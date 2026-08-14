@@ -29,6 +29,12 @@
                     RoutePlate
                 </a>
             </li>
+            <li class="{% if request.endpoint == 'index' %}active{% endif %}">
+                <a href="{{ url_for('index') }}">
+                    <i class="material-icons">apps</i>
+                    Getting started
+                </a>
+            </li>
             <li>
                 <ul class="collapsible collapsible-accordion">
                     <li class="{% if request.endpoint in ['grid', 'helpers'] %}active{% endif %}">
@@ -70,6 +76,7 @@
                             <h5>Documentation</h5>
                             <p>These pages show the same layouts the framework is built to produce. Start with the grid,
                                 then compose sections, cards, and navigation from there.</p>
+                            <a class="btn tonal btn-small" href="{{ url_for('index') }}">Getting started</a>
                             <a class="btn tonal btn-small" href="{{ url_for('grid') }}">Grid</a>
                             <a class="btn tonal btn-small" href="{{ url_for('helpers') }}">Helpers</a>
                         </div>

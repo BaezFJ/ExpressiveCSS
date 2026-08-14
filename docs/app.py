@@ -25,6 +25,8 @@ def inject_build_assets():
     }
 
 
+@app.route('/getting-started')
+@app.route('/getting-started.html')
 @app.route('/')
 def index():
     return render_template('index.html')
