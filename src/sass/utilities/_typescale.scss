@@ -1,0 +1,28 @@
+// M3 typescale helper classes, generated from the tokens in tokens/_reference.scss.
+//
+// Every property here must correspond to a token that file actually defines -
+// a `var()` pointing at an undefined custom property makes the whole
+// declaration invalid at computed-value time, which is how this file spent its
+// first life doing nothing at all.
+//
+// Deliberately not set:
+//   font-style  - the `-font-family-style` token holds "Regular"/"Medium",
+//                 which describe weight, not a CSS font-style keyword.
+
+$typescale-roles: (
+  "display-large", "display-medium", "display-small",
+  "headline-large", "headline-medium", "headline-small",
+  "body-large", "body-medium", "body-small",
+  "label-large", "label-medium", "label-small",
+  "title-large", "title-medium", "title-small"
+) !default;
+
+@each $role in $typescale-roles {
+  .#{$role} {
+    font-family: var(--md-sys-typescale-#{$role}-font-family-name);
+    font-size: var(--md-sys-typescale-#{$role}-font-size);
+    font-weight: var(--md-sys-typescale-#{$role}-font-weight);
+    line-height: var(--md-sys-typescale-#{$role}-line-height);
+    letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
+  }
+}

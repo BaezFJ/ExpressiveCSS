@@ -1,0 +1,34 @@
+// One line per component. Order is cascade order, so keep related widgets
+// together and append new components at the end unless order matters.
+
+@forward "buttons";
+@forward "collection";
+@forward "badges";
+@forward "icons-material-design";
+@forward "navbar";
+@forward "transitions";
+@forward "cards";
+@forward "toast";
+@forward "tabs";
+@forward "tooltip";
+@forward "dropdown";
+@forward "modal";
+@forward "collapsible";
+@forward "chips";
+@forward "lightbox";
+@forward "parallax";
+@forward "pushpin";
+@forward "docked-display";
+@forward "page-footer";
+@forward "forms";
+@forward "table_of_contents";
+@forward "sidenav";
+@forward "preloader";
+@forward "slider";
+@forward "carousel";
+@forward "tapTarget";
+@forward "pulse";
+@forward "datepicker";
+@forward "timepicker";
+@forward "breadcrumb";
+@forward "pagination";

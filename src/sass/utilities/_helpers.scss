@@ -1,0 +1,55 @@
+// Small single-purpose classes a page author applies deliberately.
+//
+// Anything here must be one job, one class, and independent of any component.
+// If a rule only exists to support one widget, it belongs to that component's
+// partial instead.
+
+// Positioning
+.valign-wrapper { display: flex; align-items: center; }
+
+.clearfix { clear: both; }
+
+// Text alignment
+.left-align { text-align: left; }
+.right-align { text-align: right }
+.center, .center-align { text-align: center; }
+
+// TODO: Remove this
+.left { float: left !important; }
+.right { float: right !important; }
+
+// Dividers
+.divider {
+  height: 1px;
+  overflow: hidden;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+// Shape and text behaviour
+.no-select { user-select: none; }
+.circle { border-radius: 50%; }
+.center-block { display: block; margin-left: auto; margin-right: auto; }
+.truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.no-padding { padding: 0 !important; }
+
+// Responsive media
+img.responsive-img,
+video.responsive-video {
+  max-width: 100%;
+  height: auto;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+
+  iframe, object, embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}

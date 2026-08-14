@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}RoutePlateCSS{% endblock %}</title>
+  <link rel="stylesheet" href="{{ css_url }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='docs.css') }}">
+</head>
+<body>
+  {% if build_missing %}
+  <div class="build-warning error-container on-error-container-text">
+    No build found in <code>dist/</code> &mdash; run <code>npm run build</code> (or <code>npm run watch</code>) and reload.
+  </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+  <script src="{{ js_url }}"></script>
+  <script src="{{ url_for('static', filename='docs.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+# Dependencies
+node_modules/
+
+# Build output and generated assets
+dist/
+build/
+*.tsbuildinfo
+*.map
+.sass-cache/
+
+# Python environments, bytecode, and packaging
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Test, coverage, and tool caches
+.coverage
+.coverage.*
+coverage/
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.cache/
+coverage-final.json
+
+# Logs and runtime state
+*.log
+logs/
+*.pid
+*.pid.lock
+*.seed
+*.sqlite
+*.sqlite3
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*.keystore
+credentials.json
+service-account*.json
+
+# Package-manager caches and reports
+.npm/
+.yarn/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.code-workspace
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# Operating-system metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp

@@ -1,0 +1,18 @@
+@use "sass:map";
+@use "../abstracts" as *;
+
+// The .z-depth-N classes, generated from the shadow map in
+// abstracts/_elevation.scss so the classes and the z-depth() mixin cannot drift.
+
+@each $level in map.keys($elevations) {
+  .z-depth-#{$level} {
+    @include z-depth($level);
+  }
+}
+
+.hoverable {
+  transition: box-shadow 0.25s;
+  &:hover {
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+}

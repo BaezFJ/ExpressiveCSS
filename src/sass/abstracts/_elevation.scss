@@ -1,0 +1,34 @@
+@use "sass:map";
+
+// Elevation shadows.
+//
+// These are a mixin rather than `@extend .z-depth-N` on purpose: `@extend`
+// only resolves if the extending partial loads the module that defines the
+// class, which forced every component to `@use` a CSS-emitting file and let
+// the dependency graph - not routeplate.scss - decide the output order.
+// The `.z-depth-N` classes in base/_global.scss are generated from this map,
+// so the class list and the mixin can never drift apart.
+
+$elevations: (
+  "0": none,
+  "1": (0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2)),
+  "1-half": (0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2)),
+  "2": (0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3)),
+  "3": (0 8px 17px 2px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2)),
+  "4": (0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -7px rgba(0, 0, 0, 0.2)),
+  "5": (0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2))
+) !default;
+
+@mixin z-depth($level) {
+  $key: "#{$level}";
+  @if not map.has-key($elevations, $key) {
+    @error "Unknown elevation `#{$level}`. Available: #{map.keys($elevations)}.";
+  }
+  $shadow: map.get($elevations, $key);
+  @if $shadow == none {
+    // Level 0 stays !important: it is used to cancel a shadow a component set.
+    box-shadow: none !important;
+  } @else {
+    box-shadow: $shadow;
+  }
+}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="surface-variant">
+  <div class="container section">
+    <h4 class="on-surface-variant-text">RoutePlateCSS</h4>
+    <p class="on-surface-variant-text">Build smoke test &mdash; every element below is styled by
+      <code>dist/css</code> and, where interactive, driven by <code>dist/js</code>.</p>
+    <button class="btn" id="theme-toggle">Toggle theme</button>
+  </div>
+</header>
+
+<main class="container section">
+
+  <section class="section">
+    <h5>Buttons</h5>
+    <button class="btn">Filled</button>
+    <button class="btn tonal">Tonal</button>
+    <button class="btn outlined">Outlined</button>
+    <button class="btn elevated">Elevated</button>
+    <button class="btn text">Text</button>
+    <button class="btn" disabled>Disabled</button>
+  </section>
+
+  <section class="section">
+    <h5>Grid &amp; cards</h5>
+    <div class="row">
+      <div class="s12 m6">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Surface</span>
+            <p>Colors resolve through the <code>--md-sys-color-*</code> tokens, so this card
+              follows the theme toggle above.</p>
+          </div>
+        </div>
+      </div>
+      <div class="s12 m6">
+        <div class="card primary-container">
+          <div class="card-content on-primary-container-text">
+            <span class="card-title">Primary container</span>
+            <p>Utility classes from <code>utilities/_colors.scss</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h5>Forms</h5>
+    <div class="row">
+      <div class="s12 m6">
+        <div class="input-field">
+          <input id="demo-name" type="text">
+          <label for="demo-name">Name</label>
+        </div>
+      </div>
+      <div class="s12 m6">
+        <div class="switch">
+          <label>
+            Off
+            <input type="checkbox" checked>
+            <span class="lever"></span>
+            On
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h5>Collapsible <small>(JavaScript)</small></h5>
+    <ul class="collapsible">
+      <li>
+        <div class="collapsible-header">First panel</div>
+        <div class="collapsible-body"><span>Opened by the bundled Collapsible component.</span></div>
+      </li>
+      <li>
+        <div class="collapsible-header">Second panel</div>
+        <div class="collapsible-body"><span>If these expand, <code>RoutePlate.AutoInit()</code> ran.</span></div>
+      </li>
+    </ul>
+  </section>
+
+</main>
+{% endblock %}

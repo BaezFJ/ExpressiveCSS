@@ -1,0 +1,21 @@
+/* Docs-site chrome only. Anything a component needs belongs in src/sass. */
+
+body {
+  padding-bottom: 4rem;
+}
+
+.build-warning {
+  padding: 1rem;
+  text-align: center;
+}
+
+code {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+section .btn {
+  margin-right: 0.5rem;
+}

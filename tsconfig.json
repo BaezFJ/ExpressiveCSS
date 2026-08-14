@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": [],
+
+    // The vendored Materialize sources predate class-field "define" semantics:
+    // subclasses declare fields that the constructor assigns after super().
+    // Keep assignment semantics so those values are not reset to undefined.
+    "useDefineForClassFields": false,
+
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noImplicitOverride": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "noEmit": true
+  },
+  "include": ["src/ts"]
+}

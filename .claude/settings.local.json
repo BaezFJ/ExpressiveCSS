@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run *)",
+      "Bash(pkill -f 'sass --watch')",
+      "Bash(xargs -r kill)",
+      "Bash(node --test tests/)",
+      "Bash(node --test)"
+    ]
+  }
+}

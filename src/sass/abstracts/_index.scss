@@ -1,0 +1,7 @@
+// Everything a partial needs at compile time, and nothing that emits CSS.
+// Partials load the whole layer with a single line: @use "../abstracts" as *;
+
+@forward "elevation";  // z-depth() mixin
+@forward "palette";    // $colors map + colorFunc()
+@forward "variables";  // Sass-time knobs: breakpoints, grid, font sizes
+@forward "mixins";     // btn-*, focus-visible

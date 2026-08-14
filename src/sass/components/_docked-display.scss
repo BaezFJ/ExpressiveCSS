@@ -1,0 +1,11 @@
+@use "../abstracts" as *;
+
+// Container created by src/ts/plugins/dockedDisplayPlugin.ts, which positions
+// and animates it inline. Only the resting state belongs here.
+
+.display-docked {
+  position: absolute;
+  opacity: 0;
+  z-index: 9999;
+  visibility: hidden;
+}
