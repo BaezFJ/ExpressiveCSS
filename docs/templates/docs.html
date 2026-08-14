@@ -3,80 +3,86 @@
 {% block body_class %}docs{% endblock %}
 
 {% block content %}
-<header>
-  <div class="navbar-fixed">
-    <nav class="navbar">
-      <div class="nav-wrapper primary">
-        <a class="brand-logo">{% block page_title %}RoutePlateCSS{% endblock %}</a>
-        <a class="sidenav-trigger" href="#" data-target="nav-mobile">
-          <i class="material-icons">menu</i>
-        </a>
-        <ul class="right">
-          <li>
-            <a id="theme-toggle" href="#" title="Toggle theme">
-              <i class="material-icons">dark_mode</i>
-            </a>
-          </li>
+    <header>
+        <div class="navbar-fixed">
+            <nav class="navbar">
+                <div class="nav-wrapper primary">
+                    <a class="brand-logo">{% block page_title %}RoutePlateCSS{% endblock %}</a>
+                    <a class="sidenav-trigger" href="#" data-target="nav-mobile">
+                        <i class="material-icons">menu</i>
+                    </a>
+                    <ul class="right">
+                        <li>
+                            <a id="theme-toggle" href="#" title="Toggle theme">
+                                <i class="material-icons">dark_mode</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <ul class="sidenav sidenav-fixed" id="nav-mobile">
+            <li>
+                <a href="{{ url_for('index') }}">
+                    <i class="material-icons">home</i>
+                    RoutePlate
+                </a>
+            </li>
+            <li>
+                <ul class="collapsible collapsible-accordion">
+                    <li class="{% if request.endpoint in ['grid', 'helpers'] %}active{% endif %}">
+                        <a class="collapsible-header">
+                            <i class="material-icons">palette</i>
+                            Styles
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li class="{% if request.endpoint == 'grid' %}active{% endif %}">
+                                    <a href="{{ url_for('grid') }}">Grid</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'helpers' %}active{% endif %}">
+                                    <a href="{{ url_for('helpers') }}">Helpers</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>
         </ul>
-      </div>
-    </nav>
-  </div>
+    </header>
 
-  <ul class="sidenav sidenav-fixed" id="nav-mobile">
-    <li>
-      <a href="{{ url_for('index') }}">
-        <i class="material-icons">home</i>
-        RoutePlate
-      </a>
-    </li>
-    <li>
-      <ul class="collapsible collapsible-accordion">
-        <li class="{% if request.endpoint == 'grid' %}active{% endif %}">
-          <a class="collapsible-header">
-            <i class="material-icons">palette</i>
-            Styles
-          </a>
-          <div class="collapsible-body">
-            <ul>
-              <li class="{% if request.endpoint == 'grid' %}active{% endif %}">
-                <a href="{{ url_for('grid') }}">Grid</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</header>
+    <main>
+        {% block page %}{% endblock %}
+    </main>
 
-<main>
-  {% block page %}{% endblock %}
-</main>
-
-<footer class="page-footer">
-  <div class="container">
-    <div class="row">
-      <div class="s12 m10 offset-m1">
-        <div class="row">
-          <div class="s12 m6 l4">
-            <h5>Help RoutePlate Grow</h5>
-            <p>If RoutePlateCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
-          </div>
-          <div class="s12 m6 l4">
-            <h5>Documentation</h5>
-            <p>These pages show the same layouts the framework is built to produce. Start with the grid, then compose sections, cards, and navigation from there.</p>
-            <a class="btn tonal btn-small" href="{{ url_for('grid') }}">Grid</a>
-          </div>
-          <div class="s12 m6 l4">
-            <h5>v0.1.0</h5>
-            <p>A Material Design 3 front-end framework. Still early, and growing in public.</p>
-          </div>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="s12 m10 offset-m1">
+                    <div class="row">
+                        <div class="s12 m6 l4">
+                            <h5>Help RoutePlate Grow</h5>
+                            <p>If RoutePlateCSS has helped you ship a project, open issues and send pull requests to
+                                keep the framework moving.</p>
+                        </div>
+                        <div class="s12 m6 l4">
+                            <h5>Documentation</h5>
+                            <p>These pages show the same layouts the framework is built to produce. Start with the grid,
+                                then compose sections, cards, and navigation from there.</p>
+                            <a class="btn tonal btn-small" href="{{ url_for('grid') }}">Grid</a>
+                            <a class="btn tonal btn-small" href="{{ url_for('helpers') }}">Helpers</a>
+                        </div>
+                        <div class="s12 m6 l4">
+                            <h5>v0.1.0</h5>
+                            <p>A Material Design 3 front-end framework. Still early, and growing in public.</p>
+                        </div>
+                    </div>
+                    <div class="footer-copyright">
+                        <span>&copy; 2026 RoutePlateCSS</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="footer-copyright">
-          <span>&copy; 2026 RoutePlateCSS</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
+    </footer>
 {% endblock %}

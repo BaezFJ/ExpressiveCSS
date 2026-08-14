@@ -101,3 +101,8 @@ body.containers-off .container {
 .site-layout-pane {
   min-height: 12rem;
 }
+
+/* Alignment demo: valign-wrapper only reads as centered when the box is tall. */
+.valign-demo {
+  height: 16rem;
+}

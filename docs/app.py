@@ -36,6 +36,12 @@ def grid():
     return render_template('grid.html')
 
 
+@app.route('/helpers')
+@app.route('/helpers.html')
+def helpers():
+    return render_template('helpers.html')
+
+
 @app.route('/dist/<path:filename>')
 def dist_file(filename):
     """Serve a file from the npm build output."""
