@@ -19,3 +19,85 @@ code {
 section .btn {
   margin-right: 0.5rem;
 }
+
+/* Offset documentation pages so they sit beside the fixed sidenav. */
+@media only screen and (min-width: 993px) {
+  body.docs header,
+  body.docs main,
+  body.docs footer {
+    padding-left: 300px;
+  }
+
+  body.docs .navbar-fixed .navbar {
+    left: 300px;
+    width: auto;
+  }
+}
+
+/* Hero banner on documentation pages. */
+#index-banner {
+  border-radius: 24px;
+}
+
+.scrollspy {
+  scroll-margin-top: 5rem;
+}
+
+/* Code samples — the framework has no pre styling. */
+pre {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Container-toggle demo. */
+body.containers-off .container {
+  width: 98%;
+}
+
+/* Fake browser used by the container / layout illustrations. */
+.browser-window {
+  overflow: hidden;
+}
+
+.browser-window .browser-circles {
+  display: flex;
+  gap: 6px;
+  padding: 10px 12px;
+}
+
+.browser-window .browser-circles .circle {
+  width: 10px;
+  height: 10px;
+}
+
+.docs-bar {
+  height: 1.5rem;
+  width: 80%;
+  margin: 1.5rem auto;
+}
+
+.docs-bar.small {
+  width: 25%;
+}
+
+.docs-bar.full {
+  width: 100%;
+}
+
+.site-layout-top {
+  height: 42px;
+}
+
+.site-layout-pane {
+  min-height: 12rem;
+}

@@ -30,6 +30,12 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/grid')
+@app.route('/grid.html')
+def grid():
+    return render_template('grid.html')
+
+
 @app.route('/dist/<path:filename>')
 def dist_file(filename):
     """Serve a file from the npm build output."""
