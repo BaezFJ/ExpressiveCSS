@@ -12,9 +12,12 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="input-field"><input class="autocomplete" type="text" id="ac"><label for="ac">A</label></div>`
   },
   {
+    // Semantic <article> + <aside>, which is what the docs use and what
+    // Cards.Init() has always matched - the registry claimed `.cards`, which
+    // no card markup anywhere uses.
     name: 'Cards',
-    selector: '.cards',
-    html: `<div class="cards"><div class="card"><div class="card-content"><span class="card-title activator">T</span></div><div class="card-reveal"><span class="card-title">T</span><p>body</p></div></div></div>`
+    selector: 'article',
+    html: `<article><h3>Title</h3><span class="activator">T</span><aside><h4>Title</h4><p>body</p></aside></article>`
   },
   {
     name: 'Carousel',

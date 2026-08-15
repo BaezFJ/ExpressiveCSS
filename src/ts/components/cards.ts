@@ -15,6 +15,16 @@ const _defaults: CardsOptions = {
   outDuration: 300
 };
 
+/**
+ * What counts as a card.
+ *
+ * Shared with `components/registry.ts` rather than written out twice: the
+ * registry used to claim `.cards`, which matches nothing this component
+ * actually initializes, so the AutoInit entry was dead while `Cards.Init()`
+ * quietly did the work through the selector below.
+ */
+export const CARDS_SELECTOR = '.card, article:has(> aside), article:has(.card-reveal)';
+
 export class Cards extends Component<CardsOptions> implements Openable {
   isOpen: boolean = false;
   private readonly cardReveal: HTMLElement | null;
@@ -184,9 +194,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
   static Init() {
     // Handle initialization of static cards.
     Utils.onDocumentReady(() => {
-      const cards = document.querySelectorAll(
-        '.card, article:has(> aside), article:has(.card-reveal)'
-      );
+      const cards = document.querySelectorAll(CARDS_SELECTOR);
       cards.forEach((el) => {
         if (el && el['RoutePlate_Cards'] == undefined) this.init(el as HTMLElement);
       });

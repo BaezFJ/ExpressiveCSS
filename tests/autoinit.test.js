@@ -43,6 +43,35 @@ describe('AutoInit', () => {
     assert.ok(RoutePlate.Collapsible.getInstance(normal));
   });
 
+  test('.no-autoinit is honoured on every alternative of a multi-part selector', () => {
+    // Cards claims `.card, article:has(> aside), article:has(.card-reveal)`.
+    // `${selector}:not(.no-autoinit)` would bind the negation to the last
+    // alternative only, so a `.card.no-autoinit` - matching the *first* - got
+    // initialized anyway. AutoInit wraps the selector in :is() for this.
+    document.body.innerHTML = `
+      <div class="card no-autoinit"><span class="activator">T</span><div class="card-reveal"><p>b</p></div></div>
+      <div class="card"><span class="activator">T</span><div class="card-reveal"><p>b</p></div></div>`;
+    const [optedOut, normal] = document.querySelectorAll('.card');
+
+    RoutePlate.AutoInit();
+
+    assert.equal(
+      RoutePlate.Cards.getInstance(optedOut),
+      undefined,
+      '.no-autoinit was ignored on the first alternative of the selector'
+    );
+    assert.ok(RoutePlate.Cards.getInstance(normal), 'the opted-in card was not initialized');
+  });
+
+  test('AutoInit starts Cards on the semantic article markup the docs use', () => {
+    document.body.innerHTML = `<article><span class="activator">T</span><aside><p>reveal</p></aside></article>`;
+    const el = document.querySelector('article');
+
+    RoutePlate.AutoInit();
+
+    assert.ok(RoutePlate.Cards.getInstance(el), 'AutoInit did not construct Cards for <article><aside>');
+  });
+
   test('only touches the context it is given', () => {
     document.body.innerHTML = `
       <div id="inside"><ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul></div>
