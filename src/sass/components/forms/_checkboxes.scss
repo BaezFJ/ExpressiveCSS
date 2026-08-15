@@ -1,201 +1,288 @@
 @use "../../abstracts" as *;
 
-/* Checkboxes */
+// Checkboxes.
+//
+// Anatomy is the HTML. A <label> wrapping <input type="checkbox"> is
+// the control. The label text is a sibling of the input — no extra class,
+// no required <span>. input + span still works (legacy / BeerCSS / Select).
+// label.switch is a switch, not a checkbox — leave it alone.
+//
+// Tokens follow https://m3.material.io/components/checkbox/specs
+//   container    18dp, 2dp corners
+//   unselected   2dp on-surface-variant outline
+//   selected     primary fill, on-primary check
+//   indeterminate primary fill, on-primary dash
+//   state layer  40dp, 8% hover / 10% focus
+//   touch target 48dp
+//   label        body-large / on-surface
+//   disabled     on-surface 38%
+//
+// .filled-in is a no-op: the selected state is always the filled box.
 
-/* Remove default checkbox */
-[type="checkbox"]:not(:checked),
-[type="checkbox"]:checked {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+$_cb-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M4 9.5 7.5 13 14 5.5'/%3E%3C/svg%3E");
+$_cb-dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' d='M4.5 9h9'/%3E%3C/svg%3E");
+
+label:has(> [type="checkbox"]):not(.switch),
+.checkbox {
+  --md-comp-checkbox-container-size: 18px;
+  --md-comp-checkbox-container-shape: 2px;
+  --md-comp-checkbox-state-layer-size: 40px;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("body-large");
+  font-family: $font-stack;
 }
 
-// Checkbox Styles
-[type="checkbox"] {
-  // Text Label Style
-  + span:not(.lever) {
-    position: relative;
-    padding-left: 35px;
-    cursor: pointer;
-    display: inline-block;
-    height: 25px;
-    line-height: 25px;
-    font-size: 1rem;
-    user-select: none;
-  }
-
-  /* checkbox aspect */
-  + span:not(.lever):before,
-  &:not(.filled-in) + span:not(.lever):after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 18px;
-    height: 18px;
-    z-index: 0;
-    border: 2px solid var(--md-sys-color-on-surface-variant);
-    border-radius: 1px;
-    margin-top: 3px;
-    transition: .2s;
-  }
-
-  &:not(.filled-in) + span:not(.lever):after {
-    border: 0;
-    transform: scale(0);
-  }
-
-  &:not(:checked):disabled + span:not(.lever):before {
-    border: none;
-    background-color: var(--md-sys-color-on-surface);
-  }
-
-  // Focused styles
-  &.tabbed:focus + span:not(.lever):after {
-    transform: scale(1);
-    border: 0;
-    border-radius: 50%;
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.12);
-    background-color: rgba(0, 0, 0, 0.12);
-  }
+nav:has(> label > [type="checkbox"]:not(.switch *)),
+nav:has(> .checkbox) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
 }
 
-[type="checkbox"]:checked {
-  + span:not(.lever):before {
-    top: -4px;
-    left: -5px;
-    width: 12px;
-    height: 22px;
-    border-top: 2px solid transparent;
-    border-left: 2px solid transparent;
-    border-right: 2px solid var(--md-sys-color-primary);
-    border-bottom: 2px solid var(--md-sys-color-primary);
-    transform: rotate(40deg);
-    backface-visibility: hidden;
-    transform-origin: 100% 100%;
-  }
-
-  &:disabled + span:before {
-    border-right: 2px solid var(--md-sys-color-on-surface);
-    border-bottom: 2px solid var(--md-sys-color-on-surface);
-  }
+nav > label:has(> [type="checkbox"]):not(.switch),
+nav > .checkbox {
+  display: inline-flex;
 }
 
-/* Indeterminate checkbox */
-[type="checkbox"]:indeterminate {
-  + span:not(.lever):before {
-    top: -11px;
-    left: -12px;
-    width: 10px;
-    height: 22px;
-    border-top: none;
-    border-left: none;
-    border-right: 2px solid var(--md-sys-color-primary);
-    border-bottom: none;
-    transform: rotate(90deg);
-    backface-visibility: hidden;
-    transform-origin: 100% 100%;
+// Paint the box on the input. A following span (legacy) hides this
+// control and draws the same anatomy. Nested :has() is invalid, so
+// do not write :has(:not(:has(+ span))).
+label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
+.checkbox > [type="checkbox"] {
+  appearance: none;
+  flex: 0 0 var(--md-comp-checkbox-container-size);
+  box-sizing: border-box;
+  width: var(--md-comp-checkbox-container-size);
+  height: var(--md-comp-checkbox-container-size);
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--md-sys-color-on-surface-variant);
+  border-radius: var(--md-comp-checkbox-container-shape);
+  background-color: transparent;
+  cursor: pointer;
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+
+  &:checked,
+  &:indeterminate {
+    border-color: var(--md-sys-color-primary);
+    background-color: var(--md-sys-color-primary);
   }
 
-  // Disabled indeterminate
-  &:disabled + span:not(.lever):before {
-    border-right: 2px solid var(--md-sys-color-on-surface);
+  &:hover {
+    box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  }
+
+  &:checked:hover,
+  &:indeterminate:hover {
+    box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+  }
+
+  &:focus-visible,
+  &.tabbed:focus {
+    box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    outline: none;
+  }
+
+  &.invalid,
+  &[aria-invalid="true"] {
+    border-color: var(--md-sys-color-error);
+  }
+
+  &.invalid:checked,
+  &.invalid:indeterminate,
+  &[aria-invalid="true"]:checked,
+  &[aria-invalid="true"]:indeterminate {
+    border-color: var(--md-sys-color-error);
+    background-color: var(--md-sys-color-error);
+  }
+
+  &.invalid:hover,
+  &[aria-invalid="true"]:hover {
+    box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-error) 8%, transparent);
+  }
+
+  &:disabled {
+    border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
     background-color: transparent;
-  }
-}
-
-// Filled in Style
-[type="checkbox"].filled-in {
-  // General
-  + span:not(.lever):after {
-    border-radius: 2px;
+    box-shadow: none;
+    cursor: default;
   }
 
-  + span:not(.lever):before,
-  + span:not(.lever):after {
-    content: '';
-    left: 0;
+  &:disabled:checked,
+  &:disabled:indeterminate {
+    border-color: transparent;
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  }
+
+  // Legacy: the span draws the box. Keep the input out of the way.
+  &:has(+ span) {
     position: absolute;
-    /* .1s delay is for check animation */
-    transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
-    z-index: 1;
-  }
-
-  // Unchecked style
-  &:not(:checked) + span:not(.lever):before {
+    opacity: 0;
     width: 0;
     height: 0;
-    border: 3px solid transparent;
-    left: 6px;
-    top: 10px;
-    transform: rotateZ(37deg);
-    transform-origin: 100% 100%;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    pointer-events: none;
+  }
+}
+
+// Check / dash sit on the label so they can use on-primary as a mask
+// (an <input> cannot host ::before, and a data-URI cannot see tokens).
+// Skip when a span is drawing the icon.
+label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)),
+.checkbox:not(:has(> [type="checkbox"] + span)) {
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: var(--md-comp-checkbox-container-size);
+    height: var(--md-comp-checkbox-container-size);
+    margin-top: calc(var(--md-comp-checkbox-container-size) / -2);
+    pointer-events: none;
+    background-color: var(--md-sys-color-on-primary);
+    -webkit-mask: #{$_cb-check} center / contain no-repeat;
+    mask: #{$_cb-check} center / contain no-repeat;
+    opacity: 0;
   }
 
-  &:not(:checked) + span:not(.lever):after {
-    height: 20px;
-    width: 20px;
-    background-color: transparent;
-    border: 2px solid var(--md-sys-color-on-surface-variant);
-    top: 0px;
-    z-index: 0;
+  &:has(> [type="checkbox"]:checked)::before,
+  &:has(> [type="checkbox"]:indeterminate)::before {
+    opacity: 1;
   }
 
-  // Checked style
-  &:checked {
-    + span:not(.lever):before {
-      top: 0;
-      left: 1px;
-      width: 8px;
-      height: 13px;
-      border-top: 2px solid transparent;
-      border-left: 2px solid transparent;
-      border-right: 2px solid  var(--md-sys-color-on-primary);
-      border-bottom: 2px solid  var(--md-sys-color-on-primary);
-      transform: rotateZ(37deg);
-      transform-origin: 100% 100%;
-    }
-
-    + span:not(.lever):after {
-      top: 0;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--md-sys-color-primary);
-      background-color: var(--md-sys-color-primary);
-      z-index: 0;
-    }
+  &:has(> [type="checkbox"]:indeterminate)::before {
+    -webkit-mask-image: #{$_cb-dash};
+    mask-image: #{$_cb-dash};
   }
 
-  // Focused styles
-  &.tabbed:focus + span:not(.lever):after {
-    border-radius: 2px;
-    border-color: var(--md-sys-color-on-surface-variant)r;
-    background-color: rgba(0, 0, 0, 0.12);
+  &:has(> [type="checkbox"].invalid:is(:checked, :indeterminate))::before,
+  &:has(> [type="checkbox"][aria-invalid="true"]:is(:checked, :indeterminate))::before {
+    background-color: var(--md-sys-color-on-error);
   }
 
-  &.tabbed:checked:focus + span:not(.lever):after {
-    border-radius: 2px;
-    background-color: var(--md-sys-color-primary);
-    border-color: var(--md-sys-color-primary);
+  &:has(> [type="checkbox"]:disabled:is(:checked, :indeterminate))::before {
+    background-color: var(--md-sys-color-surface);
   }
+}
 
-  // Disabled style
-  &:disabled:not(:checked) + span:not(.lever):before {
-    background-color: transparent;
-    border: 2px solid transparent;
-  }
+label:has(> [type="checkbox"]:disabled):not(.switch),
+.checkbox:has([type="checkbox"]:disabled) {
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  cursor: default;
+}
 
-  &:disabled:not(:checked) + span:not(.lever):after {
-    border-color: transparent;
-    background-color: var(--md-sys-color-on-surface);
-  }
+// Legacy / BeerCSS / Select / Autocomplete: input + span draws the same
+// 18dp anatomy. Exclude .switch — that file paints the track on a span.
+$_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-text, .character-counter, .file-path)";
 
-  &:disabled:checked + span:not(.lever):before {
-    background-color: transparent;
-  }
+#{$_cb-span} {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding-left: 30px;
+  cursor: pointer;
+  user-select: none;
+}
 
-  &:disabled:checked + span:not(.lever):after {
-    background-color: var(--md-sys-color-on-surface);
-    border-color: var(--md-sys-color-on-surface);
-  }
+#{$_cb-span}::before,
+#{$_cb-span}::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  border-radius: 2px;
+}
+
+#{$_cb-span}::before {
+  border: 2px solid var(--md-sys-color-on-surface-variant);
+  background-color: transparent;
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+
+#{$_cb-span}::after {
+  background-color: var(--md-sys-color-on-primary);
+  -webkit-mask: #{$_cb-check} center / contain no-repeat;
+  mask: #{$_cb-check} center / contain no-repeat;
+  opacity: 0;
+}
+
+*:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  border-color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-primary);
+}
+
+*:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+  opacity: 1;
+}
+
+*:not(.switch) > [type="checkbox"]:indeterminate + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+  -webkit-mask-image: #{$_cb-dash};
+  mask-image: #{$_cb-dash};
+}
+
+*:not(.switch) > [type="checkbox"]:hover + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+*:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate):hover + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+}
+
+*:not(.switch) > [type="checkbox"]:focus-visible + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
+*:not(.switch) > [type="checkbox"].tabbed:focus + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  box-shadow: 0 0 0 11px color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+}
+
+*:not(.switch) > [type="checkbox"].invalid + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
+*:not(.switch) > [type="checkbox"][aria-invalid="true"] + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  border-color: var(--md-sys-color-error);
+}
+
+*:not(.switch) > [type="checkbox"].invalid:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
+*:not(.switch) > [type="checkbox"][aria-invalid="true"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  border-color: var(--md-sys-color-error);
+  background-color: var(--md-sys-color-error);
+}
+
+*:not(.switch) > [type="checkbox"].invalid:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after,
+*:not(.switch) > [type="checkbox"][aria-invalid="true"]:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+  background-color: var(--md-sys-color-on-error);
+}
+
+*:not(.switch) > [type="checkbox"]:disabled + span:not(.lever, .supporting-text, .character-counter, .file-path) {
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  cursor: default;
+}
+
+*:not(.switch) > [type="checkbox"]:disabled + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+*:not(.switch) > [type="checkbox"]:disabled:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
+  border-color: transparent;
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+}
+
+*:not(.switch) > [type="checkbox"]:disabled:is(:checked, :indeterminate) + span:not(.lever, .supporting-text, .character-counter, .file-path)::after {
+  background-color: var(--md-sys-color-surface);
 }

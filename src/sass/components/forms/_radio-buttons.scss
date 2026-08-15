@@ -45,17 +45,11 @@ nav > .radio {
   display: inline-flex;
 }
 
-// Hide the native control only when a following span draws it (legacy).
-[type="radio"]:has(+ span) {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-// Paint the radio on the input when there is no span.
-label:has(> [type="radio"]:not(:has(+ span))) > [type="radio"] {
+// Paint the radio on the input. A following span (legacy) hides this
+// control and draws the same anatomy. Nested :has() is invalid, so
+// do not write :has(:not(:has(+ span))).
+label:has(> [type="radio"]) > [type="radio"],
+.radio > [type="radio"] {
   appearance: none;
   flex: 0 0 var(--md-comp-radio-button-icon-size);
   box-sizing: border-box;
@@ -105,6 +99,17 @@ label:has(> [type="radio"]:not(:has(+ span))) > [type="radio"] {
       color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent) 0 5px,
       transparent 5.5px
     );
+  }
+
+  &:has(+ span) {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    pointer-events: none;
   }
 }
 
