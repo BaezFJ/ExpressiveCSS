@@ -248,6 +248,12 @@ def text_inputs():
     return render_template('text-inputs.html')
 
 
+@app.route('/fieldsets')
+@app.route('/fieldsets.html')
+def fieldsets():
+    return render_template('fieldsets.html')
+
+
 @app.route('/switches')
 @app.route('/switches.html')
 def switches():

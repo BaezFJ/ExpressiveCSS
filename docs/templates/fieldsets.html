@@ -1,0 +1,218 @@
+{% extends "docs.html" %}
+
+{% block title %}Fieldsets - RoutePlateCSS{% endblock %}
+{% block page_title %}Fieldsets{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Fieldsets</h1>
+      <h4 class="light primary-text">Grouped form sections, from the HTML.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>&lt;fieldset&gt;</code> is the group. A
+          <code>&lt;legend&gt;</code> is the headline. Everything else is
+          a field — <code>.field</code>, radios, switches, a
+          <code>&lt;nav&gt;</code> of radios, a trailing
+          <code>&lt;small&gt;</code> as supporting text. There is no
+          wrapper class. They are CSS only. There is no JavaScript
+          component and nothing to AutoInit.
+        </p>
+        <p>
+          Material Design 3 has no fieldset component. Tokens follow the
+          outlined grouping container used around related form content,
+          and the
+          <a href="https://m3.material.io/components/text-fields/specs">outlined text-field</a>
+          shape so a group of fields matches the fields. The container is
+          4dp corners and a 1dp <code>outline-variant</code> stroke.
+          The legend is <code>title-small</code> /
+          <code>on-surface</code>. Supporting text is
+          <code>body-small</code>. Padding is 16dp; children sit 16dp
+          apart. Disabled is 38%.
+        </p>
+
+        <fieldset>
+          <legend>Name</legend>
+          <div class="field">
+            <input id="fs-first" type="text" placeholder=" ">
+            <label for="fs-first">First name</label>
+          </div>
+          <div class="field">
+            <input id="fs-last" type="text" placeholder=" ">
+            <label for="fs-last">Last name</label>
+          </div>
+        </fieldset>
+<pre><code>&lt;fieldset&gt;
+  &lt;legend&gt;Name&lt;/legend&gt;
+  &lt;div class="field"&gt;
+    &lt;input id="first" type="text" placeholder=" "&gt;
+    &lt;label for="first"&gt;First name&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;div class="field"&gt;
+    &lt;input id="last" type="text" placeholder=" "&gt;
+    &lt;label for="last"&gt;Last name&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+      </div>
+
+      <div id="choices" class="section scrollspy">
+        <h3>Choices</h3>
+        <p>
+          A fieldset is also the right parent for a radio, checkbox, or
+          switch group — the legend names the question, the
+          <code>disabled</code> attribute disables every control inside.
+          Put the labels in a <code>&lt;nav&gt;</code> to sit them on one
+          line.
+        </p>
+        <fieldset>
+          <legend>Notify me about</legend>
+          <label class="switch">
+            <input type="checkbox" checked>
+            Comments
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            Mentions
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            Followers
+          </label>
+          <small>You can change these later in settings.</small>
+        </fieldset>
+        <fieldset>
+          <legend>Plan</legend>
+          <nav>
+            <label>
+              <input name="fs-plan" type="radio" checked>
+              Monthly
+            </label>
+            <label>
+              <input name="fs-plan" type="radio">
+              Yearly
+            </label>
+          </nav>
+        </fieldset>
+<pre><code>&lt;fieldset&gt;
+  &lt;legend&gt;Notify me about&lt;/legend&gt;
+  &lt;label class="switch"&gt;
+    &lt;input type="checkbox" checked&gt;
+    Comments
+  &lt;/label&gt;
+  &lt;label class="switch"&gt;
+    &lt;input type="checkbox"&gt;
+    Mentions
+  &lt;/label&gt;
+  &lt;small&gt;You can change these later in settings.&lt;/small&gt;
+&lt;/fieldset&gt;
+
+&lt;fieldset&gt;
+  &lt;legend&gt;Plan&lt;/legend&gt;
+  &lt;nav&gt;
+    &lt;label&gt;
+      &lt;input name="plan" type="radio" checked&gt;
+      Monthly
+    &lt;/label&gt;
+    &lt;label&gt;
+      &lt;input name="plan" type="radio"&gt;
+      Yearly
+    &lt;/label&gt;
+  &lt;/nav&gt;
+&lt;/fieldset&gt;</code></pre>
+      </div>
+
+      <div id="variants" class="section scrollspy">
+        <h3>Variants</h3>
+        <p>
+          The default is outlined. <code>filled</code> is a
+          <code>surface-variant</code> well with no stroke — pair it with
+          <code>outlined</code> fields so the wells stay distinct.
+          <code>rounded</code> is 12dp corners (M3 medium, like a card).
+          <code>outlined</code> and <code>border</code> name the default
+          if you need to say it.
+        </p>
+        <fieldset class="filled">
+          <legend>
+            <i class="material-icons">place</i>
+            Address
+          </legend>
+          <div class="field outlined">
+            <input id="fs-street" type="text" placeholder=" ">
+            <label for="fs-street">Street</label>
+          </div>
+          <div class="field outlined">
+            <input id="fs-city" type="text" placeholder=" ">
+            <label for="fs-city">City</label>
+          </div>
+        </fieldset>
+        <fieldset class="filled rounded">
+          <legend>Preferences</legend>
+          <label class="switch">
+            <input type="checkbox" checked>
+            Dark theme
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            Compact layout
+          </label>
+        </fieldset>
+<pre><code>&lt;fieldset class="filled"&gt;
+  &lt;legend&gt;
+    &lt;i class="material-icons"&gt;place&lt;/i&gt;
+    Address
+  &lt;/legend&gt;
+  &lt;div class="field outlined"&gt;…&lt;/div&gt;
+&lt;/fieldset&gt;
+
+&lt;fieldset class="filled rounded"&gt;
+  &lt;legend&gt;Preferences&lt;/legend&gt;
+  …
+&lt;/fieldset&gt;</code></pre>
+      </div>
+
+      <div id="disabled" class="section scrollspy">
+        <h3>Disabled</h3>
+        <p>
+          The HTML <code>disabled</code> attribute on a fieldset disables
+          every control inside it. The legend and outline drop to 38%.
+        </p>
+        <fieldset disabled>
+          <legend>Billing</legend>
+          <div class="field">
+            <input id="fs-card" type="text" placeholder=" " value="•••• 4242">
+            <label for="fs-card">Card</label>
+          </div>
+          <div class="field">
+            <input id="fs-exp" type="text" placeholder=" " value="12 / 28">
+            <label for="fs-exp">Expires</label>
+          </div>
+        </fieldset>
+<pre><code>&lt;fieldset disabled&gt;
+  &lt;legend&gt;Billing&lt;/legend&gt;
+  &lt;div class="field"&gt;…&lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Introduction</a></li>
+          <li><a href="#choices">Choices</a></li>
+          <li><a href="#variants">Variants</a></li>
+          <li><a href="#disabled">Disabled</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

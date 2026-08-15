@@ -1,0 +1,128 @@
+@use "../../abstracts" as *;
+
+// Fieldsets.
+//
+// Anatomy is the HTML. A <fieldset> is the group. A <legend> is the
+// headline. Direct children are the fields — .field, radios, switches,
+// a <nav> of radios, a trailing <small> as supporting text. No wrapper
+// class. .filled / .border / .rounded are helpers markup cannot express.
+//
+// M3 has no fieldset component. Tokens follow the outlined grouping
+// container used around related form content, and the outlined text-field
+// shape so a group of fields matches the fields:
+//   container    transparent, 4dp corners, 1dp outline-variant
+//   filled       surface-variant, no outline
+//   legend       title-small / on-surface
+//   supporting   body-small / on-surface-variant
+//   padding      16dp, 16dp between children
+//   disabled     on-surface / outline at 38%
+//
+// Do not set display:flex — that pulls <legend> off the border.
+
+fieldset {
+  --md-comp-fieldset-container-color: transparent;
+  --md-comp-fieldset-container-shape: 4px;
+  --md-comp-fieldset-outline-color: var(--md-sys-color-outline-variant);
+  --md-comp-fieldset-outline-width: 1px;
+  --md-comp-fieldset-legend-color: var(--md-sys-color-on-surface);
+
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 16px;
+
+  & + & {
+    margin-block-start: 24px;
+  }
+  border: var(--md-comp-fieldset-outline-width) solid var(--md-comp-fieldset-outline-color);
+  border-radius: var(--md-comp-fieldset-container-shape);
+  background-color: var(--md-comp-fieldset-container-color);
+
+  > legend {
+    float: none;
+    width: auto;
+    max-width: calc(100% - 16px);
+    margin: 0;
+    margin-inline-start: -4px;
+    padding-inline: 8px;
+    color: var(--md-comp-fieldset-legend-color);
+    background-color: transparent;
+    @include typescale("title-small");
+
+    > i {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      margin-inline-end: 8px;
+      vertical-align: -3px;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  }
+
+  > :not(legend) + * {
+    margin-block-start: 16px;
+  }
+
+  // Switches are inline-flex. Make a bare group stack; a <nav> keeps
+  // radios on one line. Consecutive 48dp rows don't need the 16dp gap.
+  > label,
+  > .switch {
+    display: flex;
+    align-items: center;
+  }
+
+  > :is(label, .switch) + :is(label, .switch) {
+    margin-block-start: 0;
+  }
+
+  > small {
+    display: block;
+    margin-block-start: 8px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+  }
+}
+
+fieldset.filled {
+  --md-comp-fieldset-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-fieldset-outline-color: transparent;
+}
+
+fieldset.outlined,
+fieldset.border {
+  --md-comp-fieldset-container-color: transparent;
+  --md-comp-fieldset-outline-color: var(--md-sys-color-outline-variant);
+}
+
+fieldset.rounded {
+  --md-comp-fieldset-container-shape: 12px;
+}
+
+fieldset:disabled,
+fieldset[disabled] {
+  --md-comp-fieldset-outline-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) 12%,
+    transparent
+  );
+  --md-comp-fieldset-legend-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) 38%,
+    transparent
+  );
+
+  > legend > i {
+    color: var(--md-comp-fieldset-legend-color);
+  }
+}
+
+fieldset.filled:disabled,
+fieldset.filled[disabled] {
+  --md-comp-fieldset-outline-color: transparent;
+  --md-comp-fieldset-container-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) 4%,
+    transparent
+  );
+}

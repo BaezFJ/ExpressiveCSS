@@ -162,7 +162,7 @@
             </li>
             <li>
                 <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['autocomplete', 'checkboxes', 'chips', 'radio_buttons', 'range', 'select', 'switches', 'text_inputs'] %}active{% endif %}">
+                    <li class="{% if request.endpoint in ['autocomplete', 'checkboxes', 'chips', 'fieldsets', 'radio_buttons', 'range', 'select', 'switches', 'text_inputs'] %}active{% endif %}">
                         <a class="collapsible-header">
                             <i class="material-icons">edit</i>
                             Forms
@@ -177,6 +177,9 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'chips' %}active{% endif %}">
                                     <a href="{{ url_for('chips') }}">Chips</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'fieldsets' %}active{% endif %}">
+                                    <a href="{{ url_for('fieldsets') }}">Fieldsets</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'radio_buttons' %}active{% endif %}">
                                     <a href="{{ url_for('radio_buttons') }}">Radio Buttons</a>
@@ -258,6 +261,7 @@
                             <a class="btn tonal btn-small" href="{{ url_for('autocomplete') }}">Autocomplete</a>
                             <a class="btn tonal btn-small" href="{{ url_for('checkboxes') }}">Checkboxes</a>
                             <a class="btn tonal btn-small" href="{{ url_for('chips') }}">Chips</a>
+                            <a class="btn tonal btn-small" href="{{ url_for('fieldsets') }}">Fieldsets</a>
                             <a class="btn tonal btn-small" href="{{ url_for('radio_buttons') }}">Radio Buttons</a>
                             <a class="btn tonal btn-small" href="{{ url_for('range') }}">Range</a>
                             <a class="btn tonal btn-small" href="{{ url_for('select') }}">Select</a>
