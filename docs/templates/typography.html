@@ -1,0 +1,167 @@
+{% extends "docs.html" %}
+
+{% block title %}Typography - RoutePlateCSS{% endblock %}
+{% block page_title %}Typography{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500&display=swap">
+{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Typography</h1>
+      <h4 class="light primary-text">Headers, quotes, flow text, and the Material Design 3 type scale.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="typescale" class="section scrollspy">
+        <h3>Type scale</h3>
+        <p class="flow-text">
+          New work should use the Material Design 3 type scale. Fifteen classes map
+          onto the <code>--md-sys-typescale-*</code> tokens: family, size, weight,
+          line-height, and letter-spacing. They do not set <code>font-style</code> —
+          the token named <code>-font-family-style</code> holds “Regular” / “Medium”,
+          which are weights, not CSS <code>font-style</code> keywords.
+        </p>
+        <p>
+          Those classes set <code>font-family: Roboto</code>. The framework does not
+          ship the font files. This page loads Roboto so the samples match the spec;
+          your app should do the same if you use the scale.
+        </p>
+        <p class="display-large">Display Large</p>
+        <p class="display-medium">Display Medium</p>
+        <p class="display-small">Display Small</p>
+        <p class="headline-large">Headline Large</p>
+        <p class="headline-medium">Headline Medium</p>
+        <p class="headline-small">Headline Small</p>
+        <p class="title-large">Title Large</p>
+        <p class="title-medium">Title Medium</p>
+        <p class="title-small">Title Small</p>
+        <p class="body-large">Body Large</p>
+        <p class="body-medium">Body Medium</p>
+        <p class="body-small">Body Small</p>
+        <p class="label-large">Label Large</p>
+        <p class="label-medium">Label Medium</p>
+        <p class="label-small">Label Small</p>
+<pre><code>&lt;p class="display-large"&gt;Display Large&lt;/p&gt;
+&lt;p class="headline-small"&gt;Headline Small&lt;/p&gt;
+&lt;p class="body-medium"&gt;Body Medium&lt;/p&gt;
+&lt;p class="label-large"&gt;Label Large&lt;/p&gt;</code></pre>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Size</th>
+              <th>Weight</th>
+              <th>Line height</th>
+              <th>Tracking</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>display-large</code></td><td>57px</td><td>400</td><td>64px</td><td>−0.25px</td></tr>
+            <tr><td><code>display-medium</code></td><td>45px</td><td>400</td><td>52px</td><td>0</td></tr>
+            <tr><td><code>display-small</code></td><td>36px</td><td>400</td><td>44px</td><td>0</td></tr>
+            <tr><td><code>headline-large</code></td><td>32px</td><td>400</td><td>40px</td><td>0</td></tr>
+            <tr><td><code>headline-medium</code></td><td>28px</td><td>400</td><td>36px</td><td>0</td></tr>
+            <tr><td><code>headline-small</code></td><td>24px</td><td>400</td><td>32px</td><td>0</td></tr>
+            <tr><td><code>title-large</code></td><td>22px</td><td>400</td><td>28px</td><td>0</td></tr>
+            <tr><td><code>title-medium</code></td><td>16px</td><td>500</td><td>24px</td><td>0.15px</td></tr>
+            <tr><td><code>title-small</code></td><td>14px</td><td>500</td><td>20px</td><td>0.10px</td></tr>
+            <tr><td><code>body-large</code></td><td>16px</td><td>400</td><td>24px</td><td>0.50px</td></tr>
+            <tr><td><code>body-medium</code></td><td>14px</td><td>400</td><td>20px</td><td>0.25px</td></tr>
+            <tr><td><code>body-small</code></td><td>12px</td><td>400</td><td>16px</td><td>0.40px</td></tr>
+            <tr><td><code>label-large</code></td><td>14px</td><td>500</td><td>20px</td><td>0.10px</td></tr>
+            <tr><td><code>label-medium</code></td><td>12px</td><td>500</td><td>16px</td><td>0.50px</td></tr>
+            <tr><td><code>label-small</code></td><td>11px</td><td>500</td><td>16px</td><td>0.50px</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="headers" class="section scrollspy">
+        <h3>Headers</h3>
+        <p>
+          <code>h1</code>–<code>h6</code> have default sizes and weight 400.
+          <code>.light</code> is weight 300; <code>.thin</code> is 200.
+        </p>
+        <h1>Heading h1</h1>
+        <h2>Heading h2</h2>
+        <h3>Heading h3</h3>
+        <h4>Heading h4</h4>
+        <h5>Heading h5</h5>
+        <h6>Heading h6</h6>
+      </div>
+
+      <div id="blockquote" class="section scrollspy">
+        <h3>Blockquotes</h3>
+        <p>
+          Blockquotes emphasize a quote or citation. The left bar uses
+          <code>--md-sys-color-primary</code>.
+        </p>
+        <blockquote>
+          This is an example quotation that uses the blockquote tag. Here is another line to make it look bigger.
+        </blockquote>
+<pre><code>&lt;blockquote&gt;
+  This is an example quotation that uses the blockquote tag.
+&lt;/blockquote&gt;</code></pre>
+      </div>
+
+      <div id="flow" class="section scrollspy">
+        <h3>Flow Text</h3>
+        <p>
+          <a class="btn tonal waves-effect" href="#!" id="flow-toggle">Toggle flow-text</a>
+        </p>
+        <p>
+          <code>flow-text</code> scales font size with the viewport so line length
+          stays readable. Resize the window and watch the sample change, or use the
+          button to compare with unscaled body text.
+        </p>
+        <p class="flow-text" id="flow-text-demo">
+          To see Flow Text in action, slowly resize your browser and watch the size
+          of this text body change. Use the button above to toggle flow-text off
+          and on to see the difference.
+        </p>
+<pre><code>&lt;p class="flow-text"&gt;I am Flow Text&lt;/p&gt;</code></pre>
+      </div>
+
+      <div id="fontstack" class="section scrollspy">
+        <h3>Changing the font stack</h3>
+        <p>
+          Body type uses a system stack. Roboto is a name on that list, not a
+          file the package serves. Override <code>$font-stack</code> in Sass, or
+          set <code>font-family</code> in your own CSS:
+        </p>
+<pre><code>html,
+button, input, optgroup, select, textarea {
+  font-family: GillSans, Calibri, Trebuchet, sans-serif;
+}</code></pre>
+        <p>
+          The default stack is
+          <code>-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif</code>.
+          Form controls inherit the same stack. Root <code>font-size</code> is 14px
+          on small screens, 14.5px from the medium breakpoint, and 15px from the
+          large breakpoint, so header rems grow slightly on wider viewports.
+        </p>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#typescale">Type scale</a></li>
+          <li><a href="#headers">Headers</a></li>
+          <li><a href="#blockquote">Blockquotes</a></li>
+          <li><a href="#flow">Flow Text</a></li>
+          <li><a href="#fontstack">Font stack</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

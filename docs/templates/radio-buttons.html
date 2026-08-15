@@ -1,0 +1,117 @@
+{% extends "docs.html" %}
+
+{% block title %}Radio Buttons - RoutePlateCSS{% endblock %}
+{% block page_title %}Radio Buttons{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Radio Buttons</h1>
+      <h4 class="light primary-text">Pick exactly one option from a group.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="radio" class="section scrollspy">
+        <p class="flow-text">
+          Radio buttons let the user pick one item from a group. They are CSS only: put
+          the radio and a following <code>span</code> inside a <code>label</code>. The
+          <code>span</code> is required — the styles target <code>input + span</code>.
+          There is no JavaScript component and nothing to AutoInit.
+        </p>
+        <p>
+          Use the same <code>name</code> on every radio in a group. Add
+          <code>disabled</code> to disable one. <code>with-gap</code> on the input draws
+          a ring with a smaller filled center.
+        </p>
+        <form action="#">
+          <p>
+            <label>
+              <input name="group1" type="radio" checked>
+              <span>Red</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="group1" type="radio">
+              <span>Yellow</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input class="with-gap" name="group1" type="radio">
+              <span>Green</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="group1" type="radio" disabled>
+              <span>Brown</span>
+            </label>
+          </p>
+        </form>
+<pre><code>&lt;form action="#"&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input name="group1" type="radio" checked&gt;
+      &lt;span&gt;Red&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input name="group1" type="radio"&gt;
+      &lt;span&gt;Yellow&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input class="with-gap" name="group1" type="radio"&gt;
+      &lt;span&gt;Green&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input name="group1" type="radio" disabled&gt;
+      &lt;span&gt;Brown&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+&lt;/form&gt;</code></pre>
+      </div>
+
+      <div id="gap" class="section scrollspy">
+        <h3>With Gap</h3>
+        <p>
+          Add <code>class="with-gap"</code> to the input. The inner disc scales down so
+          a gap shows between the ring and the fill.
+        </p>
+        <p>
+          <label>
+            <input class="with-gap" name="group3" type="radio" checked>
+            <span>Red</span>
+          </label>
+        </p>
+<pre><code>&lt;p&gt;
+  &lt;label&gt;
+    &lt;input class="with-gap" name="group3" type="radio" checked&gt;
+    &lt;span&gt;Red&lt;/span&gt;
+  &lt;/label&gt;
+&lt;/p&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#radio">Radio Buttons</a></li>
+          <li><a href="#gap">With Gap</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

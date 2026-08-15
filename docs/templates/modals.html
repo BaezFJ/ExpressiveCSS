@@ -1,0 +1,195 @@
+{% extends "docs.html" %}
+
+{% block title %}Modals - RoutePlateCSS{% endblock %}
+{% block page_title %}Modals{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Modals</h1>
+      <h4 class="light primary-text">Dialog boxes and confirmation sheets, styled for RoutePlate.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Use a modal for a dialog box, a confirmation, or other content that should sit above the page.
+          RoutePlate styles a native <code>&lt;dialog class="modal"&gt;</code>. Open it with
+          <code>showModal()</code> and close it with <code>close()</code> — the Dialog API, not a
+          JavaScript plugin.
+        </p>
+        <p>
+          <button type="button" class="btn filled waves-effect mr-3 mb-3" onclick="document.getElementById('modal-basic').showModal()">Show</button>
+          <button type="button" class="btn tonal waves-effect mb-3" onclick="document.getElementById('modal-long').showModal()">Show with long content</button>
+        </p>
+
+        <dialog id="modal-basic" class="modal">
+          <div class="modal-header">
+            <h4>Modal Header</h4>
+          </div>
+          <div class="modal-content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </div>
+          <form method="dialog" class="modal-footer">
+            <button type="submit" class="btn text">Disagree</button>
+            <button type="submit" class="btn filled">Agree</button>
+          </form>
+        </dialog>
+
+        <dialog id="modal-long" class="modal">
+          <div class="modal-header">
+            <h4>Modal Header</h4>
+          </div>
+          <div class="modal-content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </div>
+          <form method="dialog" class="modal-footer">
+            <button type="submit" class="btn text">Disagree</button>
+            <button type="submit" class="btn filled">Agree</button>
+          </form>
+        </dialog>
+<pre><code>&lt;button type="button" class="btn filled" onclick="document.getElementById('modal1').showModal()"&gt;
+  Show
+&lt;/button&gt;
+
+&lt;dialog id="modal1" class="modal"&gt;
+  &lt;div class="modal-header"&gt;
+    &lt;h4&gt;Modal Header&lt;/h4&gt;
+  &lt;/div&gt;
+  &lt;div class="modal-content"&gt;
+    &lt;p&gt;A bunch of text&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;form method="dialog" class="modal-footer"&gt;
+    &lt;button type="submit" class="btn text"&gt;Disagree&lt;/button&gt;
+    &lt;button type="submit" class="btn filled"&gt;Agree&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+        <p>
+          A <code>&lt;form method="dialog"&gt;</code> in the footer closes the dialog when a submit
+          button is pressed. <code>modal-close</code> only sets a pointer cursor — it does not close
+          anything by itself.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          No plugin init is required. The stylesheet is written for a native
+          <code>&lt;dialog&gt;</code> with the <code>open</code> attribute and a
+          <code>::backdrop</code>.
+        </p>
+        <p>
+          <code>RoutePlate.Modal</code> is still exported, and <code>AutoInit()</code> still matches
+          <code>.modal</code>, but that class is a rewrite in progress: <code>open()</code> and
+          <code>close()</code> are empty. Use the Dialog API on the element instead.
+        </p>
+<pre><code>const modal = document.querySelector('#modal1');
+modal.showModal();
+modal.close();</code></pre>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <p>
+          Call these on the <code>&lt;dialog&gt;</code> element. See the
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement" target="_blank" rel="noopener">HTMLDialogElement</a>
+          documentation for the full API.
+        </p>
+
+        <h5 class="light">.showModal();</h5>
+        <p>Open the dialog as a modal, with a backdrop.</p>
+<pre><code>modal.showModal();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Close the dialog.</p>
+<pre><code>modal.close();</code></pre>
+      </div>
+
+      <div id="customization" class="section scrollspy">
+        <h3>Customization</h3>
+        <p>The dialog reads these custom properties. Override them on <code>.modal</code> if you need different padding or a different surface.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--modal-border-radius</code></td>
+              <td>Corner radius (default 28px).</td>
+            </tr>
+            <tr>
+              <td><code>--modal-padding</code></td>
+              <td>Header and footer padding (default 24px).</td>
+            </tr>
+            <tr>
+              <td><code>--modal-padding-bottom</code></td>
+              <td>Extra space under the header title (default 16px).</td>
+            </tr>
+            <tr>
+              <td><code>--modal-background-color</code></td>
+              <td>Surface tint used for the dialog, header, and footer.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="bottom-sheet" class="section scrollspy">
+        <h3>Bottom Sheet Modals</h3>
+        <p>
+          Add <code>bottom-sheet</code> for a shorter dialog with square bottom corners.
+          It is still a native <code>&lt;dialog&gt;</code> — open it the same way.
+        </p>
+        <p>
+          <button type="button" class="btn tonal waves-effect" onclick="document.getElementById('modal-bottom').showModal()">Show Bottom Sheet</button>
+        </p>
+        <dialog id="modal-bottom" class="modal bottom-sheet">
+          <div class="modal-header">
+            <h4>Modal Header</h4>
+          </div>
+          <div class="modal-content">
+            <p>Bottom sheet modals are useful for a short list of actions. They use the same header, content, and footer structure as a regular modal.</p>
+          </div>
+          <form method="dialog" class="modal-footer">
+            <button type="submit" class="btn text">Close</button>
+          </form>
+        </dialog>
+<pre><code>&lt;button type="button" class="btn tonal" onclick="document.getElementById('modal2').showModal()"&gt;
+  Show Bottom Sheet
+&lt;/button&gt;
+
+&lt;dialog id="modal2" class="modal bottom-sheet"&gt;
+  &lt;div class="modal-header"&gt;
+    &lt;h4&gt;Modal Header&lt;/h4&gt;
+  &lt;/div&gt;
+  &lt;div class="modal-content"&gt;
+    &lt;p&gt;A bunch of text&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#customization">Customization</a></li>
+          <li><a href="#bottom-sheet">Bottom Sheet</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

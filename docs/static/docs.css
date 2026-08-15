@@ -106,3 +106,48 @@ body.containers-off .container {
 .valign-demo {
   height: 16rem;
 }
+
+/* Color page: stacked palette swatches. */
+.color-swatch {
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+}
+
+.color-swatch:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.color-swatch:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+/* Shadow page: equal tiles so z-depth levels can be compared. */
+.shadow-demo {
+  width: 100px;
+  height: 100px;
+  margin: 1.25rem auto;
+  line-height: 100px;
+  text-align: center;
+}
+
+/* Waves page: a tall enough target for the programmatic ripple. */
+.wave-demo {
+  height: 100px;
+}
+
+/* FAB page: inline demos must not all pin to the viewport corner. */
+.fab-demo {
+  position: relative;
+  height: 70px;
+}
+
+.fab-demo .fixed-action-btn {
+  position: absolute;
+  right: 24px;
+  bottom: 0;
+}
+
+/* Tabs page: swipeable panels become a carousel (default 400px). */
+.tabs-swipe-demo {
+  --carousel-height: 8rem;
+}

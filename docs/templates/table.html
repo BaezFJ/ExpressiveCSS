@@ -1,0 +1,243 @@
+{% extends "docs.html" %}
+
+{% block title %}Table - RoutePlateCSS{% endblock %}
+{% block page_title %}Table{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Table</h1>
+      <h4 class="light primary-text">Organize data with a few utility classes on a standard HTML table.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Tables are a nice way to organize a lot of data. We provide a few utility classes to help you style your table as easily as possible.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+<pre><code>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Item Name&lt;/th&gt;
+      &lt;th&gt;Item Price&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Alvin&lt;/td&gt;
+      &lt;td&gt;Eclair&lt;/td&gt;
+      &lt;td&gt;$0.87&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Alan&lt;/td&gt;
+      &lt;td&gt;Jellybean&lt;/td&gt;
+      &lt;td&gt;$3.76&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Jonathan&lt;/td&gt;
+      &lt;td&gt;Lollipop&lt;/td&gt;
+      &lt;td&gt;$7.00&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+      </div>
+
+      <div id="striped" class="section scrollspy">
+        <h3>Striped Table</h3>
+        <p>Add <code>class="striped"</code> to the table tag for a striped table.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="highlight" class="section scrollspy">
+        <h3>Highlight Table</h3>
+        <p>Add <code>class="highlight"</code> to the table tag for a highlight table.</p>
+        <table class="highlight">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="centered" class="section scrollspy">
+        <h3>Centered Table</h3>
+        <p>Add <code>class="centered"</code> to the table tag to center align all the text in the table.</p>
+        <table class="centered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="responsive" class="section scrollspy">
+        <h3>Responsive Table</h3>
+        <p>
+          Add <code>class="responsive-table"</code> to the table tag to make the table horizontally scrollable on smaller screen widths.
+        </p>
+        <table class="responsive-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#striped">Striped</a></li>
+          <li><a href="#highlight">Highlight</a></li>
+          <li><a href="#centered">Centered</a></li>
+          <li><a href="#responsive">Responsive</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

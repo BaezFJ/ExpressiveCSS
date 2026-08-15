@@ -1,0 +1,340 @@
+{% extends "docs.html" %}
+
+{% block title %}Sidenav - RoutePlateCSS{% endblock %}
+{% block page_title %}Sidenav{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Sidenav</h1>
+      <h4 class="light primary-text">A slide-out menu, or a fixed sidebar on large screens.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="structure" class="section scrollspy">
+        <p class="flow-text">
+          This is a slide-out menu. You can nest a <a href="{{ url_for('collapsible') }}">Collapsible</a> for
+          dropdown sections. On small screens the documentation sidebar uses this same component.
+        </p>
+        <p>
+          The sidenav HTML must <strong>not</strong> sit inside the navbar HTML.
+          Put a <code>sidenav-trigger</code> anywhere and set <code>data-target</code> to the sidenav’s
+          <code>id</code>. <code>AutoInit()</code> starts every <code>.sidenav</code> except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <p>
+          <a href="#!" data-target="slide-out" class="sidenav-trigger btn filled waves-effect">Toggle Sidenav</a>
+        </p>
+        <ul id="slide-out" class="sidenav no-autoinit">
+          <li>
+            <div class="user-view">
+              <div class="background">
+                <img src="https://picsum.photos/id/1015/600/400" alt="">
+              </div>
+              <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
+              <a href="#name"><span class="name">John Doe</span></a>
+              <a href="#email"><span class="email">jdoe@example.com</span></a>
+            </div>
+          </li>
+          <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+          <li><a href="#!">Second Link</a></li>
+          <li><div class="divider"></div></li>
+          <li><a class="subheader">Subheader</a></li>
+          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+          <li><a class="sidenav-close" href="#!">Close</a></li>
+        </ul>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;
+    &lt;div class="user-view"&gt;
+      &lt;div class="background"&gt;
+        &lt;img src="images/office.jpg" alt=""&gt;
+      &lt;/div&gt;
+      &lt;a href="#user"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
+      &lt;a href="#name"&gt;&lt;span class="name"&gt;John Doe&lt;/span&gt;&lt;/a&gt;
+      &lt;a href="#email"&gt;&lt;span class="email"&gt;jdoe@example.com&lt;/span&gt;&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;cloud&lt;/i&gt;First Link With Icon&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Second Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;div class="divider"&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class="subheader"&gt;Subheader&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
+  &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Sidenav</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.sidenav</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.sidenav');
+  const instances = RoutePlate.Sidenav.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>If the sidenav contains a collapsible, AutoInit starts that too (selector <code>.collapsible</code>). To init it yourself:</p>
+<pre><code>const collapsibleElem = document.querySelector('.sidenav .collapsible');
+const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
+  // specify options here
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>edge</code></td>
+              <td>String</td>
+              <td><code>'left'</code></td>
+              <td>Side of the screen. <code>'left'</code> or <code>'right'</code>. The constructor adds <code>right-aligned</code> when the edge is right.</td>
+            </tr>
+            <tr>
+              <td><code>draggable</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Allow swipe gestures to open and close. Drag is disabled while the sidenav is fixed on large screens.</td>
+            </tr>
+            <tr>
+              <td><code>dragTargetWidth</code></td>
+              <td>String</td>
+              <td><code>'10px'</code></td>
+              <td>Width of the screen-edge strip where a drag can start.</td>
+            </tr>
+            <tr>
+              <td><code>inDuration</code></td>
+              <td>Number</td>
+              <td><code>250</code></td>
+              <td>Open transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>outDuration</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>Close transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>preventScrolling</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Prevent the page from scrolling while an overlay sidenav is open.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav starts opening.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav finishes opening.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav starts closing.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav finishes closing.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Sidenav.getInstance(elem);</code></pre>
+
+        <h5 class="light">.open();</h5>
+        <p>Opens the sidenav.</p>
+<pre><code>instance.open();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Closes the sidenav.</p>
+<pre><code>instance.close();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its overlay, drag target, and event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Whether the sidenav is open.</td>
+            </tr>
+            <tr>
+              <td><code>isFixed</code></td>
+              <td>Boolean</td>
+              <td>Whether the element has <code>sidenav-fixed</code>.</td>
+            </tr>
+            <tr>
+              <td><code>isDragged</code></td>
+              <td>Boolean</td>
+              <td>Whether the sidenav is being dragged.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="close-trigger" class="section scrollspy">
+        <h3>Close Trigger</h3>
+        <p>
+          Add <code>sidenav-close</code> to an element inside the sidenav. A click on that element
+          closes an overlay sidenav. That is useful in a single-page app where the page does not
+          reload. It does nothing while the sidenav is fixed on large screens.
+        </p>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;&lt;a class="sidenav-close" href="#!"&gt;Clicking this will close Sidenav&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
+  &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+
+      <div id="variations" class="section scrollspy">
+        <h3>Variations</h3>
+
+        <h5 class="light">Right edge</h5>
+        <p>
+          Pass <code>edge: 'right'</code>. Mark the element <code>no-autoinit</code> if you initialize it
+          yourself, otherwise AutoInit would start it on the left.
+        </p>
+        <p>
+          <a href="#!" data-target="slide-out-right" class="sidenav-trigger btn tonal waves-effect">Toggle Right Sidenav</a>
+        </p>
+        <ul id="slide-out-right" class="sidenav no-autoinit">
+          <li><a href="#!">First Sidebar Link</a></li>
+          <li><a href="#!">Second Sidebar Link</a></li>
+          <li><a class="sidenav-close" href="#!">Close</a></li>
+        </ul>
+<pre><code>RoutePlate.Sidenav.init(document.querySelector('#slide-out-right'), {
+  edge: 'right'
+});</code></pre>
+
+        <h5 class="light">Dropdown HTML Structure</h5>
+        <p>Add a collapsible menu inside the sidenav. The docs sidebar uses this for Styles and Components.</p>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="no-padding"&gt;
+    &lt;ul class="collapsible"&gt;
+      &lt;li&gt;
+        &lt;a class="collapsible-header"&gt;Dropdown&lt;i class="material-icons"&gt;arrow_drop_down&lt;/i&gt;&lt;/a&gt;
+        &lt;div class="collapsible-body"&gt;
+          &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#!"&gt;First&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#!"&gt;Second&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+        <h5 class="light">Trigger on large screens</h5>
+        <p>
+          A <code>sidenav-trigger</code> inside <code>.navbar</code> is hidden at the large breakpoint.
+          Add <code>show-on-large</code> if you want that trigger on every screen size.
+        </p>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger show-on-large"&gt;
+  &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+
+        <h5 class="light">Fixed HTML Structure</h5>
+        <p>
+          Add <code>sidenav-fixed</code> so the sidenav stays open on large screens (wider than 992px)
+          and slides away on smaller ones. The documentation sidebar on the left is this pattern.
+        </p>
+<pre><code>&lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
+  &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+        <p>
+          Offset the rest of the page by the sidenav width. The width token is
+          <code>--sidenav-width</code> (300px). Put the padding on <code>header</code>,
+          <code>main</code>, and <code>footer</code>.
+        </p>
+<pre><code>header, main, footer {
+  padding-left: 300px;
+}
+
+@media only screen and (max-width: 992px) {
+  header, main, footer {
+    padding-left: 0;
+  }
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#structure">Structure</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#close-trigger">Close Trigger</a></li>
+          <li><a href="#variations">Variations</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

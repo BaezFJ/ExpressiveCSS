@@ -1,0 +1,65 @@
+{% extends "docs.html" %}
+
+{% block title %}Breadcrumbs - RoutePlateCSS{% endblock %}
+{% block page_title %}Breadcrumbs{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Breadcrumbs</h1>
+      <h4 class="light primary-text">Show the current location when the page sits several layers deep.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+      <div id="basic" class="section scrollspy">
+        <p class="flow-text">
+          Breadcrumbs are a good way to display your current location. This is usually used when you have multiple layers of content.
+        </p>
+        <h3>Basic</h3>
+        <nav class="breadcrumb-wrapper">
+          <a href="#!" class="breadcrumb">First</a>
+          <a href="#!" class="breadcrumb">Second</a>
+          <a href="#!" class="breadcrumb">Third</a>
+        </nav>
+<pre><code>&lt;nav class="breadcrumb-wrapper"&gt;
+  &lt;a href="#!" class="breadcrumb"&gt;First&lt;/a&gt;
+  &lt;a href="#!" class="breadcrumb"&gt;Second&lt;/a&gt;
+  &lt;a href="#!" class="breadcrumb"&gt;Third&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="navbar-style" class="section scrollspy">
+        <h3>Navbar style</h3>
+        <nav class="navbar">
+          <div class="nav-wrapper primary breadcrumb-wrapper">
+            <a href="#!" class="breadcrumb">First</a>
+            <a href="#!" class="breadcrumb">Second</a>
+            <a href="#!" class="breadcrumb">Third</a>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper breadcrumb-wrapper"&gt;
+    &lt;a href="#!" class="breadcrumb"&gt;First&lt;/a&gt;
+    &lt;a href="#!" class="breadcrumb"&gt;Second&lt;/a&gt;
+    &lt;a href="#!" class="breadcrumb"&gt;Third&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#basic">Basic</a></li>
+          <li><a href="#navbar-style">Navbar style</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

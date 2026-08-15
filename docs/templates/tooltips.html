@@ -1,0 +1,250 @@
+{% extends "docs.html" %}
+
+{% block title %}Tooltips - RoutePlateCSS{% endblock %}
+{% block page_title %}Tooltips{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Tooltips</h1>
+      <h4 class="light primary-text">Small textual hints for icons and other graphical controls.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Tooltips are short hints for mainly graphical elements. When an icon is the action,
+          a tooltip can name the function.
+        </p>
+        <p>
+          Add <code>tooltipped</code> to the element. <code>data-tooltip</code> is the text;
+          <code>data-position</code> is <code>top</code>, <code>right</code>, <code>bottom</code>,
+          or <code>left</code>. <code>AutoInit()</code> starts every <code>.tooltipped</code>
+          except those marked <code>no-autoinit</code>.
+        </p>
+        <p class="py-3">
+          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">Bottom</a>
+          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
+          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
+          <a class="btn filled waves-effect tooltipped mb-3" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
+        </p>
+        <div id="tooltip-content" style="display: none;">
+          This is a tooltip with a <a href="https://github.com">link</a> and a
+          <i class="material-icons">insert_chart</i>
+        </div>
+<pre><code>&lt;!-- data-position can be bottom, top, left, or right --&gt;
+&lt;!-- data-tooltip is the tooltip text --&gt;
+&lt;a class="btn filled tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!"&gt;Hover me!&lt;/a&gt;</code></pre>
+        <p>
+          For HTML, point <code>data-tooltip-id</code> at an element. That element is moved into
+          the tooltip. Leave <code>data-tooltip</code> off so the HTML is kept. There is no
+          <code>data-html</code> attribute and no <code>unsafeHTML</code> option.
+        </p>
+        <p>
+          The tooltip does not receive pointer events, so treat HTML as display content
+          (icons, emphasis), not as something the user can click.
+        </p>
+<pre><code>&lt;a class="btn filled tooltipped" href="#!"
+   data-position="bottom" data-tooltip-id="tooltip-content"&gt;
+  Bottom
+&lt;/a&gt;
+&lt;div id="tooltip-content" style="display: none;"&gt;
+  This is a tooltip with a
+  &lt;a href="https://github.com"&gt;link&lt;/a&gt; and a
+  &lt;i class="material-icons"&gt;insert_chart&lt;/i&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Tooltip</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.tooltipped</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.tooltipped');
+  const instances = RoutePlate.Tooltip.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  Tooltip: { enterDelay: 200 }
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <p>
+          Constructor and <code>init</code> options. <code>data-tooltip</code>,
+          <code>data-position</code>, and <code>data-tooltip-id</code> are read from the
+          element and override these defaults. Attributes are read again each time the
+          tooltip opens, so changing them later takes effect on the next show.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>exitDelay</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>Delay before the tooltip disappears, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>enterDelay</code></td>
+              <td>Number</td>
+              <td><code>0</code></td>
+              <td>Delay before the tooltip appears, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>tooltipId</code></td>
+              <td>String</td>
+              <td>—</td>
+              <td>Id of an element used as the tooltip body. Set by <code>data-tooltip-id</code>.</td>
+            </tr>
+            <tr>
+              <td><code>text</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Plain-text content. Set by <code>data-tooltip</code>. Ignored when <code>tooltipId</code> is set.</td>
+            </tr>
+            <tr>
+              <td><code>margin</code></td>
+              <td>Number</td>
+              <td><code>5</code></td>
+              <td>Distance from the activator, in pixels, not counting <code>transitionMovement</code>.</td>
+            </tr>
+            <tr>
+              <td><code>inDuration</code></td>
+              <td>Number</td>
+              <td><code>250</code></td>
+              <td>Enter transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>opacity</code></td>
+              <td>Number</td>
+              <td><code>1</code></td>
+              <td>Opacity of the tooltip when shown.</td>
+            </tr>
+            <tr>
+              <td><code>outDuration</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>Exit transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>position</code></td>
+              <td>String</td>
+              <td><code>'bottom'</code></td>
+              <td>Direction: <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Set by <code>data-position</code>.</td>
+            </tr>
+            <tr>
+              <td><code>transitionMovement</code></td>
+              <td>Number</td>
+              <td><code>10</code></td>
+              <td>How far the tooltip moves during its transition, in pixels.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Tooltip.getInstance(elem);</code></pre>
+
+        <p class="py-3">
+          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me!</a>
+          <a class="btn tonal waves-effect mr-3 mb-3" href="#!" id="tooltip-open">Open</a>
+          <a class="btn tonal waves-effect mb-3" href="#!" id="tooltip-close">Close</a>
+        </p>
+
+        <h5 class="light">.open();</h5>
+        <p>Show the tooltip.</p>
+<pre><code>instance.open();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Hide the tooltip.</p>
+<pre><code>instance.close();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Whether the tooltip is open.</td>
+            </tr>
+            <tr>
+              <td><code>isHovered</code></td>
+              <td>Boolean</td>
+              <td>Whether the activator is hovered.</td>
+            </tr>
+            <tr>
+              <td><code>isFocused</code></td>
+              <td>Boolean</td>
+              <td>Whether the activator is focused via the keyboard.</td>
+            </tr>
+            <tr>
+              <td><code>tooltipEl</code></td>
+              <td>Element</td>
+              <td>The generated tooltip element.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

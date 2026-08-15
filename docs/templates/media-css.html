@@ -1,0 +1,107 @@
+{% extends "docs.html" %}
+
+{% block title %}Media Styles - RoutePlateCSS{% endblock %}
+{% block page_title %}Media Styles{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Media Styles</h1>
+      <h4 class="light primary-text">Responsive images and videos ready to be seen on many devices.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="images" class="section scrollspy">
+        <h3>Images</h3>
+        <p class="flow-text">Images can be styled in different ways using RoutePlate.</p>
+
+        <h5>Responsive Images</h5>
+        <p>
+          To make images resize responsively to page width, you can add the class <code>responsive-img</code> to your image tag. It will now have a
+          <code>max-width: 100%</code> and <code>height: auto</code>.
+        </p>
+        <img class="responsive-img" src="https://picsum.photos/id/1015/1200/480" alt="A wide landscape that shrinks with the container">
+<pre><code>&lt;img class="responsive-img" src="cool_pic.jpg"&gt;</code></pre>
+
+        <h5>Circular images</h5>
+        <div class="row">
+          <div class="s12">
+            <div class="card-panel">
+              <div class="row valign-wrapper">
+                <div class="s3">
+                  <img src="https://picsum.photos/id/64/200/200" alt="" class="circle responsive-img">
+                </div>
+                <div class="s9">
+                  <span>This is a square image. Add the <code>circle</code> class to it to make it appear circular.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>
+          To make images appear circular, simply add
+          <code>class="circle"</code> to them.
+        </p>
+<pre><code>&lt;div class="s12 m8 offset-m2 l6 offset-l3"&gt;
+  &lt;div class="card-panel"&gt;
+    &lt;div class="row valign-wrapper"&gt;
+      &lt;div class="s2"&gt;
+        &lt;img src="portrait.jpg" alt="" class="circle responsive-img"&gt;
+      &lt;/div&gt;
+      &lt;div class="s10"&gt;
+        &lt;span&gt;
+          This is a square image. Add the "circle" class to it to make it appear circular.
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="videos" class="section scrollspy">
+        <h3>Videos</h3>
+        <p class="flow-text">We provide a container for embedded videos that resizes them responsively.</p>
+
+        <h5>Responsive Embeds</h5>
+        <p>
+          To make your embeds responsive, wrap them with a containing div which has the class
+          <code>video-container</code>.
+        </p>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" title="Embedded video" allowfullscreen></iframe>
+        </div>
+<pre><code>&lt;div class="video-container"&gt;
+  &lt;iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5>Responsive Videos</h5>
+        <p>
+          To make your HTML5 videos responsive just add the class
+          <code>responsive-video</code> to the video tag.
+        </p>
+        <video class="responsive-video" controls>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+<pre><code>&lt;video class="responsive-video" controls&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+&lt;/video&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#images">Images</a></li>
+          <li><a href="#videos">Videos</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

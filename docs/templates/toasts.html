@@ -1,0 +1,257 @@
+{% extends "docs.html" %}
+
+{% block title %}Toasts - RoutePlateCSS{% endblock %}
+{% block page_title %}Toasts{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Toasts</h1>
+      <h4 class="light primary-text">Short, unobtrusive alerts that appear and dismiss themselves.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Toasts are small alerts that appear, then dismiss themselves. They resize and reposition
+          by breakpoint — try the button on a narrow and a wide viewport.
+        </p>
+        <p>
+          Toast is not in <code>AutoInit()</code>. Construct one when you need it:
+        </p>
+        <p>
+          <button type="button" class="btn filled waves-effect" id="toast-basic">Show Toast</button>
+        </p>
+<pre><code>new RoutePlate.Toast({ text: 'I am a toast!' });</code></pre>
+        <p>One way to hook that up is a click handler on a button:</p>
+<pre><code>&lt;button type="button" class="btn tonal" id="toast-basic"&gt;Show Toast&lt;/button&gt;</code></pre>
+<pre><code>document.getElementById('toast-basic').addEventListener('click', function() {
+  new RoutePlate.Toast({ text: 'I am a toast!' });
+});</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Toast</code>. Toast is not in
+          <code>AutoInit()</code> and there is no <code>toast()</code> helper — construct one
+          when you need it.
+        </p>
+<pre><code>new RoutePlate.Toast({
+  text: 'I am a toast!'
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <p>You can customize each toast with these options.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>text</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Plain-text content of the toast. If set, it replaces any HTML from <code>toastId</code>.</td>
+            </tr>
+            <tr>
+              <td><code>toastId</code></td>
+              <td>String</td>
+              <td>—</td>
+              <td>Id of a <code>&lt;template&gt;</code> (or another element) used as the toast body.</td>
+            </tr>
+            <tr>
+              <td><code>displayLength</code></td>
+              <td>Number</td>
+              <td><code>4000</code></td>
+              <td>How long the toast stays before it dismisses, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>inDuration</code></td>
+              <td>Number</td>
+              <td><code>300</code></td>
+              <td>Enter transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>outDuration</code></td>
+              <td>Number</td>
+              <td><code>375</code></td>
+              <td>Exit transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>classes</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Space-separated classes added to the toast element. <code>rounded</code> is included.</td>
+            </tr>
+            <tr>
+              <td><code>completeCallback</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the toast is dismissed.</td>
+            </tr>
+            <tr>
+              <td><code>activationPercent</code></td>
+              <td>Number</td>
+              <td><code>0.8</code></td>
+              <td>Fraction of the toast’s width a drag must travel to dismiss it.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          Instance methods are called on the toast. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Toast.getInstance(elem);</code></pre>
+
+        <h5 class="light">.dismiss();</h5>
+        <p>Dismiss this toast with its exit animation. Runs <code>completeCallback</code> when the animation finishes.</p>
+<pre><code>instance.dismiss();</code></pre>
+
+        <h5 class="light">Toast.dismissAll();</h5>
+        <p>Dismiss every toast that is currently showing.</p>
+<pre><code>RoutePlate.Toast.dismissAll();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The toast element.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>panning</code></td>
+              <td>Boolean</td>
+              <td>Whether the toast is being dragged.</td>
+            </tr>
+            <tr>
+              <td><code>timeRemaining</code></td>
+              <td>Number</td>
+              <td>Milliseconds left before the toast dismisses.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="custom-html" class="section scrollspy">
+        <h3>Custom HTML</h3>
+        <p>
+          Pass <code>toastId</code> pointing at a <code>&lt;template&gt;</code>. The first child of the
+          template is cloned as the toast. Leave <code>text</code> empty so the HTML is kept.
+        </p>
+        <p>
+          <button type="button" class="btn tonal waves-effect mr-3 mb-3" id="toast-html-1">Show Toast 1</button>
+          <button type="button" class="btn tonal waves-effect mb-3" id="toast-html-2">Show Toast 2</button>
+        </p>
+        <template id="my-toast-1">
+          <div>This is toast nº1 with a <a href="https://github.com">link</a></div>
+        </template>
+        <template id="my-toast-2">
+          <div>This is toast nº2 with a <i class="material-icons">insert_chart</i></div>
+        </template>
+<pre><code>&lt;button type="button" class="btn tonal" id="toast-html-1"&gt;Show Toast 1&lt;/button&gt;
+&lt;template id="my-toast-1"&gt;
+  &lt;div&gt;
+    This is toast nº1 with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+<pre><code>new RoutePlate.Toast({ toastId: 'my-toast-1' });</code></pre>
+      </div>
+
+      <div id="callback" class="section scrollspy">
+        <h3>Callback</h3>
+        <p>Run a function when the toast is dismissed.</p>
+        <p>
+          <button type="button" class="btn filled waves-effect" id="toast-callback">Show Toast</button>
+        </p>
+<pre><code>new RoutePlate.Toast({
+  text: 'I will call back when dismissed',
+  completeCallback: function() {
+    new RoutePlate.Toast({ text: 'Your toast was dismissed' });
+  }
+});</code></pre>
+      </div>
+
+      <div id="styling" class="section scrollspy">
+        <h3>Styling Toasts</h3>
+        <p>
+          Pass classes in the <code>classes</code> option. <code>rounded</code> is defined on
+          <code>.toast</code>; you can add your own classes too.
+        </p>
+        <p>
+          <button type="button" class="btn filled waves-effect" id="toast-rounded">Show round Toast</button>
+        </p>
+<pre><code>new RoutePlate.Toast({
+  text: 'I am a toast!',
+  classes: 'rounded'
+});</code></pre>
+      </div>
+
+      <div id="dismissal" class="section scrollspy">
+        <h3>Dismiss a Toast Programmatically</h3>
+        <p>
+          To remove a specific toast, get the instance from the toast element and call
+          <code>dismiss()</code>.
+        </p>
+        <p>
+          <button type="button" class="btn filled waves-effect mr-3 mb-3" id="toast-dismiss-show">Show Toast</button>
+          <button type="button" class="btn tonal waves-effect mr-3 mb-3" id="toast-dismiss-one">Dismiss a toast</button>
+          <button type="button" class="btn tonal waves-effect mb-3" id="toast-dismiss-all">Dismiss all</button>
+        </p>
+<pre><code>const toastElement = document.querySelector('.toast');
+const toastInstance = RoutePlate.Toast.getInstance(toastElement);
+toastInstance.dismiss();</code></pre>
+        <h5 class="light">Dismiss all Toasts</h5>
+<pre><code>RoutePlate.Toast.dismissAll();</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#custom-html">Custom HTML</a></li>
+          <li><a href="#callback">Callback</a></li>
+          <li><a href="#styling">Styling Toasts</a></li>
+          <li><a href="#dismissal">Dismissing Toasts</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

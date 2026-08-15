@@ -1,0 +1,501 @@
+{% extends "docs.html" %}
+
+{% block title %}Navbar - RoutePlateCSS{% endblock %}
+{% block page_title %}Navbar{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Navbar</h1>
+      <h4 class="light primary-text">A logo or brand link, plus navigation aligned left or right.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="right" class="section scrollspy">
+        <p class="flow-text">
+          A navbar has two main parts: a logo or brand link, and the navigation links. Align those links left or right.
+          The bar itself is CSS-only. Dropdowns, tabs, and the mobile collapse menu are separate components that
+          <code>AutoInit()</code> starts.
+        </p>
+        <p>
+          The component class is <code>navbar</code> on a <code>&lt;nav&gt;</code>. Put links and the brand inside
+          <code>nav-wrapper</code>. The bar’s own background is <code>secondary-container</code> and the links use
+          <code>on-primary</code>, so put a filled token such as <code>primary</code> on the wrapper — the
+          <code>navbar</code> rule wins over a utility on the same element.
+        </p>
+
+        <h3>Right Aligned Links</h3>
+        <p>Add the <code>right</code> class to the <code>ul</code> that contains the links.</p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+              <li><a href="#!">Components</a></li>
+              <li><a href="#!">JavaScript</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="left" class="section scrollspy">
+        <h3>Left Aligned Links</h3>
+        <p>Add the <code>left</code> class to the <code>ul</code>, and <code>right</code> to the brand if you want the logo on the other side.</p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo right">Logo</a>
+            <ul class="left hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+              <li><a href="#!">Components</a></li>
+              <li><a href="#!">JavaScript</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo right"&gt;Logo&lt;/a&gt;
+    &lt;ul class="left hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="center" class="section scrollspy">
+        <h3>Centering the logo</h3>
+        <p>
+          The logo centers itself on medium and down screens. To keep it centered at every width, add
+          <code>center</code> to <code>brand-logo</code>. You have to keep the links from overlapping it.
+        </p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo center">Logo</a>
+            <ul class="left hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo center"&gt;Logo&lt;/a&gt;
+    &lt;ul class="left hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="active-label" class="section scrollspy">
+        <h3>Active Items</h3>
+        <p>
+          Add <code>active</code> to the link — RoutePlate styles <code>a.active</code>, not the list item.
+        </p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+              <li><a href="#!">Components</a></li>
+              <li><a class="active" href="#!">JavaScript</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="active" href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="navbar-tabs" class="section scrollspy">
+        <h3>Extended Navbar with Tabs</h3>
+        <p>
+          Add <code>nav-extended</code> so the navbar height can grow, then put extra content such as tabs in
+          <code>nav-content</code>. <code>tabs-transparent</code> keeps the tab bar clear against the navbar color.
+          <code>AutoInit()</code> starts <code>.tabs</code>.
+        </p>
+        <nav class="navbar nav-extended mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <a href="#!" data-target="navbar-tabs-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+              <li><a href="#!">Components</a></li>
+              <li><a href="#!">JavaScript</a></li>
+            </ul>
+          </div>
+          <div class="nav-content primary">
+            <ul class="tabs tabs-transparent">
+              <li class="tab"><a href="#navbar-test1">Test 1</a></li>
+              <li class="tab"><a class="active" href="#navbar-test2">Test 2</a></li>
+              <li class="tab disabled"><a href="#navbar-test3">Disabled Tab</a></li>
+              <li class="tab"><a href="#navbar-test4">Test 4</a></li>
+            </ul>
+          </div>
+        </nav>
+        <ul class="sidenav" id="navbar-tabs-mobile">
+          <li><a href="#!">Sass</a></li>
+          <li><a href="#!">Components</a></li>
+          <li><a href="#!">JavaScript</a></li>
+        </ul>
+        <div id="navbar-test1" class="s12 py-3">Test 1</div>
+        <div id="navbar-test2" class="s12 py-3">Test 2</div>
+        <div id="navbar-test3" class="s12 py-3">Test 3</div>
+        <div id="navbar-test4" class="s12 py-3">Test 4</div>
+<pre><code>&lt;nav class="navbar nav-extended"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;a href="#!" data-target="mobile-demo" class="sidenav-trigger"&gt;
+      &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+    &lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div class="nav-content primary"&gt;
+    &lt;ul class="tabs tabs-transparent"&gt;
+      &lt;li class="tab"&gt;&lt;a href="#test1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="tab"&gt;&lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="tab disabled"&gt;&lt;a href="#test3"&gt;Disabled Tab&lt;/a&gt;&lt;/li&gt;
+      &lt;li class="tab"&gt;&lt;a href="#test4"&gt;Test 4&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;
+
+&lt;ul class="sidenav" id="mobile-demo"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div id="test1"&gt;Test 1&lt;/div&gt;
+&lt;div id="test2"&gt;Test 2&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="navbar-fixed" class="section scrollspy">
+        <h3>Fixed Navbar</h3>
+        <p>
+          Wrap the navbar in <code>navbar-fixed</code> to pin it and reserve its height so content is not hidden
+          underneath. The documentation header on this site uses that pattern. A second fixed bar on this page
+          would sit on top of it, so the live example is the site header itself.
+        </p>
+<pre><code>&lt;div class="navbar-fixed"&gt;
+  &lt;nav class="navbar"&gt;
+    &lt;div class="nav-wrapper primary"&gt;
+      &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+      &lt;ul class="right hide-on-med-and-down"&gt;
+        &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="navbar-dropdown" class="section scrollspy">
+        <h3>Navbar Dropdown Menu</h3>
+        <p>
+          Put a <code>dropdown-content</code> list on the page and point a
+          <code>dropdown-trigger</code> at it with <code>data-target</code>.
+          <code>AutoInit()</code> starts every <code>.dropdown-trigger</code>.
+        </p>
+        <ul id="navbar-dropdown1" class="dropdown-content">
+          <li><a href="#!">one</a></li>
+          <li><a href="#!">two</a></li>
+          <li class="divider"></li>
+          <li><a href="#!">three</a></li>
+        </ul>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+              <li><a href="#!">Components</a></li>
+              <li>
+                <a class="dropdown-trigger" href="#!" data-target="navbar-dropdown1">
+                  Dropdown<i class="material-icons right">arrow_drop_down</i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;ul id="dropdown1" class="dropdown-content"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;one&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;two&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="divider"&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a class="dropdown-trigger" href="#!" data-target="dropdown1"&gt;
+          Dropdown&lt;i class="material-icons right"&gt;arrow_drop_down&lt;/i&gt;
+        &lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+        <p>To initialize the dropdown yourself:</p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.dropdown-trigger');
+  const instances = RoutePlate.Dropdown.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <h5 class="light">Open on hover</h5>
+        <p>
+          Dropdowns open on click by default (<code>hover: false</code>). Pass <code>{ hover: true }</code> to open on hover instead.
+        </p>
+      </div>
+
+      <div id="icons" class="section scrollspy">
+        <h3>Icon Links</h3>
+        <p>For icon-only links, put an <code>i</code> in the anchor. No extra class is required.</p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo"><i class="material-icons">cloud</i>Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!"><i class="material-icons">search</i></a></li>
+              <li><a href="#!"><i class="material-icons">view_module</i></a></li>
+              <li><a href="#!"><i class="material-icons">refresh</i></a></li>
+              <li><a href="#!"><i class="material-icons">more_vert</i></a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;
+      &lt;i class="material-icons"&gt;cloud&lt;/i&gt;Logo
+    &lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;search&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;view_module&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;refresh&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;more_vert&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+        <p>
+          For a text link with an icon, add <code>left</code> or <code>right</code> to the icon.
+        </p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!"><i class="material-icons left">search</i>Left Icon</a></li>
+              <li><a href="#!"><i class="material-icons right">view_module</i>Right Icon</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;
+        &lt;a href="#!"&gt;
+          &lt;i class="material-icons left"&gt;search&lt;/i&gt;Left Icon
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href="#!"&gt;
+          &lt;i class="material-icons right"&gt;view_module&lt;/i&gt;Right Icon
+        &lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="buttons" class="section scrollspy">
+        <h3>Buttons</h3>
+        <p>
+          Add the usual button classes to a link in the list. Prefer a variant that contrasts with the bar —
+          <code>filled</code> on a <code>primary</code> wrapper disappears. See
+          <a href="{{ url_for('buttons') }}">Buttons</a> for the variants.
+        </p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a class="btn elevated waves-effect">Button</a></li>
+              <li><a class="btn tonal waves-effect">Button</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a class="btn elevated waves-effect"&gt;Button&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a class="btn tonal waves-effect"&gt;Button&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+
+        <h5 class="light">Halfway FAB in Extended Navbar</h5>
+        <p>Add a halfway FAB to an extended navbar. <code>nav-content</code> is the positioning context.</p>
+        <nav class="navbar nav-extended mb-6">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">A link</a></li>
+              <li><a href="#!">A second link</a></li>
+              <li><a href="#!">A third link</a></li>
+            </ul>
+          </div>
+          <div class="nav-content primary">
+            <span class="nav-title">Title</span>
+            <a class="btn-floating btn-large halfway-fab waves-effect waves-light">
+              <i class="material-icons">add</i>
+            </a>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar nav-extended"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;A link&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+  &lt;div class="nav-content primary"&gt;
+    &lt;span class="nav-title"&gt;Title&lt;/span&gt;
+    &lt;a class="btn-floating btn-large halfway-fab waves-effect waves-light"&gt;
+      &lt;i class="material-icons"&gt;add&lt;/i&gt;
+    &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="search-docs" class="section scrollspy">
+        <h3>Search Bar</h3>
+        <p>You can put a search form in the navbar.</p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <form>
+              <div class="input-field">
+                <input id="navbar-search" type="search" required>
+                <label for="navbar-search"><i class="material-icons">search</i></label>
+              </div>
+            </form>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;form&gt;
+      &lt;div class="input-field"&gt;
+        &lt;input id="search" type="search" required&gt;
+        &lt;label for="search"&gt;&lt;i class="material-icons"&gt;search&lt;/i&gt;&lt;/label&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="mobile-collapse" class="section scrollspy">
+        <h3>Mobile Collapse Button</h3>
+        <p>
+          Below the large breakpoint, <code>hide-on-med-and-down</code> hides the inline links and
+          <code>sidenav-trigger</code> shows the menu icon. The trigger is hidden on large screens.
+          Pair it with a <code>sidenav</code> whose id matches <code>data-target</code>.
+        </p>
+        <nav class="navbar mb-3">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <a href="#!" data-target="navbar-mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">Sass</a></li>
+              <li><a href="#!">Components</a></li>
+              <li><a href="#!">JavaScript</a></li>
+              <li><a href="#!">Mobile</a></li>
+            </ul>
+          </div>
+        </nav>
+        <ul class="sidenav" id="navbar-mobile-demo">
+          <li><a href="#!">Sass</a></li>
+          <li><a href="#!">Components</a></li>
+          <li><a href="#!">JavaScript</a></li>
+          <li><a href="#!">Mobile</a></li>
+        </ul>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper primary"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;a href="#!" data-target="mobile-demo" class="sidenav-trigger"&gt;
+      &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+    &lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Mobile&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;
+
+&lt;ul class="sidenav" id="mobile-demo"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Mobile&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+        <h5 class="light">Initialization</h5>
+        <p>
+          After you add the trigger and the sidenav, initialize Sidenav (or let <code>AutoInit()</code> do it).
+          Change the selector if you used different classes.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.sidenav');
+  const instances = RoutePlate.Sidenav.init(elems);
+});</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#right">Right Aligned</a></li>
+          <li><a href="#left">Left Aligned</a></li>
+          <li><a href="#center">Center Logo</a></li>
+          <li><a href="#active-label">Active Items</a></li>
+          <li><a href="#navbar-tabs">Navbar with Tabs</a></li>
+          <li><a href="#navbar-fixed">Fixed Navbar</a></li>
+          <li><a href="#navbar-dropdown">Dropdown Menu</a></li>
+          <li><a href="#icons">Icon Links</a></li>
+          <li><a href="#buttons">Buttons</a></li>
+          <li><a href="#search-docs">Search Bar</a></li>
+          <li><a href="#mobile-collapse">Mobile Collapse</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

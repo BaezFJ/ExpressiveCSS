@@ -1,0 +1,174 @@
+{% extends "docs.html" %}
+
+{% block title %}Feature Discovery - RoutePlateCSS{% endblock %}
+{% block page_title %}Feature Discovery{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Feature Discovery</h1>
+      <h4 class="light primary-text">Introduce a control at the moment it becomes relevant.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Feature discovery prompts have more impact when they reach the right people at a relevant moment.
+          Shown to the wrong person at the wrong time, they feel intrusive.
+        </p>
+        <p>
+          The JavaScript component is <code>RoutePlate.TapTarget</code>.
+          Put <code>tap-target</code> on the prompt and point <code>data-target</code> at the id of the
+          element you want to highlight. <code>AutoInit()</code> starts every
+          <code>.tap-target</code> except those marked <code>no-autoinit</code>.
+          Clicking the origin toggles the prompt; you can also call <code>open()</code> and
+          <code>close()</code>.
+        </p>
+        <p>
+          <a class="btn filled waves-effect mr-3 mb-3" href="#!" id="tap-target-open">Open tap target</a>
+          <a class="btn tonal waves-effect mb-3" href="#!" id="tap-target-close">Close tap target</a>
+        </p>
+        <p class="mb-5">
+          <a id="tap-target-origin" class="btn-floating btn-large waves-effect waves-light">
+            <i class="material-icons">menu</i>
+          </a>
+        </p>
+        <div class="tap-target" id="feature-tap-target" data-target="tap-target-origin">
+          <div class="tap-target-content">
+            <h5>I am here</h5>
+            <p>Provide value and encourage return visits by introducing users to new features and functionality at contextually relevant moments.</p>
+          </div>
+        </div>
+<pre><code>&lt;!-- Element shown --&gt;
+&lt;a id="menu" class="btn-floating btn-large waves-effect waves-light"&gt;
+  &lt;i class="material-icons"&gt;menu&lt;/i&gt;
+&lt;/a&gt;
+&lt;!-- Tap Target Structure --&gt;
+&lt;div class="tap-target" data-target="menu"&gt;
+  &lt;div class="tap-target-content"&gt;
+    &lt;h5&gt;Title&lt;/h5&gt;
+    &lt;p&gt;A bunch of text&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.TapTarget</code>.
+          Call <code>init</code> yourself when you need callbacks,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.tap-target</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.tap-target');
+  const instances = RoutePlate.TapTarget.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  TapTarget: {
+    onOpen: function(origin) { /* ... */ }
+  }
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>onOpen</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the tap target opens. Receives the origin element.</td>
+            </tr>
+            <tr>
+              <td><code>onClose</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the tap target closes. Receives the origin element.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.TapTarget.getInstance(elem);</code></pre>
+
+        <h5 class="light">.open();</h5>
+        <p>Open the tap target.</p>
+<pre><code>instance.open();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Close the tap target.</p>
+<pre><code>instance.close();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with (the <code>.tap-target</code>).</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Whether the tap target is open.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

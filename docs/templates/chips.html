@@ -1,0 +1,335 @@
+{% extends "docs.html" %}
+
+{% block title %}Chips - RoutePlateCSS{% endblock %}
+{% block page_title %}Chips{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Chips</h1>
+      <h4 class="light primary-text">Small blocks for contacts, tags, and filters.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          A chip is a <code>.chip</code>. Add an <code>img</code> for a contact, a
+          <code>.close</code> icon for a dismissible tag, or <code>outlined</code> for
+          a bordered style. Static chips are CSS. The JavaScript plugin lives on a
+          <code>.chips</code> wrapper.
+        </p>
+        <div class="chips mb-5">
+          <div class="chip">
+            <img src="https://picsum.photos/id/64/100/100" alt="Contact Person"> Jane Doe
+          </div>
+          <div class="chip">
+            Tag
+            <i class="close material-icons">close</i>
+          </div>
+          <div class="chip">
+            <i class="material-icons">check</i>
+            Filter
+            <i class="close material-icons">close</i>
+          </div>
+          <div class="chip outlined">Information</div>
+          <div class="chip outlined">
+            <i class="material-icons">check</i>
+            Filter
+            <i class="close material-icons">close</i>
+          </div>
+        </div>
+<pre><code>&lt;div class="chip"&gt;
+  &lt;img src="photo.jpg" alt="Contact Person"&gt; Jane Doe
+&lt;/div&gt;
+&lt;div class="chip"&gt;
+  Tag
+  &lt;i class="close material-icons"&gt;close&lt;/i&gt;
+&lt;/div&gt;
+&lt;div class="chip"&gt;
+  &lt;i class="material-icons"&gt;check&lt;/i&gt;
+  Filter
+  &lt;i class="close material-icons"&gt;close&lt;/i&gt;
+&lt;/div&gt;
+&lt;div class="chip outlined"&gt;Information&lt;/div&gt;</code></pre>
+        <p>
+          Clicking <code>.close</code> removes the chip only when it sits inside a
+          <code>.chips</code> container. Importing the bundle runs
+          <code>Chips.Init()</code> on <code>DOMContentLoaded</code>, which wires that
+          click. A lone <code>.chip</code> does not remove itself.
+        </p>
+      </div>
+
+      <div id="contact" class="section scrollspy">
+        <h3>Contacts</h3>
+        <p>Put an image inside the chip.</p>
+        <div class="chip mb-3">
+          <img src="https://picsum.photos/id/64/100/100" alt="Contact Person">
+          Jane Doe
+        </div>
+<pre><code>&lt;div class="chip"&gt;
+  &lt;img src="photo.jpg" alt="Contact Person"&gt;
+  Jane Doe
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="tag" class="section scrollspy">
+        <h3>Tags</h3>
+        <p>Put a close icon with class <code>close</code> inside the chip.</p>
+        <div class="chips mb-3">
+          <div class="chip">
+            Tag
+            <i class="close material-icons">close</i>
+          </div>
+        </div>
+<pre><code>&lt;div class="chip"&gt;
+  Tag
+  &lt;i class="close material-icons"&gt;close&lt;/i&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="basic" class="section scrollspy">
+        <h3>Javascript Plugin</h3>
+        <p>
+          The plugin turns a <code>.chips</code> container into an editable tag field.
+          Type a value and press Enter to add a chip. Delete with the close icon, or
+          select a chip and press Backspace or Delete.
+        </p>
+        <p>
+          <code>allowUserInput</code> defaults to <code>false</code>. Without it there
+          is no text field and rendered chips have no close icon. Pass
+          <code>allowUserInput: true</code> for the interactive field.
+          <code>AutoInit()</code> starts every <code>.chips</code> except
+          <code>no-autoinit</code>, but it uses the defaults, so those wrappers stay
+          display-only until you call <code>init</code> with options.
+        </p>
+        <p>Empty field — type a tag and press Enter:</p>
+        <div id="chips-empty" class="chips no-autoinit mb-5"></div>
+        <p>Initial tags from the <code>data</code> option:</p>
+        <div id="chips-initial" class="chips no-autoinit mb-5"></div>
+        <p>Placeholders when the field is empty and after the first tag:</p>
+        <div id="chips-placeholder" class="chips no-autoinit mb-5"></div>
+        <p>Autocomplete suggestions while typing:</p>
+        <div id="chips-autocomplete" class="chips no-autoinit mb-5"></div>
+<pre><code>&lt;div class="chips"&gt;&lt;/div&gt;
+&lt;div class="chips chips-initial"&gt;&lt;/div&gt;
+&lt;div class="chips chips-placeholder"&gt;&lt;/div&gt;
+&lt;div class="chips chips-autocomplete"&gt;&lt;/div&gt;
+&lt;!-- Optional: provide your own input --&gt;
+&lt;div class="chips"&gt;
+  &lt;input class="custom-class"&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          The classes <code>chips-initial</code>, <code>chips-placeholder</code>, and
+          <code>chips-autocomplete</code> are only hooks for your selectors. They have
+          no styles of their own.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Chips</code>.
+          Call <code>init</code> with <code>allowUserInput: true</code> (and any other
+          options) for an editable field. Re-init after adding a container dynamically.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.chips');
+  const instances = RoutePlate.Chips.init(elems, {
+    allowUserInput: true,
+    placeholder: 'Enter a tag',
+    secondaryPlaceholder: '+Tag',
+    autocompleteOptions: {
+      data: [
+        { id: 12, text: 'Apple' },
+        { id: 13, text: 'Microsoft' },
+        { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+      ]
+    }
+  });
+});</code></pre>
+        <p>Chip data object. <code>id</code> is required; a chip without an id is not rendered.</p>
+<pre><code>const chip = {
+  id: '4711',
+  text: 'Title',
+  image: ''
+};</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>data</code></td>
+              <td>Array</td>
+              <td><code>[]</code></td>
+              <td>Initial chips. Each item is a chip data object.</td>
+            </tr>
+            <tr>
+              <td><code>placeholder</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Placeholder when there are no chips. Requires <code>allowUserInput</code>.</td>
+            </tr>
+            <tr>
+              <td><code>secondaryPlaceholder</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Placeholder after at least one chip exists.</td>
+            </tr>
+            <tr>
+              <td><code>closeIconClass</code></td>
+              <td>String</td>
+              <td><code>'material-icons'</code></td>
+              <td>Class on the close icon. Use a Material Symbols class if that is the font you load.</td>
+            </tr>
+            <tr>
+              <td><code>allowUserInput</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, render a text field and close icons so the user can add and remove chips.</td>
+            </tr>
+            <tr>
+              <td><code>autocompleteOptions</code></td>
+              <td>Object</td>
+              <td><code>{}</code></td>
+              <td>Options passed to Autocomplete on the input. A non-empty object enables autocomplete.</td>
+            </tr>
+            <tr>
+              <td><code>autocompleteOnly</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, Enter will not add a value that is not in the autocomplete list.</td>
+            </tr>
+            <tr>
+              <td><code>limit</code></td>
+              <td>Number</td>
+              <td><code>Infinity</code></td>
+              <td>Maximum number of chips.</td>
+            </tr>
+            <tr>
+              <td><code>onChipAdd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a chip is added. Receives the container and the chip element.</td>
+            </tr>
+            <tr>
+              <td><code>onChipSelect</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a chip is selected. Receives the container and the chip element.</td>
+            </tr>
+            <tr>
+              <td><code>onChipDelete</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a chip is deleted. Receives the container and the chip element.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Chips.getInstance(elem);</code></pre>
+
+        <h5 class="light">.addChip();</h5>
+        <p>Add a chip. Ignored if <code>id</code> is missing, already present, or the limit is reached.</p>
+<pre><code>instance.addChip({
+  id: 1337,
+  text: 'John Doe',
+  image: ''
+});</code></pre>
+
+        <h5 class="light">.deleteChip();</h5>
+        <p>Delete the chip at this index.</p>
+<pre><code>instance.deleteChip(3);</code></pre>
+
+        <h5 class="light">.selectChip();</h5>
+        <p>Focus the chip at this index.</p>
+<pre><code>instance.selectChip(2);</code></pre>
+
+        <h5 class="light">.getData();</h5>
+        <p>The current chips as an array of chip data objects.</p>
+<pre><code>instance.getData();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove rendered chips, and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The container the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>chipsData</code></td>
+              <td>Array</td>
+              <td>The current chip data.</td>
+            </tr>
+            <tr>
+              <td><code>hasAutocomplete</code></td>
+              <td>Boolean</td>
+              <td>Whether autocomplete is enabled.</td>
+            </tr>
+            <tr>
+              <td><code>autocomplete</code></td>
+              <td>Autocomplete</td>
+              <td>The Autocomplete instance, if any.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#contact">Contacts</a></li>
+          <li><a href="#tag">Tags</a></li>
+          <li><a href="#basic">Plugin</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

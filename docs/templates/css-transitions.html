@@ -1,0 +1,59 @@
+{% extends "docs.html" %}
+
+{% block title %}Transitions - RoutePlateCSS{% endblock %}
+{% block page_title %}Transitions{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Transitions</h1>
+      <h4 class="light primary-text">Animate content in and out with a few CSS classes.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+      <div id="scale" class="section scrollspy">
+        <p class="flow-text">
+          We've made some custom animation classes that will transition your content with only CSS. Each CSS transition consists of a base class that applies the necessary
+          styles and additional classes that control the state of the transition.
+        </p>
+        <h5>Scale</h5>
+        <p>
+          Use this to scale in and out elements. Make sure to add the base transition class
+          <code>scale-transition</code>. Then add the class <code>scale-out</code> to scale the element down until it is hidden.
+          To start something as hidden, add the class <code>scale-out</code> first, and then add the class
+          <code>scale-in</code> to scale the element up until it is shown.
+        </p>
+
+        <div class="valign-wrapper py-5">
+          <a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition">
+            <i class="material-icons">add</i>
+          </a>
+          <a id="scale-demo-trigger" href="#!" class="btn tonal ml-4">Toggle Scale</a>
+        </div>
+
+<pre><code>&lt;!-- Scaled in --&gt;
+&lt;a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;
+&lt;/a&gt;
+&lt;!-- Scaled out --&gt;
+&lt;a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition scale-out"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#scale">Scale</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

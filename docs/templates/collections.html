@@ -1,0 +1,161 @@
+{% extends "docs.html" %}
+
+{% block title %}Collections - RoutePlateCSS{% endblock %}
+{% block page_title %}Collections{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Collections</h1>
+      <h4 class="light primary-text">Group list objects together, with optional links, headers, and avatars.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="basic" class="section scrollspy">
+        <p class="flow-text">Collections allow you to group list objects together.</p>
+        <h3>Basic</h3>
+        <ul class="collection">
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+        </ul>
+<pre><code>&lt;ul class="collection"&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="links" class="section scrollspy">
+        <h3>Links</h3>
+        <div class="collection">
+          <a href="#!" class="collection-item">Alvin</a>
+          <a href="#!" class="collection-item active">Alvin</a>
+          <a href="#!" class="collection-item">Alvin</a>
+          <a href="#!" class="collection-item">Alvin</a>
+        </div>
+<pre><code>&lt;div class="collection"&gt;
+  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
+  &lt;a href="#!" class="collection-item active"&gt;Alvin&lt;/a&gt;
+  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
+  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="headers" class="section scrollspy">
+        <h3>Headers</h3>
+        <ul class="collection with-header">
+          <li class="collection-header"><h4>First Names</h4></li>
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+          <li class="collection-item">Alvin</li>
+        </ul>
+<pre><code>&lt;ul class="collection with-header"&gt;
+  &lt;li class="collection-header"&gt;&lt;h4&gt;First Names&lt;/h4&gt;&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="secondary" class="section scrollspy">
+        <h3>Secondary content</h3>
+        <ul class="collection with-header">
+          <li class="collection-header"><h4>First Names</h4></li>
+          <li class="collection-item">
+            Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>
+          </li>
+          <li class="collection-item">
+            Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>
+          </li>
+          <li class="collection-item">
+            Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>
+          </li>
+          <li class="collection-item">
+            Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="collection with-header"&gt;
+  &lt;li class="collection-header"&gt;&lt;h4&gt;First Names&lt;/h4&gt;&lt;/li&gt;
+  &lt;li class="collection-item"&gt;
+    Alvin
+    &lt;a href="#!" class="secondary-content"&gt;
+      &lt;i class="material-icons"&gt;send&lt;/i&gt;
+    &lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="circle" class="section scrollspy">
+        <h3>Avatar Content</h3>
+        <ul class="collection">
+          <li class="collection-item avatar">
+            <img src="https://picsum.photos/id/64/100/100" alt="" class="circle">
+            <span class="title">Title</span>
+            <p>First Line<br>Second Line</p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          </li>
+          <li class="collection-item avatar">
+            <i class="material-icons circle">folder</i>
+            <span class="title">Title</span>
+            <p>First Line<br>Second Line</p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          </li>
+          <li class="collection-item avatar">
+            <i class="material-icons circle green">insert_chart</i>
+            <span class="title">Title</span>
+            <p>First Line<br>Second Line</p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          </li>
+          <li class="collection-item avatar">
+            <i class="material-icons circle red">play_arrow</i>
+            <span class="title">Title</span>
+            <p>First Line<br>Second Line</p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="collection"&gt;
+  &lt;li class="collection-item avatar"&gt;
+    &lt;img src="images/portrait.jpg" alt="" class="circle"&gt;
+    &lt;span class="title"&gt;Title&lt;/span&gt;
+    &lt;p&gt;First Line&lt;br&gt;Second Line&lt;/p&gt;
+    &lt;a href="#!" class="secondary-content"&gt;
+      &lt;i class="material-icons"&gt;grade&lt;/i&gt;
+    &lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="collection-item avatar"&gt;
+    &lt;i class="material-icons circle"&gt;folder&lt;/i&gt;
+    &lt;span class="title"&gt;Title&lt;/span&gt;
+    &lt;p&gt;First Line&lt;br&gt;Second Line&lt;/p&gt;
+    &lt;a href="#!" class="secondary-content"&gt;
+      &lt;i class="material-icons"&gt;grade&lt;/i&gt;
+    &lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#basic">Basic</a></li>
+          <li><a href="#links">Links</a></li>
+          <li><a href="#headers">Headers</a></li>
+          <li><a href="#secondary">Secondary Content</a></li>
+          <li><a href="#circle">Avatar Content</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

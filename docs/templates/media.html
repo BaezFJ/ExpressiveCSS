@@ -1,0 +1,386 @@
+{% extends "docs.html" %}
+
+{% block title %}Media - RoutePlateCSS{% endblock %}
+{% block page_title %}Media{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Media</h1>
+      <h4 class="light primary-text">Lightbox and Slider for large images and slideshows.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="lightbox" class="section scrollspy">
+        <p class="flow-text">
+          Media components handle large objects such as images. For responsive images and videos without JavaScript, see
+          <a href="{{ url_for('media_css') }}">Media Styles</a>.
+        </p>
+
+        <h3>Lightbox</h3>
+        <p>
+          Lightbox is RoutePlate’s material-style enlarge-on-click image. Click an image with
+          <code>lightboxed</code> and it centers and grows. Click it again, scroll, or press Escape to dismiss.
+          <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <img class="lightboxed responsive-img" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
+<pre><code>&lt;img class="lightboxed" width="650" alt="A mountain lake" src="images/sample-1.jpg"&gt;</code></pre>
+
+        <h5 class="light">Initialization</h5>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.lightboxed');
+  const instances = RoutePlate.Lightbox.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+
+        <h5 class="light">Options</h5>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>inDuration</code></td>
+              <td>Number</td>
+              <td><code>275</code></td>
+              <td>Open transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>outDuration</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>Close transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called before the lightbox opens.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after the lightbox opens.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called before the lightbox closes.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after the lightbox closes.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h5 class="light">Methods</h5>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Lightbox.getInstance(elem);</code></pre>
+        <h5 class="light">.open();</h5>
+        <p>Open the lightbox.</p>
+<pre><code>instance.open();</code></pre>
+        <h5 class="light">.close();</h5>
+        <p>Close the lightbox.</p>
+<pre><code>instance.close();</code></pre>
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+
+        <h5 class="light">Properties</h5>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>overlayActive</code></td>
+              <td>Boolean</td>
+              <td>Whether the lightbox overlay is showing.</td>
+            </tr>
+            <tr>
+              <td><code>doneAnimating</code></td>
+              <td>Boolean</td>
+              <td>Whether the open or close animation has finished.</td>
+            </tr>
+            <tr>
+              <td><code>caption</code></td>
+              <td>String</td>
+              <td>Caption text, if specified.</td>
+            </tr>
+            <tr>
+              <td><code>originalWidth</code></td>
+              <td>Number</td>
+              <td>Original width of the image.</td>
+            </tr>
+            <tr>
+              <td><code>originalHeight</code></td>
+              <td>Number</td>
+              <td>Original height of the image.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h5 class="light">Captions</h5>
+        <p>Add a short caption with the <code>data-caption</code> attribute.</p>
+        <img class="lightboxed" data-caption="A path through trees in a park" width="250" alt="A path through trees" src="https://picsum.photos/id/1016/800/400">
+<pre><code>&lt;img class="lightboxed"
+     data-caption="A path through trees in a park"
+     width="250"
+     alt="A path through trees"
+     src="images/sample-2.jpg"&gt;</code></pre>
+      </div>
+
+      <div id="slider" class="section scrollspy">
+        <h3>Slider</h3>
+        <p>
+          The slider is an image slideshow. Captions transition on their own according to
+          <code>center-align</code>, <code>left-align</code>, or <code>right-align</code>.
+          Indicators appear along the bottom.
+        </p>
+        <p>
+          Slider is <strong>not</strong> in <code>AutoInit()</code>. Call
+          <code>RoutePlate.Slider.init</code> yourself after the page loads.
+        </p>
+        <div class="slider">
+          <ul class="slides">
+            <li>
+              <img src="https://picsum.photos/id/1015/800/400" alt="First slide">
+              <div class="caption center-align">
+                <h3>This is our big Tagline!</h3>
+                <h5 class="light">Here's our small slogan.</h5>
+              </div>
+            </li>
+            <li>
+              <img src="https://picsum.photos/id/1016/800/400" alt="Second slide">
+              <div class="caption left-align">
+                <h3>Left Aligned Caption</h3>
+                <h5 class="light">Here's our small slogan.</h5>
+              </div>
+            </li>
+            <li>
+              <img src="https://picsum.photos/id/1018/800/400" alt="Third slide">
+              <div class="caption right-align">
+                <h3>Right Aligned Caption</h3>
+                <h5 class="light">Here's our small slogan.</h5>
+              </div>
+            </li>
+            <li>
+              <img src="https://picsum.photos/id/1019/800/400" alt="Fourth slide">
+              <div class="caption center-align">
+                <h3>This is our big Tagline!</h3>
+                <h5 class="light">Here's our small slogan.</h5>
+              </div>
+            </li>
+          </ul>
+        </div>
+<pre><code>&lt;div class="slider"&gt;
+  &lt;ul class="slides"&gt;
+    &lt;li&gt;
+      &lt;img src="images/sample-1.jpg" alt="First slide"&gt;
+      &lt;div class="caption center-align"&gt;
+        &lt;h3&gt;This is our big Tagline!&lt;/h3&gt;
+        &lt;h5 class="light"&gt;Here's our small slogan.&lt;/h5&gt;
+      &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;img src="images/sample-2.jpg" alt="Second slide"&gt;
+      &lt;div class="caption left-align"&gt;
+        &lt;h3&gt;Left Aligned Caption&lt;/h3&gt;
+        &lt;h5 class="light"&gt;Here's our small slogan.&lt;/h5&gt;
+      &lt;/div&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;img src="images/sample-3.jpg" alt="Third slide"&gt;
+      &lt;div class="caption right-align"&gt;
+        &lt;h3&gt;Right Aligned Caption&lt;/h3&gt;
+        &lt;h5 class="light"&gt;Here's our small slogan.&lt;/h5&gt;
+      &lt;/div&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5 class="light">Initialization</h5>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.slider');
+  const instances = RoutePlate.Slider.init(elems, {
+    // specify options here
+    indicatorLabelFunc: (idx, current) =&gt; {
+      let label = 'Go to slide ' + idx;
+      if (current) {
+        label = label + ' (Current)';
+      }
+      return label;
+    }
+  });
+});</code></pre>
+
+        <h5 class="light">Options</h5>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>indicators</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Set to <code>false</code> to hide slide indicators.</td>
+            </tr>
+            <tr>
+              <td><code>height</code></td>
+              <td>Number</td>
+              <td><code>400</code></td>
+              <td>Height of the slider, in pixels.</td>
+            </tr>
+            <tr>
+              <td><code>duration</code></td>
+              <td>Number</td>
+              <td><code>500</code></td>
+              <td>Transition animation duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>interval</code></td>
+              <td>Number</td>
+              <td><code>6000</code></td>
+              <td>Time between transitions, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>pauseOnFocus</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Pause autoslide when the slider receives keyboard focus.</td>
+            </tr>
+            <tr>
+              <td><code>pauseOnHover</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Pause autoslide when a pointer hovers the slider.</td>
+            </tr>
+            <tr>
+              <td><code>indicatorLabelFunc</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Builds the ARIA label for each indicator. Receives the 1-based index and a boolean that is true for the current slide. If omitted, the label is the index.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h5 class="light">Methods</h5>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Slider.getInstance(elem);</code></pre>
+        <h5 class="light">.pause();</h5>
+        <p>Pause slider autoslide.</p>
+<pre><code>instance.pause();</code></pre>
+        <h5 class="light">.start();</h5>
+        <p>Start slider autoslide.</p>
+<pre><code>instance.start();</code></pre>
+        <h5 class="light">.next();</h5>
+        <p>Move to the next slide.</p>
+<pre><code>instance.next();</code></pre>
+        <h5 class="light">.prev();</h5>
+        <p>Move to the previous slide.</p>
+<pre><code>instance.prev();</code></pre>
+        <h5 class="light">.set();</h5>
+        <p>Move to a specific slide by 0-based index. Values wrap around the ends.</p>
+<pre><code>instance.set(2);</code></pre>
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+
+        <h5 class="light">Properties</h5>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>activeIndex</code></td>
+              <td>Number</td>
+              <td>Index of the current slide.</td>
+            </tr>
+            <tr>
+              <td><code>eventPause</code></td>
+              <td>Boolean</td>
+              <td>Whether the slider is paused by a focus or hover event.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h5 class="light">Fullscreen Slider</h5>
+        <p>
+          Add <code>fullscreen</code> to the slider so it fills its positioned ancestor
+          (typically the viewport if that ancestor is the page). There is no separate demo page —
+          the class is <code>fullscreen</code> on <code>.slider</code>.
+        </p>
+<pre><code>&lt;div class="slider fullscreen"&gt;
+  &lt;ul class="slides"&gt;...&lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#lightbox">Lightbox</a></li>
+          <li><a href="#slider">Slider</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

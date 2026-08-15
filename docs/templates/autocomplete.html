@@ -1,0 +1,281 @@
+{% extends "docs.html" %}
+
+{% block title %}Autocomplete - RoutePlateCSS{% endblock %}
+{% block page_title %}Autocomplete{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Autocomplete</h1>
+      <h4 class="light primary-text">Suggest values under a text field as the user types.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Add <code>autocomplete</code> to a text input inside <code>.input-field</code>.
+          <code>AutoInit()</code> starts every <code>.autocomplete</code> except
+          <code>no-autoinit</code>, but the default <code>data</code> list is empty — pass
+          options (or call <code>init</code>) to give it something to suggest.
+        </p>
+        <div class="input-field mb-5">
+          <i class="material-icons prefix">textsms</i>
+          <input type="text" id="autocomplete-input" class="autocomplete no-autoinit" placeholder=" ">
+          <label for="autocomplete-input">Autocomplete</label>
+        </div>
+        <p>Set <code>isMultiSelect: true</code> to pick several values. A count appears on the field.</p>
+        <div class="input-field mb-5">
+          <i class="material-icons prefix">textsms</i>
+          <input type="text" id="autocomplete-multi" class="autocomplete no-autoinit" placeholder=" ">
+          <label for="autocomplete-multi">Multiple Autocomplete</label>
+        </div>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;i class="material-icons prefix"&gt;textsms&lt;/i&gt;
+  &lt;input type="text" id="autocomplete-input" class="autocomplete" placeholder=" "&gt;
+  &lt;label for="autocomplete-input"&gt;Autocomplete&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Autocomplete</code>.
+          <code>data</code> is an array of objects:
+        </p>
+        <ul>
+          <li>
+            <strong>id</strong> (required) — a string or number. Used as the option text
+            when <code>text</code> is omitted.
+          </li>
+          <li>
+            <strong>text</strong> — display label. The default search matches
+            <code>id</code> and <code>text</code>.
+          </li>
+          <li>
+            <strong>image</strong> — image URL. Shown as a circle; not searched by default.
+          </li>
+          <li>
+            <strong>description</strong> — optional secondary line under the label.
+          </li>
+        </ul>
+        <p>
+          Extra properties are ignored by the default search. Filter them yourself in
+          <code>onSearch</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.autocomplete');
+  RoutePlate.Autocomplete.init(elems, {
+    minLength: 0,
+    data: [
+      { id: 12, text: 'Apple' },
+      { id: 13, text: 'Microsoft' },
+      { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+    ]
+  });
+});</code></pre>
+        <p>Multiple selection:</p>
+<pre><code>RoutePlate.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
+  minLength: 0,
+  isMultiSelect: true,
+  data: [
+    { id: 12, text: 'Apple' },
+    { id: 13, text: 'Microsoft' },
+    { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+  ]
+});</code></pre>
+        <p>
+          Custom <code>onSearch</code> can load data asynchronously. When the list is
+          ready, call <code>setMenuItems</code>. The default filter looks at
+          <code>id</code> and <code>text</code> only:
+        </p>
+<pre><code>onSearch: function(text, autocomplete) {
+  const normSearch = text.toLocaleLowerCase();
+  autocomplete.setMenuItems(
+    autocomplete.options.data.filter(function(option) {
+      return option.id.toString().toLocaleLowerCase().includes(normSearch)
+        || (option.text && option.text.toLocaleLowerCase().includes(normSearch));
+    })
+  );
+}</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>data</code></td>
+              <td>Array</td>
+              <td><code>[]</code></td>
+              <td>Suggestion list. Each item needs an <code>id</code>; <code>text</code>, <code>image</code>, and <code>description</code> are optional.</td>
+            </tr>
+            <tr>
+              <td><code>isMultiSelect</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, several values can be selected. <code>onAutocomplete</code> receives an array.</td>
+            </tr>
+            <tr>
+              <td><code>maxDropDownHeight</code></td>
+              <td>String</td>
+              <td><code>'300px'</code></td>
+              <td>Max height of the suggestion menu.</td>
+            </tr>
+            <tr>
+              <td><code>onAutocomplete</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a selection (and when a default value is applied). Receives the selected entries.</td>
+            </tr>
+            <tr>
+              <td><code>onSearch</code></td>
+              <td>Function</td>
+              <td>filters <code>id</code> and <code>text</code></td>
+              <td>Called when the input text changes. Load or filter data, then call <code>setMenuItems</code>.</td>
+            </tr>
+            <tr>
+              <td><code>minLength</code></td>
+              <td>Number</td>
+              <td><code>1</code></td>
+              <td>Characters required before suggestions open. <code>0</code> shows the list on click or focus.</td>
+            </tr>
+            <tr>
+              <td><code>dropdownOptions</code></td>
+              <td>Object</td>
+              <td>see note</td>
+              <td>
+                Options for
+                <a href="{{ url_for('dropdown') }}#options">Dropdown</a>.
+                Defaults include <code>autoFocus: false</code>,
+                <code>closeOnClick: false</code>, and <code>coverTrigger: false</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>allowUnsafeHTML</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, matched text is inserted as HTML. Only use sanitized data.</td>
+            </tr>
+            <tr>
+              <td><code>selected</code></td>
+              <td>Array</td>
+              <td><code>[]</code></td>
+              <td>Initial selected ids (strings or numbers).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Autocomplete.getInstance(elem);
+instance.open();</code></pre>
+
+        <h5 class="light">.open();</h5>
+        <p>Open the suggestion menu if the input meets <code>minLength</code>.</p>
+<pre><code>instance.open();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Close the suggestion menu.</p>
+<pre><code>instance.close();</code></pre>
+
+        <h5 class="light">.selectOption();</h5>
+        <p>Select (or toggle, when multi-select) the entry with this id.</p>
+<pre><code>instance.selectOption(42);</code></pre>
+
+        <h5 class="light">.setMenuItems();</h5>
+        <p>Replace the visible suggestions. Optionally pass selected ids and whether to open the menu (default <code>true</code>).</p>
+<pre><code>instance.setMenuItems([
+  { id: 'Test' },
+  { id: 12, text: 'Apple' },
+  { id: 13, text: 'Microsoft' },
+  { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+]);</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove the menu, and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The input the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Whether the suggestion menu is open.</td>
+            </tr>
+            <tr>
+              <td><code>count</code></td>
+              <td>Number</td>
+              <td>Number of matching options (reset on each keyup/focus).</td>
+            </tr>
+            <tr>
+              <td><code>activeIndex</code></td>
+              <td>Number</td>
+              <td>Index of the keyboard-highlighted option, or <code>-1</code>.</td>
+            </tr>
+            <tr>
+              <td><code>dropdown</code></td>
+              <td>Dropdown</td>
+              <td>The Dropdown instance for this autocomplete.</td>
+            </tr>
+            <tr>
+              <td><code>selectedValues</code></td>
+              <td>Array</td>
+              <td>The currently selected entries.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

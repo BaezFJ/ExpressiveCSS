@@ -1,0 +1,115 @@
+{% extends "docs.html" %}
+
+{% block title %}Footer - RoutePlateCSS{% endblock %}
+{% block page_title %}Footer{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Footer</h1>
+      <h4 class="light primary-text">Site navigation and extra information at the end of a page.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="footer" class="section scrollspy">
+        <p class="flow-text">
+          Footers are a good place for site navigation and extra information. This is where people look after they finish the page, or when they want more about the site.
+        </p>
+        <p>
+          Put the page in the three HTML5 landmarks <code>header</code>, <code>main</code>, and <code>footer</code>.
+          The footer itself is CSS-only: add <code>page-footer</code>, lay out content with the grid, and optionally add a
+          <code>footer-copyright</code> bar. There is no JavaScript component.
+        </p>
+        <p>
+          RoutePlate’s footer is unfilled by default. It draws a dashed top border and uses the theme tokens for
+          paragraph and link color — not a solid primary bar.
+        </p>
+
+        <div class="page-footer">
+          <div class="row">
+            <div class="s12 m6">
+              <h5>Footer Content</h5>
+              <p>You can use rows and columns here to organize your footer content.</p>
+            </div>
+            <div class="s12 m6">
+              <h5>Links</h5>
+              <ul>
+                <li><a href="#!">Link 1</a></li>
+                <li><a href="#!">Link 2</a></li>
+                <li><a href="#!">Link 3</a></li>
+                <li><a href="#!">Link 4</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <span>&copy; 2026 Copyright Text</span>
+            <a href="#!">More Links</a>
+          </div>
+        </div>
+
+<pre><code>&lt;footer class="page-footer"&gt;
+  &lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+      &lt;div class="s12 m6"&gt;
+        &lt;h5&gt;Footer Content&lt;/h5&gt;
+        &lt;p&gt;You can use rows and columns here to organize your footer content.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="s12 m6"&gt;
+        &lt;h5&gt;Links&lt;/h5&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href="#!"&gt;Link 1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#!"&gt;Link 2&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#!"&gt;Link 3&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#!"&gt;Link 4&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="footer-copyright"&gt;
+      &lt;span&gt;&amp;copy; 2026 Copyright Text&lt;/span&gt;
+      &lt;a href="#!"&gt;More Links&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;</code></pre>
+        <p>
+          <code>footer-copyright</code> is a flex row with space-between, so put the notice and the trailing link as
+          two children. A <code>right</code> float is not required.
+        </p>
+      </div>
+
+      <div id="sticky-footer" class="section scrollspy">
+        <h3>Sticky Footer</h3>
+        <p>
+          A sticky footer stays at the bottom of the viewport when the page is short, and is pushed down when the
+          content is taller. That is different from a fixed footer. RoutePlate does not include these rules — add
+          them to your own stylesheet after you have the <code>header</code> / <code>main</code> / <code>footer</code>
+          landmarks.
+        </p>
+<pre><code>body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#footer">Footer</a></li>
+          <li><a href="#sticky-footer">Sticky Footer</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

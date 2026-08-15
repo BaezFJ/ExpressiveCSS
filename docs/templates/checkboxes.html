@@ -1,0 +1,123 @@
+{% extends "docs.html" %}
+
+{% block title %}Checkboxes - RoutePlateCSS{% endblock %}
+{% block page_title %}Checkboxes{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Checkboxes</h1>
+      <h4 class="light primary-text">Yes / no choices, one or many at a time.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="checkbox" class="section scrollspy">
+        <p class="flow-text">
+          Checkboxes are CSS only: put the checkbox and a following <code>span</code> inside
+          a <code>label</code>. The <code>span</code> is required — the styles target
+          <code>input + span</code> (and skip <code>.lever</code>, which belongs to
+          <a href="{{ url_for('switches') }}">Switches</a>). There is no JavaScript
+          component and nothing to AutoInit.
+        </p>
+        <p>
+          Add <code>checked</code> or <code>disabled</code> on the input.
+          <code>filled-in</code> draws a filled box with a light check.
+          Indeterminate is not an HTML attribute — set
+          <code>element.indeterminate = true</code> in script.
+        </p>
+        <form action="#">
+          <p>
+            <label>
+              <input type="checkbox">
+              <span>Red</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" checked>
+              <span>Yellow</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" class="filled-in" checked>
+              <span>Filled in</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input id="indeterminate-checkbox" type="checkbox">
+              <span>Indeterminate Style</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" checked disabled>
+              <span>Green</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" disabled>
+              <span>Brown</span>
+            </label>
+          </p>
+        </form>
+<pre><code>&lt;form action="#"&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input type="checkbox"&gt;
+      &lt;span&gt;Red&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input type="checkbox" checked&gt;
+      &lt;span&gt;Yellow&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input type="checkbox" class="filled-in" checked&gt;
+      &lt;span&gt;Filled in&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input id="indeterminate-checkbox" type="checkbox"&gt;
+      &lt;span&gt;Indeterminate Style&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input type="checkbox" checked disabled&gt;
+      &lt;span&gt;Green&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label&gt;
+      &lt;input type="checkbox" disabled&gt;
+      &lt;span&gt;Brown&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/p&gt;
+&lt;/form&gt;</code></pre>
+<pre><code>document.getElementById('indeterminate-checkbox').indeterminate = true;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#checkbox">Checkboxes</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

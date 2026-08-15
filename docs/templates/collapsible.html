@@ -1,0 +1,312 @@
+{% extends "docs.html" %}
+
+{% block title %}Collapsible - RoutePlateCSS{% endblock %}
+{% block page_title %}Collapsible{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Collapsible</h1>
+      <h4 class="light primary-text">Accordion sections that expand when you click them.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Collapsibles hide content that is not immediately relevant. Click a header to expand or collapse its body.
+          <code>AutoInit()</code> starts every <code>.collapsible</code> except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="collapsible"&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-icons"&gt;filter_drama&lt;/i&gt;First
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-icons"&gt;place&lt;/i&gt;Second
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-icons"&gt;whatshot&lt;/i&gt;Third
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        <p>
+          Headers are a flex row. Wrap the title in <code>collapsible-header-content</code> when you add extra
+          items such as a badge so they sit before the expand icon. See
+          <a href="{{ url_for('badges') }}#collapsible">Badges in Collapsibles</a>.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Collapsible</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.collapsible</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.collapsible');
+  const instances = RoutePlate.Collapsible.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  Collapsible: { accordion: true }
+});</code></pre>
+
+        <h5 class="light">Preselected Section</h5>
+        <p>
+          Add <code>active</code> to the <code>li</code> that wraps the header to open that section on start.
+          In accordion mode only the first active item opens; with <code>accordion: false</code> every active
+          item opens.
+        </p>
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li class="active">
+            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+        </ul>
+<pre><code>&lt;li class="active"&gt;
+  &lt;div class="collapsible-header"&gt;
+    &lt;i class="material-icons"&gt;place&lt;/i&gt;Second
+  &lt;/div&gt;
+  &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <p>
+          You can customize each instance. Callbacks receive the
+          <code>li</code> that opened or closed.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>accordion</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>When <code>true</code>, only one section stays open. When <code>false</code>, several can stay open. There is no styled <code>expandable</code> class — this option is the switch.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called before a section opens.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a section finishes opening.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called before a section closes.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a section finishes closing.</td>
+            </tr>
+            <tr>
+              <td><code>inDuration</code></td>
+              <td>Number</td>
+              <td><code>300</code></td>
+              <td>Open transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>outDuration</code></td>
+              <td>Number</td>
+              <td><code>300</code></td>
+              <td>Close transition duration, in milliseconds.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Collapsible.getInstance(elem);</code></pre>
+
+        <h5 class="light">.open();</h5>
+        <p>Open a collapsible section.</p>
+        <p><strong>Integer:</strong> 0-based index of the section to open.</p>
+<pre><code>instance.open(3);</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Close a collapsible section.</p>
+        <p><strong>Integer:</strong> 0-based index of the section to close.</p>
+<pre><code>instance.close(3);</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="accordion" class="section scrollspy">
+        <h3>Collapsible Types</h3>
+        <p>
+          A collapsible can allow several sections to stay open, or only one at a time (accordion).
+          Accordion is the default.
+        </p>
+        <h5 class="light">Accordion</h5>
+        <p>This is the default. Opening one section closes the others.</p>
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="expandable" class="section scrollspy">
+        <h5 class="light">Expandable</h5>
+        <p>
+          Pass <code>accordion: false</code> so several sections can stay open.
+          Mark the element <code>no-autoinit</code> if you initialize it yourself, otherwise AutoInit would start it as an accordion.
+        </p>
+        <ul class="collapsible no-autoinit" id="collapsible-expandable">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+        </ul>
+<pre><code>const elem = document.querySelector('.collapsible.no-autoinit');
+const instance = RoutePlate.Collapsible.init(elem, {
+  accordion: false
+});</code></pre>
+      </div>
+
+      <div id="popout" class="section scrollspy">
+        <h5 class="light">Popout</h5>
+        <p>
+          Add the <code>popout</code> class for the raised, inset look. Behavior is still accordion unless you also pass
+          <code>accordion: false</code>.
+        </p>
+        <ul class="collapsible popout">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="collapsible popout"&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#accordion">Accordion</a></li>
+          <li><a href="#expandable">Expandable</a></li>
+          <li><a href="#popout">Popout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

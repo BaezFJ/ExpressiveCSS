@@ -1,0 +1,398 @@
+{% extends "docs.html" %}
+
+{% block title %}Text Inputs - RoutePlateCSS{% endblock %}
+{% block page_title %}Text Inputs{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Text Inputs</h1>
+      <h4 class="light primary-text">Text fields, textareas, file inputs, and character counters.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="input" class="section scrollspy">
+        <p class="flow-text">
+          Wrap the control and its label in <code>.input-field</code>. That wrapper is required
+          for the floating label, supporting text, and prefix/suffix layout.
+        </p>
+        <p>
+          Add <code>placeholder=" "</code> (a single space) so the label can float with CSS
+          only. A missing placeholder, or any other placeholder string, keeps the label in
+          the floated position. Importing the bundle runs <code>Forms.Init()</code>; it
+          validates <code>.validate</code> fields on <code>change</code> and starts textareas
+          and file paths. Character Counter is not in <code>AutoInit()</code>.
+        </p>
+
+        <form class="row">
+          <div class="s12 m6 input-field">
+            <input id="first_name" type="text" placeholder=" " maxlength="20">
+            <label for="first_name">First Name</label>
+            <span class="supporting-text">Supporting Text</span>
+          </div>
+          <div class="s12 m6 input-field outlined">
+            <input id="last_name" type="text" placeholder=" " maxlength="20">
+            <label for="last_name">Last Name</label>
+          </div>
+          <div class="s12 m6 input-field">
+            <input id="disabled_filled" type="text" placeholder=" " value="I am not editable" disabled>
+            <label for="disabled_filled">Disabled</label>
+          </div>
+          <div class="s12 m6 input-field outlined">
+            <input id="disabled_outlined" type="text" placeholder=" " value="Not editable too" disabled>
+            <label for="disabled_outlined">Disabled</label>
+          </div>
+          <div class="s12 m6 input-field">
+            <div class="prefix"><i class="material-icons">place</i></div>
+            <div class="suffix"><i class="material-icons">gps_fixed</i></div>
+            <input id="inp-location" type="text" placeholder=" " value="Planet Earth">
+            <label for="inp-location">Location</label>
+          </div>
+          <div class="s12 m6 input-field outlined">
+            <div class="prefix"><i class="material-icons">bubble_chart</i></div>
+            <div class="suffix"><i class="material-icons">error</i></div>
+            <input id="inp-error" class="invalid" type="text" placeholder=" " value="$%/'#sdf">
+            <label for="inp-error">Failing Input</label>
+            <span class="supporting-text">Invalid characters! Please use 0-9 only.</span>
+          </div>
+        </form>
+<pre><code>&lt;form class="row"&gt;
+  &lt;div class="s12 m6 input-field"&gt;
+    &lt;input id="first_name" type="text" placeholder=" " maxlength="20"&gt;
+    &lt;label for="first_name"&gt;First Name&lt;/label&gt;
+    &lt;span class="supporting-text"&gt;Supporting Text&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;div class="s12 m6 input-field outlined"&gt;
+    &lt;input id="last_name" type="text" placeholder=" " maxlength="20"&gt;
+    &lt;label for="last_name"&gt;Last Name&lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;div class="s12 m6 input-field"&gt;
+    &lt;input id="disabled" type="text" placeholder=" " value="I am not editable" disabled&gt;
+    &lt;label for="disabled"&gt;Disabled&lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;div class="s12 m6 input-field"&gt;
+    &lt;div class="prefix"&gt;&lt;i class="material-icons"&gt;place&lt;/i&gt;&lt;/div&gt;
+    &lt;div class="suffix"&gt;&lt;i class="material-icons"&gt;gps_fixed&lt;/i&gt;&lt;/div&gt;
+    &lt;input id="inp-location" type="text" placeholder=" " value="Planet Earth"&gt;
+    &lt;label for="inp-location"&gt;Location&lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;div class="s12 m6 input-field outlined"&gt;
+    &lt;div class="prefix"&gt;&lt;i class="material-icons"&gt;bubble_chart&lt;/i&gt;&lt;/div&gt;
+    &lt;div class="suffix"&gt;&lt;i class="material-icons"&gt;error&lt;/i&gt;&lt;/div&gt;
+    &lt;input id="inp-error" class="invalid" type="text" placeholder=" " value="$%/'#sdf"&gt;
+    &lt;label for="inp-error"&gt;Failing Input&lt;/label&gt;
+    &lt;span class="supporting-text"&gt;Invalid characters! Please use 0-9 only.&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+        <p>
+          The underline style is the default. Add <code>outlined</code> for a full border.
+          Put <code>invalid</code> on the input for the error underline. Do not put
+          <code>error</code> on the wrapper: that class is a color utility and fills the
+          field with the error color. The helper line is <code>.supporting-text</code>,
+          not <code>.helper-text</code>.
+        </p>
+
+        <h5 class="light">Input Types</h5>
+        <p>
+          <code>email</code>, <code>password</code>, and the other native text-like types
+          are styled the same way. <code>validate</code> uses HTML5 constraint validation
+          on <code>change</code> and toggles <code>invalid</code> on the input. There is
+          no green <code>valid</code> style.
+        </p>
+        <form class="row">
+          <div class="s12 m6 input-field">
+            <input id="email" type="email" class="validate" placeholder=" ">
+            <label for="email">Email</label>
+            <span class="supporting-text" data-error="wrong">Supporting text for additional information</span>
+          </div>
+          <div class="s12 m6 input-field">
+            <input id="password" type="password" class="validate" placeholder=" " maxlength="20">
+            <label for="password">Password</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="s12 m6 input-field"&gt;
+  &lt;input id="email" type="email" class="validate" placeholder=" "&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;span class="supporting-text" data-error="wrong"&gt;
+    Supporting text for additional information
+  &lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="s12 m6 input-field"&gt;
+  &lt;input id="password" type="password" class="validate" placeholder=" " maxlength="20"&gt;
+  &lt;label for="password"&gt;Password&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5 class="light">Inline Inputs</h5>
+        <p>Add <code>inline</code> to sit the field in a line of text.</p>
+        <form>
+          <p>
+            This is an inline input field:
+            <span class="input-field inline">
+              <input id="email_inline" type="email" class="validate" placeholder=" ">
+              <label for="email_inline">Email</label>
+            </span>
+          </p>
+        </form>
+<pre><code>This is an inline input field:
+&lt;span class="input-field inline"&gt;
+  &lt;input id="email_inline" type="email" class="validate" placeholder=" "&gt;
+  &lt;label for="email_inline"&gt;Email&lt;/label&gt;
+&lt;/span&gt;</code></pre>
+
+        <h5 class="light">Floating Labels</h5>
+        <p>
+          Labels float with CSS. Use <code>placeholder=" "</code> (one space). Any other
+          placeholder string is treated as a real hint and the label stays floated.
+        </p>
+        <form class="row">
+          <div class="s12 m6 input-field outlined">
+            <input id="first_name_float" type="text" placeholder=" ">
+            <label for="first_name_float">First Name</label>
+          </div>
+          <div class="s12 m6 input-field outlined">
+            <input id="last_name_float" type="text" placeholder="Doe…">
+            <label for="last_name_float">Last Name</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field outlined"&gt;
+  &lt;input id="first_name2" type="text" placeholder=" "&gt;
+  &lt;label for="first_name2"&gt;First Name&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="input-field outlined"&gt;
+  &lt;input id="last_name2" type="text" placeholder="Doe…"&gt;
+  &lt;label for="last_name2"&gt;Last Name&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5 class="light">Icon Prefixes</h5>
+        <p>
+          Put <code>prefix</code> on an icon, or wrap the icon in <code>.prefix</code>,
+          before the input and label.
+        </p>
+        <form class="row">
+          <div class="s12 m6 input-field">
+            <i class="material-icons prefix">account_circle</i>
+            <input id="icon_prefix" type="text" placeholder=" ">
+            <label for="icon_prefix">First Name</label>
+          </div>
+          <div class="s12 m6 input-field">
+            <i class="material-icons prefix">phone</i>
+            <input id="icon_telephone" type="tel" placeholder=" ">
+            <label for="icon_telephone">Telephone</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;i class="material-icons prefix"&gt;account_circle&lt;/i&gt;
+  &lt;input id="icon_prefix" type="text" placeholder=" "&gt;
+  &lt;label for="icon_prefix"&gt;First Name&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5 class="light">Icon Suffixes</h5>
+        <p>Same idea with <code>suffix</code>, still before the input in the markup.</p>
+        <form class="row">
+          <div class="s12 m6 input-field">
+            <i class="material-icons suffix">account_circle</i>
+            <input id="icon_suffix" type="text" placeholder=" ">
+            <label for="icon_suffix">First Name</label>
+          </div>
+          <div class="s12 m6 input-field">
+            <i class="material-icons suffix">phone</i>
+            <input id="icon_telephone_suffix" type="tel" placeholder=" ">
+            <label for="icon_telephone_suffix">Telephone</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;i class="material-icons suffix"&gt;account_circle&lt;/i&gt;
+  &lt;input id="icon_suffix" type="text" placeholder=" "&gt;
+  &lt;label for="icon_suffix"&gt;First Name&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5 class="light">Custom Error Messages</h5>
+        <p>
+          Put <code>data-error</code> on <code>.supporting-text</code>. When the input has
+          <code>invalid</code>, that string replaces the supporting text. There is no
+          <code>data-success</code> style.
+        </p>
+        <form class="row">
+          <div class="s12 input-field">
+            <input id="email_helper" type="email" class="validate" placeholder=" ">
+            <label for="email_helper">Email</label>
+            <span class="supporting-text" data-error="wrong">Helper text</span>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;input id="email" type="email" class="validate" placeholder=" "&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;span class="supporting-text" data-error="wrong"&gt;Helper text&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          <code>validate</code> also honors a <code>data-length</code> attribute: the field
+          is marked <code>invalid</code> when the value is longer than that number. Prefer
+          <code>maxlength</code> when you want the browser to cap input; use
+          <code>data-length</code> only if you want the validate check without a hard cap.
+        </p>
+
+        <h5 class="light">Changing colors</h5>
+        <p>
+          Focus, label, and underline color come from <code>--input-color</code> on
+          <code>.input-field</code>, which defaults to <code>--md-sys-color-primary</code>.
+          Override the token rather than restyling each state:
+        </p>
+<pre><code>.input-field {
+  --input-color: var(--md-sys-color-tertiary);
+}</code></pre>
+      </div>
+
+      <div id="textarea" class="section scrollspy">
+        <h3>Textarea</h3>
+        <p>
+          Use <code>textarea.routeplate-textarea</code> inside <code>.input-field</code>.
+          That class name is RoutePlate’s; there is no <code>.materialize-textarea</code>.
+          Textareas grow with their content. <code>Forms.Init()</code> starts every
+          <code>.routeplate-textarea</code> on <code>DOMContentLoaded</code>.
+        </p>
+        <form class="row">
+          <div class="s12 input-field">
+            <textarea id="textarea1" class="routeplate-textarea" placeholder=" "></textarea>
+            <label for="textarea1">Textarea</label>
+          </div>
+          <div class="s12 input-field">
+            <textarea id="textarea2" class="routeplate-textarea" placeholder="A custom placeholder :)"></textarea>
+            <label for="textarea2">Textarea with placeholder</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;textarea id="textarea1" class="routeplate-textarea" placeholder=" "&gt;&lt;/textarea&gt;
+  &lt;label for="textarea1"&gt;Textarea&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="input-field"&gt;
+  &lt;textarea id="textarea2" class="routeplate-textarea" placeholder="A custom placeholder :)"&gt;&lt;/textarea&gt;
+  &lt;label for="textarea2"&gt;Textarea with placeholder&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+        <p>If you add a textarea after load, initialize it yourself:</p>
+<pre><code>RoutePlate.Forms.InitTextarea(document.querySelector('#textarea1'));</code></pre>
+        <p>
+          Setting <code>.value</code> in script does not resize the field. Call
+          <code>textareaAutoResize</code> afterwards:
+        </p>
+<pre><code>const el = document.querySelector('#textarea1');
+el.value = 'New Text';
+RoutePlate.Forms.textareaAutoResize(el);</code></pre>
+
+        <h5 class="light">Icon Prefixes</h5>
+        <form class="row">
+          <div class="s12 input-field">
+            <i class="material-icons prefix">mode_edit</i>
+            <textarea id="icon_prefix2" class="routeplate-textarea" placeholder=" "></textarea>
+            <label for="icon_prefix2">Message</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;i class="material-icons prefix"&gt;mode_edit&lt;/i&gt;
+  &lt;textarea id="icon_prefix2" class="routeplate-textarea" placeholder=" "&gt;&lt;/textarea&gt;
+  &lt;label for="icon_prefix2"&gt;Message&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="file" class="section scrollspy">
+        <h3>File Input</h3>
+        <p>
+          A <code>.file-field.input-field</code> pairs a button with a path field.
+          <code>Forms.Init()</code> copies the chosen file name into
+          <code>input.file-path</code>.
+        </p>
+        <form>
+          <div class="file-field input-field">
+            <div class="btn filled">
+              <span>File</span>
+              <input type="file">
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path" type="text" placeholder=" ">
+            </div>
+          </div>
+        </form>
+<pre><code>&lt;div class="file-field input-field"&gt;
+  &lt;div class="btn filled"&gt;
+    &lt;span&gt;File&lt;/span&gt;
+    &lt;input type="file"&gt;
+  &lt;/div&gt;
+  &lt;div class="file-path-wrapper"&gt;
+    &lt;input class="file-path" type="text" placeholder=" "&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        <p>Add <code>multiple</code> to allow more than one file. The path field lists the names, comma-separated.</p>
+        <form>
+          <div class="file-field input-field">
+            <div class="btn filled">
+              <span>File</span>
+              <input type="file" multiple>
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path" type="text" placeholder="Upload one or more files">
+            </div>
+          </div>
+        </form>
+<pre><code>&lt;input type="file" multiple&gt;</code></pre>
+        <p>If you add a file input after load:</p>
+<pre><code>RoutePlate.Forms.InitFileInputPath(document.querySelector('#fileinput1'));</code></pre>
+      </div>
+
+      <div id="character-counter" class="section scrollspy">
+        <h3>Character Counter</h3>
+        <p>
+          Character Counter is not in <code>AutoInit()</code>. It reads
+          <code>maxlength</code> (not <code>data-length</code>) and writes
+          <code>current/max</code> into a <code>.character-counter</code> span.
+          Overflow adds <code>invalid</code> on the field.
+        </p>
+        <form class="row">
+          <div class="s12 m6 input-field">
+            <input id="input_text_counter" type="text" maxlength="10" placeholder=" ">
+            <label for="input_text_counter">Input text</label>
+          </div>
+          <div class="s12 input-field">
+            <textarea id="textarea_counter" class="routeplate-textarea" maxlength="120" placeholder=" "></textarea>
+            <label for="textarea_counter">Textarea</label>
+          </div>
+        </form>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;input id="input_text" type="text" maxlength="10" placeholder=" "&gt;
+  &lt;label for="input_text"&gt;Input text&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="input-field"&gt;
+  &lt;textarea id="textarea2" class="routeplate-textarea" maxlength="120" placeholder=" "&gt;&lt;/textarea&gt;
+  &lt;label for="textarea2"&gt;Textarea&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+
+        <h5 class="light">Initialization</h5>
+        <p>There are no options. Initialize each field yourself, including ones added later.</p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('#input_text, #textarea2');
+  RoutePlate.CharacterCounter.init(elems);
+});</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#input">Input Fields</a></li>
+          <li><a href="#textarea">Textareas</a></li>
+          <li><a href="#file">File Input</a></li>
+          <li><a href="#character-counter">Character Counter</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

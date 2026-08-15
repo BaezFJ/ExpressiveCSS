@@ -1,0 +1,352 @@
+{% extends "docs.html" %}
+
+{% block title %}Time Picker - RoutePlateCSS{% endblock %}
+{% block page_title %}Time Picker{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Time Picker</h1>
+      <h4 class="light primary-text">Pick a time from a clock face, in 12-hour or 24-hour form.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Add <code>timepicker</code> to a text input. <code>AutoInit()</code> starts every
+          <code>.timepicker</code> except those marked <code>no-autoinit</code>.
+        </p>
+        <p>
+          The clock is inline, not a modal. It is appended to the input’s parent and stays
+          visible. There is no <code>openByDefault</code> flag. <code>open()</code> and
+          <code>close()</code> are deprecated no-ops.
+        </p>
+        <div class="input-field mb-3">
+          <input type="text" class="timepicker" id="timepicker-intro">
+          <label for="timepicker-intro">Lunchtime</label>
+        </div>
+<pre><code>&lt;div class="input-field"&gt;
+  &lt;input type="text" class="timepicker" id="lunchtime"&gt;
+  &lt;label for="lunchtime"&gt;Lunchtime&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          Wrap the input in its own <code>.input-field</code> (or another small parent). The
+          clock is appended inside that parent.
+        </p>
+        <p>
+          Click a hour on the dial, then a minute. With the default
+          <code>autoSubmit: true</code>, finishing the minute writes the input
+          (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
+          hour and minute fields.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Timepicker</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.timepicker</code>.
+          Unlike Datepicker, the default options already show the clock.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.timepicker');
+  const instances = RoutePlate.Timepicker.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  Timepicker: { twelveHour: false }
+});</code></pre>
+      </div>
+
+      <div id="display" class="section scrollspy">
+        <h3>Display</h3>
+        <p>
+          The clock is a <code>.timepicker-container</code> in the page. There is no overlay
+          and no <code>autoClose</code> option.
+        </p>
+        <p>
+          <code>container</code> renders the clock into a specific element instead of the
+          input’s parent. Pass a selector or a DOM node.
+        </p>
+        <h5 class="light">Docked popover</h5>
+        <p>
+          <code>displayPlugin: 'docked'</code> wraps the clock in a
+          <code>.display-docked</code> popover that appears when the input is clicked or
+          confirmed with Enter, and hides when you click outside.
+        </p>
+<pre><code>RoutePlate.Timepicker.init(elem, {
+  displayPlugin: 'docked'
+});</code></pre>
+        <p>
+          The popover is positioned in document coordinates and then appended to the
+          input’s parent. A <code>position: relative</code> parent — including
+          <code>.input-field</code> — shifts that position, so the clock will not sit
+          next to the field. Prefer a static wrapper if you use docked, or keep the
+          clock inline.
+        </p>
+        <p>
+          Optional <code>displayPluginOptions</code>: <code>margin</code> (default
+          <code>5</code>), <code>transition</code> (<code>10</code>),
+          <code>duration</code> (<code>250</code>), and <code>align</code>
+          (<code>'left'</code>).
+        </p>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>duration</code></td>
+              <td>Number</td>
+              <td><code>350</code></td>
+              <td>Transition between the hours and minutes views, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>container</code></td>
+              <td>Element or String</td>
+              <td><code>null</code></td>
+              <td>Element or selector to render the clock into. When omitted, it is appended to the input’s parent.</td>
+            </tr>
+            <tr>
+              <td><code>showClearBtn</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Show a Clear button in the footer.</td>
+            </tr>
+            <tr>
+              <td><code>autoSubmit</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added.</td>
+            </tr>
+            <tr>
+              <td><code>defaultTime</code></td>
+              <td>String</td>
+              <td><code>'now'</code></td>
+              <td>Initial time. <code>'now'</code> or a <code>'HH:MM'</code> string (optionally with <code>AM</code>/<code>PM</code>).</td>
+            </tr>
+            <tr>
+              <td><code>fromNow</code></td>
+              <td>Number</td>
+              <td><code>0</code></td>
+              <td>Millisecond offset added to <code>'now'</code>.</td>
+            </tr>
+            <tr>
+              <td><code>i18n</code></td>
+              <td>Object</td>
+              <td>See below</td>
+              <td>Labels for Cancel, Clear, and Ok.</td>
+            </tr>
+            <tr>
+              <td><code>twelveHour</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings.</td>
+            </tr>
+            <tr>
+              <td><code>vibrate</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Vibrate the device when the clock hand changes value.</td>
+            </tr>
+            <tr>
+              <td><code>onSelect</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a time is chosen on the dial. Receives <code>(hour, minute)</code>.</td>
+            </tr>
+            <tr>
+              <td><code>onInputInteraction</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the input is clicked or confirmed with Enter.</td>
+            </tr>
+            <tr>
+              <td><code>onDone</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the Ok button is used. Only created when <code>autoSubmit</code> is false.</td>
+            </tr>
+            <tr>
+              <td><code>onCancel</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the Cancel button is used. Only created when <code>autoSubmit</code> is false.</td>
+            </tr>
+            <tr>
+              <td><code>displayPlugin</code></td>
+              <td>String</td>
+              <td><code>null</code></td>
+              <td>Set to <code>'docked'</code> for a click-to-open popover.</td>
+            </tr>
+            <tr>
+              <td><code>displayPluginOptions</code></td>
+              <td>Object</td>
+              <td><code>null</code></td>
+              <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="internationalization" class="section scrollspy">
+        <h3>Internationalization</h3>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>cancel</code></td>
+              <td><code>'Cancel'</code></td>
+            </tr>
+            <tr>
+              <td><code>clear</code></td>
+              <td><code>'Clear'</code></td>
+            </tr>
+            <tr>
+              <td><code>done</code></td>
+              <td><code>'Ok'</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="twelve-hour" class="section scrollspy">
+        <h3>12-hour and 24-hour</h3>
+        <p>
+          <code>twelveHour</code> defaults to <code>true</code>. The intro clock above is
+          12-hour with AM/PM. Set <code>twelveHour: false</code> for a 24-hour dial: hours
+          1–12 on the inner ring, 13–00 on the outer ring. The written value is then
+          <code>HH:MM</code> with no meridian.
+        </p>
+        <div class="input-field mb-3">
+          <input type="text" class="timepicker no-autoinit" id="timepicker-24">
+          <label for="timepicker-24">24-hour</label>
+        </div>
+<pre><code>RoutePlate.Timepicker.init(document.getElementById('timepicker-24'), {
+  twelveHour: false
+});</code></pre>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Timepicker.getInstance(elem);</code></pre>
+
+        <h5 class="light">.showView();</h5>
+        <p>Show the hours or minutes face.</p>
+        <p><strong>String:</strong> <code>'hours'</code> or <code>'minutes'</code>.</p>
+<pre><code>instance.showView('hours');</code></pre>
+
+        <h5 class="light">.done();</h5>
+        <p>Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.</p>
+<pre><code>instance.done();
+instance.done(true);</code></pre>
+
+        <h5 class="light">.clear();</h5>
+        <p>Clear the input. Same as <code>done(true)</code>.</p>
+<pre><code>instance.clear();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove the clock, and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+
+        <h5 class="light">.open(); / .close();</h5>
+        <p>
+          Deprecated. Both log a warning and do nothing. The clock is not a modal.
+        </p>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The input the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>time</code></td>
+              <td>String</td>
+              <td>The last value written by <code>done()</code>, without the AM/PM suffix.</td>
+            </tr>
+            <tr>
+              <td><code>hours</code></td>
+              <td>Number</td>
+              <td>The hour currently shown on the clock.</td>
+            </tr>
+            <tr>
+              <td><code>minutes</code></td>
+              <td>Number</td>
+              <td>The minute currently shown on the clock.</td>
+            </tr>
+            <tr>
+              <td><code>amOrPm</code></td>
+              <td>String</td>
+              <td><code>'AM'</code> or <code>'PM'</code> when <code>twelveHour</code> is true.</td>
+            </tr>
+            <tr>
+              <td><code>currentView</code></td>
+              <td>String</td>
+              <td><code>'hours'</code> or <code>'minutes'</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#display">Display</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#internationalization">Internationalization</a></li>
+          <li><a href="#twelve-hour">12-hour and 24-hour</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

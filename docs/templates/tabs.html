@@ -1,0 +1,307 @@
+{% extends "docs.html" %}
+
+{% block title %}Tabs - RoutePlateCSS{% endblock %}
+{% block page_title %}Tabs{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Tabs</h1>
+      <h4 class="light primary-text">Switch between panels of content with a hash-linked tab bar.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Tabs are a list of links whose hashes match panel ids. Clicking a tab shows only that panel.
+          Add <code>disabled</code> to a <code>li.tab</code> to make it inaccessible.
+          <code>AutoInit()</code> starts every <code>.tabs</code> except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <ul class="tabs">
+          <li class="tab"><a href="#tabs-intro-flight"><i class="material-icons">flight</i>Flight</a></li>
+          <li class="tab"><a class="active" href="#tabs-intro-luggage"><i class="material-icons">luggage</i>Luggage</a></li>
+          <li class="tab"><a href="#tabs-intro-explore"><i class="material-icons">explore</i>Explore</a></li>
+        </ul>
+        <div id="tabs-intro-flight" class="py-3">Flight</div>
+        <div id="tabs-intro-luggage" class="py-3">Luggage</div>
+        <div id="tabs-intro-explore" class="py-3">Explore</div>
+        <p>Tabs become scrollable when there are too many to fit on screen.</p>
+        <ul class="tabs">
+          <li class="tab"><a href="#tabs-scroll-1">Test 1</a></li>
+          <li class="tab"><a href="#tabs-scroll-2">Test 2</a></li>
+          <li class="tab"><a href="#tabs-scroll-3">Test 3</a></li>
+          <li class="tab"><a href="#tabs-scroll-4">Test 4</a></li>
+          <li class="tab"><a href="#tabs-scroll-5">Test 5</a></li>
+          <li class="tab disabled"><a href="#tabs-scroll-6">Disabled Tab</a></li>
+          <li class="tab"><a href="#tabs-scroll-7">Test 7</a></li>
+          <li class="tab"><a href="#tabs-scroll-8">Test 8</a></li>
+          <li class="tab"><a href="#tabs-scroll-9">Test 9</a></li>
+          <li class="tab disabled"><a href="#tabs-scroll-10">Disabled Tab</a></li>
+          <li class="tab"><a href="#tabs-scroll-11">Test 11</a></li>
+        </ul>
+        <div id="tabs-scroll-1" class="py-3">Test 1</div>
+        <div id="tabs-scroll-2" class="py-3">Test 2</div>
+        <div id="tabs-scroll-3" class="py-3">Test 3</div>
+        <div id="tabs-scroll-4" class="py-3">Test 4</div>
+        <div id="tabs-scroll-5" class="py-3">Test 5</div>
+        <div id="tabs-scroll-6" class="py-3">Test 6</div>
+        <div id="tabs-scroll-7" class="py-3">Test 7</div>
+        <div id="tabs-scroll-8" class="py-3">Test 8</div>
+        <div id="tabs-scroll-9" class="py-3">Test 9</div>
+        <div id="tabs-scroll-10" class="py-3">Test 10</div>
+        <div id="tabs-scroll-11" class="py-3">Test 11</div>
+<pre><code>&lt;ul class="tabs"&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab disabled"&gt;&lt;a href="#test3"&gt;Disabled Tab&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test4"&gt;Test 4&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id="test1"&gt;Test 1&lt;/div&gt;
+&lt;div id="test2"&gt;Test 2&lt;/div&gt;
+&lt;div id="test3"&gt;Test 3&lt;/div&gt;
+&lt;div id="test4"&gt;Test 4&lt;/div&gt;</code></pre>
+        <p>
+          For tabs in an extended navbar, use <code>tabs-transparent</code>. See
+          <a href="{{ url_for('navbar') }}#navbar-tabs">Navbar with Tabs</a>.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Tabs</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.tabs</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.tabs');
+  const instances = RoutePlate.Tabs.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>duration</code></td>
+              <td>Number</td>
+              <td><code>300</code></td>
+              <td>Indicator transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>onShow</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a new tab panel is shown. Receives the panel element.</td>
+            </tr>
+            <tr>
+              <td><code>swipeable</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Enable swipeable tabs. Uses <code>responsiveThreshold</code>. Wraps the panels in a carousel.</td>
+            </tr>
+            <tr>
+              <td><code>responsiveThreshold</code></td>
+              <td>Number</td>
+              <td><code>Infinity</code></td>
+              <td>Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="method" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Tabs.getInstance(elem);</code></pre>
+
+        <h5 class="light">.select();</h5>
+        <p>Show the panel that belongs to the tab with this id.</p>
+        <p><strong>String:</strong> The id of the tab panel (without <code>#</code>).</p>
+<pre><code>instance.select('tab_id');</code></pre>
+
+        <h5 class="light">.updateTabIndicator();</h5>
+        <p>Recalculate the indicator position. Useful if the bar was hidden or resized.</p>
+<pre><code>instance.updateTabIndicator();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with (the <code>.tabs</code> list).</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>index</code></td>
+              <td>Number</td>
+              <td>Index of the tab that is currently shown.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="preselecting" class="section scrollspy">
+        <h3>Preselecting a tab</h3>
+        <p>
+          The first tab is selected by default. To pick another, add <code>active</code> to its
+          <code>&lt;a&gt;</code>, or load the page with a matching hash such as <code>#test2</code>.
+        </p>
+<pre><code>&lt;li class="tab"&gt;&lt;a class="active" href="#test3"&gt;Test 3&lt;/a&gt;&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="external" class="section scrollspy">
+        <h3>Linking to an External Page</h3>
+        <p>
+          Tabs ignore default anchor behaviour. To keep a tab as a normal hyperlink, set
+          <code>target</code> on the link.
+        </p>
+<pre><code>&lt;li class="tab"&gt;
+  &lt;a target="_blank" href="https://github.com"&gt;External link in new window&lt;/a&gt;
+&lt;/li&gt;
+&lt;li class="tab"&gt;
+  &lt;a target="_self" href="https://github.com"&gt;External link in same window&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="swipeable" class="section scrollspy">
+        <h3>Swipeable Tabs</h3>
+        <p>
+          Set <code>swipeable: true</code> to swipe between panels on touch devices.
+          Keep the tab panels in the same wrapping container. The implementation wraps those
+          panels in a carousel. <code>responsiveThreshold</code> is the viewport width below
+          which swipeable mode turns on.
+        </p>
+        <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
+        <ul id="tabs-swipe" class="tabs no-autoinit">
+          <li class="tab"><a href="#tabs-swipe-1">Test 1</a></li>
+          <li class="tab"><a class="active" href="#tabs-swipe-2">Test 2</a></li>
+          <li class="tab"><a href="#tabs-swipe-3">Test 3</a></li>
+        </ul>
+        <div class="tabs-swipe-demo">
+          <div id="tabs-swipe-1" class="primary-container on-primary-container-text center-align">Test 1</div>
+          <div id="tabs-swipe-2" class="secondary-container on-secondary-container-text center-align">Test 2</div>
+          <div id="tabs-swipe-3" class="tertiary-container on-tertiary-container-text center-align">Test 3</div>
+        </div>
+<pre><code>&lt;ul id="tabs-swipe-demo" class="tabs"&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test-swipe-1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a class="active" href="#test-swipe-2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test-swipe-3"&gt;Test 3&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id="test-swipe-1"&gt;Test 1&lt;/div&gt;
+&lt;div id="test-swipe-2"&gt;Test 2&lt;/div&gt;
+&lt;div id="test-swipe-3"&gt;Test 3&lt;/div&gt;</code></pre>
+<pre><code>RoutePlate.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
+  swipeable: true
+});</code></pre>
+      </div>
+
+      <div id="fixed-width" class="section scrollspy">
+        <h3>Fixed Width Tabs</h3>
+        <p>Add <code>tabs-fixed-width</code> so every tab grows equally. On medium and down, all tab bars already use this flex layout.</p>
+        <ul class="tabs tabs-fixed-width z-depth-1">
+          <li class="tab"><a href="#tabs-fixed-1">Test 1</a></li>
+          <li class="tab"><a class="active" href="#tabs-fixed-2">Test 2</a></li>
+          <li class="tab disabled"><a href="#tabs-fixed-3">Disabled Tab</a></li>
+          <li class="tab"><a href="#tabs-fixed-4">Test 4</a></li>
+          <li class="tab"><a href="#tabs-fixed-5">Test 5</a></li>
+        </ul>
+        <div id="tabs-fixed-1" class="py-3">Test 1</div>
+        <div id="tabs-fixed-2" class="py-3">Test 2</div>
+        <div id="tabs-fixed-3" class="py-3">Test 3</div>
+        <div id="tabs-fixed-4" class="py-3">Test 4</div>
+        <div id="tabs-fixed-5" class="py-3">Test 5</div>
+<pre><code>&lt;ul class="tabs tabs-fixed-width"&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab disabled"&gt;&lt;a href="#test3"&gt;Disabled Tab&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test4"&gt;Test 4&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="tab"&gt;&lt;a href="#test5"&gt;Test 5&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="icons" class="section scrollspy">
+        <h3>Icons</h3>
+        <p>
+          Icons stack above the label by default (the tab link is a column).
+          Add <code>tabs-horizontal</code> to put the icon and text on one line.
+        </p>
+        <ul class="tabs tabs-fixed-width tabs-horizontal z-depth-1">
+          <li class="tab"><a href="#tabs-horiz-flight"><i class="material-icons">flight</i>Flight</a></li>
+          <li class="tab"><a class="active" href="#tabs-horiz-luggage"><i class="material-icons">luggage</i>Luggage</a></li>
+          <li class="tab"><a href="#tabs-horiz-explore"><i class="material-icons">explore</i>Explore</a></li>
+        </ul>
+        <div id="tabs-horiz-flight" class="py-3">Flight</div>
+        <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
+        <div id="tabs-horiz-explore" class="py-3">Explore</div>
+<pre><code>&lt;ul class="tabs tabs-fixed-width tabs-horizontal"&gt;
+  &lt;li class="tab"&gt;
+    &lt;a href="#image-test1"&gt;&lt;i class="material-icons"&gt;flight&lt;/i&gt;Flight&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="tab"&gt;
+    &lt;a class="active" href="#image-test2"&gt;&lt;i class="material-icons"&gt;luggage&lt;/i&gt;Luggage&lt;/a&gt;
+  &lt;/li&gt;
+  &lt;li class="tab"&gt;
+    &lt;a href="#image-test3"&gt;&lt;i class="material-icons"&gt;explore&lt;/i&gt;Explore&lt;/a&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#method">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#preselecting">Preselecting</a></li>
+          <li><a href="#external">External Links</a></li>
+          <li><a href="#swipeable">Swipeable Tabs</a></li>
+          <li><a href="#fixed-width">Fixed Width Tabs</a></li>
+          <li><a href="#icons">Icons</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

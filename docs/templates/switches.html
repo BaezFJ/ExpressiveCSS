@@ -1,0 +1,74 @@
+{% extends "docs.html" %}
+
+{% block title %}Switches - RoutePlateCSS{% endblock %}
+{% block page_title %}Switches{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Switches</h1>
+      <h4 class="light primary-text">A checkbox styled for binary on / off states.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="switches" class="section scrollspy">
+        <p class="flow-text">
+          Switches are checkboxes for on / off. They are CSS only: wrap a checkbox and a
+          <code>span.lever</code> in <code>.switch &gt; label</code>. There is no JavaScript
+          component and nothing to AutoInit.
+        </p>
+
+        <div class="switch mb-5">
+          <label>
+            Off
+            <input type="checkbox">
+            <span class="lever"></span>
+            On
+          </label>
+        </div>
+        <div class="switch mb-5">
+          <label>
+            Off
+            <input type="checkbox" disabled>
+            <span class="lever"></span>
+            On
+          </label>
+        </div>
+<pre><code>&lt;!-- Switch --&gt;
+&lt;div class="switch"&gt;
+  &lt;label&gt;
+    Off
+    &lt;input type="checkbox"&gt;
+    &lt;span class="lever"&gt;&lt;/span&gt;
+    On
+  &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Disabled Switch --&gt;
+&lt;div class="switch"&gt;
+  &lt;label&gt;
+    Off
+    &lt;input type="checkbox" disabled&gt;
+    &lt;span class="lever"&gt;&lt;/span&gt;
+    On
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#switches">Switches</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,260 @@
+{% extends "docs.html" %}
+
+{% block title %}Floating Action Button - RoutePlateCSS{% endblock %}
+{% block page_title %}Floating Action Button{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Floating Action Button</h1>
+      <h4 class="light primary-text">A circular action that can open a menu of related shortcuts.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="fixed-action-btn">
+  <a class="btn-floating btn-large waves-effect waves-light">
+    <i class="large material-icons">mode_edit</i>
+  </a>
+  <ul>
+    <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+    <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+    <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+    <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+  </ul>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          If you want a fixed floating action button, you can add multiple actions that appear on hover.
+          The live demo is in the bottom-right corner of the page.
+        </p>
+        <p>
+          Wrap a large <code>btn-floating</code> and a list of smaller ones in
+          <code>fixed-action-btn</code>. That class pins the control to the corner.
+          <code>AutoInit()</code> starts every matching element except those marked
+          <code>no-autoinit</code>.
+        </p>
+<pre><code>&lt;div class="fixed-action-btn"&gt;
+  &lt;a class="btn-floating btn-large waves-effect waves-light"&gt;
+    &lt;i class="large material-icons"&gt;mode_edit&lt;/i&gt;
+  &lt;/a&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a class="btn-floating red"&gt;&lt;i class="material-icons"&gt;insert_chart&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="btn-floating yellow darken-1"&gt;&lt;i class="material-icons"&gt;format_quote&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="btn-floating green"&gt;&lt;i class="material-icons"&gt;publish&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="btn-floating blue"&gt;&lt;i class="material-icons"&gt;attach_file&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.FloatingActionButton</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every
+          <code>.fixed-action-btn</code> with the defaults below.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.fixed-action-btn');
+  const instances = RoutePlate.FloatingActionButton.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>
+          Per-instance options can also be passed through AutoInit:
+        </p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  FloatingActionButton: { direction: 'top' }
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>direction</code></td>
+              <td>String</td>
+              <td><code>'top'</code></td>
+              <td>Direction the menu opens. One of <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. The constructor adds the matching <code>direction-*</code> class.</td>
+            </tr>
+            <tr>
+              <td><code>hoverEnabled</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>When <code>true</code>, the menu opens on hover. When <code>false</code>, it toggles on click. There is no <code>click-to-toggle</code> class — this option is the only switch.</td>
+            </tr>
+            <tr>
+              <td><code>toolbarEnabled</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Expand the FAB into a toolbar on click. See <a href="#toolbar">FAB to Toolbar</a>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.FloatingActionButton.getInstance(elem);</code></pre>
+
+        <h5 class="light">.open();</h5>
+        <p>Opens the FAB menu.</p>
+<pre><code>instance.open();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Closes the FAB menu.</p>
+<pre><code>instance.close();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Describes the open/close state of the FAB.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="horizontal" class="section scrollspy">
+        <h3>Horizontal FAB</h3>
+        <p>Creating a horizontal FAB is easy. Set the <code>direction</code> option to <code>'left'</code> or <code>'right'</code>.</p>
+        <div class="fab-demo">
+          <div class="fixed-action-btn no-autoinit" id="fab-horizontal">
+            <a class="btn-floating btn-large waves-effect waves-light">
+              <i class="large material-icons">mode_edit</i>
+            </a>
+            <ul>
+              <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+              <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+              <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+              <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+            </ul>
+          </div>
+        </div>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.fixed-action-btn');
+  const instances = RoutePlate.FloatingActionButton.init(elems, {
+    direction: 'left'
+  });
+});</code></pre>
+      </div>
+
+      <div id="click-only" class="section scrollspy">
+        <h3>Click-only FAB</h3>
+        <p>
+          To disable hover and toggle the menu when the large button is clicked — useful on touch devices —
+          pass <code>hoverEnabled: false</code>. RoutePlate does not read a
+          <code>click-to-toggle</code> class; the option is the only way to switch.
+        </p>
+        <div class="fab-demo">
+          <div class="fixed-action-btn no-autoinit" id="fab-click-only">
+            <a class="btn-floating btn-large waves-effect waves-light">
+              <i class="large material-icons">menu</i>
+            </a>
+            <ul>
+              <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+              <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+              <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+              <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+            </ul>
+          </div>
+        </div>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.fixed-action-btn');
+  const instances = RoutePlate.FloatingActionButton.init(elems, {
+    direction: 'left',
+    hoverEnabled: false
+  });
+});</code></pre>
+      </div>
+
+      <div id="toolbar" class="section scrollspy">
+        <h3>FAB to Toolbar</h3>
+        <p>
+          <code>toolbarEnabled: true</code> is still in the options object and expands the button into a
+          full-width toolbar on click. Add the <code>toolbar</code> class yourself — the constructor only
+          adds <code>direction-*</code>, not <code>toolbar</code>.
+        </p>
+        <p>
+          Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu unless you
+          specifically need the toolbar transition.
+        </p>
+<pre><code>&lt;div class="fixed-action-btn toolbar"&gt;
+  &lt;a class="btn-floating btn-large"&gt;
+    &lt;i class="large material-icons"&gt;mode_edit&lt;/i&gt;
+  &lt;/a&gt;
+  &lt;ul&gt;
+    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;insert_chart&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;format_quote&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;publish&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;attach_file&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+<pre><code>RoutePlate.FloatingActionButton.init(
+  document.querySelector('.fixed-action-btn.toolbar'),
+  { toolbarEnabled: true }
+);</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#horizontal">Horizontal</a></li>
+          <li><a href="#click-only">Click Only FAB</a></li>
+          <li><a href="#toolbar">FAB to Toolbar</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "docs.html" %}
+
+{% block title %}Scrollspy - RoutePlateCSS{% endblock %}
+{% block page_title %}Scrollspy{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Scrollspy</h1>
+      <h4 class="light primary-text">Highlight the table of contents as the page scrolls.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Scrollspy watches a set of sections and which one is currently in view.
+          The table of contents on the right of every documentation page is the live demo:
+          the matching link gets <code>active</code>, and clicking a link scrolls to that section.
+        </p>
+        <p>
+          Put <code>scrollspy</code> and an <code>id</code> on each section.
+          In the TOC, use <code>table-of-contents</code> and point each link at
+          <code>#that-id</code>. <code>AutoInit()</code> starts every
+          <code>.scrollspy</code> except those marked <code>no-autoinit</code>.
+        </p>
+<pre><code>&lt;div class="row"&gt;
+  &lt;div class="s12 m9"&gt;
+    &lt;div id="introduction" class="section scrollspy"&gt;
+      &lt;p&gt;Content&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div id="structure" class="section scrollspy"&gt;
+      &lt;p&gt;Content&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div id="initialization" class="section scrollspy"&gt;
+      &lt;p&gt;Content&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="hide-on-small-only m3"&gt;
+    &lt;ul class="section table-of-contents"&gt;
+      &lt;li&gt;&lt;a href="#introduction"&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#structure"&gt;Structure&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#initialization"&gt;Initialization&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.ScrollSpy</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>RoutePlate.AutoInit()</code> start every <code>.scrollspy</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.scrollspy');
+  const instances = RoutePlate.ScrollSpy.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  ScrollSpy: { scrollOffset: 200 }
+});</code></pre>
+        <p>
+          These documentation pages also pin the TOC with Pushpin. That is a separate component —
+          Scrollspy only updates which link is active and handles the click-to-scroll.
+        </p>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>throttle</code></td>
+              <td>Number</td>
+              <td><code>100</code></td>
+              <td>Throttle of the scroll handler, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>scrollOffset</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>Offset used when deciding which section is in view. A larger value lets sections near the bottom of the page become active sooner.</td>
+            </tr>
+            <tr>
+              <td><code>activeClass</code></td>
+              <td>String</td>
+              <td><code>'active'</code></td>
+              <td>Class applied to the active table-of-contents link.</td>
+            </tr>
+            <tr>
+              <td><code>getActiveElement</code></td>
+              <td>Function</td>
+              <td>see below</td>
+              <td>Returns a CSS selector for the element that should receive <code>activeClass</code>, given the section’s id.</td>
+            </tr>
+            <tr>
+              <td><code>keepTopElementActive</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active.</td>
+            </tr>
+            <tr>
+              <td><code>animationDuration</code></td>
+              <td>Number</td>
+              <td><code>null</code></td>
+              <td>Duration of the click-to-scroll animation, in milliseconds. <code>null</code> uses the browser’s native <code>scrollIntoView({ behavior: 'smooth' })</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h5 class="light">getActiveElement</h5>
+        <p>
+          Default function for finding the active link. <code>id</code> is the id of the
+          <code>.scrollspy</code> section. Return a CSS selector for the element that should be marked active.
+        </p>
+<pre><code>function(id) {
+  return 'a[href="#' + id + '"]';
+}</code></pre>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.ScrollSpy.getInstance(elem);</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with (the <code>.scrollspy</code> section).</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

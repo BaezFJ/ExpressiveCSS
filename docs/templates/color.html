@@ -1,0 +1,197 @@
+{% extends "docs.html" %}
+
+{% block title %}Color - RoutePlateCSS{% endblock %}
+{% block page_title %}Color{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Color</h1>
+      <h4 class="light primary-text">Theme tokens for new work, plus the legacy Material palette.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="tokens" class="section scrollspy">
+        <p class="flow-text">
+          RoutePlate ships two color systems. New styles should use the Material Design 3
+          tokens — CSS custom properties on <code>:root</code> named
+          <code>--md-sys-color-*</code>, exposed as utility classes like
+          <code>.primary</code> and <code>.on-surface-text</code>. The older
+          <code>.red.lighten-2</code> palette is still generated for compatibility.
+        </p>
+        <p>
+          Token values follow the page theme. The docs site sets
+          <code>&lt;html theme="light"&gt;</code> or <code>theme="dark"</code>.
+          Without that attribute, the tokens follow
+          <code>prefers-color-scheme</code>.
+        </p>
+        <p>
+          A background class sets <code>background-color</code>. Append
+          <code>-text</code> for <code>color</code>. Pair a fill with its
+          <code>on-*</code> text class so contrast stays correct when the theme flips.
+        </p>
+        <div class="row mb-3">
+          <div class="s12 m6">
+            <div class="color-swatch primary on-primary-text">.primary</div>
+            <div class="color-swatch on-primary primary-text">.on-primary</div>
+            <div class="color-swatch primary-container on-primary-container-text">.primary-container</div>
+            <div class="color-swatch on-primary-container primary-container-text">.on-primary-container</div>
+          </div>
+          <div class="s12 m6">
+            <div class="color-swatch secondary on-secondary-text">.secondary</div>
+            <div class="color-swatch tertiary on-tertiary-text">.tertiary</div>
+            <div class="color-swatch error on-error-text">.error</div>
+            <div class="color-swatch surface-variant on-surface-variant-text">.surface-variant</div>
+          </div>
+        </div>
+<pre><code>&lt;div class="primary on-primary-text"&gt;.primary&lt;/div&gt;
+&lt;span class="on-surface-text"&gt;.on-surface-text&lt;/span&gt;</code></pre>
+        <p>The named utilities are:</p>
+        <p>
+          <code>primary</code>, <code>on-primary</code>, <code>primary-container</code>,
+          <code>on-primary-container</code>,
+          <code>secondary</code>, <code>on-secondary</code>, <code>secondary-container</code>,
+          <code>on-secondary-container</code>,
+          <code>tertiary</code>, <code>on-tertiary</code>, <code>tertiary-container</code>,
+          <code>on-tertiary-container</code>,
+          <code>error</code>, <code>on-error</code>, <code>error-container</code>,
+          <code>on-error-container</code>,
+          <code>background</code>, <code>on-background</code>,
+          <code>surface</code>, <code>on-surface</code>,
+          <code>surface-variant</code>, <code>on-surface-variant</code>,
+          <code>outline</code>, <code>outline-variant</code>,
+          <code>inverse-surface</code>, <code>inverse-on-surface</code>,
+          <code>inverse-primary</code>,
+          <code>shadow</code>, <code>surface-tint</code>, <code>scrim</code>.
+        </p>
+        <p>
+          Each name is a background class. The same name plus <code>-text</code> is the
+          foreground class (<code>.primary-text</code>, <code>.on-surface-text</code>).
+        </p>
+        <p>
+          In Sass, consume the token directly. Do not write
+          <code>rgba(var(--md-sys-color-primary), 0.06)</code> — the tokens hold hex
+          colors, so that form is invalid. Mix with transparency instead:
+        </p>
+<pre><code>.my-tint {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.my-overlay {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+}</code></pre>
+      </div>
+
+      <div id="color-usage" class="section scrollspy">
+        <h3>Usage</h3>
+        <p>
+          The legacy palette is the Material Design 2014 ramps: a color name plus an
+          optional <code>lighten-*</code>, <code>darken-*</code>, or <code>accent-*</code>
+          class. Prefer the token utilities above for new work.
+        </p>
+
+        <h5>Background Color</h5>
+        <p>Add the color name and, if you need a shade, the lighten/darken/accent class.</p>
+        <div class="card-panel teal lighten-2 mb-3">This is a card panel with a teal lighten-2 class</div>
+<pre><code>&lt;div class="card-panel teal lighten-2"&gt;This is a card panel with a teal lighten-2 class&lt;/div&gt;</code></pre>
+
+        <h5>Text Color</h5>
+        <p>
+          Append <code>-text</code> to the color name. Shade modifiers on text use a
+          <code>text-</code> prefix: <code>text-darken-2</code>, <code>text-lighten-1</code>,
+          <code>text-accent-2</code>.
+        </p>
+        <div class="card-panel mb-3">
+          <span class="blue-text text-darken-2">This is a card panel with dark blue text</span>
+        </div>
+<pre><code>&lt;div class="card-panel"&gt;
+  &lt;span class="blue-text text-darken-2"&gt;This is a card panel with dark blue text&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          <code>black</code>, <code>white</code>, and <code>transparent</code> are
+          standalone classes (and <code>-text</code> variants). There is also
+          <code>routeplate-red</code> with lighten/darken shades (no accents) — that is
+          the rebranded Materialize red ramp.
+        </p>
+      </div>
+
+      <div id="sass" class="section scrollspy">
+        <h3>Sass</h3>
+        <p>
+          Do not <code>@extend</code> these classes across files — that is how the old
+          stylesheet lost control of cascade order. In a component partial, call
+          <code>colorFunc("blue", "lighten-4")</code> or set the MD3 token.
+        </p>
+<pre><code>.ilike-blue-container {
+  background-color: colorFunc("blue", "lighten-4");
+  color: colorFunc("blue", "darken-2");
+}</code></pre>
+        <p>
+          <code>colorFunc($color, $type)</code> reads the <code>$colors</code> map.
+          <code>$type</code> is <code>"base"</code>, <code>"lighten-5"</code> …
+          <code>"lighten-1"</code>, <code>"darken-1"</code> … <code>"darken-4"</code>,
+          or <code>"accent-1"</code> … <code>"accent-4"</code> when that ramp has accents.
+        </p>
+      </div>
+
+      <div id="palette" class="section scrollspy">
+        <h3>Color Palette</h3>
+        <p>Every generated background class, grouped by family.</p>
+
+        {% set accented = [
+          'red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue',
+          'light-blue', 'cyan', 'teal', 'green', 'light-green', 'lime',
+          'yellow', 'amber', 'orange', 'deep-orange'
+        ] %}
+        {% set no_accent = ['routeplate-red', 'brown', 'blue-grey', 'grey'] %}
+        {% set light_bases = ['lime', 'yellow', 'amber', 'light-green'] %}
+
+        <div class="row">
+          {% for name in accented + no_accent %}
+          <div class="s12 m6 l4 mb-5">
+            {% for n in [5, 4, 3, 2, 1] %}
+            <div class="color-swatch {{ name }} lighten-{{ n }}">{{ name }} lighten-{{ n }}</div>
+            {% endfor %}
+            <div class="color-swatch {{ name }}{% if name not in light_bases %} white-text{% endif %}">{{ name }}</div>
+            {% for n in [1, 2, 3, 4] %}
+            <div class="color-swatch {{ name }} darken-{{ n }} white-text">{{ name }} darken-{{ n }}</div>
+            {% endfor %}
+            {% if name in accented %}
+            <div class="color-swatch {{ name }} accent-1">{{ name }} accent-1</div>
+            <div class="color-swatch {{ name }} accent-2{% if name not in light_bases %} white-text{% endif %}">{{ name }} accent-2</div>
+            <div class="color-swatch {{ name }} accent-3{% if name not in light_bases %} white-text{% endif %}">{{ name }} accent-3</div>
+            <div class="color-swatch {{ name }} accent-4 white-text">{{ name }} accent-4</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <div class="s12 m6 l4 mb-5">
+            <div class="color-swatch black white-text">black</div>
+            <div class="color-swatch white">white</div>
+            <div class="surface-variant">
+              <div class="color-swatch transparent">transparent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#tokens">Theme tokens</a></li>
+          <li><a href="#color-usage">Usage</a></li>
+          <li><a href="#sass">Sass</a></li>
+          <li><a href="#palette">Color Palette</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends "docs.html" %}
+
+{% block title %}Badges - RoutePlateCSS{% endblock %}
+{% block page_title %}Badges{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Badges</h1>
+      <h4 class="light primary-text">Notify that there are new or unread messages or notifications.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="collections" class="section scrollspy">
+        <p class="flow-text">
+          Badges can notify you that there are new or unread messages or notifications. Add the
+          <code>new</code> class to the badge to give it the background.
+        </p>
+        <h3>Collections</h3>
+        <div class="collection">
+          <a href="#!" class="collection-item"><span class="badge">1</span>Alan</a>
+          <a href="#!" class="collection-item"><span class="new badge">4</span>Alan</a>
+          <a href="#!" class="collection-item">Alan</a>
+          <a href="#!" class="collection-item"><span class="badge">14</span>Alan</a>
+        </div>
+<pre><code>&lt;div class="collection"&gt;
+  &lt;a href="#!" class="collection-item"&gt;&lt;span class="badge"&gt;1&lt;/span&gt;Alan&lt;/a&gt;
+  &lt;a href="#!" class="collection-item"&gt;&lt;span class="new badge"&gt;4&lt;/span&gt;Alan&lt;/a&gt;
+  &lt;a href="#!" class="collection-item"&gt;Alan&lt;/a&gt;
+  &lt;a href="#!" class="collection-item"&gt;&lt;span class="badge"&gt;14&lt;/span&gt;Alan&lt;/a&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="dropdown" class="section scrollspy">
+        <h3>Badges in Dropdown</h3>
+        <ul id="dropdown-badges" class="dropdown-content">
+          <li>
+            <a href="#!">one<span class="badge">1</span></a>
+          </li>
+          <li>
+            <a href="#!">two<span class="new badge">1</span></a>
+          </li>
+          <li><a href="#!">three</a></li>
+        </ul>
+        <a class="btn filled dropdown-trigger" href="#!" data-target="dropdown-badges">
+          Dropdown<i class="material-icons right">arrow_drop_down</i>
+        </a>
+<pre><code>&lt;ul id="dropdown-badges" class="dropdown-content"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;one&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;two&lt;span class="new badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a class="btn dropdown-trigger" href="#!" data-target="dropdown-badges"&gt;
+  Dropdown&lt;i class="material-icons right"&gt;arrow_drop_down&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+
+      <div id="navbar" class="section scrollspy">
+        <h3>Badges in Navbar</h3>
+        <nav class="navbar">
+          <div class="nav-wrapper primary">
+            <a href="#!" class="brand-logo">Logo</a>
+            <ul class="right hide-on-med-and-down">
+              <li><a href="#!">sass</a></li>
+              <li>
+                <a href="#!">sass <span class="new badge">4</span></a>
+              </li>
+              <li><a href="#!">sass</a></li>
+            </ul>
+          </div>
+        </nav>
+<pre><code>&lt;nav class="navbar"&gt;
+  &lt;div class="nav-wrapper"&gt;
+    &lt;a href="#!" class="brand-logo"&gt;Logo&lt;/a&gt;
+    &lt;ul class="right hide-on-med-and-down"&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;sass&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;sass &lt;span class="new badge"&gt;4&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;sass&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="collapsible" class="section scrollspy">
+        <h3>Badges in Collapsibles</h3>
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">filter_drama</i>
+              <div class="collapsible-header-content">First</div>
+              <span class="new badge">4</span>
+            </div>
+            <div class="collapsible-body">
+              <p>Lorem ipsum dolor sit amet.</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">place</i>
+              <div class="collapsible-header-content">Second</div>
+              <span class="badge">1</span>
+            </div>
+            <div class="collapsible-body">
+              <p>Lorem ipsum dolor sit amet.</p>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">textsms</i>
+              <div class="collapsible-header-content">Third</div>
+              <span class="badge leading new">4</span>
+            </div>
+            <div class="collapsible-body">
+              <p>Lorem ipsum dolor sit amet.</p>
+            </div>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="collapsible"&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-icons"&gt;filter_drama&lt;/i&gt;
+      &lt;div class="collapsible-header-content"&gt;First&lt;/div&gt;
+      &lt;span class="new badge"&gt;4&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-icons"&gt;place&lt;/i&gt;
+      &lt;div class="collapsible-header-content"&gt;Second&lt;/div&gt;
+      &lt;span class="badge"&gt;1&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-icons"&gt;textsms&lt;/i&gt;
+      &lt;div class="collapsible-header-content"&gt;Third&lt;/div&gt;
+      &lt;span class="badge leading new"&gt;4&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <p class="flow-text">You can customize captions in many ways.</p>
+
+        <h5 class="light">Custom Caption</h5>
+        <div class="collection">
+          <a href="#!" class="collection-item">Custom Badge Captions<span class="new badge" data-badge-caption="custom caption">4</span></a>
+          <a href="#!" class="collection-item">Custom Badge Captions<span class="badge" data-badge-caption="custom caption">4</span></a>
+        </div>
+        <p>
+          You can explicitly set the caption in a badge using the
+          <code>data-badge-caption</code>
+          attribute.
+        </p>
+<pre><code>&lt;span class="new badge" data-badge-caption="custom caption"&gt;4&lt;/span&gt;
+&lt;span class="badge" data-badge-caption="custom caption"&gt;4&lt;/span&gt;</code></pre>
+
+        <h5 class="light">Colors</h5>
+        <div class="collection">
+          <a href="#!" class="collection-item">Red<span class="new badge red" data-badge-caption="red">4</span></a>
+          <a href="#!" class="collection-item">Blue<span class="new badge blue" data-badge-caption="blue">4</span></a>
+        </div>
+        <p>You can use our color classes to set the background-color of the badge.</p>
+<pre><code>&lt;span class="new badge red"&gt;4&lt;/span&gt;
+&lt;span class="new badge blue"&gt;4&lt;/span&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#collections">Collections</a></li>
+          <li><a href="#dropdown">Dropdown</a></li>
+          <li><a href="#navbar">Navbar</a></li>
+          <li><a href="#collapsible">Collapsible</a></li>
+          <li><a href="#options">Options</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
