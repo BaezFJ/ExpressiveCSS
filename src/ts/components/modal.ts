@@ -77,12 +77,16 @@ export class Modal extends Component<ModalOptions> {
   // Experimental!
 
   static #createHtml(config: ModalCreateConfig) {
-    return `<dialog id="modal1" class="modal">
-      ${config.header ? '<div class="modal-header">' + config.header + '</div>' : ''}
-      <div class="modal-content">
-        ${config.content}
-      </div>
-      ${config.header ? '<div class="modal-footer">' + config.footer + '</div>' : ''}
+    const title = config.header
+      ? `<h2>${typeof config.header === 'string' ? config.header : ''}</h2>`
+      : '';
+    const actions = config.footer
+      ? `<form method="dialog">${typeof config.footer === 'string' ? config.footer : ''}</form>`
+      : '';
+    return `<dialog id="${config.id}">
+      ${title}
+      <div>${typeof config.content === 'string' ? config.content : ''}</div>
+      ${actions}
     </dialog>`;
   }
 

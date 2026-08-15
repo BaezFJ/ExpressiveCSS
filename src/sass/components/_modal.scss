@@ -1,74 +1,144 @@
 @use "../abstracts" as *;
 
-// use with dialog html element
+// Dialogs.
+//
+// Anatomy is the HTML. A <dialog> is a basic dialog. A heading is the
+// headline, a <p> (or a wrapping <div>) is supporting text, and the last
+// child <form method="dialog"> or <nav> is the action row. .modal and
+// .modal-header / .modal-content / .modal-footer stay as aliases.
+//
+// Tokens follow https://m3.material.io/components/dialogs/specs
+//   container    surface, 28dp corners, 280–560dp, elevation 3
+//   headline     headline-small / on-surface
+//   body         body-medium / on-surface-variant
+//   icon         24dp, on-secondary
+//   actions      end-aligned, 8dp gap
+//   scrim        32%
+//   padding      24dp
+
+dialog,
 .modal {
-  --modal-footer-divider-height: 1px;
-  --modal-border-radius: 28px;
-  --modal-padding: 24px;
-  --modal-padding-bottom: 16px;
-  --modal-background-color: color-mix(in oklab, var(--md-sys-color-surface), var(--md-sys-color-surface-tint) 17%);
+  --md-comp-basic-dialog-container-color: var(--md-sys-color-surface);
+  --md-comp-basic-dialog-container-shape: 28px;
+  --md-comp-basic-dialog-container-min-width: 280px;
+  --md-comp-basic-dialog-container-max-width: 560px;
 
-  @include z-depth("5");
-  border: none;
-  outline: none;
+  box-sizing: border-box;
+  width: min(var(--md-comp-basic-dialog-container-max-width), calc(100% - 48px));
+  min-width: min(var(--md-comp-basic-dialog-container-min-width), calc(100% - 48px));
+  max-height: min(70vh, calc(100% - 48px));
+  margin: auto;
   padding: 0;
-  max-height: 70%;
-  width: 55%;
-  border-radius: var(--modal-border-radius);
-  will-change: top, opacity;
-  background-color: var(--modal-background-color);
+  border: none;
+  border-radius: var(--md-comp-basic-dialog-container-shape);
+  background-color: var(--md-comp-basic-dialog-container-color);
+  color: var(--md-sys-color-on-surface);
+  outline: none;
+  @include z-depth("3");
 
-  // Dialog open
-  &[open] {
-    display: flex;
-    flex-direction: column;
-  }
-
-  @include bp-down("large") {
-    width: 80%;
-  }
-
-  // custom backdrop blur
   &::backdrop {
-    backdrop-filter: blur(1px);
-  }
-
-  .modal-header {
-    padding: var(--modal-padding);
-    padding-bottom: var(--modal-padding-bottom);
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    background-color: var(--modal-background-color);
-  }
-  .modal-content {
-    padding: 0 var(--modal-padding);
-  }
-  .modal-footer {
-    border-radius: 0 0 var(--modal-border-radius) var(--modal-border-radius);
-    padding: var(--modal-padding);
-    text-align: right;
-    flex-shrink: 0;
-    position: sticky;
-    bottom: 0;
-    background-color: var(--modal-background-color);
-  }
-
-  .modal-close {
-    cursor: pointer;
-  }
-
-  // todo: remove maybe
-  h1,h2,h3,h4,h5,h6 {
-    margin: 0;
+    background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
   }
 }
 
-// Modal Bottom Sheet Style
+dialog[open],
+.modal[open] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// Optional leading icon (M3 basic dialog).
+dialog > i:first-child {
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 24px 24px 0;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  color: var(--md-sys-color-secondary);
+}
+
+dialog > :is(h1, h2, h3, h4, h5, h6),
+.modal-header {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 24px 24px 16px;
+  font-family: var(--md-sys-typescale-headline-small-font-family-name);
+  font-size: var(--md-sys-typescale-headline-small-font-size);
+  font-weight: var(--md-sys-typescale-headline-small-font-weight);
+  line-height: var(--md-sys-typescale-headline-small-line-height);
+  letter-spacing: var(--md-sys-typescale-headline-small-letter-spacing);
+  color: var(--md-sys-color-on-surface);
+}
+
+dialog > i:first-child + :is(h1, h2, h3, h4, h5, h6) {
+  padding-top: 16px;
+  text-align: center;
+}
+
+dialog > p,
+dialog > div,
+.modal-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  margin: 0;
+  padding: 0 24px 16px;
+  font-family: var(--md-sys-typescale-body-medium-font-family-name);
+  font-size: var(--md-sys-typescale-body-medium-font-size);
+  font-weight: var(--md-sys-typescale-body-medium-font-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+  color: color-mix(in oklab, currentColor 72%, transparent);
+}
+
+dialog > :is(h1, h2, h3, h4, h5, h6) + p,
+.modal-header + .modal-content {
+  padding-top: 0;
+}
+
+// Action row. form[method=dialog] is the native close mechanism.
+dialog > :is(form, nav):last-child,
+.modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 16px 16px;
+  border: 0;
+  background: none;
+}
+
+.modal-close {
+  cursor: pointer;
+}
+
+// Full-screen (M3). Takes the viewport; no corners.
+dialog.max,
+.modal.max {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+}
+
+// Bottom sheet. M3 sheets are a sibling component; this keeps the existing
+// RoutePlate helper and BeerCSS's `bottom` name.
+dialog.bottom,
+dialog.bottom-sheet,
 .modal.bottom-sheet {
-  margin-bottom: 0;
-  max-height: 45%;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  will-change: bottom, opacity;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  max-height: 50%;
+  margin: auto 0 0;
+  border-radius: var(--md-comp-basic-dialog-container-shape)
+    var(--md-comp-basic-dialog-container-shape) 0 0;
 }
