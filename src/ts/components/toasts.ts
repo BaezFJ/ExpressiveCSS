@@ -7,6 +7,21 @@ export interface ToastOptions extends BaseOptions {
    */
   text: string;
   /**
+   * Optional action label. Rendered as a trailing text button.
+   * @default ""
+   */
+  action: string;
+  /**
+   * Called when the action button is pressed. The toast still dismisses.
+   * @default null
+   */
+  onAction: () => void;
+  /**
+   * Show a trailing close icon button.
+   * @default false
+   */
+  dismissible: boolean;
+  /**
    * Element Id for the tooltip.
    * @default ""
    */
@@ -46,6 +61,9 @@ export interface ToastOptions extends BaseOptions {
 
 const _defaults: ToastOptions = {
   text: '',
+  action: '',
+  onAction: null,
+  dismissible: false,
   displayLength: 4000,
   inDuration: 300,
   outDuration: 375,
@@ -130,9 +148,12 @@ export class Toast {
   }
 
   static _onDragStart(e: TouchEvent | MouseEvent) {
-    if (e.target && (<HTMLElement>e.target).closest('.toast')) {
-      const toastElem = (<HTMLElement>e.target).closest('.toast');
+    const target = e.target as HTMLElement | null;
+    // Don't start a swipe from the action or close — those are buttons.
+    if (target && !target.closest('button, a') && target.closest('.toast, .snackbar')) {
+      const toastElem = target.closest('.toast, .snackbar') as HTMLElement;
       const toast: Toast = toastElem['RoutePlate_Toast'];
+      if (!toast) return;
       toast.panning = true;
       Toast._draggedToast = toast;
       toast.el.classList.add('panning');
@@ -208,15 +229,48 @@ export class Toast {
       const node = (toast as HTMLTemplateElement).content.cloneNode(true);
       toast = (node as HTMLElement).firstElementChild as HTMLElement;
     }
-    toast.classList.add('toast');
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
+    toast.classList.add('toast', 'snackbar');
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     toast.setAttribute('aria-atomic', 'true');
     // Add custom classes onto toast
     if (this.options.classes.length > 0) {
-      toast.classList.add(...this.options.classes.split(' '));
+      toast.classList.add(...this.options.classes.split(' ').filter(Boolean));
     }
-    if (this.message) toast.innerText = this.message;
+    if (this.message) {
+      const text = document.createElement('p');
+      text.textContent = this.message;
+      toast.replaceChildren(text);
+    }
+    if (this.options.action) {
+      const action = document.createElement('button');
+      action.type = 'button';
+      action.textContent = this.options.action;
+      action.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (typeof this.options.onAction === 'function') {
+          this.options.onAction();
+        }
+        this.dismiss();
+      });
+      toast.appendChild(action);
+    }
+    if (this.options.dismissible) {
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'circle';
+      close.setAttribute('aria-label', 'Dismiss');
+      const icon = document.createElement('i');
+      icon.className = 'material-icons';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = 'close';
+      close.appendChild(icon);
+      close.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.dismiss();
+      });
+      toast.appendChild(close);
+    }
     Toast._container.appendChild(toast);
     return toast;
   }

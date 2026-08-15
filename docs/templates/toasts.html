@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Toasts</h1>
-      <h4 class="light primary-text">Short, unobtrusive alerts that appear and dismiss themselves.</h4>
+      <h4 class="light primary-text">Material Design 3 snackbars, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -17,35 +17,129 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Toasts are small alerts that appear, then dismiss themselves. They resize and reposition
-          by breakpoint — try the button on a narrow and a wide viewport.
+          A <code>.snackbar</code> (or <code>.toast</code> — they are the
+          same element) is the bar. A <code>&lt;p&gt;</code> is the
+          supporting text. A trailing <code>&lt;button&gt;</code> is the
+          action; a <code>.circle</code> button is the optional close.
+          There is no <code>toast-action</code> class required — that name
+          remains as an alias.
         </p>
         <p>
-          Toast is not in <code>AutoInit()</code>. Construct one when you need it:
+          Tokens follow the
+          <a href="https://m3.material.io/components/snackbar/specs">M3 snackbar spec</a>.
+          The container is <code>inverse-surface</code>, 4dp corners,
+          elevation 3, 48dp minimum. Supporting text is
+          <code>body-medium</code> / <code>inverse-on-surface</code>. The
+          action is a <code>label-large</code> /
+          <code>inverse-primary</code> text button. Close is a 24dp
+          <code>inverse-on-surface</code> icon. On compact viewports the
+          bar is inset 8dp from the edges; from the small breakpoint up it
+          hugs content (344–672dp) and sits 24dp from the start and the
+          bottom — not the top-right.
         </p>
         <p>
-          <button type="button" class="btn filled waves-effect" id="toast-basic">Show Toast</button>
+          Toast is not in <code>AutoInit()</code> and there is no
+          <code>toast()</code> helper. Construct one when you need it, or
+          drop a static <code>.snackbar</code> in the page and add
+          <code>.active</code> to pin it to the viewport. Static bars do
+          not time out — that is CSS only.
         </p>
-<pre><code>new RoutePlate.Toast({ text: 'I am a toast!' });</code></pre>
-        <p>One way to hook that up is a click handler on a button:</p>
-<pre><code>&lt;button type="button" class="btn tonal" id="toast-basic"&gt;Show Toast&lt;/button&gt;</code></pre>
-<pre><code>document.getElementById('toast-basic').addEventListener('click', function() {
-  new RoutePlate.Toast({ text: 'I am a toast!' });
+
+        <p>
+          <button type="button" id="toast-basic">Show</button>
+          <button type="button" class="tonal" id="toast-action">Show with action</button>
+          <button type="button" class="outlined" id="toast-close">Show with close</button>
+        </p>
+
+        <div class="snackbar">
+          <p>Photo saved to album</p>
+        </div>
+        <div class="snackbar">
+          <p>Item archived</p>
+          <button type="button">Undo</button>
+        </div>
+        <div class="snackbar">
+          <p>Can't send photo. Retry in 5 seconds.</p>
+          <button type="button">Retry</button>
+          <button type="button" class="circle" aria-label="Dismiss">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+<pre><code>new RoutePlate.Toast({ text: 'Photo saved to album' });
+
+new RoutePlate.Toast({
+  text: 'Item archived',
+  action: 'Undo',
+  onAction: function() { /* restore */ }
+});
+
+new RoutePlate.Toast({
+  text: "Can't send photo. Retry in 5 seconds.",
+  action: 'Retry',
+  dismissible: true
 });</code></pre>
+        <p>
+          The constructor wraps <code>text</code> in a
+          <code>&lt;p&gt;</code> and appends the action and close when
+          those options are set. The live element gets both
+          <code>.toast</code> and <code>.snackbar</code>.
+        </p>
       </div>
 
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Toast</code>. Toast is not in
-          <code>AutoInit()</code> and there is no <code>toast()</code> helper — construct one
-          when you need it.
+          The IIFE bundle exposes <code>RoutePlate.Toast</code>. Toast is
+          not in <code>AutoInit()</code> — construct one when you need it.
         </p>
 <pre><code>new RoutePlate.Toast({
   text: 'I am a toast!'
 });</code></pre>
+        <p>One way to hook that up is a click handler on a button:</p>
+<pre><code>&lt;button type="button" id="toast-basic"&gt;Show&lt;/button&gt;</code></pre>
+<pre><code>document.getElementById('toast-basic').addEventListener('click', function() {
+  new RoutePlate.Toast({ text: 'I am a toast!' });
+});</code></pre>
+      </div>
+
+      <div id="markup" class="section scrollspy">
+        <h3>Markup</h3>
+        <p>
+          The same anatomy works as static HTML. Without
+          <code>.active</code> the bar is in-flow — useful for previews.
+          With <code>.active</code> it pins to the bottom-start of the
+          viewport. Add <code>.top</code> to move it to the top, or
+          <code>.center</code> to center it horizontally.
+        </p>
+        <p>
+          <button type="button" class="tonal" id="toast-static">Show static snackbar</button>
+        </p>
+        <div class="snackbar" id="static-snackbar">
+          <i class="material-icons">info</i>
+          <p>I'm a snackbar</p>
+          <button type="button">Action</button>
+        </div>
+<pre><code>&lt;div class="snackbar"&gt;
+  &lt;p&gt;Photo saved to album&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="snackbar"&gt;
+  &lt;p&gt;Item archived&lt;/p&gt;
+  &lt;button type="button"&gt;Undo&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class="snackbar active"&gt;
+  &lt;i class="material-icons"&gt;info&lt;/i&gt;
+  &lt;p&gt;I'm a snackbar&lt;/p&gt;
+  &lt;button type="button"&gt;Action&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          <code>.active</code> does not dismiss itself. Add and remove the
+          class, or use the constructor if you want the 4-second timer and
+          swipe-to-dismiss.
+        </p>
       </div>
 
       <div id="options" class="section scrollspy">
@@ -65,7 +159,25 @@
               <td><code>text</code></td>
               <td>String</td>
               <td><code>''</code></td>
-              <td>Plain-text content of the toast. If set, it replaces any HTML from <code>toastId</code>.</td>
+              <td>Plain-text supporting text, wrapped in a <code>&lt;p&gt;</code>. If set, it replaces any HTML from <code>toastId</code>.</td>
+            </tr>
+            <tr>
+              <td><code>action</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Optional action label. Rendered as a trailing text button.</td>
+            </tr>
+            <tr>
+              <td><code>onAction</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the action button is pressed. The toast still dismisses.</td>
+            </tr>
+            <tr>
+              <td><code>dismissible</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Show a trailing close icon button.</td>
             </tr>
             <tr>
               <td><code>toastId</code></td>
@@ -77,7 +189,7 @@
               <td><code>displayLength</code></td>
               <td>Number</td>
               <td><code>4000</code></td>
-              <td>How long the toast stays before it dismisses, in milliseconds.</td>
+              <td>How long the toast stays before it dismisses, in milliseconds. M3 recommends 4–10 seconds.</td>
             </tr>
             <tr>
               <td><code>inDuration</code></td>
@@ -95,7 +207,7 @@
               <td><code>classes</code></td>
               <td>String</td>
               <td><code>''</code></td>
-              <td>Space-separated classes added to the toast element. <code>rounded</code> is included.</td>
+              <td>Space-separated classes added to the toast. <code>rounded</code> is a stadium. <code>top</code> and <code>center</code> move the container.</td>
             </tr>
             <tr>
               <td><code>completeCallback</code></td>
@@ -167,23 +279,30 @@
       <div id="custom-html" class="section scrollspy">
         <h3>Custom HTML</h3>
         <p>
-          Pass <code>toastId</code> pointing at a <code>&lt;template&gt;</code>. The first child of the
-          template is cloned as the toast. Leave <code>text</code> empty so the HTML is kept.
+          Pass <code>toastId</code> pointing at a
+          <code>&lt;template&gt;</code>. The first child of the template
+          is cloned as the toast. Leave <code>text</code> empty so the
+          HTML is kept. Use the same anatomy as a static snackbar.
         </p>
         <p>
-          <button type="button" class="btn tonal waves-effect mr-3 mb-3" id="toast-html-1">Show Toast 1</button>
-          <button type="button" class="btn tonal waves-effect mb-3" id="toast-html-2">Show Toast 2</button>
+          <button type="button" class="tonal mr-3 mb-3" id="toast-html-1">Show Toast 1</button>
+          <button type="button" class="tonal mb-3" id="toast-html-2">Show Toast 2</button>
         </p>
         <template id="my-toast-1">
-          <div>This is toast nº1 with a <a href="https://github.com">link</a></div>
+          <div>
+            <p>This is toast nº1 with a <a href="https://github.com">link</a></p>
+          </div>
         </template>
         <template id="my-toast-2">
-          <div>This is toast nº2 with a <i class="material-icons">insert_chart</i></div>
+          <div>
+            <i class="material-icons">insert_chart</i>
+            <p>This is toast nº2</p>
+          </div>
         </template>
-<pre><code>&lt;button type="button" class="btn tonal" id="toast-html-1"&gt;Show Toast 1&lt;/button&gt;
+<pre><code>&lt;button type="button" class="tonal" id="toast-html-1"&gt;Show Toast 1&lt;/button&gt;
 &lt;template id="my-toast-1"&gt;
   &lt;div&gt;
-    This is toast nº1 with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;
+    &lt;p&gt;This is toast nº1 with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;&lt;/p&gt;
   &lt;/div&gt;
 &lt;/template&gt;</code></pre>
 <pre><code>new RoutePlate.Toast({ toastId: 'my-toast-1' });</code></pre>
@@ -193,7 +312,7 @@
         <h3>Callback</h3>
         <p>Run a function when the toast is dismissed.</p>
         <p>
-          <button type="button" class="btn filled waves-effect" id="toast-callback">Show Toast</button>
+          <button type="button" id="toast-callback">Show Toast</button>
         </p>
 <pre><code>new RoutePlate.Toast({
   text: 'I will call back when dismissed',
@@ -204,30 +323,42 @@
       </div>
 
       <div id="styling" class="section scrollspy">
-        <h3>Styling Toasts</h3>
+        <h3>Styling</h3>
         <p>
-          Pass classes in the <code>classes</code> option. <code>rounded</code> is defined on
-          <code>.toast</code>; you can add your own classes too.
+          Pass classes in the <code>classes</code> option.
+          <code>rounded</code> is a 24dp stadium — the M3 default is 4dp.
+          <code>top</code> moves the container to the top of the viewport;
+          <code>center</code> centers it horizontally. On larger screens
+          the default is start-aligned, 24dp from the start and the
+          bottom.
         </p>
         <p>
-          <button type="button" class="btn filled waves-effect" id="toast-rounded">Show round Toast</button>
+          <button type="button" id="toast-rounded">Show round Toast</button>
+          <button type="button" class="tonal" id="toast-top">Show at top</button>
         </p>
 <pre><code>new RoutePlate.Toast({
   text: 'I am a toast!',
   classes: 'rounded'
+});
+
+new RoutePlate.Toast({
+  text: 'Posted from the top',
+  classes: 'top'
 });</code></pre>
       </div>
 
       <div id="dismissal" class="section scrollspy">
         <h3>Dismiss a Toast Programmatically</h3>
         <p>
-          To remove a specific toast, get the instance from the toast element and call
-          <code>dismiss()</code>.
+          To remove a specific toast, get the instance from the toast
+          element and call <code>dismiss()</code>. Swipe also dismisses —
+          drag past 80% of the width (or flick). The action and close
+          buttons are not swipe handles.
         </p>
         <p>
-          <button type="button" class="btn filled waves-effect mr-3 mb-3" id="toast-dismiss-show">Show Toast</button>
-          <button type="button" class="btn tonal waves-effect mr-3 mb-3" id="toast-dismiss-one">Dismiss a toast</button>
-          <button type="button" class="btn tonal waves-effect mb-3" id="toast-dismiss-all">Dismiss all</button>
+          <button type="button" class="mr-3 mb-3" id="toast-dismiss-show">Show Toast</button>
+          <button type="button" class="tonal mr-3 mb-3" id="toast-dismiss-one">Dismiss a toast</button>
+          <button type="button" class="tonal mb-3" id="toast-dismiss-all">Dismiss all</button>
         </p>
 <pre><code>const toastElement = document.querySelector('.toast');
 const toastInstance = RoutePlate.Toast.getInstance(toastElement);
@@ -240,14 +371,15 @@ toastInstance.dismiss();</code></pre>
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#anatomy">Introduction</a></li>
           <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#markup">Markup</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>
           <li><a href="#custom-html">Custom HTML</a></li>
           <li><a href="#callback">Callback</a></li>
-          <li><a href="#styling">Styling Toasts</a></li>
+          <li><a href="#styling">Styling</a></li>
           <li><a href="#dismissal">Dismissing Toasts</a></li>
         </ul>
       </div>

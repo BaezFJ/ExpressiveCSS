@@ -123,9 +123,34 @@ describe('Toast', () => {
     const toast = new RoutePlate.Toast({ text: 'Saved' });
 
     assert.ok(document.querySelector('#toast-container'), 'no toast container was created');
+    assert.ok(toast.el.classList.contains('toast'));
+    assert.ok(toast.el.classList.contains('snackbar'));
     assert.equal(toast.el.textContent.trim(), 'Saved');
+    assert.equal(toast.el.querySelector('p')?.textContent, 'Saved');
     assert.equal(RoutePlate.Toast.getInstance(toast.el), toast);
 
     toast.dismiss();
+  });
+
+  test('renders an action button and a close affordance', () => {
+    let acted = false;
+    const toast = new RoutePlate.Toast({
+      text: 'Item archived',
+      action: 'Undo',
+      onAction: () => {
+        acted = true;
+      },
+      dismissible: true,
+      displayLength: Infinity,
+    });
+
+    const action = toast.el.querySelector('button:not(.circle)');
+    const close = toast.el.querySelector('button.circle');
+    assert.ok(action, 'action button was not created');
+    assert.equal(action.textContent, 'Undo');
+    assert.ok(close, 'close button was not created');
+
+    action.click();
+    assert.equal(acted, true, 'onAction was not called');
   });
 });

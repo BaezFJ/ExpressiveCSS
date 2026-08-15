@@ -127,7 +127,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById('toast-basic')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ text: 'I am a toast!' });
+    new RoutePlate.Toast({ text: 'Photo saved to album' });
+  });
+
+  document.getElementById('toast-action')?.addEventListener('click', () => {
+    new RoutePlate.Toast({
+      text: 'Item archived',
+      action: 'Undo',
+      onAction: () => {
+        new RoutePlate.Toast({ text: 'Item restored' });
+      },
+    });
+  });
+
+  document.getElementById('toast-close')?.addEventListener('click', () => {
+    new RoutePlate.Toast({
+      text: "Can't send photo. Retry in 5 seconds.",
+      action: 'Retry',
+      dismissible: true,
+    });
+  });
+
+  document.getElementById('toast-static')?.addEventListener('click', () => {
+    const el = document.getElementById('static-snackbar');
+    if (!el) return;
+    el.classList.add('active');
+    window.clearTimeout(el._hideTimer);
+    el._hideTimer = window.setTimeout(() => el.classList.remove('active'), 4000);
   });
 
   document.getElementById('toast-html-1')?.addEventListener('click', () => {
@@ -151,12 +177,16 @@ document.addEventListener('DOMContentLoaded', () => {
     new RoutePlate.Toast({ text: 'I am a toast!', classes: 'rounded' });
   });
 
+  document.getElementById('toast-top')?.addEventListener('click', () => {
+    new RoutePlate.Toast({ text: 'Posted from the top', classes: 'top' });
+  });
+
   document.getElementById('toast-dismiss-show')?.addEventListener('click', () => {
     new RoutePlate.Toast({ text: 'I am a toast!' });
   });
 
   document.getElementById('toast-dismiss-one')?.addEventListener('click', () => {
-    const toastElement = document.querySelector('.toast');
+    const toastElement = document.querySelector('#toast-container .toast');
     RoutePlate.Toast.getInstance(toastElement)?.dismiss();
   });
 

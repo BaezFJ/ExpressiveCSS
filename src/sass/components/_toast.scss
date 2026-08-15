@@ -1,67 +1,260 @@
 @use "../abstracts" as *;
 
+// Snackbars (toasts).
+//
+// Anatomy is the HTML. A .snackbar / .toast is the container. A <p> (or
+// <span>, or loose text) is the supporting text. A trailing <button> is
+// the action; a .circle button is the optional close. An optional leading
+// <i> is an icon. .toast-action stays as an alias on the action control.
+//
+// Tokens follow https://m3.material.io/components/snackbar/specs
+//   container    inverse-surface, 4dp corners, elevation 3, min 48dp
+//   width        hug, min 344 / max 672 (full-bleed inset on compact)
+//   text         body-medium / inverse-on-surface, two lines max
+//   action       label-large / inverse-primary text button
+//   close        24dp icon, inverse-on-surface
+//   inset        8dp compact, 24dp from start+bottom on larger screens
+//
+// The constructor always adds both .toast and .snackbar. A static
+// .snackbar is in-flow (docs previews). .active pins it to the viewport.
+// There is no AutoInit and no toast() helper.
+
+$_bar: ":is(.toast, .snackbar)";
+
 #toast-container {
-  display:block;
+  --md-comp-snackbar-container-margin-leading: 8px;
+  --md-comp-snackbar-container-margin-trailing: 8px;
+  --md-comp-snackbar-container-margin-bottom: 8px;
+  --md-comp-snackbar-container-margin-top: 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
   position: fixed;
   z-index: 10000;
+  inset: auto var(--md-comp-snackbar-container-margin-trailing)
+    var(--md-comp-snackbar-container-margin-bottom)
+    var(--md-comp-snackbar-container-margin-leading);
+  width: auto;
+  max-width: calc(100% - var(--md-comp-snackbar-container-margin-leading) - var(--md-comp-snackbar-container-margin-trailing));
+  pointer-events: none;
 
-  @include bp-down("small") {
-    min-width: 100%;
-    bottom: 0%;
+  > * {
+    pointer-events: auto;
   }
-  @include bp-between("small", "large") {
-    left: 5%;
-    bottom: 7%;
-    max-width: 90%;
+
+  @include bp-up("small") {
+    --md-comp-snackbar-container-margin-leading: 24px;
+    --md-comp-snackbar-container-margin-trailing: 24px;
+    --md-comp-snackbar-container-margin-bottom: 24px;
+    --md-comp-snackbar-container-margin-top: 24px;
+    align-items: flex-start;
+    width: max-content;
+    min-width: min(344px, calc(100% - 48px));
+    max-width: min(672px, calc(100% - 48px));
   }
-  @include bp-up("large") {
-    top: 10%;
-    right: 7%;
-    max-width: 86%;
+
+  // Position helpers on the container, or on a child via :has().
+  &:has(> .top),
+  &.top {
+    inset: var(--md-comp-snackbar-container-margin-top)
+      var(--md-comp-snackbar-container-margin-trailing)
+      auto
+      var(--md-comp-snackbar-container-margin-leading);
+  }
+
+  &:has(> .center),
+  &.center {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }
 
-.toast {
-  @include z-depth("3");
-  border-radius: 4px;
-  top: 35px;
-  width: auto;
-  margin-top: 10px;
-  position: relative;
-  max-width: 100%;
-  height: auto;
-  min-height: 48px;
-  
-  //line-height: 1.5em;
-  //padding: 10px 25px;
-  padding-left: 16px;
-  padding-right: 12px;
+#{$_bar} {
+  --md-comp-snackbar-container-color: var(--md-sys-color-inverse-surface);
+  --md-comp-snackbar-container-shape: 4px;
+  --md-comp-snackbar-supporting-text-color: var(--md-sys-color-inverse-on-surface);
+  --md-comp-snackbar-action-label-text-color: var(--md-sys-color-inverse-primary);
+  --md-comp-snackbar-icon-color: var(--md-sys-color-inverse-on-surface);
 
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-
-  color: var(--md-sys-color-inverse-on-surface);
-  background-color: var(--md-sys-color-inverse-surface);
-
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  max-width: 672px;
+  min-height: 48px;
+  margin: 0;
+  padding: 4px 8px 4px 16px;
+  border: none;
+  border-radius: var(--md-comp-snackbar-container-shape);
+  background-color: var(--md-comp-snackbar-container-color);
+  color: var(--md-comp-snackbar-supporting-text-color);
+  @include typescale("body-medium");
+  @include z-depth("3");
   cursor: default;
 
-  .toast-action {
-    color: var(--md-sys-color-inverse-primary);
-    font-weight: 500;
-    margin-right: -25px;
-    margin-left: 3rem;
+  @include bp-up("small") {
+    width: max-content;
+    min-width: min(344px, 100%);
   }
 
-  &.rounded{
+  // Supporting text. A bare <p> is body-large in the type layer — reset it.
+  > p,
+  > span {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding-block: 10px;
+    color: var(--md-comp-snackbar-supporting-text-color);
+    @include typescale("body-medium");
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  // Optional leading icon (BeerCSS). M3 snackbars have no leading icon.
+  > i:first-child {
+    flex: 0 0 auto;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    color: var(--md-comp-snackbar-icon-color);
+  }
+
+  // Inline links in the supporting text use the action color.
+  a:not(.button, .toast-action) {
+    color: var(--md-comp-snackbar-action-label-text-color);
+  }
+
+  // Action row. A bare <nav> just groups the action and close.
+  > nav {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+    height: auto;
+    background: none;
+    box-shadow: none;
+  }
+
+  // Text action — inverse-primary, not the filled common-button default.
+  > :is(button, a.button, a.toast-action, .toast-action):not(.circle),
+  > nav > :is(button, a.button, a.toast-action, .toast-action):not(.circle) {
+    flex: 0 0 auto;
+    height: 40px;
+    min-width: 48px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 20px;
+    background-color: transparent;
+    color: var(--md-comp-snackbar-action-label-text-color);
+    box-shadow: none;
+    @include typescale("label-large");
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-inverse-primary) 8%, transparent);
+    }
+
+    &:active,
+    &:focus {
+      background-color: color-mix(in oklab, var(--md-sys-color-inverse-primary) 10%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--md-sys-color-inverse-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  // Close — 40dp icon button so it sits in the 48dp single-line bar.
+  > :is(button, a).circle,
+  > nav > :is(button, a).circle {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--md-comp-snackbar-icon-color);
+    box-shadow: none;
+
+    > i {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-inverse-on-surface) 8%, transparent);
+    }
+
+    &:active,
+    &:focus {
+      background-color: color-mix(in oklab, var(--md-sys-color-inverse-on-surface) 10%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--md-sys-color-inverse-on-surface);
+      outline-offset: 2px;
+    }
+  }
+
+  // Optional stadium. M3 default is extra-small (4dp).
+  &.rounded {
     border-radius: 24px;
   }
+}
+
+// Stacked in-flow previews. JS toasts use the container gap instead.
+#{$_bar} + #{$_bar} {
+  margin-top: 8px;
+}
+
+// JS enter animation starts the bar 35px below its rest position.
+#toast-container #{$_bar} {
+  position: relative;
+  top: 35px;
+  margin-top: 0;
+}
+
+// Static overlay. In-flow without this (docs previews). Not AutoInit —
+// add and remove the class yourself, or use the constructor for timing.
+#{$_bar}.active {
+  position: fixed;
+  z-index: 10000;
+  inset: auto auto 16px 16px;
+  top: auto;
+  width: max-content;
+  max-width: min(672px, calc(100% - 32px));
 
   @include bp-down("small") {
-    width: 100%;
-    border-radius: 0;
+    inset: auto 8px 8px 8px;
+    width: auto;
+    max-width: none;
+  }
+
+  &.top {
+    inset: 16px auto auto 16px;
+
+    @include bp-down("small") {
+      inset: 8px 8px auto 8px;
+    }
+  }
+
+  &.center {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }
