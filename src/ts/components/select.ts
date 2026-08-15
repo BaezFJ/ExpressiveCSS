@@ -108,9 +108,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   _setupEventHandlers() {
     this.dropdownOptions.querySelectorAll('li:not(.optgroup)').forEach((el) => {
       el.addEventListener('click', this._handleOptionClick);
-      el.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === ' ' || e.key === 'Enter') this._handleOptionClick(e);
-      });
+      el.addEventListener('keydown', this._handleOptionKeydown);
     });
     this.el.addEventListener('change', this._handleSelectChange);
     this.input.addEventListener('click', this._handleInputClick);
@@ -119,6 +117,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   _removeEventHandlers() {
     this.dropdownOptions.querySelectorAll('li:not(.optgroup)').forEach((el) => {
       el.removeEventListener('click', this._handleOptionClick);
+      el.removeEventListener('keydown', this._handleOptionKeydown);
     });
     this.el.removeEventListener('change', this._handleSelectChange);
     this.input.removeEventListener('click', this._handleInputClick);
@@ -126,6 +125,12 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   _handleSelectChange = () => {
     this._setValueToInput();
+  };
+
+  // Named rather than inline so that _removeEventHandlers can actually detach
+  // it - an anonymous listener per option was unremovable.
+  _handleOptionKeydown = (e: KeyboardEvent) => {
+    if (e.key === ' ' || e.key === 'Enter') this._handleOptionClick(e);
   };
 
   _handleOptionClick = (e: MouseEvent | KeyboardEvent) => {

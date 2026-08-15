@@ -44,12 +44,24 @@ export class DockedDisplayPlugin {
     this.container.append(container);
     el.parentElement.append(this.container);
 
-    document.addEventListener('click', (e) => {
-      if (this.visible && !(this.el === <HTMLElement>e.target) && !((<HTMLElement>e.target).closest('.display-docked'))) {
-        this.hide();
-      }
-    });
+    document.addEventListener('click', this._handleDocumentClick);
   }
+
+  private _handleDocumentClick = (e: MouseEvent) => {
+    if (this.visible && !(this.el === <HTMLElement>e.target) && !((<HTMLElement>e.target).closest('.display-docked'))) {
+      this.hide();
+    }
+  };
+
+  /**
+   * Tears the plugin down. The document listener holds a reference to this
+   * instance - and through it the whole picker subtree - so the owning
+   * component must call this from its own destroy().
+   */
+  destroy = () => {
+    document.removeEventListener('click', this._handleDocumentClick);
+    this.container.remove();
+  };
 
   /**
    * Initializes instance of DockedDisplayPlugin

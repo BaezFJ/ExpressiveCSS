@@ -58,6 +58,12 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
   static _visibleElements: HTMLElement[];
   static _ticks: number;
   static _keptTopActiveElement: HTMLElement | null = null;
+  // The document-level listeners are shared by every instance, so the
+  // references they are registered with have to be shared too - registering
+  // with one instance's bound handler and unregistering with another's is a
+  // silent no-op that leaves the listener attached forever.
+  private static _throttledScroll: (...args: unknown[]) => void = null;
+  private static _throttledResize: (...args: unknown[]) => void = null;
 
   private tickId: number;
   private id: string;
@@ -77,7 +83,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     this.tickId = -1;
     this.id = ScrollSpy._increment.toString();
     this._setupEventHandlers();
-    this._handleWindowScroll();
+    ScrollSpy._handleWindowScroll();
   }
 
   static get defaults(): ScrollSpyOptions {
@@ -113,35 +119,45 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
   }
 
   destroy() {
-    ScrollSpy._elements.splice(ScrollSpy._elements.indexOf(this), 1);
-    ScrollSpy._elementsInView.splice(ScrollSpy._elementsInView.indexOf(this), 1);
-    ScrollSpy._visibleElements.splice(ScrollSpy._visibleElements.indexOf(this.el), 1);
+    const elementIndex = ScrollSpy._elements.indexOf(this);
+    if (elementIndex >= 0) ScrollSpy._elements.splice(elementIndex, 1);
+    const inViewIndex = ScrollSpy._elementsInView.indexOf(this);
+    if (inViewIndex >= 0) ScrollSpy._elementsInView.splice(inViewIndex, 1);
+    const visibleIndex = ScrollSpy._visibleElements.indexOf(this.el);
+    if (visibleIndex >= 0) ScrollSpy._visibleElements.splice(visibleIndex, 1);
     ScrollSpy._count--;
     this._removeEventHandlers();
+    // Optional: the trigger may already be gone from the DOM, and throwing
+    // here would abort the rest of the teardown.
     const actElem = document.querySelector(this.options.getActiveElement(this.el.id));
-    actElem.classList.remove(this.options.activeClass);
+    actElem?.classList.remove(this.options.activeClass);
     this.el['RoutePlate_ScrollSpy'] = undefined;
   }
 
   _setupEventHandlers() {
     if (ScrollSpy._count === 1) {
-      window.addEventListener('scroll', this._handleWindowScroll);
-      window.addEventListener('resize', this._handleThrottledResize);
-      document.body.addEventListener('click', this._handleTriggerClick);
+      // Honour the documented `throttle` option - the scroll handler reads
+      // layout for every spied element, so running it on every scroll event
+      // was the single most expensive thing this component did.
+      ScrollSpy._throttledScroll = Utils.throttle(ScrollSpy._handleWindowScroll, this.options.throttle);
+      ScrollSpy._throttledResize = Utils.throttle(ScrollSpy._handleWindowScroll, 200);
+      window.addEventListener('scroll', ScrollSpy._throttledScroll, { passive: true });
+      window.addEventListener('resize', ScrollSpy._throttledResize, { passive: true });
+      document.body.addEventListener('click', ScrollSpy._handleTriggerClick);
     }
   }
 
   _removeEventHandlers() {
     if (ScrollSpy._count === 0) {
-      window.removeEventListener('scroll', this._handleWindowScroll);
-      window.removeEventListener('resize', this._handleThrottledResize);
-      document.body.removeEventListener('click', this._handleTriggerClick);
+      window.removeEventListener('scroll', ScrollSpy._throttledScroll);
+      window.removeEventListener('resize', ScrollSpy._throttledResize);
+      document.body.removeEventListener('click', ScrollSpy._handleTriggerClick);
+      ScrollSpy._throttledScroll = null;
+      ScrollSpy._throttledResize = null;
     }
   }
 
-  _handleThrottledResize = (): void => Utils.throttle(this._handleWindowScroll, 200).bind(this);
-
-  _handleTriggerClick = (e: MouseEvent) => {
+  static _handleTriggerClick = (e: MouseEvent) => {
     const trigger = e.target;
     for (let i = ScrollSpy._elements.length - 1; i >= 0; i--) {
       const scrollspy = ScrollSpy._elements[i];
@@ -162,7 +178,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     }
   };
 
-  _handleWindowScroll = () => {
+  static _handleWindowScroll = () => {
     // unique tick id
     ScrollSpy._ticks++;
 
@@ -200,7 +216,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     if (ScrollSpy._elements.length) {
       const options = ScrollSpy._elements[0].el['RoutePlate_ScrollSpy'].options;
       if (options.keepTopElementActive && ScrollSpy._visibleElements.length === 0) {
-        this._resetKeptTopActiveElementIfNeeded();
+        ScrollSpy._resetKeptTopActiveElement(options.activeClass);
         const topElements = ScrollSpy._elements
           .filter((value) => ScrollSpy._getDistanceToViewport(value.el) <= 0)
           .sort((a, b) => {
@@ -278,7 +294,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     } else {
       ScrollSpy._visibleElements.push(this.el);
     }
-    this._resetKeptTopActiveElementIfNeeded();
+    ScrollSpy._resetKeptTopActiveElement(this.options.activeClass);
     const selector = this.options.getActiveElement(ScrollSpy._visibleElements[0].id);
     document.querySelector(selector)?.classList.add(this.options.activeClass);
   }
@@ -300,14 +316,14 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
         // Check if empty
         const selector = this.options.getActiveElement(ScrollSpy._visibleElements[0].id);
         document.querySelector(selector)?.classList.add(this.options.activeClass);
-        this._resetKeptTopActiveElementIfNeeded();
+        ScrollSpy._resetKeptTopActiveElement(this.options.activeClass);
       }
     }
   }
 
-  private _resetKeptTopActiveElementIfNeeded() {
+  private static _resetKeptTopActiveElement(activeClass: string) {
     if (ScrollSpy._keptTopActiveElement) {
-      ScrollSpy._keptTopActiveElement.classList.remove(this.options.activeClass);
+      ScrollSpy._keptTopActiveElement.classList.remove(activeClass);
       ScrollSpy._keptTopActiveElement = null;
     }
   }

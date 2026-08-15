@@ -116,6 +116,9 @@ export class FloatingActionButton
 
   destroy() {
     this._removeEventHandlers();
+    // Toolbar mode parks a capture-phase scroll listener and a body click
+    // listener on the document; close() is what takes them back off.
+    this.close();
     this.el['RoutePlate_FloatingActionButton'] = undefined;
   }
 

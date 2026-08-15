@@ -88,7 +88,9 @@ export class Cards extends Component<CardsOptions> implements Openable {
    */
   destroy() {
     this._removeEventHandlers();
+    if (this.cardRevealClose) this._removeRevealCloseEventHandlers();
     this._activators = [];
+    this.el['RoutePlate_Cards'] = undefined;
   }
 
   _setupEventHandlers = () => {
@@ -127,8 +129,8 @@ export class Cards extends Component<CardsOptions> implements Openable {
   };
 
   _removeRevealCloseEventHandlers = () => {
-    this.cardRevealClose.addEventListener('click', this.close);
-    this.cardRevealClose.addEventListener('keypress', this._handleKeypressCloseEvent);
+    this.cardRevealClose.removeEventListener('click', this.close);
+    this.cardRevealClose.removeEventListener('keypress', this._handleKeypressCloseEvent);
   };
 
   _handleKeypressCloseEvent: (e: KeyboardEvent) => void = (e: KeyboardEvent) => {

@@ -240,11 +240,10 @@ export class Carousel extends Component<CarouselOptions> {
     window.removeEventListener('resize', this._handleThrottledResize);
   }
 
-  _handleThrottledResize = (): void => Utils.throttle(
-    this._handleResize,
-    200,
-    null
-  ).bind(this);
+  // Built once per instance. Creating the throttled function inside the
+  // handler - as this used to - produced a fresh closure per resize event and
+  // never actually called it, so resizing did nothing at all.
+  _handleThrottledResize = Utils.throttle(() => this._handleResize(), 200);
 
   _handleCarouselTap = (e: MouseEvent | TouchEvent) => {
     // Fixes firefox draggable image bug

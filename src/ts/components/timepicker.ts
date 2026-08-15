@@ -254,6 +254,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   destroy() {
     this._removeEventHandlers();
+    this.displayPlugin?.destroy();
     this.containerEl.remove();
     this.el['RoutePlate_Timepicker'] = undefined;
   }
@@ -273,6 +274,12 @@ export class Timepicker extends Component<TimepickerOptions> {
   _removeEventHandlers() {
     this.el.removeEventListener('click', this._handleInputClick);
     this.el.removeEventListener('keydown', this._handleInputKeydown);
+    // Drag handlers live on the document while the clock hand is held; if the
+    // component is destroyed mid-drag they would otherwise outlive it.
+    document.removeEventListener('mousemove', this._handleDocumentClickMove);
+    document.removeEventListener('touchmove', this._handleDocumentClickMove);
+    document.removeEventListener('mouseup', this._handleDocumentClickEnd);
+    document.removeEventListener('touchend', this._handleDocumentClickEnd);
   }
 
   _handleInputClick = () => {

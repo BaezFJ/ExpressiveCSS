@@ -167,9 +167,14 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   }
 
   destroy() {
+    clearTimeout(this.filterTimeout);
     this._resetDropdownStyles();
     this._removeEventHandlers();
-    Dropdown._dropdowns.splice(Dropdown._dropdowns.indexOf(this), 1);
+    // Temporary handlers only exist while open, but removing them is a no-op
+    // otherwise and leaving them attached leaks the instance.
+    this._removeTemporaryEventHandlers();
+    const index = Dropdown._dropdowns.indexOf(this);
+    if (index >= 0) Dropdown._dropdowns.splice(index, 1);
     this.el['RoutePlate_Dropdown'] = undefined;
   }
 
@@ -190,12 +195,15 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   }
 
   _removeEventHandlers() {
+    // `dropdownEl` is optional-chained on the way in (the trigger may point at
+    // an id that does not resolve); it has to be here too, or destroy() throws
+    // before it can detach anything else.
     this.el.removeEventListener('keydown', this._handleTriggerKeydown);
-    this.dropdownEl.removeEventListener('click', this._handleDropdownClick);
+    this.dropdownEl?.removeEventListener('click', this._handleDropdownClick);
     if (this.options.hover) {
       this.el.removeEventListener('mouseenter', this._handleMouseEnter);
       this.el.removeEventListener('mouseleave', this._handleMouseLeave);
-      this.dropdownEl.removeEventListener('mouseleave', this._handleMouseLeave);
+      this.dropdownEl?.removeEventListener('mouseleave', this._handleMouseLeave);
     } else {
       this.el.removeEventListener('click', this._handleClick);
     }
@@ -203,15 +211,15 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _setupTemporaryEventHandlers() {
     document.body.addEventListener('click', this._handleDocumentClick);
-    document.body.addEventListener('touchmove', this._handleDocumentTouchmove);
-    this.dropdownEl.addEventListener('keydown', this._handleDropdownKeydown);
+    document.body.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
+    this.dropdownEl?.addEventListener('keydown', this._handleDropdownKeydown);
     window.addEventListener('resize', this._handleWindowResize);
   }
 
   _removeTemporaryEventHandlers() {
     document.body.removeEventListener('click', this._handleDocumentClick);
     document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
-    this.dropdownEl.removeEventListener('keydown', this._handleDropdownKeydown);
+    this.dropdownEl?.removeEventListener('keydown', this._handleDropdownKeydown);
     window.removeEventListener('resize', this._handleWindowResize);
   }
 
@@ -359,6 +367,9 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
         this._focusFocusedItem();
       }
     }
+    // Re-arm rather than stack: without the clear, every keystroke left a live
+    // timer behind and the query could reset while the user was still typing.
+    clearTimeout(this.filterTimeout);
     this.filterTimeout = setTimeout(this._resetFilterQuery, 1000);
   };
 

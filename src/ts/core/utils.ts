@@ -249,33 +249,37 @@ export class Utils {
    * @param options Additional options.
    */
   static throttle(
-    func: (Function: object) => void,
+    func: (...args: unknown[]) => void,
     wait: number,
     options: Partial<{ leading: boolean; trailing: boolean }> = {}
   ) {
-    let context: object,
-      args: IArguments,
+    // `options` is nullable because callers pass an explicit null.
+    let lastArgs: unknown[] = null,
       result,
       timeout = null,
       previous = 0;
 
     const later = () => {
-      previous = options.leading === false ? 0 : new Date().getTime();
+      previous = options?.leading === false ? 0 : Date.now();
       timeout = null;
-      result = func.apply(context, args);
-      context = args = null;
+      // The trailing call replays the most recent arguments; without this it
+      // used to fire with none at all.
+      result = func(...(lastArgs ?? []));
+      lastArgs = null;
     };
 
-    return (...args) => {
-      const now = new Date().getTime();
-      if (!previous && options.leading === false) previous = now;
+    return (...args: unknown[]) => {
+      const now = Date.now();
+      if (!previous && options?.leading === false) previous = now;
       const remaining = wait - (now - previous);
+      lastArgs = args;
       if (remaining <= 0) {
         clearTimeout(timeout);
         timeout = null;
         previous = now;
-        result = func.apply(this, args);
-      } else if (!timeout && options.trailing !== false) {
+        lastArgs = null;
+        result = func(...args);
+      } else if (!timeout && options?.trailing !== false) {
         timeout = setTimeout(later, remaining);
       }
       return result;

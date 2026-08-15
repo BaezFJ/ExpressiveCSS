@@ -462,6 +462,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   destroy() {
     this._removeEventHandlers();
+    this.displayPlugin?.destroy();
     this.containerEl.remove();
     this.destroySelects();
     this.el['RoutePlate_Datepicker'] = undefined;
@@ -1191,7 +1192,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     this.el.removeEventListener('change', this._handleInputChange);
     this.calendarEl.removeEventListener('click', this._handleCalendarClick);
-    if (this.options.isDateRange) {
+    if (this.options.isDateRange && this.endDateEl) {
       this.endDateEl.removeEventListener('click', this._handleInputClick);
       this.endDateEl.removeEventListener('keypress', this._handleInputKeydown);
       this.endDateEl.removeEventListener('change', this._handleInputChange);

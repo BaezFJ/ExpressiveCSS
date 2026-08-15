@@ -86,6 +86,9 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   }
 
   destroy() {
+    // close() detaches the document-level handlers registered by open(); they
+    // are not covered by _removeEventHandlers and would otherwise survive.
+    this.close();
     this._removeEventHandlers();
     this.el['RoutePlate_TapTarget'] = undefined;
     const index = TapTarget._taptargets.indexOf(this);
@@ -109,7 +112,9 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
     window.removeEventListener('resize', this._handleThrottledResize);
   }
 
-  _handleThrottledResize = (): void => Utils.throttle(this._handleResize, 200).bind(this);
+  // Built once per instance; see the note in carousel.ts - the previous form
+  // returned a new throttled function on every resize and never invoked it.
+  _handleThrottledResize = Utils.throttle(() => this._handleResize(), 200);
 
   _handleKeyboardInteraction = (e: KeyboardEvent) => {
     if (Utils.keys.ENTER.includes(e.key)) {

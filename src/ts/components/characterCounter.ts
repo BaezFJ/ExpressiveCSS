@@ -68,7 +68,7 @@ export class CharacterCounter extends Component<object> {
 
   destroy() {
     this._removeEventHandlers();
-    this.el['CharacterCounter'] = undefined;
+    this.el['RoutePlate_CharacterCounter'] = undefined;
     this._removeCounter();
   }
 
