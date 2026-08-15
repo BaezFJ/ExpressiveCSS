@@ -1,128 +1,310 @@
 @use "../../abstracts" as *;
 
-.range-field {
+// Sliders (range).
+//
+// Anatomy is the HTML. An <input type="range"> is the control. A wrapping
+// <label> (or .range / .range-field) is the host for the value label.
+// .slider is the carousel — do not put it on a range.
+// Helpers: .vertical, .small, .large. There is no required <span>.
+//
+// Tokens follow https://m3.material.io/components/sliders/specs (Expressive)
+//   track      16dp, fully rounded
+//   gap        6dp between handle and each track
+//   active     primary
+//   inactive   secondary-container
+//   handle     4×44dp, fully rounded, primary; 2dp when pressed
+//   state      40dp, 8% hover / 10% focus
+//   label      inverse-surface / inverse-on-surface, body-small
+//   disabled   38%
+//
+// Range.Init() (import-time) sets --md-comp-slider-active-fraction so
+// the active track can follow the value. Not in AutoInit(). Dual-handle
+// range and discrete ticks are not implemented.
+
+.range,
+.range-field,
+label:has(> [type="range"]) {
+  --md-comp-slider-track-height: 16px;
+  --md-comp-slider-handle-width: 4px;
+  --md-comp-slider-handle-width-pressed: 2px;
+  --md-comp-slider-handle-height: 44px;
+  --md-comp-slider-gap: 6px;
+  --md-comp-slider-active-track-color: var(--md-sys-color-primary);
+  --md-comp-slider-inactive-track-color: var(--md-sys-color-secondary-container);
+  --md-comp-slider-handle-color: var(--md-sys-color-primary);
+  --md-comp-slider-gradient: to right;
+
   position: relative;
+  display: block;
+  overflow: visible;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("body-large");
+  font-family: $font-stack;
 }
 
-input[type=range],
-input[type=range] + .thumb {
-  user-select: none;
-  cursor: pointer;
+.range.small,
+.range-field.small,
+label.small:has(> [type="range"]),
+.range.small [type="range"],
+.range-field.small [type="range"],
+label.small > [type="range"] {
+  --md-comp-slider-track-height: 8px;
+  --md-comp-slider-handle-height: 32px;
 }
 
-input[type=range] {
-  position: relative;
-  background: linear-gradient(var(--md-sys-color-outline-variant), var(--md-sys-color-outline-variant));
-  border: none;
-  outline: none;
+.range.large,
+.range-field.large,
+label.large:has(> [type="range"]),
+.range.large [type="range"],
+.range-field.large [type="range"],
+label.large > [type="range"] {
+  --md-comp-slider-track-height: 24px;
+  --md-comp-slider-handle-height: 52px;
+}
+
+.range.vertical,
+.range-field.vertical,
+label.vertical:has(> [type="range"]) {
+  --md-comp-slider-gradient: to top;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+}
+
+.range.vertical [type="range"],
+.range-field.vertical [type="range"],
+label.vertical > [type="range"] {
+  --md-comp-slider-gradient: to top;
+}
+
+input[type="range"] {
+  --md-comp-slider-track-height: 16px;
+  --md-comp-slider-handle-width: 4px;
+  --md-comp-slider-handle-width-pressed: 2px;
+  --md-comp-slider-handle-height: 44px;
+  --md-comp-slider-gap: 6px;
+  --md-comp-slider-active-track-color: var(--md-sys-color-primary);
+  --md-comp-slider-inactive-track-color: var(--md-sys-color-secondary-container);
+  --md-comp-slider-handle-color: var(--md-sys-color-primary);
+  --md-comp-slider-gradient: to right;
+  --md-comp-slider-active-fraction: 0%;
+
+  appearance: none;
+  box-sizing: border-box;
+  display: block;
   width: 100%;
-  margin: 15px 0;
+  height: var(--md-comp-slider-handle-height);
+  margin: 8px 0;
   padding: 0;
-  height: 3px;
-
-  &:focus {
-    outline: none;
-  }
-}
-
-input[type=range] + .thumb {
-  position: absolute;
-  top: 10px;
-  left: 0;
   border: none;
-  height: 0;
-  width: 0;
-  border-radius: 50%;
-  background-color: var(--md-sys-color-primary);
-  margin-left: 7px;
+  background-color: transparent;
+  cursor: grab;
+  outline: none;
+  accent-color: var(--md-comp-slider-active-track-color);
 
-  transform-origin: 50% 50%;
-  transform: rotate(-45deg);
-
-  .value {
-    display: block;
-    width: 30px;
-    text-align: center;
-    color: var(--md-sys-color-primary);
-    font-size: 0;
-    transform: rotate(45deg);
+  &:active {
+    cursor: grabbing;
   }
 
-  &.active {
-    border-radius: 50% 50% 50% 0;
-
-    .value {
-      color:  var(--md-sys-color-on-primary);
-      margin-left: -1px;
-      margin-top: 8px;
-      font-size: 10px;
-    }
+  &:disabled {
+    cursor: default;
+    opacity: 0.38;
   }
 }
 
-// Shared
+.range.vertical > [type="range"],
+.range-field.vertical > [type="range"],
+label.vertical > [type="range"] {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: var(--md-comp-slider-handle-height);
+  height: 200px;
+  margin: 0 8px;
+}
+
+// Gap around the handle so the tracks do not run under it (M3 stop gap).
+@mixin range-track-fill {
+  background-image: linear-gradient(
+    var(--md-comp-slider-gradient),
+    var(--md-comp-slider-active-track-color)
+      max(0%, calc(var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) - var(--md-comp-slider-handle-width) / 2)),
+    transparent
+      max(0%, calc(var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) - var(--md-comp-slider-handle-width) / 2)),
+    transparent
+      min(100%, calc(var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) + var(--md-comp-slider-handle-width) / 2)),
+    var(--md-comp-slider-inactive-track-color)
+      min(100%, calc(var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) + var(--md-comp-slider-handle-width) / 2))
+  );
+}
+
 @mixin range-track {
-  height: 3px;
-  background-color: var(--md-sys-color-surface-variant);
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--md-comp-slider-track-height);
   border: none;
+  border-radius: calc(var(--md-comp-slider-track-height) / 2);
+  background-color: transparent;
+}
+
+@mixin range-track-vertical {
+  width: var(--md-comp-slider-track-height);
+  height: 100%;
 }
 
 @mixin range-thumb {
-  border: none;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  background: var(--md-sys-color-primary);
-  transition: box-shadow .3s;
-}
-
-// The track and thumb of a range input are only reachable through
-// engine-specific pseudo-elements, so these rules stay split by engine - and
-// each engine gets its own rule, never a shared selector list. An unknown
-// pseudo-element invalidates the entire list it appears in, which is how the
-// old `::-ms-fill-upper, ::-moz-range-track` pairs silently applied to nothing
-// in Firefox.
-input[type=range] {
   appearance: none;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-  @include range-track;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  @include range-thumb;
   -webkit-appearance: none;
-  background-color: var(--md-sys-color-primary);
-  transform-origin: 50% 50%;
-  margin: -5px 0 0 0;
-
+  box-sizing: border-box;
+  border: none;
+  width: var(--md-comp-slider-handle-width);
+  height: var(--md-comp-slider-handle-height);
+  border-radius: calc(var(--md-comp-slider-handle-width) / 2);
+  background: var(--md-comp-slider-handle-color);
+  box-shadow: none;
+  cursor: grab;
+  transition: box-shadow .2s ease, width .15s ease, height .15s ease;
 }
 
-.keyboard-focused input[type=range]:focus:not(.active)::-webkit-slider-thumb {
-  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
+@mixin range-thumb-vertical {
+  width: var(--md-comp-slider-handle-height);
+  height: var(--md-comp-slider-handle-width);
+  border-radius: calc(var(--md-comp-slider-handle-width) / 2);
 }
 
-// Gecko
-input[type=range]::-moz-range-track {
+input[type="range"]::-webkit-slider-runnable-track {
   @include range-track;
+  @include range-track-fill;
 }
 
-input[type=range]::-moz-range-thumb {
+input[type="range"]::-webkit-slider-thumb {
   @include range-thumb;
-  margin-top: -5px;
+  margin-top: calc((var(--md-comp-slider-track-height) - var(--md-comp-slider-handle-height)) / 2);
 }
 
-.keyboard-focused input[type=range]:focus:not(.active)::-moz-range-thumb {
-  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
+input[type="range"]:hover:not(:disabled)::-webkit-slider-thumb {
+  box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 8%, transparent);
 }
 
-// Removed with IE/Edge Legacy: ::-ms-track, ::-ms-thumb and the ::-ms-fill-lower
-// / ::-ms-fill-upper pair. The two Gecko selectors that shared a list with them
-// (::-moz-range-progress and a second ::-moz-range-track) went too - they never
-// rendered, because the -ms- selector alongside them invalidated the rule. The
-// track keeps the colour @range-track gives it.
-//
-// Also removed: ::-moz-focus-inner (pre-Firefox-50 inner border) and a
-// :-moz-focusring outline. The keyboard focus indicator is the thumb box-shadow
-// above, which Firefox still gets.
+.keyboard-focused input[type="range"]:focus:not(:disabled)::-webkit-slider-thumb,
+input[type="range"]:focus-visible:not(:disabled)::-webkit-slider-thumb {
+  box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 10%, transparent);
+}
+
+input[type="range"]:active:not(:disabled)::-webkit-slider-thumb {
+  width: var(--md-comp-slider-handle-width-pressed);
+}
+
+.range.vertical > [type="range"]::-webkit-slider-runnable-track,
+.range-field.vertical > [type="range"]::-webkit-slider-runnable-track,
+label.vertical > [type="range"]::-webkit-slider-runnable-track {
+  @include range-track-vertical;
+  // writing-mode does not swap physical width/height on these pseudos.
+  // Center the 16dp track inside the 44dp-wide input.
+  margin-left: calc((var(--md-comp-slider-handle-height) - var(--md-comp-slider-track-height)) / 2);
+}
+
+.range.vertical > [type="range"]::-webkit-slider-thumb,
+.range-field.vertical > [type="range"]::-webkit-slider-thumb,
+label.vertical > [type="range"]::-webkit-slider-thumb {
+  @include range-thumb-vertical;
+  margin-top: 0;
+  margin-left: calc((var(--md-comp-slider-track-height) - var(--md-comp-slider-handle-height)) / 2);
+}
+
+.range.vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb,
+.range-field.vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb,
+label.vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb {
+  width: var(--md-comp-slider-handle-height);
+  height: var(--md-comp-slider-handle-width-pressed);
+}
+
+input[type="range"]::-moz-range-track {
+  @include range-track;
+  @include range-track-fill;
+}
+
+input[type="range"]::-moz-range-thumb {
+  @include range-thumb;
+}
+
+input[type="range"]:hover:not(:disabled)::-moz-range-thumb {
+  box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 8%, transparent);
+}
+
+.keyboard-focused input[type="range"]:focus:not(:disabled)::-moz-range-thumb,
+input[type="range"]:focus-visible:not(:disabled)::-moz-range-thumb {
+  box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 10%, transparent);
+}
+
+input[type="range"]:active:not(:disabled)::-moz-range-thumb {
+  width: var(--md-comp-slider-handle-width-pressed);
+}
+
+.range.vertical > [type="range"]::-moz-range-track,
+.range-field.vertical > [type="range"]::-moz-range-track,
+label.vertical > [type="range"]::-moz-range-track {
+  @include range-track-vertical;
+  margin-left: calc((var(--md-comp-slider-handle-height) - var(--md-comp-slider-track-height)) / 2);
+}
+
+.range.vertical > [type="range"]::-moz-range-thumb,
+.range-field.vertical > [type="range"]::-moz-range-thumb,
+label.vertical > [type="range"]::-moz-range-thumb {
+  @include range-thumb-vertical;
+  margin-left: calc((var(--md-comp-slider-track-height) - var(--md-comp-slider-handle-height)) / 2);
+}
+
+.range.vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb,
+.range-field.vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb,
+label.vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb {
+  width: var(--md-comp-slider-handle-height);
+  height: var(--md-comp-slider-handle-width-pressed);
+}
+
+// Value label — M3 labeled slider. The JS plugin inserts this after the input.
+input[type="range"] + .thumb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 14px;
+  background-color: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 12px)) scale(0.9);
+  transform-origin: center bottom;
+  transition: opacity .15s ease, transform .15s ease;
+  @include typescale("body-small");
+
+  .value {
+    display: block;
+    color: inherit;
+    font: inherit;
+  }
+
+  &.active {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 12px)) scale(1);
+  }
+}
+
+.range.vertical > [type="range"] + .thumb,
+.range-field.vertical > [type="range"] + .thumb,
+label.vertical > [type="range"] + .thumb {
+  transform: translate(calc(100% + 12px), -50%) scale(0.9);
+  transform-origin: left center;
+
+  &.active {
+    transform: translate(calc(100% + 12px), -50%) scale(1);
+  }
+}

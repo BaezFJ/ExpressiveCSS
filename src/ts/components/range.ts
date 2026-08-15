@@ -5,8 +5,6 @@ export interface RangeOptions extends BaseOptions {}
 
 const _defaults: RangeOptions = {};
 
-// TODO: !!!!!
-
 export class Range extends Component<RangeOptions> {
   declare el: HTMLInputElement;
   private _mousedown: boolean;
@@ -24,6 +22,7 @@ export class Range extends Component<RangeOptions> {
 
     this._mousedown = false;
     this._setupThumb();
+    this._sync();
     this._setupEventHandlers();
   }
 
@@ -97,39 +96,23 @@ export class Range extends Component<RangeOptions> {
   }
 
   _handleRangeChange = () => {
-    this.value.innerHTML = this.el.value;
-    if (!this.thumb.classList.contains('active')) {
-      this._showRangeBubble();
-    }
-    const offsetLeft = this._calcRangeOffset();
+    this._sync();
     this.thumb.classList.add('active');
-    this.thumb.style.left = offsetLeft + 'px';
   };
 
   _handleRangeMousedownTouchstart = (e: MouseEvent | TouchEvent) => {
-    // Set indicator value
-    this.value.innerHTML = this.el.value;
     this._mousedown = true;
     this.el.classList.add('active');
-    if (!this.thumb.classList.contains('active')) {
-      this._showRangeBubble();
-    }
+    this._sync();
     if (e.type !== 'input') {
-      const offsetLeft = this._calcRangeOffset();
       this.thumb.classList.add('active');
-      this.thumb.style.left = offsetLeft + 'px';
     }
   };
 
   _handleRangeInputMousemoveTouchmove = () => {
     if (this._mousedown) {
-      if (!this.thumb.classList.contains('active')) {
-        this._showRangeBubble();
-      }
-      const offsetLeft = this._calcRangeOffset();
+      this._sync();
       this.thumb.classList.add('active');
-      this.thumb.style.left = offsetLeft + 'px';
-      this.value.innerHTML = this.el.value;
     }
   };
 
@@ -140,26 +123,6 @@ export class Range extends Component<RangeOptions> {
 
   _handleRangeBlurMouseoutTouchleave = () => {
     if (!this._mousedown) {
-      const paddingLeft = parseInt(getComputedStyle(this.el).paddingLeft);
-      const marginLeftText = 7 + paddingLeft + 'px';
-      if (this.thumb.classList.contains('active')) {
-        const duration = 100;
-        // from
-        this.thumb.style.transition = 'none';
-        setTimeout(() => {
-          this.thumb.style.transition = `
-            height ${duration}ms ease,
-            width ${duration}ms ease,
-            top ${duration}ms ease,
-            margin ${duration}ms ease
-          `;
-          // to
-          this.thumb.style.height = '0';
-          this.thumb.style.width = '0';
-          this.thumb.style.top = '0';
-          this.thumb.style.marginLeft = marginLeftText;
-        }, 1);
-      }
       this.thumb.classList.remove('active');
     }
   };
@@ -177,30 +140,28 @@ export class Range extends Component<RangeOptions> {
     this.thumb.remove();
   }
 
-  _showRangeBubble() {
-    const paddingLeft = parseInt(getComputedStyle(this.thumb.parentElement).paddingLeft);
-    const marginLeftText = -7 + paddingLeft + 'px'; // TODO: fix magic number?
-    const duration = 300;
-    // easeOutQuint
-    this.thumb.style.transition = `
-      height ${duration}ms ease,
-      width ${duration}ms ease,
-      top ${duration}ms ease,
-      margin ${duration}ms ease
-    `;
-    // to
-    this.thumb.style.height = '30px';
-    this.thumb.style.width = '30px';
-    this.thumb.style.top = '-30px';
-    this.thumb.style.marginLeft = marginLeftText;
+  _isVertical(): boolean {
+    return !!this.el.closest('.vertical');
   }
 
-  _calcRangeOffset(): number {
-    const width = this.el.getBoundingClientRect().width - 15;
-    const max = parseFloat(this.el.getAttribute('max')) || 100; // Range default max
-    const min = parseFloat(this.el.getAttribute('min')) || 0; // Range default min
-    const percent = (parseFloat(this.el.value) - min) / (max - min);
-    return percent * width;
+  _sync() {
+    const max = parseFloat(this.el.getAttribute('max')) || 100;
+    const min = parseFloat(this.el.getAttribute('min')) || 0;
+    const val = parseFloat(this.el.value) || 0;
+    const percent = max === min ? 0 : (val - min) / (max - min);
+    this.el.style.setProperty('--md-comp-slider-active-fraction', `${percent * 100}%`);
+    this.value.textContent = this.el.value;
+    const left = this.el.offsetLeft;
+    const top = this.el.offsetTop;
+    const width = this.el.offsetWidth;
+    const height = this.el.offsetHeight;
+    if (this._isVertical()) {
+      this.thumb.style.left = `${left + width / 2}px`;
+      this.thumb.style.top = `${top + (1 - percent) * height}px`;
+    } else {
+      this.thumb.style.left = `${left + percent * width}px`;
+      this.thumb.style.top = `${top}px`;
+    }
   }
 
   /**

@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Range</h1>
-      <h4 class="light primary-text">A slider for picking a number with the pointer.</h4>
+      <h4 class="light primary-text">Material Design 3 sliders, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -17,44 +17,124 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="html5" class="section scrollspy">
-        <h3>HTML5 Range</h3>
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Range is a styled <code>input type="range"</code>. Dragging shows a bubble with the
-          current value. It is not precise — pair it with a number field if the value must be exact.
+          An <code>&lt;input type="range"&gt;</code> is the control. A
+          wrapping <code>&lt;label&gt;</code> (or <code>.range</code> /
+          <code>.range-field</code>) is the host for the value label.
+          There is no required <code>&lt;span&gt;</code>.
+          <code>.slider</code> is the carousel — do not put it on a
+          range.
         </p>
         <p>
-          Wrap the input in <code>.range-field</code> so the bubble can be positioned.
-          <code>min</code>, <code>max</code>, <code>step</code>, and <code>value</code> are the
-          native attributes. When they are omitted, the bubble treats the range as 0–100.
+          Tokens follow the
+          <a href="https://m3.material.io/components/sliders/specs">M3 slider spec</a>
+          (Expressive). The track is 16dp, fully rounded, with a 6dp gap
+          around the handle. Active is <code>primary</code>; inactive is
+          <code>secondary-container</code>. The handle is a 4×44dp
+          <code>primary</code> stop that narrows to 2dp while pressed.
+          The state layer is 40dp at 8% hover and 10% focus. The value
+          label is <code>inverse-surface</code> /
+          <code>inverse-on-surface</code>, <code>body-small</code>.
+          Disabled is 38%. Dual-handle range and discrete ticks are not
+          implemented.
+        </p>
+        <p>
+          Range is not in <code>AutoInit()</code>. Importing the IIFE
+          bundle calls <code>RoutePlate.Range.Init()</code>, which
+          starts every <code>input[type=range]</code> already in the
+          document and keeps the active track in sync.
+          <code>no-autoinit</code> does not apply.
         </p>
         <form>
-          <p class="range-field">
-            <input type="range" id="range-demo" min="0" max="100">
-          </p>
+          <label>
+            Volume
+            <input type="range" min="0" max="100" value="40">
+          </label>
         </form>
-<pre><code>&lt;form action="#"&gt;
-  &lt;p class="range-field"&gt;
-    &lt;input type="range" id="test5" min="0" max="100" /&gt;
-  &lt;/p&gt;
-&lt;/form&gt;</code></pre>
+<pre><code>&lt;label&gt;
+  Volume
+  &lt;input type="range" min="0" max="100" value="40"&gt;
+&lt;/label&gt;</code></pre>
+        <p>
+          <code>min</code>, <code>max</code>, <code>step</code>, and
+          <code>value</code> are the native attributes. When they are
+          omitted, the control treats the range as 0–100. Dragging shows
+          the current value above the handle.
+        </p>
+      </div>
+
+      <div id="sizes" class="section scrollspy">
+        <h3>Sizes</h3>
+        <p>
+          <code>small</code> is an 8dp track and a 32dp handle.
+          <code>large</code> is a 24dp track and a 52dp handle. Scope
+          them on the host — unscoped <code>.small</code> /
+          <code>.large</code> are used by other components.
+        </p>
+        <form>
+          <div class="range small">
+            <input type="range" min="0" max="100" value="25" aria-label="Small">
+          </div>
+          <div class="range">
+            <input type="range" min="0" max="100" value="50" aria-label="Default">
+          </div>
+          <div class="range large">
+            <input type="range" min="0" max="100" value="75" aria-label="Large">
+          </div>
+        </form>
+<pre><code>&lt;div class="range small"&gt;
+  &lt;input type="range" min="0" max="100" value="25"&gt;
+&lt;/div&gt;
+&lt;div class="range large"&gt;
+  &lt;input type="range" min="0" max="100" value="75"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="vertical" class="section scrollspy">
+        <h3>Vertical</h3>
+        <p>
+          <code>vertical</code> stands the track up. Minimum is at the
+          bottom. The value label sits to the end of the handle.
+        </p>
+        <form>
+          <div class="range vertical">
+            <input type="range" min="0" max="100" value="60" aria-label="Level">
+          </div>
+        </form>
+<pre><code>&lt;div class="range vertical"&gt;
+  &lt;input type="range" min="0" max="100" value="60" aria-label="Level"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="disabled" class="section scrollspy">
+        <h3>Disabled</h3>
+        <p>The native <code>disabled</code> attribute drops the control to 38%.</p>
+        <form>
+          <label>
+            Locked
+            <input type="range" min="0" max="100" value="30" disabled>
+          </label>
+        </form>
+<pre><code>&lt;label&gt;
+  Locked
+  &lt;input type="range" min="0" max="100" value="30" disabled&gt;
+&lt;/label&gt;</code></pre>
       </div>
 
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          Range is not in <code>AutoInit()</code>. Importing the IIFE bundle calls
-          <code>RoutePlate.Range.Init()</code> immediately, which starts every
-          <code>input[type=range]</code> already in the document. Put the script after the
-          inputs (as this site does), or call <code>init</code> yourself.
-          <code>no-autoinit</code> does not apply.
+          Put the script after the inputs (as this site does), or call
+          <code>init</code> yourself. There are no options. For a range
+          added after load:
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('input[type=range]');
   RoutePlate.Range.init(elems);
-});</code></pre>
-        <p>There are no options. For a range added after load:</p>
-<pre><code>RoutePlate.Range.init(document.querySelector('#test5'));</code></pre>
+});
+
+RoutePlate.Range.init(document.querySelector('#volume'));</code></pre>
       </div>
 
       <div id="methods" class="section scrollspy">
@@ -65,7 +145,7 @@
 <pre><code>const instance = RoutePlate.Range.getInstance(elem);</code></pre>
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the value bubble, and tear down its event handlers.</p>
+        <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
       </div>
 
@@ -93,12 +173,12 @@
             <tr>
               <td><code>thumb</code></td>
               <td>Element</td>
-              <td>The generated bubble next to the input.</td>
+              <td>The generated value label next to the input.</td>
             </tr>
             <tr>
               <td><code>value</code></td>
               <td>Element</td>
-              <td>The span inside the bubble that shows the current number.</td>
+              <td>The span inside the label that shows the current number.</td>
             </tr>
           </tbody>
         </table>
@@ -108,7 +188,10 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#html5">HTML5 Range</a></li>
+          <li><a href="#anatomy">Introduction</a></li>
+          <li><a href="#sizes">Sizes</a></li>
+          <li><a href="#vertical">Vertical</a></li>
+          <li><a href="#disabled">Disabled</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>

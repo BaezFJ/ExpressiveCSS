@@ -43,7 +43,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   position: relative;
   clear: both;
 
-  input,
+  input:not([type="range"]),
   textarea {
     box-sizing: border-box;
     padding: 20px 16px 8px;
