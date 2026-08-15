@@ -40,7 +40,8 @@ $text-color: var(--md-sys-color-on-background) !default;
 // derived from it, so the two cannot drift.
 $root-font-size: 14px !default;
 
-// Header Styles
+// Legacy rem heading ladder. Headings now consume --md-sys-typescale-*
+// (see base/_typography.scss). Kept so existing Sass overrides still compile.
 $h1-fontsize: 4.2rem !default;
 $h2-fontsize: 3.56rem !default;
 $h3-fontsize: 2.92rem !default;

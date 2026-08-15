@@ -1,13 +1,18 @@
+@use "../abstracts" as *;
+
 // M3 typescale helper classes, generated from the tokens in tokens/_reference.scss.
 //
 // Every property here must correspond to a token that file actually defines -
-// a `var()` pointing at an undefined custom property makes the whole
-// declaration invalid at computed-value time, which is how this file spent its
-// first life doing nothing at all.
+// a var() pointing at an undefined custom property makes the whole
+// declaration invalid at computed-value time.
 //
 // Deliberately not set:
-//   font-style  - the `-font-family-style` token holds "Regular"/"Medium",
+//   font-style  - the -font-family-style token holds "Regular" / "Medium",
 //                 which describe weight, not a CSS font-style keyword.
+//
+// Semantic elements already consume these roles (see base/_typography.scss).
+// Use a class when the HTML cannot carry the role (a <p> that should display,
+// a <span> used as a label).
 
 $typescale-roles: (
   "display-large", "display-medium", "display-small",
@@ -19,10 +24,22 @@ $typescale-roles: (
 
 @each $role in $typescale-roles {
   .#{$role} {
-    font-family: var(--md-sys-typescale-#{$role}-font-family-name);
-    font-size: var(--md-sys-typescale-#{$role}-font-size);
-    font-weight: var(--md-sys-typescale-#{$role}-font-weight);
-    line-height: var(--md-sys-typescale-#{$role}-line-height);
-    letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
+    @include typescale($role);
   }
 }
+
+// Emphasis and case. One job each, independent of the type role.
+.italic { font-style: italic; }
+.bold { font-weight: 500; }
+.light { font-weight: 300; }
+.thin { font-weight: 200; }
+.underline { text-decoration: underline; }
+.overline { text-decoration: overline; }
+.upper { text-transform: uppercase; }
+.lower { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+
+// Body-size aliases when the element is not a <p> / <small>.
+.large-text { @include typescale("body-large"); }
+.medium-text { @include typescale("body-medium"); }
+.small-text { @include typescale("body-small"); }

@@ -159,3 +159,13 @@
   }
 }
 
+// M3 type role. Every property must name a token tokens/_reference.scss
+// actually defines — a missing var() drops the whole declaration.
+@mixin typescale($role) {
+  font-family: var(--md-sys-typescale-#{$role}-font-family-name), #{$font-stack};
+  font-size: var(--md-sys-typescale-#{$role}-font-size);
+  font-weight: var(--md-sys-typescale-#{$role}-font-weight);
+  line-height: var(--md-sys-typescale-#{$role}-line-height);
+  letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
+}
+
