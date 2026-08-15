@@ -63,7 +63,7 @@ header:has(> nav) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > nav > :is(a, button):not(.btn):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+  > nav > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -100,7 +100,7 @@ header:has(> nav) {
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > nav > a:not(:has(> i:only-child)):not(.btn):not(.btn-floating):not(.breadcrumb) {
+  > nav > a:not(:has(> i:only-child)):not(.btn):not(.button):not(.btn-floating):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 
@@ -297,7 +297,7 @@ footer:not(.page-footer):has(> nav) {
     margin: 0;
   }
 
-  > nav > :is(a, button):not(.btn):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+  > nav > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;

@@ -1,175 +1,268 @@
 @use "../abstracts" as *;
 
+// Common buttons and FABs.
+//
+// Anatomy is the HTML. A <button> (or <a class="button"> / .btn) is a filled
+// common button. Put an <i> first or last for a leading/trailing icon — no
+// icon-left / icon-right required. Icon-only is a 40dp icon button. Helpers
+// switch the M3 variant (tonal, outlined, elevated, text) or the size.
+//
+// Tokens follow https://m3.material.io/components/buttons/specs
+//   height 40 / 32 small / 56 large, label-large, 20dp stadium
+//   icon 18dp, 8dp gap, 24dp inset (16dp next to an icon)
+//   state layer 8% hover / 10% focus+press
+//   FAB 56dp (extra/large icon-only), primary-container, 16dp corners
+
 :root {
-  --btn-height: 40px;
-  --btn-font-size-icon: 16px;
-  --btn-padding: 24px;
-  --btn-padding-icon: 16px;
-  --btn-gap-icon: 8px;
-  --btn-border-radius: 4px;
-  --btn-font-size: 14px;
+  --md-comp-filled-button-container-color: var(--md-sys-color-primary);
+  --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
+  --md-comp-filled-button-container-height: 40px;
+  --md-comp-filled-button-container-shape: 20px;
+  --md-comp-filled-button-leading-space: 24px;
+  --md-comp-filled-button-trailing-space: 24px;
+  --md-comp-filled-button-with-icon-leading-space: 16px;
+  --md-comp-filled-button-icon-size: 18px;
+  --md-comp-filled-button-icon-label-space: 8px;
 }
 
-.btn, .btn-floating, .btn-large, .btn-small, .btn-flat {
-  @include btn(
-    var(--btn-height),
-    var(--btn-border-radius),
-    var(--btn-padding),
-    var(--btn-padding),
-    var(--btn-font-size)
-  );
+// Widget chrome that happens to be a <button> — not a common button.
+$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .indicator-item-btn";
+
+$_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-small";
+
+:where(#{$_btn}) {
+  @include btn;
+
+  > i {
+    flex: 0 0 auto;
+    font-size: var(--md-comp-filled-button-icon-size);
+    width: var(--md-comp-filled-button-icon-size);
+    height: var(--md-comp-filled-button-icon-size);
+    line-height: var(--md-comp-filled-button-icon-size);
+    overflow: hidden;
+  }
+
+  // :only-child ignores text nodes, so "<i>add</i>Create" would look like
+  // an icon button. Wrap the label in a <span> (BeerCSS) for the 16dp
+  // leading inset; otherwise the icon still sits on the flex gap.
+  &:has(> i + span) {
+    padding-inline-start: var(--md-comp-filled-button-with-icon-leading-space);
+  }
+
+  &:has(> span + i) {
+    padding-inline-end: var(--md-comp-filled-button-with-icon-leading-space);
+  }
+
+  // Icon button — opt in with .circle. Do not infer from :only-child.
+  &.circle {
+    width: var(--md-comp-filled-button-container-height);
+    padding: 0;
+    border-radius: 50%;
+
+    > i {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+  }
 }
 
-// Icon
-.btn.icon-left, .btn.icon-right {
-  position: relative;
-}
-
-.btn.icon-left {
-  padding-left: calc(var(--btn-padding-icon) + var(--btn-font-size-icon) + var(--btn-gap-icon));
-}
-
-.btn.icon-right {
-  padding-right: calc(var(--btn-padding-icon) + var(--btn-font-size-icon) + var(--btn-gap-icon));
-}
-
-.btn.icon-left i, .btn.icon-right i {
-  position: absolute;
-  font-size: var(--btn-font-size-icon);
-}
-
-.btn.icon-left i {
-  left: var(--btn-padding-icon);
-}
-
-.btn.icon-right i {
-  right: var(--btn-padding-icon);
-}
-
-//------------------ Enabled
-
-.btn.filled {
+// Default variant is filled. :where() keeps specificity at zero so .tonal etc. win.
+:where(#{$_btn}):not(.tonal, .outlined, .border, .elevated, .text, .transparent, .btn-flat) {
   @include btn-filled;
 }
 
-.btn.tonal {
+:where(#{$_btn}).tonal {
   @include btn-tonal;
 }
 
-.btn.elevated {
-  @include btn-elevated;
-}
-
-.btn.outlined {
+:where(#{$_btn}).outlined,
+:where(#{$_btn}).border {
   @include btn-outlined;
 }
 
-.btn.text, .btn-flat {
+:where(#{$_btn}).elevated {
+  @include btn-elevated;
+}
+
+:where(#{$_btn}).text,
+:where(#{$_btn}).transparent,
+.btn-flat {
   @include btn-flat;
 }
 
-//------------------ Disabled
-
-.btn.disabled, .btn-floating.disabled, .btn-large.disabled, .btn-small.disabled, .btn-flat.disabled,
-.btn:disabled, .btn-floating:disabled, .btn-large:disabled, .btn-small:disabled, .btn-flat:disabled,
-.btn[disabled], .btn-floating[disabled], .btn-large[disabled], .btn-small[disabled], .btn-flat[disabled] {
-  @include btn-disabled();
+// icon-right is a compat alias: new markup puts the icon last in the DOM.
+:where(#{$_btn}).icon-right {
+  flex-direction: row-reverse;
 }
 
-//------------------ Hover
+// Sizes. small = 32dp, large/extra = 56dp (M3 extra-large / FAB height).
+:where(#{$_btn}).small,
+.btn-small {
+  --md-comp-filled-button-container-height: 32px;
+  --md-comp-filled-button-container-shape: 16px;
+  --md-comp-filled-button-leading-space: 16px;
+  --md-comp-filled-button-trailing-space: 16px;
+  --md-comp-filled-button-with-icon-leading-space: 12px;
+  --md-comp-filled-button-icon-size: 16px;
+  height: 32px;
+  font-size: var(--md-sys-typescale-label-medium-font-size);
+}
 
-//------------------ Focus
+:where(#{$_btn}).large,
+:where(#{$_btn}).extra,
+.btn-large {
+  --md-comp-filled-button-container-height: 56px;
+  --md-comp-filled-button-container-shape: 28px;
+  --md-comp-filled-button-leading-space: 24px;
+  --md-comp-filled-button-trailing-space: 24px;
+  --md-comp-filled-button-with-icon-leading-space: 16px;
+  --md-comp-filled-button-icon-size: 24px;
+  height: 56px;
+}
 
-// Floating button
-.btn-floating {
-  // FIXES
-  // width: unset;
-  // padding: 16px !important;
-  // padding-right: 24px !important; /* only with icon */
-  // gap: 8px;
-  width: $button-floating-size;
-  height: $button-floating-size;
+:where(#{$_btn}).rounded {
+  border-radius: 9999px;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+// Extended FAB: 56dp, large corners, primary-container, icon + label.
+:where(#{$_btn}).extend {
+  height: 56px;
+  padding-inline: 16px 20px;
+  border-radius: 16px;
   color: var(--md-sys-color-on-primary-container);
   background-color: var(--md-sys-color-primary-container);
-  border-radius: $button-floating-radius;
-  padding: 0;
-  display: grid;
-  grid-auto-flow: column;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  @include z-depth("1");
-  transition: background-color .3s;
-  cursor: pointer;
-  vertical-align: middle;
+  @include z-depth("3");
 
   &:hover {
-    @include z-depth("1-half");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary-container), var(--md-sys-color-on-primary-container) 16%);
+    @include z-depth("4");
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-primary-container) 8%,
+      var(--md-sys-color-primary-container)
+    );
   }
 
+  &:active,
   &:focus {
-    background-color: $button-floating-background-focus;
-    @include z-depth("1-half");
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-primary-container) 10%,
+      var(--md-sys-color-primary-container)
+    );
   }
 
-  &:before {
-    border-radius: 0;
+  @include focus-visible;
+
+  > i {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+}
+
+// FAB. .btn-floating is the JS contract (FloatingActionButton looks it up).
+// Icon-only .extra / .large is the same 56dp regular FAB. Bare .btn-floating
+// is the 40dp small FAB.
+.btn-floating,
+:where(#{$_btn}).extra.circle,
+:where(#{$_btn}).large.circle,
+:where(#{$_btn}).btn-large.circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  color: var(--md-sys-color-on-primary-container);
+  background-color: var(--md-sys-color-primary-container);
+  text-decoration: none;
+  cursor: pointer;
+  appearance: none;
+  vertical-align: middle;
+  @include z-depth("3");
+  @include focus-visible;
+  transition: background-color .2s ease-out, box-shadow .2s ease-out;
+
+  > i {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    color: inherit;
   }
 
-  &.btn-large {
-    width: 56px;
-    height: 56px;
-    padding: 0;
-    &.halfway-fab {
-      bottom: -56px * 0.5;
-    }
-    // font-size:
-    // i {
-    //   // line-height: 56px;
-    // }
+  &:hover {
+    @include z-depth("4");
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-primary-container) 8%,
+      var(--md-sys-color-primary-container)
+    );
   }
 
+  &:active,
+  &:focus {
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-primary-container) 10%,
+      var(--md-sys-color-primary-container)
+    );
+  }
+
+  &.small,
   &.btn-small {
-    --btn-small-height: calc(0.75 * var(--btn-height));
-    width: var(--btn-small-height);
-    height: var(--btn-small-height);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
 
-    &.halfway-fab {
-      bottom: calc(var(--btn-small-height) * -0.5);
+    > i {
+      font-size: 24px;
     }
-    // i {
-    //   line-height: $button-floating-small-size;
-    // }
   }
 
   &.halfway-fab {
     position: absolute;
     right: 24px;
-    bottom: -$button-floating-size * 0.5;
+    bottom: -28px;
 
     &.left {
       right: auto;
       left: 24px;
     }
   }
+}
 
-  i {
-    color: $button-floating-color;
-    font-size: 1.6rem;
-    width: inherit;
-    display: inline-block;
-    text-align: center;
+// Small FAB alias: .btn-floating alone is 40dp (historical size + M3 small).
+.btn-floating:not(.large, .btn-large, .extra, .small, .btn-small) {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+
+  &.halfway-fab {
+    bottom: -20px;
   }
 }
 
-// button fix
-button.btn-floating {
-  border: none;
+:where(#{$_btn}):disabled,
+:where(#{$_btn})[disabled],
+:where(#{$_btn}).disabled,
+.btn-floating:disabled,
+.btn-floating[disabled],
+.btn-floating.disabled {
+  @include btn-disabled;
 }
 
-// Fixed Action Button
+// Fixed Action Button — JS-driven menu around a FAB.
 .fixed-action-btn {
   position: fixed;
   right: 23px;
@@ -186,7 +279,6 @@ button.btn-floating {
     }
   }
 
-  // Directions
   &.direction-left,
   &.direction-right {
     padding: 0 0 0 15px;
@@ -198,7 +290,6 @@ button.btn-floating {
       transform: translateY(-50%);
       height: 100%;
       left: auto;
-      /*width 100% only goes to width of button container */
       width: 500px;
 
       li {
@@ -243,7 +334,8 @@ button.btn-floating {
     height: 56px;
 
     &.active {
-      & > a i {
+      & > a i,
+      & > button i {
         opacity: 0;
       }
     }
@@ -261,7 +353,8 @@ button.btn-floating {
         height: 100%;
         transition: none;
 
-        a {
+        a,
+        button {
           display: block;
           overflow: hidden;
           position: relative;
@@ -269,7 +362,7 @@ button.btn-floating {
           height: 100%;
           background-color: transparent;
           box-shadow: none;
-          color: $button-floating-color;
+          color: var(--md-sys-color-on-primary-container);
           line-height: 56px;
           z-index: 1;
 
@@ -294,7 +387,8 @@ button.btn-floating {
       margin-bottom: 15px;
     }
 
-    a.btn-floating {
+    a.btn-floating,
+    button.btn-floating {
       opacity: 0;
     }
   }
@@ -304,44 +398,10 @@ button.btn-floating {
     top: 0;
     left: 0;
     z-index: -1;
-    width: $button-floating-size;
-    height: $button-floating-size;
-    background-color: $button-floating-background;
-    border-radius: $button-floating-radius;
+    width: 56px;
+    height: 56px;
+    background-color: var(--md-sys-color-primary-container);
+    border-radius: 16px;
     transform: scale(0);
   }
-}
-
-//--- Helper classes (for all)
-
-// Large button
-.btn-large {
-  @extend .btn;
-  height: calc(1.5 * var(--btn-height));
-  font-size: 18px;
-  padding: 0 28px;
-
-  i {
-    font-size: 1.6rem;
-  }
-}
-
-// Small button
-.btn-small {
-  @extend .btn;
-  height: calc(0.75 * var(--btn-height));
-  font-size: 13px;
-
-  i {
-    font-size: 1.2rem;
-  }
-}
-
-// Block button
-.btn-block {
-  display: block;
-}
-
-.btn.rounded {
-  border-radius: 99999px;
 }

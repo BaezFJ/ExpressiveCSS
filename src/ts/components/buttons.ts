@@ -34,7 +34,7 @@ export class FloatingActionButton
    */
   isOpen: boolean;
 
-  private _anchor: HTMLAnchorElement;
+  private _anchor: HTMLElement;
   private _menu: HTMLElement | null;
   private _floatingBtns: HTMLElement[];
   private _floatingBtnsReverse: HTMLElement[];
@@ -55,7 +55,7 @@ export class FloatingActionButton
     };
 
     this.isOpen = false;
-    this._anchor = this.el.querySelector('a');
+    this._anchor = this.el.querySelector('a, button');
     this._menu = this.el.querySelector('ul');
     this._floatingBtns = Array.from(this.el.querySelectorAll('ul .btn-floating'));
     this._floatingBtnsReverse = this._floatingBtns.reverse();

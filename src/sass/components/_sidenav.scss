@@ -83,7 +83,7 @@
     overflow: hidden;
     border-radius: 100px;
 
-    &:not(.btn):not(.btn-flat):not(.btn-large):not(.btn-floating) {
+    &:not(.btn):not(.button):not(.btn-flat):not(.btn-large):not(.btn-floating) {
       color: var(--md-sys-color-on-secondary-container);
       &:hover {
         //color: var(--md-sys-color-on-secondary-container);
@@ -92,7 +92,7 @@
       }
     }
 
-    &.btn, &.btn-large, &.btn-flat, &.btn-floating {
+    &.btn, &.button, &.btn-large, &.btn-flat, &.btn-floating {
       margin: 10px 15px;
     }
 

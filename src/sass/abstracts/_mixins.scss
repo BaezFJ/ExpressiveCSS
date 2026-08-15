@@ -2,52 +2,62 @@
 @use "./variables" as *;
 
 
+// Common-button geometry. M3 default is 40dp, label-large, 20dp corners
+// (a stadium), 24dp inset, 8dp icon gap. Variants only change color/elevation.
 @mixin btn(
-  $height: var(--btn-height),
-  $border-radius: var(--btn-border-radius),
-  $padding-left: var(--btn-padding),
-  $padding-right: var(--btn-padding),
-  $font-size: var(--btn-font-size),
+  $height: var(--md-comp-filled-button-container-height, 40px),
+  $border-radius: var(--md-comp-filled-button-container-shape, 20px),
+  $padding-left: var(--md-comp-filled-button-leading-space, 24px),
+  $padding-right: var(--md-comp-filled-button-trailing-space, 24px),
+  $font-size: var(--md-sys-typescale-label-large-font-size),
 ) {
-  height: $height;
-  border-radius: $border-radius;
-  padding-left: $padding-left;
-  padding-right: $padding-right;
-  font-size: $font-size;
-  font-weight: 500;
-  text-decoration: none;
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: var(--md-comp-filled-button-icon-label-space, 8px);
+  height: $height;
+  padding-left: $padding-left;
+  padding-right: $padding-right;
   border: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent; // Gets rid of tap active state
+  border-radius: $border-radius;
+  font-family: var(--md-sys-typescale-label-large-font-family-name);
+  font-size: $font-size;
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
   outline: 0;
   user-select: none;
-  transition: background-color .2s ease-out;
-
-  &:focus {
-    background-color: var(--md-sys-color-primary-container);
-  }
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s ease-out, box-shadow .2s ease-out;
 }
 
-@mixin btn-filled {
-  color: var(--md-sys-color-on-primary);
-  background-color: var(--md-sys-color-primary);
+// State layers are 8% hover / 10% focus+press of the on-color, mixed in oklab
+// onto the container. Filled and tonal have no elevation.
 
-  &:hover,
-  &:focus {
-    color: var(--md-sys-color-on-primary);
-  }
+@mixin btn-filled {
+  color: var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary));
+  background-color: var(--md-comp-filled-button-container-color, var(--md-sys-color-primary));
 
   &:hover {
-    @include z-depth("1");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary), var(--md-sys-color-on-primary) 16%);
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-primary) 8%,
+      var(--md-sys-color-primary)
+    );
   }
 
+  &:active,
   &:focus {
-    @include z-depth("0");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary), var(--md-sys-color-on-primary) 20%);
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-primary) 10%,
+      var(--md-sys-color-primary)
+    );
   }
 
   @include focus-visible();
@@ -57,42 +67,40 @@
   color: var(--md-sys-color-on-secondary-container);
   background-color: var(--md-sys-color-secondary-container);
 
-  &:hover,
-  &:focus {
-    color: var(--md-sys-color-on-secondary-container);
-  }
-
   &:hover {
-    @include z-depth("1");
-    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-secondary-container) 8%,
+      var(--md-sys-color-secondary-container)
+    );
   }
 
+  &:active,
   &:focus {
-    @include z-depth("0");
-    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 20%);
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-secondary-container) 10%,
+      var(--md-sys-color-secondary-container)
+    );
   }
 
   @include focus-visible();
 }
 
 @mixin btn-elevated {
-  color: var(--md-sys-color-on-secondary-container);
-  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface);
   @include z-depth("1");
-
-  &:hover,
-  &:focus {
-    color: var(--md-sys-color-primary);
-  }
 
   &:hover {
     @include z-depth("2");
-    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
   }
 
+  &:active,
   &:focus {
     @include z-depth("1");
-    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-primary) 20%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface));
   }
 
   @include focus-visible();
@@ -103,18 +111,13 @@
   color: var(--md-sys-color-primary);
   border: 1px solid var(--md-sys-color-outline);
 
-  &:hover,
-  &:focus {
-    color: var(--md-sys-color-primary);
-  }
-
   &:hover {
-    background-color: color-mix(in oklab, transparent, var(--md-sys-color-primary) 16%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
   }
 
+  &:active,
   &:focus {
-    background-color: color-mix(in oklab, transparent, var(--md-sys-color-primary) 20%);
-    border: 1px solid var(--md-sys-color-primary);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
   }
 
   @include focus-visible();
@@ -124,18 +127,15 @@
   @include z-depth("0");
   color: var(--md-sys-color-primary);
   background-color: transparent;
-
-  &:hover,
-  &:focus {
-    color: var(--md-sys-color-primary);
-  }
+  border-color: transparent;
 
   &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 16%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
   }
 
+  &:active,
   &:focus {
-    background-color: color-mix(in oklab, transparent, var(--md-sys-color-primary) 20%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
   }
 
   @include focus-visible();
@@ -143,8 +143,9 @@
 
 @mixin btn-disabled {
   @include z-depth("0");
-  color: color-mix(in oklab, transparent, var(--md-sys-color-on-surface) 76%);
-  background-color: color-mix(in oklab, transparent, var(--md-sys-color-on-surface) 24%);
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
+  border-color: transparent;
   pointer-events: none;
   box-shadow: none;
   cursor: default;

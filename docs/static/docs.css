@@ -16,8 +16,9 @@ code {
   padding: 0.1em 0.35em;
 }
 
-section .btn {
+section :is(button, a.button, .btn, .btn-floating) {
   margin-right: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 /* Offset documentation pages so they sit beside the fixed sidenav. */

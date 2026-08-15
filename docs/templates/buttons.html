@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Buttons</h1>
-      <h4 class="light primary-text">Filled, tonal, outlined, elevated, text, and floating actions.</h4>
+      <h4 class="light primary-text">Material Design 3 common buttons, icon buttons, and FABs — from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -16,210 +16,231 @@
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
-      <p class="flow-text">There are several button types described in Material Design: the elevated button, the filled, tonal, outlined, text, and floating button.</p>
-      <a class="btn filled">Standard Button</a>
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>&lt;button&gt;</code> is a filled common button. An
+          <code>&lt;a class="button"&gt;</code> (or the older
+          <code>.btn</code>) is the same thing for a link. Put an
+          <code>&lt;i&gt;</code> and wrap the label in a
+          <code>&lt;span&gt;</code> — there is no <code>icon-left</code> /
+          <code>icon-right</code> class. Add <code>circle</code> for a 40dp
+          icon button.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/buttons/specs">M3 button spec</a>.
+          Default height is 40dp, label is <code>label-large</code>, corners
+          are 20dp (a stadium), icons are 18dp with an 8dp gap, and the
+          horizontal inset is 24dp (16dp next to an icon). State layers are
+          8% hover and 10% focus or press. Disabled is
+          <code>on-surface</code> at 38% on a 12% container.
+        </p>
+        <p>
+          <button type="button">Create</button>
+          <button type="button"><i class="material-icons">add</i><span>Create</span></button>
+          <button type="button"><span>Send</span><i class="material-icons">send</i></button>
+          <button type="button" class="circle" aria-label="Add"><i class="material-icons">add</i></button>
+        </p>
+<pre><code>&lt;button&gt;Create&lt;/button&gt;
+&lt;button&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+&lt;/button&gt;
+&lt;button&gt;
+  &lt;span&gt;Send&lt;/span&gt;&lt;i class="material-icons"&gt;send&lt;/i&gt;
+&lt;/button&gt;
+&lt;button class="circle" aria-label="Add"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;
+&lt;/button&gt;
+
+&lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
+      </div>
 
       <div id="filled" class="section scrollspy">
-        <h3>Filled <small class="secondary-text">(Standard)</small></h3>
+        <h3>Filled</h3>
         <p>
-          The filled button communicates <strong>high</strong> emphasis actions. Add the class <code>filled</code> to provide this
-          style. This should be the main action on a page, so be careful. A good rule of thumb is to add just one primary action per page or field of view.
+          High emphasis. This is the default — the main action on a page.
+          Container <code>primary</code>, label <code>on-primary</code>, no
+          elevation. <code>filled</code> on a <code>.btn</code> is still
+          accepted and does nothing extra.
         </p>
         <p>
-          <a class="btn filled mr-3 mb-3">Create</a>
-          <a class="btn filled icon-left mr-3 mb-3"><i class="material-icons">add</i>Create</a>
-          <a class="btn filled icon-right rounded waves-effect waves-light mr-3 mb-3"><i class="material-icons">edit</i>Update</a>
+          <button type="button">Create</button>
+          <button type="button"><i class="material-icons">add</i><span>Create</span></button>
+          <a class="button" href="#!">Link</a>
         </p>
-<pre><code>&lt;a class="btn filled"&gt;Create&lt;/a&gt;
-&lt;a class="btn filled icon-left"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;
-&lt;a class="btn filled icon-right rounded waves-effect waves-light"&gt;
-  &lt;i class="material-icons"&gt;edit&lt;/i&gt;Update
-&lt;/a&gt;</code></pre>
+<pre><code>&lt;button&gt;Create&lt;/button&gt;
+&lt;button&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+&lt;/button&gt;
+&lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
       </div>
 
       <div id="filled-tonal" class="section scrollspy">
         <h3>Tonal</h3>
         <p>
-          Tonal buttons communicate a <strong>medium</strong> emphasis action. Add the class <code>tonal</code> to the button. These can be used more often on a page because they are
-          additional actions next to the primary action.
+          Medium emphasis. Add <code>tonal</code>. Container
+          <code>secondary-container</code>, label
+          <code>on-secondary-container</code>.
         </p>
         <p>
-          <a class="btn tonal mr-3 mb-3">Create</a>
-          <a class="btn tonal icon-left mr-3 mb-3"><i class="material-icons">add</i>Create</a>
-          <a class="btn tonal icon-right waves-effect mr-3 mb-3"><i class="material-icons">add</i>Create</a>
+          <button type="button" class="tonal">Create</button>
+          <button type="button" class="tonal"><i class="material-icons">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;a class="btn tonal"&gt;Create&lt;/a&gt;
-&lt;a class="btn tonal icon-left"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;
-&lt;a class="btn tonal icon-right waves-effect"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;</code></pre>
+<pre><code>&lt;button class="tonal"&gt;Create&lt;/button&gt;
+&lt;button class="tonal"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+&lt;/button&gt;</code></pre>
       </div>
 
       <div id="outlined" class="section scrollspy">
         <h3>Outlined</h3>
-        <p>The outlined button communicates a <strong>medium</strong> emphasis action. Add the class <code>outlined</code> to the button.</p>
         <p>
-          <a class="btn outlined mr-3 mb-3">Create</a>
-          <a class="btn outlined icon-left mr-3 mb-3"><i class="material-icons">add</i>Create</a>
-          <a class="btn outlined icon-right waves-effect mr-3 mb-3"><i class="material-icons">add</i>Create</a>
+          Medium emphasis, no fill. Add <code>outlined</code> (or
+          <code>border</code>). Outline is <code>outline</code>, label is
+          <code>primary</code>.
         </p>
-<pre><code>&lt;a class="btn outlined"&gt;Create&lt;/a&gt;
-&lt;a class="btn outlined icon-left"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;
-&lt;a class="btn outlined icon-right waves-effect"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;</code></pre>
+        <p>
+          <button type="button" class="outlined">Create</button>
+          <button type="button" class="outlined"><i class="material-icons">add</i><span>Create</span></button>
+        </p>
+<pre><code>&lt;button class="outlined"&gt;Create&lt;/button&gt;</code></pre>
       </div>
 
       <div id="elevated" class="section scrollspy">
         <h3>Elevated</h3>
         <p>
-          The elevated button is a tonal button with a shadow. It signifies <strong>medium</strong> emphasis actions and seeks to give depth to a mostly flat page. Try to
-          only use shadows when absolutely necessary, to prevent shadow creep. Also keep in mind that on darker backgrounds the shadows are less visible.
+          Medium emphasis with a shadow. Container <code>surface</code>,
+          label <code>primary</code>, elevation 1 at rest and 2 on hover.
+          Use sparingly so the page does not fill with shadows.
         </p>
         <p>
-          <a class="btn elevated mr-3 mb-3">Create</a>
-          <a class="btn elevated icon-left mr-3 mb-3"><i class="material-icons">add</i>Create</a>
-          <a class="btn elevated icon-right mr-3 mb-3"><i class="material-icons">add</i>Create</a>
-          <a class="btn elevated rounded mr-3 mb-3">Create</a>
-          <a class="btn elevated icon-left rounded mr-3 mb-3"><i class="material-icons">add</i>Create</a>
+          <button type="button" class="elevated">Create</button>
+          <button type="button" class="elevated"><i class="material-icons">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;a class="btn elevated"&gt;Create&lt;/a&gt;
-&lt;a class="btn elevated icon-left"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;
-&lt;a class="btn elevated icon-right"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;
-&lt;a class="btn elevated rounded"&gt;Create&lt;/a&gt;
-&lt;a class="btn elevated icon-left rounded"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;</code></pre>
+<pre><code>&lt;button class="elevated"&gt;Create&lt;/button&gt;</code></pre>
       </div>
 
       <div id="text" class="section scrollspy">
         <h3>Text</h3>
         <p>
-          Text buttons are used to reduce excessive layering and communicate <strong>low</strong> emphasis actions. For example, text buttons are used for actions within a card or
-          modal so there are not too many overlapping shadows. <code>btn-flat</code> is an alias of <code>btn text</code>.
+          Low emphasis. Add <code>text</code> (or <code>transparent</code>,
+          or the older <code>btn-flat</code>). No container, label
+          <code>primary</code>. Use these inside cards and dialogs so they
+          do not stack shadows.
         </p>
         <p>
-          <a class="btn text mr-3 mb-3">Create</a>
-          <button class="btn text icon-left mr-3 mb-3"><i class="material-icons">add</i>Create</button>
-          <a class="btn text icon-right waves-effect mr-3 mb-3"><i class="material-icons">add</i>Create</a>
+          <button type="button" class="text">Create</button>
+          <button type="button" class="text"><i class="material-icons">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;a class="btn text"&gt;Create&lt;/a&gt;
-&lt;button class="btn text icon-left"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
+<pre><code>&lt;button class="text"&gt;Create&lt;/button&gt;</code></pre>
+      </div>
+
+      <div id="icon" class="section scrollspy">
+        <h3>Icon buttons</h3>
+        <p>
+          Add <code>circle</code> for a 40dp icon button. The variant
+          helpers still apply: default is filled, <code>text</code> is the
+          standard (transparent) icon button, <code>tonal</code> and
+          <code>outlined</code> match the common-button colors.
+        </p>
+        <p>
+          <button type="button" class="circle" aria-label="Add"><i class="material-icons">add</i></button>
+          <button type="button" class="circle tonal" aria-label="Add"><i class="material-icons">add</i></button>
+          <button type="button" class="circle outlined" aria-label="Add"><i class="material-icons">add</i></button>
+          <button type="button" class="circle text" aria-label="Add"><i class="material-icons">add</i></button>
+        </p>
+<pre><code>&lt;button class="circle" aria-label="Add"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;
 &lt;/button&gt;
-&lt;a class="btn text icon-right waves-effect"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;Create
-&lt;/a&gt;</code></pre>
+&lt;button class="circle tonal" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button class="circle outlined" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button class="circle text" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
       </div>
 
       <div id="floating" class="section scrollspy">
         <h3>Floating</h3>
         <p>
-          A circular material button. Use <code>btn-floating</code>, and optionally <code>btn-large</code> or <code>btn-small</code>.
+          A FAB is <code>circle extra</code> or <code>circle large</code>:
+          56dp, 16dp corners, <code>primary-container</code>, elevation 3.
+          <code>btn-floating</code> is the 40dp small FAB and the class the
+          <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>
+          menu looks up. <code>extend</code> is the extended FAB — icon plus
+          label at 56dp.
         </p>
         <p>
-          <a class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">add</i></a>
+          <button type="button" class="circle extra" aria-label="Add"><i class="material-icons">add</i></button>
+          <a class="btn-floating" href="#!" aria-label="Add"><i class="material-icons">add</i></a>
+          <button type="button" class="extend"><i class="material-icons">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;a class="btn-floating btn-large waves-effect waves-light"&gt;
+<pre><code>&lt;button class="circle extra" aria-label="Add"&gt;
   &lt;i class="material-icons"&gt;add&lt;/i&gt;
-&lt;/a&gt;</code></pre>
-        <h5>Floating Action Button</h5>
-        <p>
-          A circular material button that lifts and can expand a menu of related actions. Wrap one or more <code>btn-floating</code> buttons in a
-          <code>fixed-action-btn</code> container to pin it to the corner of the page. See the
-          <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a> page for menus, directions, and the JavaScript API.
-        </p>
+&lt;/button&gt;
+&lt;a class="btn-floating" href="#!" aria-label="Add"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;
+&lt;/a&gt;
+&lt;button class="extend"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+&lt;/button&gt;</code></pre>
       </div>
 
-      <div id="helpers" class="section scrollspy">
-        <h3>Helpers</h3>
-        <h4>Submit Button</h4>
-        <p>When you use a button to submit a form, instead of using an input tag, use a button tag with <code>type="submit"</code>.</p>
+      <div id="sizes" class="section scrollspy">
+        <h3>Sizes</h3>
         <p>
-          <button class="btn filled icon-right waves-effect waves-light" type="submit" name="action">
-            Submit<i class="material-icons">send</i>
-          </button>
+          <code>small</code> is 32dp. Default is 40dp.
+          <code>large</code> / <code>extra</code> / <code>btn-large</code>
+          are 56dp. <code>btn-small</code> is an alias of <code>small</code>.
         </p>
-<pre><code>&lt;button class="btn filled icon-right waves-effect waves-light" type="submit" name="action"&gt;
-  Submit&lt;i class="material-icons"&gt;send&lt;/i&gt;
+        <p>
+          <button type="button" class="small">Small</button>
+          <button type="button">Default</button>
+          <button type="button" class="large">Large</button>
+        </p>
+<pre><code>&lt;button class="small"&gt;Small&lt;/button&gt;
+&lt;button&gt;Default&lt;/button&gt;
+&lt;button class="large"&gt;Large&lt;/button&gt;</code></pre>
+        <p>
+          For a form submit, use a real <code>&lt;button type="submit"&gt;</code>
+          rather than an input.
+        </p>
+        <p>
+          <button type="submit"><span>Submit</span><i class="material-icons">send</i></button>
+        </p>
+<pre><code>&lt;button type="submit"&gt;
+  &lt;span&gt;Submit&lt;/span&gt;&lt;i class="material-icons"&gt;send&lt;/i&gt;
 &lt;/button&gt;</code></pre>
-
-        <h4>Large</h4>
-        <p>This button has a larger height for buttons that need more attention.</p>
-        <p>
-          <a class="btn-large filled waves-effect waves-light mr-3 mb-3">Button</a>
-          <a class="btn-large filled icon-left waves-effect waves-light mr-3 mb-3"><i class="material-icons">cloud</i>button</a>
-          <a class="btn-large filled icon-right waves-effect waves-light mr-3 mb-3"><i class="material-icons">cloud</i>button</a>
-        </p>
-<pre><code>&lt;a class="btn-large filled waves-effect waves-light"&gt;Button&lt;/a&gt;
-&lt;a class="btn-large filled icon-left waves-effect waves-light"&gt;
-  &lt;i class="material-icons"&gt;cloud&lt;/i&gt;button
-&lt;/a&gt;
-&lt;a class="btn-large filled icon-right waves-effect waves-light"&gt;
-  &lt;i class="material-icons"&gt;cloud&lt;/i&gt;button
-&lt;/a&gt;</code></pre>
-
-        <h4>Small</h4>
-        <p>When mouse and keyboard are the primary input methods, this smaller button is useful for denser UI layouts.</p>
-        <p>
-          <a class="btn-small filled waves-effect waves-light mr-3 mb-3">Button</a>
-          <a class="btn-small filled icon-left waves-effect waves-light mr-3 mb-3"><i class="material-icons">cloud</i>button</a>
-          <a class="btn-small filled icon-right waves-effect waves-light mr-3 mb-3"><i class="material-icons">cloud</i>button</a>
-        </p>
-<pre><code>&lt;a class="btn-small filled waves-effect waves-light"&gt;Button&lt;/a&gt;
-&lt;a class="btn-small filled icon-left waves-effect waves-light"&gt;
-  &lt;i class="material-icons"&gt;cloud&lt;/i&gt;button
-&lt;/a&gt;
-&lt;a class="btn-small filled icon-right waves-effect waves-light"&gt;
-  &lt;i class="material-icons"&gt;cloud&lt;/i&gt;button
-&lt;/a&gt;</code></pre>
-
-        <h4>Rounded</h4>
-        <p>Add <code>rounded</code> for a pill-shaped button.</p>
-        <p>
-          <a class="btn filled rounded mr-3 mb-3">Rounded</a>
-        </p>
-<pre><code>&lt;a class="btn filled rounded"&gt;Rounded&lt;/a&gt;</code></pre>
       </div>
 
       <div id="disabled" class="section scrollspy">
         <h3>Disabled</h3>
-        <p>This style can be applied to all button types.</p>
         <p>
-          <a class="btn-large disabled mr-3 mb-3">Button</a>
-          <a class="btn disabled mr-3 mb-3">Button</a>
-          <a class="btn-flat disabled mr-3 mb-3">Button</a>
-          <a class="btn-floating disabled"><i class="material-icons">add</i></a>
+          The <code>disabled</code> attribute, or the <code>disabled</code>
+          class on a link. Applies to every variant.
         </p>
-<pre><code>&lt;a class="btn-large disabled"&gt;Button&lt;/a&gt;
-&lt;a class="btn disabled"&gt;Button&lt;/a&gt;
-&lt;a class="btn-flat disabled"&gt;Button&lt;/a&gt;
-&lt;a class="btn-floating disabled"&gt;
-  &lt;i class="material-icons"&gt;add&lt;/i&gt;
-&lt;/a&gt;</code></pre>
+        <p>
+          <button type="button" disabled>Filled</button>
+          <button type="button" class="tonal" disabled>Tonal</button>
+          <button type="button" class="outlined" disabled>Outlined</button>
+          <button type="button" class="text" disabled>Text</button>
+          <button type="button" class="circle extra" disabled aria-label="Add"><i class="material-icons">add</i></button>
+        </p>
+<pre><code>&lt;button disabled&gt;Filled&lt;/button&gt;
+&lt;button class="tonal" disabled&gt;Tonal&lt;/button&gt;
+&lt;a class="button disabled" href="#!"&gt;Link&lt;/a&gt;</code></pre>
       </div>
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#filled">Filled</a></li>
           <li><a href="#filled-tonal">Tonal</a></li>
           <li><a href="#outlined">Outlined</a></li>
           <li><a href="#elevated">Elevated</a></li>
           <li><a href="#text">Text</a></li>
+          <li><a href="#icon">Icon buttons</a></li>
           <li><a href="#floating">Floating</a></li>
-          <li><a href="#helpers">Helpers</a></li>
+          <li><a href="#sizes">Sizes</a></li>
           <li><a href="#disabled">Disabled</a></li>
         </ul>
       </div>
