@@ -48,7 +48,10 @@ uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
 
 Notes:
 
-- Tests are `node:test` + jsdom in `tests/`, run against the **built** `dist/js/routeplate.mjs` — so a stale bundle tests stale code; `npm test` rebuilds first. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite.
+- Tests are `node:test` + jsdom in `tests/`, run against the **built** `dist/js/routeplate.mjs` — so a stale bundle tests stale code; `npm test` rebuilds first. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
+- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and Toast/Slider/Carousel own intervals, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. Tear down in a `finally`.
+- jsdom does no layout — `getBoundingClientRect()` and every `offset*`/`client*` read returns 0. Geometry-dependent tests stub the rect on the element (`regressions.test.js`), and counting stubbed rect calls is how the scroll-path tests assert layout work. jsdom also lazily attaches its own `handleFocusEvent`/`handleKeyboardEvent`/`handleMouseEvent` to `window` once a form control is involved; listener-leak tests filter those by name.
+- To confirm a new test actually catches the bug it names: `git stash push -- src/ts`, `npm run build:js`, run the one file, `git stash pop` — **as separate Bash calls**, so a hung run can't strand the stash.
 - There is no linter. Several files carry `@typescript-eslint` disable comments inherited from upstream with no ESLint config behind them.
 - `useDefineForClassFields` is deliberately `false` in `tsconfig.json`: the vendored components declare fields that the constructor assigns after `super()`, and define semantics would reset them to `undefined`.
 - `watch:js` uses `--watch=forever`; plain `--watch` makes esbuild quit as soon as stdin closes, which silently kills it under `run-p`.
@@ -117,9 +120,20 @@ The base constructor destroys any pre-existing instance found via `getInstance`,
 
 **Adding a component** touches: the new `src/ts/components/<name>.ts`, one export line in `components/index.ts`, one line in `components/registry.ts` if it auto-inits, and a `src/sass/components/_<name>.scss` partial `@forward`ed from `components/_index.scss`.
 
-Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `checkPossibleAlignments`, `_repositionWithinScreen`, `throttle`, `guid`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers).
+Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `checkPossibleAlignments`, `_repositionWithinScreen`, `throttle`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers).
 
 `components/modal.ts` is intentionally gutted — marked "Obsolete for versions > 2.1.1", with empty method bodies and an experimental `static create()` building a native `<dialog>`. Its empty methods are a rewrite in progress, not bugs to patch.
+
+### Cross-cutting invariants
+
+These were all learned from bugs in the vendored source:
+
+- **Shared document/window listeners need a stable function identity.** ScrollSpy registers its scroll/resize/click handlers once for all instances; registering with one instance's bound arrow and unregistering with another's is a silent no-op that leaks the listener for the life of the page. That is why those handlers are `static`.
+- **`Utils.onDocumentReady(fn)`, never a bare `DOMContentLoaded` listener** — the event has already fired when the bundle is loaded async or by dynamic import, and the listener then never runs. All five `Init()` entry points (`Forms`, `Chips`, `Waves`, `Range`, `Cards`) go through it.
+- **Never build markup out of values the page author controls.** `optgroup` labels, option text, ids and i18n strings reach the DOM as nodes (`textContent`, `setAttribute`, `getElementById`) — not via `innerHTML` or an interpolated `#${…}` selector, which also throws on any id that is not a bare identifier. `Datepicker.draw()` is the exception: it still assembles an HTML string, so every i18n value it splices in goes through `Datepicker._escape()`.
+- **`Datepicker.draw()` is batchable.** One input click legitimately reaches it three times (through `setDate`, directly for the unparseable-input case, and through the trailing `gotoDate`), and each draw destroys and rebuilds two `FormSelect`s. `_batchDraws()` collapses them to one. It is deliberately synchronous — callers read `calendarEl` immediately after `init()`.
+- **`Utils.throttle` returns the throttled function; assign it once.** `x = Utils.throttle(fn, 200)` is right; `x = () => Utils.throttle(fn, 200)` builds a fresh closure per event and never calls it, which is how resize handling was dead in three components.
+- Scroll and touch handlers that never call `preventDefault()` are registered `{ passive: true }`, and anything running per pointer-move or per scroll reads layout before it writes style.
 
 ## docs/
 
