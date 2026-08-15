@@ -31,7 +31,7 @@ header:has(> nav) {
   border-radius: var(--md-comp-top-app-bar-container-shape);
   width: 100%;
 
-  > nav {
+  > nav:not(.tabs) {
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -41,7 +41,7 @@ header:has(> nav) {
     margin: 0;
   }
 
-  > nav > :is(h1, h2, h3, h4, h5, h6) {
+  > nav:not(.tabs) > :is(h1, h2, h3, h4, h5, h6) {
     flex: 1 1 auto;
     min-width: 0;
     margin: 0;
@@ -63,7 +63,7 @@ header:has(> nav) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > nav > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+  > nav:not(.tabs) > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -100,11 +100,11 @@ header:has(> nav) {
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > nav > a:not(:has(> i:only-child)):not(.btn):not(.button):not(.btn-floating):not(.breadcrumb) {
+  > nav:not(.tabs) > a:not(:has(> i:only-child)):not(.btn):not(.button):not(.btn-floating):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 
-  > nav > :is(menu, ul) {
+  > nav:not(.tabs) > :is(menu, ul) {
     display: flex;
     align-items: stretch;
     align-self: stretch;
@@ -122,7 +122,7 @@ header:has(> nav) {
     }
   }
 
-  > nav > form {
+  > nav:not(.tabs) > form {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
@@ -163,12 +163,12 @@ header:has(> nav) {
   @include bp-up("large") {
     // Beats the icon-button display:inline-flex (higher specificity).
     // Same flag the visibility utilities use for breakpoint hides.
-    > nav > .sidenav-trigger {
+    > nav:not(.tabs) > .sidenav-trigger {
       display: none !important;
     }
 
     // The trigger is still :first-child, so the title needs the no-icon inset.
-    > nav > .sidenav-trigger + :is(h1, h2, h3, h4, h5, h6) {
+    > nav:not(.tabs) > .sidenav-trigger + :is(h1, h2, h3, h4, h5, h6) {
       padding-inline-start: 12px;
     }
   }
@@ -198,7 +198,7 @@ header:has(> nav) {
 
 // Center-aligned small bar. The headline is taken out of flow so leading and
 // trailing actions can sit on the edges without shifting the title.
-header.center:has(> nav) > nav {
+header.center:has(> nav) > nav:not(.tabs) {
   position: relative;
   justify-content: space-between;
 
@@ -215,8 +215,8 @@ header.center:has(> nav) > nav {
 }
 
 // Medium (112dp) and large (152dp): same markup, title wraps to a second row.
-header.medium:has(> nav) > nav,
-header.large:has(> nav) > nav {
+header.medium:has(> nav) > nav:not(.tabs),
+header.large:has(> nav) > nav:not(.tabs) {
   flex-wrap: wrap;
   align-content: flex-start;
   height: auto;
@@ -230,7 +230,7 @@ header.large:has(> nav) > nav {
   }
 }
 
-header.medium:has(> nav) > nav {
+header.medium:has(> nav) > nav:not(.tabs) {
   min-height: 112px;
   padding-bottom: 16px;
 
@@ -244,7 +244,7 @@ header.medium:has(> nav) > nav {
   }
 }
 
-header.large:has(> nav) > nav {
+header.large:has(> nav) > nav:not(.tabs) {
   min-height: 152px;
   padding-bottom: 28px;
 
@@ -287,7 +287,7 @@ footer:not(.page-footer):has(> nav) {
   width: 100%;
   @include z-depth("2");
 
-  > nav {
+  > nav:not(.tabs) {
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -297,7 +297,7 @@ footer:not(.page-footer):has(> nav) {
     margin: 0;
   }
 
-  > nav > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+  > nav:not(.tabs) > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -333,7 +333,7 @@ footer:not(.page-footer):has(> nav) {
     }
   }
 
-  > nav > :is(.btn, .btn-floating, .btn-large) {
+  > nav:not(.tabs) > :is(.btn, .btn-floating, .btn-large) {
     margin-inline-start: auto;
   }
 

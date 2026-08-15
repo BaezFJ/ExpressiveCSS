@@ -1,167 +1,232 @@
 @use "../abstracts" as *;
 
+// Tabs.
+//
+// Anatomy is the HTML. A <nav class="tabs"> of <a href="#panel"> is the
+// bar. A heading or <span> is the label; a leading <i> is the icon.
+// .active is the selected tab. ul.tabs > li.tab > a stays as an alias.
+// Helpers: .tabs-secondary, .horizontal / .tabs-horizontal, .max /
+// .tabs-fixed-width, .transparent / .tabs-transparent.
+//
+// Tokens follow https://m3.material.io/components/tabs/specs
+//   primary     surface, 48dp (64 with stacked icon), title-small
+//               indicator 3dp primary, 3dp 3dp 0 0
+//   secondary   48dp, icons inline, indicator 2dp
+//   inactive    on-surface-variant; hover/focus on-surface 8%/10%
+//   active      primary; hover/focus primary 8%/10%
+//   icon        24dp
+//   divider     1dp outline-variant
+//   disabled    38%
+
+$_tab: "> :is(a, .tab > a, li.tab > a)";
+
 .tabs {
-  padding-left: 0;
-  list-style-type: none;
+  --md-comp-primary-tab-container-color: var(--md-sys-color-surface);
+  --md-comp-primary-tab-container-height: 48px;
+  --md-comp-primary-tab-with-icon-container-height: 64px;
+  --md-comp-primary-tab-active-indicator-color: var(--md-sys-color-primary);
+  --md-comp-primary-tab-active-indicator-height: 3px;
+  --md-comp-primary-tab-active-indicator-shape: 3px 3px 0 0;
+  --md-comp-primary-tab-icon-size: 24px;
+  --md-comp-primary-tab-label-text-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-primary-tab-active-label-text-color: var(--md-sys-color-primary);
+
+  box-sizing: border-box;
+  display: flex;
   position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   overflow-x: auto;
   overflow-y: hidden;
-  width: 100%;
-  background-color: var(--md-sys-color-surface);
-  margin: 0 auto;
   white-space: nowrap;
+  background-color: var(--md-comp-primary-tab-container-color);
+  border-block-end: 1px solid var(--md-sys-color-outline-variant);
+  scrollbar-width: none;
 
-  &.tabs-transparent {
-    background-color: transparent;
-
-    .tab a {
-      color: color-mix(in oklab, var(--md-sys-color-on-primary) 74%, transparent);
-    }
-
-    .tab.disabled a,
-    .tab.disabled a:hover,
-    .tab.disabled a:focus {
-      color: rgba(255, 255, 255, 0.38);
-    }
-
-    .tab a:hover {
-      background-color: rgba(0, 0, 0, 0.04);
-    }
-
-    .tab a.active,
-    .tab a:focus {
-      background-color: transparent;
-    }
-
-    .tab a:hover,
-    .tab a.active,
-    .tab a:focus {
-      color:  var(--md-sys-color-on-primary);
-    }
-
-    .indicator {
-      background-color:  var(--md-sys-color-on-primary);
-    }
+  &::-webkit-scrollbar {
+    display: none;
   }
 
-  &.tabs-fixed-width {
+  > :is(.tab, li.tab) {
     display: flex;
-
-    .tab {
-      flex-grow: 1;
-    }
-  }
-
-  .tab {
-    padding-left: 0;
-    list-style-type: none;
-    display: inline-block;
-    text-align: center;
-    line-height: 48px;
-    padding: 0;
+    flex: 0 0 auto;
+    list-style: none;
     margin: 0;
+    padding: 0;
+  }
 
-    i.material-icons {
-      position: relative;
-      top: 8px;
-      vertical-align: middle;
+  #{$_tab} {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: var(--md-comp-primary-tab-container-height);
+    min-width: 48px;
+    margin: 0;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--md-comp-primary-tab-label-text-color);
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    appearance: none;
+    @include typescale("title-small");
+    font-family: $font-stack;
+    transition: color .2s ease, background-color .2s ease;
+
+    > i {
+      flex: 0 0 auto;
+      font-size: var(--md-comp-primary-tab-icon-size);
+      width: var(--md-comp-primary-tab-icon-size);
+      height: var(--md-comp-primary-tab-icon-size);
+      line-height: var(--md-comp-primary-tab-icon-size);
+      color: inherit;
     }
 
-    span {
-      height: 24px;
-      line-height: 20px;
-    }
-
-    a {
-      color: var(--md-sys-color-on-surface-variant);
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      min-height: 48px;  //needed for only-icons tabs
-      padding: 0 24px;
-      font-size: 14px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      transition: color .28s ease, background-color .28s ease;
-
-      &.active {
-        background-color: transparent;
-      }
-
-      &.active,
-      &:focus,
-      &:hover {
-        color: var(--md-sys-color-primary);
-      }
-
-      &:hover {
-        background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
-      }
-
-      &:focus {
-        background-color: var(--md-sys-color-primary-container);
-      }
-
-      &.active {
-        background-color: color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
-      }
-
-      &:focus,
-      &.active {
-        outline: none;
-      }
-    }
-
-    &.disabled a,
-    &.disabled a:hover {
+    &:hover {
       color: var(--md-sys-color-on-surface);
-      cursor: default;
-      background-color: transparent;
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
 
-      &:not(:focus) {
-        background-color: transparent;
-      }
+    &:focus-visible,
+    &:focus {
+      color: var(--md-sys-color-on-surface);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+      outline: none;
+    }
+
+    &.active {
+      color: var(--md-comp-primary-tab-active-label-text-color);
+      background-color: transparent;
+    }
+
+    &.active:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+    }
+
+    &.active:focus-visible,
+    &.active:focus {
+      background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
     }
   }
 
-  .indicator {
+  // Stacked icon + label is 64dp (primary).
+  &:not(.horizontal, .tabs-horizontal) #{$_tab}:has(> i) {
+    min-height: var(--md-comp-primary-tab-with-icon-container-height);
+    padding-block: 8px;
+  }
+
+  // CSS indicator when the JS sliding bar is not present.
+  &:not(:has(> .indicator)) #{$_tab}.active::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: var(--md-comp-primary-tab-active-indicator-height);
+    background-color: var(--md-comp-primary-tab-active-indicator-color);
+    border-radius: var(--md-comp-primary-tab-active-indicator-shape);
+  }
+
+  > .indicator {
     position: absolute;
     bottom: 0;
-    height: 3px;
-    background-color: var(--md-sys-color-primary);
-    will-change: left, right;
-    border-radius: 3px 3px 0 0;
+    height: var(--md-comp-primary-tab-active-indicator-height);
+    background-color: var(--md-comp-primary-tab-active-indicator-color);
+    border-radius: var(--md-comp-primary-tab-active-indicator-shape);
+    pointer-events: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
-  &.tabs-horizontal .tab {
-    height: 48px;
+  // Disabled — on the <a> or on the wrapping .tab.
+  #{$_tab}.disabled,
+  #{$_tab}[aria-disabled="true"],
+  > :is(.tab, li.tab).disabled > a {
+    color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    background-color: transparent;
+    cursor: default;
+    pointer-events: none;
+  }
+}
 
-    a {
-      display: block;
+// Secondary — 48dp, icons inline, 2dp indicator.
+// Not .secondary: that name is a color utility.
+.tabs.tabs-secondary {
+  --md-comp-primary-tab-active-indicator-height: 2px;
+  --md-comp-primary-tab-with-icon-container-height: 48px;
+
+  #{$_tab} {
+    flex-direction: row;
+    gap: 8px;
+  }
+}
+
+// Inline icon + label (primary can do this too).
+.tabs.horizontal,
+.tabs.tabs-horizontal {
+  #{$_tab} {
+    flex-direction: row;
+    gap: 8px;
+    min-height: var(--md-comp-primary-tab-container-height);
+    padding-block: 0;
+  }
+}
+
+// Equal-width tabs. Default on compact so a few destinations still fill.
+.tabs.max,
+.tabs.tabs-fixed-width {
+  > :is(a, .tab, li.tab) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  #{$_tab} {
+    width: 100%;
+  }
+}
+
+@include bp-down("large") {
+  .tabs {
+    > :is(a, .tab, li.tab) {
+      flex: 1 1 0;
+      min-width: 0;
     }
 
-    i.material-icons {
-      padding: 0 4px;
-      position: relative;
-      top: -2px;
-      vertical-align: middle;
+    #{$_tab} {
+      width: 100%;
+      padding-inline: 12px;
     }
   }
 }
 
-/* Fixed Sidenav hide on smaller */
+// On a colored app bar (header.primary > .tabs).
+.tabs.transparent,
+.tabs.tabs-transparent {
+  --md-comp-primary-tab-container-color: transparent;
+  --md-comp-primary-tab-label-text-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-primary) 74%,
+    transparent
+  );
+  --md-comp-primary-tab-active-label-text-color: var(--md-sys-color-on-primary);
+  --md-comp-primary-tab-active-indicator-color: var(--md-sys-color-on-primary);
+  border-block-end-color: color-mix(in oklab, var(--md-sys-color-on-primary) 20%, transparent);
 
-@include bp-down("large") {
-  .tabs {
-    display: flex;
+  #{$_tab}:hover,
+  #{$_tab}:focus {
+    color: var(--md-sys-color-on-primary);
+    background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 8%, transparent);
+  }
 
-    .tab {
-      flex-grow: 1;
-
-      a {
-        padding: 0 12px;
-      }
-    }
+  #{$_tab}.active:hover,
+  #{$_tab}.active:focus {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 10%, transparent);
   }
 }

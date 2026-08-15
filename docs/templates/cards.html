@@ -234,16 +234,17 @@
       <div id="tabs" class="section scrollspy">
         <h3>Tabs</h3>
         <p>
-          Put a <code>.tabs</code> list between the supporting text and the
-          tab panels. <code>AutoInit()</code> starts <code>.tabs</code>.
+          Put a <code>&lt;nav class="tabs"&gt;</code> between the
+          supporting text and the tab panels.
+          <code>AutoInit()</code> starts <code>.tabs</code>.
         </p>
         <article class="mb-3">
           <p>I am a very simple card. I am good at containing small bits of information.</p>
-          <ul class="tabs tabs-fixed-width">
-            <li class="tab"><a href="#card-test-1">Test 1</a></li>
-            <li class="tab"><a class="active" href="#card-test-2">Test 2</a></li>
-            <li class="tab"><a href="#card-test-3">Test 3</a></li>
-          </ul>
+          <nav class="tabs max">
+            <a href="#card-test-1">Test 1</a>
+            <a class="active" href="#card-test-2">Test 2</a>
+            <a href="#card-test-3">Test 3</a>
+          </nav>
           <div class="px-4 pb-4">
             <div id="card-test-1">Test 1</div>
             <div id="card-test-2">Test 2</div>
@@ -252,10 +253,10 @@
         </article>
 <pre><code>&lt;article&gt;
   &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;ul class="tabs tabs-fixed-width"&gt;
-    &lt;li class="tab"&gt;&lt;a href="#test1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="tab"&gt;&lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
+  &lt;nav class="tabs max"&gt;
+    &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
+    &lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;
+  &lt;/nav&gt;
   &lt;div id="test1"&gt;Test 1&lt;/div&gt;
   &lt;div id="test2"&gt;Test 2&lt;/div&gt;
 &lt;/article&gt;</code></pre>

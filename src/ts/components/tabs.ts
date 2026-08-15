@@ -36,7 +36,7 @@ const _defaults: TabsOptions = {
 export class Tabs extends Component<TabsOptions> {
   _tabLinks: NodeListOf<HTMLAnchorElement>;
   _index: number;
-  _indicator: HTMLLIElement;
+  _indicator: HTMLElement;
   _tabWidth: number;
   _tabsWidth: number;
   _tabsCarousel: Carousel;
@@ -52,7 +52,7 @@ export class Tabs extends Component<TabsOptions> {
       ...options
     };
 
-    this._tabLinks = this.el.querySelectorAll('li.tab > a');
+    this._tabLinks = this._queryTabLinks();
     this._index = 0;
     this._setupActiveTabLink();
     if (this.options.swipeable) {
@@ -134,20 +134,24 @@ export class Tabs extends Component<TabsOptions> {
     }
   };
 
+  _queryTabLinks() {
+    return this.el.querySelectorAll<HTMLAnchorElement>(
+      ':scope > a, :scope > .tab > a, :scope > li.tab > a'
+    );
+  }
+
   _handleTabClick = (e: MouseEvent) => {
-    let tabLink = e.target as HTMLAnchorElement;
+    const target = e.target as Element | null;
+    if (!target) return;
+    const tabLink = target.closest('a') as HTMLAnchorElement | null;
+    if (!tabLink || !Array.from(this._tabLinks).includes(tabLink)) return;
 
-    if (!tabLink) return;
-    let tab = tabLink.parentElement;
-    while (tab && !tab.classList.contains('tab')) {
-      tabLink = tabLink.parentElement as HTMLAnchorElement;
-      tab = tab.parentElement;
-    }
-
-    // Handle click on tab link only
-    if (!tabLink || !tab.classList.contains('tab')) return;
-    // is disabled?
-    if (tab.classList.contains('disabled')) {
+    const tab = tabLink.parentElement;
+    const disabled =
+      tabLink.classList.contains('disabled') ||
+      tabLink.getAttribute('aria-disabled') === 'true' ||
+      tab?.classList.contains('disabled');
+    if (disabled) {
       e.preventDefault();
       return;
     }
@@ -160,7 +164,7 @@ export class Tabs extends Component<TabsOptions> {
 
     this._activeTabLink = tabLink;
     if (tabLink.hash) this._content = document.querySelector(tabLink.hash);
-    this._tabLinks = this.el.querySelectorAll('li.tab > a');
+    this._tabLinks = this._queryTabLinks();
     // Make the tab active
     this._activeTabLink.classList.add('active');
     const prevIndex = this._index;
@@ -193,7 +197,8 @@ export class Tabs extends Component<TabsOptions> {
   };
 
   _createIndicator() {
-    const indicator = document.createElement('li');
+    const tag = this.el.tagName === 'UL' || this.el.tagName === 'OL' ? 'li' : 'span';
+    const indicator = document.createElement(tag);
     indicator.classList.add('indicator');
     this.el.appendChild(indicator);
     this._indicator = indicator;
@@ -208,9 +213,9 @@ export class Tabs extends Component<TabsOptions> {
     );
     // If no match is found, use the first link or any with class 'active' as the initial active tab.
     if (!this._activeTabLink) {
-      let activeTabLink = this.el.querySelector('li.tab a.active');
+      let activeTabLink = this.el.querySelector('a.active');
       if (!activeTabLink) {
-        activeTabLink = this.el.querySelector('li.tab a');
+        activeTabLink = this._tabLinks[0];
       }
       this._activeTabLink = activeTabLink as HTMLAnchorElement;
     }
@@ -248,10 +253,6 @@ export class Tabs extends Component<TabsOptions> {
       tabContent.style.display = '';
     });
 
-    // Keep active tab index to set initial carousel slide
-    const tab = this._activeTabLink.parentElement;
-    const activeTabIndex = Array.from(tab.parentNode.children).indexOf(tab);
-
     this._tabsCarousel = Carousel.init(tabsWrapper, {
       fullWidth: true,
       noWrap: true,
@@ -267,7 +268,7 @@ export class Tabs extends Component<TabsOptions> {
       }
     });
     // Set initial carousel slide to active tab
-    this._tabsCarousel.set(activeTabIndex);
+    this._tabsCarousel.set(this._index);
   }
 
   _teardownSwipeableTabs() {

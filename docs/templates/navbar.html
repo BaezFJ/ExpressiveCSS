@@ -307,12 +307,12 @@
               <li><a href="#!">Components</a></li>
             </menu>
           </nav>
-          <ul class="tabs">
-            <li class="tab"><a href="#navbar-test1">Test 1</a></li>
-            <li class="tab"><a class="active" href="#navbar-test2">Test 2</a></li>
-            <li class="tab disabled"><a href="#navbar-test3">Disabled Tab</a></li>
-            <li class="tab"><a href="#navbar-test4">Test 4</a></li>
-          </ul>
+          <nav class="tabs" aria-label="Sections">
+            <a href="#navbar-test1">Test 1</a>
+            <a class="active" href="#navbar-test2">Test 2</a>
+            <a class="disabled" href="#navbar-test3">Disabled Tab</a>
+            <a href="#navbar-test4">Test 4</a>
+          </nav>
         </header>
         <div id="navbar-test1" class="s12 py-3">Test 1</div>
         <div id="navbar-test2" class="s12 py-3">Test 2</div>
@@ -322,10 +322,10 @@
   &lt;nav&gt;
     &lt;h2&gt;Title&lt;/h2&gt;
   &lt;/nav&gt;
-  &lt;ul class="tabs"&gt;
-    &lt;li class="tab"&gt;&lt;a href="#test1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="tab"&gt;&lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
+  &lt;nav class="tabs"&gt;
+    &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
+    &lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;
+  &lt;/nav&gt;
 &lt;/header&gt;
 
 &lt;div id="test1"&gt;Test 1&lt;/div&gt;
