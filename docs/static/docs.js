@@ -103,6 +103,21 @@ document.addEventListener('DOMContentLoaded', () => {
     RoutePlate.Slider.init(sliders);
   }
 
+  const carouselFull = document.getElementById('carousel-fullwidth');
+  if (carouselFull) {
+    RoutePlate.Carousel.init(carouselFull, { fullWidth: true });
+  }
+  const carouselContent = document.getElementById('carousel-content');
+  if (carouselContent) {
+    RoutePlate.Carousel.init(carouselContent, { fullWidth: true, indicators: true });
+  }
+  document.getElementById('carousel-prev')?.addEventListener('click', () => {
+    RoutePlate.Carousel.getInstance(document.getElementById('carousel-intro'))?.prev();
+  });
+  document.getElementById('carousel-next')?.addEventListener('click', () => {
+    RoutePlate.Carousel.getInstance(document.getElementById('carousel-intro'))?.next();
+  });
+
   const slideOut = document.getElementById('slide-out');
   if (slideOut) {
     RoutePlate.Sidenav.init(slideOut);

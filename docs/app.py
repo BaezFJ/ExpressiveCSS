@@ -122,6 +122,12 @@ def cards():
     return render_template('cards.html')
 
 
+@app.route('/carousel')
+@app.route('/carousel.html')
+def carousel():
+    return render_template('carousel.html')
+
+
 @app.route('/collections')
 @app.route('/collections.html')
 def collections():
@@ -156,6 +162,12 @@ def navbar():
 @app.route('/pagination.html')
 def pagination():
     return render_template('pagination.html')
+
+
+@app.route('/parallax')
+@app.route('/parallax.html')
+def parallax():
+    return render_template('parallax.html')
 
 
 @app.route('/preloader')

@@ -1,0 +1,179 @@
+{% extends "docs.html" %}
+
+{% block title %}Parallax - RoutePlateCSS{% endblock %}
+{% block page_title %}Parallax{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Parallax</h1>
+      <h4 class="light primary-text">A background image that moves slower than the page.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="parallax-container">
+  <div class="parallax">
+    <img src="https://picsum.photos/id/1015/1600/900" alt="A mountain lake">
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="introduction" class="section scrollspy">
+        <p class="flow-text">
+          Parallax moves a background image at a different speed from the
+          foreground as you scroll. The image lives in a
+          <code>parallax-container</code>; the plugin is on the inner
+          <code>.parallax</code>.
+        </p>
+        <p>
+          <code>AutoInit()</code> starts every <code>.parallax</code>
+          except those marked <code>no-autoinit</code>. There must be an
+          <code>&lt;img&gt;</code> inside. Without one,
+          <code>init</code> logs an error and returns.
+        </p>
+<pre><code>&lt;div class="parallax-container"&gt;
+  &lt;div class="parallax"&gt;
+    &lt;img src="images/parallax1.jpg" alt="A mountain lake"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          Use an image taller than the container. The plugin translates
+          the leftover height as you scroll; a short image has nothing
+          to move.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="parallax-container">
+  <div class="parallax">
+    <img src="https://picsum.photos/id/1018/1600/900" alt="A rocky coastline">
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>RoutePlate.Parallax</code>.
+          Call <code>init</code> yourself when you need options other
+          than the defaults, or let
+          <code>RoutePlate.AutoInit()</code> start every
+          <code>.parallax</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.parallax');
+  const instances = RoutePlate.Parallax.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<pre><code>RoutePlate.AutoInit(document.body, {
+  Parallax: { responsiveThreshold: 992 }
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>responsiveThreshold</code></td>
+              <td>Number</td>
+              <td><code>0</code></td>
+              <td>Minimum viewport width, in pixels, at which the image starts moving. Below this width the transform is cleared.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = RoutePlate.Parallax.getInstance(elem);</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>
+          Destroy the plugin instance, clear the image transform, and
+          tear down its event handlers. The last remaining instance
+          also removes the shared scroll and resize listeners.
+        </p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="customization" class="section scrollspy">
+        <h3>Customization</h3>
+        <p>
+          The container height is how much of the image you see. The
+          framework default is 500px. Override it on the container.
+        </p>
+        <div class="parallax-container" style="height: 300px;">
+          <div class="parallax">
+            <img src="https://picsum.photos/id/1019/1600/900" alt="Clouds over hills">
+          </div>
+        </div>
+<pre><code>.parallax-container {
+  height: 300px;
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#customization">Customization</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

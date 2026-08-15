@@ -76,7 +76,7 @@
             </li>
             <li>
                 <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['auto_init', 'badges', 'buttons', 'breadcrumbs', 'cards', 'collapsible', 'collections', 'datepicker', 'dropdown', 'feature_discovery', 'floating_action_button', 'footer', 'icons', 'media', 'modals', 'navbar', 'pagination', 'preloader', 'scrollspy', 'sidenav', 'tabs', 'timepicker', 'toasts', 'toolbars', 'tooltips'] %}active{% endif %}">
+                    <li class="{% if request.endpoint in ['auto_init', 'badges', 'buttons', 'breadcrumbs', 'cards', 'carousel', 'collapsible', 'collections', 'datepicker', 'dropdown', 'feature_discovery', 'floating_action_button', 'footer', 'icons', 'media', 'modals', 'navbar', 'pagination', 'parallax', 'preloader', 'scrollspy', 'sidenav', 'tabs', 'timepicker', 'toasts', 'toolbars', 'tooltips'] %}active{% endif %}">
                         <a class="collapsible-header">
                             <i class="material-icons">add_circle</i>
                             Components
@@ -97,6 +97,9 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'cards' %}active{% endif %}">
                                     <a href="{{ url_for('cards') }}">Cards</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'carousel' %}active{% endif %}">
+                                    <a href="{{ url_for('carousel') }}">Carousel</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'collapsible' %}active{% endif %}">
                                     <a href="{{ url_for('collapsible') }}">Collapsible</a>
@@ -136,6 +139,9 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'pagination' %}active{% endif %}">
                                     <a href="{{ url_for('pagination') }}">Pagination</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'parallax' %}active{% endif %}">
+                                    <a href="{{ url_for('parallax') }}">Parallax</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'preloader' %}active{% endif %}">
                                     <a href="{{ url_for('preloader') }}">Preloader</a>
@@ -242,6 +248,7 @@
                             <a class="btn tonal btn-small" href="{{ url_for('buttons') }}">Buttons</a>
                             <a class="btn tonal btn-small" href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
                             <a class="btn tonal btn-small" href="{{ url_for('cards') }}">Cards</a>
+                            <a class="btn tonal btn-small" href="{{ url_for('carousel') }}">Carousel</a>
                             <a class="btn tonal btn-small" href="{{ url_for('collapsible') }}">Collapsible</a>
                             <a class="btn tonal btn-small" href="{{ url_for('collections') }}">Collections</a>
                             <a class="btn tonal btn-small" href="{{ url_for('datepicker') }}">Date Picker</a>
@@ -255,6 +262,7 @@
                             <a class="btn tonal btn-small" href="{{ url_for('modals') }}">Modals</a>
                             <a class="btn tonal btn-small" href="{{ url_for('navbar') }}">Navbar</a>
                             <a class="btn tonal btn-small" href="{{ url_for('pagination') }}">Pagination</a>
+                            <a class="btn tonal btn-small" href="{{ url_for('parallax') }}">Parallax</a>
                             <a class="btn tonal btn-small" href="{{ url_for('preloader') }}">Preloader</a>
                             <a class="btn tonal btn-small" href="{{ url_for('scrollspy') }}">Scrollspy</a>
                             <a class="btn tonal btn-small" href="{{ url_for('sidenav') }}">Sidenav</a>
