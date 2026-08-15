@@ -12,7 +12,10 @@
 
   input.file-path { width: 100%; }
 
-  .btn {
+  > button,
+  > .btn {
+    position: relative;
+    overflow: hidden;
     height: 3rem;
     line-height: 3rem;
   }

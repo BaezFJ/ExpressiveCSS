@@ -1,111 +1,115 @@
 @use "../../abstracts" as *;
 
-/* Style Placeholders */
+// Text fields.
+//
+// Anatomy is the HTML. .field (or .input-field) is the container. The
+// <label> after the control is the floating label. A leading <i> is the
+// leading icon. <small> is supporting text. .outlined / .border is the
+// outlined variant; the default is filled.
+//
+// Tokens follow https://m3.material.io/components/text-fields/specs
+//   filled     surface-variant well, 4dp top corners, 1dp/2dp bottom indicator
+//   outlined   1dp/2dp outline, 4dp corners
+//   height     56dp
+//   label      body-large rest, body-small floated
+//   input      body-large / on-surface
+//   supporting body-small / on-surface-variant
+//   icons      24dp, 12dp from the edge
+//
+// placeholder=" " (one space) lets the label float with CSS only.
+
 ::placeholder {
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* Text inputs */
-input:not([type]):not(.browser-default),
-input[type=text]:not(.browser-default),
-input[type=password]:not(.browser-default),
-input[type=email]:not(.browser-default),
-input[type=url]:not(.browser-default),
-input[type=time]:not(.browser-default),
-input[type=date]:not(.browser-default),
-input[type=datetime]:not(.browser-default),
-input[type=datetime-local]:not(.browser-default),
-input[type=month]:not(.browser-default),
-input[type=tel]:not(.browser-default),
-input[type=number]:not(.browser-default),
-input[type=search]:not(.browser-default),
-textarea.routeplate-textarea {
+$_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=month]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.routeplate-textarea";
+
+#{$_text-inputs} {
   outline: none;
-  color: var(--md-sys-color-on-background);
+  color: var(--md-sys-color-on-surface);
   width: 100%;
-  font-size: $md_sys_typescale_body-large_size; //16px; // => 16 dp
-  height: 56px; // 56dp
+  height: 56px;
   background-color: transparent;
+  @include typescale("body-large");
+  font-family: $font-stack;
 }
 
-%invalid-input-style {
-  border-bottom: 2px solid var(--md-sys-color-error);
-  box-shadow: 0 1px 0 0 var(--md-sys-color-error);
-}
-
-%hidden-text > span {
-  display: none
-}
-
-%custom-error-message {
-  content: attr(data-error);
-  color: var(--md-sys-color-error);
-}
-
+.field,
 .input-field {
-  --input-color: var(--md-sys-color-primary);
+  --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
+  --input-color: var(--md-comp-filled-text-field-caret-color);
 
   position: relative;
   clear: both;
 
-  // Default
-
-  input, textarea {
-    box-sizing: border-box; /* https://stackoverflow.com/questions/1377719/padding-within-inputs-breaks-width-100*/
-    padding: 0 16px;
-    padding-top: 20px;
-    //background-color: transparent; //background-color: var(--md-sys-color-surface);
-    border: none; // reset
-    border-radius: 4px; // md.sys.shape.corner.extra-small.top
+  input,
+  textarea {
+    box-sizing: border-box;
+    padding: 20px 16px 8px;
+    border: none;
+    border-radius: 4px 4px 0 0;
     border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    background-color: var(--md-comp-filled-text-field-container-color);
+    caret-color: var(--input-color);
 
     &:focus:not([readonly]) {
-      border-bottom: 2px solid var(--input-color);
-      padding-top: 20px + 1px; // add border-width
+      border-bottom-width: 2px;
+      border-bottom-color: var(--input-color);
+      padding-bottom: 7px;
     }
 
-    &:disabled, &[readonly="readonly"] {
+    &:disabled,
+    &[readonly="readonly"] {
       color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
       border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
     }
 
-    // Label
-    &:focus:not([readonly]) + label {
+    &:focus:not([readonly]) + label,
+    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter) {
       color: var(--input-color);
     }
+
     &:focus:not([readonly]) + label,
-    &:not([placeholder=' ']) + label,
-    &:not(:placeholder-shown) + label {
-      //font-size: 12px; // md.sys.typescale.body-small.size
-      // https://stackoverflow.com/questions/34717492/css-transition-font-size-avoid-jittering-wiggling
+    &:not([placeholder=" "]) + label,
+    &:not(:placeholder-shown) + label,
+    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter),
+    &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter),
+    &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter) {
       transform: scale(calc(12 / 16));
       top: 8px;
     }
 
-    &:disabled + label, &[readonly="readonly"] + label {
+    &:disabled + label,
+    &[readonly="readonly"] + label {
       color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
     }
 
-    // Hide helper text on data message
-    &.invalid ~ .supporting-text[data-error] {
-      @extend %hidden-text;
+    &.invalid ~ .supporting-text[data-error],
+    &[aria-invalid="true"] ~ .supporting-text[data-error],
+    &.invalid ~ small[data-error],
+    &[aria-invalid="true"] ~ small[data-error] {
+      > span { display: none; }
     }
 
-    // Invalid Input Style
-    &.invalid {
-      @extend %invalid-input-style;
+    &.invalid,
+    &[aria-invalid="true"] {
+      border-bottom-color: var(--md-sys-color-error);
+      box-shadow: 0 1px 0 0 var(--md-sys-color-error);
     }
 
-    // Custom Error message
-    &.invalid ~ .supporting-text:after {
-      @extend %custom-error-message;
+    &.invalid ~ .supporting-text::after,
+    &[aria-invalid="true"] ~ .supporting-text::after,
+    &.invalid ~ small::after,
+    &[aria-invalid="true"] ~ small::after {
+      content: attr(data-error);
+      color: var(--md-sys-color-error);
     }
 
     &.invalid ~ label,
-    &:focus.invalid ~ label {
+    &:focus.invalid ~ label,
+    &[aria-invalid="true"] ~ label {
       color: var(--md-sys-color-error);
     }
   }
@@ -114,135 +118,140 @@ textarea.routeplate-textarea {
     user-select: none;
   }
 
-  & > label {
+  > label,
+  > span:not(.supporting-text, .character-counter, .file-path) {
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
-    font-size: 16px;
     position: absolute;
     left: 16px;
     top: 16px;
     cursor: text;
     transform-origin: top left;
-    transition:
-      left 0.2s ease-out,
-      top 0.2s ease-out,
-      transform 0.2s ease-out
-    ;
+    pointer-events: none;
+    @include typescale("body-large");
+    font-family: $font-stack;
+    transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
   }
 
-  // Sub-Infos
-
-  .supporting-text {
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 12px;
-    padding: 0 16px;
+  > small,
+  > .supporting-text {
+    display: block;
     margin-top: 4px;
+    padding: 0 16px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+    font-family: $font-stack;
   }
 
-  .character-counter {
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 12px;
+  > .character-counter {
     float: right;
-    padding: 0 16px;
     margin-top: 4px;
+    padding: 0 16px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+    font-family: $font-stack;
   }
 
-  .prefix {
+  > i:first-child:not(.suffix),
+  > .prefix {
     position: absolute;
     left: 12px;
     top: 16px;
-    user-select: none;
     display: flex;
-    align-self: center;
+    align-items: center;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    color: var(--md-sys-color-on-surface-variant);
+    user-select: none;
+    pointer-events: none;
   }
 
-  .suffix {
+  > .suffix,
+  > i.suffix {
     position: absolute;
     right: 12px;
     top: 16px;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    color: var(--md-sys-color-on-surface-variant);
     user-select: none;
   }
 
-  .prefix ~ input, .prefix ~ textarea {
-    padding-left: calc(12px + 24px + 16px);
-  }
-  .suffix ~ input, .suffix ~ textarea {
-    padding-right: calc(12px + 24px + 16px);
-  }
-  .prefix ~ label {
-    left: calc(12px + 24px + 16px);
+  > i:first-child:not(.suffix) ~ input,
+  > i:first-child:not(.suffix) ~ textarea,
+  > .prefix ~ input,
+  > .prefix ~ textarea {
+    padding-left: 52px;
   }
 
-  // Outlined
+  > .suffix ~ input,
+  > .suffix ~ textarea,
+  > i.suffix ~ input,
+  > i.suffix ~ textarea {
+    padding-right: 52px;
+  }
 
-  // todo: use this approach for floating labels with outline
-  // https://dev.to/icyjoseph/use-more-html-elements-floating-from-field-37o9
+  > i:first-child:not(.suffix) ~ label,
+  > i:first-child:not(.suffix) ~ span:not(.supporting-text, .character-counter),
+  > .prefix ~ label {
+    left: 52px;
+  }
 
-  &.outlined {
-
-    input, textarea {
-      padding-top: 0;
-      background-color: transparent; //(--md-sys-color-background);
-      border: 1px solid var(--md-sys-color-on-surface-variant);
-      border-radius: 4px; // md.sys.shape.corner.extra-small
+  &.outlined,
+  &.border {
+    > input,
+    > textarea {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      background-color: transparent;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: 4px;
 
       &:focus:not([readonly]) {
-        border: 2px solid var(--input-color);
-        padding-top: 0;
-        margin-left: -1px; // subtract border-width
-
+        border-width: 2px;
+        border-color: var(--input-color);
+        padding-top: 7px;
+        padding-bottom: 7px;
       }
 
-      // Label
-      &:focus:not([readonly]) + label {
-        color: var(--input-color);
-      }
       &:focus:not([readonly]) + label,
-      &:not([placeholder=' ']) + label,
-      &:not(:placeholder-shown) + label {
+      &:not([placeholder=" "]) + label,
+      &:not(:placeholder-shown) + label,
+      &:focus:not([readonly]) + span:not(.supporting-text, .character-counter),
+      &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter),
+      &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter) {
         top: -8px;
         left: 16px;
         margin-left: -4px;
         padding: 0 4px;
-        background-color: transparent; //var(--md-sys-color-background);
+        background-color: var(--md-sys-color-background);
       }
 
-      &:disabled, &[readonly="readonly"] {
-        color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      &:disabled,
+      &[readonly="readonly"] {
         border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
+        background-color: transparent;
       }
-    }
-  }
 
-  // Error
-  &.error {
-    input, textarea {
-      border-color: var(--md-sys-color-error);
-    }
-    input:focus:not([readonly]), textarea:focus:not([readonly]) {
-      border-color: var(--md-sys-color-error);
-    }
-    input:focus:not([readonly]) + label, textarea:focus:not([readonly]) + label {
-      color: var(--md-sys-color-error);
-    }
-    label {
-      color: var(--md-sys-color-error);
-    }
-    .supporting-text {
-      color: var(--md-sys-color-error);
-    }
-    .suffix {
-      color: var(--md-sys-color-error);
+      &.invalid,
+      &[aria-invalid="true"] {
+        border-color: var(--md-sys-color-error);
+        box-shadow: none;
+      }
     }
   }
 }
 
-/* Inline */
 .inline {
   display: inline-block;
 }
 
-/* Search Field */
 .searchbar {
   .prefix {
     position: absolute;
@@ -253,12 +262,13 @@ textarea.routeplate-textarea {
     align-self: center;
   }
 
-  & > input {
+  > input {
     border-width: 0;
     background-color: transparent;
     padding-left: 3rem;
   }
 }
+
 .searchbar.has-sidebar {
   margin-left: 0;
   @include bp-up("large") {
@@ -266,64 +276,36 @@ textarea.routeplate-textarea {
   }
 }
 
-/*
-.input-field input[type=search] {
-  display: block;
-  line-height: inherit;
-
-  .nav-wrapper & {
-    height: inherit;
-    padding-left: 4rem;
-    width: calc(100% - 4rem);
-    border: 0;
-    box-shadow: none;
-  }
-  &:focus:not(.browser-default) {
-    border: 0;
-    box-shadow: none;
-  }
-  & + .label-icon {
-    transform: none;
-    left: 1rem;
-  }
-}
-*/
-
-/* Textarea */
-// Default textarea
 textarea {
   width: 100%;
   height: 3rem;
   background-color: transparent;
 
   &.routeplate-textarea {
-    padding-top: 26px !important;
-    padding-bottom: 4px !important;
-    line-height: normal;
-    overflow-y: hidden; /* prevents scroll bar flash */
+    padding-top: 24px !important;
+    padding-bottom: 8px !important;
+    line-height: 24px;
+    overflow-y: hidden;
     resize: none;
-    min-height: 3rem;
+    min-height: 56px;
     box-sizing: border-box;
   }
 }
 
-// For textarea autoresize
 .hiddendiv {
   visibility: hidden;
   white-space: pre-wrap;
   word-wrap: break-word;
-  overflow-wrap: break-word; /* future version of deprecated 'word-wrap' */
-  padding-top: 1.2rem; /* prevents text jump on Enter keypress */
-  // Reduces repaints
+  overflow-wrap: break-word;
+  padding-top: 1.2rem;
   position: absolute;
   top: 0;
   z-index: -1;
 }
 
-/* Autocomplete Items */
 .autocomplete-content {
   li {
-    .highlight { color: var(--md-sys-color-on-background); }
+    .highlight { color: var(--md-sys-color-on-surface); }
     img {
       height: $dropdown-item-height - 10;
       width: $dropdown-item-height - 10;
@@ -332,7 +314,6 @@ textarea {
   }
 }
 
-/* Datepicker date input fields */
 .datepicker-date-input {
   position: relative;
   text-indent: -9999px;
@@ -340,7 +321,7 @@ textarea {
   &::after {
     display: block;
     position: absolute;
-    top: 1.10rem;
+    top: 1.1rem;
     content: attr(data-date);
     color: var(--input-color);
     text-indent: 0;
