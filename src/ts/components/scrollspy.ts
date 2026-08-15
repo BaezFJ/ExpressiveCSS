@@ -217,15 +217,13 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
       const options = ScrollSpy._elements[0].el['RoutePlate_ScrollSpy'].options;
       if (options.keepTopElementActive && ScrollSpy._visibleElements.length === 0) {
         ScrollSpy._resetKeptTopActiveElement(options.activeClass);
+        // Measure once per element, then sort on the numbers. Reading the
+        // distance inside the comparator meant O(n log n) forced layouts.
         const topElements = ScrollSpy._elements
-          .filter((value) => ScrollSpy._getDistanceToViewport(value.el) <= 0)
-          .sort((a, b) => {
-            const distanceA = ScrollSpy._getDistanceToViewport(a.el);
-            const distanceB = ScrollSpy._getDistanceToViewport(b.el);
-            if (distanceA < distanceB) return -1;
-            if (distanceA > distanceB) return 1;
-            return 0;
-          });
+          .map((value) => ({ value, distance: ScrollSpy._getDistanceToViewport(value.el) }))
+          .filter((entry) => entry.distance <= 0)
+          .sort((a, b) => a.distance - b.distance)
+          .map((entry) => entry.value);
         const nearestTopElement = topElements.length
           ? topElements[topElements.length - 1]
           : ScrollSpy._elements[0];
@@ -236,26 +234,30 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     }
   };
 
-  static _offset(el) {
-    const box = el.getBoundingClientRect();
-    const docElem = document.documentElement;
-    return {
-      top: box.top + window.pageYOffset - docElem.clientTop,
-      left: box.left + window.pageXOffset - docElem.clientLeft
-    };
-  }
-
   static _findElements(top: number, right: number, bottom: number, left: number): ScrollSpy[] {
     const hits = [];
+    // Hoisted out of the loop: these are per-document, not per-element, and
+    // reading them inside would force a layout flush on every iteration.
+    const docElem = document.documentElement;
+    const clientTop = docElem.clientTop;
+    const clientLeft = docElem.clientLeft;
+    const scrollY = window.scrollY;
+    const scrollX = window.scrollX;
+
     for (let i = 0; i < ScrollSpy._elements.length; i++) {
       const scrollspy = ScrollSpy._elements[i];
       const currTop = top + scrollspy.options.scrollOffset || 200;
 
-      if (scrollspy.el.getBoundingClientRect().height > 0) {
-        const elTop = ScrollSpy._offset(scrollspy.el).top,
-          elLeft = ScrollSpy._offset(scrollspy.el).left,
-          elRight = elLeft + scrollspy.el.getBoundingClientRect().width,
-          elBottom = elTop + scrollspy.el.getBoundingClientRect().height;
+      // One rect per element per tick. This used to take five - a height
+      // check, two _offset() calls that each built their own rect, and two
+      // more reads for width and height - and it runs for every spied element
+      // on every scroll tick.
+      const box = scrollspy.el.getBoundingClientRect();
+      if (box.height > 0) {
+        const elTop = box.top + scrollY - clientTop,
+          elLeft = box.left + scrollX - clientLeft,
+          elRight = elLeft + box.width,
+          elBottom = elTop + box.height;
 
         const isIntersect = !(
           elLeft > right ||

@@ -359,8 +359,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     if (isLetter && !specialKeys.includes(e.key)) {
       this.filterQuery.push(keyText);
       const string = this.filterQuery.join('');
+      // textContent rather than innerText: this scans every item on every
+      // keystroke, and innerText forces a layout flush per item.
       const newOptionEl = Array.from(this.dropdownEl.querySelectorAll('li')).find(
-        (el) => el.innerText.toLowerCase().indexOf(string) === 0
+        (el) => el.textContent.trim().toLowerCase().indexOf(string) === 0
       );
       if (newOptionEl) {
         this.focusedIndex = [...newOptionEl.parentNode.children].indexOf(newOptionEl);

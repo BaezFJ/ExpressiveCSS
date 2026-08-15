@@ -206,6 +206,8 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.style.height = this.originalHeight + 'px';
     this.el.style.width = this.originalWidth + 'px';
     setTimeout(() => {
+      // One offset for both axes, read before any of the writes below.
+      const placeholderOffset = this._offset(this.placeholder);
       // easeOutQuad
       this.el.style.transition = `height ${duration}ms ease,
         width ${duration}ms ease,
@@ -218,14 +220,14 @@ export class Lightbox extends Component<LightboxOptions> {
       this.el.style.left =
         Utils.getDocumentScrollLeft() +
         this.windowWidth / 2 -
-        this._offset(this.placeholder).left -
+        placeholderOffset.left -
         this.newWidth / 2 +
         'px';
 
       this.el.style.top =
         Utils.getDocumentScrollTop() +
         this.windowHeight / 2 -
-        this._offset(this.placeholder).top -
+        placeholderOffset.top -
         this.newHeight / 2 +
         'px';
     }, 1);
@@ -366,8 +368,12 @@ export class Lightbox extends Component<LightboxOptions> {
    */
   open = () => {
     this._updateVars();
-    this.originalWidth = this.el.getBoundingClientRect().width;
-    this.originalHeight = this.el.getBoundingClientRect().height;
+    // Both rects are read up front: measuring the placeholder after writing
+    // its width forced a second layout for the height.
+    const originRect = this.el.getBoundingClientRect();
+    const placeholderRect = this.placeholder.getBoundingClientRect();
+    this.originalWidth = originRect.width;
+    this.originalHeight = originRect.height;
     // Set states
     this.doneAnimating = false;
     this.el.classList.add('active');
@@ -376,8 +382,8 @@ export class Lightbox extends Component<LightboxOptions> {
     if (typeof this.options.onOpenStart === 'function')
       this.options.onOpenStart.call(this, this.el);
     // Set positioning for placeholder
-    this.placeholder.style.width = this.placeholder.getBoundingClientRect().width + 'px';
-    this.placeholder.style.height = this.placeholder.getBoundingClientRect().height + 'px';
+    this.placeholder.style.width = placeholderRect.width + 'px';
+    this.placeholder.style.height = placeholderRect.height + 'px';
     this.placeholder.style.position = 'relative';
     this.placeholder.style.top = '0';
     this.placeholder.style.left = '0';
@@ -418,8 +424,8 @@ export class Lightbox extends Component<LightboxOptions> {
     }
     this._animateImageIn();
     // Handle Exit triggers
-    window.addEventListener('scroll', this._handleWindowScroll);
-    window.addEventListener('resize', this._handleWindowResize);
+    window.addEventListener('scroll', this._handleWindowScroll, { passive: true });
+    window.addEventListener('resize', this._handleWindowResize, { passive: true });
     window.addEventListener('keyup', this._handleWindowEscape);
   };
 

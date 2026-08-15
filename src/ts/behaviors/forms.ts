@@ -43,70 +43,30 @@ export class Forms {
    */
   static textareaAutoResize(e: EventTarget) {
     const textarea = e as HTMLTextAreaElement;
-    // if (!textarea) {
-    //   console.error('No textarea element found');
-    //   return;
-    // }
-    // Textarea Auto Resize
-    let hiddenDiv: HTMLDivElement = document.querySelector('.hiddendiv');
-    if (!hiddenDiv) {
-      hiddenDiv = document.createElement('div');
-      hiddenDiv.classList.add('hiddendiv', 'common');
-      document.body.append(hiddenDiv);
-    }
-    const style = getComputedStyle(textarea);
-    // Set font properties of hiddenDiv
-    const fontFamily = style.fontFamily; //textarea.css('font-family');
-    const fontSize = style.fontSize; //textarea.css('font-size');
-    const lineHeight = style.lineHeight; //textarea.css('line-height');
-    // Firefox can't handle padding shorthand.
-    const paddingTop = style.paddingTop; //getComputedStyle(textarea).css('padding-top');
-    const paddingRight = style.paddingRight; //textarea.css('padding-right');
-    const paddingBottom = style.paddingBottom; //textarea.css('padding-bottom');
-    const paddingLeft = style.paddingLeft; //textarea.css('padding-left');
+    if (!textarea) return;
 
-    if (fontSize) hiddenDiv.style.fontSize = fontSize; //('font-size', fontSize);
-    if (fontFamily) hiddenDiv.style.fontFamily = fontFamily; //css('font-family', fontFamily);
-    if (lineHeight) hiddenDiv.style.lineHeight = lineHeight; //css('line-height', lineHeight);
-    if (paddingTop) hiddenDiv.style.paddingTop = paddingTop; //ss('padding-top', paddingTop);
-    if (paddingRight) hiddenDiv.style.paddingRight = paddingRight; //css('padding-right', paddingRight);
-    if (paddingBottom) hiddenDiv.style.paddingBottom = paddingBottom; //css('padding-bottom', paddingBottom);
-    if (paddingLeft) hiddenDiv.style.paddingLeft = paddingLeft; //css('padding-left', paddingLeft);
-
-    // Set original-height, if none
-    if (!textarea.hasAttribute('original-height'))
+    // Measure the textarea against itself: collapse it to its natural height,
+    // then read the content height back. `.routeplate-textarea` is
+    // `overflow-y: hidden`, so scrollHeight is the full content height and
+    // offsetHeight - clientHeight is exactly the borders (no scrollbar to
+    // account for) - which border-box sizing needs added back.
+    //
+    // This replaces a mirror div that the value was copied into via
+    // `innerHTML = innerHTML.replace(...)` - a full serialize and reparse of
+    // the text on every keystroke, plus getComputedStyle and seven style
+    // writes, run twice per keystroke because it was bound to keydown and
+    // keyup both.
+    if (!textarea.hasAttribute('original-height')) {
       textarea.setAttribute('original-height', textarea.getBoundingClientRect().height.toString());
-
-    if (textarea.getAttribute('wrap') === 'off') {
-      hiddenDiv.style.overflowWrap = 'normal'; // ('overflow-wrap', 'normal')
-      hiddenDiv.style.whiteSpace = 'pre'; //.css('white-space', 'pre');
     }
-
-    hiddenDiv.innerText = textarea.value + '\n';
-    hiddenDiv.innerHTML = hiddenDiv.innerHTML.replace(/\n/g, '<br>');
-
-    // When textarea is hidden, width goes crazy.
-    // Approximate with half of window size
-    if (textarea.offsetWidth > 0 && textarea.offsetHeight > 0) {
-      hiddenDiv.style.width = textarea.getBoundingClientRect().width + 'px'; // ('width', textarea.width() + 'px');
-    } else {
-      hiddenDiv.style.width = window.innerWidth / 2 + 'px'; //css('width', window.innerWidth / 2 + 'px');
-    }
-
-    // Resize if the new height is greater than the
-    // original height of the textarea
     const originalHeight = parseInt(textarea.getAttribute('original-height'));
-    const prevLength = parseInt(textarea.getAttribute('previous-length'));
     if (isNaN(originalHeight)) return;
-    if (originalHeight <= hiddenDiv.clientHeight) {
-      textarea.style.height = hiddenDiv.clientHeight + 'px'; //css('height', hiddenDiv.innerHeight() + 'px');
-    } else if (textarea.value.length < prevLength) {
-      // In case the new height is less than original height, it
-      // means the textarea has less text than before
-      // So we set the height to the original one
-      textarea.style.height = originalHeight + 'px';
-    }
-    textarea.setAttribute('previous-length', (textarea.value || '').length.toString());
+
+    textarea.style.height = 'auto';
+    // Three reads after a single write: one layout flush for the whole resize.
+    const borders = textarea.offsetHeight - textarea.clientHeight;
+    const contentHeight = textarea.scrollHeight + borders;
+    textarea.style.height = Math.max(originalHeight, contentHeight) + 'px';
   }
 
   static Init() {
@@ -158,10 +118,11 @@ export class Forms {
   static InitTextarea(textarea: HTMLTextAreaElement) {
     // Save Data in Element
     textarea.setAttribute('original-height', textarea.getBoundingClientRect().height.toString());
-    textarea.setAttribute('previous-length', (textarea.value || '').length.toString());
     Forms.textareaAutoResize(textarea);
-    textarea.addEventListener('keyup', (e) => Forms.textareaAutoResize(e.target));
-    textarea.addEventListener('keydown', (e) => Forms.textareaAutoResize(e.target));
+    // `input` rather than keydown + keyup: it fires once per actual value
+    // change and also covers paste, drag-drop and IME composition, which the
+    // key events missed.
+    textarea.addEventListener('input', (e) => Forms.textareaAutoResize(e.target));
   }
 
   static InitFileInputPath(fileInput: HTMLInputElement) {

@@ -242,8 +242,9 @@ export class Tooltip extends Component<TooltipOptions> {
     this.xMovement = 0;
     this.yMovement = 0;
 
-    let targetTop = origin.getBoundingClientRect().top + Utils.getDocumentScrollTop();
-    let targetLeft = origin.getBoundingClientRect().left + Utils.getDocumentScrollLeft();
+    const originRect = origin.getBoundingClientRect();
+    let targetTop = originRect.top + Utils.getDocumentScrollTop();
+    let targetLeft = originRect.left + Utils.getDocumentScrollLeft();
     if (this.options.position === 'top') {
       targetTop += -tooltipHeight - margin;
       targetLeft += originWidth / 2 - tooltipWidth / 2;

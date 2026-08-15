@@ -68,8 +68,9 @@ export class Waves {
           const el = <HTMLElement>trigger.closest('.waves-effect');
           if (el && el.contains(trigger)) {
             const isCircular = el.classList.contains('waves-circle');
-            const x = e.pageX - Waves._offset(el).left;
-            const y = e.pageY - Waves._offset(el).top;
+            const offset = Waves._offset(el); // one rect, not one per axis
+            const x = e.pageX - offset.left;
+            const y = e.pageY - offset.top;
 
             let color = null;
             if (el.classList.contains('waves-light')) color = { r: 255, g: 255, b: 255 };

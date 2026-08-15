@@ -17,8 +17,8 @@ export class Parallax extends Component<ParallaxOptions> {
   private _enabled: boolean;
   private _img: HTMLImageElement;
   static _parallaxes: Parallax[] = [];
-  static _handleScrollThrottled: () => Utils;
-  static _handleWindowResizeThrottled: () => Utils;
+  static _handleWindowResizeThrottled: (...args: unknown[]) => void;
+  private static _scrollFrame: number = null;
 
   constructor(el: HTMLElement, options: Partial<ParallaxOptions>) {
     super(el, options, Parallax);
@@ -83,6 +83,21 @@ export class Parallax extends Component<ParallaxOptions> {
     }
   }
 
+  /**
+   * Coalesce scroll events onto animation frames.
+   *
+   * The handler reads layout and then writes a transform, so running it more
+   * than once per frame is wasted work - and the 5ms throttle it replaces was
+   * short enough to let several run per frame anyway.
+   */
+  static _requestScrollUpdate = () => {
+    if (Parallax._scrollFrame !== null) return;
+    Parallax._scrollFrame = requestAnimationFrame(() => {
+      Parallax._scrollFrame = null;
+      Parallax._handleScroll();
+    });
+  };
+
   static _handleWindowResize() {
     for (let i = 0; i < Parallax._parallaxes.length; i++) {
       const parallaxInstance = Parallax._parallaxes[i];
@@ -93,22 +108,23 @@ export class Parallax extends Component<ParallaxOptions> {
   _setupEventHandlers() {
     this._img.addEventListener('load', this._handleImageLoad);
     if (Parallax._parallaxes.length === 0) {
-      if (!Parallax._handleScrollThrottled) {
-        Parallax._handleScrollThrottled = Utils.throttle(Parallax._handleScroll, 5);
-      }
       if (!Parallax._handleWindowResizeThrottled) {
-        Parallax._handleWindowResizeThrottled = Utils.throttle(Parallax._handleWindowResize, 5);
+        Parallax._handleWindowResizeThrottled = Utils.throttle(Parallax._handleWindowResize, 100);
       }
-      window.addEventListener('scroll', Parallax._handleScrollThrottled);
-      window.addEventListener('resize', Parallax._handleWindowResizeThrottled);
+      window.addEventListener('scroll', Parallax._requestScrollUpdate, { passive: true });
+      window.addEventListener('resize', Parallax._handleWindowResizeThrottled, { passive: true });
     }
   }
 
   _removeEventHandlers() {
     this._img.removeEventListener('load', this._handleImageLoad);
     if (Parallax._parallaxes.length === 0) {
-      window.removeEventListener('scroll', Parallax._handleScrollThrottled);
+      window.removeEventListener('scroll', Parallax._requestScrollUpdate);
       window.removeEventListener('resize', Parallax._handleWindowResizeThrottled);
+      if (Parallax._scrollFrame !== null) {
+        cancelAnimationFrame(Parallax._scrollFrame);
+        Parallax._scrollFrame = null;
+      }
     }
   }
 
@@ -120,22 +136,16 @@ export class Parallax extends Component<ParallaxOptions> {
     this._updateParallax();
   };
 
-  private _offset(el: Element) {
-    const box = el.getBoundingClientRect();
-    const docElem = document.documentElement;
-    return {
-      top: box.top + window.scrollY - docElem.clientTop,
-      left: box.left + window.scrollX - docElem.clientLeft
-    };
-  }
-
   _updateParallax() {
-    const containerHeight =
-      this.el.getBoundingClientRect().height > 0 ? this.el.parentElement.offsetHeight : 500;
+    // Runs for every parallax element on every scroll tick, so it reads
+    // layout once: one rect for the element, reused for the height check and
+    // both offsets.
+    const rect = this.el.getBoundingClientRect();
+    const containerHeight = rect.height > 0 ? this.el.parentElement.offsetHeight : 500;
     const imgHeight = this._img.offsetHeight;
     const parallaxDist = imgHeight - containerHeight;
-    const bottom = this._offset(this.el).top + containerHeight;
-    const top = this._offset(this.el).top;
+    const top = rect.top + window.scrollY - document.documentElement.clientTop;
+    const bottom = top + containerHeight;
     const scrollTop = Utils.getDocumentScrollTop();
     const windowHeight = window.innerHeight;
     const windowBottom = scrollTop + windowHeight;

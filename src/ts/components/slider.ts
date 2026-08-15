@@ -196,6 +196,7 @@ export class Slider extends Component<SliderOptions> {
         el.addEventListener('click', this._handleIndicatorClick);
       });
     }
+    document.addEventListener('visibilitychange', this._handleVisibilityChange);
   }
 
   private _removeEventHandlers() {
@@ -212,7 +213,23 @@ export class Slider extends Component<SliderOptions> {
         el.removeEventListener('click', this._handleIndicatorClick);
       });
     }
+    document.removeEventListener('visibilitychange', this._handleVisibilityChange);
   }
+
+  // Nobody is watching a backgrounded tab. Browsers clamp the timer rather
+  // than stopping it, so without this the slider keeps cycling slides - and
+  // running their transitions - out of sight.
+  private _handleVisibilityChange = () => {
+    if (document.hidden) {
+      if (this.interval != null) this._pause(true);
+    } else if (
+      this.eventPause &&
+      !(this.options.pauseOnHover && this._hovered) &&
+      !(this.options.pauseOnFocus && this._focused)
+    ) {
+      this.start();
+    }
+  };
 
   private _handleIndicatorClick = (e: MouseEvent) => {
     const el = (<HTMLElement>e.target).parentElement;

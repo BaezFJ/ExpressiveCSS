@@ -292,17 +292,6 @@ textarea {
   }
 }
 
-.hiddendiv {
-  visibility: hidden;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  padding-top: 1.2rem;
-  position: absolute;
-  top: 0;
-  z-index: -1;
-}
-
 .autocomplete-content {
   li {
     .highlight { color: var(--md-sys-color-on-surface); }

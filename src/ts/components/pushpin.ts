@@ -98,14 +98,13 @@ export class Pushpin extends Component<PushpinOptions> {
   }
 
   static _updateElements() {
-    for (const elIndex in Pushpin._pushpins) {
-      const pInstance = Pushpin._pushpins[elIndex];
-      pInstance._updatePosition();
+    for (let i = 0; i < Pushpin._pushpins.length; i++) {
+      Pushpin._pushpins[i]._updatePosition();
     }
   }
 
   _setupEventHandlers() {
-    document.addEventListener('scroll', Pushpin._updateElements);
+    document.addEventListener('scroll', Pushpin._updateElements, { passive: true });
   }
 
   _removeEventHandlers() {

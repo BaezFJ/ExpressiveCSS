@@ -433,8 +433,10 @@ export class FormSelect extends Component<FormSelectOptions> {
     );
     // Filter not disabled
     const notDisabledOptionPairs = selectedOptionPairs.filter((op) => !op.el.disabled);
+    // textContent, not innerText: innerText is layout-dependent, so reading it
+    // once per selected option forced a reflow each time.
     const texts = notDisabledOptionPairs.map((value) =>
-      value.optionEl.querySelector('span').innerText.trim()
+      value.optionEl.querySelector('span').textContent.trim()
     );
     // Set input-text to first Option with empty value which indicates a description like "choose your option"
     if (texts.length === 0) {

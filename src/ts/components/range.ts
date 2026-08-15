@@ -73,7 +73,10 @@ export class Range extends Component<RangeOptions> {
     this.el.addEventListener('touchstart', this._handleRangeMousedownTouchstart);
     this.el.addEventListener('input', this._handleRangeInputMousemoveTouchmove);
     this.el.addEventListener('mousemove', this._handleRangeInputMousemoveTouchmove);
-    this.el.addEventListener('touchmove', this._handleRangeInputMousemoveTouchmove);
+    // Never calls preventDefault, so it does not need to block scrolling.
+    this.el.addEventListener('touchmove', this._handleRangeInputMousemoveTouchmove, {
+      passive: true
+    });
     this.el.addEventListener('mouseup', this._handleRangeMouseupTouchend);
     this.el.addEventListener('touchend', this._handleRangeMouseupTouchend);
     this.el.addEventListener('blur', this._handleRangeBlurMouseoutTouchleave);
@@ -149,12 +152,17 @@ export class Range extends Component<RangeOptions> {
     const min = parseFloat(this.el.getAttribute('min')) || 0;
     const val = parseFloat(this.el.value) || 0;
     const percent = max === min ? 0 : (val - min) / (max - min);
-    this.el.style.setProperty('--md-comp-slider-active-fraction', `${percent * 100}%`);
-    this.value.textContent = this.el.value;
+
+    // Read before writing. This runs on every pointer move during a drag, and
+    // setting the custom property first made each of the four offset reads
+    // below flush a fresh layout.
     const left = this.el.offsetLeft;
     const top = this.el.offsetTop;
     const width = this.el.offsetWidth;
     const height = this.el.offsetHeight;
+
+    this.el.style.setProperty('--md-comp-slider-active-fraction', `${percent * 100}%`);
+    this.value.textContent = this.el.value;
     if (this._isVertical()) {
       this.thumb.style.left = `${left + width / 2}px`;
       this.thumb.style.top = `${top + (1 - percent) * height}px`;

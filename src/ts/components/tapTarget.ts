@@ -207,15 +207,16 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
         if (isFixed) break;
       }
     }
-    // Calculating origin
+    // Calculating origin - one rect, reused for both axes and both branches.
     const originWidth = this.originEl.offsetWidth;
     const originHeight = this.originEl.offsetHeight;
+    const originOffset = this._offset(this.originEl);
     const originTop = isFixed
-      ? this._offset(this.originEl).top - Utils.getDocumentScrollTop()
-      : this._offset(this.originEl).top;
+      ? originOffset.top - Utils.getDocumentScrollTop()
+      : originOffset.top;
     const originLeft = isFixed
-      ? this._offset(this.originEl).left - Utils.getDocumentScrollLeft()
-      : this._offset(this.originEl).left;
+      ? originOffset.left - Utils.getDocumentScrollLeft()
+      : originOffset.left;
 
     // Calculating screen
     const windowWidth = window.innerWidth;

@@ -166,17 +166,19 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     if (Sidenav._sidenavs.length === 0) {
       document.body.addEventListener('click', this._handleTriggerClick);
     }
-    const passiveIfSupported: boolean = null;
-    this.dragTarget.addEventListener('touchmove', this._handleDragTargetDrag, passiveIfSupported);
+    // The drag handlers only set transforms and opacity - none of them calls
+    // preventDefault - so they can be passive and stay off the scroll path.
+    const passive = { passive: true } as const;
+    this.dragTarget.addEventListener('touchmove', this._handleDragTargetDrag, passive);
     this.dragTarget.addEventListener('touchend', this._handleDragTargetRelease);
-    this._overlay.addEventListener('touchmove', this._handleCloseDrag, passiveIfSupported);
+    this._overlay.addEventListener('touchmove', this._handleCloseDrag, passive);
     this._overlay.addEventListener('touchend', this._handleCloseRelease);
-    this.el.addEventListener('touchmove', this._handleCloseDrag); // , passiveIfSupported);
+    this.el.addEventListener('touchmove', this._handleCloseDrag, passive);
     this.el.addEventListener('touchend', this._handleCloseRelease);
     this.el.addEventListener('click', this._handleCloseTriggerClick);
     // Add resize for side nav fixed
     if (this.isFixed) {
-      window.addEventListener('resize', this._handleWindowResize);
+      window.addEventListener('resize', this._handleWindowResize, passive);
     }
     /* Set aria-hidden state */
     this._setAriaHidden();

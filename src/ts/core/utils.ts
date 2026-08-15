@@ -26,12 +26,25 @@ export class Utils {
   };
 
   /**
+   * Keys that count as keyboard navigation, precomputed.
+   *
+   * These handlers run at capture phase on the document for every keystroke on
+   * the page, and used to rebuild three arrays and spread them into a fourth
+   * on each one.
+   */
+  private static _navigationKeys = new Set([
+    ...Utils.keys.TAB,
+    ...Utils.keys.ARROW_DOWN,
+    ...Utils.keys.ARROW_UP
+  ]);
+
+  /**
    * Detects when a key is pressed.
    * @param e Event instance.
    */
   static docHandleKeydown(e: KeyboardEvent) {
     Utils.keyDown = true;
-    if ([...Utils.keys.TAB, ...Utils.keys.ARROW_DOWN, ...Utils.keys.ARROW_UP].includes(e.key)) {
+    if (Utils._navigationKeys.has(e.key)) {
       Utils.tabPressed = true;
     }
   }
@@ -42,7 +55,7 @@ export class Utils {
    */
   static docHandleKeyup(e: KeyboardEvent) {
     Utils.keyDown = false;
-    if ([...Utils.keys.TAB, ...Utils.keys.ARROW_DOWN, ...Utils.keys.ARROW_UP].includes(e.key)) {
+    if (Utils._navigationKeys.has(e.key)) {
       Utils.tabPressed = false;
     }
   }
@@ -339,11 +352,12 @@ export class Utils {
     const originHeight = origin.offsetHeight,
       originWidth = origin.offsetWidth,
       containerHeight = container.offsetHeight,
-      containerWidth = container.offsetWidth;
+      containerWidth = container.offsetWidth,
+      originRect = origin.getBoundingClientRect(); // one rect, read twice below
     let xMovement = 0,
       yMovement = 0,
-      targetTop = origin.getBoundingClientRect().top + Utils.getDocumentScrollTop(),
-      targetLeft = origin.getBoundingClientRect().left + Utils.getDocumentScrollLeft();
+      targetTop = originRect.top + Utils.getDocumentScrollTop(),
+      targetLeft = originRect.left + Utils.getDocumentScrollLeft();
 
     if (position === 'top') {
       targetTop += -containerHeight - margin;

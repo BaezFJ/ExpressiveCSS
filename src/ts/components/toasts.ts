@@ -86,7 +86,9 @@ export class Toast {
   panning: boolean;
   options: ToastOptions;
   message: string;
-  counterInterval: ReturnType<typeof setTimeout>;
+  counterTimeout: ReturnType<typeof setTimeout>;
+  /** Wall-clock time the toast is due to dismiss, for pause/resume. */
+  private _deadline: number;
   wasSwiped: boolean;
   startingXPos: number;
   xPos: number;
@@ -155,6 +157,7 @@ export class Toast {
       const toast: Toast = toastElem['RoutePlate_Toast'];
       if (!toast) return;
       toast.panning = true;
+      toast._pauseTimer();
       Toast._draggedToast = toast;
       toast.el.classList.add('panning');
       toast.el.style.transition = '';
@@ -199,6 +202,7 @@ export class Toast {
         toast.el.style.transition = 'transform .2s, opacity .2s';
         toast.el.style.transform = '';
         toast.el.style.opacity = '';
+        toast._resumeTimer();
       }
       Toast._draggedToast = null;
     }
@@ -216,8 +220,9 @@ export class Toast {
    * dismiss all toasts.
    */
   static dismissAll() {
-    for (const toastIndex in Toast._toasts) {
-      Toast._toasts[toastIndex].dismiss();
+    // Copy first: dismiss() splices the list it is iterating.
+    for (const toast of [...Toast._toasts]) {
+      toast.dismiss();
     }
   }
 
@@ -291,29 +296,38 @@ export class Toast {
   }
 
   /**
-   * Create setInterval which automatically removes toast when timeRemaining >= 0
-   * has been reached.
+   * Arm the dismissal timer.
+   *
+   * One timeout, not a 20ms interval ticking a counter down: the old form woke
+   * the page up 50 times a second per toast purely to subtract 20 from a
+   * number. Dragging pauses the countdown via _pauseTimer/_resumeTimer instead.
    */
   _setTimer() {
-    if (this.timeRemaining !== Infinity) {
-      this.counterInterval = setInterval(() => {
-        // If toast is not being dragged, decrease its time remaining
-        if (!this.panning) {
-          this.timeRemaining -= 20;
-        }
-        // Animate toast out
-        if (this.timeRemaining <= 0) {
-          this.dismiss();
-        }
-      }, 20);
-    }
+    if (this.timeRemaining === Infinity) return;
+    this._deadline = Date.now() + this.timeRemaining;
+    this.counterTimeout = setTimeout(() => this.dismiss(), this.timeRemaining);
+  }
+
+  /** Stop the countdown, banking the time that was left on it. */
+  _pauseTimer() {
+    if (this.counterTimeout == null) return;
+    clearTimeout(this.counterTimeout);
+    this.counterTimeout = null;
+    this.timeRemaining = Math.max(0, this._deadline - Date.now());
+  }
+
+  /** Restart a countdown stopped by {@link _pauseTimer}. */
+  _resumeTimer() {
+    if (this.counterTimeout != null) return;
+    this._setTimer();
   }
 
   /**
    * Dismiss toast with animation.
    */
   dismiss() {
-    clearInterval(this.counterInterval);
+    clearTimeout(this.counterTimeout);
+    this.counterTimeout = null;
     const activationDistance = this.el.offsetWidth * this.options.activationPercent;
 
     if (this.wasSwiped) {
@@ -340,8 +354,11 @@ export class Toast {
       // Remove toast from DOM
       if (this.el.id != this.options.toastId) {
         this.el.remove();
-        Toast._toasts.splice(Toast._toasts.indexOf(this), 1);
-        if (Toast._toasts.length === 0) {
+        // Guarded: splice(-1, 1) on an already-removed toast would drop an
+        // unrelated one off the end of the list.
+        const index = Toast._toasts.indexOf(this);
+        if (index >= 0) Toast._toasts.splice(index, 1);
+        if (Toast._toasts.length === 0 && Toast._container) {
           Toast._removeContainer();
         }
       }
