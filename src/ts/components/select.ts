@@ -101,8 +101,24 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   destroy() {
     this._removeEventHandlers();
+    // The Dropdown holds itself in the static Dropdown._dropdowns registry
+    // until its own destroy() runs, so dropping the elements is not enough -
+    // every rebuilt select used to leave an instance behind for good.
+    this.dropdown?.destroy();
     this._removeDropdown();
     this.el['RoutePlate_FormSelect'] = undefined;
+  }
+
+  /**
+   * Re-read the native `<select>` and update the generated dropdown to match.
+   *
+   * Assigning `select.value` from script fires no `change` event, so nothing
+   * else syncs the visible input text or the `.selected` state on the virtual
+   * options. Call this after mutating the underlying select programmatically.
+   */
+  refresh() {
+    this._setValueToInput();
+    this._setSelectedStates();
   }
 
   _setupEventHandlers() {

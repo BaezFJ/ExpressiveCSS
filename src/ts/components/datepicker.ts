@@ -327,6 +327,10 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _drawDepth = 0;
   /** Whether a draw was requested while batching. */
   private _drawDirty = false;
+  /** Shape of the currently rendered controls; see {@link _controlsCacheKey}. */
+  private _controlsKey: string = null;
+  /** id linking the controls element to the table's aria-labelledby. */
+  private _randId: string = null;
   static _template: string;
 
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
@@ -995,6 +999,44 @@ export class Datepicker extends Component<DatepickerOptions> {
     return '<tbody>' + rows.join('') + '</tbody>';
   }
 
+  /**
+   * Whether each month arrow is usable at this position in the allowed range.
+   *
+   * Depends on the month, which is deliberately *not* part of the controls
+   * cache key - so the reuse path has to recompute and reapply it.
+   */
+  private _arrowState(year: number, month: number) {
+    const opts = this.options;
+    const isMinYear = year === opts.minYear;
+    const isMaxYear = year === opts.maxYear;
+    return {
+      prev: !(isMinYear && (month === 0 || opts.minMonth >= month)),
+      next: !(isMaxYear && (month === 11 || opts.maxMonth <= month))
+    };
+  }
+
+  /**
+   * Identifies the *shape* of the controls - everything that changes which
+   * options the month and year selects contain, as opposed to which one is
+   * picked. While this is stable the two FormSelects can be left alone.
+   *
+   * `year` is in the key because a numeric `yearRange` centres the year list
+   * on the displayed year, so paging across a year boundary does change it.
+   */
+  private _controlsCacheKey(year: number): string {
+    const o = this.options;
+    return [
+      year,
+      o.minYear,
+      o.maxYear,
+      o.minMonth,
+      o.maxMonth,
+      Array.isArray(o.yearRange) ? o.yearRange.join('-') : o.yearRange,
+      o.yearRangeReverse,
+      o.showMonthAfterYear
+    ].join('|');
+  }
+
   renderTitle(instance, c, year, month, refYear, randId) {
     const opts = this.options,
       isMinYear = year === opts.minYear,
@@ -1010,8 +1052,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     // Decided up front. These used to be computed *below* the month-prev
     // button that reads `prev`, so the previous arrow was never disabled at
     // the start of the allowed range.
-    const prev = !(isMinYear && (month === 0 || opts.minMonth >= month));
-    const next = !(isMaxYear && (month === 11 || opts.maxMonth <= month));
+    const { prev, next } = this._arrowState(year, month);
 
     for (i = 0; i < 12; i++) {
       arr.push(
@@ -1116,7 +1157,6 @@ export class Datepicker extends Component<DatepickerOptions> {
       maxYear = opts.maxYear,
       minMonth = opts.minMonth,
       maxMonth = opts.maxMonth;
-    let html = '';
 
     if (this._y <= minYear) {
       this._y = minYear;
@@ -1131,32 +1171,41 @@ export class Datepicker extends Component<DatepickerOptions> {
       }
     }
 
-    // Two random letters collided across pickers on the same page, so their
-    // aria-labelledby pointed at each other's title. (Also drops a substr().)
-    const randId = 'datepicker-title-' + Utils.guid();
+    const year = this.calendars[0].year;
+    const month = this.calendars[0].month;
 
-    for (let c = 0; c < 1; c++) {
-      if (!this.options.isDateRange) {
-        this._renderDateDisplay(this.date);
-      } else {
-        this._renderDateDisplay(this.date, this.endDate);
-      }
-      html +=
-        this.renderTitle(
-          this,
-          c,
-          this.calendars[c].year,
-          this.calendars[c].month,
-          this.calendars[0].year,
-          randId
-        ) + this.render(this.calendars[c].year, this.calendars[c].month, randId);
+    if (!this.options.isDateRange) {
+      this._renderDateDisplay(this.date);
+    } else {
+      this._renderDateDisplay(this.date, this.endDate);
     }
 
+    // Only the day grid changes when you page within a year. Rebuilding the
+    // controls as well meant tearing down and reconstructing two FormSelects -
+    // each with its own <ul> of 12 or 21+ options, an input, a caret and a
+    // Dropdown - on every single draw.
+    const key = this._controlsCacheKey(year);
+    if (key === this._controlsKey && this.calendarEl.querySelector('.datepicker-controls')) {
+      this._reuseControls(year, month);
+    } else {
+      this._controlsKey = key;
+      // Held across table re-renders: the table's aria-labelledby points at
+      // the controls element's id.
+      this._randId = 'datepicker-title-' + Utils.guid();
+      this._rebuildControls(year, month);
+    }
+    this._renderCalendarTable(year, month);
+
+    if (typeof this.options.onDraw === 'function') {
+      this.options.onDraw.call(this);
+    }
+  }
+
+  /** Tear down the two FormSelects and render the controls from scratch. */
+  private _rebuildControls(year: number, month: number) {
     this.destroySelects();
+    this.calendarEl.innerHTML = this.renderTitle(this, 0, year, month, year, this._randId);
 
-    this.calendarEl.innerHTML = html;
-
-    // Init FormSelect
     const yearSelect = this.calendarEl.querySelector('.orig-select-year') as HTMLSelectElement;
     const monthSelect = this.calendarEl.querySelector('.orig-select-month') as HTMLSelectElement;
     // @todo fix accessibility @see https://github.com/materializecss/materialize/issues/522
@@ -1172,10 +1221,31 @@ export class Datepicker extends Component<DatepickerOptions> {
     // Add change handlers for select
     yearSelect.addEventListener('change', this._handleYearChange);
     monthSelect.addEventListener('change', this._handleMonthChange);
+  }
 
-    if (typeof this.options.onDraw === 'function') {
-      this.options.onDraw.call(this);
+  /**
+   * Keep the existing controls and bring them up to date: the selected month,
+   * and the arrow states, which depend on the month rather than on the key.
+   */
+  private _reuseControls(year: number, month: number) {
+    const monthSelect = this.calendarEl.querySelector('.orig-select-month') as HTMLSelectElement;
+    if (monthSelect && monthSelect.value !== month.toString()) {
+      monthSelect.value = month.toString();
+      // Assigning .value fires no change event, so the wrapper needs telling.
+      FormSelect.getInstance(monthSelect)?.refresh();
     }
+
+    const { prev, next } = this._arrowState(year, month);
+    this.calendarEl.querySelector('.month-prev')?.classList.toggle('is-disabled', !prev);
+    this.calendarEl.querySelector('.month-next')?.classList.toggle('is-disabled', !next);
+  }
+
+  /** Replace just the day grid, leaving the controls in place. */
+  private _renderCalendarTable(year: number, month: number) {
+    const html = this.render(year, month, this._randId);
+    const existing = this.calendarEl.querySelector('.datepicker-table-wrapper');
+    if (existing) existing.outerHTML = html;
+    else this.calendarEl.insertAdjacentHTML('beforeend', html);
   }
 
   _setupEventHandlers() {

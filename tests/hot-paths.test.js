@@ -113,44 +113,41 @@ describe('Datepicker redraws', () => {
   beforeEach(resetBody);
 
   /**
-   * Count real draws. Every draw destroys and rebuilds the month and year
-   * FormSelects, so FormSelect.init runs exactly twice per draw - a more
-   * honest signal than spying on draw() itself, which would also swallow the
-   * batching being tested.
+   * Count real draws via the public onDraw callback, which fires once at the
+   * end of each one. Counting FormSelect.init instead would break the moment
+   * draw() stopped rebuilding the selects every time - which is exactly what
+   * the controls cache now does.
    */
-  function countDraws(fn) {
-    const original = RoutePlate.FormSelect.init;
-    let initCalls = 0;
-    RoutePlate.FormSelect.init = function (...args) {
-      initCalls++;
-      return original.apply(this, args);
-    };
-    try {
-      fn();
-    } finally {
-      RoutePlate.FormSelect.init = original;
-    }
-    return initCalls / 2;
-  }
-
-  test('clicking the input draws once, not three times', () => {
-    document.body.innerHTML = `<input type="text" class="datepicker" value="Jan 15, 2024">`;
+  function withDrawCounter(html, options, fn) {
+    document.body.innerHTML = html;
     const input = document.querySelector('.datepicker');
-    const instance = RoutePlate.Datepicker.init(input);
-
+    const counter = { draws: 0 };
+    const instance = RoutePlate.Datepicker.init(input, {
+      ...options,
+      onDraw: () => counter.draws++
+    });
+    counter.draws = 0; // ignore construction
     try {
-      const draws = countDraws(() => {
-        input.dispatchEvent(
-          new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
-        );
-      });
-
-      // setDateFromInput -> setDate -> gotoDate, then the direct draw(), then
-      // the trailing gotoDate: three draws for one click.
-      assert.equal(draws, 1, `one click produced ${draws} draws`);
+      fn(input, instance, counter);
     } finally {
       instance.destroy();
     }
+  }
+
+  test('clicking the input draws once, not three times', () => {
+    withDrawCounter(
+      `<input type="text" class="datepicker" value="Jan 15, 2024">`,
+      {},
+      (input, instance, counter) => {
+        input.dispatchEvent(
+          new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
+        );
+
+        // setDateFromInput -> setDate -> gotoDate, then the direct draw(),
+        // then the trailing gotoDate: three draws for one click.
+        assert.equal(counter.draws, 1, `one click produced ${counter.draws} draws`);
+      }
+    );
   });
 
   test('the calendar is rendered synchronously, before init() returns', () => {
@@ -170,23 +167,75 @@ describe('Datepicker redraws', () => {
   });
 
   test('a draw still happens when the input holds no parseable date', () => {
-    document.body.innerHTML = `<input type="text" class="datepicker" value="not a date">`;
-    const input = document.querySelector('.datepicker');
-    const instance = RoutePlate.Datepicker.init(input);
-
-    try {
-      const draws = countDraws(() => {
+    withDrawCounter(
+      `<input type="text" class="datepicker" value="not a date">`,
+      {},
+      (input, instance, counter) => {
         input.dispatchEvent(
           new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
         );
-      });
 
-      // setDate bails before drawing here, so the direct draw() in the handler
-      // is the only one - batching must not collapse it to zero.
-      assert.equal(draws, 1, `expected exactly one draw, got ${draws}`);
-    } finally {
-      instance.destroy();
-    }
+        // setDate bails before drawing here, so the direct draw() in the
+        // handler is the only one - batching must not collapse it to zero.
+        assert.equal(counter.draws, 1, `expected exactly one draw, got ${counter.draws}`);
+      }
+    );
+  });
+
+  test('paging within a year keeps the month and year selects alive', () => {
+    withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
+      const before = instance.calendarEl.querySelector('.orig-select-month');
+      const yearBefore = instance.calendarEl.querySelector('.orig-select-year');
+      const startMonth = instance.calendars[0].month;
+      // Page to a month in the same year, whichever direction stays inside it.
+      if (startMonth === 11) instance.prevMonth();
+      else instance.nextMonth();
+
+      assert.equal(
+        instance.calendarEl.querySelector('.orig-select-month'),
+        before,
+        'the month select was rebuilt for a same-year page'
+      );
+      assert.equal(instance.calendarEl.querySelector('.orig-select-year'), yearBefore);
+      assert.equal(
+        instance.calendarEl.querySelector('.orig-select-month').value,
+        instance.calendars[0].month.toString(),
+        'the reused month select was not updated to the new month'
+      );
+    });
+  });
+
+  test('crossing a year boundary rebuilds them, since the year list re-centres', () => {
+    withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
+      instance.gotoDate(new Date(2024, 11, 1)); // December
+      const before = instance.calendarEl.querySelector('.orig-select-year');
+
+      instance.nextMonth(); // -> January 2025
+
+      assert.notEqual(
+        instance.calendarEl.querySelector('.orig-select-year'),
+        before,
+        'the year select was reused across a year change, so its options are stale'
+      );
+      assert.equal(instance.calendars[0].year, 2025);
+    });
+  });
+
+  test('rebuilding the selects does not leak Dropdown instances', () => {
+    withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
+      const before = RoutePlate.Dropdown._dropdowns.length;
+
+      for (let i = 0; i < 14; i++) instance.nextMonth(); // crosses a year boundary
+
+      // FormSelect.destroy() has to destroy its Dropdown: the instance holds
+      // itself in the static registry until it does, so every rebuild used to
+      // strand two of them permanently.
+      assert.equal(
+        RoutePlate.Dropdown._dropdowns.length,
+        before,
+        'paging leaked Dropdown instances into the static registry'
+      );
+    });
   });
 });
 
