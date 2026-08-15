@@ -1,114 +1,185 @@
 @use "../../abstracts" as *;
 
-// Remove default Radio Buttons
-[type="radio"]:not(:checked),
-[type="radio"]:checked {
+// Radio buttons.
+//
+// Anatomy is the HTML. A <label> wrapping <input type="radio"> is the
+// control. The label text is a sibling of the input — no extra class, no
+// required <span>. input + span still works (legacy / BeerCSS).
+//
+// Tokens follow https://m3.material.io/components/radio-button/specs
+//   icon           20dp ring, 2dp stroke, on-surface-variant
+//   selected       primary ring + 10dp primary inner (the M3 "gap")
+//   state layer    40dp, 8% hover / 10% focus
+//   touch target   48dp
+//   label          body-large / on-surface
+//   disabled       on-surface 38%
+//
+// .with-gap is a no-op: the selected state is always the ring + inner.
+
+label:has(> [type="radio"]),
+.radio {
+  --md-comp-radio-button-icon-size: 20px;
+  --md-comp-radio-button-state-layer-size: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("body-large");
+  font-family: $font-stack;
+}
+
+nav:has(> label > [type="radio"]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+}
+
+nav > label:has(> [type="radio"]),
+nav > .radio {
+  display: inline-flex;
+}
+
+// Hide the native control only when a following span draws it (legacy).
+[type="radio"]:has(+ span) {
   position: absolute;
   opacity: 0;
+  width: 0;
+  height: 0;
   pointer-events: none;
 }
 
-[type="radio"]:not(:checked) + span,
-[type="radio"]:checked + span {
-  position: relative;
-  padding-left: 35px;
+// Paint the radio on the input when there is no span.
+label:has(> [type="radio"]:not(:has(+ span))) > [type="radio"] {
+  appearance: none;
+  flex: 0 0 var(--md-comp-radio-button-icon-size);
+  box-sizing: border-box;
+  width: var(--md-comp-radio-button-icon-size);
+  height: var(--md-comp-radio-button-icon-size);
+  margin: 0;
+  padding: 0;
+  border: 2px solid var(--md-sys-color-on-surface-variant);
+  border-radius: 50%;
+  background-color: transparent;
   cursor: pointer;
-  display: inline-block;
-  height: 25px;
-  line-height: 25px;
-  font-size: 1rem;
-  transition: .28s ease;
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+
+  &:checked {
+    border-color: var(--md-sys-color-primary);
+    background-image: radial-gradient(
+      circle at center,
+      var(--md-sys-color-primary) 0 5px,
+      transparent 5.5px
+    );
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  }
+
+  &:checked:hover {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+  }
+
+  &:focus-visible,
+  &.tabbed:focus {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    outline: none;
+  }
+
+  &:disabled {
+    border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    background-image: none;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  &:disabled:checked {
+    background-image: radial-gradient(
+      circle at center,
+      color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent) 0 5px,
+      transparent 5.5px
+    );
+  }
+}
+
+label:has(> [type="radio"]:disabled),
+.radio:has([type="radio"]:disabled) {
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  cursor: default;
+}
+
+// Legacy / BeerCSS: input + span draws the same 20/10 anatomy.
+[type="radio"] + span {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding-left: 32px;
+  cursor: pointer;
   user-select: none;
 }
 
-[type="radio"] + span:before,
-[type="radio"] + span:after {
-  content: '';
+[type="radio"] + span::before,
+[type="radio"] + span::after {
+  content: "";
   position: absolute;
   left: 0;
-  top: 0;
-  margin: 4px;
-  width: 16px;
-  height: 16px;
-  z-index: 0;
-  transition: .28s ease;
-}
-
-/* Unchecked styles */
-[type="radio"]:not(:checked) + span:before,
-[type="radio"]:not(:checked) + span:after,
-[type="radio"]:checked + span:before,
-[type="radio"]:checked + span:after,
-[type="radio"].with-gap:checked + span:before,
-[type="radio"].with-gap:checked + span:after {
+  top: 50%;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
   border-radius: 50%;
 }
 
-[type="radio"]:not(:checked) + span:before,
-[type="radio"]:not(:checked) + span:after {
+[type="radio"] + span::before {
   border: 2px solid var(--md-sys-color-on-surface-variant);
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
 
-[type="radio"]:not(:checked) + span:after {
-  transform: scale(0);
-}
-
-/* Checked styles */
-[type="radio"]:checked + span:before {
-  border: 2px solid transparent;
-}
-
-[type="radio"]:checked + span:after,
-[type="radio"].with-gap:checked + span:before,
-[type="radio"].with-gap:checked + span:after {
-  border: 2px solid var(--md-sys-color-primary);
-}
-
-[type="radio"]:checked + span:after,
-[type="radio"].with-gap:checked + span:after {
+[type="radio"] + span::after {
   background-color: var(--md-sys-color-primary);
+  transform: scale(0);
+  transition: transform .2s ease;
 }
 
-[type="radio"]:checked + span:after {
-  transform: scale(1.02);
+[type="radio"]:checked + span::before {
+  border-color: var(--md-sys-color-primary);
 }
 
-/* Radio With gap */
-[type="radio"].with-gap:checked + span:after {
-  transform: scale(.5);
+[type="radio"]:checked + span::after {
+  transform: scale(0.5);
 }
 
-/* Focused styles */
-[type="radio"].tabbed:focus + span:before {
-  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
+[type="radio"]:hover + span::before {
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
 }
 
-/* Disabled Radio With gap */
-[type="radio"].with-gap:disabled:checked + span:before {
-  border: 2px solid var(--md-sys-color-on-surface);
+[type="radio"]:checked:hover + span::before {
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
 }
 
-[type="radio"].with-gap:disabled:checked + span:after {
-  border: none;
-  background-color: var(--md-sys-color-on-surface);
-}
-
-/* Disabled style */
-[type="radio"]:disabled:not(:checked) + span:before,
-[type="radio"]:disabled:checked + span:before {
-  background-color: transparent;
-  border-color: var(--md-sys-color-on-surface);
+[type="radio"]:focus-visible + span::before,
+[type="radio"].tabbed:focus + span::before {
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
 }
 
 [type="radio"]:disabled + span {
-  color: var(--md-sys-color-on-surface);
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  cursor: default;
 }
 
-[type="radio"]:disabled:not(:checked) + span:before {
-  border-color: var(--md-sys-color-on-surface);
+[type="radio"]:disabled + span::before {
+  border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  box-shadow: none;
 }
 
-[type="radio"]:disabled:checked + span:after {
-  background-color: var(--md-sys-color-on-surface);
-  border-color: var(--md-sys-color-on-surface);
+[type="radio"]:disabled:checked + span::after {
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 }
