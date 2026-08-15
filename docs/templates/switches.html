@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Switches</h1>
-      <h4 class="light primary-text">A checkbox styled for binary on / off states.</h4>
+      <h4 class="light primary-text">Material Design 3 switches, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -17,55 +17,81 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="switches" class="section scrollspy">
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Switches are checkboxes for on / off. They are CSS only: wrap a checkbox and a
-          <code>span.lever</code> in <code>.switch &gt; label</code>. There is no JavaScript
-          component and nothing to AutoInit.
+          A <code>&lt;label class="switch"&gt;</code> wrapping
+          <code>&lt;input type="checkbox"&gt;</code> is the control. The
+          label text is a sibling of the input — no
+          <code>.lever</code> required. They are CSS only. There is no
+          JavaScript component and nothing to AutoInit.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/switch/specs">M3 switch spec</a>.
+          The track is 52×32dp. Unselected is
+          <code>surface-variant</code> with a 2dp <code>outline</code> and
+          a 16dp handle. Selected is a <code>primary</code> track and a
+          24dp <code>on-primary</code> handle. The state layer is 40dp at
+          8% hover and 10% focus. The touch target is 48dp. The label is
+          <code>body-large</code> / <code>on-surface</code>. Disabled is
+          38%.
         </p>
 
-        <div class="switch mb-5">
-          <label>
-            Off
+        <p>
+          <label class="switch">
             <input type="checkbox">
-            <span class="lever"></span>
-            On
+            Wi-Fi
           </label>
-        </div>
-        <div class="switch mb-5">
-          <label>
-            Off
+        </p>
+        <p>
+          <label class="switch">
+            <input type="checkbox" checked>
+            Bluetooth
+          </label>
+        </p>
+        <p>
+          <label class="switch">
             <input type="checkbox" disabled>
-            <span class="lever"></span>
-            On
+            Airplane mode
           </label>
-        </div>
-<pre><code>&lt;!-- Switch --&gt;
-&lt;div class="switch"&gt;
-  &lt;label&gt;
-    Off
-    &lt;input type="checkbox"&gt;
-    &lt;span class="lever"&gt;&lt;/span&gt;
-    On
-  &lt;/label&gt;
-&lt;/div&gt;
+        </p>
+        <p>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            Location
+          </label>
+        </p>
+<pre><code>&lt;label class="switch"&gt;
+  &lt;input type="checkbox"&gt;
+  Wi-Fi
+&lt;/label&gt;
 
-&lt;!-- Disabled Switch --&gt;
-&lt;div class="switch"&gt;
-  &lt;label&gt;
-    Off
-    &lt;input type="checkbox" disabled&gt;
-    &lt;span class="lever"&gt;&lt;/span&gt;
-    On
-  &lt;/label&gt;
-&lt;/div&gt;</code></pre>
+&lt;label class="switch"&gt;
+  &lt;input type="checkbox" checked&gt;
+  Bluetooth
+&lt;/label&gt;
+
+&lt;label class="switch"&gt;
+  &lt;input type="checkbox" disabled&gt;
+  Airplane mode
+&lt;/label&gt;</code></pre>
+        <p>
+          An <code>input + span</code> or <code>input + .lever</code> still
+          works if you already have that markup.
+        </p>
+<pre><code>&lt;label class="switch"&gt;
+  Off
+  &lt;input type="checkbox"&gt;
+  &lt;span class="lever"&gt;&lt;/span&gt;
+  On
+&lt;/label&gt;</code></pre>
       </div>
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#switches">Switches</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
         </ul>
       </div>
     </div>
