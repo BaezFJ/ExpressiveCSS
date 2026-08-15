@@ -33,7 +33,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
 
     this._activators = [];
 
-    this.cardReveal = this.el.querySelector('.card-reveal');
+    this.cardReveal = this.el.querySelector(':scope > aside, .card-reveal');
     if (this.cardReveal) {
       this.initialOverflow = getComputedStyle(this.el).overflow;
       this._activators = Array.from(this.el.querySelectorAll('.activator'));
@@ -41,7 +41,9 @@ export class Cards extends Component<CardsOptions> implements Openable {
         if (el) el.tabIndex = 0;
       });
 
-      this.cardRevealClose = this.cardReveal?.querySelector('.card-title');
+      this.cardRevealClose = this.cardReveal.querySelector(
+        '.card-title, :scope > :is(h1, h2, h3, h4, h5, h6)'
+      );
       if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
 
       this.cardReveal.ariaExpanded = 'false';
@@ -180,7 +182,9 @@ export class Cards extends Component<CardsOptions> implements Openable {
     if (typeof document !== 'undefined')
       // Handle initialization of static cards.
       document.addEventListener('DOMContentLoaded', () => {
-        const cards = document.querySelectorAll('.card');
+        const cards = document.querySelectorAll(
+          '.card, article:has(> aside), article:has(.card-reveal)'
+        );
         cards.forEach((el) => {
           if (el && (el['RoutePlate_Cards'] == undefined)) this.init((el as HTMLElement));
         });

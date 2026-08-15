@@ -1,228 +1,328 @@
 @use "../abstracts" as *;
 
-.card-panel {
-  transition: box-shadow .25s;
-  padding: 24px;
-  margin: $element-top-margin 0 $element-bottom-margin 0;
-  border-radius: 12px;
-  @include z-depth("1");
-  background-color: var(--md-sys-color-surface);
-}
+// Cards.
+//
+// Anatomy is the HTML. An <article> is an elevated card. A heading is the
+// headline, a <p> is supporting text, a direct <nav> is the action row,
+// <img> / <figure> is media. Helpers switch the M3 variant (filled, outlined)
+// or the layout (horizontal). .card and .card-panel stay as aliases.
+//
+// Tokens follow https://m3.material.io/components/cards/specs
+//   container  surface, 12dp corners
+//   elevated   level 1, hover level 2
+//   filled     surface-variant, level 0
+//   outlined   surface + 1dp outline, level 0
+//   headline   title-medium / on-surface
+//   body       body-medium / on-surface-variant
+//   padding    16dp
 
-.card {
-  --background-color: color-mix(in oklab, var(--md-sys-color-surface), var(--md-sys-color-surface-tint) 17%);
+$_card: "article, .card, .card-panel";
+
+:where(#{$_card}) {
+  --md-comp-elevated-card-container-color: var(--md-sys-color-surface);
+  --md-comp-elevated-card-container-shape: 12px;
 
   position: relative;
-  //margin: $element-top-margin 0 $element-bottom-margin 0;
-  background-color: var(--background-color);
-  transition: box-shadow .25s;
-  border-radius: 12px;
+  box-sizing: border-box;
+  background-color: var(--md-comp-elevated-card-container-color);
+  color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-comp-elevated-card-container-shape);
+  overflow: hidden;
+  transition: box-shadow .2s ease-out;
+}
+
+// Default is elevated. :where() keeps specificity at zero so .outlined wins.
+:where(#{$_card}):not(.filled, .outlined, .border) {
   @include z-depth("1");
 
-  .card-title {
-    font-size: 24px;
-    font-weight: 300;
-  }
-
-  // Card Sizes
-  &.small, &.medium, &.large {
-    position: relative;
-
-    .card-image {
-      max-height: 60%;
-      overflow: hidden;
-    }
-
-    .card-image + .card-content {
-      max-height: 40%;
-    }
-
-    .card-content {
-      max-height: 100%;
-      overflow: hidden;
-    }
-
-    .card-action {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-  }
-
-  &.small {
-    height: 300px;
-  }
-
-  &.medium {
-    height: 400px;
-  }
-
-  &.large {
-    height: 500px;
-  }
-
-  // Horizontal Cards
-  &.horizontal {
-    display: flex;
-
-    &.small, &.medium, &.large {
-      .card-image {
-        height: 100%;
-        max-height: none;
-        overflow: visible;
-
-        img {
-          height: 100%;
-        }
-      }
-    }
-
-    .card-image {
-      max-width: 50%;
-
-      img {
-        border-radius: 2px 0 0 2px;
-        max-width: 100%;
-        width: auto;
-      }
-    }
-
-    .card-stacked {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      position: relative;
-
-      .card-content {
-        flex-grow: 1;
-      }
-    }
-  }
-
-  // Sticky Action Section
-  &.sticky-action {
-    .card-action {
-      z-index: 2;
-    }
-
-    .card-reveal {
-      z-index: 1;
-      padding-bottom: 64px;
-    }
-  }
-
-  .card-image {
-    position: relative;
-
-    // Image background for content
-    img {
-      display: block;
-      border-radius: 2px 2px 0 0;
-      position: relative;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-    }
-
-    .card-title {
-      color: var(--md-sys-color-surface);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      max-width: 100%;
-      padding: 24px;
-    }
-
-    .activator {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top:0;
-      bottom: 0;
-      cursor: pointer;
-    }
-
-    img.activator {
-      position: relative;
-    }
-  }
-
-  .card-content {
-    padding: 24px;
-    border-radius: 0 0 2px 2px;
-
-    p {
-      margin: 0;
-    }
-
-    .card-title {
-      display: block;
-      line-height: 32px;
-      margin-bottom: 8px;
-
-      i {
-        line-height: 32px;
-      }
-
-      &.activator {
-        cursor: pointer;
-      }
-    }
-  }
-
-  .card-action {
-    padding: 0 1.6rem;
-
-    &:last-child {
-      border-radius: 0 0 2px 2px;
-    }
-    // Replaced card links with buttons (Accessibility, @see https://github.com/materializecss/materialize/issues/565)
-    a {
-      @include btn(
-        var(--btn-height),
-        var(--btn-border-radius),
-        var(--btn-padding),
-        var(--btn-padding),
-        var(--btn-font-size)
-      );
-
-      &:first-child {
-        margin-left: -1.6rem;
-      }
-
-      &:last-child {
-        margin-right: -1.6rem;
-      }
-    }
-
-    .btn {
-      &.filled,
-      &.tonal,
-      &.elevated,
-      &.outlined {
-        margin: 0 .26rem 1.6rem 0;
-      }
-    }
-  }
-
-  .card-reveal {
-    padding: 24px;
-    position: absolute;
-    background-color: var(--md-sys-color-surface);
-    width: 100%;
-    overflow-y: auto;
-    left: 0;
-    top: 100%;
-    height: 100%;
-    z-index: 3;
-    display: none;
-
-    .card-title {
-      cursor: pointer;
-      display: block;
-    }
+  &:hover {
+    @include z-depth("2");
   }
 }
+
+:where(#{$_card}).filled {
+  @include z-depth("0");
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+:where(#{$_card}).outlined,
+:where(#{$_card}).border {
+  @include z-depth("0");
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+// --- Semantic children ----------------------------------------------------
+
+article > :is(h1, h2, h3, h4, h5, h6),
+article > header > :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  padding: 16px 16px 0;
+  font-family: var(--md-sys-typescale-title-medium-font-family-name);
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+  color: var(--md-sys-color-on-surface);
+}
+
+article > p,
+article > header > p {
+  margin: 0;
+  padding: 8px 16px 16px;
+  font-family: var(--md-sys-typescale-body-medium-font-family-name);
+  font-size: var(--md-sys-typescale-body-medium-font-size);
+  font-weight: var(--md-sys-typescale-body-medium-font-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+  color: color-mix(in oklab, currentColor 72%, transparent);
+}
+
+article > :is(h1, h2, h3, h4, h5, h6) + p,
+article > header > :is(h1, h2, h3, h4, h5, h6) + p {
+  padding-top: 0;
+}
+
+article > header {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+
+article > nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 8px 8px;
+  margin: 0;
+}
+
+article > img,
+article > picture,
+article > figure {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
+article > img,
+article > picture img,
+article > figure img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+article > figure {
+  position: relative;
+}
+
+article > figure > figcaption {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 16px;
+  color: var(--md-sys-color-on-surface);
+  background: color-mix(in oklab, var(--md-sys-color-surface) 72%, transparent);
+  font-family: var(--md-sys-typescale-title-medium-font-family-name);
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+}
+
+// Horizontal: media on the start, body stacked beside it.
+article.horizontal,
+.card.horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+
+  > img,
+  > picture,
+  > figure,
+  > .card-image {
+    flex: 0 0 40%;
+    max-width: 40%;
+    width: 40%;
+    align-self: stretch;
+  }
+
+  > img,
+  > picture img,
+  > figure img,
+  > .card-image img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  > div {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// Fixed heights (Materialize sizes, still useful for uniform grids).
+article.small, .card.small { height: 300px; }
+article.medium, .card.medium { height: 400px; }
+article.large, .card.large { height: 500px; }
+
+article.small, article.medium, article.large,
+.card.small, .card.medium, .card.large {
+  display: flex;
+  flex-direction: column;
+
+  > img, > picture, > figure, > .card-image {
+    flex: 0 1 60%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  > img, > figure img, > .card-image img {
+    height: 100%;
+  }
+
+  > p, > .card-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  > nav, > .card-action {
+    margin-top: auto;
+  }
+}
+
+article.horizontal.small,
+article.horizontal.medium,
+article.horizontal.large,
+.card.horizontal.small,
+.card.horizontal.medium,
+.card.horizontal.large {
+  flex-direction: row;
+
+  > img, > picture, > figure, > .card-image {
+    flex: 0 0 40%;
+    max-height: none;
+  }
+}
+
+// Reveal overlay. aside is the semantic name; .card-reveal is the JS alias.
+article > aside,
+.card-reveal {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  padding: 16px;
+  overflow-y: auto;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+article.sticky > nav,
+.card.sticky-action > .card-action {
+  position: relative;
+  z-index: 4;
+  background-color: inherit;
+}
+
+article.sticky > aside,
+.card.sticky-action > .card-reveal {
+  bottom: auto;
+  height: calc(100% - 52px);
+}
+
+// Simple padded surface. Same tokens as a card with no slots.
+.card-panel {
+  padding: 16px;
+  margin: $element-top-margin 0 $element-bottom-margin 0;
+}
+
+// --- Legacy slots (.card-*) so existing markup keeps working --------------
+
+.card-title {
+  font-family: var(--md-sys-typescale-title-medium-font-family-name);
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+}
+
+.card .card-image {
+  position: relative;
+
+  img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .card-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    padding: 16px;
+    color: var(--md-sys-color-on-surface);
+    background: color-mix(in oklab, var(--md-sys-color-surface) 72%, transparent);
+  }
+
+  .activator {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  img.activator {
+    position: relative;
+  }
+}
+
+.card .card-content {
+  padding: 16px;
+  border-radius: 0;
+
+  p { margin: 0; }
+
+  .card-title {
+    display: block;
+    margin-bottom: 8px;
+
+    &.activator { cursor: pointer; }
+  }
+}
+
+.card .card-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 8px;
+
+  a:not(.button):not(.btn):not(.btn-floating) {
+    @include btn-flat;
+    height: auto;
+    padding: 8px 12px;
+    min-height: 40px;
+  }
+}
+
+.card .card-stacked {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+
+  .card-content { flex-grow: 1; }
+}
+
+.card .card-image .activator {
+  cursor: pointer;
+}
+
+.no-padding { padding: 0 !important; }

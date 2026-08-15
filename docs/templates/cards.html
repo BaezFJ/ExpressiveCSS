@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Cards</h1>
-      <h4 class="light primary-text">A convenient way to display content made of different types of objects.</h4>
+      <h4 class="light primary-text">Material Design 3 cards, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -17,438 +17,309 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="basic" class="section scrollspy">
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Cards are a convenient means of displaying content composed of different types of objects. They’re also well-suited for presenting similar objects whose size or supported actions can vary considerably, like photos with captions of variable length.
+          An <code>&lt;article&gt;</code> is an elevated card. A heading is the
+          headline, a <code>&lt;p&gt;</code> is supporting text, a direct
+          <code>&lt;nav&gt;</code> is the action row, and
+          <code>&lt;img&gt;</code> or <code>&lt;figure&gt;</code> is media.
+          There is no <code>card-content</code>, <code>card-title</code>, or
+          <code>card-action</code> class. <code>.card</code> and
+          <code>.card-panel</code> remain as aliases.
         </p>
-        <h3>Basic Card</h3>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/cards/specs">M3 card spec</a>.
+          The container is <code>surface</code> with 12dp corners. Elevated
+          (the default) sits at elevation 1 and rises to 2 on hover. The
+          headline is <code>title-medium</code> / <code>on-surface</code>;
+          supporting text is <code>body-medium</code> /
+          <code>on-surface-variant</code>. Inset is 16dp.
+        </p>
+        <article class="mb-3">
+          <h3>Card title</h3>
+          <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+          <nav>
+            <button type="button" class="text">Action</button>
+            <button type="button" class="tonal">Action</button>
+          </nav>
+        </article>
+<pre><code>&lt;article&gt;
+  &lt;h3&gt;Card title&lt;/h3&gt;
+  &lt;p&gt;I am a very simple card.&lt;/p&gt;
+  &lt;nav&gt;
+    &lt;button class="text"&gt;Action&lt;/button&gt;
+    &lt;button class="tonal"&gt;Action&lt;/button&gt;
+  &lt;/nav&gt;
+&lt;/article&gt;</code></pre>
+      </div>
+
+      <div id="variants" class="section scrollspy">
+        <h3>Variants</h3>
+        <p>
+          Default is elevated. <code>filled</code> uses
+          <code>surface-variant</code> at rest (no shadow).
+          <code>outlined</code> (or <code>border</code>) draws a 1dp
+          <code>outline-variant</code> stroke.
+        </p>
         <div class="row">
-          <div class="s12 m8">
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title">Card Title</span>
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-                <a href="#!">This is a link</a>
-              </div>
-            </div>
+          <div class="s12 m4">
+            <article>
+              <h3>Elevated</h3>
+              <p>The default. Surface, elevation 1.</p>
+            </article>
+          </div>
+          <div class="s12 m4">
+            <article class="filled">
+              <h3>Filled</h3>
+              <p>Surface-variant, no elevation.</p>
+            </article>
+          </div>
+          <div class="s12 m4">
+            <article class="outlined">
+              <h3>Outlined</h3>
+              <p>Surface plus a 1dp outline.</p>
+            </article>
           </div>
         </div>
-<pre><code>&lt;div class="card"&gt;
-  &lt;div class="card-content"&gt;
-    &lt;span class="card-title"&gt;Card Title&lt;/span&gt;
-    &lt;p&gt;I am a very simple card. I am good at containing small bits of information.
-    I am convenient because I require little markup to use effectively.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div class="card-action"&gt;
-    &lt;a href="#"&gt;This is a link&lt;/a&gt;
-    &lt;a href="#"&gt;This is a link&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;article&gt;…&lt;/article&gt;
+&lt;article class="filled"&gt;…&lt;/article&gt;
+&lt;article class="outlined"&gt;…&lt;/article&gt;</code></pre>
       </div>
 
       <div id="image" class="section scrollspy">
-        <h3>Image Card</h3>
+        <h3>Media</h3>
+        <p>
+          A direct <code>&lt;img&gt;</code> is full-bleed across the top.
+          Wrap it in a <code>&lt;figure&gt;</code> if you want a caption on
+          the image — <code>&lt;figcaption&gt;</code> sits on the media.
+        </p>
         <div class="row">
           <div class="s12 m7">
-            <div class="card">
-              <div class="card-image">
+            <article>
+              <figure>
                 <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <span class="card-title">Card Title</span>
-              </div>
-              <div class="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m5">
-            <p>Here is the standard card with an image thumbnail.</p>
+                <figcaption>Card title</figcaption>
+              </figure>
+              <p>I am a very simple card. I am good at containing small bits of information.</p>
+              <nav>
+                <button type="button" class="text">Action</button>
+              </nav>
+            </article>
           </div>
         </div>
-<pre><code>&lt;div class="card"&gt;
-  &lt;div class="card-image"&gt;
-    &lt;img src="images/sample-1.jpg"&gt;
-    &lt;span class="card-title"&gt;Card Title&lt;/span&gt;
-  &lt;/div&gt;
-  &lt;div class="card-content"&gt;
-    &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div class="card-action"&gt;
-    &lt;a href="#"&gt;This is a link&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;article&gt;
+  &lt;figure&gt;
+    &lt;img src="images/sample-1.jpg" alt=""&gt;
+    &lt;figcaption&gt;Card title&lt;/figcaption&gt;
+  &lt;/figure&gt;
+  &lt;p&gt;I am a very simple card.&lt;/p&gt;
+  &lt;nav&gt;
+    &lt;button class="text"&gt;Action&lt;/button&gt;
+  &lt;/nav&gt;
+&lt;/article&gt;</code></pre>
       </div>
 
       <div id="fab" class="section scrollspy">
-        <h3>FABs in Cards</h3>
+        <h3>FAB on media</h3>
+        <p>
+          Put a <code>halfway-fab</code> inside the <code>&lt;figure&gt;</code>
+          so it anchors to the image, not the whole card.
+        </p>
         <div class="row">
           <div class="s12 m7">
-            <div class="card">
-              <div class="card-image">
+            <article>
+              <figure>
                 <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <span class="card-title">Card Title</span>
-                <a class="btn-floating halfway-fab waves-effect waves-light"><i class="material-icons">add</i></a>
-              </div>
-              <div class="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m5">
-            <p>Here is an image card with a Floating Action Button.</p>
+                <figcaption>Card title</figcaption>
+                <a class="btn-floating halfway-fab" href="#!" aria-label="Add">
+                  <i class="material-icons">add</i>
+                </a>
+              </figure>
+              <p>I am a very simple card. I am good at containing small bits of information.</p>
+            </article>
           </div>
         </div>
-        <div class="row">
-          <div class="s12 m7">
-            <div class="card">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <a class="btn-floating btn-large halfway-fab waves-effect waves-light"><i class="material-icons">add</i></a>
-              </div>
-              <div class="card-content">
-                <span class="card-title">Card Title</span>
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m5">
-            <p>Here is an image card with a large Floating Action Button.</p>
-          </div>
-        </div>
-<pre><code>&lt;div class="card"&gt;
-  &lt;div class="card-image"&gt;
-    &lt;img src="images/sample-1.jpg"&gt;
-    &lt;span class="card-title"&gt;Card Title&lt;/span&gt;
-    &lt;a class="btn-floating halfway-fab waves-effect waves-light"&gt;
+<pre><code>&lt;article&gt;
+  &lt;figure&gt;
+    &lt;img src="images/sample-1.jpg" alt=""&gt;
+    &lt;figcaption&gt;Card title&lt;/figcaption&gt;
+    &lt;a class="btn-floating halfway-fab" href="#!" aria-label="Add"&gt;
       &lt;i class="material-icons"&gt;add&lt;/i&gt;
     &lt;/a&gt;
-  &lt;/div&gt;
-  &lt;div class="card-content"&gt;
-    &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+  &lt;/figure&gt;
+  &lt;p&gt;I am a very simple card.&lt;/p&gt;
+&lt;/article&gt;</code></pre>
       </div>
 
       <div id="horizontal" class="section scrollspy">
-        <h3>Horizontal Card</h3>
-        <div class="row">
-          <div class="s12 m8">
-            <div class="card horizontal">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/64/200/280" alt="">
-              </div>
-              <div class="card-stacked">
-                <div class="card-content">
-                  <p>I am a very simple card. I am good at containing small bits of information.</p>
-                </div>
-                <div class="card-action">
-                  <a href="#!">This is a link</a>
-                </div>
-              </div>
-            </div>
+        <h3>Horizontal</h3>
+        <p>
+          Add <code>horizontal</code>. The image takes the start; wrap the
+          headline, text, and actions in a <code>&lt;div&gt;</code> so they
+          stack beside it.
+        </p>
+        <article class="horizontal mb-3">
+          <img src="https://picsum.photos/id/64/200/280" alt="">
+          <div>
+            <h3>Card title</h3>
+            <p>I am a very simple card. I am good at containing small bits of information.</p>
+            <nav>
+              <button type="button" class="text">Action</button>
+            </nav>
           </div>
-          <div class="s12 m4">
-            <p>Here is the standard card with a horizontal image.</p>
-          </div>
-        </div>
-<pre><code>&lt;div class="card horizontal"&gt;
-  &lt;div class="card-image"&gt;
-    &lt;img src="images/sample.jpg"&gt;
+        </article>
+<pre><code>&lt;article class="horizontal"&gt;
+  &lt;img src="images/sample.jpg" alt=""&gt;
+  &lt;div&gt;
+    &lt;h3&gt;Card title&lt;/h3&gt;
+    &lt;p&gt;I am a very simple card.&lt;/p&gt;
+    &lt;nav&gt;
+      &lt;button class="text"&gt;Action&lt;/button&gt;
+    &lt;/nav&gt;
   &lt;/div&gt;
-  &lt;div class="card-stacked"&gt;
-    &lt;div class="card-content"&gt;
-      &lt;p&gt;I am a very simple card.&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class="card-action"&gt;
-      &lt;a href="#"&gt;This is a link&lt;/a&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+&lt;/article&gt;</code></pre>
       </div>
 
       <div id="reveal" class="section scrollspy">
-        <h3>Card Reveal</h3>
+        <h3>Reveal</h3>
+        <p>
+          An <code>&lt;aside&gt;</code> (or <code>.card-reveal</code>) slides
+          over the card. Mark the control that opens it with
+          <code>activator</code> — that class is the JavaScript contract.
+          The first heading inside the aside closes it.
+          <code>Cards.Init()</code> (and <code>AutoInit()</code> on
+          <code>.cards</code>) wires this up; a card with no aside is
+          CSS-only.
+        </p>
         <div class="row">
           <div class="s12 m7">
-            <div class="card">
-              <div class="card-image">
+            <article>
+              <figure>
                 <img src="https://picsum.photos/id/180/800/400" alt="">
-                <div class="activator waves-effect waves-light"></div>
-              </div>
-              <div class="card-content">
-                <span class="card-title activator">Card Title<i class="material-icons right">more_vert</i></span>
-                <p><a href="#!">This is a link</a></p>
-              </div>
-              <div class="card-reveal">
-                <span class="card-title"><i class="material-icons right">close</i>Card Title</span>
+                <div class="activator"></div>
+              </figure>
+              <h3 class="activator">Card title<i class="material-icons right">more_vert</i></h3>
+              <p><a href="#!">This is a link</a></p>
+              <aside>
+                <h3><i class="material-icons right">close</i>Card title</h3>
                 <p>Here is some more information about this product that is only revealed once clicked on.</p>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m5">
-            <p>
-              Here you can add a card that reveals more information once clicked. Just add the
-              <code>card-reveal</code> div with a <code>span.card-title</code> inside to make this work. Add the class
-              <code>activator</code> to an element inside the card to allow it to open the card reveal.
-            </p>
+              </aside>
+            </article>
           </div>
         </div>
-<pre><code>&lt;div class="card"&gt;
-  &lt;div class="card-image"&gt;
-    &lt;img src="images/office.jpg"&gt;
-    &lt;div class="activator waves-effect waves-light"&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="card-content"&gt;
-    &lt;span class="card-title activator"&gt;Card Title
-      &lt;i class="material-icons right"&gt;more_vert&lt;/i&gt;
-    &lt;/span&gt;
-    &lt;p&gt;&lt;a href="#"&gt;This is a link&lt;/a&gt;&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div class="card-reveal"&gt;
-    &lt;span class="card-title"&gt;
-      &lt;i class="material-icons right"&gt;close&lt;/i&gt;Card Title
-    &lt;/span&gt;
+<pre><code>&lt;article&gt;
+  &lt;figure&gt;
+    &lt;img src="images/office.jpg" alt=""&gt;
+    &lt;div class="activator"&gt;&lt;/div&gt;
+  &lt;/figure&gt;
+  &lt;h3 class="activator"&gt;Card title
+    &lt;i class="material-icons right"&gt;more_vert&lt;/i&gt;
+  &lt;/h3&gt;
+  &lt;p&gt;&lt;a href="#"&gt;This is a link&lt;/a&gt;&lt;/p&gt;
+  &lt;aside&gt;
+    &lt;h3&gt;
+      &lt;i class="material-icons right"&gt;close&lt;/i&gt;Card title
+    &lt;/h3&gt;
     &lt;p&gt;Here is some more information about this product.&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-
-        <h5>Card Action Options</h5>
-        <div class="row">
-          <div class="s12 m6">
-            <div class="card">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/180/800/400" alt="">
-                <div class="activator waves-effect waves-light"></div>
-              </div>
-              <div class="card-content">
-                <span class="card-title activator">Card Title<i class="material-icons right">more_vert</i></span>
-                <p><a href="#!">This is a link</a></p>
-              </div>
-              <div class="card-reveal">
-                <span class="card-title"><i class="material-icons right">close</i>Card Title</span>
-                <p>Here is some more information about this product that is only revealed once clicked on.</p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-                <a href="#!">This is a link</a>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m6">
-            <p>The default state is having the card-reveal go over the card-action.</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="s12 m6">
-            <div class="card sticky-action">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/180/800/400" alt="">
-                <div class="activator waves-effect waves-light"></div>
-              </div>
-              <div class="card-content">
-                <span class="card-title activator">Card Title<i class="material-icons right">more_vert</i></span>
-                <p><a href="#!">This is a link</a></p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-                <a href="#!">This is a link</a>
-              </div>
-              <div class="card-reveal">
-                <span class="card-title"><i class="material-icons right">close</i>Card Title</span>
-                <p>Here is some more information about this product that is only revealed once clicked on.</p>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m6">
-            <p>
-              You can make your card-action always visible by adding the class
-              <code>sticky-action</code> to the overall card.
-            </p>
-          </div>
-        </div>
-<pre><code>&lt;div class="card sticky-action"&gt;
-  ...
-  &lt;div class="card-action"&gt;...&lt;/div&gt;
-  &lt;div class="card-reveal"&gt;...&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+  &lt;/aside&gt;
+&lt;/article&gt;</code></pre>
+        <p>
+          Add <code>sticky</code> (or the older <code>sticky-action</code>)
+          if a trailing <code>&lt;nav&gt;</code> should stay visible under
+          the reveal.
+        </p>
       </div>
 
       <div id="tabs" class="section scrollspy">
-        <h3>Tabs in Cards</h3>
+        <h3>Tabs</h3>
         <p>
-          You can add tabs to your cards by placing a <code>tabs</code> list between header content and tab content.
+          Put a <code>.tabs</code> list between the supporting text and the
+          tab panels. <code>AutoInit()</code> starts <code>.tabs</code>.
         </p>
-        <h5>White</h5>
-        <div class="row">
-          <div class="s12 m7">
-            <div class="card">
-              <div class="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-content no-padding">
-                <ul class="tabs tabs-fixed-width">
-                  <li class="tab"><a href="#card-test-1">Test 1</a></li>
-                  <li class="tab"><a class="active" href="#card-test-2">Test 2</a></li>
-                  <li class="tab"><a href="#card-test-3">Test 3</a></li>
-                </ul>
-              </div>
-              <div class="card-content">
-                <div id="card-test-1">Test 1</div>
-                <div id="card-test-2">Test 2</div>
-                <div id="card-test-3">Test 3</div>
-              </div>
-            </div>
+        <article class="mb-3">
+          <p>I am a very simple card. I am good at containing small bits of information.</p>
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab"><a href="#card-test-1">Test 1</a></li>
+            <li class="tab"><a class="active" href="#card-test-2">Test 2</a></li>
+            <li class="tab"><a href="#card-test-3">Test 3</a></li>
+          </ul>
+          <div class="px-4 pb-4">
+            <div id="card-test-1">Test 1</div>
+            <div id="card-test-2">Test 2</div>
+            <div id="card-test-3">Test 3</div>
           </div>
-          <div class="s12 m5">
-            <p>Basic surface card with tabs.</p>
-          </div>
-        </div>
-        <h5>Colored</h5>
-        <div class="row">
-          <div class="s12 m7">
-            <div class="card primary">
-              <div class="card-content on-primary-text">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-content no-padding">
-                <ul class="tabs tabs-fixed-width tabs-transparent">
-                  <li class="tab"><a href="#card-color-1">Test 1</a></li>
-                  <li class="tab"><a class="active" href="#card-color-2">Test 2</a></li>
-                  <li class="tab"><a href="#card-color-3">Test 3</a></li>
-                </ul>
-              </div>
-              <div class="card-content on-primary-text">
-                <div id="card-color-1">Test 1</div>
-                <div id="card-color-2">Test 2</div>
-                <div id="card-color-3">Test 3</div>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m5">
-            <p>Colored or dark background card with tabs.</p>
-          </div>
-        </div>
-<pre><code>&lt;div class="card"&gt;
-  &lt;div class="card-content"&gt;
-    &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;/div&gt;
+        </article>
+<pre><code>&lt;article&gt;
+  &lt;p&gt;I am a very simple card.&lt;/p&gt;
   &lt;ul class="tabs tabs-fixed-width"&gt;
     &lt;li class="tab"&gt;&lt;a href="#test1"&gt;Test 1&lt;/a&gt;&lt;/li&gt;
     &lt;li class="tab"&gt;&lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="tab"&gt;&lt;a href="#test3"&gt;Test 3&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
-  &lt;div class="card-content"&gt;
-    &lt;div id="test1"&gt;Test 1&lt;/div&gt;
-    &lt;div id="test2"&gt;Test 2&lt;/div&gt;
-    &lt;div id="test3"&gt;Test 3&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+  &lt;div id="test1"&gt;Test 1&lt;/div&gt;
+  &lt;div id="test2"&gt;Test 2&lt;/div&gt;
+&lt;/article&gt;</code></pre>
       </div>
 
       <div id="sizes" class="section scrollspy">
-        <h3>Card Sizes</h3>
+        <h3>Sizes</h3>
         <p>
-          If you want uniformly sized cards, use the premade size classes. Add the size class in addition to the card class.
+          <code>small</code>, <code>medium</code>, and <code>large</code>
+          lock the height at 300px, 400px, and 500px so a row of cards lines
+          up. Media takes the top 60%; the action row sticks to the bottom.
+          These sizes are not in the M3 spec — they are optional layout
+          helpers.
         </p>
-<pre><code>&lt;div class="card small"&gt;
-  &lt;!-- Card Content --&gt;
-&lt;/div&gt;</code></pre>
-        <h5>Small</h5>
         <div class="row">
           <div class="s12 m6">
-            <div class="card small">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <span class="card-title">Card Title</span>
-              </div>
-              <div class="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m6">
-            <p>The Small Card limits the height of the card to 300px.</p>
+            <article class="small">
+              <img src="https://picsum.photos/id/1015/800/400" alt="">
+              <h3>Small</h3>
+              <p>The small card is 300px tall.</p>
+              <nav>
+                <button type="button" class="text">Action</button>
+              </nav>
+            </article>
           </div>
         </div>
-        <h5>Medium</h5>
-        <div class="row">
-          <div class="s12 m7">
-            <div class="card medium">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <span class="card-title">Card Title</span>
-              </div>
-              <div class="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m5">
-            <p>The Medium Card limits the height of the card to 400px.</p>
-          </div>
-        </div>
-        <h5>Large</h5>
-        <div class="row">
-          <div class="s12 m8">
-            <div class="card large">
-              <div class="card-image">
-                <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <span class="card-title">Card Title</span>
-              </div>
-              <div class="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-              </div>
-              <div class="card-action">
-                <a href="#!">This is a link</a>
-              </div>
-            </div>
-          </div>
-          <div class="s12 m4">
-            <p>The Large Card limits the height of the card to 500px.</p>
-          </div>
-        </div>
+<pre><code>&lt;article class="small"&gt;…&lt;/article&gt;
+&lt;article class="medium"&gt;…&lt;/article&gt;
+&lt;article class="large"&gt;…&lt;/article&gt;</code></pre>
       </div>
 
       <div id="panel" class="section scrollspy">
-        <h3>Card Panel</h3>
+        <h3>Panel</h3>
+        <p>
+          A card with no slots is just padding on the container. Write that
+          as an <code>&lt;article&gt;</code> with only text, or keep
+          <code>.card-panel</code> if you already have it. Color utilities
+          still apply — pair a fill with its <code>on-*</code> text class.
+        </p>
         <div class="row">
           <div class="s12 m5">
-            <div class="card-panel primary">
-              <span class="on-primary-text">I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.</span>
-            </div>
-          </div>
-          <div class="s12 m7">
-            <p>For a simpler card with less markup, try using a card panel which just has padding and a shadow effect.</p>
+            <article class="primary on-primary-text">
+              <p>I am a very simple card. I am good at containing small bits of information.</p>
+            </article>
           </div>
         </div>
-<pre><code>&lt;div class="card-panel primary"&gt;
-  &lt;span class="on-primary-text"&gt;I am a very simple card.&lt;/span&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;article class="primary on-primary-text"&gt;
+  &lt;p&gt;I am a very simple card.&lt;/p&gt;
+&lt;/article&gt;</code></pre>
       </div>
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#basic">Basic Card</a></li>
-          <li><a href="#image">Image Card</a></li>
-          <li><a href="#fab">FABs in Cards</a></li>
-          <li><a href="#horizontal">Horizontal Card</a></li>
-          <li><a href="#reveal">Card Reveal</a></li>
-          <li><a href="#tabs">Tabs in Cards</a></li>
-          <li><a href="#sizes">Card Sizes</a></li>
-          <li><a href="#panel">Card Panel</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#variants">Variants</a></li>
+          <li><a href="#image">Media</a></li>
+          <li><a href="#fab">FAB on media</a></li>
+          <li><a href="#horizontal">Horizontal</a></li>
+          <li><a href="#reveal">Reveal</a></li>
+          <li><a href="#tabs">Tabs</a></li>
+          <li><a href="#sizes">Sizes</a></li>
+          <li><a href="#panel">Panel</a></li>
         </ul>
       </div>
     </div>
