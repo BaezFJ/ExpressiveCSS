@@ -58,14 +58,24 @@
   .select-year input,
   .select-month input {
     background-color: transparent;
+    // The text-input rules give every input `padding: 0 16px`, and these are
+    // border-box - which left the 50px year control 18px of content box and
+    // clipped every four-digit year. Nothing here needs the padding: the text
+    // is centred and the caret is hidden just above.
+    padding: 0;
   }
 
+  // An <input> cannot size to its own value in CSS - `width: auto` follows the
+  // `size` attribute, not the text, and `field-sizing: content` is still
+  // Chrome-only - so these stay explicit. In `ch` rather than px so they track
+  // the font instead of a measurement taken against one particular font.
+  // Widest label is "September".
   .select-year input {
-    width: 50px;
+    width: 6ch;
   }
 
   .select-month input {
-    width: 80px;
+    width: 12ch;
   }
 
   .month-prev,
