@@ -52,13 +52,15 @@ Notes:
 - There is no linter. Several files carry `@typescript-eslint` disable comments inherited from upstream with no ESLint config behind them.
 - `useDefineForClassFields` is deliberately `false` in `tsconfig.json`: the vendored components declare fields that the constructor assigns after `super()`, and define semantics would reset them to `undefined`.
 - `watch:js` uses `--watch=forever`; plain `--watch` makes esbuild quit as soon as stdin closes, which silently kills it under `run-p`.
-- The build targets `es2020` and emits no vendor prefixes — no autoprefixer/postcss step exists. The Sass already relies on modern CSS (`color-mix()`, custom properties).
+- The build targets `es2020` and emits no vendor prefixes — no autoprefixer/postcss step exists. Browser support is the last 5 Chrome and last 5 Firefox versions, no IE, declared in `package.json` under `browserslist`; nothing reads it automatically, it documents the baseline every judgement call is made against. The Sass relies on modern CSS directly and without fallbacks: `@layer`, `light-dark()`, `color-mix()`, `clamp()`, `aspect-ratio`, `inset`, and media-query range syntax. A vendor prefix is only justified for a non-standard property with no unprefixed form (`-webkit-tap-highlight-color`, `-webkit-font-smoothing`) or an engine-private pseudo-element (`::-webkit-slider-thumb`, `::-moz-range-track`); everything else was removed.
 
 ## Sass architecture
 
 **Read `src/sass/README.md` before touching styles** — it is the working guide (layer map, the two rules, where new code goes). Summary:
 
-`src/sass/routeplate.scss` is the entry point and forwards five layers in cascade order: `abstracts` (inert) → `tokens` → `utilities` → `base` → `components`. Each layer has an `_index.scss` that forwards its own files; the entry file is the only place load order is decided.
+`src/sass/routeplate.scss` is the entry point. It declares `@layer tokens, base, components, utilities;` and pulls each one in with `meta.load-css()` (`@forward` cannot appear inside `@layer`), plus `@forward "abstracts"` for the Sass API — `abstracts` is inert and is not a cascade layer. Each layer has an `_index.scss` that forwards its own files; the entry file is the only place cascade order is decided.
+
+Utilities are emitted **after** components now, and win by layer order rather than specificity. Their `!important` flags are deliberately retained: a normal declaration inside a layer loses to any *unlayered* consumer declaration, so dropping the flag would silently stop `.hide` beating a consumer's own `display`. The `!important` in `components/` (`.pushpin`, `.tap-target`, preloader) guards JS-driven geometry and also stays.
 
 Two hard invariants, both learned from bugs:
 
@@ -67,7 +69,7 @@ Two hard invariants, both learned from bugs:
 
 Two color systems coexist:
 
-1. **Material Design 3 tokens** — `tokens/_reference.scss` declares raw ramps (`--md-ref-palette-primary40`) plus resolved `--md-sys-color-*-light` / `-dark` pairs; `tokens/_theme.scss` maps those onto the live `--md-sys-color-*` names three times: `:root, :host` default (light), `@media (prefers-color-scheme: dark)`, and explicit `:root[theme='light'|'dark']` overrides. `utilities/_colors.scss` exposes them as utility classes (`.primary`, `.on-surface-text`, …). New styling should consume `--md-sys-color-*`.
+1. **Material Design 3 tokens** — `tokens/_reference.scss` declares raw ramps (`--md-ref-palette-primary40`) plus resolved `--md-sys-color-*-light` / `-dark` pairs; `tokens/_theme.scss` maps those onto the live `--md-sys-color-*` names once, via `light-dark()` in an `@each` over `$sys-color-roles`, and `:root[theme='light'|'dark']` only set `color-scheme`. The `-light`/`-dark` pairs are public API (the docs' Themes page documents overriding them) and must stay. `light-dark()` resolves against the element's used `color-scheme` at the point of use, so `color-scheme` is load-bearing and a subtree can be re-themed on its own. `utilities/_colors.scss` exposes the live names as utility classes (`.primary`, `.on-surface-text`, …). New styling should consume `--md-sys-color-*` — never the `-light`/`-dark` pair, which locks the rule to one theme.
 2. **Legacy Materialize palette** — `abstracts/_palette.scss` holds the `$colors` map and `colorFunc($color, $type)`; `utilities/_palette-classes.scss` generates the `.red.lighten-2` helpers from it. Consolidating these two systems is the next open decision.
 
 Other things worth knowing:
@@ -75,7 +77,9 @@ Other things worth knowing:
 - `abstracts/_mixins.scss` (`btn`, `btn-filled`, `btn-tonal`, `btn-outlined`, `btn-flat`, `btn-disabled`, `focus-visible`) builds states with `color-mix()` over `--md-sys-color-*`.
 - **Translucent colors use `color-mix(in srgb, var(--token) N%, transparent)`, never `rgba(var(--token), 0.N)`.** The tokens hold hex colors, not comma-separated channels, so the `rgba(var(…))` form is invalid and the browser drops the declaration silently — it accounted for every dead rule found so far (hover tints, disabled inputs, medium-emphasis text).
 - `abstracts/_elevation.scss` owns the shadow map; the `.z-depth-*` classes in `base/_global.scss` are generated from it, so the classes and the `z-depth()` mixin cannot drift.
-- `abstracts/_variables.scss` holds Sass-time knobs (breakpoint strings `$medium-and-up`…, 12-col grid, header font sizes) — mostly `!default`, several now aliasing CSS custom properties.
+- `abstracts/_breakpoints.scss` owns the three breakpoints (`small` 601px, `large` 993px, `xlarge` 1201px) and the `bp-up()` / `bp-down()` / `bp-between()` mixins, which emit media-query range syntax (`@media (width >= 601px)`). The old interpolated strings (`$medium-and-up`…) are kept as deprecated aliases producing the same queries; nothing in the framework uses them. The `600.99px`/`992.99px` values they needed are gone — range syntax has an exclusive comparator.
+- `abstracts/_variables.scss` holds the remaining Sass-time knobs (12-col grid, header font sizes, `$root-font-size`, the flow-text bounds) — mostly `!default`, several now aliasing CSS custom properties.
+- `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
 - `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_parallax`, `_pushpin`, `_page-footer`, `_docked-display`, `_transitions`).
 - `utilities/_typescale.scss` generates the 15 `.display-large` … `.title-small` classes from a `$typescale-roles` list. Every property it sets must map to a token `tokens/_reference.scss` actually defines — a `var()` pointing at an undefined custom property invalidates the whole declaration silently, which is how these classes previously did nothing. `font-style` is deliberately not set: the `-font-family-style` token holds "Regular"/"Medium", which are weights, not CSS font-style keywords.
 

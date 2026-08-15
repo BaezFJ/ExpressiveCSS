@@ -2,22 +2,59 @@
 
 // RoutePlateCSS entry point.
 //
-// The order below IS the cascade order of the compiled stylesheet - it is the
-// only place load order is decided, so a rule's position is always answerable
-// from this file. Layers:
+// This is the only place cascade order is decided, so a rule's position is
+// always answerable from this file. Layers:
 //
-//   abstracts  - variables, functions, mixins. Emits nothing, so its position
-//                here is irrelevant; partials pull it in with
-//                `@use "../abstracts" as *;`. Forwarded so that downstream
-//                projects consuming this file keep access to $colors,
-//                colorFunc(), the breakpoint variables and the btn-* mixins.
+//   abstracts  - variables, functions, mixins. Emits nothing, so it is not a
+//                cascade layer at all; partials pull it in with
+//                `@use "../abstracts" as *;`. Forwarded below so that
+//                downstream projects consuming this file keep access to
+//                $colors, colorFunc(), the breakpoint mixins and btn-*.
 //   tokens     - :root custom properties (M3 reference palette + theme).
-//   utilities  - helper classes.
 //   base       - normalize, element defaults, typography, grid.
 //   components - widgets.
+//   utilities  - helper classes.
+//
+// Order used to be expressed purely as @forward order, with utilities emitted
+// before components so a component rule would win at equal specificity. It is
+// now a real @layer list, which changes three things:
+//
+//   1. Utilities moved after components. Layer order beats specificity
+//      outright, so a helper class now wins over a component rule without
+//      needing to out-specify it.
+//   2. Unlayered CSS beats every layer. A consumer can override any component
+//      with a plain `.btn { ... }` - no specificity war, no load-order
+//      dependence on where the framework sits in their bundle.
+//   3. !important is NOT dropped from utilities. Layer order reverses for
+//      important declarations, so an important rule inside `utilities` would
+//      also beat a consumer's own !important - but a *normal* rule in a layer
+//      loses to any unlayered consumer rule. Since `.hide`, `.m-3` and the
+//      palette classes exist precisely to be unconditional, they keep their
+//      flags and keep winning. Dropping them would silently make `.hide` lose
+//      to any unlayered `display` the consumer had already written.
+//
+// @forward cannot appear inside @layer, so each layer is pulled in with
+// meta.load-css() instead. abstracts emits no CSS, so loading it separately
+// below duplicates nothing.
+
+@use "sass:meta";
 
 @forward "abstracts";
-@forward "tokens";
-@forward "utilities";
-@forward "base";
-@forward "components";
+
+@layer tokens, base, components, utilities;
+
+@layer tokens {
+  @include meta.load-css("tokens");
+}
+
+@layer base {
+  @include meta.load-css("base");
+}
+
+@layer components {
+  @include meta.load-css("components");
+}
+
+@layer utilities {
+  @include meta.load-css("utilities");
+}

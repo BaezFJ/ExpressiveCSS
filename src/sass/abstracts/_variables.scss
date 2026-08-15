@@ -19,20 +19,9 @@ $button-floating-radius: 16px !default;
 // Dropdown
 $dropdown-item-height: 50px !default;
 
-// Media Query Ranges
-$small-screen-up: 601px !default;
-$medium-screen-up: 993px !default;
-$large-screen-up: 1201px !default;
-$small-screen: 600.99px !default;
-$medium-screen: 992.99px !default;
-$large-screen: 1200.99px !default;
-
-$medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
-$large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
-$extra-large-and-up: "only screen and (min-width : #{$large-screen-up})" !default;
-$small-and-down: "only screen and (max-width : #{$small-screen})" !default;
-$medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
-$medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
+// Media query ranges now live in abstracts/_breakpoints.scss, which states
+// each boundary once and emits range syntax - see the note there about why
+// the 600.99px / 992.99px / 1200.99px values are gone.
 
 // Grid
 $num-cols: 12 !default;
@@ -44,6 +33,10 @@ $element-bottom-margin: math.div($gutter-width * 2, 3) !default;
 $font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !default;
 $text-color: var(--md-sys-color-on-background) !default;
 
+// Base of the html font-size ladder in base/_typography.scss. Flow text is
+// derived from it, so the two cannot drift.
+$root-font-size: 14px !default;
+
 // Header Styles
 $h1-fontsize: 4.2rem !default;
 $h2-fontsize: 3.56rem !default;
@@ -52,6 +45,9 @@ $h4-fontsize: 2.28rem !default;
 $h5-fontsize: 1.64rem !default;
 $h6-fontsize: 1.15rem !default;
 
-// Flow Text
-$intervals: 20 !default;
-$interval-size: math.div($large-screen - $small-screen, $intervals) !default;
+// Flow text: font-size interpolates between these two across the viewport
+// range below. This used to be a @while loop emitting 21 media queries.
+$flow-text-min: 1.2rem !default;
+$flow-text-max: 1.68rem !default;   // the old loop's ceiling: 1.2rem * (1 + .02 * 20)
+$flow-text-from: 360px !default;
+$flow-text-to: 960px !default;      // the old loop's last step: 360px + 20 * 30px

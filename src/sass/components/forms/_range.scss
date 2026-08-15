@@ -76,10 +76,14 @@ input[type=range] + .thumb {
   transition: box-shadow .3s;
 }
 
-// WebKit
+// The track and thumb of a range input are only reachable through
+// engine-specific pseudo-elements, so these rules stay split by engine - and
+// each engine gets its own rule, never a shared selector list. An unknown
+// pseudo-element invalidates the entire list it appears in, which is how the
+// old `::-ms-fill-upper, ::-moz-range-track` pairs silently applied to nothing
+// in Firefox.
 input[type=range] {
   appearance: none;
-  -webkit-appearance: none;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -99,17 +103,9 @@ input[type=range]::-webkit-slider-thumb {
   box-shadow: 0 0 0 10px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
 }
 
-// FireFox
-input[type=range] {
-  /*required for proper track sizing in FF*/
-}
-
+// Gecko
 input[type=range]::-moz-range-track {
   @include range-track;
-}
-
-input[type=range]::-moz-focus-inner {
-  border: 0;
 }
 
 input[type=range]::-moz-range-thumb {
@@ -117,41 +113,16 @@ input[type=range]::-moz-range-thumb {
   margin-top: -5px;
 }
 
-// hide the outline behind the border
-input[type=range]:-moz-focusring {
-  outline: 1px solid #fff;
-  outline-offset: -1px;
-}
-
 .keyboard-focused input[type=range]:focus:not(.active)::-moz-range-thumb {
   box-shadow: 0 0 0 10px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
 }
 
-//------------------------------- Remove this?
-// IE 10+
-input[type=range]::-ms-track {
-  height: 3px;
-  // remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead
-  background: transparent;
-  // leave room for the larger thumb to overflow with a transparent border */
-  border-color: transparent;
-  border-width: 6px 0;
-  /*remove default tick marks*/
-  color: transparent;
-}
-input[type=range]::-ms-fill-lower,
-input[type=range]::-moz-range-progress {
-  background: var(--md-sys-color-primary);
-}
-input[type=range]::-ms-fill-upper,
-input[type=range]::-moz-range-track {
-  background: var(--md-sys-color-shadow-light);
-}
-input[type=range]::-ms-thumb {
-  @include range-thumb;
-}
-//--------------------------------
-
-.keyboard-focused input[type=range]:focus:not(.active)::-ms-thumb {
-  box-shadow: 0 0 0 10px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
-}
+// Removed with IE/Edge Legacy: ::-ms-track, ::-ms-thumb and the ::-ms-fill-lower
+// / ::-ms-fill-upper pair. The two Gecko selectors that shared a list with them
+// (::-moz-range-progress and a second ::-moz-range-track) went too - they never
+// rendered, because the -ms- selector alongside them invalidated the rule. The
+// track keeps the colour @range-track gives it.
+//
+// Also removed: ::-moz-focus-inner (pre-Firefox-50 inner border) and a
+// :-moz-focusring outline. The keyboard focus indicator is the thumb box-shadow
+// above, which Firefox still gets.

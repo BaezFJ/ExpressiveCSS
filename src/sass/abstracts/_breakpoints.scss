@@ -1,0 +1,69 @@
+@use "sass:map";
+@use "sass:list";
+
+// Breakpoints, as media-query range syntax.
+//
+// The old form built a query by interpolating a whole string:
+//
+//   $medium-and-down: "only screen and (max-width : 992.99px)";
+//   @media #{$medium-and-down} { ... }
+//
+// which needed the `.99` because `max-width: 993px` and `min-width: 993px`
+// both match at exactly 993px. Range syntax has an exclusive comparator, so
+// the fractional values are gone and the boundary is stated once:
+//
+//   @include bp-down("large") { ... }   ->  @media (width < 993px)
+//
+// `only screen` went with them: it existed to hide queries from Netscape 4
+// and IE, and `screen` alone excludes print anyway - which these rules never
+// wanted to do, since a hidden element should stay hidden on paper.
+
+$breakpoints: (
+  "small": 601px,   // phone      -> tablet
+  "large": 993px,   // tablet     -> desktop
+  "xlarge": 1201px, // desktop    -> wide desktop
+) !default;
+
+@function breakpoint($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error "Unknown breakpoint `#{$name}`. Available: #{map.keys($breakpoints)}.";
+  }
+  @return map.get($breakpoints, $name);
+}
+
+// At or above a breakpoint.
+@mixin bp-up($name) {
+  @media (width >= #{breakpoint($name)}) {
+    @content;
+  }
+}
+
+// Strictly below a breakpoint.
+@mixin bp-down($name) {
+  @media (width < #{breakpoint($name)}) {
+    @content;
+  }
+}
+
+// From one breakpoint up to (not including) another.
+@mixin bp-between($from, $to) {
+  @media (#{breakpoint($from)} <= width < #{breakpoint($to)}) {
+    @content;
+  }
+}
+
+// Deprecated: the interpolated-string breakpoints.
+//
+// Kept so a downstream `@media #{$medium-and-up}` keeps compiling - the
+// framework itself no longer uses them. Values are now range syntax, so the
+// queries they produce match the mixins above exactly. Prefer the mixins.
+$small-screen-up: breakpoint("small") !default;
+$medium-screen-up: breakpoint("large") !default;
+$large-screen-up: breakpoint("xlarge") !default;
+
+$medium-and-up: "(width >= #{breakpoint('small')})" !default;
+$large-and-up: "(width >= #{breakpoint('large')})" !default;
+$extra-large-and-up: "(width >= #{breakpoint('xlarge')})" !default;
+$small-and-down: "(width < #{breakpoint('small')})" !default;
+$medium-and-down: "(width < #{breakpoint('large')})" !default;
+$medium-only: "(#{breakpoint('small')} <= width < #{breakpoint('large')})" !default;

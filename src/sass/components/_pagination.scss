@@ -28,7 +28,7 @@
   }
 }
 
-@media #{$medium-and-down} {
+@include bp-down("large") {
   .pagination {
     width: 100%;
 

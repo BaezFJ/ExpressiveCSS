@@ -113,7 +113,7 @@ td, th {
 }
 
 // Responsive Table
-@media #{$medium-and-down} {
+@include bp-down("large") {
 
   table.responsive-table {
     width: 100%;

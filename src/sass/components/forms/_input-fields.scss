@@ -261,7 +261,7 @@ textarea.routeplate-textarea {
 }
 .searchbar.has-sidebar {
   margin-left: 0;
-  @media #{$large-and-up} {
+  @include bp-up("large") {
     margin-left: 300px;
   }
 }

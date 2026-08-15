@@ -5,7 +5,14 @@
       "Bash(pkill -f 'sass --watch')",
       "Bash(xargs -r kill)",
       "Bash(node --test tests/)",
-      "Bash(node --test)"
+      "Bash(node --test)",
+      "Bash(npx sass *)",
+      "Bash(awk -F: '{print $3}')",
+      "Bash(python3 -)",
+      "Bash(npm test *)",
+      "Bash(curl -s http://127.0.0.1:5099/)",
+      "Bash(kill %1)",
+      "Bash(npm run *)"
     ]
   }
 }

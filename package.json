@@ -46,6 +46,12 @@
   "engines": {
     "node": ">=20"
   },
+  "browserslist": [
+    "last 5 Chrome versions",
+    "last 5 Firefox versions",
+    "not IE 11",
+    "not dead"
+  ],
   "devDependencies": {
     "esbuild": "^0.28.2",
     "jsdom": "^30.0.1",

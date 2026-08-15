@@ -6,58 +6,58 @@
 .hide { display: none !important; }
 
 .hide-on-small-only, .hide-on-small-and-down {
-  @media #{$small-and-down} { display: none !important; }
+  @include bp-down("small") { display: none !important; }
 }
 
 .hide-on-med-and-down {
-  @media #{$medium-and-down} { display: none !important; }
+  @include bp-down("large") { display: none !important; }
 }
 
 .hide-on-med-and-up {
-  @media #{$medium-and-up} { display: none !important; }
+  @include bp-up("small") { display: none !important; }
 }
 
 .hide-on-med-only {
-  @media only screen and (min-width: $small-screen-up) and (max-width: $medium-screen) {
+  @include bp-between("small", "large") {
     display: none !important;
   }
 }
 
 .hide-on-large-only {
-  @media #{$large-and-up} { display: none !important; }
+  @include bp-up("large") { display: none !important; }
 }
 
 .hide-on-extra-large-only {
-  @media #{$extra-large-and-up} { display: none !important; }
+  @include bp-up("xlarge") { display: none !important; }
 }
 
 .show-on-extra-large {
-  @media #{$extra-large-and-up} { display: block !important; }
+  @include bp-up("xlarge") { display: block !important; }
 }
 
 .show-on-large {
-  @media #{$large-and-up} { display: block !important; }
+  @include bp-up("large") { display: block !important; }
 }
 
 .show-on-medium {
-  @media only screen and (min-width: $small-screen-up) and (max-width: $medium-screen) {
+  @include bp-between("small", "large") {
     display: block !important;
   }
 }
 
 .show-on-small {
-  @media #{$small-and-down} { display: block !important; }
+  @include bp-down("small") { display: block !important; }
 }
 
 .show-on-medium-and-up {
-  @media #{$medium-and-up} { display: block !important; }
+  @include bp-up("small") { display: block !important; }
 }
 
 .show-on-medium-and-down {
-  @media #{$medium-and-down} { display: block !important; }
+  @include bp-down("large") { display: block !important; }
 }
 
 // Center text on mobile
 .center-on-small-only {
-  @media #{$small-and-down} { text-align: center; }
+  @include bp-down("small") { text-align: center; }
 }

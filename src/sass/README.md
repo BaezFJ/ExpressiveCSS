@@ -1,13 +1,28 @@
 # src/sass
 
 ```
-routeplate.scss     entry point - decides load order, nothing else
+routeplate.scss     entry point - decides cascade order, nothing else
 abstracts/          variables, functions, mixins        (emits no CSS)
 tokens/             M3 design tokens as :root custom properties
-utilities/          single-purpose helper classes
 base/               normalize, element defaults, typography, grid
 components/         one file per widget (+ components/forms/)
+utilities/          single-purpose helper classes
 ```
+
+## Browser support
+
+The last 5 versions of Chrome and Firefox. No IE, no Edge Legacy. Declared in
+`package.json` under `browserslist` - nothing reads it automatically, since
+there is no autoprefixer or postcss step, but it is the baseline every
+judgement call in here is made against.
+
+That baseline is what licenses `@layer`, `light-dark()`, `color-mix()`,
+`aspect-ratio`, `clamp()`, `inset` and media-query range syntax to be used
+directly, with no fallback. A vendor prefix is only justified now if the
+property is non-standard with no unprefixed equivalent
+(`-webkit-tap-highlight-color`, `-webkit-font-smoothing`) or the selector is an
+engine's private pseudo-element (`::-webkit-slider-thumb`, `::-moz-range-track`).
+Everything else was removed.
 
 ## Two rules
 
@@ -18,16 +33,17 @@ components/         one file per widget (+ components/forms/)
 @use "../../abstracts" as *;  // components/forms/
 ```
 
-That single line brings in `$colors` + `colorFunc()`, the Sass variables
-(breakpoints, grid, font sizes), `z-depth()`, and the `btn-*` mixins. There is
-never a second project-local `@use` to work out — if you find yourself adding
-one, see rule 2.
+That single line brings in `$colors` + `colorFunc()`, the breakpoint mixins,
+the Sass variables (grid, font sizes), `z-depth()`, and the `btn-*` mixins.
+There is never a second project-local `@use` to work out — if you find yourself
+adding one, see rule 2.
 
 **2. Nothing outside `abstracts/` is ever imported by another partial.**
 
-Layers point one way: everything depends on `abstracts`, `abstracts` depends on
-nothing. This is what keeps `routeplate.scss` the only place load order is
-decided.
+Dependencies point one way: everything depends on `abstracts`, `abstracts`
+depends on nothing. This is what keeps `routeplate.scss` the only place cascade
+order is decided. (This is the Sass dependency graph, not the CSS `@layer`
+list — they happen to be described by the same word.)
 
 The trap is `@extend`: it only resolves if the extending file loads the module
 that defines the class, so `@extend .z-depth-1` used to force components to
@@ -46,6 +62,49 @@ background-color: var(--md-sys-color-surface-variant);
 
 `@extend` within a single file (placeholders, `.btn-large { @extend .btn; }`) is
 fine — it crosses no boundary.
+
+## Breakpoints
+
+Three of them, in `abstracts/_breakpoints.scss`, reached through mixins:
+
+```scss
+@include bp-up("small")   { }   // @media (width >= 601px)
+@include bp-down("large") { }   // @media (width < 993px)
+@include bp-between("small", "large") { }
+```
+
+Names are `small` (601px), `large` (993px), `xlarge` (1201px) — the boundary a
+query sits on, not the size of the screen it targets. Range syntax has an
+exclusive comparator, so the old `600.99px` / `992.99px` values used to stop
+`max-width` and `min-width` both matching on the boundary pixel are gone, and
+each boundary is written once.
+
+The interpolated-string form (`@media #{$medium-and-up}`) still compiles and now
+produces the same range queries, but it is deprecated and unused in here.
+
+## Theming
+
+`tokens/_reference.scss` declares the raw M3 ramps plus a resolved
+`--md-sys-color-<role>-light` / `-dark` pair per role. `tokens/_theme.scss` maps
+each pair onto the live `--md-sys-color-<role>` name with `light-dark()`, in one
+`@each` over `$sys-color-roles`.
+
+The pairs are public API — the docs' Themes page tells people to override them —
+so they stay. Consume the live name:
+
+```scss
+// no - locks the rule to one theme
+border-bottom: 1px solid var(--md-sys-color-surface-variant-light);
+
+// yes
+border-bottom: 1px solid var(--md-sys-color-surface-variant);
+```
+
+`light-dark()` resolves against the element's used `color-scheme` at the point
+of *use*, not where the custom property was declared. So `:root[theme='dark']`
+only has to set `color-scheme: dark` and all 30 tokens re-resolve — and setting
+`color-scheme` on any subtree re-themes just that subtree. `color-scheme` is
+load-bearing now; changing it is not cosmetic.
 
 ## Translucent colors
 
@@ -84,10 +143,31 @@ the wrong file.
 Anything under `abstracts/` that emits a selector is a bug: it would put CSS in
 the output at a position `routeplate.scss` does not control.
 
-## Load order
+## Cascade layers
 
-`routeplate.scss` forwards `tokens → utilities → base → components`, and that is
-the order rules appear in the compiled file. Note utilities are emitted *before*
-components, so a component rule beats a helper class at equal specificity — the
-legacy `.red`/`.blue` palette classes carry `!important` to get around this, the
-token-driven ones in `utilities/_colors.scss` do not.
+`routeplate.scss` declares `@layer tokens, base, components, utilities;` and
+loads each layer with `meta.load-css()` — `@forward` cannot appear inside
+`@layer`, which is the only reason the entry file uses a different mechanism
+from every other index file.
+
+Three consequences worth knowing:
+
+**Utilities beat components, without specificity.** Layer order outranks
+specificity entirely, so `.hide` wins over `.collection .collection-item` even
+though it is less specific. Utilities used to be emitted *before* components and
+had to out-shout them; they are now last.
+
+**Unlayered CSS beats every layer.** A consumer overriding the framework writes
+plain `.btn { … }` and wins — no specificity war, no dependence on where
+RoutePlate sits in their bundle. This is the main thing layers buy.
+
+**`!important` is deliberately kept on utilities.** It looks redundant now, and
+it is not. Layer order *reverses* for important declarations, but the rule that
+matters here is simpler: a normal declaration inside a layer loses to any
+unlayered declaration. Drop the flag from `.hide` and it stops beating a
+consumer's own `display` — silently, and in the common case. Classes whose whole
+job is to be unconditional (`.hide`, `.m-3`, the palette classes) keep it.
+
+The `!important` in `components/` is a different thing again: `.pushpin`,
+`.tap-target` and the preloader set JS-driven geometry that must not be
+overridable. Those stay too.

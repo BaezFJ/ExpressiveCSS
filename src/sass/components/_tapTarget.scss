@@ -96,7 +96,7 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@include bp-down("small") {
   .tap-target, .tap-target-wrapper {
     width: 600px;
     height: 600px;

@@ -232,7 +232,7 @@ input[type=text].timepicker-input-minutes {
 }
 
 /* Media Queries */
-@media #{$large-and-up} {
+@include bp-up("large") {
   .timepicker-container {
     width: auto;
     max-width: 620px;
