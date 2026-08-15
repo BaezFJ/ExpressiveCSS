@@ -1,0 +1,201 @@
+{% extends "docs.html" %}
+
+{% block title %}Toolbars - RoutePlateCSS{% endblock %}
+{% block page_title %}Toolbars{% endblock %}
+
+{% block page %}
+<section class="section primary-container m-2" id="index-banner">
+  <div class="container row py-5">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+      <h1 class="primary-text">Toolbars</h1>
+      <h4 class="light primary-text">Material Design 3 toolbars, from the HTML.</h4>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>&lt;nav class="toolbar"&gt;</code> is the bar. Direct
+          <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> children
+          are the actions. An <code>&lt;i&gt;</code> is the icon; wrap a
+          label in <code>&lt;span&gt;</code>. <code>.active</code> marks
+          the selected action. They are CSS only. There is no JavaScript
+          component and nothing to AutoInit.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/toolbars/specs">M3 toolbar spec</a>.
+          The default is the floating bar: it hugs its actions, 64dp tall,
+          32dp stadium corners, <code>surface-variant</code>, elevation 2.
+          Actions are 48dp targets with a 24dp icon, transparent at rest.
+          Selected is <code>secondary-container</code> /
+          <code>on-secondary-container</code>.
+        </p>
+        <p>
+          This is not the FAB-to-toolbar transition
+          (<code>div.fixed-action-btn.toolbar</code>). That stays on
+          <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>.
+          Do not put <code>toolbar</code> on every <code>&lt;nav&gt;</code>
+          — app bars, card actions, and radio rows stay as they are.
+        </p>
+
+        <nav class="toolbar" aria-label="Text format">
+          <button type="button" class="circle" aria-label="Undo">
+            <i class="material-icons">undo</i>
+          </button>
+          <button type="button" class="circle active" aria-label="Bold">
+            <i class="material-icons">format_bold</i>
+          </button>
+          <button type="button" class="circle" aria-label="Italic">
+            <i class="material-icons">format_italic</i>
+          </button>
+          <button type="button" class="circle" aria-label="Underline">
+            <i class="material-icons">format_underlined</i>
+          </button>
+        </nav>
+<pre><code>&lt;nav class="toolbar" aria-label="Text format"&gt;
+  &lt;button type="button" class="circle" aria-label="Undo"&gt;
+    &lt;i class="material-icons"&gt;undo&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;button type="button" class="circle active" aria-label="Bold"&gt;
+    &lt;i class="material-icons"&gt;format_bold&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;button type="button" class="circle" aria-label="Italic"&gt;
+    &lt;i class="material-icons"&gt;format_italic&lt;/i&gt;
+  &lt;/button&gt;
+&lt;/nav&gt;</code></pre>
+        <p>
+          A label next to the icon needs a <code>&lt;span&gt;</code> —
+          <code>:only-child</code> ignores text nodes, so
+          <code>&lt;i&gt;edit&lt;/i&gt;Edit</code> would look icon-only.
+        </p>
+        <nav class="toolbar" aria-label="Page actions">
+          <button type="button">
+            <i class="material-icons">edit</i>
+            <span>Edit</span>
+          </button>
+          <button type="button">
+            <i class="material-icons">share</i>
+            <span>Share</span>
+          </button>
+          <button type="button" class="circle" aria-label="More">
+            <i class="material-icons">more_vert</i>
+          </button>
+        </nav>
+<pre><code>&lt;nav class="toolbar"&gt;
+  &lt;button type="button"&gt;
+    &lt;i class="material-icons"&gt;edit&lt;/i&gt;
+    &lt;span&gt;Edit&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button type="button" class="circle" aria-label="More"&gt;
+    &lt;i class="material-icons"&gt;more_vert&lt;/i&gt;
+  &lt;/button&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="variants" class="section scrollspy">
+        <h3>Variants</h3>
+        <p>
+          <code>filled</code> is the vibrant bar —
+          <code>primary-container</code> /
+          <code>on-primary-container</code>. Selected then uses
+          <code>surface-variant</code> so it still contrasts.
+          <code>vertical</code> stacks the actions.
+        </p>
+        <p>
+          <nav class="toolbar filled" aria-label="Vibrant format">
+            <button type="button" class="circle" aria-label="Undo">
+              <i class="material-icons">undo</i>
+            </button>
+            <button type="button" class="circle active" aria-label="Bold">
+              <i class="material-icons">format_bold</i>
+            </button>
+            <button type="button" class="circle" aria-label="Italic">
+              <i class="material-icons">format_italic</i>
+            </button>
+          </nav>
+        </p>
+        <p>
+          <nav class="toolbar vertical" aria-label="Vertical actions">
+            <button type="button" class="circle" aria-label="Add">
+              <i class="material-icons">add</i>
+            </button>
+            <button type="button" class="circle active" aria-label="Edit">
+              <i class="material-icons">edit</i>
+            </button>
+            <button type="button" class="circle" aria-label="Delete">
+              <i class="material-icons">delete</i>
+            </button>
+          </nav>
+        </p>
+<pre><code>&lt;nav class="toolbar filled"&gt;…&lt;/nav&gt;
+&lt;nav class="toolbar vertical"&gt;…&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="docked" class="section scrollspy">
+        <h3>Docked</h3>
+        <p>
+          <code>max</code> (BeerCSS) or <code>docked</code> (the M3 name)
+          stretches the bar to the full width, drops the stadium and the
+          elevation, and spaces the actions. M3 recommends this in place
+          of the bottom app bar — shorter (64dp, not 80) and more
+          flexible. A child <code>.max</code> is a spacer, not the bar.
+        </p>
+        <nav class="toolbar docked" aria-label="Editor">
+          <button type="button" class="circle" aria-label="Back">
+            <i class="material-icons">arrow_back</i>
+          </button>
+          <button type="button" class="circle" aria-label="Add">
+            <i class="material-icons">add</i>
+          </button>
+          <span class="max"></span>
+          <button type="button" class="circle extra" aria-label="Create">
+            <i class="material-icons">edit</i>
+          </button>
+        </nav>
+<pre><code>&lt;nav class="toolbar docked" aria-label="Editor"&gt;
+  &lt;button type="button" class="circle" aria-label="Back"&gt;
+    &lt;i class="material-icons"&gt;arrow_back&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;button type="button" class="circle" aria-label="Add"&gt;
+    &lt;i class="material-icons"&gt;add&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;span class="max"&gt;&lt;/span&gt;
+  &lt;button type="button" class="circle extra" aria-label="Create"&gt;
+    &lt;i class="material-icons"&gt;edit&lt;/i&gt;
+  &lt;/button&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="fixed" class="section scrollspy">
+        <h3>Fixed</h3>
+        <p>
+          <code>fixed</code> pins the bar to the viewport. A floating bar
+          sits 16dp from the bottom-center; add <code>top</code> to move
+          it to the top. A vertical bar sits on the start edge;
+          <code>right</code> flips it. A docked bar sticks to the bottom
+          edge; <code>top</code> sticks it to the top.
+        </p>
+<pre><code>&lt;nav class="toolbar fixed" aria-label="Format"&gt;…&lt;/nav&gt;
+&lt;nav class="toolbar vertical fixed" aria-label="Tools"&gt;…&lt;/nav&gt;
+&lt;nav class="toolbar docked fixed" aria-label="Editor"&gt;…&lt;/nav&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Introduction</a></li>
+          <li><a href="#variants">Variants</a></li>
+          <li><a href="#docked">Docked</a></li>
+          <li><a href="#fixed">Fixed</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

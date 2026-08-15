@@ -1,0 +1,192 @@
+@use "../abstracts" as *;
+
+// Toolbars.
+//
+// Anatomy is the HTML. A <nav class="toolbar"> is the bar. Direct
+// <button> / <a> children are the actions. An <i> is the icon; wrap a
+// label in <span>. .active marks the selected action. Helpers are only
+// for variants markup cannot express: .filled, .vertical, .max / .docked,
+// .fixed, .top, .bottom.
+//
+// Tokens follow https://m3.material.io/components/toolbars/specs
+//   floating   hug, 64dp, 32dp stadium, surface-variant, elevation 2
+//   docked     full width, 64dp, 0 radius, surface-variant, no elevation
+//              (M3 replacement for the bottom app bar)
+//   vibrant    primary-container / on-primary-container (.filled)
+//   action     48dp target, 24dp icon, transparent at rest
+//   selected   secondary-container / on-secondary-container
+//
+// nav.toolbar only — do not style every <nav> (app bars, card actions,
+// radio rows). div.fixed-action-btn.toolbar is the FAB-to-toolbar
+// transition, not this component.
+
+nav.toolbar {
+  --md-comp-toolbar-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-toolbar-container-shape: 32px;
+  --md-comp-toolbar-container-height: 64px;
+  --md-comp-toolbar-leading-space: 12px;
+  --md-comp-toolbar-action-size: 48px;
+  --md-comp-toolbar-icon-size: 24px;
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: var(--md-comp-toolbar-container-height);
+  min-width: var(--md-comp-toolbar-container-height);
+  margin: 0;
+  padding: 8px var(--md-comp-toolbar-leading-space);
+  border: none;
+  border-radius: var(--md-comp-toolbar-container-shape);
+  background-color: var(--md-comp-toolbar-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("2");
+
+  & + & {
+    margin-block-start: 16px;
+  }
+
+  // Actions — transparent at rest so they sit on the container, not filled.
+  // .extra is the 56dp FAB; leave it alone so a docked bar can embed one.
+  > :is(a, button):not(.btn-floating, .extra) {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: var(--md-comp-toolbar-action-size);
+    min-height: var(--md-comp-toolbar-action-size);
+    height: var(--md-comp-toolbar-action-size);
+    margin: 0;
+    padding: 0 12px;
+    border: none;
+    border-radius: calc(var(--md-comp-toolbar-action-size) / 2);
+    background-color: transparent;
+    color: inherit;
+    box-shadow: none;
+    text-decoration: none;
+    cursor: pointer;
+    appearance: none;
+    @include typescale("label-large");
+    font-family: $font-stack;
+    @include focus-visible;
+
+    > i {
+      flex: 0 0 auto;
+      font-size: var(--md-comp-toolbar-icon-size);
+      width: var(--md-comp-toolbar-icon-size);
+      height: var(--md-comp-toolbar-icon-size);
+      line-height: var(--md-comp-toolbar-icon-size);
+    }
+
+    &:hover:not(.active) {
+      background-color: color-mix(in oklab, currentColor 8%, transparent);
+    }
+
+    &:active:not(.active) {
+      background-color: color-mix(in oklab, currentColor 10%, transparent);
+    }
+
+    &.active {
+      background-color: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+
+    &:disabled {
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      background-color: transparent;
+      box-shadow: none;
+      cursor: default;
+    }
+  }
+
+  // Icon-only — .circle, or an <i> with no <span> sibling.
+  > :is(a, button):not(.btn-floating, .extra):is(.circle, :has(> i):not(:has(> span))) {
+    width: var(--md-comp-toolbar-action-size);
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  // Spacer between leading and trailing actions.
+  > .max {
+    flex: 1 1 auto;
+    align-self: stretch;
+    min-width: 0;
+    min-height: 0;
+  }
+}
+
+// Vibrant. Pair with .active using the inverse of the container.
+nav.toolbar.filled {
+  --md-comp-toolbar-container-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+
+  > :is(a, button).active {
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface);
+  }
+}
+
+// Vertical floating bar.
+nav.toolbar.vertical {
+  flex-direction: column;
+  min-width: var(--md-comp-toolbar-container-height);
+  min-height: var(--md-comp-toolbar-container-height);
+  padding: var(--md-comp-toolbar-leading-space) 8px;
+
+  > .max {
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+  }
+}
+
+// Docked — full width, square, no lift. M3's replacement for the bottom
+// app bar. .max is the BeerCSS name; .docked is the M3 name.
+nav.toolbar.max,
+nav.toolbar.docked {
+  display: flex;
+  width: 100%;
+  --md-comp-toolbar-container-shape: 0;
+  justify-content: space-around;
+  @include z-depth("0");
+}
+
+// Pin to the viewport. Floating defaults to bottom-center; docked
+// defaults to the bottom edge.
+nav.toolbar.fixed {
+  position: fixed;
+  z-index: 996;
+  inset: auto auto 16px 50%;
+  transform: translateX(-50%);
+}
+
+nav.toolbar.fixed.top {
+  inset: 16px auto auto 50%;
+}
+
+nav.toolbar.fixed.bottom {
+  inset: auto auto 16px 50%;
+}
+
+nav.toolbar.vertical.fixed {
+  inset: 50% auto auto 16px;
+  transform: translateY(-50%);
+}
+
+nav.toolbar.vertical.fixed.right {
+  inset: 50% 16px auto auto;
+}
+
+nav.toolbar:is(.max, .docked).fixed,
+nav.toolbar:is(.max, .docked).fixed.bottom {
+  inset: auto 0 0 0;
+  transform: none;
+}
+
+nav.toolbar:is(.max, .docked).fixed.top {
+  inset: 0 0 auto 0;
+  transform: none;
+}

@@ -230,6 +230,12 @@ def tooltips():
     return render_template('tooltips.html')
 
 
+@app.route('/toolbars')
+@app.route('/toolbars.html')
+def toolbars():
+    return render_template('toolbars.html')
+
+
 @app.route('/datepicker')
 @app.route('/datepicker.html')
 def datepicker():
