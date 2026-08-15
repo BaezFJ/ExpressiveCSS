@@ -177,6 +177,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   toggleViewTimer: ReturnType<typeof setTimeout>;
   vibrateTimer: ReturnType<typeof setTimeout>;
   private displayPlugin: DockedDisplayPlugin;
+  /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
+  private _clockBuilt = false;
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
     super(el, options, Timepicker);
@@ -189,7 +191,9 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._insertHTMLIntoDOM();
     this._setupVariables();
     this._setupEventHandlers();
-    this._clockSetup();
+    // The dial is ~40 elements (12 or 24 hour ticks, 12 minute ticks, the SVG
+    // hand and the AM/PM buttons) and is built by _ensureClockBuilt() rather
+    // than here - see _pickerSetup for when that first happens.
     this._pickerSetup();
 
     if (this.options.displayPlugin) {
@@ -283,6 +287,9 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _handleInputClick = () => {
+    // Before focus(): focusing inputHours fires the handler that calls
+    // showView, and an already-focused input fires nothing at all.
+    this._ensureClockBuilt();
     this.inputHours.focus();
     if (typeof this.options.onInputInteraction === 'function') this.options.onInputInteraction.call(this);
     if (this.displayPlugin) this.displayPlugin.show();
@@ -291,6 +298,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   _handleInputKeydown = (e: KeyboardEvent) => {
     if (Utils.keys.ENTER.includes(e.key)) {
       e.preventDefault();
+      this._ensureClockBuilt();
       this.inputHours.focus();
       if (typeof this.options.onInputInteraction === 'function') this.options.onInputInteraction.call(this);
       if (this.displayPlugin) this.displayPlugin.show();
@@ -306,6 +314,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   _handleClockClickStart = (e) => {
     e.preventDefault();
+    this._ensureClockBuilt();
     const clockPlateBR = this.plate.getBoundingClientRect();
     const offset = { x: clockPlateBR.left, y: clockPlateBR.top };
 
@@ -447,7 +456,25 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
 
     this._updateTimeFromInput();
-    this.showView('hours');
+
+    // With a docked display the container is `visibility: hidden` until
+    // show(), so the dial can wait for the first interaction. Without one it
+    // is on screen from the moment it is inserted and has to be ready now.
+    if (!this.options.displayPlugin) this.showView('hours');
+  }
+
+  /**
+   * Build the dial, once. Cheap to call repeatedly - every entry point that
+   * touches the clock calls it first, so the picker cannot be interacted with
+   * before it exists.
+   */
+  private _ensureClockBuilt() {
+    if (this._clockBuilt) return;
+    this._clockBuilt = true;
+    this._clockSetup();
+    // Applies the AM/PM state _updateTimeFromInput worked out before the
+    // buttons existed.
+    this._updateAmPmView();
   }
 
   _clockSetup() {
@@ -578,6 +605,9 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _updateAmPmView() {
+    // _updateTimeFromInput settles amOrPm before the dial is built; the
+    // buttons pick the state up in _ensureClockBuilt.
+    if (!this._amBtn || !this._pmBtn) return;
     if (this.options.twelveHour) {
       if (this.amOrPm === 'PM') {
         this._amBtn.classList.remove('filled');
@@ -621,6 +651,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * @param delay
    */
   showView = (view: Views, delay: number = null) => {
+    this._ensureClockBuilt();
     if (view === 'minutes' && getComputedStyle(this.hoursView).visibility === 'visible') {
       // raiseCallback(this.options.beforeHourSelect);
     }
@@ -781,6 +812,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   setClockAttributes(radian: number, radius: number) {
+    // Nothing to point at until the SVG exists.
+    if (!this.hand || !this.bg) return;
     const cx1 = Math.sin(radian) * (radius - this.options.tickRadius),
       cy1 = -Math.cos(radian) * (radius - this.options.tickRadius),
       cx2 = Math.sin(radian) * radius,

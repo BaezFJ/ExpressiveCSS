@@ -190,6 +190,100 @@ describe('Datepicker redraws', () => {
   });
 });
 
+describe('Timepicker dial construction', () => {
+  beforeEach(resetBody);
+
+  const dialSize = (instance) => ({
+    ticks: instance.containerEl.querySelectorAll('.timepicker-tick').length,
+    svg: !!instance.containerEl.querySelector('svg'),
+    amPm: !!instance.containerEl.querySelector('.am-btn')
+  });
+
+  test('a docked picker builds only its shell up front', () => {
+    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
+    const instance = RoutePlate.Timepicker.init(document.querySelector('.timepicker'), {
+      displayPlugin: 'docked'
+    });
+
+    try {
+      // .display-docked is visibility:hidden until show(), so nothing here is
+      // on screen yet - roughly 40 of the ~49 elements can wait.
+      assert.deepEqual(dialSize(instance), { ticks: 0, svg: false, amPm: false });
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('clicking the input builds the dial', () => {
+    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
+    const input = document.querySelector('.timepicker');
+    const instance = RoutePlate.Timepicker.init(input, { displayPlugin: 'docked' });
+
+    try {
+      input.dispatchEvent(
+        new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
+      );
+
+      const dial = dialSize(instance);
+      assert.equal(dial.svg, true, 'the SVG hand was never built');
+      assert.equal(dial.amPm, true, 'the AM/PM buttons were never built');
+      assert.ok(dial.ticks > 0, 'no dial ticks were built');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the time read from the input survives the deferred build', () => {
+    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
+    const input = document.querySelector('.timepicker');
+    const instance = RoutePlate.Timepicker.init(input, { displayPlugin: 'docked' });
+
+    try {
+      // _updateTimeFromInput runs eagerly, before the AM/PM buttons exist;
+      // _ensureClockBuilt has to apply the state it settled on.
+      assert.equal(instance.amOrPm, 'PM');
+      input.dispatchEvent(
+        new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
+      );
+
+      assert.equal(instance.inputHours.value, '03');
+      assert.equal(instance.inputMinutes.value, '45');
+      assert.ok(
+        instance.containerEl.querySelector('.pm-btn').classList.contains('filled'),
+        'the PM button did not pick up the state set before it existed'
+      );
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('without a display plugin the dial is built at init', () => {
+    document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
+    const instance = RoutePlate.Timepicker.init(document.querySelector('.timepicker'));
+
+    try {
+      // No plugin means the container is on screen from the start, so
+      // deferring here would show an empty dial.
+      const dial = dialSize(instance);
+      assert.equal(dial.svg, true);
+      assert.ok(dial.ticks > 0);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('destroying before the dial is built does not throw', () => {
+    document.body.innerHTML = `<input type="text" class="timepicker">`;
+    const instance = RoutePlate.Timepicker.init(document.querySelector('.timepicker'), {
+      displayPlugin: 'docked'
+    });
+
+    instance.destroy();
+
+    assert.equal(RoutePlate.Timepicker.getInstance(document.querySelector('.timepicker')), undefined);
+  });
+});
+
 describe('textarea auto-resize', () => {
   beforeEach(resetBody);
 
