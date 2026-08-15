@@ -2,7 +2,6 @@
 // Partials load the whole layer with a single line: @use "../abstracts" as *;
 
 @forward "elevation";    // z-depth() mixin
-@forward "palette";      // $colors map + colorFunc()
 @forward "breakpoints";  // $breakpoints map + bp-up()/bp-down()/bp-between()
 @forward "variables";    // Sass-time knobs: grid, font sizes, flow text
 @forward "mixins";       // btn-*, focus-visible

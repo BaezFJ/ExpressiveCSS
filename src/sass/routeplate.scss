@@ -8,8 +8,8 @@
 //   abstracts  - variables, functions, mixins. Emits nothing, so it is not a
 //                cascade layer at all; partials pull it in with
 //                `@use "../abstracts" as *;`. Forwarded below so that
-//                downstream projects consuming this file keep access to
-//                $colors, colorFunc(), the breakpoint mixins and btn-*.
+//                downstream projects consuming this file keep access to the
+//                breakpoint mixins, z-depth() and btn-*.
 //   tokens     - :root custom properties (M3 reference palette + theme).
 //   base       - normalize, element defaults, typography, grid.
 //   components - widgets.

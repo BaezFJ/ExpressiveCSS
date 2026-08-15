@@ -106,7 +106,7 @@
 
   &:hover {
     @include z-depth("1-half");
-    background-color: color-mix(in srgb, var(--md-sys-color-primary-container), var(--md-sys-color-on-primary-container) 16%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary-container), var(--md-sys-color-on-primary-container) 16%);
   }
 
   &:focus {

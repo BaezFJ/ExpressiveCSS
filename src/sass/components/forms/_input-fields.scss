@@ -67,9 +67,9 @@ textarea.routeplate-textarea {
     }
 
     &:disabled, &[readonly="readonly"] {
-      color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
-      border-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
-      background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 4%, transparent);
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
     }
 
     // Label
@@ -86,7 +86,7 @@ textarea.routeplate-textarea {
     }
 
     &:disabled + label, &[readonly="readonly"] + label {
-      color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
     }
 
     // Hide helper text on data message
@@ -208,8 +208,8 @@ textarea.routeplate-textarea {
       }
 
       &:disabled, &[readonly="readonly"] {
-        color: color-mix(in srgb, var(--md-sys-color-on-surface) 38%, transparent);
-        border-color: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
+        color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+        border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
       }
     }
   }

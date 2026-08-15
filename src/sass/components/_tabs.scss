@@ -15,7 +15,7 @@
     background-color: transparent;
 
     .tab a {
-      color: color-mix(in srgb, var(--md-sys-color-on-primary) 74%, transparent);
+      color: color-mix(in oklab, var(--md-sys-color-on-primary) 74%, transparent);
     }
 
     .tab.disabled a,
@@ -96,7 +96,7 @@
       }
 
       &:hover {
-        background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+        background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
       }
 
       &:focus {
@@ -104,7 +104,7 @@
       }
 
       &.active {
-        background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+        background-color: color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
       }
 
       &:focus,

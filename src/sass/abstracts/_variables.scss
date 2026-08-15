@@ -2,11 +2,14 @@
 $md_sys_typescale_body-large_size: 16px;
 
 @use "sass:math";
-@use "./palette" as *;
 
 // Colors
-$success-color: colorFunc("green", "base") !default;
-$link-color: colorFunc("light-blue", "darken-1") !default;
+//
+// The 2014 Material palette ($colors + colorFunc()) is gone. It generated 532
+// utility classes - 18% of the compiled sheet - to express a design opinion
+// this framework does not hold, and the framework itself consumed exactly one
+// value from it: this link color. Everything now comes from --md-sys-color-*.
+$link-color: var(--md-sys-color-primary) !default;
 
 // Floating buttons
 $button-floating-background: var(--md-sys-color-secondary) !default;

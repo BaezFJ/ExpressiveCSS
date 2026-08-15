@@ -100,7 +100,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .keyboard-focused input[type=range]:focus:not(.active)::-webkit-slider-thumb {
-  box-shadow: 0 0 0 10px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
 }
 
 // Gecko
@@ -114,7 +114,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 .keyboard-focused input[type=range]:focus:not(.active)::-moz-range-thumb {
-  box-shadow: 0 0 0 10px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  box-shadow: 0 0 0 10px color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
 }
 
 // Removed with IE/Edge Legacy: ::-ms-track, ::-ms-thumb and the ::-ms-fill-lower

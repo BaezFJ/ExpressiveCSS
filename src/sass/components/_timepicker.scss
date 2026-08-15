@@ -166,7 +166,7 @@ input[type=text].timepicker-input-minutes {
 
 .timepicker-tick.active,
 .timepicker-tick:hover {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
 }
 
 .timepicker-dial {

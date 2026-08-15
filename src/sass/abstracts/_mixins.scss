@@ -42,12 +42,12 @@
 
   &:hover {
     @include z-depth("1");
-    background-color: color-mix(in srgb, var(--md-sys-color-primary), var(--md-sys-color-on-primary) 16%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary), var(--md-sys-color-on-primary) 16%);
   }
 
   &:focus {
     @include z-depth("0");
-    background-color: color-mix(in srgb, var(--md-sys-color-primary), var(--md-sys-color-on-primary) 20%);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary), var(--md-sys-color-on-primary) 20%);
   }
 
   @include focus-visible();
@@ -64,12 +64,12 @@
 
   &:hover {
     @include z-depth("1");
-    background-color: color-mix(in srgb, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
+    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
   }
 
   &:focus {
     @include z-depth("0");
-    background-color: color-mix(in srgb, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 20%);
+    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 20%);
   }
 
   @include focus-visible();
@@ -87,12 +87,12 @@
 
   &:hover {
     @include z-depth("2");
-    background-color: color-mix(in srgb, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
+    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
   }
 
   &:focus {
     @include z-depth("1");
-    background-color: color-mix(in srgb, var(--md-sys-color-secondary-container), var(--md-sys-color-primary) 20%);
+    background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-primary) 20%);
   }
 
   @include focus-visible();
@@ -109,11 +109,11 @@
   }
 
   &:hover {
-    background-color: color-mix(in srgb, transparent, var(--md-sys-color-primary) 16%);
+    background-color: color-mix(in oklab, transparent, var(--md-sys-color-primary) 16%);
   }
 
   &:focus {
-    background-color: color-mix(in srgb, transparent, var(--md-sys-color-primary) 20%);
+    background-color: color-mix(in oklab, transparent, var(--md-sys-color-primary) 20%);
     border: 1px solid var(--md-sys-color-primary);
   }
 
@@ -131,11 +131,11 @@
   }
 
   &:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 16%, transparent);
   }
 
   &:focus {
-    background-color: color-mix(in srgb, transparent, var(--md-sys-color-primary) 20%);
+    background-color: color-mix(in oklab, transparent, var(--md-sys-color-primary) 20%);
   }
 
   @include focus-visible();
@@ -143,8 +143,8 @@
 
 @mixin btn-disabled {
   @include z-depth("0");
-  color: color-mix(in srgb, transparent, var(--md-sys-color-on-surface) 76%);
-  background-color: color-mix(in srgb, transparent, var(--md-sys-color-on-surface) 24%);
+  color: color-mix(in oklab, transparent, var(--md-sys-color-on-surface) 76%);
+  background-color: color-mix(in oklab, transparent, var(--md-sys-color-on-surface) 24%);
   pointer-events: none;
   box-shadow: none;
   cursor: default;

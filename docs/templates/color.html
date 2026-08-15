@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Color</h1>
-      <h4 class="light primary-text">Theme tokens for new work, plus the legacy Material palette.</h4>
+      <h4 class="light primary-text">One system: the Material Design 3 theme tokens.</h4>
     </div>
   </div>
 </section>
@@ -19,11 +19,20 @@
 
       <div id="tokens" class="section scrollspy">
         <p class="flow-text">
-          RoutePlate ships two color systems. New styles should use the Material Design 3
-          tokens — CSS custom properties on <code>:root</code> named
+          Color in RoutePlate is the Material Design 3 tokens and nothing else — CSS
+          custom properties on <code>:root</code> named
           <code>--md-sys-color-*</code>, exposed as utility classes like
-          <code>.primary</code> and <code>.on-surface-text</code>. The older
-          <code>.red.lighten-2</code> palette is still generated for compatibility.
+          <code>.primary</code> and <code>.on-surface-text</code>.
+        </p>
+        <p>
+          The 2014 Material palette that shipped with earlier versions
+          (<code>.red</code>, <code>.blue.lighten-2</code>, <code>colorFunc()</code>)
+          has been removed. It generated 532 utility classes — 18% of the stylesheet —
+          expressing a design opinion this framework does not hold, and it did not
+          follow the page theme. Replace a palette class with the role it was standing
+          in for: <code>.red</code> → <code>.error</code>, <code>.blue</code> →
+          <code>.primary</code>, <code>.green</code> → <code>.tertiary</code>, and pair
+          each fill with its <code>on-*</code> text class.
         </p>
         <p>
           Token values follow the page theme. The docs site sets
@@ -85,100 +94,78 @@
 }
 
 .my-overlay {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
 }</code></pre>
+        <p>
+          Mix <code>in oklab</code>, not <code>in srgb</code>. sRGB interpolation dips in
+          lightness through the midtones, so the same percentage reads muddier on some
+          hues than others; OKLab is perceptually uniform, so a 16% state layer looks
+          like 16% everywhere.
+        </p>
       </div>
 
-      <div id="color-usage" class="section scrollspy">
-        <h3>Usage</h3>
+      <div id="roles" class="section scrollspy">
+        <h3>Every role</h3>
         <p>
-          The legacy palette is the Material Design 2014 ramps: a color name plus an
-          optional <code>lighten-*</code>, <code>darken-*</code>, or <code>accent-*</code>
-          class. Prefer the token utilities above for new work.
+          Thirty roles, each a fill class and a matching <code>-text</code> foreground
+          class. A role is a job, not a color: <code>error</code> means "this went
+          wrong", and what that looks like is the theme's business.
         </p>
 
-        <h5>Background Color</h5>
-        <p>Add the color name and, if you need a shade, the lighten/darken/accent class.</p>
-        <div class="card-panel teal lighten-2 mb-3">This is a card panel with a teal lighten-2 class</div>
-<pre><code>&lt;div class="card-panel teal lighten-2"&gt;This is a card panel with a teal lighten-2 class&lt;/div&gt;</code></pre>
+        {% set groups = [
+          ('Accent', [
+            ('primary', 'on-primary'), ('primary-container', 'on-primary-container'),
+            ('secondary', 'on-secondary'), ('secondary-container', 'on-secondary-container'),
+            ('tertiary', 'on-tertiary'), ('tertiary-container', 'on-tertiary-container')
+          ]),
+          ('Status', [
+            ('error', 'on-error'), ('error-container', 'on-error-container')
+          ]),
+          ('Neutral', [
+            ('background', 'on-background'), ('surface', 'on-surface'),
+            ('surface-variant', 'on-surface-variant'),
+            ('inverse-surface', 'inverse-on-surface')
+          ])
+        ] %}
 
-        <h5>Text Color</h5>
-        <p>
-          Append <code>-text</code> to the color name. Shade modifiers on text use a
-          <code>text-</code> prefix: <code>text-darken-2</code>, <code>text-lighten-1</code>,
-          <code>text-accent-2</code>.
-        </p>
-        <div class="card-panel mb-3">
-          <span class="blue-text text-darken-2">This is a card panel with dark blue text</span>
+        <div class="row">
+          {% for group, pairs in groups %}
+          <div class="s12 m6 mb-5">
+            <h6>{{ group }}</h6>
+            {% for fill, on in pairs %}
+            <div class="color-swatch {{ fill }} {{ on }}-text">.{{ fill }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+          <div class="s12 m6 mb-5">
+            <h6>Line and overlay</h6>
+            <div class="color-swatch outline on-surface-text">.outline</div>
+            <div class="color-swatch outline-variant on-surface-text">.outline-variant</div>
+            <div class="color-swatch inverse-primary on-surface-text">.inverse-primary</div>
+            <div class="color-swatch surface-tint on-primary-text">.surface-tint</div>
+            <div class="color-swatch scrim on-primary-text">.scrim</div>
+            <div class="color-swatch shadow on-primary-text">.shadow</div>
+          </div>
         </div>
-<pre><code>&lt;div class="card-panel"&gt;
-  &lt;span class="blue-text text-darken-2"&gt;This is a card panel with dark blue text&lt;/span&gt;
-&lt;/div&gt;</code></pre>
-        <p>
-          <code>black</code>, <code>white</code>, and <code>transparent</code> are
-          standalone classes (and <code>-text</code> variants). There is also
-          <code>routeplate-red</code> with lighten/darken shades (no accents) — that is
-          the rebranded Materialize red ramp.
-        </p>
       </div>
 
       <div id="sass" class="section scrollspy">
         <h3>Sass</h3>
         <p>
           Do not <code>@extend</code> these classes across files — that is how the old
-          stylesheet lost control of cascade order. In a component partial, call
-          <code>colorFunc("blue", "lighten-4")</code> or set the MD3 token.
+          stylesheet lost control of cascade order. In a component partial, read the
+          token directly.
         </p>
-<pre><code>.ilike-blue-container {
-  background-color: colorFunc("blue", "lighten-4");
-  color: colorFunc("blue", "darken-2");
+<pre><code>.my-panel {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
 }</code></pre>
         <p>
-          <code>colorFunc($color, $type)</code> reads the <code>$colors</code> map.
-          <code>$type</code> is <code>"base"</code>, <code>"lighten-5"</code> …
-          <code>"lighten-1"</code>, <code>"darken-1"</code> … <code>"darken-4"</code>,
-          or <code>"accent-1"</code> … <code>"accent-4"</code> when that ramp has accents.
+          There is no Sass color function any more. <code>colorFunc()</code> and the
+          <code>$colors</code> map were removed with the palette — a Sass function
+          resolves at build time, which cannot follow a theme the user switches at
+          runtime. The custom property can.
         </p>
-      </div>
-
-      <div id="palette" class="section scrollspy">
-        <h3>Color Palette</h3>
-        <p>Every generated background class, grouped by family.</p>
-
-        {% set accented = [
-          'red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue',
-          'light-blue', 'cyan', 'teal', 'green', 'light-green', 'lime',
-          'yellow', 'amber', 'orange', 'deep-orange'
-        ] %}
-        {% set no_accent = ['routeplate-red', 'brown', 'blue-grey', 'grey'] %}
-        {% set light_bases = ['lime', 'yellow', 'amber', 'light-green'] %}
-
-        <div class="row">
-          {% for name in accented + no_accent %}
-          <div class="s12 m6 l4 mb-5">
-            {% for n in [5, 4, 3, 2, 1] %}
-            <div class="color-swatch {{ name }} lighten-{{ n }}">{{ name }} lighten-{{ n }}</div>
-            {% endfor %}
-            <div class="color-swatch {{ name }}{% if name not in light_bases %} white-text{% endif %}">{{ name }}</div>
-            {% for n in [1, 2, 3, 4] %}
-            <div class="color-swatch {{ name }} darken-{{ n }} white-text">{{ name }} darken-{{ n }}</div>
-            {% endfor %}
-            {% if name in accented %}
-            <div class="color-swatch {{ name }} accent-1">{{ name }} accent-1</div>
-            <div class="color-swatch {{ name }} accent-2{% if name not in light_bases %} white-text{% endif %}">{{ name }} accent-2</div>
-            <div class="color-swatch {{ name }} accent-3{% if name not in light_bases %} white-text{% endif %}">{{ name }} accent-3</div>
-            <div class="color-swatch {{ name }} accent-4 white-text">{{ name }} accent-4</div>
-            {% endif %}
-          </div>
-          {% endfor %}
-          <div class="s12 m6 l4 mb-5">
-            <div class="color-swatch black white-text">black</div>
-            <div class="color-swatch white">white</div>
-            <div class="surface-variant">
-              <div class="color-swatch transparent">transparent</div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -186,9 +173,8 @@
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
           <li><a href="#tokens">Theme tokens</a></li>
-          <li><a href="#color-usage">Usage</a></li>
+          <li><a href="#roles">Every role</a></li>
           <li><a href="#sass">Sass</a></li>
-          <li><a href="#palette">Color Palette</a></li>
         </ul>
       </div>
     </div>

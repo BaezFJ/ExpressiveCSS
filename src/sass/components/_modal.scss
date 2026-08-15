@@ -6,7 +6,7 @@
   --modal-border-radius: 28px;
   --modal-padding: 24px;
   --modal-padding-bottom: 16px;
-  --modal-background-color: color-mix(in srgb, var(--md-sys-color-surface), var(--md-sys-color-surface-tint) 17%);
+  --modal-background-color: color-mix(in oklab, var(--md-sys-color-surface), var(--md-sys-color-surface-tint) 17%);
 
   @include z-depth("5");
   border: none;

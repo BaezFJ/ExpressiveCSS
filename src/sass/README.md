@@ -33,8 +33,8 @@ Everything else was removed.
 @use "../../abstracts" as *;  // components/forms/
 ```
 
-That single line brings in `$colors` + `colorFunc()`, the breakpoint mixins,
-the Sass variables (grid, font sizes), `z-depth()`, and the `btn-*` mixins.
+That single line brings in the breakpoint mixins, the Sass variables (grid,
+font sizes), `z-depth()`, and the `btn-*` mixins.
 There is never a second project-local `@use` to work out — if you find yourself
 adding one, see rule 2.
 
@@ -84,10 +84,31 @@ produces the same range queries, but it is deprecated and unused in here.
 
 ## Theming
 
-`tokens/_reference.scss` declares the raw M3 ramps plus a resolved
+`tokens/_reference.scss` **generates** five of the six M3 tonal ramps from
+`--md-source` with relative color syntax, then resolves them into a
 `--md-sys-color-<role>-light` / `-dark` pair per role. `tokens/_theme.scss` maps
 each pair onto the live `--md-sys-color-<role>` name with `light-dark()`, in one
 `@each` over `$sys-color-roles`.
+
+The shipped seed is `#006A79`, a teal. It is chosen, not arbitrary: the error
+ramp is pinned at hue 27.7°, and both primary and tertiary (source + 62°) derive
+from the seed, so the seed has to keep both clear of red. Warm "appetising" hues
+(0–60°) put primary on top of error — ΔEok 0.07–0.12 against ~0.28 for teal.
+Green is avoided so it stays available for a "settled/paid" role, which Material
+does not supply. See the comment above `$md-source`.
+
+Setting `--md-source` re-themes the whole system at runtime, with no rebuild:
+
+```css
+:root { --md-source: #6750a4; }   /* everything but the error ramp follows */
+```
+
+Two things about that file are load-bearing and non-obvious. **M3 "tone" is
+CIELAB L\*, not OKLCH lightness** — `oklch(40% c h)` is not tone 40, and using it
+drifts far past the just-noticeable difference; the `$tones` table is the
+conversion. And the **error ramp is literal hex on purpose**, because Material
+fixes the error hue rather than deriving it. `tests/color-drift.test.js` enforces
+both.
 
 The pairs are public API — the docs' Themes page tells people to override them —
 so they stay. Consume the live name:
@@ -113,8 +134,14 @@ load-bearing now; changing it is not cosmetic.
 background-color: rgba(var(--md-sys-color-primary), 0.06);
 
 // yes
-background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
 ```
+
+Mix `in oklab`, not `in srgb`. sRGB interpolation darkens and desaturates
+through the midtones, so a 50% tint reads muddier than either endpoint; OKLab is
+perceptually uniform, so a 16% state layer looks like 16% on every hue. Use
+`oklab` rather than `oklch` for mixing: `oklch` interpolates the hue *angle*,
+which can swing a tint through unrelated hues on its way between two colors.
 
 A `var()` that names an undefined custom property fails the same silent way, so
 a typo costs you the rule with no warning at build time. To audit the compiled

@@ -98,13 +98,13 @@ input[type=checkbox]:not(:disabled) ~ .lever:hover::before {
 }
 
 input[type=checkbox]:checked:not(:disabled) ~ .lever:hover::before {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
 }
 
 // Switch active style
 input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before,
 input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::before {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-primary) 18%, transparent);
 }
 
 input[type=checkbox]:not(:disabled) ~ .lever:hover::before {

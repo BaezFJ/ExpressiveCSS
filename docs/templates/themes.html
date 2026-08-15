@@ -160,12 +160,13 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
           other pre-2.1 names — those are not wired in RoutePlate.
         </p>
         <p>
-          Two layers exist. <code>tokens/_reference.scss</code> declares the
-          resolved pairs (<code>--md-sys-color-primary-light</code>,
+          Three layers exist. <code>tokens/_reference.scss</code> generates the
+          tonal ramps from <code>--md-source</code>, then resolves them into the
+          pairs (<code>--md-sys-color-primary-light</code>,
           <code>--md-sys-color-primary-dark</code>, and the rest).
-          <code>tokens/_theme.scss</code> points the live
-          <code>--md-sys-color-*</code> names at one of those pairs. Components
-          only read the live names.
+          <code>tokens/_theme.scss</code> collapses each pair into the live
+          <code>--md-sys-color-*</code> name with <code>light-dark()</code>.
+          Components only read the live names.
         </p>
         <p>
           Override the <code>-light</code> and <code>-dark</code> pairs so both
@@ -193,8 +194,8 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
 <pre><code>:root[theme='dark'] {
   --md-sys-color-primary: #d0bcff;
   --md-sys-color-on-primary: #381e72;
-  --md-sys-color-surface: #1a1c1e;
-  --md-sys-color-on-surface: #e2e2e5;
+  --md-sys-color-surface: #1c1b1f;
+  --md-sys-color-on-surface: #e6e1e5;
 }</code></pre>
         <p>
           The same custom properties inherit, so a wrapper can preview a
@@ -229,14 +230,37 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
 }
 
 .my-overlay {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
 }</code></pre>
         <p>
-          <code>--md-source</code> in the reference file is only a recorded
-          seed (<code>#006495</code>). Nothing reads it at runtime; changing
-          that one property will not recolor the ramps.
+          <code>--md-source</code> is the seed the ramps are generated from, and
+          it is live: set it and every generated ramp — and every system color
+          that resolves to one — recolors at runtime, with no rebuild.
+          RoutePlate ships <code>#006A79</code>.
         </p>
-        <p>Shipped pair values for the roles you will most often replace:</p>
+<pre><code>:root {
+  --md-source: #6750a4;   /* one line; the whole theme follows */
+}</code></pre>
+        <p>
+          Five of the six ramps are derived this way with
+          <code>oklch(from var(--md-source) …)</code>. The
+          <strong>error</strong> ramp is deliberately not: Material fixes the
+          error hue rather than deriving it, because "this went wrong" should
+          not change color when you change your brand color.
+        </p>
+        <p>
+          Overriding an individual <code>-light</code>/<code>-dark</code> pair
+          still works and still wins — that is the more surgical tool.
+          <code>--md-source</code> is the blunt one.
+        </p>
+        <p>
+          Where the shipped seed <code>#006A79</code> lands, for the roles you
+          will most often replace. These are <em>resolved</em> values: the
+          stylesheet ships the <code>oklch()</code> expression, and the browser
+          computes the color — including gamut-mapping the entries whose target
+          chroma sRGB cannot reach — so treat them as accurate to about a
+          rounding step rather than as literals to paste back in.
+        </p>
         <table class="striped">
           <thead>
             <tr>
@@ -246,22 +270,27 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>primary</code></td><td>#006495</td><td>#8fcdff</td></tr>
-            <tr><td><code>on-primary</code></td><td>#ffffff</td><td>#003450</td></tr>
-            <tr><td><code>primary-container</code></td><td>#cbe6ff</td><td>#004b71</td></tr>
-            <tr><td><code>on-primary-container</code></td><td>#001e30</td><td>#cbe6ff</td></tr>
-            <tr><td><code>secondary</code></td><td>#50606f</td><td>#b8c8d9</td></tr>
-            <tr><td><code>tertiary</code></td><td>#66587b</td><td>#d0bfe7</td></tr>
+            <tr><td><code>primary</code></td><td>#006a7a</td><td>#4fdbf5</td></tr>
+            <tr><td><code>on-primary</code></td><td>#ffffff</td><td>#003740</td></tr>
+            <tr><td><code>primary-container</code></td><td>#aaf0ff</td><td>#00505c</td></tr>
+            <tr><td><code>on-primary-container</code></td><td>#002026</td><td>#aaf0ff</td></tr>
+            <tr><td><code>secondary</code></td><td>#4b6369</td><td>#b1cbd3</td></tr>
+            <tr><td><code>secondary-container</code></td><td>#cde8ef</td><td>#344b51</td></tr>
+            <tr><td><code>tertiary</code></td><td>#535c7f</td><td>#bac4ed</td></tr>
             <tr><td><code>error</code></td><td>#ba1a1a</td><td>#ffb4ab</td></tr>
-            <tr><td><code>background</code></td><td>#fcfcff</td><td>#1a1c1e</td></tr>
-            <tr><td><code>surface</code></td><td>#fcfcff</td><td>#1a1c1e</td></tr>
-            <tr><td><code>on-surface</code></td><td>#1a1c1e</td><td>#e2e2e5</td></tr>
-            <tr><td><code>outline</code></td><td>#72787e</td><td>#8b9198</td></tr>
+            <tr><td><code>background</code></td><td>#fafdff</td><td>#1a1c1d</td></tr>
+            <tr><td><code>surface</code></td><td>#fafdff</td><td>#1a1c1d</td></tr>
+            <tr><td><code>on-surface</code></td><td>#1a1c1d</td><td>#e0e3e4</td></tr>
+            <tr><td><code>surface-variant</code></td><td>#d9e5e8</td><td>#3f484b</td></tr>
+            <tr><td><code>outline</code></td><td>#6f797c</td><td>#889296</td></tr>
           </tbody>
         </table>
         <p>
-          The full list of utilities and the legacy
-          <code>.red.lighten-2</code> palette live on the
+          <code>error</code> is the one row that does not move when you change
+          the seed — it is the ramp that is not generated.
+        </p>
+        <p>
+          The full list of role utilities lives on the
           <a href="{{ url_for('color') }}">Color</a> page. Pair a fill with its
           <code>on-*</code> text class so contrast stays correct when the
           scheme flips.

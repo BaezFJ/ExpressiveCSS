@@ -58,7 +58,7 @@
     }
   }
   li:not(.disabled):hover, li.active {
-    background-color: color-mix(in srgb, var(--md-sys-color-surface), var(--md-sys-color-on-surface) 8%);
+    background-color: color-mix(in oklab, var(--md-sys-color-surface), var(--md-sys-color-on-surface) 8%);
   }
 }
 

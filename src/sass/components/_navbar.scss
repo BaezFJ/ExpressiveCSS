@@ -148,11 +148,11 @@
         // dark. Mixing against the live token keeps the relationship in both
         // themes.
         &.active {
-          background-color: color-mix(in srgb, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 20%);
+          background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 20%);
         }
 
         &:hover:not(.active) {
-          background-color: color-mix(in srgb, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
+          background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
         }
 
         &.btn, &.btn-large, &.btn-flat, &.btn-floating {
@@ -203,7 +203,7 @@
       left: 0;
 
       i {
-        color: color-mix(in srgb, var(--md-sys-color-on-secondary-container) 74%, transparent);
+        color: color-mix(in oklab, var(--md-sys-color-on-secondary-container) 74%, transparent);
         transition: color .3s;
       }
 
