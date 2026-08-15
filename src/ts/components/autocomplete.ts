@@ -173,6 +173,28 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     return el['RoutePlate_Autocomplete'];
   }
 
+  /**
+   * The three-dot loading indicator, parsed once and cloned thereafter.
+   *
+   * It is shown on every input change, and it used to be assigned as an
+   * innerHTML string each time - re-running the HTML parser over the same
+   * fixed markup on every keystroke.
+   */
+  private static _loadingTemplate: HTMLElement = null;
+
+  private static _loadingIndicator(): HTMLElement {
+    if (!Autocomplete._loadingTemplate) {
+      const template = document.createElement('template');
+      template.innerHTML = `<div style="height:100%;width:50px;"><svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+    <circle fill="#888c" stroke="none" cx="6" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1"/></circle>
+    <circle fill="#888c" stroke="none" cx="26" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2"/></circle>
+    <circle fill="#888c" stroke="none" cx="46" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite"  begin="0.3"/></circle>
+  </svg></div>`;
+      Autocomplete._loadingTemplate = template.content.firstElementChild as HTMLElement;
+    }
+    return Autocomplete._loadingTemplate.cloneNode(true) as HTMLElement;
+  }
+
   destroy() {
     this._removeEventHandlers();
     this._removeDropdown();
@@ -392,12 +414,16 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     item.tabIndex = 0;
     // Checkbox
     if (this.options.isMultiSelect) {
-      item.innerHTML = `
-        <div class="item-selection" style="text-align:center;">
-        <input type="checkbox"${
-          this.selectedValues.some((sel) => sel.id === entry.id) ? ' checked="checked"' : ''
-        }><span style="padding-left:21px;"></span>
-      </div>`;
+      const selection = document.createElement('div');
+      selection.classList.add('item-selection');
+      selection.style.textAlign = 'center';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = this.selectedValues.some((sel) => sel.id === entry.id);
+      const spacer = document.createElement('span');
+      spacer.style.paddingLeft = '21px';
+      selection.append(checkbox, spacer);
+      item.appendChild(selection);
     }
     // Image
     if (entry.image) {
@@ -469,20 +495,16 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _setStatusLoading() {
-    this.el.parentElement.querySelector('.status-info').innerHTML =
-      `<div style="height:100%;width:50px;"><svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
-    <circle fill="#888c" stroke="none" cx="6" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1"/></circle>
-    <circle fill="#888c" stroke="none" cx="26" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2"/></circle>
-    <circle fill="#888c" stroke="none" cx="46" cy="50" r="6"><animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite"  begin="0.3"/></circle>
-  </svg></div>`;
+    const statusElement = this.el.parentElement.querySelector('.status-info');
+    if (statusElement) statusElement.replaceChildren(Autocomplete._loadingIndicator());
   }
 
   _updateSelectedInfo() {
     const statusElement = this.el.parentElement.querySelector('.status-info');
     if (statusElement) {
       if (this.options.isMultiSelect)
-        statusElement.innerHTML = this.selectedValues.length.toString();
-      else statusElement.innerHTML = '';
+        statusElement.textContent = this.selectedValues.length.toString();
+      else statusElement.replaceChildren();
     }
   }
 

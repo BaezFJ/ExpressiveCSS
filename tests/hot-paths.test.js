@@ -88,18 +88,24 @@ describe('Toast countdown', () => {
   test('pausing banks the remaining time instead of dismissing', async () => {
     const toast = new RoutePlate.Toast({ text: 'Saved', displayLength: 60, outDuration: 10 });
 
-    toast._pauseTimer(); // what _onDragStart does
-    await sleep(200);
+    // finally: a toast owns a live timer, so a failed assertion that skipped
+    // the dismiss would keep the test process alive.
+    try {
+      toast._pauseTimer(); // what _onDragStart does
+      await sleep(200);
 
-    assert.ok(document.querySelector('.toast'), 'a paused toast dismissed anyway');
-    assert.ok(toast.timeRemaining > 0, 'paused toast banked no time');
-    assert.equal(toast.counterTimeout, null, 'the timer was left armed while paused');
+      assert.ok(document.querySelector('.toast'), 'a paused toast dismissed anyway');
+      assert.ok(toast.timeRemaining > 0, 'paused toast banked no time');
+      assert.equal(toast.counterTimeout, null, 'the timer was left armed while paused');
 
-    toast._resumeTimer(); // what _onDragEnd does
-    assert.notEqual(toast.counterTimeout, null, 'resuming did not re-arm the timer');
+      toast._resumeTimer(); // what _onDragEnd does
+      assert.notEqual(toast.counterTimeout, null, 'resuming did not re-arm the timer');
 
-    await sleep(200);
-    assert.equal(document.querySelector('.toast'), null, 'resumed toast never dismissed');
+      await sleep(200);
+      assert.equal(document.querySelector('.toast'), null, 'resumed toast never dismissed');
+    } finally {
+      toast.dismiss();
+    }
   });
 });
 

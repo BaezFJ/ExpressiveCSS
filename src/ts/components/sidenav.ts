@@ -207,7 +207,8 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     const trigger = e.target.closest('.sidenav-trigger');
     if (e.target && trigger) {
       const sidenavId = Utils.getIdFromTrigger(trigger);
-      const sidenavInstance = document.getElementById(sidenavId)['RoutePlate_Sidenav'];
+      // The trigger can name an id that is not in the document.
+      const sidenavInstance = document.getElementById(sidenavId)?.['RoutePlate_Sidenav'];
       if (sidenavInstance) {
         sidenavInstance.open();
       }

@@ -327,7 +327,14 @@ export class Slider extends Component<SliderOptions> {
           : `${i + 1}`;
         const li = document.createElement('li');
         li.classList.add('indicator-item');
-        li.innerHTML = `<button type="button" class="indicator-item-btn" aria-label="${label}" aria-controls="${this._sliderId}"></button>`;
+        // setAttribute, not an interpolated attribute in markup: the label
+        // comes from indicatorLabelFunc and a quote in it would break out.
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.classList.add('indicator-item-btn');
+        button.setAttribute('aria-label', label);
+        button.setAttribute('aria-controls', this._sliderId);
+        li.appendChild(button);
         arrLi.push(li);
         ul.append(li);
       });

@@ -43,7 +43,14 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
 
     this.isOpen = false;
     // setup
-    this.originEl = document.querySelector(`#${el.dataset.target}`);
+    // getElementById, not a `#${...}` selector: data-target is author content
+    // and anything that is not a bare identifier either threw a SyntaxError
+    // here or steered the query somewhere else.
+    this.originEl = el.dataset.target ? document.getElementById(el.dataset.target) : null;
+    if (!this.originEl) {
+      console.error(`TapTarget: no element with id "${el.dataset.target ?? ''}" to attach to`);
+      return;
+    }
     this.originEl.tabIndex = 0;
 
     this._setup();
@@ -98,6 +105,7 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   }
 
   _setupEventHandlers() {
+    if (!this.originEl) return; // constructor bailed: nothing was ever wired up
     this.originEl.addEventListener('click', this._handleTargetToggle);
     this.originEl.addEventListener('keypress', this._handleKeyboardInteraction, true);
     // this.originEl.addEventListener('click', this._handleOriginClick);
@@ -106,6 +114,7 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   }
 
   _removeEventHandlers() {
+    if (!this.originEl) return;
     this.originEl.removeEventListener('click', this._handleTargetToggle);
     this.originEl.removeEventListener('keypress', this._handleKeyboardInteraction, true);
     // this.originEl.removeEventListener('click', this._handleOriginClick);
@@ -136,10 +145,12 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   };
 
   _handleDocumentClick = (e: MouseEvent | TouchEvent | KeyboardEvent) => {
-    if (
-      (e.target as HTMLElement).closest(`#${this.el.dataset.target}`) !== this.originEl &&
-      !(e.target as HTMLElement).closest('.tap-target-wrapper')
-    ) {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    // "outside the origin and outside the tap target" - expressed against the
+    // elements themselves rather than by rebuilding a selector from
+    // data-target on every document click.
+    if (!this.originEl.contains(target) && !target.closest('.tap-target-wrapper')) {
       this.close();
       // e.preventDefault();
       // e.stopPropagation();

@@ -536,7 +536,7 @@ export class Timepicker extends Component<TimepickerOptions> {
       this.options.dialRadius + Math.sin(radian) * radius - this.options.tickRadius + 'px';
     tick.style.top =
       this.options.dialRadius - Math.cos(radian) * radius - this.options.tickRadius + 'px';
-    tick.innerHTML = i === 0 ? '00' : i.toString();
+    tick.textContent = i === 0 ? '00' : i.toString();
     this.hoursView.appendChild(tick);
   }
 
@@ -557,7 +557,7 @@ export class Timepicker extends Component<TimepickerOptions> {
         Math.cos(radian) * this.options.outerRadius -
         this.options.tickRadius +
         'px';
-      tick.innerHTML = Timepicker._addLeadingZero(i);
+      tick.textContent = Timepicker._addLeadingZero(i);
       this.minutesView.appendChild(tick);
     }
   }

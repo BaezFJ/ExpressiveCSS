@@ -105,7 +105,7 @@ export class CharacterCounter extends Component<object> {
       counterString += '/' + maxLength;
       this._validateInput();
     }
-    this.counterEl.innerHTML = counterString;
+    this.counterEl.textContent = counterString;
   };
 
   _validateInput() {

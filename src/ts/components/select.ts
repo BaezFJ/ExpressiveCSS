@@ -184,12 +184,15 @@ export class FormSelect extends Component<FormSelectOptions> {
   };
 
   _setupDropdown() {
-    this.labelEl = document.querySelector('[for="' + this.el.id + '"]');
+    // The DOM already knows which labels belong to this control. Building a
+    // selector out of the id instead meant an id with any CSS-special
+    // character either threw or matched something else entirely.
+    this.labelEl = this.el.labels?.[0] ?? null;
 
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('select-wrapper', 'input-field');
     if (this.options.classes.length > 0) {
-      this.wrapper.classList.add(...this.options.classes.split(' '));
+      this.wrapper.classList.add(...this.options.classes.split(' ').filter(Boolean));
     }
     this.el.before(this.wrapper);
 
@@ -232,7 +235,14 @@ export class FormSelect extends Component<FormSelectOptions> {
           groupParent.tabIndex = -1;
           groupParent.setAttribute('role', 'group');
           groupParent.setAttribute('aria-labelledby', groupId);
-          groupParent.innerHTML = `<span id="${groupId}" role="presentation">${realOption.getAttribute('label')}</span>`;
+          // Built as nodes, not markup: the optgroup's label attribute is
+          // author content that may come from a server, and interpolating it
+          // into innerHTML let it close the span and inject an element.
+          const groupLabel = document.createElement('span');
+          groupLabel.id = groupId;
+          groupLabel.setAttribute('role', 'presentation');
+          groupLabel.textContent = realOption.getAttribute('label') ?? '';
+          groupParent.replaceChildren(groupLabel);
           this.dropdownOptions.append(groupParent);
 
           const groupChildren = [];
@@ -365,20 +375,32 @@ export class FormSelect extends Component<FormSelectOptions> {
     }
     if (type === 'optgroup-option') li.classList.add(type);
 
-    // Text / Checkbox
+    // Text / Checkbox. An <option>'s content model is text, so its markup is
+    // its text - copying it as nodes rather than through innerHTML keeps it
+    // that way instead of handing it back to the parser.
+    const optionText = realOption.textContent;
     const span = document.createElement('span');
-    span.innerHTML = realOption.innerHTML;
     if (this.isMultiple && !realOption.disabled) {
-      span.innerHTML = `<label><input type="checkbox"><span>${realOption.innerHTML}</span></label>`;
+      const label = document.createElement('label');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      const labelText = document.createElement('span');
+      labelText.textContent = optionText;
+      label.append(checkbox, labelText);
+      span.appendChild(label);
+    } else {
+      span.textContent = optionText;
     }
     li.appendChild(span);
 
     // add Icon
     const iconUrl = realOption.getAttribute('data-icon');
-    const classes = realOption.getAttribute('class')?.split(' ');
+    // filter(Boolean): a doubled or trailing space yields an empty string,
+    // and classList.add('') throws.
+    const classes = realOption.getAttribute('class')?.split(' ').filter(Boolean);
     if (iconUrl) {
       const img = document.createElement('img');
-      if (classes) img.classList.add(...classes);
+      if (classes?.length) img.classList.add(...classes);
       img.src = iconUrl;
       img.ariaHidden = 'true';
       li.prepend(img);

@@ -416,6 +416,24 @@ export class Datepicker extends Component<DatepickerOptions> {
     return super.init(els, options, Datepicker);
   }
 
+  /**
+   * Escape a value for interpolation into the calendar markup.
+   *
+   * `draw()` assembles the calendar as an HTML string, so every value that is
+   * not a number this class computed itself has to go through here. In
+   * practice that means the i18n strings: month and weekday names are the one
+   * part of a datepicker that routinely comes from a translation file, and a
+   * translation file is as trustworthy as whatever wrote it.
+   */
+  static _escape(value: unknown): string {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   static _isDate(obj) {
     return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
   }
@@ -485,20 +503,23 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.el.classList.add('datepicker-date-input');
     }
 
-    if (!this.el.parentElement.querySelector('.datepicker-format') === null) {
-      this._renderDateInputFormat(this.el);
-    }
+    // `!x === null` is always false, so this never ran; _renderDateInputFormat
+    // now no-ops on its own when there is no hint element to fill in.
+    this._renderDateInputFormat(this.el);
 
     if (this.options.isDateRange) {
       this.containerEl.classList.add('daterange');
       if (!this.options.dateRangeEndEl) {
         this.endDateEl = this.createDateInput();
         this.endDateEl.classList.add('datepicker-end-date');
-      } else if(document.querySelector(this.options.dateRangeEndEl) as HTMLInputElement === undefined) {
-        console.warn('Specified date range end input element in dateRangeEndEl not found');
       } else {
-        this.endDateEl = document.querySelector(this.options.dateRangeEndEl) as HTMLInputElement;
-        if (!this.endDateEl.parentElement.querySelector('.datepicker-format') === null) {
+        // querySelector returns null, never undefined: the old check compared
+        // against undefined, so a miss skipped the warning and fell through to
+        // dereferencing null.
+        this.endDateEl = document.querySelector(this.options.dateRangeEndEl);
+        if (!this.endDateEl) {
+          console.warn('Specified date range end input element in dateRangeEndEl not found');
+        } else {
           this._renderDateInputFormat(this.endDateEl);
         }
       }
@@ -530,10 +551,17 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   /**
-   * Renders the date input format
+   * Renders the date input format into the optional `.datepicker-format` hint
+   * next to the input, if the consumer provided one.
    */
   _renderDateInputFormat(el: HTMLInputElement) {
-    el.parentElement.querySelector('.datepicker-format').innerHTML = this.options.format.toString();
+    const formatEl = el.parentElement?.querySelector('.datepicker-format');
+    if (!formatEl) return;
+    // textContent, and nothing at all for a function format: this used to be
+    // `innerHTML = format.toString()`, which rendered a format string as
+    // markup and dumped a function's entire source into the page.
+    formatEl.textContent =
+      typeof this.options.format === 'function' ? '' : String(this.options.format);
   }
 
   /**
@@ -708,11 +736,12 @@ export class Datepicker extends Component<DatepickerOptions> {
     const displayDate = Datepicker._isDate(date) ? date : new Date();
     // this.yearTextEl.innerHTML = displayDate.getFullYear().toString();
     // @todo should we include an option for date formatting by component options?
+    // textContent: formatDate splices i18n month and weekday names in.
     if (!this.options.isDateRange) {
-      this.dateTextEl.innerHTML = this.formatDate(displayDate, 'ddd, mmm d');
+      this.dateTextEl.textContent = this.formatDate(displayDate, 'ddd, mmm d');
     } else {
       const displayEndDate = Datepicker._isDate(endDate) ? endDate : new Date();
-      this.dateTextEl.innerHTML = `${this.formatDate(displayDate, 'mmm d')} - ${this.formatDate(displayEndDate, 'mmm d')}`;
+      this.dateTextEl.textContent = `${this.formatDate(displayDate, 'mmm d')} - ${this.formatDate(displayEndDate, 'mmm d')}`;
     }
   }
 
@@ -951,13 +980,9 @@ export class Datepicker extends Component<DatepickerOptions> {
     const arr = [];
     let i;
     for (i = 0; i < 7; i++) {
-      arr.push(
-        `<th scope="col"><abbr title="${this.renderDayName(opts, i)}">${this.renderDayName(
-          opts,
-          i,
-          true
-        )}</abbr></th>`
-      );
+      const full = Datepicker._escape(this.renderDayName(opts, i));
+      const abbrev = Datepicker._escape(this.renderDayName(opts, i, true));
+      arr.push(`<th scope="col"><abbr title="${full}">${abbrev}</abbr></th>`);
     }
     return '<thead><tr>' + (opts.isRTL ? arr.reverse() : arr).join('') + '</tr></thead>';
   }
@@ -990,7 +1015,7 @@ export class Datepicker extends Component<DatepickerOptions> {
             ? 'disabled="disabled"'
             : '') +
           '>' +
-          opts.i18n.months[i] +
+          Datepicker._escape(opts.i18n.months[i]) +
           '</option>'
       );
     }
