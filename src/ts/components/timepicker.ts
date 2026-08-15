@@ -163,8 +163,8 @@ export class Timepicker extends Component<TimepickerOptions> {
    */
   amOrPm: 'AM' | 'PM';
   static _template;
-  /** Vibrate device when dragging clock hand. */
-  vibrate: 'vibrate' | 'webkitVibrate' | null;
+  /** Whether this device exposes the Vibration API at all. */
+  canVibrate: boolean;
   _canvas: HTMLElement;
   hoursView: HTMLElement;
   spanAmPm: HTMLSpanElement;
@@ -393,11 +393,9 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   _setupVariables() {
     this.currentView = 'hours';
-    this.vibrate = navigator.vibrate
-      ? 'vibrate'
-      : navigator['webkitVibrate']
-        ? 'webkitVibrate'
-        : null;
+    // `navigator.webkitVibrate` never shipped in any browser - the probe it
+    // came from was folklore. A plain feature check is the whole of it.
+    this.canVibrate = typeof navigator.vibrate === 'function';
     this._canvas = this.containerEl.querySelector('.timepicker-canvas');
     this.plate = this.containerEl.querySelector('.timepicker-plate');
     this.digitalClock = this.containerEl.querySelector('.timepicker-display-column');
@@ -789,10 +787,10 @@ export class Timepicker extends Component<TimepickerOptions> {
 
     // Once hours or minutes changed, vibrate the device
     if (this[this.currentView] !== value) {
-      if (this.vibrate && this.options.vibrate) {
+      if (this.canVibrate && this.options.vibrate) {
         // Do not vibrate too frequently
         if (!this.vibrateTimer) {
-          navigator[this.vibrate](10);
+          navigator.vibrate(10);
           this.vibrateTimer = setTimeout(() => {
             this.vibrateTimer = null;
           }, 100);

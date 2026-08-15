@@ -155,10 +155,7 @@ export class Pushpin extends Component<PushpinOptions> {
   }
 
   _removePinClasses() {
-    // IE 11 bug (can't remove multiple classes in one line)
-    this.el.classList.remove('pin-top');
-    this.el.classList.remove('pinned');
-    this.el.classList.remove('pin-bottom');
+    this.el.classList.remove('pin-top', 'pinned', 'pin-bottom');
   }
 
   static {
