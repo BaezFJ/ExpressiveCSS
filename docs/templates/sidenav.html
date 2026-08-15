@@ -23,7 +23,8 @@
           dropdown sections. On small screens the documentation sidebar uses this same component.
         </p>
         <p>
-          The sidenav HTML must <strong>not</strong> sit inside the navbar HTML.
+          The sidenav HTML must <strong>not</strong> sit inside the app bar’s
+          <code>&lt;nav&gt;</code>.
           Put a <code>sidenav-trigger</code> anywhere and set <code>data-target</code> to the sidenav’s
           <code>id</code>. <code>AutoInit()</code> starts every <code>.sidenav</code> except those marked
           <code>no-autoinit</code>.
@@ -283,7 +284,7 @@ const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
 
         <h5 class="light">Trigger on large screens</h5>
         <p>
-          A <code>sidenav-trigger</code> inside <code>.navbar</code> is hidden at the large breakpoint.
+          A <code>sidenav-trigger</code> inside a top app bar is hidden at the large breakpoint.
           Add <code>show-on-large</code> if you want that trigger on every screen size.
         </p>
 <pre><code>&lt;ul id="slide-out" class="sidenav"&gt;

@@ -3,24 +3,16 @@
 {% block body_class %}docs{% endblock %}
 
 {% block content %}
-    <header>
-        <div class="navbar-fixed">
-            <nav class="navbar">
-                <div class="nav-wrapper primary">
-                    <a class="brand-logo">{% block page_title %}RoutePlateCSS{% endblock %}</a>
-                    <a class="sidenav-trigger" href="#" data-target="nav-mobile">
-                        <i class="material-icons">menu</i>
-                    </a>
-                    <ul class="right">
-                        <li>
-                            <a id="theme-toggle" href="#" title="Toggle theme">
-                                <i class="material-icons">dark_mode</i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
+    <header class="fixed">
+        <nav>
+            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+                <i class="material-icons">menu</i>
+            </button>
+            <h2>{% block page_title %}RoutePlateCSS{% endblock %}</h2>
+            <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
+                <i class="material-icons">dark_mode</i>
+            </a>
+        </nav>
 
         <ul class="sidenav sidenav-fixed" id="nav-mobile">
             <li>

@@ -1,240 +1,345 @@
 @use "../abstracts" as *;
 
-:root {
-  --navbar-height: 64px;
-  --navbar-height-mobile: 56px;
-}
+// Top and bottom app bars.
+//
+// Anatomy is the HTML. A header whose child is a nav is a top app bar; a
+// footer whose child is a nav (and that is not .page-footer) is a bottom app
+// bar. Headings are the headline, icon-only links/buttons are the leading and
+// trailing actions, <menu> / <ul> hold text destinations. Helpers are only
+// for variants the markup cannot express: .center, .medium, .large, .fixed.
+//
+// Tokens follow the M3 top-app-bar / bottom-app-bar specs
+// (https://m3.material.io/components/app-bars/specs):
+//   container      surface, 64dp small / 112 medium / 152 large / 80 bottom
+//   headline       on-surface, title-large (small), headline-small/medium
+//   icons          on-surface-variant, 24dp in a 48dp target, 4dp inset
+//   elevation      0 at rest; level 2 once a .fixed bar has scrolled
 
-.navbar {
-  color:  var(--md-sys-color-on-secondary-container);
-  @include z-depth("1");
-  background-color: var(--md-sys-color-secondary-container);
+header:has(> nav) {
+  --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
+  --md-comp-top-app-bar-headline-color: var(--md-sys-color-on-surface);
+  // Inherit so a fill + on-* pair on the header recolors the icons.
+  // Set this to --md-sys-color-on-surface-variant for the spec mute.
+  --md-comp-top-app-bar-leading-icon-color: inherit;
+  --md-comp-top-app-bar-trailing-icon-color: inherit;
+  --md-comp-top-app-bar-container-height: 64px;
+  --md-comp-top-app-bar-leading-icon-size: 24px;
+  --md-comp-top-app-bar-container-shape: 0;
+
+  background-color: var(--md-comp-top-app-bar-container-color);
+  color: var(--md-comp-top-app-bar-headline-color);
+  border-radius: var(--md-comp-top-app-bar-container-shape);
   width: 100%;
-  height: var(--navbar-height-mobile);
-  line-height: var(--navbar-height-mobile);
 
-  &.nav-extended {
-    height: auto;
+  > nav {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--md-comp-top-app-bar-container-height);
+    padding-inline: 4px;
+    margin: 0;
+  }
 
-    .nav-wrapper {
-      min-height: var(--navbar-height-mobile);
-      height: auto;
+  > nav > :is(h1, h2, h3, h4, h5, h6) {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding-inline: 4px 12px;
+
+    // 16dp from the container edge when there is no leading icon.
+    &:first-child {
+      padding-inline-start: 12px;
     }
-    
-    .nav-content {
-      position: relative;
-      line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    font-family: var(--md-sys-typescale-title-large-font-family-name);
+    font-size: var(--md-sys-typescale-title-large-font-size);
+    font-weight: var(--md-sys-typescale-title-large-font-weight);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+  }
+
+  // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
+  > nav > :is(a, button):not(.btn):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--md-comp-top-app-bar-leading-icon-color);
+    cursor: pointer;
+    appearance: none;
+    font: inherit;
+    text-decoration: none;
+    @include focus-visible;
+
+    > i {
+      display: block;
+      font-size: var(--md-comp-top-app-bar-leading-icon-size);
+      width: var(--md-comp-top-app-bar-leading-icon-size);
+      height: var(--md-comp-top-app-bar-leading-icon-size);
+      line-height: var(--md-comp-top-app-bar-leading-icon-size);
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, currentColor 8%, transparent);
+    }
+
+    &:active {
+      background-color: color-mix(in oklab, currentColor 10%, transparent);
     }
   }
 
-  a {
-    color:  var(--md-sys-color-on-secondary-container);
+  // Text destinations, either loose or grouped in a menu/list.
+  > nav > a:not(:has(> i:only-child)):not(.btn):not(.btn-floating):not(.breadcrumb) {
+    @extend %app-bar-destination;
   }
 
-  i,
-  [class^="mdi-"], [class*="mdi-"],
-  i.material-icons, i.material-symbols-outlined,
-  i.material-symbols-rounded, i.material-symbols-sharp {
-    display: block;
-    font-size: 24px;
-    height: var(--navbar-height-mobile);
-    line-height: var(--navbar-height-mobile);
-  }
-
-  .nav-wrapper {
-    position: relative;
-    height: 100%;
-  }
-
-  @include bp-up("large") {
-    a.sidenav-trigger {
-      display: none;
-    }
-  }
-
-  // Collapse button
-  .sidenav-trigger {
-    float: left;
-    position: relative;
-    z-index: 1;
-    height: var(--navbar-height-mobile);
-    margin: 0 18px;
-
-    i {
-      height: var(--navbar-height-mobile);
-      line-height: var(--navbar-height-mobile);
-    }
-  }
-
-  // Logo
-  .brand-logo {
-    position: absolute;
-    color:  var(--md-sys-color-on-secondary-container);
-    display: inline-block;
-    font-size: 2.1rem;
+  > nav > :is(menu, ul) {
+    display: flex;
+    align-items: stretch;
+    align-self: stretch;
+    list-style: none;
+    margin: 0;
     padding: 0;
 
-    &.center {
-      left: 50%;
-      transform: translateX(-50%);
+    > li {
+      display: flex;
+      align-items: stretch;
     }
 
-    @include bp-down("large") {
-      left: 50%;
-      transform: translateX(-50%);
-
-      &.left, &.right {
-        padding: 0;
-        transform: none;
-      }
-
-      &.left {
-        left: 0.5rem;
-      }
-      &.right {
-        right: 0.5rem;
-        left: auto;
-      }
-    }
-
-    &.right {
-      right: 0.5rem;
-      padding: 0;
-    }
-
-    i,
-    [class^="mdi-"], [class*="mdi-"],
-    i.material-icons, i.material-symbols-outlined,
-    i.material-symbols-rounded, i.material-symbols-sharp {
-      float: left;
-      margin-right: 15px;
+    a {
+      @extend %app-bar-destination;
     }
   }
 
-
-  // Title
-  .nav-title {
-    display: inline-block;
-    font-size: 32px;
-    padding: 28px 0;
-  }
-
-
-  // Navbar Links
-  ul:not(.dropdown-content) {
-    list-style-type: none;
+  > nav > form {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    align-self: stretch;
+    min-width: 0;
     margin: 0;
 
-    & > li {
-      transition: background-color .3s;
-      float: left;
-      padding: 0;
-
-      & > a {
-        transition: background-color .3s;
-        font-size: 1rem;
-        color:  var(--md-sys-color-on-secondary-container);
-        display: block;
-        padding: 0 15px;
-        cursor: pointer;
-
-        // State layers over the bar's own background, matching btn-tonal in
-        // abstracts/_mixins.scss (16% hover, 20% for the stronger state).
-        //
-        // These used to be fixed dark-palette values - primary-container-dark
-        // and on-primary-dark - picked to read as "a darker shade" against a
-        // light bar. They did not follow the theme: in dark mode the bar
-        // lightens while those stayed dark, so an active item ended up dark on
-        // dark. Mixing against the live token keeps the relationship in both
-        // themes.
-        &.active {
-          background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 20%);
-        }
-
-        &:hover:not(.active) {
-          background-color: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) 16%);
-        }
-
-        &.btn, &.btn-large, &.btn-flat, &.btn-floating {
-          margin-top: -2px;
-          margin-left: 15px;
-          margin-right: 15px;
-          display: inline-block;
-
-          & > .material-icons, & > .material-symbols-outlined,
-          & > .material-symbols-rounded, & > .material-symbols-sharp {
-            height: inherit;
-            line-height: inherit;
-          }
-        }
-      }
-    }
-
-    &.left {
-      float: left;
-    }
-  }
-
-  // Navbar Search Form
-  form {
-    height: 100%;
-  }
-
-  .input-field {
-    margin: 0;
-    height: 100%;
-
-    input[type=search] {
+    input {
+      flex: 1 1 auto;
+      min-width: 0;
       height: 100%;
-      font-size: 1.2rem;
-      border: none;
-      padding-left: 2rem;
-      color:  var(--md-sys-color-on-secondary-container);
+      margin: 0;
+      padding: 0 16px;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      color: inherit;
+      font-family: var(--md-sys-typescale-body-large-font-family-name);
+      font-size: var(--md-sys-typescale-body-large-font-size);
+      font-weight: var(--md-sys-typescale-body-large-font-weight);
+      line-height: var(--md-sys-typescale-body-large-line-height);
 
-      &:focus, &[type=text]:valid, &[type=password]:valid,
-      &[type=email]:valid, &[type=url]:valid, &[type=date]:valid {
-        border: none;
+      &:focus,
+      &:focus-visible {
+        outline: none;
+        border: 0;
         box-shadow: none;
       }
     }
+  }
 
-    label {
-      top: 0;
-      left: 0;
+  // Secondary row (tabs sit under the bar, not inside it).
+  > .tabs {
+    background-color: transparent;
+    width: 100%;
+  }
 
-      i {
-        color: color-mix(in oklab, var(--md-sys-color-on-secondary-container) 74%, transparent);
-        transition: color .3s;
-      }
+  @include bp-up("large") {
+    // Beats the icon-button display:inline-flex (higher specificity).
+    // Same flag the visibility utilities use for breakpoint hides.
+    > nav > .sidenav-trigger {
+      display: none !important;
+    }
 
-      &.active i {
-        color:  var(--md-sys-color-on-secondary-container)
-      }
+    // The trigger is still :first-child, so the title needs the no-icon inset.
+    > nav > .sidenav-trigger + :is(h1, h2, h3, h4, h5, h6) {
+      padding-inline-start: 12px;
     }
   }
 }
 
-// Fixed Navbar
-.navbar-fixed {
-  position: relative;
-  height: var(--navbar-height-mobile);
-  z-index: 997;
+%app-bar-destination {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--md-sys-typescale-label-large-font-family-name);
+  font-size: var(--md-sys-typescale-label-large-font-size);
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  @include focus-visible;
 
-  .navbar {
-    position: fixed;
-    right: 0;
+  &:hover:not(.active) {
+    background-color: color-mix(in oklab, currentColor 8%, transparent);
+  }
+
+  &.active {
+    background-color: color-mix(in oklab, currentColor 10%, transparent);
   }
 }
 
-@include bp-up("small") {
-  .nav.nav-extended .nav-wrapper {
-    min-height: var(--navbar-height-mobile);
+// Center-aligned small bar. The headline is taken out of flow so leading and
+// trailing actions can sit on the edges without shifting the title.
+header.center:has(> nav) > nav {
+  position: relative;
+  justify-content: space-between;
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    flex: 0 1 auto;
+    max-width: calc(100% - 96px);
+    padding-inline: 16px;
+    text-align: center;
+    pointer-events: none;
   }
-  .nav, .navbar .nav-wrapper i, nav a.sidenav-trigger, .navbar a.sidenav-trigger i {
-    height: var(--navbar-height);
-    line-height: var(--navbar-height)
+}
+
+// Medium (112dp) and large (152dp): same markup, title wraps to a second row.
+header.medium:has(> nav) > nav,
+header.large:has(> nav) > nav {
+  flex-wrap: wrap;
+  align-content: flex-start;
+  height: auto;
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    order: 1;
+    flex: 1 0 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
-  .navbar-fixed {
-    height: var(--navbar-height);
+}
+
+header.medium:has(> nav) > nav {
+  min-height: 112px;
+  padding-bottom: 16px;
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    padding: 4px 12px 0 16px;
+    font-family: var(--md-sys-typescale-headline-small-font-family-name);
+    font-size: var(--md-sys-typescale-headline-small-font-size);
+    font-weight: var(--md-sys-typescale-headline-small-font-weight);
+    line-height: var(--md-sys-typescale-headline-small-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-small-letter-spacing);
+  }
+}
+
+header.large:has(> nav) > nav {
+  min-height: 152px;
+  padding-bottom: 28px;
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    padding: 12px 12px 0 16px;
+    font-family: var(--md-sys-typescale-headline-medium-font-family-name);
+    font-size: var(--md-sys-typescale-headline-medium-font-size);
+    font-weight: var(--md-sys-typescale-headline-medium-font-weight);
+    line-height: var(--md-sys-typescale-headline-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-headline-medium-letter-spacing);
+  }
+}
+
+// Pin the bar. Scroll-driven elevation is progressive enhancement: without
+// animation-timeline the bar stays at rest (level 0), which is the spec default.
+header.fixed:has(> nav) {
+  position: sticky;
+  top: 0;
+  z-index: 997;
+  animation: top-app-bar-scroll linear both;
+  animation-timeline: scroll(root);
+  animation-range: 0 8px;
+}
+
+@keyframes top-app-bar-scroll {
+  to {
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+      0 1px 10px 0 rgba(0, 0, 0, 0.12),
+      0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Bottom app bar. 80dp row, icons on the start, a FAB (any .btn) pushed to the end.
+footer:not(.page-footer):has(> nav) {
+  --md-comp-bottom-app-bar-container-color: var(--md-sys-color-surface);
+  --md-comp-bottom-app-bar-container-height: 80px;
+
+  background-color: var(--md-comp-bottom-app-bar-container-color);
+  color: var(--md-sys-color-on-surface);
+  width: 100%;
+  @include z-depth("2");
+
+  > nav {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--md-comp-bottom-app-bar-container-height);
+    padding: 12px 4px;
+    margin: 0;
+  }
+
+  > nav > :is(a, button):not(.btn):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    appearance: none;
+    font: inherit;
+    text-decoration: none;
+    @include focus-visible;
+
+    > i {
+      display: block;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, currentColor 8%, transparent);
+    }
+
+    &:active {
+      background-color: color-mix(in oklab, currentColor 10%, transparent);
+    }
+  }
+
+  > nav > :is(.btn, .btn-floating, .btn-large) {
+    margin-inline-start: auto;
+  }
+
+  &.fixed {
+    position: sticky;
+    bottom: 0;
+    z-index: 997;
   }
 }

@@ -39,7 +39,7 @@ span.badge {
 
 // Special cases
 
-.navbar ul a span.badge {
+header:has(> nav) nav a span.badge {
   display: inline-block;
   float: none;
   margin-left: 4px;

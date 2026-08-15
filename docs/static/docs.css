@@ -22,15 +22,10 @@ section .btn {
 
 /* Offset documentation pages so they sit beside the fixed sidenav. */
 @media only screen and (min-width: 993px) {
-  body.docs header,
-  body.docs main,
-  body.docs footer {
+  body.docs > header,
+  body.docs > main,
+  body.docs > footer {
     padding-left: 300px;
-  }
-
-  body.docs .navbar-fixed .navbar {
-    left: 300px;
-    width: auto;
   }
 }
 
