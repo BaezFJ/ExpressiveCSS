@@ -114,6 +114,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     Dropdown._dropdowns.push(this);
     this.id = Utils.getIdFromTrigger(el);
     this.dropdownEl = document.getElementById(this.id);
+    this.dropdownEl?.classList.add('dropdown-content');
 
     this.options = {
       ...Dropdown.defaults,
@@ -231,7 +232,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleMouseLeave = (e: MouseEvent) => {
     const toEl = e.relatedTarget as HTMLElement;
-    const leaveToDropdownContent = !!toEl.closest('.dropdown-content');
+    const leaveToDropdownContent = !!toEl.closest('.dropdown-content, menu');
     let leaveToActiveDropdownTrigger = false;
     const closestTrigger = toEl.closest('.dropdown-trigger');
     if (closestTrigger && !!closestTrigger['RoutePlate_Dropdown'] && closestTrigger['RoutePlate_Dropdown'].isOpen) {
@@ -245,10 +246,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleDocumentClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
-    if (this.options.closeOnClick && target.closest('.dropdown-content') && !this.isTouchMoving) {
+    if (this.options.closeOnClick && target.closest('.dropdown-content, menu') && !this.isTouchMoving) {
       // isTouchMoving to check if scrolling on mobile.
       this.close();
-    } else if (!target.closest('.dropdown-content')) {
+    } else if (!target.closest('.dropdown-content, menu')) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
       // For example, if a label for a select was clicked, that we don't close/open the dropdown
       setTimeout(() => {
@@ -272,7 +273,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleDocumentTouchmove = (e: TouchEvent) => {
     const target = <HTMLElement>e.target;
-    if (target.closest('.dropdown-content')) {
+    if (target.closest('.dropdown-content, menu')) {
       this.isTouchMoving = true;
     }
   };
@@ -407,6 +408,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     this.dropdownEl.tabIndex = 0;
     // Only set tabindex if it hasn't been set by user
     Array.from(this.dropdownEl.children).forEach((el) => {
+      if (el instanceof HTMLHRElement || el.classList.contains('divider')) {
+        el.setAttribute('tabindex', '-1');
+        return;
+      }
       if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '0');
     });
   }

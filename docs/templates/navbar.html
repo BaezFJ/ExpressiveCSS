@@ -336,15 +336,16 @@
         <h3>Dropdown</h3>
         <p>
           Point a <code>dropdown-trigger</code> at a
-          <code>dropdown-content</code> list with <code>data-target</code>.
+          <code>&lt;menu&gt;</code> whose <code>id</code> matches
+          <code>data-target</code>.
           <code>AutoInit()</code> starts every <code>.dropdown-trigger</code>.
         </p>
-        <ul id="navbar-dropdown1" class="dropdown-content">
+        <menu id="navbar-dropdown1">
           <li><a href="#!">one</a></li>
           <li><a href="#!">two</a></li>
-          <li class="divider"></li>
+          <hr>
           <li><a href="#!">three</a></li>
-        </ul>
+        </menu>
         <header class="mb-3">
           <nav>
             <h2>Title</h2>
@@ -359,12 +360,12 @@
             </menu>
           </nav>
         </header>
-<pre><code>&lt;ul id="dropdown1" class="dropdown-content"&gt;
+<pre><code>&lt;menu id="dropdown1"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;one&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="#!"&gt;two&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="divider"&gt;&lt;/li&gt;
+  &lt;hr&gt;
   &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;/menu&gt;
 &lt;header&gt;
   &lt;nav&gt;
     &lt;h2&gt;Title&lt;/h2&gt;

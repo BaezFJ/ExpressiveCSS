@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Dropdown</h1>
-      <h4 class="light primary-text">Add a dropdown list to any button.</h4>
+      <h4 class="light primary-text">Material Design 3 menus, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -17,39 +17,67 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Add a dropdown list to any button. The trigger’s <code>data-target</code> must match the
-          <code>id</code> of the <code>ul</code>. A divider is an empty
-          <code>li</code> with the <code>divider</code> class. Icons go inside the item’s
-          <code>&lt;a&gt;</code>.
+          A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
+          is an item, an <code>&lt;hr&gt;</code> is a divider, and an
+          <code>&lt;i&gt;</code> inside the item is the leading icon. The
+          trigger’s <code>data-target</code> must match the menu’s
+          <code>id</code>. <code>.dropdown-trigger</code> is still required —
+          that is the JavaScript contract. <code>.dropdown-content</code> is
+          an alias; FormSelect and Autocomplete still generate it.
         </p>
         <p>
-          <code>AutoInit()</code> starts every <code>.dropdown-trigger</code> except those marked
-          <code>no-autoinit</code>. Dropdowns open on click by default.
+          Tokens follow the
+          <a href="https://m3.material.io/components/menus/specs">M3 menu spec</a>.
+          The container is <code>surface</code>, 4dp corners, elevation 2,
+          at least 112dp wide. Items are 48dp, <code>label-large</code> /
+          <code>on-surface</code>, with 12dp inset. Icons are 24dp
+          <code>on-surface-variant</code>. Hover is an 8% state layer.
         </p>
-        <a class="dropdown-trigger btn filled waves-effect" href="#!" data-target="dropdown1">Drop Me!</a>
-        <ul id="dropdown1" class="dropdown-content">
-          <li><a href="#!">one</a></li>
-          <li><a href="#!">two</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">three</a></li>
-          <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-          <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
-        </ul>
-<pre><code>&lt;!-- Dropdown Trigger --&gt;
-&lt;a class="dropdown-trigger btn filled" href="#!" data-target="dropdown1"&gt;Drop Me!&lt;/a&gt;
-&lt;!-- Dropdown Structure --&gt;
-&lt;ul id="dropdown1" class="dropdown-content"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;one&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;two&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="divider" tabindex="-1"&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;view_module&lt;/i&gt;four&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;cloud&lt;/i&gt;five&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
         <p>
-          For a dropdown inside a top app bar, see
+          <code>AutoInit()</code> starts every <code>.dropdown-trigger</code>
+          except those marked <code>no-autoinit</code>. Menus open on click
+          by default. M3 opens the menu below the trigger; pass
+          <code>coverTrigger: false</code> for that. The default still
+          covers the trigger so Select is unchanged.
+        </p>
+        <p>
+          <button type="button" class="dropdown-trigger" data-target="dropdown1">Drop me</button>
+        </p>
+        <menu id="dropdown1">
+          <li><a href="#!">One</a></li>
+          <li><a href="#!">Two</a></li>
+          <hr>
+          <li><a href="#!">Three</a></li>
+          <li>
+            <a href="#!">
+              <i class="material-icons">view_module</i>
+              <span>Four</span>
+            </a>
+          </li>
+          <li>
+            <a href="#!">
+              <i class="material-icons">cloud</i>
+              <span>Five</span>
+            </a>
+          </li>
+        </menu>
+<pre><code>&lt;button class="dropdown-trigger" data-target="menu1"&gt;Drop me&lt;/button&gt;
+&lt;menu id="menu1"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;One&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Two&lt;/a&gt;&lt;/li&gt;
+  &lt;hr&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Three&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#!"&gt;
+      &lt;i class="material-icons"&gt;cloud&lt;/i&gt;
+      &lt;span&gt;Five&lt;/span&gt;
+    &lt;/a&gt;
+  &lt;/li&gt;
+&lt;/menu&gt;</code></pre>
+        <p>
+          For a menu inside a top app bar, see
           <a href="{{ url_for('navbar') }}#navbar-dropdown">Navbar Dropdown</a>.
         </p>
       </div>
@@ -58,18 +86,18 @@
         <h3>Initialization</h3>
         <p>
           The IIFE bundle exposes <code>RoutePlate.Dropdown</code>.
-          Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>RoutePlate.AutoInit()</code> start every <code>.dropdown-trigger</code>.
+          Call <code>init</code> yourself when you need options other than
+          the defaults, or let <code>RoutePlate.AutoInit()</code> start
+          every <code>.dropdown-trigger</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.dropdown-trigger');
-  const instances = RoutePlate.Dropdown.init(elems, {
-    // specify options here
+  RoutePlate.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
+    coverTrigger: false
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
 <pre><code>RoutePlate.AutoInit(document.body, {
-  Dropdown: { constrainWidth: false }
+  Dropdown: { constrainWidth: false, coverTrigger: false }
 });</code></pre>
       </div>
 
@@ -95,37 +123,37 @@
               <td><code>autoFocus</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, automatically focus the dropdown for keyboard navigation. This option is named <code>autoFocus</code>, not <code>autoTrigger</code>.</td>
+              <td>If true, automatically focus the menu for keyboard navigation. This option is named <code>autoFocus</code>, not <code>autoTrigger</code>.</td>
             </tr>
             <tr>
               <td><code>constrainWidth</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, the menu is as wide as the trigger.</td>
+              <td>If true, the menu is as wide as the trigger. M3 menus are independently sized — pass <code>false</code> for that.</td>
             </tr>
             <tr>
               <td><code>container</code></td>
               <td>Element</td>
               <td><code>null</code></td>
-              <td>Element that will contain the dropdown. When omitted, the menu is moved next to the trigger.</td>
+              <td>Element that will contain the menu. When omitted, the menu is moved next to the trigger.</td>
             </tr>
             <tr>
               <td><code>coverTrigger</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If false, the menu opens below the trigger instead of covering it.</td>
+              <td>If false, the menu opens below the trigger. That is the M3 placement. The default still covers the trigger so Select is unchanged.</td>
             </tr>
             <tr>
               <td><code>closeOnClick</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, close the dropdown when an item is clicked.</td>
+              <td>If true, close the menu when an item is clicked.</td>
             </tr>
             <tr>
               <td><code>hover</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, the dropdown opens on hover instead of click.</td>
+              <td>If true, the menu opens on hover instead of click.</td>
             </tr>
             <tr>
               <td><code>inDuration</code></td>
@@ -143,25 +171,25 @@
               <td><code>onOpenStart</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the dropdown starts opening.</td>
+              <td>Called when the menu starts opening.</td>
             </tr>
             <tr>
               <td><code>onOpenEnd</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the dropdown finishes opening.</td>
+              <td>Called when the menu finishes opening.</td>
             </tr>
             <tr>
               <td><code>onCloseStart</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the dropdown starts closing.</td>
+              <td>Called when the menu starts closing.</td>
             </tr>
             <tr>
               <td><code>onCloseEnd</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the dropdown finishes closing.</td>
+              <td>Called when the menu finishes closing.</td>
             </tr>
             <tr>
               <td><code>onItemClick</code></td>
@@ -172,56 +200,62 @@
           </tbody>
         </table>
 
-        <h5 class="light">Examples</h5>
+        <h5>Examples</h5>
         <p>
-          These two menus set <code>constrainWidth: false</code> so the list can be wider than the button,
-          and use <code>alignment</code> to pick an edge.
+          These two menus set <code>constrainWidth: false</code> so the list
+          can be wider than the button, and use <code>alignment</code> to
+          pick an edge.
         </p>
         <p>
-          <a class="dropdown-trigger btn filled waves-effect no-autoinit mr-3 mb-3" href="#!" id="dropdown-left-trigger" data-target="dropdown-left">Left DropDown!</a>
-          <a class="dropdown-trigger btn filled waves-effect no-autoinit mr-3 mb-3" href="#!" id="dropdown-right-trigger" data-target="dropdown-right">Right DropDown!</a>
+          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-left-trigger" data-target="dropdown-left">Left</button>
+          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-right-trigger" data-target="dropdown-right">Right</button>
         </p>
-        <ul id="dropdown-left" class="dropdown-content">
-          <li><a href="#!">one</a></li>
-          <li><a href="#!">two</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">three</a></li>
-          <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-          <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
-        </ul>
-        <ul id="dropdown-right" class="dropdown-content">
-          <li><a href="#!">one</a></li>
-          <li><a href="#!">two</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">three</a></li>
-          <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-          <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
-        </ul>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  RoutePlate.Dropdown.init(document.querySelector('#dropdown-left-trigger'), {
-    alignment: 'left',
-    constrainWidth: false
-  });
-  RoutePlate.Dropdown.init(document.querySelector('#dropdown-right-trigger'), {
-    alignment: 'right',
-    constrainWidth: false
-  });
+        <menu id="dropdown-left">
+          <li><a href="#!">One</a></li>
+          <li><a href="#!">Two</a></li>
+          <hr>
+          <li><a href="#!">Three</a></li>
+          <li>
+            <a href="#!">
+              <i class="material-icons">view_module</i>
+              <span>Four</span>
+            </a>
+          </li>
+        </menu>
+        <menu id="dropdown-right">
+          <li><a href="#!">One</a></li>
+          <li><a href="#!">Two</a></li>
+          <hr>
+          <li><a href="#!">Three</a></li>
+          <li>
+            <a href="#!">
+              <i class="material-icons">cloud</i>
+              <span>Five</span>
+            </a>
+          </li>
+        </menu>
+<pre><code>RoutePlate.Dropdown.init(document.querySelector('#left'), {
+  alignment: 'left',
+  constrainWidth: false,
+  coverTrigger: false
 });</code></pre>
         <p>
-          Hover is off by default. Pass <code>hover: true</code> to open on mouse enter instead of click.
+          Hover is off by default. Pass <code>hover: true</code> to open on
+          mouse enter instead of click.
         </p>
         <p>
-          <a class="dropdown-trigger btn filled waves-effect no-autoinit" href="#!" id="dropdown-hover-trigger" data-target="dropdown-hover">Hover Me!</a>
+          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-hover-trigger" data-target="dropdown-hover">Hover me</button>
         </p>
-        <ul id="dropdown-hover" class="dropdown-content">
-          <li><a href="#!">one</a></li>
-          <li><a href="#!">two</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">three</a></li>
-        </ul>
-<pre><code>RoutePlate.Dropdown.init(document.querySelector('#dropdown-hover-trigger'), {
+        <menu id="dropdown-hover">
+          <li><a href="#!">One</a></li>
+          <li><a href="#!">Two</a></li>
+          <hr>
+          <li><a href="#!">Three</a></li>
+        </menu>
+<pre><code>RoutePlate.Dropdown.init(document.querySelector('#hover'), {
   hover: true,
-  constrainWidth: false
+  constrainWidth: false,
+  coverTrigger: false
 });</code></pre>
       </div>
 
@@ -232,19 +266,19 @@
         </blockquote>
 <pre><code>const instance = RoutePlate.Dropdown.getInstance(elem);</code></pre>
 
-        <h5 class="light">.open();</h5>
-        <p>Open the dropdown.</p>
+        <h5>.open()</h5>
+        <p>Open the menu.</p>
 <pre><code>instance.open();</code></pre>
 
-        <h5 class="light">.close();</h5>
-        <p>Close the dropdown.</p>
+        <h5>.close()</h5>
+        <p>Close the menu.</p>
 <pre><code>instance.close();</code></pre>
 
-        <h5 class="light">.recalculateDimensions();</h5>
-        <p>While the dropdown is open, recalculate its dimensions if its contents have changed.</p>
+        <h5>.recalculateDimensions()</h5>
+        <p>While the menu is open, recalculate its dimensions if its contents have changed.</p>
 <pre><code>instance.recalculateDimensions();</code></pre>
 
-        <h5 class="light">.destroy();</h5>
+        <h5>.destroy()</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
       </div>
@@ -263,7 +297,7 @@
             <tr>
               <td><code>el</code></td>
               <td>Element</td>
-              <td>The DOM element the plugin was initialized with (the trigger).</td>
+              <td>The trigger the plugin was initialized with.</td>
             </tr>
             <tr>
               <td><code>options</code></td>
@@ -273,22 +307,22 @@
             <tr>
               <td><code>id</code></td>
               <td>String</td>
-              <td>ID of the dropdown content element.</td>
+              <td>ID of the menu element.</td>
             </tr>
             <tr>
               <td><code>dropdownEl</code></td>
               <td>Element</td>
-              <td>The dropdown content element.</td>
+              <td>The menu element.</td>
             </tr>
             <tr>
               <td><code>isOpen</code></td>
               <td>Boolean</td>
-              <td>Whether the dropdown is open.</td>
+              <td>Whether the menu is open.</td>
             </tr>
             <tr>
               <td><code>isScrollable</code></td>
               <td>Boolean</td>
-              <td>Whether the dropdown content is scrollable.</td>
+              <td>Whether the menu content is scrollable.</td>
             </tr>
             <tr>
               <td><code>focusedIndex</code></td>
@@ -303,7 +337,7 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#methods">Methods</a></li>
