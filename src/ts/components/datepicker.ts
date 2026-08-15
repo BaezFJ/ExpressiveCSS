@@ -1001,9 +1001,13 @@ export class Datepicker extends Component<DatepickerOptions> {
       html =
         '<div id="' +
         randId +
-        '" class="datepicker-controls" role="heading" aria-live="assertive">',
-      prev = true,
-      next = true;
+        '" class="datepicker-controls" role="heading" aria-live="assertive">';
+
+    // Decided up front. These used to be computed *below* the month-prev
+    // button that reads `prev`, so the previous arrow was never disabled at
+    // the start of the allowed range.
+    const prev = !(isMinYear && (month === 0 || opts.minMonth >= month));
+    const next = !(isMaxYear && (month === 11 || opts.maxMonth <= month));
 
     for (i = 0; i < 12; i++) {
       arr.push(
@@ -1056,14 +1060,6 @@ export class Datepicker extends Component<DatepickerOptions> {
       html += monthHtml + yearHtml;
     }
     html += '</div>';
-
-    if (isMinYear && (month === 0 || opts.minMonth >= month)) {
-      prev = false;
-    }
-
-    if (isMaxYear && (month === 11 || opts.maxMonth <= month)) {
-      next = false;
-    }
 
     const rightArrow =
       '<svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/><path d="M0-.25h24v24H0z" fill="none"/></svg>';
@@ -1362,6 +1358,9 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   createDateInput() {
     const dateInput = <HTMLInputElement>this.el.cloneNode(true);
+    // cloneNode copies the id too, and two elements sharing one id break every
+    // lookup that goes through it.
+    dateInput.removeAttribute('id');
     dateInput.addEventListener('click', this._handleInputClick);
     dateInput.addEventListener('keypress', this._handleInputKeydown);
     dateInput.addEventListener('change', this._handleInputChange);

@@ -240,6 +240,11 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleMouseLeave = (e: MouseEvent) => {
     const toEl = e.relatedTarget as HTMLElement;
+    // relatedTarget is null when the pointer leaves the window entirely.
+    if (!toEl) {
+      this.close();
+      return;
+    }
     const leaveToDropdownContent = !!toEl.closest('.dropdown-content, menu');
     let leaveToActiveDropdownTrigger = false;
     const closestTrigger = toEl.closest('.dropdown-trigger');

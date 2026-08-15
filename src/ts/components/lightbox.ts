@@ -271,7 +271,7 @@ export class Lightbox extends Component<LightboxOptions> {
       top ${duration}ms ease
     `;
     // to
-    this.el.style.height = this.originalWidth + 'px';
+    this.el.style.height = this.originalHeight + 'px'; // was originalWidth
     this.el.style.width = this.originalWidth + 'px';
     this.el.style.left = '0';
     this.el.style.top = '0';
@@ -400,7 +400,7 @@ export class Lightbox extends Component<LightboxOptions> {
       this.el.removeAttribute('width');
     }
     if (this.attrHeight) {
-      this.el.style.width = this.attrHeight + 'px';
+      this.el.style.height = this.attrHeight + 'px'; // was width, from the height attribute
       this.el.removeAttribute('height');
     }
     this._addOverlay();

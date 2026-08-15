@@ -31,6 +31,10 @@ export class Parallax extends Component<ParallaxOptions> {
 
     this._enabled = window.innerWidth > this.options.responsiveThreshold;
     this._img = this.el.querySelector('img');
+    if (!this._img) {
+      console.error('Parallax: no <img> to move inside the .parallax element');
+      return;
+    }
     this._updateParallax();
     this._setupEventHandlers();
     this._setupStyles();
@@ -70,8 +74,9 @@ export class Parallax extends Component<ParallaxOptions> {
   }
 
   destroy() {
-    Parallax._parallaxes.splice(Parallax._parallaxes.indexOf(this), 1);
-    this._img.style.transform = '';
+    const index = Parallax._parallaxes.indexOf(this);
+    if (index >= 0) Parallax._parallaxes.splice(index, 1);
+    if (this._img) this._img.style.transform = '';
     this._removeEventHandlers();
     this.el['RoutePlate_Parallax'] = undefined;
   }
@@ -106,7 +111,7 @@ export class Parallax extends Component<ParallaxOptions> {
   }
 
   _setupEventHandlers() {
-    this._img.addEventListener('load', this._handleImageLoad);
+    this._img?.addEventListener('load', this._handleImageLoad);
     if (Parallax._parallaxes.length === 0) {
       if (!Parallax._handleWindowResizeThrottled) {
         Parallax._handleWindowResizeThrottled = Utils.throttle(Parallax._handleWindowResize, 100);
@@ -117,7 +122,7 @@ export class Parallax extends Component<ParallaxOptions> {
   }
 
   _removeEventHandlers() {
-    this._img.removeEventListener('load', this._handleImageLoad);
+    this._img?.removeEventListener('load', this._handleImageLoad);
     if (Parallax._parallaxes.length === 0) {
       window.removeEventListener('scroll', Parallax._requestScrollUpdate);
       window.removeEventListener('resize', Parallax._handleWindowResizeThrottled);
@@ -129,7 +134,7 @@ export class Parallax extends Component<ParallaxOptions> {
   }
 
   _setupStyles() {
-    this._img.style.opacity = '1';
+    if (this._img) this._img.style.opacity = '1';
   }
 
   _handleImageLoad = () => {

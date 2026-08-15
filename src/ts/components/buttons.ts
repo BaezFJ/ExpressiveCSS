@@ -38,6 +38,8 @@ export class FloatingActionButton
   private _menu: HTMLElement | null;
   private _floatingBtns: HTMLElement[];
   private _floatingBtnsReverse: HTMLElement[];
+  /** Toolbar-mode backdrop, kept so closing can take it back out. */
+  private _backdrop: HTMLElement | null = null;
 
   offsetY: number;
   offsetX: number;
@@ -63,8 +65,8 @@ export class FloatingActionButton
     this.offsetX = 0;
 
     this.el.classList.add(`direction-${this.options.direction}`);
-    this._anchor.tabIndex = 0;
-    this._menu.ariaExpanded = 'false';
+    if (this._anchor) this._anchor.tabIndex = 0;
+    if (this._menu) this._menu.ariaExpanded = 'false';
     if (this.options.direction === 'top')
       this.offsetY = 40;
     else if (this.options.direction === 'right')
@@ -183,6 +185,7 @@ export class FloatingActionButton
     if (this.options.toolbarEnabled) {
       window.removeEventListener('scroll', this.close, true);
       document.body.removeEventListener('click', this._handleDocumentClick, true);
+      this._animateOutToolbar();
     } else {
       this._animateOutFAB();
     }
@@ -191,7 +194,7 @@ export class FloatingActionButton
 
   _animateInFAB() {
     this.el.classList.add('active');
-    this._menu.ariaExpanded = 'true';
+    if (this._menu) this._menu.ariaExpanded = 'true';
     const delayIncrement = 40;
     const duration = 275;
 
@@ -219,7 +222,7 @@ export class FloatingActionButton
     const duration = 175;
     setTimeout(() => {
       this.el.classList.remove('active');
-      this._menu.ariaExpanded = 'false';
+      if (this._menu) this._menu.ariaExpanded = 'false';
     }, duration);
     this._floatingBtnsReverse.forEach((el) => {
       el.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
@@ -234,13 +237,19 @@ export class FloatingActionButton
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     const btnRect = this.el.getBoundingClientRect();
+    const fabColor = getComputedStyle(this._anchor).backgroundColor;
 
-    const backdrop = document.createElement('div'),
-      scaleFactor = windowWidth / backdrop[0].clientWidth,
-      fabColor = getComputedStyle(this._anchor).backgroundColor; // css('background-color');
-    backdrop.classList.add('fab-backdrop'); //  $('<div class="fab-backdrop"></div>');
+    // The backdrop has to be in the document before it has a width. Reading
+    // `backdrop[0].clientWidth` off a bare element - a leftover from the
+    // cash-based original, where [0] unwrapped the collection - threw here and
+    // took the whole of toolbar mode with it.
+    const backdrop = document.createElement('div');
+    backdrop.classList.add('fab-backdrop');
     backdrop.style.backgroundColor = fabColor;
     this._anchor.append(backdrop);
+    this._backdrop = backdrop;
+    const backdropWidth = backdrop.clientWidth;
+    const scaleFactor = backdropWidth > 0 ? windowWidth / backdropWidth : 1;
 
     this.offsetX = btnRect.left - windowWidth / 2 + btnRect.width / 2;
     this.offsetY = windowHeight - btnRect.bottom;
@@ -256,9 +265,10 @@ export class FloatingActionButton
     this.el.style.left = '0';
     this.el.style.transform = 'translateX(' + this.offsetX + 'px)';
     this.el.style.transition = 'none';
-    this._menu.ariaExpanded = 'true';
+    if (this._menu) this._menu.ariaExpanded = 'true';
 
-    this._anchor.style.transform = `translateY(${this.offsetY}px`;
+    // Was missing its closing paren, so the browser dropped the declaration.
+    this._anchor.style.transform = `translateY(${this.offsetY}px)`;
     this._anchor.style.transition = 'none';
 
     setTimeout(() => {
@@ -287,5 +297,50 @@ export class FloatingActionButton
         document.body.addEventListener('click', this._handleDocumentClick, true);
       }, 100);
     }, 0);
+  }
+
+  /**
+   * Reverse {@link _animateInToolbar}.
+   *
+   * Closing used to only unbind the listeners, leaving the FAB stretched
+   * across the viewport with its backdrop still in the DOM - and a fresh
+   * backdrop appended on every subsequent open.
+   */
+  _animateOutToolbar() {
+    const backdrop = this._backdrop;
+    this._backdrop = null;
+
+    this._menu?.querySelectorAll('li > a').forEach((a: HTMLAnchorElement) => {
+      a.style.opacity = '';
+      a.tabIndex = -1;
+    });
+
+    if (backdrop) {
+      backdrop.style.transition = 'transform .2s';
+      backdrop.style.transform = 'scale(0)';
+    }
+
+    this.el.style.overflow = '';
+    this.el.style.backgroundColor = '';
+    this.el.style.transition = 'transform .2s';
+    this.el.style.transform = `translateX(${this.offsetX}px)`;
+    this._anchor.style.transition = 'transform .2s';
+    this._anchor.style.transform = `translateY(${this.offsetY}px)`;
+
+    setTimeout(() => {
+      backdrop?.remove();
+      this.el.classList.remove('active');
+      if (this._menu) this._menu.ariaExpanded = 'false';
+      // Clear every inline style _animateInToolbar wrote.
+      this.el.style.textAlign = '';
+      this.el.style.width = '';
+      this.el.style.bottom = '';
+      this.el.style.left = '';
+      this.el.style.transform = '';
+      this.el.style.transition = '';
+      this._anchor.style.overflow = '';
+      this._anchor.style.transform = '';
+      this._anchor.style.transition = '';
+    }, 200);
   }
 }

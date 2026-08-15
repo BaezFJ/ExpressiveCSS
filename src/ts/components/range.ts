@@ -1,4 +1,5 @@
 import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Utils } from '../core/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface RangeOptions extends BaseOptions {}
@@ -176,10 +177,10 @@ export class Range extends Component<RangeOptions> {
    * Initializes every range input in the current document.
    */
   static Init() {
-    if (typeof document !== 'undefined')
-      Range.init(
-        document?.querySelectorAll('input[type=range]') as NodeListOf<HTMLInputElement>,
-        {}
-      );
+    // Deferred like every other Init(): this ran at import time, so a bundle
+    // loaded in <head> found no inputs at all.
+    Utils.onDocumentReady(() => {
+      Range.init(document.querySelectorAll('input[type=range]') as NodeListOf<HTMLInputElement>, {});
+    });
   }
 }

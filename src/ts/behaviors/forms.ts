@@ -70,49 +70,43 @@ export class Forms {
   }
 
   static Init() {
-    if (typeof document !== 'undefined')
-      document?.addEventListener('DOMContentLoaded', () => {
-        document.addEventListener('change', (e: KeyboardEvent) => {
-          const target = <HTMLInputElement>e.target;
-          if (target instanceof HTMLInputElement) {
-            if (target.value.length !== 0 || target.getAttribute('placeholder') !== null) {
-              for (const child of target.parentNode.children) {
-                if (child.tagName == 'label') {
-                  child.classList.add('active');
-                }
-              }
-            }
-            Forms.validateField(target);
-          }
-        });
-
-        document.addEventListener('keyup', (e: KeyboardEvent) => {
-          const target = <HTMLInputElement>e.target;
-          // Radio and Checkbox focus class
-          if (target instanceof HTMLInputElement && ['radio', 'checkbox'].includes(target.type)) {
-            // TAB, check if tabbing to radio or checkbox.
-            if (Utils.keys.TAB.includes(e.key)) {
-              target.classList.add('tabbed');
-              target.addEventListener('blur', () => target.classList.remove('tabbed'), {
-                once: true
-              });
-            }
-          }
-        });
-
-        document
-          .querySelectorAll('.routeplate-textarea')
-          .forEach((textArea: HTMLTextAreaElement) => {
-            Forms.InitTextarea(textArea);
-          });
-
-        // File Input Path
-        document
-          .querySelectorAll('.file-field input[type="file"]')
-          .forEach((fileInput: HTMLInputElement) => {
-            Forms.InitFileInputPath(fileInput);
-          });
+    Utils.onDocumentReady(() => {
+      document.addEventListener('change', (e: KeyboardEvent) => {
+        const target = <HTMLInputElement>e.target;
+        if (target instanceof HTMLInputElement) {
+          // The sibling-label loop that used to live here compared
+          // `tagName == 'label'` (tagName is uppercase) so it never matched,
+          // and no rule in the Sass styles `label.active` anyway - the
+          // floating label is driven by CSS, not by a class from here.
+          Forms.validateField(target);
+        }
       });
+
+      document.addEventListener('keyup', (e: KeyboardEvent) => {
+        const target = <HTMLInputElement>e.target;
+        // Radio and Checkbox focus class
+        if (target instanceof HTMLInputElement && ['radio', 'checkbox'].includes(target.type)) {
+          // TAB, check if tabbing to radio or checkbox.
+          if (Utils.keys.TAB.includes(e.key)) {
+            target.classList.add('tabbed');
+            target.addEventListener('blur', () => target.classList.remove('tabbed'), {
+              once: true
+            });
+          }
+        }
+      });
+
+      document.querySelectorAll('.routeplate-textarea').forEach((textArea: HTMLTextAreaElement) => {
+        Forms.InitTextarea(textArea);
+      });
+
+      // File Input Path
+      document
+        .querySelectorAll('.file-field input[type="file"]')
+        .forEach((fileInput: HTMLInputElement) => {
+          Forms.InitFileInputPath(fileInput);
+        });
+    });
   }
 
   static InitTextarea(textarea: HTMLTextAreaElement) {

@@ -109,8 +109,13 @@ export class Carousel extends Component<CarouselOptions> {
     this.dragged = false;
     this.offset = this.target = 0;
     this.images = [];
-    this.itemWidth = this.el.querySelector('.carousel-item').clientWidth;
-    this.itemHeight = this.el.querySelector('.carousel-item').clientHeight;
+    const firstItem = this.el.querySelector('.carousel-item');
+    if (!firstItem) {
+      console.error('Carousel: no .carousel-item elements to show');
+      return;
+    }
+    this.itemWidth = firstItem.clientWidth;
+    this.itemHeight = firstItem.clientHeight;
     this.dim = this.itemWidth * 2 + this.options.padding || 1; // Make sure dim is non zero for divisions.
 
     // Full Width carousel setup
@@ -381,8 +386,11 @@ export class Carousel extends Component<CarouselOptions> {
 
   _handleResize = () => {
     if (this.options.fullWidth) {
-      this.itemWidth = this.el.querySelector('.carousel-item').clientWidth;
-      this.imageHeight = this.el.querySelector('.carousel-item.active').clientHeight;
+      const firstItem = this.el.querySelector('.carousel-item');
+      const activeItem = this.el.querySelector('.carousel-item.active');
+      if (!firstItem || !activeItem) return;
+      this.itemWidth = firstItem.clientWidth;
+      this.imageHeight = activeItem.clientHeight;
       this.dim = this.itemWidth * 2 + this.options.padding;
       this.offset = this.center * 2 * this.itemWidth;
       this.target = this.offset;
@@ -535,16 +543,16 @@ export class Carousel extends Component<CarouselOptions> {
     if (!this.noWrap || (this.center >= 0 && this.center < this.count)) {
       el = this.images[this._wrap(this.center)];
 
-      // Add active class to center item.
+      // Add active class to center item. Clear it off whichever item actually
+      // has it - this used to unconditionally clear the *first* item.
       if (!el.classList.contains('active')) {
-        this.el.querySelector('.carousel-item').classList.remove('active');
+        this.el.querySelector('.carousel-item.active')?.classList.remove('active');
         el.classList.add('active');
       }
-
-      const transformString = `${alignment} translateX(${-delta / 2}px) translateX(${
-        dir * this.options.shift * tween * i
-      }px) translateZ(${this.options.dist * tween}px)`;
-      this._updateItemStyle(el, centerTweenedOpacity, 0, transformString);
+      // The transform for the centre item is written once, after the loop
+      // below. A second copy used to be written here too, multiplied by `i` -
+      // which is not assigned until the loop starts, so it produced
+      // `translateX(NaNpx)` and the browser dropped the declaration.
     }
 
     for (i = 1; i <= half; ++i) {

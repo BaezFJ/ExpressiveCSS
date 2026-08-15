@@ -375,9 +375,9 @@ export class Slider extends Component<SliderOptions> {
       });
     }, this.options.duration);
 
-    // Hide active Caption
+    // Hide active Caption - a slide is not required to have one.
     //this._animateCaptionIn(_caption, this.options.duration);
-    _caption.style.opacity = '0';
+    if (_caption) _caption.style.opacity = '0';
 
     // Update indicators
     if (this.options.indicators) {

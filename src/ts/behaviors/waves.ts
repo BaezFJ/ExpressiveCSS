@@ -1,3 +1,5 @@
+import { Utils } from '../core/utils';
+
 type RGBColor = {
   r: number;
   g: number;
@@ -61,23 +63,22 @@ export class Waves {
   }
 
   static Init() {
-    if (typeof document !== 'undefined')
-      document?.addEventListener('DOMContentLoaded', () => {
-        document.body.addEventListener('click', (e) => {
-          const trigger = <HTMLElement>e.target;
-          const el = <HTMLElement>trigger.closest('.waves-effect');
-          if (el && el.contains(trigger)) {
-            const isCircular = el.classList.contains('waves-circle');
-            const offset = Waves._offset(el); // one rect, not one per axis
-            const x = e.pageX - offset.left;
-            const y = e.pageY - offset.top;
+    Utils.onDocumentReady(() => {
+      document.body.addEventListener('click', (e) => {
+        const trigger = <HTMLElement>e.target;
+        const el = <HTMLElement>trigger.closest('.waves-effect');
+        if (el && el.contains(trigger)) {
+          const isCircular = el.classList.contains('waves-circle');
+          const offset = Waves._offset(el); // one rect, not one per axis
+          const x = e.pageX - offset.left;
+          const y = e.pageY - offset.top;
 
-            let color = null;
-            if (el.classList.contains('waves-light')) color = { r: 255, g: 255, b: 255 };
+          let color = null;
+          if (el.classList.contains('waves-light')) color = { r: 255, g: 255, b: 255 };
 
-            Waves.renderWaveEffect(el, isCircular ? null : { x, y }, color);
-          }
-        });
+          Waves.renderWaveEffect(el, isCircular ? null : { x, y }, color);
+        }
       });
+    });
   }
 }

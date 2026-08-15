@@ -148,7 +148,8 @@ export class Cards extends Component<CardsOptions> implements Openable {
     this.el.style.overflow = 'hidden';
     this.cardReveal.style.display = 'block';
     this.cardReveal.ariaExpanded = 'true';
-    this.cardRevealClose.tabIndex = 0;
+    // A reveal without a title has no close affordance; that is allowed.
+    if (this.cardRevealClose) this.cardRevealClose.tabIndex = 0;
     setTimeout(() => {
       this.cardReveal.style.transition = `transform ${this.options.outDuration}ms ease`; //easeInOutQuad
       this.cardReveal.style.transform = 'translateY(-100%)';
@@ -156,7 +157,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     if (typeof this.options.onOpen === 'function') {
       this.options.onOpen.call(this);
     }
-    this._setupRevealCloseEventHandlers();
+    if (this.cardRevealClose) this._setupRevealCloseEventHandlers();
   };
 
   /**
@@ -171,25 +172,24 @@ export class Cards extends Component<CardsOptions> implements Openable {
       this.cardReveal.style.display = 'none';
       this.cardReveal.ariaExpanded = 'false';
       this._activators.forEach((el: HTMLElement) => (el.tabIndex = 0));
-      this.cardRevealClose.tabIndex = -1;
+      if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
       this.el.style.overflow = this.initialOverflow;
     }, this.options.inDuration);
     if (typeof this.options.onClose === 'function') {
       this.options.onClose.call(this);
     }
-    this._removeRevealCloseEventHandlers();
+    if (this.cardRevealClose) this._removeRevealCloseEventHandlers();
   };
 
   static Init() {
-    if (typeof document !== 'undefined')
-      // Handle initialization of static cards.
-      document.addEventListener('DOMContentLoaded', () => {
-        const cards = document.querySelectorAll(
-          '.card, article:has(> aside), article:has(.card-reveal)'
-        );
-        cards.forEach((el) => {
-          if (el && (el['RoutePlate_Cards'] == undefined)) this.init((el as HTMLElement));
-        });
+    // Handle initialization of static cards.
+    Utils.onDocumentReady(() => {
+      const cards = document.querySelectorAll(
+        '.card, article:has(> aside), article:has(.card-reveal)'
+      );
+      cards.forEach((el) => {
+        if (el && el['RoutePlate_Cards'] == undefined) this.init(el as HTMLElement);
       });
+    });
   }
 }

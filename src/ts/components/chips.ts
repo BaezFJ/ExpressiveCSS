@@ -89,10 +89,6 @@ const _defaults: ChipsOptions = {
   onChipDelete: null
 };
 
-function gGetIndex(el: HTMLElement): number {
-  return [...el.parentNode.children].indexOf(el);
-}
-
 export class Chips extends Component<ChipsOptions> {
   /** Array of the current chips data. */
   chipsData: ChipData[];
@@ -124,7 +120,6 @@ export class Chips extends Component<ChipsOptions> {
       this.chipsData = this.options.data;
       this._renderChips();
     }
-    this._setupLabel();
 
     // Render input element, setup event handlers
     if (this.options.allowUserInput) {
@@ -134,6 +129,9 @@ export class Chips extends Component<ChipsOptions> {
       // move input to end
       this.el.append(this._input);
     }
+    // After _setupInput: the label points at the input's id, which is only
+    // assigned there. Running this first threw on any .chips with a <label>.
+    this._setupLabel();
   }
 
   static get defaults() {
@@ -206,7 +204,11 @@ export class Chips extends Component<ChipsOptions> {
     const _chip = (<HTMLElement>e.target).closest('.chip');
     const clickedClose = (<HTMLElement>e.target).classList.contains('close');
     if (_chip) {
-      const index = [..._chip.parentNode.children].indexOf(_chip);
+      // Index into the chip list, not into the container's children: the
+      // container also holds the label and the input, so counting children
+      // gave an index that did not line up with chipsData.
+      const index = this._chips.indexOf(_chip as HTMLElement);
+      if (index < 0) return;
       if (clickedClose) {
         this.deleteChip(index);
         this._input.focus();
@@ -229,12 +231,13 @@ export class Chips extends Component<ChipsOptions> {
     if (tag === 'INPUT' || tag === 'TEXTAREA' || !chipsKeydown) return;
 
     const currChips: Chips = chips['RoutePlate_Chips'];
+    if (!currChips) return; // .chips markup without an instance behind it
 
     if (Utils.keys.BACKSPACE.includes(e.key) || Utils.keys.DELETE.includes(e.key)) {
       e.preventDefault();
       let selectIndex = currChips.chipsData.length;
       if (currChips._selectedChip) {
-        const index = gGetIndex(currChips._selectedChip);
+        const index = currChips._chips.indexOf(currChips._selectedChip);
         currChips.deleteChip(index);
         currChips._selectedChip = null;
         // Make sure selectIndex doesn't go negative
@@ -244,13 +247,13 @@ export class Chips extends Component<ChipsOptions> {
       else currChips._input.focus();
     } else if (Utils.keys.ARROW_LEFT.includes(e.key)) {
       if (currChips._selectedChip) {
-        const selectIndex = gGetIndex(currChips._selectedChip) - 1;
+        const selectIndex = currChips._chips.indexOf(currChips._selectedChip) - 1;
         if (selectIndex < 0) return;
         currChips.selectChip(selectIndex);
       }
     } else if (Utils.keys.ARROW_RIGHT.includes(e.key)) {
       if (currChips._selectedChip) {
-        const selectIndex = gGetIndex(currChips._selectedChip) + 1;
+        const selectIndex = currChips._chips.indexOf(currChips._selectedChip) + 1;
         if (selectIndex >= currChips.chipsData.length) currChips._input.focus();
         else currChips.selectChip(selectIndex);
       }
@@ -264,8 +267,8 @@ export class Chips extends Component<ChipsOptions> {
   static _handleChipsBlur(e: Event) {
     if (!Chips._keydown && document.hidden) {
       const chips = (<HTMLElement>e.target).closest('.chips');
-      const currChips: Chips = chips['RoutePlate_Chips'];
-      currChips._selectedChip = null;
+      const currChips: Chips = chips?.['RoutePlate_Chips'];
+      if (currChips) currChips._selectedChip = null;
     }
   }
 
@@ -360,7 +363,8 @@ export class Chips extends Component<ChipsOptions> {
 
   _setupLabel() {
     this._label = this.el.querySelector('label');
-    if (this._label) this._label.setAttribute('for', this._input.getAttribute('id'));
+    // No input to point at when allowUserInput is off.
+    if (this._label && this._input) this._label.setAttribute('for', this._input.getAttribute('id'));
   }
 
   _setPlaceholder() {
@@ -404,7 +408,8 @@ export class Chips extends Component<ChipsOptions> {
    */
   deleteChip(chipIndex: number) {
     const chip = this._chips[chipIndex];
-    this._chips[chipIndex].remove();
+    if (!chip) return;
+    chip.remove();
     this._chips.splice(chipIndex, 1);
     this.chipsData.splice(chipIndex, 1);
     this._setPlaceholder();
@@ -420,6 +425,7 @@ export class Chips extends Component<ChipsOptions> {
    */
   selectChip(chipIndex: number) {
     const chip = this._chips[chipIndex];
+    if (!chip) return;
     this._selectedChip = chip;
     chip.focus();
     // fire chipSelect callback
@@ -429,20 +435,22 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   static Init() {
-    if (typeof document !== 'undefined')
-      // Handle removal of static chips.
-      document.addEventListener('DOMContentLoaded', () => {
-        const chips = document.querySelectorAll('.chips');
-        chips.forEach((el) => {
-          // if (el && (el['RoutePlate_Chips == undefined) return;
-          el.addEventListener('click', (e) => {
-            if ((<HTMLElement>e.target).classList.contains('close')) {
-              const chip = (<HTMLElement>e.target).closest('.chip');
-              if (chip) chip.remove();
-            }
-          });
+    // Handle removal of static chips - markup written by hand, with no Chips
+    // instance behind it. Where there *is* an instance, _handleChipClick owns
+    // the close button: removing the node here as well left chipsData holding
+    // an entry whose element was gone.
+    Utils.onDocumentReady(() => {
+      const chips = document.querySelectorAll('.chips');
+      chips.forEach((el) => {
+        el.addEventListener('click', (e) => {
+          if (el['RoutePlate_Chips']) return;
+          if ((<HTMLElement>e.target).classList.contains('close')) {
+            const chip = (<HTMLElement>e.target).closest('.chip');
+            if (chip) chip.remove();
+          }
         });
       });
+    });
   }
 
   static {

@@ -83,6 +83,23 @@ export class Utils {
   }
 
   /**
+   * Run `callback` once the document is parsed.
+   *
+   * The document-level behaviors all used a bare DOMContentLoaded listener,
+   * which never fires if the bundle is loaded after that event - an async or
+   * deferred script tag, or a dynamic import. Checking readyState first covers
+   * both orders.
+   */
+  static onDocumentReady(callback: () => void): void {
+    if (typeof document === 'undefined') return;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback, { once: true });
+    } else {
+      callback();
+    }
+  }
+
+  /**
    * Generates a unique string identifier.
    */
   static guid(): string {
@@ -334,10 +351,14 @@ export class Utils {
     button.type = 'button';
     button.tabIndex = !!visibility ? 0 : -1;
     button.innerText = text;
-    button.addEventListener('click', callback);
-    button.addEventListener('keypress', (e) => {
-      if (Utils.keys.ENTER.includes(e.key)) callback(e);
-    });
+    // The keypress handler used to call `callback` unconditionally, so a
+    // button created without one threw on Enter.
+    if (typeof callback === 'function') {
+      button.addEventListener('click', callback);
+      button.addEventListener('keypress', (e) => {
+        if (Utils.keys.ENTER.includes(e.key)) callback(e);
+      });
+    }
     container.append(button);
   }
 
