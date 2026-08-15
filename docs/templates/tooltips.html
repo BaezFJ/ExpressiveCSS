@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Tooltips</h1>
-      <h4 class="light primary-text">Small textual hints for icons and other graphical controls.</h4>
+      <h4 class="light primary-text">Material Design 3 tooltips, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -17,47 +17,148 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Tooltips are short hints for mainly graphical elements. When an icon is the action,
-          a tooltip can name the function.
+          A child <code>.tooltip</code> is the bubble. No
+          <code>tooltipped</code> class is required. They are CSS only on
+          hover and keyboard focus. Helpers are only for placement and
+          the rich variant: <code>top</code> (the default),
+          <code>bottom</code>, <code>left</code>, <code>right</code>,
+          <code>rich</code> / <code>max</code>.
         </p>
         <p>
-          Add <code>tooltipped</code> to the element. <code>data-tooltip</code> is the text;
-          <code>data-position</code> is <code>top</code>, <code>right</code>, <code>bottom</code>,
-          or <code>left</code>. <code>AutoInit()</code> starts every <code>.tooltipped</code>
-          except those marked <code>no-autoinit</code>.
+          Tokens follow the
+          <a href="https://m3.material.io/components/tooltips/specs">M3 tooltip spec</a>.
+          A plain tooltip is <code>inverse-surface</code> /
+          <code>inverse-on-surface</code>, 4dp corners,
+          <code>body-small</code>, 24dp minimum, 4/8dp padding, 200dp
+          max, no elevation and no caret. It sits 4dp from the activator.
+          M3 prefers above.
         </p>
-        <p class="py-3">
-          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">Bottom</a>
-          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
-          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
-          <a class="btn filled waves-effect tooltipped mb-3" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
+        <p>
+          Inside a <code>&lt;button&gt;</code> the bubble has to be a
+          <code>&lt;span&gt;</code> — a <code>&lt;div&gt;</code> is not
+          phrasing content and the parser will hoist it. Icon-only
+          buttons still need <code>.circle</code> so the span is not
+          treated as a label.
+        </p>
+        <p>
+          <button type="button" class="circle" aria-label="Add">
+            <i class="material-icons">add</i>
+            <span class="tooltip">Add to album</span>
+          </button>
+          <button type="button" class="circle" aria-label="Above">
+            <i class="material-icons">arrow_upward</i>
+            <span class="tooltip">Above</span>
+          </button>
+          <button type="button" class="circle" aria-label="Below">
+            <i class="material-icons">arrow_downward</i>
+            <span class="tooltip bottom">Below</span>
+          </button>
+          <button type="button" class="circle" aria-label="Start">
+            <i class="material-icons">arrow_back</i>
+            <span class="tooltip left">Start</span>
+          </button>
+          <button type="button" class="circle" aria-label="End">
+            <i class="material-icons">arrow_forward</i>
+            <span class="tooltip right">End</span>
+          </button>
+        </p>
+<pre><code>&lt;button type="button" class="circle" aria-label="Add"&gt;
+  &lt;i class="material-icons"&gt;add&lt;/i&gt;
+  &lt;span class="tooltip"&gt;Add to album&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;button type="button" class="circle" aria-label="Below"&gt;
+  &lt;i class="material-icons"&gt;arrow_downward&lt;/i&gt;
+  &lt;span class="tooltip bottom"&gt;Below&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+      </div>
+
+      <div id="rich" class="section scrollspy">
+        <h3>Rich</h3>
+        <p>
+          <code>rich</code> (or BeerCSS’s <code>max</code>) is the rich
+          tooltip: <code>surface</code>, elevation 2, 12dp corners,
+          320dp max. A heading is the title
+          (<code>title-small</code>), a <code>&lt;p&gt;</code> is
+          supporting text (<code>body-medium</code>), and a trailing
+          <code>&lt;nav&gt;</code> is the action. Rich bubbles can
+          receive pointer events so the action is usable.
+        </p>
+        <div>
+          <button type="button" class="tonal">Why this is saved</button>
+          <div class="tooltip rich bottom">
+            <h3>Saved offline</h3>
+            <p>This stop is stored on the device so it still opens without a signal.</p>
+            <nav>
+              <button type="button" class="text">Got it</button>
+            </nav>
+          </div>
+        </div>
+<pre><code>&lt;div&gt;
+  &lt;button type="button" class="tonal"&gt;Why this is saved&lt;/button&gt;
+  &lt;div class="tooltip rich bottom"&gt;
+    &lt;h3&gt;Saved offline&lt;/h3&gt;
+    &lt;p&gt;This stop is stored on the device so it still opens without a signal.&lt;/p&gt;
+    &lt;nav&gt;
+      &lt;button type="button" class="text"&gt;Got it&lt;/button&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          A rich tooltip with an action cannot live inside a
+          <code>&lt;button&gt;</code> — that would nest buttons. Put the
+          bubble next to the control, wrapped in a parent.
+        </p>
+      </div>
+
+      <div id="javascript" class="section scrollspy">
+        <h3>JavaScript</h3>
+        <p>
+          The CSS path does not need AutoInit. The JS plugin is still
+          there for <code>data-tooltip</code>, delayed show/hide, and
+          keeping the bubble inside the viewport. Add
+          <code>tooltipped</code> to the activator.
+          <code>data-tooltip</code> is the text;
+          <code>data-position</code> is <code>top</code>,
+          <code>right</code>, <code>bottom</code>, or
+          <code>left</code>. <code>AutoInit()</code> starts every
+          <code>.tooltipped</code> except those marked
+          <code>no-autoinit</code>. The generated element gets both
+          <code>.tooltip</code> and <code>.material-tooltip</code>.
+        </p>
+        <p>
+          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip="I am a tooltip">Bottom</a>
+          <a class="tooltipped" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
+          <a class="tooltipped" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
+          <a class="tooltipped" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
+        </p>
+<pre><code>&lt;a class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!"&gt;
+  Hover me
+&lt;/a&gt;</code></pre>
+        <p>
+          For HTML, point <code>data-tooltip-id</code> at an element.
+          That element is moved into the tooltip and the bubble is
+          marked <code>rich</code>. Leave <code>data-tooltip</code> off
+          so the HTML is kept. There is no <code>data-html</code>
+          attribute and no <code>unsafeHTML</code> option.
+        </p>
+        <p>
+          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">With HTML</a>
         </p>
         <div id="tooltip-content" style="display: none;">
-          This is a tooltip with a <a href="https://github.com">link</a> and a
-          <i class="material-icons">insert_chart</i>
+          <h3>Chart</h3>
+          <p>This is a tooltip with a <a href="https://github.com">link</a>
+          and a <i class="material-icons">insert_chart</i>.</p>
         </div>
-<pre><code>&lt;!-- data-position can be bottom, top, left, or right --&gt;
-&lt;!-- data-tooltip is the tooltip text --&gt;
-&lt;a class="btn filled tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!"&gt;Hover me!&lt;/a&gt;</code></pre>
-        <p>
-          For HTML, point <code>data-tooltip-id</code> at an element. That element is moved into
-          the tooltip. Leave <code>data-tooltip</code> off so the HTML is kept. There is no
-          <code>data-html</code> attribute and no <code>unsafeHTML</code> option.
-        </p>
-        <p>
-          The tooltip does not receive pointer events, so treat HTML as display content
-          (icons, emphasis), not as something the user can click.
-        </p>
-<pre><code>&lt;a class="btn filled tooltipped" href="#!"
+<pre><code>&lt;a class="tooltipped" href="#!"
    data-position="bottom" data-tooltip-id="tooltip-content"&gt;
-  Bottom
+  With HTML
 &lt;/a&gt;
-&lt;div id="tooltip-content" style="display: none;"&gt;
-  This is a tooltip with a
-  &lt;a href="https://github.com"&gt;link&lt;/a&gt; and a
-  &lt;i class="material-icons"&gt;insert_chart&lt;/i&gt;
+&lt;div id="tooltip-content" hidden&gt;
+  &lt;h3&gt;Chart&lt;/h3&gt;
+  &lt;p&gt;This is a tooltip with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;</code></pre>
       </div>
 
@@ -65,13 +166,15 @@
         <h3>Initialization</h3>
         <p>
           The IIFE bundle exposes <code>RoutePlate.Tooltip</code>.
-          Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>RoutePlate.AutoInit()</code> start every <code>.tooltipped</code>.
+          Call <code>init</code> yourself when you need options other
+          than the defaults, or let
+          <code>RoutePlate.AutoInit()</code> start every
+          <code>.tooltipped</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tooltipped');
   const instances = RoutePlate.Tooltip.init(elems, {
-    // specify options here
+    enterDelay: 200
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
@@ -83,10 +186,12 @@
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
         <p>
-          Constructor and <code>init</code> options. <code>data-tooltip</code>,
-          <code>data-position</code>, and <code>data-tooltip-id</code> are read from the
-          element and override these defaults. Attributes are read again each time the
-          tooltip opens, so changing them later takes effect on the next show.
+          Constructor and <code>init</code> options.
+          <code>data-tooltip</code>, <code>data-position</code>, and
+          <code>data-tooltip-id</code> are read from the element and
+          override these defaults. Attributes are read again each time
+          the tooltip opens, so changing them later takes effect on the
+          next show.
         </p>
         <table class="striped">
           <thead>
@@ -114,7 +219,7 @@
               <td><code>tooltipId</code></td>
               <td>String</td>
               <td>—</td>
-              <td>Id of an element used as the tooltip body. Set by <code>data-tooltip-id</code>.</td>
+              <td>Id of an element used as the tooltip body. Set by <code>data-tooltip-id</code>. Marks the bubble <code>rich</code>.</td>
             </tr>
             <tr>
               <td><code>text</code></td>
@@ -125,8 +230,8 @@
             <tr>
               <td><code>margin</code></td>
               <td>Number</td>
-              <td><code>5</code></td>
-              <td>Distance from the activator, in pixels, not counting <code>transitionMovement</code>.</td>
+              <td><code>4</code></td>
+              <td>Distance from the activator, in pixels, not counting <code>transitionMovement</code>. M3 is 4dp.</td>
             </tr>
             <tr>
               <td><code>inDuration</code></td>
@@ -150,7 +255,7 @@
               <td><code>position</code></td>
               <td>String</td>
               <td><code>'bottom'</code></td>
-              <td>Direction: <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Set by <code>data-position</code>.</td>
+              <td>Direction: <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Set by <code>data-position</code>. The CSS-only default is above.</td>
             </tr>
             <tr>
               <td><code>transitionMovement</code></td>
@@ -169,10 +274,10 @@
         </blockquote>
 <pre><code>const instance = RoutePlate.Tooltip.getInstance(elem);</code></pre>
 
-        <p class="py-3">
-          <a class="btn filled waves-effect tooltipped mr-3 mb-3" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me!</a>
-          <a class="btn tonal waves-effect mr-3 mb-3" href="#!" id="tooltip-open">Open</a>
-          <a class="btn tonal waves-effect mb-3" href="#!" id="tooltip-close">Close</a>
+        <p>
+          <a class="tooltipped" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</a>
+          <button type="button" class="tonal" id="tooltip-open">Open</button>
+          <button type="button" class="tonal" id="tooltip-close">Close</button>
         </p>
 
         <h5 class="light">.open();</h5>
@@ -237,7 +342,9 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#anatomy">Introduction</a></li>
+          <li><a href="#rich">Rich</a></li>
+          <li><a href="#javascript">JavaScript</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#methods">Methods</a></li>

@@ -1,42 +1,166 @@
 @use "../abstracts" as *;
 
+// Tooltips.
+//
+// Anatomy is the HTML. A child .tooltip is the bubble — no .tooltipped
+// required. Helpers are only for placement and the rich variant:
+// .top (default), .bottom, .left, .right, .rich / .max.
+//
+// Tokens follow https://m3.material.io/components/tooltips/specs
+//   plain    inverse-surface / inverse-on-surface, 4dp, body-small
+//            min 24dp, pad 4/8, max 200dp, no elevation, no caret
+//   rich     surface, elevation 2, 12dp, title-small + body-medium
+//            pad 12/16, max 320dp, optional action
+//   gap      4dp from the activator
+//
+// The JS plugin still exists: .tooltipped + data-tooltip, AutoInit,
+// class .tooltip.material-tooltip appended to <body>. .material-tooltip
+// is an alias. There is no data-html / unsafeHTML.
+
+.tooltip,
 .material-tooltip {
-  padding: 0 8px;  
-  border-radius: 4px;
-  color: var(--md-sys-color-inverse-on-surface);
-  background-color: var(--md-sys-color-inverse-surface);
-  font-family: var(--md-sys-typescale-body-small-font-family-name);
-  font-size: var(--md-sys-typescale-body-small-font-size);
-  line-height: var(--md-sys-typescale-body-small-line-height);
-  font-weight: var(--md-sys-typescale-body-small-font-weight);
-  min-height: 24px;
-  opacity: 0;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 400;
-  letter-spacing: 0.4px;
-  position: absolute;
-  max-width: 300px;
-  overflow: hidden;
-  left: 0;
-  top: 0;
-  pointer-events: none;
+  --md-comp-plain-tooltip-container-color: var(--md-sys-color-inverse-surface);
+  --md-comp-plain-tooltip-supporting-text-color: var(--md-sys-color-inverse-on-surface);
+  --md-comp-plain-tooltip-container-shape: 4px;
+  --md-comp-tooltip-anchor-gap: 4px;
+
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  visibility: hidden;
+  justify-content: center;
+  gap: 8px;
+  min-height: 24px;
+  max-width: 200px;
+  margin: 0;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--md-comp-plain-tooltip-container-shape);
+  background-color: var(--md-comp-plain-tooltip-container-color);
+  color: var(--md-comp-plain-tooltip-supporting-text-color);
+  @include typescale("body-small");
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
   z-index: 2000;
 }
 
-.backdrop {
+// CSS-only: a child of the activator. Default sits above (M3 preferred).
+:not(body):has(> .tooltip) {
+  position: relative;
+}
+
+// Only shrink-wrap typical activators. A stray .tooltip as a section
+// child must not turn the section into inline-flex (invalid <p><div>
+// gets hoisted and would match).
+:is(button, a, span, label, i):has(> .tooltip) {
+  display: inline-flex;
+}
+
+:not(body) > .tooltip {
   position: absolute;
-  opacity: 0;
-  height: 7px;
-  width: 14px;
-  border-radius: 0 0 50% 50%;
-  background-color: var(--md-sys-color-inverse-surface);
-  z-index: -1;
-  transform-origin: 50% 0;
   visibility: hidden;
+  opacity: 0;
+  inset: 0 auto auto 50%;
+  transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(0.96);
+  transition: opacity .15s ease-out, transform .15s ease-out, visibility 0s linear .15s;
+}
+
+:not(body) > .tooltip.bottom {
+  inset: auto auto 0 50%;
+  transform: translate(-50%, calc(100% + var(--md-comp-tooltip-anchor-gap))) scale(0.96);
+}
+
+:not(body) > .tooltip.left {
+  inset: 50% auto auto 0;
+  transform: translate(calc(-100% - var(--md-comp-tooltip-anchor-gap)), -50%) scale(0.96);
+}
+
+:not(body) > .tooltip.right {
+  inset: 50% 0 auto auto;
+  transform: translate(calc(100% + var(--md-comp-tooltip-anchor-gap)), -50%) scale(0.96);
+}
+
+:is(:hover, :focus-visible, :focus-within):not(body) > .tooltip,
+:not(body) > .tooltip:hover {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+:is(:hover, :focus-visible, :focus-within):not(body) > .tooltip:not(.left, .right, .bottom),
+:not(body) > .tooltip:not(.left, .right, .bottom):hover {
+  transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(1);
+}
+
+:is(:hover, :focus-visible, :focus-within):not(body) > .tooltip.bottom,
+:not(body) > .tooltip.bottom:hover {
+  transform: translate(-50%, calc(100% + var(--md-comp-tooltip-anchor-gap))) scale(1);
+}
+
+:is(:hover, :focus-visible, :focus-within):not(body) > .tooltip.left,
+:not(body) > .tooltip.left:hover {
+  transform: translate(calc(-100% - var(--md-comp-tooltip-anchor-gap)), -50%) scale(1);
+}
+
+:is(:hover, :focus-visible, :focus-within):not(body) > .tooltip.right,
+:not(body) > .tooltip.right:hover {
+  transform: translate(calc(100% + var(--md-comp-tooltip-anchor-gap)), -50%) scale(1);
+}
+
+// JS plugin: appended to <body>, top/left set in script. Do not use the
+// child-positioning rules; they would fight the inline transform.
+body > .tooltip,
+.material-tooltip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  opacity: 0;
+  overflow: hidden;
+}
+
+// Rich tooltip — title, supporting text, optional action.
+.tooltip.rich,
+.tooltip.max,
+.material-tooltip.rich,
+.material-tooltip.max {
+  --md-comp-rich-tooltip-container-color: var(--md-sys-color-surface);
+  --md-comp-rich-tooltip-container-shape: 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 160px;
+  max-width: 320px;
+  padding: 12px 16px;
+  border-radius: var(--md-comp-rich-tooltip-container-shape);
+  background-color: var(--md-comp-rich-tooltip-container-color);
+  color: var(--md-sys-color-on-surface);
+  text-align: start;
+  white-space: normal;
+  pointer-events: auto;
+  @include z-depth("2");
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("title-small");
+  }
+
+  > p {
+    margin: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > :is(nav, form) {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 4px -8px -4px 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
 }

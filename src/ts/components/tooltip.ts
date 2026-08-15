@@ -28,7 +28,7 @@ export interface TooltipOptions extends BaseOptions {
   /**
    * Set distance tooltip appears away from its activator
    * excluding transitionMovement.
-   * @default 5
+   * @default 4
    */
   margin: number;
   /**
@@ -62,7 +62,7 @@ const _defaults: TooltipOptions = {
   exitDelay: 200,
   enterDelay: 0,
   text: '',
-  margin: 5,
+  margin: 4,
   inDuration: 250,
   outDuration: 200,
   position: 'bottom' as TooltipPosition,
@@ -139,6 +139,9 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   destroy() {
+    if (this.el.getAttribute('aria-describedby') === this.tooltipEl.id) {
+      this.el.removeAttribute('aria-describedby');
+    }
     this.tooltipEl.remove();
     this._removeEventHandlers();
     this.el['RoutePlate_Tooltip'] = undefined;
@@ -146,14 +149,18 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _appendTooltipEl() {
     this.tooltipEl = document.createElement('div');
-    this.tooltipEl.classList.add('material-tooltip');
+    this.tooltipEl.classList.add('tooltip', 'material-tooltip');
+    this.tooltipEl.id = `tooltip-${Utils.guid()}`;
+    this.tooltipEl.setAttribute('role', 'tooltip');
+    this.el.setAttribute('aria-describedby', this.tooltipEl.id);
 
     const tooltipContentEl = this.options.tooltipId
       ? document.getElementById(this.options.tooltipId)
       : document.createElement('div');
-    this.tooltipEl.append(tooltipContentEl);
+    if (this.options.tooltipId) {
+      this.tooltipEl.classList.add('rich');
+    }
     tooltipContentEl.style.display = '';
-
     tooltipContentEl.classList.add('tooltip-content');
     this._setTooltipContent(tooltipContentEl);
     this.tooltipEl.appendChild(tooltipContentEl);
