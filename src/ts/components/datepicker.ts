@@ -323,6 +323,10 @@ export class Datepicker extends Component<DatepickerOptions> {
   private _m: number;
   private displayPlugin: DockedDisplayPlugin;
   private footer: HTMLElement;
+  /** Nesting depth of {@link _batchDraws}; > 0 means draws are being collected. */
+  private _drawDepth = 0;
+  /** Whether a draw was requested while batching. */
+  private _drawDirty = false;
   static _template: string;
 
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
@@ -1071,8 +1075,42 @@ export class Datepicker extends Component<DatepickerOptions> {
     return (html += '</div>');
   }
 
+  /**
+   * Run `fn`, collapsing every draw it triggers into a single one at the end.
+   *
+   * A single input click reaches draw() three times - once through
+   * setDateFromInput -> setDate -> gotoDate, once directly, and once through
+   * the trailing gotoDate - and each one destroys two FormSelect instances,
+   * reparses the calendar and builds two fresh FormSelects. The three calls
+   * cannot simply be deleted: the direct draw() is what covers an empty input
+   * (setDate bails before drawing when the value does not parse), and the
+   * trailing gotoDate re-centres on a date validateDate may have clamped to
+   * minDate/maxDate. So they are collected instead of removed.
+   *
+   * Deliberately synchronous: the constructor and callers read calendarEl
+   * immediately after init(), which a microtask-deferred draw would leave
+   * empty.
+   */
+  private _batchDraws(fn: () => void) {
+    this._drawDepth++;
+    try {
+      fn();
+    } finally {
+      this._drawDepth--;
+      if (this._drawDepth === 0 && this._drawDirty) {
+        this._drawDirty = false;
+        this.draw();
+      }
+    }
+  }
+
   // refresh HTML
   draw() {
+    // Inside a batch, note that a draw is due and let the batch do it once.
+    if (this._drawDepth > 0) {
+      this._drawDirty = true;
+      return;
+    }
     const opts = this.options,
       minYear = opts.minYear,
       maxYear = opts.maxYear,
@@ -1093,12 +1131,9 @@ export class Datepicker extends Component<DatepickerOptions> {
       }
     }
 
-    const randId =
-      'datepicker-title-' +
-      Math.random()
-        .toString(36)
-        .replace(/[^a-z]+/g, '')
-        .substr(0, 2);
+    // Two random letters collided across pickers on the same page, so their
+    // aria-labelledby pointed at each other's title. (Also drops a substr().)
+    const randId = 'datepicker-title-' + Utils.guid();
 
     for (let c = 0; c < 1; c++) {
       if (!this.options.isDateRange) {
@@ -1225,9 +1260,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (e.type == 'date') {
       e.preventDefault();
     }
-    this.setDateFromInput(e.target as HTMLInputElement);
-    this.draw();
-    this.gotoDate(<HTMLElement>e.target === this.el ? this.date : this.endDate);
+    this._batchDraws(() => {
+      this.setDateFromInput(e.target as HTMLInputElement);
+      this.draw();
+      this.gotoDate(<HTMLElement>e.target === this.el ? this.date : this.endDate);
+    });
     if (this.displayPlugin) this.displayPlugin.show();
     if (this.options.onInputInteraction) this.options.onInputInteraction.call(this);
   };
@@ -1235,8 +1272,10 @@ export class Datepicker extends Component<DatepickerOptions> {
   _handleInputKeydown = (e: KeyboardEvent) => {
     if (Utils.keys.ENTER.includes(e.key)) {
       e.preventDefault();
-      this.setDateFromInput(e.target as HTMLInputElement);
-      this.draw();
+      this._batchDraws(() => {
+        this.setDateFromInput(e.target as HTMLInputElement);
+        this.draw();
+      });
       if (this.displayPlugin) this.displayPlugin.show();
       if (this.options.onInputInteraction) this.options.onInputInteraction.call(this);
     }
@@ -1244,7 +1283,9 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleCalendarClick = (e) => {
     const target = <HTMLElement>e.target;
-    if (!target.classList.contains('is-disabled')) {
+    if (target.classList.contains('is-disabled')) return;
+
+    this._batchDraws(() => {
       if (
         target.classList.contains('datepicker-day-button') &&
         !target.classList.contains('is-empty') &&
@@ -1260,6 +1301,7 @@ export class Datepicker extends Component<DatepickerOptions> {
           this.setDate(selectedDate);
         }
 
+        // Selecting a range end draws a second time on top of setDate's.
         if (this.options.isDateRange) {
           this._handleDateRangeCalendarClick(selectedDate);
         }
@@ -1270,7 +1312,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       } else if (target.closest('.month-next')) {
         this.nextMonth();
       }
-    }
+    });
   };
 
   _handleDateRangeCalendarClick = (date: Date) => {

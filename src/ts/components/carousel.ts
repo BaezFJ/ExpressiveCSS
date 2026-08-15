@@ -77,7 +77,6 @@ export class Carousel extends Component<CarouselOptions> {
   dim: number;
   _indicators: HTMLUListElement;
   count: number;
-  xform: string;
   verticalDragged: boolean;
   reference: number;
   referenceY: number;
@@ -152,17 +151,6 @@ export class Carousel extends Component<CarouselOptions> {
 
     // Cap numVisible at count
     this.options.numVisible = Math.min(this.count, this.options.numVisible);
-
-    // Setup cross browser string
-    this.xform = 'transform';
-    ['webkit', 'Moz', 'O', 'ms'].every((prefix) => {
-      const e = prefix + 'Transform';
-      if (typeof document.body.style[e] !== 'undefined') {
-        this.xform = e;
-        return false;
-      }
-      return true;
-    });
 
     this._setupEventHandlers();
     this._scroll(this.offset);
@@ -612,7 +600,7 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   _updateItemStyle(el: HTMLElement, opacity: number, zIndex: number, transform: string) {
-    el.style[this.xform] = transform;
+    el.style.transform = transform;
     el.style.zIndex = zIndex.toString();
     el.style.opacity = opacity.toString();
     el.style.visibility = 'visible';

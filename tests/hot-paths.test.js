@@ -109,6 +109,87 @@ describe('Toast countdown', () => {
   });
 });
 
+describe('Datepicker redraws', () => {
+  beforeEach(resetBody);
+
+  /**
+   * Count real draws. Every draw destroys and rebuilds the month and year
+   * FormSelects, so FormSelect.init runs exactly twice per draw - a more
+   * honest signal than spying on draw() itself, which would also swallow the
+   * batching being tested.
+   */
+  function countDraws(fn) {
+    const original = RoutePlate.FormSelect.init;
+    let initCalls = 0;
+    RoutePlate.FormSelect.init = function (...args) {
+      initCalls++;
+      return original.apply(this, args);
+    };
+    try {
+      fn();
+    } finally {
+      RoutePlate.FormSelect.init = original;
+    }
+    return initCalls / 2;
+  }
+
+  test('clicking the input draws once, not three times', () => {
+    document.body.innerHTML = `<input type="text" class="datepicker" value="Jan 15, 2024">`;
+    const input = document.querySelector('.datepicker');
+    const instance = RoutePlate.Datepicker.init(input);
+
+    try {
+      const draws = countDraws(() => {
+        input.dispatchEvent(
+          new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
+        );
+      });
+
+      // setDateFromInput -> setDate -> gotoDate, then the direct draw(), then
+      // the trailing gotoDate: three draws for one click.
+      assert.equal(draws, 1, `one click produced ${draws} draws`);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the calendar is rendered synchronously, before init() returns', () => {
+    document.body.innerHTML = `<input type="text" class="datepicker">`;
+
+    const instance = RoutePlate.Datepicker.init(document.querySelector('.datepicker'));
+
+    try {
+      // Batching must not defer: callers read calendarEl straight after init.
+      assert.ok(
+        instance.calendarEl.querySelector('.datepicker-table'),
+        'the calendar was empty immediately after init()'
+      );
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a draw still happens when the input holds no parseable date', () => {
+    document.body.innerHTML = `<input type="text" class="datepicker" value="not a date">`;
+    const input = document.querySelector('.datepicker');
+    const instance = RoutePlate.Datepicker.init(input);
+
+    try {
+      const draws = countDraws(() => {
+        input.dispatchEvent(
+          new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window })
+        );
+      });
+
+      // setDate bails before drawing here, so the direct draw() in the handler
+      // is the only one - batching must not collapse it to zero.
+      assert.equal(draws, 1, `expected exactly one draw, got ${draws}`);
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
 describe('textarea auto-resize', () => {
   beforeEach(resetBody);
 
