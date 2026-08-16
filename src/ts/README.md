@@ -70,6 +70,9 @@ read-it-off-the-element access that key provides.
 - **`modal.ts` is deliberately gutted** — marked obsolete for versions > 2.1.1,
   with empty method bodies and an experimental `static create()` building a
   native `<dialog>`. Those empty methods are a rewrite in progress, not bugs.
+- **Parallax motion is CSS.** `animation-timeline: view()` on the clip; the
+  component class is AutoInit/getInstance/destroy only and attaches no
+  scroll listener. `responsiveThreshold` is accepted and ignored.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

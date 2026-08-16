@@ -8,16 +8,14 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Parallax</h1>
-      <h4 class="light primary-text">A background image that moves slower than the page.</h4>
+      <h4 class="light primary-text">A cropped image that shifts as it crosses the viewport.</h4>
     </div>
   </div>
 </section>
 
-<div class="parallax-container">
-  <div class="parallax">
-    <img src="https://picsum.photos/id/1015/1600/900" alt="A mountain lake">
-  </div>
-</div>
+<figure class="parallax">
+  <img src="https://picsum.photos/id/1015/1600/900" alt="A mountain lake">
+</figure>
 
 <div class="container">
   <div class="row">
@@ -25,60 +23,113 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          Parallax moves a background image at a different speed from the
-          foreground as you scroll. The image lives in a
-          <code>parallax-container</code>; the plugin is on the inner
-          <code>.parallax</code>.
+          A <code>.parallax</code> (or <code>&lt;figure class="parallax"&gt;</code>)
+          clips an <code>&lt;img&gt;</code>, <code>&lt;picture&gt;</code>, or
+          <code>&lt;video&gt;</code>. As the clip crosses the viewport the
+          media shifts, slower than the page. There is no inner wrapper
+          and no scroll listener — the motion is CSS
+          (<code>animation-timeline: view()</code>). Without that API the
+          image is just <code>object-fit: cover</code>.
         </p>
         <p>
-          <code>AutoInit()</code> starts every <code>.parallax</code>
-          except those marked <code>no-autoinit</code>. There must be an
-          <code>&lt;img&gt;</code> inside. Without one,
-          <code>init</code> logs an error and returns.
+          <code>AutoInit()</code> still matches <code>.parallax</code>, but
+          you do not need it for the effect. A missing image logs an error
+          and returns. Prefer an image taller than the clip, or a
+          <code>srcset</code> that is; a short image has less to move.
         </p>
-<pre><code>&lt;div class="parallax-container"&gt;
-  &lt;div class="parallax"&gt;
-    &lt;img src="images/parallax1.jpg" alt="A mountain lake"&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;figure class="parallax"&gt;
+  &lt;img src="images/lake.jpg" alt="A mountain lake"&gt;
+&lt;/figure&gt;</code></pre>
         <p>
-          Use an image taller than the container. The plugin translates
-          the leftover height as you scroll; a short image has nothing
-          to move.
+          <code>.parallax-container</code> with an inner
+          <code>.parallax</code> still works as the old two-box markup.
         </p>
       </div>
     </div>
   </div>
 </div>
 
-<div class="parallax-container">
-  <div class="parallax">
-    <img src="https://picsum.photos/id/1018/1600/900" alt="A rocky coastline">
-  </div>
-</div>
+<figure class="parallax">
+  <img src="https://picsum.photos/id/1018/1600/900" alt="">
+  <figcaption>A rocky coastline. The caption is a sibling, not a plugin option.</figcaption>
+</figure>
 
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
+      <div id="overlay" class="section scrollspy">
+        <h3>Overlay</h3>
+        <p>
+          A heading or <code>&lt;p&gt;</code> is centered on the image. A
+          <code>&lt;figcaption&gt;</code> docks to the bottom on a
+          translucent surface, the same idea as a card figure.
+        </p>
+<pre><code>&lt;figure class="parallax"&gt;
+  &lt;img src="images/coast.jpg" alt=""&gt;
+  &lt;figcaption&gt;A rocky coastline.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;div class="parallax"&gt;
+  &lt;img src="images/lake.jpg" alt=""&gt;
+  &lt;h2 class="on-primary-text"&gt;Visit the lake&lt;/h2&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <p>
+          Override these on the clip. Height is how much of the image you
+          see; travel is how far it moves. Shape matches media, lightbox,
+          and slider. Add <code>max</code> for a full-viewport hero with
+          no corners.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--md-comp-parallax-height</code></td>
+              <td>500px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-parallax-travel</code></td>
+              <td>120px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-parallax-shape</code></td>
+              <td>12px</td>
+            </tr>
+          </tbody>
+        </table>
+        <figure class="parallax" style="--md-comp-parallax-height: 300px; --md-comp-parallax-travel: 40px;">
+          <img src="https://picsum.photos/id/1019/1600/900" alt="Clouds over hills">
+        </figure>
+<pre><code>&lt;figure class="parallax" style="--md-comp-parallax-height: 300px"&gt;
+  &lt;img src="images/hills.jpg" alt="Clouds over hills"&gt;
+&lt;/figure&gt;
+
+&lt;figure class="parallax max"&gt;…&lt;/figure&gt;</code></pre>
+        <p>
+          Motion follows <code>prefers-reduced-motion</code>. When the
+          user asks for less, the image stays a static cover.
+        </p>
+      </div>
+
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>Expressive.Parallax</code>.
-          Call <code>init</code> yourself when you need options other
-          than the defaults, or let
-          <code>Expressive.AutoInit()</code> start every
-          <code>.parallax</code>.
+          Optional. The IIFE still exposes <code>Expressive.Parallax</code>
+          so existing <code>init</code> / <code>AutoInit</code> calls keep
+          working. They do not attach scroll or resize listeners.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.parallax');
-  const instances = Expressive.Parallax.init(elems, {
-    // specify options here
-  });
-});</code></pre>
-        <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
-  Parallax: { responsiveThreshold: 992 }
+  const instances = Expressive.Parallax.init(elems);
 });</code></pre>
       </div>
 
@@ -98,7 +149,7 @@
               <td><code>responsiveThreshold</code></td>
               <td>Number</td>
               <td><code>0</code></td>
-              <td>Minimum viewport width, in pixels, at which the image starts moving. Below this width the transform is cleared.</td>
+              <td>Deprecated. Accepted so existing calls compile. Motion is CSS; disable it with <code>prefers-reduced-motion</code> or by overriding the animation.</td>
             </tr>
           </tbody>
         </table>
@@ -106,59 +157,10 @@
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
 <pre><code>const instance = Expressive.Parallax.getInstance(elem);</code></pre>
-
         <h5 class="light">.destroy();</h5>
-        <p>
-          Destroy the plugin instance, clear the image transform, and
-          tear down its event handlers. The last remaining instance
-          also removes the shared scroll and resize listeners.
-        </p>
+        <p>Drop the instance stash. There are no listeners to tear down.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
-
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The DOM element the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="customization" class="section scrollspy">
-        <h3>Customization</h3>
-        <p>
-          The container height is how much of the image you see. The
-          framework default is 500px. Override it on the container.
-        </p>
-        <div class="parallax-container" style="height: 300px;">
-          <div class="parallax">
-            <img src="https://picsum.photos/id/1019/1600/900" alt="Clouds over hills">
-          </div>
-        </div>
-<pre><code>.parallax-container {
-  height: 300px;
-}</code></pre>
       </div>
     </div>
 
@@ -166,11 +168,11 @@
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
           <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#overlay">Overlay</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-          <li><a href="#customization">Customization</a></li>
         </ul>
       </div>
     </div>

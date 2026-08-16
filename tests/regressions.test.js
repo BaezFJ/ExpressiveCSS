@@ -260,7 +260,7 @@ describe('optional markup does not crash a component', () => {
   });
 
   test('a parallax container with no image', () => {
-    document.body.innerHTML = `<div class="parallax-container"><div class="parallax"></div></div>`;
+    document.body.innerHTML = `<div class="parallax"></div>`;
 
     const instance = Expressive.Parallax.init(document.querySelector('.parallax'));
 

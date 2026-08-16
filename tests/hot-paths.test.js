@@ -11,11 +11,6 @@ import assert from 'node:assert/strict';
 import { Expressive, resetBody, window } from './setup.js';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const nextFrames = (n) =>
-  new Promise((resolve) => {
-    const step = (left) => (left === 0 ? resolve() : requestAnimationFrame(() => step(left - 1)));
-    step(n);
-  });
 
 /** jsdom has no layout, so give the element a rect and count who asks for it. */
 function stubRect(el, counter, rect = { top: 0, left: 0, width: 100, height: 100 }) {
@@ -53,23 +48,18 @@ describe('layout reads per scroll tick', () => {
     spies.forEach((spy) => spy.destroy());
   });
 
-  test('Parallax coalesces a burst of scroll events onto one frame', async () => {
-    document.body.innerHTML = `<div class="parallax-container"><div class="parallax"><img src="http://localhost/1.jpg"></div></div>`;
-    const instance = Expressive.Parallax.init(document.querySelector('.parallax'));
+  test('Parallax does not read layout on scroll', () => {
+    document.body.innerHTML = `<div class="parallax"><img src="http://localhost/1.jpg"></div>`;
+    const el = document.querySelector('.parallax');
+    const counter = { reads: 0 };
+    stubRect(el, counter);
+    const instance = Expressive.Parallax.init(el);
+    counter.reads = 0;
 
-    const original = Expressive.Parallax._handleScroll;
-    let runs = 0;
-    Expressive.Parallax._handleScroll = () => {
-      runs++;
-    };
-    try {
-      for (let i = 0; i < 5; i++) window.dispatchEvent(new window.Event('scroll'));
-      await nextFrames(2);
-      assert.equal(runs, 1, `5 scroll events produced ${runs} updates, expected 1`);
-    } finally {
-      Expressive.Parallax._handleScroll = original;
-      instance.destroy();
-    }
+    window.dispatchEvent(new window.Event('scroll'));
+
+    assert.equal(counter.reads, 0, 'Parallax read layout on scroll; motion is CSS');
+    instance.destroy();
   });
 });
 

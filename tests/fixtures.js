@@ -49,7 +49,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Parallax',
     selector: '.parallax',
-    html: `<div class="parallax-container"><div class="parallax"><img src="http://localhost/1.jpg"></div></div>`
+    html: `<div class="parallax"><img src="http://localhost/1.jpg"></div>`
   },
   { name: 'Pushpin', selector: '.pushpin', html: `<div class="pushpin">pinned</div>` },
   {
