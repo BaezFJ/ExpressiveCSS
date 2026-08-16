@@ -33,8 +33,9 @@
           The container is <code>surface</code>, 28dp corners, 280–560dp wide,
           elevation 3. The headline is <code>headline-small</code> /
           <code>on-surface</code>; supporting text is <code>body-medium</code>.
-          The scrim is 32% <code>scrim</code>. Actions sit at the end with an
-          8dp gap.
+          The scrim is 32% <code>scrim</code> with a 12px blur. Opening with
+          <code>showModal()</code> also stops the page behind it from
+          scrolling. Actions sit at the end with an 8dp gap.
         </p>
         <p>
           Open it with <code>showModal()</code> and close it with
@@ -147,6 +148,10 @@
             <tr>
               <td><code>--md-comp-basic-dialog-container-max-width</code></td>
               <td>560px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
+              <td>12px</td>
             </tr>
           </tbody>
         </table>

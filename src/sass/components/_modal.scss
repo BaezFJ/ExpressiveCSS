@@ -13,7 +13,7 @@
 //   body         body-medium / on-surface-variant
 //   icon         24dp, on-secondary
 //   actions      end-aligned, 8dp gap
-//   scrim        32%
+//   scrim        32% + 12px blur
 //   padding      24dp
 
 dialog,
@@ -22,6 +22,7 @@ dialog,
   --md-comp-basic-dialog-container-shape: 28px;
   --md-comp-basic-dialog-container-min-width: 280px;
   --md-comp-basic-dialog-container-max-width: 560px;
+  --md-comp-basic-dialog-scrim-blur: 12px;
 
   box-sizing: border-box;
   width: min(var(--md-comp-basic-dialog-container-max-width), calc(100% - 48px));
@@ -38,7 +39,15 @@ dialog,
 
   &::backdrop {
     background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+    backdrop-filter: blur(var(--md-comp-basic-dialog-scrim-blur));
   }
+}
+
+// showModal() puts the dialog in the top layer but does not lock the
+// document scroller. :modal is the modal-only match — a modeless
+// dialog.show() must not freeze the page.
+html:has(dialog:modal) {
+  overflow: hidden;
 }
 
 dialog[open],
@@ -46,6 +55,7 @@ dialog[open],
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 // Optional leading icon (M3 basic dialog).
@@ -84,6 +94,7 @@ dialog > div,
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
+  overscroll-behavior: contain;
   margin: 0;
   padding: 0 24px 16px;
   font-family: var(--md-sys-typescale-body-medium-font-family-name);
