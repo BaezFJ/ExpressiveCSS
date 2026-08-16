@@ -98,7 +98,9 @@
           A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
           submit button is pressed and sets <code>dialog.returnValue</code>
           from the button’s <code>value</code>. An optional leading
-          <code>&lt;i&gt;</code> is the M3 dialog icon.
+          <code>&lt;i&gt;</code> is the M3 dialog icon. Tapping the scrim
+          closes it too, but only if the press and the release both miss
+          the dialog.
         </p>
       </div>
 
@@ -116,9 +118,11 @@
         <p>Close the dialog.</p>
 <pre><code>dialog.close();</code></pre>
         <p>
-          Clicking the scrim does not close it — that is how the Dialog API
-          works. Call <code>close()</code> yourself if you want that, or put
-          a cancel action in the form.
+          A tap or click on the scrim also closes it. Both ends of the
+          gesture have to land outside the dialog’s box, so a drag that
+          starts on the dialog — selecting text, missing a button — cannot
+          dismiss it. Set <code>closedby="none"</code> or
+          <code>closedby="closerequest"</code> to opt out.
         </p>
       </div>
 

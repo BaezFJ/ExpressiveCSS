@@ -12,10 +12,12 @@ import { Utils } from './core/utils';
 import { Cards } from './components/cards';
 import { Chips } from './components/chips';
 import { Range } from './components/range';
+import { Dialogs } from './behaviors/dialogs';
 import { Forms } from './behaviors/forms';
 import { Waves } from './behaviors/waves';
 
 export * from './components';
+export { Dialogs } from './behaviors/dialogs';
 export { Forms } from './behaviors/forms';
 export { Waves } from './behaviors/waves';
 export { AutoInit } from './components/registry';
@@ -38,3 +40,4 @@ Chips.Init();
 Waves.Init();
 Range.Init();
 Cards.Init();
+Dialogs.Init();

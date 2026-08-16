@@ -93,6 +93,19 @@ if (!window.Element.prototype.scrollTo) window.Element.prototype.scrollTo = () =
 if (!window.scrollTo) window.scrollTo = () => {};
 globalThis.scrollTo = window.scrollTo;
 
+// jsdom's HTMLDialogElement reflects `open` but has no show/showModal/close.
+if (window.HTMLDialogElement && !window.HTMLDialogElement.prototype.close) {
+  window.HTMLDialogElement.prototype.show = function show() {
+    this.setAttribute('open', '');
+  };
+  window.HTMLDialogElement.prototype.showModal = function showModal() {
+    this.setAttribute('open', '');
+  };
+  window.HTMLDialogElement.prototype.close = function close() {
+    this.removeAttribute('open');
+  };
+}
+
 /** Clear the document between test cases. */
 export function resetBody() {
   document.body.innerHTML = '';

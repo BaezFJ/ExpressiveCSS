@@ -61,8 +61,10 @@ read-it-off-the-element access that key provides.
 
 - **Importing the bundle has side effects.** `index.ts` attaches document-level
   key/focus listeners and calls `Forms.Init()`, `Chips.Init()`, `Waves.Init()`,
-  `Range.Init()`, `Cards.Init()`. Order matters; the delegated listeners those
-  install are what several components rely on.
+  `Range.Init()`, `Cards.Init()`, `Dialogs.Init()`. Order matters; the delegated
+  listeners those install are what several components rely on. `Dialogs.Init()`
+  light-dismisses an open `<dialog>` only when both ends of a pointer gesture
+  land outside its box — a drag that starts on the dialog cannot close it.
 - **`AutoInit()` is not automatic.** Callers invoke it themselves (the docs site
   does it on `DOMContentLoaded`). Elements opt out with `.no-autoinit`.
 - **`modal.ts` is deliberately gutted** — marked obsolete for versions > 2.1.1,

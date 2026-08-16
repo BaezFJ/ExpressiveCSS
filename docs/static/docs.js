@@ -93,10 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
       sourceDialog.showModal();
     });
 
-    sourceDialog.addEventListener('click', (event) => {
-      if (event.target === sourceDialog) sourceDialog.close();
-    });
-
     sourceSwatches.forEach((swatch) => {
       swatch.addEventListener('click', () => applySource(swatch.dataset.source));
     });
