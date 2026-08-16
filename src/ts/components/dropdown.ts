@@ -109,7 +109,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   constructor(el: HTMLElement, options: Partial<DropdownOptions>) {
     super(el, options, Dropdown);
-    this.el['RoutePlate_Dropdown'] = this;
+    this.el['LibrePOS_Dropdown'] = this;
 
     Dropdown._dropdowns.push(this);
     this.id = Utils.getIdFromTrigger(el);
@@ -163,7 +163,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   }
 
   static getInstance(el: HTMLElement): Dropdown {
-    return el['RoutePlate_Dropdown'];
+    return el['LibrePOS_Dropdown'];
   }
 
   destroy() {
@@ -175,7 +175,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     this._removeTemporaryEventHandlers();
     const index = Dropdown._dropdowns.indexOf(this);
     if (index >= 0) Dropdown._dropdowns.splice(index, 1);
-    this.el['RoutePlate_Dropdown'] = undefined;
+    this.el['LibrePOS_Dropdown'] = undefined;
   }
 
   _setupEventHandlers() {
@@ -248,7 +248,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     const leaveToDropdownContent = !!toEl.closest('.dropdown-content, menu');
     let leaveToActiveDropdownTrigger = false;
     const closestTrigger = toEl.closest('.dropdown-trigger');
-    if (closestTrigger && !!closestTrigger['RoutePlate_Dropdown'] && closestTrigger['RoutePlate_Dropdown'].isOpen) {
+    if (closestTrigger && !!closestTrigger['LibrePOS_Dropdown'] && closestTrigger['LibrePOS_Dropdown'].isOpen) {
       leaveToActiveDropdownTrigger = true;
     }
     // Close hover dropdown if mouse did not leave to either active dropdown-trigger or dropdown-content

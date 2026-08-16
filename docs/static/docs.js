@@ -1,7 +1,7 @@
 // Docs-site glue. The framework bundle only self-initializes Forms/Chips/Waves/
 // Range/Cards; everything else needs an explicit AutoInit pass.
 document.addEventListener('DOMContentLoaded', () => {
-  RoutePlate.AutoInit();
+  LibrePOS.AutoInit();
 
   const applyTheme = (next) => {
     document.documentElement.setAttribute('theme', next);
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('wave-trigger')?.addEventListener('click', () => {
-    RoutePlate.Waves.renderWaveEffect(
+    LibrePOS.Waves.renderWaveEffect(
       document.querySelector('.wave-demo'),
       null,
       { r: 255, g: 0, b: 0 }
@@ -48,12 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const fabHorizontal = document.getElementById('fab-horizontal');
   if (fabHorizontal) {
-    RoutePlate.FloatingActionButton.init(fabHorizontal, { direction: 'left' });
+    LibrePOS.FloatingActionButton.init(fabHorizontal, { direction: 'left' });
   }
 
   const fabClickOnly = document.getElementById('fab-click-only');
   if (fabClickOnly) {
-    RoutePlate.FloatingActionButton.init(fabClickOnly, {
+    LibrePOS.FloatingActionButton.init(fabClickOnly, {
       direction: 'left',
       hoverEnabled: false,
     });
@@ -61,12 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const collapsibleExpandable = document.getElementById('collapsible-expandable');
   if (collapsibleExpandable) {
-    RoutePlate.Collapsible.init(collapsibleExpandable, { accordion: false });
+    LibrePOS.Collapsible.init(collapsibleExpandable, { accordion: false });
   }
 
   const dropdownLeft = document.getElementById('dropdown-left-trigger');
   if (dropdownLeft) {
-    RoutePlate.Dropdown.init(dropdownLeft, {
+    LibrePOS.Dropdown.init(dropdownLeft, {
       alignment: 'left',
       constrainWidth: false,
     });
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const dropdownRight = document.getElementById('dropdown-right-trigger');
   if (dropdownRight) {
-    RoutePlate.Dropdown.init(dropdownRight, {
+    LibrePOS.Dropdown.init(dropdownRight, {
       alignment: 'right',
       constrainWidth: false,
     });
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const dropdownHover = document.getElementById('dropdown-hover-trigger');
   if (dropdownHover) {
-    RoutePlate.Dropdown.init(dropdownHover, {
+    LibrePOS.Dropdown.init(dropdownHover, {
       hover: true,
       constrainWidth: false,
     });
@@ -91,41 +91,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const featureTapTarget = document.getElementById('feature-tap-target');
   document.getElementById('tap-target-open')?.addEventListener('click', (event) => {
     event.preventDefault();
-    RoutePlate.TapTarget.getInstance(featureTapTarget)?.open();
+    LibrePOS.TapTarget.getInstance(featureTapTarget)?.open();
   });
   document.getElementById('tap-target-close')?.addEventListener('click', (event) => {
     event.preventDefault();
-    RoutePlate.TapTarget.getInstance(featureTapTarget)?.close();
+    LibrePOS.TapTarget.getInstance(featureTapTarget)?.close();
   });
 
   const sliders = document.querySelectorAll('.slider');
-  if (sliders.length && RoutePlate.Slider) {
-    RoutePlate.Slider.init(sliders);
+  if (sliders.length && LibrePOS.Slider) {
+    LibrePOS.Slider.init(sliders);
   }
 
   const carouselFull = document.getElementById('carousel-fullwidth');
   if (carouselFull) {
-    RoutePlate.Carousel.init(carouselFull, { fullWidth: true });
+    LibrePOS.Carousel.init(carouselFull, { fullWidth: true });
   }
   const carouselContent = document.getElementById('carousel-content');
   if (carouselContent) {
-    RoutePlate.Carousel.init(carouselContent, { fullWidth: true, indicators: true });
+    LibrePOS.Carousel.init(carouselContent, { fullWidth: true, indicators: true });
   }
   document.getElementById('carousel-prev')?.addEventListener('click', () => {
-    RoutePlate.Carousel.getInstance(document.getElementById('carousel-intro'))?.prev();
+    LibrePOS.Carousel.getInstance(document.getElementById('carousel-intro'))?.prev();
   });
   document.getElementById('carousel-next')?.addEventListener('click', () => {
-    RoutePlate.Carousel.getInstance(document.getElementById('carousel-intro'))?.next();
+    LibrePOS.Carousel.getInstance(document.getElementById('carousel-intro'))?.next();
   });
 
   const slideOut = document.getElementById('slide-out');
   if (slideOut) {
-    RoutePlate.Sidenav.init(slideOut);
+    LibrePOS.Sidenav.init(slideOut);
   }
 
   const slideOutRight = document.getElementById('slide-out-right');
   if (slideOutRight) {
-    RoutePlate.Sidenav.init(slideOutRight, { edge: 'right' });
+    LibrePOS.Sidenav.init(slideOutRight, { edge: 'right' });
   }
 
   // Extra overlay sidenavs set tabindex on every .sidenav link. Put the docs
@@ -138,25 +138,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const swipeTabs = document.getElementById('tabs-swipe');
   if (swipeTabs) {
-    RoutePlate.Tabs.init(swipeTabs, { swipeable: true });
+    LibrePOS.Tabs.init(swipeTabs, { swipeable: true });
   }
 
   document.getElementById('toast-basic')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ text: 'Photo saved to album' });
+    new LibrePOS.Toast({ text: 'Photo saved to album' });
   });
 
   document.getElementById('toast-action')?.addEventListener('click', () => {
-    new RoutePlate.Toast({
+    new LibrePOS.Toast({
       text: 'Item archived',
       action: 'Undo',
       onAction: () => {
-        new RoutePlate.Toast({ text: 'Item restored' });
+        new LibrePOS.Toast({ text: 'Item restored' });
       },
     });
   });
 
   document.getElementById('toast-close')?.addEventListener('click', () => {
-    new RoutePlate.Toast({
+    new LibrePOS.Toast({
       text: "Can't send photo. Retry in 5 seconds.",
       action: 'Retry',
       dismissible: true,
@@ -172,46 +172,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('toast-html-1')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ toastId: 'my-toast-1' });
+    new LibrePOS.Toast({ toastId: 'my-toast-1' });
   });
 
   document.getElementById('toast-html-2')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ toastId: 'my-toast-2' });
+    new LibrePOS.Toast({ toastId: 'my-toast-2' });
   });
 
   document.getElementById('toast-callback')?.addEventListener('click', () => {
-    new RoutePlate.Toast({
+    new LibrePOS.Toast({
       text: 'I will call back when dismissed',
       completeCallback: () => {
-        new RoutePlate.Toast({ text: 'Your toast was dismissed' });
+        new LibrePOS.Toast({ text: 'Your toast was dismissed' });
       },
     });
   });
 
   document.getElementById('toast-rounded')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ text: 'I am a toast!', classes: 'rounded' });
+    new LibrePOS.Toast({ text: 'I am a toast!', classes: 'rounded' });
   });
 
   document.getElementById('toast-top')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ text: 'Posted from the top', classes: 'top' });
+    new LibrePOS.Toast({ text: 'Posted from the top', classes: 'top' });
   });
 
   document.getElementById('toast-dismiss-show')?.addEventListener('click', () => {
-    new RoutePlate.Toast({ text: 'I am a toast!' });
+    new LibrePOS.Toast({ text: 'I am a toast!' });
   });
 
   document.getElementById('toast-dismiss-one')?.addEventListener('click', () => {
     const toastElement = document.querySelector('#toast-container .toast');
-    RoutePlate.Toast.getInstance(toastElement)?.dismiss();
+    LibrePOS.Toast.getInstance(toastElement)?.dismiss();
   });
 
   document.getElementById('toast-dismiss-all')?.addEventListener('click', () => {
-    RoutePlate.Toast.dismissAll();
+    LibrePOS.Toast.dismissAll();
   });
 
   const initDatepicker = (id, options) => {
     const el = document.getElementById(id);
-    if (el) RoutePlate.Datepicker.init(el, options);
+    if (el) LibrePOS.Datepicker.init(el, options);
   };
   initDatepicker('datepicker-intro', { openByDefault: true });
   initDatepicker('datepicker-range', {
@@ -226,11 +226,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const timepicker24 = document.getElementById('timepicker-24');
   if (timepicker24) {
-    RoutePlate.Timepicker.init(timepicker24, { twelveHour: false });
+    LibrePOS.Timepicker.init(timepicker24, { twelveHour: false });
   }
 
   document.querySelectorAll('#input_text_counter, #textarea_counter').forEach((el) => {
-    RoutePlate.CharacterCounter.init(el);
+    LibrePOS.CharacterCounter.init(el);
   });
 
   const indeterminate = document.getElementById('indeterminate-checkbox');
@@ -243,14 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
   const autocompleteInput = document.getElementById('autocomplete-input');
   if (autocompleteInput) {
-    RoutePlate.Autocomplete.init(autocompleteInput, {
+    LibrePOS.Autocomplete.init(autocompleteInput, {
       minLength: 0,
       data: autocompleteData,
     });
   }
   const autocompleteMulti = document.getElementById('autocomplete-multi');
   if (autocompleteMulti) {
-    RoutePlate.Autocomplete.init(autocompleteMulti, {
+    LibrePOS.Autocomplete.init(autocompleteMulti, {
       minLength: 0,
       isMultiSelect: true,
       data: autocompleteData,
@@ -259,18 +259,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const chipsEmpty = document.getElementById('chips-empty');
   if (chipsEmpty) {
-    RoutePlate.Chips.init(chipsEmpty, { allowUserInput: true });
+    LibrePOS.Chips.init(chipsEmpty, { allowUserInput: true });
   }
   const chipsInitial = document.getElementById('chips-initial');
   if (chipsInitial) {
-    RoutePlate.Chips.init(chipsInitial, {
+    LibrePOS.Chips.init(chipsInitial, {
       allowUserInput: true,
       data: [{ id: 'Apple' }, { id: 'Microsoft' }, { id: 'Google' }],
     });
   }
   const chipsPlaceholder = document.getElementById('chips-placeholder');
   if (chipsPlaceholder) {
-    RoutePlate.Chips.init(chipsPlaceholder, {
+    LibrePOS.Chips.init(chipsPlaceholder, {
       allowUserInput: true,
       placeholder: 'Enter a tag',
       secondaryPlaceholder: '+Tag',
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const chipsAutocomplete = document.getElementById('chips-autocomplete');
   if (chipsAutocomplete) {
-    RoutePlate.Chips.init(chipsAutocomplete, {
+    LibrePOS.Chips.init(chipsAutocomplete, {
       allowUserInput: true,
       autocompleteOptions: {
         data: [
@@ -293,17 +293,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const tooltipDemo = document.getElementById('tooltip-method-demo');
   document.getElementById('tooltip-open')?.addEventListener('click', (event) => {
     event.preventDefault();
-    RoutePlate.Tooltip.getInstance(tooltipDemo)?.open();
+    LibrePOS.Tooltip.getInstance(tooltipDemo)?.open();
   });
   document.getElementById('tooltip-close')?.addEventListener('click', (event) => {
     event.preventDefault();
-    RoutePlate.Tooltip.getInstance(tooltipDemo)?.close();
+    LibrePOS.Tooltip.getInstance(tooltipDemo)?.close();
   });
 
   const toc = document.querySelector('.toc-wrapper');
-  if (toc && RoutePlate.Pushpin) {
+  if (toc && LibrePOS.Pushpin) {
     toc.style.width = `${toc.parentElement.getBoundingClientRect().width}px`;
-    RoutePlate.Pushpin.init(toc, {
+    LibrePOS.Pushpin.init(toc, {
       top: toc.getBoundingClientRect().top + window.scrollY,
     });
   }

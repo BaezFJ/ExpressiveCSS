@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Text Inputs - RoutePlateCSS{% endblock %}
+{% block title %}Text Inputs - LibrePOS-CSS{% endblock %}
 {% block page_title %}Text Inputs{% endblock %}
 
 {% block page %}
@@ -158,29 +158,29 @@
       <div id="textarea" class="section scrollspy">
         <h3>Textarea</h3>
         <p>
-          Use <code>textarea.routeplate-textarea</code> inside
-          <code>.field</code>. That class name is RoutePlate’s; there is no
+          Use <code>textarea.librepos-textarea</code> inside
+          <code>.field</code>. That class name is LibrePOS’s; there is no
           <code>.materialize-textarea</code>. Textareas grow with their
           content. <code>Forms.Init()</code> starts every
-          <code>.routeplate-textarea</code> on <code>DOMContentLoaded</code>.
+          <code>.librepos-textarea</code> on <code>DOMContentLoaded</code>.
         </p>
         <form class="row">
           <div class="s12 field">
-            <textarea id="textarea1" class="routeplate-textarea" placeholder=" "></textarea>
+            <textarea id="textarea1" class="librepos-textarea" placeholder=" "></textarea>
             <label for="textarea1">Textarea</label>
           </div>
           <div class="s12 field">
             <i class="material-icons">mode_edit</i>
-            <textarea id="textarea2" class="routeplate-textarea" placeholder=" "></textarea>
+            <textarea id="textarea2" class="librepos-textarea" placeholder=" "></textarea>
             <label for="textarea2">Message</label>
           </div>
         </form>
 <pre><code>&lt;div class="field"&gt;
-  &lt;textarea id="textarea1" class="routeplate-textarea" placeholder=" "&gt;&lt;/textarea&gt;
+  &lt;textarea id="textarea1" class="librepos-textarea" placeholder=" "&gt;&lt;/textarea&gt;
   &lt;label for="textarea1"&gt;Textarea&lt;/label&gt;
 &lt;/div&gt;</code></pre>
         <p>If you add a textarea after load, initialize it yourself:</p>
-<pre><code>RoutePlate.Forms.InitTextarea(document.querySelector('#textarea1'));</code></pre>
+<pre><code>LibrePOS.Forms.InitTextarea(document.querySelector('#textarea1'));</code></pre>
         <p>
           Setting <code>.value</code> in script does not resize the field.
           Call <code>textareaAutoResize</code> afterwards.
@@ -231,11 +231,11 @@
             <label for="input_text_counter">Input text</label>
           </div>
           <div class="s12 field">
-            <textarea id="textarea_counter" class="routeplate-textarea" maxlength="120" placeholder=" "></textarea>
+            <textarea id="textarea_counter" class="librepos-textarea" maxlength="120" placeholder=" "></textarea>
             <label for="textarea_counter">Textarea</label>
           </div>
         </form>
-<pre><code>RoutePlate.CharacterCounter.init(
+<pre><code>LibrePOS.CharacterCounter.init(
   document.querySelectorAll('#input_text, #textarea2')
 );</code></pre>
       </div>

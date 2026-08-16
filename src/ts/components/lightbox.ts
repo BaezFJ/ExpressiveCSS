@@ -68,7 +68,7 @@ export class Lightbox extends Component<LightboxOptions> {
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
     super(el, options, Lightbox);
-    this.el['RoutePlate_Lightbox'] = this;
+    this.el['LibrePOS_Lightbox'] = this;
 
     this.options = {
       ...Lightbox.defaults,
@@ -119,12 +119,12 @@ export class Lightbox extends Component<LightboxOptions> {
   }
 
   static getInstance(el: HTMLElement): Lightbox {
-    return el['RoutePlate_Lightbox'];
+    return el['LibrePOS_Lightbox'];
   }
 
   destroy() {
     this._removeEventHandlers();
-    this.el['RoutePlate_Lightbox'] = undefined;
+    this.el['LibrePOS_Lightbox'] = undefined;
     // Unwrap image
     //this.placeholder.after(this.el).remove();
     this.placeholder.remove();

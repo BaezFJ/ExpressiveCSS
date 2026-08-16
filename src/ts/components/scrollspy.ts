@@ -70,7 +70,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
 
   constructor(el: HTMLElement, options: Partial<ScrollSpyOptions>) {
     super(el, options, ScrollSpy);
-    this.el['RoutePlate_ScrollSpy'] = this;
+    this.el['LibrePOS_ScrollSpy'] = this;
 
     this.options = {
       ...ScrollSpy.defaults,
@@ -115,7 +115,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
   }
 
   static getInstance(el: HTMLElement): ScrollSpy {
-    return el['RoutePlate_ScrollSpy'];
+    return el['LibrePOS_ScrollSpy'];
   }
 
   destroy() {
@@ -131,7 +131,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     // here would abort the rest of the teardown.
     const actElem = document.querySelector(this.options.getActiveElement(this.el.id));
     actElem?.classList.remove(this.options.activeClass);
-    this.el['RoutePlate_ScrollSpy'] = undefined;
+    this.el['LibrePOS_ScrollSpy'] = undefined;
   }
 
   _setupEventHandlers() {
@@ -165,10 +165,10 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
       if (trigger === x) {
         e.preventDefault();
 
-        if (scrollspy.el['RoutePlate_ScrollSpy'].options.animationDuration) {
+        if (scrollspy.el['LibrePOS_ScrollSpy'].options.animationDuration) {
           ScrollSpy._smoothScrollIntoView(
             scrollspy.el,
-            scrollspy.el['RoutePlate_ScrollSpy'].options.animationDuration
+            scrollspy.el['LibrePOS_ScrollSpy'].options.animationDuration
           );
         } else {
           scrollspy.el.scrollIntoView({ behavior: 'smooth' });
@@ -214,7 +214,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     // remember elements in view for next tick
     ScrollSpy._elementsInView = intersections;
     if (ScrollSpy._elements.length) {
-      const options = ScrollSpy._elements[0].el['RoutePlate_ScrollSpy'].options;
+      const options = ScrollSpy._elements[0].el['LibrePOS_ScrollSpy'].options;
       if (options.keepTopElementActive && ScrollSpy._visibleElements.length === 0) {
         ScrollSpy._resetKeptTopActiveElement(options.activeClass);
         // Measure once per element, then sort on the numbers. Reading the
@@ -286,8 +286,8 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
       actElem?.classList.remove(this.options.activeClass);
 
       if (
-        ScrollSpy._visibleElements[0]['RoutePlate_ScrollSpy'] &&
-        this.id < ScrollSpy._visibleElements[0]['RoutePlate_ScrollSpy'].id
+        ScrollSpy._visibleElements[0]['LibrePOS_ScrollSpy'] &&
+        this.id < ScrollSpy._visibleElements[0]['LibrePOS_ScrollSpy'].id
       ) {
         ScrollSpy._visibleElements.unshift(this.el);
       } else {

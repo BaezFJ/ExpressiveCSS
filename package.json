@@ -1,21 +1,21 @@
 {
-  "name": "routeplatecss",
+  "name": "libreposcss",
   "version": "0.1.0",
-  "description": "RoutePlateCSS - a Material Design 3 front-end framework.",
+  "description": "LibrePOS-CSS - a Material Design 3 front-end framework.",
   "type": "module",
-  "main": "./dist/js/routeplate.cjs",
-  "module": "./dist/js/routeplate.mjs",
+  "main": "./dist/js/librepos.cjs",
+  "module": "./dist/js/librepos.mjs",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/js/routeplate.mjs",
-      "require": "./dist/js/routeplate.cjs",
-      "default": "./dist/js/routeplate.mjs"
+      "import": "./dist/js/librepos.mjs",
+      "require": "./dist/js/librepos.cjs",
+      "default": "./dist/js/librepos.mjs"
     },
-    "./css": "./dist/css/routeplate.css",
-    "./css/min": "./dist/css/routeplate.min.css",
-    "./scss": "./src/sass/routeplate.scss",
+    "./css": "./dist/css/librepos.css",
+    "./css/min": "./dist/css/librepos.min.css",
+    "./scss": "./src/sass/librepos.scss",
     "./scss/*": "./src/sass/*"
   },
   "files": [
@@ -27,21 +27,21 @@
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build": "run-s clean build:css build:js build:types",
     "build:css": "run-s build:css:expanded build:css:min",
-    "build:css:expanded": "sass src/sass/routeplate.scss dist/css/routeplate.css --style=expanded --source-map --load-path=src/sass",
-    "build:css:min": "sass src/sass/routeplate.scss dist/css/routeplate.min.css --style=compressed --source-map --load-path=src/sass",
+    "build:css:expanded": "sass src/sass/librepos.scss dist/css/librepos.css --style=expanded --source-map --load-path=src/sass",
+    "build:css:min": "sass src/sass/librepos.scss dist/css/librepos.min.css --style=compressed --source-map --load-path=src/sass",
     "build:js": "run-s build:js:esm build:js:cjs build:js:iife build:js:iife-min",
-    "build:js:esm": "esbuild src/ts/index.ts --bundle --format=esm --target=es2020 --outfile=dist/js/routeplate.mjs --sourcemap",
-    "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/routeplate.cjs --sourcemap",
-    "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=RoutePlate --target=es2020 --outfile=dist/js/routeplate.js --sourcemap",
-    "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=RoutePlate --target=es2020 --outfile=dist/js/routeplate.min.js --minify --sourcemap",
+    "build:js:esm": "esbuild src/ts/index.ts --bundle --format=esm --target=es2020 --outfile=dist/js/librepos.mjs --sourcemap",
+    "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/librepos.cjs --sourcemap",
+    "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=LibrePOS --target=es2020 --outfile=dist/js/librepos.js --sourcemap",
+    "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=LibrePOS --target=es2020 --outfile=dist/js/librepos.min.js --minify --sourcemap",
     "build:types": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "run-s build:js:esm test:run",
     "test:run": "node --test",
     "test:watch": "node --test --watch",
     "watch": "run-p watch:css watch:js",
-    "watch:css": "sass --watch src/sass/routeplate.scss:dist/css/routeplate.css --style=expanded --source-map --load-path=src/sass",
-    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=RoutePlate --target=es2020 --outfile=dist/js/routeplate.js --sourcemap --watch=forever"
+    "watch:css": "sass --watch src/sass/librepos.scss:dist/css/librepos.css --style=expanded --source-map --load-path=src/sass",
+    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=LibrePOS --target=es2020 --outfile=dist/js/librepos.js --sourcemap --watch=forever"
   },
   "engines": {
     "node": ">=20"

@@ -6,7 +6,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { RoutePlate, resetBody, fire, window } from './setup.js';
+import { LibrePOS, resetBody, fire, window } from './setup.js';
 
 const collapsibleHtml = `
   <ul class="collapsible">
@@ -21,7 +21,7 @@ describe('Collapsible', () => {
     document.body.innerHTML = collapsibleHtml;
     const el = document.querySelector('.collapsible');
     const [first] = el.querySelectorAll('li');
-    const instance = RoutePlate.Collapsible.init(el);
+    const instance = LibrePOS.Collapsible.init(el);
 
     assert.equal(first.classList.contains('active'), false);
     instance.open(0);
@@ -34,7 +34,7 @@ describe('Collapsible', () => {
     document.body.innerHTML = collapsibleHtml;
     const el = document.querySelector('.collapsible');
     const [first, second] = el.querySelectorAll('li');
-    RoutePlate.Collapsible.init(el);
+    LibrePOS.Collapsible.init(el);
 
     fire(first.querySelector('.collapsible-header'), 'click');
     assert.equal(first.classList.contains('active'), true);
@@ -55,7 +55,7 @@ describe('Tabs', () => {
         <li class="tab"><a href="#tab2">Tab 2</a></li>
       </ul>
       <div id="tab1">one</div><div id="tab2">two</div>`;
-    const instance = RoutePlate.Tabs.init(document.querySelector('.tabs'));
+    const instance = LibrePOS.Tabs.init(document.querySelector('.tabs'));
     const [link1, link2] = document.querySelectorAll('.tabs .tab a');
 
     assert.equal(link1.classList.contains('active'), true);
@@ -80,7 +80,7 @@ describe('FormSelect', () => {
         </select>
       </div>`;
     const select = document.querySelector('select');
-    RoutePlate.FormSelect.init(select);
+    LibrePOS.FormSelect.init(select);
 
     const wrapper = document.querySelector('.select-wrapper');
     assert.ok(wrapper, 'no .select-wrapper was created');
@@ -100,7 +100,7 @@ describe('CharacterCounter', () => {
   test('counts input against maxlength and flags overflow', () => {
     document.body.innerHTML = `<div class="input-field"><input id="t" type="text" maxlength="5"></div>`;
     const input = document.querySelector('#t');
-    RoutePlate.CharacterCounter.init(input);
+    LibrePOS.CharacterCounter.init(input);
     const counter = document.querySelector('.character-counter');
     assert.ok(counter, 'no counter element was appended');
 
@@ -120,21 +120,21 @@ describe('Toast', () => {
   beforeEach(resetBody);
 
   test('renders its message into a toast container', () => {
-    const toast = new RoutePlate.Toast({ text: 'Saved' });
+    const toast = new LibrePOS.Toast({ text: 'Saved' });
 
     assert.ok(document.querySelector('#toast-container'), 'no toast container was created');
     assert.ok(toast.el.classList.contains('toast'));
     assert.ok(toast.el.classList.contains('snackbar'));
     assert.equal(toast.el.textContent.trim(), 'Saved');
     assert.equal(toast.el.querySelector('p')?.textContent, 'Saved');
-    assert.equal(RoutePlate.Toast.getInstance(toast.el), toast);
+    assert.equal(LibrePOS.Toast.getInstance(toast.el), toast);
 
     toast.dismiss();
   });
 
   test('renders an action button and a close affordance', () => {
     let acted = false;
-    const toast = new RoutePlate.Toast({
+    const toast = new LibrePOS.Toast({
       text: 'Item archived',
       action: 'Undo',
       onAction: () => {

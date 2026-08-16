@@ -4,16 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-RoutePlateCSS is a new front-end framework being grown out of a vendored copy of MaterializeCSS v2.2.2 source (`src/ts` + `src/sass`), with a Flask app in `docs/` intended to become the documentation/showcase site.
+LibrePOS-CSS is a new front-end framework being grown out of a vendored copy of MaterializeCSS v2.2.2 source (`src/ts` + `src/sass`), with a Flask app in `docs/` intended to become the documentation/showcase site.
 
-The public surface is rebranded. Instances are stashed on elements as `el['RoutePlate_<Component>']`, the IIFE global is `RoutePlate`, `src/ts/index.ts` exports `version = '0.1.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
+The public surface is rebranded. Instances are stashed on elements as `el['LibrePOS_<Component>']`, the IIFE global is `LibrePOS`, `src/ts/index.ts` exports `version = '0.1.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
 
-| Upstream | RoutePlate |
+| Upstream | LibrePOS |
 | --- | --- |
 | `Materialbox` / `.materialboxed` / `#materialbox-overlay` | `Lightbox` / `.lightboxed` / `#lightbox-overlay` |
-| `.materialize-textarea` | `.routeplate-textarea` |
-| `.materialize-red` (+ shades) | `.routeplate-red` |
-| `el['M_<Component>']`, global `M` | `el['RoutePlate_<Component>']`, global `RoutePlate` |
+| `.materialize-textarea` | `.librepos-textarea` |
+| `.materialize-red` (+ shades) | `.librepos-red` |
+| `el['M_<Component>']`, global `M` | `el['LibrePOS_<Component>']`, global `LibrePOS` |
 
 **`.material-icons` and `.material-symbols-*` are deliberately untouched** — they are Google's icon-font class names, not Materialize's. Consumers load Google's stylesheet, which defines them; renaming ours would only desynchronize the two. The `--md-sys-*` / `--md-ref-*` tokens are Material Design 3 spec names for the same reason, as is `components/_icons-material-design.scss`.
 
@@ -25,8 +25,8 @@ Framework build is npm-based (dart-sass + esbuild + tsc). `npm install` first.
 
 ```bash
 npm run build          # css + js + type declarations -> dist/
-npm run build:css      # sass -> dist/css/routeplate.css (+ .min.css, source maps)
-npm run build:js       # esbuild -> dist/js/routeplate.{mjs,cjs,js,min.js}
+npm run build:css      # sass -> dist/css/librepos.css (+ .min.css, source maps)
+npm run build:js       # esbuild -> dist/js/librepos.{mjs,cjs,js,min.js}
 npm run build:types    # tsc --emitDeclarationOnly -> dist/types/
 npm run typecheck      # tsc --noEmit, no output
 npm test               # rebuild the ESM bundle, then run the jsdom suite
@@ -37,7 +37,7 @@ npm run clean          # remove dist/
 
 `npm test` runs a single test file with `node --test path/to/file.test.js`, or filter by name with `node --test --test-name-pattern "Collapsible"`.
 
-Entry points are `src/sass/routeplate.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `RoutePlate` for `<script>` usage (`RoutePlate.AutoInit()`, `RoutePlate.Modal.getInstance(el)`).
+Entry points are `src/sass/librepos.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `LibrePOS` for `<script>` usage (`LibrePOS.AutoInit()`, `LibrePOS.Modal.getInstance(el)`).
 
 Docs site (uv + Flask, Python ≥ 3.14):
 
@@ -48,7 +48,7 @@ uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
 
 Notes:
 
-- Tests are `node:test` + jsdom in `tests/`, run against the **built** `dist/js/routeplate.mjs` — so a stale bundle tests stale code; `npm test` rebuilds first. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
+- Tests are `node:test` + jsdom in `tests/`, run against the **built** `dist/js/librepos.mjs` — so a stale bundle tests stale code; `npm test` rebuilds first. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
 - **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and Toast/Slider/Carousel own intervals, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. Tear down in a `finally`.
 - jsdom does no layout — `getBoundingClientRect()` and every `offset*`/`client*` read returns 0. Geometry-dependent tests stub the rect on the element (`regressions.test.js`), and counting stubbed rect calls is how the scroll-path tests assert layout work. jsdom also lazily attaches its own `handleFocusEvent`/`handleKeyboardEvent`/`handleMouseEvent` to `window` once a form control is involved; listener-leak tests filter those by name.
 - To confirm a new test actually catches the bug it names: `git stash push -- src/ts`, `npm run build:js`, run the one file, `git stash pop` — **as separate Bash calls**, so a hung run can't strand the stash.
@@ -61,7 +61,7 @@ Notes:
 
 **Read `src/sass/README.md` before touching styles** — it is the working guide (layer map, the two rules, where new code goes). Summary:
 
-`src/sass/routeplate.scss` is the entry point. It declares `@layer tokens, base, components, utilities;` and pulls each one in with `meta.load-css()` (`@forward` cannot appear inside `@layer`), plus `@forward "abstracts"` for the Sass API — `abstracts` is inert and is not a cascade layer. Each layer has an `_index.scss` that forwards its own files; the entry file is the only place cascade order is decided.
+`src/sass/librepos.scss` is the entry point. It declares `@layer tokens, base, components, utilities;` and pulls each one in with `meta.load-css()` (`@forward` cannot appear inside `@layer`), plus `@forward "abstracts"` for the Sass API — `abstracts` is inert and is not a cascade layer. Each layer has an `_index.scss` that forwards its own files; the entry file is the only place cascade order is decided.
 
 Utilities are emitted **after** components now, and win by layer order rather than specificity. Their `!important` flags are deliberately retained: a normal declaration inside a layer loses to any *unlayered* consumer declaration, so dropping the flag would silently stop `.hide` beating a consumer's own `display`. The `!important` in `components/` (`.pushpin`, `.tap-target`, preloader) guards JS-driven geometry and also stays.
 
@@ -104,11 +104,11 @@ Other things worth knowing:
 export interface XOptions extends BaseOptions { /* … */ }
 const _defaults = { /* … */ };
 export class X extends Component<XOptions> {
-  constructor(el, options) { super(el, options, X); this.el['RoutePlate_X'] = this; this.options = {...X.defaults, ...options}; }
+  constructor(el, options) { super(el, options, X); this.el['LibrePOS_X'] = this; this.options = {...X.defaults, ...options}; }
   static get defaults() { return _defaults; }
   static init(els, options = {}) { return super.init(els, options, X); }   // overloaded for element vs NodeList
-  static getInstance(el) { return el['RoutePlate_X']; }
-  destroy() { this.el['RoutePlate_X'] = undefined; /* remove handlers */ }
+  static getInstance(el) { return el['LibrePOS_X']; }
+  destroy() { this.el['LibrePOS_X'] = undefined; /* remove handlers */ }
 }
 ```
 
@@ -141,4 +141,4 @@ The Flask app serves the npm build **directly out of `dist/`** via the `dist_fil
 
 An `inject_build_assets` context processor exposes `css_url` / `js_url` to templates and picks unminified assets when `app.debug` is set, minified otherwise; it also sets `build_missing`, which renders a "run npm run build" banner in `base.html` when `dist/` is absent. Debug responses are sent with `max-age=0` so rebuilt assets aren't cached.
 
-The bundle only self-initializes Forms/Chips/Waves/Range/Cards — `docs/static/docs.js` calls `RoutePlate.AutoInit()` on `DOMContentLoaded` for everything else, and toggles `<html theme="light|dark">` to exercise the token layer.
+The bundle only self-initializes Forms/Chips/Waves/Range/Cards — `docs/static/docs.js` calls `LibrePOS.AutoInit()` on `DOMContentLoaded` for everything else, and toggles `<html theme="light|dark">` to exercise the token layer.

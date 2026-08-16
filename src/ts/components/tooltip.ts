@@ -91,7 +91,7 @@ export class Tooltip extends Component<TooltipOptions> {
 
   constructor(el: HTMLElement, options: Partial<TooltipOptions>) {
     super(el, options, Tooltip);
-    this.el['RoutePlate_Tooltip'] = this;
+    this.el['LibrePOS_Tooltip'] = this;
 
     this.options = {
       ...Tooltip.defaults,
@@ -135,7 +135,7 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   static getInstance(el: HTMLElement): Tooltip {
-    return el['RoutePlate_Tooltip'];
+    return el['LibrePOS_Tooltip'];
   }
 
   destroy() {
@@ -144,7 +144,7 @@ export class Tooltip extends Component<TooltipOptions> {
     }
     this.tooltipEl.remove();
     this._removeEventHandlers();
-    this.el['RoutePlate_Tooltip'] = undefined;
+    this.el['LibrePOS_Tooltip'] = undefined;
   }
 
   _appendTooltipEl() {

@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Media - RoutePlateCSS{% endblock %}
+{% block title %}Media - LibrePOS-CSS{% endblock %}
 {% block page_title %}Media{% endblock %}
 
 {% block page %}
@@ -25,7 +25,7 @@
 
         <h3>Lightbox</h3>
         <p>
-          Lightbox is RoutePlate’s material-style enlarge-on-click image. Click an image with
+          Lightbox is LibrePOS’s material-style enlarge-on-click image. Click an image with
           <code>lightboxed</code> and it centers and grows. Click it again, scroll, or press Escape to dismiss.
           <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
           <code>no-autoinit</code>.
@@ -36,7 +36,7 @@
         <h5 class="light">Initialization</h5>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.lightboxed');
-  const instances = RoutePlate.Lightbox.init(elems, {
+  const instances = LibrePOS.Lightbox.init(elems, {
     // specify options here
   });
 });</code></pre>
@@ -95,7 +95,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Lightbox.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Lightbox.getInstance(elem);</code></pre>
         <h5 class="light">.open();</h5>
         <p>Open the lightbox.</p>
 <pre><code>instance.open();</code></pre>
@@ -173,7 +173,7 @@
         </p>
         <p>
           Slider is <strong>not</strong> in <code>AutoInit()</code>. Call
-          <code>RoutePlate.Slider.init</code> yourself after the page loads.
+          <code>LibrePOS.Slider.init</code> yourself after the page loads.
           For a 3D item carousel or a full-width image track, see
           <a href="{{ url_for('carousel') }}">Carousel</a>.
         </p>
@@ -238,7 +238,7 @@
         <h5 class="light">Initialization</h5>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.slider');
-  const instances = RoutePlate.Slider.init(elems, {
+  const instances = LibrePOS.Slider.init(elems, {
     // specify options here
     indicatorLabelFunc: (idx, current) =&gt; {
       let label = 'Go to slide ' + idx;
@@ -310,7 +310,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Slider.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Slider.getInstance(elem);</code></pre>
         <h5 class="light">.pause();</h5>
         <p>Pause slider autoslide.</p>
 <pre><code>instance.pause();</code></pre>

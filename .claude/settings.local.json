@@ -14,7 +14,15 @@
       "Bash(kill %1)",
       "Bash(npm run *)",
       "Bash(git rm *)",
-      "Bash(node --test tests/color-drift.test.js)"
+      "Bash(node --test tests/color-drift.test.js)",
+      "Bash(gh repo *)",
+      "Bash(sort -t: -k3)",
+      "Bash(uniq -c -f2)",
+      "Bash(git mv *)",
+      "Bash(mv .idea/routeplatecss.iml .idea/libreposcss.iml)",
+      "Bash(sed -i 's/routeplatecss/libreposcss/g' .idea/modules.xml)",
+      "Bash(uv sync *)",
+      "Bash(git add *)"
     ]
   }
 }

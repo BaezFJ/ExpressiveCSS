@@ -182,7 +182,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
     super(el, options, Timepicker);
-    this.el['RoutePlate_Timepicker'] = this;
+    this.el['LibrePOS_Timepicker'] = this;
     this.options = {
       ...Timepicker.defaults,
       ...options
@@ -253,14 +253,14 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   static getInstance(el: HTMLElement): Timepicker {
-    return el['RoutePlate_Timepicker'];
+    return el['LibrePOS_Timepicker'];
   }
 
   destroy() {
     this._removeEventHandlers();
     this.displayPlugin?.destroy();
     this.containerEl.remove();
-    this.el['RoutePlate_Timepicker'] = undefined;
+    this.el['LibrePOS_Timepicker'] = undefined;
   }
 
   _setupEventHandlers() {

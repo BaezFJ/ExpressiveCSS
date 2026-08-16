@@ -24,7 +24,7 @@ export interface Openable {
 }
 
 /**
- * Base class implementation for RoutePlate components.
+ * Base class implementation for LibrePOS components.
  */
 export class Component<O extends BaseOptions> {
   /**

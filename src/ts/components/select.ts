@@ -49,7 +49,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
     super(el, options, FormSelect);
     if (this.el.classList.contains('browser-default')) return;
-    this.el['RoutePlate_FormSelect'] = this;
+    this.el['LibrePOS_FormSelect'] = this;
 
     this.options = {
       ...FormSelect.defaults,
@@ -96,7 +96,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   static getInstance(el: HTMLElement): FormSelect {
-    return el['RoutePlate_FormSelect'];
+    return el['LibrePOS_FormSelect'];
   }
 
   destroy() {
@@ -106,7 +106,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     // every rebuilt select used to leave an instance behind for good.
     this.dropdown?.destroy();
     this._removeDropdown();
-    this.el['RoutePlate_FormSelect'] = undefined;
+    this.el['LibrePOS_FormSelect'] = undefined;
   }
 
   /**

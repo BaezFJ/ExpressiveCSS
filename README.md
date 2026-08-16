@@ -1,10 +1,10 @@
-# RoutePlateCSS
+# LibrePOS-CSS
 
-RoutePlateCSS is a Material Design 3 front-end framework built with Sass and
+LibrePOS-CSS is a Material Design 3 front-end framework built with Sass and
 TypeScript. It provides theme tokens, layout and utility classes, styled form
 controls, and JavaScript components in browser, ES module, and CommonJS builds.
 
-> RoutePlateCSS is currently at version `0.1.0` and under active development.
+> LibrePOS-CSS is currently at version `0.1.0` and under active development.
 
 ## Features
 
@@ -40,13 +40,13 @@ The compiled assets are written to `dist/`:
 ```text
 dist/
 ├── css/
-│   ├── routeplate.css
-│   └── routeplate.min.css
+│   ├── librepos.css
+│   └── librepos.min.css
 ├── js/
-│   ├── routeplate.cjs
-│   ├── routeplate.js
-│   ├── routeplate.min.js
-│   └── routeplate.mjs
+│   ├── librepos.cjs
+│   ├── librepos.js
+│   ├── librepos.min.js
+│   └── librepos.mjs
 └── types/
 ```
 
@@ -60,31 +60,31 @@ Include the compiled stylesheet and browser bundle, then initialize components
 after the page has loaded:
 
 ```html
-<link rel="stylesheet" href="dist/css/routeplate.min.css">
+<link rel="stylesheet" href="dist/css/librepos.min.css">
 
 <ul class="collapsible">
   <li>
     <div class="collapsible-header">Details</div>
-    <div class="collapsible-body">RoutePlateCSS is ready.</div>
+    <div class="collapsible-body">LibrePOS-CSS is ready.</div>
   </li>
 </ul>
 
-<script src="dist/js/routeplate.min.js"></script>
+<script src="dist/js/librepos.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    RoutePlate.AutoInit();
+    LibrePOS.AutoInit();
   });
 </script>
 ```
 
-The browser bundle exposes the framework as the global `RoutePlate` object.
+The browser bundle exposes the framework as the global `LibrePOS` object.
 
 ### ES modules
 
 Import the framework or individual components from the module build:
 
 ```js
-import { AutoInit, Tooltip } from './dist/js/routeplate.mjs';
+import { AutoInit, Tooltip } from './dist/js/librepos.mjs';
 
 AutoInit();
 
@@ -110,15 +110,15 @@ behaviors, but it does not call `AutoInit()` automatically.
 Use the framework's Sass entry point in another Sass project:
 
 ```scss
-@use "routeplatecss/src/sass/routeplate";
+@use "libreposcss/src/sass/librepos";
 ```
 
 When working directly in this repository, the entry point is
-`src/sass/routeplate.scss`.
+`src/sass/librepos.scss`.
 
 ### Themes
 
-RoutePlateCSS uses the `theme` attribute on the root element:
+LibrePOS-CSS uses the `theme` attribute on the root element:
 
 ```html
 <html lang="en" theme="light">

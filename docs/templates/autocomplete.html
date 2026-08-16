@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Autocomplete - RoutePlateCSS{% endblock %}
+{% block title %}Autocomplete - LibrePOS-CSS{% endblock %}
 {% block page_title %}Autocomplete{% endblock %}
 
 {% block page %}
@@ -45,7 +45,7 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Autocomplete</code>.
+          The IIFE bundle exposes <code>LibrePOS.Autocomplete</code>.
           <code>data</code> is an array of objects:
         </p>
         <ul>
@@ -70,7 +70,7 @@
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.autocomplete');
-  RoutePlate.Autocomplete.init(elems, {
+  LibrePOS.Autocomplete.init(elems, {
     minLength: 0,
     data: [
       { id: 12, text: 'Apple' },
@@ -80,7 +80,7 @@
   });
 });</code></pre>
         <p>Multiple selection:</p>
-<pre><code>RoutePlate.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
+<pre><code>LibrePOS.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
   minLength: 0,
   isMultiSelect: true,
   data: [
@@ -185,7 +185,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Autocomplete.getInstance(elem);
+<pre><code>const instance = LibrePOS.Autocomplete.getInstance(elem);
 instance.open();</code></pre>
 
         <h5 class="light">.open();</h5>

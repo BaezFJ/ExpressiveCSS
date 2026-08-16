@@ -93,7 +93,7 @@ export class Carousel extends Component<CarouselOptions> {
 
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
     super(el, options, Carousel);
-    this.el['RoutePlate_Carousel'] = this;
+    this.el['LibrePOS_Carousel'] = this;
 
     this.options = {
       ...Carousel.defaults,
@@ -185,12 +185,12 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   static getInstance(el: HTMLElement): Carousel {
-    return el['RoutePlate_Carousel'];
+    return el['LibrePOS_Carousel'];
   }
 
   destroy() {
     this._removeEventHandlers();
-    this.el['RoutePlate_Carousel'] = undefined;
+    this.el['LibrePOS_Carousel'] = undefined;
   }
 
   _setupEventHandlers() {

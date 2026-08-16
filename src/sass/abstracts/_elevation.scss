@@ -5,7 +5,7 @@
 // These are a mixin rather than `@extend .z-depth-N` on purpose: `@extend`
 // only resolves if the extending partial loads the module that defines the
 // class, which forced every component to `@use` a CSS-emitting file and let
-// the dependency graph - not routeplate.scss - decide the output order.
+// the dependency graph - not librepos.scss - decide the output order.
 // The `.z-depth-N` classes in base/_global.scss are generated from this map,
 // so the class list and the mixin can never drift apart.
 

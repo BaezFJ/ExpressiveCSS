@@ -12,7 +12,7 @@
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { RoutePlate, resetBody, window } from './setup.js';
+import { LibrePOS, resetBody, window } from './setup.js';
 
 const capture = (opts) => (typeof opts === 'object' && opts !== null ? !!opts.capture : !!opts);
 
@@ -90,8 +90,8 @@ describe('destroy() releases shared listeners', () => {
       <a href="#section1">to one</a>`;
     const [first, second] = document.querySelectorAll('.scrollspy');
 
-    const a = RoutePlate.ScrollSpy.init(first);
-    const b = RoutePlate.ScrollSpy.init(second);
+    const a = LibrePOS.ScrollSpy.init(first);
+    const b = LibrePOS.ScrollSpy.init(second);
     assert.notDeepEqual(watch.live(), [], 'ScrollSpy attached nothing to begin with');
 
     // Destroyed out of creation order on purpose: the listeners used to be
@@ -105,7 +105,7 @@ describe('destroy() releases shared listeners', () => {
 
   test('Pushpin detaches its document scroll handler', () => {
     document.body.innerHTML = `<div class="pushpin">pinned</div>`;
-    const instance = RoutePlate.Pushpin.init(document.querySelector('.pushpin'));
+    const instance = LibrePOS.Pushpin.init(document.querySelector('.pushpin'));
 
     instance.destroy();
 
@@ -114,7 +114,7 @@ describe('destroy() releases shared listeners', () => {
 
   test('Parallax detaches its scroll and resize handlers', () => {
     document.body.innerHTML = `<div class="parallax-container"><div class="parallax"><img src="http://localhost/1.jpg"></div></div>`;
-    const instance = RoutePlate.Parallax.init(document.querySelector('.parallax'));
+    const instance = LibrePOS.Parallax.init(document.querySelector('.parallax'));
 
     instance.destroy();
 
@@ -125,7 +125,7 @@ describe('destroy() releases shared listeners', () => {
     document.body.innerHTML = `
       <a class="dropdown-trigger btn" data-target="dropdown1">Drop</a>
       <ul id="dropdown1" class="dropdown-content"><li><a href="#!">one</a></li></ul>`;
-    const instance = RoutePlate.Dropdown.init(document.querySelector('.dropdown-trigger'));
+    const instance = LibrePOS.Dropdown.init(document.querySelector('.dropdown-trigger'));
 
     instance.open();
     await tick(); // open() defers _setupTemporaryEventHandlers by a frame
@@ -140,7 +140,7 @@ describe('destroy() releases shared listeners', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div>
       <a id="menu-btn" class="btn">menu</a>`;
-    const instance = RoutePlate.TapTarget.init(document.querySelector('.tap-target'));
+    const instance = LibrePOS.TapTarget.init(document.querySelector('.tap-target'));
 
     instance.open();
     assert.notDeepEqual(watch.live(), []);
@@ -152,7 +152,7 @@ describe('destroy() releases shared listeners', () => {
 
   test('the docked display plugin detaches its document click handler', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
-    const instance = RoutePlate.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
       displayPlugin: 'docked'
     });
     assert.ok(
@@ -172,12 +172,12 @@ describe('destroy() clears the instance off the element', () => {
   test('CharacterCounter', () => {
     document.body.innerHTML = `<div class="input-field"><input type="text" maxlength="10"></div>`;
     const el = document.querySelector('input');
-    const instance = RoutePlate.CharacterCounter.init(el);
+    const instance = LibrePOS.CharacterCounter.init(el);
 
     instance.destroy();
 
     assert.equal(
-      RoutePlate.CharacterCounter.getInstance(el),
+      LibrePOS.CharacterCounter.getInstance(el),
       undefined,
       'the counter stayed stashed on the element under the wrong key'
     );
@@ -186,10 +186,10 @@ describe('destroy() clears the instance off the element', () => {
   test('Cards', () => {
     document.body.innerHTML = `<div class="card"><div class="card-content"><span class="card-title activator">T</span></div><div class="card-reveal"><span class="card-title">T</span><p>body</p></div></div>`;
     const el = document.querySelector('.card');
-    const instance = RoutePlate.Cards.init(el);
+    const instance = LibrePOS.Cards.init(el);
 
     instance.destroy();
 
-    assert.equal(RoutePlate.Cards.getInstance(el), undefined);
+    assert.equal(LibrePOS.Cards.getInstance(el), undefined);
   });
 });

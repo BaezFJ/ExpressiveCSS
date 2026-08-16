@@ -17,7 +17,7 @@ export class CharacterCounter extends Component<object> {
 
   constructor(el: HTMLInputElement | HTMLTextAreaElement, options: Partial<BaseOptions>) {
     super(el, {}, CharacterCounter);
-    this.el['RoutePlate_CharacterCounter'] = this;
+    this.el['LibrePOS_CharacterCounter'] = this;
 
     this.options = {
       ...CharacterCounter.defaults,
@@ -63,12 +63,12 @@ export class CharacterCounter extends Component<object> {
   }
 
   static getInstance(el: InputElement): CharacterCounter {
-    return el['RoutePlate_CharacterCounter'];
+    return el['LibrePOS_CharacterCounter'];
   }
 
   destroy() {
     this._removeEventHandlers();
-    this.el['RoutePlate_CharacterCounter'] = undefined;
+    this.el['LibrePOS_CharacterCounter'] = undefined;
     this._removeCounter();
   }
 

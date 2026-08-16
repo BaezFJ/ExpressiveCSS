@@ -14,7 +14,7 @@ export class Range extends Component<RangeOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<RangeOptions>) {
     super(el, options, Range);
-    this.el['RoutePlate_Range'] = this;
+    this.el['LibrePOS_Range'] = this;
 
     this.options = {
       ...Range.defaults,
@@ -59,13 +59,13 @@ export class Range extends Component<RangeOptions> {
   }
 
   static getInstance(el: HTMLInputElement): Range {
-    return el['RoutePlate_Range'];
+    return el['LibrePOS_Range'];
   }
 
   destroy() {
     this._removeEventHandlers();
     this._removeThumb();
-    this.el['RoutePlate_Range'] = undefined;
+    this.el['LibrePOS_Range'] = undefined;
   }
 
   _setupEventHandlers() {

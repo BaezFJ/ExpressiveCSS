@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Toasts - RoutePlateCSS{% endblock %}
+{% block title %}Toasts - LibrePOS-CSS{% endblock %}
 {% block page_title %}Toasts{% endblock %}
 
 {% block page %}
@@ -67,15 +67,15 @@
             <i class="material-icons">close</i>
           </button>
         </div>
-<pre><code>new RoutePlate.Toast({ text: 'Photo saved to album' });
+<pre><code>new LibrePOS.Toast({ text: 'Photo saved to album' });
 
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'Item archived',
   action: 'Undo',
   onAction: function() { /* restore */ }
 });
 
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: "Can't send photo. Retry in 5 seconds.",
   action: 'Retry',
   dismissible: true
@@ -91,16 +91,16 @@ new RoutePlate.Toast({
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Toast</code>. Toast is
+          The IIFE bundle exposes <code>LibrePOS.Toast</code>. Toast is
           not in <code>AutoInit()</code> — construct one when you need it.
         </p>
-<pre><code>new RoutePlate.Toast({
+<pre><code>new LibrePOS.Toast({
   text: 'I am a toast!'
 });</code></pre>
         <p>One way to hook that up is a click handler on a button:</p>
 <pre><code>&lt;button type="button" id="toast-basic"&gt;Show&lt;/button&gt;</code></pre>
 <pre><code>document.getElementById('toast-basic').addEventListener('click', function() {
-  new RoutePlate.Toast({ text: 'I am a toast!' });
+  new LibrePOS.Toast({ text: 'I am a toast!' });
 });</code></pre>
       </div>
 
@@ -230,7 +230,7 @@ new RoutePlate.Toast({
         <blockquote>
           Instance methods are called on the toast. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Toast.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Toast.getInstance(elem);</code></pre>
 
         <h5 class="light">.dismiss();</h5>
         <p>Dismiss this toast with its exit animation. Runs <code>completeCallback</code> when the animation finishes.</p>
@@ -238,7 +238,7 @@ new RoutePlate.Toast({
 
         <h5 class="light">Toast.dismissAll();</h5>
         <p>Dismiss every toast that is currently showing.</p>
-<pre><code>RoutePlate.Toast.dismissAll();</code></pre>
+<pre><code>LibrePOS.Toast.dismissAll();</code></pre>
       </div>
 
       <div id="properties" class="section scrollspy">
@@ -305,7 +305,7 @@ new RoutePlate.Toast({
     &lt;p&gt;This is toast nº1 with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;&lt;/p&gt;
   &lt;/div&gt;
 &lt;/template&gt;</code></pre>
-<pre><code>new RoutePlate.Toast({ toastId: 'my-toast-1' });</code></pre>
+<pre><code>new LibrePOS.Toast({ toastId: 'my-toast-1' });</code></pre>
       </div>
 
       <div id="callback" class="section scrollspy">
@@ -314,10 +314,10 @@ new RoutePlate.Toast({
         <p>
           <button type="button" id="toast-callback">Show Toast</button>
         </p>
-<pre><code>new RoutePlate.Toast({
+<pre><code>new LibrePOS.Toast({
   text: 'I will call back when dismissed',
   completeCallback: function() {
-    new RoutePlate.Toast({ text: 'Your toast was dismissed' });
+    new LibrePOS.Toast({ text: 'Your toast was dismissed' });
   }
 });</code></pre>
       </div>
@@ -336,12 +336,12 @@ new RoutePlate.Toast({
           <button type="button" id="toast-rounded">Show round Toast</button>
           <button type="button" class="tonal" id="toast-top">Show at top</button>
         </p>
-<pre><code>new RoutePlate.Toast({
+<pre><code>new LibrePOS.Toast({
   text: 'I am a toast!',
   classes: 'rounded'
 });
 
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'Posted from the top',
   classes: 'top'
 });</code></pre>
@@ -361,10 +361,10 @@ new RoutePlate.Toast({
           <button type="button" class="tonal mb-3" id="toast-dismiss-all">Dismiss all</button>
         </p>
 <pre><code>const toastElement = document.querySelector('.toast');
-const toastInstance = RoutePlate.Toast.getInstance(toastElement);
+const toastInstance = LibrePOS.Toast.getInstance(toastElement);
 toastInstance.dismiss();</code></pre>
         <h5 class="light">Dismiss all Toasts</h5>
-<pre><code>RoutePlate.Toast.dismissAll();</code></pre>
+<pre><code>LibrePOS.Toast.dismissAll();</code></pre>
       </div>
     </div>
 

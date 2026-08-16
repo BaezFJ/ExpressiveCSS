@@ -1,7 +1,7 @@
 # src/sass
 
 ```
-routeplate.scss     entry point - decides cascade order, nothing else
+librepos.scss     entry point - decides cascade order, nothing else
 abstracts/          variables, functions, mixins        (emits no CSS)
 tokens/             M3 design tokens as :root custom properties
 base/               normalize, element defaults, typography, grid
@@ -41,7 +41,7 @@ adding one, see rule 2.
 **2. Nothing outside `abstracts/` is ever imported by another partial.**
 
 Dependencies point one way: everything depends on `abstracts`, `abstracts`
-depends on nothing. This is what keeps `routeplate.scss` the only place cascade
+depends on nothing. This is what keeps `librepos.scss` the only place cascade
 order is decided. (This is the Sass dependency graph, not the CSS `@layer`
 list — they happen to be described by the same word.)
 
@@ -168,11 +168,11 @@ the wrong file.
 | A colour/type token | `tokens/_reference.scss` | wire it up in `tokens/_theme.scss` |
 
 Anything under `abstracts/` that emits a selector is a bug: it would put CSS in
-the output at a position `routeplate.scss` does not control.
+the output at a position `librepos.scss` does not control.
 
 ## Cascade layers
 
-`routeplate.scss` declares `@layer tokens, base, components, utilities;` and
+`librepos.scss` declares `@layer tokens, base, components, utilities;` and
 loads each layer with `meta.load-css()` — `@forward` cannot appear inside
 `@layer`, which is the only reason the entry file uses a different mechanism
 from every other index file.
@@ -186,7 +186,7 @@ had to out-shout them; they are now last.
 
 **Unlayered CSS beats every layer.** A consumer overriding the framework writes
 plain `.btn { … }` and wins — no specificity war, no dependence on where
-RoutePlate sits in their bundle. This is the main thing layers buy.
+LibrePOS sits in their bundle. This is the main thing layers buy.
 
 **`!important` is deliberately kept on utilities.** It looks redundant now, and
 it is not. Layer order *reverses* for important declarations, but the rule that

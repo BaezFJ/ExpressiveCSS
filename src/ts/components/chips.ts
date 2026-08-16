@@ -104,7 +104,7 @@ export class Chips extends Component<ChipsOptions> {
 
   constructor(el: HTMLElement, options: Partial<ChipsOptions>) {
     super(el, options, Chips);
-    this.el['RoutePlate_Chips'] = this;
+    this.el['LibrePOS_Chips'] = this;
 
     this.options = {
       ...Chips.defaults,
@@ -163,7 +163,7 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   static getInstance(el: HTMLElement): Chips {
-    return el['RoutePlate_Chips'];
+    return el['LibrePOS_Chips'];
   }
 
   getData() {
@@ -176,7 +176,7 @@ export class Chips extends Component<ChipsOptions> {
     }
     this._chips.forEach((c) => c.remove());
     this._chips = [];
-    this.el['RoutePlate_Chips'] = undefined;
+    this.el['LibrePOS_Chips'] = undefined;
   }
 
   _setupEventHandlers() {
@@ -230,7 +230,7 @@ export class Chips extends Component<ChipsOptions> {
     const tag = (<HTMLElement>e.target).tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || !chipsKeydown) return;
 
-    const currChips: Chips = chips['RoutePlate_Chips'];
+    const currChips: Chips = chips['LibrePOS_Chips'];
     if (!currChips) return; // .chips markup without an instance behind it
 
     if (Utils.keys.BACKSPACE.includes(e.key) || Utils.keys.DELETE.includes(e.key)) {
@@ -267,7 +267,7 @@ export class Chips extends Component<ChipsOptions> {
   static _handleChipsBlur(e: Event) {
     if (!Chips._keydown && document.hidden) {
       const chips = (<HTMLElement>e.target).closest('.chips');
-      const currChips: Chips = chips?.['RoutePlate_Chips'];
+      const currChips: Chips = chips?.['LibrePOS_Chips'];
       if (currChips) currChips._selectedChip = null;
     }
   }
@@ -443,7 +443,7 @@ export class Chips extends Component<ChipsOptions> {
       const chips = document.querySelectorAll('.chips');
       chips.forEach((el) => {
         el.addEventListener('click', (e) => {
-          if (el['RoutePlate_Chips']) return;
+          if (el['LibrePOS_Chips']) return;
           if ((<HTMLElement>e.target).classList.contains('close')) {
             const chip = (<HTMLElement>e.target).closest('.chip');
             if (chip) chip.remove();

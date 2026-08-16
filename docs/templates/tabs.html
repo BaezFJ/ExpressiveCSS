@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Tabs - RoutePlateCSS{% endblock %}
+{% block title %}Tabs - LibrePOS-CSS{% endblock %}
 {% block page_title %}Tabs{% endblock %}
 
 {% block page %}
@@ -132,15 +132,15 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Tabs</code>.
+          The IIFE bundle exposes <code>LibrePOS.Tabs</code>.
           Call <code>init</code> yourself when you need options other
           than the defaults, or let
-          <code>RoutePlate.AutoInit()</code> start every
+          <code>LibrePOS.AutoInit()</code> start every
           <code>.tabs</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tabs');
-  const instances = RoutePlate.Tabs.init(elems, {
+  const instances = LibrePOS.Tabs.init(elems, {
     duration: 300
   });
 });</code></pre>
@@ -191,7 +191,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Tabs.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Tabs.getInstance(elem);</code></pre>
 
         <h5 class="light">.select();</h5>
         <p>Show the panel that belongs to the tab with this id.</p>
@@ -284,7 +284,7 @@
   &lt;a class="active" href="#test-swipe-2"&gt;Test 2&lt;/a&gt;
   &lt;a href="#test-swipe-3"&gt;Test 3&lt;/a&gt;
 &lt;/nav&gt;</code></pre>
-<pre><code>RoutePlate.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
+<pre><code>LibrePOS.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
   swipeable: true
 });</code></pre>
       </div>

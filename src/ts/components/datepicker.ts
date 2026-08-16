@@ -335,7 +335,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
     super(el, options, Datepicker);
-    this.el['RoutePlate_Datepicker'] = this;
+    this.el['LibrePOS_Datepicker'] = this;
 
     this.options = {
       ...Datepicker.defaults,
@@ -483,7 +483,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   static getInstance(el: HTMLElement): Datepicker {
-    return el['RoutePlate_Datepicker'];
+    return el['LibrePOS_Datepicker'];
   }
 
   destroy() {
@@ -491,7 +491,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.displayPlugin?.destroy();
     this.containerEl.remove();
     this.destroySelects();
-    this.el['RoutePlate_Datepicker'] = undefined;
+    this.el['LibrePOS_Datepicker'] = undefined;
   }
 
   destroySelects() {

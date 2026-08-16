@@ -22,7 +22,7 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-$_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=month]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.routeplate-textarea";
+$_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=month]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.librepos-textarea";
 
 #{$_text-inputs} {
   outline: none;
@@ -281,7 +281,7 @@ textarea {
   height: 3rem;
   background-color: transparent;
 
-  &.routeplate-textarea {
+  &.librepos-textarea {
     padding-top: 24px !important;
     padding-bottom: 8px !important;
     line-height: 24px;

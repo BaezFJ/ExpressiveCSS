@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Navbar - RoutePlateCSS{% endblock %}
+{% block title %}Navbar - LibrePOS-CSS{% endblock %}
 {% block page_title %}Navbar{% endblock %}
 
 {% block page %}
@@ -381,7 +381,7 @@
         <p>To initialize the dropdown yourself:</p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.dropdown-trigger');
-  RoutePlate.Dropdown.init(elems);
+  LibrePOS.Dropdown.init(elems);
 });</code></pre>
         <p>
           Dropdowns open on click by default (<code>hover: false</code>). Pass
@@ -470,7 +470,7 @@
           <code>AutoInit()</code> do it).
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  RoutePlate.Sidenav.init(document.querySelectorAll('.sidenav'));
+  LibrePOS.Sidenav.init(document.querySelectorAll('.sidenav'));
 });</code></pre>
       </div>
     </div>

@@ -1,10 +1,10 @@
-# RoutePlateCSS - Complete Documentation for AI/LLM Systems
+# LibrePOS-CSS - Complete Documentation for AI/LLM Systems
 
-RoutePlateCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
+LibrePOS-CSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the RoutePlateCSS framework documentation for code-generation systems. It describes version `0.1.0`, which is under active development.
+This file consolidates the LibrePOS-CSS framework documentation for code-generation systems. It describes version `0.1.0`, which is under active development.
 
-- Package: `routeplatecss`
+- Package: `libreposcss`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
 - JavaScript formats: ES module, CommonJS, and browser IIFE
 - Styles: compiled CSS, minified CSS, and Sass sources
@@ -83,7 +83,7 @@ This file consolidates the RoutePlateCSS framework documentation for code-genera
 
 ## Framework principles
 
-RoutePlateCSS combines semantic HTML with component classes and single-purpose utilities. Use the documented HTML structure for a component, then add helpers for spacing, alignment, visibility, color, and elevation instead of duplicating those rules in custom CSS.
+LibrePOS-CSS combines semantic HTML with component classes and single-purpose utilities. Use the documented HTML structure for a component, then add helpers for spacing, alignment, visibility, color, and elevation instead of duplicating those rules in custom CSS.
 
 - Start with the native HTML element when the documentation does so, especially for buttons, links, inputs, selects, tables, and dialogs.
 - Preserve required child classes and ID relationships. JavaScript components query those selectors directly.
@@ -99,7 +99,7 @@ RoutePlateCSS combines semantic HTML with component classes and single-purpose u
 Install the published package:
 
 ```sh
-npm install routeplatecss
+npm install libreposcss
 ```
 
 Or build the repository sources:
@@ -115,11 +115,11 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 
 | Import | Purpose |
 | --- | --- |
-| `routeplatecss` | JavaScript module and TypeScript declarations |
-| `routeplatecss/css` | Expanded compiled stylesheet |
-| `routeplatecss/css/min` | Minified compiled stylesheet |
-| `routeplatecss/scss` | Sass entry point |
-| `routeplatecss/scss/*` | Individual Sass source paths |
+| `libreposcss` | JavaScript module and TypeScript declarations |
+| `libreposcss/css` | Expanded compiled stylesheet |
+| `libreposcss/css/min` | Minified compiled stylesheet |
+| `libreposcss/scss` | Sass entry point |
+| `libreposcss/scss/*` | Individual Sass source paths |
 
 ## Minimal browser setup
 
@@ -129,29 +129,29 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="dist/css/routeplate.min.css">
+    <link rel="stylesheet" href="dist/css/librepos.min.css">
   </head>
   <body>
     <main class="container">
-      <!-- RoutePlateCSS markup -->
+      <!-- LibrePOS-CSS markup -->
     </main>
-    <script src="dist/js/routeplate.min.js"></script>
+    <script src="dist/js/librepos.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        RoutePlate.AutoInit();
+        LibrePOS.AutoInit();
       });
     </script>
   </body>
 </html>
 ```
 
-The IIFE bundle exposes the global `RoutePlate` object. Material Icons or Material Symbols must be loaded separately when icon-font markup is used.
+The IIFE bundle exposes the global `LibrePOS` object. Material Icons or Material Symbols must be loaded separately when icon-font markup is used.
 
 ## ES module setup
 
 ```js
-import 'routeplatecss/css';
-import { AutoInit, Tooltip } from 'routeplatecss';
+import 'libreposcss/css';
+import { AutoInit, Tooltip } from 'libreposcss';
 
 AutoInit();
 
@@ -162,7 +162,7 @@ if (element) Tooltip.init(element, { position: 'top' });
 ## Sass setup
 
 ```scss
-@use "routeplatecss/src/sass/routeplate";
+@use "libreposcss/src/sass/librepos";
 ```
 
 The Sass entry point emits four cascade layers in this order: `tokens`, `base`, `components`, and `utilities`. Utilities therefore override component-layer declarations without selector-specificity escalation. Unlayered application CSS overrides normal declarations in all framework layers.
@@ -196,16 +196,16 @@ The live Material tokens use the `--md-sys-color-<role>` naming scheme. Override
 
 ## Responsive model
 
-RoutePlateCSS uses a 12-column grid. Its named boundaries are small at `601px`, large at `993px`, and extra-large at `1201px`. Grid classes use prefixes such as `s`, `m`, `l`, and `xl`; the Grid section below is authoritative for exact sizing and offset syntax.
+LibrePOS-CSS uses a 12-column grid. Its named boundaries are small at `601px`, large at `993px`, and extra-large at `1201px`. Grid classes use prefixes such as `s`, `m`, `l`, and `xl`; the Grid section below is authoritative for exact sizing and offset syntax.
 
 ## JavaScript initialization
 
 Initialize all registered components in a context:
 
 ```js
-RoutePlate.AutoInit();
+LibrePOS.AutoInit();
 
-RoutePlate.AutoInit(document.querySelector('#app'), {
+LibrePOS.AutoInit(document.querySelector('#app'), {
   Tooltip: { position: 'top' },
   Collapsible: { accordion: false }
 });
@@ -249,8 +249,8 @@ Most per-element JavaScript components share this pattern:
 
 ```js
 const element = document.querySelector('.component');
-const instance = RoutePlate.ComponentName.init(element, options);
-const current = RoutePlate.ComponentName.getInstance(element);
+const instance = LibrePOS.ComponentName.init(element, options);
+const current = LibrePOS.ComponentName.getInstance(element);
 current?.destroy();
 ```
 
@@ -273,13 +273,13 @@ The main bundle exports:
 
 ## Getting started
 
-Learn how to start using RoutePlate and integrate it into your project.
+Learn how to start using LibrePOS and integrate it into your project.
 
 ### Download
 
-RoutePlate comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.1.0` and is still growing, so the usual path is to build from the repository.
+LibrePOS comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.1.0` and is still growing, so the usual path is to build from the repository.
 
-#### RoutePlate
+#### LibrePOS
 
 This is the standard version that comes with both the minified and unminified CSS and JavaScript files. After you build the project, copy the files from `dist/`. This option requires little to no setup. Use this if you are unfamiliar with Sass.
 
@@ -301,22 +301,22 @@ The compiled assets are written to `dist/`:
 ```text
 dist/
 ├── css/
-│   ├── routeplate.css
-│   └── routeplate.min.css
+│   ├── librepos.css
+│   └── librepos.min.css
 ├── js/
-│   ├── routeplate.cjs
-│   ├── routeplate.js
-│   ├── routeplate.min.js
-│   └── routeplate.mjs
+│   ├── librepos.cjs
+│   ├── librepos.js
+│   ├── librepos.min.js
+│   └── librepos.mjs
 └── types/
 ```
 
 #### NPM
 
-The package name is `routeplatecss`. This release contains source files as well as the compiled CSS and JavaScript files.
+The package name is `libreposcss`. This release contains source files as well as the compiled CSS and JavaScript files.
 
 ```sh
-npm install routeplatecss
+npm install libreposcss
 ```
 
 #### Yarn
@@ -324,7 +324,7 @@ npm install routeplatecss
 Or you can add the package with yarn.
 
 ```sh
-yarn add routeplatecss
+yarn add libreposcss
 ```
 
 ### Setup
@@ -338,17 +338,17 @@ You'll notice that there are two sets of the files. The `min` means that the fil
 ```text
 MyWebsite/
   |--css/
-  |  |--routeplate.css
+  |  |--librepos.css
   |
   |--js/
-  |  |--routeplate.js
+  |  |--librepos.js
   |
   |--index.html
 ```
 
 #### HTML Setup
 
-Next you just have to make sure you link the files properly in your webpage. Generally it is wise to import JavaScript files at the end of the body to reduce page load time. Follow the example below on how to import RoutePlate into your webpage.
+Next you just have to make sure you link the files properly in your webpage. Generally it is wise to import JavaScript files at the end of the body to reduce page load time. Follow the example below on how to import LibrePOS into your webpage.
 
 ```html
 <!DOCTYPE html>
@@ -356,17 +356,17 @@ Next you just have to make sure you link the files properly in your webpage. Gen
   <head>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import routeplate.css-->
-    <link rel="stylesheet" href="css/routeplate.min.css">
+    <!--Import librepos.css-->
+    <link rel="stylesheet" href="css/librepos.min.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <!--JavaScript at end of body for optimized loading-->
-    <script src="js/routeplate.min.js"></script>
+    <script src="js/librepos.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        RoutePlate.AutoInit();
+        LibrePOS.AutoInit();
       });
     </script>
   </body>
@@ -375,14 +375,14 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 
 #### Initialize JavaScript
 
-The browser bundle exposes the framework as the global `RoutePlate` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as collapsibles, sidenavs, and tooltips start themselves.
+The browser bundle exposes the framework as the global `LibrePOS` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as collapsibles, sidenavs, and tooltips start themselves.
 
 `AutoInit()` scans `document.body` by default. Pass a container to limit the scan, or add the `no-autoinit` class to an element that should be initialized manually.
 
 ```js
-RoutePlate.AutoInit();
+LibrePOS.AutoInit();
 
-RoutePlate.AutoInit(document.querySelector('#app'), {
+LibrePOS.AutoInit(document.querySelector('#app'), {
   Tooltip: { position: 'top' }
 });
 ```
@@ -392,7 +392,7 @@ RoutePlate.AutoInit(document.querySelector('#app'), {
 Import the framework or individual components from the module build:
 
 ```js
-import { AutoInit, Tooltip } from './js/routeplate.mjs';
+import { AutoInit, Tooltip } from './js/librepos.mjs';
 
 AutoInit();
 
@@ -402,7 +402,7 @@ Tooltip.init(element, { position: 'top' });
 
 #### Themes
 
-RoutePlate uses the `theme` attribute on the root element. The default is light. Switch themes at runtime by updating the attribute.
+LibrePOS uses the `theme` attribute on the root element. The default is light. Switch themes at runtime by updating the attribute.
 
 ```html
 <html lang="en" theme="light">
@@ -414,7 +414,7 @@ document.documentElement.setAttribute('theme', 'dark');
 
 ### Templates
 
-Start from a documented layout instead of an empty page. These two pages show how RoutePlate structures content, and you can copy the markup they use.
+Start from a documented layout instead of an empty page. These two pages show how LibrePOS structures content, and you can copy the markup they use.
 
 #### Grid
 
@@ -426,7 +426,7 @@ This section is only relevant if you chose to use the Sass sources.
 
 #### Compiling Sass
 
-Instead of only a CSS folder, the repository contains many `.scss` files which contain the styles of individual layers and components. The browser cannot interpret Sass, so you must compile `src/sass/routeplate.scss` into a regular CSS file. At this point you can link this newly outputted file in your HTML page.
+Instead of only a CSS folder, the repository contains many `.scss` files which contain the styles of individual layers and components. The browser cannot interpret Sass, so you must compile `src/sass/librepos.scss` into a regular CSS file. At this point you can link this newly outputted file in your HTML page.
 
 From the repository, the npm script does that for you:
 
@@ -437,21 +437,21 @@ npm run build:css
 In another Sass project, use the framework's Sass entry point:
 
 ```scss
-@use "routeplatecss/src/sass/routeplate";
+@use "libreposcss/src/sass/librepos";
 ```
 
-When working directly in this repository, the entry point is `src/sass/routeplate.scss`.
+When working directly in this repository, the entry point is `src/sass/librepos.scss`.
 
 ```text
 MyWebsite/
 |--css/
-|  |--routeplate.css <-- compiled from scss/routeplate.scss
+|  |--librepos.css <-- compiled from scss/librepos.scss
 |
 |--js/
-|  |--routeplate.js
+|  |--librepos.js
 |
 |--scss/
-|  |--routeplate.scss
+|  |--librepos.scss
 |  |--abstracts/
 |  |--tokens/
 |  |--utilities/
@@ -469,7 +469,7 @@ MyWebsite/
 
 Light and dark schemes, the theme attribute, and custom tokens.
 
-RoutePlate maps Material Design 3 color tokens onto live `--md-sys-color-*` custom properties. Components, buttons, and the color utilities all read those live names, so flipping the scheme recolors the page without extra classes.
+LibrePOS maps Material Design 3 color tokens onto live `--md-sys-color-*` custom properties. Components, buttons, and the color utilities all read those live names, so flipping the scheme recolors the page without extra classes.
 
 Three rules decide which pair is live, in this order:
 
@@ -510,7 +510,7 @@ Keep this inline rather than in an external file so it runs before the first pai
 
 ### Changing the theme
 
-Switch schemes by writing the attribute. That is the entire public API — there is no `RoutePlate.theme` helper.
+Switch schemes by writing the attribute. That is the entire public API — there is no `LibrePOS.theme` helper.
 
 ```js
 document.documentElement.setAttribute('theme', 'dark');
@@ -535,11 +535,11 @@ The same control lives in the top-right of every docs page. After a reload this 
 
 ### Creating a theme
 
-Customize by overriding the Material Design 3 tokens. Do not set `--background-color`, `--primary-color`, or other pre-2.1 names — those are not wired in RoutePlate.
+Customize by overriding the Material Design 3 tokens. Do not set `--background-color`, `--primary-color`, or other pre-2.1 names — those are not wired in LibrePOS.
 
 Three layers exist. `tokens/_reference.scss` generates the tonal ramps from `--md-source`, then resolves them into the pairs (`--md-sys-color-primary-light`, `--md-sys-color-primary-dark`, and the rest). `tokens/_theme.scss` collapses each pair into the live `--md-sys-color-*` name with `light-dark()`. Components only read the live names.
 
-Override the `-light` and `-dark` pairs so both schemes stay consistent. Load your sheet **after** RoutePlate so equal-specificity `:root` rules win.
+Override the `-light` and `-dark` pairs so both schemes stay consistent. Load your sheet **after** LibrePOS so equal-specificity `:root` rules win.
 
 ```css
 :root {
@@ -592,7 +592,7 @@ In Sass, consume the live token. The values are hex, so `rgba(var(--md-sys-color
 }
 ```
 
-`--md-source` is the seed the ramps are generated from, and it is live: set it and every generated ramp — and every system color that resolves to one — recolors at runtime, with no rebuild. RoutePlate ships `#006A79`.
+`--md-source` is the seed the ramps are generated from, and it is live: set it and every generated ramp — and every system color that resolves to one — recolors at runtime, with no rebuild. LibrePOS ships `#006A79`.
 
 ```css
 :root {
@@ -632,7 +632,7 @@ The full list of role utilities lives on the Color page. Pair a fill with its `o
 
 One system: the Material Design 3 theme tokens.
 
-Color in RoutePlate is the Material Design 3 tokens and nothing else — CSS custom properties on `:root` named `--md-sys-color-*`, exposed as utility classes like `.primary` and `.on-surface-text`.
+Color in LibrePOS is the Material Design 3 tokens and nothing else — CSS custom properties on `:root` named `--md-sys-color-*`, exposed as utility classes like `.primary` and `.on-surface-text`.
 
 The 2014 Material palette that shipped with earlier versions (`.red`, `.blue.lighten-2`, `colorFunc()`) has been removed. It generated 532 utility classes — 18% of the stylesheet — expressing a design opinion this framework does not hold, and it did not follow the page theme. Replace a palette class with the role it was standing in for: `.red` → `.error`, `.blue` → `.primary`, `.green` → `.tertiary`, and pair each fill with its `on-*` text class.
 
@@ -691,7 +691,7 @@ There is no Sass color function any more. `colorFunc()` and the `$colors` map we
 
 ## Grid
 
-Use RoutePlate's CSS Grid system to format a page in an ordered, comfortable way.
+Use LibrePOS's CSS Grid system to format a page in an ordered, comfortable way.
 
 We are using a standard 12 column fluid responsive grid system. The grid helps you layout your page in an ordered, easy fashion.
 
@@ -1163,7 +1163,7 @@ Responsive images and videos ready to be seen on many devices.
 
 ### Images
 
-Images can be styled in different ways using RoutePlate.
+Images can be styled in different ways using LibrePOS.
 
 #### Responsive Images
 
@@ -1550,11 +1550,11 @@ The default stack is `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxy
 
 ## Waves
 
-The Material Design ink ripple, included in the RoutePlate JavaScript bundle.
+The Material Design ink ripple, included in the LibrePOS JavaScript bundle.
 
 #### Introduction
 
-Waves creates the ink effect outlined in Material Design. It is included in the RoutePlate JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
+Waves creates the ink effect outlined in Material Design. It is included in the LibrePOS JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
 
 #### Applying Waves
 
@@ -1582,7 +1582,7 @@ You can create a wave on a specific element programmatically. Here you can set a
 
 ```js
 // Trigger a red wave from the center
-RoutePlate.Waves.renderWaveEffect(
+LibrePOS.Waves.renderWaveEffect(
   document.querySelector('.wave-demo'), // Target element
   null,                                 // Position {x, y}, or null for center
   { r: 255, g: 0, b: 0 }                // RGB color
@@ -2093,12 +2093,12 @@ Every child that should move needs `carousel-item`. With no items, `init` logs a
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Carousel`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.carousel`.
+The IIFE bundle exposes `LibrePOS.Carousel`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.carousel`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.carousel');
-  const instances = RoutePlate.Carousel.init(elems, {
+  const instances = LibrePOS.Carousel.init(elems, {
     // specify options here
   });
 });
@@ -2107,7 +2107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Carousel: { indicators: true }
 });
 ```
@@ -2133,7 +2133,7 @@ That AutoInit call would apply to every carousel on the page. For a single full-
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Carousel.getInstance(elem);
+const instance = LibrePOS.Carousel.getInstance(elem);
 ```
 
 #### .next();
@@ -2207,7 +2207,7 @@ Add `carousel-slider` for the layout, and pass `fullWidth: true` so the plugin d
 ```
 
 ```js
-RoutePlate.Carousel.init(document.querySelector('.carousel-slider'), {
+LibrePOS.Carousel.init(document.querySelector('.carousel-slider'), {
   fullWidth: true
 });
 ```
@@ -2241,7 +2241,7 @@ Items do not have to be images. A `carousel-fixed-item` stays put over the slide
 ```
 
 ```js
-RoutePlate.Carousel.init(document.querySelector('#carousel-content'), {
+LibrePOS.Carousel.init(document.querySelector('#carousel-content'), {
   fullWidth: true,
   indicators: true
 });
@@ -2354,12 +2354,12 @@ Wrap a large `btn-floating` and a list of smaller ones in `fixed-action-btn`. Th
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.FloatingActionButton`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.fixed-action-btn` with the defaults below.
+The IIFE bundle exposes `LibrePOS.FloatingActionButton`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.fixed-action-btn` with the defaults below.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = RoutePlate.FloatingActionButton.init(elems, {
+  const instances = LibrePOS.FloatingActionButton.init(elems, {
     // specify options here
   });
 });
@@ -2368,7 +2368,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   FloatingActionButton: { direction: 'top' }
 });
 ```
@@ -2386,7 +2386,7 @@ RoutePlate.AutoInit(document.body, {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.FloatingActionButton.getInstance(elem);
+const instance = LibrePOS.FloatingActionButton.getInstance(elem);
 ```
 
 #### .open();
@@ -2428,7 +2428,7 @@ Creating a horizontal FAB is easy. Set the `direction` option to `'left'` or `'r
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = RoutePlate.FloatingActionButton.init(elems, {
+  const instances = LibrePOS.FloatingActionButton.init(elems, {
     direction: 'left'
   });
 });
@@ -2436,12 +2436,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ### Click-only FAB
 
-To disable hover and toggle the menu when the large button is clicked — useful on touch devices — pass `hoverEnabled: false`. RoutePlate does not read a `click-to-toggle` class; the option is the only way to switch.
+To disable hover and toggle the menu when the large button is clicked — useful on touch devices — pass `hoverEnabled: false`. LibrePOS does not read a `click-to-toggle` class; the option is the only way to switch.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = RoutePlate.FloatingActionButton.init(elems, {
+  const instances = LibrePOS.FloatingActionButton.init(elems, {
     direction: 'left',
     hoverEnabled: false
   });
@@ -2469,7 +2469,7 @@ Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu 
 ```
 
 ```js
-RoutePlate.FloatingActionButton.init(
+LibrePOS.FloatingActionButton.init(
   document.querySelector('.fixed-action-btn.toolbar'),
   { toolbarEnabled: true }
 );
@@ -2485,7 +2485,7 @@ Footers are a good place for site navigation and extra information. This is wher
 
 Put the page in the three HTML5 landmarks `header`, `main`, and `footer`. The footer itself is CSS-only: add `page-footer`, lay out content with the grid, and optionally add a `footer-copyright` bar. There is no JavaScript component.
 
-RoutePlate’s footer is unfilled by default. It draws a dashed top border and uses the theme tokens for paragraph and link color — not a solid primary bar.
+LibrePOS’s footer is unfilled by default. It draws a dashed top border and uses the theme tokens for paragraph and link color — not a solid primary bar.
 
 #### Footer Content
 
@@ -2528,7 +2528,7 @@ You can use rows and columns here to organize your footer content.
 
 ### Sticky Footer
 
-A sticky footer stays at the bottom of the viewport when the page is short, and is pushed down when the content is taller. That is different from a fixed footer. RoutePlate does not include these rules — add them to your own stylesheet after you have the `header` / `main` / `footer` landmarks.
+A sticky footer stays at the bottom of the viewport when the page is short, and is pushed down when the content is taller. That is different from a fixed footer. LibrePOS does not include these rules — add them to your own stylesheet after you have the `header` / `main` / `footer` landmarks.
 
 ```text
 body {
@@ -2548,11 +2548,11 @@ main {
 
 Google Material Icons and Material Symbols, sized with a few helper classes.
 
-RoutePlate uses Google’s Material Icons and every Material Symbols set — outlined, rounded, and sharp. The class names are Google’s. RoutePlate does not rename them, because the font stylesheet you load is what defines them.
+LibrePOS uses Google’s Material Icons and every Material Symbols set — outlined, rounded, and sharp. The class names are Google’s. LibrePOS does not rename them, because the font stylesheet you load is what defines them.
 
 Google publishes a [searchable Material Icons list](https://fonts.google.com/icons?icon.set=Material+Icons) and a [Material Symbols list](https://fonts.google.com/icons?icon.set=Material+Symbols). Those catalogs are the source for ligature names. You can also download the fonts from the [Material Icons guide](https://developers.google.com/fonts/docs/material_icons).
 
-The RoutePlate stylesheet does not ship the font files. Include one or more of these lines in `<head>`:
+The LibrePOS stylesheet does not ship the font files. Include one or more of these lines in `<head>`:
 
 ```text
 <!-- Material Icons -->
@@ -2794,7 +2794,7 @@ To initialize the dropdown yourself:
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.dropdown-trigger');
-  RoutePlate.Dropdown.init(elems);
+  LibrePOS.Dropdown.init(elems);
 });
 ```
 
@@ -2844,7 +2844,7 @@ After you add the trigger and the sidenav, initialize Sidenav (or let `AutoInit(
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  RoutePlate.Sidenav.init(document.querySelectorAll('.sidenav'));
+  LibrePOS.Sidenav.init(document.querySelectorAll('.sidenav'));
 });
 ```
 
@@ -2904,12 +2904,12 @@ A background image that moves slower than the page.
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Parallax`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.parallax`.
+The IIFE bundle exposes `LibrePOS.Parallax`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.parallax`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.parallax');
-  const instances = RoutePlate.Parallax.init(elems, {
+  const instances = LibrePOS.Parallax.init(elems, {
     // specify options here
   });
 });
@@ -2918,7 +2918,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Parallax: { responsiveThreshold: 992 }
 });
 ```
@@ -2934,7 +2934,7 @@ RoutePlate.AutoInit(document.body, {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Parallax.getInstance(elem);
+const instance = LibrePOS.Parallax.getInstance(elem);
 ```
 
 #### .destroy();
@@ -2968,7 +2968,7 @@ The container height is how much of the image you see. The framework default is 
 
 Activity and progress indicators for content that takes time to load.
 
-If content will take a while to load, give the user feedback. RoutePlate ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
+If content will take a while to load, give the user feedback. LibrePOS ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
 
 ### Linear
 
@@ -3061,7 +3061,7 @@ Stack four `spinner-layer`s with `spinner-blue`, `spinner-red`, `spinner-yellow`
 
 Initialize every registered component with one function call.
 
-Auto Init starts all of the registered RoutePlate components with a single call. The IIFE bundle exposes it as `RoutePlate.AutoInit`.
+Auto Init starts all of the registered LibrePOS components with a single call. The IIFE bundle exposes it as `LibrePOS.AutoInit`.
 
 Importing the JavaScript installs a few document-level behaviors (Forms, Waves, Range, Chips, and Cards), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
 
@@ -3069,14 +3069,14 @@ Importing the JavaScript installs a few document-level behaviors (Forms, Waves, 
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  RoutePlate.AutoInit();
+  LibrePOS.AutoInit();
 });
 ```
 
 Or pass a root element and per-component options. The option keys are the component names from the table below.
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Dropdown: {
     // pass options for Dropdown here
   },
@@ -3089,7 +3089,7 @@ RoutePlate.AutoInit(document.body, {
 From the module build:
 
 ```js
-import { AutoInit, Tooltip } from './js/routeplate.mjs';
+import { AutoInit, Tooltip } from './js/librepos.mjs';
 
 AutoInit();
 
@@ -3150,7 +3150,7 @@ If you want `AutoInit()` to skip an element, add the class `no-autoinit`. Initia
 ```
 
 ```js
-RoutePlate.Collapsible.init(
+LibrePOS.Collapsible.init(
   document.querySelector('.collapsible.no-autoinit'),
   { accordion: false }
 );
@@ -3191,12 +3191,12 @@ Headers are a flex row. Wrap the title in `collapsible-header-content` when you 
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Collapsible`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.collapsible`.
+The IIFE bundle exposes `LibrePOS.Collapsible`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.collapsible`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.collapsible');
-  const instances = RoutePlate.Collapsible.init(elems, {
+  const instances = LibrePOS.Collapsible.init(elems, {
     // specify options here
   });
 });
@@ -3205,7 +3205,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Collapsible: { accordion: true }
 });
 ```
@@ -3242,7 +3242,7 @@ You can customize each instance. Callbacks receive the `li` that opened or close
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Collapsible.getInstance(elem);
+const instance = LibrePOS.Collapsible.getInstance(elem);
 ```
 
 #### .open();
@@ -3294,7 +3294,7 @@ Pass `accordion: false` so several sections can stay open. Mark the element `no-
 
 ```js
 const elem = document.querySelector('.collapsible.no-autoinit');
-const instance = RoutePlate.Collapsible.init(elem, {
+const instance = LibrePOS.Collapsible.init(elem, {
   accordion: false
 });
 ```
@@ -3341,11 +3341,11 @@ For a menu inside a top app bar, see Navbar Dropdown.
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Dropdown`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.dropdown-trigger`.
+The IIFE bundle exposes `LibrePOS.Dropdown`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.dropdown-trigger`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  RoutePlate.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
+  LibrePOS.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
     coverTrigger: false
   });
 });
@@ -3354,7 +3354,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Dropdown: { constrainWidth: false, coverTrigger: false }
 });
 ```
@@ -3385,7 +3385,7 @@ These two menus set `constrainWidth: false` so the list can be wider than the bu
 Left Right
 
 ```js
-RoutePlate.Dropdown.init(document.querySelector('#left'), {
+LibrePOS.Dropdown.init(document.querySelector('#left'), {
   alignment: 'left',
   constrainWidth: false,
   coverTrigger: false
@@ -3397,7 +3397,7 @@ Hover is off by default. Pass `hover: true` to open on mouse enter instead of cl
 Hover me
 
 ```js
-RoutePlate.Dropdown.init(document.querySelector('#hover'), {
+LibrePOS.Dropdown.init(document.querySelector('#hover'), {
   hover: true,
   constrainWidth: false,
   coverTrigger: false
@@ -3409,7 +3409,7 @@ RoutePlate.Dropdown.init(document.querySelector('#hover'), {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Dropdown.getInstance(elem);
+const instance = LibrePOS.Dropdown.getInstance(elem);
 ```
 
 #### .open()
@@ -3464,7 +3464,7 @@ Introduce a control at the moment it becomes relevant.
 
 Feature discovery prompts have more impact when they reach the right people at a relevant moment. Shown to the wrong person at the wrong time, they feel intrusive.
 
-The JavaScript component is `RoutePlate.TapTarget`. Put `tap-target` on the prompt and point `data-target` at the id of the element you want to highlight. `AutoInit()` starts every `.tap-target` except those marked `no-autoinit`. Clicking the origin toggles the prompt; you can also call `open()` and `close()`.
+The JavaScript component is `LibrePOS.TapTarget`. Put `tap-target` on the prompt and point `data-target` at the id of the element you want to highlight. `AutoInit()` starts every `.tap-target` except those marked `no-autoinit`. Clicking the origin toggles the prompt; you can also call `open()` and `close()`.
 
 Open tap target Close tap target
 
@@ -3486,12 +3486,12 @@ Open tap target Close tap target
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.TapTarget`. Call `init` yourself when you need callbacks, or let `RoutePlate.AutoInit()` start every `.tap-target`.
+The IIFE bundle exposes `LibrePOS.TapTarget`. Call `init` yourself when you need callbacks, or let `LibrePOS.AutoInit()` start every `.tap-target`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tap-target');
-  const instances = RoutePlate.TapTarget.init(elems, {
+  const instances = LibrePOS.TapTarget.init(elems, {
     // specify options here
   });
 });
@@ -3500,7 +3500,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   TapTarget: {
     onOpen: function(origin) { /* ... */ }
   }
@@ -3519,7 +3519,7 @@ RoutePlate.AutoInit(document.body, {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.TapTarget.getInstance(elem);
+const instance = LibrePOS.TapTarget.getInstance(elem);
 ```
 
 #### .open();
@@ -3564,7 +3564,7 @@ Media components handle large objects such as images. For responsive images and 
 
 ### Lightbox
 
-Lightbox is RoutePlate’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
+Lightbox is LibrePOS’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 
 ```html
 <img class="lightboxed" width="650" alt="A mountain lake" src="images/sample-1.jpg">
@@ -3575,7 +3575,7 @@ Lightbox is RoutePlate’s material-style enlarge-on-click image. Click an image
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.lightboxed');
-  const instances = RoutePlate.Lightbox.init(elems, {
+  const instances = LibrePOS.Lightbox.init(elems, {
     // specify options here
   });
 });
@@ -3597,7 +3597,7 @@ document.addEventListener('DOMContentLoaded', function() {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Lightbox.getInstance(elem);
+const instance = LibrePOS.Lightbox.getInstance(elem);
 ```
 
 #### .open();
@@ -3652,7 +3652,7 @@ Add a short caption with the `data-caption` attribute.
 
 The slider is an image slideshow. Captions transition on their own according to `center-align`, `left-align`, or `right-align`. Indicators appear along the bottom.
 
-Slider is **not** in `AutoInit()`. Call `RoutePlate.Slider.init` yourself after the page loads. For a 3D item carousel or a full-width image track, see Carousel.
+Slider is **not** in `AutoInit()`. Call `LibrePOS.Slider.init` yourself after the page loads. For a 3D item carousel or a full-width image track, see Carousel.
 
 ```html
 <div class="slider">
@@ -3687,7 +3687,7 @@ Slider is **not** in `AutoInit()`. Call `RoutePlate.Slider.init` yourself after 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.slider');
-  const instances = RoutePlate.Slider.init(elems, {
+  const instances = LibrePOS.Slider.init(elems, {
     // specify options here
     indicatorLabelFunc: (idx, current) => {
       let label = 'Go to slide ' + idx;
@@ -3717,7 +3717,7 @@ document.addEventListener('DOMContentLoaded', function() {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Slider.getInstance(elem);
+const instance = LibrePOS.Slider.getInstance(elem);
 ```
 
 #### .pause();
@@ -3797,7 +3797,7 @@ A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrappin
 
 Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is 32% `scrim`. Actions sit at the end with an 8dp gap.
 
-Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. `RoutePlate.Modal` is still exported and `AutoInit()` still matches `.modal`, but `open()` and `close()` are empty. Do not call them.
+Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. `LibrePOS.Modal` is still exported and `AutoInit()` still matches `.modal`, but `open()` and `close()` are empty. Do not call them.
 
 Show Show with icon Show with long content
 
@@ -3943,12 +3943,12 @@ Put `scrollspy` and an `id` on each section. In the TOC, use `table-of-contents`
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.ScrollSpy`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.scrollspy`.
+The IIFE bundle exposes `LibrePOS.ScrollSpy`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.scrollspy`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.scrollspy');
-  const instances = RoutePlate.ScrollSpy.init(elems, {
+  const instances = LibrePOS.ScrollSpy.init(elems, {
     // specify options here
   });
 });
@@ -3957,7 +3957,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   ScrollSpy: { scrollOffset: 200 }
 });
 ```
@@ -3990,7 +3990,7 @@ function(id) {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.ScrollSpy.getInstance(elem);
+const instance = LibrePOS.ScrollSpy.getInstance(elem);
 ```
 
 #### .destroy();
@@ -4045,12 +4045,12 @@ Toggle Sidenav
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Sidenav`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.sidenav`.
+The IIFE bundle exposes `LibrePOS.Sidenav`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.sidenav`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.sidenav');
-  const instances = RoutePlate.Sidenav.init(elems, {
+  const instances = LibrePOS.Sidenav.init(elems, {
     // specify options here
   });
 });
@@ -4060,7 +4060,7 @@ If the sidenav contains a collapsible, AutoInit starts that too (selector `.coll
 
 ```js
 const collapsibleElem = document.querySelector('.sidenav .collapsible');
-const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
+const collapsibleInstance = LibrePOS.Collapsible.init(collapsibleElem, {
   // specify options here
 });
 ```
@@ -4085,7 +4085,7 @@ const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Sidenav.getInstance(elem);
+const instance = LibrePOS.Sidenav.getInstance(elem);
 ```
 
 #### .open();
@@ -4144,7 +4144,7 @@ Pass `edge: 'right'`. Mark the element `no-autoinit` if you initialize it yourse
 Toggle Right Sidenav
 
 ```js
-RoutePlate.Sidenav.init(document.querySelector('#slide-out-right'), {
+LibrePOS.Sidenav.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
 });
 ```
@@ -4266,12 +4266,12 @@ For tabs under a top app bar, put `.tabs` on a sibling of the bar’s `<nav>` �
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Tabs`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.tabs`.
+The IIFE bundle exposes `LibrePOS.Tabs`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.tabs`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tabs');
-  const instances = RoutePlate.Tabs.init(elems, {
+  const instances = LibrePOS.Tabs.init(elems, {
     duration: 300
   });
 });
@@ -4291,7 +4291,7 @@ document.addEventListener('DOMContentLoaded', function() {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Tabs.getInstance(elem);
+const instance = LibrePOS.Tabs.getInstance(elem);
 ```
 
 #### .select();
@@ -4362,7 +4362,7 @@ This demo is marked `no-autoinit` and started with `swipeable: true`.
 ```
 
 ```js
-RoutePlate.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
+LibrePOS.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
   swipeable: true
 });
 ```
@@ -4417,15 +4417,15 @@ Item archived
 Can't send photo. Retry in 5 seconds.
 
 ```js
-new RoutePlate.Toast({ text: 'Photo saved to album' });
+new LibrePOS.Toast({ text: 'Photo saved to album' });
 
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'Item archived',
   action: 'Undo',
   onAction: function() { /* restore */ }
 });
 
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: "Can't send photo. Retry in 5 seconds.",
   action: 'Retry',
   dismissible: true
@@ -4436,10 +4436,10 @@ The constructor wraps `text` in a `<p>` and appends the action and close when th
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Toast`. Toast is not in `AutoInit()` — construct one when you need it.
+The IIFE bundle exposes `LibrePOS.Toast`. Toast is not in `AutoInit()` — construct one when you need it.
 
 ```js
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'I am a toast!'
 });
 ```
@@ -4452,7 +4452,7 @@ One way to hook that up is a click handler on a button:
 
 ```js
 document.getElementById('toast-basic').addEventListener('click', function() {
-  new RoutePlate.Toast({ text: 'I am a toast!' });
+  new LibrePOS.Toast({ text: 'I am a toast!' });
 });
 ```
 
@@ -4506,7 +4506,7 @@ You can customize each toast with these options.
 > Instance methods are called on the toast. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Toast.getInstance(elem);
+const instance = LibrePOS.Toast.getInstance(elem);
 ```
 
 #### .dismiss();
@@ -4522,7 +4522,7 @@ instance.dismiss();
 Dismiss every toast that is currently showing.
 
 ```js
-RoutePlate.Toast.dismissAll();
+LibrePOS.Toast.dismissAll();
 ```
 
 ### Properties
@@ -4554,7 +4554,7 @@ This is toast nº2
 ```
 
 ```js
-new RoutePlate.Toast({ toastId: 'my-toast-1' });
+new LibrePOS.Toast({ toastId: 'my-toast-1' });
 ```
 
 ### Callback
@@ -4564,10 +4564,10 @@ Run a function when the toast is dismissed.
 Show Toast
 
 ```js
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'I will call back when dismissed',
   completeCallback: function() {
-    new RoutePlate.Toast({ text: 'Your toast was dismissed' });
+    new LibrePOS.Toast({ text: 'Your toast was dismissed' });
   }
 });
 ```
@@ -4579,12 +4579,12 @@ Pass classes in the `classes` option. `rounded` is a 24dp stadium — the M3 def
 Show round Toast Show at top
 
 ```js
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'I am a toast!',
   classes: 'rounded'
 });
 
-new RoutePlate.Toast({
+new LibrePOS.Toast({
   text: 'Posted from the top',
   classes: 'top'
 });
@@ -4598,14 +4598,14 @@ Show Toast Dismiss a toast Dismiss all
 
 ```js
 const toastElement = document.querySelector('.toast');
-const toastInstance = RoutePlate.Toast.getInstance(toastElement);
+const toastInstance = LibrePOS.Toast.getInstance(toastElement);
 toastInstance.dismiss();
 ```
 
 #### Dismiss all Toasts
 
 ```js
-RoutePlate.Toast.dismissAll();
+LibrePOS.Toast.dismissAll();
 ```
 
 ---
@@ -4690,12 +4690,12 @@ This is a tooltip with a [link](https://github.com) and a .
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.tooltipped`.
+The IIFE bundle exposes `LibrePOS.Tooltip`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.tooltipped`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tooltipped');
-  const instances = RoutePlate.Tooltip.init(elems, {
+  const instances = LibrePOS.Tooltip.init(elems, {
     enterDelay: 200
   });
 });
@@ -4704,7 +4704,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Tooltip: { enterDelay: 200 }
 });
 ```
@@ -4731,7 +4731,7 @@ Constructor and `init` options. `data-tooltip`, `data-position`, and `data-toolt
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Tooltip.getInstance(elem);
+const instance = LibrePOS.Tooltip.getInstance(elem);
 ```
 
 Hover me Open Close
@@ -4869,7 +4869,7 @@ The calendar is inline, not a modal. `open()` and `close()` are deprecated no-op
 ```
 
 ```js
-RoutePlate.Datepicker.init(document.querySelectorAll('.datepicker'), {
+LibrePOS.Datepicker.init(document.querySelectorAll('.datepicker'), {
   openByDefault: true
 });
 ```
@@ -4878,12 +4878,12 @@ Wrap the input in its own `.input-field` (or another small parent). The calendar
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Datepicker`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.datepicker`. AutoInit uses the defaults, so the calendar stays hidden until you pass `openByDefault` (or a working `displayPlugin` pair, below).
+The IIFE bundle exposes `LibrePOS.Datepicker`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.datepicker`. AutoInit uses the defaults, so the calendar stays hidden until you pass `openByDefault` (or a working `displayPlugin` pair, below).
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.datepicker');
-  const instances = RoutePlate.Datepicker.init(elems, {
+  const instances = LibrePOS.Datepicker.init(elems, {
     openByDefault: true
   });
 });
@@ -4892,7 +4892,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Datepicker: { openByDefault: true }
 });
 ```
@@ -4910,7 +4910,7 @@ The calendar is a `.datepicker-container` in the page. There is no overlay and n
 `displayPlugin: 'docked'` wraps the calendar in a `.display-docked` popover that appears when the input is clicked or focused with Enter, and hides when you click outside. The plugin only animates the wrapper. If `openByDefault` is still `false`, the calendar inside stays `display: none`. Use both:
 
 ```js
-RoutePlate.Datepicker.init(elem, {
+LibrePOS.Datepicker.init(elem, {
   displayPlugin: 'docked',
   openByDefault: true
 });
@@ -4998,7 +4998,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 Set `isDateRange: true`. Click a start day, then an end day that is on or after it. Point `dateRangeEndEl` at a second input, or omit it and a second input is created next to the first.
 
 ```js
-RoutePlate.Datepicker.init(document.getElementById('datepicker-range'), {
+LibrePOS.Datepicker.init(document.getElementById('datepicker-range'), {
   openByDefault: true,
   isDateRange: true,
   dateRangeEndEl: '#datepicker-range-end'
@@ -5010,7 +5010,7 @@ RoutePlate.Datepicker.init(document.getElementById('datepicker-range'), {
 Set `isMultipleSelection: true`. Click a day to add it; click it again to remove it. Each selected date gets its own input.
 
 ```js
-RoutePlate.Datepicker.init(document.getElementById('datepicker-multi'), {
+LibrePOS.Datepicker.init(document.getElementById('datepicker-multi'), {
   openByDefault: true,
   isMultipleSelection: true
 });
@@ -5021,7 +5021,7 @@ RoutePlate.Datepicker.init(document.getElementById('datepicker-multi'), {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Datepicker.getInstance(elem);
+const instance = LibrePOS.Datepicker.getInstance(elem);
 ```
 
 #### .toString();
@@ -5098,12 +5098,12 @@ Click a hour on the dial, then a minute. With the default `autoSubmit: true`, fi
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Timepicker`. Call `init` yourself when you need options other than the defaults, or let `RoutePlate.AutoInit()` start every `.timepicker`. Unlike Datepicker, the default options already show the clock.
+The IIFE bundle exposes `LibrePOS.Timepicker`. Call `init` yourself when you need options other than the defaults, or let `LibrePOS.AutoInit()` start every `.timepicker`. Unlike Datepicker, the default options already show the clock.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.timepicker');
-  const instances = RoutePlate.Timepicker.init(elems, {
+  const instances = LibrePOS.Timepicker.init(elems, {
     // specify options here
   });
 });
@@ -5112,7 +5112,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   Timepicker: { twelveHour: false }
 });
 ```
@@ -5128,7 +5128,7 @@ The clock is a `.timepicker-container` in the page. There is no overlay and no `
 `displayPlugin: 'docked'` wraps the clock in a `.display-docked` popover that appears when the input is clicked or confirmed with Enter, and hides when you click outside.
 
 ```js
-RoutePlate.Timepicker.init(elem, {
+LibrePOS.Timepicker.init(elem, {
   displayPlugin: 'docked'
 });
 ```
@@ -5172,7 +5172,7 @@ Pass a partial `i18n` object. Missing keys keep the English defaults.
 `twelveHour` defaults to `true`. The intro clock above is 12-hour with AM/PM. Set `twelveHour: false` for a 24-hour dial: hours 1–12 on the inner ring, 13–00 on the outer ring. The written value is then `HH:MM` with no meridian.
 
 ```js
-RoutePlate.Timepicker.init(document.getElementById('timepicker-24'), {
+LibrePOS.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });
 ```
@@ -5182,7 +5182,7 @@ RoutePlate.Timepicker.init(document.getElementById('timepicker-24'), {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Timepicker.getInstance(elem);
+const instance = LibrePOS.Timepicker.getInstance(elem);
 ```
 
 #### .showView();
@@ -5300,11 +5300,11 @@ This is an inline input field:
 
 ### Textarea
 
-Use `textarea.routeplate-textarea` inside `.field`. That class name is RoutePlate’s; there is no `.materialize-textarea`. Textareas grow with their content. `Forms.Init()` starts every `.routeplate-textarea` on `DOMContentLoaded`.
+Use `textarea.librepos-textarea` inside `.field`. That class name is LibrePOS’s; there is no `.materialize-textarea`. Textareas grow with their content. `Forms.Init()` starts every `.librepos-textarea` on `DOMContentLoaded`.
 
 ```html
 <div class="field">
-  <textarea id="textarea1" class="routeplate-textarea" placeholder=" "></textarea>
+  <textarea id="textarea1" class="librepos-textarea" placeholder=" "></textarea>
   <label for="textarea1">Textarea</label>
 </div>
 ```
@@ -5312,7 +5312,7 @@ Use `textarea.routeplate-textarea` inside `.field`. That class name is RoutePlat
 If you add a textarea after load, initialize it yourself:
 
 ```js
-RoutePlate.Forms.InitTextarea(document.querySelector('#textarea1'));
+LibrePOS.Forms.InitTextarea(document.querySelector('#textarea1'));
 ```
 
 Setting `.value` in script does not resize the field. Call `textareaAutoResize` afterwards.
@@ -5340,7 +5340,7 @@ Add `multiple` to allow more than one file.
 Character Counter is not in `AutoInit()`. It reads `maxlength` (not `data-length`) and writes `current/max` into a `.character-counter` span. Overflow adds `invalid` on the field.
 
 ```js
-RoutePlate.CharacterCounter.init(
+LibrePOS.CharacterCounter.init(
   document.querySelectorAll('#input_text, #textarea2')
 );
 ```
@@ -5504,7 +5504,7 @@ Browser Select Choose your option Option 1 Option 2 Option 3
     <option value="2">Option 2</option>
     <option value="3">Option 3</option>
   </select>
-  <label for="form-select-1">RoutePlate Select</label>
+  <label for="form-select-1">LibrePOS Select</label>
 </div>
 
 <div class="input-field">
@@ -5549,12 +5549,12 @@ Browser Select Choose your option Option 1 Option 2 Option 3
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.FormSelect`. Call `init` yourself when you need options other than the defaults, after adding a select dynamically, or after changing an existing select’s options. Otherwise `RoutePlate.AutoInit()` starts every `select`.
+The IIFE bundle exposes `LibrePOS.FormSelect`. Call `init` yourself when you need options other than the defaults, after adding a select dynamically, or after changing an existing select’s options. Otherwise `LibrePOS.AutoInit()` starts every `select`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('select');
-  const instances = RoutePlate.FormSelect.init(elems, {
+  const instances = LibrePOS.FormSelect.init(elems, {
     // specify options here
   });
 });
@@ -5563,7 +5563,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Per-instance options can also be passed through AutoInit:
 
 ```js
-RoutePlate.AutoInit(document.body, {
+LibrePOS.AutoInit(document.body, {
   FormSelect: { dropdownOptions: { constrainWidth: false } }
 });
 ```
@@ -5582,7 +5582,7 @@ There is no `selected` option. Mark options with the HTML `selected` attribute i
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.FormSelect.getInstance(elem);
+const instance = LibrePOS.FormSelect.getInstance(elem);
 ```
 
 #### .getSelectedValues();
@@ -5646,7 +5646,7 @@ An `<input type="range">` is the control. A wrapping `<label>` (or `.range` / `.
 
 Tokens follow the [M3 slider spec](https://m3.material.io/components/sliders/specs) (Expressive). The track is 16dp, fully rounded, with a 6dp gap around the handle. Active is `primary`; inactive is `secondary-container`. The handle is a 4×44dp `primary` stop that narrows to 2dp while pressed. The state layer is 40dp at 8% hover and 10% focus. The value label is `inverse-surface` / `inverse-on-surface`, `body-small`. Disabled is 38%. Dual-handle range and discrete ticks are not implemented.
 
-Range is not in `AutoInit()`. Importing the IIFE bundle calls `RoutePlate.Range.Init()`, which starts every `input[type=range]` already in the document and keeps the active track in sync. `no-autoinit` does not apply.
+Range is not in `AutoInit()`. Importing the IIFE bundle calls `LibrePOS.Range.Init()`, which starts every `input[type=range]` already in the document and keeps the active track in sync. `no-autoinit` does not apply.
 
 ```html
 <label>
@@ -5698,10 +5698,10 @@ Put the script after the inputs (as this site does), or call `init` yourself. Th
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('input[type=range]');
-  RoutePlate.Range.init(elems);
+  LibrePOS.Range.init(elems);
 });
 
-RoutePlate.Range.init(document.querySelector('#volume'));
+LibrePOS.Range.init(document.querySelector('#volume'));
 ```
 
 ### Methods
@@ -5709,7 +5709,7 @@ RoutePlate.Range.init(document.querySelector('#volume'));
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Range.getInstance(elem);
+const instance = LibrePOS.Range.getInstance(elem);
 ```
 
 #### .destroy();
@@ -5859,12 +5859,12 @@ The classes `chips-initial`, `chips-placeholder`, and `chips-autocomplete` are o
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Chips`. Call `init` with `allowUserInput: true` (and any other options) for an editable field. Re-init after adding a container dynamically.
+The IIFE bundle exposes `LibrePOS.Chips`. Call `init` with `allowUserInput: true` (and any other options) for an editable field. Re-init after adding a container dynamically.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.chips');
-  const instances = RoutePlate.Chips.init(elems, {
+  const instances = LibrePOS.Chips.init(elems, {
     allowUserInput: true,
     placeholder: 'Enter a tag',
     secondaryPlaceholder: '+Tag',
@@ -5910,7 +5910,7 @@ const chip = {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Chips.getInstance(elem);
+const instance = LibrePOS.Chips.getInstance(elem);
 ```
 
 #### .addChip();
@@ -6055,7 +6055,7 @@ Set `isMultiSelect: true` to pick several values. A count appears on the field.
 
 ### Initialization
 
-The IIFE bundle exposes `RoutePlate.Autocomplete`. `data` is an array of objects:
+The IIFE bundle exposes `LibrePOS.Autocomplete`. `data` is an array of objects:
 
 - id (required) — a string or number. Used as the option text when text is omitted.
 - text — display label. The default search matches id and text.
@@ -6067,7 +6067,7 @@ Extra properties are ignored by the default search. Filter them yourself in `onS
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.autocomplete');
-  RoutePlate.Autocomplete.init(elems, {
+  LibrePOS.Autocomplete.init(elems, {
     minLength: 0,
     data: [
       { id: 12, text: 'Apple' },
@@ -6081,7 +6081,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Multiple selection:
 
 ```js
-RoutePlate.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
+LibrePOS.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
   minLength: 0,
   isMultiSelect: true,
   data: [
@@ -6125,7 +6125,7 @@ onSearch: function(text, autocomplete) {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = RoutePlate.Autocomplete.getInstance(elem);
+const instance = LibrePOS.Autocomplete.getInstance(elem);
 instance.open();
 ```
 

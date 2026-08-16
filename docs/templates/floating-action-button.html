@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Floating Action Button - RoutePlateCSS{% endblock %}
+{% block title %}Floating Action Button - LibrePOS-CSS{% endblock %}
 {% block page_title %}Floating Action Button{% endblock %}
 
 {% block page %}
@@ -56,21 +56,21 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.FloatingActionButton</code>.
+          The IIFE bundle exposes <code>LibrePOS.FloatingActionButton</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>RoutePlate.AutoInit()</code> start every
+          or let <code>LibrePOS.AutoInit()</code> start every
           <code>.fixed-action-btn</code> with the defaults below.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = RoutePlate.FloatingActionButton.init(elems, {
+  const instances = LibrePOS.FloatingActionButton.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>
           Per-instance options can also be passed through AutoInit:
         </p>
-<pre><code>RoutePlate.AutoInit(document.body, {
+<pre><code>LibrePOS.AutoInit(document.body, {
   FloatingActionButton: { direction: 'top' }
 });</code></pre>
       </div>
@@ -114,7 +114,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.FloatingActionButton.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.FloatingActionButton.getInstance(elem);</code></pre>
 
         <h5 class="light">.open();</h5>
         <p>Opens the FAB menu.</p>
@@ -177,7 +177,7 @@
         </div>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = RoutePlate.FloatingActionButton.init(elems, {
+  const instances = LibrePOS.FloatingActionButton.init(elems, {
     direction: 'left'
   });
 });</code></pre>
@@ -187,7 +187,7 @@
         <h3>Click-only FAB</h3>
         <p>
           To disable hover and toggle the menu when the large button is clicked — useful on touch devices —
-          pass <code>hoverEnabled: false</code>. RoutePlate does not read a
+          pass <code>hoverEnabled: false</code>. LibrePOS does not read a
           <code>click-to-toggle</code> class; the option is the only way to switch.
         </p>
         <div class="fab-demo">
@@ -205,7 +205,7 @@
         </div>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = RoutePlate.FloatingActionButton.init(elems, {
+  const instances = LibrePOS.FloatingActionButton.init(elems, {
     direction: 'left',
     hoverEnabled: false
   });
@@ -234,7 +234,7 @@
     &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-icons"&gt;attach_file&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/div&gt;</code></pre>
-<pre><code>RoutePlate.FloatingActionButton.init(
+<pre><code>LibrePOS.FloatingActionButton.init(
   document.querySelector('.fixed-action-btn.toolbar'),
   { toolbarEnabled: true }
 );</code></pre>

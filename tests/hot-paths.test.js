@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { RoutePlate, resetBody, window } from './setup.js';
+import { LibrePOS, resetBody, window } from './setup.js';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const nextFrames = (n) =>
@@ -38,7 +38,7 @@ describe('layout reads per scroll tick', () => {
     const counter = { reads: 0 };
     sections.forEach((el) => stubRect(el, counter));
 
-    const spies = sections.map((el) => RoutePlate.ScrollSpy.init(el));
+    const spies = sections.map((el) => LibrePOS.ScrollSpy.init(el));
     counter.reads = 0; // ignore construction
 
     window.dispatchEvent(new window.Event('scroll'));
@@ -55,11 +55,11 @@ describe('layout reads per scroll tick', () => {
 
   test('Parallax coalesces a burst of scroll events onto one frame', async () => {
     document.body.innerHTML = `<div class="parallax-container"><div class="parallax"><img src="http://localhost/1.jpg"></div></div>`;
-    const instance = RoutePlate.Parallax.init(document.querySelector('.parallax'));
+    const instance = LibrePOS.Parallax.init(document.querySelector('.parallax'));
 
-    const original = RoutePlate.Parallax._handleScroll;
+    const original = LibrePOS.Parallax._handleScroll;
     let runs = 0;
-    RoutePlate.Parallax._handleScroll = () => {
+    LibrePOS.Parallax._handleScroll = () => {
       runs++;
     };
     try {
@@ -67,7 +67,7 @@ describe('layout reads per scroll tick', () => {
       await nextFrames(2);
       assert.equal(runs, 1, `5 scroll events produced ${runs} updates, expected 1`);
     } finally {
-      RoutePlate.Parallax._handleScroll = original;
+      LibrePOS.Parallax._handleScroll = original;
       instance.destroy();
     }
   });
@@ -77,7 +77,7 @@ describe('Toast countdown', () => {
   beforeEach(resetBody);
 
   test('dismisses on schedule without a ticking interval', async () => {
-    const toast = new RoutePlate.Toast({ text: 'Saved', displayLength: 40, outDuration: 10 });
+    const toast = new LibrePOS.Toast({ text: 'Saved', displayLength: 40, outDuration: 10 });
     assert.ok(document.querySelector('.toast'));
 
     await sleep(200);
@@ -86,7 +86,7 @@ describe('Toast countdown', () => {
   });
 
   test('pausing banks the remaining time instead of dismissing', async () => {
-    const toast = new RoutePlate.Toast({ text: 'Saved', displayLength: 60, outDuration: 10 });
+    const toast = new LibrePOS.Toast({ text: 'Saved', displayLength: 60, outDuration: 10 });
 
     // finally: a toast owns a live timer, so a failed assertion that skipped
     // the dismiss would keep the test process alive.
@@ -122,7 +122,7 @@ describe('Datepicker redraws', () => {
     document.body.innerHTML = html;
     const input = document.querySelector('.datepicker');
     const counter = { draws: 0 };
-    const instance = RoutePlate.Datepicker.init(input, {
+    const instance = LibrePOS.Datepicker.init(input, {
       ...options,
       onDraw: () => counter.draws++
     });
@@ -153,7 +153,7 @@ describe('Datepicker redraws', () => {
   test('the calendar is rendered synchronously, before init() returns', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
 
-    const instance = RoutePlate.Datepicker.init(document.querySelector('.datepicker'));
+    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'));
 
     try {
       // Batching must not defer: callers read calendarEl straight after init.
@@ -223,7 +223,7 @@ describe('Datepicker redraws', () => {
 
   test('rebuilding the selects does not leak Dropdown instances', () => {
     withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
-      const before = RoutePlate.Dropdown._dropdowns.length;
+      const before = LibrePOS.Dropdown._dropdowns.length;
 
       for (let i = 0; i < 14; i++) instance.nextMonth(); // crosses a year boundary
 
@@ -231,7 +231,7 @@ describe('Datepicker redraws', () => {
       // itself in the static registry until it does, so every rebuild used to
       // strand two of them permanently.
       assert.equal(
-        RoutePlate.Dropdown._dropdowns.length,
+        LibrePOS.Dropdown._dropdowns.length,
         before,
         'paging leaked Dropdown instances into the static registry'
       );
@@ -250,7 +250,7 @@ describe('Timepicker dial construction', () => {
 
   test('a docked picker builds only its shell up front', () => {
     document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
-    const instance = RoutePlate.Timepicker.init(document.querySelector('.timepicker'), {
+    const instance = LibrePOS.Timepicker.init(document.querySelector('.timepicker'), {
       displayPlugin: 'docked'
     });
 
@@ -266,7 +266,7 @@ describe('Timepicker dial construction', () => {
   test('clicking the input builds the dial', () => {
     document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
     const input = document.querySelector('.timepicker');
-    const instance = RoutePlate.Timepicker.init(input, { displayPlugin: 'docked' });
+    const instance = LibrePOS.Timepicker.init(input, { displayPlugin: 'docked' });
 
     try {
       input.dispatchEvent(
@@ -285,7 +285,7 @@ describe('Timepicker dial construction', () => {
   test('the time read from the input survives the deferred build', () => {
     document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
     const input = document.querySelector('.timepicker');
-    const instance = RoutePlate.Timepicker.init(input, { displayPlugin: 'docked' });
+    const instance = LibrePOS.Timepicker.init(input, { displayPlugin: 'docked' });
 
     try {
       // _updateTimeFromInput runs eagerly, before the AM/PM buttons exist;
@@ -308,7 +308,7 @@ describe('Timepicker dial construction', () => {
 
   test('without a display plugin the dial is built at init', () => {
     document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
-    const instance = RoutePlate.Timepicker.init(document.querySelector('.timepicker'));
+    const instance = LibrePOS.Timepicker.init(document.querySelector('.timepicker'));
 
     try {
       // No plugin means the container is on screen from the start, so
@@ -323,13 +323,13 @@ describe('Timepicker dial construction', () => {
 
   test('destroying before the dial is built does not throw', () => {
     document.body.innerHTML = `<input type="text" class="timepicker">`;
-    const instance = RoutePlate.Timepicker.init(document.querySelector('.timepicker'), {
+    const instance = LibrePOS.Timepicker.init(document.querySelector('.timepicker'), {
       displayPlugin: 'docked'
     });
 
     instance.destroy();
 
-    assert.equal(RoutePlate.Timepicker.getInstance(document.querySelector('.timepicker')), undefined);
+    assert.equal(LibrePOS.Timepicker.getInstance(document.querySelector('.timepicker')), undefined);
   });
 });
 
@@ -337,10 +337,10 @@ describe('textarea auto-resize', () => {
   beforeEach(resetBody);
 
   test('measures the textarea itself, with no mirror div', () => {
-    document.body.innerHTML = `<textarea class="routeplate-textarea"></textarea>`;
+    document.body.innerHTML = `<textarea class="librepos-textarea"></textarea>`;
     const textarea = document.querySelector('textarea');
 
-    RoutePlate.Forms.InitTextarea(textarea);
+    LibrePOS.Forms.InitTextarea(textarea);
     textarea.value = 'one\ntwo\nthree';
     textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
 

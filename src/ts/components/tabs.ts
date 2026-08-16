@@ -45,7 +45,7 @@ export class Tabs extends Component<TabsOptions> {
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
     super(el, options, Tabs);
-    this.el['RoutePlate_Tabs'] = this;
+    this.el['LibrePOS_Tabs'] = this;
 
     this.options = {
       ...Tabs.defaults,
@@ -95,7 +95,7 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   static getInstance(el: HTMLElement): Tabs {
-    return el['RoutePlate_Tabs'];
+    return el['LibrePOS_Tabs'];
   }
 
   destroy() {
@@ -106,7 +106,7 @@ export class Tabs extends Component<TabsOptions> {
     } else {
       this._teardownNormalTabs();
     }
-    this.el['RoutePlate_Tabs'] = undefined;
+    this.el['LibrePOS_Tabs'] = undefined;
   }
 
   /**

@@ -68,7 +68,7 @@ export class Slider extends Component<SliderOptions> {
 
   constructor(el: HTMLElement, options: Partial<SliderOptions>) {
     super(el, options, Slider);
-    this.el['RoutePlate_Slider'] = this;
+    this.el['LibrePOS_Slider'] = this;
 
     this.options = {
       ...Slider.defaults,
@@ -172,14 +172,14 @@ export class Slider extends Component<SliderOptions> {
   }
 
   static getInstance(el: HTMLElement): Slider {
-    return el['RoutePlate_Slider'];
+    return el['LibrePOS_Slider'];
   }
 
   destroy() {
     this.pause();
     this._removeIndicators();
     this._removeEventHandlers();
-    this.el['RoutePlate_Slider'] = undefined;
+    this.el['LibrePOS_Slider'] = undefined;
   }
 
   private _setupEventHandlers() {

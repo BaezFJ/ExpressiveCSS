@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Time Picker - RoutePlateCSS{% endblock %}
+{% block title %}Time Picker - LibrePOS-CSS{% endblock %}
 {% block page_title %}Time Picker{% endblock %}
 
 {% block page %}
@@ -50,19 +50,19 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Timepicker</code>.
+          The IIFE bundle exposes <code>LibrePOS.Timepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>RoutePlate.AutoInit()</code> start every <code>.timepicker</code>.
+          or let <code>LibrePOS.AutoInit()</code> start every <code>.timepicker</code>.
           Unlike Datepicker, the default options already show the clock.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.timepicker');
-  const instances = RoutePlate.Timepicker.init(elems, {
+  const instances = LibrePOS.Timepicker.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>RoutePlate.AutoInit(document.body, {
+<pre><code>LibrePOS.AutoInit(document.body, {
   Timepicker: { twelveHour: false }
 });</code></pre>
       </div>
@@ -83,7 +83,7 @@
           <code>.display-docked</code> popover that appears when the input is clicked or
           confirmed with Enter, and hides when you click outside.
         </p>
-<pre><code>RoutePlate.Timepicker.init(elem, {
+<pre><code>LibrePOS.Timepicker.init(elem, {
   displayPlugin: 'docked'
 });</code></pre>
         <p>
@@ -246,7 +246,7 @@
           <input type="text" class="timepicker no-autoinit" id="timepicker-24">
           <label for="timepicker-24">24-hour</label>
         </div>
-<pre><code>RoutePlate.Timepicker.init(document.getElementById('timepicker-24'), {
+<pre><code>LibrePOS.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });</code></pre>
       </div>
@@ -256,7 +256,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Timepicker.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Timepicker.getInstance(elem);</code></pre>
 
         <h5 class="light">.showView();</h5>
         <p>Show the hours or minutes face.</p>

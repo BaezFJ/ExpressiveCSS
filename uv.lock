@@ -101,7 +101,7 @@ wheels = [
 ]
 
 [[package]]
-name = "routeplatecss"
+name = "libreposcss"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

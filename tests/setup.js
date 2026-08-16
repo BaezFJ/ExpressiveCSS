@@ -104,5 +104,5 @@ export function fire(el, type, EventCtor = window.MouseEvent) {
 }
 
 // Import the shipped bundle, not the sources: this is what consumers get.
-export const RoutePlate = await import('../dist/js/routeplate.mjs');
+export const LibrePOS = await import('../dist/js/librepos.mjs');
 export { window, dom };

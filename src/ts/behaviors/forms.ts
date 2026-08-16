@@ -46,7 +46,7 @@ export class Forms {
     if (!textarea) return;
 
     // Measure the textarea against itself: collapse it to its natural height,
-    // then read the content height back. `.routeplate-textarea` is
+    // then read the content height back. `.librepos-textarea` is
     // `overflow-y: hidden`, so scrollHeight is the full content height and
     // offsetHeight - clientHeight is exactly the borders (no scrollbar to
     // account for) - which border-box sizing needs added back.
@@ -96,7 +96,7 @@ export class Forms {
         }
       });
 
-      document.querySelectorAll('.routeplate-textarea').forEach((textArea: HTMLTextAreaElement) => {
+      document.querySelectorAll('.librepos-textarea').forEach((textArea: HTMLTextAreaElement) => {
         Forms.InitTextarea(textArea);
       });
 

@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Chips - RoutePlateCSS{% endblock %}
+{% block title %}Chips - LibrePOS-CSS{% endblock %}
 {% block page_title %}Chips{% endblock %}
 
 {% block page %}
@@ -134,13 +134,13 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Chips</code>.
+          The IIFE bundle exposes <code>LibrePOS.Chips</code>.
           Call <code>init</code> with <code>allowUserInput: true</code> (and any other
           options) for an editable field. Re-init after adding a container dynamically.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.chips');
-  const instances = RoutePlate.Chips.init(elems, {
+  const instances = LibrePOS.Chips.init(elems, {
     allowUserInput: true,
     placeholder: 'Enter a tag',
     secondaryPlaceholder: '+Tag',
@@ -248,7 +248,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Chips.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Chips.getInstance(elem);</code></pre>
 
         <h5 class="light">.addChip();</h5>
         <p>Add a chip. Ignored if <code>id</code> is missing, already present, or the limit is reached.</p>

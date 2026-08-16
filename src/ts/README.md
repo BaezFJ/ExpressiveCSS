@@ -36,13 +36,13 @@ const _defaults = { /* … */ };
 export class Thing extends Component<ThingOptions> {
   constructor(el: HTMLElement, options: Partial<ThingOptions>) {
     super(el, options, Thing);
-    this.el['RoutePlate_Thing'] = this;                       // instance lookup key
+    this.el['LibrePOS_Thing'] = this;                       // instance lookup key
     this.options = { ...Thing.defaults, ...options };
   }
   static get defaults() { return _defaults; }
   static init(els, options = {}) { return super.init(els, options, Thing); }
-  static getInstance(el: HTMLElement): Thing { return el['RoutePlate_Thing']; }
-  destroy() { this.el['RoutePlate_Thing'] = undefined; /* remove handlers */ }
+  static getInstance(el: HTMLElement): Thing { return el['LibrePOS_Thing']; }
+  destroy() { this.el['LibrePOS_Thing'] = undefined; /* remove handlers */ }
 }
 ```
 
@@ -50,8 +50,8 @@ export class Thing extends Component<ThingOptions> {
 them is broken, not defaulted. The base constructor destroys any existing
 instance first, so re-initializing an element is safe.
 
-The `el['RoutePlate_Thing']` stashing backs `RoutePlate.Thing.getInstance(el)`,
-and page code can read `el.RoutePlate_Thing` directly. The key was `M_Thing`
+The `el['LibrePOS_Thing']` stashing backs `LibrePOS.Thing.getInstance(el)`,
+and page code can read `el.LibrePOS_Thing` directly. The key was `M_Thing`
 while this was a Materialize fork, so anything written against the upstream
 property name needs updating. It is duplicated in every component; replacing it
 with a WeakMap in the base class would be cleaner, but would drop the
@@ -74,7 +74,7 @@ read-it-off-the-element access that key provides.
 ## Tests
 
 `npm test` (jsdom + `node:test`, in `tests/`). It runs against the built
-`dist/js/routeplate.mjs`, so the script rebuilds the ESM bundle first.
+`dist/js/librepos.mjs`, so the script rebuilds the ESM bundle first.
 
 A new auto-initialized component needs one entry in `tests/fixtures.js` with the
 minimal markup it expects — that table is written by hand rather than derived

@@ -54,7 +54,7 @@ export class Collapsible extends Component<CollapsibleOptions> {
 
   constructor(el: HTMLElement, options: Partial<CollapsibleOptions>) {
     super(el, options, Collapsible);
-    this.el['RoutePlate_Collapsible'] = this;
+    this.el['LibrePOS_Collapsible'] = this;
 
     this.options = {
       ...Collapsible.defaults,
@@ -110,12 +110,12 @@ export class Collapsible extends Component<CollapsibleOptions> {
   }
 
   static getInstance(el: HTMLElement): Collapsible {
-    return el['RoutePlate_Collapsible'];
+    return el['LibrePOS_Collapsible'];
   }
 
   destroy() {
     this._removeEventHandlers();
-    this.el['RoutePlate_Collapsible'] = undefined;
+    this.el['LibrePOS_Collapsible'] = undefined;
   }
 
   _setupEventHandlers() {

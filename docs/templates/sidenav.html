@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Sidenav - RoutePlateCSS{% endblock %}
+{% block title %}Sidenav - LibrePOS-CSS{% endblock %}
 {% block page_title %}Sidenav{% endblock %}
 
 {% block page %}
@@ -75,19 +75,19 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>RoutePlate.Sidenav</code>.
+          The IIFE bundle exposes <code>LibrePOS.Sidenav</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>RoutePlate.AutoInit()</code> start every <code>.sidenav</code>.
+          or let <code>LibrePOS.AutoInit()</code> start every <code>.sidenav</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.sidenav');
-  const instances = RoutePlate.Sidenav.init(elems, {
+  const instances = LibrePOS.Sidenav.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>If the sidenav contains a collapsible, AutoInit starts that too (selector <code>.collapsible</code>). To init it yourself:</p>
 <pre><code>const collapsibleElem = document.querySelector('.sidenav .collapsible');
-const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
+const collapsibleInstance = LibrePOS.Collapsible.init(collapsibleElem, {
   // specify options here
 });</code></pre>
       </div>
@@ -173,7 +173,7 @@ const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = RoutePlate.Sidenav.getInstance(elem);</code></pre>
+<pre><code>const instance = LibrePOS.Sidenav.getInstance(elem);</code></pre>
 
         <h5 class="light">.open();</h5>
         <p>Opens the sidenav.</p>
@@ -259,7 +259,7 @@ const collapsibleInstance = RoutePlate.Collapsible.init(collapsibleElem, {
           <li><a href="#!">Second Sidebar Link</a></li>
           <li><a class="sidenav-close" href="#!">Close</a></li>
         </ul>
-<pre><code>RoutePlate.Sidenav.init(document.querySelector('#slide-out-right'), {
+<pre><code>LibrePOS.Sidenav.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
 });</code></pre>
 

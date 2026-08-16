@@ -34,7 +34,7 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
 
   constructor(el: HTMLElement, options: Partial<TapTargetOptions>) {
     super(el, options, TapTarget);
-    this.el['RoutePlate_TapTarget'] = this;
+    this.el['LibrePOS_TapTarget'] = this;
 
     this.options = {
       ...TapTarget.defaults,
@@ -89,7 +89,7 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   }
 
   static getInstance(el: HTMLElement): TapTarget {
-    return el['RoutePlate_TapTarget'];
+    return el['LibrePOS_TapTarget'];
   }
 
   destroy() {
@@ -97,7 +97,7 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
     // are not covered by _removeEventHandlers and would otherwise survive.
     this.close();
     this._removeEventHandlers();
-    this.el['RoutePlate_TapTarget'] = undefined;
+    this.el['LibrePOS_TapTarget'] = undefined;
     const index = TapTarget._taptargets.indexOf(this);
     if (index >= 0) {
       TapTarget._taptargets.splice(index, 1);
