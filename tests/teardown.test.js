@@ -147,14 +147,16 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'Dropdown left its temporary handlers attached');
   });
 
-  test('TapTarget detaches the document handlers open() adds', () => {
+  test('TapTarget detaches its resize listener and does not add document click handlers', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div>
       <a id="menu-btn" class="btn">menu</a>`;
     const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
 
     instance.open();
-    assert.notDeepEqual(watch.live(), []);
+    assert.ok(!watch.live().includes('click'), 'open() attached a document click handler');
+    assert.ok(!watch.live().includes('touchend'), 'open() attached a touchend handler');
+    assert.ok(!watch.live().includes('keypress'), 'open() attached a keypress handler');
 
     instance.destroy();
 

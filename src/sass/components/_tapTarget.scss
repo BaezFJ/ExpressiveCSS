@@ -1,104 +1,191 @@
 @use "../abstracts" as *;
 
+// Tap target (Feature Discovery). A circular spotlight centered on an
+// origin. JS writes --md-comp-tap-target-x/y/origin-size and data-edge;
+// this file does the rest.
+//
+// Tokens:
+//   --md-comp-tap-target-size           480px
+//   --md-comp-tap-target-z              1000
+//   --md-comp-tap-target-container-color
+//   --md-comp-tap-target-supporting-color
+//   --md-comp-tap-target-duration       300ms
+//   --md-comp-tap-target-easing         soft ease-in-out
+//
+// .feature-discovery is an alias of .tap-target.
+
 .tap-target-wrapper {
-  width: 800px;
-  height: 800px;
+  --md-comp-tap-target-size: 480px;
+  --md-comp-tap-target-z: 1000;
+  --md-comp-tap-target-container-color: var(--md-sys-color-primary-container);
+  --md-comp-tap-target-supporting-color: var(--md-sys-color-on-primary-container);
+  --md-comp-tap-target-duration: 300ms;
+  --md-comp-tap-target-easing: cubic-bezier(0.65, 0, 0.35, 1);
+  --md-comp-tap-target-x: 50%;
+  --md-comp-tap-target-y: 50%;
+  --md-comp-tap-target-origin-size: 56px;
+
+  box-sizing: border-box;
   position: fixed;
-  z-index: 1000;
+  inset: auto;
+  left: var(--md-comp-tap-target-x);
+  top: var(--md-comp-tap-target-y);
+  translate: -50% -50%;
+  width: var(--md-comp-tap-target-size);
+  height: var(--md-comp-tap-target-size);
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: var(--md-comp-tap-target-supporting-color);
   visibility: hidden;
-  transition: visibility 0s .3s;
+  pointer-events: none;
+  z-index: var(--md-comp-tap-target-z);
+  transition:
+    visibility 0s var(--md-comp-tap-target-duration),
+    overlay var(--md-comp-tap-target-duration) allow-discrete,
+    display var(--md-comp-tap-target-duration) allow-discrete;
 }
 
-.tap-target-wrapper.open {
+.tap-target-wrapper:is(.open, :popover-open) {
   visibility: visible;
-  transition: visibility 0s;
+  pointer-events: none;
+  transition-delay: 0s;
 
-  .tap-target {
+  .tap-target,
+  .feature-discovery {
     transform: scale(1);
-    opacity: .95;
-    transition:
-      transform .3s cubic-bezier(.42,0,.58,1),
-      opacity .3s cubic-bezier(.42,0,.58,1);
+    opacity: 1;
   }
 
   .tap-target-wave::before {
     transform: scale(1);
   }
+
   .tap-target-wave::after {
     visibility: visible;
     animation: pulse-animation 1s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-    transition:
-      opacity .3s,
-      transform .3s,
-      visibility 0s 1s;
   }
 }
 
-.tap-target {
+.tap-target,
+.feature-discovery {
   position: absolute;
-  font-size: 1rem;
-  border-radius: 50%;
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-primary);
-  box-shadow: 0 20px 20px 0 rgba(0, 0, 0, 0.14), 0 10px 50px 0 rgba(0, 0, 0, 0.12), 0 30px 10px -20px rgba(0, 0, 0, 0.2);
+  inset: 0;
+  display: grid;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--md-comp-tap-target-container-color);
+  color: var(--md-comp-tap-target-supporting-color);
   opacity: 0;
   transform: scale(0);
-  transition: transform .3s cubic-bezier(.42, 0, .58, 1),
-  opacity .3s cubic-bezier(.42, 0, .58, 1);
+  transition:
+    transform var(--md-comp-tap-target-duration) var(--md-comp-tap-target-easing),
+    opacity var(--md-comp-tap-target-duration) var(--md-comp-tap-target-easing);
+  @include z-depth("3");
+  @include typescale("body-medium");
 }
 
 .tap-target-content {
   position: relative;
-  display: table-cell;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  box-sizing: border-box;
+  max-width: min(18rem, 52%);
+  padding: calc(var(--md-comp-tap-target-origin-size) * 0.5 + 20px);
+  pointer-events: auto;
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+    color: inherit;
+    @include typescale("title-medium");
+  }
+
+  > p {
+    margin: 0;
+    color: inherit;
+  }
+}
+
+.tap-target-wrapper[data-edge^="top"] .tap-target-content {
+  align-self: end;
+}
+
+.tap-target-wrapper[data-edge^="bottom"] .tap-target-content {
+  align-self: start;
+}
+
+.tap-target-wrapper[data-edge$="left"] .tap-target-content {
+  justify-self: end;
+}
+
+.tap-target-wrapper[data-edge$="right"] .tap-target-content {
+  justify-self: start;
+}
+
+.tap-target-wrapper[data-edge$="center"] .tap-target-content {
+  justify-self: center;
+  max-width: min(22rem, 80%);
+  text-align: center;
 }
 
 .tap-target-wave {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: calc(var(--md-comp-tap-target-origin-size) * 2);
+  height: calc(var(--md-comp-tap-target-origin-size) * 2);
+  translate: -50% -50%;
   border-radius: 50%;
-  z-index: 10001;
+  pointer-events: none;
 
   &::before,
   &::after {
-    content: '';
-    display: block;
+    content: "";
     position: absolute;
-    width: 100%;
-    height: 100%;
+    inset: 0;
+    display: block;
     border-radius: 50%;
-    background-color: var(--md-sys-color-surface)
+    background-color: var(--md-sys-color-surface);
   }
+
   &::before {
     transform: scale(0);
-    transition: transform .3s;
+    transition: transform var(--md-comp-tap-target-duration)
+      var(--md-comp-tap-target-easing);
   }
+
   &::after {
     visibility: hidden;
-    transition:
-      opacity .3s,
-      transform .3s,
-      visibility 0s;
     z-index: -1;
   }
 }
 
+// Raised only on the non-popover path so a static origin stays above the
+// circle. Never set position here — a FAB may already be fixed.
 .tap-target-origin {
-  top: 50%;
-  left: 50%;
-  z-index: 10002;
-  position: absolute !important;
-  transform: translate(-50%,-50%);
-
-  &:not(.btn),
-  &:not(.btn):hover {
-    background: none;
-  }
+  z-index: calc(var(--md-comp-tap-target-z, 1000) + 2);
 }
 
 @include bp-down("small") {
-  .tap-target, .tap-target-wrapper {
-    width: 600px;
-    height: 600px;
+  .tap-target-wrapper {
+    --md-comp-tap-target-size: 360px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tap-target-wrapper {
+    --md-comp-tap-target-duration: 0s;
+  }
+
+  .tap-target-wrapper:is(.open, :popover-open) .tap-target-wave::after {
+    animation: none;
   }
 }

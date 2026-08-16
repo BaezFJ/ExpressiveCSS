@@ -195,6 +195,7 @@ unlayered declaration. Drop the flag from `.hide` and it stops beating a
 consumer's own `display` — silently, and in the common case. Classes whose whole
 job is to be unconditional (`.hide`, `.m-3`, the palette classes) keep it.
 
-The `!important` in `components/` is a different thing again: `.pushpin`,
-`.tap-target` and the preloader set JS-driven geometry that must not be
-overridable. Those stay too.
+The `!important` in `components/` is a different thing again: `.pushpin`
+and the preloader set JS-driven geometry that must not be overridable.
+Those stay. Tap target placement is custom properties now, so it no
+longer needs the flag.

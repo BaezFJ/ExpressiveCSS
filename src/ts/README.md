@@ -83,6 +83,10 @@ read-it-off-the-element access that key provides.
   public `open`/`close` API, accordion for the `<ul>/<li>` alias, and
   `aria-expanded` on non-native headers. `inDuration` / `outDuration`
   are accepted and ignored.
+- **Tap target (Feature Discovery) is a popover + CSS.** JS writes
+  `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
+  one origin rect. The wrapper uses `popover="auto"` when the platform
+  has it. Do not build a `#${data-target}` selector.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

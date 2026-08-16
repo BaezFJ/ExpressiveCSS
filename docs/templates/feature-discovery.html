@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Feature Discovery</h1>
-      <h4 class="light primary-text">Introduce a control at the moment it becomes relevant.</h4>
+      <h4 class="light primary-text">A circular spotlight on a control, at the moment it matters.</h4>
     </div>
   </div>
 </section>
@@ -27,8 +27,15 @@
           Put <code>tap-target</code> on the prompt and point <code>data-target</code> at the id of the
           element you want to highlight. <code>AutoInit()</code> starts every
           <code>.tap-target</code> except those marked <code>no-autoinit</code>.
-          Clicking the origin toggles the prompt; you can also call <code>open()</code> and
+          Clicking the origin toggles the prompt; Escape or a click outside
+          the copy also closes it. You can also call <code>open()</code> and
           <code>close()</code>.
+        </p>
+        <p>
+          The spotlight is 480px (360px on small screens). Override
+          <code>--md-comp-tap-target-size</code> if you need it larger.
+          Motion is CSS; <code>prefers-reduced-motion</code> drops the
+          pulse and the scale.
         </p>
         <p>
           <a class="btn filled waves-effect mr-3 mb-3" href="#!" id="tap-target-open">Open tap target</a>
@@ -45,17 +52,18 @@
             <p>Provide value and encourage return visits by introducing users to new features and functionality at contextually relevant moments.</p>
           </div>
         </div>
-<pre><code>&lt;!-- Element shown --&gt;
-&lt;a id="menu" class="btn-floating btn-large waves-effect waves-light"&gt;
+<pre><code>&lt;button type="button" id="menu" class="btn-floating btn-large"&gt;
   &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-&lt;/a&gt;
-&lt;!-- Tap Target Structure --&gt;
+&lt;/button&gt;
 &lt;div class="tap-target" data-target="menu"&gt;
-  &lt;div class="tap-target-content"&gt;
-    &lt;h5&gt;Title&lt;/h5&gt;
-    &lt;p&gt;A bunch of text&lt;/p&gt;
-  &lt;/div&gt;
+  &lt;h2&gt;I am here&lt;/h2&gt;
+  &lt;p&gt;Introduce the control at a relevant moment.&lt;/p&gt;
 &lt;/div&gt;</code></pre>
+        <p>
+          <code>.tap-target-content</code> is optional — init wraps loose
+          children if it is missing. <code>.feature-discovery</code> is a
+          style alias of <code>.tap-target</code>.
+        </p>
       </div>
 
       <div id="initialization" class="section scrollspy">
@@ -142,6 +150,11 @@
               <td><code>el</code></td>
               <td>Element</td>
               <td>The DOM element the plugin was initialized with (the <code>.tap-target</code>).</td>
+            </tr>
+            <tr>
+              <td><code>originEl</code></td>
+              <td>Element</td>
+              <td>The highlighted origin, or <code>null</code> if <code>data-target</code> did not resolve.</td>
             </tr>
             <tr>
               <td><code>options</code></td>
