@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Carousel</h1>
-      <h4 class="light primary-text">A 3D item carousel, or a full-width slider.</h4>
+      <h4 class="light primary-text">A 3D coverflow, or a linear snap track.</h4>
     </div>
   </div>
 </section>
@@ -19,15 +19,17 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          A carousel is a row of items you can drag or swipe. The default
-          is a perspective stack: the center item is large, the others recede.
-          Touch and mouse both work.
+          A <code>.carousel</code> is a row of items. The default is a
+          perspective stack: the center item is large, the others recede.
+          Add <code>flat</code> for a full-width snap track — that motion
+          is CSS. This is not the
+          <a href="{{ url_for('media') }}#slider">Slider</a> on the Media
+          page; that component crossfades captions.
         </p>
         <p>
-          <code>AutoInit()</code> starts every <code>.carousel</code> except
-          those marked <code>no-autoinit</code>. This is not the
-          <a href="{{ url_for('media') }}#slider">Slider</a> on the Media
-          page — that is a separate component on <code>.slider</code>.
+          Direct children move. <code>.carousel-item</code> is optional.
+          <code>AutoInit()</code> starts every <code>.carousel</code>
+          except those marked <code>no-autoinit</code>.
         </p>
         <div class="carousel" id="carousel-intro">
           <a class="carousel-item" href="#one!"><img src="https://picsum.photos/id/1015/250/250" alt="Mountain lake"></a>
@@ -41,230 +43,47 @@
           <button type="button" class="btn" id="carousel-next">Next</button>
         </div>
 <pre><code>&lt;div class="carousel"&gt;
-  &lt;a class="carousel-item" href="#one!"&gt;
-    &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
-  &lt;/a&gt;
-  &lt;a class="carousel-item" href="#two!"&gt;
-    &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
-  &lt;/a&gt;
-  &lt;a class="carousel-item" href="#three!"&gt;
-    &lt;img src="images/sample-3.jpg" alt="Rocky coastline"&gt;
-  &lt;/a&gt;
+  &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
+  &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
+  &lt;img src="images/sample-3.jpg" alt="Rocky coastline"&gt;
 &lt;/div&gt;</code></pre>
         <p>
-          Every child that should move needs <code>carousel-item</code>.
-          With no items, <code>init</code> logs an error and returns
-          without starting. The track is 400px tall; set
-          <code>--carousel-height</code> on the carousel to change it.
-          Default items are half that size.
+          With no items, <code>init</code> logs an error and returns.
+          The track is 400px tall; set
+          <code>--md-comp-carousel-height</code> (or the older
+          <code>--carousel-height</code>) to change it. Coverflow items
+          are half that size. Arrow keys move the focused carousel.
         </p>
       </div>
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+      <div id="flat" class="section scrollspy">
+        <h3>Flat (snap)</h3>
         <p>
-          The IIFE bundle exposes <code>Expressive.Carousel</code>.
-          Call <code>init</code> yourself when you need options other than
-          the defaults, or let <code>Expressive.AutoInit()</code> start
-          every <code>.carousel</code>.
+          Add <code>flat</code> for a linear track. Slides snap. Swipe
+          is native scrolling — no drag physics.
+          <code>carousel-slider</code> and <code>fullWidth: true</code>
+          still enable this mode.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.carousel');
-  const instances = Expressive.Carousel.init(elems, {
-    // specify options here
-  });
-});</code></pre>
-        <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
-  Carousel: { indicators: true }
-});</code></pre>
-        <p>
-          That AutoInit call would apply to every carousel on the page.
-          For a single full-width instance, mark it
-          <code>no-autoinit</code> and call <code>init</code> yourself.
-        </p>
-      </div>
-
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>duration</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>dist</code></td>
-              <td>Number</td>
-              <td><code>-100</code></td>
-              <td>Perspective zoom. <code>0</code> keeps every item the same size. Full-width mode forces this to <code>0</code>.</td>
-            </tr>
-            <tr>
-              <td><code>shift</code></td>
-              <td>Number</td>
-              <td><code>0</code></td>
-              <td>Extra spacing on the center item.</td>
-            </tr>
-            <tr>
-              <td><code>padding</code></td>
-              <td>Number</td>
-              <td><code>0</code></td>
-              <td>Padding between items that are not in the center.</td>
-            </tr>
-            <tr>
-              <td><code>numVisible</code></td>
-              <td>Number</td>
-              <td><code>5</code></td>
-              <td>How many items stay visible. Capped at the number of items.</td>
-            </tr>
-            <tr>
-              <td><code>fullWidth</code></td>
-              <td>Boolean</td>
-              <td><code>false</code></td>
-              <td>Turn the carousel into a full-width slider. Pair it with the <code>carousel-slider</code> class.</td>
-            </tr>
-            <tr>
-              <td><code>indicators</code></td>
-              <td>Boolean</td>
-              <td><code>false</code></td>
-              <td>Show paging dots. Only drawn when there is more than one item.</td>
-            </tr>
-            <tr>
-              <td><code>noWrap</code></td>
-              <td>Boolean</td>
-              <td><code>false</code></td>
-              <td>Stop at the first and last items instead of wrapping. A single-item carousel always behaves as if this were true.</td>
-            </tr>
-            <tr>
-              <td><code>onCycleTo</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Called when a new item becomes the center. Receives the current item and whether the move was a drag.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Carousel.getInstance(elem);</code></pre>
-
-        <h5 class="light">.next();</h5>
-        <p>Move to the next item, or skip forward a given number of items.</p>
-        <p><strong>Integer (optional):</strong> How many items to advance. Defaults to 1.</p>
-<pre><code>instance.next();
-instance.next(3);</code></pre>
-
-        <h5 class="light">.prev();</h5>
-        <p>Move to the previous item, or skip back a given number of items.</p>
-        <p><strong>Integer (optional):</strong> How many items to go back. Defaults to 1.</p>
-<pre><code>instance.prev();
-instance.prev(3);</code></pre>
-
-        <h5 class="light">.set();</h5>
-        <p>Move to the item at a given index.</p>
-        <p><strong>Integer:</strong> 0-based index of the item.</p>
-        <p><strong>Function (optional):</strong> A one-shot <code>onCycleTo</code> callback for this move.</p>
-<pre><code>instance.set(3);
-instance.set(3, function(current, dragged) {
-  // ran once, after this move
-});</code></pre>
-
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
-      </div>
-
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The DOM element the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>pressed</code></td>
-              <td>Boolean</td>
-              <td>Whether the carousel is being clicked or tapped.</td>
-            </tr>
-            <tr>
-              <td><code>dragged</code></td>
-              <td>Boolean</td>
-              <td>Whether the carousel is currently being dragged.</td>
-            </tr>
-            <tr>
-              <td><code>center</code></td>
-              <td>Number</td>
-              <td>The index of the center item.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="slider" class="section scrollspy">
-        <h3>Full Width Slider</h3>
-        <p>
-          Add <code>carousel-slider</code> for the layout, and pass
-          <code>fullWidth: true</code> so the plugin drops the perspective
-          zoom and sizes the track to the first image. Mark the element
-          <code>no-autoinit</code> so AutoInit does not start it as a 3D
-          carousel.
-        </p>
-        <div class="carousel carousel-slider no-autoinit" id="carousel-fullwidth">
-          <a class="carousel-item" href="#one!"><img src="https://picsum.photos/id/1015/800/400" alt="Mountain lake"></a>
-          <a class="carousel-item" href="#two!"><img src="https://picsum.photos/id/1016/800/400" alt="Forest path"></a>
-          <a class="carousel-item" href="#three!"><img src="https://picsum.photos/id/1018/800/400" alt="Rocky coastline"></a>
-          <a class="carousel-item" href="#four!"><img src="https://picsum.photos/id/1019/800/400" alt="Clouds over hills"></a>
+        <div class="carousel flat" id="carousel-fullwidth">
+          <img src="https://picsum.photos/id/1015/800/400" alt="Mountain lake">
+          <img src="https://picsum.photos/id/1016/800/400" alt="Forest path">
+          <img src="https://picsum.photos/id/1018/800/400" alt="Rocky coastline">
+          <img src="https://picsum.photos/id/1019/800/400" alt="Clouds over hills">
         </div>
-<pre><code>&lt;div class="carousel carousel-slider no-autoinit"&gt;
-  &lt;a class="carousel-item" href="#one!"&gt;
-    &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
-  &lt;/a&gt;
-  &lt;a class="carousel-item" href="#two!"&gt;
-    &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
-  &lt;/a&gt;
+<pre><code>&lt;div class="carousel flat"&gt;
+  &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
+  &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
 &lt;/div&gt;</code></pre>
-<pre><code>Expressive.Carousel.init(document.querySelector('.carousel-slider'), {
-  fullWidth: true
-});</code></pre>
       </div>
 
-      <div id="special" class="section scrollspy">
+      <div id="content" class="section scrollspy">
         <h3>Content carousel</h3>
         <p>
           Items do not have to be images. A
-          <code>carousel-fixed-item</code> stays put over the slides —
-          useful for a button that should not move with the content.
+          <code>carousel-fixed-item</code> stays put over the slides.
           This demo also turns <code>indicators</code> on.
         </p>
-        <div class="carousel carousel-slider center no-autoinit" id="carousel-content">
+        <div class="carousel flat center no-autoinit" id="carousel-content">
           <div class="carousel-fixed-item center">
             <a class="btn" href="{{ url_for('buttons') }}">Button</a>
           </div>
@@ -285,29 +104,151 @@ instance.set(3, function(current, dragged) {
             <p>This is your fourth panel</p>
           </div>
         </div>
-<pre><code>&lt;div class="carousel carousel-slider center no-autoinit"&gt;
-  &lt;div class="carousel-fixed-item center"&gt;
+<pre><code>&lt;div class="carousel flat"&gt;
+  &lt;div class="carousel-fixed-item"&gt;
     &lt;a class="btn"&gt;Button&lt;/a&gt;
   &lt;/div&gt;
   &lt;div class="carousel-item primary on-primary-text p-5"&gt;
     &lt;h2&gt;First Panel&lt;/h2&gt;
     &lt;p&gt;This is your first panel&lt;/p&gt;
   &lt;/div&gt;
-  &lt;div class="carousel-item secondary on-secondary-text p-5"&gt;
-    &lt;h2&gt;Second Panel&lt;/h2&gt;
-    &lt;p&gt;This is your second panel&lt;/p&gt;
-  &lt;/div&gt;
 &lt;/div&gt;</code></pre>
 <pre><code>Expressive.Carousel.init(document.querySelector('#carousel-content'), {
-  fullWidth: true,
   indicators: true
 });</code></pre>
         <p>
-          Swipeable
-          <a href="{{ url_for('tabs') }}">tabs</a> wrap their panels in a
-          carousel. That is the Tabs plugin, not a carousel you start
-          yourself.
+          Swipeable <a href="{{ url_for('tabs') }}">tabs</a> wrap their
+          panels in a flat carousel. That is the Tabs plugin.
         </p>
+      </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--md-comp-carousel-height</code></td>
+              <td>400px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-carousel-shape</code></td>
+              <td>12px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-carousel-gap</code></td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <code>--carousel-height</code> is still read if you set it.
+          <code>prefers-reduced-motion</code> turns off snap smoothing
+          and the coverflow tween.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.carousel');
+  const instances = Expressive.Carousel.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+<pre><code>Expressive.AutoInit(document.body, {
+  Carousel: { indicators: true }
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>duration</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>Coverflow tween, in milliseconds. Snap mode uses CSS.</td>
+            </tr>
+            <tr>
+              <td><code>dist</code></td>
+              <td>Number</td>
+              <td><code>-100</code></td>
+              <td>Coverflow zoom. <code>0</code> keeps every item the same size. Flat mode forces this to <code>0</code>.</td>
+            </tr>
+            <tr>
+              <td><code>shift</code></td>
+              <td>Number</td>
+              <td><code>0</code></td>
+              <td>Extra spacing on the center coverflow item.</td>
+            </tr>
+            <tr>
+              <td><code>padding</code></td>
+              <td>Number</td>
+              <td><code>0</code></td>
+              <td>Padding between non-center coverflow items.</td>
+            </tr>
+            <tr>
+              <td><code>numVisible</code></td>
+              <td>Number</td>
+              <td><code>5</code></td>
+              <td>How many coverflow items stay visible.</td>
+            </tr>
+            <tr>
+              <td><code>fullWidth</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Same as adding <code>flat</code>. Kept so existing calls compile.</td>
+            </tr>
+            <tr>
+              <td><code>indicators</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Show paging dots. Only drawn when there is more than one item.</td>
+            </tr>
+            <tr>
+              <td><code>noWrap</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Stop at the ends instead of wrapping. Flat tracks never wrap. A single-item carousel always behaves as if this were true.</td>
+            </tr>
+            <tr>
+              <td><code>onCycleTo</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a new item becomes the center. Receives the current item and whether the move was a drag.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+<pre><code>const instance = Expressive.Carousel.getInstance(elem);</code></pre>
+        <h5 class="light">.next(); / .prev();</h5>
+        <p>Move one item, or pass how many.</p>
+<pre><code>instance.next();
+instance.prev(3);</code></pre>
+        <h5 class="light">.set();</h5>
+        <p>Move to a 0-based index. Optional one-shot <code>onCycleTo</code>.</p>
+<pre><code>instance.set(3);</code></pre>
+        <h5 class="light">.destroy();</h5>
+        <p>Tear down listeners, generated dots, and inline transforms.</p>
+<pre><code>instance.destroy();</code></pre>
       </div>
     </div>
 
@@ -315,12 +256,12 @@ instance.set(3, function(current, dragged) {
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
           <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#flat">Flat</a></li>
+          <li><a href="#content">Content carousel</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-          <li><a href="#slider">Full Width Slider</a></li>
-          <li><a href="#special">Content carousel</a></li>
         </ul>
       </div>
     </div>

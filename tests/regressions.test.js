@@ -151,6 +151,40 @@ describe('Carousel', () => {
     assert.ok(instance);
     instance.destroy();
   });
+
+  test('flat mode keeps indicators outside the scroll track', () => {
+    document.body.innerHTML = `
+      <div class="carousel flat">
+        <div class="carousel-item">one</div>
+        <div class="carousel-item">two</div>
+      </div>`;
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el, { indicators: true });
+    try {
+      const track = el.querySelector('.carousel-track');
+      const dots = el.querySelector('.indicators');
+      assert.ok(track, 'slides were not wrapped in a track');
+      assert.equal(dots.parentElement, el, 'indicators were placed inside a slide');
+      assert.equal(track.querySelector('.indicators'), null);
+      assert.ok(track.querySelector('.carousel-item'));
+    } finally {
+      instance.destroy();
+    }
+    assert.equal(el.querySelector('.carousel-track'), null, 'destroy left the track wrapper');
+  });
+
+  test('destroy removes generated indicators', () => {
+    document.body.innerHTML = `
+      <div class="carousel">
+        <a class="carousel-item" href="#one">one</a>
+        <a class="carousel-item" href="#two">two</a>
+      </div>`;
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el, { indicators: true });
+    assert.ok(el.querySelector('.indicators'), 'indicators were not created');
+    instance.destroy();
+    assert.equal(el.querySelector('.indicators'), null, 'generated indicators were left behind');
+  });
 });
 
 describe('Chips indices line up with the data', () => {

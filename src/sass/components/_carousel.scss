@@ -1,95 +1,162 @@
 @use "../abstracts" as *;
 
+// Carousel. Two layouts, one class:
+//   .carousel           3D coverflow (JS)
+//   .carousel.flat      linear snap track (CSS). .carousel-slider is an alias.
+//
+// Anatomy: direct children move. .carousel-item is optional. Indicators and
+// .carousel-fixed-item are chrome, not slides.
+//
+// Tokens:
+//   --md-comp-carousel-height   400px  (--carousel-height still wins)
+//   --md-comp-carousel-shape    12px
+//   --md-comp-carousel-gap      0
+
 .carousel {
-  --carousel-height: 400px;
+  --md-comp-carousel-height: 400px;
+  --md-comp-carousel-shape: 12px;
+  --md-comp-carousel-gap: 0px;
 
   overflow: hidden;
   position: relative;
   width: 100%;
-  height: var(--carousel-height);
+  height: var(--carousel-height, var(--md-comp-carousel-height));
+  border-radius: var(--md-comp-carousel-shape);
+
+  .carousel-item > img,
+  .carousel-item > video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    margin: 0;
+    padding: 16px 0;
+    border: 0;
+    background: none;
+
+    .indicator-item {
+      appearance: none;
+      box-sizing: border-box;
+      display: block;
+      width: 8px;
+      height: 8px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 45%, transparent);
+      cursor: pointer;
+      transition: background-color 0.2s ease-out;
+
+      &:is(.active, [aria-current="true"]) {
+        background-color: var(--md-sys-color-primary);
+      }
+
+      @include focus-visible;
+    }
+  }
+}
+
+// Coverflow. JS writes transform / opacity / visibility on each item.
+.carousel:not(.flat):not(.carousel-slider) {
   perspective: 500px;
   transform-style: preserve-3d;
   transform-origin: 0% 50%;
+  touch-action: pan-y;
 
-  &.carousel-slider {
+  > .carousel-item {
+    visibility: hidden;
+    position: absolute;
     top: 0;
     left: 0;
+    width: calc(var(--carousel-height, var(--md-comp-carousel-height)) * 0.5);
+    height: calc(var(--carousel-height, var(--md-comp-carousel-height)) * 0.5);
+    overflow: hidden;
+    border-radius: var(--md-comp-carousel-shape);
+  }
+}
 
-    .carousel-fixed-item {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 20px;
-      z-index: 1;
+// Linear track. The outer box clips and holds chrome (dots, fixed item).
+// Slides live in .carousel-track so they can scroll without taking the
+// controls with them — abspos children of an overflow:auto box scroll too.
+.carousel.flat,
+.carousel.carousel-slider {
+  overflow: hidden;
+  perspective: none;
+  transform: none;
 
-      &.with-indicators {
-        bottom: 68px;
-      }
+  > .carousel-track {
+    display: flex;
+    gap: var(--md-comp-carousel-gap);
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    touch-action: pan-x;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
     }
+  }
 
-    .carousel-item {
-      width: 100%;
-      height: 100%;
-      min-height: var(--carousel-height);
-      position: absolute;
-      top: 0;
-      left: 0;
+  .carousel-track > .carousel-item {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    position: relative;
+    visibility: visible;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
 
-      h2 {
-        font-size: 24px;
-        font-weight: 500;
-        line-height: 32px;
-      }
+  .carousel-fixed-item {
+    position: absolute;
+    inset: auto 0 20px;
+    z-index: 1;
 
-      p {
-        font-size: 15px;
-      }
+    &.with-indicators {
+      bottom: 68px;
     }
   }
 
   .carousel-item {
-    visibility: hidden;
-    width: calc(var(--carousel-height) * 0.5);
-    height: calc(var(--carousel-height) * 0.5);
-    position: absolute;
-    top: 0;
-    left: 0;
+    h2 {
+      @include typescale("headline-small");
+      margin: 0 0 8px;
+    }
 
-    & > img {
-      width: 100%;
+    p {
+      @include typescale("body-medium");
+      margin: 0;
     }
   }
+}
 
-  .indicators {
-    padding-left: 0;
-    list-style-type: none;
-    position: absolute;
-    text-align: center;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-
-    .indicator-item {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      height: 8px;
-      width: 8px;
-      margin: 24px 4px;
-      background-color: rgba(255, 255, 255, 0.45);
-      transition: background-color .3s;
-      border-radius: 50%;
-
-      &.active {
-        background-color: var(--md-ref-palette-primary100);
-      }
-    }
+@media (prefers-reduced-motion: reduce) {
+  .carousel.flat > .carousel-track,
+  .carousel.carousel-slider > .carousel-track {
+    scroll-behavior: auto;
   }
+}
 
-  // Lightbox compatibility
-  &.scrolling .carousel-item .lightboxed,
-  .carousel-item:not(.active) .lightboxed {
-    pointer-events: none;
-  }
+// Lightbox: do not open a boxed image while the track is moving.
+.carousel.scrolling .carousel-item .lightboxed,
+.carousel-item:not(.active) .lightboxed {
+  pointer-events: none;
 }

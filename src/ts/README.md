@@ -73,6 +73,10 @@ read-it-off-the-element access that key provides.
 - **Parallax motion is CSS.** `animation-timeline: view()` on the clip; the
   component class is AutoInit/getInstance/destroy only and attaches no
   scroll listener. `responsiveThreshold` is accepted and ignored.
+- **Carousel has two layouts.** `.flat` (and `.carousel-slider` / `fullWidth`)
+  is a CSS scroll-snap track. The default remains the 3D coverflow, driven
+  by pointer events and a shared resize listener. `destroy()` removes
+  generated indicators.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

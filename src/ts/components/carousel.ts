@@ -3,71 +3,71 @@ import { Component, BaseOptions, InitElements, MElement } from '../core/componen
 
 export interface CarouselOptions extends BaseOptions {
   /**
-   * Transition duration in milliseconds.
+   * Transition duration in milliseconds (coverflow). Snap mode uses CSS.
    * @default 200
    */
   duration: number;
   /**
-   * Perspective zoom. If 0, all items are the same size.
+   * Perspective zoom. If 0, all items are the same size. Coverflow only.
    * @default -100
    */
   dist: number;
   /**
-   * Set the spacing of the center item.
+   * Extra spacing on the center item. Coverflow only.
    * @default 0
    */
   shift: number;
   /**
-   * Set the padding between non center items.
+   * Padding between items that are not in the center. Coverflow only.
    * @default 0
    */
   padding: number;
   /**
-   * Set the number of visible items.
+   * How many items stay visible. Coverflow only.
    * @default 5
    */
   numVisible: number;
   /**
-   * Make the carousel a full width slider like the second example.
+   * Linear snap track instead of 3D coverflow.
+   * Also implied by `.flat` / `.carousel-slider`.
    * @default false
    */
   fullWidth: boolean;
   /**
-   * Set to true to show indicators.
+   * Show paging dots. Only drawn when there is more than one item.
    * @default false
    */
   indicators: boolean;
   /**
-   * Don't wrap around and cycle through items.
+   * Stop at the first and last items instead of wrapping. Coverflow only.
+   * Snap tracks do not wrap.
    * @default false
    */
   noWrap: boolean;
   /**
-   * Callback for when a new slide is cycled to.
+   * Called when a new item becomes the center.
    * @default null
    */
   onCycleTo: (current: Element, dragged: boolean) => void;
 }
 
 const _defaults: CarouselOptions = {
-  duration: 200, // ms
-  dist: -100, // zoom scale TODO: make this more intuitive as an option
-  shift: 0, // spacing for center image
-  padding: 0, // Padding between non center items
-  numVisible: 5, // Number of visible items in carousel
-  fullWidth: false, // Change to full width styles
-  indicators: false, // Toggle indicators
-  noWrap: false, // Don't wrap around and cycle through items.
-  onCycleTo: null // Callback for when a new slide is cycled to.
+  duration: 200,
+  dist: -100,
+  shift: 0,
+  padding: 0,
+  numVisible: 5,
+  fullWidth: false,
+  indicators: false,
+  noWrap: false,
+  onCycleTo: null
 };
 
 export class Carousel extends Component<CarouselOptions> {
   hasMultipleSlides: boolean;
   showIndicators: boolean;
   noWrap: boolean;
-  /** If the carousel is being clicked or tapped. */
   pressed: boolean;
-  /** If the carousel is currently being dragged. */
   dragged: boolean;
   offset: number;
   target: number;
@@ -75,7 +75,7 @@ export class Carousel extends Component<CarouselOptions> {
   itemWidth: number;
   itemHeight: number;
   dim: number;
-  _indicators: HTMLUListElement;
+  _indicators: HTMLUListElement | HTMLElement;
   count: number;
   verticalDragged: boolean;
   reference: number;
@@ -83,13 +83,28 @@ export class Carousel extends Component<CarouselOptions> {
   velocity: number;
   frame: number;
   timestamp: number;
-  ticker: ReturnType<typeof setTimeout>;
   amplitude: number;
-  /** The index of the center carousel item. */
   center: number = 0;
   imageHeight: number;
   scrollingTimeout: ReturnType<typeof setTimeout>;
   oneTimeCallback: (current: Element, dragged: boolean) => void | null;
+
+  private _flat: boolean;
+  private _ownIndicators: boolean = false;
+  private _trackEl: HTMLElement | null = null;
+  private _ignoreScroll: boolean = false;
+  private _trackRaf: number = null;
+  private _started: boolean = false;
+
+  private get _scroller(): HTMLElement {
+    return this._trackEl ?? this.el;
+  }
+
+  private static _live = new Set<Carousel>();
+  private static _resizeListening = false;
+  private static _onResize = Utils.throttle(() => {
+    Carousel._live.forEach((c) => c._handleResize());
+  }, 200);
 
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
     super(el, options, Carousel);
@@ -100,83 +115,71 @@ export class Carousel extends Component<CarouselOptions> {
       ...options
     };
 
-    // Setup
-    this.hasMultipleSlides = this.el.querySelectorAll('.carousel-item').length > 1;
-    this.showIndicators = this.options.indicators && this.hasMultipleSlides;
-    this.noWrap = this.options.noWrap || !this.hasMultipleSlides;
+    this._flat =
+      this.options.fullWidth ||
+      this.el.classList.contains('flat') ||
+      this.el.classList.contains('carousel-slider');
+    if (this._flat) {
+      this.el.classList.add('flat');
+      this.options.fullWidth = true;
+      this.options.dist = 0;
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.options.duration = 1;
+      if (!this._flat) this.options.dist = 0;
+    }
+
     this.pressed = false;
     this.dragged = false;
     this.offset = this.target = 0;
-    this.images = [];
-    const firstItem = this.el.querySelector('.carousel-item');
-    if (!firstItem) {
+    this.images = this._collectItems();
+    if (!this.images.length) {
       console.error('Carousel: no .carousel-item elements to show');
       return;
     }
-    this.itemWidth = firstItem.clientWidth;
-    this.itemHeight = firstItem.clientHeight;
-    this.dim = this.itemWidth * 2 + this.options.padding || 1; // Make sure dim is non zero for divisions.
 
-    // Full Width carousel setup
-    if (this.options.fullWidth) {
-      this.options.dist = 0;
-      this._setCarouselHeight();
-
-      // Offset fixed items when indicators.
-      if (this.showIndicators) {
-        this.el.querySelector('.carousel-fixed-item')?.classList.add('with-indicators');
-      }
-    }
-
-    // Iterate through slides
-    this._indicators = document.createElement('ul');
-    this._indicators.classList.add('indicators');
-
-    this.el.querySelectorAll('.carousel-item').forEach((item: HTMLElement, i) => {
-      this.images.push(item);
-      if (this.showIndicators) {
-        const indicator = document.createElement('li');
-        indicator.classList.add('indicator-item');
-        indicator.tabIndex = 0;
-        if (i === 0) {
-          indicator.classList.add('active');
-        }
-        this._indicators.appendChild(indicator);
-      }
-    });
-
-    if (this.showIndicators) this.el.appendChild(this._indicators);
-
+    this.hasMultipleSlides = this.images.length > 1;
+    this.showIndicators = this.options.indicators && this.hasMultipleSlides;
+    this.noWrap = this.options.noWrap || !this.hasMultipleSlides || this._flat;
     this.count = this.images.length;
-
-    // Cap numVisible at count
     this.options.numVisible = Math.min(this.count, this.options.numVisible);
 
+    this.images.forEach((item) => item.classList.add('carousel-item'));
+    if (this._flat) this._wrapTrack();
+
+    const firstItem = this.images[0];
+    this.itemWidth = firstItem.clientWidth || this.el.clientWidth || 1;
+    this.itemHeight = firstItem.clientHeight || this.el.clientHeight || 1;
+    this.dim = this.itemWidth * 2 + this.options.padding || 1;
+
+    if (this.showIndicators) this._setupIndicators();
+
+    this.el.tabIndex = this.el.tabIndex >= 0 ? this.el.tabIndex : 0;
+    this.el.setAttribute('aria-roledescription', 'carousel');
+
     this._setupEventHandlers();
-    this._scroll(this.offset);
+    this._started = true;
+
+    if (this._flat) {
+      const start = Math.max(
+        0,
+        this.images.findIndex((el) => el.classList.contains('active'))
+      );
+      this.center = start;
+      this._syncActive(start, false);
+      this._scrollToIndex(start, false);
+    } else {
+      this._scroll(this.offset);
+    }
   }
 
   static get defaults(): CarouselOptions {
     return _defaults;
   }
 
-  /**
-   * Initializes instance of Carousel.
-   * @param el HTML element.
-   * @param options Component options.
-   */
   static init(el: HTMLElement, options?: Partial<CarouselOptions>): Carousel;
-  /**
-   * Initializes instances of Carousel.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
   static init(els: InitElements<MElement>, options?: Partial<CarouselOptions>): Carousel[];
-  /**
-   * Initializes instances of Carousel.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
   static init(
     els: HTMLElement | InitElements<MElement>,
     options: Partial<CarouselOptions> = {}
@@ -189,119 +192,173 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   destroy() {
-    this._removeEventHandlers();
+    if (this._started) this._teardown();
     this.el['Expressive_Carousel'] = undefined;
   }
 
+  private _collectItems(): HTMLElement[] {
+    const explicit = Array.from(this.el.children).filter(
+      (el): el is HTMLElement => el instanceof HTMLElement && el.classList.contains('carousel-item')
+    );
+    if (explicit.length) return explicit;
+    return Array.from(this.el.children).filter((el): el is HTMLElement => {
+      if (!(el instanceof HTMLElement)) return false;
+      if (el.classList.contains('indicators') || el.classList.contains('carousel-fixed-item')) {
+        return false;
+      }
+      return el.tagName !== 'NAV';
+    });
+  }
+
+  private _setupIndicators() {
+    const existing = Array.from(this.el.children).find(
+      (el): el is HTMLElement => el instanceof HTMLElement && el.classList.contains('indicators')
+    );
+    this._indicators = existing ?? document.createElement('nav');
+    this._ownIndicators = !existing;
+    this._indicators.classList.add('indicators');
+    this._indicators.setAttribute('aria-label', 'Slides');
+    this._indicators.replaceChildren();
+
+    this.images.forEach((_, i) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.classList.add('indicator-item');
+      if (i === 0) {
+        button.classList.add('active');
+        button.setAttribute('aria-current', 'true');
+      }
+      button.setAttribute('aria-label', `Slide ${i + 1}`);
+      this._indicators.appendChild(button);
+    });
+
+    if (this._ownIndicators) this.el.appendChild(this._indicators);
+    if (this._flat) {
+      this.el.querySelector('.carousel-fixed-item')?.classList.add('with-indicators');
+    }
+  }
+
   _setupEventHandlers() {
-    if (typeof window.ontouchstart !== 'undefined') {
-      this.el.addEventListener('touchstart', this._handleCarouselTap);
-      this.el.addEventListener('touchmove', this._handleCarouselDrag);
-      this.el.addEventListener('touchend', this._handleCarouselRelease);
-    }
-    this.el.addEventListener('mousedown', this._handleCarouselTap);
-    this.el.addEventListener('mousemove', this._handleCarouselDrag);
-    this.el.addEventListener('mouseup', this._handleCarouselRelease);
-    this.el.addEventListener('mouseleave', this._handleCarouselRelease);
-    this.el.addEventListener('click', this._handleCarouselClick);
+    this.el.addEventListener('keydown', this._handleKeydown);
     if (this.showIndicators && this._indicators) {
-      this._indicators.querySelectorAll('.indicator-item').forEach((el) => {
-        el.addEventListener('click', this._handleIndicatorClick);
-        el.addEventListener('keypress', this._handleIndicatorKeyPress);
-      });
+      this._indicators.addEventListener('click', this._handleIndicatorClick);
     }
-    // Resize
-    window.addEventListener('resize', this._handleThrottledResize);
+    Carousel._live.add(this);
+    if (!Carousel._resizeListening) {
+      window.addEventListener('resize', Carousel._onResize, { passive: true });
+      Carousel._resizeListening = true;
+    }
+
+    if (this._flat) {
+      this._scroller.addEventListener('scroll', this._handleFlatScroll, { passive: true });
+      return;
+    }
+
+    this.el.addEventListener('pointerdown', this._handleCarouselTap);
+    this.el.addEventListener('pointermove', this._handleCarouselDrag);
+    this.el.addEventListener('pointerup', this._handleCarouselRelease);
+    this.el.addEventListener('pointercancel', this._handleCarouselRelease);
+    this.el.addEventListener('click', this._handleCarouselClick);
   }
 
   _removeEventHandlers() {
-    if (typeof window.ontouchstart !== 'undefined') {
-      this.el.removeEventListener('touchstart', this._handleCarouselTap);
-      this.el.removeEventListener('touchmove', this._handleCarouselDrag);
-      this.el.removeEventListener('touchend', this._handleCarouselRelease);
+    this.el.removeEventListener('keydown', this._handleKeydown);
+    if (this._indicators) {
+      this._indicators.removeEventListener('click', this._handleIndicatorClick);
     }
-    this.el.removeEventListener('mousedown', this._handleCarouselTap);
-    this.el.removeEventListener('mousemove', this._handleCarouselDrag);
-    this.el.removeEventListener('mouseup', this._handleCarouselRelease);
-    this.el.removeEventListener('mouseleave', this._handleCarouselRelease);
+    this._scroller.removeEventListener('scroll', this._handleFlatScroll);
+    this.el.removeEventListener('pointerdown', this._handleCarouselTap);
+    this.el.removeEventListener('pointermove', this._handleCarouselDrag);
+    this.el.removeEventListener('pointerup', this._handleCarouselRelease);
+    this.el.removeEventListener('pointercancel', this._handleCarouselRelease);
     this.el.removeEventListener('click', this._handleCarouselClick);
-    if (this.showIndicators && this._indicators) {
-      this._indicators.querySelectorAll('.indicator-item').forEach((el) => {
-        el.removeEventListener('click', this._handleIndicatorClick);
-      });
+
+    Carousel._live.delete(this);
+    if (Carousel._live.size === 0 && Carousel._resizeListening) {
+      window.removeEventListener('resize', Carousel._onResize);
+      Carousel._resizeListening = false;
     }
-    window.removeEventListener('resize', this._handleThrottledResize);
   }
 
-  // Built once per instance. Creating the throttled function inside the
-  // handler - as this used to - produced a fresh closure per resize event and
-  // never actually called it, so resizing did nothing at all.
+  private _teardown() {
+    this._removeEventHandlers();
+    if (this._trackRaf !== null) cancelAnimationFrame(this._trackRaf);
+    window.clearTimeout(this.scrollingTimeout);
+    if (this._ownIndicators) this._indicators?.remove();
+    this._unwrapTrack();
+    this.images.forEach((el) => {
+      el.style.transform = '';
+      el.style.zIndex = '';
+      el.style.opacity = '';
+      el.style.visibility = '';
+    });
+  }
+
   _handleThrottledResize = Utils.throttle(() => this._handleResize(), 200);
 
-  _handleCarouselTap = (e: MouseEvent | TouchEvent) => {
-    // Fixes firefox draggable image bug
-    if (e.type === 'mousedown' && (<HTMLElement>e.target).tagName === 'IMG') {
+  _handleCarouselTap = (e: PointerEvent) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.target instanceof HTMLElement && e.target.tagName === 'IMG') {
       e.preventDefault();
     }
     this.pressed = true;
     this.dragged = false;
     this.verticalDragged = false;
-    this.reference = this._xpos(e);
-    this.referenceY = this._ypos(e);
-
+    this.reference = e.clientX;
+    this.referenceY = e.clientY;
     this.velocity = this.amplitude = 0;
     this.frame = this.offset;
     this.timestamp = Date.now();
-    clearInterval(this.ticker);
-    this.ticker = setInterval(this._track, 100);
+    try {
+      this.el.setPointerCapture(e.pointerId);
+    } catch {
+      // capture is optional
+    }
+    if (this._trackRaf !== null) cancelAnimationFrame(this._trackRaf);
+    const loop = () => {
+      this._track();
+      if (this.pressed) this._trackRaf = requestAnimationFrame(loop);
+      else this._trackRaf = null;
+    };
+    this._trackRaf = requestAnimationFrame(loop);
   };
 
-  _handleCarouselDrag = (e: MouseEvent | TouchEvent) => {
-    let x: number, y: number, delta: number, deltaY: number;
-    if (this.pressed) {
-      x = this._xpos(e);
-      y = this._ypos(e);
-      delta = this.reference - x;
-      deltaY = Math.abs(this.referenceY - y);
-      if (deltaY < 30 && !this.verticalDragged) {
-        // If vertical scrolling don't allow dragging.
-        if (delta > 2 || delta < -2) {
-          this.dragged = true;
-          this.reference = x;
-          this._scroll(this.offset + delta);
-        }
-      } else if (this.dragged) {
-        // If dragging don't allow vertical scroll.
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      } else {
-        // Vertical scrolling.
-        this.verticalDragged = true;
+  _handleCarouselDrag = (e: PointerEvent) => {
+    if (!this.pressed) return;
+    const delta = this.reference - e.clientX;
+    const deltaY = Math.abs(this.referenceY - e.clientY);
+    if (deltaY < 30 && !this.verticalDragged) {
+      if (delta > 2 || delta < -2) {
+        this.dragged = true;
+        this.reference = e.clientX;
+        this._scroll(this.offset + delta);
       }
-    }
-    if (this.dragged) {
-      // If dragging don't allow vertical scroll.
+    } else if (this.dragged) {
       e.preventDefault();
-      e.stopPropagation();
-      return false;
+    } else {
+      this.verticalDragged = true;
     }
+    if (this.dragged) e.preventDefault();
   };
 
-  _handleCarouselRelease = (e: MouseEvent | TouchEvent) => {
-    if (this.pressed) {
-      this.pressed = false;
-    } else {
-      return;
+  _handleCarouselRelease = (e: PointerEvent) => {
+    if (!this.pressed) return;
+    this.pressed = false;
+    if (this._trackRaf !== null) {
+      cancelAnimationFrame(this._trackRaf);
+      this._trackRaf = null;
     }
-    clearInterval(this.ticker);
+    try {
+      this.el.releasePointerCapture(e.pointerId);
+    } catch {
+      // already released
+    }
     this.target = this.offset;
     if (this.velocity > 10 || this.velocity < -10) {
       this.amplitude = 0.9 * this.velocity;
       this.target = this.offset + this.amplitude;
     }
     this.target = Math.round(this.target / this.dim) * this.dim;
-    // No wrap of items.
     if (this.noWrap) {
       if (this.target >= this.dim * (this.count - 1)) {
         this.target = this.dim * (this.count - 1);
@@ -312,129 +369,87 @@ export class Carousel extends Component<CarouselOptions> {
     this.amplitude = this.target - this.offset;
     this.timestamp = Date.now();
     requestAnimationFrame(this._autoScroll);
+    if (this.dragged) e.preventDefault();
+  };
+
+  _handleCarouselClick = (e: MouseEvent) => {
     if (this.dragged) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    const clickedElem = (e.target as HTMLElement).closest('.carousel-item');
+    if (!clickedElem || !this.el.contains(clickedElem)) return;
+    const clickedIndex = this.images.indexOf(clickedElem as HTMLElement);
+    const diff = this._wrap(this.center) - clickedIndex;
+    if (diff !== 0) {
       e.preventDefault();
       e.stopPropagation();
     }
-    return false;
-  };
-
-  _handleCarouselClick = (e: MouseEvent | TouchEvent) => {
-    // Disable clicks if carousel was dragged.
-    if (this.dragged) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    } else if (!this.options.fullWidth) {
-      const clickedElem = (<HTMLElement>e.target).closest('.carousel-item');
-      if (!clickedElem) return;
-      const clickedIndex = [...clickedElem.parentNode.children].indexOf(clickedElem);
-      const diff = this._wrap(this.center) - clickedIndex;
-      // Disable clicks if carousel was shifted by click
-      if (diff !== 0) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      // fixes https://github.com/materializecss/materialize/issues/180
-      if (clickedIndex < 0) {
-        // relative X position > center of carousel = clicked at the right part of the carousel
-        if (
-          (e as MouseEvent).clientX - (e.target as HTMLElement).getBoundingClientRect().left >
-          this.el.clientWidth / 2
-        ) {
-          this.next();
-        } else {
-          this.prev();
-        }
+    if (clickedIndex < 0) {
+      if (e.clientX - (e.target as HTMLElement).getBoundingClientRect().left > this.el.clientWidth / 2) {
+        this.next();
       } else {
-        this._cycleTo(clickedIndex);
+        this.prev();
       }
+    } else {
+      this._cycleTo(clickedIndex);
     }
   };
 
   _handleIndicatorClick = (e: Event) => {
     e.stopPropagation();
-    this._handleIndicatorInteraction(e);
+    const indicator = (e.target as HTMLElement).closest('.indicator-item');
+    if (!indicator || !this._indicators.contains(indicator)) return;
+    const index = [...this._indicators.children].indexOf(indicator);
+    if (index < 0) return;
+    this._cycleTo(index);
   };
 
-  _handleIndicatorKeyPress = (e: KeyboardEvent) => {
-    e.stopPropagation();
-    if (Utils.keys.ENTER.includes(e.key)) {
-      this._handleIndicatorInteraction(e);
+  _handleKeydown = (e: KeyboardEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (Utils.keys.ARROW_RIGHT.includes(e.key)) {
+      e.preventDefault();
+      this.next();
+    } else if (Utils.keys.ARROW_LEFT.includes(e.key)) {
+      e.preventDefault();
+      this.prev();
     }
   };
 
-  _handleIndicatorInteraction = (e: Event) => {
-    const indicator = (<HTMLElement>e.target).closest('.indicator-item');
-    if (indicator) {
-      const index = [...indicator.parentNode.children].indexOf(indicator);
-      this._cycleTo(index);
-    }
+  _handleFlatScroll = () => {
+    if (this._ignoreScroll) return;
+    const index = this._nearestIndex();
+    if (index !== this.center) this._syncActive(index, this.dragged);
   };
 
   _handleResize = () => {
+    if (!this.images.length) return;
+    if (this._flat) {
+      this._scrollToIndex(this.center, false);
+      return;
+    }
     if (this.options.fullWidth) {
-      const firstItem = this.el.querySelector('.carousel-item');
-      const activeItem = this.el.querySelector('.carousel-item.active');
-      if (!firstItem || !activeItem) return;
+      const firstItem = this.images[0];
+      if (!firstItem) return;
       this.itemWidth = firstItem.clientWidth;
-      this.imageHeight = activeItem.clientHeight;
       this.dim = this.itemWidth * 2 + this.options.padding;
       this.offset = this.center * 2 * this.itemWidth;
       this.target = this.offset;
-      this._setCarouselHeight(true);
     } else {
       this._scroll();
     }
   };
 
-  _setCarouselHeight(imageOnly: boolean = false) {
-    const firstSlide = this.el.querySelector('.carousel-item.active')
-      ? this.el.querySelector('.carousel-item.active')
-      : this.el.querySelector('.carousel-item');
-
-    const firstImage = firstSlide.querySelector('img');
-    if (firstImage) {
-      if (firstImage.complete) {
-        // If image won't trigger the load event
-        const imageHeight = firstImage.clientHeight;
-        if (imageHeight > 0) {
-          this.el.style.height = imageHeight + 'px';
-        } else {
-          // If image still has no height, use the natural dimensions to calculate
-          const naturalWidth = firstImage.naturalWidth;
-          const naturalHeight = firstImage.naturalHeight;
-          const adjustedHeight = (this.el.clientWidth / naturalWidth) * naturalHeight;
-          this.el.style.height = adjustedHeight + 'px';
-        }
-      } else {
-        // Get height when image is loaded normally
-        firstImage.addEventListener('load', () => {
-          this.el.style.height = firstImage.offsetHeight + 'px';
-        });
-      }
-    } else if (!imageOnly) {
-      const slideHeight = firstSlide.clientHeight;
-      this.el.style.height = slideHeight + 'px';
-    }
+  _xpos(e: PointerEvent | MouseEvent | TouchEvent) {
+    if ('clientX' in e) return e.clientX;
+    return 0;
   }
 
-  _xpos(e: MouseEvent | TouchEvent) {
-    // touch event
-    if (e.type.startsWith('touch') && (e as TouchEvent).targetTouches.length >= 1) {
-      return (e as TouchEvent).targetTouches[0].clientX;
-    }
-    // mouse event
-    return (e as MouseEvent).clientX;
-  }
-
-  _ypos(e: MouseEvent | TouchEvent) {
-    // touch event
-    if (e.type.startsWith('touch') && (e as TouchEvent).targetTouches.length >= 1) {
-      return (e as TouchEvent).targetTouches[0].clientY;
-    }
-    // mouse event
-    return (e as MouseEvent).clientY;
+  _ypos(e: PointerEvent | MouseEvent | TouchEvent) {
+    if ('clientY' in e) return e.clientY;
+    return 0;
   }
 
   _wrap(x: number) {
@@ -442,67 +457,48 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   _track = () => {
-    const now: number = Date.now(),
-      elapsed: number = now - this.timestamp,
-      delta: number = this.offset - this.frame,
-      v: number = (1000 * delta) / (1 + elapsed);
-    // now = Date.now();
-    // elapsed = now - this.timestamp;
+    const now = Date.now();
+    const elapsed = now - this.timestamp;
+    const delta = this.offset - this.frame;
+    const v = (1000 * delta) / (1 + elapsed);
     this.timestamp = now;
-    // delta = this.offset - this.frame;
     this.frame = this.offset;
-    // v = (1000 * delta) / (1 + elapsed);
     this.velocity = 0.8 * v + 0.2 * this.velocity;
   };
 
   _autoScroll = () => {
-    let elapsed: number, delta: number;
-    if (this.amplitude) {
-      elapsed = Date.now() - this.timestamp;
-      delta = this.amplitude * Math.exp(-elapsed / this.options.duration);
-      if (delta > 2 || delta < -2) {
-        this._scroll(this.target - delta);
-        requestAnimationFrame(this._autoScroll);
-      } else {
-        this._scroll(this.target);
-      }
+    if (!this.amplitude) return;
+    const elapsed = Date.now() - this.timestamp;
+    const delta = this.amplitude * Math.exp(-elapsed / this.options.duration);
+    if (delta > 2 || delta < -2) {
+      this._scroll(this.target - delta);
+      requestAnimationFrame(this._autoScroll);
+    } else {
+      this._scroll(this.target);
     }
   };
 
   _scroll(x: number = 0) {
-    // Track scrolling state
     if (!this.el.classList.contains('scrolling')) {
       this.el.classList.add('scrolling');
     }
-    if (this.scrollingTimeout != null) {
-      clearTimeout(this.scrollingTimeout);
-    }
+    window.clearTimeout(this.scrollingTimeout);
     this.scrollingTimeout = setTimeout(() => {
       this.el.classList.remove('scrolling');
     }, this.options.duration);
 
-    // Start actual scroll
     this.offset = typeof x === 'number' ? x : this.offset;
     this.center = Math.floor((this.offset + this.dim / 2) / this.dim);
 
-    const half: number = this.count >> 1,
-      delta: number = this.offset - this.center * this.dim,
-      dir: number = delta < 0 ? 1 : -1,
-      tween: number = (-dir * delta * 2) / this.dim;
-    let i: number,
-      el: HTMLElement,
-      alignment: string,
-      zTranslation: number,
-      tweenedOpacity: number,
-      centerTweenedOpacity: number;
+    const half = this.count >> 1;
+    const delta = this.offset - this.center * this.dim;
+    const dir = delta < 0 ? 1 : -1;
+    const tween = (-dir * delta * 2) / this.dim;
     const lastCenter = this.center;
     const numVisibleOffset = 1 / this.options.numVisible;
 
-    // delta = this.offset - this.center * this.dim;
-    // dir = delta < 0 ? 1 : -1;
-    // tween = (-dir * delta * 2) / this.dim;
-    // half = this.count >> 1;
-
+    let alignment: string;
+    let centerTweenedOpacity: number;
     if (this.options.fullWidth) {
       alignment = 'translateX(0)';
       centerTweenedOpacity = 1;
@@ -512,39 +508,19 @@ export class Carousel extends Component<CarouselOptions> {
       centerTweenedOpacity = 1 - numVisibleOffset * tween;
     }
 
-    // Set indicator active
-    if (this.showIndicators) {
-      const diff = this.center % this.count;
-      const activeIndicator = this._indicators.querySelector('.indicator-item.active');
-      const activeIndicatorIndex = [...activeIndicator.parentNode.children].indexOf(
-        activeIndicator
-      );
-      if (activeIndicatorIndex !== diff) {
-        activeIndicator.classList.remove('active');
-        const pos = diff < 0 ? this.count + diff : diff;
-        this._indicators.querySelectorAll('.indicator-item')[pos].classList.add('active');
-      }
-    }
+    this._paintIndicators(this.center);
 
-    // center
-    // Don't show wrapped items.
     if (!this.noWrap || (this.center >= 0 && this.center < this.count)) {
-      el = this.images[this._wrap(this.center)];
-
-      // Add active class to center item. Clear it off whichever item actually
-      // has it - this used to unconditionally clear the *first* item.
-      if (!el.classList.contains('active')) {
+      const el = this.images[this._wrap(this.center)];
+      if (el && !el.classList.contains('active')) {
         this.el.querySelector('.carousel-item.active')?.classList.remove('active');
         el.classList.add('active');
       }
-      // The transform for the centre item is written once, after the loop
-      // below. A second copy used to be written here too, multiplied by `i` -
-      // which is not assigned until the loop starts, so it produced
-      // `translateX(NaNpx)` and the browser dropped the declaration.
     }
 
-    for (i = 1; i <= half; ++i) {
-      // right side
+    for (let i = 1; i <= half; ++i) {
+      let zTranslation: number;
+      let tweenedOpacity: number;
       if (this.options.fullWidth) {
         zTranslation = this.options.dist;
         tweenedOpacity = i === half && delta < 0 ? 1 - tween : 1;
@@ -552,15 +528,13 @@ export class Carousel extends Component<CarouselOptions> {
         zTranslation = this.options.dist * (i * 2 + tween * dir);
         tweenedOpacity = 1 - numVisibleOffset * (i * 2 + tween * dir);
       }
-      // Don't show wrapped items.
       if (!this.noWrap || this.center + i < this.count) {
-        el = this.images[this._wrap(this.center + i)];
+        const el = this.images[this._wrap(this.center + i)];
         const transformString = `${alignment} translateX(${
           this.options.shift + (this.dim * i - delta) / 2
         }px) translateZ(${zTranslation}px)`;
         this._updateItemStyle(el, tweenedOpacity, -i, transformString);
       }
-      // left side
       if (this.options.fullWidth) {
         zTranslation = this.options.dist;
         tweenedOpacity = i === half && delta > 0 ? 1 - tween : 1;
@@ -568,47 +542,131 @@ export class Carousel extends Component<CarouselOptions> {
         zTranslation = this.options.dist * (i * 2 - tween * dir);
         tweenedOpacity = 1 - numVisibleOffset * (i * 2 - tween * dir);
       }
-      // Don't show wrapped items.
       if (!this.noWrap || this.center - i >= 0) {
-        el = this.images[this._wrap(this.center - i)];
+        const el = this.images[this._wrap(this.center - i)];
         const transformString = `${alignment} translateX(${
           -this.options.shift + (-this.dim * i - delta) / 2
         }px) translateZ(${zTranslation}px)`;
         this._updateItemStyle(el, tweenedOpacity, -i, transformString);
       }
     }
-    // center
-    // Don't show wrapped items.
+
     if (!this.noWrap || (this.center >= 0 && this.center < this.count)) {
-      el = this.images[this._wrap(this.center)];
+      const el = this.images[this._wrap(this.center)];
       const transformString = `${alignment} translateX(${-delta / 2}px) translateX(${
         dir * this.options.shift * tween
       }px) translateZ(${this.options.dist * tween}px)`;
       this._updateItemStyle(el, centerTweenedOpacity, 0, transformString);
     }
-    // onCycleTo callback
-    const _currItem = this.el.querySelectorAll('.carousel-item')[this._wrap(this.center)];
+
+    const currItem = this.images[this._wrap(this.center)];
+    this._syncA11y(this._wrap(this.center));
 
     if (lastCenter !== this.center && typeof this.options.onCycleTo === 'function') {
-      this.options.onCycleTo.call(this, _currItem, this.dragged);
+      this.options.onCycleTo.call(this, currItem, this.dragged);
     }
-    // One time callback
     if (typeof this.oneTimeCallback === 'function') {
-      this.oneTimeCallback.call(this, _currItem, this.dragged);
+      this.oneTimeCallback.call(this, currItem, this.dragged);
       this.oneTimeCallback = null;
     }
   }
 
   _updateItemStyle(el: HTMLElement, opacity: number, zIndex: number, transform: string) {
+    if (!el) return;
     el.style.transform = transform;
     el.style.zIndex = zIndex.toString();
     el.style.opacity = opacity.toString();
     el.style.visibility = 'visible';
   }
 
+  private _paintIndicators(center: number) {
+    if (!this.showIndicators || !this._indicators) return;
+    const pos = ((center % this.count) + this.count) % this.count;
+    this._indicators.querySelectorAll('.indicator-item').forEach((el, i) => {
+      const on = i === pos;
+      el.classList.toggle('active', on);
+      if (on) el.setAttribute('aria-current', 'true');
+      else el.removeAttribute('aria-current');
+    });
+  }
+
+  private _syncA11y(index: number) {
+    this.images.forEach((el, i) => {
+      if (i === index) el.removeAttribute('aria-hidden');
+      else el.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  private _syncActive(index: number, dragged: boolean) {
+    const prev = this.center;
+    this.center = index;
+    this.images.forEach((el, i) => el.classList.toggle('active', i === index));
+    this._paintIndicators(index);
+    this._syncA11y(index);
+    const curr = this.images[index];
+    if (prev !== index && typeof this.options.onCycleTo === 'function') {
+      this.options.onCycleTo.call(this, curr, dragged);
+    }
+    if (typeof this.oneTimeCallback === 'function') {
+      this.oneTimeCallback.call(this, curr, dragged);
+      this.oneTimeCallback = null;
+    }
+  }
+
+  private _wrapTrack() {
+    const track = document.createElement('div');
+    track.className = 'carousel-track';
+    this.images[0].before(track);
+    this.images.forEach((el) => track.appendChild(el));
+    this._trackEl = track;
+  }
+
+  private _unwrapTrack() {
+    if (!this._trackEl) return;
+    this.images.forEach((el) => this.el.insertBefore(el, this._trackEl));
+    this._trackEl.remove();
+    this._trackEl = null;
+  }
+
+  private _nearestIndex(): number {
+    const left = this._scroller.scrollLeft;
+    let best = 0;
+    let bestDist = Infinity;
+    this.images.forEach((el, i) => {
+      const dist = Math.abs(el.offsetLeft - left);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+    return best;
+  }
+
+  private _scrollToIndex(n: number, smooth = true) {
+    const el = this.images[n];
+    if (!el) return;
+    const left = el.offsetLeft;
+    if (Math.abs(this._scroller.scrollLeft - left) < 1) {
+      this._syncActive(n, false);
+      return;
+    }
+    this._ignoreScroll = true;
+    this._scroller.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' });
+    const done = () => {
+      this._ignoreScroll = false;
+    };
+    this._scroller.addEventListener('scrollend', done, { once: true });
+    window.setTimeout(done, this.options.duration + 350);
+  }
+
   _cycleTo(n: number, callback: CarouselOptions['onCycleTo'] = null) {
+    if (this._flat) {
+      if (typeof callback === 'function') this.oneTimeCallback = callback;
+      this._syncActive(n, false);
+      this._scrollToIndex(n);
+      return;
+    }
     let diff = (this.center % this.count) - n;
-    // Account for wraparound.
     if (!this.noWrap) {
       if (diff < 0) {
         if (Math.abs(diff + this.count) < Math.abs(diff)) {
@@ -621,18 +679,14 @@ export class Carousel extends Component<CarouselOptions> {
       }
     }
     this.target = this.dim * Math.round(this.offset / this.dim);
-    // Next
     if (diff < 0) {
       this.target += this.dim * Math.abs(diff);
-    } // Prev
-    else if (diff > 0) {
+    } else if (diff > 0) {
       this.target -= this.dim * diff;
     }
-    // Set one time callback
     if (typeof callback === 'function') {
       this.oneTimeCallback = callback;
     }
-    // Scroll
     if (this.offset !== this.target) {
       this.amplitude = this.target - this.offset;
       this.timestamp = Date.now();
@@ -640,14 +694,8 @@ export class Carousel extends Component<CarouselOptions> {
     }
   }
 
-  /**
-   * Move carousel to next slide or go forward a given amount of slides.
-   * @param n How many times the carousel slides.
-   */
   next(n: number = 1) {
-    if (n === undefined || isNaN(n)) {
-      n = 1;
-    }
+    if (n === undefined || isNaN(n)) n = 1;
     let index = this.center + n;
     if (index >= this.count || index < 0) {
       if (this.noWrap) return;
@@ -656,14 +704,8 @@ export class Carousel extends Component<CarouselOptions> {
     this._cycleTo(index);
   }
 
-  /**
-   * Move carousel to previous slide or go back a given amount of slides.
-   * @param n How many times the carousel slides.
-   */
   prev(n: number = 1) {
-    if (n === undefined || isNaN(n)) {
-      n = 1;
-    }
+    if (n === undefined || isNaN(n)) n = 1;
     let index = this.center - n;
     if (index >= this.count || index < 0) {
       if (this.noWrap) return;
@@ -672,15 +714,8 @@ export class Carousel extends Component<CarouselOptions> {
     this._cycleTo(index);
   }
 
-  /**
-   * Move carousel to nth slide.
-   * @param n Index of slide.
-   * @param callback "onCycleTo" optional callback.
-   */
   set(n: number, callback?: CarouselOptions['onCycleTo']) {
-    if (n === undefined || isNaN(n)) {
-      n = 0;
-    }
+    if (n === undefined || isNaN(n)) n = 0;
     if (n > this.count || n < 0) {
       if (this.noWrap) return;
       n = this._wrap(n);

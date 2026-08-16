@@ -112,6 +112,17 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), []);
   });
 
+  test('Carousel detaches the shared resize listener', () => {
+    document.body.innerHTML = `
+      <div class="carousel">
+        <a class="carousel-item" href="#one">one</a>
+        <a class="carousel-item" href="#two">two</a>
+      </div>`;
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
+    instance.destroy();
+    assert.deepEqual(watch.live(), [], 'Carousel left the resize listener attached');
+  });
+
   test('Parallax does not attach window listeners', () => {
     document.body.innerHTML = `<div class="parallax"><img src="http://localhost/1.jpg"></div>`;
     const instance = Expressive.Parallax.init(document.querySelector('.parallax'));

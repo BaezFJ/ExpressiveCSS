@@ -197,13 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
     Expressive.Slider.init(sliders);
   }
 
-  const carouselFull = document.getElementById('carousel-fullwidth');
-  if (carouselFull) {
-    Expressive.Carousel.init(carouselFull, { fullWidth: true });
-  }
   const carouselContent = document.getElementById('carousel-content');
   if (carouselContent) {
-    Expressive.Carousel.init(carouselContent, { fullWidth: true, indicators: true });
+    Expressive.Carousel.init(carouselContent, { indicators: true });
   }
   document.getElementById('carousel-prev')?.addEventListener('click', () => {
     Expressive.Carousel.getInstance(document.getElementById('carousel-intro'))?.prev();
