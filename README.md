@@ -110,7 +110,7 @@ behaviors, but it does not call `AutoInit()` automatically.
 Use the framework's Sass entry point in another Sass project:
 
 ```scss
-@use "expressivecss/src/sass/expressive";
+@use "@expressivecss/expressive/src/sass/expressive";
 ```
 
 When working directly in this repository, the entry point is

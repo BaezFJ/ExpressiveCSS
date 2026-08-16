@@ -4,7 +4,7 @@ ExpressiveCSS is a Material Design 3 front-end framework built with Sass and Typ
 
 This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.2.0`, which is under active development.
 
-- Package: `expressivecss`
+- Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
 - JavaScript formats: ES module, CommonJS, and browser IIFE
 - Styles: compiled CSS, minified CSS, and Sass sources
@@ -99,7 +99,7 @@ ExpressiveCSS combines semantic HTML with component classes and single-purpose u
 Install the published package:
 
 ```sh
-npm install expressivecss
+npm install @expressivecss/expressive
 ```
 
 Or build the repository sources:
@@ -115,11 +115,11 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 
 | Import | Purpose |
 | --- | --- |
-| `expressivecss` | JavaScript module and TypeScript declarations |
-| `expressivecss/css` | Expanded compiled stylesheet |
-| `expressivecss/css/min` | Minified compiled stylesheet |
-| `expressivecss/scss` | Sass entry point |
-| `expressivecss/scss/*` | Individual Sass source paths |
+| `@expressivecss/expressive` | JavaScript module and TypeScript declarations |
+| `@expressivecss/expressive/css` | Expanded compiled stylesheet |
+| `@expressivecss/expressive/css/min` | Minified compiled stylesheet |
+| `@expressivecss/expressive/scss` | Sass entry point |
+| `@expressivecss/expressive/scss/*` | Individual Sass source paths |
 
 ## Minimal browser setup
 
@@ -150,8 +150,8 @@ The IIFE bundle exposes the global `Expressive` object. Material Icons or Materi
 ## ES module setup
 
 ```js
-import 'expressivecss/css';
-import { AutoInit, Tooltip } from 'expressivecss';
+import '@expressivecss/expressive/css';
+import { AutoInit, Tooltip } from '@expressivecss/expressive';
 
 AutoInit();
 
@@ -162,7 +162,7 @@ if (element) Tooltip.init(element, { position: 'top' });
 ## Sass setup
 
 ```scss
-@use "expressivecss/src/sass/expressive";
+@use "@expressivecss/expressive/src/sass/expressive";
 ```
 
 The Sass entry point emits four cascade layers in this order: `tokens`, `base`, `components`, and `utilities`. Utilities therefore override component-layer declarations without selector-specificity escalation. Unlayered application CSS overrides normal declarations in all framework layers.
@@ -313,10 +313,10 @@ dist/
 
 #### NPM
 
-The package name is `expressivecss`. This release contains source files as well as the compiled CSS and JavaScript files.
+The package name is `@expressivecss/expressive`. This release contains source files as well as the compiled CSS and JavaScript files.
 
 ```sh
-npm install expressivecss
+npm install @expressivecss/expressive
 ```
 
 #### Yarn
@@ -324,7 +324,7 @@ npm install expressivecss
 Or you can add the package with yarn.
 
 ```sh
-yarn add expressivecss
+yarn add @expressivecss/expressive
 ```
 
 ### Setup
@@ -437,7 +437,7 @@ npm run build:css
 In another Sass project, use the framework's Sass entry point:
 
 ```scss
-@use "expressivecss/src/sass/expressive";
+@use "@expressivecss/expressive/src/sass/expressive";
 ```
 
 When working directly in this repository, the entry point is `src/sass/expressive.scss`.
