@@ -103,6 +103,117 @@ body.containers-off .container {
   height: 16rem;
 }
 
+/* Navbar seed-color action picks up the live primary so the icon tracks the seed. */
+header:has(> nav) > nav #source-color-toggle {
+  color: var(--md-sys-color-primary);
+}
+
+/* Source-color dialog: preset grid, custom picker, and live role chips. */
+#source-color-dialog {
+  max-height: min(90vh, calc(100% - 48px));
+}
+
+#source-color-dialog .source-color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0 16px;
+}
+
+#source-color-dialog .source-color-swatch {
+  display: block;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  border: 2px solid color-mix(in oklab, var(--md-sys-color-outline) 40%, transparent);
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  appearance: none;
+  background-clip: padding-box;
+}
+
+#source-color-dialog .source-color-swatch:hover {
+  border-color: var(--md-sys-color-on-surface);
+}
+
+#source-color-dialog .source-color-swatch:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 3px;
+}
+
+#source-color-dialog .source-color-swatch[aria-checked="true"] {
+  border-color: var(--md-sys-color-on-surface);
+  box-shadow: 0 0 0 3px var(--md-sys-color-surface), 0 0 0 5px var(--md-sys-color-primary);
+}
+
+#source-color-dialog .source-color-custom,
+#source-color-dialog .source-color-preview {
+  color: var(--md-sys-color-on-surface);
+}
+
+#source-color-dialog .source-color-custom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+#source-color-dialog .source-color-custom .field {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+#source-color-dialog #source-color-input {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--md-sys-color-outline);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#source-color-dialog #source-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#source-color-dialog #source-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+#source-color-dialog #source-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+#source-color-dialog .source-color-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+#source-color-dialog .source-color-chip {
+  display: block;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+#source-color-dialog #source-color-reset {
+  margin-right: auto;
+}
+
 /* Color page: stacked palette swatches. */
 .color-swatch {
   padding: 0.85rem 1rem;

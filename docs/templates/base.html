@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" theme="light">
+<html lang="en" theme="auto">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +8,17 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   <link rel="stylesheet" href="{{ css_url }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='docs.css') }}">
+  {# Apply a stored --md-source before first paint so the page does not flash the default seed. #}
+  <script>
+    (function () {
+      try {
+        var c = localStorage.getItem('md-source');
+        if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+          document.documentElement.style.setProperty('--md-source', c);
+        }
+      } catch (e) {}
+    })();
+  </script>
   {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">

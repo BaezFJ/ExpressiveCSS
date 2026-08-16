@@ -236,7 +236,10 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
           <code>--md-source</code> is the seed the ramps are generated from, and
           it is live: set it and every generated ramp — and every system color
           that resolves to one — recolors at runtime, with no rebuild.
-          Expressive ships <code>#006A79</code>.
+          Expressive ships <code>#006A79</code>. The palette icon in the
+          navbar opens a picker that writes this property; the choice is stored
+          in <code>localStorage</code> so you can browse the rest of the docs
+          in the palette you picked.
         </p>
 <pre><code>:root {
   --md-source: #6750a4;   /* one line; the whole theme follows */

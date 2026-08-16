@@ -19,6 +19,104 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const DEFAULT_SOURCE = '#006a79';
+  const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+  const normalizeHex = (value) => {
+    const raw = String(value ?? '').trim();
+    const match = raw.match(HEX);
+    if (!match) return null;
+    const digits = match[1].toLowerCase();
+    if (digits.length === 3) {
+      return `#${digits[0]}${digits[0]}${digits[1]}${digits[1]}${digits[2]}${digits[2]}`;
+    }
+    return `#${digits}`;
+  };
+
+  const readSource = () => {
+    try {
+      const stored = normalizeHex(localStorage.getItem('md-source'));
+      if (stored) return stored;
+    } catch {
+      // private mode / blocked storage
+    }
+    const inline = normalizeHex(document.documentElement.style.getPropertyValue('--md-source'));
+    if (inline) return inline;
+    return normalizeHex(
+      getComputedStyle(document.documentElement).getPropertyValue('--md-source')
+    ) ?? DEFAULT_SOURCE;
+  };
+
+  const persistSource = (hex) => {
+    try {
+      if (hex === DEFAULT_SOURCE) localStorage.removeItem('md-source');
+      else localStorage.setItem('md-source', hex);
+    } catch {
+      // ignore quota / privacy errors
+    }
+  };
+
+  const sourceDialog = document.getElementById('source-color-dialog');
+  const sourceToggle = document.getElementById('source-color-toggle');
+  const sourceInput = document.getElementById('source-color-input');
+  const sourceHex = document.getElementById('source-color-hex');
+  const sourceSwatches = sourceDialog?.querySelectorAll('.source-color-swatch') ?? [];
+
+  const syncSourceUi = (hex) => {
+    if (sourceInput) sourceInput.value = hex;
+    if (sourceHex) sourceHex.value = hex;
+    sourceSwatches.forEach((swatch) => {
+      const selected = normalizeHex(swatch.dataset.source) === hex;
+      swatch.setAttribute('aria-checked', selected ? 'true' : 'false');
+    });
+  };
+
+  const applySource = (value) => {
+    const hex = normalizeHex(value);
+    if (!hex) return null;
+    if (hex === DEFAULT_SOURCE) {
+      document.documentElement.style.removeProperty('--md-source');
+    } else {
+      document.documentElement.style.setProperty('--md-source', hex);
+    }
+    persistSource(hex);
+    syncSourceUi(hex);
+    return hex;
+  };
+
+  if (sourceDialog && sourceToggle) {
+    syncSourceUi(readSource());
+
+    sourceToggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      syncSourceUi(readSource());
+      sourceDialog.showModal();
+    });
+
+    sourceDialog.addEventListener('click', (event) => {
+      if (event.target === sourceDialog) sourceDialog.close();
+    });
+
+    sourceSwatches.forEach((swatch) => {
+      swatch.addEventListener('click', () => applySource(swatch.dataset.source));
+    });
+
+    sourceInput?.addEventListener('input', () => applySource(sourceInput.value));
+
+    sourceHex?.addEventListener('input', () => {
+      const hex = normalizeHex(sourceHex.value);
+      if (hex) applySource(hex);
+    });
+
+    sourceHex?.addEventListener('blur', () => {
+      syncSourceUi(readSource());
+    });
+
+    document.getElementById('source-color-reset')?.addEventListener('click', () => {
+      applySource(DEFAULT_SOURCE);
+    });
+  }
+
   const containerToggle = document.getElementById('container-toggle-button');
   containerToggle?.addEventListener('click', (event) => {
     event.preventDefault();
