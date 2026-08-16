@@ -87,6 +87,11 @@ read-it-off-the-element access that key provides.
   `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
   one origin rect. The wrapper uses `popover="auto"` when the platform
   has it. Do not build a `#${data-target}` selector.
+- **FAB speed dial is CSS.** `.active` (and `:hover` when the pointer
+  can hover) opens the menu. `.click-to-toggle` and `.direction-*` are
+  markup switches. JS toggles the class, Escape, and click-outside.
+  Do not write `transform` / `opacity` onto the children. Toolbar mode
+  is `.toolbar.active` — no backdrop scale math.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

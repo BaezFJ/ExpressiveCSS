@@ -147,6 +147,21 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'Dropdown left its temporary handlers attached');
   });
 
+  test('FloatingActionButton detaches the document handlers open() adds', () => {
+    document.body.innerHTML = `
+      <div class="fixed-action-btn">
+        <a class="btn-floating btn-large">+</a>
+        <ul><li><a class="btn-floating">e</a></li></ul>
+      </div>`;
+    const instance = Expressive.FloatingActionButton.init(document.querySelector('.fixed-action-btn'));
+
+    instance.open();
+    assert.ok(watch.live().includes('click'), 'open() did not attach a document click handler');
+
+    instance.destroy();
+    assert.deepEqual(watch.live(), []);
+  });
+
   test('TapTarget detaches its resize listener and does not add document click handlers', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div>

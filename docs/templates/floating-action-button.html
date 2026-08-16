@@ -14,14 +14,14 @@
 </section>
 
 <div class="fixed-action-btn">
-  <a class="btn-floating btn-large waves-effect waves-light">
-    <i class="large material-symbols">mode_edit</i>
-  </a>
+  <button type="button" class="btn-floating extra" aria-label="Edit">
+    <i class="material-symbols">mode_edit</i>
+  </button>
   <ul>
-    <li><a class="btn-floating error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
-    <li><a class="btn-floating secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
-    <li><a class="btn-floating tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
-    <li><a class="btn-floating primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
+    <li><a class="btn-floating error on-error-text" href="#!" aria-label="Chart"><i class="material-symbols">insert_chart</i></a></li>
+    <li><a class="btn-floating secondary on-secondary-text" href="#!" aria-label="Quote"><i class="material-symbols">format_quote</i></a></li>
+    <li><a class="btn-floating tertiary on-tertiary-text" href="#!" aria-label="Publish"><i class="material-symbols">publish</i></a></li>
+    <li><a class="btn-floating primary on-primary-text" href="#!" aria-label="Attach"><i class="material-symbols">attach_file</i></a></li>
   </ul>
 </div>
 
@@ -35,20 +35,19 @@
           The live demo is in the bottom-right corner of the page.
         </p>
         <p>
-          Wrap a large <code>btn-floating</code> and a list of smaller ones in
-          <code>fixed-action-btn</code>. That class pins the control to the corner.
-          <code>AutoInit()</code> starts every matching element except those marked
-          <code>no-autoinit</code>.
+          Wrap a large <code>btn-floating</code> (or <code>circle extra</code>)
+          and a list of smaller ones in <code>fixed-action-btn</code>.
+          That class pins the control to the corner. The menu opens on
+          hover when the pointer can hover; add <code>click-to-toggle</code>
+          to toggle on click. <code>AutoInit()</code> starts every matching
+          element except those marked <code>no-autoinit</code>. Motion is CSS.
         </p>
 <pre><code>&lt;div class="fixed-action-btn"&gt;
-  &lt;a class="btn-floating btn-large waves-effect waves-light"&gt;
-    &lt;i class="large material-symbols"&gt;mode_edit&lt;/i&gt;
-  &lt;/a&gt;
+  &lt;button type="button" class="btn-floating extra" aria-label="Edit"&gt;
+    &lt;i class="material-symbols"&gt;mode_edit&lt;/i&gt;
+  &lt;/button&gt;
   &lt;ul&gt;
-    &lt;li&gt;&lt;a class="btn-floating error on-error-text"&gt;&lt;i class="material-symbols"&gt;insert_chart&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a class="btn-floating secondary on-secondary-text"&gt;&lt;i class="material-symbols"&gt;format_quote&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a class="btn-floating tertiary on-tertiary-text"&gt;&lt;i class="material-symbols"&gt;publish&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a class="btn-floating primary on-primary-text"&gt;&lt;i class="material-symbols"&gt;attach_file&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="btn-floating" href="#!" aria-label="Attach"&gt;…&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/div&gt;</code></pre>
       </div>
@@ -91,19 +90,19 @@
               <td><code>direction</code></td>
               <td>String</td>
               <td><code>'top'</code></td>
-              <td>Direction the menu opens. One of <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. The constructor adds the matching <code>direction-*</code> class.</td>
+              <td>Direction the menu opens. One of <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Write <code>direction-left</code> (etc.) on the element, or pass this option — the constructor stamps the class.</td>
             </tr>
             <tr>
               <td><code>hoverEnabled</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>When <code>true</code>, the menu opens on hover. When <code>false</code>, it toggles on click. There is no <code>click-to-toggle</code> class — this option is the only switch.</td>
+              <td>When <code>true</code>, the menu opens on hover (CSS). When <code>false</code>, it toggles on click. <code>.click-to-toggle</code> is the markup switch.</td>
             </tr>
             <tr>
               <td><code>toolbarEnabled</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>Expand the FAB into a toolbar on click. See <a href="#toolbar">FAB to Toolbar</a>.</td>
+              <td>Expand the FAB into a toolbar on click. <code>.toolbar</code> is the markup switch. See <a href="#toolbar">FAB to Toolbar</a>.</td>
             </tr>
           </tbody>
         </table>
@@ -162,11 +161,16 @@
       <div id="horizontal" class="section scrollspy">
         <h3>Horizontal FAB</h3>
         <p>Creating a horizontal FAB is easy. Set the <code>direction</code> option to <code>'left'</code> or <code>'right'</code>.</p>
+        <p>
+          Add <code>direction-left</code> or <code>direction-right</code>
+          on the wrapper. The JS <code>direction</code> option stamps the
+          same class.
+        </p>
         <div class="fab-demo">
-          <div class="fixed-action-btn no-autoinit" id="fab-horizontal">
-            <a class="btn-floating btn-large waves-effect waves-light">
-              <i class="large material-symbols">mode_edit</i>
-            </a>
+          <div class="fixed-action-btn direction-left" id="fab-horizontal">
+            <button type="button" class="btn-floating extra" aria-label="Edit">
+              <i class="material-symbols">mode_edit</i>
+            </button>
             <ul>
               <li><a class="btn-floating error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
               <li><a class="btn-floating secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
@@ -175,26 +179,22 @@
             </ul>
           </div>
         </div>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = Expressive.FloatingActionButton.init(elems, {
-    direction: 'left'
-  });
-});</code></pre>
+<pre><code>&lt;div class="fixed-action-btn direction-left"&gt;…&lt;/div&gt;</code></pre>
       </div>
 
       <div id="click-only" class="section scrollspy">
         <h3>Click-only FAB</h3>
         <p>
           To disable hover and toggle the menu when the large button is clicked — useful on touch devices —
-          pass <code>hoverEnabled: false</code>. Expressive does not read a
-          <code>click-to-toggle</code> class; the option is the only way to switch.
+          add <code>click-to-toggle</code> (or pass
+          <code>hoverEnabled: false</code>). On a device with no hover,
+          click is used even without the class.
         </p>
         <div class="fab-demo">
-          <div class="fixed-action-btn no-autoinit" id="fab-click-only">
-            <a class="btn-floating btn-large waves-effect waves-light">
-              <i class="large material-symbols">menu</i>
-            </a>
+          <div class="fixed-action-btn direction-left click-to-toggle" id="fab-click-only">
+            <button type="button" class="btn-floating extra" aria-label="Menu">
+              <i class="material-symbols">menu</i>
+            </button>
             <ul>
               <li><a class="btn-floating error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
               <li><a class="btn-floating secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
@@ -203,25 +203,15 @@
             </ul>
           </div>
         </div>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
-  const instances = Expressive.FloatingActionButton.init(elems, {
-    direction: 'left',
-    hoverEnabled: false
-  });
-});</code></pre>
+<pre><code>&lt;div class="fixed-action-btn direction-left click-to-toggle"&gt;…&lt;/div&gt;</code></pre>
       </div>
 
       <div id="toolbar" class="section scrollspy">
         <h3>FAB to Toolbar</h3>
         <p>
-          <code>toolbarEnabled: true</code> is still in the options object and expands the button into a
-          full-width toolbar on click. Add the <code>toolbar</code> class yourself — the constructor only
-          adds <code>direction-*</code>, not <code>toolbar</code>.
-        </p>
-        <p>
-          Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu unless you
-          specifically need the toolbar transition.
+          Add <code>toolbar</code> (or pass <code>toolbarEnabled: true</code>)
+          to expand the button into a full-width bar on click. Prefer a hover
+          or click-only menu unless you specifically need the bar.
         </p>
 <pre><code>&lt;div class="fixed-action-btn toolbar"&gt;
   &lt;a class="btn-floating btn-large"&gt;

@@ -203,6 +203,44 @@ describe('TapTarget', () => {
   });
 });
 
+describe('FloatingActionButton', () => {
+  beforeEach(resetBody);
+
+  test('open() and close() toggle .active', () => {
+    document.body.innerHTML = `
+      <div class="fixed-action-btn">
+        <a class="btn-floating btn-large">+</a>
+        <ul><li><a class="btn-floating">e</a></li></ul>
+      </div>`;
+    const el = document.querySelector('.fixed-action-btn');
+    const instance = Expressive.FloatingActionButton.init(el);
+    const trigger = el.querySelector(':scope > a');
+
+    assert.equal(el.classList.contains('active'), false);
+    assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+    instance.open();
+    assert.equal(el.classList.contains('active'), true);
+    assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+    instance.close();
+    assert.equal(el.classList.contains('active'), false);
+    instance.destroy();
+  });
+
+  test('.click-to-toggle and direction-* in markup are honoured', () => {
+    document.body.innerHTML = `
+      <div class="fixed-action-btn direction-left click-to-toggle">
+        <button type="button" class="btn-floating extra">+</button>
+        <ul><li><button type="button" class="btn-floating">e</button></li></ul>
+      </div>`;
+    const el = document.querySelector('.fixed-action-btn');
+    const instance = Expressive.FloatingActionButton.init(el);
+
+    assert.equal(instance.options.direction, 'left');
+    assert.equal(instance.options.hoverEnabled, false);
+    instance.destroy();
+  });
+});
+
 describe('Tabs', () => {
   beforeEach(resetBody);
 

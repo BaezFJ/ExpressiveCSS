@@ -29,7 +29,7 @@ function fixRect(el, width, height) {
 describe('FloatingActionButton toolbar mode', () => {
   beforeEach(resetBody);
 
-  test('opens without throwing and puts a backdrop in the DOM', () => {
+  test('opens without throwing and does not inject a backdrop', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
         <a class="btn-floating btn-large"><i class="material-symbols">add</i></a>
@@ -38,15 +38,14 @@ describe('FloatingActionButton toolbar mode', () => {
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
 
-    // Used to throw: `backdrop[0].clientWidth` on a bare element.
     instance.open();
 
-    assert.ok(el.querySelector('.fab-backdrop'), 'no backdrop was created');
     assert.ok(el.classList.contains('active'));
+    assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'toolbar mode should not inject a backdrop');
     instance.destroy();
   });
 
-  test('closing takes the backdrop back out instead of stacking a new one', async () => {
+  test('closing clears .active and does not leave a backdrop', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
         <a class="btn-floating btn-large"><i class="material-symbols">add</i></a>
@@ -58,14 +57,14 @@ describe('FloatingActionButton toolbar mode', () => {
     try {
       instance.open();
       instance.close();
-      await sleep(300);
-      assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'the backdrop was left behind');
+      assert.equal(el.classList.contains('active'), false);
+      assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'a backdrop was injected');
+      assert.equal(el.style.width, '', 'toolbar mode wrote leftover inline styles');
 
       instance.open();
       instance.close();
-      await sleep(300);
+      assert.equal(el.classList.contains('active'), false);
       assert.equal(el.querySelectorAll('.fab-backdrop').length, 0, 'backdrops accumulated');
-      assert.equal(el.style.width, '', 'the toolbar styles were never cleared');
     } finally {
       instance.destroy();
     }

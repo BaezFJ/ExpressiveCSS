@@ -140,19 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  const fabHorizontal = document.getElementById('fab-horizontal');
-  if (fabHorizontal) {
-    Expressive.FloatingActionButton.init(fabHorizontal, { direction: 'left' });
-  }
-
-  const fabClickOnly = document.getElementById('fab-click-only');
-  if (fabClickOnly) {
-    Expressive.FloatingActionButton.init(fabClickOnly, {
-      direction: 'left',
-      hoverEnabled: false,
-    });
-  }
-
   const dropdownLeft = document.getElementById('dropdown-left-trigger');
   if (dropdownLeft) {
     Expressive.Dropdown.init(dropdownLeft, {

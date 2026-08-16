@@ -232,12 +232,12 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
 
   &.halfway-fab {
     position: absolute;
-    right: 24px;
+    inset-inline-end: 24px;
     bottom: -28px;
 
     &.left {
-      right: auto;
-      left: 24px;
+      inset-inline-end: auto;
+      inset-inline-start: 24px;
     }
   }
 }
@@ -262,70 +262,135 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
   @include btn-disabled;
 }
 
-// Fixed Action Button — JS-driven menu around a FAB.
+// Speed dial. .active (and :hover when the pointer can hover) opens the
+// menu. Motion is CSS. .click-to-toggle is the markup switch for click
+// mode. .fixed-action-btn stays the public class.
+//
+// Tokens:
+//   --md-comp-fab-offset            16px from the corner
+//   --md-comp-fab-z                 997
+//   --md-comp-fab-menu-gap          16px
+//   --md-comp-fab-duration          200ms
+//   --md-comp-fab-stagger           40ms
+//   --md-comp-fab-easing            soft ease-in-out
+//   --md-comp-fab-hidden-transform  toward the main button
 .fixed-action-btn {
-  position: fixed;
-  right: 23px;
-  bottom: 23px;
-  padding-top: 15px;
-  margin-bottom: 0;
-  z-index: 997;
+  --md-comp-fab-offset: 16px;
+  --md-comp-fab-z: 997;
+  --md-comp-fab-menu-gap: 16px;
+  --md-comp-fab-duration: 200ms;
+  --md-comp-fab-stagger: 40ms;
+  --md-comp-fab-easing: cubic-bezier(0.65, 0, 0.35, 1);
+  --md-comp-fab-hidden-transform: scale(0.4) translateY(40px);
 
-  &.active {
-    ul {
-      visibility: visible;
-      padding-left: 0;
-      list-style-type: none;
+  position: fixed;
+  inset-inline-end: var(--md-comp-fab-offset);
+  bottom: var(--md-comp-fab-offset);
+  z-index: var(--md-comp-fab-z);
+  padding-top: var(--md-comp-fab-menu-gap);
+  margin: 0;
+
+  :is(ul, menu) {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--md-comp-fab-menu-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    visibility: hidden;
+
+    li:nth-last-child(1) { --i: 0; }
+    li:nth-last-child(2) { --i: 1; }
+    li:nth-last-child(3) { --i: 2; }
+    li:nth-last-child(4) { --i: 3; }
+    li:nth-last-child(5) { --i: 4; }
+    li:nth-last-child(6) { --i: 5; }
+    li:nth-last-child(7) { --i: 6; }
+    li:nth-last-child(8) { --i: 7; }
+
+    :is(a, button) {
+      opacity: 0;
+      transform: var(--md-comp-fab-hidden-transform);
+      transition:
+        opacity var(--md-comp-fab-duration) var(--md-comp-fab-easing),
+        transform var(--md-comp-fab-duration) var(--md-comp-fab-easing);
+      transition-delay: calc(var(--md-comp-fab-stagger) * var(--i, 0));
+    }
+  }
+
+  &.active :is(ul, menu) {
+    visibility: visible;
+
+    :is(a, button) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  // Closest-to-FAB is the first child when the menu is left, right, or
+  // down (row-reverse / row / column). Top uses nth-last-child above.
+  &.direction-left,
+  &.direction-right,
+  &.direction-bottom {
+    :is(ul, menu) {
+      li:nth-child(1) { --i: 0; }
+      li:nth-child(2) { --i: 1; }
+      li:nth-child(3) { --i: 2; }
+      li:nth-child(4) { --i: 3; }
+      li:nth-child(5) { --i: 4; }
+      li:nth-child(6) { --i: 5; }
+      li:nth-child(7) { --i: 6; }
+      li:nth-child(8) { --i: 7; }
     }
   }
 
   &.direction-left,
   &.direction-right {
-    padding: 0 0 0 15px;
+    padding: 0;
 
-    ul {
-      text-align: right;
-      right: 64px;
+    :is(ul, menu) {
+      inset: auto;
       top: 50%;
-      transform: translateY(-50%);
-      height: 100%;
-      left: auto;
-      width: 500px;
+      translate: 0 -50%;
+      flex-direction: row;
+      width: max-content;
+      height: auto;
+    }
+  }
 
-      li {
-        display: inline-block;
-        margin: 7.5px 15px 0 0;
-      }
+  // Start offset is toward the main button so items grow out of it.
+  &.direction-left {
+    --md-comp-fab-hidden-transform: scale(0.4) translateX(40px);
+    padding-inline-start: var(--md-comp-fab-menu-gap);
+
+    :is(ul, menu) {
+      inset-inline-end: 64px;
+      flex-direction: row-reverse;
     }
   }
 
   &.direction-right {
-    padding: 0 15px 0 0;
+    --md-comp-fab-hidden-transform: scale(0.4) translateX(-40px);
+    padding-inline-end: var(--md-comp-fab-menu-gap);
 
-    ul {
-      text-align: left;
-      direction: rtl;
-      left: 64px;
-      right: auto;
-
-      li {
-        margin: 7.5px 0 0 15px;
-      }
+    :is(ul, menu) {
+      inset-inline-start: 64px;
     }
   }
 
   &.direction-bottom {
-    padding: 0 0 15px 0;
+    --md-comp-fab-hidden-transform: scale(0.4) translateY(-40px);
+    padding: 0 0 var(--md-comp-fab-menu-gap);
 
-    ul {
+    :is(ul, menu) {
+      inset: auto;
       top: 64px;
       bottom: auto;
-      display: flex;
-      flex-direction: column-reverse;
-
-      li {
-        margin: 15px 0 0 0;
-      }
+      inset-inline: 0;
     }
   }
 
@@ -333,75 +398,76 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
     padding: 0;
     height: 56px;
 
+    :is(ul, menu) :is(a, button) {
+      opacity: 1;
+      transform: none;
+      transition: opacity var(--md-comp-fab-duration);
+    }
+
     &.active {
-      & > a i,
-      & > button i {
+      inset-inline: 0;
+      bottom: 0;
+      width: 100%;
+      height: 56px;
+
+      > :is(a, button) > i {
         opacity: 0;
       }
-    }
 
-    ul {
-      display: flex;
-      top: 0;
-      bottom: 0;
-      z-index: 1;
-
-      li {
-        flex: 1;
-        display: inline-block;
-        margin: 0;
+      :is(ul, menu) {
+        visibility: visible;
+        position: static;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
         height: 100%;
-        transition: none;
-
-        a,
-        button {
-          display: block;
-          overflow: hidden;
-          position: relative;
-          width: 100%;
-          height: 100%;
-          background-color: transparent;
-          box-shadow: none;
-          color: var(--md-sys-color-on-primary-container);
-          line-height: 56px;
-          z-index: 1;
-
-          i {
-            line-height: inherit;
-          }
-        }
+        gap: 0;
       }
     }
-  }
 
-  ul {
-    left: 0;
-    right: 0;
-    text-align: center;
-    position: absolute;
-    bottom: 64px;
-    margin: 0;
-    visibility: hidden;
+    :is(ul, menu) li {
+      flex: 1;
+      margin: 0;
+      height: 100%;
 
-    li {
-      margin-bottom: 15px;
-    }
-
-    a.btn-floating,
-    button.btn-floating {
-      opacity: 0;
+      :is(a, button) {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        box-shadow: none;
+        color: var(--md-sys-color-on-primary-container);
+      }
     }
   }
 
   .fab-backdrop {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0 auto auto 0;
     z-index: -1;
     width: 56px;
     height: 56px;
-    background-color: var(--md-sys-color-primary-container);
     border-radius: 16px;
+    background-color: var(--md-sys-color-primary-container);
     transform: scale(0);
+  }
+}
+
+@media (hover: hover) {
+  .fixed-action-btn:not(.click-to-toggle):hover :is(ul, menu) {
+    visibility: visible;
+
+    :is(a, button) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fixed-action-btn {
+    --md-comp-fab-duration: 0s;
+    --md-comp-fab-stagger: 0s;
   }
 }
