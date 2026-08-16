@@ -4,6 +4,14 @@
   position: relative;
   height: 400px;
   width: 100%;
+  // Same 12px as .responsive-img / .lightboxed. Applied to the slide
+  // stack, not the slider: init() adds 40px under the slides for the
+  // indicators, so a radius on the outer box never meets the photo.
+  // Fullscreen stays square so it can meet the viewport edges.
+  &:not(.fullscreen) .slides,
+  &:not(.fullscreen) .slides li {
+    border-radius: 12px;
+  }
 
   // Fullscreen slider
   &.fullscreen {
