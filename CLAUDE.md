@@ -29,7 +29,7 @@ npm run build:css      # sass -> dist/css/expressive.css (+ .min.css, source map
 npm run build:js       # esbuild -> dist/js/expressive.{mjs,cjs,js,min.js}
 npm run build:types    # tsc --emitDeclarationOnly -> dist/types/
 npm run typecheck      # tsc --noEmit, no output
-npm test               # rebuild the ESM bundle, then run the jsdom suite
+npm test               # rebuild every JS bundle, then run the jsdom suite
 npm run test:run       # run tests against the existing dist/ bundle
 npm run watch          # sass --watch + esbuild --watch in parallel
 npm run clean          # remove dist/
@@ -48,7 +48,7 @@ uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
 
 Notes:
 
-- Tests are `node:test` + jsdom in `tests/`, run against the **built** `dist/js/expressive.mjs` — so a stale bundle tests stale code; `npm test` rebuilds first. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
+- Tests are `node:test` + jsdom in `tests/`, run against the **built** bundles — so a stale bundle tests stale code; `npm test` rebuilds first. Two artifacts are needed, not one: `tests/setup.js` imports `dist/js/expressive.mjs`, and `bundle.test.js` reads the IIFE `dist/js/expressive.js`. That is why `test` runs `build:js` (all four formats) rather than `build:js:esm` — building only the ESM bundle passes locally off a warm `dist/` and fails on a clean checkout. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
 - **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and Toast/Slider/Carousel own intervals, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. Tear down in a `finally`.
 - jsdom does no layout — `getBoundingClientRect()` and every `offset*`/`client*` read returns 0. Geometry-dependent tests stub the rect on the element (`regressions.test.js`), and counting stubbed rect calls is how the scroll-path tests assert layout work. jsdom also lazily attaches its own `handleFocusEvent`/`handleKeyboardEvent`/`handleMouseEvent` to `window` once a form control is involved; listener-leak tests filter those by name.
 - To confirm a new test actually catches the bug it names: `git stash push -- src/ts`, `npm run build:js`, run the one file, `git stash pop` — **as separate Bash calls**, so a hung run can't strand the stash.
