@@ -28,9 +28,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    # Recommended once this is real: create an environment named "npm-publish"
-    # in repo Settings -> Environments, scope NPM_TOKEN to it, and add yourself
-    # as a required reviewer so every publish needs a human click.
+    # Optional gate: create an environment named "npm-publish" in repo Settings
+    # -> Environments with yourself as a required reviewer, so every publish
+    # needs a human click. If you enable it, add the same environment name to
+    # the trusted publisher config on npmjs.com -- it is part of the identity
+    # npm matches against, and a mismatch rejects the publish.
     # environment: npm-publish
 
     env:
@@ -49,30 +51,31 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          # Writes the .npmrc that makes NODE_AUTH_TOKEN take effect.
+          # Writes an .npmrc pointing at the public registry, which is where
+          # the OIDC exchange happens. Still required without a token.
           registry-url: https://registry.npmjs.org
 
       - run: npm ci
 
-      # `npm publish --dry-run` never contacts the registry, so without this a
-      # dry run would pass with a missing, expired, or wrong-scope token and
-      # only fail on the real publish. `npm whoami` is the cheapest call that
-      # actually authenticates.
-      - name: Verify the npm token authenticates
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Trusted publishing needs npm >= 11.5.1. Node 24 ships an npm 11, but
+      # not necessarily a new enough one, and a too-old CLI fails by falling
+      # back to token auth (i.e. an EOTP or ENEEDAUTH) rather than saying so.
+      - name: Ensure npm supports trusted publishing
         run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::error::NPM_TOKEN secret is not set on this repository"
+          npm install -g npm@latest
+          echo "npm $(npm --version) / node $(node --version)"
+
+      # There is no token to test against, so the pre-flight check is that the
+      # OIDC machinery is actually available: these two variables only exist
+      # when `permissions: id-token: write` is in effect. Without them npm
+      # silently falls back to token auth and fails at the publish step.
+      - name: Verify OIDC is available
+        run: |
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ] || [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "::error::No OIDC token available -- check 'permissions: id-token: write'"
             exit 1
           fi
-          who="$(npm whoami)" || {
-            echo "::error::NPM_TOKEN did not authenticate (expired, revoked, or malformed)"
-            exit 1
-          }
-          echo "authenticated to npm as: $who"
-          # Granular tokens are scoped; confirm this one actually covers the
-          # scope we publish under before spending a build on it.
+          echo "OIDC token endpoint present"
           scope="$(node -p "require('./package.json').name.split('/')[0]")"
           echo "publishing under scope: $scope"
 
@@ -103,25 +106,21 @@ jobs:
 
       - run: npm run typecheck
 
-      # `npm test` rebuilds the ESM bundle first, then runs the jsdom suite.
+      # `npm test` rebuilds every JS bundle first, then runs the jsdom suite.
       - run: npm test
 
-      # --provenance works here because the repo is public and package.json's
-      # "repository" URL matches it (case-sensitive) — both are requirements.
+      # Trusted publishing: npm mints a short-lived OIDC credential for this
+      # exact repo + workflow, so there is no NODE_AUTH_TOKEN. The trusted
+      # publisher is configured on the package at npmjs.com and every field is
+      # case-sensitive, including the workflow filename "release.yml".
       #
-      # Once 0.1.0 is on npm, configure a trusted publisher for the package at
-      # npmjs.com (Settings -> Trusted Publishers: this repo, workflow
-      # "release.yml") and this step becomes:
-      #
-      #     run: npm publish --access public --tag "$DIST_TAG"
-      #
-      # with the `env:` block deleted and the NPM_TOKEN secret revoked.
-      # Provenance is automatic under trusted publishing — no flag needed.
+      # No --provenance flag: provenance is generated automatically here.
+      # Token auth previously failed with EOTP because the account requires 2FA
+      # for writes; an OIDC credential is not a user credential, so it is not
+      # subject to that.
       - name: Publish
         if: env.DRY_RUN != 'true'
-        run: npm publish --access public --tag "$DIST_TAG" --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --tag "$DIST_TAG"
 
       - name: Dry run (pack only)
         if: env.DRY_RUN == 'true'
