@@ -130,9 +130,13 @@ dialog > :is(form, nav):last-child,
 }
 
 // Full-screen (M3). Takes the viewport; no corners.
+// UA `dialog:modal` sets max-width: calc(100% - 2em - 6px). Without
+// clearing it, width: 100% is capped and a strip of scrim shows on the
+// right. Bottom sheet already overrides this.
 dialog.max,
 .modal.max {
   width: 100%;
+  max-width: none;
   height: 100%;
   min-width: 0;
   max-height: none;
