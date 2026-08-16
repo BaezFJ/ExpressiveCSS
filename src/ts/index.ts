@@ -23,7 +23,7 @@ export { Waves } from './behaviors/waves';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
-export const version = '0.1.0';
+export const version = '0.2.0';
 
 // Side effects: importing the bundle wires up the document-level behaviors and
 // the delegated listeners the components below rely on. Order is preserved from

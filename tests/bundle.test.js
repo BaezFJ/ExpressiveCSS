@@ -13,6 +13,13 @@ import { JSDOM } from 'jsdom';
 
 const iife = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
+// index.ts hand-maintains its `version` export to track package.json. Asserting
+// against the manifest rather than a literal catches the two drifting apart,
+// which a hardcoded string cannot -- it only catches "someone forgot to edit me".
+const { version: pkgVersion } = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8')
+);
+
 describe('IIFE bundle', () => {
   const dom = new JSDOM('<!doctype html><html><body></body></html>', {
     url: 'http://localhost/',
@@ -33,7 +40,7 @@ describe('IIFE bundle', () => {
     }
   });
 
-  test('reports ExpressiveCSS own version', () => {
-    assert.equal(dom.window.Expressive.version, '0.1.0');
+  test('reports ExpressiveCSS own version, matching package.json', () => {
+    assert.equal(dom.window.Expressive.version, pkgVersion);
   });
 });
