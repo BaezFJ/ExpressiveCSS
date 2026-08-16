@@ -2,7 +2,7 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.2.0`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.3.0`, which is under active development.
 
 - Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
@@ -277,7 +277,7 @@ Learn how to start using Expressive and integrate it into your project.
 
 ### Download
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.2.0` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.3.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
