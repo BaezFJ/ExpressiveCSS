@@ -273,7 +273,8 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
 //   --md-comp-fab-duration          200ms
 //   --md-comp-fab-stagger           40ms
 //   --md-comp-fab-easing            soft ease-in-out
-//   --md-comp-fab-hidden-transform  toward the main button
+//   --md-comp-fab-travel            center-to-center step into the main disc
+//   --md-comp-fab-hidden-transform  toward / into the main button
 .fixed-action-btn {
   --md-comp-fab-offset: 16px;
   --md-comp-fab-z: 997;
@@ -281,7 +282,9 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
   --md-comp-fab-duration: 200ms;
   --md-comp-fab-stagger: 40ms;
   --md-comp-fab-easing: cubic-bezier(0.65, 0, 0.35, 1);
-  --md-comp-fab-hidden-transform: scale(0.4) translateY(40px);
+  --md-comp-fab-travel: 64px;
+  --md-comp-fab-hidden-transform: scale(0)
+    translateY(calc(var(--md-comp-fab-travel) * (var(--i, 0) + 1)));
 
   position: fixed;
   inset-inline-end: var(--md-comp-fab-offset);
@@ -289,8 +292,16 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
   z-index: var(--md-comp-fab-z);
   padding-top: var(--md-comp-fab-menu-gap);
   margin: 0;
+  overflow: visible;
+
+  // Main disc stays above retracting actions so they slide under it.
+  > :is(a, button) {
+    position: relative;
+    z-index: 1;
+  }
 
   :is(ul, menu) {
+    --n: 1;
     position: absolute;
     inset-inline: 0;
     bottom: 64px;
@@ -302,6 +313,17 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
     padding: 0;
     list-style: none;
     visibility: hidden;
+    overflow: visible;
+    transition: visibility 0s
+      calc(var(--md-comp-fab-duration) + var(--md-comp-fab-stagger) * (var(--n) - 1));
+
+    &:has(> :nth-child(2)) { --n: 2; }
+    &:has(> :nth-child(3)) { --n: 3; }
+    &:has(> :nth-child(4)) { --n: 4; }
+    &:has(> :nth-child(5)) { --n: 5; }
+    &:has(> :nth-child(6)) { --n: 6; }
+    &:has(> :nth-child(7)) { --n: 7; }
+    &:has(> :nth-child(8)) { --n: 8; }
 
     li:nth-last-child(1) { --i: 0; }
     li:nth-last-child(2) { --i: 1; }
@@ -318,16 +340,21 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
       transition:
         opacity var(--md-comp-fab-duration) var(--md-comp-fab-easing),
         transform var(--md-comp-fab-duration) var(--md-comp-fab-easing);
-      transition-delay: calc(var(--md-comp-fab-stagger) * var(--i, 0));
+      // Close: farthest first, so they funnel into the disc.
+      transition-delay: calc(
+        var(--md-comp-fab-stagger) * (var(--n) - 1 - var(--i, 0))
+      );
     }
   }
 
   &.active :is(ul, menu) {
     visibility: visible;
+    transition-delay: 0s;
 
     :is(a, button) {
       opacity: 1;
       transform: none;
+      transition-delay: calc(var(--md-comp-fab-stagger) * var(--i, 0));
     }
   }
 
@@ -362,9 +389,11 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
     }
   }
 
-  // Start offset is toward the main button so items grow out of it.
+  // Hidden offset is toward the main button, one step per index, so
+  // close sends every action into the disc.
   &.direction-left {
-    --md-comp-fab-hidden-transform: scale(0.4) translateX(40px);
+    --md-comp-fab-hidden-transform: scale(0)
+      translateX(calc(var(--md-comp-fab-travel) * (var(--i, 0) + 1)));
     padding-inline-start: var(--md-comp-fab-menu-gap);
 
     :is(ul, menu) {
@@ -374,7 +403,8 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
   }
 
   &.direction-right {
-    --md-comp-fab-hidden-transform: scale(0.4) translateX(-40px);
+    --md-comp-fab-hidden-transform: scale(0)
+      translateX(calc(-1 * var(--md-comp-fab-travel) * (var(--i, 0) + 1)));
     padding-inline-end: var(--md-comp-fab-menu-gap);
 
     :is(ul, menu) {
@@ -383,7 +413,8 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
   }
 
   &.direction-bottom {
-    --md-comp-fab-hidden-transform: scale(0.4) translateY(-40px);
+    --md-comp-fab-hidden-transform: scale(0)
+      translateY(calc(-1 * var(--md-comp-fab-travel) * (var(--i, 0) + 1)));
     padding: 0 0 var(--md-comp-fab-menu-gap);
 
     :is(ul, menu) {
@@ -457,10 +488,12 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
 @media (hover: hover) {
   .fixed-action-btn:not(.click-to-toggle):hover :is(ul, menu) {
     visibility: visible;
+    transition-delay: 0s;
 
     :is(a, button) {
       opacity: 1;
       transform: none;
+      transition-delay: calc(var(--md-comp-fab-stagger) * var(--i, 0));
     }
   }
 }
