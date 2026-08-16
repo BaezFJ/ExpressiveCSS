@@ -1,0 +1,119 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dist-tag:
+        description: npm dist-tag to publish under
+        required: true
+        default: next
+        type: choice
+        options: [next, latest]
+      dry-run:
+        description: Pack and validate, but do not publish
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  # Mints the OIDC token that signs the provenance attestation. Also the
+  # permission trusted publishing needs, once this package exists on npm and a
+  # trusted publisher is configured for it (see the Publish step).
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    # Recommended once this is real: create an environment named "npm-publish"
+    # in repo Settings -> Environments, scope NPM_TOKEN to it, and add yourself
+    # as a required reviewer so every publish needs a human click.
+    # environment: npm-publish
+
+    env:
+      # release: prereleases go to "next", full releases to "latest".
+      # workflow_dispatch: whatever was chosen in the run dialog.
+      DIST_TAG: >-
+        ${{ github.event_name == 'workflow_dispatch'
+            && inputs.dist-tag
+            || (github.event.release.prerelease && 'next' || 'latest') }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          # Writes the .npmrc that makes NODE_AUTH_TOKEN take effect.
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      # A release tag that disagrees with package.json publishes a version whose
+      # git tag points at different code. Fail loudly instead.
+      - name: Verify package version matches the release tag
+        if: github.event_name == 'release'
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          pkg="$(node -p "require('./package.json').version")"
+          tag="${TAG_NAME#v}"
+          if [ "$pkg" != "$tag" ]; then
+            echo "::error::package.json version ($pkg) does not match release tag ($tag)"
+            exit 1
+          fi
+          echo "version $pkg matches tag $TAG_NAME"
+
+      - name: Refuse to overwrite an existing version
+        run: |
+          name="$(node -p "require('./package.json').name")"
+          version="$(node -p "require('./package.json').version")"
+          if npm view "$name@$version" version >/dev/null 2>&1; then
+            echo "::error::$name@$version is already published"
+            exit 1
+          fi
+          echo "$name@$version is not yet on the registry"
+
+      - run: npm run typecheck
+
+      # `npm test` rebuilds the ESM bundle first, then runs the jsdom suite.
+      - run: npm test
+
+      # --provenance works here because the repo is public and package.json's
+      # "repository" URL matches it (case-sensitive) — both are requirements.
+      #
+      # Once 0.1.0 is on npm, configure a trusted publisher for the package at
+      # npmjs.com (Settings -> Trusted Publishers: this repo, workflow
+      # "release.yml") and this step becomes:
+      #
+      #     run: npm publish --access public --tag "$DIST_TAG"
+      #
+      # with the `env:` block deleted and the NPM_TOKEN secret revoked.
+      # Provenance is automatic under trusted publishing — no flag needed.
+      - name: Publish
+        if: env.DRY_RUN != 'true'
+        run: npm publish --access public --tag "$DIST_TAG" --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Dry run (pack only)
+        if: env.DRY_RUN == 'true'
+        run: npm publish --access public --tag "$DIST_TAG" --dry-run
+
+      - name: Summary
+        if: always()
+        run: |
+          name="$(node -p "require('./package.json').name")"
+          version="$(node -p "require('./package.json').version")"
+          if [ "$DRY_RUN" = "true" ]; then verb="Dry run"; else verb="Published"; fi
+          {
+            echo "### $verb \`$name@$version\`"
+            echo
+            echo "- dist-tag: \`$DIST_TAG\`"
+            echo "- trigger: \`$GITHUB_EVENT_NAME\`"
+          } >> "$GITHUB_STEP_SUMMARY"

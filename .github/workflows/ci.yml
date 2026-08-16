@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # package.json "engines" declares >=20; test the range we claim.
+        node: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      # Full build: the test suite runs against the built dist/js/librepos.mjs,
+      # so a stale or missing bundle would test stale code.
+      - run: npm run build
+
+      - run: npm run test:run
+
+      # Catches the failure mode where dist/ is gitignored and nothing rebuilds
+      # it: proves `prepack` regenerates every exports target from clean.
+      - name: Verify the published tarball
+        if: matrix.node == 24
+        run: |
+          rm -rf dist
+          npm pack --pack-destination "$RUNNER_TEMP"
+          tar tzf "$RUNNER_TEMP"/*.tgz > "$RUNNER_TEMP/files.txt"
+          missing=0
+          for f in \
+            dist/types/index.d.ts \
+            dist/js/librepos.mjs \
+            dist/js/librepos.cjs \
+            dist/js/librepos.min.js \
+            dist/css/librepos.css \
+            dist/css/librepos.min.css \
+            src/sass/librepos.scss \
+            LICENSE \
+            README.md
+          do
+            if grep -qx "package/$f" "$RUNNER_TEMP/files.txt"; then
+              echo "  OK       $f"
+            else
+              echo "::error::missing from tarball: $f"
+              missing=1
+            fi
+          done
+          exit $missing
