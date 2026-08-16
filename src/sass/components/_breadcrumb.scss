@@ -13,7 +13,7 @@
 // Nest descendants inside this block. `#{$_crumb} > ol` would only attach
 // `> ol` to the last item in the list (same bug as the icon size classes).
 
-nav:has(> ol),
+nav:has(> ol):not(.pagination),
 nav:has(> .breadcrumb),
 .breadcrumb-wrapper {
   --md-comp-breadcrumb-label-color: var(--md-sys-color-on-surface-variant);
@@ -99,7 +99,7 @@ nav:has(> .breadcrumb),
 // Inside a top app bar the trail follows the bar, not the muted ancestor
 // pair. Loose .breadcrumb links in the bar are already excluded from
 // destination styling in _navbar.scss.
-header:has(> nav) > nav:has(> ol),
+header:has(> nav) > nav:has(> ol):not(.pagination),
 header:has(> nav) > nav:has(> .breadcrumb) {
   --md-comp-breadcrumb-label-color: inherit;
   --md-comp-breadcrumb-current-color: inherit;

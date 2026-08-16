@@ -1,46 +1,152 @@
 @use "../abstracts" as *;
 
+// Pagination. Anatomy is the HTML: a nav.pagination whose child is an
+// <ol> (or <ul>) of page links. The current page is aria-current="page".
+// A bare <ul class="pagination"> stays as an alias.
+//
+// .active / .disabled / .prev / .next / .pages still work.
+// .nowrap (or the old li.pages nest) scrolls a long run instead of wrapping.
+//
+// Tokens (defaults match the original compact pager):
+//   --md-comp-pagination-size                 2rem
+//   --md-comp-pagination-shape                2rem (stadium / disc)
+//   --md-comp-pagination-gap                  0
+//   --md-comp-pagination-padding              0.66rem
+//   --md-comp-pagination-icon-size            2rem
+//   --md-comp-pagination-selected-color       primary
+//   --md-comp-pagination-selected-on-color    on-primary
+//
+// Nest descendants inside this block.
+
 .pagination {
+  --md-comp-pagination-size: 2rem;
+  --md-comp-pagination-shape: 2rem;
+  --md-comp-pagination-gap: 0px;
+  --md-comp-pagination-padding: 0.66rem;
+  --md-comp-pagination-icon-size: 2rem;
+  --md-comp-pagination-selected-color: var(--md-sys-color-primary);
+  --md-comp-pagination-selected-on-color: var(--md-sys-color-on-primary);
+
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.2rem;
+  line-height: 1;
+
+  &,
+  > :is(ul, ol) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--md-comp-pagination-gap);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &.nowrap,
+  &.nowrap > :is(ul, ol) {
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
   li {
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+  }
 
-    a {
-      @include btn($height: 2rem, $padding-left: .66rem, $padding-right: .66rem, $font-size: 1.2rem);
+  :is(a, button) {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: var(--md-comp-pagination-size);
+    height: var(--md-comp-pagination-size);
+    padding: 0 var(--md-comp-pagination-padding);
+    border: 0;
+    border-radius: var(--md-comp-pagination-shape);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.2s ease-out;
+    @include focus-visible;
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
     }
 
-    &.active a {
-      @include btn-filled;
+    &:has(> span) {
+      width: auto;
     }
 
-    &.disabled a {
-      @include btn-disabled;
-    }
-
-    i {
-      font-size: 2rem;
+    > i {
+      font-size: var(--md-comp-pagination-icon-size);
+      width: var(--md-comp-pagination-icon-size);
+      height: var(--md-comp-pagination-icon-size);
+      line-height: 1;
     }
   }
 
-  li.pages ul li {
-    display: inline-block;
-    float: none;
-  }
-}
+  :is(a, button)[aria-current="page"],
+  .active > :is(a, button),
+  li:has(> [aria-current="page"]) > :is(a, button) {
+    background-color: var(--md-comp-pagination-selected-color);
+    color: var(--md-comp-pagination-selected-on-color);
 
-@include bp-down("large") {
-  .pagination {
-    width: 100%;
-
-    li.prev,
-    li.next {
-      width: 10%;
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-pagination-selected-on-color) 8%,
+        var(--md-comp-pagination-selected-color)
+      );
     }
+  }
 
-    li.pages {
-      width: 80%;
-      overflow: hidden;
-      white-space: nowrap;
+  :is(a, button)[aria-disabled="true"],
+  .disabled > :is(a, button) {
+    color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    background-color: transparent;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  li > span {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--md-comp-pagination-size);
+    height: var(--md-comp-pagination-size);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  // Old nested-pages markup. Scroll, do not clip to 80%.
+  .pages {
+    min-width: 0;
+
+    > :is(ul, ol) {
+      display: flex;
+      flex-wrap: inherit;
+      align-items: center;
+      gap: var(--md-comp-pagination-gap);
+      list-style: none;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
     }
   }
 }

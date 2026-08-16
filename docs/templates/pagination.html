@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Pagination</h1>
-      <h4 class="light primary-text">Split long content into shorter, easier blocks.</h4>
+      <h4 class="light primary-text">A list of pages. The HTML is the component.</h4>
     </div>
   </div>
 </section>
@@ -19,62 +19,157 @@
 
       <div id="basic" class="section scrollspy">
         <p class="flow-text">
-          Add pagination links to split long content into shorter blocks. The component is CSS-only:
-          a <code>pagination</code> list of links. There is no JavaScript plugin.
+          Pagination is CSS-only. A <code>nav.pagination</code> whose child
+          is an <code>&lt;ol&gt;</code> of links. There is no JavaScript plugin.
         </p>
         <p>
-          Mark the current page with <code>active</code> on the <code>li</code> — that fills the link.
-          Use <code>disabled</code> for unavailable prev/next. <code>waves-effect</code> is optional and
-          adds the ink ripple on the item.
+          Mark the current page with <code>aria-current="page"</code>
+          (or the older <code>active</code> class on the <code>li</code>).
+          Unavailable prev/next use <code>aria-disabled="true"</code>
+          (or <code>disabled</code> on the <code>li</code>).
         </p>
 
+        <nav class="pagination" aria-label="Pagination">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page" aria-disabled="true">
+                <i class="material-symbols">chevron_left</i>
+              </a>
+            </li>
+            <li><a href="#!" aria-current="page">1</a></li>
+            <li><a href="#!">2</a></li>
+            <li><a href="#!">3</a></li>
+            <li><a href="#!">4</a></li>
+            <li><a href="#!">5</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <i class="material-symbols">chevron_right</i>
+              </a>
+            </li>
+          </ol>
+        </nav>
+<pre><code>&lt;nav class="pagination" aria-label="Pagination"&gt;
+  &lt;ol&gt;
+    &lt;li&gt;
+      &lt;a href="/p/1" aria-label="Previous page" aria-disabled="true"&gt;
+        &lt;i class="material-symbols"&gt;chevron_left&lt;/i&gt;
+      &lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href="/p/1" aria-current="page"&gt;1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/p/2"&gt;2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;
+      &lt;a href="/p/3" aria-label="Next page"&gt;
+        &lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;
+      &lt;/a&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+        <p>
+          Items are the original compact 2rem chips. The current page
+          fills with <code>primary</code>. Icon-only prev/next need an
+          <code>aria-label</code>. A <code>&lt;span&gt;</code> next to
+          the icon widens the control:
+        </p>
+        <nav class="pagination" aria-label="Pagination with labels">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page" aria-disabled="true">
+                <i class="material-symbols">chevron_left</i>
+                <span>Prev</span>
+              </a>
+            </li>
+            <li><a href="#!" aria-current="page">1</a></li>
+            <li><a href="#!">2</a></li>
+            <li><a href="#!">3</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <span>Next</span>
+                <i class="material-symbols">chevron_right</i>
+              </a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+
+      <div id="ellipsis" class="section scrollspy">
+        <h3>Ellipsis</h3>
+        <p>
+          A non-link <code>&lt;span&gt;</code> is an inert gap, not a target.
+        </p>
+        <nav class="pagination" aria-label="Pagination with ellipsis">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page">
+                <i class="material-symbols">chevron_left</i>
+              </a>
+            </li>
+            <li><a href="#!">1</a></li>
+            <li><span aria-hidden="true">…</span></li>
+            <li><a href="#!">8</a></li>
+            <li><a href="#!" aria-current="page">9</a></li>
+            <li><a href="#!">10</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <i class="material-symbols">chevron_right</i>
+              </a>
+            </li>
+          </ol>
+        </nav>
+<pre><code>&lt;li&gt;&lt;span aria-hidden="true"&gt;…&lt;/span&gt;&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="nowrap" class="section scrollspy">
+        <h3>Nowrap</h3>
+        <p>
+          Add <code>nowrap</code> so a long run scrolls instead of wrapping.
+          That replaces the old nested <code>li.pages</code> tree.
+        </p>
+        <nav class="pagination nowrap" aria-label="Scrolling pagination">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page">
+                <i class="material-symbols">chevron_left</i>
+              </a>
+            </li>
+            <li><a href="#!">1</a></li>
+            <li><a href="#!">2</a></li>
+            <li><a href="#!">3</a></li>
+            <li><a href="#!">4</a></li>
+            <li><a href="#!" aria-current="page">5</a></li>
+            <li><a href="#!">6</a></li>
+            <li><a href="#!">7</a></li>
+            <li><a href="#!">8</a></li>
+            <li><a href="#!">9</a></li>
+            <li><a href="#!">10</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <i class="material-symbols">chevron_right</i>
+              </a>
+            </li>
+          </ol>
+        </nav>
+<pre><code>&lt;nav class="pagination nowrap" aria-label="Pagination"&gt;…&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="alias" class="section scrollspy">
+        <h3>List alias</h3>
+        <p>
+          A bare <code>&lt;ul class="pagination"&gt;</code> still works.
+          <code>active</code>, <code>disabled</code>, <code>prev</code>,
+          <code>next</code>, and <code>pages</code> stay as aliases.
+        </p>
         <ul class="pagination">
           <li class="disabled"><a href="#!"><i class="material-symbols">chevron_left</i></a></li>
           <li class="active"><a href="#!">1</a></li>
-          <li class="waves-effect"><a href="#!">2</a></li>
-          <li class="waves-effect"><a href="#!">3</a></li>
-          <li class="waves-effect"><a href="#!">4</a></li>
-          <li class="waves-effect"><a href="#!">5</a></li>
-          <li class="waves-effect"><a href="#!"><i class="material-symbols">chevron_right</i></a></li>
+          <li><a href="#!">2</a></li>
+          <li><a href="#!">3</a></li>
+          <li><a href="#!"><i class="material-symbols">chevron_right</i></a></li>
         </ul>
 <pre><code>&lt;ul class="pagination"&gt;
   &lt;li class="disabled"&gt;
     &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;chevron_left&lt;/i&gt;&lt;/a&gt;
   &lt;/li&gt;
   &lt;li class="active"&gt;&lt;a href="#!"&gt;1&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="waves-effect"&gt;&lt;a href="#!"&gt;2&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="waves-effect"&gt;&lt;a href="#!"&gt;3&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="waves-effect"&gt;&lt;a href="#!"&gt;4&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="waves-effect"&gt;&lt;a href="#!"&gt;5&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="waves-effect"&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;&lt;/a&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
-      </div>
-
-      <div id="responsive" class="section scrollspy">
-        <h3>Responsive</h3>
-        <p>
-          On medium and down, wrap the page numbers in <code>li.pages</code> and mark the ends
-          <code>prev</code> and <code>next</code>. The ends take 10% each; the pages take the remaining
-          80% and clip overflow so a long run of numbers does not wrap. On large screens the basic
-          flat list is enough — the nested <code>pages</code> list is a block, so
-          <code>next</code> would drop to the next line.
-        </p>
-<pre><code>&lt;ul class="pagination"&gt;
-  &lt;li class="disabled prev"&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;chevron_left&lt;/i&gt;&lt;/a&gt;
-  &lt;/li&gt;
-  &lt;li class="pages"&gt;
-    &lt;ul&gt;
-      &lt;li class="active"&gt;&lt;a href="#!"&gt;1&lt;/a&gt;&lt;/li&gt;
-      &lt;li class="waves-effect"&gt;&lt;a href="#!"&gt;2&lt;/a&gt;&lt;/li&gt;
-      &lt;li class="waves-effect"&gt;&lt;a href="#!"&gt;3&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li class="waves-effect next"&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;&lt;/a&gt;
-  &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
       </div>
     </div>
@@ -83,7 +178,9 @@
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
           <li><a href="#basic">Basic</a></li>
-          <li><a href="#responsive">Responsive</a></li>
+          <li><a href="#ellipsis">Ellipsis</a></li>
+          <li><a href="#nowrap">Nowrap</a></li>
+          <li><a href="#alias">List alias</a></li>
         </ul>
       </div>
     </div>
