@@ -3,17 +3,12 @@
 {% block title %}Icons - ExpressiveCSS{% endblock %}
 {% block page_title %}Icons{% endblock %}
 
-{% block extra_head %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp">
-{% endblock %}
-
 {% block page %}
 <section class="section primary-container m-2" id="index-banner">
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Icons</h1>
-      <h4 class="light primary-text">Google Material Icons and Material Symbols, sized with a few helper classes.</h4>
+      <h4 class="light primary-text">Material Symbols, outlined by default. Axes and style are CSS variables.</h4>
     </div>
   </div>
 </section>
@@ -24,37 +19,32 @@
 
       <div id="usage" class="section scrollspy">
         <p class="flow-text">
-          Expressive uses Google’s Material Icons and every Material Symbols set — outlined, rounded, and sharp.
-          The class names are Google’s. Expressive does not rename them, because the font stylesheet you load is what
-          defines them.
+          Icons are Material Symbols. The default class is
+          <code>material-symbols</code>; it uses the outlined family.
+          Ligature names come from the
+          <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Material Symbols catalog</a>.
         </p>
         <p>
-          Google publishes a
-          <a href="https://fonts.google.com/icons?icon.set=Material+Icons" target="_blank" rel="noopener">searchable Material Icons list</a>
-          and a
-          <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Material Symbols list</a>.
-          Those catalogs are the source for ligature names. You can also download the fonts from the
-          <a href="https://developers.google.com/fonts/docs/material_icons" target="_blank" rel="noopener">Material Icons guide</a>.
+          The framework does not ship the font files. Outlined, rounded, and
+          sharp are three separate variable fonts — bundling them would
+          dwarf the rest of the CSS. Load the families you actually use,
+          with the axis ranges so fill / weight / grade / optical size work.
+          Outlined alone is enough for the default.
         </p>
+<pre><code>&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
+
+&lt;!-- Only if you switch style to rounded or sharp --&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;</code></pre>
         <p>
-          The Expressive stylesheet does not ship the font files. Include one or more of these lines in
-          <code>&lt;head&gt;</code>:
-        </p>
-<pre><code>&lt;!-- Material Icons --&gt;
-&lt;link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"&gt;
-&lt;!-- Material Symbols — Outlined --&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"&gt;
-&lt;!-- Material Symbols — Rounded --&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet"&gt;
-&lt;!-- Material Symbols — Sharp --&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet"&gt;</code></pre>
-        <p>
-          Put the matching class on an element and use the ligature as the text content.
+          Put <code>material-symbols</code> on an element and use the ligature
+          as the text. <code>.material-icons</code> is kept as an alias so
+          older markup still renders with Symbols.
         </p>
         <div class="row py-5">
           <div class="s3 center-align">
-            <i class="medium material-icons">add</i>
-            <p>Icons</p>
+            <i class="medium material-symbols">add</i>
+            <p>Default</p>
           </div>
           <div class="s3 center-align">
             <i class="medium material-symbols-outlined">add</i>
@@ -69,28 +59,135 @@
             <p>Sharp</p>
           </div>
         </div>
-<pre><code>&lt;i class="material-icons"&gt;add&lt;/i&gt;
-&lt;i class="material-symbols-outlined"&gt;add&lt;/i&gt;
+<pre><code>&lt;i class="material-symbols"&gt;add&lt;/i&gt;
 &lt;i class="material-symbols-rounded"&gt;add&lt;/i&gt;
 &lt;i class="material-symbols-sharp"&gt;add&lt;/i&gt;</code></pre>
         <p>
-          Icons inherit the current text color, so token utilities such as <code>primary-text</code> work.
-          For icons inside buttons, see <a href="{{ url_for('buttons') }}">Buttons</a>.
+          Icons inherit the current text color, so token utilities such as
+          <code>primary-text</code> work. For icons inside buttons, see
+          <a href="{{ url_for('buttons') }}">Buttons</a>.
         </p>
+      </div>
+
+      <div id="style" class="section scrollspy">
+        <h3>Style</h3>
+        <p>
+          Outlined, rounded, and sharp are font families, not variation
+          axes. Set the <code>icon-style</code> attribute — the same idea as
+          <code>theme</code> — or set <code>--md-icon-font</code> directly.
+          Either one inherits, so a subtree can use a different style.
+        </p>
+<pre><code>&lt;html icon-style="rounded"&gt;
+&lt;nav icon-style="sharp"&gt;…&lt;/nav&gt;
+&lt;nav style="--md-icon-font: var(--md-icon-font-sharp)"&gt;…&lt;/nav&gt;</code></pre>
+        <p>
+          Values are <code>outlined</code> (default), <code>rounded</code>,
+          and <code>sharp</code>. A single icon can still opt out with
+          <code>material-symbols-rounded</code> or
+          <code>material-symbols-sharp</code>.
+        </p>
+        <div class="row py-3">
+          <div class="s4 center-align" icon-style="outlined">
+            <i class="medium material-symbols">settings</i>
+            <p><code>outlined</code></p>
+          </div>
+          <div class="s4 center-align" icon-style="rounded">
+            <i class="medium material-symbols">settings</i>
+            <p><code>rounded</code></p>
+          </div>
+          <div class="s4 center-align" icon-style="sharp">
+            <i class="medium material-symbols">settings</i>
+            <p><code>sharp</code></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="axes" class="section scrollspy">
+        <h3>Fill, weight, grade, optical size</h3>
+        <p>
+          These four are variable-font axes. They inherit, so set them on
+          <code>:root</code> or on a wrapper. A missing range in the Google
+          Fonts URL (a link without <code>opsz,wght,FILL,GRAD@…</code>)
+          serves a static instance and the axes will not move.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Default</th>
+              <th>Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--md-icon-fill</code></td>
+              <td>0</td>
+              <td>0 or 1</td>
+            </tr>
+            <tr>
+              <td><code>--md-icon-weight</code></td>
+              <td>400</td>
+              <td>100–700</td>
+            </tr>
+            <tr>
+              <td><code>--md-icon-grade</code></td>
+              <td>0</td>
+              <td>−50–200</td>
+            </tr>
+            <tr>
+              <td><code>--md-icon-optical-size</code></td>
+              <td>24</td>
+              <td>20–48 (unitless)</td>
+            </tr>
+          </tbody>
+        </table>
+<pre><code>:root {
+  --md-icon-fill: 0;
+  --md-icon-weight: 400;
+  --md-icon-grade: 0;
+  --md-icon-optical-size: 24;
+}
+
+&lt;i class="material-symbols" style="--md-icon-fill: 1; --md-icon-weight: 600"&gt;favorite&lt;/i&gt;</code></pre>
+        <p>
+          <code>icon-filled</code> is a shortcut for
+          <code>--md-icon-fill: 1</code>.
+        </p>
+        <div class="row py-3">
+          <div class="s3 center-align">
+            <i class="medium material-symbols">favorite</i>
+            <p>Empty</p>
+          </div>
+          <div class="s3 center-align">
+            <i class="medium material-symbols icon-filled">favorite</i>
+            <p>Filled</p>
+          </div>
+          <div class="s3 center-align">
+            <i class="medium material-symbols" style="--md-icon-weight: 200">settings</i>
+            <p>Weight 200</p>
+          </div>
+          <div class="s3 center-align">
+            <i class="medium material-symbols" style="--md-icon-weight: 700">settings</i>
+            <p>Weight 700</p>
+          </div>
+        </div>
       </div>
 
       <div id="sizes" class="section scrollspy">
-        <h3>Icon Sizes</h3>
+        <h3>Sizes</h3>
         <p>
-          Size an icon with <code>font-size</code>, or use the preset classes on the
-          <code>&lt;i&gt;</code>: <code>tiny</code> (1rem), <code>small</code> (2rem),
-          <code>medium</code> (4rem), and <code>large</code> (6rem).
+          Size an icon with <code>font-size</code>, or use the preset classes
+          on the <code>&lt;i&gt;</code>: <code>tiny</code> (1rem),
+          <code>small</code> (2rem), <code>medium</code> (4rem), and
+          <code>large</code> (6rem). Those classes also nudge
+          <code>--md-icon-optical-size</code> so the glyph is cut for that
+          size.
         </p>
         <div class="row pt-5">
-          <div class="s3 center-align"><i class="tiny material-icons">insert_chart</i></div>
-          <div class="s3 center-align"><i class="small material-icons">insert_chart</i></div>
-          <div class="s3 center-align"><i class="medium material-icons">insert_chart</i></div>
-          <div class="s3 center-align"><i class="large material-icons">insert_chart</i></div>
+          <div class="s3 center-align"><i class="tiny material-symbols">insert_chart</i></div>
+          <div class="s3 center-align"><i class="small material-symbols">insert_chart</i></div>
+          <div class="s3 center-align"><i class="medium material-symbols">insert_chart</i></div>
+          <div class="s3 center-align"><i class="large material-symbols">insert_chart</i></div>
         </div>
         <div class="row pb-5">
           <div class="s3 center-align">Tiny</div>
@@ -98,28 +195,7 @@
           <div class="s3 center-align">Medium</div>
           <div class="s3 center-align">Large</div>
         </div>
-      </div>
-
-      <div id="symbol-sizes" class="section scrollspy">
-        <h3>Symbol Sizes</h3>
-        <p>The same size classes apply to Material Symbols.</p>
-        <div class="row pt-5">
-          <div class="s3 center-align"><i class="tiny material-symbols-outlined">settings</i></div>
-          <div class="s3 center-align"><i class="small material-symbols-outlined">settings</i></div>
-          <div class="s3 center-align"><i class="medium material-symbols-outlined">settings</i></div>
-          <div class="s3 center-align"><i class="large material-symbols-outlined">settings</i></div>
-        </div>
-        <div class="row pb-5">
-          <div class="s3 center-align">Tiny</div>
-          <div class="s3 center-align">Small</div>
-          <div class="s3 center-align">Medium</div>
-          <div class="s3 center-align">Large</div>
-        </div>
-<pre><code>&lt;!-- Sizes: tiny 1rem, small 2rem, medium 4rem, large 6rem --&gt;
-&lt;i class="large material-icons"&gt;insert_chart&lt;/i&gt;
-&lt;i class="large material-symbols-outlined"&gt;insert_chart&lt;/i&gt;
-&lt;i class="large material-symbols-rounded"&gt;insert_chart&lt;/i&gt;
-&lt;i class="large material-symbols-sharp"&gt;insert_chart&lt;/i&gt;</code></pre>
+<pre><code>&lt;i class="large material-symbols"&gt;insert_chart&lt;/i&gt;</code></pre>
       </div>
     </div>
 
@@ -127,10 +203,10 @@
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
           <li><a href="#usage">Usage</a></li>
-          <li><a href="#sizes">Icon Sizes</a></li>
-          <li><a href="#symbol-sizes">Symbol Sizes</a></li>
-          <li><a href="https://fonts.google.com/icons?icon.set=Material+Icons" target="_blank" rel="noopener">Material Icons catalog</a></li>
-          <li><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Material Symbols catalog</a></li>
+          <li><a href="#style">Style</a></li>
+          <li><a href="#axes">Axes</a></li>
+          <li><a href="#sizes">Sizes</a></li>
+          <li><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Catalog</a></li>
         </ul>
       </div>
     </div>

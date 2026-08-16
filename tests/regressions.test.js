@@ -32,8 +32,8 @@ describe('FloatingActionButton toolbar mode', () => {
   test('opens without throwing and puts a backdrop in the DOM', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large"><i class="material-icons">add</i></a>
-        <ul><li><a class="btn-floating"><i class="material-icons">edit</i></a></li></ul>
+        <a class="btn-floating btn-large"><i class="material-symbols">add</i></a>
+        <ul><li><a class="btn-floating"><i class="material-symbols">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
@@ -49,8 +49,8 @@ describe('FloatingActionButton toolbar mode', () => {
   test('closing takes the backdrop back out instead of stacking a new one', async () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large"><i class="material-icons">add</i></a>
-        <ul><li><a class="btn-floating"><i class="material-icons">edit</i></a></li></ul>
+        <a class="btn-floating btn-large"><i class="material-symbols">add</i></a>
+        <ul><li><a class="btn-floating"><i class="material-symbols">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });

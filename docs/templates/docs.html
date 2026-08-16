@@ -6,27 +6,27 @@
     <header class="fixed">
         <nav>
             <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-icons">menu</i>
+                <i class="material-symbols">menu</i>
             </button>
             <h2>{% block page_title %}ExpressiveCSS{% endblock %}</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-icons">palette</i>
+                <i class="material-symbols">palette</i>
             </button>
             <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
-                <i class="material-icons">dark_mode</i>
+                <i class="material-symbols">dark_mode</i>
             </a>
         </nav>
 
         <ul class="sidenav sidenav-fixed" id="nav-mobile">
             <li>
                 <a href="{{ url_for('index') }}">
-                    <i class="material-icons">home</i>
+                    <i class="material-symbols">home</i>
                     Expressive
                 </a>
             </li>
             <li class="{% if request.endpoint == 'index' %}active{% endif %}">
                 <a href="{{ url_for('index') }}">
-                    <i class="material-icons">apps</i>
+                    <i class="material-symbols">apps</i>
                     Getting started
                 </a>
             </li>
@@ -34,7 +34,7 @@
                 <ul class="collapsible collapsible-accordion">
                     <li class="{% if request.endpoint in ['color', 'grid', 'helpers', 'media_css', 'pulse', 'shadow', 'table', 'css_transitions', 'typography', 'themes', 'waves'] %}active{% endif %}">
                         <a class="collapsible-header">
-                            <i class="material-icons">palette</i>
+                            <i class="material-symbols">palette</i>
                             Styles
                         </a>
                         <div class="collapsible-body">
@@ -81,7 +81,7 @@
                 <ul class="collapsible collapsible-accordion">
                     <li class="{% if request.endpoint in ['auto_init', 'badges', 'buttons', 'breadcrumbs', 'cards', 'carousel', 'collapsible', 'collections', 'datepicker', 'dropdown', 'feature_discovery', 'floating_action_button', 'footer', 'icons', 'media', 'modals', 'navbar', 'pagination', 'parallax', 'preloader', 'scrollspy', 'sidenav', 'tabs', 'timepicker', 'toasts', 'toolbars', 'tooltips'] %}active{% endif %}">
                         <a class="collapsible-header">
-                            <i class="material-icons">add_circle</i>
+                            <i class="material-symbols">add_circle</i>
                             Components
                         </a>
                         <div class="collapsible-body">
@@ -176,7 +176,7 @@
                 <ul class="collapsible collapsible-accordion">
                     <li class="{% if request.endpoint in ['autocomplete', 'checkboxes', 'chips', 'fieldsets', 'radio_buttons', 'range', 'select', 'switches', 'text_inputs'] %}active{% endif %}">
                         <a class="collapsible-header">
-                            <i class="material-icons">edit</i>
+                            <i class="material-symbols">edit</i>
                             Forms
                         </a>
                         <div class="collapsible-body">
@@ -297,7 +297,7 @@
     </footer>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-icons">palette</i>
+        <i class="material-symbols">palette</i>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

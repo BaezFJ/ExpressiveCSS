@@ -34,7 +34,12 @@
 .collapsible-header::after {
   content: '\e5cf';
   margin-left: .5rem;
-  font-family: 'Material Symbols Outlined', 'Material Symbols Rounded', 'Material Symbols Sharp', 'Material Icons';
+  font-family: var(--md-icon-font);
+  font-variation-settings:
+    "FILL" var(--md-icon-fill),
+    "wght" var(--md-icon-weight),
+    "GRAD" var(--md-icon-grade),
+    "opsz" var(--md-icon-optical-size);
   font-size: 25px;
   line-height: .9;
   -webkit-font-smoothing: antialiased;

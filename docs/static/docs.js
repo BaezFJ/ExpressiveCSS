@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const applyTheme = (next) => {
     document.documentElement.setAttribute('theme', next);
-    document.querySelectorAll('#theme-toggle .material-icons, #page-theme-toggle .material-icons')
+    document.querySelectorAll('#theme-toggle .material-symbols, #page-theme-toggle .material-symbols')
       .forEach((icon) => {
         icon.textContent = next === 'dark' ? 'light_mode' : 'dark_mode';
       });

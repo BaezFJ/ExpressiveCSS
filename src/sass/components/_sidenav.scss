@@ -97,8 +97,7 @@
     }
 
     /* TODO: Use special class in future like "mw-icon" */
-    & > .material-icons, & > .material-symbols-outlined,
-    & > .material-symbols-rounded, & > .material-symbols-sharp {
+    & > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons) {
       display: inline-flex;
       vertical-align: middle;
       margin-right: 12px;

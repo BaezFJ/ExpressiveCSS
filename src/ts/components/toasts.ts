@@ -266,7 +266,7 @@ export class Toast {
       close.className = 'circle';
       close.setAttribute('aria-label', 'Dismiss');
       const icon = document.createElement('i');
-      icon.className = 'material-icons';
+      icon.className = 'material-symbols';
       icon.setAttribute('aria-hidden', 'true');
       icon.textContent = 'close';
       close.appendChild(icon);

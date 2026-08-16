@@ -49,8 +49,8 @@ export interface ChipsOptions extends BaseOptions {
    */
   limit: number;
   /**
-   * Specifies class to be used in "close" button (useful when working with Material Symbols icon set).
-   * @default 'material-icons'
+   * Specifies class to be used in "close" button.
+   * @default 'material-symbols'
    */
   closeIconClass: string;
   /**
@@ -79,7 +79,7 @@ const _defaults: ChipsOptions = {
   data: [],
   placeholder: '',
   secondaryPlaceholder: '',
-  closeIconClass: 'material-icons',
+  closeIconClass: 'material-symbols',
   autocompleteOptions: {},
   autocompleteOnly: false,
   limit: Infinity,

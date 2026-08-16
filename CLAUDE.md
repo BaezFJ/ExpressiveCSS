@@ -15,7 +15,7 @@ The public surface is rebranded. Instances are stashed on elements as `el['Expre
 | `.materialize-red` (+ shades) | `.expressive-red` |
 | `el['M_<Component>']`, global `M` | `el['Expressive_<Component>']`, global `Expressive` |
 
-**`.material-icons` and `.material-symbols-*` are deliberately untouched** — they are Google's icon-font class names, not Materialize's. Consumers load Google's stylesheet, which defines them; renaming ours would only desynchronize the two. The `--md-sys-*` / `--md-ref-*` tokens are Material Design 3 spec names for the same reason, as is `components/_icons-material-design.scss`.
+Icons are Material Symbols, outlined by default (`--md-icon-font`). Style (outlined / rounded / sharp) is the font family — switch it with the `icon-style` attribute or `--md-icon-font`. Fill, weight, grade, and optical size are variation axes (`--md-icon-fill`, `--md-icon-weight`, `--md-icon-grade`, `--md-icon-optical-size`). The font files are **not** shipped: three variable families would dwarf the sheet, and most pages only need outlined. `.material-icons` is a compat alias that now uses Symbols. The `--md-sys-*` / `--md-ref-*` tokens stay Material Design 3 spec names.
 
 Links to `github.com/materializecss/materialize` issues in code comments are real upstream references and should stay.
 

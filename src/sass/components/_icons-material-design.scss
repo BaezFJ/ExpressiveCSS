@@ -1,8 +1,81 @@
 @use "../abstracts" as *;
 
-/* This is needed for some mobile phones to display the Google Icon font properly */
-.material-icons, .material-symbols-outlined,
-.material-symbols-rounded, .material-symbols-sharp {
-  text-rendering: optimizeLegibility;
-  font-feature-settings: 'liga';
+// Material Symbols. The framework does not ship the font files — outlined,
+// rounded, and sharp are three separate variable fonts, and pulling all
+// three into the main sheet would dwarf the rest of the CSS. Load the
+// families you use (see the Icons docs). Outlined with every axis:
+//
+//   fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200
+//
+// Style (outlined / rounded / sharp) is the font family, not a variation
+// axis. Switch it with the `icon-style` attribute (same idea as `theme`)
+// or by setting --md-icon-font. Fill, weight, grade, and optical size
+// are axes and inherit as custom properties.
+
+:root {
+  --md-icon-font-outlined: "Material Symbols Outlined";
+  --md-icon-font-rounded: "Material Symbols Rounded";
+  --md-icon-font-sharp: "Material Symbols Sharp";
+  --md-icon-font: var(--md-icon-font-outlined);
+  --md-icon-fill: 0;
+  --md-icon-weight: 400;
+  --md-icon-grade: 0;
+  --md-icon-optical-size: 24;
 }
+
+[icon-style="outlined"] { --md-icon-font: var(--md-icon-font-outlined); }
+[icon-style="rounded"] { --md-icon-font: var(--md-icon-font-rounded); }
+[icon-style="sharp"] { --md-icon-font: var(--md-icon-font-sharp); }
+
+$_icon: ".material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons";
+
+#{$_icon} {
+  display: inline-block;
+  font-family: var(--md-icon-font);
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  user-select: none;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    "FILL" var(--md-icon-fill),
+    "wght" var(--md-icon-weight),
+    "GRAD" var(--md-icon-grade),
+    "opsz" var(--md-icon-optical-size);
+
+  // Nest so each class in $_icon gets the suffix. `#{$_icon}.tiny` would
+  // only attach `.tiny` to the last item and leave every other icon
+  // matching the bare `.material-symbols` selector — including `.large`.
+  &.tiny {
+    font-size: 1rem;
+    --md-icon-optical-size: 20;
+  }
+  &.small {
+    font-size: 2rem;
+    --md-icon-optical-size: 24;
+  }
+  &.medium {
+    font-size: 4rem;
+    --md-icon-optical-size: 40;
+  }
+  &.large {
+    font-size: 6rem;
+    --md-icon-optical-size: 48;
+  }
+}
+
+// One-off family overrides. These only change --md-icon-font so the
+// inherited fill / weight / grade / opsz still apply.
+.material-symbols-outlined { --md-icon-font: var(--md-icon-font-outlined); }
+.material-symbols-rounded { --md-icon-font: var(--md-icon-font-rounded); }
+.material-symbols-sharp { --md-icon-font: var(--md-icon-font-sharp); }
+
+.icon-filled { --md-icon-fill: 1; }

@@ -86,6 +86,6 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'FloatingActionButton',
     selector: '.fixed-action-btn',
-    html: `<div class="fixed-action-btn"><a class="btn-floating btn-large"><i class="material-icons">add</i></a><ul><li><a class="btn-floating red"><i class="material-icons">chart</i></a></li></ul></div>`
+    html: `<div class="fixed-action-btn"><a class="btn-floating btn-large"><i class="material-symbols">add</i></a><ul><li><a class="btn-floating red"><i class="material-symbols">chart</i></a></li></ul></div>`
   }
 ];

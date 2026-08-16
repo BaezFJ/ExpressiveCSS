@@ -10,8 +10,9 @@
   align-items: center;
 
   i,
-  i.material-icons, i.material-symbols-outlined,
+  i.material-symbols, i.material-symbols-outlined,
   i.material-symbols-rounded, i.material-symbols-sharp,
+  i.material-icons,
   &:before {
     font-weight: normal;
     font-style: normal;
@@ -20,7 +21,12 @@
 
   &:before {
     content: '\E5CC';
-    font-family: 'Material Symbols Outlined', 'Material Symbols Rounded', 'Material Symbols Sharp', 'Material Icons';
+    font-family: var(--md-icon-font);
+    font-variation-settings:
+      "FILL" var(--md-icon-fill),
+      "wght" var(--md-icon-weight),
+      "GRAD" var(--md-icon-grade),
+      "opsz" var(--md-icon-optical-size);
   }
 
   &:first-child:before {
