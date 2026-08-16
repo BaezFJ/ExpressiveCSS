@@ -196,6 +196,5 @@ consumer's own `display` — silently, and in the common case. Classes whose who
 job is to be unconditional (`.hide`, `.m-3`, the palette classes) keep it.
 
 The `!important` in `components/` is a different thing again: `.pushpin`
-and the preloader set JS-driven geometry that must not be overridable.
-Those stay. Tap target placement is custom properties now, so it no
-longer needs the flag.
+sets JS-driven geometry that must not be overridable. That stays.
+Tap target and the preloader no longer need the flag.

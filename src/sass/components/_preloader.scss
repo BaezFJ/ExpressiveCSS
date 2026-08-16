@@ -1,204 +1,258 @@
 @use "../abstracts" as *;
 
+// Progress. Anatomy is the HTML:
+//   <progress class="progress" value="70" max="100">   determinate bar
+//   <progress class="progress">                        indeterminate bar
+//   <span class="preloader" role="status">             circular spinner
+//
+// Aliases: .progress > .determinate / .indeterminate, --md-comp-progress-value
+// on a bare div.progress, and the Polymer clipper tree
+// (.preloader-wrapper > .spinner-layer > .circle-clipper).
+//
+// Tokens:
+//   --md-comp-progress-track
+//   --md-comp-progress-indicator
+//   --md-comp-progress-thickness        4px
+//   --md-comp-progress-shape            4px
+//   --md-comp-progress-value            determinate fill (optional)
+//   --md-comp-progress-circular-size    48px
+//   --md-comp-progress-circular-thickness  4px
+
+.progress,
+.preloader,
+.preloader-wrapper {
+  --md-comp-progress-track: var(--md-sys-color-secondary-container);
+  --md-comp-progress-indicator: var(--md-sys-color-primary);
+  --md-comp-progress-thickness: 4px;
+  --md-comp-progress-shape: 4px;
+  --md-comp-progress-circular-size: 48px;
+  --md-comp-progress-circular-thickness: 4px;
+}
+
+// ---------------------------------------------------------------------------
+// Linear
+// ---------------------------------------------------------------------------
+
 .progress {
+  box-sizing: border-box;
   position: relative;
-  height: 4px;
   display: block;
   width: 100%;
-  background-color: var(--md-sys-color-surface-variant);
-  border-radius: 4px;
-  margin: $element-top-margin 0 $element-bottom-margin 0;
+  height: var(--md-comp-progress-thickness);
+  margin: $element-top-margin 0 $element-bottom-margin;
   overflow: hidden;
-  background-color: var(--md-sys-color-secondary-container);
+  border: 0;
+  border-radius: var(--md-comp-progress-shape);
+  background-color: var(--md-comp-progress-track);
+  appearance: none;
+  -webkit-appearance: none;
+}
 
-  .determinate {
+progress.progress {
+  vertical-align: baseline;
+
+  &::-webkit-progress-bar {
+    background-color: var(--md-comp-progress-track);
+    border-radius: var(--md-comp-progress-shape);
+  }
+
+  &::-webkit-progress-value {
+    background-color: var(--md-comp-progress-indicator);
+    border-radius: var(--md-comp-progress-shape);
+  }
+
+  &::-moz-progress-bar {
+    background-color: var(--md-comp-progress-indicator);
+    border-radius: var(--md-comp-progress-shape);
+  }
+
+  &:indeterminate::-webkit-progress-value,
+  &:indeterminate::-moz-progress-bar {
+    background-color: transparent;
+  }
+}
+
+.progress > .determinate {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--md-comp-progress-value, 0%);
+  background-color: var(--md-comp-progress-indicator);
+  transition: width 0.3s linear;
+}
+
+// Bare div.progress with a value token, no child.
+.progress:not(:is(progress)):not(:has(> .determinate, > .indeterminate)) {
+  &::after {
+    content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-color: var(--md-sys-color-primary);
-    transition: width .3s linear;
+    inset: 0 auto 0 0;
+    width: var(--md-comp-progress-value, 0%);
+    background-color: var(--md-comp-progress-indicator);
+    transition: width 0.3s linear;
   }
 
-  .indeterminate {
-    background-color: var(--md-sys-color-primary);
-
-    &:before {
-      content: '';
-      position: absolute;
-      background-color: inherit;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      will-change: left, right;
-      // Custom bezier
-      animation: indeterminate 2.1s cubic-bezier(0.650, 0.815, 0.735, 0.395) infinite;
-
-    }
-
-    &:after {
-      content: '';
-      position: absolute;
-      background-color: inherit;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      will-change: left, right;
-      // Custom bezier
-      animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.840, 0.440, 1.000) infinite;
-      animation-delay: 1.15s;
-    }
+  &:not([style*="--md-comp-progress-value"])::after {
+    width: auto;
+    animation: preloader-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
 }
 
-@keyframes indeterminate {
-  0% {
-    left: -35%;
-    right: 100%;
-  }
-  60% {
-    left: 100%;
-    right: -90%;
-  }
-  100% {
-    left: 100%;
-    right: -90%;
-  }
-}
+.progress > .indeterminate,
+progress.progress:indeterminate {
+  background-color: transparent;
 
-@keyframes indeterminate-short {
-  0% {
-    left: -200%;
-    right: 100%;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    background-color: var(--md-comp-progress-indicator);
   }
-  60% {
-    left: 107%;
-    right: -8%;
+
+  &::before {
+    animation: preloader-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
-  100% {
-    left: 107%;
-    right: -8%;
+
+  &::after {
+    animation: preloader-indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    animation-delay: 1.15s;
   }
 }
 
+@keyframes preloader-indeterminate {
+  0%   { left: -35%; right: 100%; }
+  60%  { left: 100%; right: -90%; }
+  100% { left: 100%; right: -90%; }
+}
 
+@keyframes preloader-indeterminate-short {
+  0%   { left: -200%; right: 100%; }
+  60%  { left: 107%;  right: -8%; }
+  100% { left: 107%;  right: -8%; }
+}
 
-/*
-    @license
-    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-    Code distributed by Google as part of the polymer project is also
-    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
- */
+// ---------------------------------------------------------------------------
+// Circular — one element
+// ---------------------------------------------------------------------------
 
-/**************************/
-/* STYLES FOR THE SPINNER */
-/**************************/
+.preloader,
+.preloader-wrapper:not(:has(.spinner-layer)) {
+  box-sizing: border-box;
+  display: inline-block;
+  width: var(--md-comp-progress-circular-size);
+  height: var(--md-comp-progress-circular-size);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0turn,
+    var(--md-comp-progress-indicator) 0 90deg,
+    transparent 90deg 360deg
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--md-comp-progress-circular-thickness)),
+    #000 0
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--md-comp-progress-circular-thickness)),
+    #000 0
+  );
+  animation: preloader-rotate 1.4s linear infinite;
+  vertical-align: middle;
 
-/*
- * Constants:
- *      STROKEWIDTH = 3px
- *      ARCSIZE     = 270 degrees (amount of circle the arc takes up)
- *      ARCTIME     = 1333ms (time it takes to expand and contract arc)
- *      ARCSTARTROT = 216 degrees (how much the start location of the arc
- *                                should rotate each time, 216 gives us a
- *                                5 pointed star shape (it's 360/5 * 3).
- *                                For a 7 pointed star, we might do
- *                                360/7 * 3 = 154.286)
- *      CONTAINERWIDTH = 28px
- *      SHRINK_TIME = 400ms
- */
+  &.small { --md-comp-progress-circular-size: 36px; }
+  &.big   { --md-comp-progress-circular-size: 64px; }
 
+  &.determinate {
+    animation: none;
+    background: conic-gradient(
+      from 0turn,
+      var(--md-comp-progress-indicator) 0 var(--md-comp-progress-value, 0%),
+      color-mix(in oklab, var(--md-comp-progress-indicator) 20%, transparent)
+        var(--md-comp-progress-value, 0%)
+    );
+  }
+}
 
-.preloader-wrapper {
+@keyframes preloader-rotate {
+  to { transform: rotate(1turn); }
+}
+
+// ---------------------------------------------------------------------------
+// Circular — clipper tree (alias)
+// ---------------------------------------------------------------------------
+
+.preloader-wrapper:has(.spinner-layer) {
   display: inline-block;
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: var(--md-comp-progress-circular-size);
+  height: var(--md-comp-progress-circular-size);
+  vertical-align: middle;
 
-  &.small {
-    width: 36px;
-    height: 36px;
-  }
-
-  &.big {
-    width: 64px;
-    height: 64px;
-  }
+  &.small { --md-comp-progress-circular-size: 36px; }
+  &.big   { --md-comp-progress-circular-size: 64px; }
 
   &.active {
-    /* duration: 360 * ARCTIME / (ARCSTARTROT + (360-ARCSIZE)) */
-    animation: container-rotate 1568ms linear infinite;
+    animation: preloader-container-rotate 1568ms linear infinite;
   }
 }
 
-@keyframes container-rotate {
-  to { transform: rotate(360deg) }
+@keyframes preloader-container-rotate {
+  to { transform: rotate(360deg); }
 }
 
 .spinner-layer {
   position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  border-color: var(--md-sys-color-primary);
-}
-
-.spinner-blue,
-.spinner-blue-only {
-  border-color: #4285f4;
+  border-color: var(--md-comp-progress-indicator);
+  color: var(--md-comp-progress-indicator);
 }
 
 .spinner-red,
 .spinner-red-only {
-  border-color: #db4437;
+  --md-comp-progress-indicator: var(--md-sys-color-error);
+}
+
+.spinner-blue,
+.spinner-blue-only {
+  --md-comp-progress-indicator: var(--md-sys-color-primary);
 }
 
 .spinner-yellow,
 .spinner-yellow-only {
-  border-color: #f4b400;
+  --md-comp-progress-indicator: var(--md-sys-color-tertiary);
 }
 
 .spinner-green,
 .spinner-green-only {
-  border-color: #0f9d58;
+  --md-comp-progress-indicator: var(--md-sys-color-secondary);
 }
 
-/**
- * NOTE ABOUT CSS ANIMATION PROPERTIES (keanulee):
- *
- * iOS Safari (tested on iOS 8.1) does not handle animation-delay very well - it doesn't
- * guarantee that the animation will start _exactly_ after that value. So we avoid using
- * animation-delay and instead set custom keyframes for each color (as redundant as it
- * seems).
- *
- * The second half of this note explained why each animation is written as the
- * `animation` shorthand rather than as separate animation-name/-duration
- * longhands: the Web Animations polyfill on old Safari mistook the longhands
- * for -webkit-animation. That polyfill is long gone, and the prefixed
- * declarations it was about have been removed - the shorthand is kept only
- * because it is shorter here. See github.com/Polymer/platform/issues/53.
- */
 .active .spinner-layer.spinner-blue {
-  /* durations: 4 * ARCTIME */
-  animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both, blue-fade-in-out 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation:
+    preloader-fill-unfill 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both,
+    preloader-blue-fade 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
 .active .spinner-layer.spinner-red {
-  /* durations: 4 * ARCTIME */
-  animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both, red-fade-in-out 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation:
+    preloader-fill-unfill 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both,
+    preloader-red-fade 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
 .active .spinner-layer.spinner-yellow {
-  /* durations: 4 * ARCTIME */
-  animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both, yellow-fade-in-out 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation:
+    preloader-fill-unfill 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both,
+    preloader-yellow-fade 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
 .active .spinner-layer.spinner-green {
-  /* durations: 4 * ARCTIME */
-  animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both, green-fade-in-out 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation:
+    preloader-fill-unfill 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both,
+    preloader-green-fade 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
 .active .spinner-layer,
@@ -206,23 +260,22 @@
 .active .spinner-layer.spinner-red-only,
 .active .spinner-layer.spinner-yellow-only,
 .active .spinner-layer.spinner-green-only {
-  /* durations: 4 * ARCTIME */
   opacity: 1;
-  animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation: preloader-fill-unfill 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-@keyframes fill-unfill-rotate {
-  12.5% { transform: rotate(135deg);  } /* 0.5 * ARCSIZE */
-  25%   { transform: rotate(270deg);  } /* 1   * ARCSIZE */
-  37.5% { transform: rotate(405deg);  } /* 1.5 * ARCSIZE */
-  50%   { transform: rotate(540deg);  } /* 2   * ARCSIZE */
-  62.5% { transform: rotate(675deg);  } /* 2.5 * ARCSIZE */
-  75%   { transform: rotate(810deg);  } /* 3   * ARCSIZE */
-  87.5% { transform: rotate(945deg);  } /* 3.5 * ARCSIZE */
-  to    { transform: rotate(1080deg); } /* 4   * ARCSIZE */
+@keyframes preloader-fill-unfill {
+  12.5% { transform: rotate(135deg); }
+  25%   { transform: rotate(270deg); }
+  37.5% { transform: rotate(405deg); }
+  50%   { transform: rotate(540deg); }
+  62.5% { transform: rotate(675deg); }
+  75%   { transform: rotate(810deg); }
+  87.5% { transform: rotate(945deg); }
+  to    { transform: rotate(1080deg); }
 }
 
-@keyframes blue-fade-in-out {
+@keyframes preloader-blue-fade {
   from { opacity: 1; }
   25% { opacity: 1; }
   26% { opacity: 0; }
@@ -231,7 +284,7 @@
   100% { opacity: 1; }
 }
 
-@keyframes red-fade-in-out {
+@keyframes preloader-red-fade {
   from { opacity: 0; }
   15% { opacity: 0; }
   25% { opacity: 1; }
@@ -239,7 +292,7 @@
   51% { opacity: 0; }
 }
 
-@keyframes yellow-fade-in-out {
+@keyframes preloader-yellow-fade {
   from { opacity: 0; }
   40% { opacity: 0; }
   50% { opacity: 1; }
@@ -247,7 +300,7 @@
   76% { opacity: 0; }
 }
 
-@keyframes green-fade-in-out {
+@keyframes preloader-green-fade {
   from { opacity: 0; }
   65% { opacity: 0; }
   75% { opacity: 1; }
@@ -255,10 +308,6 @@
   100% { opacity: 0; }
 }
 
-/**
- * Patch the gap that appear between the two adjacent div.circle-clipper while the
- * spinner is rotating (appears on Chrome 38, Safari 7.1, and IE 11).
- */
 .gap-patch {
   position: absolute;
   top: 0;
@@ -283,62 +332,75 @@
   border-color: inherit;
 
   .circle {
-    width: 200%;
-    height: 100%;
-    border-width: 3px; /* STROKEWIDTH */
-    border-style: solid;
-    border-color: inherit;
-    border-bottom-color: transparent !important;
-    border-radius: 50%;
-    animation: none;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
+    width: 200%;
+    height: 100%;
+    border: 3px solid var(--md-comp-progress-indicator);
+    border-radius: 50%;
+    animation: none;
   }
 
   &.left .circle {
     left: 0;
-    border-right-color: transparent !important;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
     transform: rotate(129deg);
   }
+
   &.right .circle {
     left: -100%;
-    border-left-color: transparent !important;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
     transform: rotate(-129deg);
   }
 }
 
-
-
 .active .circle-clipper.left .circle {
-  /* duration: ARCTIME */
-  animation: left-spin 1333ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation: preloader-left-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
 .active .circle-clipper.right .circle {
-  /* duration: ARCTIME */
-  animation: right-spin 1333ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
+  animation: preloader-right-spin 1333ms cubic-bezier(0.4, 0, 0.2, 1) infinite both;
 }
 
-@keyframes left-spin {
+@keyframes preloader-left-spin {
   from { transform: rotate(130deg); }
   50% { transform: rotate(-5deg); }
   to { transform: rotate(130deg); }
 }
 
-@keyframes right-spin {
+@keyframes preloader-right-spin {
   from { transform: rotate(-130deg); }
   50% { transform: rotate(5deg); }
   to { transform: rotate(-130deg); }
 }
 
-#spinnerContainer.cooldown {
-  /* duration: SHRINK_TIME */
-  animation: container-rotate 1568ms linear infinite, fade-out 400ms cubic-bezier(0.4, 0.0, 0.2, 1);
-}
+@media (prefers-reduced-motion: reduce) {
+  .progress > .indeterminate,
+  progress.progress:indeterminate,
+  .progress:not(:is(progress)):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"]),
+  .preloader,
+  .preloader-wrapper:not(:has(.spinner-layer)),
+  .preloader-wrapper.active,
+  .active .spinner-layer,
+  .active .spinner-layer.spinner-blue,
+  .active .spinner-layer.spinner-red,
+  .active .spinner-layer.spinner-yellow,
+  .active .spinner-layer.spinner-green,
+  .active .spinner-layer.spinner-blue-only,
+  .active .spinner-layer.spinner-red-only,
+  .active .spinner-layer.spinner-yellow-only,
+  .active .spinner-layer.spinner-green-only,
+  .active .circle-clipper.left .circle,
+  .active .circle-clipper.right .circle {
+    animation: none;
+  }
 
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  .preloader,
+  .preloader-wrapper:not(:has(.spinner-layer)) {
+    transform: none;
+  }
 }

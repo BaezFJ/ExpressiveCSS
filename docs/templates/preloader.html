@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Preloader</h1>
-      <h4 class="light primary-text">Activity and progress indicators for content that takes time to load.</h4>
+      <h4 class="light primary-text">Activity and progress. The HTML is the indicator.</h4>
     </div>
   </div>
 </section>
@@ -19,27 +19,40 @@
 
       <div id="linear" class="section scrollspy">
         <p class="flow-text">
-          If content will take a while to load, give the user feedback. Expressive ships linear progress bars
-          and circular spinners. Both are CSS-only — there is no JavaScript plugin.
+          If content will take a while to load, give the user feedback.
+          Linear bars are a native <code>&lt;progress&gt;</code>. Circular
+          spinners are one element. Both are CSS-only — there is no
+          JavaScript plugin.
         </p>
 
         <h3>Linear</h3>
-        <p>There are two linear bars: determinate and indeterminate.</p>
+        <p>
+          A <code>value</code> is determinate. Omit it for an indeterminate
+          bar. The fill is <code>primary</code> on a
+          <code>secondary-container</code> track.
+        </p>
 
         <h5 class="light">Determinate</h5>
+        <progress class="progress" value="70" max="100"></progress>
+<pre><code>&lt;progress class="progress" value="70" max="100"&gt;&lt;/progress&gt;</code></pre>
         <p>
-          Set the filled width on <code>.determinate</code>. The bar uses the primary token on a
-          <code>secondary-container</code> track.
+          A <code>div</code> still works. Set the width on
+          <code>.determinate</code>, or set
+          <code>--md-comp-progress-value</code> on the bar.
         </p>
         <div class="progress">
           <div class="determinate" style="width: 70%"></div>
         </div>
 <pre><code>&lt;div class="progress"&gt;
   &lt;div class="determinate" style="width: 70%"&gt;&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+&lt;/div&gt;
+
+&lt;div class="progress" style="--md-comp-progress-value: 70%"&gt;&lt;/div&gt;</code></pre>
 
         <h5 class="light">Indeterminate</h5>
-        <p>Use <code>.indeterminate</code> when you cannot report a percentage.</p>
+        <progress class="progress"></progress>
+<pre><code>&lt;progress class="progress"&gt;&lt;/progress&gt;</code></pre>
+        <p>The child class is the alias:</p>
         <div class="progress">
           <div class="indeterminate"></div>
         </div>
@@ -51,115 +64,110 @@
       <div id="circular" class="section scrollspy">
         <h3>Circular</h3>
         <p>
-          Nest the spinner in a <code>preloader-wrapper</code> and add <code>active</code> so it animates.
-          The default size is 50px. Add <code>big</code> (64px) or <code>small</code> (36px) to change it.
-        </p>
-        <p>
-          A bare <code>spinner-layer</code> uses the primary token. For a fixed color, add
-          <code>spinner-red-only</code>, <code>spinner-blue-only</code>,
-          <code>spinner-yellow-only</code>, or <code>spinner-green-only</code>.
-          Those four classes use the Google brand hex values, not the theme tokens.
+          One element. Default size is 48px.
+          <code>small</code> is 36px, <code>big</code> is 64px.
+          It uses the primary token. <code>prefers-reduced-motion</code>
+          freezes the arc.
         </p>
         <div class="row py-5">
           <div class="s4 center-align">
-            <div class="preloader-wrapper big active">
-              <div class="spinner-layer spinner-blue-only">
-                <div class="circle-clipper left"><div class="circle"></div></div>
-                <div class="gap-patch"><div class="circle"></div></div>
-                <div class="circle-clipper right"><div class="circle"></div></div>
-              </div>
-            </div>
+            <span class="preloader big" role="status" aria-label="Loading"></span>
           </div>
           <div class="s4 center-align">
-            <div class="preloader-wrapper active">
-              <div class="spinner-layer spinner-red-only">
-                <div class="circle-clipper left"><div class="circle"></div></div>
-                <div class="gap-patch"><div class="circle"></div></div>
-                <div class="circle-clipper right"><div class="circle"></div></div>
-              </div>
-            </div>
+            <span class="preloader" role="status" aria-label="Loading"></span>
           </div>
           <div class="s4 center-align">
-            <div class="preloader-wrapper small active">
-              <div class="spinner-layer spinner-green-only">
-                <div class="circle-clipper left"><div class="circle"></div></div>
-                <div class="gap-patch"><div class="circle"></div></div>
-                <div class="circle-clipper right"><div class="circle"></div></div>
-              </div>
-            </div>
+            <span class="preloader small" role="status" aria-label="Loading"></span>
           </div>
         </div>
-<pre><code>&lt;div class="preloader-wrapper big active"&gt;
-  &lt;div class="spinner-layer spinner-blue-only"&gt;
-    &lt;div class="circle-clipper left"&gt;
-      &lt;div class="circle"&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class="gap-patch"&gt;
-      &lt;div class="circle"&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class="circle-clipper right"&gt;
-      &lt;div class="circle"&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class="preloader-wrapper active"&gt;
-  &lt;div class="spinner-layer spinner-red-only"&gt;...&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class="preloader-wrapper small active"&gt;
-  &lt;div class="spinner-layer spinner-green-only"&gt;...&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;span class="preloader" role="status" aria-label="Loading"&gt;&lt;/span&gt;
+&lt;span class="preloader small" role="status" aria-label="Loading"&gt;&lt;/span&gt;
+&lt;span class="preloader big" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+        <p>
+          Add <code>determinate</code> and set
+          <code>--md-comp-progress-value</code> for a known percentage.
+        </p>
+        <p>
+          <span class="preloader determinate" style="--md-comp-progress-value: 70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Loading"></span>
+        </p>
+<pre><code>&lt;span class="preloader determinate"
+      style="--md-comp-progress-value: 70%"
+      role="progressbar" aria-valuenow="70"
+      aria-valuemin="0" aria-valuemax="100"
+      aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
       </div>
 
-      <div id="circular-color" class="section scrollspy">
-        <h3>Circular Flashing Colors</h3>
+      <div id="colors" class="section scrollspy">
+        <h3>Colors</h3>
         <p>
-          Stack four <code>spinner-layer</code>s with <code>spinner-blue</code>,
-          <code>spinner-red</code>, <code>spinner-yellow</code>, and <code>spinner-green</code>
-          (without <code>-only</code>). They fade in sequence while the wrapper rotates.
+          The indicator follows the theme. The old
+          <code>spinner-*-only</code> names map onto tokens, not Google hex:
+          red is <code>error</code>, blue is <code>primary</code>,
+          yellow is <code>tertiary</code>, green is <code>secondary</code>.
+          Or set <code>--md-comp-progress-indicator</code>.
         </p>
-        <div class="py-5">
-          <div class="preloader-wrapper big active">
-            <div class="spinner-layer spinner-blue">
-              <div class="circle-clipper left"><div class="circle"></div></div>
-              <div class="gap-patch"><div class="circle"></div></div>
-              <div class="circle-clipper right"><div class="circle"></div></div>
+        <div class="row py-5">
+          <div class="s3 center-align">
+            <span class="preloader spinner-blue-only" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s3 center-align">
+            <span class="preloader spinner-red-only" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s3 center-align">
+            <span class="preloader spinner-yellow-only" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s3 center-align">
+            <span class="preloader spinner-green-only" role="status" aria-label="Loading"></span>
+          </div>
+        </div>
+<pre><code>&lt;span class="preloader spinner-red-only" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+      </div>
+
+      <div id="alias" class="section scrollspy">
+        <h3>Clipper alias</h3>
+        <p>
+          The older Polymer tree still works.
+          <code>.active</code> is required so it animates.
+          An empty <code>.preloader-wrapper</code> (no
+          <code>spinner-layer</code>) is the one-element spinner.
+        </p>
+        <div class="row py-5">
+          <div class="s6 center-align">
+            <div class="preloader-wrapper active">
+              <div class="spinner-layer">
+                <div class="circle-clipper left"><div class="circle"></div></div>
+                <div class="gap-patch"><div class="circle"></div></div>
+                <div class="circle-clipper right"><div class="circle"></div></div>
+              </div>
             </div>
-            <div class="spinner-layer spinner-red">
-              <div class="circle-clipper left"><div class="circle"></div></div>
-              <div class="gap-patch"><div class="circle"></div></div>
-              <div class="circle-clipper right"><div class="circle"></div></div>
-            </div>
-            <div class="spinner-layer spinner-yellow">
-              <div class="circle-clipper left"><div class="circle"></div></div>
-              <div class="gap-patch"><div class="circle"></div></div>
-              <div class="circle-clipper right"><div class="circle"></div></div>
-            </div>
-            <div class="spinner-layer spinner-green">
-              <div class="circle-clipper left"><div class="circle"></div></div>
-              <div class="gap-patch"><div class="circle"></div></div>
-              <div class="circle-clipper right"><div class="circle"></div></div>
+          </div>
+          <div class="s6 center-align">
+            <div class="preloader-wrapper big active">
+              <div class="spinner-layer spinner-blue">
+                <div class="circle-clipper left"><div class="circle"></div></div>
+                <div class="gap-patch"><div class="circle"></div></div>
+                <div class="circle-clipper right"><div class="circle"></div></div>
+              </div>
+              <div class="spinner-layer spinner-red">
+                <div class="circle-clipper left"><div class="circle"></div></div>
+                <div class="gap-patch"><div class="circle"></div></div>
+                <div class="circle-clipper right"><div class="circle"></div></div>
+              </div>
+              <div class="spinner-layer spinner-yellow">
+                <div class="circle-clipper left"><div class="circle"></div></div>
+                <div class="gap-patch"><div class="circle"></div></div>
+                <div class="circle-clipper right"><div class="circle"></div></div>
+              </div>
+              <div class="spinner-layer spinner-green">
+                <div class="circle-clipper left"><div class="circle"></div></div>
+                <div class="gap-patch"><div class="circle"></div></div>
+                <div class="circle-clipper right"><div class="circle"></div></div>
+              </div>
             </div>
           </div>
         </div>
-<pre><code>&lt;div class="preloader-wrapper big active"&gt;
-  &lt;div class="spinner-layer spinner-blue"&gt;
-    &lt;div class="circle-clipper left"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-    &lt;div class="gap-patch"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-    &lt;div class="circle-clipper right"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="spinner-layer spinner-red"&gt;
-    &lt;div class="circle-clipper left"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-    &lt;div class="gap-patch"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-    &lt;div class="circle-clipper right"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="spinner-layer spinner-yellow"&gt;
-    &lt;div class="circle-clipper left"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-    &lt;div class="gap-patch"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-    &lt;div class="circle-clipper right"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="spinner-layer spinner-green"&gt;
+<pre><code>&lt;div class="preloader-wrapper active"&gt;
+  &lt;div class="spinner-layer"&gt;
     &lt;div class="circle-clipper left"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
     &lt;div class="gap-patch"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
     &lt;div class="circle-clipper right"&gt;&lt;div class="circle"&gt;&lt;/div&gt;&lt;/div&gt;
@@ -173,7 +181,8 @@
         <ul class="section table-of-contents">
           <li><a href="#linear">Linear</a></li>
           <li><a href="#circular">Circular</a></li>
-          <li><a href="#circular-color">Circular Flashing Colors</a></li>
+          <li><a href="#colors">Colors</a></li>
+          <li><a href="#alias">Clipper alias</a></li>
         </ul>
       </div>
     </div>
