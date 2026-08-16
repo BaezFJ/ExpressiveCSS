@@ -2,10 +2,40 @@
   "name": "libreposcss",
   "version": "0.1.0",
   "description": "LibrePOS-CSS - a Material Design 3 front-end framework.",
+  "license": "MIT",
+  "author": "BaezFJ <baezdevs@gmail.com>",
+  "homepage": "https://github.com/BaezFJ/LibrePOS-CSS#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaezFJ/LibrePOS-CSS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BaezFJ/LibrePOS-CSS/issues"
+  },
+  "keywords": [
+    "css",
+    "sass",
+    "scss",
+    "material-design",
+    "material-design-3",
+    "md3",
+    "front-end",
+    "framework",
+    "ui",
+    "components",
+    "typescript"
+  ],
   "type": "module",
   "main": "./dist/js/librepos.cjs",
   "module": "./dist/js/librepos.mjs",
   "types": "./dist/types/index.d.ts",
+  "unpkg": "./dist/js/librepos.min.js",
+  "jsdelivr": "./dist/js/librepos.min.js",
+  "sideEffects": [
+    "./dist/js/*",
+    "*.css",
+    "*.scss"
+  ],
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -20,10 +50,10 @@
   },
   "files": [
     "dist",
-    "src/sass",
-    "src/ts"
+    "src/sass"
   ],
   "scripts": {
+    "prepack": "npm run build",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build": "run-s clean build:css build:js build:types",
     "build:css": "run-s build:css:expanded build:css:min",

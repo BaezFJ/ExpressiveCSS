@@ -3,7 +3,10 @@
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
-    "declarationMap": true,
+    // Off deliberately: the package does not ship `src/ts` (see package.json
+    // "files"), so declaration maps would point at sources that are not in the
+    // tarball. "Go to definition" lands on the .d.ts instead.
+    "declarationMap": false,
     "emitDeclarationOnly": true,
     "rootDir": "src/ts",
     "outDir": "dist/types"
