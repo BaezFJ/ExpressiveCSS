@@ -62,12 +62,12 @@ after the page has loaded:
 ```html
 <link rel="stylesheet" href="dist/css/expressive.min.css">
 
-<ul class="collapsible">
-  <li>
-    <div class="collapsible-header">Details</div>
-    <div class="collapsible-body">ExpressiveCSS is ready.</div>
-  </li>
-</ul>
+<div class="collapsible">
+  <details name="intro">
+    <summary>Details</summary>
+    <p>ExpressiveCSS is ready.</p>
+  </details>
+</div>
 
 <script src="dist/js/expressive.min.js"></script>
 <script>

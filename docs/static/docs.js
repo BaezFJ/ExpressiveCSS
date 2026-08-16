@@ -153,11 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const collapsibleExpandable = document.getElementById('collapsible-expandable');
-  if (collapsibleExpandable) {
-    Expressive.Collapsible.init(collapsibleExpandable, { accordion: false });
-  }
-
   const dropdownLeft = document.getElementById('dropdown-left-trigger');
   if (dropdownLeft) {
     Expressive.Dropdown.init(dropdownLeft, {

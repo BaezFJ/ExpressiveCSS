@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, resetBody, fire, window } from './setup.js';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -316,6 +316,24 @@ describe('optional markup does not crash a component', () => {
     );
 
     assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
+  test('collapsible open() indexes list items, not every child', () => {
+    document.body.innerHTML = `
+      <ul class="collapsible">
+        <div class="oops"></div>
+        <li><div class="collapsible-header">One</div><div class="collapsible-body"><span>A</span></div></li>
+        <li><div class="collapsible-header">Two</div><div class="collapsible-body"><span>B</span></div></li>
+      </ul>`;
+    const el = document.querySelector('.collapsible');
+    const [first, second] = el.querySelectorAll('li');
+    const instance = Expressive.Collapsible.init(el);
+
+    fire(first.querySelector('.collapsible-header'), 'click');
+    assert.equal(first.classList.contains('active'), true, 'clicked the first li but opened a different item');
+    assert.equal(second.classList.contains('active'), false);
+
     instance.destroy();
   });
 });

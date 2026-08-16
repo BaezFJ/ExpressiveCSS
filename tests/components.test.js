@@ -14,6 +14,12 @@ const collapsibleHtml = `
     <li><div class="collapsible-header">Two</div><div class="collapsible-body"><span>Body two</span></div></li>
   </ul>`;
 
+const detailsHtml = `
+  <div class="collapsible">
+    <details><summary>One</summary><p>Body one</p></details>
+    <details><summary>Two</summary><p>Body two</p></details>
+  </div>`;
+
 describe('Collapsible', () => {
   beforeEach(resetBody);
 
@@ -42,6 +48,100 @@ describe('Collapsible', () => {
     fire(second.querySelector('.collapsible-header'), 'click');
     assert.equal(second.classList.contains('active'), true);
     assert.equal(first.classList.contains('active'), false, 'accordion left two sections open');
+  });
+
+  test('alias headers get aria-expanded and a button role', () => {
+    document.body.innerHTML = collapsibleHtml;
+    const el = document.querySelector('.collapsible');
+    const header = el.querySelector('.collapsible-header');
+    Expressive.Collapsible.init(el);
+
+    assert.equal(header.getAttribute('role'), 'button');
+    assert.equal(header.getAttribute('aria-expanded'), 'false');
+    assert.ok(header.getAttribute('aria-controls'));
+
+    Expressive.Collapsible.getInstance(el).open(0);
+    assert.equal(header.getAttribute('aria-expanded'), 'true');
+  });
+
+  test('Space on an alias header toggles the section', () => {
+    document.body.innerHTML = collapsibleHtml;
+    const el = document.querySelector('.collapsible');
+    const [first] = el.querySelectorAll('li');
+    const header = first.querySelector('.collapsible-header');
+    Expressive.Collapsible.init(el);
+
+    header.dispatchEvent(
+      new window.KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true })
+    );
+    assert.equal(first.classList.contains('active'), true);
+  });
+
+  test('open() and close() toggle <details>', () => {
+    document.body.innerHTML = detailsHtml;
+    const el = document.querySelector('.collapsible');
+    const [first] = el.querySelectorAll('details');
+    const instance = Expressive.Collapsible.init(el);
+
+    assert.equal(first.open, false);
+    instance.open(0);
+    assert.equal(first.open, true);
+    instance.close(0);
+    assert.equal(first.open, false);
+  });
+
+  test('accordion open() closes the other details section', () => {
+    document.body.innerHTML = detailsHtml;
+    const el = document.querySelector('.collapsible');
+    const [first, second] = el.querySelectorAll('details');
+    const instance = Expressive.Collapsible.init(el);
+
+    instance.open(0);
+    instance.open(1);
+    assert.equal(second.open, true);
+    assert.equal(first.open, false, 'accordion left two sections open');
+  });
+
+  test('init assigns a shared name so native exclusive-open works', () => {
+    document.body.innerHTML = detailsHtml;
+    const el = document.querySelector('.collapsible');
+    Expressive.Collapsible.init(el);
+    const names = [...el.querySelectorAll('details')].map((d) => d.getAttribute('name'));
+    assert.ok(names[0]);
+    assert.equal(names[0], names[1]);
+  });
+
+  test('wraps details content in .collapsible-body and unwraps on destroy', () => {
+    document.body.innerHTML = detailsHtml;
+    const el = document.querySelector('.collapsible');
+    const [first] = el.querySelectorAll('details');
+    const instance = Expressive.Collapsible.init(el);
+
+    const body = first.querySelector(':scope > .collapsible-body');
+    assert.ok(body);
+    assert.equal(body.querySelector('p')?.textContent, 'Body one');
+
+    instance.destroy();
+    assert.equal(first.querySelector(':scope > .collapsible-body'), null);
+    assert.equal(first.querySelector(':scope > p')?.textContent, 'Body one');
+  });
+
+  test('.expandable lets several sections stay open and does not assign name', () => {
+    document.body.innerHTML = `
+      <div class="collapsible expandable">
+        <details><summary>One</summary><p>Body one</p></details>
+        <details><summary>Two</summary><p>Body two</p></details>
+      </div>`;
+    const el = document.querySelector('.collapsible');
+    const [first, second] = el.querySelectorAll('details');
+    const instance = Expressive.Collapsible.init(el);
+
+    assert.equal(instance.options.accordion, false);
+    assert.equal(first.getAttribute('name'), null);
+    instance.open(0);
+    instance.open(1);
+    assert.equal(first.open, true);
+    assert.equal(second.open, true);
   });
 });
 

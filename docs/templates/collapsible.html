@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Collapsible</h1>
-      <h4 class="light primary-text">Accordion sections that expand when you click them.</h4>
+      <h4 class="light primary-text">Accordion sections. The HTML is the component.</h4>
     </div>
   </div>
 </section>
@@ -19,48 +19,54 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          Collapsibles hide content that is not immediately relevant. Click a header to expand or collapse its body.
-          <code>AutoInit()</code> starts every <code>.collapsible</code> except those marked
-          <code>no-autoinit</code>.
+          A <code>.collapsible</code> is a stack of
+          <code>&lt;details&gt;</code> sections. The browser opens and
+          closes them. Give every section the same <code>name</code> and
+          only one stays open; omit it (or add <code>expandable</code>)
+          so several can stay open. <code>AutoInit()</code> starts the
+          JavaScript API on every <code>.collapsible</code> except those
+          marked <code>no-autoinit</code> — a details list still works
+          without it.
         </p>
-        <ul class="collapsible">
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">filter_drama</i>First</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">place</i>Second</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">whatshot</i>Third</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div>
-          </li>
-        </ul>
-<pre><code>&lt;ul class="collapsible"&gt;
-  &lt;li&gt;
-    &lt;div class="collapsible-header"&gt;
+        <div class="collapsible">
+          <details name="intro">
+            <summary><i class="material-symbols">filter_drama</i>First</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </details>
+          <details name="intro">
+            <summary><i class="material-symbols">place</i>Second</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </details>
+          <details name="intro">
+            <summary><i class="material-symbols">whatshot</i>Third</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </details>
+        </div>
+<pre><code>&lt;div class="collapsible"&gt;
+  &lt;details name="faq"&gt;
+    &lt;summary&gt;
       &lt;i class="material-symbols"&gt;filter_drama&lt;/i&gt;First
-    &lt;/div&gt;
-    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;div class="collapsible-header"&gt;
+    &lt;/summary&gt;
+    &lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+  &lt;/details&gt;
+  &lt;details name="faq"&gt;
+    &lt;summary&gt;
       &lt;i class="material-symbols"&gt;place&lt;/i&gt;Second
-    &lt;/div&gt;
-    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;div class="collapsible-header"&gt;
-      &lt;i class="material-symbols"&gt;whatshot&lt;/i&gt;Third
-    &lt;/div&gt;
-    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+    &lt;/summary&gt;
+    &lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+  &lt;/details&gt;
+&lt;/div&gt;</code></pre>
         <p>
-          Headers are a flex row. Wrap the title in <code>collapsible-header-content</code> when you add extra
+          Headers are a flex row. Wrap the title in
+          <code>collapsible-header-content</code> when you add extra
           items such as a badge so they sit before the expand icon. See
           <a href="{{ url_for('badges') }}#collapsible">Badges in Collapsibles</a>.
+          Add <code>no-icon</code> to hide the trailing chevron.
+        </p>
+        <p>
+          Use a unique <code>name</code> per list on the same page —
+          a shared name exclusive-opens across every matching
+          <code>&lt;details&gt;</code>.
         </p>
       </div>
 
@@ -68,8 +74,10 @@
         <h3>Initialization</h3>
         <p>
           The IIFE bundle exposes <code>Expressive.Collapsible</code>.
-          Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>Expressive.AutoInit()</code> start every <code>.collapsible</code>.
+          Call <code>init</code> when you want the
+          <code>open</code> / <code>close</code> API or the callbacks.
+          <code>Expressive.AutoInit()</code> does that for every
+          <code>.collapsible</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.collapsible');
@@ -84,37 +92,44 @@
 
         <h5 class="light">Preselected Section</h5>
         <p>
-          Add <code>active</code> to the <code>li</code> that wraps the header to open that section on start.
-          In accordion mode only the first active item opens; with <code>accordion: false</code> every active
-          item opens.
+          Add the <code>open</code> attribute to the section that should
+          start expanded. In accordion mode only the first open section
+          stays that way; with <code>expandable</code> every
+          <code>open</code> section stays open.
         </p>
-        <ul class="collapsible">
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">filter_drama</i>First</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-          <li class="active">
-            <div class="collapsible-header"><i class="material-symbols">place</i>Second</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">whatshot</i>Third</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-        </ul>
-<pre><code>&lt;li class="active"&gt;
-  &lt;div class="collapsible-header"&gt;
+        <div class="collapsible">
+          <details name="preselected">
+            <summary><i class="material-symbols">filter_drama</i>First</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details name="preselected" open>
+            <summary><i class="material-symbols">place</i>Second</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details name="preselected">
+            <summary><i class="material-symbols">whatshot</i>Third</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+        </div>
+<pre><code>&lt;details name="faq" open&gt;
+  &lt;summary&gt;
     &lt;i class="material-symbols"&gt;place&lt;/i&gt;Second
-  &lt;/div&gt;
-  &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
-&lt;/li&gt;</code></pre>
+  &lt;/summary&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+&lt;/details&gt;</code></pre>
       </div>
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
         <p>
           You can customize each instance. Callbacks receive the
-          <code>li</code> that opened or closed.
+          <code>&lt;details&gt;</code> (or the alias <code>li</code>)
+          that opened or closed. Duration and easing are CSS —
+          set <code>--md-comp-collapsible-duration</code>
+          (default <code>500ms</code>),
+          <code>--md-comp-collapsible-easing-open</code>, and
+          <code>--md-comp-collapsible-easing-close</code>
+          (both a soft ease-in-out by default).
         </p>
         <table class="striped">
           <thead>
@@ -130,7 +145,12 @@
               <td><code>accordion</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>When <code>true</code>, only one section stays open. When <code>false</code>, several can stay open. There is no styled <code>expandable</code> class — this option is the switch.</td>
+              <td>
+                When <code>true</code>, only one section stays open.
+                When <code>false</code>, several can stay open.
+                The <code>expandable</code> class is the markup switch
+                and does not need a <code>no-autoinit</code>.
+              </td>
             </tr>
             <tr>
               <td><code>onOpenStart</code></td>
@@ -160,13 +180,13 @@
               <td><code>inDuration</code></td>
               <td>Number</td>
               <td><code>300</code></td>
-              <td>Open transition duration, in milliseconds.</td>
+              <td>Deprecated. Accepted and ignored. Use <code>--md-comp-collapsible-duration</code>.</td>
             </tr>
             <tr>
               <td><code>outDuration</code></td>
               <td>Number</td>
               <td><code>300</code></td>
-              <td>Close transition duration, in milliseconds.</td>
+              <td>Deprecated. Accepted and ignored. Use <code>--md-comp-collapsible-duration</code>.</td>
             </tr>
           </tbody>
         </table>
@@ -226,7 +246,88 @@
           Accordion is the default.
         </p>
         <h5 class="light">Accordion</h5>
-        <p>This is the default. Opening one section closes the others.</p>
+        <p>
+          This is the default. Opening one section closes the others.
+          Same <code>name</code> on each <code>&lt;details&gt;</code> is
+          enough; AutoInit also assigns a shared name when it is missing.
+        </p>
+        <div class="collapsible">
+          <details name="types">
+            <summary><i class="material-symbols">filter_drama</i>First</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details name="types">
+            <summary><i class="material-symbols">place</i>Second</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details name="types">
+            <summary><i class="material-symbols">whatshot</i>Third</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+        </div>
+      </div>
+
+      <div id="expandable" class="section scrollspy">
+        <h5 class="light">Expandable</h5>
+        <p>
+          Add <code>expandable</code> so several sections can stay open.
+          Leave <code>name</code> off the details. No
+          <code>no-autoinit</code> and no options object.
+        </p>
+        <div class="collapsible expandable">
+          <details>
+            <summary><i class="material-symbols">filter_drama</i>First</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details>
+            <summary><i class="material-symbols">place</i>Second</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details>
+            <summary><i class="material-symbols">whatshot</i>Third</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+        </div>
+<pre><code>&lt;div class="collapsible expandable"&gt;
+  &lt;details&gt;
+    &lt;summary&gt;First&lt;/summary&gt;
+    &lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+  &lt;/details&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="popout" class="section scrollspy">
+        <h5 class="light">Popout</h5>
+        <p>
+          Add the <code>popout</code> class for the raised, inset look. Behavior is still accordion unless you also add
+          <code>expandable</code>.
+        </p>
+        <div class="collapsible popout">
+          <details name="popout">
+            <summary><i class="material-symbols">filter_drama</i>First</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details name="popout">
+            <summary><i class="material-symbols">place</i>Second</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+          <details name="popout">
+            <summary><i class="material-symbols">whatshot</i>Third</summary>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </details>
+        </div>
+<pre><code>&lt;div class="collapsible popout"&gt;</code></pre>
+      </div>
+
+      <div id="alias" class="section scrollspy">
+        <h3>List alias</h3>
+        <p>
+          The older <code>&lt;ul&gt;</code> / <code>.collapsible-header</code>
+          / <code>.collapsible-body</code> markup still works. Add
+          <code>active</code> to an <code>li</code> to preselect it.
+          JavaScript drives open and close on this anatomy —
+          <code>AutoInit()</code> or <code>Collapsible.init</code>.
+        </p>
         <ul class="collapsible">
           <li>
             <div class="collapsible-header"><i class="material-symbols">filter_drama</i>First</div>
@@ -241,55 +342,14 @@
             <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
           </li>
         </ul>
-      </div>
-
-      <div id="expandable" class="section scrollspy">
-        <h5 class="light">Expandable</h5>
-        <p>
-          Pass <code>accordion: false</code> so several sections can stay open.
-          Mark the element <code>no-autoinit</code> if you initialize it yourself, otherwise AutoInit would start it as an accordion.
-        </p>
-        <ul class="collapsible no-autoinit" id="collapsible-expandable">
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">filter_drama</i>First</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">place</i>Second</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">whatshot</i>Third</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-        </ul>
-<pre><code>const elem = document.querySelector('.collapsible.no-autoinit');
-const instance = Expressive.Collapsible.init(elem, {
-  accordion: false
-});</code></pre>
-      </div>
-
-      <div id="popout" class="section scrollspy">
-        <h5 class="light">Popout</h5>
-        <p>
-          Add the <code>popout</code> class for the raised, inset look. Behavior is still accordion unless you also pass
-          <code>accordion: false</code>.
-        </p>
-        <ul class="collapsible popout">
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">filter_drama</i>First</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">place</i>Second</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-symbols">whatshot</i>Third</div>
-            <div class="collapsible-body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
-          </li>
-        </ul>
-<pre><code>&lt;ul class="collapsible popout"&gt;</code></pre>
+<pre><code>&lt;ul class="collapsible"&gt;
+  &lt;li&gt;
+    &lt;div class="collapsible-header"&gt;
+      &lt;i class="material-symbols"&gt;filter_drama&lt;/i&gt;First
+    &lt;/div&gt;
+    &lt;div class="collapsible-body"&gt;&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;&lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
       </div>
     </div>
 
@@ -304,6 +364,7 @@ const instance = Expressive.Collapsible.init(elem, {
           <li><a href="#accordion">Accordion</a></li>
           <li><a href="#expandable">Expandable</a></li>
           <li><a href="#popout">Popout</a></li>
+          <li><a href="#alias">List alias</a></li>
         </ul>
       </div>
     </div>

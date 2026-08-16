@@ -62,7 +62,7 @@ header:has(> nav) nav a span.badge {
   }
 }
 
-.collapsible .active span.badge:not(.new) {
+.collapsible :is(.active, [open]) span.badge:not(.new) {
   color: var(--md-sys-color-on-surface-variant);
 }
 

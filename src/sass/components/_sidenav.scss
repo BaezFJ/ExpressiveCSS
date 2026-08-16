@@ -213,7 +213,8 @@
   }
 }
 
-.sidenav .collapsible-body {
+.sidenav .collapsible-body,
+.sidenav details::details-content {
   padding: 0;
 }
 
@@ -233,13 +234,18 @@
 .sidenav,
 .sidenav.sidenav-fixed {
   .collapsible {
+    overflow: visible;
     border: none;
+    border-radius: 0;
+    background: transparent;
     box-shadow: none;
   }
-  .collapsible-header {
+  .collapsible-header,
+  summary {
     border: none;
   }
-  .collapsible-body {
+  .collapsible-body,
+  details::details-content {
     border: none;
   }
 }

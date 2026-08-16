@@ -28,7 +28,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Collapsible',
     selector: '.collapsible',
-    html: `<ul class="collapsible"><li><div class="collapsible-header">One</div><div class="collapsible-body"><span>Body one</span></div></li><li><div class="collapsible-header">Two</div><div class="collapsible-body"><span>Body two</span></div></li></ul>`
+    html: `<div class="collapsible"><details><summary>One</summary><p>Body one</p></details><details><summary>Two</summary><p>Body two</p></details></div>`
   },
   { name: 'Datepicker', selector: '.datepicker', html: `<input type="text" class="datepicker">` },
   {

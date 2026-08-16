@@ -1,86 +1,181 @@
 @use "../abstracts" as *;
 
+// Collapsible. Anatomy is the HTML: a .collapsible of <details> with
+// <summary> headers. Same `name` on each <details> is an accordion;
+// omit it (or add .expandable) so several can stay open. The `open`
+// attribute is the preselected section.
+//
+// <ul>/<li> + .collapsible-header / .collapsible-body stay as aliases.
+// .collapsible-accordion is the default and does nothing extra.
+//
+// Tokens:
+//   --md-comp-collapsible-shape              12px
+//   --md-comp-collapsible-container-color    surface
+//   --md-comp-collapsible-outline-color      outline-variant
+//   --md-comp-collapsible-header-padding     1rem
+//   --md-comp-collapsible-body-padding       0 1rem
+//   --md-comp-collapsible-duration           500ms
+//   --md-comp-collapsible-easing-open        ease-in-out cubic
+//   --md-comp-collapsible-easing-close       ease-in-out cubic
+//   --md-comp-collapsible-icon-size          24px
+//   --md-comp-collapsible-popout-inset       24px
+//   --md-comp-collapsible-popout-gap         16px
+//
+// Nest descendants inside this block. A list-suffixed selector only
+// attaches the suffix to the last item (same bug as the icon sizes).
+
 .collapsible {
-  padding-left: 0;
-  list-style-type: none;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-  border-right: 1px solid var(--md-sys-color-outline-variant);
-  border-left: 1px solid var(--md-sys-color-outline-variant);
-  margin: $element-top-margin 0 $element-bottom-margin 0;
-  @include z-depth("1");
-}
+  --md-comp-collapsible-shape: 12px;
+  --md-comp-collapsible-container-color: var(--md-sys-color-surface);
+  --md-comp-collapsible-outline-color: var(--md-sys-color-outline-variant);
+  --md-comp-collapsible-header-padding: 1rem;
+  --md-comp-collapsible-body-padding: 0 1rem;
+  --md-comp-collapsible-duration: 500ms;
+  --md-comp-collapsible-easing-open: cubic-bezier(0.65, 0, 0.35, 1);
+  --md-comp-collapsible-easing-close: cubic-bezier(0.65, 0, 0.35, 1);
+  --md-comp-collapsible-icon-size: 24px;
+  --md-comp-collapsible-popout-inset: 24px;
+  --md-comp-collapsible-popout-gap: 16px;
 
-.collapsible-header {
-  display: flex;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  line-height: 1.5;
-  padding: 1rem;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-
-  &:focus {
-    outline: 0
-  }
-
-  i {
-    width: 2rem;
-    font-size: 1.6rem;
-    display: inline-block;
-    text-align: center;
-    margin-right: 1rem;
-  }
-}
-
-.collapsible-header::after {
-  content: '\e5cf';
-  margin-left: .5rem;
-  font-family: var(--md-icon-font);
-  font-variation-settings:
-    "FILL" var(--md-icon-fill),
-    "wght" var(--md-icon-weight),
-    "GRAD" var(--md-icon-grade),
-    "opsz" var(--md-icon-optical-size);
-  font-size: 25px;
-  line-height: .9;
-  -webkit-font-smoothing: antialiased;
-}
-
-.active .collapsible-header::after {
-  content: '\e5ce';
-}
-
-.keyboard-focused .collapsible-header:focus {
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.collapsible-header-content {
-  flex-grow: 1;
-}
-
-.collapsible-body {
-  max-height: 0;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
   box-sizing: border-box;
-  padding: 0 2rem;
+  padding: 0;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  list-style: none;
   overflow: hidden;
-}
+  border: 1px solid var(--md-comp-collapsible-outline-color);
+  border-radius: var(--md-comp-collapsible-shape);
+  background-color: var(--md-comp-collapsible-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("1");
 
-// Popout Collapsible
-
-.collapsible.popout {
-  border: none;
-  box-shadow: none;
-
-  > li {
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-    // transform: scaleX(.92);
-    margin: 0 24px;
-    transition: margin .35s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  > :is(details, li) + :is(details, li) {
+    border-top: 1px solid var(--md-comp-collapsible-outline-color);
   }
 
-  > li.active {
-    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
-    margin: 16px 0;
-    // transform: scaleX(1);
+  :is(summary, .collapsible-header) {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: var(--md-comp-collapsible-header-padding);
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    line-height: 1.5;
+    text-align: start;
+    list-style: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    @include focus-visible;
+
+    > i {
+      width: 2rem;
+      margin-right: 1rem;
+      font-size: 1.6rem;
+      line-height: 1;
+      text-align: center;
+    }
+
+    &::after {
+      content: "expand_more";
+      flex-shrink: 0;
+      margin-inline-start: auto;
+      font-family: var(--md-icon-font);
+      font-size: var(--md-comp-collapsible-icon-size);
+      font-variation-settings:
+        "FILL" var(--md-icon-fill),
+        "wght" var(--md-icon-weight),
+        "GRAD" var(--md-icon-grade),
+        "opsz" var(--md-icon-optical-size);
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      transition: transform var(--md-comp-collapsible-duration)
+        var(--md-comp-collapsible-easing-close);
+    }
+  }
+
+  :is(details[open] > summary, .active > .collapsible-header)::after {
+    transform: rotate(180deg);
+    transition-timing-function: var(--md-comp-collapsible-easing-open);
+  }
+
+  .collapsible-header-content {
+    flex-grow: 1;
+  }
+
+  // Shared body for the <ul> alias and for <details> (JS wraps the
+  // latter). Text stays painted and is clipped as the row shrinks.
+  .collapsible-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    box-sizing: border-box;
+    padding: var(--md-comp-collapsible-body-padding);
+    overflow: hidden;
+    transition: grid-template-rows var(--md-comp-collapsible-duration)
+      var(--md-comp-collapsible-easing-close);
+
+    > * {
+      min-height: 0;
+      overflow: hidden;
+    }
+  }
+
+  .active > .collapsible-body,
+  details[open] > .collapsible-body {
+    grid-template-rows: 1fr;
+    transition-timing-function: var(--md-comp-collapsible-easing-open);
+  }
+
+  // UA `display: none` on closed details children. Keep our wrapper as
+  // a grid so 0fr can clip instead of popping the copy away.
+  details:not([open]) > .collapsible-body {
+    display: grid;
+  }
+
+  &.no-icon :is(summary, .collapsible-header)::after {
+    content: none;
+  }
+
+  &.popout {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    @include z-depth("0");
+
+    > :is(details, li) {
+      margin-inline: var(--md-comp-collapsible-popout-inset);
+      overflow: hidden;
+      border: 0;
+      border-radius: var(--md-comp-collapsible-shape);
+      background-color: var(--md-comp-collapsible-container-color);
+      transition: margin var(--md-comp-collapsible-duration)
+        var(--md-comp-collapsible-easing-close);
+      @include z-depth("1");
+    }
+
+    > :is(details, li) + :is(details, li) {
+      border-top: 0;
+    }
+
+    > :is(details[open], li.active) {
+      margin-block: var(--md-comp-collapsible-popout-gap);
+      margin-inline: 0;
+      transition-timing-function: var(--md-comp-collapsible-easing-open);
+      @include z-depth("2");
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible {
+    --md-comp-collapsible-duration: 0s;
   }
 }
