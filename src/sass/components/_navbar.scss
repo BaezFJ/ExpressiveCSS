@@ -122,6 +122,21 @@ header:has(> nav) {
     }
   }
 
+  // Breadcrumb trail. Layout only — colors stay on the breadcrumb tokens
+  // (which this header remaps to inherit). Do not treat the crumbs as
+  // destinations.
+  > nav:not(.tabs) > ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-self: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    list-style: none;
+    margin: 0;
+    padding-inline: 12px;
+  }
+
   > nav:not(.tabs) > form {
     display: flex;
     flex: 1 1 auto;

@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Breadcrumbs</h1>
-      <h4 class="light primary-text">Show the current location when the page sits several layers deep.</h4>
+      <h4 class="light primary-text">The path to this page, from the HTML.</h4>
     </div>
   </div>
 </section>
@@ -16,37 +16,124 @@
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
-      <div id="basic" class="section scrollspy">
+
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Breadcrumbs are a good way to display your current location. This is usually used when you have multiple layers of content.
+          A <code>&lt;nav&gt;</code> whose child is an <code>&lt;ol&gt;</code>
+          is a breadcrumb trail. There is no <code>breadcrumb</code> class on
+          each crumb. The last item is the current page —
+          <code>aria-current="page"</code>.
         </p>
-        <h3>Basic</h3>
-        <nav class="breadcrumb-wrapper">
-          <a href="#!" class="breadcrumb">First</a>
-          <a href="#!" class="breadcrumb">Second</a>
-          <a href="#!" class="breadcrumb">Third</a>
+        <nav aria-label="Breadcrumb">
+          <ol>
+            <li><a href="#!">Home</a></li>
+            <li><a href="#!">Library</a></li>
+            <li><a href="#!" aria-current="page">Data</a></li>
+          </ol>
         </nav>
-<pre><code>&lt;nav class="breadcrumb-wrapper"&gt;
-  &lt;a href="#!" class="breadcrumb"&gt;First&lt;/a&gt;
-  &lt;a href="#!" class="breadcrumb"&gt;Second&lt;/a&gt;
-  &lt;a href="#!" class="breadcrumb"&gt;Third&lt;/a&gt;
+<pre><code>&lt;nav aria-label="Breadcrumb"&gt;
+  &lt;ol&gt;
+    &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/library"&gt;Library&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/library/data" aria-current="page"&gt;Data&lt;/a&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+        <p>
+          The separator is
+          <code>--md-comp-breadcrumb-separator</code>, default
+          <code>/</code>. It is not an icon-font glyph, so the trail
+          still reads if Symbols are not loaded. Set the token to
+          <code>"›"</code> if you want a chevron.
+        </p>
+        <p>
+          <code>.breadcrumb-wrapper</code> and <code>.breadcrumb</code>
+          remain as aliases for the older loose-link markup.
+        </p>
+      </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <p>Override these on the <code>&lt;nav&gt;</code>.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--md-comp-breadcrumb-label-color</code></td>
+              <td><code>--md-sys-color-on-surface-variant</code></td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-breadcrumb-current-color</code></td>
+              <td><code>--md-sys-color-on-surface</code></td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-breadcrumb-separator</code></td>
+              <td><code>"/"</code></td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-breadcrumb-gap</code></td>
+              <td>8px</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Breadcrumb" style="--md-comp-breadcrumb-separator: '›';">
+          <ol>
+            <li><a href="#!">Home</a></li>
+            <li><a href="#!">Library</a></li>
+            <li><a href="#!" aria-current="page">Data</a></li>
+          </ol>
+        </nav>
+<pre><code>&lt;nav aria-label="Breadcrumb" style="--md-comp-breadcrumb-separator: '›'"&gt;
+  …
 &lt;/nav&gt;</code></pre>
       </div>
 
-      <div id="navbar-style" class="section scrollspy">
-        <h3>Navbar style</h3>
+      <div id="overflow" class="section scrollspy">
+        <h3>Overflow</h3>
+        <p>
+          The trail wraps by default. Add <code>nowrap</code> to keep one
+          row and scroll sideways; the current page does not shrink.
+        </p>
+        <nav class="nowrap" aria-label="Breadcrumb" style="max-width: 16rem;">
+          <ol>
+            <li><a href="#!">Home</a></li>
+            <li><a href="#!">Library</a></li>
+            <li><a href="#!">Collections</a></li>
+            <li><a href="#!">Winter</a></li>
+            <li><a href="#!" aria-current="page">Catalog</a></li>
+          </ol>
+        </nav>
+<pre><code>&lt;nav class="nowrap" aria-label="Breadcrumb"&gt;
+  &lt;ol&gt;…&lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="navbar" class="section scrollspy">
+        <h3>In an app bar</h3>
+        <p>
+          Put the same <code>&lt;ol&gt;</code> in a
+          <code>header &gt; nav</code>. The trail follows the bar’s color.
+        </p>
         <header>
-          <nav>
-            <a href="#!" class="breadcrumb">First</a>
-            <a href="#!" class="breadcrumb">Second</a>
-            <a href="#!" class="breadcrumb">Third</a>
+          <nav aria-label="Breadcrumb">
+            <ol>
+              <li><a href="#!">First</a></li>
+              <li><a href="#!">Second</a></li>
+              <li><a href="#!" aria-current="page">Third</a></li>
+            </ol>
           </nav>
         </header>
 <pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;a href="#!" class="breadcrumb"&gt;First&lt;/a&gt;
-    &lt;a href="#!" class="breadcrumb"&gt;Second&lt;/a&gt;
-    &lt;a href="#!" class="breadcrumb"&gt;Third&lt;/a&gt;
+  &lt;nav aria-label="Breadcrumb"&gt;
+    &lt;ol&gt;
+      &lt;li&gt;&lt;a href="/"&gt;First&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/second"&gt;Second&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/second/third" aria-current="page"&gt;Third&lt;/a&gt;&lt;/li&gt;
+    &lt;/ol&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
       </div>
@@ -55,8 +142,10 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper pushpin no-autoinit mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#basic">Basic</a></li>
-          <li><a href="#navbar-style">Navbar style</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#tokens">Tokens</a></li>
+          <li><a href="#overflow">Overflow</a></li>
+          <li><a href="#navbar">In an app bar</a></li>
         </ul>
       </div>
     </div>

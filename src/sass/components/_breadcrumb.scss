@@ -1,35 +1,106 @@
 @use "../abstracts" as *;
 
+// Breadcrumbs. Anatomy is the HTML: a <nav> whose child is an <ol> of
+// links. The last crumb is the current page (aria-current="page").
+// .breadcrumb / .breadcrumb-wrapper stay as aliases.
+//
+// Tokens:
+//   --md-comp-breadcrumb-label-color      ancestors
+//   --md-comp-breadcrumb-current-color    current page
+//   --md-comp-breadcrumb-separator        "/"
+//   --md-comp-breadcrumb-gap              8px
+//
+// Nest descendants inside this block. `#{$_crumb} > ol` would only attach
+// `> ol` to the last item in the list (same bug as the icon size classes).
+
+nav:has(> ol),
+nav:has(> .breadcrumb),
 .breadcrumb-wrapper {
+  --md-comp-breadcrumb-label-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-breadcrumb-current-color: var(--md-sys-color-on-surface);
+  --md-comp-breadcrumb-separator: "/";
+  --md-comp-breadcrumb-gap: 8px;
+
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  margin: 0;
+  padding: 0;
+  color: var(--md-comp-breadcrumb-label-color);
+  @include typescale("body-small");
+
+  &.nowrap {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  > ol {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    list-style: none;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    > li:has(> [aria-current="page"]) {
+      flex-shrink: 0;
+    }
+
+    // Separator before every crumb after the first. A real character, not
+    // a private-use icon-font slot — no Symbols file required.
+    > li + li::before {
+      content: var(--md-comp-breadcrumb-separator);
+      margin-inline: var(--md-comp-breadcrumb-gap);
+      color: var(--md-comp-breadcrumb-label-color);
+    }
+  }
+
+  > .breadcrumb + .breadcrumb::before {
+    content: var(--md-comp-breadcrumb-separator);
+    margin-inline: var(--md-comp-breadcrumb-gap);
+    color: var(--md-comp-breadcrumb-label-color);
+  }
+
+  :is(a, .breadcrumb) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    color: var(--md-comp-breadcrumb-label-color);
+    text-decoration: none;
+    @include focus-visible;
+
+    &:hover {
+      color: var(--md-comp-breadcrumb-current-color);
+    }
+  }
+
+  [aria-current="page"] {
+    color: var(--md-comp-breadcrumb-current-color);
+  }
+
+  i {
+    font-size: 1.125em;
+    margin-inline-end: 4px;
+  }
 }
 
-.breadcrumb {
-  display: inline-flex;
-  align-items: center;
-
-  i,
-  i.material-symbols, i.material-symbols-outlined,
-  i.material-symbols-rounded, i.material-symbols-sharp,
-  i.material-icons,
-  &:before {
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-  }
-
-  &:before {
-    content: '\E5CC';
-    font-family: var(--md-icon-font);
-    font-variation-settings:
-      "FILL" var(--md-icon-fill),
-      "wght" var(--md-icon-weight),
-      "GRAD" var(--md-icon-grade),
-      "opsz" var(--md-icon-optical-size);
-  }
-
-  &:first-child:before {
-    visibility: hidden;
-  }
+// Inside a top app bar the trail follows the bar, not the muted ancestor
+// pair. Loose .breadcrumb links in the bar are already excluded from
+// destination styling in _navbar.scss.
+header:has(> nav) > nav:has(> ol),
+header:has(> nav) > nav:has(> .breadcrumb) {
+  --md-comp-breadcrumb-label-color: inherit;
+  --md-comp-breadcrumb-current-color: inherit;
 }
