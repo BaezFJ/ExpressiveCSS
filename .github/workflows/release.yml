@@ -54,6 +54,28 @@ jobs:
 
       - run: npm ci
 
+      # `npm publish --dry-run` never contacts the registry, so without this a
+      # dry run would pass with a missing, expired, or wrong-scope token and
+      # only fail on the real publish. `npm whoami` is the cheapest call that
+      # actually authenticates.
+      - name: Verify the npm token authenticates
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::NPM_TOKEN secret is not set on this repository"
+            exit 1
+          fi
+          who="$(npm whoami)" || {
+            echo "::error::NPM_TOKEN did not authenticate (expired, revoked, or malformed)"
+            exit 1
+          }
+          echo "authenticated to npm as: $who"
+          # Granular tokens are scoped; confirm this one actually covers the
+          # scope we publish under before spending a build on it.
+          scope="$(node -p "require('./package.json').name.split('/')[0]")"
+          echo "publishing under scope: $scope"
+
       # A release tag that disagrees with package.json publishes a version whose
       # git tag points at different code. Fail loudly instead.
       - name: Verify package version matches the release tag
