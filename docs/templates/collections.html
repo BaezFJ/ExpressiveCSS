@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Collections</h1>
-      <h4 class="light primary-text">Group list objects together, with optional links, headers, and avatars.</h4>
+      <h4 class="light primary-text">A list. The HTML is the component.</h4>
     </div>
   </div>
 </section>
@@ -18,130 +18,165 @@
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
       <div id="basic" class="section scrollspy">
-        <p class="flow-text">Collections allow you to group list objects together.</p>
-        <h3>Basic</h3>
+        <p class="flow-text">
+          A <code>.collection</code> is a list of rows. There is no
+          JavaScript. <code>.collection-item</code> is optional — a
+          direct <code>&lt;li&gt;</code> is enough.
+        </p>
         <ul class="collection">
-          <li class="collection-item">Alvin</li>
-          <li class="collection-item">Alvin</li>
-          <li class="collection-item">Alvin</li>
-          <li class="collection-item">Alvin</li>
+          <li>Alvin</li>
+          <li>Alvin</li>
+          <li>Alvin</li>
+          <li>Alvin</li>
         </ul>
 <pre><code>&lt;ul class="collection"&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+  &lt;li&gt;Alvin&lt;/li&gt;
+  &lt;li&gt;Alvin&lt;/li&gt;
+  &lt;li&gt;Alvin&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
+        <p>
+          The box is 12px and uses
+          <code>--md-comp-collection-shape</code>. Add
+          <code>flush</code> for a borderless list.
+        </p>
+        <ul class="collection flush">
+          <li>Alvin</li>
+          <li>Alvin</li>
+          <li>Alvin</li>
+        </ul>
+<pre><code>&lt;ul class="collection flush"&gt;…&lt;/ul&gt;</code></pre>
       </div>
 
       <div id="links" class="section scrollspy">
         <h3>Links</h3>
-        <div class="collection">
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item active">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-        </div>
-<pre><code>&lt;div class="collection"&gt;
-  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
-  &lt;a href="#!" class="collection-item active"&gt;Alvin&lt;/a&gt;
-  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
-  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
-&lt;/div&gt;</code></pre>
+        <p>
+          Put the link in the item. Mark the current row with
+          <code>aria-current="page"</code> (or the older
+          <code>active</code> class).
+        </p>
+        <ul class="collection">
+          <li><a href="#!">Alvin</a></li>
+          <li><a href="#!" aria-current="page">Alvin</a></li>
+          <li><a href="#!">Alvin</a></li>
+          <li><a href="#!">Alvin</a></li>
+        </ul>
+<pre><code>&lt;ul class="collection"&gt;
+  &lt;li&gt;&lt;a href="/inbox"&gt;Inbox&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="/sent" aria-current="page"&gt;Sent&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
       </div>
 
       <div id="headers" class="section scrollspy">
         <h3>Headers</h3>
-        <ul class="collection with-header">
-          <li class="collection-header"><h4>First Names</h4></li>
-          <li class="collection-item">Alvin</li>
-          <li class="collection-item">Alvin</li>
-          <li class="collection-item">Alvin</li>
-          <li class="collection-item">Alvin</li>
+        <p>
+          A heading as the first child of an item is the section header.
+          <code>with-header</code> and <code>collection-header</code>
+          still work.
+        </p>
+        <ul class="collection">
+          <li><h3>First names</h3></li>
+          <li>Alvin</li>
+          <li>Alvin</li>
+          <li>Alvin</li>
         </ul>
-<pre><code>&lt;ul class="collection with-header"&gt;
-  &lt;li class="collection-header"&gt;&lt;h4&gt;First Names&lt;/h4&gt;&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
-  &lt;li class="collection-item"&gt;Alvin&lt;/li&gt;
+<pre><code>&lt;ul class="collection"&gt;
+  &lt;li&gt;&lt;h3&gt;First names&lt;/h3&gt;&lt;/li&gt;
+  &lt;li&gt;Alvin&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
       </div>
 
       <div id="secondary" class="section scrollspy">
         <h3>Secondary content</h3>
-        <ul class="collection with-header">
-          <li class="collection-header"><h4>First Names</h4></li>
-          <li class="collection-item">
-            Alvin<a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
+        <p>
+          A trailing action uses <code>secondary-content</code>. It sits
+          at the end of the row — no float.
+        </p>
+        <ul class="collection">
+          <li>
+            Alvin
+            <a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
           </li>
-          <li class="collection-item">
-            Alvin<a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
+          <li>
+            Alvin
+            <a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
           </li>
-          <li class="collection-item">
-            Alvin<a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
-          </li>
-          <li class="collection-item">
-            Alvin<a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
+          <li>
+            Alvin
+            <a href="#!" class="secondary-content"><i class="material-symbols">send</i></a>
           </li>
         </ul>
-<pre><code>&lt;ul class="collection with-header"&gt;
-  &lt;li class="collection-header"&gt;&lt;h4&gt;First Names&lt;/h4&gt;&lt;/li&gt;
-  &lt;li class="collection-item"&gt;
-    Alvin
-    &lt;a href="#!" class="secondary-content"&gt;
-      &lt;i class="material-symbols"&gt;send&lt;/i&gt;
-    &lt;/a&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+<pre><code>&lt;li&gt;
+  Alvin
+  &lt;a href="#!" class="secondary-content"&gt;
+    &lt;i class="material-symbols"&gt;send&lt;/i&gt;
+  &lt;/a&gt;
+&lt;/li&gt;</code></pre>
       </div>
 
       <div id="circle" class="section scrollspy">
-        <h3>Avatar Content</h3>
+        <h3>Avatars</h3>
+        <p>
+          A leading <code>.circle</code> (image or icon) is the avatar.
+          <code>.avatar</code> is optional.
+          <code>.title</code> is the headline;
+          a following <code>&lt;p&gt;</code> is supporting text.
+        </p>
         <ul class="collection">
-          <li class="collection-item avatar">
+          <li>
             <img src="https://picsum.photos/id/64/100/100" alt="" class="circle">
             <span class="title">Title</span>
             <p>First Line<br>Second Line</p>
             <a href="#!" class="secondary-content"><i class="material-symbols">grade</i></a>
           </li>
-          <li class="collection-item avatar">
+          <li>
             <i class="material-symbols circle">folder</i>
             <span class="title">Title</span>
             <p>First Line<br>Second Line</p>
             <a href="#!" class="secondary-content"><i class="material-symbols">grade</i></a>
           </li>
-          <li class="collection-item avatar">
+          <li>
             <i class="material-symbols circle tertiary on-tertiary-text">insert_chart</i>
             <span class="title">Title</span>
             <p>First Line<br>Second Line</p>
             <a href="#!" class="secondary-content"><i class="material-symbols">grade</i></a>
           </li>
-          <li class="collection-item avatar">
+          <li>
             <i class="material-symbols circle error on-error-text">play_arrow</i>
             <span class="title">Title</span>
             <p>First Line<br>Second Line</p>
             <a href="#!" class="secondary-content"><i class="material-symbols">grade</i></a>
           </li>
         </ul>
-<pre><code>&lt;ul class="collection"&gt;
-  &lt;li class="collection-item avatar"&gt;
-    &lt;img src="images/portrait.jpg" alt="" class="circle"&gt;
-    &lt;span class="title"&gt;Title&lt;/span&gt;
-    &lt;p&gt;First Line&lt;br&gt;Second Line&lt;/p&gt;
-    &lt;a href="#!" class="secondary-content"&gt;
-      &lt;i class="material-symbols"&gt;grade&lt;/i&gt;
-    &lt;/a&gt;
-  &lt;/li&gt;
-  &lt;li class="collection-item avatar"&gt;
-    &lt;i class="material-symbols circle"&gt;folder&lt;/i&gt;
-    &lt;span class="title"&gt;Title&lt;/span&gt;
-    &lt;p&gt;First Line&lt;br&gt;Second Line&lt;/p&gt;
-    &lt;a href="#!" class="secondary-content"&gt;
-      &lt;i class="material-symbols"&gt;grade&lt;/i&gt;
-    &lt;/a&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+<pre><code>&lt;li&gt;
+  &lt;img src="images/portrait.jpg" alt="" class="circle"&gt;
+  &lt;span class="title"&gt;Title&lt;/span&gt;
+  &lt;p&gt;First Line&lt;br&gt;Second Line&lt;/p&gt;
+  &lt;a href="#!" class="secondary-content"&gt;
+    &lt;i class="material-symbols"&gt;grade&lt;/i&gt;
+  &lt;/a&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="alias" class="section scrollspy">
+        <h3>Class aliases</h3>
+        <p>
+          The older class names still work:
+          <code>collection-item</code>,
+          <code>collection-header</code>,
+          <code>with-header</code>,
+          <code>avatar</code>,
+          and a <code>&lt;div class="collection"&gt;</code> of bare
+          <code>&lt;a class="collection-item"&gt;</code> links.
+        </p>
+        <div class="collection">
+          <a href="#!" class="collection-item">Alvin</a>
+          <a href="#!" class="collection-item active">Alvin</a>
+          <a href="#!" class="collection-item">Alvin</a>
+        </div>
+<pre><code>&lt;div class="collection"&gt;
+  &lt;a href="#!" class="collection-item"&gt;Alvin&lt;/a&gt;
+  &lt;a href="#!" class="collection-item active"&gt;Alvin&lt;/a&gt;
+&lt;/div&gt;</code></pre>
       </div>
     </div>
 
@@ -152,7 +187,8 @@
           <li><a href="#links">Links</a></li>
           <li><a href="#headers">Headers</a></li>
           <li><a href="#secondary">Secondary Content</a></li>
-          <li><a href="#circle">Avatar Content</a></li>
+          <li><a href="#circle">Avatars</a></li>
+          <li><a href="#alias">Class aliases</a></li>
         </ul>
       </div>
     </div>

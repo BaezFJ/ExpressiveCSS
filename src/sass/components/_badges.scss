@@ -48,9 +48,10 @@ header:has(> nav) nav a span.badge {
   -webkit-font-smoothing: auto;
 }
 
-// Line height centering
-.collection-item span.badge {
-  margin-top: calc(calc(1.5rem * 0.5) - calc(var(--bagde-height) * 0.5));
+.collection span.badge {
+  float: none;
+  margin-block: 0;
+  margin-inline-start: auto;
 }
 
 .collapsible span.badge {
