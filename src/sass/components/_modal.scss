@@ -22,6 +22,7 @@ dialog,
   --md-comp-basic-dialog-container-shape: 28px;
   --md-comp-basic-dialog-container-min-width: 280px;
   --md-comp-basic-dialog-container-max-width: 560px;
+  --md-comp-basic-dialog-sheet-width: 400px;
   --md-comp-basic-dialog-scrim-blur: 12px;
 
   box-sizing: border-box;
@@ -144,8 +145,9 @@ dialog.max,
   border-radius: 0;
 }
 
-// Bottom sheet. M3 sheets are a sibling component; this keeps the existing
-// Expressive helper and BeerCSS's `bottom` name.
+// Sheets. Docked to one edge; the inner corners keep the dialog shape,
+// the edge against the viewport is square. `left` / `right` also float
+// via the helper utilities (`!important`), so sheets reset that.
 dialog.bottom,
 dialog.bottom-sheet,
 .modal.bottom-sheet {
@@ -156,4 +158,51 @@ dialog.bottom-sheet,
   margin: auto 0 0;
   border-radius: var(--md-comp-basic-dialog-container-shape)
     var(--md-comp-basic-dialog-container-shape) 0 0;
+}
+
+dialog.top,
+dialog.top-sheet,
+.modal.top-sheet {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  max-height: 50%;
+  margin: 0 0 auto;
+  border-radius: 0 0 var(--md-comp-basic-dialog-container-shape)
+    var(--md-comp-basic-dialog-container-shape);
+}
+
+dialog.left,
+dialog.left-sheet,
+.modal.left-sheet,
+dialog.right,
+dialog.right-sheet,
+.modal.right-sheet {
+  float: none !important;
+  width: min(var(--md-comp-basic-dialog-sheet-width), 85%);
+  max-width: none;
+  height: auto;
+  max-height: none;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  inset-block: 0;
+}
+
+dialog.left,
+dialog.left-sheet,
+.modal.left-sheet {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  border-radius: 0 var(--md-comp-basic-dialog-container-shape)
+    var(--md-comp-basic-dialog-container-shape) 0;
+}
+
+dialog.right,
+dialog.right-sheet,
+.modal.right-sheet {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  border-radius: var(--md-comp-basic-dialog-container-shape) 0 0
+    var(--md-comp-basic-dialog-container-shape);
 }

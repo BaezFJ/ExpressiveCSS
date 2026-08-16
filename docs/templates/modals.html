@@ -154,6 +154,10 @@
               <td>560px</td>
             </tr>
             <tr>
+              <td><code>--md-comp-basic-dialog-sheet-width</code></td>
+              <td>400px</td>
+            </tr>
+            <tr>
               <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
               <td>12px</td>
             </tr>
@@ -161,30 +165,56 @@
         </table>
       </div>
 
-      <div id="bottom" class="section scrollspy">
-        <h3>Bottom sheet</h3>
+      <div id="sheets" class="section scrollspy">
+        <h3>Sheets</h3>
         <p>
-          Add <code>bottom</code> (or the older <code>bottom-sheet</code>)
-          for a sheet docked to the bottom with square bottom corners. It is
-          still a native <code>&lt;dialog&gt;</code>.
+          Add <code>top</code>, <code>right</code>, <code>bottom</code>, or
+          <code>left</code> to dock the dialog to that edge. The inner
+          corners keep the 28dp shape; the edge against the viewport is
+          square. <code>top-sheet</code>, <code>right-sheet</code>,
+          <code>bottom-sheet</code>, and <code>left-sheet</code> are
+          aliases. Side sheets are 400px wide
+          (<code>--md-comp-basic-dialog-sheet-width</code>); top and bottom
+          take the full width and half the viewport height.
         </p>
         <p>
-          <button type="button" class="tonal" onclick="document.getElementById('modal-bottom').showModal()">Show bottom sheet</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-top').showModal()">Top</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-right').showModal()">Right</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-bottom').showModal()">Bottom</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-left').showModal()">Left</button>
         </p>
+        <dialog id="modal-top" class="top">
+          <h2>Top sheet</h2>
+          <p>Docked to the top. Useful for a compact status or filter bar.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+        <dialog id="modal-right" class="right">
+          <h2>Right sheet</h2>
+          <p>A side sheet for details, filters, or a short form that should stay next to the page.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
         <dialog id="modal-bottom" class="bottom">
-          <h2>Choose an action</h2>
+          <h2>Bottom sheet</h2>
           <p>Bottom sheets are useful for a short list of actions.</p>
           <form method="dialog">
             <button type="submit" class="text" value="close">Close</button>
           </form>
         </dialog>
-<pre><code>&lt;dialog class="bottom"&gt;
-  &lt;h2&gt;Choose an action&lt;/h2&gt;
-  &lt;p&gt;Bottom sheets are useful for a short list of actions.&lt;/p&gt;
-  &lt;form method="dialog"&gt;
-    &lt;button type="submit" class="text"&gt;Close&lt;/button&gt;
-  &lt;/form&gt;
-&lt;/dialog&gt;</code></pre>
+        <dialog id="modal-left" class="left">
+          <h2>Left sheet</h2>
+          <p>A side sheet docked to the start edge. Same width token as the right sheet.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+<pre><code>&lt;dialog class="top"&gt;…&lt;/dialog&gt;
+&lt;dialog class="right"&gt;…&lt;/dialog&gt;
+&lt;dialog class="bottom"&gt;…&lt;/dialog&gt;
+&lt;dialog class="left"&gt;…&lt;/dialog&gt;</code></pre>
       </div>
 
       <div id="fullscreen" class="section scrollspy">
@@ -221,7 +251,7 @@
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#tokens">Tokens</a></li>
-          <li><a href="#bottom">Bottom sheet</a></li>
+          <li><a href="#sheets">Sheets</a></li>
           <li><a href="#fullscreen">Full-screen</a></li>
         </ul>
       </div>
