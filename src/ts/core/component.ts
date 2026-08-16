@@ -24,7 +24,7 @@ export interface Openable {
 }
 
 /**
- * Base class implementation for LibrePOS components.
+ * Base class implementation for Expressive components.
  */
 export class Component<O extends BaseOptions> {
   /**

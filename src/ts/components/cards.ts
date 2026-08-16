@@ -34,7 +34,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
 
   constructor(el: HTMLElement, options: Partial<CardsOptions>) {
     super(el, options, Cards);
-    this.el['LibrePOS_Cards'] = this;
+    this.el['Expressive_Cards'] = this;
 
     this.options = {
       ...Cards.defaults,
@@ -90,7 +90,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
   }
 
   static getInstance(el: HTMLElement): Cards {
-    return el['LibrePOS_Cards'];
+    return el['Expressive_Cards'];
   }
 
   /**
@@ -100,7 +100,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     this._removeEventHandlers();
     if (this.cardRevealClose) this._removeRevealCloseEventHandlers();
     this._activators = [];
-    this.el['LibrePOS_Cards'] = undefined;
+    this.el['Expressive_Cards'] = undefined;
   }
 
   _setupEventHandlers = () => {
@@ -196,7 +196,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     Utils.onDocumentReady(() => {
       const cards = document.querySelectorAll(CARDS_SELECTOR);
       cards.forEach((el) => {
-        if (el && el['LibrePOS_Cards'] == undefined) this.init(el as HTMLElement);
+        if (el && el['Expressive_Cards'] == undefined) this.init(el as HTMLElement);
       });
     });
   }

@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Waves - LibrePOS-CSS{% endblock %}
+{% block title %}Waves - ExpressiveCSS{% endblock %}
 {% block page_title %}Waves{% endblock %}
 
 {% block page %}
@@ -8,7 +8,7 @@
   <div class="container row py-5">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
       <h1 class="primary-text">Waves</h1>
-      <h4 class="light primary-text">The Material Design ink ripple, included in the LibrePOS JavaScript bundle.</h4>
+      <h4 class="light primary-text">The Material Design ink ripple, included in the Expressive JavaScript bundle.</h4>
     </div>
   </div>
 </section>
@@ -20,7 +20,7 @@
       <div id="introduction" class="section scrollspy">
         <h4>Introduction</h4>
         <p class="flow-text">
-          Waves creates the ink effect outlined in Material Design. It is included in the LibrePOS JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
+          Waves creates the ink effect outlined in Material Design. It is included in the Expressive JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
         </p>
         <a class="waves-effect waves-light btn filled" href="#!">Wave</a>
       </div>
@@ -68,7 +68,7 @@
           </div>
         </div>
 <pre><code>// Trigger a red wave from the center
-LibrePOS.Waves.renderWaveEffect(
+Expressive.Waves.renderWaveEffect(
   document.querySelector('.wave-demo'), // Target element
   null,                                 // Position {x, y}, or null for center
   { r: 255, g: 0, b: 0 }                // RGB color

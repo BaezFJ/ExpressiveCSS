@@ -1,7 +1,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { LibrePOS, resetBody } from './setup.js';
+import { Expressive, resetBody } from './setup.js';
 import { AUTO_INIT_FIXTURES } from './fixtures.js';
 
 describe('AutoInit', () => {
@@ -13,12 +13,12 @@ describe('AutoInit', () => {
       const el = document.querySelector(selector);
       assert.ok(el, `fixture for ${name} has no element matching ${selector}`);
 
-      LibrePOS.AutoInit();
+      Expressive.AutoInit();
 
-      const instance = LibrePOS[name].getInstance(el);
+      const instance = Expressive[name].getInstance(el);
       assert.ok(instance, `${name}.getInstance() returned nothing after AutoInit()`);
       assert.ok(
-        instance instanceof LibrePOS[name],
+        instance instanceof Expressive[name],
         `instance for ${selector} is ${instance?.constructor?.name}, expected ${name}`
       );
       assert.equal(instance.el, el, `${name} instance is bound to the wrong element`);
@@ -37,10 +37,10 @@ describe('AutoInit', () => {
       <ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul>`;
     const [optedOut, normal] = document.querySelectorAll('.collapsible');
 
-    LibrePOS.AutoInit();
+    Expressive.AutoInit();
 
-    assert.equal(LibrePOS.Collapsible.getInstance(optedOut), undefined);
-    assert.ok(LibrePOS.Collapsible.getInstance(normal));
+    assert.equal(Expressive.Collapsible.getInstance(optedOut), undefined);
+    assert.ok(Expressive.Collapsible.getInstance(normal));
   });
 
   test('.no-autoinit is honoured on every alternative of a multi-part selector', () => {
@@ -53,23 +53,23 @@ describe('AutoInit', () => {
       <div class="card"><span class="activator">T</span><div class="card-reveal"><p>b</p></div></div>`;
     const [optedOut, normal] = document.querySelectorAll('.card');
 
-    LibrePOS.AutoInit();
+    Expressive.AutoInit();
 
     assert.equal(
-      LibrePOS.Cards.getInstance(optedOut),
+      Expressive.Cards.getInstance(optedOut),
       undefined,
       '.no-autoinit was ignored on the first alternative of the selector'
     );
-    assert.ok(LibrePOS.Cards.getInstance(normal), 'the opted-in card was not initialized');
+    assert.ok(Expressive.Cards.getInstance(normal), 'the opted-in card was not initialized');
   });
 
   test('AutoInit starts Cards on the semantic article markup the docs use', () => {
     document.body.innerHTML = `<article><span class="activator">T</span><aside><p>reveal</p></aside></article>`;
     const el = document.querySelector('article');
 
-    LibrePOS.AutoInit();
+    Expressive.AutoInit();
 
-    assert.ok(LibrePOS.Cards.getInstance(el), 'AutoInit did not construct Cards for <article><aside>');
+    assert.ok(Expressive.Cards.getInstance(el), 'AutoInit did not construct Cards for <article><aside>');
   });
 
   test('only touches the context it is given', () => {
@@ -77,20 +77,20 @@ describe('AutoInit', () => {
       <div id="inside"><ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul></div>
       <div id="outside"><ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul></div>`;
 
-    LibrePOS.AutoInit(document.getElementById('inside'));
+    Expressive.AutoInit(document.getElementById('inside'));
 
-    assert.ok(LibrePOS.Collapsible.getInstance(document.querySelector('#inside .collapsible')));
-    assert.equal(LibrePOS.Collapsible.getInstance(document.querySelector('#outside .collapsible')), undefined);
+    assert.ok(Expressive.Collapsible.getInstance(document.querySelector('#inside .collapsible')));
+    assert.equal(Expressive.Collapsible.getInstance(document.querySelector('#outside .collapsible')), undefined);
   });
 
   test('re-initializing an element replaces the instance instead of stacking', () => {
     document.body.innerHTML = `<ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul>`;
     const el = document.querySelector('.collapsible');
 
-    LibrePOS.AutoInit();
-    const first = LibrePOS.Collapsible.getInstance(el);
-    LibrePOS.AutoInit();
-    const second = LibrePOS.Collapsible.getInstance(el);
+    Expressive.AutoInit();
+    const first = Expressive.Collapsible.getInstance(el);
+    Expressive.AutoInit();
+    const second = Expressive.Collapsible.getInstance(el);
 
     assert.ok(first && second);
     assert.notEqual(first, second, 'second AutoInit() did not create a new instance');

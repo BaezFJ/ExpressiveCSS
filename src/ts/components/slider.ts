@@ -68,7 +68,7 @@ export class Slider extends Component<SliderOptions> {
 
   constructor(el: HTMLElement, options: Partial<SliderOptions>) {
     super(el, options, Slider);
-    this.el['LibrePOS_Slider'] = this;
+    this.el['Expressive_Slider'] = this;
 
     this.options = {
       ...Slider.defaults,
@@ -172,14 +172,14 @@ export class Slider extends Component<SliderOptions> {
   }
 
   static getInstance(el: HTMLElement): Slider {
-    return el['LibrePOS_Slider'];
+    return el['Expressive_Slider'];
   }
 
   destroy() {
     this.pause();
     this._removeIndicators();
     this._removeEventHandlers();
-    this.el['LibrePOS_Slider'] = undefined;
+    this.el['Expressive_Slider'] = undefined;
   }
 
   private _setupEventHandlers() {

@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Tooltips - LibrePOS-CSS{% endblock %}
+{% block title %}Tooltips - ExpressiveCSS{% endblock %}
 {% block page_title %}Tooltips{% endblock %}
 
 {% block page %}
@@ -165,20 +165,20 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>LibrePOS.Tooltip</code>.
+          The IIFE bundle exposes <code>Expressive.Tooltip</code>.
           Call <code>init</code> yourself when you need options other
           than the defaults, or let
-          <code>LibrePOS.AutoInit()</code> start every
+          <code>Expressive.AutoInit()</code> start every
           <code>.tooltipped</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tooltipped');
-  const instances = LibrePOS.Tooltip.init(elems, {
+  const instances = Expressive.Tooltip.init(elems, {
     enterDelay: 200
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   Tooltip: { enterDelay: 200 }
 });</code></pre>
       </div>
@@ -272,7 +272,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.Tooltip.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Tooltip.getInstance(elem);</code></pre>
 
         <p>
           <a class="tooltipped" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</a>

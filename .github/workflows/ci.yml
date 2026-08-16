@@ -34,7 +34,7 @@ jobs:
 
       - run: npm run typecheck
 
-      # Full build: the test suite runs against the built dist/js/librepos.mjs,
+      # Full build: the test suite runs against the built dist/js/expressive.mjs,
       # so a stale or missing bundle would test stale code.
       - run: npm run build
 
@@ -51,12 +51,12 @@ jobs:
           missing=0
           for f in \
             dist/types/index.d.ts \
-            dist/js/librepos.mjs \
-            dist/js/librepos.cjs \
-            dist/js/librepos.min.js \
-            dist/css/librepos.css \
-            dist/css/librepos.min.css \
-            src/sass/librepos.scss \
+            dist/js/expressive.mjs \
+            dist/js/expressive.cjs \
+            dist/js/expressive.min.js \
+            dist/css/expressive.css \
+            dist/css/expressive.min.css \
+            src/sass/expressive.scss \
             LICENSE \
             README.md
           do

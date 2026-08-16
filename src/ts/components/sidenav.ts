@@ -88,7 +88,7 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
 
   constructor(el: HTMLElement, options: Partial<SidenavOptions>) {
     super(el, options, Sidenav);
-    this.el['LibrePOS_Sidenav'] = this;
+    this.el['Expressive_Sidenav'] = this;
 
     this.options = {
       ...Sidenav.defaults,
@@ -139,7 +139,7 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   }
 
   static getInstance(el: HTMLElement): Sidenav {
-    return el['LibrePOS_Sidenav'];
+    return el['Expressive_Sidenav'];
   }
 
   destroy() {
@@ -147,7 +147,7 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     this._enableBodyScrolling();
     this._overlay.parentNode.removeChild(this._overlay);
     this.dragTarget.parentNode.removeChild(this.dragTarget);
-    this.el['LibrePOS_Sidenav'] = undefined;
+    this.el['Expressive_Sidenav'] = undefined;
     this.el.style.transform = '';
     const index = Sidenav._sidenavs.indexOf(this);
     if (index >= 0) {
@@ -208,7 +208,7 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     if (e.target && trigger) {
       const sidenavId = Utils.getIdFromTrigger(trigger);
       // The trigger can name an id that is not in the document.
-      const sidenavInstance = document.getElementById(sidenavId)?.['LibrePOS_Sidenav'];
+      const sidenavInstance = document.getElementById(sidenavId)?.['Expressive_Sidenav'];
       if (sidenavInstance) {
         sidenavInstance.open();
       }

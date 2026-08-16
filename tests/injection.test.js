@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { LibrePOS, resetBody } from './setup.js';
+import { Expressive, resetBody } from './setup.js';
 
 const PAYLOAD = '"><img src=x onerror=alert(1)>';
 
@@ -26,7 +26,7 @@ describe('FormSelect renders author content as text', () => {
     document.querySelector('optgroup').setAttribute('label', PAYLOAD);
     const select = document.querySelector('select');
 
-    const instance = LibrePOS.FormSelect.init(select);
+    const instance = Expressive.FormSelect.init(select);
 
     const dropdown = instance.dropdownOptions;
     assert.equal(dropdown.querySelector('img'), null, 'the label was parsed as markup');
@@ -44,7 +44,7 @@ describe('FormSelect renders author content as text', () => {
       </select>`;
     const select = document.querySelector('select');
 
-    const instance = LibrePOS.FormSelect.init(select);
+    const instance = Expressive.FormSelect.init(select);
 
     assert.equal(instance.dropdownOptions.querySelector('img'), null);
     assert.equal(
@@ -67,7 +67,7 @@ describe('FormSelect renders author content as text', () => {
       </div>`;
     const select = document.querySelector('select');
 
-    const instance = LibrePOS.FormSelect.init(select);
+    const instance = Expressive.FormSelect.init(select);
 
     assert.ok(instance.labelEl, 'the associated label was not found');
     assert.equal(instance.labelEl.textContent, 'Pick');
@@ -78,7 +78,7 @@ describe('FormSelect renders author content as text', () => {
       <select><option value="1" class="  a  b " data-icon="http://localhost/i.png">One</option></select>`;
     const select = document.querySelector('select');
 
-    const instance = LibrePOS.FormSelect.init(select);
+    const instance = Expressive.FormSelect.init(select);
 
     const img = instance.dropdownOptions.querySelector('img');
     assert.ok(img, 'the option icon was not rendered');
@@ -94,7 +94,7 @@ describe('ids are looked up, not interpolated into selectors', () => {
       <div class="tap-target" data-target='x"y'><div class="tap-target-content"><h5>T</h5></div></div>
       <a id='x"y' class="btn">menu</a>`;
 
-    const instance = LibrePOS.TapTarget.init(document.querySelector('.tap-target'));
+    const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
 
     assert.equal(instance.originEl, document.getElementById('x"y'));
     instance.destroy();
@@ -103,7 +103,7 @@ describe('ids are looked up, not interpolated into selectors', () => {
   test('TapTarget survives a data-target that resolves to nothing', () => {
     document.body.innerHTML = `<div class="tap-target" data-target="missing"><div class="tap-target-content"><h5>T</h5></div></div>`;
 
-    const instance = LibrePOS.TapTarget.init(document.querySelector('.tap-target'));
+    const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
 
     assert.equal(instance.originEl, null);
     instance.destroy(); // must not throw
@@ -117,7 +117,7 @@ describe('Datepicker escapes what it splices into markup', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
     const months = Array.from({ length: 12 }, (_, i) => `${PAYLOAD}${i}`);
 
-    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       i18n: { months, monthsShort: months }
     });
 
@@ -136,7 +136,7 @@ describe('Datepicker escapes what it splices into markup', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
     const weekdays = Array.from({ length: 7 }, () => PAYLOAD);
 
-    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       i18n: { weekdays, weekdaysShort: weekdays, weekdaysAbbrev: weekdays }
     });
 
@@ -153,7 +153,7 @@ describe('Datepicker escapes what it splices into markup', () => {
         <span class="datepicker-format"></span>
       </div>`;
 
-    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       format: (d) => d.toISOString()
     });
 
@@ -168,7 +168,7 @@ describe('Datepicker escapes what it splices into markup', () => {
         <span class="datepicker-format"></span>
       </div>`;
 
-    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       format: 'mmm dd, yyyy'
     });
 
@@ -187,7 +187,7 @@ describe('Slider indicator labels', () => {
         <li><img src="http://localhost/2.jpg"><div class="caption">two</div></li>
       </ul></div>`;
 
-    const instance = LibrePOS.Slider.init(document.querySelector('.slider'), {
+    const instance = Expressive.Slider.init(document.querySelector('.slider'), {
       indicatorLabelFunc: () => PAYLOAD
     });
 

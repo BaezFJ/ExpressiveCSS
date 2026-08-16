@@ -26,7 +26,7 @@ SOFTWARE.
 THIRD-PARTY NOTICES
 ================================================================================
 
-LibrePOS-CSS is derived from MaterializeCSS v2.2.2
+ExpressiveCSS is derived from MaterializeCSS v2.2.2
 (https://github.com/materializecss/materialize), which is distributed under the
 MIT license reproduced above. Portions of `src/ts` and `src/sass` remain
 substantially that work.

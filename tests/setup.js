@@ -104,5 +104,5 @@ export function fire(el, type, EventCtor = window.MouseEvent) {
 }
 
 // Import the shipped bundle, not the sources: this is what consumers get.
-export const LibrePOS = await import('../dist/js/librepos.mjs');
+export const Expressive = await import('../dist/js/expressive.mjs');
 export { window, dom };

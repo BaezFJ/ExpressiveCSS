@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Getting started - LibrePOS-CSS{% endblock %}
+{% block title %}Getting started - ExpressiveCSS{% endblock %}
 {% block page_title %}Getting started{% endblock %}
 
 {% block page %}
@@ -8,7 +8,7 @@
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
                 <h1 class="primary-text">Getting started</h1>
-                <h4 class="light primary-text">Learn how to start using LibrePOS and integrate it into your
+                <h4 class="light primary-text">Learn how to start using Expressive and integrate it into your
                     project.</h4>
             </div>
         </div>
@@ -21,14 +21,14 @@
                 <div id="download" class="section scrollspy">
                     <h3>Download</h3>
                     <p class="flow-text">
-                        LibrePOS comes in two different forms. You can select which version you want depending on your
+                        Expressive comes in two different forms. You can select which version you want depending on your
                         preference and expertise.
                         The project is at version <code>0.1.0</code> and is still growing, so the usual path is to build
                         from the repository.
                     </p>
                     <div class="row">
                         <div class="s12 m6">
-                            <h5>LibrePOS</h5>
+                            <h5>Expressive</h5>
                             <p>
                                 This is the standard version that comes with both the minified and unminified CSS and
                                 JavaScript files.
@@ -54,25 +54,25 @@ npm run build</code></pre>
                     <p>The compiled assets are written to <code>dist/</code>:</p>
                     <pre><code>dist/
 ├── css/
-│   ├── librepos.css
-│   └── librepos.min.css
+│   ├── expressive.css
+│   └── expressive.min.css
 ├── js/
-│   ├── librepos.cjs
-│   ├── librepos.js
-│   ├── librepos.min.js
-│   └── librepos.mjs
+│   ├── expressive.cjs
+│   ├── expressive.js
+│   ├── expressive.min.js
+│   └── expressive.mjs
 └── types/</code></pre>
 
                     <h5>NPM</h5>
                     <p>
-                        The package name is <code>libreposcss</code>. This release contains source files as well as
+                        The package name is <code>expressivecss</code>. This release contains source files as well as
                         the compiled CSS and JavaScript files.
                     </p>
-                    <pre><code>npm install libreposcss</code></pre>
+                    <pre><code>npm install expressivecss</code></pre>
 
                     <h5>Yarn</h5>
                     <p>Or you can add the package with yarn.</p>
-                    <pre><code>yarn add libreposcss</code></pre>
+                    <pre><code>yarn add expressivecss</code></pre>
                 </div>
 
                 <div id="setup" class="section scrollspy">
@@ -88,10 +88,10 @@ npm run build</code></pre>
                     </p>
                     <pre><code>MyWebsite/
   |--css/
-  |  |--librepos.css
+  |  |--expressive.css
   |
   |--js/
-  |  |--librepos.js
+  |  |--expressive.js
   |
   |--index.html</code></pre>
 
@@ -99,24 +99,24 @@ npm run build</code></pre>
                     <p>
                         Next you just have to make sure you link the files properly in your webpage. Generally it is
                         wise to import JavaScript files at the end of the body to reduce page
-                        load time. Follow the example below on how to import LibrePOS into your webpage.
+                        load time. Follow the example below on how to import Expressive into your webpage.
                     </p>
                     <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en" theme="light"&gt;
   &lt;head&gt;
     &lt;!--Import Google Icon Font--&gt;
     &lt;link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"&gt;
-    &lt;!--Import librepos.css--&gt;
-    &lt;link rel="stylesheet" href="css/librepos.min.css"&gt;
+    &lt;!--Import expressive.css--&gt;
+    &lt;link rel="stylesheet" href="css/expressive.min.css"&gt;
     &lt;!--Let browser know website is optimized for mobile--&gt;
     &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
   &lt;/head&gt;
   &lt;body&gt;
     &lt;!--JavaScript at end of body for optimized loading--&gt;
-    &lt;script src="js/librepos.min.js"&gt;&lt;/script&gt;
+    &lt;script src="js/expressive.min.js"&gt;&lt;/script&gt;
     &lt;script&gt;
       document.addEventListener('DOMContentLoaded', () =&gt; {
-        LibrePOS.AutoInit();
+        Expressive.AutoInit();
       });
     &lt;/script&gt;
   &lt;/body&gt;
@@ -124,7 +124,7 @@ npm run build</code></pre>
 
                     <h5>Initialize JavaScript</h5>
                     <p>
-                        The browser bundle exposes the framework as the global <code>LibrePOS</code> object. Importing
+                        The browser bundle exposes the framework as the global <code>Expressive</code> object. Importing
                         the JavaScript installs
                         shared document behaviors (forms, waves, and a few others), but it does not call <code>AutoInit()</code>
                         automatically.
@@ -136,15 +136,15 @@ npm run build</code></pre>
                         the scan, or add the
                         <code>no-autoinit</code> class to an element that should be initialized manually.
                     </p>
-                    <pre><code>LibrePOS.AutoInit();
+                    <pre><code>Expressive.AutoInit();
 
-LibrePOS.AutoInit(document.querySelector('#app'), {
+Expressive.AutoInit(document.querySelector('#app'), {
   Tooltip: { position: 'top' }
 });</code></pre>
 
                     <h5>ES modules</h5>
                     <p>Import the framework or individual components from the module build:</p>
-                    <pre><code>import { AutoInit, Tooltip } from './js/librepos.mjs';
+                    <pre><code>import { AutoInit, Tooltip } from './js/expressive.mjs';
 
 AutoInit();
 
@@ -153,7 +153,7 @@ Tooltip.init(element, { position: 'top' });</code></pre>
 
                     <h5>Themes</h5>
                     <p>
-                        LibrePOS uses the <code>theme</code> attribute on the root element. The default is light.
+                        Expressive uses the <code>theme</code> attribute on the root element. The default is light.
                         Switch themes at runtime
                         by updating the attribute.
                     </p>
@@ -164,7 +164,7 @@ Tooltip.init(element, { position: 'top' });</code></pre>
                 <div id="templates" class="section scrollspy">
                     <h3>Templates</h3>
                     <p class="flow-text">
-                        Start from a documented layout instead of an empty page. These two pages show how LibrePOS
+                        Start from a documented layout instead of an empty page. These two pages show how Expressive
                         structures content,
                         and you can copy the markup they use.
                     </p>
@@ -201,25 +201,25 @@ Tooltip.init(element, { position: 'top' });</code></pre>
                     <p>
                         Instead of only a CSS folder, the repository contains many <code>.scss</code> files which
                         contain the styles of individual layers
-                        and components. The browser cannot interpret Sass, so you must compile <code>src/sass/librepos.scss</code>
+                        and components. The browser cannot interpret Sass, so you must compile <code>src/sass/expressive.scss</code>
                         into a regular CSS file.
                         At this point you can link this newly outputted file in your HTML page.
                     </p>
                     <p>From the repository, the npm script does that for you:</p>
                     <pre><code>npm run build:css</code></pre>
                     <p>In another Sass project, use the framework's Sass entry point:</p>
-                    <pre><code>@use "libreposcss/src/sass/librepos";</code></pre>
+                    <pre><code>@use "expressivecss/src/sass/expressive";</code></pre>
                     <p>When working directly in this repository, the entry point is
-                        <code>src/sass/librepos.scss</code>.</p>
+                        <code>src/sass/expressive.scss</code>.</p>
                     <pre><code>MyWebsite/
 |--css/
-|  |--librepos.css &lt;-- compiled from scss/librepos.scss
+|  |--expressive.css &lt;-- compiled from scss/expressive.scss
 |
 |--js/
-|  |--librepos.js
+|  |--expressive.js
 |
 |--scss/
-|  |--librepos.scss
+|  |--expressive.scss
 |  |--abstracts/
 |  |--tokens/
 |  |--utilities/

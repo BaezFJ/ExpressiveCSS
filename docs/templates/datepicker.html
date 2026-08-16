@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Date Picker - LibrePOS-CSS{% endblock %}
+{% block title %}Date Picker - ExpressiveCSS{% endblock %}
 {% block page_title %}Date Picker{% endblock %}
 
 {% block page %}
@@ -36,7 +36,7 @@
   &lt;input type="text" class="datepicker" id="birthdate"&gt;
   &lt;label for="birthdate"&gt;Birthdate&lt;/label&gt;
 &lt;/div&gt;</code></pre>
-<pre><code>LibrePOS.Datepicker.init(document.querySelectorAll('.datepicker'), {
+<pre><code>Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
   openByDefault: true
 });</code></pre>
         <p>
@@ -48,20 +48,20 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>LibrePOS.Datepicker</code>.
+          The IIFE bundle exposes <code>Expressive.Datepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>LibrePOS.AutoInit()</code> start every <code>.datepicker</code>.
+          or let <code>Expressive.AutoInit()</code> start every <code>.datepicker</code>.
           AutoInit uses the defaults, so the calendar stays hidden until you pass
           <code>openByDefault</code> (or a working <code>displayPlugin</code> pair, below).
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.datepicker');
-  const instances = LibrePOS.Datepicker.init(elems, {
+  const instances = Expressive.Datepicker.init(elems, {
     openByDefault: true
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   Datepicker: { openByDefault: true }
 });</code></pre>
       </div>
@@ -85,7 +85,7 @@
           the wrapper. If <code>openByDefault</code> is still <code>false</code>, the calendar
           inside stays <code>display: none</code>. Use both:
         </p>
-<pre><code>LibrePOS.Datepicker.init(elem, {
+<pre><code>Expressive.Datepicker.init(elem, {
   displayPlugin: 'docked',
   openByDefault: true
 });</code></pre>
@@ -452,7 +452,7 @@
           <input type="text" id="datepicker-range-end">
           <label for="datepicker-range-end">End date</label>
         </div>
-<pre><code>LibrePOS.Datepicker.init(document.getElementById('datepicker-range'), {
+<pre><code>Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
   openByDefault: true,
   isDateRange: true,
   dateRangeEndEl: '#datepicker-range-end'
@@ -469,7 +469,7 @@
           <input type="text" class="datepicker no-autoinit" id="datepicker-multi">
           <label for="datepicker-multi">Dates</label>
         </div>
-<pre><code>LibrePOS.Datepicker.init(document.getElementById('datepicker-multi'), {
+<pre><code>Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {
   openByDefault: true,
   isMultipleSelection: true
 });</code></pre>
@@ -480,7 +480,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.Datepicker.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Datepicker.getInstance(elem);</code></pre>
 
         <h5 class="light">.toString();</h5>
         <p>String form of the selected date, using <code>format</code>. You can pass another date and format.</p>

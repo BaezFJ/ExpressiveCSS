@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Feature Discovery - LibrePOS-CSS{% endblock %}
+{% block title %}Feature Discovery - ExpressiveCSS{% endblock %}
 {% block page_title %}Feature Discovery{% endblock %}
 
 {% block page %}
@@ -23,7 +23,7 @@
           Shown to the wrong person at the wrong time, they feel intrusive.
         </p>
         <p>
-          The JavaScript component is <code>LibrePOS.TapTarget</code>.
+          The JavaScript component is <code>Expressive.TapTarget</code>.
           Put <code>tap-target</code> on the prompt and point <code>data-target</code> at the id of the
           element you want to highlight. <code>AutoInit()</code> starts every
           <code>.tap-target</code> except those marked <code>no-autoinit</code>.
@@ -61,18 +61,18 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>LibrePOS.TapTarget</code>.
+          The IIFE bundle exposes <code>Expressive.TapTarget</code>.
           Call <code>init</code> yourself when you need callbacks,
-          or let <code>LibrePOS.AutoInit()</code> start every <code>.tap-target</code>.
+          or let <code>Expressive.AutoInit()</code> start every <code>.tap-target</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tap-target');
-  const instances = LibrePOS.TapTarget.init(elems, {
+  const instances = Expressive.TapTarget.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   TapTarget: {
     onOpen: function(origin) { /* ... */ }
   }
@@ -112,7 +112,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.TapTarget.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.TapTarget.getInstance(elem);</code></pre>
 
         <h5 class="light">.open();</h5>
         <p>Open the tap target.</p>

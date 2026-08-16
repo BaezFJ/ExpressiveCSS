@@ -1,10 +1,10 @@
-# LibrePOS-CSS
+# ExpressiveCSS
 
-LibrePOS-CSS is a Material Design 3 front-end framework built with Sass and
+ExpressiveCSS is a Material Design 3 front-end framework built with Sass and
 TypeScript. It provides theme tokens, layout and utility classes, styled form
 controls, and JavaScript components in browser, ES module, and CommonJS builds.
 
-> LibrePOS-CSS is currently at version `0.1.0` and under active development.
+> ExpressiveCSS is currently at version `0.1.0` and under active development.
 
 ## Features
 
@@ -40,13 +40,13 @@ The compiled assets are written to `dist/`:
 ```text
 dist/
 ├── css/
-│   ├── librepos.css
-│   └── librepos.min.css
+│   ├── expressive.css
+│   └── expressive.min.css
 ├── js/
-│   ├── librepos.cjs
-│   ├── librepos.js
-│   ├── librepos.min.js
-│   └── librepos.mjs
+│   ├── expressive.cjs
+│   ├── expressive.js
+│   ├── expressive.min.js
+│   └── expressive.mjs
 └── types/
 ```
 
@@ -60,31 +60,31 @@ Include the compiled stylesheet and browser bundle, then initialize components
 after the page has loaded:
 
 ```html
-<link rel="stylesheet" href="dist/css/librepos.min.css">
+<link rel="stylesheet" href="dist/css/expressive.min.css">
 
 <ul class="collapsible">
   <li>
     <div class="collapsible-header">Details</div>
-    <div class="collapsible-body">LibrePOS-CSS is ready.</div>
+    <div class="collapsible-body">ExpressiveCSS is ready.</div>
   </li>
 </ul>
 
-<script src="dist/js/librepos.min.js"></script>
+<script src="dist/js/expressive.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    LibrePOS.AutoInit();
+    Expressive.AutoInit();
   });
 </script>
 ```
 
-The browser bundle exposes the framework as the global `LibrePOS` object.
+The browser bundle exposes the framework as the global `Expressive` object.
 
 ### ES modules
 
 Import the framework or individual components from the module build:
 
 ```js
-import { AutoInit, Tooltip } from './dist/js/librepos.mjs';
+import { AutoInit, Tooltip } from './dist/js/expressive.mjs';
 
 AutoInit();
 
@@ -110,15 +110,15 @@ behaviors, but it does not call `AutoInit()` automatically.
 Use the framework's Sass entry point in another Sass project:
 
 ```scss
-@use "libreposcss/src/sass/librepos";
+@use "expressivecss/src/sass/expressive";
 ```
 
 When working directly in this repository, the entry point is
-`src/sass/librepos.scss`.
+`src/sass/expressive.scss`.
 
 ### Themes
 
-LibrePOS-CSS uses the `theme` attribute on the root element:
+ExpressiveCSS uses the `theme` attribute on the root element:
 
 ```html
 <html lang="en" theme="light">

@@ -40,7 +40,7 @@ export class Pushpin extends Component<PushpinOptions> {
 
   constructor(el: HTMLElement, options: Partial<PushpinOptions>) {
     super(el, options, Pushpin);
-    this.el['LibrePOS_Pushpin'] = this;
+    this.el['Expressive_Pushpin'] = this;
 
     this.options = {
       ...Pushpin.defaults,
@@ -82,7 +82,7 @@ export class Pushpin extends Component<PushpinOptions> {
   }
 
   static getInstance(el: HTMLElement): Pushpin {
-    return el['LibrePOS_Pushpin'];
+    return el['Expressive_Pushpin'];
   }
 
   destroy() {
@@ -94,7 +94,7 @@ export class Pushpin extends Component<PushpinOptions> {
     if (Pushpin._pushpins.length === 0) {
       this._removeEventHandlers();
     }
-    this.el['LibrePOS_Pushpin'] = undefined;
+    this.el['Expressive_Pushpin'] = undefined;
   }
 
   static _updateElements() {

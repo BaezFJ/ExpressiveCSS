@@ -1,4 +1,4 @@
-"""LibrePOS-CSS documentation site.
+"""ExpressiveCSS documentation site.
 
 The framework build is served straight out of `dist/` rather than copied into
 `docs/static/`, so `npm run watch` shows up on a browser reload with no extra step.
@@ -19,8 +19,8 @@ def inject_build_assets():
     # Unminified while developing so the source maps stay usable.
     suffix = '' if app.debug else '.min'
     return {
-        'css_url': url_for('dist_file', filename=f'css/librepos{suffix}.css'),
-        'js_url': url_for('dist_file', filename=f'js/librepos{suffix}.js'),
+        'css_url': url_for('dist_file', filename=f'css/expressive{suffix}.css'),
+        'js_url': url_for('dist_file', filename=f'js/expressive{suffix}.js'),
         'build_missing': not (DIST_DIR / 'css').is_dir(),
     }
 

@@ -1,16 +1,16 @@
 {
-  "name": "libreposcss",
+  "name": "@expressivecss/expressive",
   "version": "0.1.0",
-  "description": "LibrePOS-CSS - a Material Design 3 front-end framework.",
+  "description": "ExpressiveCSS - a Material Design 3 front-end framework.",
   "license": "MIT",
   "author": "BaezFJ <baezdevs@gmail.com>",
-  "homepage": "https://github.com/BaezFJ/LibrePOS-CSS#readme",
+  "homepage": "https://github.com/BaezFJ/ExpressiveCSS#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BaezFJ/LibrePOS-CSS.git"
+    "url": "git+https://github.com/BaezFJ/ExpressiveCSS.git"
   },
   "bugs": {
-    "url": "https://github.com/BaezFJ/LibrePOS-CSS/issues"
+    "url": "https://github.com/BaezFJ/ExpressiveCSS/issues"
   },
   "keywords": [
     "css",
@@ -26,11 +26,11 @@
     "typescript"
   ],
   "type": "module",
-  "main": "./dist/js/librepos.cjs",
-  "module": "./dist/js/librepos.mjs",
+  "main": "./dist/js/expressive.cjs",
+  "module": "./dist/js/expressive.mjs",
   "types": "./dist/types/index.d.ts",
-  "unpkg": "./dist/js/librepos.min.js",
-  "jsdelivr": "./dist/js/librepos.min.js",
+  "unpkg": "./dist/js/expressive.min.js",
+  "jsdelivr": "./dist/js/expressive.min.js",
   "sideEffects": [
     "./dist/js/*",
     "*.css",
@@ -39,39 +39,42 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/js/librepos.mjs",
-      "require": "./dist/js/librepos.cjs",
-      "default": "./dist/js/librepos.mjs"
+      "import": "./dist/js/expressive.mjs",
+      "require": "./dist/js/expressive.cjs",
+      "default": "./dist/js/expressive.mjs"
     },
-    "./css": "./dist/css/librepos.css",
-    "./css/min": "./dist/css/librepos.min.css",
-    "./scss": "./src/sass/librepos.scss",
+    "./css": "./dist/css/expressive.css",
+    "./css/min": "./dist/css/expressive.min.css",
+    "./scss": "./src/sass/expressive.scss",
     "./scss/*": "./src/sass/*"
   },
   "files": [
     "dist",
     "src/sass"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepack": "npm run build",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build": "run-s clean build:css build:js build:types",
     "build:css": "run-s build:css:expanded build:css:min",
-    "build:css:expanded": "sass src/sass/librepos.scss dist/css/librepos.css --style=expanded --source-map --load-path=src/sass",
-    "build:css:min": "sass src/sass/librepos.scss dist/css/librepos.min.css --style=compressed --source-map --load-path=src/sass",
+    "build:css:expanded": "sass src/sass/expressive.scss dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
+    "build:css:min": "sass src/sass/expressive.scss dist/css/expressive.min.css --style=compressed --source-map --load-path=src/sass",
     "build:js": "run-s build:js:esm build:js:cjs build:js:iife build:js:iife-min",
-    "build:js:esm": "esbuild src/ts/index.ts --bundle --format=esm --target=es2020 --outfile=dist/js/librepos.mjs --sourcemap",
-    "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/librepos.cjs --sourcemap",
-    "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=LibrePOS --target=es2020 --outfile=dist/js/librepos.js --sourcemap",
-    "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=LibrePOS --target=es2020 --outfile=dist/js/librepos.min.js --minify --sourcemap",
+    "build:js:esm": "esbuild src/ts/index.ts --bundle --format=esm --target=es2020 --outfile=dist/js/expressive.mjs --sourcemap",
+    "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/expressive.cjs --sourcemap",
+    "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
+    "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",
     "build:types": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "run-s build:js:esm test:run",
     "test:run": "node --test",
     "test:watch": "node --test --watch",
     "watch": "run-p watch:css watch:js",
-    "watch:css": "sass --watch src/sass/librepos.scss:dist/css/librepos.css --style=expanded --source-map --load-path=src/sass",
-    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=LibrePOS --target=es2020 --outfile=dist/js/librepos.js --sourcemap --watch=forever"
+    "watch:css": "sass --watch src/sass/expressive.scss:dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
+    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap --watch=forever"
   },
   "engines": {
     "node": ">=20"

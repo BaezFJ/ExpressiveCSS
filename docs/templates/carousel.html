@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Carousel - LibrePOS-CSS{% endblock %}
+{% block title %}Carousel - ExpressiveCSS{% endblock %}
 {% block page_title %}Carousel{% endblock %}
 
 {% block page %}
@@ -63,19 +63,19 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>LibrePOS.Carousel</code>.
+          The IIFE bundle exposes <code>Expressive.Carousel</code>.
           Call <code>init</code> yourself when you need options other than
-          the defaults, or let <code>LibrePOS.AutoInit()</code> start
+          the defaults, or let <code>Expressive.AutoInit()</code> start
           every <code>.carousel</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.carousel');
-  const instances = LibrePOS.Carousel.init(elems, {
+  const instances = Expressive.Carousel.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   Carousel: { indicators: true }
 });</code></pre>
         <p>
@@ -160,7 +160,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.Carousel.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Carousel.getInstance(elem);</code></pre>
 
         <h5 class="light">.next();</h5>
         <p>Move to the next item, or skip forward a given number of items.</p>
@@ -251,7 +251,7 @@ instance.set(3, function(current, dragged) {
     &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
   &lt;/a&gt;
 &lt;/div&gt;</code></pre>
-<pre><code>LibrePOS.Carousel.init(document.querySelector('.carousel-slider'), {
+<pre><code>Expressive.Carousel.init(document.querySelector('.carousel-slider'), {
   fullWidth: true
 });</code></pre>
       </div>
@@ -298,7 +298,7 @@ instance.set(3, function(current, dragged) {
     &lt;p&gt;This is your second panel&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
-<pre><code>LibrePOS.Carousel.init(document.querySelector('#carousel-content'), {
+<pre><code>Expressive.Carousel.init(document.querySelector('#carousel-content'), {
   fullWidth: true,
   indicators: true
 });</code></pre>

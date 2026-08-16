@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Range - LibrePOS-CSS{% endblock %}
+{% block title %}Range - ExpressiveCSS{% endblock %}
 {% block page_title %}Range{% endblock %}
 
 {% block page %}
@@ -41,7 +41,7 @@
         </p>
         <p>
           Range is not in <code>AutoInit()</code>. Importing the IIFE
-          bundle calls <code>LibrePOS.Range.Init()</code>, which
+          bundle calls <code>Expressive.Range.Init()</code>, which
           starts every <code>input[type=range]</code> already in the
           document and keeps the active track in sync.
           <code>no-autoinit</code> does not apply.
@@ -131,10 +131,10 @@
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('input[type=range]');
-  LibrePOS.Range.init(elems);
+  Expressive.Range.init(elems);
 });
 
-LibrePOS.Range.init(document.querySelector('#volume'));</code></pre>
+Expressive.Range.init(document.querySelector('#volume'));</code></pre>
       </div>
 
       <div id="methods" class="section scrollspy">
@@ -142,7 +142,7 @@ LibrePOS.Range.init(document.querySelector('#volume'));</code></pre>
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.Range.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Range.getInstance(elem);</code></pre>
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>

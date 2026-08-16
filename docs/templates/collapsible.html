@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Collapsible - LibrePOS-CSS{% endblock %}
+{% block title %}Collapsible - ExpressiveCSS{% endblock %}
 {% block page_title %}Collapsible{% endblock %}
 
 {% block page %}
@@ -67,18 +67,18 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>LibrePOS.Collapsible</code>.
+          The IIFE bundle exposes <code>Expressive.Collapsible</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>LibrePOS.AutoInit()</code> start every <code>.collapsible</code>.
+          or let <code>Expressive.AutoInit()</code> start every <code>.collapsible</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.collapsible');
-  const instances = LibrePOS.Collapsible.init(elems, {
+  const instances = Expressive.Collapsible.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   Collapsible: { accordion: true }
 });</code></pre>
 
@@ -177,7 +177,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.Collapsible.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Collapsible.getInstance(elem);</code></pre>
 
         <h5 class="light">.open();</h5>
         <p>Open a collapsible section.</p>
@@ -264,7 +264,7 @@
           </li>
         </ul>
 <pre><code>const elem = document.querySelector('.collapsible.no-autoinit');
-const instance = LibrePOS.Collapsible.init(elem, {
+const instance = Expressive.Collapsible.init(elem, {
   accordion: false
 });</code></pre>
       </div>

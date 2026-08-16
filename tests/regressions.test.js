@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { LibrePOS, resetBody, window } from './setup.js';
+import { Expressive, resetBody, window } from './setup.js';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -36,7 +36,7 @@ describe('FloatingActionButton toolbar mode', () => {
         <ul><li><a class="btn-floating"><i class="material-icons">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
-    const instance = LibrePOS.FloatingActionButton.init(el, { toolbarEnabled: true });
+    const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
 
     // Used to throw: `backdrop[0].clientWidth` on a bare element.
     instance.open();
@@ -53,7 +53,7 @@ describe('FloatingActionButton toolbar mode', () => {
         <ul><li><a class="btn-floating"><i class="material-icons">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
-    const instance = LibrePOS.FloatingActionButton.init(el, { toolbarEnabled: true });
+    const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
 
     try {
       instance.open();
@@ -74,7 +74,7 @@ describe('FloatingActionButton toolbar mode', () => {
   test('a FAB with no menu list does not throw', () => {
     document.body.innerHTML = `<div class="fixed-action-btn"><a class="btn-floating btn-large">+</a></div>`;
 
-    const instance = LibrePOS.FloatingActionButton.init(
+    const instance = Expressive.FloatingActionButton.init(
       document.querySelector('.fixed-action-btn')
     );
 
@@ -90,7 +90,7 @@ describe('Lightbox dimensions', () => {
     document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
     const img = document.querySelector('img');
     fixRect(img, 100, 50);
-    const instance = LibrePOS.Lightbox.init(img);
+    const instance = Expressive.Lightbox.init(img);
 
     instance.open();
     instance.close();
@@ -114,7 +114,7 @@ describe('Carousel', () => {
         <a class="carousel-item" href="#three">three</a>
       </div>`;
 
-    const instance = LibrePOS.Carousel.init(document.querySelector('.carousel'));
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
 
     assert.equal(
       document.querySelectorAll('.carousel-item.active').length,
@@ -131,7 +131,7 @@ describe('Carousel', () => {
         <a class="carousel-item" href="#two">two</a>
       </div>`;
 
-    const instance = LibrePOS.Carousel.init(document.querySelector('.carousel'));
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
 
     // Guards the removal of the webkit/Moz/O/ms probe that used to pick the
     // property name. (jsdom exposes no prefixed aliases, so this cannot catch
@@ -146,7 +146,7 @@ describe('Carousel', () => {
   test('an empty carousel does not throw', () => {
     document.body.innerHTML = `<div class="carousel"></div>`;
 
-    const instance = LibrePOS.Carousel.init(document.querySelector('.carousel'));
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
 
     assert.ok(instance);
     instance.destroy();
@@ -160,7 +160,7 @@ describe('Chips indices line up with the data', () => {
     // The container also holds a label and the input, so counting children
     // gave an index shifted off the chipsData index.
     document.body.innerHTML = `<div class="chips"><label>Tags</label></div>`;
-    const instance = LibrePOS.Chips.init(document.querySelector('.chips'), {
+    const instance = Expressive.Chips.init(document.querySelector('.chips'), {
       allowUserInput: true,
       data: [{ id: 'a' }, { id: 'b' }, { id: 'c' }]
     });
@@ -187,7 +187,7 @@ describe('Datepicker month arrows', () => {
     const now = new Date();
     document.body.innerHTML = `<input type="text" class="datepicker">`;
 
-    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       minYear: now.getFullYear(),
       minMonth: now.getMonth()
     });
@@ -209,7 +209,7 @@ describe('Datepicker month arrows', () => {
   test('a cloned range input does not duplicate the id', () => {
     document.body.innerHTML = `<div><input type="text" id="range-start" class="datepicker"></div>`;
 
-    const instance = LibrePOS.Datepicker.init(document.querySelector('.datepicker'), {
+    const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {
       isDateRange: true
     });
 
@@ -234,7 +234,7 @@ describe('optional markup does not crash a component', () => {
         <div class="card-content"><span class="card-title activator">T</span></div>
         <div class="card-reveal"><p>body</p></div>
       </div>`;
-    const instance = LibrePOS.Cards.init(document.querySelector('.card'));
+    const instance = Expressive.Cards.init(document.querySelector('.card'));
 
     instance.open();
     instance.close();
@@ -249,7 +249,7 @@ describe('optional markup does not crash a component', () => {
         <li class="active"><img src="http://localhost/1.jpg"></li>
         <li><img src="http://localhost/2.jpg"></li>
       </ul></div>`;
-    const instance = LibrePOS.Slider.init(document.querySelector('.slider'));
+    const instance = Expressive.Slider.init(document.querySelector('.slider'));
 
     try {
       instance.set(1);
@@ -262,7 +262,7 @@ describe('optional markup does not crash a component', () => {
   test('a parallax container with no image', () => {
     document.body.innerHTML = `<div class="parallax-container"><div class="parallax"></div></div>`;
 
-    const instance = LibrePOS.Parallax.init(document.querySelector('.parallax'));
+    const instance = Expressive.Parallax.init(document.querySelector('.parallax'));
 
     assert.ok(instance);
     instance.destroy();
@@ -272,7 +272,7 @@ describe('optional markup does not crash a component', () => {
     document.body.innerHTML = `
       <a class="dropdown-trigger btn" data-target="dd">Drop</a>
       <ul id="dd" class="dropdown-content"><li><a href="#!">one</a></li></ul>`;
-    const instance = LibrePOS.Dropdown.init(document.querySelector('.dropdown-trigger'), {
+    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'), {
       hover: true
     });
 

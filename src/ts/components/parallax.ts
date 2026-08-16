@@ -22,7 +22,7 @@ export class Parallax extends Component<ParallaxOptions> {
 
   constructor(el: HTMLElement, options: Partial<ParallaxOptions>) {
     super(el, options, Parallax);
-    this.el['LibrePOS_Parallax'] = this;
+    this.el['Expressive_Parallax'] = this;
 
     this.options = {
       ...Parallax.defaults,
@@ -70,7 +70,7 @@ export class Parallax extends Component<ParallaxOptions> {
   }
 
   static getInstance(el: HTMLElement): Parallax {
-    return el['LibrePOS_Parallax'];
+    return el['Expressive_Parallax'];
   }
 
   destroy() {
@@ -78,7 +78,7 @@ export class Parallax extends Component<ParallaxOptions> {
     if (index >= 0) Parallax._parallaxes.splice(index, 1);
     if (this._img) this._img.style.transform = '';
     this._removeEventHandlers();
-    this.el['LibrePOS_Parallax'] = undefined;
+    this.el['Expressive_Parallax'] = undefined;
   }
 
   static _handleScroll() {

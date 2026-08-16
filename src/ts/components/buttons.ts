@@ -49,7 +49,7 @@ export class FloatingActionButton
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
     super(el, options, FloatingActionButton);
-    this.el['LibrePOS_FloatingActionButton'] = this;
+    this.el['Expressive_FloatingActionButton'] = this;
 
     this.options = {
       ...FloatingActionButton.defaults,
@@ -113,7 +113,7 @@ export class FloatingActionButton
   }
 
   static getInstance(el: HTMLElement): FloatingActionButton {
-    return el['LibrePOS_FloatingActionButton'];
+    return el['Expressive_FloatingActionButton'];
   }
 
   destroy() {
@@ -121,7 +121,7 @@ export class FloatingActionButton
     // Toolbar mode parks a capture-phase scroll listener and a body click
     // listener on the document; close() is what takes them back off.
     this.close();
-    this.el['LibrePOS_FloatingActionButton'] = undefined;
+    this.el['Expressive_FloatingActionButton'] = undefined;
   }
 
   _setupEventHandlers() {

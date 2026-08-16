@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Auto Init - LibrePOS-CSS{% endblock %}
+{% block title %}Auto Init - ExpressiveCSS{% endblock %}
 {% block page_title %}Auto Init{% endblock %}
 
 {% block page %}
@@ -19,8 +19,8 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          Auto Init starts all of the registered LibrePOS components with a single call.
-          The IIFE bundle exposes it as <code>LibrePOS.AutoInit</code>.
+          Auto Init starts all of the registered Expressive components with a single call.
+          The IIFE bundle exposes it as <code>Expressive.AutoInit</code>.
         </p>
         <p>
           Importing the JavaScript installs a few document-level behaviors
@@ -33,10 +33,10 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  LibrePOS.AutoInit();
+  Expressive.AutoInit();
 });</code></pre>
         <p>Or pass a root element and per-component options. The option keys are the component names from the table below.</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   Dropdown: {
     // pass options for Dropdown here
   },
@@ -45,7 +45,7 @@
   }
 });</code></pre>
         <p>From the module build:</p>
-<pre><code>import { AutoInit, Tooltip } from './js/librepos.mjs';
+<pre><code>import { AutoInit, Tooltip } from './js/expressive.mjs';
 
 AutoInit();
 
@@ -142,7 +142,7 @@ Tooltip.init(element, { position: 'top' });</code></pre>
     &lt;div class="collapsible-body"&gt;Body&lt;/div&gt;
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
-<pre><code>LibrePOS.Collapsible.init(
+<pre><code>Expressive.Collapsible.init(
   document.querySelector('.collapsible.no-autoinit'),
   { accordion: false }
 );</code></pre>

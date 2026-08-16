@@ -114,7 +114,7 @@ export class Toast {
     // Create new toast
     Toast._toasts.push(this);
     const toastElement = this._createToast();
-    toastElement['LibrePOS_Toast'] = this;
+    toastElement['Expressive_Toast'] = this;
     this.el = toastElement;
     this._animateIn();
     this._setTimer();
@@ -125,7 +125,7 @@ export class Toast {
   }
 
   static getInstance(el: HTMLElement): Toast {
-    return el['LibrePOS_Toast'];
+    return el['Expressive_Toast'];
   }
 
   static _createContainer() {
@@ -154,7 +154,7 @@ export class Toast {
     // Don't start a swipe from the action or close — those are buttons.
     if (target && !target.closest('button, a') && target.closest('.toast, .snackbar')) {
       const toastElem = target.closest('.toast, .snackbar') as HTMLElement;
-      const toast: Toast = toastElem['LibrePOS_Toast'];
+      const toast: Toast = toastElem['Expressive_Toast'];
       if (!toast) return;
       toast.panning = true;
       toast._pauseTimer();

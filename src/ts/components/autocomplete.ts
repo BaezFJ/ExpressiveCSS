@@ -119,7 +119,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   constructor(el: HTMLInputElement, options: Partial<AutocompleteOptions>) {
     super(el, options, Autocomplete);
-    this.el['LibrePOS_Autocomplete'] = this;
+    this.el['Expressive_Autocomplete'] = this;
 
     this.options = {
       ...Autocomplete.defaults,
@@ -170,7 +170,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   static getInstance(el: HTMLElement): Autocomplete {
-    return el['LibrePOS_Autocomplete'];
+    return el['Expressive_Autocomplete'];
   }
 
   /**
@@ -198,7 +198,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   destroy() {
     this._removeEventHandlers();
     this._removeDropdown();
-    this.el['LibrePOS_Autocomplete'] = undefined;
+    this.el['Expressive_Autocomplete'] = undefined;
   }
 
   _setupEventHandlers() {

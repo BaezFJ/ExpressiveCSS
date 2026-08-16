@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Themes - LibrePOS-CSS{% endblock %}
+{% block title %}Themes - ExpressiveCSS{% endblock %}
 {% block page_title %}Themes{% endblock %}
 
 {% block page %}
@@ -19,7 +19,7 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          LibrePOS maps Material Design 3 color tokens onto live
+          Expressive maps Material Design 3 color tokens onto live
           <code>--md-sys-color-*</code> custom properties. Components, buttons, and
           the <a href="{{ url_for('color') }}">color utilities</a> all read those
           live names, so flipping the scheme recolors the page without extra classes.
@@ -124,7 +124,7 @@
         <h3>Changing the theme</h3>
         <p>
           Switch schemes by writing the attribute. That is the entire public
-          API — there is no <code>LibrePOS.theme</code> helper.
+          API — there is no <code>Expressive.theme</code> helper.
         </p>
 <pre><code>document.documentElement.setAttribute('theme', 'dark');
 document.documentElement.setAttribute('theme', 'light');</code></pre>
@@ -157,7 +157,7 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
         <p>
           Customize by overriding the Material Design 3 tokens. Do not set
           <code>--background-color</code>, <code>--primary-color</code>, or
-          other pre-2.1 names — those are not wired in LibrePOS.
+          other pre-2.1 names — those are not wired in Expressive.
         </p>
         <p>
           Three layers exist. <code>tokens/_reference.scss</code> generates the
@@ -171,7 +171,7 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
         <p>
           Override the <code>-light</code> and <code>-dark</code> pairs so both
           schemes stay consistent. Load your sheet
-          <strong>after</strong> LibrePOS so equal-specificity
+          <strong>after</strong> Expressive so equal-specificity
           <code>:root</code> rules win.
         </p>
 <pre><code>:root {
@@ -236,7 +236,7 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
           <code>--md-source</code> is the seed the ramps are generated from, and
           it is live: set it and every generated ramp — and every system color
           that resolves to one — recolors at runtime, with no rebuild.
-          LibrePOS ships <code>#006A79</code>.
+          Expressive ships <code>#006A79</code>.
         </p>
 <pre><code>:root {
   --md-source: #6750a4;   /* one line; the whole theme follows */

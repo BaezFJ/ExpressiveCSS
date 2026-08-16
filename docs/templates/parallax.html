@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 
-{% block title %}Parallax - LibrePOS-CSS{% endblock %}
+{% block title %}Parallax - ExpressiveCSS{% endblock %}
 {% block page_title %}Parallax{% endblock %}
 
 {% block page %}
@@ -64,20 +64,20 @@
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>LibrePOS.Parallax</code>.
+          The IIFE bundle exposes <code>Expressive.Parallax</code>.
           Call <code>init</code> yourself when you need options other
           than the defaults, or let
-          <code>LibrePOS.AutoInit()</code> start every
+          <code>Expressive.AutoInit()</code> start every
           <code>.parallax</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.parallax');
-  const instances = LibrePOS.Parallax.init(elems, {
+  const instances = Expressive.Parallax.init(elems, {
     // specify options here
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>LibrePOS.AutoInit(document.body, {
+<pre><code>Expressive.AutoInit(document.body, {
   Parallax: { responsiveThreshold: 992 }
 });</code></pre>
       </div>
@@ -109,7 +109,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = LibrePOS.Parallax.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Parallax.getInstance(elem);</code></pre>
 
         <h5 class="light">.destroy();</h5>
         <p>
