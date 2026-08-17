@@ -1,17 +1,11 @@
 {% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
 
 {% block title %}Parallax - ExpressiveCSS{% endblock %}
 {% block page_title %}Parallax{% endblock %}
 
 {% block page %}
-<section class="section primary-container m-2" id="index-banner">
-  <div class="container row py-5">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-      <h1 class="primary-text">Parallax</h1>
-      <h4 class="light primary-text">A cropped image that shifts as it crosses the viewport.</h4>
-    </div>
-  </div>
-</section>
+{{ Banner("Parallax", "A cropped image that shifts as it crosses the viewport.") }}
 
 <figure class="parallax">
   <img src="https://picsum.photos/id/1015/1600/900" alt="A mountain lake">

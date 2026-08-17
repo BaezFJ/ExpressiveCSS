@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
 
 {% block title %}Typography - ExpressiveCSS{% endblock %}
 {% block page_title %}Typography{% endblock %}
@@ -8,14 +9,7 @@
 {% endblock %}
 
 {% block page %}
-<section class="section primary-container m-2" id="index-banner">
-  <div class="container row py-5">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-      <h1 class="primary-text">Typography</h1>
-      <h4 class="light primary-text">Material Design 3 type, from the HTML.</h4>
-    </div>
-  </div>
-</section>
+{{ Banner("Typography", "Material Design 3 type, from the HTML.") }}
 
 <div class="container">
   <div class="row">

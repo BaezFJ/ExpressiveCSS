@@ -1,17 +1,11 @@
 {% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
 
 {% block title %}Themes - ExpressiveCSS{% endblock %}
 {% block page_title %}Themes{% endblock %}
 
 {% block page %}
-<section class="section primary-container m-2" id="index-banner">
-  <div class="container row py-5">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-      <h1 class="primary-text">Themes</h1>
-      <h4 class="light primary-text">Light and dark schemes, the theme attribute, and custom tokens.</h4>
-    </div>
-  </div>
-</section>
+{{ Banner("Themes", "Light and dark schemes, the theme attribute, and custom tokens.") }}
 
 <div class="container">
   <div class="row">
