@@ -1,18 +1,29 @@
 name: Deploy docs site
 
 on:
+  # After a successful npm publish. The release commit bumps the version that
+  # docs/app.py renders into every page, so the site is stale until it is
+  # regenerated. Failed and cancelled releases are filtered by the job's `if`.
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+  # website/** is deliberately absent: it is generated output now, rewritten by
+  # the freeze step below. Edit docs/ instead.
   push:
     branches: [master]
     paths:
-      - 'website/**'
+      - 'docs/**'
       - 'src/**'
+      - 'freeze.py'
       - 'package.json'
       - 'package-lock.json'
+      - 'pyproject.toml'
+      - 'uv.lock'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write # commits the regenerated website/ back to master
   pages: write
   id-token: write
 
@@ -26,8 +37,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # A release that failed or was cancelled must not publish docs claiming a
+    # version that never reached npm. Other triggers always run.
+    if: >-
+      github.event_name != 'workflow_run'
+      || github.event.workflow_run.conclusion == 'success'
+
     steps:
+      # Explicitly master, not the triggering ref: on workflow_run the default
+      # checkout is the Release run's head (a tag), which is detached and cannot
+      # be pushed to. The release commit is on master anyway.
       - uses: actions/checkout@v7
+        with:
+          ref: master
 
       - uses: actions/setup-node@v7
         with:
@@ -36,10 +58,43 @@ jobs:
 
       - run: npm ci
 
-      # website/dist/ is gitignored (the root .gitignore's "dist/" pattern
-      # matches at any depth), so the framework assets the pages reference are
-      # not in the checkout. They have to be built.
+      # Must precede the freeze. docs/app.py serves /dist/... straight out of
+      # this directory and sets build_missing when it is absent, which renders a
+      # "run npm run build" banner into every page it then freezes.
       - run: npm run build
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - run: uv sync --frozen
+
+      # Frozen-Flask walks docs/app.py's 98 routes and writes website/. It also
+      # picks up the /dist/... URLs the templates build with url_for, so
+      # website/dist/ comes from the build above.
+      - name: Regenerate the static site
+        run: uv run --frozen python freeze.py
+
+      - name: Commit the regenerated site
+        run: |
+          set -euo pipefail
+          # -A, not diff: freeze can add pages for new routes, and untracked
+          # files are invisible to `git diff`. website/dist/ stays ignored.
+          git add -A website
+          if git diff --cached --quiet; then
+            echo "website/ is already up to date, nothing to commit"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Regenerate the docs site'
+          # Master may have moved while the framework was building.
+          git push origin HEAD:master || {
+            git fetch origin master
+            git rebase origin/master
+            git push origin HEAD:master
+          }
+          echo "committed $(git show --stat --oneline HEAD | tail -1)"
 
       - name: Assemble the site
         run: |
@@ -47,12 +102,12 @@ jobs:
           rm -rf _site
           mkdir -p _site
 
-          # The pages, plus static/. Anything gitignored under website/ is
-          # absent from the checkout, so this copies only committed content.
+          # The freshly frozen pages, plus static/.
           cp -R website/. _site/
 
-          # Framework assets, freshly built. Replaced rather than merged so a
-          # stale local copy can never be what ships.
+          # Framework assets, freshly built. Frozen-Flask also emits website/dist
+          # from the same files, but this is replaced rather than merged so the
+          # build output is unambiguously what ships.
           rm -rf _site/dist
           mkdir -p _site/dist
           cp -R dist/css _site/dist/css
