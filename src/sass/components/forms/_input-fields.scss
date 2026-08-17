@@ -8,8 +8,8 @@
 // outlined variant; the default is filled.
 //
 // Tokens follow https://m3.material.io/components/text-fields/specs
-//   filled     surface-variant well, 4dp top corners, 1dp/2dp bottom indicator
-//   outlined   1dp/2dp outline, 4dp corners
+//   filled     surface-variant well, 1rem corners, 1dp/2dp bottom indicator
+//   outlined   1dp/2dp outline, 1rem corners
 //   height     56dp
 //   label      body-large rest, body-small floated
 //   input      body-large / on-surface
@@ -37,6 +37,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
 .field,
 .input-field {
   --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-filled-text-field-container-shape: 1rem;
   --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
   --input-color: var(--md-comp-filled-text-field-caret-color);
 
@@ -50,7 +51,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     box-sizing: border-box;
     padding: 20px 16px 8px;
     border: none;
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--md-comp-filled-text-field-container-shape);
     border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
     background-color: var(--md-comp-filled-text-field-container-color);
     caret-color: var(--input-color);
@@ -213,7 +214,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
       padding-bottom: 8px;
       background-color: transparent;
       border: 1px solid var(--md-sys-color-outline);
-      border-radius: 4px;
+      border-radius: var(--md-comp-filled-text-field-container-shape);
 
       &:focus:not([readonly]) {
         border-width: 2px;
