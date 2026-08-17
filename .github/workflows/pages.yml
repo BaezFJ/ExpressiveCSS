@@ -1,0 +1,152 @@
+name: Deploy docs site
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'website/**'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a deploy in flight: a half-published site is worse than a
+# slightly stale one. Queued runs wait instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # website/dist/ is gitignored (the root .gitignore's "dist/" pattern
+      # matches at any depth), so the framework assets the pages reference are
+      # not in the checkout. They have to be built.
+      - run: npm run build
+
+      - name: Assemble the site
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site
+
+          # The pages, plus static/. Anything gitignored under website/ is
+          # absent from the checkout, so this copies only committed content.
+          cp -R website/. _site/
+
+          # Framework assets, freshly built. Replaced rather than merged so a
+          # stale local copy can never be what ships.
+          rm -rf _site/dist
+          mkdir -p _site/dist
+          cp -R dist/css _site/dist/css
+          cp -R dist/js _site/dist/js
+
+          # Pages has no directory-index concept beyond index.html, and the
+          # site's landing page is getting-started.html. Copy rather than move
+          # so the 96 in-site links to getting-started.html keep resolving.
+          cp _site/getting-started.html _site/index.html
+
+          # Belt and braces: the artifact is served as-is, but this guarantees
+          # no Jekyll pass ever eats a file.
+          touch _site/.nojekyll
+
+      # The pages use root-absolute URLs (/dist/..., /static/..., /color.html),
+      # which resolve to https://baezfj.github.io/dist/... on a project page --
+      # the wrong origin path, so every asset and link 404s. Rewriting them to
+      # relative works because the site is flat: every page sits at the root of
+      # _site, so "color.html" and "dist/css/..." resolve correctly from any of
+      # them, at a project subpath or at a custom domain later.
+      #
+      # The three patterns are deliberately narrow. A blanket ="/ -> =" would
+      # also hit the HTML-escaped code samples on the breadcrumbs, collections
+      # and pagination pages, which document links like href="/library" and
+      # href="/p/1" -- rewriting those would corrupt the documentation itself.
+      - name: Make asset and page URLs relative
+        run: |
+          set -euo pipefail
+          find _site -name '*.html' -print0 | xargs -0 sed -i -E \
+            -e 's|="/dist/|="dist/|g' \
+            -e 's|="/static/|="static/|g' \
+            -e 's|="/([a-z0-9-]+\.html(#[^"]*)?)"|="\1"|g'
+
+          # Informational only -- || true because grep exits 1 on no matches,
+          # which pipefail would turn into a failed step.
+          echo "Remaining root-absolute refs (expected: only escaped code samples):"
+          { grep -rhoE '(href|src)="/[^"]*"' _site --include='*.html' || true; } \
+            | sort | uniq -c | sort -rn | head -20
+
+      # Fails the build rather than publishing a site whose CSS 404s.
+      - name: Verify the assembled site
+        run: |
+          set -euo pipefail
+          missing=0
+          for f in \
+            index.html \
+            getting-started.html \
+            dist/css/expressive.min.css \
+            dist/js/expressive.min.js \
+            static/docs.css \
+            static/docs.js
+          do
+            if [ -s "_site/$f" ]; then
+              echo "  OK       $f"
+            else
+              echo "::error::missing or empty in _site: $f"
+              missing=1
+            fi
+          done
+
+          # Every local href/src on every page must exist on disk. Lines holding
+          # escaped markup are skipped: the docs quote example HTML like
+          # src="images/sample-1.jpg" and href="css/expressive.min.css", which
+          # describe a reader's project tree, not files in this site. Multi-line
+          # quoted blocks mean a continuation line can carry &gt; without &lt;,
+          # so both entities are filtered.
+          for page in _site/*.html; do
+            while read -r ref; do
+              [ -e "_site/${ref%%#*}" ] || {
+                echo "::error::$(basename "$page") references missing ${ref%%#*}"
+                missing=1
+              }
+            done < <(grep -vE '&lt;|&gt;' "$page" \
+                     | grep -oE '(href|src)="[a-z0-9][^":]*"' \
+                     | sed -E 's/.*="([^"]*)"/\1/' | sort -u)
+          done
+
+          echo "pages: $(find _site -name '*.html' | wc -l)"
+          exit $missing
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
