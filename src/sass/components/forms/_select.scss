@@ -152,19 +152,9 @@ select.browser-default {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 }
 
-.select-dropdown {
-  --md-comp-menu-container-shape: 1rem;
-
-  border-radius: var(--md-comp-menu-container-shape);
-}
-
 .select-dropdown > li:not(.optgroup, .divider) {
   display: flex;
   align-items: center;
-  box-sizing: border-box;
-  width: calc(100% - 16px);
-  margin-inline: 8px;
-  border-radius: 2rem;
 }
 
 .select-dropdown > li.selected:not(.disabled, .optgroup) {

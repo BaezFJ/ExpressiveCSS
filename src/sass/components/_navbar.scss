@@ -117,7 +117,10 @@ header:has(> nav) {
       align-items: stretch;
     }
 
-    a {
+    // Direct destinations only. Dropdown JS parks the menu next to the
+    // trigger, so a descendant `a` would also paint a square hover on
+    // top of the menu's pill.
+    > li > a {
       @extend %app-bar-destination;
     }
   }

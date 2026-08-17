@@ -9,8 +9,9 @@
 // still generate it).
 //
 // Tokens follow https://m3.material.io/components/menus/specs
-//   container    surface, 4dp corners, elevation 2, 112–280dp
-//   item         48dp, label-large / on-surface, 12dp inset
+// plus the 1rem surface / stadium items used by fields and select.
+//   container    surface, 1rem corners, elevation 2, 112–280dp
+//   item         48dp, 2rem corners, label-large / on-surface, 12dp inset
 //   leading icon 24dp, on-surface-variant
 //   divider      1dp outline-variant
 //   state layer  8% hover / 10% selected
@@ -24,7 +25,7 @@
 .dropdown-content,
 menu[id] {
   --md-comp-menu-container-color: var(--md-sys-color-surface);
-  --md-comp-menu-container-shape: 4px;
+  --md-comp-menu-container-shape: 1rem;
   --md-comp-menu-item-container-height: 48px;
 
   box-sizing: border-box;
@@ -47,6 +48,7 @@ menu[id] {
   @include z-depth("2");
 
   > li {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -70,6 +72,11 @@ menu[id] {
       color: var(--md-sys-color-on-surface);
       text-decoration: none;
       cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background: none;
+      }
       @include typescale("label-large");
       font-family: $font-stack;
     }
@@ -84,6 +91,12 @@ menu[id] {
       line-height: 24px;
       color: var(--md-sys-color-on-surface-variant);
     }
+  }
+
+  > li:not(.disabled, .divider, .optgroup) {
+    width: calc(100% - 16px);
+    margin-inline: 8px;
+    border-radius: 2rem;
   }
 
   > li:not(.disabled, .divider):hover,
