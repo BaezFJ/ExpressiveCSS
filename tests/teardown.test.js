@@ -83,7 +83,7 @@ describe('destroy() releases shared listeners', () => {
 
   afterEach(() => watch.restore());
 
-  test('ScrollSpy detaches the scroll, resize and click handlers it shares', () => {
+  test('ScrollSpy does not attach window or document listeners', () => {
     document.body.innerHTML = `
       <div id="section1" class="scrollspy">one</div>
       <div id="section2" class="scrollspy">two</div>
@@ -92,15 +92,12 @@ describe('destroy() releases shared listeners', () => {
 
     const a = Expressive.ScrollSpy.init(first);
     const b = Expressive.ScrollSpy.init(second);
-    assert.notDeepEqual(watch.live(), [], 'ScrollSpy attached nothing to begin with');
+    assert.deepEqual(watch.live(), [], 'ScrollSpy attached a window/document listener');
 
-    // Destroyed out of creation order on purpose: the listeners used to be
-    // registered with the first instance's bound handler and unregistered with
-    // the last one's, so removeEventListener silently did nothing.
     a.destroy();
     b.destroy();
 
-    assert.deepEqual(watch.live(), [], 'ScrollSpy left listeners attached after destroy()');
+    assert.deepEqual(watch.live(), []);
   });
 
   test('Pushpin detaches its document scroll handler', () => {

@@ -23,7 +23,7 @@ function stubRect(el, counter, rect = { top: 0, left: 0, width: 100, height: 100
 describe('layout reads per scroll tick', () => {
   beforeEach(resetBody);
 
-  test('ScrollSpy reads one rect per spied element', () => {
+  test('ScrollSpy does not read layout on scroll', () => {
     document.body.innerHTML = `
       <div id="s1" class="scrollspy">one</div>
       <div id="s2" class="scrollspy">two</div>
@@ -38,12 +38,9 @@ describe('layout reads per scroll tick', () => {
 
     window.dispatchEvent(new window.Event('scroll'));
 
-    // Previously five per element: a height check, two _offset() calls that
-    // each built their own rect, then width and height again.
-    assert.ok(
-      counter.reads <= sections.length,
-      `expected at most ${sections.length} rect reads, got ${counter.reads}`
-    );
+    // Observation is IntersectionObserver. A scroll event must not walk
+    // the sections and read layout.
+    assert.equal(counter.reads, 0, `scroll still read ${counter.reads} rects`);
 
     spies.forEach((spy) => spy.destroy());
   });

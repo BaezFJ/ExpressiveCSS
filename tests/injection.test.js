@@ -100,6 +100,17 @@ describe('ids are looked up, not interpolated into selectors', () => {
     instance.destroy();
   });
 
+  test('ScrollSpy finds a hash whose id contains a quote', () => {
+    document.body.innerHTML = `
+      <div id='sec"tion' class="scrollspy">one</div>
+      <a href='#sec"tion'>to one</a>`;
+    const el = document.querySelector('.scrollspy');
+    const instance = Expressive.ScrollSpy.init(el);
+    const link = Expressive.ScrollSpy._linkFor(el.id, instance.options);
+    assert.equal(link, document.querySelector('a'));
+    instance.destroy();
+  });
+
   test('TapTarget survives a data-target that resolves to nothing', () => {
     document.body.innerHTML = `<div class="tap-target" data-target="missing"><div class="tap-target-content"><h5>T</h5></div></div>`;
 

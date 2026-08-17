@@ -92,6 +92,11 @@ read-it-off-the-element access that key provides.
   markup switches. JS toggles the class, Escape, and click-outside.
   Do not write `transform` / `opacity` onto the children. Toolbar mode
   is `.toolbar.active` — no backdrop scale math.
+- **ScrollSpy is IntersectionObserver.** No window scroll listener and
+  no click hijack. Offset is `scroll-margin-block-start` /
+  `--md-comp-scrollspy-offset`. Default link lookup compares `href`
+  attributes — do not interpolate the section id into a selector.
+  `throttle` and `animationDuration` are accepted and ignored.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

@@ -1,0 +1,18 @@
+@use "../abstracts" as *;
+
+// ScrollSpy. The section is the target of a hash link. Offset is CSS
+// (scroll-margin). Which TOC link is current is IntersectionObserver.
+//
+// Tokens:
+//   --md-comp-scrollspy-offset   200px (JS writes the instance value)
+
+.scrollspy {
+  --md-comp-scrollspy-offset: 200px;
+  scroll-margin-block-start: var(--md-comp-scrollspy-offset);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.scrollspy) {
+    scroll-behavior: smooth;
+  }
+}

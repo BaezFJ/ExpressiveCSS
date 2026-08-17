@@ -1,7 +1,21 @@
 @use "../abstracts" as *;
 
+// Table of contents. Paired with .scrollspy sections. The current link
+// is .active and aria-current="true".
+//
+// Tokens:
+//   --md-comp-toc-label-color
+//   --md-comp-toc-active-color
+//   --md-comp-toc-indicator
+
 .table-of-contents {
+  --md-comp-toc-label-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-toc-active-color: var(--md-sys-color-primary);
+  --md-comp-toc-indicator: 2px;
+
   list-style: none;
+  margin: 0;
+  padding: 0;
 
   &.fixed {
     position: fixed;
@@ -12,23 +26,25 @@
   }
 
   a {
-    display: inline-block;
-    font-weight: 400;
-    color: var(--md-sys-color-secondary);
-    padding-left: 16px;
-    height: 2rem;
-    line-height: 2rem;
-    border-left: 1px solid var(--md-sys-color-outline-variant);
-    
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 2rem;
+    padding-inline-start: 16px;
+    border-inline-start: var(--md-comp-toc-indicator) solid transparent;
+    color: var(--md-comp-toc-label-color);
+    text-decoration: none;
+    @include typescale("label-large");
+    @include focus-visible;
+
     &:hover {
-      color: var(--md-sys-color-on-background);
-      padding-left: 15px;
+      color: var(--md-comp-toc-active-color);
     }
-    &.active {
-      color: var(--md-sys-color-primary);
+
+    &:is(.active, [aria-current="true"]) {
+      color: var(--md-comp-toc-active-color);
       font-weight: 500;
-      padding-left: 14px;
-      border-left: 2px solid var(--md-sys-color-primary);
+      border-inline-start-color: var(--md-comp-toc-active-color);
     }
   }
 }

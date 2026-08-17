@@ -21,13 +21,18 @@
         <p class="flow-text">
           Scrollspy watches a set of sections and which one is currently in view.
           The table of contents on the right of every documentation page is the live demo:
-          the matching link gets <code>active</code>, and clicking a link scrolls to that section.
+          the matching link gets <code>active</code> and <code>aria-current="true"</code>.
+          Clicking a link is a normal hash jump — the offset is
+          <code>scroll-margin</code>, the motion is
+          <code>scroll-behavior: smooth</code>.
         </p>
         <p>
           Put <code>scrollspy</code> and an <code>id</code> on each section.
           In the TOC, use <code>table-of-contents</code> and point each link at
           <code>#that-id</code>. <code>AutoInit()</code> starts every
           <code>.scrollspy</code> except those marked <code>no-autoinit</code>.
+          Observation is <code>IntersectionObserver</code> — there is no
+          scroll listener.
         </p>
 <pre><code>&lt;div class="row"&gt;
   &lt;div class="s12 m9"&gt;
@@ -37,15 +42,11 @@
     &lt;div id="structure" class="section scrollspy"&gt;
       &lt;p&gt;Content&lt;/p&gt;
     &lt;/div&gt;
-    &lt;div id="initialization" class="section scrollspy"&gt;
-      &lt;p&gt;Content&lt;/p&gt;
-    &lt;/div&gt;
   &lt;/div&gt;
   &lt;div class="hide-on-small-only m3"&gt;
     &lt;ul class="section table-of-contents"&gt;
       &lt;li&gt;&lt;a href="#introduction"&gt;Introduction&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href="#structure"&gt;Structure&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#initialization"&gt;Initialization&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
@@ -70,7 +71,7 @@
 });</code></pre>
         <p>
           These documentation pages also pin the TOC with Pushpin. That is a separate component —
-          Scrollspy only updates which link is active and handles the click-to-scroll.
+          Scrollspy only updates which link is active.
         </p>
       </div>
 
@@ -87,16 +88,15 @@
           </thead>
           <tbody>
             <tr>
-              <td><code>throttle</code></td>
-              <td>Number</td>
-              <td><code>100</code></td>
-              <td>Throttle of the scroll handler, in milliseconds.</td>
-            </tr>
-            <tr>
               <td><code>scrollOffset</code></td>
               <td>Number</td>
               <td><code>200</code></td>
-              <td>Offset used when deciding which section is in view. A larger value lets sections near the bottom of the page become active sooner.</td>
+              <td>
+                Offset in pixels. Written as
+                <code>--md-comp-scrollspy-offset</code> (section
+                <code>scroll-margin</code>) and used as the observer
+                <code>rootMargin</code>.
+              </td>
             </tr>
             <tr>
               <td><code>activeClass</code></td>
@@ -108,30 +108,41 @@
               <td><code>getActiveElement</code></td>
               <td>Function</td>
               <td>see below</td>
-              <td>Returns a CSS selector for the element that should receive <code>activeClass</code>, given the section’s id.</td>
+              <td>
+                Optional. Returns a CSS selector for the element that should
+                receive <code>activeClass</code>, given the section’s id.
+                The default finds <code>a[href="#id"]</code> by comparing
+                attributes — it does not interpolate the id into a selector.
+              </td>
             </tr>
             <tr>
               <td><code>keepTopElementActive</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active.</td>
+              <td>If true, keep the last section above the viewport active when nothing intersects. If there is no such section, the first one stays active.</td>
+            </tr>
+            <tr>
+              <td><code>throttle</code></td>
+              <td>Number</td>
+              <td><code>100</code></td>
+              <td>Deprecated. Observation is IntersectionObserver. Accepted and ignored.</td>
             </tr>
             <tr>
               <td><code>animationDuration</code></td>
               <td>Number</td>
               <td><code>null</code></td>
-              <td>Duration of the click-to-scroll animation, in milliseconds. <code>null</code> uses the browser’s native <code>scrollIntoView({ behavior: 'smooth' })</code>.</td>
+              <td>Deprecated. Clicks are native hash navigation. Accepted and ignored.</td>
             </tr>
           </tbody>
         </table>
 
         <h5 class="light">getActiveElement</h5>
         <p>
-          Default function for finding the active link. <code>id</code> is the id of the
-          <code>.scrollspy</code> section. Return a CSS selector for the element that should be marked active.
+          Only needed when the TOC is not <code>a[href="#id"]</code>.
+          Return a CSS selector. Escape any author-controlled id yourself.
         </p>
 <pre><code>function(id) {
-  return 'a[href="#' + id + '"]';
+  return '[data-section="' + CSS.escape(id) + '"]';
 }</code></pre>
       </div>
 
@@ -143,7 +154,7 @@
 <pre><code>const instance = Expressive.ScrollSpy.getInstance(elem);</code></pre>
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and tear down its event handlers.</p>
+        <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
 <pre><code>instance.destroy();</code></pre>
       </div>
 

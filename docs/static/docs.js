@@ -375,8 +375,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const toc = document.querySelector('.toc-wrapper');
   if (toc && Expressive.Pushpin) {
     toc.style.width = `${toc.parentElement.getBoundingClientRect().width}px`;
+    // Measure the bar, not the header: the header also wraps the sidenav.
+    const bar = document.querySelector('header.fixed > nav');
+    const offset = bar ? Math.round(bar.getBoundingClientRect().height) + 8 : 72;
     Expressive.Pushpin.init(toc, {
       top: toc.getBoundingClientRect().top + window.scrollY,
+      offset,
     });
   }
 });
