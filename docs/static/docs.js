@@ -164,6 +164,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const dropdownNested = document.getElementById('dropdown-nested-trigger');
+  if (dropdownNested) {
+    Expressive.Dropdown.init(dropdownNested, {
+      constrainWidth: false,
+      coverTrigger: false
+    });
+  }
+
   const featureTapTarget = document.getElementById('feature-tap-target');
   document.getElementById('tap-target-open')?.addEventListener('click', (event) => {
     event.preventDefault();

@@ -147,7 +147,7 @@
               <td><code>closeOnClick</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>If true, close the menu when an item is clicked.</td>
+              <td>If true, close the menu when a leaf item is clicked. A click on a row that owns a nested <code>&lt;menu&gt;</code> toggles that flyout and does not close the root.</td>
             </tr>
             <tr>
               <td><code>hover</code></td>
@@ -259,6 +259,42 @@
 });</code></pre>
       </div>
 
+      <div id="nested" class="section scrollspy">
+        <h3>Nested menus</h3>
+        <p>
+          Optional and desktop-first. Put a <code>&lt;menu&gt;</code> inside an
+          <code>&lt;li&gt;</code> — no extra trigger, no second instance.
+          On a fine pointer the flyout opens on hover or focus.
+          On touch, a tap toggles <code>.open</code> on that row.
+          A click on the parent row does not close the root menu.
+        </p>
+        <p>
+          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-nested-trigger" data-target="dropdown-nested">Nested</button>
+        </p>
+        <menu id="dropdown-nested">
+          <li><a href="#!">One</a></li>
+          <li>
+            <a href="#!">More</a>
+            <menu>
+              <li><a href="#!">Nested one</a></li>
+              <li><a href="#!">Nested two</a></li>
+            </menu>
+          </li>
+          <li><a href="#!">Three</a></li>
+        </menu>
+<pre><code>&lt;button class="dropdown-trigger" data-target="menu1"&gt;Nested&lt;/button&gt;
+&lt;menu id="menu1"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;One&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;a href="#!"&gt;More&lt;/a&gt;
+    &lt;menu&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Nested one&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Nested two&lt;/a&gt;&lt;/li&gt;
+    &lt;/menu&gt;
+  &lt;/li&gt;
+&lt;/menu&gt;</code></pre>
+      </div>
+
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
         <blockquote>
@@ -340,6 +376,7 @@
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
+          <li><a href="#nested">Nested menus</a></li>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>
         </ul>

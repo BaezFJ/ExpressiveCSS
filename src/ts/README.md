@@ -87,6 +87,10 @@ read-it-off-the-element access that key provides.
   `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
   one origin rect. The wrapper uses `popover="auto"` when the platform
   has it. Do not build a `#${data-target}` selector.
+- **Dropdown nested menus are markup.** A `<menu>` inside an `<li>`
+  is a flyout. Hover / `:focus-within` on `(hover: hover) and
+  (pointer: fine)`; `.open` is the tap/keyboard switch. Do not start a
+  second Dropdown. `closeOnClick` ignores the parent row of a submenu.
 - **FAB speed dial is CSS.** `.active` (and `:hover` when the pointer
   can hover) opens the menu. `.click-to-toggle` and `.direction-*` are
   markup switches. JS toggles the class, Escape, and click-outside.

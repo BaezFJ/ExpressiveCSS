@@ -131,6 +131,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     // Move dropdown-content after dropdown-trigger
     this._moveDropdownToElement();
     this._makeDropdownFocusable();
+    this._setupSubmenus();
     this._setupEventHandlers();
   }
 
@@ -183,6 +184,9 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     this.el.addEventListener('keydown', this._handleTriggerKeydown);
     // Item click handler
     this.dropdownEl?.addEventListener('click', this._handleDropdownClick);
+    if (this.dropdownEl?.querySelector(':scope > li > menu')) {
+      this.dropdownEl.addEventListener('mouseover', this._handleSubmenuAlign);
+    }
     // Hover event handlers
     if (this.options.hover) {
       this.el.addEventListener('mouseenter', this._handleMouseEnter);
@@ -200,6 +204,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     // before it can detach anything else.
     this.el.removeEventListener('keydown', this._handleTriggerKeydown);
     this.dropdownEl?.removeEventListener('click', this._handleDropdownClick);
+    this.dropdownEl?.removeEventListener('mouseover', this._handleSubmenuAlign);
     if (this.options.hover) {
       this.el.removeEventListener('mouseenter', this._handleMouseEnter);
       this.el.removeEventListener('mouseleave', this._handleMouseLeave);
@@ -259,6 +264,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleDocumentClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
+    if (this._isSubmenuTriggerClick(target)) return;
     if (this.options.closeOnClick && target.closest('.dropdown-content, menu') && !this.isTouchMoving) {
       // isTouchMoving to check if scrolling on mobile.
       this.close();
@@ -292,12 +298,97 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   };
 
   _handleDropdownClick = (e: MouseEvent) => {
-    // onItemClick callback
+    const target = <HTMLElement>e.target;
+    const li = target.closest('li');
+    if (li && this._isSubmenuTriggerClick(target)) {
+      e.preventDefault();
+      e.stopPropagation();
+      this._toggleSubmenu(li);
+      return;
+    }
     if (typeof this.options.onItemClick === 'function') {
-      const itemEl = (<HTMLElement>e.target).closest('li');
-      this.options.onItemClick.call(this, itemEl);
+      this.options.onItemClick.call(this, li);
     }
   };
+
+  private _isSubmenuTriggerClick(target: HTMLElement) {
+    if (!this.dropdownEl) return false;
+    const li = target.closest('li');
+    if (!li || !this.dropdownEl.contains(li)) return false;
+    const submenu = li.querySelector(':scope > menu');
+    if (!submenu) return false;
+    return !submenu.contains(target);
+  }
+
+  private _setupSubmenus() {
+    this.dropdownEl?.querySelectorAll('li').forEach((li) => {
+      if (!li.querySelector(':scope > menu')) return;
+      const trigger = li.querySelector(':scope > a, :scope > button, :scope > span') ?? li;
+      trigger.setAttribute('aria-haspopup', 'menu');
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  private _toggleSubmenu(li: HTMLElement) {
+    const open = !li.classList.contains('open');
+    li.parentElement?.querySelectorAll(':scope > li.open').forEach((other) => {
+      if (other !== li) {
+        other.classList.remove('open', 'submenu-start');
+        this._syncSubmenuAria(other as HTMLElement, false);
+      }
+    });
+    li.classList.toggle('open', open);
+    if (open) this._alignSubmenu(li);
+    this._syncSubmenuAria(li, open);
+  }
+
+  private _syncSubmenuAria(li: HTMLElement, open: boolean) {
+    const trigger = li.querySelector(':scope > a, :scope > button, :scope > span') ?? li;
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  private _handleSubmenuAlign = (e: MouseEvent) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    const li = target.closest('li');
+    if (li?.querySelector(':scope > menu') && this.dropdownEl?.contains(li)) {
+      this._alignSubmenu(li as HTMLElement);
+    }
+  };
+
+  private _alignSubmenu(li: HTMLElement) {
+    const menu = li.querySelector(':scope > menu') as HTMLElement | null;
+    if (!menu) return;
+    const wasHidden = getComputedStyle(menu).display === 'none';
+    if (wasHidden) menu.style.display = 'block';
+    li.classList.remove('submenu-start');
+    const rect = menu.getBoundingClientRect();
+    if (rect.right > window.innerWidth - 8) li.classList.add('submenu-start');
+    if (wasHidden) menu.style.display = '';
+  }
+
+  private _closeSubmenus() {
+    this.dropdownEl?.querySelectorAll('li.open').forEach((li) => {
+      li.classList.remove('open', 'submenu-start');
+      this._syncSubmenuAria(li as HTMLElement, false);
+    });
+  }
+
+  private _containingSubmenu(e: Event): HTMLElement | null {
+    const target = e.target;
+    if (!(target instanceof Element)) return null;
+    const submenu = target.closest('li > menu');
+    if (submenu instanceof HTMLElement && this.dropdownEl?.contains(submenu)) return submenu;
+    return null;
+  }
+
+  private _focusedRow(e: Event): HTMLElement | null {
+    const target = e.target;
+    if (!(target instanceof Element)) return null;
+    const li = target.closest('li');
+    if (li instanceof HTMLElement && this.dropdownEl?.contains(li)) return li;
+    return null;
+  }
 
   _handleDropdownKeydown = (e: KeyboardEvent) => {
     const arrowUpOrDown =
@@ -306,49 +397,80 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
       e.preventDefault();
       this.close();
     }
+    else if (Utils.keys.ARROW_RIGHT.includes(e.key) && this.isOpen) {
+      const li = this._focusedRow(e);
+      if (li?.querySelector(':scope > menu')) {
+        e.preventDefault();
+        li.classList.add('open');
+        this._alignSubmenu(li);
+        this._syncSubmenuAria(li, true);
+        const first = li.querySelector(':scope > menu > li') as HTMLElement | null;
+        first?.focus();
+      }
+    } else if (Utils.keys.ARROW_LEFT.includes(e.key) && this.isOpen) {
+      const submenu = this._containingSubmenu(e);
+      if (submenu) {
+        e.preventDefault();
+        const parentLi = submenu.parentElement as HTMLElement;
+        parentLi.classList.remove('open', 'submenu-start');
+        this._syncSubmenuAria(parentLi, false);
+        parentLi.focus();
+      }
+    }
     // Navigate down dropdown list
     else if (arrowUpOrDown && this.isOpen) {
       e.preventDefault();
       const direction = Utils.keys.ARROW_DOWN.includes(e.key) ? 1 : -1;
+      const list = this._containingSubmenu(e) ?? this.dropdownEl;
       let newFocusedIndex = this.focusedIndex;
       let hasFoundNewIndex = false;
       do {
         newFocusedIndex = newFocusedIndex + direction;
         if (
-          !!this.dropdownEl.children[newFocusedIndex] &&
-          (<HTMLLIElement>this.dropdownEl.children[newFocusedIndex]).tabIndex !== -1
+          !!list.children[newFocusedIndex] &&
+          (<HTMLLIElement>list.children[newFocusedIndex]).tabIndex !== -1
         ) {
           hasFoundNewIndex = true;
           break;
         }
-      } while (newFocusedIndex < this.dropdownEl.children.length && newFocusedIndex >= 0);
+      } while (newFocusedIndex < list.children.length && newFocusedIndex >= 0);
 
       if (hasFoundNewIndex) {
-        // Remove active class from old element
         if (this.focusedIndex >= 0)
-          this.dropdownEl.children[this.focusedIndex].classList.remove('active');
+          list.children[this.focusedIndex]?.classList.remove('active');
         this.focusedIndex = newFocusedIndex;
-        this._focusFocusedItem();
+        const item = list.children[this.focusedIndex] as HTMLElement;
+        item.classList.add('active');
+        item.focus({ preventScroll: true });
       }
     }
     // ENTER selects choice on focused item
     else if (Utils.keys.ENTER.includes(e.key) && this.isOpen) {
-      // Search for <a> and <button>
-      const focusedElement = this.dropdownEl.children[this.focusedIndex];
+      const li = this._focusedRow(e);
+      if (li?.querySelector(':scope > menu')) {
+        e.preventDefault();
+        this._toggleSubmenu(li);
+        return;
+      }
+      const focusedElement = li ?? this.dropdownEl.children[this.focusedIndex];
       const activatableElement = <HTMLElement>focusedElement?.querySelector('a, button');
-      // Click a or button tag if exists, otherwise click li tag
       if (!!activatableElement) {
         activatableElement.click();
-      } else if (!!focusedElement) {
-        if (focusedElement instanceof HTMLElement) {
-          focusedElement.click();
-        }
+      } else if (focusedElement instanceof HTMLElement) {
+        focusedElement.click();
       }
     }
     // Close dropdown on ESC
     else if (Utils.keys.ESC.includes(e.key) && this.isOpen) {
       e.preventDefault();
-      this.close();
+      const openSub = this.dropdownEl.querySelector('li.open');
+      if (openSub) {
+        openSub.classList.remove('open', 'submenu-start');
+        this._syncSubmenuAria(openSub as HTMLElement, false);
+        (openSub as HTMLElement).focus();
+      } else {
+        this.close();
+      }
     }
 
     // CASE WHEN USER TYPE LTTERS
@@ -366,7 +488,8 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
       const string = this.filterQuery.join('');
       // textContent rather than innerText: this scans every item on every
       // keystroke, and innerText forces a layout flush per item.
-      const newOptionEl = Array.from(this.dropdownEl.querySelectorAll('li')).find(
+      const list = this._containingSubmenu(e) ?? this.dropdownEl;
+      const newOptionEl = Array.from(list.querySelectorAll(':scope > li')).find(
         (el) => el.textContent.trim().toLowerCase().indexOf(string) === 0
       );
       if (newOptionEl) {
@@ -425,7 +548,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     // Needed for arrow key navigation
     this.dropdownEl.tabIndex = 0;
     // Only set tabindex if it hasn't been set by user
-    Array.from(this.dropdownEl.children).forEach((el) => {
+    this.dropdownEl.querySelectorAll(':scope li, :scope > hr').forEach((el) => {
       if (el instanceof HTMLHRElement || el.classList.contains('divider')) {
         el.setAttribute('tabindex', '-1');
         return;
@@ -652,6 +775,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     if (!this.isOpen) return;
     this.isOpen = false;
     this.focusedIndex = -1;
+    this._closeSubmenus();
     // onCloseStart callback
     if (typeof this.options.onCloseStart === 'function') {
       this.options.onCloseStart.call(this, this.el);

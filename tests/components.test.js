@@ -350,6 +350,56 @@ describe('FormSelect', () => {
   });
 });
 
+describe('Dropdown nested menus', () => {
+  beforeEach(resetBody);
+
+  const html = `
+    <button type="button" class="dropdown-trigger" data-target="dn">Drop</button>
+    <menu id="dn">
+      <li><a href="#!">One</a></li>
+      <li id="more-row">
+        <a href="#!">More</a>
+        <menu>
+          <li><a href="#!">Nested</a></li>
+        </menu>
+      </li>
+    </menu>`;
+
+  test('does not start a second Dropdown for the nested menu', () => {
+    document.body.innerHTML = html;
+    const before = Expressive.Dropdown._dropdowns.length;
+    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
+    assert.equal(Expressive.Dropdown._dropdowns.length, before + 1);
+    assert.equal(
+      document.getElementById('more-row').querySelector('a').getAttribute('aria-haspopup'),
+      'menu'
+    );
+    instance.destroy();
+    assert.equal(Expressive.Dropdown._dropdowns.length, before);
+  });
+
+  test('clicking a submenu parent toggles .open and keeps the root open', () => {
+    document.body.innerHTML = html;
+    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
+    const more = document.getElementById('more-row');
+    instance.open();
+
+    fire(more.querySelector('a'), 'click');
+    assert.equal(instance.isOpen, true);
+    assert.equal(more.classList.contains('open'), true);
+    assert.equal(more.querySelector('a').getAttribute('aria-expanded'), 'true');
+
+    fire(more.querySelector('a'), 'click');
+    assert.equal(more.classList.contains('open'), false);
+    assert.equal(instance.isOpen, true);
+
+    fire(more.querySelector('a'), 'click');
+    instance.close();
+    assert.equal(more.classList.contains('open'), false);
+    instance.destroy();
+  });
+});
+
 describe('Cards reveal', () => {
   beforeEach(resetBody);
 
