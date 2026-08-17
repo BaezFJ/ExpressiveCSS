@@ -350,6 +350,55 @@ describe('FormSelect', () => {
   });
 });
 
+describe('Cards reveal', () => {
+  beforeEach(resetBody);
+
+  const html = `
+    <article>
+      <h3 class="activator">Title</h3>
+      <p>body</p>
+      <aside>
+        <h4>More</h4>
+        <p>reveal</p>
+      </aside>
+    </article>`;
+
+  test('open() keeps the reveal expanded until close()', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('article');
+    const reveal = el.querySelector('aside');
+    const instance = Expressive.Cards.init(el);
+
+    instance.open();
+    assert.equal(instance.isOpen, true);
+    assert.equal(reveal.getAttribute('aria-expanded'), 'true');
+    assert.equal(el.style.transform, '', 'open() wrote an inline transform');
+    assert.equal(reveal.style.transform, '', 'the reveal transform is CSS, not inline');
+
+    instance.open();
+    assert.equal(instance.isOpen, true, 'a second open() closed the reveal');
+
+    instance.close();
+    assert.equal(instance.isOpen, false);
+    assert.equal(reveal.getAttribute('aria-expanded'), 'false');
+
+    instance.open();
+    assert.equal(instance.isOpen, true, 'the reveal could not be opened again');
+    instance.destroy();
+  });
+
+  test('clicking the activator opens the reveal', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('article');
+    const instance = Expressive.Cards.init(el);
+
+    fire(el.querySelector('.activator'), 'click');
+    assert.equal(instance.isOpen, true);
+    assert.equal(el.querySelector('aside').getAttribute('aria-expanded'), 'true');
+    instance.destroy();
+  });
+});
+
 describe('CharacterCounter', () => {
   beforeEach(resetBody);
 

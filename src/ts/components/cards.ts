@@ -4,7 +4,15 @@ import { Component, BaseOptions, InitElements, MElement, Openable } from '../cor
 export interface CardsOptions extends BaseOptions {
   onOpen: (el: Element) => void;
   onClose: (el: Element) => void;
+  /**
+   * Open transition duration, in milliseconds.
+   * Accepted and ignored. Use --md-comp-card-reveal-duration.
+   */
   inDuration: number;
+  /**
+   * Close transition duration, in milliseconds.
+   * Accepted and ignored. Use --md-comp-card-reveal-duration.
+   */
   outDuration: number;
 }
 
@@ -28,7 +36,6 @@ export const CARDS_SELECTOR = '.card, article:has(> aside), article:has(.card-re
 export class Cards extends Component<CardsOptions> implements Openable {
   isOpen: boolean = false;
   private readonly cardReveal: HTMLElement | null;
-  private readonly initialOverflow: string;
   private _activators: HTMLElement[] | null;
   private cardRevealClose: HTMLElement | null;
 
@@ -45,7 +52,6 @@ export class Cards extends Component<CardsOptions> implements Openable {
 
     this.cardReveal = this.el.querySelector(':scope > aside, .card-reveal');
     if (this.cardReveal) {
-      this.initialOverflow = getComputedStyle(this.el).overflow;
       this._activators = Array.from(this.el.querySelectorAll('.activator'));
       this._activators.forEach((el: HTMLElement) => {
         if (el) el.tabIndex = 0;
@@ -153,17 +159,11 @@ export class Cards extends Component<CardsOptions> implements Openable {
    * Show card reveal.
    */
   open: () => void = () => {
-    if (this.isOpen) return;
+    if (this.isOpen || !this.cardReveal) return;
     this.isOpen = true;
-    this.el.style.overflow = 'hidden';
-    this.cardReveal.style.display = 'block';
     this.cardReveal.ariaExpanded = 'true';
     // A reveal without a title has no close affordance; that is allowed.
     if (this.cardRevealClose) this.cardRevealClose.tabIndex = 0;
-    setTimeout(() => {
-      this.cardReveal.style.transition = `transform ${this.options.outDuration}ms ease`; //easeInOutQuad
-      this.cardReveal.style.transform = 'translateY(-100%)';
-    }, 1);
     if (typeof this.options.onOpen === 'function') {
       this.options.onOpen.call(this);
     }
@@ -174,17 +174,11 @@ export class Cards extends Component<CardsOptions> implements Openable {
    * Hide card reveal.
    */
   close: () => void = () => {
-    if (!this.isOpen) return;
+    if (!this.isOpen || !this.cardReveal) return;
     this.isOpen = false;
-    this.cardReveal.style.transition = `transform ${this.options.inDuration}ms ease`; //easeInOutQuad
-    this.cardReveal.style.transform = 'translateY(0)';
-    setTimeout(() => {
-      this.cardReveal.style.display = 'none';
-      this.cardReveal.ariaExpanded = 'false';
-      this._activators.forEach((el: HTMLElement) => (el.tabIndex = 0));
-      if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
-      this.el.style.overflow = this.initialOverflow;
-    }, this.options.inDuration);
+    this.cardReveal.ariaExpanded = 'false';
+    this._activators.forEach((el: HTMLElement) => (el.tabIndex = 0));
+    if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
     if (typeof this.options.onClose === 'function') {
       this.options.onClose.call(this);
     }

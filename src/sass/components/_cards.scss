@@ -211,9 +211,15 @@ article.horizontal.large,
 }
 
 // Reveal overlay. aside is the semantic name; .card-reveal is the JS alias.
+// Parked under the card (translateY 100%) and clipped by overflow:hidden.
+// Open is aria-expanded="true" → slide up to cover. Do not use inset:0 as
+// the closed geometry and then translateY(-100%): that slides the panel
+// *off* the card, and isOpen stays true so a second click is a no-op.
 article > aside,
 .card-reveal {
-  display: none;
+  --md-comp-card-reveal-duration: 300ms;
+  --md-comp-card-reveal-easing: ease;
+
   position: absolute;
   inset: 0;
   z-index: 3;
@@ -222,6 +228,27 @@ article > aside,
   overflow-y: auto;
   background-color: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
+  transform: translateY(100%);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
+    visibility 0s var(--md-comp-card-reveal-duration);
+}
+
+article > aside[aria-expanded="true"],
+.card-reveal[aria-expanded="true"] {
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  article > aside,
+  .card-reveal {
+    transition: none;
+  }
 }
 
 article.sticky > nav,

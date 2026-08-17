@@ -105,6 +105,10 @@ read-it-off-the-element access that key provides.
   `.sidenav-fixed` is `matchMedia('(width >= 993px)')`, not a resize
   `open()`. `inDuration` / `outDuration` / `preventScrolling` are
   accepted and ignored.
+- **Card reveal is CSS.** `aside` / `.card-reveal` rests at
+  `translateY(100%)` (clipped). `aria-expanded="true"` slides it to
+  cover the card. Do not write `transform` / `display` / `overflow`.
+  `inDuration` / `outDuration` are accepted and ignored.
 - **FormSelect is a text field + menu.** The native `<select>` stays
   the form value. JS reuses an existing `.field` / `.input-field` or
   creates `.select-wrapper.field`. The caret is a CSS-masked `.caret`,
