@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, resetBody, fire } from './setup.js';
 
 const PAYLOAD = '"><img src=x onerror=alert(1)>';
 
@@ -108,6 +108,27 @@ describe('ids are looked up, not interpolated into selectors', () => {
     const instance = Expressive.ScrollSpy.init(el);
     const link = Expressive.ScrollSpy._linkFor(el.id, instance.options);
     assert.equal(link, document.querySelector('a'));
+    instance.destroy();
+  });
+
+  test('Sidenav resolves a data-target containing a quote', () => {
+    document.body.innerHTML = `
+      <ul id='slide"out' class="sidenav"><li><a href="#!">First</a></li></ul>
+      <a href="#" data-target='slide"out' class="sidenav-trigger">menu</a>`;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    fire(document.querySelector('.sidenav-trigger'), 'click');
+    assert.equal(instance.isOpen, true);
+    instance.destroy();
+  });
+
+  test('Sidenav survives a trigger whose target is missing', () => {
+    document.body.innerHTML = `
+      <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
+      <a href="#" data-target="missing" class="sidenav-trigger">menu</a>`;
+    const instance = Expressive.Sidenav.init(document.querySelector('.sidenav'));
+    fire(document.querySelector('.sidenav-trigger'), 'click');
+    assert.equal(instance.isOpen, false);
     instance.destroy();
   });
 

@@ -22,11 +22,11 @@ section :is(button, a.button, .btn, .btn-floating) {
 }
 
 /* Offset documentation pages so they sit beside the fixed sidenav. */
-@media only screen and (min-width: 993px) {
+@media (width >= 993px) {
   body.docs > header,
   body.docs > main,
   body.docs > footer {
-    padding-left: 300px;
+    padding-left: var(--sidenav-width, 300px);
   }
 }
 

@@ -350,3 +350,182 @@ describe('Toast', () => {
     assert.equal(acted, true, 'onAction was not called');
   });
 });
+
+describe('Sidenav', () => {
+  beforeEach(resetBody);
+
+  const html = `
+    <ul id="slide-out" class="sidenav">
+      <li><a href="#!">First</a></li>
+      <li><a class="sidenav-close" href="#!">Close</a></li>
+    </ul>
+    <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
+
+  test('wraps the list in a dialog host', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+
+    assert.equal(el.parentElement.tagName, 'DIALOG');
+    assert.ok(el.parentElement.classList.contains('sidenav-overlay'));
+    instance.destroy();
+    assert.equal(el.parentElement.tagName, 'BODY');
+    assert.equal(document.querySelector('dialog.sidenav-overlay'), null);
+  });
+
+  test('does not wrap a parent that is already a sidenav-overlay dialog', () => {
+    document.body.innerHTML = `
+      <dialog class="sidenav-overlay">
+        <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
+      </dialog>`;
+    const el = document.querySelector('.sidenav');
+    const parent = el.parentElement;
+    const instance = Expressive.Sidenav.init(el);
+    assert.equal(el.parentElement, parent);
+    assert.equal(parent.parentElement?.classList.contains('sidenav-overlay'), false);
+    instance.destroy();
+  });
+
+  test('does not wrap a dialog.sidenav', () => {
+    document.body.innerHTML = `<dialog id="slide-out" class="sidenav"><p>nav</p></dialog>`;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    assert.equal(el.parentElement.tagName, 'BODY');
+    assert.equal(el.tagName, 'DIALOG');
+    instance.open();
+    assert.equal(el.open, true);
+    instance.destroy();
+  });
+
+  test('open() and close() toggle the modal dialog', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const trigger = document.querySelector('.sidenav-trigger');
+    const instance = Expressive.Sidenav.init(el);
+    const dialog = el.parentElement;
+
+    assert.equal(instance.isOpen, false);
+    assert.equal(dialog.open, false);
+    assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+
+    instance.open();
+    assert.equal(instance.isOpen, true);
+    assert.equal(dialog.open, true);
+    assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+
+    instance.close();
+    assert.equal(instance.isOpen, false);
+    assert.equal(dialog.open, false);
+    instance.destroy();
+  });
+
+  test('a trigger click opens the sidenav', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+
+    fire(document.querySelector('.sidenav-trigger'), 'click');
+    assert.equal(instance.isOpen, true);
+    instance.destroy();
+  });
+
+  test('sidenav-close closes an overlay sidenav', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    instance.open();
+
+    fire(el.querySelector('.sidenav-close'), 'click');
+    assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
+  test('a native dialog close event syncs isOpen', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    instance.open();
+    // jsdom's close() does not fire the event the UA sends for Escape / scrim.
+    el.parentElement.dispatchEvent(new window.Event('close'));
+    assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
+  test('opening one sidenav closes another', () => {
+    document.body.innerHTML = `
+      <ul id="a" class="sidenav"><li><a href="#!">A</a></li></ul>
+      <ul id="b" class="sidenav"><li><a href="#!">B</a></li></ul>`;
+    const [first, second] = document.querySelectorAll('.sidenav');
+    const a = Expressive.Sidenav.init(first);
+    const b = Expressive.Sidenav.init(second);
+    a.open();
+    b.open();
+    assert.equal(a.isOpen, false);
+    assert.equal(b.isOpen, true);
+    a.destroy();
+    b.destroy();
+  });
+
+  test('does not write body overflow or tabIndex', () => {
+    document.body.innerHTML = `
+      ${html}
+      <nav><div class="nav-wrapper"><ul><li><a href="#!">Top</a></li></ul></div></nav>`;
+    const el = document.querySelector('.sidenav');
+    const topLink = document.querySelector('.nav-wrapper a');
+    const instance = Expressive.Sidenav.init(el);
+
+    instance.open();
+    assert.equal(document.body.style.overflow, '');
+    assert.equal(topLink.tabIndex, 0);
+    assert.equal(el.querySelector('a').tabIndex, 0);
+
+    instance.close();
+    assert.equal(document.body.style.overflow, '');
+    instance.destroy();
+  });
+
+  test('does not write inline transform or transition', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el, { inDuration: 12, outDuration: 8 });
+    instance.open();
+    assert.equal(el.style.transform, '');
+    assert.equal(el.style.transition, '');
+    assert.equal(el.parentElement.style.transform, '');
+    instance.close();
+    instance.destroy();
+  });
+
+  test('fixed at the large breakpoint does not showModal', () => {
+    document.body.innerHTML = `<ul id="nav" class="sidenav sidenav-fixed"><li><a href="#!">A</a></li></ul>`;
+    const original = window.matchMedia;
+    window.matchMedia = (query) => ({
+      matches: query.includes('993'),
+      media: query,
+      onchange: null,
+      addListener() {},
+      removeListener() {},
+      addEventListener() {},
+      removeEventListener() {},
+      dispatchEvent: () => false
+    });
+    try {
+      const el = document.querySelector('.sidenav');
+      const instance = Expressive.Sidenav.init(el);
+      instance.open();
+      assert.equal(instance.isOpen, false);
+      assert.equal(el.parentElement.open, false);
+      instance.destroy();
+    } finally {
+      window.matchMedia = original;
+    }
+  });
+
+  test('destroy() clears the instance off the element', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    instance.destroy();
+    assert.equal(Expressive.Sidenav.getInstance(el), undefined);
+  });
+});

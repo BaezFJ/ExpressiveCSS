@@ -23,6 +23,13 @@
           dropdown sections. On small screens the documentation sidebar uses this same component.
         </p>
         <p>
+          An overlay sidenav is a modal <code>&lt;dialog&gt;</code>.
+          The framework wraps your <code>&lt;ul class="sidenav"&gt;</code>;
+          <code>Escape</code> and a tap on the backdrop close it.
+          A <code>sidenav-fixed</code> drawer stays open on large screens as CSS —
+          no resize listener, no overlay.
+        </p>
+        <p>
           The sidenav HTML must <strong>not</strong> sit inside the app bar’s
           <code>&lt;nav&gt;</code>.
           Put a <code>sidenav-trigger</code> anywhere and set <code>data-target</code> to the sidenav’s
@@ -126,19 +133,19 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
               <td><code>inDuration</code></td>
               <td>Number</td>
               <td><code>250</code></td>
-              <td>Open transition duration, in milliseconds.</td>
+              <td>Deprecated. Accepted and ignored. Use <code>--md-comp-nav-drawer-duration</code>.</td>
             </tr>
             <tr>
               <td><code>outDuration</code></td>
               <td>Number</td>
               <td><code>200</code></td>
-              <td>Close transition duration, in milliseconds.</td>
+              <td>Deprecated. Accepted and ignored. Use <code>--md-comp-nav-drawer-duration</code>.</td>
             </tr>
             <tr>
               <td><code>preventScrolling</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>Prevent the page from scrolling while an overlay sidenav is open.</td>
+              <td>Deprecated. Accepted and ignored. A modal dialog already locks the page.</td>
             </tr>
             <tr>
               <td><code>onOpenStart</code></td>
@@ -184,7 +191,7 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
 <pre><code>instance.close();</code></pre>
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and tear down its overlay, drag target, and event handlers.</p>
+        <p>Destroy the plugin instance, unwrap the dialog host, and remove the drag target and event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
       </div>
 
@@ -212,7 +219,7 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
             <tr>
               <td><code>isOpen</code></td>
               <td>Boolean</td>
-              <td>Whether the sidenav is open.</td>
+              <td>Whether the overlay drawer is open. Stays false while a fixed sidenav is docked on large screens.</td>
             </tr>
             <tr>
               <td><code>isFixed</code></td>
@@ -296,8 +303,9 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
 
         <h5 class="light">Fixed HTML Structure</h5>
         <p>
-          Add <code>sidenav-fixed</code> so the sidenav stays open on large screens (wider than 992px)
-          and slides away on smaller ones. The documentation sidebar on the left is this pattern.
+          Add <code>sidenav-fixed</code> so the sidenav stays open on large screens (993px and up)
+          and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
+          The documentation sidebar on the left is this pattern.
         </p>
 <pre><code>&lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
@@ -308,16 +316,12 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
 &lt;/a&gt;</code></pre>
         <p>
           Offset the rest of the page by the sidenav width. The width token is
-          <code>--sidenav-width</code> (300px). Put the padding on <code>header</code>,
-          <code>main</code>, and <code>footer</code>.
+          <code>--sidenav-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
+          Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
         </p>
-<pre><code>header, main, footer {
-  padding-left: 300px;
-}
-
-@media only screen and (max-width: 992px) {
+<pre><code>@media (width >= 993px) {
   header, main, footer {
-    padding-left: 0;
+    padding-left: var(--sidenav-width);
   }
 }</code></pre>
       </div>

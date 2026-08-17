@@ -159,6 +159,21 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), []);
   });
 
+  test('Sidenav detaches the shared trigger click and does not attach resize', () => {
+    document.body.innerHTML = `
+      <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
+      <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
+    const instance = Expressive.Sidenav.init(document.querySelector('.sidenav'));
+
+    assert.ok(watch.live().includes('click'), 'Sidenav did not attach a body click handler');
+    assert.ok(!watch.live().includes('resize'), 'Sidenav attached a window resize handler');
+
+    instance.open();
+    instance.destroy();
+
+    assert.deepEqual(watch.live(), [], 'Sidenav left its trigger listener attached');
+  });
+
   test('TapTarget detaches its resize listener and does not add document click handlers', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div>

@@ -97,6 +97,14 @@ read-it-off-the-element access that key provides.
   `--md-comp-scrollspy-offset`. Default link lookup compares `href`
   attributes — do not interpolate the section id into a selector.
   `throttle` and `animationDuration` are accepted and ignored.
+- **Sidenav overlay is a modal `<dialog>`.** JS wraps a `ul.sidenav` in
+  `dialog.sidenav-overlay` (or the element is already a dialog).
+  `showModal()` / `::backdrop` / Escape replace the overlay div, body
+  overflow lock, and tabindex carpet bomb. Drag writes
+  `--md-comp-nav-drawer-shift`; do not write `transform` or `opacity`.
+  `.sidenav-fixed` is `matchMedia('(width >= 993px)')`, not a resize
+  `open()`. `inDuration` / `outDuration` / `preventScrolling` are
+  accepted and ignored.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

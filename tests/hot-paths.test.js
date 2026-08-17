@@ -60,6 +60,43 @@ describe('layout reads per scroll tick', () => {
   });
 });
 
+describe('Sidenav drag', () => {
+  beforeEach(resetBody);
+
+  test('a drag tick reads layout once, then only writes CSS variables', () => {
+    document.body.innerHTML = `
+      <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
+      <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    const dialog = el.parentElement;
+    const dragTarget = instance.dragTarget;
+    const counter = { reads: 0 };
+    stubRect(dialog, counter, { top: 0, left: 0, width: 300, height: 600 });
+
+    const move = (x) => {
+      const event = new window.Event('touchmove', { bubbles: true, cancelable: true });
+      Object.defineProperty(event, 'targetTouches', {
+        value: [{ clientX: x, clientY: 10 }]
+      });
+      dragTarget.dispatchEvent(event);
+    };
+
+    counter.reads = 0;
+    move(20);
+    const afterStart = counter.reads;
+    assert.ok(afterStart <= 1, `drag start read layout ${afterStart} times`);
+
+    counter.reads = 0;
+    move(80);
+    move(140);
+    assert.equal(counter.reads, 0, `later drag ticks read layout ${counter.reads} times`);
+    assert.ok(dialog.style.getPropertyValue('--md-comp-nav-drawer-shift'));
+
+    instance.destroy();
+  });
+});
+
 describe('Toast countdown', () => {
   beforeEach(resetBody);
 

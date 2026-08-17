@@ -200,14 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
     Expressive.Sidenav.init(slideOutRight, { edge: 'right' });
   }
 
-  // Extra overlay sidenavs set tabindex on every .sidenav link. Put the docs
-  // sidebar back in the tab order.
-  if (slideOut || slideOutRight) {
-    document.querySelectorAll('#nav-mobile a').forEach((link) => {
-      link.tabIndex = 0;
-    });
-  }
-
   const swipeTabs = document.getElementById('tabs-swipe');
   if (swipeTabs) {
     Expressive.Tabs.init(swipeTabs, { swipeable: true });
