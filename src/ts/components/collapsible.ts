@@ -5,8 +5,8 @@ export interface CollapsibleOptions extends BaseOptions {
   /**
    * If accordion versus collapsible. When omitted, `.expandable` on the
    * element turns accordion off. `<details>` with the same `name` already
-   * exclusive-open in the browser; this option is the switch for the
-   * `<ul>/<li>` alias and assigns `name` when it is missing.
+   * exclusive-open in the browser; this option assigns `name` when it
+   * is missing.
    * @default true
    */
   accordion: boolean;
@@ -41,9 +41,8 @@ const _defaults: CollapsibleOptions = {
 };
 
 /**
- * Collapsible. Open/close is HTML (`<details>` / `[open]`, or `.active` on
- * the `<li>` alias). Height is CSS. This class is the public API, accordion
- * for the alias, and aria on non-native headers.
+ * Collapsible. Open/close is HTML (`<details>` / `[open]`). Height is CSS.
+ * This class is the public API and accordion `name` assignment.
  */
 export class Collapsible extends Component<CollapsibleOptions> {
   private _items: HTMLElement[] = [];
@@ -141,9 +140,7 @@ export class Collapsible extends Component<CollapsibleOptions> {
   };
 
   private _collectItems(): HTMLElement[] {
-    const details = Array.from(this.el.querySelectorAll(':scope > details')) as HTMLElement[];
-    if (details.length) return details;
-    return Array.from(this.el.children).filter((c) => c.tagName === 'LI') as HTMLElement[];
+    return Array.from(this.el.querySelectorAll(':scope > details')) as HTMLElement[];
   }
 
   private _setupItems() {
@@ -159,41 +156,29 @@ export class Collapsible extends Component<CollapsibleOptions> {
     if (this.options.accordion && opened.length > 1) {
       opened.slice(1).forEach((item) => {
         if (item instanceof HTMLDetailsElement) item.open = false;
-        else item.classList.remove('active');
       });
     }
-
-    this._items.forEach((item) => this._syncAria(item));
   }
 
   private _isOpen(item: HTMLElement): boolean {
-    if (item instanceof HTMLDetailsElement) return item.open;
-    return item.classList.contains('active');
+    return item instanceof HTMLDetailsElement && item.open;
   }
 
   private _setOpen(item: HTMLElement, open: boolean) {
-    if (item instanceof HTMLDetailsElement) {
-      item.open = open;
-      return;
-    }
-    item.classList.toggle('active', open);
-    this._syncAria(item);
-    this._notify(item, open);
-  }
-
-  private _headerOf(item: HTMLElement): HTMLElement | null {
-    if (item instanceof HTMLDetailsElement) {
-      return item.querySelector(':scope > summary');
-    }
-    return item.querySelector(':scope > .collapsible-header');
+    if (item instanceof HTMLDetailsElement) item.open = open;
   }
 
   private _wrapDetailsBodies() {
     this._items.forEach((item) => {
       if (!(item instanceof HTMLDetailsElement)) return;
-      if (item.querySelector(':scope > .collapsible-body')) return;
+      if (item.querySelector(':scope > :not(summary)')) {
+        const already = Array.from(item.children).filter((c) => c.tagName !== 'SUMMARY');
+        if (already.length === 1 && already[0].tagName === 'DIV') {
+          this._wrappedBodies.push(already[0] as HTMLElement);
+          return;
+        }
+      }
       const body = document.createElement('div');
-      body.className = 'collapsible-body';
       Array.from(item.childNodes).forEach((node) => {
         if (node instanceof HTMLElement && node.tagName === 'SUMMARY') return;
         body.appendChild(node);
@@ -214,67 +199,15 @@ export class Collapsible extends Component<CollapsibleOptions> {
   }
 
   private _bodyOf(item: HTMLElement): HTMLElement | null {
-    return item.querySelector(':scope > .collapsible-body');
-  }
-
-  private _syncAria(item: HTMLElement) {
-    if (item instanceof HTMLDetailsElement) return;
-    const header = this._headerOf(item);
-    const body = this._bodyOf(item);
-    if (!header) return;
-
-    header.setAttribute('aria-expanded', String(this._isOpen(item)));
-    if (body) {
-      if (!body.id) body.id = `collapsible-body-${Utils.guid()}`;
-      header.setAttribute('aria-controls', body.id);
-    }
-    if (!header.matches('a, button, summary')) {
-      header.setAttribute('role', 'button');
-      if (header.tabIndex < 0) header.tabIndex = 0;
-    }
+    return item.querySelector(':scope > :not(summary)') as HTMLElement | null;
   }
 
   private _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleClick);
-    this.el.addEventListener('keydown', this._handleKeydown);
     this.el.addEventListener('toggle', this._handleToggle, true);
   }
 
   private _removeEventHandlers() {
-    this.el.removeEventListener('click', this._handleClick);
-    this.el.removeEventListener('keydown', this._handleKeydown);
     this.el.removeEventListener('toggle', this._handleToggle, true);
-  }
-
-  private _handleClick = (e: MouseEvent) => {
-    const header = (e.target as HTMLElement).closest('.collapsible-header');
-    if (!header || header.closest('.collapsible') !== this.el) return;
-    if (header.closest('details')) return;
-
-    const item = header.closest('li');
-    if (!item) return;
-    const index = this._items.indexOf(item as HTMLElement);
-    if (index < 0) return;
-
-    if (this._isOpen(item as HTMLElement)) this.close(index);
-    else this.open(index);
-  };
-
-  private _handleKeydown = (e: KeyboardEvent) => {
-    if (!Utils.keys.ENTER.includes(e.key) && e.key !== ' ') return;
-    const header = (e.target as HTMLElement).closest('.collapsible-header');
-    if (!header || header.closest('.collapsible') !== this.el) return;
-    if (header.closest('details')) return;
-    if (header.matches('a, button')) return;
-
-    e.preventDefault();
-    const item = header.closest('li');
-    if (!item) return;
-    const index = this._items.indexOf(item as HTMLElement);
-    if (index < 0) return;
-
-    if (this._isOpen(item as HTMLElement)) this.close(index);
-    else this.open(index);
   };
 
   private _handleToggle = (e: Event) => {

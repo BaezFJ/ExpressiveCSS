@@ -3,9 +3,12 @@
 // Text fields.
 //
 // Anatomy is the HTML. .field is the container. The <label> after the
-// control is the floating label. A leading <i> is the leading icon.
-// <small> is supporting text. .outlined is the outlined variant; the
-// default is filled.
+// control is the floating label. A leading <i> (or .prefix) is the
+// leading icon; .suffix (or a second / trailing <i>) is the trailing
+// icon. Icons come before the control in the documented markup, so
+// trailing cannot be selected with :last-child — that left .suffix
+// in flow above the well. <small> is supporting text. .outlined is
+// the outlined variant; the default is filled.
 //
 // Tokens follow https://m3.material.io/components/text-fields/specs
 //   filled     surface-variant well, 1rem corners, 1dp/2dp bottom indicator
@@ -69,16 +72,16 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     }
 
     &:focus:not([readonly]) + label,
-    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter) {
+    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter, .caret) {
       color: var(--input-color);
     }
 
     &:focus:not([readonly]) + label,
     &:not([placeholder=" "]) + label,
     &:not(:placeholder-shown) + label,
-    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter),
-    &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter),
-    &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter) {
+    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter, .caret),
+    &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter, .caret),
+    &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter, .caret) {
       transform: scale(calc(12 / 16));
       top: 8px;
     }
@@ -121,7 +124,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   }
 
   > label,
-  > span:not(.supporting-text, .character-counter, .file-path) {
+  > span:not(.supporting-text, .character-counter, .file-path, .caret) {
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
     position: absolute;
@@ -154,9 +157,11 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     font-family: $font-stack;
   }
 
-  > i:first-child {
+  // Shared icon box. Position is set on the leading / trailing rules;
+  // a lone <i> matches several of the :is() items and must not pick
+  // a side here.
+  > i:is(.prefix, .suffix, :first-of-type, :last-of-type, :last-child) {
     position: absolute;
-    left: 12px;
     top: 16px;
     display: flex;
     align-items: center;
@@ -166,36 +171,34 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     line-height: 24px;
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
+  }
+
+  > i:first-of-type:not(.suffix):not(:last-child),
+  > i.prefix {
+    left: 12px;
     pointer-events: none;
   }
 
-  > i:last-child:not(:first-child) {
-    position: absolute;
+  > i.suffix,
+  > i:last-of-type:not(:first-of-type),
+  > i:last-child:not(:first-child):not(.prefix) {
     right: 12px;
-    top: 16px;
-    display: flex;
-    align-items: center;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    color: var(--md-sys-color-on-surface-variant);
-    user-select: none;
   }
 
-  > i:first-child ~ input,
-  > i:first-child ~ textarea {
-    padding-left: 52px;
+  &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix) {
+    > :is(input, textarea) {
+      padding-left: 52px;
+    }
+
+    > :is(label, span:not(.supporting-text, .character-counter, .file-path, .caret)) {
+      left: 52px;
+    }
   }
 
-  &:has(> i:last-child:not(:first-child)) > input,
-  &:has(> i:last-child:not(:first-child)) > textarea {
-    padding-right: 52px;
-  }
-
-  > i:first-child ~ label,
-  > i:first-child ~ span:not(.supporting-text, .character-counter) {
-    left: 52px;
+  &:has(> i.suffix, > i:last-of-type:not(:first-of-type), > i:last-child:not(:first-child):not(.prefix)) {
+    > :is(input, textarea) {
+      padding-right: 52px;
+    }
   }
 
   &.outlined {
@@ -217,9 +220,9 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
       &:focus:not([readonly]) + label,
       &:not([placeholder=" "]) + label,
       &:not(:placeholder-shown) + label,
-      &:focus:not([readonly]) + span:not(.supporting-text, .character-counter),
-      &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter),
-      &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter) {
+      &:focus:not([readonly]) + span:not(.supporting-text, .character-counter, .caret),
+      &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter, .caret),
+      &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter, .caret) {
         top: -8px;
         left: 16px;
         margin-left: -4px;

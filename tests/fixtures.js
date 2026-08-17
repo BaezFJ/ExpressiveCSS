@@ -34,7 +34,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Dropdown',
     selector: '.dropdown-trigger',
-    html: `<a class="button dropdown-trigger" data-target="dropdown1">Drop</a><ul id="dropdown1" class="dropdown-content"><li><a href="#!">one</a></li></ul>`
+    html: `<a class="button dropdown-trigger" data-target="dropdown1">Drop</a><menu id="dropdown1"><li><a href="#!">one</a></li></menu>`
   },
   {
     name: 'Lightbox',
@@ -81,6 +81,6 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'FloatingActionButton',
     selector: '.fixed-action-btn',
-    html: `<div class="fixed-action-btn"><a class="btn-floating large"><i class="material-symbols">add</i></a><ul><li><a class="btn-floating red"><i class="material-symbols">chart</i></a></li></ul></div>`
+    html: `<div class="fixed-action-btn"><a class="button extra circle"><i class="material-symbols">add</i></a><ul><li><a class="button extra circle small red"><i class="material-symbols">chart</i></a></li></ul></div>`
   }
 ];

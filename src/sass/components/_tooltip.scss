@@ -14,11 +14,9 @@
 //   gap      4dp from the activator
 //
 // The JS plugin still exists: .tooltipped + data-tooltip, AutoInit,
-// class .tooltip.material-tooltip appended to <body>. .material-tooltip
-// is an alias. There is no data-html / unsafeHTML.
+// class .tooltip appended to <body>. There is no data-html / unsafeHTML.
 
-.tooltip,
-.material-tooltip {
+.tooltip {
   --md-comp-plain-tooltip-container-color: var(--md-sys-color-inverse-surface);
   --md-comp-plain-tooltip-supporting-text-color: var(--md-sys-color-inverse-on-surface);
   --md-comp-plain-tooltip-container-shape: 4px;
@@ -109,8 +107,7 @@
 
 // JS plugin: appended to <body>, top/left set in script. Do not use the
 // child-positioning rules; they would fight the inline transform.
-body > .tooltip,
-.material-tooltip {
+body > .tooltip {
   position: absolute;
   left: 0;
   top: 0;
@@ -121,9 +118,7 @@ body > .tooltip,
 
 // Rich tooltip — title, supporting text, optional action.
 .tooltip.rich,
-.tooltip.max,
-.material-tooltip.rich,
-.material-tooltip.max {
+.tooltip.max {
   --md-comp-rich-tooltip-container-color: var(--md-sys-color-surface);
   --md-comp-rich-tooltip-container-shape: 12px;
 

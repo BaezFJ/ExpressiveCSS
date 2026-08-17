@@ -162,11 +162,11 @@ dialog.sidenav {
     align-content: center;
   }
 
-  li.active > a:not(.collapsible-header, .btn, .btn-large, .btn-small, .btn-flat, .btn-floating) {
+  li.active > a:not(.button, .circle, .extra) {
     background-color: color-mix(in oklab, var(--md-sys-color-secondary) 10%, transparent);
   }
 
-  .collapsible-body > ul {
+  details > div > ul {
     padding-left: 10px;
   }
 
@@ -181,7 +181,7 @@ dialog.sidenav {
     font-size: var(--md-comp-nav-drawer-font-size);
     font-weight: 500;
 
-    &:not(.btn, .button, .btn-flat, .btn-large, .btn-floating) {
+    &:not(.button, .circle, .extra) {
       color: var(--md-sys-color-on-secondary-container);
 
       &:hover {
@@ -191,11 +191,9 @@ dialog.sidenav {
       @include focus-visible;
     }
 
-    &.btn,
     &.button,
-    &.btn-large,
-    &.btn-flat,
-    &.btn-floating {
+    &.circle,
+    &.extra {
       margin: 10px 15px;
     }
 
@@ -335,8 +333,7 @@ dialog.sidenav-overlay:modal > .sidenav {
   }
 }
 
-.sidenav .collapsible-body,
-.sidenav details::details-content {
+.sidenav details > :not(summary) {
   padding: 0;
 }
 
@@ -350,13 +347,11 @@ dialog.sidenav-overlay:modal > .sidenav {
     box-shadow: none;
   }
 
-  .collapsible-header,
   summary {
     border: none;
   }
 
-  .collapsible-body,
-  details::details-content {
+  details > :not(summary) {
     border: none;
   }
 }

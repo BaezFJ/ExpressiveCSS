@@ -2,10 +2,10 @@
 
 // Snackbars (toasts).
 //
-// Anatomy is the HTML. A .snackbar / .toast is the container. A <p> (or
-// <span>, or loose text) is the supporting text. A trailing <button> is
-// the action; a .circle button is the optional close. An optional leading
-// <i> is an icon. .toast-action stays as an alias on the action control.
+// Anatomy is the HTML. A .snackbar is the container. A <p> (or <span>,
+// or loose text) is the supporting text. A trailing <button> is the
+// action; a .circle button is the optional close. An optional leading
+// <i> is an icon.
 //
 // Tokens follow https://m3.material.io/components/snackbar/specs
 //   container    inverse-surface, 4dp corners, elevation 3, min 48dp
@@ -15,11 +15,10 @@
 //   close        24dp icon, inverse-on-surface
 //   inset        8dp compact, 24dp from start+bottom on larger screens
 //
-// The constructor always adds both .toast and .snackbar. A static
-// .snackbar is in-flow (docs previews). .active pins it to the viewport.
-// There is no AutoInit and no toast() helper.
+// The constructor adds .snackbar. A static .snackbar is in-flow (docs
+// previews). .active pins it to the viewport. There is no AutoInit.
 
-$_bar: ":is(.toast, .snackbar)";
+$_bar: ".snackbar";
 
 #toast-container {
   --md-comp-snackbar-container-margin-leading: 8px;
@@ -128,7 +127,7 @@ $_bar: ":is(.toast, .snackbar)";
   }
 
   // Inline links in the supporting text use the action color.
-  a:not(.button, .toast-action) {
+  a:not(.button) {
     color: var(--md-comp-snackbar-action-label-text-color);
   }
 
@@ -147,8 +146,8 @@ $_bar: ":is(.toast, .snackbar)";
   }
 
   // Text action — inverse-primary, not the filled common-button default.
-  > :is(button, a.button, a.toast-action, .toast-action):not(.circle),
-  > nav > :is(button, a.button, a.toast-action, .toast-action):not(.circle) {
+  > :is(button, a.button):not(.circle),
+  > nav > :is(button, a.button):not(.circle) {
     flex: 0 0 auto;
     height: 40px;
     min-width: 48px;

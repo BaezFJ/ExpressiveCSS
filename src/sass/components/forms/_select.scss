@@ -3,9 +3,9 @@
 // Select (exposed dropdown).
 //
 // Anatomy is the HTML. A <select> is the control. FormSelect wraps it
-// in .select-wrapper (or reuses an existing .field / .input-field) and
-// paints a text field + menu. .browser-default keeps the native control.
-// .caret is the trailing expand icon (CSS, not an SVG node).
+// in .field (or reuses an existing one) and paints a text field + menu.
+// .browser-default keeps the native control. .caret is the trailing
+// expand icon (CSS, not an SVG node).
 //
 // Tokens follow https://m3.material.io/components/menus/overview
 // (exposed dropdown = text field + menu) and the filled/outlined field
@@ -15,8 +15,6 @@
 //   selected item  10% on-surface + trailing check
 //   optgroup       on-surface-variant, outline-variant rule
 //
-// .select-wrapper and .select-dropdown stay as aliases.
-
 $_select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
 $_select-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
 
@@ -70,7 +68,7 @@ select.browser-default {
   }
 }
 
-.select-wrapper {
+.field:has(> .hide-select) {
   // BeerCSS menu: 1rem surface, stadium items. Same radius on the
   // field so the closed control and the open list read as one shape.
   --md-comp-filled-select-container-shape: 1rem;
@@ -82,18 +80,23 @@ select.browser-default {
   position: relative;
   border-radius: var(--md-comp-filled-select-container-shape);
 
-  > input.select-dropdown {
+  > input.dropdown-trigger {
     border-radius: inherit;
   }
 
-  > .caret ~ input.select-dropdown {
+  > input.dropdown-trigger {
     padding-inline-end: 52px;
   }
 
   // Trailing expand icon. Empty .caret is the hook; the glyph is a mask.
+  // `left: auto` beats `.field > span { left: 16px }` if that rule ever
+  // matches again — left + width would otherwise ignore inset-inline-end
+  // and pin the chevron over the value.
   .caret {
     position: absolute;
     inset-block-start: 16px;
+    inset-inline-start: auto;
+    left: auto;
     inset-inline-end: 12px;
     z-index: 1;
     width: var(--md-comp-filled-select-trailing-icon-size);
@@ -106,7 +109,7 @@ select.browser-default {
   }
 
   &:has(> input[aria-expanded="true"]) .caret,
-  &:has(> .select-dropdown:popover-open) .caret {
+  &:has(> menu:popover-open) .caret {
     transform: rotate(180deg);
   }
 
@@ -130,7 +133,7 @@ select.browser-default {
   }
 }
 
-.select-wrapper.disabled {
+.field:has(> .hide-select).disabled {
   .caret {
     background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   }
@@ -141,28 +144,28 @@ select.browser-default {
   }
 }
 
-.select-wrapper input.select-dropdown:disabled {
+.field:has(> .hide-select) > input.dropdown-trigger:disabled {
   cursor: default;
   user-select: none;
 }
 
-.select-dropdown > li.disabled,
-.select-dropdown > li.disabled > span,
-.select-dropdown > li.optgroup {
+menu[role="listbox"] > li.disabled,
+menu[role="listbox"] > li.disabled > span,
+menu[role="listbox"] > li.optgroup {
   color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 }
 
-.select-dropdown > li:not(.optgroup, .divider) {
+menu[role="listbox"] > li:not(.optgroup, .divider) {
   display: flex;
   align-items: center;
 }
 
-.select-dropdown > li.selected:not(.disabled, .optgroup) {
+menu[role="listbox"] > li.selected:not(.disabled, .optgroup) {
   background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
 }
 
 // Single-select: trailing check. Multi-select already has a leading checkbox.
-.select-dropdown:not(.multiple-select-dropdown) > li.selected:not(.disabled, .optgroup)::after {
+menu[role="listbox"]:not(.multiple-select-dropdown) > li.selected:not(.disabled, .optgroup)::after {
   content: "";
   flex: 0 0 24px;
   width: 24px;
@@ -173,7 +176,7 @@ select.browser-default {
   mask: $_select-check center / 24px no-repeat;
 }
 
-.select-dropdown li img {
+menu[role="listbox"] li img {
   box-sizing: border-box;
   flex: 0 0 var(--md-comp-menu-item-leading-image-size);
   width: var(--md-comp-menu-item-leading-image-size);
@@ -191,7 +194,7 @@ select.browser-default {
   }
 }
 
-.select-dropdown li.optgroup {
+menu[role="listbox"] li.optgroup {
   cursor: default;
   pointer-events: none;
 
@@ -204,12 +207,12 @@ select.browser-default {
   }
 }
 
-.select-dropdown li.optgroup-option {
+menu[role="listbox"] li.optgroup-option {
   padding-inline-start: 1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .select-wrapper .caret {
+  .field:has(> .hide-select) .caret {
     transition: none;
   }
 }

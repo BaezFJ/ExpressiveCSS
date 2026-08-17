@@ -7,6 +7,7 @@
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import { Expressive, resetBody, fire, window } from './setup.js';
 
@@ -32,8 +33,8 @@ describe('FloatingActionButton toolbar mode', () => {
   test('opens without throwing and does not inject a backdrop', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating large"><i class="material-symbols">add</i></a>
-        <ul><li><a class="btn-floating"><i class="material-symbols">edit</i></a></li></ul>
+        <a class="button extra circle"><i class="material-symbols">add</i></a>
+        <ul><li><a class="button extra circle small"><i class="material-symbols">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
@@ -48,8 +49,8 @@ describe('FloatingActionButton toolbar mode', () => {
   test('closing clears .active and does not leave a backdrop', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating large"><i class="material-symbols">add</i></a>
-        <ul><li><a class="btn-floating"><i class="material-symbols">edit</i></a></li></ul>
+        <a class="button extra circle"><i class="material-symbols">add</i></a>
+        <ul><li><a class="button extra circle small"><i class="material-symbols">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el, { toolbarEnabled: true });
@@ -71,7 +72,7 @@ describe('FloatingActionButton toolbar mode', () => {
   });
 
   test('a FAB with no menu list does not throw', () => {
-    document.body.innerHTML = `<div class="fixed-action-btn"><a class="btn-floating large">+</a></div>`;
+    document.body.innerHTML = `<div class="fixed-action-btn"><a class="button extra circle">+</a></div>`;
 
     const instance = Expressive.FloatingActionButton.init(
       document.querySelector('.fixed-action-btn')
@@ -304,7 +305,7 @@ describe('optional markup does not crash a component', () => {
   test('a hover dropdown when the pointer leaves the window', () => {
     document.body.innerHTML = `
       <a class="button dropdown-trigger" data-target="dd">Drop</a>
-      <ul id="dd" class="dropdown-content"><li><a href="#!">one</a></li></ul>`;
+      <menu id="dd"><li><a href="#!">one</a></li></menu>`;
     const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'), {
       hover: true
     });
@@ -318,21 +319,60 @@ describe('optional markup does not crash a component', () => {
     instance.destroy();
   });
 
-  test('collapsible open() indexes list items, not every child', () => {
+  test('collapsible open() indexes details, not every child', () => {
     document.body.innerHTML = `
-      <ul class="collapsible">
+      <div class="collapsible">
         <div class="oops"></div>
-        <li><div class="collapsible-header">One</div><div class="collapsible-body"><span>A</span></div></li>
-        <li><div class="collapsible-header">Two</div><div class="collapsible-body"><span>B</span></div></li>
-      </ul>`;
+        <details><summary>One</summary><span>A</span></details>
+        <details><summary>Two</summary><span>B</span></details>
+      </div>`;
     const el = document.querySelector('.collapsible');
-    const [first, second] = el.querySelectorAll('li');
+    const [first, second] = el.querySelectorAll('details');
     const instance = Expressive.Collapsible.init(el);
 
-    fire(first.querySelector('.collapsible-header'), 'click');
-    assert.equal(first.classList.contains('active'), true, 'clicked the first li but opened a different item');
-    assert.equal(second.classList.contains('active'), false);
+    instance.open(0);
+    assert.equal(first.open, true, 'opened a different item than index 0');
+    assert.equal(second.open, false);
 
     instance.destroy();
+  });
+});
+
+describe('Tabs disabled-selector interpolation', () => {
+  test('disabled styles do not match every nav.tabs > a', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    // `#{$_tab}.disabled` compiles to `.tabs > a, .tabs > .tab > a.disabled`
+    // — every direct tab link then gets pointer-events:none.
+    assert.doesNotMatch(
+      css,
+      /\.tabs\s*>\s*a\s*,\s*\.tabs\s*>\s*\.tab\s*>\s*a\.disabled/
+    );
+    assert.match(css, /\.tabs\s*>\s*a\.disabled/);
+  });
+});
+
+describe('Text field icon selectors', () => {
+  test('trailing icons are selected by .suffix, not only :last-child', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    // Documented markup puts both icons before the input, so
+    // `> i:last-child` never matches the trailing icon and it
+    // sits in flow above the well.
+    assert.match(css, /\.field\s*>\s*i\.suffix/);
+    assert.match(css, /\.field\s*>\s*i\.prefix/);
+  });
+});
+
+describe('Select caret position', () => {
+  test('the floating-label span rule excludes .caret', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    // `.field > span:not(...)` is the floating label. The caret is a
+    // <span class="caret">, so omitting it from the :not() list set
+    // left:16px. Combined with width:24px that ignored inset-inline-end
+    // and pinned the chevron over the value.
+    assert.match(
+      css,
+      /\.field\s*>\s*span:not\([^)]*\.caret[^)]*\)/
+    );
+    assert.match(css, /\.caret\s*\{[^}]*left:\s*auto/s);
   });
 });

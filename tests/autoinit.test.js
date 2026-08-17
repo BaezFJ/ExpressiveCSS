@@ -33,8 +33,8 @@ describe('AutoInit', () => {
 
   test('skips elements marked .no-autoinit', () => {
     document.body.innerHTML = `
-      <ul class="collapsible no-autoinit"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul>
-      <ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul>`;
+      <div class="collapsible no-autoinit"><details><summary>H</summary><p>B</p></details></div>
+      <div class="collapsible"><details><summary>H</summary><p>B</p></details></div>`;
     const [optedOut, normal] = document.querySelectorAll('.collapsible');
 
     Expressive.AutoInit();
@@ -66,8 +66,8 @@ describe('AutoInit', () => {
 
   test('only touches the context it is given', () => {
     document.body.innerHTML = `
-      <div id="inside"><ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul></div>
-      <div id="outside"><ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul></div>`;
+      <div id="inside"><div class="collapsible"><details><summary>H</summary><p>B</p></details></div></div>
+      <div id="outside"><div class="collapsible"><details><summary>H</summary><p>B</p></details></div></div>`;
 
     Expressive.AutoInit(document.getElementById('inside'));
 
@@ -76,7 +76,7 @@ describe('AutoInit', () => {
   });
 
   test('re-initializing an element replaces the instance instead of stacking', () => {
-    document.body.innerHTML = `<ul class="collapsible"><li><div class="collapsible-header">H</div><div class="collapsible-body">B</div></li></ul>`;
+    document.body.innerHTML = `<div class="collapsible"><details><summary>H</summary><p>B</p></details></div>`;
     const el = document.querySelector('.collapsible');
 
     Expressive.AutoInit();

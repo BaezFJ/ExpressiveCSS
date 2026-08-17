@@ -31,14 +31,13 @@
                 </a>
             </li>
             <li>
-                <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['color', 'themes', 'typography', 'icons', 'shadow', 'grid', 'helpers', 'media_css', 'table', 'css_transitions', 'pulse', 'waves'] %}active{% endif %}">
-                        <a class="collapsible-header">
+                <div class="collapsible">
+                    <details name="docs-nav"{% if request.endpoint in ['color', 'themes', 'typography', 'icons', 'shadow', 'grid', 'helpers', 'media_css', 'table', 'css_transitions', 'pulse', 'waves'] %} open{% endif %}>
+                        <summary>
                             <i class="material-symbols">palette</i>
                             Foundations
-                        </a>
-                        <div class="collapsible-body">
-                            <ul>
+                        </summary>
+                        <ul>
                                 <li class="{% if request.endpoint == 'color' %}active{% endif %}">
                                     <a href="{{ url_for('color') }}">Color</a>
                                 </li>
@@ -76,19 +75,17 @@
                                     <a href="{{ url_for('waves') }}">Waves</a>
                                 </li>
                             </ul>
-                        </div>
-                    </li>
-                </ul>
+                    </details>
+                </div>
             </li>
             <li>
-                <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['navbar', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'dropdown', 'scrollspy'] %}active{% endif %}">
-                        <a class="collapsible-header">
+                <div class="collapsible">
+                    <details name="docs-nav"{% if request.endpoint in ['navbar', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'dropdown', 'scrollspy'] %} open{% endif %}>
+                        <summary>
                             <i class="material-symbols">view_quilt</i>
                             Structure
-                        </a>
-                        <div class="collapsible-body">
-                            <ul>
+                        </summary>
+                        <ul>
                                 <li class="{% if request.endpoint == 'navbar' %}active{% endif %}">
                                     <a href="{{ url_for('navbar') }}">App bar</a>
                                 </li>
@@ -114,19 +111,17 @@
                                     <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
                                 </li>
                             </ul>
-                        </div>
-                    </li>
-                </ul>
+                    </details>
+                </div>
             </li>
             <li>
-                <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'collections', 'collapsible', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %}active{% endif %}">
-                        <a class="collapsible-header">
+                <div class="collapsible">
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'collections', 'collapsible', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                        <summary>
                             <i class="material-symbols">widgets</i>
                             Components
-                        </a>
-                        <div class="collapsible-body">
-                            <ul>
+                        </summary>
+                        <ul>
                                 <li class="{% if request.endpoint == 'buttons' %}active{% endif %}">
                                     <a href="{{ url_for('buttons') }}">Buttons</a>
                                 </li>
@@ -173,19 +168,17 @@
                                     <a href="{{ url_for('toolbars') }}">Toolbars</a>
                                 </li>
                             </ul>
-                        </div>
-                    </li>
-                </ul>
+                    </details>
+                </div>
             </li>
             <li>
-                <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['fieldsets', 'text_inputs', 'select', 'checkboxes', 'radio_buttons', 'switches', 'range', 'chips', 'autocomplete', 'datepicker', 'timepicker'] %}active{% endif %}">
-                        <a class="collapsible-header">
+                <div class="collapsible">
+                    <details name="docs-nav"{% if request.endpoint in ['fieldsets', 'text_inputs', 'select', 'checkboxes', 'radio_buttons', 'switches', 'range', 'chips', 'autocomplete', 'datepicker', 'timepicker'] %} open{% endif %}>
+                        <summary>
                             <i class="material-symbols">edit</i>
                             Forms
-                        </a>
-                        <div class="collapsible-body">
-                            <ul>
+                        </summary>
+                        <ul>
                                 <li class="{% if request.endpoint == 'fieldsets' %}active{% endif %}">
                                     <a href="{{ url_for('fieldsets') }}">Fieldsets</a>
                                 </li>
@@ -220,9 +213,8 @@
                                     <a href="{{ url_for('timepicker') }}">Time picker</a>
                                 </li>
                             </ul>
-                        </div>
-                    </li>
-                </ul>
+                    </details>
+                </div>
             </li>
         </ul>
     </header>
@@ -231,7 +223,7 @@
         {% block page %}{% endblock %}
     </main>
 
-    <footer class="page-footer">
+    <footer>
         <div class="container">
             <nav>
                 <h2>Start</h2>
@@ -297,7 +289,7 @@
                 <a href="{{ url_for('datepicker') }}">Date picker</a>
                 <a href="{{ url_for('timepicker') }}">Time picker</a>
             </nav>
-            <small class="footer-copyright">
+            <small>
                 <span>&copy; 2026 ExpressiveCSS</span>
                 <span>v0.3.0</span>
             </small>

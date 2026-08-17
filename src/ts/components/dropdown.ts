@@ -114,7 +114,6 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     Dropdown._dropdowns.push(this);
     this.id = Utils.getIdFromTrigger(el);
     this.dropdownEl = document.getElementById(this.id);
-    this.dropdownEl?.classList.add('dropdown-content');
 
     this.options = {
       ...Dropdown.defaults,
@@ -128,7 +127,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     this.filterQuery = [];
     this.el.ariaExpanded = 'false';
 
-    // Move dropdown-content after dropdown-trigger
+    // Keep the menu next to the trigger so positioning stays local.
     this._moveDropdownToElement();
     this._makeDropdownFocusable();
     this._setupSubmenus();
@@ -250,7 +249,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
       this.close();
       return;
     }
-    const leaveToDropdownContent = !!toEl.closest('.dropdown-content, menu');
+    const leaveToDropdownContent = !!(this.dropdownEl && toEl && this.dropdownEl.contains(toEl));
     let leaveToActiveDropdownTrigger = false;
     const closestTrigger = toEl.closest('.dropdown-trigger');
     if (closestTrigger && !!closestTrigger['Expressive_Dropdown'] && closestTrigger['Expressive_Dropdown'].isOpen) {
@@ -265,10 +264,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   _handleDocumentClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
     if (this._isSubmenuTriggerClick(target)) return;
-    if (this.options.closeOnClick && target.closest('.dropdown-content, menu') && !this.isTouchMoving) {
+    if (this.options.closeOnClick && this.dropdownEl?.contains(target) && !this.isTouchMoving) {
       // isTouchMoving to check if scrolling on mobile.
       this.close();
-    } else if (!target.closest('.dropdown-content, menu')) {
+    } else if (!this.dropdownEl?.contains(target)) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
       // For example, if a label for a select was clicked, that we don't close/open the dropdown
       setTimeout(() => {
@@ -292,7 +291,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleDocumentTouchmove = (e: TouchEvent) => {
     const target = <HTMLElement>e.target;
-    if (target.closest('.dropdown-content, menu')) {
+    if (this.dropdownEl?.contains(target)) {
       this.isTouchMoving = true;
     }
   };

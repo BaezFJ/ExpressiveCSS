@@ -2,10 +2,10 @@
 
 // Site footer.
 //
-// Anatomy is the HTML. A <footer class="page-footer"> is the landmark.
-// A heading is a column title. A <nav> (or ul) is a link list. The last
-// child .footer-copyright (or a <small>) is the legal bar. .page-footer
-// is required so a <footer><nav> is not the bottom app bar.
+// Anatomy is the HTML. A <footer> is the landmark. A heading is a column
+// title. A <nav> (or ul) is a link list. The last child <small> is the
+// legal bar. A footer whose only child is a <nav> is the bottom app bar,
+// not this component.
 //
 // Tokens:
 //   --md-comp-footer-padding-block     3rem
@@ -16,7 +16,7 @@
 // Unfilled by default (dashed hairline). .filled uses surface-container.
 // There is no JavaScript.
 
-.page-footer {
+footer:not(:has(> nav:only-child)) {
   --md-comp-footer-padding-block: 3rem;
   --md-comp-footer-padding-inline: 1rem;
   --md-comp-footer-gap: 2rem;
@@ -35,7 +35,7 @@
     font-family: $font-stack;
   }
 
-  a:not(.btn, .button, .btn-small, .btn-large, .btn-flat, .btn-floating) {
+  a:not(.button, .circle, .extra) {
     color: var(--md-sys-color-primary);
     text-decoration: none;
     @include focus-visible;
@@ -55,16 +55,16 @@
   }
 }
 
-.page-footer.filled,
-.page-footer.surface {
+footer:not(:has(> nav:only-child)).filled,
+footer:not(:has(> nav:only-child)).surface {
   background-color: var(--md-sys-color-surface-container);
   border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 
 // Columns: direct <nav> children. A wrapping .container is the grid
 // when the author uses one. Legacy .row still spans the full measure.
-.page-footer > .container,
-.page-footer:not(:has(> .container)) {
+footer:not(:has(> nav:only-child)) > .container,
+footer:not(:has(> nav:only-child)):not(:has(> .container)) {
   display: grid;
   gap: var(--md-comp-footer-gap);
   grid-template-columns: 1fr;
@@ -82,12 +82,12 @@
   }
 }
 
-.page-footer > .container > .row,
-.page-footer > .row {
+footer:not(:has(> nav:only-child)) > .container > .row,
+footer:not(:has(> nav:only-child)) > .row {
   grid-column: 1 / -1;
 }
 
-.page-footer nav {
+footer:not(:has(> nav:only-child)) nav {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -95,8 +95,8 @@
   min-width: 0;
 }
 
-.page-footer nav > a:not(.btn, .button, .btn-small, .btn-large, .btn-flat, .btn-floating),
-.page-footer ul a:not(.btn, .button, .btn-small, .btn-large, .btn-flat, .btn-floating) {
+footer:not(:has(> nav:only-child)) nav > a:not(.button, .circle, .extra),
+footer:not(:has(> nav:only-child)) ul a:not(.button, .circle, .extra) {
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
@@ -112,8 +112,7 @@
   }
 }
 
-.page-footer .footer-copyright,
-.page-footer small.footer-copyright {
+footer:not(:has(> nav:only-child)) > small:last-child {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -129,19 +128,19 @@
   @include typescale("body-small");
   font-family: $font-stack;
 
-  a:not(.btn, .button) {
+  a:not(.button) {
     color: var(--md-sys-color-primary);
   }
 }
 
 // Sticky: pin the footer to the bottom of a short page. Only when the
 // landmark is a direct child of body — not a footer nested in a demo.
-body:has(> footer.page-footer) {
+body:has(> footer:not(:has(> nav:only-child))) {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
-body:has(> footer.page-footer) > main {
+body:has(> footer:not(:has(> nav:only-child))) > main {
   flex: 1 0 auto;
 }

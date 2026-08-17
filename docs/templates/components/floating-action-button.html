@@ -8,14 +8,14 @@
 {{ Banner("Floating Action Button", "A circular action that can open a menu of related shortcuts.") }}
 
 <div class="fixed-action-btn">
-  <button type="button" class="btn-floating extra" aria-label="Edit">
+  <button type="button" class="button extra circle" aria-label="Edit">
     <i class="material-symbols">mode_edit</i>
   </button>
   <ul>
-    <li><a class="btn-floating error on-error-text" href="#!" aria-label="Chart"><i class="material-symbols">insert_chart</i></a></li>
-    <li><a class="btn-floating secondary on-secondary-text" href="#!" aria-label="Quote"><i class="material-symbols">format_quote</i></a></li>
-    <li><a class="btn-floating tertiary on-tertiary-text" href="#!" aria-label="Publish"><i class="material-symbols">publish</i></a></li>
-    <li><a class="btn-floating primary on-primary-text" href="#!" aria-label="Attach"><i class="material-symbols">attach_file</i></a></li>
+    <li><a class="button extra circle small error on-error-text" href="#!" aria-label="Chart"><i class="material-symbols">insert_chart</i></a></li>
+    <li><a class="button extra circle small secondary on-secondary-text" href="#!" aria-label="Quote"><i class="material-symbols">format_quote</i></a></li>
+    <li><a class="button extra circle small tertiary on-tertiary-text" href="#!" aria-label="Publish"><i class="material-symbols">publish</i></a></li>
+    <li><a class="button extra circle small primary on-primary-text" href="#!" aria-label="Attach"><i class="material-symbols">attach_file</i></a></li>
   </ul>
 </div>
 
@@ -29,7 +29,7 @@
           The live demo is in the bottom-right corner of the page.
         </p>
         <p>
-          Wrap a large <code>btn-floating</code> (or <code>circle extra</code>)
+          Wrap a large <code>extra circle small</code> (or <code>circle extra</code>)
           and a list of smaller ones in <code>fixed-action-btn</code>.
           That class pins the control to the corner. The menu opens on
           hover when the pointer can hover; add <code>click-to-toggle</code>
@@ -37,11 +37,11 @@
           element except those marked <code>no-autoinit</code>. Motion is CSS.
         </p>
 <pre><code>&lt;div class="fixed-action-btn"&gt;
-  &lt;button type="button" class="btn-floating extra" aria-label="Edit"&gt;
+  &lt;button type="button" class="button extra circle" aria-label="Edit"&gt;
     &lt;i class="material-symbols"&gt;mode_edit&lt;/i&gt;
   &lt;/button&gt;
   &lt;ul&gt;
-    &lt;li&gt;&lt;a class="btn-floating" href="#!" aria-label="Attach"&gt;…&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="button extra circle small" href="#!" aria-label="Attach"&gt;…&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/div&gt;</code></pre>
       </div>
@@ -162,14 +162,14 @@
         </p>
         <div class="fab-demo">
           <div class="fixed-action-btn direction-left" id="fab-horizontal">
-            <button type="button" class="btn-floating extra" aria-label="Edit">
+            <button type="button" class="button extra circle" aria-label="Edit">
               <i class="material-symbols">mode_edit</i>
             </button>
             <ul>
-              <li><a class="btn-floating error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
-              <li><a class="btn-floating secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
-              <li><a class="btn-floating tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
-              <li><a class="btn-floating primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
+              <li><a class="button extra circle small error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
+              <li><a class="button extra circle small secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
+              <li><a class="button extra circle small tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
+              <li><a class="button extra circle small primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
             </ul>
           </div>
         </div>
@@ -186,14 +186,14 @@
         </p>
         <div class="fab-demo">
           <div class="fixed-action-btn direction-left click-to-toggle" id="fab-click-only">
-            <button type="button" class="btn-floating extra" aria-label="Menu">
+            <button type="button" class="button extra circle" aria-label="Menu">
               <i class="material-symbols">menu</i>
             </button>
             <ul>
-              <li><a class="btn-floating error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
-              <li><a class="btn-floating secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
-              <li><a class="btn-floating tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
-              <li><a class="btn-floating primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
+              <li><a class="button extra circle small error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
+              <li><a class="button extra circle small secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
+              <li><a class="button extra circle small tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
+              <li><a class="button extra circle small primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
             </ul>
           </div>
         </div>
@@ -208,7 +208,7 @@
           or click-only menu unless you specifically need the bar.
         </p>
 <pre><code>&lt;div class="fixed-action-btn toolbar"&gt;
-  &lt;a class="btn-floating large"&gt;
+  &lt;a class="button extra circle"&gt;
     &lt;i class="large material-symbols"&gt;mode_edit&lt;/i&gt;
   &lt;/a&gt;
   &lt;ul&gt;

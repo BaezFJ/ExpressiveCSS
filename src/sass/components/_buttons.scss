@@ -153,10 +153,8 @@ $_btn: "button:not(#{$_not-btn}), a.button";
   }
 }
 
-// FAB. .btn-floating is the JS contract (FloatingActionButton looks it up).
-// Icon-only .extra / .large is the same 56dp regular FAB. Bare .btn-floating
-// is the 40dp small FAB.
-.btn-floating,
+// FAB. Icon-only .extra / .large is the 56dp regular FAB. Add .small for
+// the 40dp small FAB. The speed-dial host is .fixed-action-btn.
 :where(#{$_btn}).extra.circle,
 :where(#{$_btn}).large.circle {
   display: inline-flex;
@@ -175,7 +173,6 @@ $_btn: "button:not(#{$_not-btn}), a.button";
   vertical-align: middle;
   @include z-depth("3");
   @include focus-visible;
-  transition: background-color .2s ease-out, box-shadow .2s ease-out;
 
   > i {
     font-size: 24px;
@@ -225,23 +222,9 @@ $_btn: "button:not(#{$_not-btn}), a.button";
   }
 }
 
-// Small FAB alias: .btn-floating alone is 40dp (historical size + M3 small).
-.btn-floating:not(.large, .extra, .small) {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-
-  &.halfway-fab {
-    bottom: -20px;
-  }
-}
-
 :where(#{$_btn}):disabled,
 :where(#{$_btn})[disabled],
-:where(#{$_btn}).disabled,
-.btn-floating:disabled,
-.btn-floating[disabled],
-.btn-floating.disabled {
+:where(#{$_btn}).disabled {
   @include btn-disabled;
 }
 
@@ -317,12 +300,14 @@ $_btn: "button:not(#{$_not-btn}), a.button";
     li:nth-last-child(7) { --i: 6; }
     li:nth-last-child(8) { --i: 7; }
 
-    :is(a, button) {
+    > li > :is(a, button) {
       opacity: 0;
       transform: var(--md-comp-fab-hidden-transform);
       transition:
         opacity var(--md-comp-fab-duration) var(--md-comp-fab-easing),
-        transform var(--md-comp-fab-duration) var(--md-comp-fab-easing);
+        transform var(--md-comp-fab-duration) var(--md-comp-fab-easing),
+        background-color .2s ease-out,
+        box-shadow .2s ease-out;
       // Close: farthest first, so they funnel into the disc.
       transition-delay: calc(
         var(--md-comp-fab-stagger) * (var(--n) - 1 - var(--i, 0))
@@ -334,7 +319,7 @@ $_btn: "button:not(#{$_not-btn}), a.button";
     visibility: visible;
     transition-delay: 0s;
 
-    :is(a, button) {
+    > li > :is(a, button) {
       opacity: 1;
       transform: none;
       transition-delay: calc(var(--md-comp-fab-stagger) * var(--i, 0));
@@ -412,7 +397,7 @@ $_btn: "button:not(#{$_not-btn}), a.button";
     padding: 0;
     height: 56px;
 
-    :is(ul, menu) :is(a, button) {
+    :is(ul, menu) > li > :is(a, button) {
       opacity: 1;
       transform: none;
       transition: opacity var(--md-comp-fab-duration);
@@ -473,7 +458,7 @@ $_btn: "button:not(#{$_not-btn}), a.button";
     visibility: visible;
     transition-delay: 0s;
 
-    :is(a, button) {
+    > li > :is(a, button) {
       opacity: 1;
       transform: none;
       transition-delay: calc(var(--md-comp-fab-stagger) * var(--i, 0));

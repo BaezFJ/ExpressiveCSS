@@ -231,10 +231,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _setupDropdown() {
-    this.container = document.createElement('ul');
+    this.container = document.createElement('menu');
     this.container.style.maxHeight = this.options.maxDropDownHeight;
     this.container.id = `autocomplete-options-${Utils.guid()}`;
-    this.container.classList.add('autocomplete-content', 'dropdown-content');
+    this.container.classList.add('autocomplete-content');
     this.container.ariaExpanded = 'true';
     this.el.setAttribute('data-target', this.container.id);
 

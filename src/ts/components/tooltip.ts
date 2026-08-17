@@ -149,7 +149,7 @@ export class Tooltip extends Component<TooltipOptions> {
 
   _appendTooltipEl() {
     this.tooltipEl = document.createElement('div');
-    this.tooltipEl.classList.add('tooltip', 'material-tooltip');
+    this.tooltipEl.classList.add('tooltip');
     this.tooltipEl.id = `tooltip-${Utils.guid()}`;
     this.tooltipEl.setAttribute('role', 'tooltip');
     this.el.setAttribute('aria-describedby', this.tooltipEl.id);

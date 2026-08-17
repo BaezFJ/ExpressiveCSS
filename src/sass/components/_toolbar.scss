@@ -49,7 +49,7 @@ nav.toolbar {
 
   // Actions — transparent at rest so they sit on the container, not filled.
   // .extra is the 56dp FAB; leave it alone so a docked bar can embed one.
-  > :is(a, button):not(.btn-floating, .extra) {
+  > :is(a, button):not(.extra) {
     box-sizing: border-box;
     display: inline-flex;
     flex: 0 0 auto;
@@ -103,7 +103,7 @@ nav.toolbar {
   }
 
   // Icon-only — .circle, or an <i> with no <span> sibling.
-  > :is(a, button):not(.btn-floating, .extra):is(.circle, :has(> i):not(:has(> span))) {
+  > :is(a, button):not(.extra):is(.circle, :has(> i):not(:has(> span))) {
     width: var(--md-comp-toolbar-action-size);
     padding: 0;
     border-radius: 50%;

@@ -16,7 +16,7 @@ code {
   padding: 0.1em 0.35em;
 }
 
-section :is(button, a.button, .btn, .btn-floating) {
+section :is(button, a.button) {
   margin-right: 0.5rem;
   margin-bottom: 0.35rem;
 }

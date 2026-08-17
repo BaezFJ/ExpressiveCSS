@@ -5,8 +5,7 @@
 // Anatomy is the HTML. A <menu id> is the surface; each <li> is an item,
 // an <hr> is a divider, and an <i> inside the item is the leading icon.
 // The trigger is still .dropdown-trigger[data-target] — that is the JS
-// contract. .dropdown-content is an alias (FormSelect and Autocomplete
-// still generate it).
+// contract.
 //
 // Tokens follow https://m3.material.io/components/menus/specs
 // plus the 1rem surface / stadium items used by fields and select.
@@ -24,7 +23,6 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
   border: none;
 }
 
-.dropdown-content,
 menu[id] {
   --md-comp-menu-container-color: var(--md-sys-color-surface);
   --md-comp-menu-container-shape: 1rem;
@@ -147,7 +145,6 @@ menu[id] {
 // Nested menu. Optional, desktop-first. No second Dropdown instance —
 // a <menu> inside an <li> is a flyout. Hover / :focus-within on fine
 // pointers; .open is the tap / keyboard switch.
-.dropdown-content li > menu,
 menu[id] li > menu {
   --md-comp-menu-container-color: var(--md-sys-color-surface);
   --md-comp-menu-container-shape: 1rem;
@@ -203,25 +200,21 @@ menu[id] li > menu {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .dropdown-content li:is(:hover, :focus-within) > menu,
   menu[id] li:is(:hover, :focus-within) > menu {
     display: block;
   }
 }
 
-.dropdown-content li.open > menu,
 menu[id] li.open > menu {
   display: block;
 }
 
-.dropdown-content li.submenu-start > menu,
 menu[id] li.submenu-start > menu {
   inset-inline-start: auto;
   inset-inline-end: 100%;
 }
 
 body.keyboard-focused {
-  .dropdown-content > li:focus,
   menu[id] > li:focus {
     background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
   }

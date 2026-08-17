@@ -152,8 +152,8 @@ export class Toast {
   static _onDragStart(e: TouchEvent | MouseEvent) {
     const target = e.target as HTMLElement | null;
     // Don't start a swipe from the action or close — those are buttons.
-    if (target && !target.closest('button, a') && target.closest('.toast, .snackbar')) {
-      const toastElem = target.closest('.toast, .snackbar') as HTMLElement;
+    if (target && !target.closest('button, a') && target.closest('.snackbar')) {
+      const toastElem = target.closest('.snackbar') as HTMLElement;
       const toast: Toast = toastElem['Expressive_Toast'];
       if (!toast) return;
       toast.panning = true;
@@ -234,7 +234,7 @@ export class Toast {
       const node = (toast as HTMLTemplateElement).content.cloneNode(true);
       toast = (node as HTMLElement).firstElementChild as HTMLElement;
     }
-    toast.classList.add('toast', 'snackbar');
+    toast.classList.add('snackbar');
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', 'polite');
     toast.setAttribute('aria-atomic', 'true');

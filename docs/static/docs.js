@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('toast-dismiss-one')?.addEventListener('click', () => {
-    const toastElement = document.querySelector('#toast-container .toast');
+    const toastElement = document.querySelector('#toast-container .snackbar');
     Expressive.Toast.getInstance(toastElement)?.dismiss();
   });
 

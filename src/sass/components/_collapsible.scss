@@ -5,8 +5,7 @@
 // omit it (or add .expandable) so several can stay open. The `open`
 // attribute is the preselected section.
 //
-// <ul>/<li> + .collapsible-header / .collapsible-body stay as aliases.
-// .collapsible-accordion is the default and does nothing extra.
+// JS wraps non-summary children in a div so height can clip.
 //
 // Tokens:
 //   --md-comp-collapsible-shape              12px
@@ -48,11 +47,11 @@
   color: var(--md-sys-color-on-surface);
   @include z-depth("1");
 
-  > :is(details, li) + :is(details, li) {
+  > details + details {
     border-top: 1px solid var(--md-comp-collapsible-outline-color);
   }
 
-  :is(summary, .collapsible-header) {
+  summary {
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -102,7 +101,7 @@
     }
   }
 
-  :is(details[open] > summary, .active > .collapsible-header)::after {
+  details[open] > summary::after {
     transform: rotate(180deg);
     transition-timing-function: var(--md-comp-collapsible-easing-open);
   }
@@ -111,9 +110,9 @@
     flex-grow: 1;
   }
 
-  // Shared body for the <ul> alias and for <details> (JS wraps the
-  // latter). Text stays painted and is clipped as the row shrinks.
-  .collapsible-body {
+  // JS wraps non-summary children. Text stays painted and is clipped
+  // as the row shrinks.
+  details > :not(summary) {
     display: grid;
     grid-template-rows: 0fr;
     box-sizing: border-box;
@@ -128,19 +127,18 @@
     }
   }
 
-  .active > .collapsible-body,
-  details[open] > .collapsible-body {
+  details[open] > :not(summary) {
     grid-template-rows: 1fr;
     transition-timing-function: var(--md-comp-collapsible-easing-open);
   }
 
   // UA `display: none` on closed details children. Keep our wrapper as
   // a grid so 0fr can clip instead of popping the copy away.
-  details:not([open]) > .collapsible-body {
+  details:not([open]) > :not(summary) {
     display: grid;
   }
 
-  &.no-icon :is(summary, .collapsible-header)::after {
+  &.no-icon summary::after {
     content: none;
   }
 
@@ -150,7 +148,7 @@
     background: transparent;
     @include z-depth("0");
 
-    > :is(details, li) {
+    > details {
       margin-inline: var(--md-comp-collapsible-popout-inset);
       overflow: hidden;
       border: 0;
@@ -161,11 +159,11 @@
       @include z-depth("1");
     }
 
-    > :is(details, li) + :is(details, li) {
+    > details + details {
       border-top: 0;
     }
 
-    > :is(details[open], li.active) {
+    > details[open] {
       margin-block: var(--md-comp-collapsible-popout-gap);
       margin-inline: 0;
       transition-timing-function: var(--md-comp-collapsible-easing-open);

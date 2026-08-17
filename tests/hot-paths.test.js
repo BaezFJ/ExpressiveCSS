@@ -102,11 +102,11 @@ describe('Toast countdown', () => {
 
   test('dismisses on schedule without a ticking interval', async () => {
     const toast = new Expressive.Toast({ text: 'Saved', displayLength: 40, outDuration: 10 });
-    assert.ok(document.querySelector('.toast'));
+    assert.ok(document.querySelector('.snackbar'));
 
     await sleep(200);
 
-    assert.equal(document.querySelector('.toast'), null, 'toast outlived its displayLength');
+    assert.equal(document.querySelector('.snackbar'), null, 'toast outlived its displayLength');
   });
 
   test('pausing banks the remaining time instead of dismissing', async () => {
@@ -118,7 +118,7 @@ describe('Toast countdown', () => {
       toast._pauseTimer(); // what _onDragStart does
       await sleep(200);
 
-      assert.ok(document.querySelector('.toast'), 'a paused toast dismissed anyway');
+      assert.ok(document.querySelector('.snackbar'), 'a paused toast dismissed anyway');
       assert.ok(toast.timeRemaining > 0, 'paused toast banked no time');
       assert.equal(toast.counterTimeout, null, 'the timer was left armed while paused');
 
@@ -126,7 +126,7 @@ describe('Toast countdown', () => {
       assert.notEqual(toast.counterTimeout, null, 'resuming did not re-arm the timer');
 
       await sleep(200);
-      assert.equal(document.querySelector('.toast'), null, 'resumed toast never dismissed');
+      assert.equal(document.querySelector('.snackbar'), null, 'resumed toast never dismissed');
     } finally {
       toast.dismiss();
     }

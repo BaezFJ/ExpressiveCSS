@@ -244,7 +244,7 @@ export class Tabs extends Component<TabsOptions> {
 
     // Create Carousel-Wrapper around Tab-Contents
     const tabsWrapper = document.createElement('div');
-    tabsWrapper.classList.add('tabs-content', 'carousel', 'carousel-slider');
+    tabsWrapper.classList.add('tabs-content', 'carousel', 'flat');
 
     // Wrap around
     tabsContent[0].parentElement.insertBefore(tabsWrapper, tabsContent[0]);

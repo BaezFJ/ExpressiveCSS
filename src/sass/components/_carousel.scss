@@ -2,7 +2,7 @@
 
 // Carousel. Two layouts, one class:
 //   .carousel           3D coverflow (JS)
-//   .carousel.flat      linear snap track (CSS). .carousel-slider is an alias.
+//   .carousel.flat      linear snap track (CSS).
 //
 // Anatomy: direct children move. .carousel-item is optional. Indicators and
 // .carousel-fixed-item are chrome, not slides.
@@ -69,7 +69,7 @@
 }
 
 // Coverflow. JS writes transform / opacity / visibility on each item.
-.carousel:not(.flat):not(.carousel-slider) {
+.carousel:not(.flat) {
   perspective: 500px;
   transform-style: preserve-3d;
   transform-origin: 0% 50%;
@@ -90,8 +90,7 @@
 // Linear track. The outer box clips and holds chrome (dots, fixed item).
 // Slides live in .carousel-track so they can scroll without taking the
 // controls with them — abspos children of an overflow:auto box scroll too.
-.carousel.flat,
-.carousel.carousel-slider {
+.carousel.flat {
   overflow: hidden;
   perspective: none;
   transform: none;
@@ -149,8 +148,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .carousel.flat > .carousel-track,
-  .carousel.carousel-slider > .carousel-track {
+  .carousel.flat > .carousel-track {
     scroll-behavior: auto;
   }
 }

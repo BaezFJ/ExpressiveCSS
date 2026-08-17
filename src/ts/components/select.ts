@@ -34,13 +34,13 @@ export class FormSelect extends Component<FormSelectOptions> {
    * Is "null", if not detected.
    */
   labelEl: HTMLLabelElement;
-  /** Dropdown UL element. */
-  dropdownOptions: HTMLUListElement;
+  /** Dropdown menu element. */
+  dropdownOptions: HTMLElement;
   /** Text input that shows current selected option. */
   input: HTMLInputElement;
   /** Instance of the dropdown plugin for this select. */
   dropdown: Dropdown;
-  /** The select wrapper element. */
+  /** The field wrapper around the native select. */
   wrapper: HTMLDivElement;
   selectOptions: (HTMLOptionElement | HTMLOptGroupElement)[];
   private _values: ValueStruct[];
@@ -231,10 +231,9 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._hideNativeSelect();
     if (this.el.disabled) this.wrapper.classList.add('disabled');
 
-    this.dropdownOptions = document.createElement('ul');
+    this.dropdownOptions = document.createElement('menu');
     this.dropdownOptions.id = `select-options-${Utils.guid()}`;
     this.dropdownOptions.setAttribute('popover', 'auto');
-    this.dropdownOptions.classList.add('dropdown-content', 'select-dropdown');
     this.dropdownOptions.setAttribute('role', 'listbox');
     this.dropdownOptions.ariaMultiSelectable = this.isMultiple.toString();
     if (this.isMultiple) this.dropdownOptions.classList.add('multiple-select-dropdown');
@@ -253,15 +252,14 @@ export class FormSelect extends Component<FormSelectOptions> {
     const reuse =
       parent &&
       parent.matches('.field') &&
-      !parent.classList.contains('select-wrapper') &&
+      !parent.querySelector(':scope > .hide-select') &&
       !parent.querySelector(':scope > input, :scope > textarea');
     if (reuse) {
       this.wrapper = parent as HTMLDivElement;
-      this.wrapper.classList.add('select-wrapper');
       this._createdWrapper = false;
     } else {
       this.wrapper = document.createElement('div');
-      this.wrapper.classList.add('select-wrapper', 'field');
+      this.wrapper.classList.add('field');
       this._createdWrapper = true;
       this.el.before(this.wrapper);
     }
@@ -281,7 +279,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _buildInput() {
     this.input = document.createElement('input');
     this.input.id = 'select-input-' + Utils.guid();
-    this.input.classList.add('select-dropdown', 'dropdown-trigger');
+    this.input.classList.add('dropdown-trigger');
     this.input.type = 'text';
     this.input.readOnly = true;
     this.input.setAttribute('data-target', this.dropdownOptions.id);
@@ -426,7 +424,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     if (this._createdWrapper) {
       this.wrapper.replaceWith(this.el);
     } else {
-      this.wrapper.classList.remove('select-wrapper', 'disabled');
+      this.wrapper.classList.remove('disabled');
       if (this.options.classes.length > 0) {
         this.wrapper.classList.remove(...this.options.classes.split(' ').filter(Boolean));
       }

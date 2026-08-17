@@ -29,7 +29,7 @@ export interface CarouselOptions extends BaseOptions {
   numVisible: number;
   /**
    * Linear snap track instead of 3D coverflow.
-   * Also implied by `.flat` / `.carousel-slider`.
+   * Also implied by `.flat`.
    * @default false
    */
   fullWidth: boolean;
@@ -117,8 +117,7 @@ export class Carousel extends Component<CarouselOptions> {
 
     this._flat =
       this.options.fullWidth ||
-      this.el.classList.contains('flat') ||
-      this.el.classList.contains('carousel-slider');
+      this.el.classList.contains('flat');
     if (this._flat) {
       this.el.classList.add('flat');
       this.options.fullWidth = true;

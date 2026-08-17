@@ -17,6 +17,12 @@
 //   divider     1dp outline-variant
 //   disabled    38%
 
+// Comma list of tab-link selectors. Always nest suffixes inside
+// `#{$_tab} { &.foo {} }` — interpolating `#{$_tab}.foo` only
+// attaches `.foo` to the last alternative and leaves `> a` bare
+// (same bug as the icon size classes). That compiled the disabled
+// rule as `.tabs > a, .tabs > .tab > a.disabled`, so every
+// `nav.tabs > a` got pointer-events:none and could not switch panels.
 $_tab: "> a, > .tab > a";
 
 .tabs {
@@ -114,22 +120,40 @@ $_tab: "> a, > .tab > a";
     &.active:focus {
       background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
     }
+
+    // Disabled — on the <a>. The wrapping `.tab.disabled` case is
+    // below; it cannot live in this block.
+    &.disabled,
+    &[aria-disabled="true"] {
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      background-color: transparent;
+      cursor: default;
+      pointer-events: none;
+    }
   }
 
   // Stacked icon + label is 64dp (primary).
-  &:not(.horizontal) #{$_tab}:has(> i) {
-    min-height: var(--md-comp-primary-tab-with-icon-container-height);
-    padding-block: 8px;
+  &:not(.horizontal) {
+    #{$_tab} {
+      &:has(> i) {
+        min-height: var(--md-comp-primary-tab-with-icon-container-height);
+        padding-block: 8px;
+      }
+    }
   }
 
   // CSS indicator when the JS sliding bar is not present.
-  &:not(:has(> .indicator)) #{$_tab}.active::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0 0;
-    height: var(--md-comp-primary-tab-active-indicator-height);
-    background-color: var(--md-comp-primary-tab-active-indicator-color);
-    border-radius: var(--md-comp-primary-tab-active-indicator-shape);
+  &:not(:has(> .indicator)) {
+    #{$_tab} {
+      &.active::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: var(--md-comp-primary-tab-active-indicator-height);
+        background-color: var(--md-comp-primary-tab-active-indicator-color);
+        border-radius: var(--md-comp-primary-tab-active-indicator-shape);
+      }
+    }
   }
 
   > .indicator {
@@ -144,9 +168,6 @@ $_tab: "> a, > .tab > a";
     margin: 0;
   }
 
-  // Disabled — on the <a> or on the wrapping .tab.
-  #{$_tab}.disabled,
-  #{$_tab}[aria-disabled="true"],
   > .tab.disabled > a {
     color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
     background-color: transparent;
@@ -215,14 +236,16 @@ $_tab: "> a, > .tab > a";
   --md-comp-primary-tab-active-indicator-color: var(--md-sys-color-on-primary);
   border-block-end-color: color-mix(in oklab, var(--md-sys-color-on-primary) 20%, transparent);
 
-  #{$_tab}:hover,
-  #{$_tab}:focus {
-    color: var(--md-sys-color-on-primary);
-    background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 8%, transparent);
-  }
+  #{$_tab} {
+    &:hover,
+    &:focus {
+      color: var(--md-sys-color-on-primary);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 8%, transparent);
+    }
 
-  #{$_tab}.active:hover,
-  #{$_tab}.active:focus {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 10%, transparent);
+    &.active:hover,
+    &.active:focus {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 10%, transparent);
+    }
   }
 }

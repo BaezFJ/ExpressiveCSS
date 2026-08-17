@@ -18,7 +18,7 @@
     display: flex;
   }
 
-  .select-wrapper {
+  .field:has(> .hide-select) {
     input {
       height: 49px;
       margin: 4px 0 0 0;
@@ -39,11 +39,6 @@
     .caret {
       display: none;
     }
-  }
-
-  .select-dropdown {
-    padding: 0;
-    vertical-align: middle;
   }
 
   .select-year input,

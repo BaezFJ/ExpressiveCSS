@@ -8,12 +8,6 @@ import assert from 'node:assert/strict';
 
 import { Expressive, resetBody, fire, window } from './setup.js';
 
-const collapsibleHtml = `
-  <ul class="collapsible">
-    <li><div class="collapsible-header">One</div><div class="collapsible-body"><span>Body one</span></div></li>
-    <li><div class="collapsible-header">Two</div><div class="collapsible-body"><span>Body two</span></div></li>
-  </ul>`;
-
 const detailsHtml = `
   <div class="collapsible">
     <details><summary>One</summary><p>Body one</p></details>
@@ -22,60 +16,6 @@ const detailsHtml = `
 
 describe('Collapsible', () => {
   beforeEach(resetBody);
-
-  test('open() and close() toggle the active section', () => {
-    document.body.innerHTML = collapsibleHtml;
-    const el = document.querySelector('.collapsible');
-    const [first] = el.querySelectorAll('li');
-    const instance = Expressive.Collapsible.init(el);
-
-    assert.equal(first.classList.contains('active'), false);
-    instance.open(0);
-    assert.equal(first.classList.contains('active'), true);
-    instance.close(0);
-    assert.equal(first.classList.contains('active'), false);
-  });
-
-  test('clicking a header opens that section and, as an accordion, closes the other', () => {
-    document.body.innerHTML = collapsibleHtml;
-    const el = document.querySelector('.collapsible');
-    const [first, second] = el.querySelectorAll('li');
-    Expressive.Collapsible.init(el);
-
-    fire(first.querySelector('.collapsible-header'), 'click');
-    assert.equal(first.classList.contains('active'), true);
-
-    fire(second.querySelector('.collapsible-header'), 'click');
-    assert.equal(second.classList.contains('active'), true);
-    assert.equal(first.classList.contains('active'), false, 'accordion left two sections open');
-  });
-
-  test('alias headers get aria-expanded and a button role', () => {
-    document.body.innerHTML = collapsibleHtml;
-    const el = document.querySelector('.collapsible');
-    const header = el.querySelector('.collapsible-header');
-    Expressive.Collapsible.init(el);
-
-    assert.equal(header.getAttribute('role'), 'button');
-    assert.equal(header.getAttribute('aria-expanded'), 'false');
-    assert.ok(header.getAttribute('aria-controls'));
-
-    Expressive.Collapsible.getInstance(el).open(0);
-    assert.equal(header.getAttribute('aria-expanded'), 'true');
-  });
-
-  test('Space on an alias header toggles the section', () => {
-    document.body.innerHTML = collapsibleHtml;
-    const el = document.querySelector('.collapsible');
-    const [first] = el.querySelectorAll('li');
-    const header = first.querySelector('.collapsible-header');
-    Expressive.Collapsible.init(el);
-
-    header.dispatchEvent(
-      new window.KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true })
-    );
-    assert.equal(first.classList.contains('active'), true);
-  });
 
   test('open() and close() toggle <details>', () => {
     document.body.innerHTML = detailsHtml;
@@ -111,18 +51,18 @@ describe('Collapsible', () => {
     assert.equal(names[0], names[1]);
   });
 
-  test('wraps details content in .collapsible-body and unwraps on destroy', () => {
+  test('wraps details content and unwraps on destroy', () => {
     document.body.innerHTML = detailsHtml;
     const el = document.querySelector('.collapsible');
     const [first] = el.querySelectorAll('details');
     const instance = Expressive.Collapsible.init(el);
 
-    const body = first.querySelector(':scope > .collapsible-body');
+    const body = first.querySelector(':scope > div');
     assert.ok(body);
     assert.equal(body.querySelector('p')?.textContent, 'Body one');
 
     instance.destroy();
-    assert.equal(first.querySelector(':scope > .collapsible-body'), null);
+    assert.equal(first.querySelector(':scope > div'), null);
     assert.equal(first.querySelector(':scope > p')?.textContent, 'Body one');
   });
 
@@ -209,8 +149,8 @@ describe('FloatingActionButton', () => {
   test('open() and close() toggle .active', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating large">+</a>
-        <ul><li><a class="btn-floating">e</a></li></ul>
+        <a class="button extra circle">+</a>
+        <ul><li><a class="button extra circle small">e</a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el);
@@ -229,8 +169,8 @@ describe('FloatingActionButton', () => {
   test('.click-to-toggle and direction-* in markup are honoured', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn direction-left click-to-toggle">
-        <button type="button" class="btn-floating extra">+</button>
-        <ul><li><button type="button" class="btn-floating">e</button></li></ul>
+        <button type="button" class="button extra circle">+</button>
+        <ul><li><button type="button" class="button extra circle small">e</button></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
     const instance = Expressive.FloatingActionButton.init(el);
@@ -260,6 +200,36 @@ describe('Tabs', () => {
 
     assert.equal(link2.classList.contains('active'), true);
     assert.equal(link1.classList.contains('active'), false);
+    instance.destroy();
+  });
+
+  test('nav.tabs click hides the old panel and shows the hashed one', () => {
+    document.body.innerHTML = `
+      <article>
+        <nav class="tabs max">
+          <a href="#card-test-1">Test 1</a>
+          <a class="active" href="#card-test-2">Test 2</a>
+          <a href="#card-test-3">Test 3</a>
+        </nav>
+        <div>
+          <div id="card-test-1">Test 1</div>
+          <div id="card-test-2">Test 2</div>
+          <div id="card-test-3">Test 3</div>
+        </div>
+      </article>`;
+    const instance = Expressive.Tabs.init(document.querySelector('.tabs'));
+    try {
+      assert.equal(document.getElementById('card-test-1').style.display, 'none');
+      assert.equal(document.getElementById('card-test-3').style.display, 'none');
+
+      document.querySelector('a[href="#card-test-1"]').click();
+
+      assert.equal(document.getElementById('card-test-1').style.display, 'block');
+      assert.equal(document.getElementById('card-test-2').style.display, 'none');
+      assert.equal(document.querySelector('a[href="#card-test-1"]').classList.contains('active'), true);
+    } finally {
+      instance.destroy();
+    }
   });
 });
 
@@ -281,10 +251,10 @@ describe('FormSelect', () => {
     const select = document.querySelector('select');
     Expressive.FormSelect.init(select);
 
-    const wrapper = document.querySelector('.select-wrapper');
-    assert.ok(wrapper, 'no .select-wrapper was created');
+    const wrapper = document.querySelector('.field');
+    assert.ok(wrapper, 'no .field wrapper was created');
 
-    const items = wrapper.querySelectorAll('ul.select-dropdown li');
+    const items = wrapper.querySelectorAll('menu[role="listbox"] li');
     assert.equal(items.length, 3, 'dropdown does not mirror the three <option>s');
     assert.deepEqual(
       Array.from(items, (li) => li.textContent.trim()),
@@ -298,11 +268,10 @@ describe('FormSelect', () => {
     const instance = Expressive.FormSelect.init(document.querySelector('select'));
 
     assert.equal(instance.wrapper, field);
-    assert.ok(field.classList.contains('select-wrapper'));
+    assert.ok(field.querySelector(':scope > .hide-select'));
     assert.equal(document.querySelectorAll('.field').length, 1);
     assert.equal(field.querySelectorAll('.field').length, 0);
     instance.destroy();
-    assert.equal(field.classList.contains('select-wrapper'), false);
     assert.equal(document.querySelector('select').parentElement, field);
   });
 
@@ -478,7 +447,6 @@ describe('Toast', () => {
     const toast = new Expressive.Toast({ text: 'Saved' });
 
     assert.ok(document.querySelector('#toast-container'), 'no toast container was created');
-    assert.ok(toast.el.classList.contains('toast'));
     assert.ok(toast.el.classList.contains('snackbar'));
     assert.equal(toast.el.textContent.trim(), 'Saved');
     assert.equal(toast.el.querySelector('p')?.textContent, 'Saved');

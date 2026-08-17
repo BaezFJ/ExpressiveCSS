@@ -132,7 +132,7 @@ describe('destroy() releases shared listeners', () => {
   test('Dropdown detaches the handlers open() adds', async () => {
     document.body.innerHTML = `
       <a class="button dropdown-trigger" data-target="dropdown1">Drop</a>
-      <ul id="dropdown1" class="dropdown-content"><li><a href="#!">one</a></li></ul>`;
+      <menu id="dropdown1"><li><a href="#!">one</a></li></menu>`;
     const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
 
     instance.open();
@@ -147,8 +147,8 @@ describe('destroy() releases shared listeners', () => {
   test('FloatingActionButton detaches the document handlers open() adds', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating large">+</a>
-        <ul><li><a class="btn-floating">e</a></li></ul>
+        <a class="button extra circle">+</a>
+        <ul><li><a class="button extra circle small">e</a></li></ul>
       </div>`;
     const instance = Expressive.FloatingActionButton.init(document.querySelector('.fixed-action-btn'));
 

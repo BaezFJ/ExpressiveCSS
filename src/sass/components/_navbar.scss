@@ -63,7 +63,7 @@ header:has(> nav) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > nav:not(.tabs) > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+  > nav:not(.tabs) > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -100,7 +100,7 @@ header:has(> nav) {
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > nav:not(.tabs) > a:not(:has(> i:only-child)):not(.btn):not(.button):not(.btn-floating):not(.breadcrumb) {
+  > nav:not(.tabs) > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 
@@ -296,7 +296,7 @@ header.fixed:has(> nav) {
 }
 
 // Bottom app bar. 80dp row, icons on the start, a FAB (any .btn) pushed to the end.
-footer:not(.page-footer):has(> nav) {
+footer:has(> nav:only-child) {
   --md-comp-bottom-app-bar-container-color: var(--md-sys-color-surface);
   --md-comp-bottom-app-bar-container-height: 80px;
 
@@ -315,7 +315,7 @@ footer:not(.page-footer):has(> nav) {
     margin: 0;
   }
 
-  > nav:not(.tabs) > :is(a, button):not(.btn):not(.button):not(.btn-floating):not(.btn-large):not(.btn-small):has(> i:only-child) {
+  > nav:not(.tabs) > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -351,7 +351,7 @@ footer:not(.page-footer):has(> nav) {
     }
   }
 
-  > nav:not(.tabs) > :is(.btn, .btn-floating, .btn-large) {
+  > nav:not(.tabs) > :is(.button, .circle, .extra) {
     margin-inline-start: auto;
   }
 

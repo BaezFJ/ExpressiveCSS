@@ -17,10 +17,13 @@
         </p>
         <p>
           Put the page in the three HTML5 landmarks <code>header</code>, <code>main</code>, and <code>footer</code>.
-          The footer is CSS-only. Add <code>page-footer</code> so it is not treated as a
-          <a href="{{ url_for('navbar') }}">bottom app bar</a>.
-          A heading is a column title, a <code>&lt;nav&gt;</code> is a link list, and
-          <code>footer-copyright</code> is the legal bar. There is no JavaScript component.
+          The footer is CSS-only. A <code>&lt;footer&gt;</code> whose only
+          child is a <code>&lt;nav&gt;</code> is the
+          <a href="{{ url_for('navbar') }}">bottom app bar</a>; anything
+          richer is the site footer. A heading is a column title, a
+          <code>&lt;nav&gt;</code> is a link list, and the last
+          <code>&lt;small&gt;</code> is the legal bar. There is no JavaScript
+          component.
         </p>
         <p>
           Unfilled by default: a dashed hairline and theme tokens — not a solid primary bar.
@@ -28,7 +31,7 @@
           <code>surface-container</code> well.
         </p>
 
-        <footer class="page-footer">
+        <footer>
           <nav>
             <h2>Product</h2>
             <p>You can use navs here to organize your footer content.</p>
@@ -40,13 +43,13 @@
             <a href="#!">Link 3</a>
             <a href="#!">Link 4</a>
           </nav>
-          <small class="footer-copyright">
+          <small>
             <span>&copy; 2026 Copyright Text</span>
             <a href="#!">More Links</a>
           </small>
         </footer>
 
-<pre><code>&lt;footer class="page-footer"&gt;
+<pre><code>&lt;footer&gt;
   &lt;nav&gt;
     &lt;h2&gt;Product&lt;/h2&gt;
     &lt;p&gt;You can use navs here to organize your footer content.&lt;/p&gt;
@@ -56,7 +59,7 @@
     &lt;a href="#!"&gt;Link 1&lt;/a&gt;
     &lt;a href="#!"&gt;Link 2&lt;/a&gt;
   &lt;/nav&gt;
-  &lt;small class="footer-copyright"&gt;
+  &lt;small&gt;
     &lt;span&gt;&amp;copy; 2026 Copyright Text&lt;/span&gt;
     &lt;a href="#!"&gt;More Links&lt;/a&gt;
   &lt;/small&gt;
@@ -65,7 +68,7 @@
           The grid still works if you prefer columns. <code>.page-footer</code> and
           <code>.footer-copyright</code> stay as aliases.
         </p>
-<pre><code>&lt;footer class="page-footer"&gt;
+<pre><code>&lt;footer&gt;
   &lt;div class="container"&gt;
     &lt;div class="row"&gt;
       &lt;div class="s12 m6"&gt;
@@ -102,7 +105,7 @@
 <pre><code>&lt;body&gt;
   &lt;header&gt;...&lt;/header&gt;
   &lt;main&gt;...&lt;/main&gt;
-  &lt;footer class="page-footer"&gt;...&lt;/footer&gt;
+  &lt;footer&gt;...&lt;/footer&gt;
 &lt;/body&gt;</code></pre>
       </div>
     </div>

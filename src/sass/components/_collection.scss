@@ -4,8 +4,7 @@
 // as the first child of an item is the header. An <a> may be the item
 // (old <div class="collection"> markup) or live inside an <li>.
 //
-// Aliases: .collection-item, .collection-header, .with-header, .avatar,
-// .title, .secondary-content. .flush drops the boxed outline.
+// .flush drops the boxed outline.
 //
 // Tokens:
 //   --md-comp-collection-shape              12px
@@ -40,7 +39,7 @@
     border-top: 1px solid var(--md-comp-collection-outline-color);
   }
 
-  > :is(li, a, .collection-item, .collection-header) {
+  > :is(li, a) {
     display: grid;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto auto;
@@ -96,14 +95,14 @@
       grid-row: 2;
     }
 
-    > :is(.secondary-content, .badge) {
+    > :is(a:last-child, .badge) {
       grid-column: 3;
       grid-row: 1 / -1;
       align-self: center;
       justify-self: end;
     }
 
-    > a:not(.secondary-content, .btn, .btn-floating, .badge) {
+    > a:not(.badge) {
       grid-column: 1 / -1;
       display: flex;
       align-items: center;
@@ -118,12 +117,11 @@
     }
   }
 
-  > :is(li, .collection-item):is(.avatar, :has(> .circle)),
-  > a:has(> .circle) {
+  > :is(li, a):has(> .circle) {
     min-height: 72px;
   }
 
-  > :is(.collection-header, li:has(> :is(h1, h2, h3, h4, h5, h6))) {
+  > li:has(> :is(h1, h2, h3, h4, h5, h6)) {
     min-height: 0;
     padding-block: 12px;
 
@@ -135,12 +133,12 @@
   }
 
   > a,
-  > li > a:not(.secondary-content, .btn, .btn-floating) {
+  > li > a {
     @include focus-visible;
   }
 
   > a:hover,
-  > li:has(> a:not(.secondary-content, .btn, .btn-floating):hover) {
+  > li:has(> a:hover) {
     background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
   }
 
@@ -149,7 +147,7 @@
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
 
-    .secondary-content:not(.btn, .btn-floating) {
+    > a:last-child {
       color: var(--md-sys-color-on-secondary-container);
     }
 
@@ -163,16 +161,6 @@
     color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   }
 
-  .secondary-content {
-    float: none;
-    margin-inline-start: auto;
-    @include focus-visible;
-
-    &:not(.btn, .btn-floating) {
-      color: var(--md-sys-color-primary);
-    }
-  }
-
   span.badge {
     float: none;
     margin-block: 0;
@@ -183,12 +171,6 @@
     border: 0;
     border-radius: 0;
   }
-}
-
-// Keep the hook public so pages that used it outside a collection still
-// color the trailing action. Layout (no float) is owned by .collection.
-.secondary-content:not(.btn, .btn-floating) {
-  color: var(--md-sys-color-primary);
 }
 
 .collapsible .collection {
