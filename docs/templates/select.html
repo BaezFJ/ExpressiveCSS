@@ -19,8 +19,11 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          Select turns a native <code>&lt;select&gt;</code> into a dropdown. Wrap it in
-          <code>.input-field</code> and give the label a matching <code>for</code>.
+          Select turns a native <code>&lt;select&gt;</code> into an exposed dropdown —
+          a text field plus a menu. Wrap it in
+          <code>.field</code> or <code>.input-field</code> and give the label a matching
+          <code>for</code>. Add <code>outlined</code> (or <code>border</code>) on that
+          field for the outlined variant.
           <code>AutoInit()</code> starts every <code>select</code> except those marked
           <code>no-autoinit</code>. Add <code>browser-default</code> to keep the native control.
         </p>
@@ -211,6 +214,15 @@
         <h5 class="light">.getSelectedValues();</h5>
         <p>Selected values as an array of strings.</p>
 <pre><code>instance.getSelectedValues();</code></pre>
+
+        <h5 class="light">.refresh();</h5>
+        <p>
+          Re-read the native <code>&lt;select&gt;</code>. Call this after changing
+          <code>select.value</code> or after adding or removing
+          <code>&lt;option&gt;</code>s. The menu is rebuilt; the field and
+          Dropdown instance stay put.
+        </p>
+<pre><code>instance.refresh();</code></pre>
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the dropdown, and restore the native select.</p>

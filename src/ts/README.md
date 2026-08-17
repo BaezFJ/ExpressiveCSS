@@ -105,6 +105,13 @@ read-it-off-the-element access that key provides.
   `.sidenav-fixed` is `matchMedia('(width >= 993px)')`, not a resize
   `open()`. `inDuration` / `outDuration` / `preventScrolling` are
   accepted and ignored.
+- **FormSelect is a text field + menu.** The native `<select>` stays
+  the form value. JS reuses an existing `.field` / `.input-field` or
+  creates `.select-wrapper.field`. The caret is a CSS-masked `.caret`,
+  not an SVG. `refresh()` rebuilds the option list from the native
+  control; it does not tear down the Dropdown. `.browser-default`
+  skips JS; `@supports (appearance: base-select)` only paints that
+  native path. Do not give menu checkboxes the 56dp field chrome.
 - There is no linter config, though some files still carry `@typescript-eslint`
   disable comments from upstream.
 

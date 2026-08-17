@@ -43,7 +43,9 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   position: relative;
   clear: both;
 
-  input:not([type="range"]),
+  // Checkboxes / radios inside a field (multi-select menu) are not text
+  // fields — do not give them the 56dp well.
+  input:not([type="range"], [type="checkbox"], [type="radio"], [type="file"]),
   textarea {
     box-sizing: border-box;
     padding: 20px 16px 8px;

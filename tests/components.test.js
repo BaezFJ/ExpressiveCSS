@@ -266,15 +266,18 @@ describe('Tabs', () => {
 describe('FormSelect', () => {
   beforeEach(resetBody);
 
+  const fieldHtml = `
+    <div class="input-field">
+      <select id="pick">
+        <option value="" disabled selected>Choose</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+      </select>
+      <label for="pick">Pick</label>
+    </div>`;
+
   test('builds a dropdown mirroring the native options', () => {
-    document.body.innerHTML = `
-      <div class="input-field">
-        <select>
-          <option value="" disabled selected>Choose</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-        </select>
-      </div>`;
+    document.body.innerHTML = fieldHtml;
     const select = document.querySelector('select');
     Expressive.FormSelect.init(select);
 
@@ -287,6 +290,63 @@ describe('FormSelect', () => {
       Array.from(items, (li) => li.textContent.trim()),
       ['Choose', 'One', 'Two']
     );
+  });
+
+  test('reuses an existing .input-field instead of nesting another', () => {
+    document.body.innerHTML = fieldHtml;
+    const field = document.querySelector('.input-field');
+    const instance = Expressive.FormSelect.init(document.querySelector('select'));
+
+    assert.equal(instance.wrapper, field);
+    assert.ok(field.classList.contains('select-wrapper'));
+    assert.equal(document.querySelectorAll('.input-field').length, 1);
+    assert.equal(field.querySelectorAll('.input-field').length, 0);
+    instance.destroy();
+    assert.equal(field.classList.contains('select-wrapper'), false);
+    assert.equal(document.querySelector('select').parentElement, field);
+  });
+
+  test('the fake field is a combobox and the caret is not an SVG', () => {
+    document.body.innerHTML = fieldHtml;
+    const instance = Expressive.FormSelect.init(document.querySelector('select'));
+
+    assert.equal(instance.input.getAttribute('role'), 'combobox');
+    assert.equal(instance.input.getAttribute('aria-haspopup'), 'listbox');
+    assert.ok(instance.input.id.startsWith('select-input-'));
+    assert.equal(instance.wrapper.querySelector('svg'), null);
+    assert.ok(instance.wrapper.querySelector(':scope > .caret'));
+    instance.destroy();
+  });
+
+  test('refresh() rebuilds the menu after options change', () => {
+    document.body.innerHTML = fieldHtml;
+    const select = document.querySelector('select');
+    const instance = Expressive.FormSelect.init(select);
+    const menu = instance.dropdownOptions;
+
+    const extra = document.createElement('option');
+    extra.value = '3';
+    extra.textContent = 'Three';
+    select.appendChild(extra);
+    instance.refresh();
+
+    assert.equal(instance.dropdownOptions, menu, 'refresh() replaced the Dropdown host');
+    assert.equal(menu.querySelectorAll('li').length, 4);
+    assert.equal(menu.querySelectorAll('li')[3].textContent.trim(), 'Three');
+    instance.destroy();
+  });
+
+  test('refresh() syncs a programmatic value change', () => {
+    document.body.innerHTML = fieldHtml;
+    const select = document.querySelector('select');
+    const instance = Expressive.FormSelect.init(select);
+
+    select.value = '2';
+    instance.refresh();
+
+    assert.equal(instance.input.value, 'Two');
+    assert.ok(instance.dropdownOptions.querySelector('li.selected')?.textContent.includes('Two'));
+    instance.destroy();
   });
 });
 

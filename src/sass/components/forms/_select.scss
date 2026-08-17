@@ -1,103 +1,225 @@
 @use "../../abstracts" as *;
 
+// Select (exposed dropdown).
+//
+// Anatomy is the HTML. A <select> is the control. FormSelect wraps it
+// in .select-wrapper (or reuses an existing .field / .input-field) and
+// paints a text field + menu. .browser-default keeps the native control.
+// .caret is the trailing expand icon (CSS, not an SVG node).
+//
+// Tokens follow https://m3.material.io/components/menus/overview
+// (exposed dropdown = text field + menu) and the filled/outlined field
+// tokens in _input-fields.scss.
+//   field          56dp, same chrome as .field
+//   trailing icon  24dp, 12dp from the end, rotates when open
+//   selected item  10% on-surface + trailing check
+//   optgroup       on-surface-variant, outline-variant rule
+//
+// .select-wrapper and .select-dropdown stay as aliases.
+
+$_select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+$_select-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+
+// Native / no-js / .browser-default: a 56dp field, not a 3rem box.
+select {
+  --md-comp-filled-select-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-filled-select-container-shape: 1rem;
+  --md-comp-filled-select-input-text-color: var(--md-sys-color-on-surface);
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 56px;
+  margin: 0;
+  padding: 16px 12px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-comp-filled-select-container-shape);
+  background-color: var(--md-comp-filled-select-container-color);
+  color: var(--md-comp-filled-select-input-text-color);
+  @include typescale("body-large");
+  font-family: $font-stack;
+
+  &:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+    border-color: var(--md-sys-color-primary);
+  }
+
+  &:disabled {
+    color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 12%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
+  }
+}
+
 select.browser-default {
   opacity: 1;
-  color: var(--md-sys-color-on-background);
 }
 
-// TODO: Change to ".select" and not use tag name directly
-// Keep selects useable without javascript
+@supports (appearance: base-select) {
+  select.browser-default,
+  select.browser-default::picker(select) {
+    appearance: base-select;
+  }
 
-select {
-  background-color: var(--md-sys-color-surface);
-  width: 100%;
-  padding: 5px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 2px;
-  height: 3rem;
-}
-
-.select-wrapper:focus-within {
-  outline: 2px solid var(--md-sys-color-primary);
-  border-radius: 4px;
+  select.browser-default::picker(select) {
+    border: none;
+    border-radius: var(--md-comp-menu-container-shape, 1rem);
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    @include z-depth("2");
+  }
 }
 
 .select-wrapper {
-  position: relative;
+  // BeerCSS menu: 1rem surface, stadium items. Same radius on the
+  // field so the closed control and the open list read as one shape.
+  --md-comp-filled-select-container-shape: 1rem;
+  --md-comp-menu-container-shape: 1rem;
+  --md-comp-filled-select-trailing-icon-size: 24px;
+  --md-comp-filled-select-trailing-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-menu-item-leading-image-size: 40px;
 
+  position: relative;
+  border-radius: var(--md-comp-filled-select-container-shape);
+
+  > input.select-dropdown {
+    border-radius: inherit;
+  }
+
+  > .caret ~ input.select-dropdown {
+    padding-inline-end: 52px;
+  }
+
+  // Trailing expand icon. Empty .caret is the hook; the glyph is a mask.
   .caret {
     position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    z-index: 0;
-    fill: var(--md-sys-color-on-background);
+    inset-block-start: 16px;
+    inset-inline-end: 12px;
+    z-index: 1;
+    width: var(--md-comp-filled-select-trailing-icon-size);
+    height: var(--md-comp-filled-select-trailing-icon-size);
+    margin: 0;
     pointer-events: none;
+    background-color: var(--md-comp-filled-select-trailing-icon-color);
+    mask: $_select-chevron center / 24px no-repeat;
+    transition: transform 0.2s ease;
   }
 
-  // Hide select with overflow hidden instead of using display none
-  // (this prevents form validation errors with hidden form elements)
+  &:has(> input[aria-expanded="true"]) .caret,
+  &:has(> .select-dropdown:popover-open) .caret {
+    transform: rotate(180deg);
+  }
+
+  // Keep the native select in the field's box so constraint-validation
+  // bubbles land on the control, not at (0, 0).
   .hide-select {
-    width: 0;
-    height: 0;
-    overflow: hidden;
     position: absolute;
-    top: 0;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
     z-index: -1;
-  }
-}
 
-select:disabled {
-  color: var(--md-sys-color-on-surface);
+    select {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+  }
 }
 
 .select-wrapper.disabled {
-  + label {
-    color: var(--md-sys-color-on-surface);
-  }
   .caret {
-    fill: var(--md-sys-color-on-surface);
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  }
+
+  + label,
+  > label {
+    color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   }
 }
 
 .select-wrapper input.select-dropdown:disabled {
-  color: var(--md-sys-color-on-surface);
   cursor: default;
   user-select: none;
 }
 
-.select-wrapper i {
-  color: var(--md-sys-color-on-surface);
+.select-dropdown > li.disabled,
+.select-dropdown > li.disabled > span,
+.select-dropdown > li.optgroup {
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 }
 
-.select-dropdown li.disabled,
-.select-dropdown li.disabled > span,
-.select-dropdown li.optgroup {
-  color: var(--md-sys-color-on-surface);
-  //background-color: transparent;
+.select-dropdown {
+  --md-comp-menu-container-shape: 1rem;
+
+  border-radius: var(--md-comp-menu-container-shape);
 }
 
-// Icons
-.select-dropdown li {
-  img {
-    height: $dropdown-item-height - 10;
-    width: $dropdown-item-height - 10;
-    margin: 5px 15px;
-    float: right;
+.select-dropdown > li:not(.optgroup, .divider) {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(100% - 16px);
+  margin-inline: 8px;
+  border-radius: 2rem;
+}
+
+.select-dropdown > li.selected:not(.disabled, .optgroup) {
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+}
+
+// Single-select: trailing check. Multi-select already has a leading checkbox.
+.select-dropdown:not(.multiple-select-dropdown) > li.selected:not(.disabled, .optgroup)::after {
+  content: "";
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  margin-inline-start: auto;
+  margin-inline-end: 12px;
+  background-color: var(--md-sys-color-on-surface);
+  mask: $_select-check center / 24px no-repeat;
+}
+
+.select-dropdown li img {
+  box-sizing: border-box;
+  flex: 0 0 var(--md-comp-menu-item-leading-image-size);
+  width: var(--md-comp-menu-item-leading-image-size);
+  height: var(--md-comp-menu-item-leading-image-size);
+  margin: 4px 12px;
+  object-fit: cover;
+  border-radius: 4px;
+  order: 1;
+  margin-inline-start: auto;
+
+  &.left {
+    order: 0;
+    margin-inline-start: 12px;
+    margin-inline-end: 0;
   }
 }
 
-// Optgroup styles
 .select-dropdown li.optgroup {
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
-  &.selected > span {
-    color: var(--md-sys-color-on-background);
+  cursor: default;
+  pointer-events: none;
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--md-sys-color-outline-variant);
   }
-  & > span {
+
+  > span {
     color: var(--md-sys-color-on-surface-variant);
   }
-  & ~ li.optgroup-option {
-    padding-left: 1rem;
+}
+
+.select-dropdown li.optgroup-option {
+  padding-inline-start: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select-wrapper .caret {
+    transition: none;
   }
 }
