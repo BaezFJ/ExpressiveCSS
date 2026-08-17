@@ -129,6 +129,8 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="dist/css/expressive.min.css">
   </head>
   <body>
@@ -145,7 +147,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. Material Icons or Material Symbols must be loaded separately when icon-font markup is used.
+The IIFE bundle exposes the global `Expressive` object. The two Google Fonts stylesheets above are the same ones the docs site loads: variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes) and Roboto 400 / 500. The framework does not ship those font files. Drop the Symbols link only if the page has no icon-font markup; drop Roboto only if you override the type-scale font. The older Material Icons stylesheet is optional and is not required for `.material-symbols`.
 
 ## ES module setup
 
