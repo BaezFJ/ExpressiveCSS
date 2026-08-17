@@ -68,13 +68,21 @@
   border: 2px solid var(--md-sys-color-outline);
   border-radius: 16px;
   background-color: var(--md-sys-color-surface-variant);
+  // Size the image to the handle. A 100% gradient keeps the circle in
+  // the middle of the track, so background-position cannot put off on
+  // the start and on on the end.
   background-image: radial-gradient(
-    circle,
-    var(--md-sys-color-outline) 0 8px,
-    transparent 8.5px
+    circle closest-side,
+    var(--md-sys-color-outline) 100%,
+    transparent 101%
   );
   background-repeat: no-repeat;
-  background-position: 8px center;
+  background-origin: padding-box;
+  background-size: var(--md-comp-switch-handle-unselected) var(--md-comp-switch-handle-unselected);
+  // Lengths only. A % in background-position is “align this point of the
+  // image with that point of the box”, so calc(100% - handle) leaves the
+  // thumb on the start and it only grows.
+  background-position: 6px 50%;
   cursor: pointer;
   transition: background-color .2s ease, background-position .2s ease,
     background-size .2s ease, border-color .2s ease, box-shadow .2s ease;
@@ -83,11 +91,16 @@
     border-color: var(--md-sys-color-primary);
     background-color: var(--md-sys-color-primary);
     background-image: radial-gradient(
-      circle,
-      var(--md-sys-color-on-primary) 0 12px,
-      transparent 12.5px
+      circle closest-side,
+      var(--md-sys-color-on-primary) 100%,
+      transparent 101%
     );
-    background-position: calc(100% - 14px) center;
+    background-size: var(--md-comp-switch-handle-selected) var(--md-comp-switch-handle-selected);
+    // padding-box is track minus the 2px border on each side; 2px inset.
+    background-position: calc(
+        var(--md-comp-switch-track-width) - 4px - 2px - var(--md-comp-switch-handle-selected)
+      )
+      50%;
   }
 
   &:hover {
