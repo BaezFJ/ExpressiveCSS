@@ -339,17 +339,6 @@ article.sticky > aside,
   }
 }
 
-.card .card-stacked {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-
-  .card-content { flex-grow: 1; }
-}
-
 .card .card-image .activator {
   cursor: pointer;
 }
-
-.no-padding { padding: 0 !important; }

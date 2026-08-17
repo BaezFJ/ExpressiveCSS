@@ -35,7 +35,7 @@ describe('IIFE bundle', () => {
 
   test('the global carries AutoInit and the components', () => {
     assert.equal(typeof dom.window.Expressive.AutoInit, 'function');
-    for (const name of ['Collapsible', 'Tabs', 'Modal', 'Toast', 'FormSelect']) {
+    for (const name of ['Collapsible', 'Tabs', 'Toast', 'FormSelect', 'Dialogs']) {
       assert.equal(typeof dom.window.Expressive[name], 'function', `${name} missing from global`);
     }
   });

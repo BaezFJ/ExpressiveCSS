@@ -1,7 +1,7 @@
 @use "../abstracts" as *;
 
 // Showing and hiding, globally and per breakpoint.
-// Breakpoint strings ($small-and-down, ...) come from abstracts/_variables.scss.
+// Queries come from bp-up / bp-down / bp-between in abstracts/_breakpoints.scss.
 
 .hide { display: none !important; }
 

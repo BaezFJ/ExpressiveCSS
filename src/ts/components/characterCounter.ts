@@ -1,12 +1,10 @@
-import { Component, InitElements, MElement } from '../core/component';
-
-export interface BaseOptions {}
+import { Component, BaseOptions, InitElements, MElement } from '../core/component';
 
 const _defaults = Object.freeze({});
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 
-export class CharacterCounter extends Component<object> {
+export class CharacterCounter extends Component<BaseOptions> {
   declare el: InputElement;
   /** Stores the reference to the counter HTML element. */
   counterEl: HTMLSpanElement;

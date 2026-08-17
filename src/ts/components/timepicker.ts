@@ -871,21 +871,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.done(true);
   };
 
-  // deprecated
-  open() {
-    console.warn(
-      'Timepicker.close() is deprecated. Remove this method and wrap in modal yourself.'
-    );
-    return this;
-  }
-
-  close() {
-    console.warn(
-      'Timepicker.close() is deprecated. Remove this method and wrap in modal yourself.'
-    );
-    return this;
-  }
-
   static {
     Timepicker._template = `<div class="timepicker-container">
           <div class="timepicker-digital-display">

@@ -4,23 +4,11 @@ import { Component, BaseOptions, InitElements, MElement, Openable } from '../cor
 export interface CardsOptions extends BaseOptions {
   onOpen: (el: Element) => void;
   onClose: (el: Element) => void;
-  /**
-   * Open transition duration, in milliseconds.
-   * Accepted and ignored. Use --md-comp-card-reveal-duration.
-   */
-  inDuration: number;
-  /**
-   * Close transition duration, in milliseconds.
-   * Accepted and ignored. Use --md-comp-card-reveal-duration.
-   */
-  outDuration: number;
 }
 
 const _defaults: CardsOptions = {
   onOpen: null,
-  onClose: null,
-  inDuration: 225,
-  outDuration: 300
+  onClose: null
 };
 
 /**

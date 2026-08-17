@@ -92,11 +92,6 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
   @include btn-flat;
 }
 
-// icon-right is a compat alias: new markup puts the icon last in the DOM.
-:where(#{$_btn}).icon-right {
-  flex-direction: row-reverse;
-}
-
 // Sizes. small = 32dp, large/extra = 56dp (M3 extra-large / FAB height).
 :where(#{$_btn}).small,
 .btn-small {
@@ -124,11 +119,6 @@ $_btn: "button:not(#{$_not-btn}), a.button, .btn, .btn-flat, .btn-large, .btn-sm
 
 :where(#{$_btn}).rounded {
   border-radius: 9999px;
-}
-
-.btn-block {
-  display: flex;
-  width: 100%;
 }
 
 // Extended FAB: 56dp, large corners, primary-container, icon + label.

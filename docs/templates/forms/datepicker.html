@@ -17,10 +17,10 @@
           <code>.datepicker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
-          The calendar is inline, not a modal. <code>open()</code> and <code>close()</code> are
-          deprecated no-ops. With the default options the calendar is hidden
-          (<code>openByDefault: false</code>) and clicking the input does not reveal it.
-          Pass <code>openByDefault: true</code> to show the calendar under the field.
+          The calendar is inline, not a modal. With the default options the
+          calendar is hidden (<code>openByDefault: false</code>) and clicking
+          the input does not reveal it. Pass <code>openByDefault: true</code>
+          to show the calendar under the field.
         </p>
         <div class="input-field">
           <input type="text" class="datepicker no-autoinit" id="datepicker-intro">
@@ -494,12 +494,6 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the calendar, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-
-        <h5 class="light">.open(); / .close();</h5>
-        <p>
-          Deprecated. Both log a warning and do nothing. The calendar is not a modal;
-          show it with <code>openByDefault</code> or the docked display plugin.
-        </p>
       </div>
 
       <div id="properties" class="section scrollspy">

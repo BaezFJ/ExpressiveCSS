@@ -2,11 +2,6 @@ import { Component, BaseOptions, InitElements, MElement } from '../core/componen
 
 export interface ScrollSpyOptions extends BaseOptions {
   /**
-   * @deprecated Observation is IntersectionObserver. Accepted and ignored.
-   * @default 100
-   */
-  throttle: number;
-  /**
    * Offset used as IntersectionObserver rootMargin and as
    * `--md-comp-scrollspy-offset` (scroll-margin on the section).
    * @default 200
@@ -30,22 +25,15 @@ export interface ScrollSpyOptions extends BaseOptions {
    * @default false
    */
   keepTopElementActive: boolean;
-  /**
-   * @deprecated Clicks are native hash navigation. Accepted and ignored.
-   * @default null
-   */
-  animationDuration: number | null;
 }
 
 const _defaultGetActiveElement = (id: string): string => `a[href="#${id}"]`;
 
 const _defaults: ScrollSpyOptions = {
-  throttle: 100,
   scrollOffset: 200,
   activeClass: 'active',
   getActiveElement: _defaultGetActiveElement,
-  keepTopElementActive: false,
-  animationDuration: null
+  keepTopElementActive: false
 };
 
 /**

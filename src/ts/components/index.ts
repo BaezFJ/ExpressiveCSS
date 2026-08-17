@@ -2,7 +2,7 @@
 // here it does not exist as far as the bundle is concerned.
 //
 // Each module also exports its `<Name>Options` interface; import those from the
-// component's own module (e.g. `./modal`) when you need the type.
+// component's own module (e.g. `./dropdown`) when you need the type.
 
 export { Autocomplete } from './autocomplete';
 export { FloatingActionButton } from './buttons';
@@ -14,7 +14,6 @@ export { Collapsible } from './collapsible';
 export { Datepicker } from './datepicker';
 export { Dropdown } from './dropdown';
 export { Lightbox } from './lightbox';
-export { Modal } from './modal';
 export { Parallax } from './parallax';
 export { Pushpin } from './pushpin';
 export { Range } from './range';

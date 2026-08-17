@@ -26,7 +26,6 @@ export const AUTO_INIT_COMPONENTS = {
   Datepicker: { component: Components.Datepicker, selector: '.datepicker' },
   Dropdown: { component: Components.Dropdown, selector: '.dropdown-trigger' },
   Lightbox: { component: Components.Lightbox, selector: '.lightboxed' },
-  Modal: { component: Components.Modal, selector: '.modal' },
   Parallax: { component: Components.Parallax, selector: '.parallax' },
   Pushpin: { component: Components.Pushpin, selector: '.pushpin' },
   ScrollSpy: { component: Components.ScrollSpy, selector: '.scrollspy' },

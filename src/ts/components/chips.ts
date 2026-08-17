@@ -393,7 +393,6 @@ export class Chips extends Component<ChipsOptions> {
     const renderedChip = this._renderChip(chip);
     this._chips.push(renderedChip);
     this.chipsData.push(chip);
-    //$(this._input).before(renderedChip);
     this._input.before(renderedChip);
     this._setPlaceholder();
     // fire chipAdd callback

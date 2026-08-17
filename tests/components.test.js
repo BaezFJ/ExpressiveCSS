@@ -646,7 +646,7 @@ describe('Sidenav', () => {
   test('does not write inline transform or transition', () => {
     document.body.innerHTML = html;
     const el = document.querySelector('.sidenav');
-    const instance = Expressive.Sidenav.init(el, { inDuration: 12, outDuration: 8 });
+    const instance = Expressive.Sidenav.init(el);
     instance.open();
     assert.equal(el.style.transform, '');
     assert.equal(el.style.transition, '');

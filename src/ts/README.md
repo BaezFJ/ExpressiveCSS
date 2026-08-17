@@ -67,12 +67,11 @@ read-it-off-the-element access that key provides.
   land outside its box — a drag that starts on the dialog cannot close it.
 - **`AutoInit()` is not automatic.** Callers invoke it themselves (the docs site
   does it on `DOMContentLoaded`). Elements opt out with `.no-autoinit`.
-- **`modal.ts` is deliberately gutted** — marked obsolete for versions > 2.1.1,
-  with empty method bodies and an experimental `static create()` building a
-  native `<dialog>`. Those empty methods are a rewrite in progress, not bugs.
+- **Dialogs are native `<dialog>`.** Open with `showModal()`, close with
+  `close()`. `Dialogs.Init()` light-dismisses. There is no `Modal` plugin.
 - **Parallax motion is CSS.** `animation-timeline: view()` on the clip; the
   component class is AutoInit/getInstance/destroy only and attaches no
-  scroll listener. `responsiveThreshold` is accepted and ignored.
+  scroll listener.
 - **Carousel has two layouts.** `.flat` (and `.carousel-slider` / `fullWidth`)
   is a CSS scroll-snap track. The default remains the 3D coverflow, driven
   by pointer events and a shared resize listener. `destroy()` removes
@@ -81,8 +80,7 @@ read-it-off-the-element access that key provides.
   same `name` is an accordion, `.expandable` (or no `name`) lets several
   stay open. Height is CSS (`grid-template-rows: 0fr/1fr`). JS is the
   public `open`/`close` API, accordion for the `<ul>/<li>` alias, and
-  `aria-expanded` on non-native headers. `inDuration` / `outDuration`
-  are accepted and ignored.
+  `aria-expanded` on non-native headers.
 - **Tap target (Feature Discovery) is a popover + CSS.** JS writes
   `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
   one origin rect. The wrapper uses `popover="auto"` when the platform
@@ -100,7 +98,6 @@ read-it-off-the-element access that key provides.
   no click hijack. Offset is `scroll-margin-block-start` /
   `--md-comp-scrollspy-offset`. Default link lookup compares `href`
   attributes — do not interpolate the section id into a selector.
-  `throttle` and `animationDuration` are accepted and ignored.
 - **Sidenav overlay is a modal `<dialog>`.** JS wraps a `ul.sidenav` in
   `dialog.sidenav-overlay` (or the element is already a dialog).
   `showModal()` / `::backdrop` / Escape replace the overlay div, body

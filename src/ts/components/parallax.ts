@@ -1,17 +1,8 @@
 import { Component, BaseOptions, InitElements, MElement } from '../core/component';
 
-export interface ParallaxOptions extends BaseOptions {
-  /**
-   * @deprecated Motion is CSS (`animation-timeline: view()`). This value
-   * is accepted so existing AutoInit calls keep compiling, and is ignored.
-   * @default 0
-   */
-  responsiveThreshold: number;
-}
+export interface ParallaxOptions extends BaseOptions {}
 
-const _defaults: ParallaxOptions = {
-  responsiveThreshold: 0
-};
+const _defaults: ParallaxOptions = {};
 
 /**
  * Parallax. The effect is CSS (see components/_parallax.scss). This class

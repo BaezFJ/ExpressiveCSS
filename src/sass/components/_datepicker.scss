@@ -1,14 +1,5 @@
 @use "../abstracts" as *;
 
-/* Modal */
-// @removed since v2.2.1
-/*.datepicker-modal {
-  max-width: 325px;
-  // @removed since v2.2.1-dev regarding Material M3 standards
-  min-width: 300px;
-  max-height: none;
-}*/
-
 .datepicker-container {
   display: flex;
   flex-direction: column;

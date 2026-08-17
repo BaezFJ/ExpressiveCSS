@@ -18,24 +18,6 @@ export interface SidenavOptions extends BaseOptions {
    */
   dragTargetWidth: string;
   /**
-   * Open transition duration, in milliseconds.
-   * Accepted and ignored. Use --md-comp-nav-drawer-duration.
-   * @default 250
-   */
-  inDuration: number;
-  /**
-   * Close transition duration, in milliseconds.
-   * Accepted and ignored. Use --md-comp-nav-drawer-duration.
-   * @default 200
-   */
-  outDuration: number;
-  /**
-   * Prevent page from scrolling while sidenav is open.
-   * Accepted and ignored. showModal() + html:has(dialog:modal) do this.
-   * @default true
-   */
-  preventScrolling: boolean;
-  /**
    * Function called when sidenav starts entering.
    */
   onOpenStart: (elem: HTMLElement) => void;
@@ -57,13 +39,10 @@ const _defaults: SidenavOptions = {
   edge: 'left',
   draggable: true,
   dragTargetWidth: '10px',
-  inDuration: 250,
-  outDuration: 200,
   onOpenStart: null,
   onOpenEnd: null,
   onCloseStart: null,
-  onCloseEnd: null,
-  preventScrolling: true
+  onCloseEnd: null
 };
 
 const LARGE_UP = '(width >= 993px)';

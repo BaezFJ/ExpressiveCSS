@@ -11,18 +11,6 @@ export interface CollapsibleOptions extends BaseOptions {
    */
   accordion: boolean;
   /**
-   * @deprecated Duration is CSS (`--md-comp-collapsible-duration`).
-   * Accepted so existing init calls keep compiling, and ignored.
-   * @default 300
-   */
-  inDuration: number;
-  /**
-   * @deprecated Duration is CSS (`--md-comp-collapsible-duration`).
-   * Accepted so existing init calls keep compiling, and ignored.
-   * @default 300
-   */
-  outDuration: number;
-  /**
    * Callback function called before collapsible is opened.
    * @default null
    */
@@ -49,9 +37,7 @@ const _defaults: CollapsibleOptions = {
   onOpenStart: null,
   onOpenEnd: null,
   onCloseStart: null,
-  onCloseEnd: null,
-  inDuration: 300,
-  outDuration: 300
+  onCloseEnd: null
 };
 
 /**

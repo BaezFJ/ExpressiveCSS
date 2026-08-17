@@ -1,6 +1,3 @@
-// TypeScale
-$md_sys_typescale_body-large_size: 16px;
-
 @use "sass:math";
 
 // Colors
@@ -11,14 +8,6 @@ $md_sys_typescale_body-large_size: 16px;
 // value from it: this link color. Everything now comes from --md-sys-color-*.
 $link-color: var(--md-sys-color-primary) !default;
 
-// Floating buttons
-$button-floating-background: var(--md-sys-color-secondary) !default;
-$button-floating-background-hover: var(--md-ref-palette-secondary70) !default;
-$button-floating-background-focus: var(--md-ref-palette-secondary80) !default;
-$button-floating-color: var(--md-sys-color-on-secondary) !default;
-$button-floating-size: 40px !default;
-$button-floating-radius: 16px !default;
-
 // Dropdown
 $dropdown-item-height: 50px !default;
 
@@ -27,7 +16,6 @@ $dropdown-item-height: 50px !default;
 // the 600.99px / 992.99px / 1200.99px values are gone.
 
 // Grid
-$num-cols: 12 !default;
 $gutter-width: 1.5rem !default;
 $element-top-margin: math.div($gutter-width, 3) !default;
 $element-bottom-margin: math.div($gutter-width * 2, 3) !default;

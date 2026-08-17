@@ -148,11 +148,6 @@ export interface DatepickerOptions extends BaseOptions {
    */
   onSelect: ((selectedDate: Date) => void) | null;
   /**
-   * Callback function when Datepicker is closed.
-   * @default null
-   */
-  //onClose: (() => void) | null; // TODO: Remove
-  /**
    * Callback function when Datepicker HTML is refreshed.
    * @default null
    */
@@ -1480,11 +1475,8 @@ export class Datepicker extends Component<DatepickerOptions> {
     return dateInput;
   }
 
-  // Set input value to the selected date and close Datepicker
   _finishSelection = () => {
     this.setInputValues();
-    // Commented out because of function deprecations
-    // this.close();
   };
 
   _confirm = () => {
@@ -1496,18 +1488,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (typeof this.options.onCancel === 'function') this.options.onCancel.call(this);
   };
 
-  // deprecated
-  open() {
-    console.warn('Datepicker.open() is deprecated. Remove this method and wrap in modal yourself.');
-    return this;
-  }
-  close() {
-    console.warn(
-      'Datepicker.close() is deprecated. Remove this method and wrap in modal yourself.'
-    );
-    return this;
-  }
-
   static {
     Datepicker._template = `
         <div class="datepicker-container">
@@ -1517,13 +1497,7 @@ export class Datepicker extends Component<DatepickerOptions> {
           </div>
           <div class="datepicker-calendar-container">
             <div class="datepicker-calendar"></div>
-            <div class="datepicker-footer">
-              <!--<button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" type="button"></button>
-              <div class="confirmation-btns">
-                <button class="btn-flat datepicker-cancel waves-effect" type="button"></button>
-                <button class="btn-flat datepicker-done waves-effect" type="button"></button>
-              </div>-->
-            </div>
+            <div class="datepicker-footer"></div>
           </div>
         </div>`;
   }

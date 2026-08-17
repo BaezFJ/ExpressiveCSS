@@ -12,7 +12,6 @@ The public surface is rebranded. Instances are stashed on elements as `el['Expre
 | --- | --- |
 | `Materialbox` / `.materialboxed` / `#materialbox-overlay` | `Lightbox` / `.lightboxed` / `#lightbox-overlay` |
 | `.materialize-textarea` | `.expressive-textarea` |
-| `.materialize-red` (+ shades) | `.expressive-red` |
 | `el['M_<Component>']`, global `M` | `el['Expressive_<Component>']`, global `Expressive` |
 
 Icons are Material Symbols, outlined by default (`--md-icon-font`). Style (outlined / rounded / sharp) is the font family — switch it with the `icon-style` attribute or `--md-icon-font`. Fill, weight, grade, and optical size are variation axes (`--md-icon-fill`, `--md-icon-weight`, `--md-icon-grade`, `--md-icon-optical-size`). The font files are **not** shipped: three variable families would dwarf the sheet, and most pages only need outlined. `.material-icons` is a compat alias that now uses Symbols. The `--md-sys-*` / `--md-ref-*` tokens stay Material Design 3 spec names.
@@ -37,7 +36,7 @@ npm run clean          # remove dist/
 
 `npm test` runs a single test file with `node --test path/to/file.test.js`, or filter by name with `node --test --test-name-pattern "Collapsible"`.
 
-Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Modal.getInstance(el)`).
+Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Sidenav.getInstance(el)`).
 
 Docs site (uv + Flask, Python ≥ 3.14):
 
@@ -89,7 +88,7 @@ Other things worth knowing:
 - **Translucent colors use `color-mix(in srgb, var(--token) N%, transparent)`, never `rgba(var(--token), 0.N)`.** The tokens hold hex colors, not comma-separated channels, so the `rgba(var(…))` form is invalid and the browser drops the declaration silently — it accounted for every dead rule found so far (hover tints, disabled inputs, medium-emphasis text).
 - `abstracts/_elevation.scss` owns the shadow map; the `.z-depth-*` classes in `base/_global.scss` are generated from it, so the classes and the `z-depth()` mixin cannot drift.
 - `abstracts/_breakpoints.scss` owns the three breakpoints (`small` 601px, `large` 993px, `xlarge` 1201px) and the `bp-up()` / `bp-down()` / `bp-between()` mixins, which emit media-query range syntax (`@media (width >= 601px)`). The old interpolated strings (`$medium-and-up`…) are kept as deprecated aliases producing the same queries; nothing in the framework uses them. The `600.99px`/`992.99px` values they needed are gone — range syntax has an exclusive comparator.
-- `abstracts/_variables.scss` holds the remaining Sass-time knobs (12-col grid, header font sizes, `$root-font-size`, the flow-text bounds) — mostly `!default`, several now aliasing CSS custom properties.
+- `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`) — mostly `!default`, several now aliasing CSS custom properties. The heading rem ladder (`$h1-fontsize`…) is unused internally and kept only so downstream Sass overrides still compile.
 - `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
 - `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_parallax`, `_pushpin`, `_page-footer`, `_docked-display`, `_transitions`).
 - `utilities/_typescale.scss` generates the 15 `.display-large` … `.title-small` classes from a `$typescale-roles` list. Every property it sets must map to a token `tokens/_reference.scss` actually defines — a `var()` pointing at an undefined custom property invalidates the whole declaration silently, which is how these classes previously did nothing. `font-style` is deliberately not set: the `-font-family-style` token holds "Regular"/"Medium", which are weights, not CSS font-style keywords.
@@ -120,9 +119,7 @@ The base constructor destroys any pre-existing instance found via `getInstance`,
 
 **Adding a component** touches: the new `src/ts/components/<name>.ts`, one export line in `components/index.ts`, one line in `components/registry.ts` if it auto-inits, and a `src/sass/components/_<name>.scss` partial `@forward`ed from `components/_index.scss`.
 
-Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `checkPossibleAlignments`, `_repositionWithinScreen`, `throttle`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers).
-
-`components/modal.ts` is intentionally gutted — marked "Obsolete for versions > 2.1.1", with empty method bodies and an experimental `static create()` building a native `<dialog>`. Its empty methods are a rewrite in progress, not bugs to patch.
+Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `checkPossibleAlignments`, `_repositionWithinScreen`, `throttle`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers). Dialogs are native `<dialog>` plus `behaviors/dialogs.ts` for light-dismiss — there is no `Modal` plugin.
 
 ### Cross-cutting invariants
 

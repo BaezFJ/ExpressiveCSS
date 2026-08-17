@@ -42,11 +42,6 @@ export const AUTO_INIT_FIXTURES = [
     html: `<img class="lightboxed" width="100" src="http://localhost/1.jpg">`
   },
   {
-    name: 'Modal',
-    selector: '.modal',
-    html: `<div id="modal1" class="modal"><div class="modal-content"><h4>Title</h4></div><div class="modal-footer"><a class="modal-close btn-flat">Close</a></div></div>`
-  },
-  {
     name: 'Parallax',
     selector: '.parallax',
     html: `<div class="parallax"><img src="http://localhost/1.jpg"></div>`

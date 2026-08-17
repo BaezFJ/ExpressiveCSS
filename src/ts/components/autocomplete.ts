@@ -572,20 +572,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   /**
-   * Sets selected values.
-   * @deprecated @see https://github.com/materializecss/materialize/issues/552
-   * @param entries
-   */
-  setValues(entries: AutocompleteData[]) {
-    this.selectedValues = entries;
-    this._updateSelectedInfo();
-    if (!this.options.isMultiSelect) {
-      this._refreshInputText();
-    }
-    this._triggerChanged();
-  }
-
-  /**
    * Select a specific autocomplete option via id-property.
    * @param id The id of a data-entry.
    */
@@ -615,14 +601,5 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     this._updateSelectedInfo();
     this._triggerChanged();
-  }
-
-  selectOptions(ids: []) {
-    const entries = this.menuItems.filter(
-      (item) => !(ids.indexOf(<never>item.id) === -1)
-    );
-    if (!entries) return;
-    this.selectedValues = entries;
-    this._renderDropdown();
   }
 }
