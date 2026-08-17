@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Getting started - ExpressiveCSS</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="/dist/css/expressive.min.css">
+    <link rel="stylesheet" href="/static/docs.css">
+    
+    <script>
+        (function () {
+            try {
+                var c = localStorage.getItem('md-source');
+                if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+                    document.documentElement.style.setProperty('--md-source', c);
+                }
+            } catch (e) {
+            }
+        })();
+    </script>
+    
+</head>
+<body class="docs">
+
+
+
+    <header class="fixed">
+        <nav>
+            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+                <i class="material-symbols">menu</i>
+            </button>
+            <h2>Getting started</h2>
+            <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
+                <i class="material-symbols">palette</i>
+            </button>
+            <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
+                <i class="material-symbols">dark_mode</i>
+            </a>
+        </nav>
+
+        <ul class="sidenav sidenav-fixed" id="nav-mobile">
+            <li class="active">
+                <a href="/getting-started.html">
+                    <i class="material-symbols">home</i>
+                    Getting started
+                </a>
+            </li>
+            <li class="">
+                <a href="/auto-init.html">
+                    <i class="material-symbols">bolt</i>
+                    Auto Init
+                </a>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">palette</i>
+                            Foundations
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/color.html">Color</a>
+                                </li>
+                                <li class="">
+                                    <a href="/themes.html">Themes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/typography.html">Typography</a>
+                                </li>
+                                <li class="">
+                                    <a href="/icons.html">Icons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/shadow.html">Elevation</a>
+                                </li>
+                                <li class="">
+                                    <a href="/grid.html">Grid</a>
+                                </li>
+                                <li class="">
+                                    <a href="/helpers.html">Helpers</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media-css.html">Media styles</a>
+                                </li>
+                                <li class="">
+                                    <a href="/table.html">Table</a>
+                                </li>
+                                <li class="">
+                                    <a href="/css-transitions.html">Transitions</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pulse.html">Pulse</a>
+                                </li>
+                                <li class="">
+                                    <a href="/waves.html">Waves</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">view_quilt</i>
+                            Structure
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/navbar.html">App bar</a>
+                                </li>
+                                <li class="">
+                                    <a href="/sidenav.html">Sidenav</a>
+                                </li>
+                                <li class="">
+                                    <a href="/footer.html">Footer</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tabs.html">Tabs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/breadcrumbs.html">Breadcrumbs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pagination.html">Pagination</a>
+                                </li>
+                                <li class="">
+                                    <a href="/dropdown.html">Menu</a>
+                                </li>
+                                <li class="">
+                                    <a href="/scrollspy.html">Scrollspy</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">widgets</i>
+                            Components
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/buttons.html">Buttons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/floating-action-button.html">FAB</a>
+                                </li>
+                                <li class="">
+                                    <a href="/cards.html">Cards</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collections.html">Collections</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collapsible.html">Collapsible</a>
+                                </li>
+                                <li class="">
+                                    <a href="/modals.html">Dialogs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/badges.html">Badges</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tooltips.html">Tooltips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toasts.html">Toasts</a>
+                                </li>
+                                <li class="">
+                                    <a href="/preloader.html">Preloader</a>
+                                </li>
+                                <li class="">
+                                    <a href="/carousel.html">Carousel</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media.html">Lightbox</a>
+                                </li>
+                                <li class="">
+                                    <a href="/parallax.html">Parallax</a>
+                                </li>
+                                <li class="">
+                                    <a href="/feature-discovery.html">Feature Discovery</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toolbars.html">Toolbars</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">edit</i>
+                            Forms
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/fieldsets.html">Fieldsets</a>
+                                </li>
+                                <li class="">
+                                    <a href="/text-inputs.html">Text fields</a>
+                                </li>
+                                <li class="">
+                                    <a href="/select.html">Select</a>
+                                </li>
+                                <li class="">
+                                    <a href="/checkboxes.html">Checkboxes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/radio-buttons.html">Radio</a>
+                                </li>
+                                <li class="">
+                                    <a href="/switches.html">Switches</a>
+                                </li>
+                                <li class="">
+                                    <a href="/range.html">Range</a>
+                                </li>
+                                <li class="">
+                                    <a href="/chips.html">Chips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/autocomplete.html">Autocomplete</a>
+                                </li>
+                                <li class="">
+                                    <a href="/datepicker.html">Date picker</a>
+                                </li>
+                                <li class="">
+                                    <a href="/timepicker.html">Time picker</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        
+    
+
+    <section class="section primary-container my-2 mx-6" id="index-banner">
+        <div class="container row py-5">
+            <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+                <h1 class="primary-text">Getting started</h1>
+                <h4 class="light primary-text">Learn how to start using Expressive and integrate it into your project.</h4>
+            </div>
+        </div>
+    </section>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+                <div id="download" class="section scrollspy">
+                    <h3>Download</h3>
+                    <p class="flow-text">
+                        Expressive comes in two different forms. You can select which version you want depending on your
+                        preference and expertise.
+                        The project is at version <code>0.3.0</code> and is still growing, so the usual path is to build
+                        from the repository.
+                    </p>
+                    <div class="row">
+                        <div class="s12 m6">
+                            <h5>Expressive</h5>
+                            <p>
+                                This is the standard version that comes with both the minified and unminified CSS and
+                                JavaScript files.
+                                After you build the project, copy the files from <code>dist/</code>. This option
+                                requires little to no setup.
+                                Use this if you are unfamiliar with Sass.
+                            </p>
+                        </div>
+                        <div class="s12 m6">
+                            <h5>Sass</h5>
+                            <p>
+                                This version is the source SCSS in <code>src/sass</code>. By choosing this version you
+                                have more control over
+                                which layers to include. You will need a Sass compiler if you choose this option.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h5>From source</h5>
+                    <p>Clone the repository and build the compiled CSS and JavaScript:</p>
+                    <pre><code>npm install
+npm run build</code></pre>
+                    <p>The compiled assets are written to <code>dist/</code>:</p>
+                    <pre><code>dist/
+├── css/
+│   ├── expressive.css
+│   └── expressive.min.css
+├── js/
+│   ├── expressive.cjs
+│   ├── expressive.js
+│   ├── expressive.min.js
+│   └── expressive.mjs
+└── types/</code></pre>
+
+                    <h5>NPM</h5>
+                    <p>
+                        The package name is <code>@expressivecss/expressive</code>. This release contains source files as well as
+                        the compiled CSS and JavaScript files.
+                    </p>
+                    <pre><code>npm install @expressivecss/expressive</code></pre>
+
+                    <h5>Yarn</h5>
+                    <p>Or you can add the package with yarn.</p>
+                    <pre><code>yarn add @expressivecss/expressive</code></pre>
+                </div>
+
+                <div id="setup" class="section scrollspy">
+                    <h3>Setup</h3>
+                    <h5>Project Structure</h5>
+                    <p>After building, copy the compiled files into the directory where your website is located. Your
+                        directory will look something like this.</p>
+                    <p>
+                        You'll notice that there are two sets of the files. The
+                        <code>min</code> means that the file is compressed to reduce load times. These minified files
+                        are usually used in production while it is
+                        better to use the unminified files during development.
+                    </p>
+                    <pre><code>MyWebsite/
+  |--css/
+  |  |--expressive.css
+  |
+  |--js/
+  |  |--expressive.js
+  |
+  |--index.html</code></pre>
+
+                    <h5>HTML Setup</h5>
+                    <p>
+                        Next you just have to make sure you link the files properly in your webpage. Generally it is
+                        wise to import JavaScript files at the end of the body to reduce page
+                        load time. Follow the example below on how to import Expressive into your webpage.
+                    </p>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en" theme="light"&gt;
+  &lt;head&gt;
+    &lt;!-- Material Symbols (outlined, all axes) --&gt;
+    &lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
+    &lt;!--Import expressive.css--&gt;
+    &lt;link rel="stylesheet" href="css/expressive.min.css"&gt;
+    &lt;!--Let browser know website is optimized for mobile--&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!--JavaScript at end of body for optimized loading--&gt;
+    &lt;script src="js/expressive.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+      document.addEventListener('DOMContentLoaded', () =&gt; {
+        Expressive.AutoInit();
+      });
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+                    <h5>Initialize JavaScript</h5>
+                    <p>
+                        The browser bundle exposes the framework as the global <code>Expressive</code> object. Importing
+                        the JavaScript installs
+                        shared document behaviors (forms, waves, and a few others), but it does not call <code>AutoInit()</code>
+                        automatically.
+                        Call it after the page has loaded so components such as collapsibles, sidenavs, and tooltips
+                        start themselves.
+                    </p>
+                    <p>
+                        <code>AutoInit()</code> scans <code>document.body</code> by default. Pass a container to limit
+                        the scan, or add the
+                        <code>no-autoinit</code> class to an element that should be initialized manually.
+                    </p>
+                    <pre><code>Expressive.AutoInit();
+
+Expressive.AutoInit(document.querySelector('#app'), {
+  Tooltip: { position: 'top' }
+});</code></pre>
+
+                    <h5>ES modules</h5>
+                    <p>Import the framework or individual components from the module build:</p>
+                    <pre><code>import { AutoInit, Tooltip } from './js/expressive.mjs';
+
+AutoInit();
+
+const element = document.querySelector('.custom-tooltip');
+Tooltip.init(element, { position: 'top' });</code></pre>
+
+                    <h5>Themes</h5>
+                    <p>
+                        Expressive uses the <code>theme</code> attribute on the root element. The default is light.
+                        Switch themes at runtime
+                        by updating the attribute.
+                    </p>
+                    <pre><code>&lt;html lang="en" theme="light"&gt;</code></pre>
+                    <pre><code>document.documentElement.setAttribute('theme', 'dark');</code></pre>
+                </div>
+
+                <div id="templates" class="section scrollspy">
+                    <h3>Templates</h3>
+                    <p class="flow-text">
+                        Start from a documented layout instead of an empty page. These two pages show how Expressive
+                        structures content,
+                        and you can copy the markup they use.
+                    </p>
+                    <div class="row">
+                        <div class="s12 m6">
+                            <article class="center-align">
+                                <i class="material-symbols medium primary-text">grid_on</i>
+                                <h5>Grid</h5>
+                                <p class="left-align">
+                                    The 12-column CSS Grid, containers, offsets, and responsive layouts. The first thing
+                                    to learn after you link the stylesheet.
+                                </p>
+                                <a class="button filled waves-effect" href="/grid.html">Open Grid</a>
+                            </article>
+                        </div>
+                        <div class="s12 m6">
+                            <article class="center-align">
+                                <i class="material-symbols medium primary-text">tune</i>
+                                <h5>Helpers</h5>
+                                <p class="left-align">
+                                    Alignment, visibility, spacing, truncation, and other single-purpose classes you
+                                    will use on every page.
+                                </p>
+                                <a class="button outlined waves-effect" href="/helpers.html">Open Helpers</a>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sass" class="section scrollspy">
+                    <h3>Sass Setup</h3>
+                    <p class="flow-text">This section is only relevant if you chose to use the Sass sources.</p>
+                    <h5>Compiling Sass</h5>
+                    <p>
+                        Instead of only a CSS folder, the repository contains many <code>.scss</code> files which
+                        contain the styles of individual layers
+                        and components. The browser cannot interpret Sass, so you must compile <code>src/sass/expressive.scss</code>
+                        into a regular CSS file.
+                        At this point you can link this newly outputted file in your HTML page.
+                    </p>
+                    <p>From the repository, the npm script does that for you:</p>
+                    <pre><code>npm run build:css</code></pre>
+                    <p>In another Sass project, use the framework's Sass entry point:</p>
+                    <pre><code>@use "@expressivecss/expressive/src/sass/expressive";</code></pre>
+                    <p>When working directly in this repository, the entry point is
+                        <code>src/sass/expressive.scss</code>.</p>
+                    <pre><code>MyWebsite/
+|--css/
+|  |--expressive.css &lt;-- compiled from scss/expressive.scss
+|
+|--js/
+|  |--expressive.js
+|
+|--scss/
+|  |--expressive.scss
+|  |--abstracts/
+|  |--tokens/
+|  |--utilities/
+|  |--base/
+|  |--components/
+|
+|--index.html</code></pre>
+                </div>
+            </div>
+
+            <div class="hide-on-small-only m3 xl3">
+                <div class="toc-wrapper pushpin no-autoinit mt-5">
+                    <ul class="section table-of-contents">
+                        <li><a href="#download">Download</a></li>
+                        <li><a href="#setup">Setup</a></li>
+                        <li><a href="#templates">Templates</a></li>
+                        <li><a href="#sass">Sass</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <nav>
+                <h2>Start</h2>
+                <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
+                <a href="/getting-started.html">Getting started</a>
+                <a href="/auto-init.html">Auto Init</a>
+            </nav>
+            <nav>
+                <h2>Foundations</h2>
+                <a href="/color.html">Color</a>
+                <a href="/themes.html">Themes</a>
+                <a href="/typography.html">Typography</a>
+                <a href="/icons.html">Icons</a>
+                <a href="/shadow.html">Elevation</a>
+                <a href="/grid.html">Grid</a>
+                <a href="/helpers.html">Helpers</a>
+                <a href="/media-css.html">Media styles</a>
+                <a href="/table.html">Table</a>
+                <a href="/css-transitions.html">Transitions</a>
+                <a href="/pulse.html">Pulse</a>
+                <a href="/waves.html">Waves</a>
+            </nav>
+            <nav>
+                <h2>Structure</h2>
+                <a href="/navbar.html">App bar</a>
+                <a href="/sidenav.html">Sidenav</a>
+                <a href="/footer.html">Footer</a>
+                <a href="/tabs.html">Tabs</a>
+                <a href="/breadcrumbs.html">Breadcrumbs</a>
+                <a href="/pagination.html">Pagination</a>
+                <a href="/dropdown.html">Menu</a>
+                <a href="/scrollspy.html">Scrollspy</a>
+            </nav>
+            <nav>
+                <h2>Components</h2>
+                <a href="/buttons.html">Buttons</a>
+                <a href="/floating-action-button.html">FAB</a>
+                <a href="/cards.html">Cards</a>
+                <a href="/collections.html">Collections</a>
+                <a href="/collapsible.html">Collapsible</a>
+                <a href="/modals.html">Dialogs</a>
+                <a href="/badges.html">Badges</a>
+                <a href="/tooltips.html">Tooltips</a>
+                <a href="/toasts.html">Toasts</a>
+                <a href="/preloader.html">Preloader</a>
+                <a href="/carousel.html">Carousel</a>
+                <a href="/media.html">Lightbox</a>
+                <a href="/parallax.html">Parallax</a>
+                <a href="/feature-discovery.html">Feature Discovery</a>
+                <a href="/toolbars.html">Toolbars</a>
+            </nav>
+            <nav>
+                <h2>Forms</h2>
+                <a href="/fieldsets.html">Fieldsets</a>
+                <a href="/text-inputs.html">Text fields</a>
+                <a href="/select.html">Select</a>
+                <a href="/checkboxes.html">Checkboxes</a>
+                <a href="/radio-buttons.html">Radio</a>
+                <a href="/switches.html">Switches</a>
+                <a href="/range.html">Range</a>
+                <a href="/chips.html">Chips</a>
+                <a href="/autocomplete.html">Autocomplete</a>
+                <a href="/datepicker.html">Date picker</a>
+                <a href="/timepicker.html">Time picker</a>
+            </nav>
+            <small>
+                <span>&copy; 2026 ExpressiveCSS</span>
+                <span>v0.3.0</span>
+            </small>
+        </div>
+    </footer>
+
+    <dialog id="source-color-dialog" aria-labelledby="source-color-title">
+        <i class="material-symbols">palette</i>
+        <h2 id="source-color-title">Source color</h2>
+        <div>
+            <p>
+                The seed every generated ramp derives from. Pick one and browse
+                the docs &mdash; the whole theme follows. Error does not: it is
+                a fixed hue.
+            </p>
+            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
+            </div>
+            <div class="source-color-custom">
+                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
+                <div class="field outlined">
+                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
+                    <label for="source-color-hex">Hex</label>
+                </div>
+            </div>
+            <div class="source-color-preview" aria-hidden="true">
+                <span class="source-color-chip primary on-primary-text">primary</span>
+                <span class="source-color-chip secondary on-secondary-text">secondary</span>
+                <span class="source-color-chip tertiary on-tertiary-text">tertiary</span>
+                <span class="source-color-chip error on-error-text">error</span>
+            </div>
+        </div>
+        <form method="dialog">
+            <button type="button" class="text" id="source-color-reset">Reset</button>
+            <button type="submit" value="done">Done</button>
+        </form>
+    </dialog>
+
+
+<script src="/dist/js/expressive.min.js"></script>
+<script src="/static/docs.js"></script>
+</body>
+</html>

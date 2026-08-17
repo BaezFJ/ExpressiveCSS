@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toasts - ExpressiveCSS</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="/dist/css/expressive.min.css">
+    <link rel="stylesheet" href="/static/docs.css">
+    
+    <script>
+        (function () {
+            try {
+                var c = localStorage.getItem('md-source');
+                if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+                    document.documentElement.style.setProperty('--md-source', c);
+                }
+            } catch (e) {
+            }
+        })();
+    </script>
+    
+</head>
+<body class="docs">
+
+
+
+    <header class="fixed">
+        <nav>
+            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+                <i class="material-symbols">menu</i>
+            </button>
+            <h2>Toasts</h2>
+            <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
+                <i class="material-symbols">palette</i>
+            </button>
+            <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
+                <i class="material-symbols">dark_mode</i>
+            </a>
+        </nav>
+
+        <ul class="sidenav sidenav-fixed" id="nav-mobile">
+            <li class="">
+                <a href="/getting-started.html">
+                    <i class="material-symbols">home</i>
+                    Getting started
+                </a>
+            </li>
+            <li class="">
+                <a href="/auto-init.html">
+                    <i class="material-symbols">bolt</i>
+                    Auto Init
+                </a>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">palette</i>
+                            Foundations
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/color.html">Color</a>
+                                </li>
+                                <li class="">
+                                    <a href="/themes.html">Themes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/typography.html">Typography</a>
+                                </li>
+                                <li class="">
+                                    <a href="/icons.html">Icons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/shadow.html">Elevation</a>
+                                </li>
+                                <li class="">
+                                    <a href="/grid.html">Grid</a>
+                                </li>
+                                <li class="">
+                                    <a href="/helpers.html">Helpers</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media-css.html">Media styles</a>
+                                </li>
+                                <li class="">
+                                    <a href="/table.html">Table</a>
+                                </li>
+                                <li class="">
+                                    <a href="/css-transitions.html">Transitions</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pulse.html">Pulse</a>
+                                </li>
+                                <li class="">
+                                    <a href="/waves.html">Waves</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">view_quilt</i>
+                            Structure
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/navbar.html">App bar</a>
+                                </li>
+                                <li class="">
+                                    <a href="/sidenav.html">Sidenav</a>
+                                </li>
+                                <li class="">
+                                    <a href="/footer.html">Footer</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tabs.html">Tabs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/breadcrumbs.html">Breadcrumbs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pagination.html">Pagination</a>
+                                </li>
+                                <li class="">
+                                    <a href="/dropdown.html">Menu</a>
+                                </li>
+                                <li class="">
+                                    <a href="/scrollspy.html">Scrollspy</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav" open>
+                        <summary>
+                            <i class="material-symbols">widgets</i>
+                            Components
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/buttons.html">Buttons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/floating-action-button.html">FAB</a>
+                                </li>
+                                <li class="">
+                                    <a href="/cards.html">Cards</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collections.html">Collections</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collapsible.html">Collapsible</a>
+                                </li>
+                                <li class="">
+                                    <a href="/modals.html">Dialogs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/badges.html">Badges</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tooltips.html">Tooltips</a>
+                                </li>
+                                <li class="active">
+                                    <a href="/toasts.html">Toasts</a>
+                                </li>
+                                <li class="">
+                                    <a href="/preloader.html">Preloader</a>
+                                </li>
+                                <li class="">
+                                    <a href="/carousel.html">Carousel</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media.html">Lightbox</a>
+                                </li>
+                                <li class="">
+                                    <a href="/parallax.html">Parallax</a>
+                                </li>
+                                <li class="">
+                                    <a href="/feature-discovery.html">Feature Discovery</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toolbars.html">Toolbars</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">edit</i>
+                            Forms
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/fieldsets.html">Fieldsets</a>
+                                </li>
+                                <li class="">
+                                    <a href="/text-inputs.html">Text fields</a>
+                                </li>
+                                <li class="">
+                                    <a href="/select.html">Select</a>
+                                </li>
+                                <li class="">
+                                    <a href="/checkboxes.html">Checkboxes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/radio-buttons.html">Radio</a>
+                                </li>
+                                <li class="">
+                                    <a href="/switches.html">Switches</a>
+                                </li>
+                                <li class="">
+                                    <a href="/range.html">Range</a>
+                                </li>
+                                <li class="">
+                                    <a href="/chips.html">Chips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/autocomplete.html">Autocomplete</a>
+                                </li>
+                                <li class="">
+                                    <a href="/datepicker.html">Date picker</a>
+                                </li>
+                                <li class="">
+                                    <a href="/timepicker.html">Time picker</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        
+
+
+    <section class="section primary-container my-2 mx-6" id="index-banner">
+        <div class="container row py-5">
+            <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+                <h1 class="primary-text">Toasts</h1>
+                <h4 class="light primary-text">Material Design 3 snackbars, from the HTML.</h4>
+            </div>
+        </div>
+    </section>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>.snackbar</code> is the bar. A <code>&lt;p&gt;</code> is
+          the supporting text. A trailing <code>&lt;button&gt;</code> is
+          the action; a <code>.circle</code> button is the optional close.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/snackbar/specs">M3 snackbar spec</a>.
+          The container is <code>inverse-surface</code>, 4dp corners,
+          elevation 3, 48dp minimum. Supporting text is
+          <code>body-medium</code> / <code>inverse-on-surface</code>. The
+          action is a <code>label-large</code> /
+          <code>inverse-primary</code> text button. Close is a 24dp
+          <code>inverse-on-surface</code> icon. On compact viewports the
+          bar is inset 8dp from the edges; from the small breakpoint up it
+          hugs content (344–672dp) and sits 24dp from the start and the
+          bottom — not the top-right.
+        </p>
+        <p>
+          Toast is not in <code>AutoInit()</code> and there is no
+          <code>toast()</code> helper. Construct one when you need it, or
+          drop a static <code>.snackbar</code> in the page and add
+          <code>.active</code> to pin it to the viewport. Static bars do
+          not time out — that is CSS only.
+        </p>
+
+        <p>
+          <button type="button" id="toast-basic">Show</button>
+          <button type="button" class="tonal" id="toast-action">Show with action</button>
+          <button type="button" class="outlined" id="toast-close">Show with close</button>
+        </p>
+
+        <div class="snackbar">
+          <p>Photo saved to album</p>
+        </div>
+        <div class="snackbar">
+          <p>Item archived</p>
+          <button type="button">Undo</button>
+        </div>
+        <div class="snackbar">
+          <p>Can't send photo. Retry in 5 seconds.</p>
+          <button type="button">Retry</button>
+          <button type="button" class="circle" aria-label="Dismiss">
+            <i class="material-symbols">close</i>
+          </button>
+        </div>
+<pre><code>new Expressive.Toast({ text: 'Photo saved to album' });
+
+new Expressive.Toast({
+  text: 'Item archived',
+  action: 'Undo',
+  onAction: function() { /* restore */ }
+});
+
+new Expressive.Toast({
+  text: "Can't send photo. Retry in 5 seconds.",
+  action: 'Retry',
+  dismissible: true
+});</code></pre>
+        <p>
+          The constructor wraps <code>text</code> in a
+          <code>&lt;p&gt;</code> and appends the action and close when
+          those options are set. The live element gets both
+          <code>.toast</code> and <code>.snackbar</code>.
+        </p>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>Expressive.Toast</code>. Toast is
+          not in <code>AutoInit()</code> — construct one when you need it.
+        </p>
+<pre><code>new Expressive.Toast({
+  text: 'I am a toast!'
+});</code></pre>
+        <p>One way to hook that up is a click handler on a button:</p>
+<pre><code>&lt;button type="button" id="toast-basic"&gt;Show&lt;/button&gt;</code></pre>
+<pre><code>document.getElementById('toast-basic').addEventListener('click', function() {
+  new Expressive.Toast({ text: 'I am a toast!' });
+});</code></pre>
+      </div>
+
+      <div id="markup" class="section scrollspy">
+        <h3>Markup</h3>
+        <p>
+          The same anatomy works as static HTML. Without
+          <code>.active</code> the bar is in-flow — useful for previews.
+          With <code>.active</code> it pins to the bottom-start of the
+          viewport. Add <code>.top</code> to move it to the top, or
+          <code>.center</code> to center it horizontally.
+        </p>
+        <p>
+          <button type="button" class="tonal" id="toast-static">Show static snackbar</button>
+        </p>
+        <div class="snackbar" id="static-snackbar">
+          <i class="material-symbols">info</i>
+          <p>I'm a snackbar</p>
+          <button type="button">Action</button>
+        </div>
+<pre><code>&lt;div class="snackbar"&gt;
+  &lt;p&gt;Photo saved to album&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="snackbar"&gt;
+  &lt;p&gt;Item archived&lt;/p&gt;
+  &lt;button type="button"&gt;Undo&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div class="snackbar active"&gt;
+  &lt;i class="material-symbols"&gt;info&lt;/i&gt;
+  &lt;p&gt;I'm a snackbar&lt;/p&gt;
+  &lt;button type="button"&gt;Action&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          <code>.active</code> does not dismiss itself. Add and remove the
+          class, or use the constructor if you want the 4-second timer and
+          swipe-to-dismiss.
+        </p>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <p>You can customize each toast with these options.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>text</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Plain-text supporting text, wrapped in a <code>&lt;p&gt;</code>. If set, it replaces any HTML from <code>toastId</code>.</td>
+            </tr>
+            <tr>
+              <td><code>action</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Optional action label. Rendered as a trailing text button.</td>
+            </tr>
+            <tr>
+              <td><code>onAction</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the action button is pressed. The toast still dismisses.</td>
+            </tr>
+            <tr>
+              <td><code>dismissible</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Show a trailing close icon button.</td>
+            </tr>
+            <tr>
+              <td><code>toastId</code></td>
+              <td>String</td>
+              <td>—</td>
+              <td>Id of a <code>&lt;template&gt;</code> (or another element) used as the toast body.</td>
+            </tr>
+            <tr>
+              <td><code>displayLength</code></td>
+              <td>Number</td>
+              <td><code>4000</code></td>
+              <td>How long the toast stays before it dismisses, in milliseconds. M3 recommends 4–10 seconds.</td>
+            </tr>
+            <tr>
+              <td><code>inDuration</code></td>
+              <td>Number</td>
+              <td><code>300</code></td>
+              <td>Enter transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>outDuration</code></td>
+              <td>Number</td>
+              <td><code>375</code></td>
+              <td>Exit transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>classes</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Space-separated classes added to the toast. <code>rounded</code> is a stadium. <code>top</code> and <code>center</code> move the container.</td>
+            </tr>
+            <tr>
+              <td><code>completeCallback</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the toast is dismissed.</td>
+            </tr>
+            <tr>
+              <td><code>activationPercent</code></td>
+              <td>Number</td>
+              <td><code>0.8</code></td>
+              <td>Fraction of the toast’s width a drag must travel to dismiss it.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          Instance methods are called on the toast. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = Expressive.Toast.getInstance(elem);</code></pre>
+
+        <h5 class="light">.dismiss();</h5>
+        <p>Dismiss this toast with its exit animation. Runs <code>completeCallback</code> when the animation finishes.</p>
+<pre><code>instance.dismiss();</code></pre>
+
+        <h5 class="light">Toast.dismissAll();</h5>
+        <p>Dismiss every toast that is currently showing.</p>
+<pre><code>Expressive.Toast.dismissAll();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The toast element.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>panning</code></td>
+              <td>Boolean</td>
+              <td>Whether the toast is being dragged.</td>
+            </tr>
+            <tr>
+              <td><code>timeRemaining</code></td>
+              <td>Number</td>
+              <td>Milliseconds left before the toast dismisses.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="custom-html" class="section scrollspy">
+        <h3>Custom HTML</h3>
+        <p>
+          Pass <code>toastId</code> pointing at a
+          <code>&lt;template&gt;</code>. The first child of the template
+          is cloned as the toast. Leave <code>text</code> empty so the
+          HTML is kept. Use the same anatomy as a static snackbar.
+        </p>
+        <p>
+          <button type="button" class="tonal mr-3 mb-3" id="toast-html-1">Show Toast 1</button>
+          <button type="button" class="tonal mb-3" id="toast-html-2">Show Toast 2</button>
+        </p>
+        <template id="my-toast-1">
+          <div>
+            <p>This is toast nº1 with a <a href="https://github.com">link</a></p>
+          </div>
+        </template>
+        <template id="my-toast-2">
+          <div>
+            <i class="material-symbols">insert_chart</i>
+            <p>This is toast nº2</p>
+          </div>
+        </template>
+<pre><code>&lt;button type="button" class="tonal" id="toast-html-1"&gt;Show Toast 1&lt;/button&gt;
+&lt;template id="my-toast-1"&gt;
+  &lt;div&gt;
+    &lt;p&gt;This is toast nº1 with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+<pre><code>new Expressive.Toast({ toastId: 'my-toast-1' });</code></pre>
+      </div>
+
+      <div id="callback" class="section scrollspy">
+        <h3>Callback</h3>
+        <p>Run a function when the toast is dismissed.</p>
+        <p>
+          <button type="button" id="toast-callback">Show Toast</button>
+        </p>
+<pre><code>new Expressive.Toast({
+  text: 'I will call back when dismissed',
+  completeCallback: function() {
+    new Expressive.Toast({ text: 'Your toast was dismissed' });
+  }
+});</code></pre>
+      </div>
+
+      <div id="styling" class="section scrollspy">
+        <h3>Styling</h3>
+        <p>
+          Pass classes in the <code>classes</code> option.
+          <code>rounded</code> is a 24dp stadium — the M3 default is 4dp.
+          <code>top</code> moves the container to the top of the viewport;
+          <code>center</code> centers it horizontally. On larger screens
+          the default is start-aligned, 24dp from the start and the
+          bottom.
+        </p>
+        <p>
+          <button type="button" id="toast-rounded">Show round Toast</button>
+          <button type="button" class="tonal" id="toast-top">Show at top</button>
+        </p>
+<pre><code>new Expressive.Toast({
+  text: 'I am a toast!',
+  classes: 'rounded'
+});
+
+new Expressive.Toast({
+  text: 'Posted from the top',
+  classes: 'top'
+});</code></pre>
+      </div>
+
+      <div id="dismissal" class="section scrollspy">
+        <h3>Dismiss a Toast Programmatically</h3>
+        <p>
+          To remove a specific toast, get the instance from the toast
+          element and call <code>dismiss()</code>. Swipe also dismisses —
+          drag past 80% of the width (or flick). The action and close
+          buttons are not swipe handles.
+        </p>
+        <p>
+          <button type="button" class="mr-3 mb-3" id="toast-dismiss-show">Show Toast</button>
+          <button type="button" class="tonal mr-3 mb-3" id="toast-dismiss-one">Dismiss a toast</button>
+          <button type="button" class="tonal mb-3" id="toast-dismiss-all">Dismiss all</button>
+        </p>
+<pre><code>const toastElement = document.querySelector('.toast');
+const toastInstance = Expressive.Toast.getInstance(toastElement);
+toastInstance.dismiss();</code></pre>
+        <h5 class="light">Dismiss all Toasts</h5>
+<pre><code>Expressive.Toast.dismissAll();</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Introduction</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#markup">Markup</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#custom-html">Custom HTML</a></li>
+          <li><a href="#callback">Callback</a></li>
+          <li><a href="#styling">Styling</a></li>
+          <li><a href="#dismissal">Dismissing Toasts</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <nav>
+                <h2>Start</h2>
+                <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
+                <a href="/getting-started.html">Getting started</a>
+                <a href="/auto-init.html">Auto Init</a>
+            </nav>
+            <nav>
+                <h2>Foundations</h2>
+                <a href="/color.html">Color</a>
+                <a href="/themes.html">Themes</a>
+                <a href="/typography.html">Typography</a>
+                <a href="/icons.html">Icons</a>
+                <a href="/shadow.html">Elevation</a>
+                <a href="/grid.html">Grid</a>
+                <a href="/helpers.html">Helpers</a>
+                <a href="/media-css.html">Media styles</a>
+                <a href="/table.html">Table</a>
+                <a href="/css-transitions.html">Transitions</a>
+                <a href="/pulse.html">Pulse</a>
+                <a href="/waves.html">Waves</a>
+            </nav>
+            <nav>
+                <h2>Structure</h2>
+                <a href="/navbar.html">App bar</a>
+                <a href="/sidenav.html">Sidenav</a>
+                <a href="/footer.html">Footer</a>
+                <a href="/tabs.html">Tabs</a>
+                <a href="/breadcrumbs.html">Breadcrumbs</a>
+                <a href="/pagination.html">Pagination</a>
+                <a href="/dropdown.html">Menu</a>
+                <a href="/scrollspy.html">Scrollspy</a>
+            </nav>
+            <nav>
+                <h2>Components</h2>
+                <a href="/buttons.html">Buttons</a>
+                <a href="/floating-action-button.html">FAB</a>
+                <a href="/cards.html">Cards</a>
+                <a href="/collections.html">Collections</a>
+                <a href="/collapsible.html">Collapsible</a>
+                <a href="/modals.html">Dialogs</a>
+                <a href="/badges.html">Badges</a>
+                <a href="/tooltips.html">Tooltips</a>
+                <a href="/toasts.html">Toasts</a>
+                <a href="/preloader.html">Preloader</a>
+                <a href="/carousel.html">Carousel</a>
+                <a href="/media.html">Lightbox</a>
+                <a href="/parallax.html">Parallax</a>
+                <a href="/feature-discovery.html">Feature Discovery</a>
+                <a href="/toolbars.html">Toolbars</a>
+            </nav>
+            <nav>
+                <h2>Forms</h2>
+                <a href="/fieldsets.html">Fieldsets</a>
+                <a href="/text-inputs.html">Text fields</a>
+                <a href="/select.html">Select</a>
+                <a href="/checkboxes.html">Checkboxes</a>
+                <a href="/radio-buttons.html">Radio</a>
+                <a href="/switches.html">Switches</a>
+                <a href="/range.html">Range</a>
+                <a href="/chips.html">Chips</a>
+                <a href="/autocomplete.html">Autocomplete</a>
+                <a href="/datepicker.html">Date picker</a>
+                <a href="/timepicker.html">Time picker</a>
+            </nav>
+            <small>
+                <span>&copy; 2026 ExpressiveCSS</span>
+                <span>v0.3.0</span>
+            </small>
+        </div>
+    </footer>
+
+    <dialog id="source-color-dialog" aria-labelledby="source-color-title">
+        <i class="material-symbols">palette</i>
+        <h2 id="source-color-title">Source color</h2>
+        <div>
+            <p>
+                The seed every generated ramp derives from. Pick one and browse
+                the docs &mdash; the whole theme follows. Error does not: it is
+                a fixed hue.
+            </p>
+            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
+            </div>
+            <div class="source-color-custom">
+                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
+                <div class="field outlined">
+                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
+                    <label for="source-color-hex">Hex</label>
+                </div>
+            </div>
+            <div class="source-color-preview" aria-hidden="true">
+                <span class="source-color-chip primary on-primary-text">primary</span>
+                <span class="source-color-chip secondary on-secondary-text">secondary</span>
+                <span class="source-color-chip tertiary on-tertiary-text">tertiary</span>
+                <span class="source-color-chip error on-error-text">error</span>
+            </div>
+        </div>
+        <form method="dialog">
+            <button type="button" class="text" id="source-color-reset">Reset</button>
+            <button type="submit" value="done">Done</button>
+        </form>
+    </dialog>
+
+
+<script src="/dist/js/expressive.min.js"></script>
+<script src="/static/docs.js"></script>
+</body>
+</html>

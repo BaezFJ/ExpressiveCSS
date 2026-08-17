@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sidenav - ExpressiveCSS</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="/dist/css/expressive.min.css">
+    <link rel="stylesheet" href="/static/docs.css">
+    
+    <script>
+        (function () {
+            try {
+                var c = localStorage.getItem('md-source');
+                if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+                    document.documentElement.style.setProperty('--md-source', c);
+                }
+            } catch (e) {
+            }
+        })();
+    </script>
+    
+</head>
+<body class="docs">
+
+
+
+    <header class="fixed">
+        <nav>
+            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+                <i class="material-symbols">menu</i>
+            </button>
+            <h2>Sidenav</h2>
+            <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
+                <i class="material-symbols">palette</i>
+            </button>
+            <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
+                <i class="material-symbols">dark_mode</i>
+            </a>
+        </nav>
+
+        <ul class="sidenav sidenav-fixed" id="nav-mobile">
+            <li class="">
+                <a href="/getting-started.html">
+                    <i class="material-symbols">home</i>
+                    Getting started
+                </a>
+            </li>
+            <li class="">
+                <a href="/auto-init.html">
+                    <i class="material-symbols">bolt</i>
+                    Auto Init
+                </a>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">palette</i>
+                            Foundations
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/color.html">Color</a>
+                                </li>
+                                <li class="">
+                                    <a href="/themes.html">Themes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/typography.html">Typography</a>
+                                </li>
+                                <li class="">
+                                    <a href="/icons.html">Icons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/shadow.html">Elevation</a>
+                                </li>
+                                <li class="">
+                                    <a href="/grid.html">Grid</a>
+                                </li>
+                                <li class="">
+                                    <a href="/helpers.html">Helpers</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media-css.html">Media styles</a>
+                                </li>
+                                <li class="">
+                                    <a href="/table.html">Table</a>
+                                </li>
+                                <li class="">
+                                    <a href="/css-transitions.html">Transitions</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pulse.html">Pulse</a>
+                                </li>
+                                <li class="">
+                                    <a href="/waves.html">Waves</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav" open>
+                        <summary>
+                            <i class="material-symbols">view_quilt</i>
+                            Structure
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/navbar.html">App bar</a>
+                                </li>
+                                <li class="active">
+                                    <a href="/sidenav.html">Sidenav</a>
+                                </li>
+                                <li class="">
+                                    <a href="/footer.html">Footer</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tabs.html">Tabs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/breadcrumbs.html">Breadcrumbs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pagination.html">Pagination</a>
+                                </li>
+                                <li class="">
+                                    <a href="/dropdown.html">Menu</a>
+                                </li>
+                                <li class="">
+                                    <a href="/scrollspy.html">Scrollspy</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">widgets</i>
+                            Components
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/buttons.html">Buttons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/floating-action-button.html">FAB</a>
+                                </li>
+                                <li class="">
+                                    <a href="/cards.html">Cards</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collections.html">Collections</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collapsible.html">Collapsible</a>
+                                </li>
+                                <li class="">
+                                    <a href="/modals.html">Dialogs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/badges.html">Badges</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tooltips.html">Tooltips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toasts.html">Toasts</a>
+                                </li>
+                                <li class="">
+                                    <a href="/preloader.html">Preloader</a>
+                                </li>
+                                <li class="">
+                                    <a href="/carousel.html">Carousel</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media.html">Lightbox</a>
+                                </li>
+                                <li class="">
+                                    <a href="/parallax.html">Parallax</a>
+                                </li>
+                                <li class="">
+                                    <a href="/feature-discovery.html">Feature Discovery</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toolbars.html">Toolbars</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">edit</i>
+                            Forms
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/fieldsets.html">Fieldsets</a>
+                                </li>
+                                <li class="">
+                                    <a href="/text-inputs.html">Text fields</a>
+                                </li>
+                                <li class="">
+                                    <a href="/select.html">Select</a>
+                                </li>
+                                <li class="">
+                                    <a href="/checkboxes.html">Checkboxes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/radio-buttons.html">Radio</a>
+                                </li>
+                                <li class="">
+                                    <a href="/switches.html">Switches</a>
+                                </li>
+                                <li class="">
+                                    <a href="/range.html">Range</a>
+                                </li>
+                                <li class="">
+                                    <a href="/chips.html">Chips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/autocomplete.html">Autocomplete</a>
+                                </li>
+                                <li class="">
+                                    <a href="/datepicker.html">Date picker</a>
+                                </li>
+                                <li class="">
+                                    <a href="/timepicker.html">Time picker</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        
+
+
+    <section class="section primary-container my-2 mx-6" id="index-banner">
+        <div class="container row py-5">
+            <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+                <h1 class="primary-text">Sidenav</h1>
+                <h4 class="light primary-text">A slide-out menu, or a fixed sidebar on large screens.</h4>
+            </div>
+        </div>
+    </section>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="structure" class="section scrollspy">
+        <p class="flow-text">
+          This is a slide-out menu. You can nest a <a href="/collapsible.html">Collapsible</a> for
+          dropdown sections. On small screens the documentation sidebar uses this same component.
+        </p>
+        <p>
+          An overlay sidenav is a modal <code>&lt;dialog&gt;</code>.
+          The framework wraps your <code>&lt;ul class="sidenav"&gt;</code>;
+          <code>Escape</code> and a tap on the backdrop close it.
+          A <code>sidenav-fixed</code> drawer stays open on large screens as CSS —
+          no resize listener, no overlay.
+        </p>
+        <p>
+          The sidenav HTML must <strong>not</strong> sit inside the app bar’s
+          <code>&lt;nav&gt;</code>.
+          Put a <code>sidenav-trigger</code> anywhere and set <code>data-target</code> to the sidenav’s
+          <code>id</code>. <code>AutoInit()</code> starts every <code>.sidenav</code> except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <p>
+          <a href="#!" data-target="slide-out" class="button sidenav-trigger filled waves-effect">Toggle Sidenav</a>
+        </p>
+        <ul id="slide-out" class="sidenav no-autoinit">
+          <li>
+            <div class="user-view">
+              <div class="background">
+                <img src="https://picsum.photos/id/1015/600/400" alt="">
+              </div>
+              <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
+              <a href="#name"><span class="name">John Doe</span></a>
+              <a href="#email"><span class="email">jdoe@example.com</span></a>
+            </div>
+          </li>
+          <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+          <li><a href="#!">Second Link</a></li>
+          <li><div class="divider"></div></li>
+          <li><a class="subheader">Subheader</a></li>
+          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+          <li><a class="sidenav-close" href="#!">Close</a></li>
+        </ul>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;
+    &lt;div class="user-view"&gt;
+      &lt;div class="background"&gt;
+        &lt;img src="images/office.jpg" alt=""&gt;
+      &lt;/div&gt;
+      &lt;a href="#user"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
+      &lt;a href="#name"&gt;&lt;span class="name"&gt;John Doe&lt;/span&gt;&lt;/a&gt;
+      &lt;a href="#email"&gt;&lt;span class="email"&gt;jdoe@example.com&lt;/span&gt;&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;First Link With Icon&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Second Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;div class="divider"&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class="subheader"&gt;Subheader&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
+  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          The IIFE bundle exposes <code>Expressive.Sidenav</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>Expressive.AutoInit()</code> start every <code>.sidenav</code>.
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.sidenav');
+  const instances = Expressive.Sidenav.init(elems, {
+    // specify options here
+  });
+});</code></pre>
+        <p>If the sidenav contains a collapsible, AutoInit starts that too (selector <code>.collapsible</code>). To init it yourself:</p>
+<pre><code>const collapsibleElem = document.querySelector('.sidenav .collapsible');
+const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
+  // specify options here
+});</code></pre>
+      </div>
+
+      <div id="options" class="section scrollspy">
+        <h3>Options</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>edge</code></td>
+              <td>String</td>
+              <td><code>'left'</code></td>
+              <td>Side of the screen. <code>'left'</code> or <code>'right'</code>. The constructor adds <code>right-aligned</code> when the edge is right.</td>
+            </tr>
+            <tr>
+              <td><code>draggable</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Allow swipe gestures to open and close. Drag is disabled while the sidenav is fixed on large screens.</td>
+            </tr>
+            <tr>
+              <td><code>dragTargetWidth</code></td>
+              <td>String</td>
+              <td><code>'10px'</code></td>
+              <td>Width of the screen-edge strip where a drag can start.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav starts opening.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav finishes opening.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav starts closing.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the sidenav finishes closing.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <blockquote>
+          All methods are called on the plugin instance. You can get the instance like this:
+        </blockquote>
+<pre><code>const instance = Expressive.Sidenav.getInstance(elem);</code></pre>
+
+        <h5 class="light">.open();</h5>
+        <p>Opens the sidenav.</p>
+<pre><code>instance.open();</code></pre>
+
+        <h5 class="light">.close();</h5>
+        <p>Closes the sidenav.</p>
+<pre><code>instance.close();</code></pre>
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, unwrap the dialog host, and remove the drag target and event handlers.</p>
+<pre><code>instance.destroy();</code></pre>
+      </div>
+
+      <div id="properties" class="section scrollspy">
+        <h3>Properties</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>el</code></td>
+              <td>Element</td>
+              <td>The DOM element the plugin was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td>The options the instance was initialized with.</td>
+            </tr>
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Whether the overlay drawer is open. Stays false while a fixed sidenav is docked on large screens.</td>
+            </tr>
+            <tr>
+              <td><code>isFixed</code></td>
+              <td>Boolean</td>
+              <td>Whether the element has <code>sidenav-fixed</code>.</td>
+            </tr>
+            <tr>
+              <td><code>isDragged</code></td>
+              <td>Boolean</td>
+              <td>Whether the sidenav is being dragged.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="close-trigger" class="section scrollspy">
+        <h3>Close Trigger</h3>
+        <p>
+          Add <code>sidenav-close</code> to an element inside the sidenav. A click on that element
+          closes an overlay sidenav. That is useful in a single-page app where the page does not
+          reload. It does nothing while the sidenav is fixed on large screens.
+        </p>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;&lt;a class="sidenav-close" href="#!"&gt;Clicking this will close Sidenav&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
+  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+
+      <div id="variations" class="section scrollspy">
+        <h3>Variations</h3>
+
+        <h5 class="light">Right edge</h5>
+        <p>
+          Pass <code>edge: 'right'</code>. Mark the element <code>no-autoinit</code> if you initialize it
+          yourself, otherwise AutoInit would start it on the left.
+        </p>
+        <p>
+          <a href="#!" data-target="slide-out-right" class="button sidenav-trigger tonal waves-effect">Toggle Right Sidenav</a>
+        </p>
+        <ul id="slide-out-right" class="sidenav no-autoinit">
+          <li><a href="#!">First Sidebar Link</a></li>
+          <li><a href="#!">Second Sidebar Link</a></li>
+          <li><a class="sidenav-close" href="#!">Close</a></li>
+        </ul>
+<pre><code>Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
+  edge: 'right'
+});</code></pre>
+
+        <h5 class="light">Dropdown HTML Structure</h5>
+        <p>Add a collapsible menu inside the sidenav. The docs sidebar uses this for Styles and Components.</p>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="no-padding"&gt;
+    &lt;ul class="collapsible"&gt;
+      &lt;li&gt;
+        &lt;a class="collapsible-header"&gt;Dropdown&lt;i class="material-symbols"&gt;arrow_drop_down&lt;/i&gt;&lt;/a&gt;
+        &lt;div class="collapsible-body"&gt;
+          &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#!"&gt;First&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#!"&gt;Second&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+        <h5 class="light">Trigger on large screens</h5>
+        <p>
+          A <code>sidenav-trigger</code> inside a top app bar is hidden at the large breakpoint.
+          Add <code>show-on-large</code> if you want that trigger on every screen size.
+        </p>
+<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger show-on-large"&gt;
+  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+
+        <h5 class="light">Fixed HTML Structure</h5>
+        <p>
+          Add <code>sidenav-fixed</code> so the sidenav stays open on large screens (993px and up)
+          and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
+          The documentation sidebar on the left is this pattern.
+        </p>
+<pre><code>&lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
+  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
+&lt;/a&gt;</code></pre>
+        <p>
+          Offset the rest of the page by the sidenav width. The width token is
+          <code>--md-comp-nav-drawer-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
+          Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
+        </p>
+<pre><code>@media (width >= 993px) {
+  header, main, footer {
+    padding-left: var(--md-comp-nav-drawer-width);
+  }
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#structure">Structure</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#options">Options</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#close-trigger">Close Trigger</a></li>
+          <li><a href="#variations">Variations</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <nav>
+                <h2>Start</h2>
+                <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
+                <a href="/getting-started.html">Getting started</a>
+                <a href="/auto-init.html">Auto Init</a>
+            </nav>
+            <nav>
+                <h2>Foundations</h2>
+                <a href="/color.html">Color</a>
+                <a href="/themes.html">Themes</a>
+                <a href="/typography.html">Typography</a>
+                <a href="/icons.html">Icons</a>
+                <a href="/shadow.html">Elevation</a>
+                <a href="/grid.html">Grid</a>
+                <a href="/helpers.html">Helpers</a>
+                <a href="/media-css.html">Media styles</a>
+                <a href="/table.html">Table</a>
+                <a href="/css-transitions.html">Transitions</a>
+                <a href="/pulse.html">Pulse</a>
+                <a href="/waves.html">Waves</a>
+            </nav>
+            <nav>
+                <h2>Structure</h2>
+                <a href="/navbar.html">App bar</a>
+                <a href="/sidenav.html">Sidenav</a>
+                <a href="/footer.html">Footer</a>
+                <a href="/tabs.html">Tabs</a>
+                <a href="/breadcrumbs.html">Breadcrumbs</a>
+                <a href="/pagination.html">Pagination</a>
+                <a href="/dropdown.html">Menu</a>
+                <a href="/scrollspy.html">Scrollspy</a>
+            </nav>
+            <nav>
+                <h2>Components</h2>
+                <a href="/buttons.html">Buttons</a>
+                <a href="/floating-action-button.html">FAB</a>
+                <a href="/cards.html">Cards</a>
+                <a href="/collections.html">Collections</a>
+                <a href="/collapsible.html">Collapsible</a>
+                <a href="/modals.html">Dialogs</a>
+                <a href="/badges.html">Badges</a>
+                <a href="/tooltips.html">Tooltips</a>
+                <a href="/toasts.html">Toasts</a>
+                <a href="/preloader.html">Preloader</a>
+                <a href="/carousel.html">Carousel</a>
+                <a href="/media.html">Lightbox</a>
+                <a href="/parallax.html">Parallax</a>
+                <a href="/feature-discovery.html">Feature Discovery</a>
+                <a href="/toolbars.html">Toolbars</a>
+            </nav>
+            <nav>
+                <h2>Forms</h2>
+                <a href="/fieldsets.html">Fieldsets</a>
+                <a href="/text-inputs.html">Text fields</a>
+                <a href="/select.html">Select</a>
+                <a href="/checkboxes.html">Checkboxes</a>
+                <a href="/radio-buttons.html">Radio</a>
+                <a href="/switches.html">Switches</a>
+                <a href="/range.html">Range</a>
+                <a href="/chips.html">Chips</a>
+                <a href="/autocomplete.html">Autocomplete</a>
+                <a href="/datepicker.html">Date picker</a>
+                <a href="/timepicker.html">Time picker</a>
+            </nav>
+            <small>
+                <span>&copy; 2026 ExpressiveCSS</span>
+                <span>v0.3.0</span>
+            </small>
+        </div>
+    </footer>
+
+    <dialog id="source-color-dialog" aria-labelledby="source-color-title">
+        <i class="material-symbols">palette</i>
+        <h2 id="source-color-title">Source color</h2>
+        <div>
+            <p>
+                The seed every generated ramp derives from. Pick one and browse
+                the docs &mdash; the whole theme follows. Error does not: it is
+                a fixed hue.
+            </p>
+            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
+            </div>
+            <div class="source-color-custom">
+                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
+                <div class="field outlined">
+                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
+                    <label for="source-color-hex">Hex</label>
+                </div>
+            </div>
+            <div class="source-color-preview" aria-hidden="true">
+                <span class="source-color-chip primary on-primary-text">primary</span>
+                <span class="source-color-chip secondary on-secondary-text">secondary</span>
+                <span class="source-color-chip tertiary on-tertiary-text">tertiary</span>
+                <span class="source-color-chip error on-error-text">error</span>
+            </div>
+        </div>
+        <form method="dialog">
+            <button type="button" class="text" id="source-color-reset">Reset</button>
+            <button type="submit" value="done">Done</button>
+        </form>
+    </dialog>
+
+
+<script src="/dist/js/expressive.min.js"></script>
+<script src="/static/docs.js"></script>
+</body>
+</html>

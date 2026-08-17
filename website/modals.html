@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modals - ExpressiveCSS</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="/dist/css/expressive.min.css">
+    <link rel="stylesheet" href="/static/docs.css">
+    
+    <script>
+        (function () {
+            try {
+                var c = localStorage.getItem('md-source');
+                if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+                    document.documentElement.style.setProperty('--md-source', c);
+                }
+            } catch (e) {
+            }
+        })();
+    </script>
+    
+</head>
+<body class="docs">
+
+
+
+    <header class="fixed">
+        <nav>
+            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+                <i class="material-symbols">menu</i>
+            </button>
+            <h2>Modals</h2>
+            <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
+                <i class="material-symbols">palette</i>
+            </button>
+            <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
+                <i class="material-symbols">dark_mode</i>
+            </a>
+        </nav>
+
+        <ul class="sidenav sidenav-fixed" id="nav-mobile">
+            <li class="">
+                <a href="/getting-started.html">
+                    <i class="material-symbols">home</i>
+                    Getting started
+                </a>
+            </li>
+            <li class="">
+                <a href="/auto-init.html">
+                    <i class="material-symbols">bolt</i>
+                    Auto Init
+                </a>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">palette</i>
+                            Foundations
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/color.html">Color</a>
+                                </li>
+                                <li class="">
+                                    <a href="/themes.html">Themes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/typography.html">Typography</a>
+                                </li>
+                                <li class="">
+                                    <a href="/icons.html">Icons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/shadow.html">Elevation</a>
+                                </li>
+                                <li class="">
+                                    <a href="/grid.html">Grid</a>
+                                </li>
+                                <li class="">
+                                    <a href="/helpers.html">Helpers</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media-css.html">Media styles</a>
+                                </li>
+                                <li class="">
+                                    <a href="/table.html">Table</a>
+                                </li>
+                                <li class="">
+                                    <a href="/css-transitions.html">Transitions</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pulse.html">Pulse</a>
+                                </li>
+                                <li class="">
+                                    <a href="/waves.html">Waves</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">view_quilt</i>
+                            Structure
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/navbar.html">App bar</a>
+                                </li>
+                                <li class="">
+                                    <a href="/sidenav.html">Sidenav</a>
+                                </li>
+                                <li class="">
+                                    <a href="/footer.html">Footer</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tabs.html">Tabs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/breadcrumbs.html">Breadcrumbs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/pagination.html">Pagination</a>
+                                </li>
+                                <li class="">
+                                    <a href="/dropdown.html">Menu</a>
+                                </li>
+                                <li class="">
+                                    <a href="/scrollspy.html">Scrollspy</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav" open>
+                        <summary>
+                            <i class="material-symbols">widgets</i>
+                            Components
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/buttons.html">Buttons</a>
+                                </li>
+                                <li class="">
+                                    <a href="/floating-action-button.html">FAB</a>
+                                </li>
+                                <li class="">
+                                    <a href="/cards.html">Cards</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collections.html">Collections</a>
+                                </li>
+                                <li class="">
+                                    <a href="/collapsible.html">Collapsible</a>
+                                </li>
+                                <li class="active">
+                                    <a href="/modals.html">Dialogs</a>
+                                </li>
+                                <li class="">
+                                    <a href="/badges.html">Badges</a>
+                                </li>
+                                <li class="">
+                                    <a href="/tooltips.html">Tooltips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toasts.html">Toasts</a>
+                                </li>
+                                <li class="">
+                                    <a href="/preloader.html">Preloader</a>
+                                </li>
+                                <li class="">
+                                    <a href="/carousel.html">Carousel</a>
+                                </li>
+                                <li class="">
+                                    <a href="/media.html">Lightbox</a>
+                                </li>
+                                <li class="">
+                                    <a href="/parallax.html">Parallax</a>
+                                </li>
+                                <li class="">
+                                    <a href="/feature-discovery.html">Feature Discovery</a>
+                                </li>
+                                <li class="">
+                                    <a href="/toolbars.html">Toolbars</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible">
+                    <details name="docs-nav">
+                        <summary>
+                            <i class="material-symbols">edit</i>
+                            Forms
+                        </summary>
+                        <ul>
+                                <li class="">
+                                    <a href="/fieldsets.html">Fieldsets</a>
+                                </li>
+                                <li class="">
+                                    <a href="/text-inputs.html">Text fields</a>
+                                </li>
+                                <li class="">
+                                    <a href="/select.html">Select</a>
+                                </li>
+                                <li class="">
+                                    <a href="/checkboxes.html">Checkboxes</a>
+                                </li>
+                                <li class="">
+                                    <a href="/radio-buttons.html">Radio</a>
+                                </li>
+                                <li class="">
+                                    <a href="/switches.html">Switches</a>
+                                </li>
+                                <li class="">
+                                    <a href="/range.html">Range</a>
+                                </li>
+                                <li class="">
+                                    <a href="/chips.html">Chips</a>
+                                </li>
+                                <li class="">
+                                    <a href="/autocomplete.html">Autocomplete</a>
+                                </li>
+                                <li class="">
+                                    <a href="/datepicker.html">Date picker</a>
+                                </li>
+                                <li class="">
+                                    <a href="/timepicker.html">Time picker</a>
+                                </li>
+                            </ul>
+                    </details>
+                </div>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        
+
+
+    <section class="section primary-container my-2 mx-6" id="index-banner">
+        <div class="container row py-5">
+            <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
+                <h1 class="primary-text">Modals</h1>
+                <h4 class="light primary-text">Material Design 3 dialogs, from the HTML.</h4>
+            </div>
+        </div>
+    </section>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>&lt;dialog&gt;</code> is a basic dialog. A heading is the
+          headline, a <code>&lt;p&gt;</code> (or a wrapping
+          <code>&lt;div&gt;</code>) is supporting text, and the last child
+          <code>&lt;form method="dialog"&gt;</code> or <code>&lt;nav&gt;</code>
+          is the action row. There is no <code>modal-header</code>,
+          <code>modal-content</code>, or <code>modal-footer</code> class.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/dialogs/specs">M3 dialog spec</a>.
+          The container is <code>surface</code>, 28dp corners, 280–560dp wide,
+          elevation 3. The headline is <code>headline-small</code> /
+          <code>on-surface</code>; supporting text is <code>body-medium</code>.
+          The scrim is 32% <code>scrim</code> with a 12px blur. Opening with
+          <code>showModal()</code> also stops the page behind it from
+          scrolling. Actions sit at the end with an 8dp gap.
+        </p>
+        <p>
+          Open it with <code>showModal()</code> and close it with
+          <code>close()</code> — the Dialog API, not a plugin.
+        </p>
+        <p>
+          <button type="button" onclick="document.getElementById('modal-basic').showModal()">Show</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-icon').showModal()">Show with icon</button>
+          <button type="button" class="outlined" onclick="document.getElementById('modal-long').showModal()">Show with long content</button>
+        </p>
+
+        <dialog id="modal-basic">
+          <h2>Use location services?</h2>
+          <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="disagree">Disagree</button>
+            <button type="submit" value="agree">Agree</button>
+          </form>
+        </dialog>
+
+        <dialog id="modal-icon">
+          <i class="material-symbols">place</i>
+          <h2>Use location services?</h2>
+          <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="disagree">Disagree</button>
+            <button type="submit" value="agree">Agree</button>
+          </form>
+        </dialog>
+
+        <dialog id="modal-long">
+          <h2>Terms of service</h2>
+          <div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+          <form method="dialog">
+            <button type="submit" class="text" value="disagree">Disagree</button>
+            <button type="submit" value="agree">Agree</button>
+          </form>
+        </dialog>
+<pre><code>&lt;button type="button" onclick="document.getElementById('dialog1').showModal()"&gt;
+  Show
+&lt;/button&gt;
+
+&lt;dialog id="dialog1"&gt;
+  &lt;h2&gt;Use location services?&lt;/h2&gt;
+  &lt;p&gt;Let the app use your location to suggest nearby stops.&lt;/p&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button type="submit" class="text" value="disagree"&gt;Disagree&lt;/button&gt;
+    &lt;button type="submit" value="agree"&gt;Agree&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+        <p>
+          A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
+          submit button is pressed and sets <code>dialog.returnValue</code>
+          from the button’s <code>value</code>. An optional leading
+          <code>&lt;i&gt;</code> is the M3 dialog icon. Tapping the scrim
+          closes it too, but only if the press and the release both miss
+          the dialog.
+        </p>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+        <p>
+          Call these on the <code>&lt;dialog&gt;</code> element. See
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement" target="_blank" rel="noopener">HTMLDialogElement</a>
+          for the full API.
+        </p>
+        <h5 class="light">.showModal()</h5>
+        <p>Open as a modal, with the scrim.</p>
+<pre><code>dialog.showModal();</code></pre>
+        <h5 class="light">.close()</h5>
+        <p>Close the dialog.</p>
+<pre><code>dialog.close();</code></pre>
+        <p>
+          A tap or click on the scrim also closes it. Both ends of the
+          gesture have to land outside the dialog’s box, so a drag that
+          starts on the dialog — selecting text, missing a button — cannot
+          dismiss it. Set <code>closedby="none"</code> or
+          <code>closedby="closerequest"</code> to opt out.
+        </p>
+      </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-color</code></td>
+              <td><code>--md-sys-color-surface</code></td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-shape</code></td>
+              <td>28px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-min-width</code></td>
+              <td>280px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-max-width</code></td>
+              <td>560px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-sheet-width</code></td>
+              <td>400px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
+              <td>12px</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="sheets" class="section scrollspy">
+        <h3>Sheets</h3>
+        <p>
+          Add <code>top</code>, <code>right</code>, <code>bottom</code>, or
+          <code>left</code> to dock the dialog to that edge. The inner
+          corners keep the 28dp shape; the edge against the viewport is
+          square. <code>top-sheet</code>, <code>right-sheet</code>,
+          <code>bottom-sheet</code>, and <code>left-sheet</code> are
+          aliases. Side sheets are 400px wide
+          (<code>--md-comp-basic-dialog-sheet-width</code>); top and bottom
+          take the full width and half the viewport height.
+        </p>
+        <p>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-top').showModal()">Top</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-right').showModal()">Right</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-bottom').showModal()">Bottom</button>
+          <button type="button" class="tonal" onclick="document.getElementById('modal-left').showModal()">Left</button>
+        </p>
+        <dialog id="modal-top" class="top">
+          <h2>Top sheet</h2>
+          <p>Docked to the top. Useful for a compact status or filter bar.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+        <dialog id="modal-right" class="right">
+          <h2>Right sheet</h2>
+          <p>A side sheet for details, filters, or a short form that should stay next to the page.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+        <dialog id="modal-bottom" class="bottom">
+          <h2>Bottom sheet</h2>
+          <p>Bottom sheets are useful for a short list of actions.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+        <dialog id="modal-left" class="left">
+          <h2>Left sheet</h2>
+          <p>A side sheet docked to the start edge. Same width token as the right sheet.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+<pre><code>&lt;dialog class="top"&gt;…&lt;/dialog&gt;
+&lt;dialog class="right"&gt;…&lt;/dialog&gt;
+&lt;dialog class="bottom"&gt;…&lt;/dialog&gt;
+&lt;dialog class="left"&gt;…&lt;/dialog&gt;</code></pre>
+      </div>
+
+      <div id="fullscreen" class="section scrollspy">
+        <h3>Full-screen</h3>
+        <p>
+          Add <code>max</code> for a full-viewport dialog with no corners.
+          That is the M3 full-screen dialog, typically used on small screens.
+        </p>
+        <p>
+          <button type="button" class="outlined" onclick="document.getElementById('modal-max').showModal()">Show full-screen</button>
+        </p>
+        <dialog id="modal-max" class="max">
+          <h2>New message</h2>
+          <p>A full-screen dialog fills the viewport. Put the primary action in the form at the end.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+            <button type="submit" value="save">Save</button>
+          </form>
+        </dialog>
+<pre><code>&lt;dialog class="max"&gt;
+  &lt;h2&gt;New message&lt;/h2&gt;
+  &lt;p&gt;A full-screen dialog fills the viewport.&lt;/p&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button type="submit" class="text"&gt;Close&lt;/button&gt;
+    &lt;button type="submit"&gt;Save&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#methods">Methods</a></li>
+          <li><a href="#tokens">Tokens</a></li>
+          <li><a href="#sheets">Sheets</a></li>
+          <li><a href="#fullscreen">Full-screen</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <nav>
+                <h2>Start</h2>
+                <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
+                <a href="/getting-started.html">Getting started</a>
+                <a href="/auto-init.html">Auto Init</a>
+            </nav>
+            <nav>
+                <h2>Foundations</h2>
+                <a href="/color.html">Color</a>
+                <a href="/themes.html">Themes</a>
+                <a href="/typography.html">Typography</a>
+                <a href="/icons.html">Icons</a>
+                <a href="/shadow.html">Elevation</a>
+                <a href="/grid.html">Grid</a>
+                <a href="/helpers.html">Helpers</a>
+                <a href="/media-css.html">Media styles</a>
+                <a href="/table.html">Table</a>
+                <a href="/css-transitions.html">Transitions</a>
+                <a href="/pulse.html">Pulse</a>
+                <a href="/waves.html">Waves</a>
+            </nav>
+            <nav>
+                <h2>Structure</h2>
+                <a href="/navbar.html">App bar</a>
+                <a href="/sidenav.html">Sidenav</a>
+                <a href="/footer.html">Footer</a>
+                <a href="/tabs.html">Tabs</a>
+                <a href="/breadcrumbs.html">Breadcrumbs</a>
+                <a href="/pagination.html">Pagination</a>
+                <a href="/dropdown.html">Menu</a>
+                <a href="/scrollspy.html">Scrollspy</a>
+            </nav>
+            <nav>
+                <h2>Components</h2>
+                <a href="/buttons.html">Buttons</a>
+                <a href="/floating-action-button.html">FAB</a>
+                <a href="/cards.html">Cards</a>
+                <a href="/collections.html">Collections</a>
+                <a href="/collapsible.html">Collapsible</a>
+                <a href="/modals.html">Dialogs</a>
+                <a href="/badges.html">Badges</a>
+                <a href="/tooltips.html">Tooltips</a>
+                <a href="/toasts.html">Toasts</a>
+                <a href="/preloader.html">Preloader</a>
+                <a href="/carousel.html">Carousel</a>
+                <a href="/media.html">Lightbox</a>
+                <a href="/parallax.html">Parallax</a>
+                <a href="/feature-discovery.html">Feature Discovery</a>
+                <a href="/toolbars.html">Toolbars</a>
+            </nav>
+            <nav>
+                <h2>Forms</h2>
+                <a href="/fieldsets.html">Fieldsets</a>
+                <a href="/text-inputs.html">Text fields</a>
+                <a href="/select.html">Select</a>
+                <a href="/checkboxes.html">Checkboxes</a>
+                <a href="/radio-buttons.html">Radio</a>
+                <a href="/switches.html">Switches</a>
+                <a href="/range.html">Range</a>
+                <a href="/chips.html">Chips</a>
+                <a href="/autocomplete.html">Autocomplete</a>
+                <a href="/datepicker.html">Date picker</a>
+                <a href="/timepicker.html">Time picker</a>
+            </nav>
+            <small>
+                <span>&copy; 2026 ExpressiveCSS</span>
+                <span>v0.3.0</span>
+            </small>
+        </div>
+    </footer>
+
+    <dialog id="source-color-dialog" aria-labelledby="source-color-title">
+        <i class="material-symbols">palette</i>
+        <h2 id="source-color-title">Source color</h2>
+        <div>
+            <p>
+                The seed every generated ramp derives from. Pick one and browse
+                the docs &mdash; the whole theme follows. Error does not: it is
+                a fixed hue.
+            </p>
+            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
+            </div>
+            <div class="source-color-custom">
+                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
+                <div class="field outlined">
+                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
+                    <label for="source-color-hex">Hex</label>
+                </div>
+            </div>
+            <div class="source-color-preview" aria-hidden="true">
+                <span class="source-color-chip primary on-primary-text">primary</span>
+                <span class="source-color-chip secondary on-secondary-text">secondary</span>
+                <span class="source-color-chip tertiary on-tertiary-text">tertiary</span>
+                <span class="source-color-chip error on-error-text">error</span>
+            </div>
+        </div>
+        <form method="dialog">
+            <button type="button" class="text" id="source-color-reset">Reset</button>
+            <button type="submit" value="done">Done</button>
+        </form>
+    </dialog>
+
+
+<script src="/dist/js/expressive.min.js"></script>
+<script src="/static/docs.js"></script>
+</body>
+</html>
