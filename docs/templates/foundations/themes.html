@@ -50,7 +50,7 @@
           <code>prefers-color-scheme</code> and it does not persist to
           <code>localStorage</code>.
         </p>
-        <div class="card-panel">
+        <article>
           <p class="title-medium mt-0">These tokens follow the page theme</p>
           <p class="mb-3">
             Toggle the moon in the navbar — or the button in
@@ -69,10 +69,10 @@
               <div class="color-swatch error on-error-text">.error</div>
             </div>
           </div>
-          <a class="btn filled mr-2 mb-2">Filled</a>
-          <a class="btn tonal mr-2 mb-2">Tonal</a>
-          <a class="btn outlined mr-2 mb-2">Outlined</a>
-        </div>
+          <a class="button filled mr-2 mb-2">Filled</a>
+          <a class="button tonal mr-2 mb-2">Tonal</a>
+          <a class="button outlined mr-2 mb-2">Outlined</a>
+        </article>
       </div>
 
       <div id="reading-theme" class="section scrollspy">
@@ -136,7 +136,7 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
   setTheme(next);
 });</code></pre>
         <p>
-          <a id="page-theme-toggle" class="btn filled" href="#" title="Switch theme">
+          <a id="page-theme-toggle" class="button filled" href="#" title="Switch theme">
             <i class="material-symbols">dark_mode</i>Toggle theme
           </a>
         </p>
@@ -195,24 +195,24 @@ document.documentElement.setAttribute('theme', 'light');</code></pre>
           The same custom properties inherit, so a wrapper can preview a
           palette without touching the rest of the page:
         </p>
-        <div class="card-panel" style="--md-sys-color-primary: #6750a4; --md-sys-color-on-primary: #ffffff; --md-sys-color-primary-container: #eaddff; --md-sys-color-on-primary-container: #21005d;">
+        <article style="--md-sys-color-primary: #6750a4; --md-sys-color-on-primary: #ffffff; --md-sys-color-primary-container: #eaddff; --md-sys-color-on-primary-container: #21005d;">
           <p class="title-medium mt-0">Scoped preview</p>
           <p>
             This panel overrides primary on itself. The filled and tonal
             buttons pick up the new tokens; the rest of the page does not.
           </p>
-          <a class="btn filled mr-2 mb-2">Filled</a>
-          <a class="btn tonal mr-2 mb-2">Tonal</a>
-          <a class="btn outlined mr-2 mb-2">Outlined</a>
-        </div>
-<pre><code>&lt;div style="
+          <a class="button filled mr-2 mb-2">Filled</a>
+          <a class="button tonal mr-2 mb-2">Tonal</a>
+          <a class="button outlined mr-2 mb-2">Outlined</a>
+        </article>
+<pre><code>&lt;article style="
   --md-sys-color-primary: #6750a4;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-primary-container: #eaddff;
   --md-sys-color-on-primary-container: #21005d;
 "&gt;
-  &lt;a class="btn filled"&gt;Filled&lt;/a&gt;
-&lt;/div&gt;</code></pre>
+  &lt;a class="button filled"&gt;Filled&lt;/a&gt;
+&lt;/article&gt;</code></pre>
         <p>
           In Sass, consume the live token. The values are hex, so
           <code>rgba(var(--md-sys-color-primary), 0.06)</code> is invalid and

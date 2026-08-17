@@ -43,23 +43,15 @@ describe('AutoInit', () => {
     assert.ok(Expressive.Collapsible.getInstance(normal));
   });
 
-  test('.no-autoinit is honoured on every alternative of a multi-part selector', () => {
-    // Cards claims `.card, article:has(> aside), article:has(.card-reveal)`.
-    // `${selector}:not(.no-autoinit)` would bind the negation to the last
-    // alternative only, so a `.card.no-autoinit` - matching the *first* - got
-    // initialized anyway. AutoInit wraps the selector in :is() for this.
+  test('.no-autoinit is honoured on a card article', () => {
     document.body.innerHTML = `
-      <div class="card no-autoinit"><span class="activator">T</span><div class="card-reveal"><p>b</p></div></div>
-      <div class="card"><span class="activator">T</span><div class="card-reveal"><p>b</p></div></div>`;
-    const [optedOut, normal] = document.querySelectorAll('.card');
+      <article class="no-autoinit"><span class="activator">T</span><aside><p>b</p></aside></article>
+      <article><span class="activator">T</span><aside><p>b</p></aside></article>`;
+    const [optedOut, normal] = document.querySelectorAll('article');
 
     Expressive.AutoInit();
 
-    assert.equal(
-      Expressive.Cards.getInstance(optedOut),
-      undefined,
-      '.no-autoinit was ignored on the first alternative of the selector'
-    );
+    assert.equal(Expressive.Cards.getInstance(optedOut), undefined);
     assert.ok(Expressive.Cards.getInstance(normal), 'the opted-in card was not initialized');
   });
 

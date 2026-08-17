@@ -32,7 +32,7 @@ describe('FloatingActionButton toolbar mode', () => {
   test('opens without throwing and does not inject a backdrop', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large"><i class="material-symbols">add</i></a>
+        <a class="btn-floating large"><i class="material-symbols">add</i></a>
         <ul><li><a class="btn-floating"><i class="material-symbols">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
@@ -48,7 +48,7 @@ describe('FloatingActionButton toolbar mode', () => {
   test('closing clears .active and does not leave a backdrop', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large"><i class="material-symbols">add</i></a>
+        <a class="btn-floating large"><i class="material-symbols">add</i></a>
         <ul><li><a class="btn-floating"><i class="material-symbols">edit</i></a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
@@ -71,7 +71,7 @@ describe('FloatingActionButton toolbar mode', () => {
   });
 
   test('a FAB with no menu list does not throw', () => {
-    document.body.innerHTML = `<div class="fixed-action-btn"><a class="btn-floating btn-large">+</a></div>`;
+    document.body.innerHTML = `<div class="fixed-action-btn"><a class="btn-floating large">+</a></div>`;
 
     const instance = Expressive.FloatingActionButton.init(
       document.querySelector('.fixed-action-btn')
@@ -263,11 +263,11 @@ describe('optional markup does not crash a component', () => {
 
   test('a card reveal with no title', () => {
     document.body.innerHTML = `
-      <div class="card">
-        <div class="card-content"><span class="card-title activator">T</span></div>
-        <div class="card-reveal"><p>body</p></div>
-      </div>`;
-    const instance = Expressive.Cards.init(document.querySelector('.card'));
+      <article>
+        <span class="activator">T</span>
+        <aside><p>body</p></aside>
+      </article>`;
+    const instance = Expressive.Cards.init(document.querySelector('article'));
 
     instance.open();
     instance.close();
@@ -303,7 +303,7 @@ describe('optional markup does not crash a component', () => {
 
   test('a hover dropdown when the pointer leaves the window', () => {
     document.body.innerHTML = `
-      <a class="dropdown-trigger btn" data-target="dd">Drop</a>
+      <a class="button dropdown-trigger" data-target="dd">Drop</a>
       <ul id="dd" class="dropdown-content"><li><a href="#!">one</a></li></ul>`;
     const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'), {
       hover: true

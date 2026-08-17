@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Dropdown, DropdownOptions } from './dropdown';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface AutocompleteData {
   /**
@@ -154,7 +154,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param options Component options.
    */
   static init(
-    els: InitElements<HTMLInputElement | MElement>,
+    els: InitElements<HTMLInputElement | InitElement>,
     options?: Partial<AutocompleteOptions>
   ): Autocomplete[];
   /**
@@ -163,7 +163,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param options Component options.
    */
   static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | MElement>,
+    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
     options: Partial<AutocompleteOptions> = {}
   ): Autocomplete | Autocomplete[] {
     return super.init(els, options, Autocomplete);

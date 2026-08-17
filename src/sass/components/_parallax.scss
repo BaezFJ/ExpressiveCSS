@@ -2,7 +2,7 @@
 
 // Parallax. Anatomy is the HTML: a .parallax (or <figure class="parallax">)
 // clips an <img>, <picture>, or <video>. A heading / <p> / <figcaption> is
-// the overlay. .parallax-container is the old wrapper and still works.
+// the overlay.
 //
 // Motion is CSS. A named view timeline on the clip drives the image; without
 // animation-timeline the image is just object-fit: cover. JS does not scroll.
@@ -12,8 +12,7 @@
 //   --md-comp-parallax-travel   how far the image moves (64px)
 //   --md-comp-parallax-shape    12px, same as media / lightbox / slider
 
-.parallax,
-.parallax-container {
+.parallax {
   --md-comp-parallax-height: 500px;
   --md-comp-parallax-travel: 120px;
   --md-comp-parallax-shape: 12px;
@@ -29,22 +28,8 @@
   view-timeline-axis: block;
 }
 
-// Old markup: container > .parallax > img. The outer box is the clip;
-// the inner .parallax is just a fill, not a second 500px window.
-.parallax-container > .parallax {
-  position: absolute;
-  inset: 0;
-  height: auto;
-  margin: 0;
-  border-radius: 0;
-  overflow: visible;
-  view-timeline-name: none;
-}
-
 .parallax > :is(img, video),
-.parallax > picture,
-.parallax-container .parallax > :is(img, video),
-.parallax-container .parallax > picture {
+.parallax > picture {
   position: absolute;
   inset: 0;
   display: block;
@@ -53,8 +38,7 @@
   border: 0;
 }
 
-.parallax > picture img,
-.parallax-container .parallax > picture img {
+.parallax > picture img {
   display: block;
   width: 100%;
   height: 100%;
@@ -62,9 +46,7 @@
 }
 
 .parallax > :is(img, video),
-.parallax > picture img,
-.parallax-container .parallax > :is(img, video),
-.parallax-container .parallax > picture img {
+.parallax > picture img {
   object-fit: cover;
   object-position: center;
 }
@@ -95,8 +77,7 @@
 }
 
 // Full-bleed hero. Meets the viewport edges; no corners.
-.parallax.max,
-.parallax-container.max {
+.parallax.max {
   height: 100vh;
   height: 100dvh;
   border-radius: 0;
@@ -107,9 +88,7 @@
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .parallax > :is(img, video),
-    .parallax > picture img,
-    .parallax-container .parallax > :is(img, video),
-    .parallax-container .parallax > picture img {
+    .parallax > picture img {
       height: calc(100% + 2 * var(--md-comp-parallax-travel));
       inset: calc(-1 * var(--md-comp-parallax-travel)) 0 auto;
       animation: parallax-shift linear both;

@@ -26,7 +26,7 @@ section :is(button, a.button, .btn, .btn-floating) {
   body.docs > header,
   body.docs > main,
   body.docs > footer {
-    padding-left: var(--sidenav-width, 300px);
+    padding-left: var(--md-comp-nav-drawer-width, 300px);
   }
 }
 

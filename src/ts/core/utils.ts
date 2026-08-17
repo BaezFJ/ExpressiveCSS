@@ -344,7 +344,7 @@ export class Utils {
     visibility: boolean = true,
     callback: (Function: object) => void = null
   ): void {
-    className = className.concat(['btn', 'waves-effect', 'text']);
+    className = className.concat(['waves-effect', 'text']);
     const button = document.createElement('button');
     button.className = className.join(' ');
     button.style.visibility = visibility ? 'visible' : 'hidden';

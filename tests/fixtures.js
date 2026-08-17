@@ -9,7 +9,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Autocomplete',
     selector: '.autocomplete',
-    html: `<div class="input-field"><input class="autocomplete" type="text" id="ac"><label for="ac">A</label></div>`
+    html: `<div class="field"><input class="autocomplete" type="text" id="ac"><label for="ac">A</label></div>`
   },
   {
     // Semantic <article> + <aside>, which is what the docs use and what
@@ -34,7 +34,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Dropdown',
     selector: '.dropdown-trigger',
-    html: `<a class="dropdown-trigger btn" data-target="dropdown1">Drop</a><ul id="dropdown1" class="dropdown-content"><li><a href="#!">one</a></li></ul>`
+    html: `<a class="button dropdown-trigger" data-target="dropdown1">Drop</a><ul id="dropdown1" class="dropdown-content"><li><a href="#!">one</a></li></ul>`
   },
   {
     name: 'Lightbox',
@@ -55,7 +55,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'FormSelect',
     selector: 'select',
-    html: `<div class="input-field"><select><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label>Pick</label></div>`
+    html: `<div class="field"><select><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label>Pick</label></div>`
   },
   {
     name: 'Sidenav',
@@ -70,17 +70,17 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'TapTarget',
     selector: '.tap-target',
-    html: `<div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div><a id="menu-btn" class="btn">menu</a>`
+    html: `<div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div><a id="menu-btn" class="button">menu</a>`
   },
   { name: 'Timepicker', selector: '.timepicker', html: `<input type="text" class="timepicker">` },
   {
     name: 'Tooltip',
     selector: '.tooltipped',
-    html: `<a class="btn tooltipped" data-position="bottom" data-tooltip="Hi">Hover</a>`
+    html: `<a class="button tooltipped" data-position="bottom" data-tooltip="Hi">Hover</a>`
   },
   {
     name: 'FloatingActionButton',
     selector: '.fixed-action-btn',
-    html: `<div class="fixed-action-btn"><a class="btn-floating btn-large"><i class="material-symbols">add</i></a><ul><li><a class="btn-floating red"><i class="material-symbols">chart</i></a></li></ul></div>`
+    html: `<div class="fixed-action-btn"><a class="btn-floating large"><i class="material-symbols">add</i></a><ul><li><a class="btn-floating red"><i class="material-symbols">chart</i></a></li></ul></div>`
   }
 ];

@@ -5,7 +5,7 @@
 
 .hide { display: none !important; }
 
-.hide-on-small-only, .hide-on-small-and-down {
+.hide-on-small-only {
   @include bp-down("small") { display: none !important; }
 }
 

@@ -1,5 +1,5 @@
 import { Carousel } from './carousel';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface TabsOptions extends BaseOptions {
   /**
@@ -81,14 +81,14 @@ export class Tabs extends Component<TabsOptions> {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<TabsOptions>): Tabs[];
+  static init(els: InitElements<InitElement>, options?: Partial<TabsOptions>): Tabs[];
   /**
    * Initializes instances of Tabs.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<TabsOptions> = {}
   ): Tabs | Tabs[] {
     return super.init(els, options, Tabs);
@@ -136,7 +136,7 @@ export class Tabs extends Component<TabsOptions> {
 
   _queryTabLinks() {
     return this.el.querySelectorAll<HTMLAnchorElement>(
-      ':scope > a, :scope > .tab > a, :scope > li.tab > a'
+      ':scope > a, :scope > .tab > a'
     );
   }
 

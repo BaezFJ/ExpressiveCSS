@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface ScrollSpyOptions extends BaseOptions {
   /**
@@ -70,9 +70,9 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
   }
 
   static init(el: HTMLElement, options?: Partial<ScrollSpyOptions>): ScrollSpy;
-  static init(els: InitElements<MElement>, options?: Partial<ScrollSpyOptions>): ScrollSpy[];
+  static init(els: InitElements<InitElement>, options?: Partial<ScrollSpyOptions>): ScrollSpy[];
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<ScrollSpyOptions> = {}
   ): ScrollSpy | ScrollSpy[] {
     return super.init(els, options, ScrollSpy);

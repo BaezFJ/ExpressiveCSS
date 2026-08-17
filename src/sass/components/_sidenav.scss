@@ -19,12 +19,12 @@
 //   --md-comp-nav-drawer-easing
 //   --md-comp-nav-drawer-shift          0px   (JS, px from fully open)
 //   --md-comp-nav-drawer-open           1     (JS, 0–1 scrim opacity)
-//
-// --sidenav-* aliases stay for existing page offsets and badges.
+//   --md-comp-nav-drawer-font-size      14px
+//   --md-comp-nav-drawer-padding        16px
+//   --md-comp-nav-drawer-line-height    item height
 
 :root {
   --md-comp-nav-drawer-width: 300px;
-  --sidenav-width: var(--md-comp-nav-drawer-width);
 }
 
 dialog.sidenav-overlay,
@@ -34,10 +34,9 @@ dialog.sidenav {
   --md-comp-nav-drawer-easing: ease;
   --md-comp-nav-drawer-shift: 0px;
   --md-comp-nav-drawer-open: 1;
-  --sidenav-font-size: 14px;
-  --sidenav-padding: 16px;
-  --sidenav-item-height: var(--md-comp-nav-drawer-item-height);
-  --sidenav-line-height: var(--sidenav-item-height);
+  --md-comp-nav-drawer-font-size: 14px;
+  --md-comp-nav-drawer-padding: 16px;
+  --md-comp-nav-drawer-line-height: var(--md-comp-nav-drawer-item-height);
 
   box-sizing: border-box;
   width: var(--md-comp-nav-drawer-width);
@@ -128,10 +127,9 @@ dialog.sidenav {
 
 .sidenav {
   --md-comp-nav-drawer-item-height: 48px;
-  --sidenav-font-size: 14px;
-  --sidenav-padding: 16px;
-  --sidenav-item-height: var(--md-comp-nav-drawer-item-height);
-  --sidenav-line-height: var(--sidenav-item-height);
+  --md-comp-nav-drawer-font-size: 14px;
+  --md-comp-nav-drawer-padding: 16px;
+  --md-comp-nav-drawer-line-height: var(--md-comp-nav-drawer-item-height);
 
   box-sizing: border-box;
   position: fixed;
@@ -176,11 +174,11 @@ dialog.sidenav {
     display: flex;
     align-items: center;
     margin: 0 12px;
-    padding: 0 var(--sidenav-padding);
-    height: var(--sidenav-item-height);
+    padding: 0 var(--md-comp-nav-drawer-padding);
+    height: var(--md-comp-nav-drawer-item-height);
     overflow: hidden;
     border-radius: 100px;
-    font-size: var(--sidenav-font-size);
+    font-size: var(--md-comp-nav-drawer-font-size);
     font-weight: 500;
 
     &:not(.btn, .button, .btn-flat, .btn-large, .btn-floating) {
@@ -215,22 +213,22 @@ dialog.sidenav {
   }
 
   .divider {
-    margin: calc(var(--sidenav-padding) * 0.5) 0 0;
+    margin: calc(var(--md-comp-nav-drawer-padding) * 0.5) 0 0;
   }
 
   .subheader {
     cursor: initial;
     pointer-events: none;
     color: var(--md-sys-color-on-surface-variant);
-    font-size: var(--sidenav-font-size);
+    font-size: var(--md-comp-nav-drawer-font-size);
     font-weight: 500;
-    line-height: var(--sidenav-line-height);
+    line-height: var(--md-comp-nav-drawer-line-height);
   }
 
   .user-view {
     position: relative;
-    padding: calc(var(--sidenav-padding) * 2) calc(var(--sidenav-padding) * 2) 0;
-    margin-bottom: calc(var(--sidenav-padding) * 0.5);
+    padding: calc(var(--md-comp-nav-drawer-padding) * 2) calc(var(--md-comp-nav-drawer-padding) * 2) 0;
+    margin-bottom: calc(var(--md-comp-nav-drawer-padding) * 0.5);
 
     > a {
       height: auto;
@@ -261,8 +259,8 @@ dialog.sidenav {
 
     .name,
     .email {
-      font-size: var(--sidenav-font-size);
-      line-height: calc(var(--sidenav-line-height) * 0.5);
+      font-size: var(--md-comp-nav-drawer-font-size);
+      line-height: calc(var(--md-comp-nav-drawer-line-height) * 0.5);
     }
 
     .name {
@@ -313,7 +311,7 @@ dialog.sidenav-overlay:modal > .sidenav {
   }
 
   .sidenav .user-view {
-    padding: var(--sidenav-padding) var(--sidenav-padding) 0;
+    padding: var(--md-comp-nav-drawer-padding) var(--md-comp-nav-drawer-padding) 0;
   }
 }
 

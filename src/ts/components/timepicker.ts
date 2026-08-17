@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement, I18nOptions } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement, I18nOptions } from '../core/component';
 import { DockedDisplayPlugin } from '../plugins/dockedDisplayPlugin';
 
 export type Views = 'hours' | 'minutes';
@@ -217,7 +217,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * @param options Component options.
    */
   static init(
-    els: InitElements<HTMLInputElement | MElement>,
+    els: InitElements<HTMLInputElement | InitElement>,
     options?: Partial<TimepickerOptions>
   ): Timepicker[];
   /**
@@ -226,7 +226,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * @param options Component options.
    */
   static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | MElement>,
+    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
     options: Partial<TimepickerOptions> = {}
   ): Timepicker | Timepicker[] {
     return super.init(els, options, Timepicker);
@@ -410,7 +410,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   /*private _createButton(text: string, visibility: string): HTMLButtonElement {
     const button = document.createElement('button');
-    button.classList.add('btn', 'waves-effect', 'text');
+    button.classList.add('waves-effect', 'text');
     button.style.visibility = visibility;
     button.type = 'button';
     button.tabIndex = -1;
@@ -479,7 +479,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (this.options.twelveHour) {
       // AM Button
       this._amBtn = document.createElement('div');
-      this._amBtn.classList.add('am-btn', 'btn');
+      this._amBtn.classList.add('am-btn');
       this._amBtn.innerText = 'AM';
       this._amBtn.tabIndex = 0;
       this._amBtn.addEventListener('click', this._handleAmPmClick);
@@ -487,7 +487,7 @@ export class Timepicker extends Component<TimepickerOptions> {
       this.spanAmPm.appendChild(this._amBtn);
       // PM Button
       this._pmBtn = document.createElement('div');
-      this._pmBtn.classList.add('pm-btn', 'btn');
+      this._pmBtn.classList.add('pm-btn');
       this._pmBtn.innerText = 'PM';
       this._pmBtn.tabIndex = 0;
       this._pmBtn.addEventListener('click', this._handleAmPmClick);

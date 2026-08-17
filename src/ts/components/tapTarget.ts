@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement, Openable } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
 export interface TapTargetOptions extends BaseOptions {
   /**
@@ -70,9 +70,9 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   }
 
   static init(el: HTMLElement, options?: Partial<TapTargetOptions>): TapTarget;
-  static init(els: InitElements<MElement>, options?: Partial<TapTargetOptions>): TapTarget[];
+  static init(els: InitElements<InitElement>, options?: Partial<TapTargetOptions>): TapTarget[];
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<TapTargetOptions> = {}
   ): TapTarget | TapTarget[] {
     return super.init(els, options, TapTarget);
@@ -230,7 +230,7 @@ export class TapTarget extends Component<TapTargetOptions> implements Openable {
   private _setupEventHandlers() {
     if (!this.originEl) return;
     this.originEl.addEventListener('click', this._handleTargetToggle);
-    if (!this.originEl.matches('button, a, [tabindex], .btn, [role="button"]')) {
+    if (!this.originEl.matches('button, a, [tabindex], [role="button"]')) {
       this.originEl.tabIndex = 0;
       this.originEl.addEventListener('keydown', this._handleOriginKeydown);
     }

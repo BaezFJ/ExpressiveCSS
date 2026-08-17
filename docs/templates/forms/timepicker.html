@@ -20,16 +20,16 @@
           The clock is inline, not a modal. It is appended to the input’s parent and stays
           visible. There is no <code>openByDefault</code> flag.
         </p>
-        <div class="input-field mb-3">
+        <div class="field mb-3">
           <input type="text" class="timepicker" id="timepicker-intro">
           <label for="timepicker-intro">Lunchtime</label>
         </div>
-<pre><code>&lt;div class="input-field"&gt;
+<pre><code>&lt;div class="field"&gt;
   &lt;input type="text" class="timepicker" id="lunchtime"&gt;
   &lt;label for="lunchtime"&gt;Lunchtime&lt;/label&gt;
 &lt;/div&gt;</code></pre>
         <p>
-          Wrap the input in its own <code>.input-field</code> (or another small parent). The
+          Wrap the input in its own <code>.field</code> (or another small parent). The
           clock is appended inside that parent.
         </p>
         <p>
@@ -82,7 +82,7 @@
         <p>
           The popover is positioned in document coordinates and then appended to the
           input’s parent. A <code>position: relative</code> parent — including
-          <code>.input-field</code> — shifts that position, so the clock will not sit
+          <code>.field</code> — shifts that position, so the clock will not sit
           next to the field. Prefer a static wrapper if you use docked, or keep the
           clock inline.
         </p>
@@ -235,7 +235,7 @@
           1–12 on the inner ring, 13–00 on the outer ring. The written value is then
           <code>HH:MM</code> with no meridian.
         </p>
-        <div class="input-field mb-3">
+        <div class="field mb-3">
           <input type="text" class="timepicker no-autoinit" id="timepicker-24">
           <label for="timepicker-24">24-hour</label>
         </div>

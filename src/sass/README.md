@@ -79,9 +79,6 @@ exclusive comparator, so the old `600.99px` / `992.99px` values used to stop
 `max-width` and `min-width` both matching on the boundary pixel are gone, and
 each boundary is written once.
 
-The interpolated-string form (`@media #{$medium-and-up}`) still compiles and now
-produces the same range queries, but it is deprecated and unused in here.
-
 ## Theming
 
 `tokens/_reference.scss` **generates** five of the six M3 tonal ramps from

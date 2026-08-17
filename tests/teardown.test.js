@@ -131,7 +131,7 @@ describe('destroy() releases shared listeners', () => {
 
   test('Dropdown detaches the handlers open() adds', async () => {
     document.body.innerHTML = `
-      <a class="dropdown-trigger btn" data-target="dropdown1">Drop</a>
+      <a class="button dropdown-trigger" data-target="dropdown1">Drop</a>
       <ul id="dropdown1" class="dropdown-content"><li><a href="#!">one</a></li></ul>`;
     const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
 
@@ -147,7 +147,7 @@ describe('destroy() releases shared listeners', () => {
   test('FloatingActionButton detaches the document handlers open() adds', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large">+</a>
+        <a class="btn-floating large">+</a>
         <ul><li><a class="btn-floating">e</a></li></ul>
       </div>`;
     const instance = Expressive.FloatingActionButton.init(document.querySelector('.fixed-action-btn'));
@@ -177,7 +177,7 @@ describe('destroy() releases shared listeners', () => {
   test('TapTarget detaches its resize listener and does not add document click handlers', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div>
-      <a id="menu-btn" class="btn">menu</a>`;
+      <a id="menu-btn" class="button">menu</a>`;
     const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
 
     instance.open();
@@ -210,7 +210,7 @@ describe('destroy() clears the instance off the element', () => {
   beforeEach(resetBody);
 
   test('CharacterCounter', () => {
-    document.body.innerHTML = `<div class="input-field"><input type="text" maxlength="10"></div>`;
+    document.body.innerHTML = `<div class="field"><input type="text" maxlength="10"></div>`;
     const el = document.querySelector('input');
     const instance = Expressive.CharacterCounter.init(el);
 
@@ -224,8 +224,8 @@ describe('destroy() clears the instance off the element', () => {
   });
 
   test('Cards', () => {
-    document.body.innerHTML = `<div class="card"><div class="card-content"><span class="card-title activator">T</span></div><div class="card-reveal"><span class="card-title">T</span><p>body</p></div></div>`;
-    const el = document.querySelector('.card');
+    document.body.innerHTML = `<article><h3 class="activator">T</h3><aside><h4>T</h4><p>body</p></aside></article>`;
+    const el = document.querySelector('article');
     const instance = Expressive.Cards.init(el);
 
     instance.destroy();

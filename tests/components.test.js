@@ -152,7 +152,7 @@ describe('TapTarget', () => {
     <div class="tap-target" data-target="menu-btn">
       <div class="tap-target-content"><h5>Title</h5><p>Body</p></div>
     </div>
-    <a id="menu-btn" class="btn">menu</a>`;
+    <a id="menu-btn" class="button">menu</a>`;
 
   test('open() and close() toggle isOpen and the wrapper class', () => {
     document.body.innerHTML = html;
@@ -176,7 +176,7 @@ describe('TapTarget', () => {
           <div class="tap-target-content"><h5>Title</h5></div>
         </div>
       </div>
-      <a id="menu-btn" class="btn">menu</a>`;
+      <a id="menu-btn" class="button">menu</a>`;
     const el = document.querySelector('.tap-target');
     const parent = el.parentElement;
     Expressive.TapTarget.init(el);
@@ -189,8 +189,8 @@ describe('TapTarget', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target="a"><div class="tap-target-content"><h5>A</h5></div></div>
       <div class="tap-target" data-target="b"><div class="tap-target-content"><h5>B</h5></div></div>
-      <a id="a" class="btn">A</a>
-      <a id="b" class="btn">B</a>`;
+      <a id="a" class="button">A</a>
+      <a id="b" class="button">B</a>`;
     const [first, second] = document.querySelectorAll('.tap-target');
     const a = Expressive.TapTarget.init(first);
     const b = Expressive.TapTarget.init(second);
@@ -209,7 +209,7 @@ describe('FloatingActionButton', () => {
   test('open() and close() toggle .active', () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
-        <a class="btn-floating btn-large">+</a>
+        <a class="btn-floating large">+</a>
         <ul><li><a class="btn-floating">e</a></li></ul>
       </div>`;
     const el = document.querySelector('.fixed-action-btn');
@@ -267,7 +267,7 @@ describe('FormSelect', () => {
   beforeEach(resetBody);
 
   const fieldHtml = `
-    <div class="input-field">
+    <div class="field">
       <select id="pick">
         <option value="" disabled selected>Choose</option>
         <option value="1">One</option>
@@ -292,15 +292,15 @@ describe('FormSelect', () => {
     );
   });
 
-  test('reuses an existing .input-field instead of nesting another', () => {
+  test('reuses an existing .field instead of nesting another', () => {
     document.body.innerHTML = fieldHtml;
-    const field = document.querySelector('.input-field');
+    const field = document.querySelector('.field');
     const instance = Expressive.FormSelect.init(document.querySelector('select'));
 
     assert.equal(instance.wrapper, field);
     assert.ok(field.classList.contains('select-wrapper'));
-    assert.equal(document.querySelectorAll('.input-field').length, 1);
-    assert.equal(field.querySelectorAll('.input-field').length, 0);
+    assert.equal(document.querySelectorAll('.field').length, 1);
+    assert.equal(field.querySelectorAll('.field').length, 0);
     instance.destroy();
     assert.equal(field.classList.contains('select-wrapper'), false);
     assert.equal(document.querySelector('select').parentElement, field);
@@ -453,7 +453,7 @@ describe('CharacterCounter', () => {
   beforeEach(resetBody);
 
   test('counts input against maxlength and flags overflow', () => {
-    document.body.innerHTML = `<div class="input-field"><input id="t" type="text" maxlength="5"></div>`;
+    document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="5"></div>`;
     const input = document.querySelector('#t');
     Expressive.CharacterCounter.init(input);
     const counter = document.querySelector('.character-counter');

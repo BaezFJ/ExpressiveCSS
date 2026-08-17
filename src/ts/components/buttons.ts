@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, MElement, Openable } from "../core/component";
+import { Component, BaseOptions, InitElements, InitElement, Openable } from "../core/component";
 import { Utils } from '../core/utils';
 
 export interface FloatingActionButtonOptions extends BaseOptions {
@@ -91,11 +91,11 @@ export class FloatingActionButton
     options?: Partial<FloatingActionButtonOptions>
   ): FloatingActionButton;
   static init(
-    els: InitElements<MElement>,
+    els: InitElements<InitElement>,
     options?: Partial<FloatingActionButtonOptions>
   ): FloatingActionButton[];
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<FloatingActionButtonOptions> = {}
   ): FloatingActionButton | FloatingActionButton[] {
     return super.init(els, options, FloatingActionButton);

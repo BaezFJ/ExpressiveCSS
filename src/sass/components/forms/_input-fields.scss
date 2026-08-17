@@ -2,10 +2,10 @@
 
 // Text fields.
 //
-// Anatomy is the HTML. .field (or .input-field) is the container. The
-// <label> after the control is the floating label. A leading <i> is the
-// leading icon. <small> is supporting text. .outlined / .border is the
-// outlined variant; the default is filled.
+// Anatomy is the HTML. .field is the container. The <label> after the
+// control is the floating label. A leading <i> is the leading icon.
+// <small> is supporting text. .outlined is the outlined variant; the
+// default is filled.
 //
 // Tokens follow https://m3.material.io/components/text-fields/specs
 //   filled     surface-variant well, 1rem corners, 1dp/2dp bottom indicator
@@ -34,8 +34,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   font-family: $font-stack;
 }
 
-.field,
-.input-field {
+.field {
   --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-variant);
   --md-comp-filled-text-field-container-shape: 1rem;
   --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
@@ -155,8 +154,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     font-family: $font-stack;
   }
 
-  > i:first-child:not(.suffix),
-  > .prefix {
+  > i:first-child {
     position: absolute;
     left: 12px;
     top: 16px;
@@ -171,8 +169,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     pointer-events: none;
   }
 
-  > .suffix,
-  > i.suffix {
+  > i:last-child:not(:first-child) {
     position: absolute;
     right: 12px;
     top: 16px;
@@ -186,28 +183,22 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     user-select: none;
   }
 
-  > i:first-child:not(.suffix) ~ input,
-  > i:first-child:not(.suffix) ~ textarea,
-  > .prefix ~ input,
-  > .prefix ~ textarea {
+  > i:first-child ~ input,
+  > i:first-child ~ textarea {
     padding-left: 52px;
   }
 
-  > .suffix ~ input,
-  > .suffix ~ textarea,
-  > i.suffix ~ input,
-  > i.suffix ~ textarea {
+  &:has(> i:last-child:not(:first-child)) > input,
+  &:has(> i:last-child:not(:first-child)) > textarea {
     padding-right: 52px;
   }
 
-  > i:first-child:not(.suffix) ~ label,
-  > i:first-child:not(.suffix) ~ span:not(.supporting-text, .character-counter),
-  > .prefix ~ label {
+  > i:first-child ~ label,
+  > i:first-child ~ span:not(.supporting-text, .character-counter) {
     left: 52px;
   }
 
-  &.outlined,
-  &.border {
+  &.outlined {
     > input,
     > textarea {
       padding-top: 8px;
@@ -256,7 +247,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
 }
 
 .searchbar {
-  .prefix {
+  > i:first-child {
     position: absolute;
     padding-left: 1rem;
     top: 0;

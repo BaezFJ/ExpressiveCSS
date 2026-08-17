@@ -4,8 +4,7 @@
 //
 // Anatomy is the HTML. A <dialog> is a basic dialog. A heading is the
 // headline, a <p> (or a wrapping <div>) is supporting text, and the last
-// child <form method="dialog"> or <nav> is the action row. .modal and
-// .modal-header / .modal-content / .modal-footer stay as aliases.
+// child <form method="dialog"> or <nav> is the action row.
 //
 // Tokens follow https://m3.material.io/components/dialogs/specs
 //   container    surface, 28dp corners, 280–560dp, elevation 3
@@ -16,8 +15,7 @@
 //   scrim        32% + 12px blur
 //   padding      24dp
 
-dialog,
-.modal {
+dialog {
   --md-comp-basic-dialog-container-color: var(--md-sys-color-surface);
   --md-comp-basic-dialog-container-shape: 28px;
   --md-comp-basic-dialog-container-min-width: 280px;
@@ -51,8 +49,7 @@ html:has(dialog:modal) {
   overflow: hidden;
 }
 
-dialog[open],
-.modal[open] {
+dialog[open] {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -71,8 +68,7 @@ dialog > i:first-child {
   color: var(--md-sys-color-secondary);
 }
 
-dialog > :is(h1, h2, h3, h4, h5, h6),
-.modal-header {
+dialog > :is(h1, h2, h3, h4, h5, h6) {
   flex: 0 0 auto;
   margin: 0;
   padding: 24px 24px 16px;
@@ -90,8 +86,7 @@ dialog > i:first-child + :is(h1, h2, h3, h4, h5, h6) {
 }
 
 dialog > p,
-dialog > div,
-.modal-content {
+dialog > div {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
@@ -106,14 +101,12 @@ dialog > div,
   color: color-mix(in oklab, currentColor 72%, transparent);
 }
 
-dialog > :is(h1, h2, h3, h4, h5, h6) + p,
-.modal-header + .modal-content {
+dialog > :is(h1, h2, h3, h4, h5, h6) + p {
   padding-top: 0;
 }
 
 // Action row. form[method=dialog] is the native close mechanism.
-dialog > :is(form, nav):last-child,
-.modal-footer {
+dialog > :is(form, nav):last-child {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -126,16 +119,11 @@ dialog > :is(form, nav):last-child,
   background: none;
 }
 
-.modal-close {
-  cursor: pointer;
-}
-
 // Full-screen (M3). Takes the viewport; no corners.
 // UA `dialog:modal` sets max-width: calc(100% - 2em - 6px). Without
 // clearing it, width: 100% is capped and a strip of scrim shows on the
 // right. Bottom sheet already overrides this.
-dialog.max,
-.modal.max {
+dialog.max {
   width: 100%;
   max-width: none;
   height: 100%;
@@ -149,8 +137,7 @@ dialog.max,
 // the edge against the viewport is square. `left` / `right` also float
 // via the helper utilities (`!important`), so sheets reset that.
 dialog.bottom,
-dialog.bottom-sheet,
-.modal.bottom-sheet {
+dialog.bottom-sheet {
   width: 100%;
   min-width: 0;
   max-width: none;
@@ -161,8 +148,7 @@ dialog.bottom-sheet,
 }
 
 dialog.top,
-dialog.top-sheet,
-.modal.top-sheet {
+dialog.top-sheet {
   width: 100%;
   min-width: 0;
   max-width: none;
@@ -174,10 +160,8 @@ dialog.top-sheet,
 
 dialog.left,
 dialog.left-sheet,
-.modal.left-sheet,
 dialog.right,
-dialog.right-sheet,
-.modal.right-sheet {
+dialog.right-sheet {
   float: none !important;
   width: min(var(--md-comp-basic-dialog-sheet-width), 85%);
   max-width: none;
@@ -190,8 +174,7 @@ dialog.right-sheet,
 }
 
 dialog.left,
-dialog.left-sheet,
-.modal.left-sheet {
+dialog.left-sheet {
   inset-inline-start: 0;
   inset-inline-end: auto;
   border-radius: 0 var(--md-comp-basic-dialog-container-shape)
@@ -199,8 +182,7 @@ dialog.left-sheet,
 }
 
 dialog.right,
-dialog.right-sheet,
-.modal.right-sheet {
+dialog.right-sheet {
   inset-inline-start: auto;
   inset-inline-end: 0;
   border-radius: var(--md-comp-basic-dialog-container-shape) 0 0

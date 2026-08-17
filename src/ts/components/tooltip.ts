@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Bounding } from '../core/bounding';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -121,14 +121,14 @@ export class Tooltip extends Component<TooltipOptions> {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<TooltipOptions>): Tooltip[];
+  static init(els: InitElements<InitElement>, options?: Partial<TooltipOptions>): Tooltip[];
   /**
    * Initializes instances of Tooltip.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<TooltipOptions> = {}
   ): Tooltip | Tooltip[] {
     return super.init(els, options, Tooltip);

@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { BaseOptions, Component, InitElements, MElement } from '../core/component';
+import { BaseOptions, Component, InitElements, InitElement } from '../core/component';
 
 export interface LightboxOptions extends BaseOptions {
   /**
@@ -105,14 +105,14 @@ export class Lightbox extends Component<LightboxOptions> {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<LightboxOptions>): Lightbox[];
+  static init(els: InitElements<InitElement>, options?: Partial<LightboxOptions>): Lightbox[];
   /**
    * Initializes instances of Lightbox.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<LightboxOptions> = {}
   ): Lightbox | Lightbox[] {
     return super.init(els, options, Lightbox);

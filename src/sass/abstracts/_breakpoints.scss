@@ -51,19 +51,3 @@ $breakpoints: (
     @content;
   }
 }
-
-// Deprecated: the interpolated-string breakpoints.
-//
-// Kept so a downstream `@media #{$medium-and-up}` keeps compiling - the
-// framework itself no longer uses them. Values are now range syntax, so the
-// queries they produce match the mixins above exactly. Prefer the mixins.
-$small-screen-up: breakpoint("small") !default;
-$medium-screen-up: breakpoint("large") !default;
-$large-screen-up: breakpoint("xlarge") !default;
-
-$medium-and-up: "(width >= #{breakpoint('small')})" !default;
-$large-and-up: "(width >= #{breakpoint('large')})" !default;
-$extra-large-and-up: "(width >= #{breakpoint('xlarge')})" !default;
-$small-and-down: "(width < #{breakpoint('small')})" !default;
-$medium-and-down: "(width < #{breakpoint('large')})" !default;
-$medium-only: "(#{breakpoint('small')} <= width < #{breakpoint('large')})" !default;

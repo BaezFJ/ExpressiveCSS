@@ -22,11 +22,11 @@
           the input does not reveal it. Pass <code>openByDefault: true</code>
           to show the calendar under the field.
         </p>
-        <div class="input-field">
+        <div class="field">
           <input type="text" class="datepicker no-autoinit" id="datepicker-intro">
           <label for="datepicker-intro">Birthdate</label>
         </div>
-<pre><code>&lt;div class="input-field"&gt;
+<pre><code>&lt;div class="field"&gt;
   &lt;input type="text" class="datepicker" id="birthdate"&gt;
   &lt;label for="birthdate"&gt;Birthdate&lt;/label&gt;
 &lt;/div&gt;</code></pre>
@@ -34,7 +34,7 @@
   openByDefault: true
 });</code></pre>
         <p>
-          Wrap the input in its own <code>.input-field</code> (or another small parent). The
+          Wrap the input in its own <code>.field</code> (or another small parent). The
           calendar is inserted after that parent, not after the input itself.
         </p>
       </div>
@@ -86,7 +86,7 @@
         <p>
           The popover is positioned in document coordinates and then appended to the
           input’s parent. A <code>position: relative</code> parent — including
-          <code>.input-field</code> — shifts that position, so the calendar will not sit
+          <code>.field</code> — shifts that position, so the calendar will not sit
           next to the field. Prefer a static wrapper if you use docked, or keep the
           calendar inline with <code>openByDefault</code>.
         </p>
@@ -438,11 +438,11 @@
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
           input is created next to the first.
         </p>
-        <div class="input-field">
+        <div class="field">
           <input type="text" class="datepicker no-autoinit" id="datepicker-range">
           <label for="datepicker-range">Start date</label>
         </div>
-        <div class="input-field mb-3">
+        <div class="field mb-3">
           <input type="text" id="datepicker-range-end">
           <label for="datepicker-range-end">End date</label>
         </div>
@@ -459,7 +459,7 @@
           Set <code>isMultipleSelection: true</code>. Click a day to add it; click it again to
           remove it. Each selected date gets its own input.
         </p>
-        <div class="input-field mb-3">
+        <div class="field mb-3">
           <input type="text" class="datepicker no-autoinit" id="datepicker-multi">
           <label for="datepicker-multi">Dates</label>
         </div>

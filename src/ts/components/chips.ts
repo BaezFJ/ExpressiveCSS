@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface ChipData {
   /**
@@ -123,7 +123,7 @@ export class Chips extends Component<ChipsOptions> {
 
     // Render input element, setup event handlers
     if (this.options.allowUserInput) {
-      this.el.classList.add('input-field');
+      this.el.classList.add('field');
       this._setupInput();
       this._setupEventHandlers();
       // move input to end
@@ -149,14 +149,14 @@ export class Chips extends Component<ChipsOptions> {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<ChipsOptions>): Chips[];
+  static init(els: InitElements<InitElement>, options?: Partial<ChipsOptions>): Chips[];
   /**
    * Initializes instances of Chips.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<ChipsOptions> = {}
   ): Chips | Chips[] {
     return super.init(els, options, Chips);

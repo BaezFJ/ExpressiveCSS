@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface CarouselOptions extends BaseOptions {
   /**
@@ -179,9 +179,9 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   static init(el: HTMLElement, options?: Partial<CarouselOptions>): Carousel;
-  static init(els: InitElements<MElement>, options?: Partial<CarouselOptions>): Carousel[];
+  static init(els: InitElements<InitElement>, options?: Partial<CarouselOptions>): Carousel[];
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<CarouselOptions> = {}
   ): Carousel | Carousel[] {
     return super.init(els, options, Carousel);

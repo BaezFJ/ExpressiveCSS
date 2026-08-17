@@ -61,7 +61,7 @@ describe('FormSelect renders author content as text', () => {
   test('an id containing a quote does not break label lookup', () => {
     // The old code built '[for="' + id + '"]', which this closes early.
     document.body.innerHTML = `
-      <div class="input-field">
+      <div class="field">
         <select id='a"b'><option value="1">One</option></select>
         <label for='a"b'>Pick</label>
       </div>`;
@@ -92,7 +92,7 @@ describe('ids are looked up, not interpolated into selectors', () => {
   test('TapTarget resolves a data-target containing a quote', () => {
     document.body.innerHTML = `
       <div class="tap-target" data-target='x"y'><div class="tap-target-content"><h5>T</h5></div></div>
-      <a id='x"y' class="btn">menu</a>`;
+      <a id='x"y' class="button">menu</a>`;
 
     const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
 
@@ -180,7 +180,7 @@ describe('Datepicker escapes what it splices into markup', () => {
 
   test('a function format does not spill its source into the page', () => {
     document.body.innerHTML = `
-      <div class="input-field">
+      <div class="field">
         <input type="text" class="datepicker">
         <span class="datepicker-format"></span>
       </div>`;
@@ -195,7 +195,7 @@ describe('Datepicker escapes what it splices into markup', () => {
 
   test('a string format is shown as the hint it is', () => {
     document.body.innerHTML = `
-      <div class="input-field">
+      <div class="field">
         <input type="text" class="datepicker">
         <span class="datepicker-format"></span>
       </div>`;

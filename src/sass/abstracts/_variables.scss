@@ -28,15 +28,6 @@ $text-color: var(--md-sys-color-on-background) !default;
 // derived from it, so the two cannot drift.
 $root-font-size: 14px !default;
 
-// Legacy rem heading ladder. Headings now consume --md-sys-typescale-*
-// (see base/_typography.scss). Kept so existing Sass overrides still compile.
-$h1-fontsize: 4.2rem !default;
-$h2-fontsize: 3.56rem !default;
-$h3-fontsize: 2.92rem !default;
-$h4-fontsize: 2.28rem !default;
-$h5-fontsize: 1.64rem !default;
-$h6-fontsize: 1.15rem !default;
-
 // Flow text: font-size interpolates between these two across the viewport
 // range below. This used to be a @while loop emitting 21 media queries.
 $flow-text-min: 1.2rem !default;

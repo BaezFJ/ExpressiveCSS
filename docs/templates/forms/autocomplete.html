@@ -13,23 +13,23 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          Add <code>autocomplete</code> to a text input inside <code>.input-field</code>.
+          Add <code>autocomplete</code> to a text input inside <code>.field</code>.
           <code>AutoInit()</code> starts every <code>.autocomplete</code> except
           <code>no-autoinit</code>, but the default <code>data</code> list is empty — pass
           options (or call <code>init</code>) to give it something to suggest.
         </p>
-        <div class="input-field mb-5">
+        <div class="field mb-5">
           <i class="material-symbols prefix">textsms</i>
           <input type="text" id="autocomplete-input" class="autocomplete no-autoinit" placeholder=" ">
           <label for="autocomplete-input">Autocomplete</label>
         </div>
         <p>Set <code>isMultiSelect: true</code> to pick several values. A count appears on the field.</p>
-        <div class="input-field mb-5">
+        <div class="field mb-5">
           <i class="material-symbols prefix">textsms</i>
           <input type="text" id="autocomplete-multi" class="autocomplete no-autoinit" placeholder=" ">
           <label for="autocomplete-multi">Multiple Autocomplete</label>
         </div>
-<pre><code>&lt;div class="input-field"&gt;
+<pre><code>&lt;div class="field"&gt;
   &lt;i class="material-symbols prefix"&gt;textsms&lt;/i&gt;
   &lt;input type="text" id="autocomplete-input" class="autocomplete" placeholder=" "&gt;
   &lt;label for="autocomplete-input"&gt;Autocomplete&lt;/label&gt;

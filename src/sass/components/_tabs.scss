@@ -4,9 +4,8 @@
 //
 // Anatomy is the HTML. A <nav class="tabs"> of <a href="#panel"> is the
 // bar. A heading or <span> is the label; a leading <i> is the icon.
-// .active is the selected tab. ul.tabs > li.tab > a stays as an alias.
-// Helpers: .tabs-secondary, .horizontal / .tabs-horizontal, .max /
-// .tabs-fixed-width, .transparent / .tabs-transparent.
+// .active is the selected tab. Helpers: .tabs-secondary, .horizontal,
+// .max, .transparent.
 //
 // Tokens follow https://m3.material.io/components/tabs/specs
 //   primary     surface, 48dp (64 with stacked icon), title-small
@@ -18,7 +17,7 @@
 //   divider     1dp outline-variant
 //   disabled    38%
 
-$_tab: "> :is(a, .tab > a, li.tab > a)";
+$_tab: "> a, > .tab > a";
 
 .tabs {
   --md-comp-primary-tab-container-color: var(--md-sys-color-surface);
@@ -49,7 +48,7 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
     display: none;
   }
 
-  > :is(.tab, li.tab) {
+  > .tab {
     display: flex;
     flex: 0 0 auto;
     list-style: none;
@@ -118,7 +117,7 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
   }
 
   // Stacked icon + label is 64dp (primary).
-  &:not(.horizontal, .tabs-horizontal) #{$_tab}:has(> i) {
+  &:not(.horizontal) #{$_tab}:has(> i) {
     min-height: var(--md-comp-primary-tab-with-icon-container-height);
     padding-block: 8px;
   }
@@ -148,7 +147,7 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
   // Disabled — on the <a> or on the wrapping .tab.
   #{$_tab}.disabled,
   #{$_tab}[aria-disabled="true"],
-  > :is(.tab, li.tab).disabled > a {
+  > .tab.disabled > a {
     color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
     background-color: transparent;
     cursor: default;
@@ -169,8 +168,7 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
 }
 
 // Inline icon + label (primary can do this too).
-.tabs.horizontal,
-.tabs.tabs-horizontal {
+.tabs.horizontal {
   #{$_tab} {
     flex-direction: row;
     gap: 8px;
@@ -180,9 +178,8 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
 }
 
 // Equal-width tabs. Default on compact so a few destinations still fill.
-.tabs.max,
-.tabs.tabs-fixed-width {
-  > :is(a, .tab, li.tab) {
+.tabs.max {
+  > :is(a, .tab) {
     flex: 1 1 0;
     min-width: 0;
   }
@@ -194,7 +191,7 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
 
 @include bp-down("large") {
   .tabs {
-    > :is(a, .tab, li.tab) {
+    > :is(a, .tab) {
       flex: 1 1 0;
       min-width: 0;
     }
@@ -207,8 +204,7 @@ $_tab: "> :is(a, .tab > a, li.tab > a)";
 }
 
 // On a colored app bar (header.primary > .tabs).
-.tabs.transparent,
-.tabs.tabs-transparent {
+.tabs.transparent {
   --md-comp-primary-tab-container-color: transparent;
   --md-comp-primary-tab-label-text-color: color-mix(
     in oklab,

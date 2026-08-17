@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement, Openable } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
 export interface DropdownOptions extends BaseOptions {
   /**
@@ -150,14 +150,14 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<DropdownOptions>): Dropdown[];
+  static init(els: InitElements<InitElement>, options?: Partial<DropdownOptions>): Dropdown[];
   /**
    * Initializes instances of Dropdown.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<DropdownOptions> = {}
   ): Dropdown | Dropdown[] {
     return super.init(els, options, Dropdown);

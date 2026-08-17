@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement, Openable } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
 export interface CardsOptions extends BaseOptions {
   onOpen: (el: Element) => void;
@@ -19,7 +19,7 @@ const _defaults: CardsOptions = {
  * actually initializes, so the AutoInit entry was dead while `Cards.Init()`
  * quietly did the work through the selector below.
  */
-export const CARDS_SELECTOR = '.card, article:has(> aside), article:has(.card-reveal)';
+export const CARDS_SELECTOR = 'article:has(> aside)';
 
 export class Cards extends Component<CardsOptions> implements Openable {
   isOpen: boolean = false;
@@ -38,7 +38,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
 
     this._activators = [];
 
-    this.cardReveal = this.el.querySelector(':scope > aside, .card-reveal');
+    this.cardReveal = this.el.querySelector(':scope > aside');
     if (this.cardReveal) {
       this._activators = Array.from(this.el.querySelectorAll('.activator'));
       this._activators.forEach((el: HTMLElement) => {
@@ -46,7 +46,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
       });
 
       this.cardRevealClose = this.cardReveal.querySelector(
-        '.card-title, :scope > :is(h1, h2, h3, h4, h5, h6)'
+        ':scope > :is(h1, h2, h3, h4, h5, h6)'
       );
       if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
 
@@ -70,14 +70,14 @@ export class Cards extends Component<CardsOptions> implements Openable {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<CardsOptions>): Cards[];
+  static init(els: InitElements<InitElement>, options?: Partial<CardsOptions>): Cards[];
   /**
    * Initializes instances of Cards.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options?: Partial<CardsOptions>
   ): Cards | Cards[] {
     return super.init(els, options, Cards);

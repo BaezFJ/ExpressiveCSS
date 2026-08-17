@@ -1,4 +1,4 @@
-import { InitElements, MElement } from '../core/component';
+import { InitElements, InitElement } from '../core/component';
 import * as Components from './index';
 import { CARDS_SELECTOR } from './cards';
 
@@ -53,7 +53,7 @@ export type AutoInitOptions = {
 
 /** The shape every entry in the table satisfies; see the cast in AutoInit. */
 type AutoInitable = {
-  init(els: InitElements<MElement>, options: Partial<object>): unknown;
+  init(els: InitElements<InitElement>, options: Partial<object>): unknown;
 };
 
 /**

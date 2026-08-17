@@ -31,7 +31,7 @@
           <code>no-autoinit</code>.
         </p>
         <p>
-          <a href="#!" data-target="slide-out" class="sidenav-trigger btn filled waves-effect">Toggle Sidenav</a>
+          <a href="#!" data-target="slide-out" class="button sidenav-trigger filled waves-effect">Toggle Sidenav</a>
         </p>
         <ul id="slide-out" class="sidenav no-autoinit">
           <li>
@@ -235,7 +235,7 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
           yourself, otherwise AutoInit would start it on the left.
         </p>
         <p>
-          <a href="#!" data-target="slide-out-right" class="sidenav-trigger btn tonal waves-effect">Toggle Right Sidenav</a>
+          <a href="#!" data-target="slide-out-right" class="button sidenav-trigger tonal waves-effect">Toggle Right Sidenav</a>
         </p>
         <ul id="slide-out-right" class="sidenav no-autoinit">
           <li><a href="#!">First Sidebar Link</a></li>
@@ -292,12 +292,12 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
 &lt;/a&gt;</code></pre>
         <p>
           Offset the rest of the page by the sidenav width. The width token is
-          <code>--sidenav-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
+          <code>--md-comp-nav-drawer-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
           Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
         </p>
 <pre><code>@media (width >= 993px) {
   header, main, footer {
-    padding-left: var(--sidenav-width);
+    padding-left: var(--md-comp-nav-drawer-width);
   }
 }</code></pre>
       </div>

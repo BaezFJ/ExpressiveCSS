@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 import { Utils } from '../core/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -43,7 +43,7 @@ export class Range extends Component<RangeOptions> {
    * @param options Component options.
    */
   static init(
-    els: InitElements<HTMLInputElement | MElement>,
+    els: InitElements<HTMLInputElement | InitElement>,
     options?: Partial<RangeOptions>
   ): Range[];
   /**
@@ -52,7 +52,7 @@ export class Range extends Component<RangeOptions> {
    * @param options Component options.
    */
   static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | MElement>,
+    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
     options: Partial<RangeOptions> = {}
   ): Range | Range[] {
     return super.init(els, options, Range);

@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { FormSelect } from './select';
-import { BaseOptions, Component, I18nOptions, InitElements, MElement } from '../core/component';
+import { BaseOptions, Component, I18nOptions, InitElements, InitElement } from '../core/component';
 import { DockedDisplayPlugin } from '../plugins/dockedDisplayPlugin';
 
 export interface DateI18nOptions extends I18nOptions {
@@ -404,7 +404,7 @@ export class Datepicker extends Component<DatepickerOptions> {
    * @param options Component options.
    */
   static init(
-    els: InitElements<HTMLInputElement | MElement>,
+    els: InitElements<HTMLInputElement | InitElement>,
     options?: Partial<DatepickerOptions>
   ): Datepicker[];
   /**
@@ -413,7 +413,7 @@ export class Datepicker extends Component<DatepickerOptions> {
    * @param options Component options.
    */
   static init(
-    els: HTMLInputElement | InitElements<HTMLInputElement | MElement>,
+    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
     options: Partial<DatepickerOptions> = {}
   ): Datepicker | Datepicker[] {
     return super.init(els, options, Datepicker);
@@ -1091,7 +1091,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     html += `<button class="month-prev${
       prev ? '' : ' is-disabled'
       // @todo remove button class and add scss mixin, current implementation temporary for focus states, @see https://github.com/materializecss/materialize/issues/566
-    } btn" type="button">${leftArrow}</button>`;
+    }" type="button">${leftArrow}</button>`;
 
     html += '<div class="selects-container">';
     if (opts.showMonthAfterYear) {
@@ -1106,7 +1106,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     html += `<button class="month-next${
       next ? '' : ' is-disabled'
       // @todo remove button class and add scss mixin, current implementation temporary for focus states, @see https://github.com/materializecss/materialize/issues/566
-    } btn" type="button">${rightArrow}</button>`;
+    }" type="button">${rightArrow}</button>`;
 
     return (html += '</div>');
   }

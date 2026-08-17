@@ -3,8 +3,8 @@
  */
 export interface BaseOptions {}
 
-export type MElement = HTMLElement | Element;
-export type InitElements<T extends MElement> = NodeListOf<T> | HTMLCollectionOf<T>;
+export type InitElement = HTMLElement | Element;
+export type InitElements<T extends InitElement> = NodeListOf<T> | HTMLCollectionOf<T>;
 type ComponentConstructor<T extends Component<O>, O extends BaseOptions> = {
   new (el: HTMLElement, options: Partial<O>): T;
 };
@@ -69,7 +69,7 @@ export class Component<O extends BaseOptions> {
    * @param options Component options.
    * @param classDef Class definition.
    */
-  protected static init<I extends MElement, O extends BaseOptions, C extends Component<O>>(
+  protected static init<I extends InitElement, O extends BaseOptions, C extends Component<O>>(
     els: InitElements<I>,
     options: Partial<O>,
     classDef: ComponentType<C, O>
@@ -80,7 +80,7 @@ export class Component<O extends BaseOptions> {
    * @param options Component options.
    * @param classDef Class definition.
    */
-  protected static init<I extends MElement, O extends BaseOptions, C extends Component<O>>(
+  protected static init<I extends InitElement, O extends BaseOptions, C extends Component<O>>(
     els: I | InitElements<I>,
     options: Partial<O>,
     classDef: ComponentType<C, O>
@@ -91,7 +91,7 @@ export class Component<O extends BaseOptions> {
    * @param options Component options.
    * @param classDef Class definition.
    */
-  protected static init<I extends MElement, O extends BaseOptions, C extends Component<O>>(
+  protected static init<I extends InitElement, O extends BaseOptions, C extends Component<O>>(
     els: I | InitElements<I>,
     options: Partial<O>,
     classDef: ComponentType<C, O>

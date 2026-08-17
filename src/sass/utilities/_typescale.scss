@@ -38,8 +38,3 @@ $typescale-roles: (
 .upper { text-transform: uppercase; }
 .lower { text-transform: lowercase; }
 .capitalize { text-transform: capitalize; }
-
-// Body-size aliases when the element is not a <p> / <small>.
-.large-text { @include typescale("body-large"); }
-.medium-text { @include typescale("body-medium"); }
-.small-text { @include typescale("body-small"); }

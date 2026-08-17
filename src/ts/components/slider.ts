@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface SliderOptions extends BaseOptions {
   /**
@@ -158,14 +158,14 @@ export class Slider extends Component<SliderOptions> {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<SliderOptions>): Slider[];
+  static init(els: InitElements<InitElement>, options?: Partial<SliderOptions>): Slider[];
   /**
    * Initializes instances of Slider.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<SliderOptions> = {}
   ): Slider | Slider[] {
     return super.init(els, options, Slider);

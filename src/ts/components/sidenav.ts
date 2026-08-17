@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement, Openable } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
 export interface SidenavOptions extends BaseOptions {
   /**
@@ -122,14 +122,14 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<SidenavOptions>): Sidenav[];
+  static init(els: InitElements<InitElement>, options?: Partial<SidenavOptions>): Sidenav[];
   /**
    * Initializes instances of Sidenav.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<SidenavOptions> = {}
   ): Sidenav | Sidenav[] {
     return super.init(els, options, Sidenav);

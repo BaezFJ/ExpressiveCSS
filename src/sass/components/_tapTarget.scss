@@ -11,8 +11,6 @@
 //   --md-comp-tap-target-supporting-color
 //   --md-comp-tap-target-duration       300ms
 //   --md-comp-tap-target-easing         soft ease-in-out
-//
-// .feature-discovery is an alias of .tap-target.
 
 .tap-target-wrapper {
   --md-comp-tap-target-size: 480px;
@@ -53,8 +51,7 @@
   pointer-events: none;
   transition-delay: 0s;
 
-  .tap-target,
-  .feature-discovery {
+  .tap-target {
     transform: scale(1);
     opacity: 1;
   }
@@ -69,8 +66,7 @@
   }
 }
 
-.tap-target,
-.feature-discovery {
+.tap-target {
   position: absolute;
   inset: 0;
   display: grid;

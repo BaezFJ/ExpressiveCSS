@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface CollapsibleOptions extends BaseOptions {
   /**
@@ -88,14 +88,14 @@ export class Collapsible extends Component<CollapsibleOptions> {
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<MElement>, options?: Partial<CollapsibleOptions>): Collapsible[];
+  static init(els: InitElements<InitElement>, options?: Partial<CollapsibleOptions>): Collapsible[];
   /**
    * Initializes instances of Collapsible.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<MElement>,
+    els: HTMLElement | InitElements<InitElement>,
     options: Partial<CollapsibleOptions> = {}
   ): Collapsible | Collapsible[] {
     return super.init(els, options, Collapsible);

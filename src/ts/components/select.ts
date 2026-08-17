@@ -1,6 +1,6 @@
 import { Utils } from '../core/utils';
 import { Dropdown, DropdownOptions } from './dropdown';
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface FormSelectOptions extends BaseOptions {
   /**
@@ -84,7 +84,7 @@ export class FormSelect extends Component<FormSelectOptions> {
    * @param options Component options.
    */
   static init(
-    els: InitElements<HTMLSelectElement | MElement>,
+    els: InitElements<HTMLSelectElement | InitElement>,
     options?: Partial<FormSelectOptions>
   ): FormSelect[];
   /**
@@ -93,7 +93,7 @@ export class FormSelect extends Component<FormSelectOptions> {
    * @param options Component options.
    */
   static init(
-    els: HTMLSelectElement | InitElements<HTMLSelectElement | MElement>,
+    els: HTMLSelectElement | InitElements<HTMLSelectElement | InitElement>,
     options: Partial<FormSelectOptions> = {}
   ): FormSelect | FormSelect[] {
     return super.init(els, options, FormSelect);
@@ -252,7 +252,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     const parent = this.el.parentElement;
     const reuse =
       parent &&
-      parent.matches('.field, .input-field') &&
+      parent.matches('.field') &&
       !parent.classList.contains('select-wrapper') &&
       !parent.querySelector(':scope > input, :scope > textarea');
     if (reuse) {
@@ -261,7 +261,7 @@ export class FormSelect extends Component<FormSelectOptions> {
       this._createdWrapper = false;
     } else {
       this.wrapper = document.createElement('div');
-      this.wrapper.classList.add('select-wrapper', 'field', 'input-field');
+      this.wrapper.classList.add('select-wrapper', 'field');
       this._createdWrapper = true;
       this.el.before(this.wrapper);
     }

@@ -1,4 +1,4 @@
-import { Component, BaseOptions, InitElements, MElement } from '../core/component';
+import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 const _defaults = Object.freeze({});
 
@@ -45,7 +45,7 @@ export class CharacterCounter extends Component<BaseOptions> {
    * @param options Component options.
    */
   static init(
-    els: InitElements<InputElement | MElement>,
+    els: InitElements<InputElement | InitElement>,
     options?: Partial<BaseOptions>
   ): CharacterCounter[];
   /**
@@ -54,7 +54,7 @@ export class CharacterCounter extends Component<BaseOptions> {
    * @param options Component options.
    */
   static init(
-    els: InputElement | InitElements<InputElement | MElement>,
+    els: InputElement | InitElements<InputElement | InitElement>,
     options: Partial<BaseOptions> = {}
   ): CharacterCounter | CharacterCounter[] {
     return super.init(els, options, CharacterCounter);

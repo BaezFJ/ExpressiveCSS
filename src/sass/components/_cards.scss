@@ -5,7 +5,7 @@
 // Anatomy is the HTML. An <article> is an elevated card. A heading is the
 // headline, a <p> is supporting text, a direct <nav> is the action row,
 // <img> / <figure> is media. Helpers switch the M3 variant (filled, outlined)
-// or the layout (horizontal). .card and .card-panel stay as aliases.
+// or the layout (horizontal).
 //
 // Tokens follow https://m3.material.io/components/cards/specs
 //   container  surface, 12dp corners
@@ -16,7 +16,7 @@
 //   body       body-medium / on-surface-variant
 //   padding    16dp
 
-$_card: "article, .card, .card-panel";
+$_card: "article";
 
 :where(#{$_card}) {
   --md-comp-elevated-card-container-color: var(--md-sys-color-surface);
@@ -132,8 +132,7 @@ article > figure > figcaption {
 }
 
 // Horizontal: media on the start, body stacked beside it.
-article.horizontal,
-.card.horizontal {
+article.horizontal {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -141,8 +140,7 @@ article.horizontal,
 
   > img,
   > picture,
-  > figure,
-  > .card-image {
+  > figure {
     flex: 0 0 40%;
     max-width: 40%;
     width: 40%;
@@ -151,8 +149,7 @@ article.horizontal,
 
   > img,
   > picture img,
-  > figure img,
-  > .card-image img {
+  > figure img {
     height: 100%;
     object-fit: cover;
   }
@@ -165,58 +162,53 @@ article.horizontal,
   }
 }
 
-// Fixed heights (Materialize sizes, still useful for uniform grids).
-article.small, .card.small { height: 300px; }
-article.medium, .card.medium { height: 400px; }
-article.large, .card.large { height: 500px; }
+// Fixed heights for uniform grids.
+article.small { height: 300px; }
+article.medium { height: 400px; }
+article.large { height: 500px; }
 
-article.small, article.medium, article.large,
-.card.small, .card.medium, .card.large {
+article.small, article.medium, article.large {
   display: flex;
   flex-direction: column;
 
-  > img, > picture, > figure, > .card-image {
+  > img, > picture, > figure {
     flex: 0 1 60%;
     min-height: 0;
     overflow: hidden;
   }
 
-  > img, > figure img, > .card-image img {
+  > img, > figure img {
     height: 100%;
   }
 
-  > p, > .card-content {
+  > p {
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
   }
 
-  > nav, > .card-action {
+  > nav {
     margin-top: auto;
   }
 }
 
 article.horizontal.small,
 article.horizontal.medium,
-article.horizontal.large,
-.card.horizontal.small,
-.card.horizontal.medium,
-.card.horizontal.large {
+article.horizontal.large {
   flex-direction: row;
 
-  > img, > picture, > figure, > .card-image {
+  > img, > picture, > figure {
     flex: 0 0 40%;
     max-height: none;
   }
 }
 
-// Reveal overlay. aside is the semantic name; .card-reveal is the JS alias.
-// Parked under the card (translateY 100%) and clipped by overflow:hidden.
-// Open is aria-expanded="true" → slide up to cover. Do not use inset:0 as
-// the closed geometry and then translateY(-100%): that slides the panel
-// *off* the card, and isOpen stays true so a second click is a no-op.
-article > aside,
-.card-reveal {
+// Reveal overlay. aside is the panel. Parked under the card (translateY 100%)
+// and clipped by overflow:hidden. Open is aria-expanded="true" → slide up
+// to cover. Do not use inset:0 as the closed geometry and then
+// translateY(-100%): that slides the panel *off* the card, and isOpen stays
+// true so a second click is a no-op.
+article > aside {
   --md-comp-card-reveal-duration: 300ms;
   --md-comp-card-reveal-easing: ease;
 
@@ -236,8 +228,7 @@ article > aside,
     visibility 0s var(--md-comp-card-reveal-duration);
 }
 
-article > aside[aria-expanded="true"],
-.card-reveal[aria-expanded="true"] {
+article > aside[aria-expanded="true"] {
   transform: translateY(0);
   visibility: visible;
   pointer-events: auto;
@@ -245,100 +236,18 @@ article > aside[aria-expanded="true"],
 }
 
 @media (prefers-reduced-motion: reduce) {
-  article > aside,
-  .card-reveal {
+  article > aside {
     transition: none;
   }
 }
 
-article.sticky > nav,
-.card.sticky-action > .card-action {
+article.sticky > nav {
   position: relative;
   z-index: 4;
   background-color: inherit;
 }
 
-article.sticky > aside,
-.card.sticky-action > .card-reveal {
+article.sticky > aside {
   bottom: auto;
   height: calc(100% - 52px);
-}
-
-// Simple padded surface. Same tokens as a card with no slots.
-.card-panel {
-  padding: 16px;
-  margin: $element-top-margin 0 $element-bottom-margin 0;
-}
-
-// --- Legacy slots (.card-*) so existing markup keeps working --------------
-
-.card-title {
-  font-family: var(--md-sys-typescale-title-medium-font-family-name);
-  font-size: var(--md-sys-typescale-title-medium-font-size);
-  font-weight: var(--md-sys-typescale-title-medium-font-weight);
-  line-height: var(--md-sys-typescale-title-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
-}
-
-.card .card-image {
-  position: relative;
-
-  img {
-    display: block;
-    width: 100%;
-    object-fit: cover;
-  }
-
-  .card-title {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    max-width: 100%;
-    padding: 16px;
-    color: var(--md-sys-color-on-surface);
-    background: color-mix(in oklab, var(--md-sys-color-surface) 72%, transparent);
-  }
-
-  .activator {
-    position: absolute;
-    inset: 0;
-    cursor: pointer;
-  }
-
-  img.activator {
-    position: relative;
-  }
-}
-
-.card .card-content {
-  padding: 16px;
-  border-radius: 0;
-
-  p { margin: 0; }
-
-  .card-title {
-    display: block;
-    margin-bottom: 8px;
-
-    &.activator { cursor: pointer; }
-  }
-}
-
-.card .card-action {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px 8px;
-
-  a:not(.button):not(.btn):not(.btn-floating) {
-    @include btn-flat;
-    height: auto;
-    padding: 8px 12px;
-    min-height: 40px;
-  }
-}
-
-.card .card-image .activator {
-  cursor: pointer;
 }
