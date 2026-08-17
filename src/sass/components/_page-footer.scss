@@ -76,6 +76,10 @@
   @include bp-up("large") {
     grid-template-columns: repeat(4, 1fr);
   }
+
+  @include bp-up("xlarge") {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 .page-footer > .container > .row,

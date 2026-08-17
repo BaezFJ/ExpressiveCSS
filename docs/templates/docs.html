@@ -18,29 +18,41 @@
         </nav>
 
         <ul class="sidenav sidenav-fixed" id="nav-mobile">
-            <li>
-                <a href="{{ url_for('index') }}">
-                    <i class="material-symbols">home</i>
-                    Expressive
-                </a>
-            </li>
             <li class="{% if request.endpoint == 'index' %}active{% endif %}">
                 <a href="{{ url_for('index') }}">
-                    <i class="material-symbols">apps</i>
+                    <i class="material-symbols">home</i>
                     Getting started
+                </a>
+            </li>
+            <li class="{% if request.endpoint == 'auto_init' %}active{% endif %}">
+                <a href="{{ url_for('auto_init') }}">
+                    <i class="material-symbols">bolt</i>
+                    Auto Init
                 </a>
             </li>
             <li>
                 <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['color', 'grid', 'helpers', 'media_css', 'pulse', 'shadow', 'table', 'css_transitions', 'typography', 'themes', 'waves'] %}active{% endif %}">
+                    <li class="{% if request.endpoint in ['color', 'themes', 'typography', 'icons', 'shadow', 'grid', 'helpers', 'media_css', 'table', 'css_transitions', 'pulse', 'waves'] %}active{% endif %}">
                         <a class="collapsible-header">
                             <i class="material-symbols">palette</i>
-                            Styles
+                            Foundations
                         </a>
                         <div class="collapsible-body">
                             <ul>
                                 <li class="{% if request.endpoint == 'color' %}active{% endif %}">
                                     <a href="{{ url_for('color') }}">Color</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'themes' %}active{% endif %}">
+                                    <a href="{{ url_for('themes') }}">Themes</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'typography' %}active{% endif %}">
+                                    <a href="{{ url_for('typography') }}">Typography</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'icons' %}active{% endif %}">
+                                    <a href="{{ url_for('icons') }}">Icons</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'shadow' %}active{% endif %}">
+                                    <a href="{{ url_for('shadow') }}">Elevation</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'grid' %}active{% endif %}">
                                     <a href="{{ url_for('grid') }}">Grid</a>
@@ -49,13 +61,7 @@
                                     <a href="{{ url_for('helpers') }}">Helpers</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'media_css' %}active{% endif %}">
-                                    <a href="{{ url_for('media_css') }}">Media Styles</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'pulse' %}active{% endif %}">
-                                    <a href="{{ url_for('pulse') }}">Pulse</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'shadow' %}active{% endif %}">
-                                    <a href="{{ url_for('shadow') }}">Shadow</a>
+                                    <a href="{{ url_for('media_css') }}">Media styles</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'table' %}active{% endif %}">
                                     <a href="{{ url_for('table') }}">Table</a>
@@ -63,11 +69,8 @@
                                 <li class="{% if request.endpoint == 'css_transitions' %}active{% endif %}">
                                     <a href="{{ url_for('css_transitions') }}">Transitions</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'typography' %}active{% endif %}">
-                                    <a href="{{ url_for('typography') }}">Typography</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'themes' %}active{% endif %}">
-                                    <a href="{{ url_for('themes') }}">Themes</a>
+                                <li class="{% if request.endpoint == 'pulse' %}active{% endif %}">
+                                    <a href="{{ url_for('pulse') }}">Pulse</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'waves' %}active{% endif %}">
                                     <a href="{{ url_for('waves') }}">Waves</a>
@@ -79,93 +82,36 @@
             </li>
             <li>
                 <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['auto_init', 'badges', 'buttons', 'breadcrumbs', 'cards', 'carousel', 'collapsible', 'collections', 'datepicker', 'dropdown', 'feature_discovery', 'floating_action_button', 'footer', 'icons', 'media', 'modals', 'navbar', 'pagination', 'parallax', 'preloader', 'scrollspy', 'sidenav', 'tabs', 'timepicker', 'toasts', 'toolbars', 'tooltips'] %}active{% endif %}">
+                    <li class="{% if request.endpoint in ['navbar', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'dropdown', 'scrollspy'] %}active{% endif %}">
                         <a class="collapsible-header">
-                            <i class="material-symbols">add_circle</i>
-                            Components
+                            <i class="material-symbols">view_quilt</i>
+                            Structure
                         </a>
                         <div class="collapsible-body">
                             <ul>
-                                <li class="{% if request.endpoint == 'auto_init' %}active{% endif %}">
-                                    <a href="{{ url_for('auto_init') }}">Auto Init</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'badges' %}active{% endif %}">
-                                    <a href="{{ url_for('badges') }}">Badges</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'buttons' %}active{% endif %}">
-                                    <a href="{{ url_for('buttons') }}">Buttons</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'breadcrumbs' %}active{% endif %}">
-                                    <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'cards' %}active{% endif %}">
-                                    <a href="{{ url_for('cards') }}">Cards</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'carousel' %}active{% endif %}">
-                                    <a href="{{ url_for('carousel') }}">Carousel</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'collapsible' %}active{% endif %}">
-                                    <a href="{{ url_for('collapsible') }}">Collapsible</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'collections' %}active{% endif %}">
-                                    <a href="{{ url_for('collections') }}">Collections</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'datepicker' %}active{% endif %}">
-                                    <a href="{{ url_for('datepicker') }}">Date Picker</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'timepicker' %}active{% endif %}">
-                                    <a href="{{ url_for('timepicker') }}">Time Picker</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'dropdown' %}active{% endif %}">
-                                    <a href="{{ url_for('dropdown') }}">Dropdown</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'feature_discovery' %}active{% endif %}">
-                                    <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'floating_action_button' %}active{% endif %}">
-                                    <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'footer' %}active{% endif %}">
-                                    <a href="{{ url_for('footer') }}">Footer</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'icons' %}active{% endif %}">
-                                    <a href="{{ url_for('icons') }}">Icons</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'media' %}active{% endif %}">
-                                    <a href="{{ url_for('media') }}">Media</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'modals' %}active{% endif %}">
-                                    <a href="{{ url_for('modals') }}">Modals</a>
-                                </li>
                                 <li class="{% if request.endpoint == 'navbar' %}active{% endif %}">
-                                    <a href="{{ url_for('navbar') }}">Navbar</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'pagination' %}active{% endif %}">
-                                    <a href="{{ url_for('pagination') }}">Pagination</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'parallax' %}active{% endif %}">
-                                    <a href="{{ url_for('parallax') }}">Parallax</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'preloader' %}active{% endif %}">
-                                    <a href="{{ url_for('preloader') }}">Preloader</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'scrollspy' %}active{% endif %}">
-                                    <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
+                                    <a href="{{ url_for('navbar') }}">App bar</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'sidenav' %}active{% endif %}">
                                     <a href="{{ url_for('sidenav') }}">Sidenav</a>
                                 </li>
+                                <li class="{% if request.endpoint == 'footer' %}active{% endif %}">
+                                    <a href="{{ url_for('footer') }}">Footer</a>
+                                </li>
                                 <li class="{% if request.endpoint == 'tabs' %}active{% endif %}">
                                     <a href="{{ url_for('tabs') }}">Tabs</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'toasts' %}active{% endif %}">
-                                    <a href="{{ url_for('toasts') }}">Toasts</a>
+                                <li class="{% if request.endpoint == 'breadcrumbs' %}active{% endif %}">
+                                    <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'toolbars' %}active{% endif %}">
-                                    <a href="{{ url_for('toolbars') }}">Toolbars</a>
+                                <li class="{% if request.endpoint == 'pagination' %}active{% endif %}">
+                                    <a href="{{ url_for('pagination') }}">Pagination</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'tooltips' %}active{% endif %}">
-                                    <a href="{{ url_for('tooltips') }}">Tooltips</a>
+                                <li class="{% if request.endpoint == 'dropdown' %}active{% endif %}">
+                                    <a href="{{ url_for('dropdown') }}">Menu</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'scrollspy' %}active{% endif %}">
+                                    <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
                                 </li>
                             </ul>
                         </div>
@@ -174,39 +120,104 @@
             </li>
             <li>
                 <ul class="collapsible collapsible-accordion">
-                    <li class="{% if request.endpoint in ['autocomplete', 'checkboxes', 'chips', 'fieldsets', 'radio_buttons', 'range', 'select', 'switches', 'text_inputs'] %}active{% endif %}">
+                    <li class="{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'collections', 'collapsible', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %}active{% endif %}">
+                        <a class="collapsible-header">
+                            <i class="material-symbols">widgets</i>
+                            Components
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li class="{% if request.endpoint == 'buttons' %}active{% endif %}">
+                                    <a href="{{ url_for('buttons') }}">Buttons</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'floating_action_button' %}active{% endif %}">
+                                    <a href="{{ url_for('floating_action_button') }}">FAB</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'cards' %}active{% endif %}">
+                                    <a href="{{ url_for('cards') }}">Cards</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'collections' %}active{% endif %}">
+                                    <a href="{{ url_for('collections') }}">Collections</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'collapsible' %}active{% endif %}">
+                                    <a href="{{ url_for('collapsible') }}">Collapsible</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'modals' %}active{% endif %}">
+                                    <a href="{{ url_for('modals') }}">Dialogs</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'badges' %}active{% endif %}">
+                                    <a href="{{ url_for('badges') }}">Badges</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'tooltips' %}active{% endif %}">
+                                    <a href="{{ url_for('tooltips') }}">Tooltips</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'toasts' %}active{% endif %}">
+                                    <a href="{{ url_for('toasts') }}">Toasts</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'preloader' %}active{% endif %}">
+                                    <a href="{{ url_for('preloader') }}">Preloader</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'carousel' %}active{% endif %}">
+                                    <a href="{{ url_for('carousel') }}">Carousel</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'media' %}active{% endif %}">
+                                    <a href="{{ url_for('media') }}">Lightbox</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'parallax' %}active{% endif %}">
+                                    <a href="{{ url_for('parallax') }}">Parallax</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'feature_discovery' %}active{% endif %}">
+                                    <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'toolbars' %}active{% endif %}">
+                                    <a href="{{ url_for('toolbars') }}">Toolbars</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <ul class="collapsible collapsible-accordion">
+                    <li class="{% if request.endpoint in ['fieldsets', 'text_inputs', 'select', 'checkboxes', 'radio_buttons', 'switches', 'range', 'chips', 'autocomplete', 'datepicker', 'timepicker'] %}active{% endif %}">
                         <a class="collapsible-header">
                             <i class="material-symbols">edit</i>
                             Forms
                         </a>
                         <div class="collapsible-body">
                             <ul>
-                                <li class="{% if request.endpoint == 'autocomplete' %}active{% endif %}">
-                                    <a href="{{ url_for('autocomplete') }}">Autocomplete</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'checkboxes' %}active{% endif %}">
-                                    <a href="{{ url_for('checkboxes') }}">Checkboxes</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'chips' %}active{% endif %}">
-                                    <a href="{{ url_for('chips') }}">Chips</a>
-                                </li>
                                 <li class="{% if request.endpoint == 'fieldsets' %}active{% endif %}">
                                     <a href="{{ url_for('fieldsets') }}">Fieldsets</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'radio_buttons' %}active{% endif %}">
-                                    <a href="{{ url_for('radio_buttons') }}">Radio Buttons</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'range' %}active{% endif %}">
-                                    <a href="{{ url_for('range') }}">Range</a>
+                                <li class="{% if request.endpoint == 'text_inputs' %}active{% endif %}">
+                                    <a href="{{ url_for('text_inputs') }}">Text fields</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'select' %}active{% endif %}">
                                     <a href="{{ url_for('select') }}">Select</a>
                                 </li>
+                                <li class="{% if request.endpoint == 'checkboxes' %}active{% endif %}">
+                                    <a href="{{ url_for('checkboxes') }}">Checkboxes</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'radio_buttons' %}active{% endif %}">
+                                    <a href="{{ url_for('radio_buttons') }}">Radio</a>
+                                </li>
                                 <li class="{% if request.endpoint == 'switches' %}active{% endif %}">
                                     <a href="{{ url_for('switches') }}">Switches</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'text_inputs' %}active{% endif %}">
-                                    <a href="{{ url_for('text_inputs') }}">Text Inputs</a>
+                                <li class="{% if request.endpoint == 'range' %}active{% endif %}">
+                                    <a href="{{ url_for('range') }}">Range</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'chips' %}active{% endif %}">
+                                    <a href="{{ url_for('chips') }}">Chips</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'autocomplete' %}active{% endif %}">
+                                    <a href="{{ url_for('autocomplete') }}">Autocomplete</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'datepicker' %}active{% endif %}">
+                                    <a href="{{ url_for('datepicker') }}">Date picker</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'timepicker' %}active{% endif %}">
+                                    <a href="{{ url_for('timepicker') }}">Time picker</a>
                                 </li>
                             </ul>
                         </div>
@@ -223,65 +234,68 @@
     <footer class="page-footer">
         <div class="container">
             <nav>
-                <h2>Expressive</h2>
+                <h2>Start</h2>
                 <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
                 <a href="{{ url_for('index') }}">Getting started</a>
                 <a href="{{ url_for('auto_init') }}">Auto Init</a>
             </nav>
             <nav>
-                <h2>Styles</h2>
+                <h2>Foundations</h2>
                 <a href="{{ url_for('color') }}">Color</a>
+                <a href="{{ url_for('themes') }}">Themes</a>
+                <a href="{{ url_for('typography') }}">Typography</a>
+                <a href="{{ url_for('icons') }}">Icons</a>
+                <a href="{{ url_for('shadow') }}">Elevation</a>
                 <a href="{{ url_for('grid') }}">Grid</a>
                 <a href="{{ url_for('helpers') }}">Helpers</a>
-                <a href="{{ url_for('media_css') }}">Media Styles</a>
-                <a href="{{ url_for('pulse') }}">Pulse</a>
-                <a href="{{ url_for('shadow') }}">Shadow</a>
+                <a href="{{ url_for('media_css') }}">Media styles</a>
                 <a href="{{ url_for('table') }}">Table</a>
                 <a href="{{ url_for('css_transitions') }}">Transitions</a>
-                <a href="{{ url_for('typography') }}">Typography</a>
-                <a href="{{ url_for('themes') }}">Themes</a>
+                <a href="{{ url_for('pulse') }}">Pulse</a>
                 <a href="{{ url_for('waves') }}">Waves</a>
             </nav>
             <nav>
-                <h2>Components</h2>
-                <a href="{{ url_for('badges') }}">Badges</a>
-                <a href="{{ url_for('buttons') }}">Buttons</a>
-                <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
-                <a href="{{ url_for('cards') }}">Cards</a>
-                <a href="{{ url_for('carousel') }}">Carousel</a>
-                <a href="{{ url_for('collapsible') }}">Collapsible</a>
-                <a href="{{ url_for('collections') }}">Collections</a>
-                <a href="{{ url_for('datepicker') }}">Date Picker</a>
-                <a href="{{ url_for('dropdown') }}">Dropdown</a>
-                <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
-                <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>
-                <a href="{{ url_for('footer') }}">Footer</a>
-                <a href="{{ url_for('icons') }}">Icons</a>
-                <a href="{{ url_for('media') }}">Media</a>
-                <a href="{{ url_for('modals') }}">Modals</a>
-                <a href="{{ url_for('navbar') }}">Navbar</a>
-                <a href="{{ url_for('pagination') }}">Pagination</a>
-                <a href="{{ url_for('parallax') }}">Parallax</a>
-                <a href="{{ url_for('preloader') }}">Preloader</a>
-                <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
+                <h2>Structure</h2>
+                <a href="{{ url_for('navbar') }}">App bar</a>
                 <a href="{{ url_for('sidenav') }}">Sidenav</a>
+                <a href="{{ url_for('footer') }}">Footer</a>
                 <a href="{{ url_for('tabs') }}">Tabs</a>
-                <a href="{{ url_for('timepicker') }}">Time Picker</a>
-                <a href="{{ url_for('toasts') }}">Toasts</a>
-                <a href="{{ url_for('toolbars') }}">Toolbars</a>
+                <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
+                <a href="{{ url_for('pagination') }}">Pagination</a>
+                <a href="{{ url_for('dropdown') }}">Menu</a>
+                <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
+            </nav>
+            <nav>
+                <h2>Components</h2>
+                <a href="{{ url_for('buttons') }}">Buttons</a>
+                <a href="{{ url_for('floating_action_button') }}">FAB</a>
+                <a href="{{ url_for('cards') }}">Cards</a>
+                <a href="{{ url_for('collections') }}">Collections</a>
+                <a href="{{ url_for('collapsible') }}">Collapsible</a>
+                <a href="{{ url_for('modals') }}">Dialogs</a>
+                <a href="{{ url_for('badges') }}">Badges</a>
                 <a href="{{ url_for('tooltips') }}">Tooltips</a>
+                <a href="{{ url_for('toasts') }}">Toasts</a>
+                <a href="{{ url_for('preloader') }}">Preloader</a>
+                <a href="{{ url_for('carousel') }}">Carousel</a>
+                <a href="{{ url_for('media') }}">Lightbox</a>
+                <a href="{{ url_for('parallax') }}">Parallax</a>
+                <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
+                <a href="{{ url_for('toolbars') }}">Toolbars</a>
             </nav>
             <nav>
                 <h2>Forms</h2>
-                <a href="{{ url_for('autocomplete') }}">Autocomplete</a>
-                <a href="{{ url_for('checkboxes') }}">Checkboxes</a>
-                <a href="{{ url_for('chips') }}">Chips</a>
                 <a href="{{ url_for('fieldsets') }}">Fieldsets</a>
-                <a href="{{ url_for('radio_buttons') }}">Radio Buttons</a>
-                <a href="{{ url_for('range') }}">Range</a>
+                <a href="{{ url_for('text_inputs') }}">Text fields</a>
                 <a href="{{ url_for('select') }}">Select</a>
+                <a href="{{ url_for('checkboxes') }}">Checkboxes</a>
+                <a href="{{ url_for('radio_buttons') }}">Radio</a>
                 <a href="{{ url_for('switches') }}">Switches</a>
-                <a href="{{ url_for('text_inputs') }}">Text Inputs</a>
+                <a href="{{ url_for('range') }}">Range</a>
+                <a href="{{ url_for('chips') }}">Chips</a>
+                <a href="{{ url_for('autocomplete') }}">Autocomplete</a>
+                <a href="{{ url_for('datepicker') }}">Date picker</a>
+                <a href="{{ url_for('timepicker') }}">Time picker</a>
             </nav>
             <small class="footer-copyright">
                 <span>&copy; 2026 ExpressiveCSS</span>
