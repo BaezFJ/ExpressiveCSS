@@ -63,7 +63,9 @@ jobs:
       # "run npm run build" banner into every page it then freezes.
       - run: npm run build
 
-      - uses: astral-sh/setup-uv@v10
+      # Pinned to a full version: setup-uv stopped publishing floating major
+      # tags after v7, so @v10 does not resolve.
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
 
