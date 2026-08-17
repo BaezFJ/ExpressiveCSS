@@ -222,77 +222,71 @@
 
     <footer class="page-footer">
         <div class="container">
-            <div class="row">
-                <div class="s12 m10 offset-m1">
-                    <div class="row">
-                        <div class="s12 m6 l4">
-                            <h5>Help Expressive Grow</h5>
-                            <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to
-                                keep the framework moving.</p>
-                        </div>
-                        <div class="s12 m6 l4">
-                            <h5>Documentation</h5>
-                            <p>These pages show the same layouts the framework is built to produce. Start with the grid,
-                                then compose sections, cards, and navigation from there.</p>
-                            <a class="btn tonal btn-small" href="{{ url_for('index') }}">Getting started</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('color') }}">Color</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('grid') }}">Grid</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('helpers') }}">Helpers</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('media_css') }}">Media Styles</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('pulse') }}">Pulse</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('shadow') }}">Shadow</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('table') }}">Table</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('css_transitions') }}">Transitions</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('typography') }}">Typography</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('themes') }}">Themes</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('waves') }}">Waves</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('auto_init') }}">Auto Init</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('badges') }}">Badges</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('buttons') }}">Buttons</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('cards') }}">Cards</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('carousel') }}">Carousel</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('collapsible') }}">Collapsible</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('collections') }}">Collections</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('datepicker') }}">Date Picker</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('timepicker') }}">Time Picker</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('dropdown') }}">Dropdown</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('floating_action_button') }}">Floating Action Button</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('footer') }}">Footer</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('icons') }}">Icons</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('media') }}">Media</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('modals') }}">Modals</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('navbar') }}">Navbar</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('pagination') }}">Pagination</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('parallax') }}">Parallax</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('preloader') }}">Preloader</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('scrollspy') }}">Scrollspy</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('sidenav') }}">Sidenav</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('tabs') }}">Tabs</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('toasts') }}">Toasts</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('toolbars') }}">Toolbars</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('tooltips') }}">Tooltips</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('autocomplete') }}">Autocomplete</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('checkboxes') }}">Checkboxes</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('chips') }}">Chips</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('fieldsets') }}">Fieldsets</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('radio_buttons') }}">Radio Buttons</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('range') }}">Range</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('select') }}">Select</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('switches') }}">Switches</a>
-                            <a class="btn tonal btn-small" href="{{ url_for('text_inputs') }}">Text Inputs</a>
-                        </div>
-                        <div class="s12 m6 l4">
-                            <h5>v0.3.0</h5>
-                            <p>A Material Design 3 front-end framework. Still early, and growing in public.</p>
-                        </div>
-                    </div>
-                    <div class="footer-copyright">
-                        <span>&copy; 2026 ExpressiveCSS</span>
-                    </div>
-                </div>
-            </div>
+            <nav>
+                <h2>Expressive</h2>
+                <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
+                <a href="{{ url_for('index') }}">Getting started</a>
+                <a href="{{ url_for('auto_init') }}">Auto Init</a>
+            </nav>
+            <nav>
+                <h2>Styles</h2>
+                <a href="{{ url_for('color') }}">Color</a>
+                <a href="{{ url_for('grid') }}">Grid</a>
+                <a href="{{ url_for('helpers') }}">Helpers</a>
+                <a href="{{ url_for('media_css') }}">Media Styles</a>
+                <a href="{{ url_for('pulse') }}">Pulse</a>
+                <a href="{{ url_for('shadow') }}">Shadow</a>
+                <a href="{{ url_for('table') }}">Table</a>
+                <a href="{{ url_for('css_transitions') }}">Transitions</a>
+                <a href="{{ url_for('typography') }}">Typography</a>
+                <a href="{{ url_for('themes') }}">Themes</a>
+                <a href="{{ url_for('waves') }}">Waves</a>
+            </nav>
+            <nav>
+                <h2>Components</h2>
+                <a href="{{ url_for('badges') }}">Badges</a>
+                <a href="{{ url_for('buttons') }}">Buttons</a>
+                <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
+                <a href="{{ url_for('cards') }}">Cards</a>
+                <a href="{{ url_for('carousel') }}">Carousel</a>
+                <a href="{{ url_for('collapsible') }}">Collapsible</a>
+                <a href="{{ url_for('collections') }}">Collections</a>
+                <a href="{{ url_for('datepicker') }}">Date Picker</a>
+                <a href="{{ url_for('dropdown') }}">Dropdown</a>
+                <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
+                <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>
+                <a href="{{ url_for('footer') }}">Footer</a>
+                <a href="{{ url_for('icons') }}">Icons</a>
+                <a href="{{ url_for('media') }}">Media</a>
+                <a href="{{ url_for('modals') }}">Modals</a>
+                <a href="{{ url_for('navbar') }}">Navbar</a>
+                <a href="{{ url_for('pagination') }}">Pagination</a>
+                <a href="{{ url_for('parallax') }}">Parallax</a>
+                <a href="{{ url_for('preloader') }}">Preloader</a>
+                <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
+                <a href="{{ url_for('sidenav') }}">Sidenav</a>
+                <a href="{{ url_for('tabs') }}">Tabs</a>
+                <a href="{{ url_for('timepicker') }}">Time Picker</a>
+                <a href="{{ url_for('toasts') }}">Toasts</a>
+                <a href="{{ url_for('toolbars') }}">Toolbars</a>
+                <a href="{{ url_for('tooltips') }}">Tooltips</a>
+            </nav>
+            <nav>
+                <h2>Forms</h2>
+                <a href="{{ url_for('autocomplete') }}">Autocomplete</a>
+                <a href="{{ url_for('checkboxes') }}">Checkboxes</a>
+                <a href="{{ url_for('chips') }}">Chips</a>
+                <a href="{{ url_for('fieldsets') }}">Fieldsets</a>
+                <a href="{{ url_for('radio_buttons') }}">Radio Buttons</a>
+                <a href="{{ url_for('range') }}">Range</a>
+                <a href="{{ url_for('select') }}">Select</a>
+                <a href="{{ url_for('switches') }}">Switches</a>
+                <a href="{{ url_for('text_inputs') }}">Text Inputs</a>
+            </nav>
+            <small class="footer-copyright">
+                <span>&copy; 2026 ExpressiveCSS</span>
+                <span>v0.3.0</span>
+            </small>
         </div>
     </footer>
 

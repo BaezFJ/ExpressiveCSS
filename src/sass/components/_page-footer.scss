@@ -1,27 +1,143 @@
 @use "../abstracts" as *;
 
+// Site footer.
+//
+// Anatomy is the HTML. A <footer class="page-footer"> is the landmark.
+// A heading is a column title. A <nav> (or ul) is a link list. The last
+// child .footer-copyright (or a <small>) is the legal bar. .page-footer
+// is required so a <footer><nav> is not the bottom app bar.
+//
+// Tokens:
+//   --md-comp-footer-padding-block     3rem
+//   --md-comp-footer-padding-inline    1rem
+//   --md-comp-footer-gap               2rem
+//   --md-comp-footer-legal-height      48px
+//
+// Unfilled by default (dashed hairline). .filled uses surface-container.
+// There is no JavaScript.
+
 .page-footer {
+  --md-comp-footer-padding-block: 3rem;
+  --md-comp-footer-padding-inline: 1rem;
+  --md-comp-footer-gap: 2rem;
+  --md-comp-footer-legal-height: 48px;
+
+  box-sizing: border-box;
   margin-top: 5rem;
-  padding-top: 3rem;
+  padding: var(--md-comp-footer-padding-block) var(--md-comp-footer-padding-inline) 1rem;
   border-top: 1px dashed var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+
   p {
-    color: var(--md-sys-color-outline);
+    margin: 0 0 8px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+    font-family: $font-stack;
   }
-  a {
+
+  a:not(.btn, .button, .btn-small, .btn-large, .btn-flat, .btn-floating) {
     color: var(--md-sys-color-primary);
+    text-decoration: none;
+    @include focus-visible;
   }
-  .footer-copyright,
-  .footer-copyright a {
-    overflow: hidden;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0px;
+
+  :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0 0 8px;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("title-small");
+    font-family: $font-stack;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 }
 
-.page-footer ul {
-  padding-left: 0;
-  list-style-type: none;
+.page-footer.filled,
+.page-footer.surface {
+  background-color: var(--md-sys-color-surface-container);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+// Columns: direct <nav> children. A wrapping .container is the grid
+// when the author uses one. Legacy .row still spans the full measure.
+.page-footer > .container,
+.page-footer:not(:has(> .container)) {
+  display: grid;
+  gap: var(--md-comp-footer-gap);
+  grid-template-columns: 1fr;
+
+  @include bp-up("small") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp-up("large") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.page-footer > .container > .row,
+.page-footer > .row {
+  grid-column: 1 / -1;
+}
+
+.page-footer nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 0;
+}
+
+.page-footer nav > a:not(.btn, .button, .btn-small, .btn-large, .btn-flat, .btn-floating),
+.page-footer ul a:not(.btn, .button, .btn-small, .btn-large, .btn-flat, .btn-floating) {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 0 12px;
+  margin-inline-start: -12px;
+  border-radius: 2rem;
+  @include typescale("label-large");
+  font-family: $font-stack;
+
+  &:hover {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  }
+}
+
+.page-footer .footer-copyright,
+.page-footer small.footer-copyright {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  box-sizing: border-box;
+  min-height: var(--md-comp-footer-legal-height);
+  margin: 0;
+  padding-block: 12px;
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("body-small");
+  font-family: $font-stack;
+
+  a:not(.btn, .button) {
+    color: var(--md-sys-color-primary);
+  }
+}
+
+// Sticky: pin the footer to the bottom of a short page. Only when the
+// landmark is a direct child of body — not a footer nested in a demo.
+body:has(> footer.page-footer) {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+body:has(> footer.page-footer) > main {
+  flex: 1 0 auto;
 }
