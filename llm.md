@@ -2821,7 +2821,7 @@ A `<form>` in the nav fills the space between the leading action and anything af
 
 ### Mobile collapse
 
-Hide the destination menu below the large breakpoint and put a `sidenav-trigger` in the leading slot. The trigger is hidden on large screens when it sits inside a top app bar. Pair it with a `sidenav` whose id matches `data-target`. The sidenav element itself must not be a child of the `<nav>`.
+Hide the destination menu below the large breakpoint and put a `sidenav-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `sidenav` whose id matches `data-target`. The sidenav element itself must not be a child of the `<nav>`.
 
 ```text
 <header>
@@ -4172,19 +4172,6 @@ Add a collapsible menu inside the sidenav. The docs sidebar uses this for Styles
     </ul>
   </li>
 </ul>
-```
-
-#### Trigger on large screens
-
-A `sidenav-trigger` inside a top app bar is hidden at the large breakpoint. Add `show-on-large` if you want that trigger on every screen size.
-
-```html
-<ul id="slide-out" class="sidenav">
-  <li><a href="#!">First Sidebar Link</a></li>
-</ul>
-<a href="#!" data-target="slide-out" class="sidenav-trigger show-on-large">
-  <i class="material-icons">menu</i>
-</a>
 ```
 
 #### Fixed HTML Structure

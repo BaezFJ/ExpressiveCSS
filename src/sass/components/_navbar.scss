@@ -177,19 +177,6 @@ header:has(> nav) {
     background-color: transparent;
     width: 100%;
   }
-
-  @include bp-up("large") {
-    // Beats the icon-button display:inline-flex (higher specificity).
-    // Same flag the visibility utilities use for breakpoint hides.
-    > nav:not(.tabs) > .sidenav-trigger {
-      display: none !important;
-    }
-
-    // The trigger is still :first-child, so the title needs the no-icon inset.
-    > nav:not(.tabs) > .sidenav-trigger + :is(h1, h2, h3, h4, h5, h6) {
-      padding-inline-start: 12px;
-    }
-  }
 }
 
 %app-bar-destination {

@@ -376,3 +376,16 @@ describe('Select caret position', () => {
     assert.match(css, /\.caret\s*\{[^}]*left:\s*auto/s);
   });
 });
+
+describe('App bar sidenav trigger', () => {
+  test('a sidenav-trigger inside a top app bar is not hidden on large screens', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    // Materialize hid header > nav > .sidenav-trigger at the large
+    // breakpoint. An M3 app bar keeps the leading page-navigation
+    // control visible at every size.
+    assert.doesNotMatch(
+      css,
+      /header:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*>\s*\.sidenav-trigger\s*\{[^}]*display:\s*none/
+    );
+  });
+});
