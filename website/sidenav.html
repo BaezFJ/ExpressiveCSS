@@ -28,7 +28,7 @@
 
     <header class="fixed">
         <nav>
-            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <i class="material-symbols">menu</i>
             </button>
             <h2>Sidenav</h2>
@@ -514,18 +514,6 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
-
-        <h5 class="light">Trigger on large screens</h5>
-        <p>
-          A <code>sidenav-trigger</code> inside a top app bar is hidden at the large breakpoint.
-          Add <code>show-on-large</code> if you want that trigger on every screen size.
-        </p>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger show-on-large"&gt;
-  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-&lt;/a&gt;</code></pre>
 
         <h5 class="light">Fixed HTML Structure</h5>
         <p>

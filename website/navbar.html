@@ -28,7 +28,7 @@
 
     <header class="fixed">
         <nav>
-            <button type="button" class="sidenav-trigger" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <i class="material-symbols">menu</i>
             </button>
             <h2>Navbar</h2>
@@ -667,11 +667,11 @@
         <h3>Mobile collapse</h3>
         <p>
           Hide the destination menu below the large breakpoint and put a
-          <code>sidenav-trigger</code> in the leading slot. The trigger is
-          hidden on large screens when it sits inside a top app bar. Pair it
-          with a <code>sidenav</code> whose id matches <code>data-target</code>.
-          The sidenav element itself must not be a child of the
-          <code>&lt;nav&gt;</code>.
+          <code>sidenav-trigger</code> in the leading slot. The trigger stays
+          visible at every size — it is the page-navigation control, not
+          collapse chrome. Pair it with a <code>sidenav</code> whose id
+          matches <code>data-target</code>. The sidenav element itself must
+          not be a child of the <code>&lt;nav&gt;</code>.
         </p>
         <header class="mb-3">
           <nav>
