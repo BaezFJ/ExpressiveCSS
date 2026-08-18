@@ -2668,7 +2668,7 @@ Add `center` to the header. The headline is taken out of flow so the leading and
 
 ### Medium and large
 
-Same markup as the small bar. `medium` is 112dp with a `headline-small` title on the second row. `large` is 152dp with `headline-medium`. The title is `order`ed to the end of the flex row so trailing icons stay on the first line.
+Same markup as the small bar. `medium` is 112dp with a `headline-small` title on the second row. `large` is 152dp with `headline-medium`. The title is `order`ed onto the bottom row so the first row can hold the leading icon on the start and the trailing icons on the end.
 
 ```text
 <header class="medium">

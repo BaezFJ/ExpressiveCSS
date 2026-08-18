@@ -389,3 +389,20 @@ describe('App bar sidenav trigger', () => {
     );
   });
 });
+
+describe('App bar medium and large', () => {
+  test('trailing actions are pushed to the end and the title sits on the bottom row', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    // Without these, order+100% basis leaves every icon packed at the
+    // start and align-content:flex-start pins the title under them, so
+    // the 112/152dp bar reads as a small toolbar.
+    assert.match(
+      css,
+      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*\{[^}]*align-content:\s*space-between/s
+    );
+    assert.match(
+      css,
+      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
+    );
+  });
+});

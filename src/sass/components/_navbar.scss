@@ -71,7 +71,10 @@ header:has(> nav) {
     width: 48px;
     height: 48px;
     padding: 0;
-    margin: 0;
+    // Leave margin-inline-start unset so a medium/large bar can push
+    // the first trailing action to the end with margin-inline-start: auto.
+    margin-block: 0;
+    margin-inline-end: 0;
     border: 0;
     border-radius: 50%;
     background: transparent;
@@ -219,12 +222,18 @@ header.center:has(> nav) > nav:not(.tabs) {
   }
 }
 
-// Medium (112dp) and large (152dp): same markup, title wraps to a second row.
+// Medium (112dp) and large (152dp): same markup, title on a second row.
+// The title is pulled out of the first flex line (`order` + 100% basis),
+// so leading/trailing icons would otherwise pack together at the start.
+// `space-between` parks the icon row at the top and the title at the
+// bottom — that's what makes the 112/152 height readable.
 header.medium:has(> nav) > nav:not(.tabs),
 header.large:has(> nav) > nav:not(.tabs) {
   flex-wrap: wrap;
-  align-content: flex-start;
+  align-content: space-between;
+  align-items: flex-start;
   height: auto;
+  padding-top: 4px;
 
   > :is(h1, h2, h3, h4, h5, h6) {
     order: 1;
@@ -232,6 +241,10 @@ header.large:has(> nav) > nav:not(.tabs) {
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) + * {
+    margin-inline-start: auto;
   }
 }
 
