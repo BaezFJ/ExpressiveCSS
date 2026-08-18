@@ -177,7 +177,7 @@ from every other index file.
 Three consequences worth knowing:
 
 **Utilities beat components, without specificity.** Layer order outranks
-specificity entirely, so `.hide` wins over `.collection .collection-item` even
+specificity entirely, so `.hide` wins over `.list > li` even
 though it is less specific. Utilities used to be emitted *before* components and
 had to out-shout them; they are now last.
 

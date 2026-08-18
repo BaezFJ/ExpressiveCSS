@@ -39,7 +39,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Buttons
 - Cards
 - Carousel
-- Collections
+- Lists
 - Floating Action Button
 - Footer
 - Icons
@@ -1613,15 +1613,15 @@ Notify that there are new or unread messages or notifications.
 
 Badges can notify you that there are new or unread messages or notifications. Add the `new` class to the badge to give it the background.
 
-### Collections
+### Lists
 
 ```html
-<div class="collection">
-  <a href="#!" class="collection-item"><span class="badge">1</span>Alan</a>
-  <a href="#!" class="collection-item"><span class="new badge">4</span>Alan</a>
-  <a href="#!" class="collection-item">Alan</a>
-  <a href="#!" class="collection-item"><span class="badge">14</span>Alan</a>
-</div>
+<ul class="list">
+  <li><a href="#!">Alan<span class="badge">1</span></a></li>
+  <li><a href="#!">Alan<span class="new badge">4</span></a></li>
+  <li><a href="#!">Alan</a></li>
+  <li><a href="#!">Alan<span class="badge">14</span></a></li>
+</ul>
 ```
 
 ### Badges in Dropdown
@@ -2253,81 +2253,83 @@ Swipeable tabs wrap their panels in a carousel. That is the Tabs plugin, not a c
 
 ---
 
-## Collections
+## Lists
 
-Group list objects together, with optional links, headers, and avatars.
+Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. There is no JavaScript — the HTML is the component.
 
-Collections allow you to group list objects together.
+The leading visual is the first `<i>`, `<img>`, or `<input>`. The trailing action is the last `<i>`, `<kbd>`, `<button>`, `<time>`, or `.meta`. A following `<p>` is supporting text. Mark the current row with `aria-selected="true"` (or `active`).
 
-### Basic
+Two variants: standard (the default) and `segmented`.
+
+### Standard
+
+Transparent rows. The selected item is a pill in `secondary-container`. The leading icon fills when the row is selected.
 
 ```html
-<ul class="collection">
-  <li class="collection-item">Alvin</li>
-  <li class="collection-item">Alvin</li>
-  <li class="collection-item">Alvin</li>
-  <li class="collection-item">Alvin</li>
+<ul class="list">
+  <li>
+    <i class="material-symbols">star</i>
+    List item
+    <kbd>⌘C</kbd>
+  </li>
+  <li aria-selected="true">
+    <i class="material-symbols">star</i>
+    List item
+    <kbd>⌘C</kbd>
+  </li>
 </ul>
+```
+
+### Segmented
+
+Add `segmented`. Every row is a rounded tile; the selected tile uses the same `secondary-container` fill.
+
+```html
+<ul class="list segmented">
+  <li aria-selected="true">
+    <i class="material-symbols">star</i>
+    List item
+    <kbd>⌘C</kbd>
+  </li>
+</ul>
+```
+
+### Text
+
+A row can be a single line of label text, or a label with supporting text underneath. Either can wrap, or take `truncate` to ellipsis.
+
+```html
+<li>Label text only</li>
+<li><span class="truncate">A long label…</span></li>
+<li>
+  Headline
+  <p>Supporting text sits under the label.</p>
+</li>
+```
+
+### Icons
+
+A leading icon is a quick visual cue for the label. A trailing icon is status or an action.
+
+```html
+<li>
+  <i class="material-symbols">inbox</i>
+  Inbox
+  <i class="material-symbols">chevron_right</i>
+</li>
 ```
 
 ### Links
 
-```html
-<div class="collection">
-  <a href="#!" class="collection-item">Alvin</a>
-  <a href="#!" class="collection-item active">Alvin</a>
-  <a href="#!" class="collection-item">Alvin</a>
-  <a href="#!" class="collection-item">Alvin</a>
-</div>
-```
-
-### Headers
+Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-current` on the link, or a checked radio inside the label, paints the selected pill.
 
 ```html
-<ul class="collection with-header">
-  <li class="collection-header"><h4>First Names</h4></li>
-  <li class="collection-item">Alvin</li>
-  <li class="collection-item">Alvin</li>
-  <li class="collection-item">Alvin</li>
-  <li class="collection-item">Alvin</li>
-</ul>
-```
-
-### Secondary content
-
-```html
-<ul class="collection with-header">
-  <li class="collection-header"><h4>First Names</h4></li>
-  <li class="collection-item">
-    Alvin
-    <a href="#!" class="secondary-content">
-      <i class="material-icons">send</i>
-    </a>
-  </li>
-</ul>
-```
-
-### Avatar Content
-
-```html
-<ul class="collection">
-  <li class="collection-item avatar">
-    <img src="images/portrait.jpg" alt="" class="circle">
-    <span class="title">Title</span>
-    <p>First Line<br>Second Line</p>
-    <a href="#!" class="secondary-content">
-      <i class="material-icons">grade</i>
-    </a>
-  </li>
-  <li class="collection-item avatar">
-    <i class="material-icons circle">folder</i>
-    <span class="title">Title</span>
-    <p>First Line<br>Second Line</p>
-    <a href="#!" class="secondary-content">
-      <i class="material-icons">grade</i>
-    </a>
-  </li>
-</ul>
+<li>
+  <a href="/inbox" aria-current="page">
+    <i class="material-symbols">inbox</i>
+    Inbox
+  </a>
+</li>
 ```
 
 ---

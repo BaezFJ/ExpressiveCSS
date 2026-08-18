@@ -1,0 +1,253 @@
+@use "../abstracts" as *;
+
+// List. Anatomy is the HTML: a ul/ol/menu.list of items. A leading icon,
+// image, or input is the first child; a trailing icon, kbd, button, time,
+// or .meta is the last child; a following <p> is supporting text.
+//
+// Two variants (M3 Expressive):
+//   (default)  standard — transparent rows, selected is a pill
+//   .segmented — each row is a rounded tile with a gap
+//
+// Tokens:
+//   --md-comp-list-item-height              56px
+//   --md-comp-list-item-two-line-height     72px
+//   --md-comp-list-item-padding             16px
+//   --md-comp-list-item-shape               100px (pill) / 20px segmented
+//   --md-comp-list-item-container-color     transparent / surface mix
+//   --md-comp-list-selected-container-color secondary-container
+//   --md-comp-list-gap                      16px (icon to text)
+//   --md-comp-list-leading-icon-size        24px
+//   --md-comp-list-trailing-icon-size       24px
+//   --md-comp-list-avatar-size              40px
+//   --md-comp-list-image-size               56px
+//   --md-comp-list-segmented-gap            2px
+//
+// Nest descendants inside this block.
+
+.list {
+  --md-comp-list-item-height: 56px;
+  --md-comp-list-item-two-line-height: 72px;
+  --md-comp-list-item-padding: 16px;
+  --md-comp-list-item-shape: 100px;
+  --md-comp-list-item-container-color: transparent;
+  --md-comp-list-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-list-selected-color: var(--md-sys-color-on-secondary-container);
+  --md-comp-list-gap: 16px;
+  --md-comp-list-leading-icon-size: 24px;
+  --md-comp-list-trailing-icon-size: 24px;
+  --md-comp-list-avatar-size: 40px;
+  --md-comp-list-image-size: 56px;
+  --md-comp-list-segmented-gap: 2px;
+
+  box-sizing: border-box;
+  margin: $element-top-margin 0 $element-bottom-margin;
+  padding: 0;
+  list-style: none;
+  color: var(--md-sys-color-on-surface);
+
+  > li {
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: var(--md-comp-list-item-shape);
+    background-color: var(--md-comp-list-item-container-color);
+    color: inherit;
+    transition: background-color 0.2s ease-out;
+  }
+
+  // The row grid lives on the item, or on a wrapping <a>/<label>.
+  > li:not(:has(> :is(a, label):only-child)),
+  > li > :is(a, label):only-child {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: var(--md-comp-list-gap);
+    box-sizing: border-box;
+    min-height: var(--md-comp-list-item-height);
+    padding: 8px var(--md-comp-list-item-padding);
+    @include typescale("body-large");
+
+    > :is(i, img, input):first-child {
+      grid-column: 1;
+      grid-row: 1 / -1;
+      align-self: center;
+      flex-shrink: 0;
+    }
+
+    > i:first-child:not(.circle) {
+      font-size: var(--md-comp-list-leading-icon-size);
+      width: var(--md-comp-list-leading-icon-size);
+      height: var(--md-comp-list-leading-icon-size);
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    > img:first-child {
+      width: var(--md-comp-list-image-size);
+      height: var(--md-comp-list-image-size);
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    > :is(img, i).circle {
+      width: var(--md-comp-list-avatar-size);
+      height: var(--md-comp-list-avatar-size);
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    > i.circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      line-height: 1;
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    > div:not(.meta),
+    > span {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    > p {
+      grid-column: 2;
+      grid-row: 2;
+      min-width: 0;
+      margin: 0;
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("body-medium");
+    }
+
+    > :is(i, kbd, button, time, .meta, .badge, .button, a):last-child:not(:first-child) {
+      grid-column: 3;
+      grid-row: 1 / -1;
+      justify-self: end;
+      align-self: center;
+    }
+
+    > i:last-child:not(:first-child) {
+      font-size: var(--md-comp-list-trailing-icon-size);
+      width: var(--md-comp-list-trailing-icon-size);
+      height: var(--md-comp-list-trailing-icon-size);
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    > :is(kbd, time, .meta):last-child {
+      color: var(--md-sys-color-on-surface-variant);
+      @include typescale("label-small");
+    }
+
+    > kbd:last-child {
+      font-family: inherit;
+      border: 0;
+      background: none;
+      padding: 0;
+    }
+
+    > button:last-child:not(:first-child):not(.button),
+    > a:last-child:not(:first-child):not(.button):has(> i:only-child) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      appearance: none;
+      @include focus-visible;
+    }
+
+    &:has(> p),
+    &:has(> div:not(.meta) > p) {
+      min-height: var(--md-comp-list-item-two-line-height);
+    }
+
+    &:has(> img:first-child:not(.circle)) {
+      min-height: calc(var(--md-comp-list-image-size) + 16px);
+    }
+  }
+
+  > li > :is(a, label):only-child {
+    color: inherit;
+    text-decoration: none;
+    border-radius: inherit;
+    cursor: pointer;
+    @include focus-visible;
+  }
+
+  > li:not(.active):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-surface) 8%,
+      var(--md-comp-list-item-container-color)
+    );
+  }
+
+  > li.active,
+  > li[aria-selected="true"],
+  > li[aria-current],
+  > li:has(> [aria-current]),
+  > li:has([aria-selected="true"]),
+  > li:has(:checked) {
+    background-color: var(--md-comp-list-selected-container-color);
+    color: var(--md-comp-list-selected-color);
+
+    i,
+    p,
+    kbd,
+    time,
+    .meta {
+      color: inherit;
+    }
+
+    > i:first-child,
+    > :is(a, label):only-child > i:first-child {
+      --md-icon-fill: 1;
+    }
+  }
+
+  > li:has(> :is(h1, h2, h3, h4, h5, h6):only-child) {
+    min-height: 0;
+    padding: 16px var(--md-comp-list-item-padding) 8px;
+    background: transparent;
+    pointer-events: none;
+    color: var(--md-sys-color-on-surface-variant);
+
+    > :is(h1, h2, h3, h4, h5, h6) {
+      margin: 0;
+      @include typescale("title-small");
+    }
+  }
+
+  > li.divider {
+    height: 1px;
+    min-height: 0;
+    padding: 0;
+    margin: 8px var(--md-comp-list-item-padding);
+    border-radius: 0;
+    background-color: var(--md-sys-color-outline-variant);
+    pointer-events: none;
+  }
+
+  > li.disabled,
+  > li[aria-disabled="true"] {
+    pointer-events: none;
+    color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  }
+
+  &.segmented {
+    --md-comp-list-item-container-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-surface) 8%,
+      var(--md-sys-color-surface)
+    );
+    --md-comp-list-item-shape: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-comp-list-segmented-gap);
+  }
+}

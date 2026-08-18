@@ -1,0 +1,320 @@
+{% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
+
+{% block title %}Lists - ExpressiveCSS{% endblock %}
+{% block page_title %}Lists{% endblock %}
+
+{% block page %}
+{{ Banner("Lists", "Continuous vertical indexes of text and images.") }}
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>.list</code> is a vertical index. Use it so people can find
+          an item and act on it. There is no JavaScript — the HTML is the
+          component. Order items logically, keep each row short, and put
+          icons, text, and actions in the same place on every row.
+        </p>
+        <p>
+          The leading visual is the first <code>&lt;i&gt;</code>,
+          <code>&lt;img&gt;</code>, or <code>&lt;input&gt;</code>. The
+          trailing action is the last <code>&lt;i&gt;</code>,
+          <code>&lt;kbd&gt;</code>, <code>&lt;button&gt;</code>,
+          <code>&lt;time&gt;</code>, or <code>.meta</code>. A following
+          <code>&lt;p&gt;</code> is supporting text. Mark the current row
+          with <code>aria-selected="true"</code> (or <code>active</code>).
+        </p>
+        <p>
+          Two variants: <strong>standard</strong> (the default) and
+          <code>segmented</code>.
+        </p>
+      </div>
+
+      <div id="standard" class="section scrollspy">
+        <h3>Standard</h3>
+        <p>
+          Transparent rows. The selected item is a pill in
+          <code>secondary-container</code>. The leading icon fills when
+          the row is selected.
+        </p>
+        <ul class="list">
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li aria-selected="true">
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="list"&gt;
+  &lt;li&gt;
+    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    List item
+    &lt;kbd&gt;⌘C&lt;/kbd&gt;
+  &lt;/li&gt;
+  &lt;li aria-selected="true"&gt;
+    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    List item
+    &lt;kbd&gt;⌘C&lt;/kbd&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="segmented" class="section scrollspy">
+        <h3>Segmented</h3>
+        <p>
+          Add <code>segmented</code>. Every row is a rounded tile;
+          the selected tile uses the same <code>secondary-container</code>
+          fill. Use this when the list itself should read as a group.
+        </p>
+        <ul class="list segmented">
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li aria-selected="true">
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <i class="material-symbols">star</i>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+        </ul>
+<pre><code>&lt;ul class="list segmented"&gt;
+  &lt;li aria-selected="true"&gt;
+    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    List item
+    &lt;kbd&gt;⌘C&lt;/kbd&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      </div>
+
+      <div id="text" class="section scrollspy">
+        <h3>Text</h3>
+        <p>
+          A row can be a single line of label text, or a label with
+          supporting text underneath. Either can wrap, or take
+          <code>truncate</code> to ellipsis.
+        </p>
+        <ul class="list">
+          <li>Label text only</li>
+          <li><span class="truncate">A long label that will not wrap past the end of the row and is cut off</span></li>
+          <li>
+            Headline
+            <p>Supporting text sits under the label and can wrap onto another line.</p>
+          </li>
+        </ul>
+<pre><code>&lt;li&gt;Label text only&lt;/li&gt;
+&lt;li&gt;&lt;span class="truncate"&gt;A long label…&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;
+  Headline
+  &lt;p&gt;Supporting text sits under the label.&lt;/p&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="icons" class="section scrollspy">
+        <h3>Icons</h3>
+        <p>
+          A leading icon is a quick visual cue for the label. A trailing
+          icon is status or an action — more, info, chevron.
+        </p>
+        <ul class="list">
+          <li>
+            <i class="material-symbols">inbox</i>
+            Inbox
+            <i class="material-symbols">chevron_right</i>
+          </li>
+          <li>
+            <i class="material-symbols">send</i>
+            Sent
+            <i class="material-symbols">info</i>
+          </li>
+          <li>
+            <i class="material-symbols">delete</i>
+            Trash
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </li>
+        </ul>
+<pre><code>&lt;li&gt;
+  &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+  Inbox
+  &lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="media" class="section scrollspy">
+        <h3>Avatars and images</h3>
+        <p>
+          A leading <code>.circle</code> is a 40dp avatar. A bare
+          <code>&lt;img&gt;</code> is a 56dp thumbnail.
+        </p>
+        <ul class="list">
+          <li>
+            <img src="https://picsum.photos/id/64/80/80" alt="" class="circle">
+            Ada Lovelace
+            <p>Mathematician</p>
+          </li>
+          <li>
+            <i class="material-symbols circle">person</i>
+            Icon avatar
+          </li>
+          <li>
+            <img src="https://picsum.photos/id/1015/112/112" alt="">
+            Thumbnail
+            <p>56dp image, 8dp corners.</p>
+          </li>
+        </ul>
+<pre><code>&lt;li&gt;
+  &lt;img src="portrait.jpg" alt="" class="circle"&gt;
+  Ada Lovelace
+  &lt;p&gt;Mathematician&lt;/p&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="links" class="section scrollspy">
+        <h3>Links and selection</h3>
+        <p>
+          Wrap the row in an <code>&lt;a&gt;</code> or
+          <code>&lt;label&gt;</code> to make the whole item the target.
+          <code>aria-current</code> on the link, or a checked radio
+          inside the label, paints the selected pill.
+        </p>
+        <ul class="list">
+          <li>
+            <a href="#!">
+              <i class="material-symbols">mail</i>
+              Inbox
+            </a>
+          </li>
+          <li>
+            <a href="#!" aria-current="page">
+              <i class="material-symbols">star</i>
+              Starred
+            </a>
+          </li>
+          <li>
+            <a href="#!">
+              <i class="material-symbols">snooze</i>
+              Snoozed
+            </a>
+          </li>
+        </ul>
+<pre><code>&lt;li&gt;
+  &lt;a href="/inbox" aria-current="page"&gt;
+    &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+    Inbox
+  &lt;/a&gt;
+&lt;/li&gt;</code></pre>
+        <ul class="list">
+          <li>
+            <label>
+              <input type="radio" name="list-pick" checked>
+              Red
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="radio" name="list-pick">
+              Green
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="radio" name="list-pick">
+              Blue
+            </label>
+          </li>
+        </ul>
+<pre><code>&lt;li&gt;
+  &lt;label&gt;
+    &lt;input type="radio" name="color"&gt;
+    Red
+  &lt;/label&gt;
+&lt;/li&gt;</code></pre>
+      </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <p>Set these on the list (or on <code>:root</code>):</p>
+        <table class="striped">
+          <thead>
+            <tr><th>Token</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--md-comp-list-item-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-list-item-two-line-height</code></td><td>72px</td></tr>
+            <tr><td><code>--md-comp-list-item-padding</code></td><td>16px</td></tr>
+            <tr><td><code>--md-comp-list-item-shape</code></td><td>100px (20px segmented)</td></tr>
+            <tr><td><code>--md-comp-list-item-container-color</code></td><td>transparent</td></tr>
+            <tr><td><code>--md-comp-list-selected-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+            <tr><td><code>--md-comp-list-leading-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-list-segmented-gap</code></td><td>2px</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#standard">Standard</a></li>
+          <li><a href="#segmented">Segmented</a></li>
+          <li><a href="#text">Text</a></li>
+          <li><a href="#icons">Icons</a></li>
+          <li><a href="#media">Avatars and images</a></li>
+          <li><a href="#links">Links and selection</a></li>
+          <li><a href="#tokens">Tokens</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

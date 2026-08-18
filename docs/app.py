@@ -10,7 +10,7 @@ start, foundations, structure, components, forms. Layout chrome
 
 from pathlib import Path
 
-from flask import Flask, render_template, send_from_directory, url_for
+from flask import Flask, redirect, render_template, send_from_directory, url_for
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DIST_DIR = REPO_ROOT / 'dist'
@@ -188,10 +188,16 @@ def cards():
     return render_template('components/cards.html')
 
 
+@app.route('/lists')
+@app.route('/lists.html')
+def lists():
+    return render_template('components/lists.html')
+
+
 @app.route('/collections')
 @app.route('/collections.html')
 def collections():
-    return render_template('components/collections.html')
+    return redirect(url_for('lists'), code=301)
 
 
 @app.route('/collapsible')

@@ -116,7 +116,7 @@
             </li>
             <li>
                 <div class="collapsible">
-                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'collections', 'collapsible', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'collapsible', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">widgets</i>
                             Components
@@ -131,8 +131,8 @@
                                 <li class="{% if request.endpoint == 'cards' %}active{% endif %}">
                                     <a href="{{ url_for('cards') }}">Cards</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'collections' %}active{% endif %}">
-                                    <a href="{{ url_for('collections') }}">Collections</a>
+                                <li class="{% if request.endpoint == 'lists' %}active{% endif %}">
+                                    <a href="{{ url_for('lists') }}">Lists</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'collapsible' %}active{% endif %}">
                                     <a href="{{ url_for('collapsible') }}">Collapsible</a>
@@ -262,7 +262,7 @@
                 <a href="{{ url_for('buttons') }}">Buttons</a>
                 <a href="{{ url_for('floating_action_button') }}">FAB</a>
                 <a href="{{ url_for('cards') }}">Cards</a>
-                <a href="{{ url_for('collections') }}">Collections</a>
+                <a href="{{ url_for('lists') }}">Lists</a>
                 <a href="{{ url_for('collapsible') }}">Collapsible</a>
                 <a href="{{ url_for('modals') }}">Dialogs</a>
                 <a href="{{ url_for('badges') }}">Badges</a>
