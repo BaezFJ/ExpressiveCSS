@@ -52,7 +52,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background-color: var(--md-sys-color-surface);
+  background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
   transition: width var(--md-comp-nav-rail-duration) ease,
     min-width var(--md-comp-nav-rail-duration) ease,

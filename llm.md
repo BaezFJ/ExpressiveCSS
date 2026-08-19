@@ -634,24 +634,22 @@ The full list of role utilities lives on the Color page. Pair a fill with its `o
 
 One system: the Material Design 3 theme tokens.
 
-Color in Expressive is the Material Design 3 tokens and nothing else — CSS custom properties on `:root` named `--md-sys-color-*`, exposed as utility classes like `.primary` and `.on-surface-text`.
+Color in Expressive is the Material Design 3 Expressive roles — CSS custom properties on `:root` named `--md-sys-color-*`, exposed as utility classes like `.primary` and `.on-surface-text`. There are 26 standard roles in six groups (primary, secondary, tertiary, error, surface, outline), plus optional add-ons for fixed accents and the surface container scale.
 
 The 2014 Material palette that shipped with earlier versions (`.red`, `.blue.lighten-2`, `colorFunc()`) has been removed. It generated 532 utility classes — 18% of the stylesheet — expressing a design opinion this framework does not hold, and it did not follow the page theme. Replace a palette class with the role it was standing in for: `.red` → `.error`, `.blue` → `.primary`, `.green` → `.tertiary`, and pair each fill with its `on-*` text class.
 
 Token values follow the page theme. The docs site sets `<html theme="light">` or `theme="dark"`. Without that attribute, the tokens follow `prefers-color-scheme`.
 
-A background class sets `background-color`. Append `-text` for `color`. Pair a fill with its `on-*` text class so contrast stays correct when the theme flips.
+A background class sets `background-color`. Append `-text` for `color`. Pair roles as the spec intends so contrast stays at least 3:1: primary for the FAB and filled buttons, secondary for filter chips and selected nav pills, tertiary for contrasting accents, error for error states, surface for page backgrounds, surface-container* for cards/sheets/dialogs/menus. `on-*` is text and icons on that fill. Container roles are fills, not text.
 
 ```html
 <div class="primary on-primary-text">.primary</div>
 <span class="on-surface-text">.on-surface-text</span>
 ```
 
-The named utilities are:
+Every role name is a background class. The same name plus `-text` is the foreground class (`.on-surface-text`). Prefer the `on-*` text class on its paired fill.
 
-`primary`, `on-primary`, `primary-container`, `on-primary-container`, `secondary`, `on-secondary`, `secondary-container`, `on-secondary-container`, `tertiary`, `on-tertiary`, `tertiary-container`, `on-tertiary-container`, `error`, `on-error`, `error-container`, `on-error-container`, `background`, `on-background`, `surface`, `on-surface`, `surface-variant`, `on-surface-variant`, `outline`, `outline-variant`, `inverse-surface`, `inverse-on-surface`, `inverse-primary`, `shadow`, `surface-tint`, `scrim`.
-
-Each name is a background class. The same name plus `-text` is the foreground class (`.primary-text`, `.on-surface-text`).
+Standard pairs: `primary` / `on-primary`, `primary-container` / `on-primary-container`, and the same for secondary, tertiary, and error. Surface: `surface`, `surface-dim`, `surface-bright`, `surface-container-lowest` … `surface-container-highest`, `on-surface`, `on-surface-variant`. Outline: `outline`, `outline-variant`. Inverse: `inverse-surface` / `inverse-on-surface`, `inverse-primary`. Overlay: `scrim`, `shadow`. Optional fixed accents (`primary-fixed`, `primary-fixed-dim`, `on-primary-fixed`, `on-primary-fixed-variant`, and the secondary/tertiary copies) stay the same in light and dark. `background`, `on-background`, `surface-variant`, and `surface-tint` remain as aliases.
 
 In Sass, consume the token directly. Do not write `rgba(var(--md-sys-color-primary), 0.06)` — the tokens hold hex colors, so that form is invalid. Mix with transparency instead:
 
@@ -670,7 +668,7 @@ Mix `in oklab`, not `in srgb`. sRGB interpolation dips in lightness through the 
 
 ### Every role
 
-Thirty roles, each a fill class and a matching `-text` foreground class. A role is a job, not a color: `error` means "this went wrong", and what that looks like is the theme's business.
+A role is a job, not a color: `error` means "this went wrong", and what that looks like is the theme's business.
 
 ##### #
 
@@ -682,8 +680,8 @@ Do not `@extend` these classes across files — that is how the old stylesheet l
 
 ```css
 .my-panel {
-  background-color: var(--md-sys-color-surface-variant);
-  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
 }
 ```
 

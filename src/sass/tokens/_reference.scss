@@ -42,9 +42,11 @@ $md-source: #006A79 !default;
 
 // tone -> OKLCH lightness. Fitted against the reference ramps; see the test.
 $tones: (
-  0: 0%, 10: 22.37%, 20: 30.99%, 25: 35.26%, 30: 39.48%, 35: 43.79%,
-  40: 48.14%, 50: 56.83%, 60: 65.42%, 70: 74.04%, 80: 82.63%, 90: 91.33%,
-  95: 95.62%, 98: 98.25%, 99: 99.19%, 100: 100%
+  0: 0%, 4: 8.95%, 6: 13.42%, 10: 22.37%, 12: 24.09%, 17: 28.40%,
+  20: 30.99%, 22: 32.70%, 24: 34.41%, 25: 35.26%, 30: 39.48%, 35: 43.79%,
+  40: 48.14%, 50: 56.83%, 60: 65.42%, 70: 74.04%, 80: 82.63%, 87: 88.72%,
+  90: 91.33%, 92: 93.05%, 94: 94.76%, 95: 95.62%, 96: 96.50%, 98: 98.25%,
+  99: 99.19%, 100: 100%
 ) !default;
 
 // Per-ramp hue offset from the source hue, and target chroma. Chroma is a
@@ -72,37 +74,59 @@ $ramps: (
 $sys-light: (
   "primary": "primary40", "on-primary": "primary100",
   "primary-container": "primary90", "on-primary-container": "primary10",
+  "primary-fixed": "primary90", "primary-fixed-dim": "primary80",
+  "on-primary-fixed": "primary10", "on-primary-fixed-variant": "primary30",
   "secondary": "secondary40", "on-secondary": "secondary100",
   "secondary-container": "secondary90", "on-secondary-container": "secondary10",
+  "secondary-fixed": "secondary90", "secondary-fixed-dim": "secondary80",
+  "on-secondary-fixed": "secondary10", "on-secondary-fixed-variant": "secondary30",
   "tertiary": "tertiary40", "on-tertiary": "tertiary100",
   "tertiary-container": "tertiary90", "on-tertiary-container": "tertiary10",
+  "tertiary-fixed": "tertiary90", "tertiary-fixed-dim": "tertiary80",
+  "on-tertiary-fixed": "tertiary10", "on-tertiary-fixed-variant": "tertiary30",
   "error": "error40", "on-error": "error100",
   "error-container": "error90", "on-error-container": "error10",
-  "background": "neutral99", "on-background": "neutral10",
-  "surface": "neutral99", "on-surface": "neutral10",
-  "surface-variant": "neutral-variant90", "on-surface-variant": "neutral-variant30",
+  "surface": "neutral98", "on-surface": "neutral10",
+  "on-surface-variant": "neutral-variant30",
+  "surface-dim": "neutral87", "surface-bright": "neutral98",
+  "surface-container-lowest": "neutral100", "surface-container-low": "neutral96",
+  "surface-container": "neutral94", "surface-container-high": "neutral92",
+  "surface-container-highest": "neutral90",
   "outline": "neutral-variant50", "outline-variant": "neutral-variant80",
   "inverse-surface": "neutral20", "inverse-on-surface": "neutral95",
-  "inverse-primary": "primary80", "surface-tint": "primary40",
-  "shadow": "neutral0", "scrim": "neutral0"
+  "inverse-primary": "primary80",
+  "scrim": "neutral0", "shadow": "neutral0",
+  "background": "neutral98", "on-background": "neutral10",
+  "surface-variant": "neutral-variant90", "surface-tint": "primary40"
 ) !default;
 
 $sys-dark: (
   "primary": "primary80", "on-primary": "primary20",
   "primary-container": "primary30", "on-primary-container": "primary90",
+  "primary-fixed": "primary90", "primary-fixed-dim": "primary80",
+  "on-primary-fixed": "primary10", "on-primary-fixed-variant": "primary30",
   "secondary": "secondary80", "on-secondary": "secondary20",
   "secondary-container": "secondary30", "on-secondary-container": "secondary90",
+  "secondary-fixed": "secondary90", "secondary-fixed-dim": "secondary80",
+  "on-secondary-fixed": "secondary10", "on-secondary-fixed-variant": "secondary30",
   "tertiary": "tertiary80", "on-tertiary": "tertiary20",
   "tertiary-container": "tertiary30", "on-tertiary-container": "tertiary90",
+  "tertiary-fixed": "tertiary90", "tertiary-fixed-dim": "tertiary80",
+  "on-tertiary-fixed": "tertiary10", "on-tertiary-fixed-variant": "tertiary30",
   "error": "error80", "on-error": "error20",
   "error-container": "error30", "on-error-container": "error90",
-  "background": "neutral10", "on-background": "neutral90",
-  "surface": "neutral10", "on-surface": "neutral90",
-  "surface-variant": "neutral-variant30", "on-surface-variant": "neutral-variant80",
+  "surface": "neutral6", "on-surface": "neutral90",
+  "on-surface-variant": "neutral-variant80",
+  "surface-dim": "neutral6", "surface-bright": "neutral24",
+  "surface-container-lowest": "neutral4", "surface-container-low": "neutral10",
+  "surface-container": "neutral12", "surface-container-high": "neutral17",
+  "surface-container-highest": "neutral22",
   "outline": "neutral-variant60", "outline-variant": "neutral-variant30",
   "inverse-surface": "neutral90", "inverse-on-surface": "neutral10",
-  "inverse-primary": "primary40", "surface-tint": "primary80",
-  "shadow": "neutral0", "scrim": "neutral0"
+  "inverse-primary": "primary40",
+  "scrim": "neutral0", "shadow": "neutral0",
+  "background": "neutral6", "on-background": "neutral90",
+  "surface-variant": "neutral-variant30", "surface-tint": "primary80"
 ) !default;
 
 :root {

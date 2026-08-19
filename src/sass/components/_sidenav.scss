@@ -55,7 +55,7 @@ dialog.sidenav {
   inset: 0 auto 0 0;
   overflow: hidden;
   color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface);
+  background-color: var(--md-sys-color-surface-container-low);
   outline: none;
   @include z-depth("1");
 
@@ -147,7 +147,7 @@ dialog.sidenav {
   overscroll-behavior: contain;
   user-select: none;
   color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface);
+  background-color: var(--md-sys-color-surface-container-low);
   transform: translateX(-100%);
   @include z-depth("1");
 
@@ -163,7 +163,8 @@ dialog.sidenav {
   }
 
   li.active > a:not(.button, .circle, .extra) {
-    background-color: color-mix(in oklab, var(--md-sys-color-secondary) 10%, transparent);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
   }
 
   :is(li > a, summary) {
@@ -192,7 +193,7 @@ dialog.sidenav {
 
   li > a:not(.button, .circle, .extra),
   summary {
-    color: var(--md-sys-color-on-secondary-container);
+    color: var(--md-sys-color-on-surface-variant);
 
     &:hover {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);

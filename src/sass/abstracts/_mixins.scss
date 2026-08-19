@@ -89,18 +89,18 @@
 
 @mixin btn-elevated {
   color: var(--md-sys-color-primary);
-  background-color: var(--md-sys-color-surface);
+  background-color: var(--md-sys-color-surface-container-low);
   @include z-depth("1");
 
   &:hover {
     @include z-depth("2");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface));
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface-container-low));
   }
 
   &:active,
   &:focus {
     @include z-depth("1");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface));
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface-container-low));
   }
 
   @include focus-visible();

@@ -9,9 +9,9 @@
 // or the layout (horizontal).
 //
 // Tokens follow https://m3.material.io/components/cards/specs
-//   container  surface, 12dp corners
+//   container  surface-container-low, 12dp corners
 //   elevated   level 1, hover level 2
-//   filled     surface-variant, level 0
+//   filled     surface-container-highest, level 0
 //   outlined   surface + 1dp outline, level 0
 //   headline   title-medium / on-surface
 //   body       body-medium / on-surface-variant
@@ -20,7 +20,7 @@
 $_card: "article";
 
 :where(#{$_card}) {
-  --md-comp-elevated-card-container-color: var(--md-sys-color-surface);
+  --md-comp-elevated-card-container-color: var(--md-sys-color-surface-container-low);
   --md-comp-elevated-card-container-shape: 12px;
 
   position: relative;
@@ -43,7 +43,7 @@ $_card: "article";
 
 :where(#{$_card}).filled {
   @include z-depth("0");
-  background-color: var(--md-sys-color-surface-variant);
+  background-color: var(--md-sys-color-surface-container-highest);
 }
 
 :where(#{$_card}).outlined,

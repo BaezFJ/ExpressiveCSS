@@ -1,7 +1,9 @@
+@use "../abstracts" as *;
+
 // Maps the resolved pairs from tokens/_reference.scss onto the live
 // --md-sys-color-* names that the rest of the framework consumes.
 //
-// This file used to spell out all 30 tokens four times - once for the light
+// This file used to spell out all tokens four times - once for the light
 // default, once inside @media (prefers-color-scheme: dark), and once for each
 // of :root[theme='light'] / [theme='dark'] - because a custom property can
 // only hold one value per selector. light-dark() holds both, so the mapping is
@@ -17,18 +19,6 @@
 // The --md-sys-color-*-light / -dark pairs are deliberately left in place.
 // They are the documented way to re-theme the framework (see the docs' Themes
 // page) and several components reference them directly.
-
-$sys-color-roles: (
-  "primary", "on-primary", "primary-container", "on-primary-container",
-  "secondary", "on-secondary", "secondary-container", "on-secondary-container",
-  "tertiary", "on-tertiary", "tertiary-container", "on-tertiary-container",
-  "error", "on-error", "error-container", "on-error-container",
-  "outline", "outline-variant",
-  "background", "on-background",
-  "surface", "on-surface", "surface-variant", "on-surface-variant",
-  "inverse-surface", "inverse-on-surface", "inverse-primary",
-  "shadow", "surface-tint", "scrim"
-) !default;
 
 :root, :host {
   // `light dark` means: follow the OS unless an ancestor says otherwise.

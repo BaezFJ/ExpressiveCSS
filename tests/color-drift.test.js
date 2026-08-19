@@ -168,7 +168,9 @@ describe('M3 ramp generation', () => {
 
   test('the tone table covers every tone the reference ramps use', () => {
     const referenceTones = Object.keys(M3_REFERENCE_RAMPS.primary).map(Number).sort((a, b) => a - b);
-    assert.deepEqual(Object.keys(tones).map(Number).sort((a, b) => a - b), referenceTones);
+    const have = Object.keys(tones).map(Number);
+    const missing = referenceTones.filter((t) => !have.includes(t));
+    assert.deepEqual(missing, [], `tone table is missing ${missing.join(', ')}`);
   });
 
   for (const name of Object.keys(ramps)) {
@@ -222,7 +224,7 @@ describe('M3 ramp generation', () => {
       const block = SCSS.match(new RegExp(`\\$sys-${scheme}:\\s*\\(([\\s\\S]*?)\\n\\)\\s*!default`));
       assert.ok(block, `$sys-${scheme} map not found`);
       const entries = [...block[1].matchAll(/"([a-z-]+)":\s*"([a-z-]+\d+)"/g)];
-      assert.equal(entries.length, 30, `$sys-${scheme} should map all 30 roles`);
+      assert.equal(entries.length, 49, `$sys-${scheme} should map all 49 roles`);
       for (const [, role, ref] of entries) {
         assert.ok(declared.has(ref), `$sys-${scheme} role "${role}" points at --md-ref-palette-${ref}, which is never declared`);
       }

@@ -20,7 +20,7 @@ $_select-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
 // Native / no-js / .browser-default: a 56dp field, not a 3rem box.
 select {
-  --md-comp-filled-select-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-filled-select-container-color: var(--md-sys-color-surface-container-highest);
   --md-comp-filled-select-container-shape: 1rem;
   --md-comp-filled-select-input-text-color: var(--md-sys-color-on-surface);
 

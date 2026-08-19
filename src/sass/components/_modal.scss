@@ -7,7 +7,7 @@
 // child <form method="dialog"> or <nav> is the action row.
 //
 // Tokens follow https://m3.material.io/components/dialogs/specs
-//   container    surface, 28dp corners, 280–560dp, elevation 3
+//   container    surface-container-high, 28dp corners, 280–560dp, elevation 3
 //   headline     headline-small / on-surface
 //   body         body-medium / on-surface-variant
 //   icon         24dp, on-secondary
@@ -16,7 +16,7 @@
 //   padding      24dp
 
 dialog {
-  --md-comp-basic-dialog-container-color: var(--md-sys-color-surface);
+  --md-comp-basic-dialog-container-color: var(--md-sys-color-surface-container-high);
   --md-comp-basic-dialog-container-shape: 28px;
   --md-comp-basic-dialog-container-min-width: 280px;
   --md-comp-basic-dialog-container-max-width: 560px;

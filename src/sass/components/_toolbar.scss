@@ -9,8 +9,8 @@
 // .fixed, .top, .bottom.
 //
 // Tokens follow https://m3.material.io/components/toolbars/specs
-//   floating   hug, 64dp, 32dp stadium, surface-variant, elevation 2
-//   docked     full width, 64dp, 0 radius, surface-variant, no elevation
+//   floating   hug, 64dp, 32dp stadium, surface-container, elevation 2
+//   docked     full width, 64dp, 0 radius, surface-container, no elevation
 //              (page actions; destinations belong on nav.navigation-bar)
 //   vibrant    primary-container / on-primary-container (.filled)
 //   action     48dp target, 24dp icon, transparent at rest
@@ -21,7 +21,7 @@
 // transition, not this component.
 
 nav.toolbar {
-  --md-comp-toolbar-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
   --md-comp-toolbar-container-shape: 32px;
   --md-comp-toolbar-container-height: 64px;
   --md-comp-toolbar-leading-space: 12px;
@@ -124,7 +124,7 @@ nav.toolbar.filled {
   color: var(--md-sys-color-on-primary-container);
 
   > :is(a, button).active {
-    background-color: var(--md-sys-color-surface-variant);
+    background-color: var(--md-sys-color-surface-container-lowest);
     color: var(--md-sys-color-on-surface);
   }
 }

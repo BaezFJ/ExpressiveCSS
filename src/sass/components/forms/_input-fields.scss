@@ -38,7 +38,7 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
 }
 
 .field {
-  --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-variant);
+  --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-container-highest);
   --md-comp-filled-text-field-container-shape: 1rem;
   --md-comp-filled-text-field-caret-color: var(--md-sys-color-primary);
   --input-color: var(--md-comp-filled-text-field-caret-color);

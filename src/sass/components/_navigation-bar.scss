@@ -24,11 +24,7 @@
 // Nest descendants inside this block.
 
 .navigation-bar {
-  --md-comp-nav-bar-container-color: color-mix(
-    in oklab,
-    var(--md-sys-color-on-surface) 8%,
-    var(--md-sys-color-surface)
-  );
+  --md-comp-nav-bar-container-color: var(--md-sys-color-surface-container);
   --md-comp-nav-bar-container-height: 64px;
   --md-comp-nav-bar-icon-size: 24px;
   --md-comp-nav-bar-indicator-width: 56px;

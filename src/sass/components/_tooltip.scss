@@ -119,7 +119,7 @@ body > .tooltip {
 // Rich tooltip — title, supporting text, optional action.
 .tooltip.rich,
 .tooltip.max {
-  --md-comp-rich-tooltip-container-color: var(--md-sys-color-surface);
+  --md-comp-rich-tooltip-container-color: var(--md-sys-color-surface-container);
   --md-comp-rich-tooltip-container-shape: 12px;
 
   display: flex;

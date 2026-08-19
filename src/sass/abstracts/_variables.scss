@@ -8,6 +8,31 @@
 // value from it: this link color. Everything now comes from --md-sys-color-*.
 $link-color: var(--md-sys-color-primary) !default;
 
+// M3 Expressive color roles. The live tokens are --md-sys-color-#{role}.
+// 26 standard roles in six groups (primary, secondary, tertiary, error,
+// surface, outline), plus optional add-ons (fixed accents, the surface
+// container scale) and four legacy aliases (background, on-background,
+// surface-variant, surface-tint). Consumed by tokens/_theme.scss and
+// utilities/_colors.scss so the token layer and the utility classes
+// cannot drift.
+$sys-color-roles: (
+  "primary", "on-primary", "primary-container", "on-primary-container",
+  "primary-fixed", "primary-fixed-dim", "on-primary-fixed", "on-primary-fixed-variant",
+  "secondary", "on-secondary", "secondary-container", "on-secondary-container",
+  "secondary-fixed", "secondary-fixed-dim", "on-secondary-fixed", "on-secondary-fixed-variant",
+  "tertiary", "on-tertiary", "tertiary-container", "on-tertiary-container",
+  "tertiary-fixed", "tertiary-fixed-dim", "on-tertiary-fixed", "on-tertiary-fixed-variant",
+  "error", "on-error", "error-container", "on-error-container",
+  "surface", "on-surface", "on-surface-variant",
+  "surface-dim", "surface-bright",
+  "surface-container-lowest", "surface-container-low", "surface-container",
+  "surface-container-high", "surface-container-highest",
+  "outline", "outline-variant",
+  "inverse-surface", "inverse-on-surface", "inverse-primary",
+  "scrim", "shadow",
+  "background", "on-background", "surface-variant", "surface-tint"
+) !default;
+
 // Dropdown
 $dropdown-item-height: 50px !default;
 

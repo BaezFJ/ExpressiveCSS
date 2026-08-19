@@ -6,7 +6,7 @@
   --padding: 8px;
 
   color: var(--md-sys-color-on-surface-variant);
-  background-color: rgba(0, 0, 0, 0.09);
+  background-color: var(--md-sys-color-surface-container-low);
   display: inline-flex;
   white-space: nowrap;
   gap: 8px;
@@ -21,10 +21,11 @@
   user-select: none;
   vertical-align: top;
 
-  &:focus {
+  &:focus,
+  &.active {
     outline: none;
-    background-color: var(--md-sys-color-primary);
-    color:  var(--md-sys-color-on-primary);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
   }
 }
 
@@ -60,7 +61,7 @@
 }
 
 .chip .close:hover {
-  background-color: #8888;
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface-variant) 8%, transparent);
 }
 
 //--------------------------
