@@ -1,0 +1,214 @@
+{% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
+
+{% block title %}Slider - ExpressiveCSS{% endblock %}
+{% block page_title %}Slider{% endblock %}
+
+{% block page %}
+{{ Banner("Slider", "Selections from a range of values.") }}
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          Sliders let people pick from a range of values. An
+          <code>&lt;input type="range"&gt;</code> is the control. A wrapping
+          <code>.range</code> (or a <code>&lt;label&gt;</code>) is the host.
+          <code>.slider</code> is the carousel — do not put it on a range.
+          The plugin is <code>Expressive.Range</code> because
+          <code>Slider</code> is already the carousel.
+        </p>
+        <p>
+          Three variants: <strong>standard</strong> (active from the start),
+          <strong>centered</strong> (active grows from the midpoint), and
+          <strong>range</strong> (two handles, active between them). Horizontal
+          or vertical. Five sizes: XS (the default), S, M, L, XL. Optional
+          inset icon, discrete stops, and a value indicator.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/sliders/specs">M3 slider spec</a>
+          (Expressive). The handle is a 4dp stop with a 6dp gap to each
+          track. Active is <code>primary</code>; inactive is
+          <code>secondary-container</code>. The end of an inactive track
+          has a 4dp stop. The value label is a 40dp
+          <code>inverse-surface</code> bubble.
+        </p>
+        <p>
+          Range is not in <code>AutoInit()</code>. Importing the IIFE
+          bundle calls <code>Expressive.Range.Init()</code>, which
+          starts every <code>input[type=range]</code> already in the
+          document and keeps the active track in sync.
+        </p>
+        <form>
+          <label>
+            Volume
+            <input type="range" min="0" max="100" value="40">
+          </label>
+        </form>
+<pre><code>&lt;label&gt;
+  Volume
+  &lt;input type="range" min="0" max="100" value="40"&gt;
+&lt;/label&gt;</code></pre>
+      </div>
+
+      <div id="variants" class="section scrollspy">
+        <h3>Variants</h3>
+        <p>
+          Standard is the default. <code>centered</code> grows the active
+          track from 50%. A range slider is two inputs in one
+          <code>.range</code> host.
+        </p>
+        <form>
+          <div class="range">
+            <input type="range" min="0" max="100" value="40" aria-label="Standard">
+          </div>
+          <div class="range centered">
+            <input type="range" min="0" max="100" value="30" aria-label="Centered">
+          </div>
+          <div class="range">
+            <input type="range" min="0" max="100" value="25" aria-label="Range start">
+            <input type="range" min="0" max="100" value="75" aria-label="Range end">
+          </div>
+        </form>
+<pre><code>&lt;div class="range"&gt;
+  &lt;input type="range" min="0" max="100" value="40" aria-label="Standard"&gt;
+&lt;/div&gt;
+
+&lt;div class="range centered"&gt;
+  &lt;input type="range" min="0" max="100" value="30" aria-label="Centered"&gt;
+&lt;/div&gt;
+
+&lt;div class="range"&gt;
+  &lt;input type="range" min="0" max="100" value="25" aria-label="Range start"&gt;
+  &lt;input type="range" min="0" max="100" value="75" aria-label="Range end"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="sizes" class="section scrollspy">
+        <h3>Sizes</h3>
+        <p>
+          Default is XS (16dp track, 44dp handle).
+          <code>s</code> / <code>small</code> is S,
+          <code>m</code> / <code>medium</code> is M,
+          <code>l</code> / <code>large</code> is L,
+          <code>xl</code> is XL. Scope them on the host.
+        </p>
+        <form>
+          <div class="range">
+            <input type="range" min="0" max="100" value="40" aria-label="XS">
+          </div>
+          <div class="range s">
+            <input type="range" min="0" max="100" value="40" aria-label="S">
+          </div>
+          <div class="range m">
+            <input type="range" min="0" max="100" value="40" aria-label="M">
+          </div>
+          <div class="range l">
+            <input type="range" min="0" max="100" value="40" aria-label="L">
+          </div>
+          <div class="range xl">
+            <input type="range" min="0" max="100" value="40" aria-label="XL">
+          </div>
+        </form>
+<pre><code>&lt;div class="range s"&gt;…&lt;/div&gt;
+&lt;div class="range m"&gt;…&lt;/div&gt;
+&lt;div class="range l"&gt;…&lt;/div&gt;
+&lt;div class="range xl"&gt;…&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="icon" class="section scrollspy">
+        <h3>Inset icon, stops, value</h3>
+        <p>
+          A leading <code>&lt;i&gt;</code> sits in the active track —
+          M, L, and XL are tall enough. <code>stops</code> plus
+          <code>step</code> paints ticks on the active track. Dragging
+          shows the value in a 40dp bubble.
+        </p>
+        <form>
+          <div class="range m">
+            <i class="material-symbols">volume_up</i>
+            <input type="range" min="0" max="100" value="55" aria-label="Volume">
+          </div>
+          <div class="range stops">
+            <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
+          </div>
+        </form>
+<pre><code>&lt;div class="range m"&gt;
+  &lt;i class="material-symbols"&gt;volume_up&lt;/i&gt;
+  &lt;input type="range" min="0" max="100" value="55" aria-label="Volume"&gt;
+&lt;/div&gt;
+
+&lt;div class="range stops"&gt;
+  &lt;input type="range" min="0" max="100" step="20" value="40" aria-label="Stops"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="vertical" class="section scrollspy">
+        <h3>Vertical</h3>
+        <p>
+          <code>vertical</code> stands the track up. Minimum is at the
+          bottom.
+        </p>
+        <form>
+          <div class="range vertical m">
+            <input type="range" min="0" max="100" value="60" aria-label="Level">
+          </div>
+        </form>
+<pre><code>&lt;div class="range vertical m"&gt;
+  &lt;input type="range" min="0" max="100" value="60" aria-label="Level"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <div id="disabled" class="section scrollspy">
+        <h3>Disabled</h3>
+        <p>The native <code>disabled</code> attribute drops the control to 38%.</p>
+        <form>
+          <label>
+            Locked
+            <input type="range" min="0" max="100" value="30" disabled>
+          </label>
+        </form>
+      </div>
+
+      <div id="initialization" class="section scrollspy">
+        <h3>Initialization</h3>
+        <p>
+          Put the script after the inputs, or call <code>init</code>
+          yourself. There are no options. For a slider added after load:
+        </p>
+<pre><code>document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('input[type=range]');
+  Expressive.Range.init(elems);
+});
+
+Expressive.Range.init(document.querySelector('#volume'));</code></pre>
+      </div>
+
+      <div id="methods" class="section scrollspy">
+        <h3>Methods</h3>
+<pre><code>const instance = Expressive.Range.getInstance(elem);
+instance.destroy();</code></pre>
+        <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#variants">Variants</a></li>
+          <li><a href="#sizes">Sizes</a></li>
+          <li><a href="#icon">Icon, stops, value</a></li>
+          <li><a href="#vertical">Vertical</a></li>
+          <li><a href="#disabled">Disabled</a></li>
+          <li><a href="#initialization">Initialization</a></li>
+          <li><a href="#methods">Methods</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

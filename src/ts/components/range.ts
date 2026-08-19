@@ -100,6 +100,7 @@ export class Range extends Component<RangeOptions> {
   }
 
   _handleRangeChange = () => {
+    this._clampDual();
     this._sync();
     this.thumb.classList.add('active');
   };
@@ -107,6 +108,7 @@ export class Range extends Component<RangeOptions> {
   _handleRangeMousedownTouchstart = (e: MouseEvent | TouchEvent) => {
     this._mousedown = true;
     this.el.classList.add('active');
+    this._clampDual();
     this._sync();
     if (e.type !== 'input') {
       this.thumb.classList.add('active');
@@ -115,6 +117,7 @@ export class Range extends Component<RangeOptions> {
 
   _handleRangeInputMousemoveTouchmove = () => {
     if (this._mousedown) {
+      this._clampDual();
       this._sync();
       this.thumb.classList.add('active');
     }
@@ -148,11 +151,30 @@ export class Range extends Component<RangeOptions> {
     return !!this.el.closest('.vertical');
   }
 
+  _host(): HTMLElement | null {
+    return this.el.closest('.range, .range-field, label');
+  }
+
+  _clampDual() {
+    const host = this._host();
+    const peers = host?.querySelectorAll('input[type="range"]');
+    if (!peers || peers.length !== 2) return;
+    const start = peers[0] as HTMLInputElement;
+    const end = peers[1] as HTMLInputElement;
+    if (this.el === start && +start.value > +end.value) start.value = end.value;
+    if (this.el === end && +end.value < +start.value) end.value = start.value;
+  }
+
+  _fraction(el: HTMLInputElement): number {
+    const max = parseFloat(el.max) || 100;
+    const min = parseFloat(el.min) || 0;
+    const val = parseFloat(el.value) || 0;
+    return max === min ? 0 : (val - min) / (max - min);
+  }
+
   _sync() {
-    const max = parseFloat(this.el.getAttribute('max')) || 100;
-    const min = parseFloat(this.el.getAttribute('min')) || 0;
-    const val = parseFloat(this.el.value) || 0;
-    const percent = max === min ? 0 : (val - min) / (max - min);
+    const percent = this._fraction(this.el);
+    const fraction = `${percent * 100}%`;
 
     // Read before writing. This runs on every pointer move during a drag, and
     // setting the custom property first made each of the four offset reads
@@ -162,7 +184,25 @@ export class Range extends Component<RangeOptions> {
     const width = this.el.offsetWidth;
     const height = this.el.offsetHeight;
 
-    this.el.style.setProperty('--md-comp-slider-active-fraction', `${percent * 100}%`);
+    this.el.style.setProperty('--md-comp-slider-active-fraction', fraction);
+
+    const host = this._host();
+    const peers = host?.querySelectorAll('input[type="range"]');
+    if (host && peers && peers.length === 2) {
+      const nums = Array.from(peers).map((el) => this._fraction(el as HTMLInputElement));
+      host.style.setProperty('--md-comp-slider-start-fraction', `${Math.min(...nums) * 100}%`);
+      host.style.setProperty('--md-comp-slider-end-fraction', `${Math.max(...nums) * 100}%`);
+    }
+    if (host?.classList.contains('stops')) {
+      const max = parseFloat(this.el.max) || 100;
+      const min = parseFloat(this.el.min) || 0;
+      const step = parseFloat(this.el.step);
+      if (step > 0 && Number.isFinite(step)) {
+        const n = Math.round((max - min) / step) + 1;
+        host.style.setProperty('--md-comp-slider-stop-count', String(Math.max(2, n)));
+      }
+    }
+
     this.value.textContent = this.el.value;
     if (this._isVertical()) {
       this.thumb.style.left = `${left + width / 2}px`;

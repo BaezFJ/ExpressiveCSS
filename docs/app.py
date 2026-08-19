@@ -340,10 +340,18 @@ def switches():
     return render_template('forms/switches.html')
 
 
+@app.route('/sliders')
+@app.route('/sliders.html')
+@app.route('/slider')
+@app.route('/slider.html')
+def sliders():
+    return render_template('forms/sliders.html')
+
+
 @app.route('/range')
 @app.route('/range.html')
 def range():
-    return render_template('forms/range.html')
+    return redirect(url_for('sliders'), code=301)
 
 
 @app.route('/chips')

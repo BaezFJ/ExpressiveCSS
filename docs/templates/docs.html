@@ -172,7 +172,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['fieldsets', 'text_inputs', 'select', 'checkboxes', 'radio_buttons', 'switches', 'range', 'chips', 'autocomplete', 'datepicker', 'timepicker'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['fieldsets', 'text_inputs', 'select', 'checkboxes', 'radio_buttons', 'switches', 'sliders', 'chips', 'autocomplete', 'datepicker', 'timepicker'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">edit</i>
                             Forms
@@ -196,8 +196,8 @@
                                 <li class="{% if request.endpoint == 'switches' %}active{% endif %}">
                                     <a href="{{ url_for('switches') }}">Switches</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'range' %}active{% endif %}">
-                                    <a href="{{ url_for('range') }}">Range</a>
+                                <li class="{% if request.endpoint == 'sliders' %}active{% endif %}">
+                                    <a href="{{ url_for('sliders') }}">Slider</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'chips' %}active{% endif %}">
                                     <a href="{{ url_for('chips') }}">Chips</a>
@@ -283,7 +283,7 @@
                 <a href="{{ url_for('checkboxes') }}">Checkboxes</a>
                 <a href="{{ url_for('radio_buttons') }}">Radio</a>
                 <a href="{{ url_for('switches') }}">Switches</a>
-                <a href="{{ url_for('range') }}">Range</a>
+                <a href="{{ url_for('sliders') }}">Slider</a>
                 <a href="{{ url_for('chips') }}">Chips</a>
                 <a href="{{ url_for('autocomplete') }}">Autocomplete</a>
                 <a href="{{ url_for('datepicker') }}">Date picker</a>

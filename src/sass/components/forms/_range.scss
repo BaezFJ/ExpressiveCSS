@@ -1,39 +1,61 @@
 @use "../../abstracts" as *;
 
-// Sliders (range).
+// Sliders.
 //
 // Anatomy is the HTML. An <input type="range"> is the control. A wrapping
-// <label> (or .range / .range-field) is the host for the value label.
-// .slider is the carousel — do not put it on a range.
-// Helpers: .vertical, .small, .large. There is no required <span>.
+// .range (or label / .range-field) is the host. .slider is the carousel —
+// do not put it on a range. The IIFE plugin is Expressive.Range because
+// Slider is the carousel.
 //
-// Tokens follow https://m3.material.io/components/sliders/specs (Expressive)
-//   track      16dp, fully rounded
+// Variants (M3 Expressive):
+//   standard   default. Active from the start to the handle.
+//   .centered  active grows from the midpoint to the handle.
+//   dual       two inputs in one .range; active is between the handles.
+//
+// Orientation: horizontal (default) or .vertical.
+// Size on the host: default XS, .s / .small, .m / .medium, .l / .large, .xl.
+// Optional: a leading <i> (inset icon), .stops (discrete ticks), value
+// label (JS .thumb).
+//
+// Tokens follow https://m3.material.io/components/sliders/specs
+//   XS  track 16 / handle 44 / stop inset 8
+//   S   track 24 / handle 44 / stop inset 8
+//   M   track 40 / handle 52 / stop inset 12 / icon 24
+//   L   track 56 / handle 68 / stop inset 16 / icon 24
+//   XL  track 96 / handle 108 / stop inset 28 / icon 32
 //   gap        6dp between handle and each track
+//   handle     4×H, fully rounded, primary; 2dp when pressed
 //   active     primary
 //   inactive   secondary-container
-//   handle     4×44dp, fully rounded, primary; 2dp when pressed
-//   state      40dp, 8% hover / 10% focus
-//   label      inverse-surface / inverse-on-surface, body-small
-//   disabled   38%
-//
-// Range.Init() (import-time) sets --md-comp-slider-active-fraction so
-// the active track can follow the value. Not in AutoInit(). Dual-handle
-// range and discrete ticks are not implemented.
+//   stop       4dp primary dot
+//   label      40dp, inverse-surface / inverse-on-surface, body-small
 
-.range,
-.range-field,
-label:has(> [type="range"]) {
+$_host: ".range, .range-field, label:has(> [type='range'])";
+
+:is(#{$_host}),
+input[type="range"] {
   --md-comp-slider-track-height: 16px;
   --md-comp-slider-handle-width: 4px;
   --md-comp-slider-handle-width-pressed: 2px;
   --md-comp-slider-handle-height: 44px;
   --md-comp-slider-gap: 6px;
+  --md-comp-slider-stop-size: 2px;
+  --md-comp-slider-stop-inset: 8px;
+  --md-comp-slider-icon-size: 24px;
   --md-comp-slider-active-track-color: var(--md-sys-color-primary);
   --md-comp-slider-inactive-track-color: var(--md-sys-color-secondary-container);
   --md-comp-slider-handle-color: var(--md-sys-color-primary);
+  --md-comp-slider-stop-color: var(--md-sys-color-primary);
   --md-comp-slider-gradient: to right;
+  --md-comp-slider-stop-at-start: var(--md-comp-slider-stop-inset) 50%;
+  --md-comp-slider-stop-at-end: calc(100% - var(--md-comp-slider-stop-inset)) 50%;
+  --md-comp-slider-active-fraction: 0%;
+  --md-comp-slider-start-fraction: 0%;
+  --md-comp-slider-end-fraction: 100%;
+  --md-comp-slider-stop-count: 6;
+}
 
+:is(#{$_host}) {
   position: relative;
   display: block;
   overflow: visible;
@@ -42,54 +64,83 @@ label:has(> [type="range"]) {
   font-family: $font-stack;
 }
 
-.range.small,
-.range-field.small,
-label.small:has(> [type="range"]),
-.range.small [type="range"],
-.range-field.small [type="range"],
-label.small > [type="range"] {
-  --md-comp-slider-track-height: 8px;
-  --md-comp-slider-handle-height: 32px;
-}
-
-.range.large,
-.range-field.large,
-label.large:has(> [type="range"]),
-.range.large [type="range"],
-.range-field.large [type="range"],
-label.large > [type="range"] {
+// Sizes. Default is XS. .small / .large keep the old names, now S / L.
+:is(#{$_host}).s,
+:is(#{$_host}).small,
+:is(#{$_host}).s [type="range"],
+:is(#{$_host}).small [type="range"] {
   --md-comp-slider-track-height: 24px;
-  --md-comp-slider-handle-height: 52px;
+  --md-comp-slider-handle-height: 44px;
+  --md-comp-slider-stop-inset: 8px;
 }
 
-.range.vertical,
-.range-field.vertical,
-label.vertical:has(> [type="range"]) {
+:is(#{$_host}).m,
+:is(#{$_host}).medium,
+:is(#{$_host}).m [type="range"],
+:is(#{$_host}).medium [type="range"] {
+  --md-comp-slider-track-height: 40px;
+  --md-comp-slider-handle-height: 52px;
+  --md-comp-slider-stop-inset: 12px;
+  --md-comp-slider-icon-size: 24px;
+}
+
+:is(#{$_host}).l,
+:is(#{$_host}).large,
+:is(#{$_host}).l [type="range"],
+:is(#{$_host}).large [type="range"] {
+  --md-comp-slider-track-height: 56px;
+  --md-comp-slider-handle-height: 68px;
+  --md-comp-slider-stop-inset: 16px;
+  --md-comp-slider-icon-size: 24px;
+}
+
+:is(#{$_host}).xl,
+:is(#{$_host}).xl [type="range"] {
+  --md-comp-slider-track-height: 96px;
+  --md-comp-slider-handle-height: 108px;
+  --md-comp-slider-stop-inset: 28px;
+  --md-comp-slider-icon-size: 32px;
+}
+
+:is(#{$_host}).vertical {
   --md-comp-slider-gradient: to top;
+  --md-comp-slider-stop-at-start: 50% var(--md-comp-slider-stop-inset);
+  --md-comp-slider-stop-at-end: 50% calc(100% - var(--md-comp-slider-stop-inset));
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   width: auto;
 }
 
-.range.vertical [type="range"],
-.range-field.vertical [type="range"],
-label.vertical > [type="range"] {
+:is(#{$_host}).vertical [type="range"] {
   --md-comp-slider-gradient: to top;
+  --md-comp-slider-stop-at-start: 50% var(--md-comp-slider-stop-inset);
+  --md-comp-slider-stop-at-end: 50% calc(100% - var(--md-comp-slider-stop-inset));
+}
+
+// Inset icon. Sits in the active track; M / L / XL are the intended sizes.
+:is(#{$_host}) > i:first-child {
+  position: absolute;
+  z-index: 1;
+  left: var(--md-comp-slider-stop-inset);
+  top: 50%;
+  translate: 0 -50%;
+  font-size: var(--md-comp-slider-icon-size);
+  width: var(--md-comp-slider-icon-size);
+  height: var(--md-comp-slider-icon-size);
+  line-height: 1;
+  color: var(--md-sys-color-on-primary);
+  pointer-events: none;
+}
+
+:is(#{$_host}).vertical > i:first-child {
+  left: 50%;
+  top: auto;
+  bottom: var(--md-comp-slider-stop-inset);
+  translate: -50% 0;
 }
 
 input[type="range"] {
-  --md-comp-slider-track-height: 16px;
-  --md-comp-slider-handle-width: 4px;
-  --md-comp-slider-handle-width-pressed: 2px;
-  --md-comp-slider-handle-height: 44px;
-  --md-comp-slider-gap: 6px;
-  --md-comp-slider-active-track-color: var(--md-sys-color-primary);
-  --md-comp-slider-inactive-track-color: var(--md-sys-color-secondary-container);
-  --md-comp-slider-handle-color: var(--md-sys-color-primary);
-  --md-comp-slider-gradient: to right;
-  --md-comp-slider-active-fraction: 0%;
-
   appearance: none;
   box-sizing: border-box;
   display: block;
@@ -113,9 +164,7 @@ input[type="range"] {
   }
 }
 
-.range.vertical > [type="range"],
-.range-field.vertical > [type="range"],
-label.vertical > [type="range"] {
+:is(#{$_host}).vertical > [type="range"] {
   writing-mode: vertical-lr;
   direction: rtl;
   width: var(--md-comp-slider-handle-height);
@@ -123,19 +172,211 @@ label.vertical > [type="range"] {
   margin: 0 8px;
 }
 
-// Gap around the handle so the tracks do not run under it (M3 stop gap).
+// Gap around the handle so the tracks do not run under it.
 @mixin range-track-fill {
-  background-image: linear-gradient(
-    var(--md-comp-slider-gradient),
-    var(--md-comp-slider-active-track-color)
-      max(0%, calc(var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) - var(--md-comp-slider-handle-width) / 2)),
-    transparent
-      max(0%, calc(var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) - var(--md-comp-slider-handle-width) / 2)),
-    transparent
-      min(100%, calc(var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) + var(--md-comp-slider-handle-width) / 2)),
-    var(--md-comp-slider-inactive-track-color)
-      min(100%, calc(var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) + var(--md-comp-slider-handle-width) / 2))
-  );
+  background-image:
+    radial-gradient(
+      circle var(--md-comp-slider-stop-size) at var(--md-comp-slider-stop-at-end),
+      var(--md-comp-slider-stop-color) 99%,
+      transparent
+    ),
+    linear-gradient(
+      var(--md-comp-slider-gradient),
+      var(--md-comp-slider-active-track-color)
+        max(
+          0%,
+          calc(
+            var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        max(
+          0%,
+          calc(
+            var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        min(
+          100%,
+          calc(
+            var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-inactive-track-color)
+        min(
+          100%,
+          calc(
+            var(--md-comp-slider-active-fraction) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        )
+    );
+}
+
+@mixin range-track-fill-centered {
+  background-image:
+    radial-gradient(
+      circle var(--md-comp-slider-stop-size) at var(--md-comp-slider-stop-at-start),
+      var(--md-comp-slider-stop-color) 99%,
+      transparent
+    ),
+    radial-gradient(
+      circle var(--md-comp-slider-stop-size) at var(--md-comp-slider-stop-at-end),
+      var(--md-comp-slider-stop-color) 99%,
+      transparent
+    ),
+    linear-gradient(
+      var(--md-comp-slider-gradient),
+      var(--md-comp-slider-inactive-track-color)
+        max(
+          0%,
+          calc(
+            min(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        max(
+          0%,
+          calc(
+            min(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        min(
+          100%,
+          calc(
+            min(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-active-track-color)
+        min(
+          100%,
+          calc(
+            min(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-active-track-color)
+        max(
+          0%,
+          calc(
+            max(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        max(
+          0%,
+          calc(
+            max(50%, var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        min(
+          100%,
+          calc(
+            max(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-inactive-track-color)
+        min(
+          100%,
+          calc(
+            max(50%, var(--md-comp-slider-active-fraction)) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        )
+    );
+}
+
+@mixin range-track-fill-dual {
+  background-image:
+    radial-gradient(
+      circle var(--md-comp-slider-stop-size) at var(--md-comp-slider-stop-at-start),
+      var(--md-comp-slider-stop-color) 99%,
+      transparent
+    ),
+    radial-gradient(
+      circle var(--md-comp-slider-stop-size) at var(--md-comp-slider-stop-at-end),
+      var(--md-comp-slider-stop-color) 99%,
+      transparent
+    ),
+    linear-gradient(
+      var(--md-comp-slider-gradient),
+      var(--md-comp-slider-inactive-track-color)
+        max(
+          0%,
+          calc(
+            var(--md-comp-slider-start-fraction) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        max(
+          0%,
+          calc(
+            var(--md-comp-slider-start-fraction) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        min(
+          100%,
+          calc(
+            var(--md-comp-slider-start-fraction) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-active-track-color)
+        min(
+          100%,
+          calc(
+            var(--md-comp-slider-start-fraction) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-active-track-color)
+        max(
+          0%,
+          calc(
+            var(--md-comp-slider-end-fraction) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        max(
+          0%,
+          calc(
+            var(--md-comp-slider-end-fraction) - var(--md-comp-slider-gap) -
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      transparent
+        min(
+          100%,
+          calc(
+            var(--md-comp-slider-end-fraction) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        ),
+      var(--md-comp-slider-inactive-track-color)
+        min(
+          100%,
+          calc(
+            var(--md-comp-slider-end-fraction) + var(--md-comp-slider-gap) +
+              var(--md-comp-slider-handle-width) / 2
+          )
+        )
+    );
 }
 
 @mixin range-track {
@@ -163,7 +404,7 @@ label.vertical > [type="range"] {
   background: var(--md-comp-slider-handle-color);
   box-shadow: none;
   cursor: grab;
-  transition: box-shadow .2s ease, width .15s ease, height .15s ease;
+  transition: box-shadow 0.2s ease, width 0.15s ease, height 0.15s ease;
 }
 
 @mixin range-thumb-vertical {
@@ -195,26 +436,22 @@ input[type="range"]:active:not(:disabled)::-webkit-slider-thumb {
   width: var(--md-comp-slider-handle-width-pressed);
 }
 
-.range.vertical > [type="range"]::-webkit-slider-runnable-track,
-.range-field.vertical > [type="range"]::-webkit-slider-runnable-track,
-label.vertical > [type="range"]::-webkit-slider-runnable-track {
+:is(#{$_host}).centered [type="range"]::-webkit-slider-runnable-track {
+  @include range-track-fill-centered;
+}
+
+:is(#{$_host}).vertical > [type="range"]::-webkit-slider-runnable-track {
   @include range-track-vertical;
-  // writing-mode does not swap physical width/height on these pseudos.
-  // Center the 16dp track inside the 44dp-wide input.
   margin-left: calc((var(--md-comp-slider-handle-height) - var(--md-comp-slider-track-height)) / 2);
 }
 
-.range.vertical > [type="range"]::-webkit-slider-thumb,
-.range-field.vertical > [type="range"]::-webkit-slider-thumb,
-label.vertical > [type="range"]::-webkit-slider-thumb {
+:is(#{$_host}).vertical > [type="range"]::-webkit-slider-thumb {
   @include range-thumb-vertical;
   margin-top: 0;
   margin-left: calc((var(--md-comp-slider-track-height) - var(--md-comp-slider-handle-height)) / 2);
 }
 
-.range.vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb,
-.range-field.vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb,
-label.vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb {
+:is(#{$_host}).vertical > [type="range"]:active:not(:disabled)::-webkit-slider-thumb {
   width: var(--md-comp-slider-handle-height);
   height: var(--md-comp-slider-handle-width-pressed);
 }
@@ -241,28 +478,118 @@ input[type="range"]:active:not(:disabled)::-moz-range-thumb {
   width: var(--md-comp-slider-handle-width-pressed);
 }
 
-.range.vertical > [type="range"]::-moz-range-track,
-.range-field.vertical > [type="range"]::-moz-range-track,
-label.vertical > [type="range"]::-moz-range-track {
+:is(#{$_host}).centered [type="range"]::-moz-range-track {
+  @include range-track-fill-centered;
+}
+
+:is(#{$_host}).vertical > [type="range"]::-moz-range-track {
   @include range-track-vertical;
   margin-left: calc((var(--md-comp-slider-handle-height) - var(--md-comp-slider-track-height)) / 2);
 }
 
-.range.vertical > [type="range"]::-moz-range-thumb,
-.range-field.vertical > [type="range"]::-moz-range-thumb,
-label.vertical > [type="range"]::-moz-range-thumb {
+:is(#{$_host}).vertical > [type="range"]::-moz-range-thumb {
   @include range-thumb-vertical;
   margin-left: calc((var(--md-comp-slider-track-height) - var(--md-comp-slider-handle-height)) / 2);
 }
 
-.range.vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb,
-.range-field.vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb,
-label.vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb {
+:is(#{$_host}).vertical > [type="range"]:active:not(:disabled)::-moz-range-thumb {
   width: var(--md-comp-slider-handle-height);
   height: var(--md-comp-slider-handle-width-pressed);
 }
 
-// Value label — M3 labeled slider. The JS plugin inserts this after the input.
+// Dual-handle range. Two inputs share one host; the host paints the track.
+:is(#{$_host}):has(> [type="range"] ~ [type="range"]) {
+  display: grid;
+  align-items: center;
+  min-height: var(--md-comp-slider-handle-height);
+
+  &::before {
+    content: "";
+    grid-area: 1 / 1;
+    height: var(--md-comp-slider-track-height);
+    border-radius: calc(var(--md-comp-slider-track-height) / 2);
+    pointer-events: none;
+    @include range-track-fill-dual;
+  }
+
+  > [type="range"] {
+    grid-area: 1 / 1;
+    width: 100%;
+    margin: 0;
+    background: none;
+    pointer-events: none;
+  }
+
+  > [type="range"]::-webkit-slider-runnable-track {
+    background-image: none;
+    background-color: transparent;
+  }
+
+  > [type="range"]::-webkit-slider-thumb {
+    pointer-events: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  > [type="range"]::-moz-range-track {
+    background-image: none;
+    background-color: transparent;
+  }
+
+  > [type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+  }
+
+  > .thumb {
+    grid-area: 1 / 1;
+  }
+}
+
+:is(#{$_host}).vertical:has(> [type="range"] ~ [type="range"])::before {
+  width: var(--md-comp-slider-track-height);
+  height: 200px;
+  justify-self: center;
+}
+
+// Discrete stops. Dots along the active track; JS sets --stop-count.
+:is(#{$_host}).stops::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 50%;
+  width: max(
+    0px,
+    calc(
+      var(--md-comp-slider-active-fraction) - var(--md-comp-slider-gap) -
+        var(--md-comp-slider-handle-width) / 2
+    )
+  );
+  height: var(--md-comp-slider-track-height);
+  translate: 0 -50%;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle var(--md-comp-slider-stop-size),
+    var(--md-sys-color-on-primary) 99%,
+    transparent
+  );
+  background-size: calc(100% / max(1, var(--md-comp-slider-stop-count) - 1)) 100%;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+:is(#{$_host}).stops.centered::after {
+  left: min(50%, var(--md-comp-slider-active-fraction));
+  width: max(
+    0%,
+    calc(
+      abs(50% - var(--md-comp-slider-active-fraction)) - var(--md-comp-slider-gap) -
+        var(--md-comp-slider-handle-width) / 2
+    )
+  );
+}
+
+// Value label — 40dp, 4dp above the handle. JS inserts this after the input.
 input[type="range"] + .thumb {
   position: absolute;
   left: 0;
@@ -272,18 +599,18 @@ input[type="range"] + .thumb {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
-  min-height: 28px;
-  padding: 4px 8px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
   border: none;
-  border-radius: 14px;
+  border-radius: 20px;
   background-color: var(--md-sys-color-inverse-surface);
   color: var(--md-sys-color-inverse-on-surface);
   pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, calc(-100% - 12px)) scale(0.9);
+  transform: translate(-50%, calc(-100% - 4px)) scale(0.9);
   transform-origin: center bottom;
-  transition: opacity .15s ease, transform .15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
   @include typescale("body-small");
 
   .value {
@@ -294,17 +621,15 @@ input[type="range"] + .thumb {
 
   &.active {
     opacity: 1;
-    transform: translate(-50%, calc(-100% - 12px)) scale(1);
+    transform: translate(-50%, calc(-100% - 4px)) scale(1);
   }
 }
 
-.range.vertical > [type="range"] + .thumb,
-.range-field.vertical > [type="range"] + .thumb,
-label.vertical > [type="range"] + .thumb {
-  transform: translate(calc(100% + 12px), -50%) scale(0.9);
+:is(#{$_host}).vertical > [type="range"] + .thumb {
+  transform: translate(calc(100% + 4px), -50%) scale(0.9);
   transform-origin: left center;
 
   &.active {
-    transform: translate(calc(100% + 12px), -50%) scale(1);
+    transform: translate(calc(100% + 4px), -50%) scale(1);
   }
 }
