@@ -1,6 +1,6 @@
 @use "../abstracts" as *;
 
-// Snackbars (toasts).
+// Snackbars.
 //
 // Anatomy is the HTML. A .snackbar is the container. A <p> (or <span>,
 // or loose text) is the supporting text. A trailing <button> is the
@@ -13,14 +13,18 @@
 //   text         body-medium / inverse-on-surface, two lines max
 //   action       label-large / inverse-primary text button
 //   close        24dp icon, inverse-on-surface
-//   inset        8dp compact, 24dp from start+bottom on larger screens
+//   inset        8dp compact, 24dp from the bottom on larger screens
+//   placement    bottom of the UI; centered from the small breakpoint
 //
-// The constructor adds .snackbar. A static .snackbar is in-flow (docs
-// previews). .active pins it to the viewport. There is no AutoInit.
+// Snackbars must not interrupt browsing: the container is pointer-events
+// none except on the bar, and the live region is polite. One at a time
+// is a JS concern. The constructor adds .snackbar. A static .snackbar
+// is in-flow (docs previews). .active pins it to the viewport. There
+// is no AutoInit.
 
 $_bar: ".snackbar";
 
-#toast-container {
+#snackbar-container {
   --md-comp-snackbar-container-margin-leading: 8px;
   --md-comp-snackbar-container-margin-trailing: 8px;
   --md-comp-snackbar-container-margin-bottom: 8px;
@@ -33,10 +37,11 @@ $_bar: ".snackbar";
   position: fixed;
   z-index: 10000;
   inset: auto var(--md-comp-snackbar-container-margin-trailing)
-    var(--md-comp-snackbar-container-margin-bottom)
+    max(var(--md-comp-snackbar-container-margin-bottom), env(safe-area-inset-bottom, 0px))
     var(--md-comp-snackbar-container-margin-leading);
   width: auto;
   max-width: calc(100% - var(--md-comp-snackbar-container-margin-leading) - var(--md-comp-snackbar-container-margin-trailing));
+  // The page stays browsable — only the bar itself receives pointer events.
   pointer-events: none;
 
   > * {
@@ -48,26 +53,20 @@ $_bar: ".snackbar";
     --md-comp-snackbar-container-margin-trailing: 24px;
     --md-comp-snackbar-container-margin-bottom: 24px;
     --md-comp-snackbar-container-margin-top: 24px;
-    align-items: flex-start;
+    align-items: center;
+    left: 50%;
+    right: auto;
     width: max-content;
     min-width: min(344px, calc(100% - 48px));
     max-width: min(672px, calc(100% - 48px));
+    transform: translateX(-50%);
   }
 
-  // Position helpers on the container, or on a child via :has().
+  // Opt-in: M3 places snackbars at the bottom. `.top` is the exception.
   &:has(> .top),
   &.top {
-    inset: var(--md-comp-snackbar-container-margin-top)
-      var(--md-comp-snackbar-container-margin-trailing)
-      auto
-      var(--md-comp-snackbar-container-margin-leading);
-  }
-
-  &:has(> .center),
-  &.center {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    inset-block-start: var(--md-comp-snackbar-container-margin-top);
+    inset-block-end: auto;
   }
 }
 
@@ -215,45 +214,47 @@ $_bar: ".snackbar";
   }
 }
 
-// Stacked in-flow previews. JS toasts use the container gap instead.
+// Stacked in-flow previews. JS-created snackbars use the container gap instead.
 #{$_bar} + #{$_bar} {
   margin-top: 8px;
 }
 
-// JS enter animation starts the bar 35px below its rest position.
-#toast-container #{$_bar} {
+#snackbar-container #{$_bar} {
   position: relative;
-  top: 35px;
   margin-top: 0;
 }
 
 // Static overlay. In-flow without this (docs previews). Not AutoInit —
 // add and remove the class yourself, or use the constructor for timing.
+// Default: bottom of the UI, centered from the small breakpoint.
 #{$_bar}.active {
   position: fixed;
   z-index: 10000;
-  inset: auto auto 16px 16px;
+  left: 50%;
+  right: auto;
+  bottom: 24px;
   top: auto;
+  transform: translateX(-50%);
   width: max-content;
-  max-width: min(672px, calc(100% - 32px));
+  max-width: min(672px, calc(100% - 48px));
 
   @include bp-down("small") {
-    inset: auto 8px 8px 8px;
+    left: 8px;
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    transform: none;
     width: auto;
     max-width: none;
   }
 
   &.top {
-    inset: 16px auto auto 16px;
+    top: 24px;
+    bottom: auto;
 
     @include bp-down("small") {
-      inset: 8px 8px auto 8px;
+      top: 8px;
+      left: 8px;
+      right: 8px;
     }
-  }
-
-  &.center {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
   }
 }

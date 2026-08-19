@@ -213,29 +213,29 @@ document.addEventListener('DOMContentLoaded', () => {
     Expressive.Tabs.init(swipeTabs, { swipeable: true });
   }
 
-  document.getElementById('toast-basic')?.addEventListener('click', () => {
-    new Expressive.Toast({ text: 'Photo saved to album' });
+  document.getElementById('snackbar-basic')?.addEventListener('click', () => {
+    new Expressive.Snackbar({ text: 'Photo saved to album' });
   });
 
-  document.getElementById('toast-action')?.addEventListener('click', () => {
-    new Expressive.Toast({
+  document.getElementById('snackbar-action')?.addEventListener('click', () => {
+    new Expressive.Snackbar({
       text: 'Item archived',
       action: 'Undo',
       onAction: () => {
-        new Expressive.Toast({ text: 'Item restored' });
+        new Expressive.Snackbar({ text: 'Item restored' });
       },
     });
   });
 
-  document.getElementById('toast-close')?.addEventListener('click', () => {
-    new Expressive.Toast({
+  document.getElementById('snackbar-close')?.addEventListener('click', () => {
+    new Expressive.Snackbar({
       text: "Can't send photo. Retry in 5 seconds.",
       action: 'Retry',
       dismissible: true,
     });
   });
 
-  document.getElementById('toast-static')?.addEventListener('click', () => {
+  document.getElementById('snackbar-static')?.addEventListener('click', () => {
     const el = document.getElementById('static-snackbar');
     if (!el) return;
     el.classList.add('active');
@@ -243,42 +243,42 @@ document.addEventListener('DOMContentLoaded', () => {
     el._hideTimer = window.setTimeout(() => el.classList.remove('active'), 4000);
   });
 
-  document.getElementById('toast-html-1')?.addEventListener('click', () => {
-    new Expressive.Toast({ toastId: 'my-toast-1' });
+  document.getElementById('snackbar-html-1')?.addEventListener('click', () => {
+    new Expressive.Snackbar({ snackbarId: 'my-snackbar-1' });
   });
 
-  document.getElementById('toast-html-2')?.addEventListener('click', () => {
-    new Expressive.Toast({ toastId: 'my-toast-2' });
+  document.getElementById('snackbar-html-2')?.addEventListener('click', () => {
+    new Expressive.Snackbar({ snackbarId: 'my-snackbar-2' });
   });
 
-  document.getElementById('toast-callback')?.addEventListener('click', () => {
-    new Expressive.Toast({
+  document.getElementById('snackbar-callback')?.addEventListener('click', () => {
+    new Expressive.Snackbar({
       text: 'I will call back when dismissed',
       completeCallback: () => {
-        new Expressive.Toast({ text: 'Your toast was dismissed' });
+        new Expressive.Snackbar({ text: 'Your snackbar was dismissed' });
       },
     });
   });
 
-  document.getElementById('toast-rounded')?.addEventListener('click', () => {
-    new Expressive.Toast({ text: 'I am a toast!', classes: 'rounded' });
+  document.getElementById('snackbar-rounded')?.addEventListener('click', () => {
+    new Expressive.Snackbar({ text: 'I am a snackbar!', classes: 'rounded' });
   });
 
-  document.getElementById('toast-top')?.addEventListener('click', () => {
-    new Expressive.Toast({ text: 'Posted from the top', classes: 'top' });
+  document.getElementById('snackbar-top')?.addEventListener('click', () => {
+    new Expressive.Snackbar({ text: 'Posted from the top', classes: 'top' });
   });
 
-  document.getElementById('toast-dismiss-show')?.addEventListener('click', () => {
-    new Expressive.Toast({ text: 'I am a toast!' });
+  document.getElementById('snackbar-dismiss-show')?.addEventListener('click', () => {
+    new Expressive.Snackbar({ text: 'I am a snackbar!' });
   });
 
-  document.getElementById('toast-dismiss-one')?.addEventListener('click', () => {
-    const toastElement = document.querySelector('#toast-container .snackbar');
-    Expressive.Toast.getInstance(toastElement)?.dismiss();
+  document.getElementById('snackbar-dismiss-one')?.addEventListener('click', () => {
+    const snackbarElement = document.querySelector('#snackbar-container .snackbar');
+    Expressive.Snackbar.getInstance(snackbarElement)?.dismiss();
   });
 
-  document.getElementById('toast-dismiss-all')?.addEventListener('click', () => {
-    Expressive.Toast.dismissAll();
+  document.getElementById('snackbar-dismiss-all')?.addEventListener('click', () => {
+    Expressive.Snackbar.dismissAll();
   });
 
   const initDatepicker = (id, options) => {

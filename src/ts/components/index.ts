@@ -23,5 +23,5 @@ export { Slider } from './slider';
 export { Tabs } from './tabs';
 export { TapTarget } from './tapTarget';
 export { Timepicker } from './timepicker';
-export { Toast } from './toasts';
+export { Snackbar } from './snackbar';
 export { Tooltip } from './tooltip';

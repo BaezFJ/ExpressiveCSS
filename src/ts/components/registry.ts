@@ -12,7 +12,7 @@ import { CARDS_SELECTOR } from './cards';
  * ./index.ts) - not four hand-synchronized edits that fail silently when one
  * is forgotten.
  *
- * A component that should only ever be constructed explicitly (Toast,
+ * A component that should only ever be constructed explicitly (Snackbar,
  * CharacterCounter, Range, ...) simply stays out of this table.
  */
 export const AUTO_INIT_COMPONENTS = {

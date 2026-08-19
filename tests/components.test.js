@@ -363,24 +363,25 @@ describe('CharacterCounter', () => {
   });
 });
 
-describe('Toast', () => {
+describe('Snackbar', () => {
   beforeEach(resetBody);
 
-  test('renders its message into a toast container', () => {
-    const toast = new Expressive.Toast({ text: 'Saved' });
-
-    assert.ok(document.querySelector('#toast-container'), 'no toast container was created');
-    assert.ok(toast.el.classList.contains('snackbar'));
-    assert.equal(toast.el.textContent.trim(), 'Saved');
-    assert.equal(toast.el.querySelector('p')?.textContent, 'Saved');
-    assert.equal(Expressive.Toast.getInstance(toast.el), toast);
-
-    toast.dismiss();
+  test('renders its message into a snackbar container', () => {
+    const snackbar = new Expressive.Snackbar({ text: 'Saved' });
+    try {
+      assert.ok(document.querySelector('#snackbar-container'), 'no snackbar container was created');
+      assert.ok(snackbar.el.classList.contains('snackbar'));
+      assert.equal(snackbar.el.textContent.trim(), 'Saved');
+      assert.equal(snackbar.el.querySelector('p')?.textContent, 'Saved');
+      assert.equal(Expressive.Snackbar.getInstance(snackbar.el), snackbar);
+    } finally {
+      snackbar.dismiss();
+    }
   });
 
   test('renders an action button and a close affordance', () => {
     let acted = false;
-    const toast = new Expressive.Toast({
+    const snackbar = new Expressive.Snackbar({
       text: 'Item archived',
       action: 'Undo',
       onAction: () => {
@@ -389,15 +390,50 @@ describe('Toast', () => {
       dismissible: true,
       displayLength: Infinity,
     });
+    try {
+      const action = snackbar.el.querySelector('button:not(.circle)');
+      const close = snackbar.el.querySelector('button.circle');
+      assert.ok(action, 'action button was not created');
+      assert.equal(action.textContent, 'Undo');
+      assert.ok(close, 'close button was not created');
 
-    const action = toast.el.querySelector('button:not(.circle)');
-    const close = toast.el.querySelector('button.circle');
-    assert.ok(action, 'action button was not created');
-    assert.equal(action.textContent, 'Undo');
-    assert.ok(close, 'close button was not created');
+      action.click();
+      assert.equal(acted, true, 'onAction was not called');
+    } finally {
+      snackbar.dismiss();
+    }
+  });
 
-    action.click();
-    assert.equal(acted, true, 'onAction was not called');
+  test('a new snackbar replaces the one that is showing', () => {
+    const first = new Expressive.Snackbar({ text: 'First', displayLength: Infinity });
+    const second = new Expressive.Snackbar({ text: 'Second', displayLength: Infinity });
+    try {
+      assert.equal(first.el.isConnected, false);
+      assert.equal(second.el.textContent.trim(), 'Second');
+      assert.equal(document.querySelectorAll('#snackbar-container .snackbar').length, 1);
+    } finally {
+      second.dismiss();
+    }
+  });
+
+  test('an action snackbar stays longer unless displayLength is set', () => {
+    const snackbar = new Expressive.Snackbar({ text: 'Archived', action: 'Undo' });
+    try {
+      assert.equal(snackbar.options.displayLength, 10000);
+    } finally {
+      snackbar.dismiss();
+    }
+  });
+
+  test('is a polite live region and does not take focus', () => {
+    const snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: Infinity });
+    try {
+      assert.equal(snackbar.el.getAttribute('role'), 'status');
+      assert.equal(snackbar.el.getAttribute('aria-live'), 'polite');
+      assert.notEqual(document.activeElement, snackbar.el);
+    } finally {
+      snackbar.dismiss();
+    }
   });
 });
 

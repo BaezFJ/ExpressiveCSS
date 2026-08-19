@@ -117,7 +117,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'modals', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">widgets</i>
                             Components
@@ -144,8 +144,8 @@
                                 <li class="{% if request.endpoint == 'tooltips' %}active{% endif %}">
                                     <a href="{{ url_for('tooltips') }}">Tooltips</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'toasts' %}active{% endif %}">
-                                    <a href="{{ url_for('toasts') }}">Toasts</a>
+                                <li class="{% if request.endpoint == 'snackbar' %}active{% endif %}">
+                                    <a href="{{ url_for('snackbar') }}">Snackbar</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'preloader' %}active{% endif %}">
                                     <a href="{{ url_for('preloader') }}">Preloader</a>
@@ -263,7 +263,7 @@
                 <a href="{{ url_for('modals') }}">Dialogs</a>
                 <a href="{{ url_for('badges') }}">Badges</a>
                 <a href="{{ url_for('tooltips') }}">Tooltips</a>
-                <a href="{{ url_for('toasts') }}">Toasts</a>
+                <a href="{{ url_for('snackbar') }}">Snackbar</a>
                 <a href="{{ url_for('preloader') }}">Preloader</a>
                 <a href="{{ url_for('carousel') }}">Carousel</a>
                 <a href="{{ url_for('media') }}">Lightbox</a>

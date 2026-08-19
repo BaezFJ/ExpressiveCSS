@@ -35,7 +35,7 @@ describe('IIFE bundle', () => {
 
   test('the global carries AutoInit and the components', () => {
     assert.equal(typeof dom.window.Expressive.AutoInit, 'function');
-    for (const name of ['Sidenav', 'Tabs', 'Toast', 'FormSelect', 'Dialogs']) {
+    for (const name of ['Sidenav', 'Tabs', 'Snackbar', 'FormSelect', 'Dialogs']) {
       assert.equal(typeof dom.window.Expressive[name], 'function', `${name} missing from global`);
     }
     assert.equal(
@@ -47,6 +47,11 @@ describe('IIFE bundle', () => {
       dom.window.Expressive.Pushpin,
       undefined,
       'retired Pushpin is still on the global'
+    );
+    assert.equal(
+      dom.window.Expressive.Toast,
+      undefined,
+      'retired Toast is still on the global'
     );
   });
 

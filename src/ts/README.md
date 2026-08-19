@@ -25,7 +25,7 @@ in sync — the old barrel had four hand-synchronized edit sites, and forgetting
 one failed silently at runtime.
 
 Leave a component out of the registry when it should only ever be constructed
-explicitly (`Toast`, `CharacterCounter`, `Range`).
+explicitly (`Snackbar`, `CharacterCounter`, `Range`).
 
 ## The Component contract
 

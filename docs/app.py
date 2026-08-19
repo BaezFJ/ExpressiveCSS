@@ -236,10 +236,16 @@ def tooltips():
     return render_template('components/tooltips.html')
 
 
+@app.route('/snackbar')
+@app.route('/snackbar.html')
+def snackbar():
+    return render_template('components/snackbar.html')
+
+
 @app.route('/toasts')
 @app.route('/toasts.html')
 def toasts():
-    return render_template('components/toasts.html')
+    return redirect(url_for('snackbar'), code=301)
 
 
 @app.route('/preloader')

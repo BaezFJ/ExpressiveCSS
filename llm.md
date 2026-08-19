@@ -61,7 +61,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Scrollspy
 - Sidenav
 - Tabs
-- Toasts
+- Snackbar
 - Tooltips
 - Toolbars
 
@@ -243,7 +243,7 @@ Opt an element out when it needs manual options:
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fixed-action-btn` |
 
-`Toast`, `CharacterCounter`, and `Range` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Waves, Range, and Cards behaviors.
+`Snackbar`, `CharacterCounter`, and `Range` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Waves, Range, and Cards behaviors.
 
 ## Component lifecycle
 
@@ -267,7 +267,7 @@ The main bundle exports:
 - `Chips`, `Datepicker`, `Dropdown`, and `Lightbox`
 - `Modal`, `Parallax`, `Range`, and `ScrollSpy`
 - `FormSelect`, `Sidenav`, `Slider`, `Tabs`, and `TapTarget`
-- `Timepicker`, `Toast`, and `Tooltip`
+- `Timepicker`, `Snackbar`, and `Tooltip`
 
 ---
 
@@ -3149,7 +3149,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fixed-action-btn` |
 
-Toast, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Waves, Chips, and Cards also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
+Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Waves, Chips, and Cards also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
 ### Ignoring Elements
 
@@ -4234,15 +4234,15 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-h
 
 ---
 
-## Toasts
+## Snackbar
 
 Material Design 3 snackbars, from the HTML.
 
-A `.snackbar` (or `.toast` — they are the same element) is the bar. A `<p>` is the supporting text. A trailing `<button>` is the action; a `.circle` button is the optional close. There is no `toast-action` class required — that name remains as an alias.
+Snackbars show short updates about app processes at the bottom of the screen. They should not interrupt browsing. A `.snackbar` is the bar. A `<p>` is the supporting text. A trailing `<button>` is the optional action; a `.circle` button is the optional close.
 
-Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On compact viewports the bar is inset 8dp from the edges; from the small breakpoint up it hugs content (344–672dp) and sits 24dp from the start and the bottom — not the top-right.
+Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`, two lines max. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On compact viewports the bar is inset 8dp from the edges; from the small breakpoint up it hugs content (344–672dp) and sits centered 24dp from the bottom.
 
-Toast is not in `AutoInit()` and there is no `toast()` helper. Construct one when you need it, or drop a static `.snackbar` in the page and add `.active` to pin it to the viewport. Static bars do not time out — that is CSS only.
+A snackbar can time out on its own (4 seconds, or 10 with an action) or stay until the user acts (`displayLength: Infinity`). Only one shows at a time. The live region is `role="status"` / `aria-live="polite"` and does not steal focus. Snackbar is not in `AutoInit()`.
 
 Show Show with action Show with close
 
@@ -4253,48 +4253,48 @@ Item archived
 Can't send photo. Retry in 5 seconds.
 
 ```js
-new Expressive.Toast({ text: 'Photo saved to album' });
+new Expressive.Snackbar({ text: 'Photo saved to album' });
 
-new Expressive.Toast({
+new Expressive.Snackbar({
   text: 'Item archived',
   action: 'Undo',
   onAction: function() { /* restore */ }
 });
 
-new Expressive.Toast({
+new Expressive.Snackbar({
   text: "Can't send photo. Retry in 5 seconds.",
   action: 'Retry',
   dismissible: true
 });
 ```
 
-The constructor wraps `text` in a `<p>` and appends the action and close when those options are set. The live element gets both `.toast` and `.snackbar`.
+The constructor wraps `text` in a `<p>` and appends the action and close when those options are set.
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Toast`. Toast is not in `AutoInit()` — construct one when you need it.
+The IIFE bundle exposes `Expressive.Snackbar`. Snackbar is not in `AutoInit()` — construct one when you need it.
 
 ```js
-new Expressive.Toast({
-  text: 'I am a toast!'
+new Expressive.Snackbar({
+  text: 'I am a snackbar!'
 });
 ```
 
 One way to hook that up is a click handler on a button:
 
 ```html
-<button type="button" id="toast-basic">Show</button>
+<button type="button" id="snackbar-basic">Show</button>
 ```
 
 ```js
-document.getElementById('toast-basic').addEventListener('click', function() {
-  new Expressive.Toast({ text: 'I am a toast!' });
+document.getElementById('snackbar-basic').addEventListener('click', function() {
+  new Expressive.Snackbar({ text: 'I am a snackbar!' });
 });
 ```
 
 ### Markup
 
-The same anatomy works as static HTML. Without `.active` the bar is in-flow — useful for previews. With `.active` it pins to the bottom-start of the viewport. Add `.top` to move it to the top, or `.center` to center it horizontally.
+The same anatomy works as static HTML. Without `.active` the bar is in-flow — useful for previews. With `.active` it pins to the bottom of the viewport, centered from the small breakpoint.
 
 Show static snackbar
 
@@ -4311,8 +4311,7 @@ I'm a snackbar
 </div>
 
 <div class="snackbar active">
-  <i class="material-icons">info</i>
-  <p>I'm a snackbar</p>
+  <p>Single-line snackbar with action</p>
   <button type="button">Action</button>
 </div>
 ```
@@ -4321,127 +4320,127 @@ I'm a snackbar
 
 ### Options
 
-You can customize each toast with these options.
+You can customize each snackbar with these options.
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `text` | String | `''` | Plain-text supporting text, wrapped in a `<p>`. If set, it replaces any HTML from `toastId`. |
+| `text` | String | `''` | Plain-text supporting text, wrapped in a `<p>`. If set, it replaces any HTML from `snackbarId`. |
 | `action` | String | `''` | Optional action label. Rendered as a trailing text button. |
-| `onAction` | Function | `null` | Called when the action button is pressed. The toast still dismisses. |
+| `onAction` | Function | `null` | Called when the action button is pressed. The snackbar still dismisses. |
 | `dismissible` | Boolean | `false` | Show a trailing close icon button. |
-| `toastId` | String | — | Id of a `<template>` (or another element) used as the toast body. |
-| `displayLength` | Number | `4000` | How long the toast stays before it dismisses, in milliseconds. M3 recommends 4–10 seconds. |
+| `snackbarId` | String | — | Id of a `<template>` (or another element) used as the snackbar body. |
+| `displayLength` | Number | `4000` | How long the snackbar stays before it dismisses, in milliseconds. M3 recommends 4–10 seconds. |
 | `inDuration` | Number | `300` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `375` | Exit transition duration, in milliseconds. |
-| `classes` | String | `''` | Space-separated classes added to the toast. `rounded` is a stadium. `top` and `center` move the container. |
-| `completeCallback` | Function | `null` | Called when the toast is dismissed. |
-| `activationPercent` | Number | `0.8` | Fraction of the toast’s width a drag must travel to dismiss it. |
+| `classes` | String | `''` | Space-separated classes added to the snackbar. `rounded` is a stadium. `top` moves the bar off the bottom. |
+| `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
+| `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
 
 ### Methods
 
-> Instance methods are called on the toast. You can get the instance like this:
+> Instance methods are called on the snackbar. You can get the instance like this:
 
 ```js
-const instance = Expressive.Toast.getInstance(elem);
+const instance = Expressive.Snackbar.getInstance(elem);
 ```
 
 #### .dismiss();
 
-Dismiss this toast with its exit animation. Runs `completeCallback` when the animation finishes.
+Dismiss this snackbar with its exit animation. Runs `completeCallback` when the animation finishes.
 
 ```text
 instance.dismiss();
 ```
 
-#### Toast.dismissAll();
+#### Snackbar.dismissAll();
 
-Dismiss every toast that is currently showing.
+Dismiss every snackbar that is currently showing.
 
 ```js
-Expressive.Toast.dismissAll();
+Expressive.Snackbar.dismissAll();
 ```
 
 ### Properties
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `el` | Element | The toast element. |
+| `el` | Element | The snackbar element. |
 | `options` | Object | The options the instance was initialized with. |
-| `panning` | Boolean | Whether the toast is being dragged. |
-| `timeRemaining` | Number | Milliseconds left before the toast dismisses. |
+| `panning` | Boolean | Whether the snackbar is being dragged. |
+| `timeRemaining` | Number | Milliseconds left before the snackbar dismisses. |
 
 ### Custom HTML
 
-Pass `toastId` pointing at a `<template>`. The first child of the template is cloned as the toast. Leave `text` empty so the HTML is kept. Use the same anatomy as a static snackbar.
+Pass `snackbarId` pointing at a `<template>`. The first child of the template is cloned as the snackbar. Leave `text` empty so the HTML is kept. Use the same anatomy as a static snackbar.
 
-Show Toast 1 Show Toast 2
+Show Snackbar 1 Show Snackbar 2
 
-This is toast nº1 with a [link](https://github.com)
+This is snackbar nº1 with a [link](https://github.com)
 
-This is toast nº2
+This is snackbar nº2
 
 ```html
-<button type="button" class="tonal" id="toast-html-1">Show Toast 1</button>
-<template id="my-toast-1">
+<button type="button" class="tonal" id="snackbar-html-1">Show Snackbar 1</button>
+<template id="my-snackbar-1">
   <div>
-    <p>This is toast nº1 with a <a href="https://github.com">link</a></p>
+    <p>This is snackbar nº1 with a <a href="https://github.com">link</a></p>
   </div>
 </template>
 ```
 
 ```js
-new Expressive.Toast({ toastId: 'my-toast-1' });
+new Expressive.Snackbar({ snackbarId: 'my-snackbar-1' });
 ```
 
 ### Callback
 
-Run a function when the toast is dismissed.
+Run a function when the snackbar is dismissed.
 
-Show Toast
+Show Snackbar
 
 ```js
-new Expressive.Toast({
+new Expressive.Snackbar({
   text: 'I will call back when dismissed',
   completeCallback: function() {
-    new Expressive.Toast({ text: 'Your toast was dismissed' });
+    new Expressive.Snackbar({ text: 'Your snackbar was dismissed' });
   }
 });
 ```
 
 ### Styling
 
-Pass classes in the `classes` option. `rounded` is a 24dp stadium — the M3 default is 4dp. `top` moves the container to the top of the viewport; `center` centers it horizontally. On larger screens the default is start-aligned, 24dp from the start and the bottom.
+Pass classes in the `classes` option. `rounded` is a 24dp stadium — the M3 default is 4dp. Snackbars sit at the bottom; `top` is the exception.
 
-Show round Toast Show at top
+Show round Snackbar Show at top
 
 ```js
-new Expressive.Toast({
-  text: 'I am a toast!',
+new Expressive.Snackbar({
+  text: 'I am a snackbar!',
   classes: 'rounded'
 });
 
-new Expressive.Toast({
+new Expressive.Snackbar({
   text: 'Posted from the top',
   classes: 'top'
 });
 ```
 
-### Dismiss a Toast Programmatically
+### Dismiss a Snackbar Programmatically
 
-To remove a specific toast, get the instance from the toast element and call `dismiss()`. Swipe also dismisses — drag past 80% of the width (or flick). The action and close buttons are not swipe handles.
+To remove a specific snackbar, get the instance from the snackbar element and call `dismiss()`. Swipe also dismisses — drag past 80% of the width (or flick). The action and close buttons are not swipe handles.
 
-Show Toast Dismiss a toast Dismiss all
+Show Snackbar Dismiss a snackbar Dismiss all
 
 ```js
-const toastElement = document.querySelector('.toast');
-const toastInstance = Expressive.Toast.getInstance(toastElement);
-toastInstance.dismiss();
+const snackbarElement = document.querySelector('.snackbar');
+const snackbarInstance = Expressive.Snackbar.getInstance(snackbarElement);
+snackbarInstance.dismiss();
 ```
 
-#### Dismiss all Toasts
+#### Dismiss all snackbars
 
 ```js
-Expressive.Toast.dismissAll();
+Expressive.Snackbar.dismissAll();
 ```
 
 ---

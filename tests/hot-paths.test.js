@@ -1,7 +1,7 @@
 // How much work a component does per event.
 //
 // These are not micro-benchmarks - they assert the shape of the work: how many
-// times layout is read per scroll tick, how many timers a toast arms, whether
+// times layout is read per scroll tick, how many timers a snackbar arms, whether
 // a scroll handler coalesces onto a frame. Those are the properties that
 // regress silently, because doing them the expensive way still looks correct.
 
@@ -97,38 +97,38 @@ describe('Sidenav drag', () => {
   });
 });
 
-describe('Toast countdown', () => {
+describe('Snackbar countdown', () => {
   beforeEach(resetBody);
 
   test('dismisses on schedule without a ticking interval', async () => {
-    const toast = new Expressive.Toast({ text: 'Saved', displayLength: 40, outDuration: 10 });
+    const snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: 40, outDuration: 10 });
     assert.ok(document.querySelector('.snackbar'));
 
     await sleep(200);
 
-    assert.equal(document.querySelector('.snackbar'), null, 'toast outlived its displayLength');
+    assert.equal(document.querySelector('.snackbar'), null, 'snackbar outlived its displayLength');
   });
 
   test('pausing banks the remaining time instead of dismissing', async () => {
-    const toast = new Expressive.Toast({ text: 'Saved', displayLength: 60, outDuration: 10 });
+    const snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: 60, outDuration: 10 });
 
-    // finally: a toast owns a live timer, so a failed assertion that skipped
+    // finally: a snackbar owns a live timer, so a failed assertion that skipped
     // the dismiss would keep the test process alive.
     try {
-      toast._pauseTimer(); // what _onDragStart does
+      snackbar._pauseTimer(); // what _onDragStart does
       await sleep(200);
 
-      assert.ok(document.querySelector('.snackbar'), 'a paused toast dismissed anyway');
-      assert.ok(toast.timeRemaining > 0, 'paused toast banked no time');
-      assert.equal(toast.counterTimeout, null, 'the timer was left armed while paused');
+      assert.ok(document.querySelector('.snackbar'), 'a paused snackbar dismissed anyway');
+      assert.ok(snackbar.timeRemaining > 0, 'paused snackbar banked no time');
+      assert.equal(snackbar.counterTimeout, null, 'the timer was left armed while paused');
 
-      toast._resumeTimer(); // what _onDragEnd does
-      assert.notEqual(toast.counterTimeout, null, 'resuming did not re-arm the timer');
+      snackbar._resumeTimer(); // what _onDragEnd does
+      assert.notEqual(snackbar.counterTimeout, null, 'resuming did not re-arm the timer');
 
       await sleep(200);
-      assert.equal(document.querySelector('.snackbar'), null, 'resumed toast never dismissed');
+      assert.equal(document.querySelector('.snackbar'), null, 'resumed snackbar never dismissed');
     } finally {
-      toast.dismiss();
+      snackbar.dismiss();
     }
   });
 });
