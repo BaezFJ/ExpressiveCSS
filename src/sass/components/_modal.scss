@@ -133,10 +133,8 @@ dialog.max {
   border-radius: 0;
 }
 
-// Sheets. Docked to one edge; the inner corners keep the dialog shape,
-// the edge against the viewport is square. `left` / `right` also float
-// via the helper utilities (`!important`), so sheets reset that.
-// Bottom sheets are a separate M3 component — see _bottom-sheet.scss.
+// Top sheet stays a generic docked dialog. Bottom and side sheets are
+// their own M3 components — see _bottom-sheet.scss and _side-sheet.scss.
 
 dialog.top,
 dialog.top-sheet {
@@ -149,33 +147,4 @@ dialog.top-sheet {
     var(--md-comp-basic-dialog-container-shape);
 }
 
-dialog.left,
-dialog.left-sheet,
-dialog.right,
-dialog.right-sheet {
-  float: none !important;
-  width: min(var(--md-comp-basic-dialog-sheet-width), 85%);
-  max-width: none;
-  height: auto;
-  max-height: none;
-  min-width: 0;
-  min-height: 0;
-  margin: 0;
-  inset-block: 0;
-}
 
-dialog.left,
-dialog.left-sheet {
-  inset-inline-start: 0;
-  inset-inline-end: auto;
-  border-radius: 0 var(--md-comp-basic-dialog-container-shape)
-    var(--md-comp-basic-dialog-container-shape) 0;
-}
-
-dialog.right,
-dialog.right-sheet {
-  inset-inline-start: auto;
-  inset-inline-end: 0;
-  border-radius: var(--md-comp-basic-dialog-container-shape) 0 0
-    var(--md-comp-basic-dialog-container-shape);
-}

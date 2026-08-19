@@ -117,7 +117,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'modals', 'bottom_sheet', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'modals', 'bottom_sheet', 'side_sheet', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">widgets</i>
                             Components
@@ -140,6 +140,9 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'bottom_sheet' %}active{% endif %}">
                                     <a href="{{ url_for('bottom_sheet') }}">Bottom sheet</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'side_sheet' %}active{% endif %}">
+                                    <a href="{{ url_for('side_sheet') }}">Side sheet</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'badges' %}active{% endif %}">
                                     <a href="{{ url_for('badges') }}">Badges</a>
@@ -265,6 +268,7 @@
                 <a href="{{ url_for('lists') }}">Lists</a>
                 <a href="{{ url_for('modals') }}">Dialogs</a>
                 <a href="{{ url_for('bottom_sheet') }}">Bottom sheet</a>
+                <a href="{{ url_for('side_sheet') }}">Side sheet</a>
                 <a href="{{ url_for('badges') }}">Badges</a>
                 <a href="{{ url_for('tooltips') }}">Tooltips</a>
                 <a href="{{ url_for('snackbar') }}">Snackbar</a>

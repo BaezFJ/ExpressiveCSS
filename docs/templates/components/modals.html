@@ -157,18 +157,14 @@
       <div id="sheets" class="section scrollspy">
         <h3>Sheets</h3>
         <p>
-          Add <code>top</code>, <code>right</code>, or
-          <code>left</code> to dock the dialog to that edge. The inner
-          corners keep the 28dp shape; the edge against the viewport is
-          square. Side sheets are 400px wide
-          (<code>--md-comp-basic-dialog-sheet-width</code>). Bottom sheets
-          are a separate component — see
+          Add <code>top</code> to dock the dialog to the top edge. Side
+          sheets and bottom sheets are separate M3 components — see
+          <a href="{{ url_for('side_sheet') }}">Side sheet</a>
+          and
           <a href="{{ url_for('bottom_sheet') }}">Bottom sheet</a>.
         </p>
         <p>
           <button type="button" class="tonal" onclick="document.getElementById('modal-top').showModal()">Top</button>
-          <button type="button" class="tonal" onclick="document.getElementById('modal-right').showModal()">Right</button>
-          <button type="button" class="tonal" onclick="document.getElementById('modal-left').showModal()">Left</button>
         </p>
         <dialog id="modal-top" class="top">
           <h2>Top sheet</h2>
@@ -177,23 +173,7 @@
             <button type="submit" class="text" value="close">Close</button>
           </form>
         </dialog>
-        <dialog id="modal-right" class="right">
-          <h2>Right sheet</h2>
-          <p>A side sheet for details, filters, or a short form that should stay next to the page.</p>
-          <form method="dialog">
-            <button type="submit" class="text" value="close">Close</button>
-          </form>
-        </dialog>
-        <dialog id="modal-left" class="left">
-          <h2>Left sheet</h2>
-          <p>A side sheet docked to the start edge. Same width token as the right sheet.</p>
-          <form method="dialog">
-            <button type="submit" class="text" value="close">Close</button>
-          </form>
-        </dialog>
-<pre><code>&lt;dialog class="top"&gt;…&lt;/dialog&gt;
-&lt;dialog class="right"&gt;…&lt;/dialog&gt;
-&lt;dialog class="left"&gt;…&lt;/dialog&gt;</code></pre>
+<pre><code>&lt;dialog class="top"&gt;…&lt;/dialog&gt;</code></pre>
       </div>
 
       <div id="fullscreen" class="section scrollspy">

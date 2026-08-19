@@ -236,6 +236,12 @@ def bottom_sheet():
     return render_template('components/bottom-sheet.html')
 
 
+@app.route('/side-sheet')
+@app.route('/side-sheet.html')
+def side_sheet():
+    return render_template('components/side-sheet.html')
+
+
 @app.route('/badges')
 @app.route('/badges.html')
 def badges():

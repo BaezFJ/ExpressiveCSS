@@ -1,0 +1,187 @@
+@use "../abstracts" as *;
+
+// Side sheets.
+//
+// Anatomy is the HTML. A dialog.side-sheet (or .right / .left) is the
+// surface, docked to the trailing edge by default. showModal() is the
+// modal variant (scrim, rounded inner corners). show() is the standard
+// variant (no scrim, a divider on the inner edge, page stays interactive).
+//
+// A <header> is the top bar: an optional back button, a heading, and a
+// close control (form[method=dialog] with an icon button). Body content
+// is a <div> or <p>. A last-child form[method=dialog] is the action row.
+//
+// Tokens follow https://m3.material.io/components/side-sheets
+//   container    surface-container-low, 400dp, full height
+//   standard     coplanar, 1dp outline-variant rule on the inner edge
+//   modal        28dp inner corners, elevation 1, scrim
+//   header       64dp, title-large, 24dp inset, 48dp icon buttons
+//   actions      16dp pad, outline-variant rule above
+//
+// Standard is for large windows next to the main pane. Modal is for
+// compact/medium, or whenever the sheet should interrupt.
+
+$_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dialog.left-sheet";
+
+#{$_sheet} {
+  --md-comp-side-sheet-container-color: var(--md-sys-color-surface-container-low);
+  --md-comp-side-sheet-container-shape: 28px;
+  --md-comp-side-sheet-container-width: 400px;
+  --md-comp-side-sheet-shift: 0px;
+
+  box-sizing: border-box;
+  position: fixed;
+  float: none !important;
+  inset-block: 0;
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  width: min(var(--md-comp-side-sheet-container-width), 85%);
+  max-width: var(--md-comp-side-sheet-container-width);
+  height: auto;
+  max-height: none;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: var(--md-comp-side-sheet-container-color);
+  color: var(--md-sys-color-on-surface);
+  outline: none;
+  translate: var(--md-comp-side-sheet-shift) 0;
+  transition: translate 280ms ease, border-radius 200ms ease;
+
+  &:not(:modal) {
+    z-index: 1100;
+    border-radius: 0;
+    box-shadow: none;
+    // Standard: attached to the page, inner edge is a divider.
+    border-inline-start: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  &:modal {
+    border-radius: var(--md-comp-side-sheet-container-shape) 0 0
+      var(--md-comp-side-sheet-container-shape);
+    @include z-depth("1");
+  }
+
+  &:not(:modal)::backdrop {
+    background: none;
+    backdrop-filter: none;
+  }
+
+  // Leading-edge dock.
+  &.left,
+  &.left-sheet,
+  &.start {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+
+    &:not(:modal) {
+      border-inline-start: 0;
+      border-inline-end: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    &:modal {
+      border-radius: 0 var(--md-comp-side-sheet-container-shape)
+        var(--md-comp-side-sheet-container-shape) 0;
+    }
+  }
+
+  > header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-height: 64px;
+    margin: 0;
+    padding: 8px 12px 8px 24px;
+    background: none;
+    box-shadow: none;
+  }
+
+  > header:has(> :is(button, a):first-child) {
+    padding-inline-start: 8px;
+  }
+
+  > header > :is(h1, h2, h3, h4, h5, h6) {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("title-large");
+  }
+
+  > header > form {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  > header :is(button, a.button) {
+    flex: 0 0 48px;
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    box-shadow: none;
+
+    > i {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--md-sys-color-secondary);
+      outline-offset: 2px;
+    }
+  }
+
+  > :is(form, nav):last-child {
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 16px 24px;
+    border-block-start: 1px solid var(--md-sys-color-outline-variant);
+  }
+}
+
+#{$_sheet}[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+@starting-style {
+  dialog.side-sheet[open],
+  dialog.right[open],
+  dialog.right-sheet[open] {
+    translate: 100% 0;
+  }
+
+  dialog.left[open],
+  dialog.left-sheet[open] {
+    translate: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #{$_sheet} {
+    transition: none;
+  }
+}

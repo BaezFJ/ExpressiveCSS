@@ -59,6 +59,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Media
 - Modals
 - Bottom sheet
+- Side sheet
 - Scrollspy
 - Sidenav
 - Tabs
@@ -3744,6 +3745,29 @@ A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bott
 ```js
 document.getElementById('sheet').showModal(); // modal, with scrim
 document.getElementById('sheet').show();      // standard, no scrim
+```
+
+### Side sheet
+
+A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
+
+```html
+<dialog class="side-sheet">
+  <header>
+    <h2>Headline</h2>
+    <form method="dialog">
+      <button type="submit" aria-label="Close">
+        <i class="material-symbols">close</i>
+      </button>
+    </form>
+  </header>
+  <div>…</div>
+</dialog>
+```
+
+```js
+document.getElementById('sheet').show();      // standard
+document.getElementById('sheet').showModal(); // modal
 ```
 
 ### Full-screen

@@ -1,0 +1,163 @@
+{% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
+
+{% block title %}Side sheet - ExpressiveCSS{% endblock %}
+{% block page_title %}Side sheet{% endblock %}
+
+{% block page %}
+{{ Banner("Side sheet", "Optional content and actions, without interrupting the main view.") }}
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>dialog.side-sheet</code> (or <code>.right</code> /
+          <code>.left</code>) is the surface, docked to the trailing edge
+          by default. Use it for optional content and actions so the main
+          view stays put. People can move to another region inside the
+          sheet; a back icon is the affordance for that.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/side-sheets">M3 side sheet spec</a>.
+          The container is <code>surface-container-low</code>, 400dp wide,
+          full height. A <code>&lt;header&gt;</code> is the 64dp top bar:
+          optional back, a <code>title-large</code> headline, and a close
+          control. A last-child <code>&lt;form method="dialog"&gt;</code>
+          is the action row.
+        </p>
+        <p>
+          Two variants, same sheet:
+        </p>
+        <ul class="browser-default">
+          <li>
+            <strong>Standard</strong> — <code>show()</code>. No scrim; a
+            1dp divider on the inner edge. The page stays interactive.
+            Intended next to the main pane on large windows.
+          </li>
+          <li>
+            <strong>Modal</strong> — <code>showModal()</code>. A scrim
+            sits beside the sheet and the page is inert. Inner corners are
+            28dp. Tap the scrim, drag the inner edge out, or use close.
+          </li>
+        </ul>
+        <p>
+          <button type="button" onclick="document.getElementById('sheet-standard').show()">Show standard</button>
+          <button type="button" class="tonal" onclick="document.getElementById('sheet-modal').showModal()">Show modal</button>
+          <button type="button" class="outlined" onclick="document.getElementById('sheet-back').showModal()">Show with back</button>
+        </p>
+
+        <dialog id="sheet-standard" class="side-sheet">
+          <header>
+            <h2>Headline</h2>
+            <form method="dialog">
+              <button type="submit" aria-label="Close">
+                <i class="material-symbols">close</i>
+              </button>
+            </form>
+          </header>
+          <div>
+            <p>Optional details sit beside the page. Dismiss to get the full view back.</p>
+          </div>
+        </dialog>
+
+        <dialog id="sheet-modal" class="side-sheet">
+          <header>
+            <h2>Headline</h2>
+            <form method="dialog">
+              <button type="submit" aria-label="Close">
+                <i class="material-symbols">close</i>
+              </button>
+            </form>
+          </header>
+          <div>
+            <p>Secondary content. The scrim marks the main view as unavailable until this sheet closes.</p>
+          </div>
+          <form method="dialog">
+            <button type="submit" value="save">Save</button>
+            <button type="submit" class="outlined" value="cancel">Cancel</button>
+          </form>
+        </dialog>
+
+        <dialog id="sheet-back" class="side-sheet">
+          <header>
+            <button type="button" aria-label="Back" onclick="this.closest('dialog').close()">
+              <i class="material-symbols">arrow_back</i>
+            </button>
+            <h2>Headline</h2>
+            <form method="dialog">
+              <button type="submit" aria-label="Close">
+                <i class="material-symbols">close</i>
+              </button>
+            </form>
+          </header>
+          <div>
+            <p>A back icon means this region is nested inside the sheet. The page author swaps the body; the icon is the HTML.</p>
+          </div>
+        </dialog>
+<pre><code>&lt;dialog class="side-sheet"&gt;
+  &lt;header&gt;
+    &lt;h2&gt;Headline&lt;/h2&gt;
+    &lt;form method="dialog"&gt;
+      &lt;button type="submit" aria-label="Close"&gt;
+        &lt;i class="material-symbols"&gt;close&lt;/i&gt;
+      &lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/header&gt;
+  &lt;div&gt;…&lt;/div&gt;
+&lt;/dialog&gt;</code></pre>
+        <p>
+          There is no extra class for the modal variant —
+          <code>showModal()</code> vs <code>show()</code> is the split.
+          Add <code>.left</code> to dock to the start edge.
+        </p>
+      </div>
+
+      <div id="header" class="section scrollspy">
+        <h3>Header and back</h3>
+        <p>
+          The header is 64dp. 24dp from the start to the headline, 12dp
+          between the headline and close, 24dp from the close icon to the
+          trailing edge. Put a back button first when the sheet has more
+          than one region — it does not close the sheet unless you wire it
+          to.
+        </p>
+<pre><code>&lt;header&gt;
+  &lt;button type="button" aria-label="Back"&gt;
+    &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;h2&gt;Headline&lt;/h2&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button type="submit" aria-label="Close"&gt;
+      &lt;i class="material-symbols"&gt;close&lt;/i&gt;
+    &lt;/button&gt;
+  &lt;/form&gt;
+&lt;/header&gt;</code></pre>
+      </div>
+
+      <div id="layout" class="section scrollspy">
+        <h3>Layout</h3>
+        <p>
+          Standard sheets sit on large windows beside the main pane. Modal
+          sheets are the compact/medium pattern (or any time the sheet
+          should take focus). On small screens a
+          <a href="{{ url_for('bottom_sheet') }}">bottom sheet</a>
+          is often a better fit.
+        </p>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#header">Header and back</a></li>
+          <li><a href="#layout">Layout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
