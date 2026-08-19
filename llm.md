@@ -2602,7 +2602,7 @@ The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. T
 
 Tokens follow the [M3 app bar spec](https://m3.material.io/components/app-bars/specs). The container is `surface` at rest, the headline is `on-surface` at `title-large`, and icons are 24dp in a 48dp target, inset 4dp. Icons inherit the header color so a fill + `on-*` pair stays readable. The small bar is 64dp tall. Pair a fill utility with its `on-*` text class if you want a colored bar.
 
-The bar is CSS-only. Dropdowns, tabs, and the sidenav are separate components that `AutoInit()` starts. A `sidenav-trigger` inside the bar is still required — that class is the Sidenav contract, not bar chrome.
+The bar is CSS-only. Dropdowns and the sidenav are separate components that `AutoInit()` starts. A `sidenav-trigger` inside the bar is still required — that class is the Sidenav contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
 
 ### Small
 
@@ -2711,25 +2711,6 @@ Component tokens you can set on the header (or on `:root`):
 | `--md-comp-top-app-bar-trailing-icon-color` | `inherit` (spec: `on-surface-variant`) |
 | `--md-comp-top-app-bar-container-height` | 64px |
 | `--md-comp-top-app-bar-leading-icon-size` | 24px |
-
-### Tabs
-
-Put `.tabs` on a sibling of the `<nav>`, still inside the header. The tab list is transparent against the bar. `AutoInit()` starts `.tabs`.
-
-```text
-<header>
-  <nav>
-    <h2>Title</h2>
-  </nav>
-  <nav class="tabs">
-    <a href="#test1">Test 1</a>
-    <a class="active" href="#test2">Test 2</a>
-  </nav>
-</header>
-
-<div id="test1">Test 1</div>
-<div id="test2">Test 2</div>
-```
 
 ### Dropdown
 
@@ -4135,8 +4116,6 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 ```
 
 Add `disabled` on the `<a>` (or on a wrapping `li.tab`) to make it inaccessible. Tabs become scrollable when there are too many to fit.
-
-For tabs under a top app bar, put `.tabs` on a sibling of the bar’s `<nav>` — not on that `<nav>` itself. See Navbar with Tabs.
 
 ### Secondary
 

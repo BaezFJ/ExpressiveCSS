@@ -174,12 +174,6 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
       }
     }
   }
-
-  // Secondary row (tabs sit under the bar, not inside it).
-  > .tabs {
-    background-color: transparent;
-    width: 100%;
-  }
 }
 
 %app-bar-destination {

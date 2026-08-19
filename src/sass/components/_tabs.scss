@@ -5,7 +5,7 @@
 // Anatomy is the HTML. A <nav class="tabs"> of <a href="#panel"> is the
 // bar. A heading or <span> is the label; a leading <i> is the icon.
 // .active is the selected tab. Helpers: .tabs-secondary, .horizontal,
-// .max, .transparent.
+// .max.
 //
 // Tokens follow https://m3.material.io/components/tabs/specs
 //   primary     surface, 48dp (64 with stacked icon), title-small
@@ -220,32 +220,6 @@ $_tab: "> a, > .tab > a";
     #{$_tab} {
       width: 100%;
       padding-inline: 12px;
-    }
-  }
-}
-
-// On a colored app bar (header.primary > .tabs).
-.tabs.transparent {
-  --md-comp-primary-tab-container-color: transparent;
-  --md-comp-primary-tab-label-text-color: color-mix(
-    in oklab,
-    var(--md-sys-color-on-primary) 74%,
-    transparent
-  );
-  --md-comp-primary-tab-active-label-text-color: var(--md-sys-color-on-primary);
-  --md-comp-primary-tab-active-indicator-color: var(--md-sys-color-on-primary);
-  border-block-end-color: color-mix(in oklab, var(--md-sys-color-on-primary) 20%, transparent);
-
-  #{$_tab} {
-    &:hover,
-    &:focus {
-      color: var(--md-sys-color-on-primary);
-      background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 8%, transparent);
-    }
-
-    &.active:hover,
-    &.active:focus {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-primary) 10%, transparent);
     }
   }
 }

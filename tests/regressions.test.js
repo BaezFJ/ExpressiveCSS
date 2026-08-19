@@ -398,3 +398,11 @@ describe('retired Pushpin', () => {
     assert.doesNotMatch(css, /\.pinned\s*\{/);
   });
 });
+
+describe('retired app bar tabs', () => {
+  test('does not style .tabs as a header secondary row', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    assert.doesNotMatch(css, /header[^{]*\s>\s*\.tabs\s*\{/);
+    assert.doesNotMatch(css, /\.tabs\.transparent\s*\{/);
+  });
+});
