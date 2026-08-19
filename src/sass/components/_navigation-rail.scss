@@ -1,0 +1,331 @@
+@use "../abstracts" as *;
+
+// Navigation rail. Destinations on mid-size screens, not the bottom
+// navigation bar and not the sidenav drawer.
+//
+// Anatomy is the HTML: a nav.navigation-rail. The first
+// button:not(.button) is the menu toggle. A .button child is the
+// optional FAB. Other <a>/<button> are destinations (leading <i>,
+// remaining text is the label, optional .badge). A heading is a
+// section header (expanded only). aria-current / .active is selected.
+//
+// .expanded widens the rail (icon+label on one row, extended FAB).
+// Below `small`, .expanded is modal (scrim). .modal forces that
+// overlay at every breakpoint. JS toggles .expanded from the menu
+// button; the class is also valid set by the author.
+//
+// Tokens:
+//   --md-comp-nav-rail-collapsed-width     96px
+//   --md-comp-nav-rail-expanded-width      280px (clamped 220–360)
+//   --md-comp-nav-rail-icon-size           24px
+//   --md-comp-nav-rail-indicator-width     56px
+//   --md-comp-nav-rail-indicator-height    32px / 56px expanded
+//   --md-comp-nav-rail-fab-size            56px
+//
+// Nest descendants inside this block.
+
+:root {
+  --md-comp-nav-rail-collapsed-width: 96px;
+  --md-comp-nav-rail-expanded-width: 280px;
+}
+
+.navigation-rail {
+  --md-comp-nav-rail-icon-size: 24px;
+  --md-comp-nav-rail-indicator-width: 56px;
+  --md-comp-nav-rail-indicator-height: 32px;
+  --md-comp-nav-rail-indicator-shape: 16px;
+  --md-comp-nav-rail-fab-size: 56px;
+  --md-comp-nav-rail-active-indicator-color: var(--md-sys-color-secondary-container);
+  --md-comp-nav-rail-active-color: var(--md-sys-color-on-secondary-container);
+  --md-comp-nav-rail-duration: 250ms;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: var(--md-comp-nav-rail-collapsed-width);
+  min-width: var(--md-comp-nav-rail-collapsed-width);
+  min-height: 100dvh;
+  margin: 0;
+  padding: 20px 8px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  transition: width var(--md-comp-nav-rail-duration) ease,
+    min-width var(--md-comp-nav-rail-duration) ease,
+    padding var(--md-comp-nav-rail-duration) ease;
+
+  // Menu toggle.
+  > button:not(.button):first-child {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: var(--md-comp-nav-rail-indicator-width);
+    height: 48px;
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--md-comp-nav-rail-indicator-shape);
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    appearance: none;
+    @include focus-visible;
+
+    > i {
+      font-size: var(--md-comp-nav-rail-icon-size);
+      width: var(--md-comp-nav-rail-icon-size);
+      height: var(--md-comp-nav-rail-icon-size);
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+  }
+
+  // Optional FAB. Collapsed: icon-only 56dp. Expanded: extended.
+  > :is(a, button).button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: var(--md-comp-nav-rail-fab-size);
+    height: var(--md-comp-nav-rail-fab-size);
+    margin: 4px 0 16px;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    color: var(--md-sys-color-on-primary-container);
+    background-color: var(--md-sys-color-primary-container);
+    text-decoration: none;
+
+    > :not(i) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+
+  // Destinations.
+  > a:not(.button),
+  > button:not(.button):not(:first-child) {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 6px 0;
+    border: 0;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    appearance: none;
+    text-decoration: none;
+    text-align: center;
+    @include typescale("label-medium");
+    @include focus-visible;
+
+    > i {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: var(--md-comp-nav-rail-indicator-width);
+      height: var(--md-comp-nav-rail-indicator-height);
+      border-radius: var(--md-comp-nav-rail-indicator-shape);
+      font-size: var(--md-comp-nav-rail-icon-size);
+      color: inherit;
+      transition: background-color var(--md-comp-nav-rail-duration) ease;
+    }
+
+    &:hover:not(.active, [aria-current]) > i {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+
+    &.active,
+    &[aria-current] {
+      color: var(--md-sys-color-on-surface);
+
+      > i {
+        background-color: var(--md-comp-nav-rail-active-indicator-color);
+        color: var(--md-comp-nav-rail-active-color);
+        --md-icon-fill: 1;
+      }
+    }
+
+    > .badge {
+      position: absolute;
+      top: 4px;
+      left: 50%;
+      transform: translate(6px, 0);
+      float: none;
+      z-index: 1;
+      box-sizing: border-box;
+      min-width: 16px;
+      height: 16px;
+      margin: 0;
+      padding: 0 4px;
+      border-radius: 8px;
+      background-color: var(--md-sys-color-error);
+      color: var(--md-sys-color-on-error);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 16px;
+      text-align: center;
+
+      &:empty {
+        min-width: 8px;
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        border-radius: 50%;
+      }
+
+      &:empty::after {
+        content: none;
+      }
+    }
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 12px 16px 8px;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("title-small");
+  }
+
+  &.expanded {
+    --md-comp-nav-rail-indicator-height: 56px;
+    --md-comp-nav-rail-indicator-shape: 28px;
+
+    align-items: stretch;
+    width: clamp(220px, var(--md-comp-nav-rail-expanded-width), 360px);
+    min-width: 220px;
+    padding-inline: 16px;
+
+    > button:not(.button):first-child {
+      justify-content: flex-start;
+      width: auto;
+      padding-inline: 16px;
+    }
+
+    > :is(a, button).button {
+      width: 100%;
+      justify-content: flex-start;
+      padding-inline: 16px 20px;
+      color: var(--md-sys-color-on-primary-container);
+      background-color: var(--md-sys-color-primary-container);
+
+      > :not(i) {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
+        @include typescale("label-large");
+      }
+    }
+
+    > a:not(.button),
+    > button:not(.button):not(:first-child) {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: var(--md-comp-nav-rail-indicator-height);
+      padding: 0 16px;
+      border-radius: var(--md-comp-nav-rail-indicator-shape);
+      text-align: start;
+
+      > i {
+        width: var(--md-comp-nav-rail-icon-size);
+        height: var(--md-comp-nav-rail-icon-size);
+        border-radius: 0;
+      }
+
+      &:hover:not(.active, [aria-current]) {
+        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+
+        > i {
+          background-color: transparent;
+        }
+      }
+
+      &.active,
+      &[aria-current] {
+        background-color: var(--md-comp-nav-rail-active-indicator-color);
+        color: var(--md-comp-nav-rail-active-color);
+
+        > i {
+          background-color: transparent;
+          color: inherit;
+        }
+      }
+
+      > .badge {
+        top: 8px;
+        left: auto;
+        inset-inline-start: 32px;
+        transform: none;
+      }
+    }
+
+    > :is(h1, h2, h3, h4, h5, h6) {
+      display: block;
+    }
+  }
+
+  &.expanded.modal {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 998;
+    @include z-depth("1");
+
+    &::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+      z-index: -1;
+    }
+  }
+
+  @include bp-down("small") {
+    &.expanded:not(.modal) {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 998;
+      @include z-depth("1");
+
+      &::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+        z-index: -1;
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navigation-rail {
+    transition: none;
+  }
+}

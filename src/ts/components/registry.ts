@@ -31,6 +31,7 @@ export const AUTO_INIT_COMPONENTS = {
   ScrollSpy: { component: Components.ScrollSpy, selector: '.scrollspy' },
   FormSelect: { component: Components.FormSelect, selector: 'select' },
   Sidenav: { component: Components.Sidenav, selector: '.sidenav' },
+  NavigationRail: { component: Components.NavigationRail, selector: '.navigation-rail' },
   Tabs: { component: Components.Tabs, selector: '.tabs' },
   TapTarget: { component: Components.TapTarget, selector: '.tap-target' },
   Timepicker: { component: Components.Timepicker, selector: '.timepicker' },

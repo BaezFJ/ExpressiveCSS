@@ -398,11 +398,11 @@ describe('App bar medium and large', () => {
     // the 112/152dp bar reads as a small toolbar.
     assert.match(
       css,
-      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*\{[^}]*align-content:\s*space-between/s
+      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.navigation-bar)?\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.navigation-bar)?\)\s*\{[^}]*align-content:\s*space-between/s
     );
     assert.match(
       css,
-      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
+      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.navigation-bar)?\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
     );
   });
 });

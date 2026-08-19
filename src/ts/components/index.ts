@@ -20,6 +20,7 @@ export { Range } from './range';
 export { ScrollSpy } from './scrollspy';
 export { FormSelect } from './select';
 export { Sidenav } from './sidenav';
+export { NavigationRail } from './navigationRail';
 export { Slider } from './slider';
 export { Tabs } from './tabs';
 export { TapTarget } from './tapTarget';

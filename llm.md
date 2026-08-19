@@ -44,6 +44,8 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Footer
 - Icons
 - Navbar
+- Navigation bar
+- Navigation rail
 - Pagination
 - Parallax
 - Preloader
@@ -51,6 +53,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 ### JavaScript components
 
 - Auto Init
+- Navigation rail
 - Collapsible
 - Dropdown
 - Feature Discovery
@@ -2608,7 +2611,7 @@ The same size classes apply to Material Symbols.
 
 ## Navbar
 
-Material Design 3 top and bottom app bars, from the HTML.
+Material Design 3 top app bars, from the HTML.
 
 The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. The heading is the headline. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
@@ -2685,31 +2688,6 @@ Same markup as the small bar. `medium` is 112dp with a `headline-small` title on
 
 <header class="large">…</header>
 ```
-
-### Bottom app bar
-
-A `<footer>` whose child is a `<nav>` — and that is not `page-footer` — is a bottom app bar. 80dp, elevation 2, icons on the start. A `.btn` / `.btn-floating` is pushed to the end as the FAB.
-
-```html
-<footer>
-  <nav>
-    <button type="button" aria-label="Select">
-      <i class="material-icons">check_box</i>
-    </button>
-    <button type="button" aria-label="Draw">
-      <i class="material-icons">brush</i>
-    </button>
-    <button type="button" aria-label="Record">
-      <i class="material-icons">mic</i>
-    </button>
-    <a class="btn-floating">
-      <i class="material-icons">add</i>
-    </a>
-  </nav>
-</footer>
-```
-
-Add `fixed` to stick it to the bottom of the viewport. Do not put this markup on `.page-footer` — that component is the site footer, not an app bar.
 
 ### Fixed
 
@@ -2850,6 +2828,108 @@ After you add the trigger and the sidenav, initialize Sidenav (or let `AutoInit(
 document.addEventListener('DOMContentLoaded', function() {
   Expressive.Sidenav.init(document.querySelectorAll('.sidenav'));
 });
+```
+
+---
+
+## Navigation bar
+
+Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).
+
+This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows; a navigation rail covers mid-size screens and a sidenav the rest.
+
+### Stacked
+
+Default. Icon above the label. The selected destination puts a pill behind the icon and fills the glyph.
+
+```html
+<nav class="navigation-bar" aria-label="Main">
+  <a href="/" aria-current="page">
+    <i class="material-symbols">home</i>
+    Home
+  </a>
+  <a href="/browse">
+    <i class="material-symbols">explore</i>
+    Browse
+  </a>
+  <a href="/radio">
+    <i class="material-symbols">radio</i>
+    Radio
+  </a>
+  <a href="/library">
+    <i class="material-symbols">library_music</i>
+    Library
+  </a>
+</nav>
+```
+
+### Horizontal
+
+Add `horizontal`. Icon and label sit on one row, and the selected pill wraps both. Use this in medium windows.
+
+```html
+<nav class="navigation-bar horizontal" aria-label="Main">
+  <a href="/" aria-current="page">
+    <i class="material-symbols">home</i>
+    Home
+  </a>
+  …
+</nav>
+```
+
+### Fixed
+
+Add `fixed` to stick the bar to the bottom of the viewport. Padding includes `safe-area-inset-bottom`.
+
+```html
+<nav class="navigation-bar fixed" aria-label="Main">…</nav>
+```
+
+---
+
+## Navigation rail
+
+Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.
+
+Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint.
+
+```html
+<nav class="navigation-rail" aria-label="Main">
+  <button type="button" aria-label="Menu">
+    <i class="material-symbols">menu</i>
+  </button>
+  <a class="button extra" href="#!">
+    <i class="material-symbols">edit</i>
+    <span>Label</span>
+  </a>
+  <a href="/" aria-current="page">
+    <i class="material-symbols">star</i>
+    Label
+  </a>
+  <a href="/two">
+    <i class="material-symbols">star</i>
+    Label
+    <span class="badge">3</span>
+  </a>
+</nav>
+```
+
+```html
+<nav class="navigation-rail expanded" aria-label="Main">…</nav>
+<nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
+```
+
+Offset the rest of the page:
+
+```css
+@media (width >= 601px) {
+  body {
+    padding-left: var(--md-comp-nav-rail-collapsed-width);
+  }
+  body:has(.navigation-rail.expanded) {
+    padding-left: var(--md-comp-nav-rail-expanded-width);
+  }
+}
 ```
 
 ---
@@ -4813,7 +4893,7 @@ A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, 
 
 ### Docked
 
-`max` (BeerCSS) or `docked` (the M3 name) stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. M3 recommends this in place of the bottom app bar — shorter (64dp, not 80) and more flexible. A child `.max` is a spacer, not the bar.
+`max` (BeerCSS) or `docked` (the M3 name) stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
 
 ```html
 <nav class="toolbar docked" aria-label="Editor">

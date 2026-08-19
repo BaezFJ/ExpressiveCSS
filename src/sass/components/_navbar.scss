@@ -1,21 +1,21 @@
 @use "../abstracts" as *;
 
-// Top and bottom app bars.
+// Top app bar.
 //
-// Anatomy is the HTML. A header whose child is a nav is a top app bar; a
-// footer whose child is a nav (and that is not .page-footer) is a bottom app
-// bar. Headings are the headline, icon-only links/buttons are the leading and
+// Anatomy is the HTML. A header whose child is a nav is a top app bar.
+// Headings are the headline, icon-only links/buttons are the leading and
 // trailing actions, <menu> / <ul> hold text destinations. Helpers are only
 // for variants the markup cannot express: .center, .medium, .large, .fixed.
+// Destinations at the bottom of the screen are nav.navigation-bar, not this.
 //
-// Tokens follow the M3 top-app-bar / bottom-app-bar specs
+// Tokens follow the M3 top-app-bar spec
 // (https://m3.material.io/components/app-bars/specs):
-//   container      surface, 64dp small / 112 medium / 152 large / 80 bottom
+//   container      surface, 64dp small / 112 medium / 152 large
 //   headline       on-surface, title-large (small), headline-small/medium
 //   icons          on-surface-variant, 24dp in a 48dp target, 4dp inset
 //   elevation      0 at rest; level 2 once a .fixed bar has scrolled
 
-header:has(> nav) {
+header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
   --md-comp-top-app-bar-headline-color: var(--md-sys-color-on-surface);
   // Inherit so a fill + on-* pair on the header recolors the icons.
@@ -31,7 +31,7 @@ header:has(> nav) {
   border-radius: var(--md-comp-top-app-bar-container-shape);
   width: 100%;
 
-  > nav:not(.tabs) {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) {
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -41,7 +41,7 @@ header:has(> nav) {
     margin: 0;
   }
 
-  > nav:not(.tabs) > :is(h1, h2, h3, h4, h5, h6) {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) > :is(h1, h2, h3, h4, h5, h6) {
     flex: 1 1 auto;
     min-width: 0;
     margin: 0;
@@ -63,7 +63,7 @@ header:has(> nav) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > nav:not(.tabs) > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -103,11 +103,11 @@ header:has(> nav) {
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > nav:not(.tabs) > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 
-  > nav:not(.tabs) > :is(menu, ul) {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) > :is(menu, ul) {
     display: flex;
     align-items: stretch;
     align-self: stretch;
@@ -131,7 +131,7 @@ header:has(> nav) {
   // Breadcrumb trail. Layout only — colors stay on the breadcrumb tokens
   // (which this header remaps to inherit). Do not treat the crumbs as
   // destinations.
-  > nav:not(.tabs) > ol {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) > ol {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -143,7 +143,7 @@ header:has(> nav) {
     padding-inline: 12px;
   }
 
-  > nav:not(.tabs) > form {
+  > nav:not(.tabs, .navigation-bar, .navigation-rail) > form {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
@@ -206,7 +206,7 @@ header:has(> nav) {
 
 // Center-aligned small bar. The headline is taken out of flow so leading and
 // trailing actions can sit on the edges without shifting the title.
-header.center:has(> nav) > nav:not(.tabs) {
+header.center:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   position: relative;
   justify-content: space-between;
 
@@ -227,8 +227,8 @@ header.center:has(> nav) > nav:not(.tabs) {
 // so leading/trailing icons would otherwise pack together at the start.
 // `space-between` parks the icon row at the top and the title at the
 // bottom — that's what makes the 112/152 height readable.
-header.medium:has(> nav) > nav:not(.tabs),
-header.large:has(> nav) > nav:not(.tabs) {
+header.medium:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail),
+header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   flex-wrap: wrap;
   align-content: space-between;
   align-items: flex-start;
@@ -248,7 +248,7 @@ header.large:has(> nav) > nav:not(.tabs) {
   }
 }
 
-header.medium:has(> nav) > nav:not(.tabs) {
+header.medium:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   min-height: 112px;
   padding-bottom: 16px;
 
@@ -262,7 +262,7 @@ header.medium:has(> nav) > nav:not(.tabs) {
   }
 }
 
-header.large:has(> nav) > nav:not(.tabs) {
+header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   min-height: 152px;
   padding-bottom: 28px;
 
@@ -278,7 +278,7 @@ header.large:has(> nav) > nav:not(.tabs) {
 
 // Pin the bar. Scroll-driven elevation is progressive enhancement: without
 // animation-timeline the bar stays at rest (level 0), which is the spec default.
-header.fixed:has(> nav) {
+header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
   position: sticky;
   top: 0;
   z-index: 997;
@@ -292,72 +292,5 @@ header.fixed:has(> nav) {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
       0 1px 10px 0 rgba(0, 0, 0, 0.12),
       0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  }
-}
-
-// Bottom app bar. 80dp row, icons on the start, a FAB (any .btn) pushed to the end.
-footer:has(> nav:only-child) {
-  --md-comp-bottom-app-bar-container-color: var(--md-sys-color-surface);
-  --md-comp-bottom-app-bar-container-height: 80px;
-
-  background-color: var(--md-comp-bottom-app-bar-container-color);
-  color: var(--md-sys-color-on-surface);
-  width: 100%;
-  @include z-depth("2");
-
-  > nav:not(.tabs) {
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-    width: 100%;
-    min-height: var(--md-comp-bottom-app-bar-container-height);
-    padding: 12px 4px;
-    margin: 0;
-  }
-
-  > nav:not(.tabs) > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--md-sys-color-on-surface-variant);
-    cursor: pointer;
-    appearance: none;
-    font: inherit;
-    text-decoration: none;
-    @include focus-visible;
-
-    > i {
-      display: block;
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-    }
-
-    &:hover {
-      background-color: color-mix(in oklab, currentColor 8%, transparent);
-    }
-
-    &:active {
-      background-color: color-mix(in oklab, currentColor 10%, transparent);
-    }
-  }
-
-  > nav:not(.tabs) > :is(.button, .circle, .extra) {
-    margin-inline-start: auto;
-  }
-
-  &.fixed {
-    position: sticky;
-    bottom: 0;
-    z-index: 997;
   }
 }

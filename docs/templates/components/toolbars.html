@@ -135,9 +135,10 @@
         <p>
           <code>max</code> (BeerCSS) or <code>docked</code> (the M3 name)
           stretches the bar to the full width, drops the stadium and the
-          elevation, and spaces the actions. M3 recommends this in place
-          of the bottom app bar — shorter (64dp, not 80) and more
-          flexible. A child <code>.max</code> is a spacer, not the bar.
+          elevation, and spaces the actions. Use it for page actions at
+          the bottom of the screen; destinations belong on a
+          <a href="{{ url_for('navigation_bar') }}">navigation bar</a>.
+          A child <code>.max</code> is a spacer, not the bar.
         </p>
         <nav class="toolbar docked" aria-label="Editor">
           <button type="button" class="circle" aria-label="Back">

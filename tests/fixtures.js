@@ -58,6 +58,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="field"><select><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label>Pick</label></div>`
   },
   {
+    name: 'NavigationRail',
+    selector: '.navigation-rail',
+    html: `<nav class="navigation-rail" aria-label="Main"><button type="button" aria-label="Menu"><i class="material-symbols">menu</i></button><a href="#!" aria-current="page"><i class="material-symbols">star</i>Label</a></nav>`
+  },
+  {
     name: 'Sidenav',
     selector: '.sidenav',
     html: `<ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul><a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`

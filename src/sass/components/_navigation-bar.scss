@@ -1,0 +1,152 @@
+@use "../abstracts" as *;
+
+// Navigation bar. Destinations, not the app bar (header:has(> nav)).
+// Anatomy is the HTML: a nav.navigation-bar of <a> or <button> items.
+// A leading <i> is the icon; the remaining text is the label.
+// aria-current (or .active) is the selected destination.
+//
+// Two layouts (M3 Expressive):
+//   (default)     stacked — icon above label, pill on the icon
+//   .horizontal   icon beside label, pill around both (medium windows)
+//
+// 3–5 destinations of equal importance. They do not change per screen.
+//
+// Tokens:
+//   --md-comp-nav-bar-container-color
+//   --md-comp-nav-bar-container-height          64px
+//   --md-comp-nav-bar-icon-size                 24px
+//   --md-comp-nav-bar-indicator-width           56px
+//   --md-comp-nav-bar-indicator-height          32px
+//   --md-comp-nav-bar-indicator-shape           16px / 100px horizontal
+//   --md-comp-nav-bar-active-indicator-color    secondary-container
+//   --md-comp-nav-bar-active-color              on-secondary-container
+//
+// Nest descendants inside this block.
+
+.navigation-bar {
+  --md-comp-nav-bar-container-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) 8%,
+    var(--md-sys-color-surface)
+  );
+  --md-comp-nav-bar-container-height: 64px;
+  --md-comp-nav-bar-icon-size: 24px;
+  --md-comp-nav-bar-indicator-width: 56px;
+  --md-comp-nav-bar-indicator-height: 32px;
+  --md-comp-nav-bar-indicator-shape: 16px;
+  --md-comp-nav-bar-active-indicator-color: var(--md-sys-color-secondary-container);
+  --md-comp-nav-bar-active-color: var(--md-sys-color-on-secondary-container);
+
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  min-height: var(--md-comp-nav-bar-container-height);
+  margin: 0;
+  padding: 6px 8px;
+  padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
+  background-color: var(--md-comp-nav-bar-container-color);
+  color: var(--md-sys-color-on-surface);
+
+  > :is(a, button) {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    margin: 0;
+    padding: 4px 0 6px;
+    border: 0;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    appearance: none;
+    text-decoration: none;
+    @include typescale("label-medium");
+    @include focus-visible;
+
+    > i {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: var(--md-comp-nav-bar-indicator-width);
+      height: var(--md-comp-nav-bar-indicator-height);
+      border-radius: var(--md-comp-nav-bar-indicator-shape);
+      font-size: var(--md-comp-nav-bar-icon-size);
+      color: inherit;
+      transition: background-color 0.2s ease-out;
+    }
+
+    &:hover:not(.active, [aria-current]) > i {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+
+    &.active,
+    &[aria-current] {
+      color: var(--md-sys-color-on-surface);
+
+      > i {
+        background-color: var(--md-comp-nav-bar-active-indicator-color);
+        color: var(--md-comp-nav-bar-active-color);
+        --md-icon-fill: 1;
+      }
+    }
+
+    &.disabled,
+    &[aria-disabled="true"] {
+      pointer-events: none;
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    }
+  }
+
+  &.horizontal {
+    --md-comp-nav-bar-indicator-shape: 100px;
+    min-height: 56px;
+
+    > :is(a, button) {
+      flex: 0 1 auto;
+      flex-direction: row;
+      gap: 8px;
+      min-height: 40px;
+      padding: 8px 16px;
+      border-radius: var(--md-comp-nav-bar-indicator-shape);
+
+      > i {
+        width: var(--md-comp-nav-bar-icon-size);
+        height: var(--md-comp-nav-bar-icon-size);
+        border-radius: 0;
+      }
+
+      &:hover:not(.active, [aria-current]) {
+        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+
+        > i {
+          background-color: transparent;
+        }
+      }
+
+      &.active,
+      &[aria-current] {
+        background-color: var(--md-comp-nav-bar-active-indicator-color);
+        color: var(--md-comp-nav-bar-active-color);
+
+        > i {
+          background-color: transparent;
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  &.fixed {
+    position: sticky;
+    bottom: 0;
+    z-index: 997;
+  }
+}

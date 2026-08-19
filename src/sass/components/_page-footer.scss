@@ -4,8 +4,8 @@
 //
 // Anatomy is the HTML. A <footer> is the landmark. A heading is a column
 // title. A <nav> (or ul) is a link list. The last child <small> is the
-// legal bar. A footer whose only child is a <nav> is the bottom app bar,
-// not this component.
+// legal bar. A footer whose only child is nav.navigation-bar is the
+// navigation bar, not this component.
 //
 // Tokens:
 //   --md-comp-footer-padding-block     3rem
@@ -16,7 +16,7 @@
 // Unfilled by default (dashed hairline). .filled uses surface-container.
 // There is no JavaScript.
 
-footer:not(:has(> nav:only-child)) {
+footer:not(:has(> .navigation-bar:only-child)) {
   --md-comp-footer-padding-block: 3rem;
   --md-comp-footer-padding-inline: 1rem;
   --md-comp-footer-gap: 2rem;

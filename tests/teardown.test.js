@@ -159,6 +159,20 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), []);
   });
 
+  test('NavigationRail detaches its document keydown handler', () => {
+    document.body.innerHTML = `
+      <nav class="navigation-rail" aria-label="Main">
+        <button type="button" aria-label="Menu"><i>menu</i></button>
+        <a href="#!">Label</a>
+      </nav>`;
+    const instance = Expressive.NavigationRail.init(document.querySelector('.navigation-rail'));
+
+    assert.ok(watch.live().includes('keydown'), 'NavigationRail did not attach a document keydown handler');
+
+    instance.destroy();
+    assert.deepEqual(watch.live(), [], 'NavigationRail left its keydown listener attached');
+  });
+
   test('Sidenav detaches the shared trigger click and does not attach resize', () => {
     document.body.innerHTML = `
       <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>

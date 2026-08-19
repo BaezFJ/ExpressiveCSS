@@ -126,6 +126,18 @@ def navbar():
     return render_template('structure/navbar.html')
 
 
+@app.route('/navigation-bar')
+@app.route('/navigation-bar.html')
+def navigation_bar():
+    return render_template('structure/navigation-bar.html')
+
+
+@app.route('/navigation-rail')
+@app.route('/navigation-rail.html')
+def navigation_rail():
+    return render_template('structure/navigation-rail.html')
+
+
 @app.route('/sidenav')
 @app.route('/sidenav.html')
 def sidenav():

@@ -1,0 +1,189 @@
+{% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
+
+{% block title %}Navigation rail - ExpressiveCSS{% endblock %}
+{% block page_title %}Navigation rail{% endblock %}
+
+{% block page %}
+{{ Banner("Navigation rail", "Switch between UI views on mid-sized devices.") }}
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>nav.navigation-rail</code> holds 3–7 destinations plus an
+          optional FAB. Put it in the same place on every screen. Use it
+          in medium, expanded, large, or extra-large windows.
+        </p>
+        <p>
+          Collapsed is 96dp with the icon above the label. Add
+          <code>expanded</code> for 220–360dp, icon and label on one row,
+          and an extended FAB. The menu button toggles that class
+          (<code>AutoInit()</code> starts it). On compact windows an
+          expanded rail is modal — a scrim, and Escape or a scrim tap
+          collapses it. Add <code>modal</code> to keep that overlay at
+          every breakpoint.
+        </p>
+        <p>
+          Compact windows that need persistent destinations still use a
+          <a href="{{ url_for('navigation_bar') }}">navigation bar</a>.
+          A full overlay menu is a
+          <a href="{{ url_for('sidenav') }}">sidenav</a>.
+        </p>
+      </div>
+
+      <div id="collapsed" class="section scrollspy">
+        <h3>Collapsed</h3>
+        <p>
+          Default. 96dp. Icon above the label; the selected pill sits
+          behind the icon. The FAB is icon-only. Offset the rest of the
+          page by <code>--md-comp-nav-rail-collapsed-width</code>.
+        </p>
+        <div class="rail-demo mb-3">
+          <nav class="navigation-rail" aria-label="Main">
+            <button type="button" aria-label="Menu">
+              <i class="material-symbols">menu</i>
+            </button>
+            <a class="button extra" href="#!">
+              <i class="material-symbols">edit</i>
+              <span>Label</span>
+            </a>
+            <a href="#!" aria-current="page">
+              <i class="material-symbols">star</i>
+              Label
+            </a>
+            <a href="#!">
+              <i class="material-symbols">star</i>
+              Label
+              <span class="badge">3</span>
+            </a>
+            <a href="#!">
+              <i class="material-symbols">star</i>
+              Label
+              <span class="badge"></span>
+            </a>
+            <a href="#!">
+              <i class="material-symbols">star</i>
+              Label
+            </a>
+          </nav>
+        </div>
+<pre><code>&lt;nav class="navigation-rail" aria-label="Main"&gt;
+  &lt;button type="button" aria-label="Menu"&gt;
+    &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;a class="button extra" href="#!"&gt;
+    &lt;i class="material-symbols"&gt;edit&lt;/i&gt;
+    &lt;span&gt;Label&lt;/span&gt;
+  &lt;/a&gt;
+  &lt;a href="/" aria-current="page"&gt;
+    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    Label
+  &lt;/a&gt;
+  &lt;a href="/two"&gt;
+    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    Label
+    &lt;span class="badge"&gt;3&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="expanded" class="section scrollspy">
+        <h3>Expanded</h3>
+        <p>
+          Add <code>expanded</code>. Destinations become a row: icon,
+          then label, with the selected pill around both. The FAB grows
+          into an extended button. Section headings show only in this
+          layout.
+        </p>
+        <div class="rail-demo mb-3">
+          <nav class="navigation-rail expanded" aria-label="Main">
+            <button type="button" aria-label="Menu">
+              <i class="material-symbols">menu</i>
+            </button>
+            <a class="button extra" href="#!">
+              <i class="material-symbols">edit</i>
+              <span>Label</span>
+            </a>
+            <a href="#!" aria-current="page">
+              <i class="material-symbols">star</i>
+              Label
+            </a>
+            <a href="#!">
+              <i class="material-symbols">star</i>
+              Label
+              <span class="badge">3</span>
+            </a>
+            <h3>Section Header</h3>
+            <a href="#!">
+              <i class="material-symbols">star</i>
+              Label
+            </a>
+            <a href="#!">
+              <i class="material-symbols">star</i>
+              Label
+            </a>
+          </nav>
+        </div>
+<pre><code>&lt;nav class="navigation-rail expanded" aria-label="Main"&gt;
+  …
+  &lt;h3&gt;Section Header&lt;/h3&gt;
+  &lt;a href="/other"&gt;
+    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    Label
+  &lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+<pre><code>@media (width >= 601px) {
+  body {
+    padding-left: var(--md-comp-nav-rail-collapsed-width);
+  }
+  body:has(.navigation-rail.expanded) {
+    padding-left: var(--md-comp-nav-rail-expanded-width);
+  }
+}</code></pre>
+      </div>
+
+      <div id="modal" class="section scrollspy">
+        <h3>Modal</h3>
+        <p>
+          Below the small breakpoint, <code>expanded</code> already
+          overlays the page with a scrim. Add <code>modal</code> if you
+          want that overlay on tablets and desktops too — image 2 in
+          the spec, a compact window expanding in place.
+        </p>
+<pre><code>&lt;nav class="navigation-rail expanded modal" aria-label="Main"&gt;…&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <table class="striped">
+          <thead>
+            <tr><th>Token</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--md-comp-nav-rail-collapsed-width</code></td><td>96px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-expanded-width</code></td><td>280px (clamped 220–360)</td></tr>
+            <tr><td><code>--md-comp-nav-rail-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-indicator-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-fab-size</code></td><td>56px</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper pushpin no-autoinit mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#collapsed">Collapsed</a></li>
+          <li><a href="#expanded">Expanded</a></li>
+          <li><a href="#modal">Modal</a></li>
+          <li><a href="#tokens">Tokens</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
