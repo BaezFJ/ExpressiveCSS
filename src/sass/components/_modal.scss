@@ -20,7 +20,6 @@ dialog {
   --md-comp-basic-dialog-container-shape: 28px;
   --md-comp-basic-dialog-container-min-width: 280px;
   --md-comp-basic-dialog-container-max-width: 560px;
-  --md-comp-basic-dialog-sheet-width: 400px;
   --md-comp-basic-dialog-scrim-blur: 12px;
 
   box-sizing: border-box;
@@ -132,19 +131,4 @@ dialog.max {
   margin: 0;
   border-radius: 0;
 }
-
-// Top sheet stays a generic docked dialog. Bottom and side sheets are
-// their own M3 components — see _bottom-sheet.scss and _side-sheet.scss.
-
-dialog.top,
-dialog.top-sheet {
-  width: 100%;
-  min-width: 0;
-  max-width: none;
-  max-height: 50%;
-  margin: 0 0 auto;
-  border-radius: 0 0 var(--md-comp-basic-dialog-container-shape)
-    var(--md-comp-basic-dialog-container-shape);
-}
-
 

@@ -4,8 +4,18 @@
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import { resetBody, window } from './setup.js';
+
+const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+describe('Dialog CSS', () => {
+  test('the retired top sheet is not in the sheet', () => {
+    assert.doesNotMatch(css, /dialog\.top(?:-sheet)?[\s,{]/);
+    assert.doesNotMatch(css, /--md-comp-basic-dialog-sheet-width/);
+  });
+});
 
 function box(el, { left, top, width, height }) {
   el.getBoundingClientRect = () => ({

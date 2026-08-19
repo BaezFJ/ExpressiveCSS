@@ -5,6 +5,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Removed
+
+- **Breaking:** `dialog.top` / `dialog.top-sheet`. M3 has no top sheet;
+  use a side sheet or a bottom sheet. The unused
+  `--md-comp-basic-dialog-sheet-width` token is gone with them.
+
 ### Changed
 
 - **Breaking:** `Autocomplete`'s `menuOptions.onItemClick` now receives the clicked
