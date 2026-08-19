@@ -179,10 +179,12 @@
         <h3>Fixed</h3>
         <p>
           Add <code>fixed</code> to pin a top bar with <code>position: sticky</code>.
-          No wrapper is required. Once the page has scrolled, supporting
-          browsers raise the bar to elevation 2 via
-          <code>animation-timeline: scroll()</code>. Without that feature the
-          bar stays at rest (level 0), which is the spec default.
+          No wrapper is required. At rest the bar is <code>surface</code>,
+          the same as the page. Once content scrolls under it, supporting
+          browsers fill it with <code>surface-container</code> via
+          <code>animation-timeline: scroll()</code> so it separates from the
+          body — that is the M3 Expressive treatment, not a shadow.
+          Without that API the bar stays at rest.
         </p>
         <p>
           The documentation header on this site is a fixed small bar. A second
@@ -230,6 +232,7 @@
           </thead>
           <tbody>
             <tr><td><code>--md-comp-top-app-bar-container-color</code></td><td><code>--md-sys-color-surface</code></td></tr>
+            <tr><td><code>--md-comp-top-app-bar-scrolled-container-color</code></td><td><code>--md-sys-color-surface-container</code></td></tr>
             <tr><td><code>--md-comp-top-app-bar-headline-color</code></td><td><code>--md-sys-color-on-surface</code></td></tr>
             <tr><td><code>--md-comp-top-app-bar-leading-icon-color</code></td><td><code>inherit</code> (spec: <code>on-surface-variant</code>)</td></tr>
             <tr><td><code>--md-comp-top-app-bar-trailing-icon-color</code></td><td><code>inherit</code> (spec: <code>on-surface-variant</code>)</td></tr>

@@ -13,10 +13,19 @@
 //   container      surface, 64dp small / 112 medium / 152 large
 //   headline       on-surface, title-large (small), headline-small/medium
 //   icons          on-surface-variant, 24dp in a 48dp target, 4dp inset
-//   elevation      0 at rest; level 2 once a .fixed bar has scrolled
+//   on scroll      surface-container fill (not elevation) so the bar
+//                  separates from the body. A color utility on the
+//                  header still wins — it sets background-color itself.
+
+@property --md-comp-top-app-bar-container-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
 
 header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
+  --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container);
   --md-comp-top-app-bar-headline-color: var(--md-sys-color-on-surface);
   // Inherit so a fill + on-* pair on the header recolors the icons.
   // Set this to --md-sys-color-on-surface-variant for the spec mute.
@@ -270,8 +279,11 @@ header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   }
 }
 
-// Pin the bar. Scroll-driven elevation is progressive enhancement: without
-// animation-timeline the bar stays at rest (level 0), which is the spec default.
+// Pin the bar. On scroll, fill with surface-container so it separates
+// from the body (M3 Expressive). The custom property is registered so
+// the two surface colors interpolate; a utility class on the header
+// sets background-color itself and is not overwritten. Without
+// animation-timeline the bar stays at rest (surface), the spec default.
 header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
   position: sticky;
   top: 0;
@@ -283,8 +295,6 @@ header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
 
 @keyframes top-app-bar-scroll {
   to {
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-      0 1px 10px 0 rgba(0, 0, 0, 0.12),
-      0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --md-comp-top-app-bar-container-color: var(--md-comp-top-app-bar-scrolled-container-color);
   }
 }

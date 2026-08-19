@@ -2674,7 +2674,7 @@ Same markup as the small bar. `medium` is 112dp with a `headline-small` title on
 
 ### Fixed
 
-Add `fixed` to pin a top bar with `position: sticky`. No wrapper is required. Once the page has scrolled, supporting browsers raise the bar to elevation 2 via `animation-timeline: scroll()`. Without that feature the bar stays at rest (level 0), which is the spec default.
+Add `fixed` to pin a top bar with `position: sticky`. No wrapper is required. At rest the bar is `surface`, the same as the page. Once content scrolls under it, supporting browsers fill it with `surface-container` via `animation-timeline: scroll()` so it separates from the body — that is the M3 Expressive treatment, not a shadow. Without that API the bar stays at rest.
 
 The documentation header on this site is a fixed small bar. A second fixed bar on this page would sit on top of it, so the live example is the site header itself.
 
@@ -2704,6 +2704,7 @@ Component tokens you can set on the header (or on `:root`):
 | Token | Default |
 | --- | --- |
 | `--md-comp-top-app-bar-container-color` | `--md-sys-color-surface` |
+| `--md-comp-top-app-bar-scrolled-container-color` | `--md-sys-color-surface-container` |
 | `--md-comp-top-app-bar-headline-color` | `--md-sys-color-on-surface` |
 | `--md-comp-top-app-bar-leading-icon-color` | `inherit` (spec: `on-surface-variant`) |
 | `--md-comp-top-app-bar-trailing-icon-color` | `inherit` (spec: `on-surface-variant`) |

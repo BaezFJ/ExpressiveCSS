@@ -372,6 +372,22 @@ describe('App bar sidenav trigger', () => {
   });
 });
 
+describe('App bar scroll fill', () => {
+  test('a fixed bar fills with surface-container on scroll, not a shadow', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    assert.match(css, /--md-comp-top-app-bar-scrolled-container-color:\s*var\(--md-sys-color-surface-container\)/);
+    assert.match(css, /@keyframes\s+top-app-bar-scroll/);
+    assert.match(
+      css,
+      /top-app-bar-scroll[^{]*\{[^}]*--md-comp-top-app-bar-container-color:\s*var\(--md-comp-top-app-bar-scrolled-container-color\)/s
+    );
+    assert.doesNotMatch(
+      css,
+      /@keyframes\s+top-app-bar-scroll\s*\{[^}]*box-shadow/s
+    );
+  });
+});
+
 describe('App bar medium and large', () => {
   test('trailing actions are pushed to the end and the title sits on the bottom row', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
