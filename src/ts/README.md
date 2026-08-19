@@ -71,6 +71,8 @@ read-it-off-the-element access that key provides.
   does it on `DOMContentLoaded`). Elements opt out with `.no-autoinit`.
 - **Dialogs are native `<dialog>`.** Open with `showModal()`, close with
   `close()`. `Dialogs.Init()` light-dismisses. There is no `Modal` plugin.
+  Basic is the default surface; `dialog.max` is the full-screen variant
+  (64dp header, no scrim).
 - **Bottom sheets are native `<dialog class="bottom-sheet">`.**
   `showModal()` is modal (scrim); `show()` is standard (no scrim).
   `BottomSheets.Init()` drag-dismisses from the top 48dp handle.

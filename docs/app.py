@@ -224,10 +224,16 @@ def collapsible():
     return redirect(url_for('sidenav'), code=301)
 
 
+@app.route('/dialogs')
+@app.route('/dialogs.html')
+def dialogs():
+    return render_template('components/dialogs.html')
+
+
 @app.route('/modals')
 @app.route('/modals.html')
 def modals():
-    return render_template('components/modals.html')
+    return redirect(url_for('dialogs'), code=301)
 
 
 @app.route('/bottom-sheet')

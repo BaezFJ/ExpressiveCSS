@@ -1,19 +1,22 @@
 @use "../abstracts" as *;
 
-// Dialogs.
+// Dialogs (M3 Expressive).
 //
-// Anatomy is the HTML. A <dialog> is a basic dialog. A heading is the
-// headline, a <p> (or a wrapping <div>) is supporting text, and the last
-// child <form method="dialog"> or <nav> is the action row.
+// Anatomy is the HTML. A <dialog> is a basic dialog: optional leading
+// <i>, a heading, supporting <p> (or a wrapping <div>), optional <hr>
+// + extra content, and a last-child <form method="dialog"> or <nav>
+// as the action row. dialog.max is the full-screen variant: a <header>
+// holds close, the headline, and the confirming action.
 //
 // Tokens follow https://m3.material.io/components/dialogs/specs
-//   container    surface-container-high, 28dp corners, 280–560dp, elevation 3
-//   headline     headline-small / on-surface
+//   basic        surface-container-high, 28dp corners, 280–560dp, elevation 3
+//   headline     headline-small / on-surface (centered when an icon leads)
 //   body         body-medium / on-surface-variant
-//   icon         24dp, on-secondary
-//   actions      end-aligned, 8dp gap
+//   icon         24dp, secondary
+//   actions      text buttons, end-aligned, 8dp gap
+//   padding      24dp; 16dp between headline and body
 //   scrim        32% + 12px blur
-//   padding      24dp
+//   full-screen  surface, 64dp header, no corners, no scrim
 
 dialog {
   --md-comp-basic-dialog-container-color: var(--md-sys-color-surface-container-high);
@@ -71,12 +74,8 @@ dialog > :is(h1, h2, h3, h4, h5, h6) {
   flex: 0 0 auto;
   margin: 0;
   padding: 24px 24px 16px;
-  font-family: var(--md-sys-typescale-headline-small-font-family-name);
-  font-size: var(--md-sys-typescale-headline-small-font-size);
-  font-weight: var(--md-sys-typescale-headline-small-font-weight);
-  line-height: var(--md-sys-typescale-headline-small-line-height);
-  letter-spacing: var(--md-sys-typescale-headline-small-letter-spacing);
   color: var(--md-sys-color-on-surface);
+  @include typescale("headline-small");
 }
 
 dialog > i:first-child + :is(h1, h2, h3, h4, h5, h6) {
@@ -91,20 +90,45 @@ dialog > div {
   overflow: auto;
   overscroll-behavior: contain;
   margin: 0;
-  padding: 0 24px 16px;
-  font-family: var(--md-sys-typescale-body-medium-font-family-name);
-  font-size: var(--md-sys-typescale-body-medium-font-size);
-  font-weight: var(--md-sys-typescale-body-medium-font-weight);
-  line-height: var(--md-sys-typescale-body-medium-line-height);
-  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
-  color: color-mix(in oklab, currentColor 72%, transparent);
+  padding: 0 24px 24px;
+}
+
+dialog > p {
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("body-medium");
+}
+
+dialog > i:first-child + :is(h1, h2, h3, h4, h5, h6) + p {
+  text-align: center;
 }
 
 dialog > :is(h1, h2, h3, h4, h5, h6) + p {
   padding-top: 0;
 }
 
+// Optional divider when extra content (a list, a form) follows the copy.
+dialog > hr {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+// Extra content. A .list inside the dialog lines up with the 24dp inset.
+dialog > .list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  margin: 0;
+  --md-comp-list-item-padding: 24px;
+}
+
 // Action row. form[method=dialog] is the native close mechanism.
+// Text buttons are the spec default; .filled / .tonal / .outlined opt in.
 dialog > :is(form, nav):last-child {
   display: flex;
   flex-wrap: wrap;
@@ -113,16 +137,35 @@ dialog > :is(form, nav):last-child {
   gap: 8px;
   flex: 0 0 auto;
   margin: 0;
-  padding: 8px 16px 16px;
+  padding: 0 24px 24px;
   border: 0;
   background: none;
 }
 
-// Full-screen (M3). Takes the viewport; no corners.
+dialog:not(
+    .bottom,
+    .bottom-sheet,
+    .side-sheet,
+    .right,
+    .right-sheet,
+    .left,
+    .left-sheet,
+    .sidenav,
+    .sidenav-overlay
+  )
+  > :is(form, nav):last-child
+  > :is(button, a.button):not(.tonal, .outlined, .elevated, .filled) {
+  @include btn-flat;
+}
+
+// Full-screen. Fills the viewport; no corners, no elevation, no scrim.
+// A <header> is the 64dp top bar: close, title-large headline, confirm.
 // UA `dialog:modal` sets max-width: calc(100% - 2em - 6px). Without
 // clearing it, width: 100% is capped and a strip of scrim shows on the
 // right. Bottom sheet already overrides this.
 dialog.max {
+  --md-comp-basic-dialog-container-color: var(--md-sys-color-surface);
+
   width: 100%;
   max-width: none;
   height: 100%;
@@ -130,5 +173,96 @@ dialog.max {
   max-height: none;
   margin: 0;
   border-radius: 0;
-}
+  @include z-depth("0");
 
+  &::backdrop {
+    background: none;
+    backdrop-filter: none;
+  }
+
+  > header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-height: 64px;
+    margin: 0;
+    padding: 8px 4px;
+    background: none;
+    box-shadow: none;
+  }
+
+  > header > :is(h1, h2, h3, h4, h5, h6) {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0 12px;
+    text-align: start;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("title-large");
+  }
+
+  > header > form {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0;
+    padding: 0 8px 0 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  // Close is a 48dp icon button. 4dp bar inset + 12dp to the glyph = 16dp.
+  > header > :is(button, a):has(> i:only-child) {
+    display: inline-flex;
+    flex: 0 0 48px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    box-shadow: none;
+
+    > i {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--md-sys-color-secondary);
+      outline-offset: 2px;
+    }
+  }
+
+  // Confirming action in the header is a text button, not an icon.
+  > header :is(button, a.button):not(:has(> i:only-child)) {
+    @include btn-flat;
+    width: auto;
+    min-width: 0;
+    height: 40px;
+    padding-inline: 12px;
+    border-radius: 20px;
+  }
+
+  > :is(p, div) {
+    padding: 8px 24px 24px;
+  }
+
+  > .list {
+    padding-block: 8px;
+  }
+}

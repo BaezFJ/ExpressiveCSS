@@ -117,7 +117,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'modals', 'bottom_sheet', 'side_sheet', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'dialogs', 'bottom_sheet', 'side_sheet', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">widgets</i>
                             Components
@@ -135,8 +135,8 @@
                                 <li class="{% if request.endpoint == 'lists' %}active{% endif %}">
                                     <a href="{{ url_for('lists') }}">Lists</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'modals' %}active{% endif %}">
-                                    <a href="{{ url_for('modals') }}">Dialogs</a>
+                                <li class="{% if request.endpoint == 'dialogs' %}active{% endif %}">
+                                    <a href="{{ url_for('dialogs') }}">Dialogs</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'bottom_sheet' %}active{% endif %}">
                                     <a href="{{ url_for('bottom_sheet') }}">Bottom sheet</a>
@@ -266,7 +266,7 @@
                 <a href="{{ url_for('floating_action_button') }}">FAB</a>
                 <a href="{{ url_for('cards') }}">Cards</a>
                 <a href="{{ url_for('lists') }}">Lists</a>
-                <a href="{{ url_for('modals') }}">Dialogs</a>
+                <a href="{{ url_for('dialogs') }}">Dialogs</a>
                 <a href="{{ url_for('bottom_sheet') }}">Bottom sheet</a>
                 <a href="{{ url_for('side_sheet') }}">Side sheet</a>
                 <a href="{{ url_for('badges') }}">Badges</a>

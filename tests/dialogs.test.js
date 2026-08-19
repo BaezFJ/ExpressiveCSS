@@ -15,6 +15,30 @@ describe('Dialog CSS', () => {
     assert.doesNotMatch(css, /dialog\.top(?:-sheet)?[\s,{]/);
     assert.doesNotMatch(css, /--md-comp-basic-dialog-sheet-width/);
   });
+
+  test('basic uses surface-container-high, 28dp corners, 280–560dp', () => {
+    assert.match(
+      css,
+      /--md-comp-basic-dialog-container-color:\s*var\(--md-sys-color-surface-container-high\)/
+    );
+    assert.match(css, /--md-comp-basic-dialog-container-shape:\s*28px/);
+    assert.match(css, /--md-comp-basic-dialog-container-min-width:\s*280px/);
+    assert.match(css, /--md-comp-basic-dialog-container-max-width:\s*560px/);
+  });
+
+  test('supporting text is on-surface-variant, not a currentColor mix', () => {
+    assert.match(css, /dialog\s*>\s*p\s*\{[^}]*--md-sys-color-on-surface-variant/s);
+    assert.doesNotMatch(
+      css,
+      /dialog\s*>\s*p[\s\S]{0,400}color-mix\(in oklab,\s*currentColor 72%/
+    );
+  });
+
+  test('full-screen drops the scrim and uses a 64dp header', () => {
+    assert.match(css, /dialog\.max\s*\{[^}]*--md-sys-color-surface/s);
+    assert.match(css, /dialog\.max\s*>\s*header\s*\{[^}]*min-height:\s*64px/s);
+    assert.match(css, /dialog\.max::backdrop\s*\{[^}]*background:\s*none/s);
+  });
 });
 
 function box(el, { left, top, width, height }) {
