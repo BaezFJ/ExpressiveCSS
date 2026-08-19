@@ -377,10 +377,19 @@ describe('App bar scroll fill', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
     assert.match(css, /--md-comp-top-app-bar-scrolled-container-color:\s*var\(--md-sys-color-surface-container\)/);
     assert.match(css, /@keyframes\s+top-app-bar-scroll/);
+    // Mix progress is a number. Typing the fill as <color> made
+    // light-dark() IACVT and the lerp used transparent-black.
+    assert.match(css, /@property\s+--md-comp-top-app-bar-scroll/);
+    assert.match(css, /syntax:\s*"<number>"/);
     assert.match(
       css,
-      /top-app-bar-scroll[^{]*\{[^}]*--md-comp-top-app-bar-container-color:\s*var\(--md-comp-top-app-bar-scrolled-container-color\)/s
+      /color-mix\(\s*in oklab,\s*var\(--md-comp-top-app-bar-scrolled-container-color\)/
     );
+    assert.match(
+      css,
+      /top-app-bar-scroll[^{]*\{[^}]*--md-comp-top-app-bar-scroll:\s*1/s
+    );
+    assert.doesNotMatch(css, /@property\s+--md-comp-top-app-bar-container-color/);
     assert.doesNotMatch(
       css,
       /@keyframes\s+top-app-bar-scroll\s*\{[^}]*box-shadow/s

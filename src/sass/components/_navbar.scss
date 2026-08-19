@@ -17,10 +17,16 @@
 //                  separates from the body. A color utility on the
 //                  header still wins — it sets background-color itself.
 
-@property --md-comp-top-app-bar-container-color {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: transparent;
+// Scroll progress, not the fill color. Registering the fill as <color>
+// with initial-value: transparent made the 8px lerp run from
+// transparent-black through black: light-dark() tokens are IACVT for a
+// typed <color> property, so the used value collapsed to the initial
+// value. A <number> interpolates; color-mix() then resolves the two
+// live surfaces at use time.
+@property --md-comp-top-app-bar-scroll {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
 }
 
 header:has(> nav:not(.navigation-bar, .navigation-rail)) {
@@ -35,7 +41,12 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   --md-comp-top-app-bar-leading-icon-size: 24px;
   --md-comp-top-app-bar-container-shape: 0;
 
-  background-color: var(--md-comp-top-app-bar-container-color);
+  background-color: color-mix(
+    in oklab,
+    var(--md-comp-top-app-bar-scrolled-container-color)
+      calc(100% * var(--md-comp-top-app-bar-scroll)),
+    var(--md-comp-top-app-bar-container-color)
+  );
   color: var(--md-comp-top-app-bar-headline-color);
   border-radius: var(--md-comp-top-app-bar-container-shape);
   width: 100%;
@@ -280,10 +291,10 @@ header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
 }
 
 // Pin the bar. On scroll, fill with surface-container so it separates
-// from the body (M3 Expressive). The custom property is registered so
-// the two surface colors interpolate; a utility class on the header
-// sets background-color itself and is not overwritten. Without
-// animation-timeline the bar stays at rest (surface), the spec default.
+// from the body (M3 Expressive). The animation only drives the mix
+// progress; a utility class on the header sets background-color itself
+// and is not overwritten. Without animation-timeline the bar stays at
+// rest (surface), the spec default.
 header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
   position: sticky;
   top: 0;
@@ -295,6 +306,6 @@ header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
 
 @keyframes top-app-bar-scroll {
   to {
-    --md-comp-top-app-bar-container-color: var(--md-comp-top-app-bar-scrolled-container-color);
+    --md-comp-top-app-bar-scroll: 1;
   }
 }
