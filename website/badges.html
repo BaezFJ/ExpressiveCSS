@@ -54,7 +54,6 @@
                 </a>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav">
                         <summary>
                             <i class="material-symbols">palette</i>
@@ -99,10 +98,8 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav">
                         <summary>
                             <i class="material-symbols">view_quilt</i>
@@ -141,10 +138,8 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav" open>
                         <summary>
                             <i class="material-symbols">widgets</i>
@@ -162,9 +157,6 @@
                                 </li>
                                 <li class="">
                                     <a href="/lists.html">Lists</a>
-                                </li>
-                                <li class="">
-                                    <a href="/collapsible.html">Collapsible</a>
                                 </li>
                                 <li class="">
                                     <a href="/modals.html">Dialogs</a>
@@ -198,10 +190,8 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav">
                         <summary>
                             <i class="material-symbols">edit</i>
@@ -243,7 +233,6 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
         </ul>
     </header>
@@ -343,44 +332,40 @@
 &lt;/header&gt;</code></pre>
       </div>
 
-      <div id="collapsible" class="section scrollspy">
-        <h3>Badges in Collapsibles</h3>
-        <div class="collapsible">
-          <details name="badges">
-            <summary>
-              <i class="material-symbols">filter_drama</i>
-              <div class="collapsible-header-content">First</div>
-              <span class="new badge">4</span>
-            </summary>
-            <p>Lorem ipsum dolor sit amet.</p>
-          </details>
-          <details name="badges">
-            <summary>
-              <i class="material-symbols">place</i>
-              <div class="collapsible-header-content">Second</div>
-              <span class="badge">1</span>
-            </summary>
-            <p>Lorem ipsum dolor sit amet.</p>
-          </details>
-          <details name="badges">
-            <summary>
-              <i class="material-symbols">textsms</i>
-              <div class="collapsible-header-content">Third</div>
-              <span class="badge leading new">4</span>
-            </summary>
-            <p>Lorem ipsum dolor sit amet.</p>
-          </details>
-        </div>
-<pre><code>&lt;div class="collapsible"&gt;
-  &lt;details name="badges"&gt;
+      <div id="sidenav" class="section scrollspy">
+        <h3>Badges in a sidenav</h3>
+        <p>
+          Put a badge on a <code>summary</code> or a destination. Nested
+          sections are native <code>&lt;details&gt;</code>.
+        </p>
+        <ul class="sidenav sidenav-demo">
+          <li>
+            <details open>
+              <summary>
+                <i class="material-symbols">inbox</i>
+                Inbox
+                <span class="new badge">4</span>
+              </summary>
+              <ul>
+                <li><a href="#!">Primary<span class="badge">1</span></a></li>
+                <li><a href="#!">Social</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a href="#!">Sent</a></li>
+        </ul>
+<pre><code>&lt;li&gt;
+  &lt;details&gt;
     &lt;summary&gt;
-      &lt;i class="material-symbols"&gt;filter_drama&lt;/i&gt;
-      &lt;div class="collapsible-header-content"&gt;First&lt;/div&gt;
+      &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+      Inbox
       &lt;span class="new badge"&gt;4&lt;/span&gt;
     &lt;/summary&gt;
-    &lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#!"&gt;Primary&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
   &lt;/details&gt;
-&lt;/div&gt;</code></pre>
+&lt;/li&gt;</code></pre>
       </div>
 
       <div id="options" class="section scrollspy">
@@ -425,7 +410,7 @@
           <li><a href="#lists">Lists</a></li>
           <li><a href="#dropdown">Dropdown</a></li>
           <li><a href="#navbar">Navbar</a></li>
-          <li><a href="#collapsible">Collapsible</a></li>
+          <li><a href="#sidenav">Sidenav</a></li>
           <li><a href="#options">Options</a></li>
         </ul>
       </div>
@@ -477,7 +462,6 @@
                 <a href="/floating-action-button.html">FAB</a>
                 <a href="/cards.html">Cards</a>
                 <a href="/lists.html">Lists</a>
-                <a href="/collapsible.html">Collapsible</a>
                 <a href="/modals.html">Dialogs</a>
                 <a href="/badges.html">Badges</a>
                 <a href="/tooltips.html">Tooltips</a>
