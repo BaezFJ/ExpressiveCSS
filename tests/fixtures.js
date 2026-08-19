@@ -41,7 +41,6 @@ export const AUTO_INIT_FIXTURES = [
     selector: '.parallax',
     html: `<div class="parallax"><img src="http://localhost/1.jpg"></div>`
   },
-  { name: 'Pushpin', selector: '.pushpin', html: `<div class="pushpin">pinned</div>` },
   {
     name: 'ScrollSpy',
     selector: '.scrollspy',

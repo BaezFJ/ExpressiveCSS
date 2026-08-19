@@ -159,7 +159,7 @@ A rule is a **utility** when it is one job, one class, and independent of any
 component (`.hide`, `.m-3`, `.truncate`). It belongs in **base** when it styles
 bare elements (`a`, `table`, `blockquote`), and in **components** when it only
 exists to serve one widget — including widgets whose CSS is driven by
-JavaScript rather than by a user-applied class (`.pinned`, `.display-docked`,
+JavaScript rather than by a user-applied class (`.display-docked`,
 `ul.staggered-list li`). If a selector in `base/` names a component, it is in
 the wrong file.
 | A colour/type token | `tokens/_reference.scss` | wire it up in `tokens/_theme.scss` |
@@ -192,6 +192,6 @@ unlayered declaration. Drop the flag from `.hide` and it stops beating a
 consumer's own `display` — silently, and in the common case. Classes whose whole
 job is to be unconditional (`.hide`, `.m-3`, the palette classes) keep it.
 
-The `!important` in `components/` is a different thing again: `.pushpin`
-sets JS-driven geometry that must not be overridable. That stays.
-Tap target and the preloader no longer need the flag.
+A few rules in `components/` still use `!important` for UA resets
+(modal float, staggered-list transitions, textarea padding), not for
+JS-driven geometry. Tap target and the preloader no longer need the flag.

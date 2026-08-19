@@ -26,7 +26,6 @@ export const AUTO_INIT_COMPONENTS = {
   Dropdown: { component: Components.Dropdown, selector: '.dropdown-trigger' },
   Lightbox: { component: Components.Lightbox, selector: '.lightboxed' },
   Parallax: { component: Components.Parallax, selector: '.parallax' },
-  Pushpin: { component: Components.Pushpin, selector: '.pushpin' },
   ScrollSpy: { component: Components.ScrollSpy, selector: '.scrollspy' },
   FormSelect: { component: Components.FormSelect, selector: 'select' },
   Sidenav: { component: Components.Sidenav, selector: '.sidenav' },

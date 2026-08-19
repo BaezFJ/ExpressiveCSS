@@ -43,6 +43,11 @@ describe('IIFE bundle', () => {
       undefined,
       'retired Collapsible is still on the global'
     );
+    assert.equal(
+      dom.window.Expressive.Pushpin,
+      undefined,
+      'retired Pushpin is still on the global'
+    );
   });
 
   test('reports ExpressiveCSS own version, matching package.json', () => {

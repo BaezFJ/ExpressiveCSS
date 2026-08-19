@@ -234,7 +234,6 @@ Opt an element out when it needs manual options:
 | `Modal` | `.modal` |
 | `NavigationRail` | `.navigation-rail` |
 | `Parallax` | `.parallax` |
-| `Pushpin` | `.pushpin` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Sidenav` | `.sidenav` |
@@ -266,7 +265,7 @@ The main bundle exports:
 - `AutoInit`, `Forms`, `Waves`, and `version`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Dropdown`, and `Lightbox`
-- `Modal`, `Parallax`, `Pushpin`, `Range`, and `ScrollSpy`
+- `Modal`, `Parallax`, `Range`, and `ScrollSpy`
 - `FormSelect`, `Sidenav`, `Slider`, `Tabs`, and `TapTarget`
 - `Timepicker`, `Toast`, and `Tooltip`
 
@@ -3194,7 +3193,6 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Modal` | `.modal` |
 | `NavigationRail` | `.navigation-rail` |
 | `Parallax` | `.parallax` |
-| `Pushpin` | `.pushpin` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Sidenav` | `.sidenav` |
@@ -3876,7 +3874,7 @@ Expressive.AutoInit(document.body, {
 });
 ```
 
-These documentation pages also pin the TOC with Pushpin. That is a separate component — Scrollspy only updates which link is active and handles the click-to-scroll.
+The documentation TOC is `position: sticky`. Scrollspy only updates which link is active.
 
 ### Options
 

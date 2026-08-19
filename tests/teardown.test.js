@@ -100,15 +100,6 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), []);
   });
 
-  test('Pushpin detaches its document scroll handler', () => {
-    document.body.innerHTML = `<div class="pushpin">pinned</div>`;
-    const instance = Expressive.Pushpin.init(document.querySelector('.pushpin'));
-
-    instance.destroy();
-
-    assert.deepEqual(watch.live(), []);
-  });
-
   test('Carousel detaches the shared resize listener', () => {
     document.body.innerHTML = `
       <div class="carousel">

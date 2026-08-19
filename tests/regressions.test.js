@@ -388,3 +388,13 @@ describe('App bar medium and large', () => {
     );
   });
 });
+
+describe('retired Pushpin', () => {
+  test('does not emit .pushpin or the pin classes', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    assert.doesNotMatch(css, /\.pushpin\s*\{/);
+    assert.doesNotMatch(css, /\.pin-top/);
+    assert.doesNotMatch(css, /\.pin-bottom/);
+    assert.doesNotMatch(css, /\.pinned\s*\{/);
+  });
+});

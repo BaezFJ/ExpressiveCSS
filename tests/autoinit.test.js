@@ -28,7 +28,7 @@ describe('AutoInit', () => {
   test('every fixture selector is covered exactly once', () => {
     const selectors = AUTO_INIT_FIXTURES.map((f) => f.selector);
     assert.equal(new Set(selectors).size, selectors.length, 'duplicate selector in fixtures');
-    assert.equal(AUTO_INIT_FIXTURES.length, 18);
+    assert.equal(AUTO_INIT_FIXTURES.length, 17);
   });
 
   test('skips elements marked .no-autoinit', () => {

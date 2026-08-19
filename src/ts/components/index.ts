@@ -14,7 +14,6 @@ export { Datepicker } from './datepicker';
 export { Dropdown } from './dropdown';
 export { Lightbox } from './lightbox';
 export { Parallax } from './parallax';
-export { Pushpin } from './pushpin';
 export { Range } from './range';
 export { ScrollSpy } from './scrollspy';
 export { FormSelect } from './select';
