@@ -5,7 +5,7 @@
 {% block page_title %}Select{% endblock %}
 
 {% block page %}
-{{ Banner("Select", "Choose one option, or several, from a styled dropdown.") }}
+{{ Banner("Select", "Choose one option, or several, from a styled menu.") }}
 
 <div class="container">
   <div class="row">
@@ -13,7 +13,7 @@
 
       <div id="introduction" class="section scrollspy">
         <p class="flow-text">
-          Select turns a native <code>&lt;select&gt;</code> into an exposed dropdown —
+          Select turns a native <code>&lt;select&gt;</code> into an exposed menu —
           a text field plus a menu. Wrap it in
           <code>.field</code> and give the label a matching
           <code>for</code>. Add <code>outlined</code> (or <code>border</code>) on that
@@ -84,7 +84,7 @@
           </div>
         </form>
 
-        <p>Add <code>browser-default</code> to skip the dropdown and keep the native select.</p>
+        <p>Add <code>browser-default</code> to skip the menu and keep the native select.</p>
         <p class="mb-5">
           <label for="form-select-6">Browser Select</label>
           <select id="form-select-6" class="browser-default">
@@ -160,7 +160,7 @@
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
 <pre><code>Expressive.AutoInit(document.body, {
-  FormSelect: { dropdownOptions: { constrainWidth: false } }
+  FormSelect: { menuOptions: { constrainWidth: false } }
 });</code></pre>
       </div>
 
@@ -183,12 +183,12 @@
               <td>Space-separated classes added to the generated <code>.select-wrapper</code>.</td>
             </tr>
             <tr>
-              <td><code>dropdownOptions</code></td>
+              <td><code>menuOptions</code></td>
               <td>Object</td>
               <td><code>{}</code></td>
               <td>
-                Options passed to <code>Dropdown</code>. See
-                <a href="{{ url_for('dropdown') }}#options">Dropdown</a>.
+                Options passed to <code>Menu</code>. See
+                <a href="{{ url_for('menu') }}#options">Menu</a>.
                 <code>coverTrigger</code> is forced to <code>false</code> and
                 <code>closeOnClick</code> is forced to <code>false</code>.
               </td>
@@ -214,12 +214,12 @@
           Re-read the native <code>&lt;select&gt;</code>. Call this after changing
           <code>select.value</code> or after adding or removing
           <code>&lt;option&gt;</code>s. The menu is rebuilt; the field and
-          Dropdown instance stay put.
+          Menu instance stay put.
         </p>
 <pre><code>instance.refresh();</code></pre>
 
         <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the dropdown, and restore the native select.</p>
+        <p>Destroy the plugin instance, remove the menu, and restore the native select.</p>
 <pre><code>instance.destroy();</code></pre>
       </div>
 
@@ -255,9 +255,9 @@
               <td>The generated <code>.select-wrapper</code>.</td>
             </tr>
             <tr>
-              <td><code>dropdownOptions</code></td>
+              <td><code>menuEl</code></td>
               <td>Element</td>
-              <td>The dropdown <code>ul</code>.</td>
+              <td>The generated <code>&lt;menu&gt;</code>.</td>
             </tr>
             <tr>
               <td><code>labelEl</code></td>
@@ -270,9 +270,9 @@
               <td>The text input that shows the current selection.</td>
             </tr>
             <tr>
-              <td><code>dropdown</code></td>
-              <td>Dropdown</td>
-              <td>The Dropdown instance for this select.</td>
+              <td><code>menu</code></td>
+              <td>Menu</td>
+              <td>The Menu instance for this select.</td>
             </tr>
           </tbody>
         </table>

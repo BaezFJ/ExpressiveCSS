@@ -54,7 +54,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 
 - Auto Init
 - Navigation rail
-- Dropdown
+- Menu
 - Feature Discovery
 - Media
 - Modals
@@ -229,7 +229,7 @@ Opt an element out when it needs manual options:
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Datepicker` | `.datepicker` |
-| `Dropdown` | `.dropdown-trigger` |
+| `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `Modal` | `.modal` |
 | `NavigationRail` | `.navigation-rail` |
@@ -264,7 +264,7 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, `Waves`, and `version`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
-- `Chips`, `Datepicker`, `Dropdown`, and `Lightbox`
+- `Chips`, `Datepicker`, `Menu`, and `Lightbox`
 - `Modal`, `Parallax`, `Range`, and `ScrollSpy`
 - `FormSelect`, `Sidenav`, `Slider`, `Tabs`, and `TapTarget`
 - `Timepicker`, `Snackbar`, and `Tooltip`
@@ -2568,7 +2568,7 @@ The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. T
 
 Tokens follow the [M3 app bar spec](https://m3.material.io/components/app-bars/specs). The container is `surface` at rest, the headline is `on-surface` at `title-large`, and icons are 24dp in a 48dp target, inset 4dp. Icons inherit the header color so a fill + `on-*` pair stays readable. The small bar is 64dp tall. Pair a fill utility with its `on-*` text class if you want a colored bar.
 
-The bar is CSS-only. Dropdowns and the sidenav are separate components that `AutoInit()` starts. A `sidenav-trigger` inside the bar is still required — that class is the Sidenav contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
+The bar is CSS-only. Menus and the sidenav are separate components that `AutoInit()` starts. A `sidenav-trigger` inside the bar is still required — that class is the Sidenav contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
 
 ### Small
 
@@ -2679,12 +2679,12 @@ Component tokens you can set on the header (or on `:root`):
 | `--md-comp-top-app-bar-container-height` | 64px |
 | `--md-comp-top-app-bar-leading-icon-size` | 24px |
 
-### Dropdown
+### Menu
 
-Point a `dropdown-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit()` starts every `.dropdown-trigger`.
+Point a `menu-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit()` starts every `.menu-trigger`.
 
 ```text
-<menu id="dropdown1">
+<menu id="menu1">
   <li><a href="#!">one</a></li>
   <li><a href="#!">two</a></li>
   <hr>
@@ -2695,8 +2695,8 @@ Point a `dropdown-trigger` at a `<menu>` whose `id` matches `data-target`. `Auto
     <h2>Title</h2>
     <menu>
       <li>
-        <a class="dropdown-trigger" href="#!" data-target="dropdown1">
-          Dropdown<i class="material-icons right">arrow_drop_down</i>
+        <a class="menu-trigger" href="#!" data-target="menu1">
+          Menu<i class="material-icons right">arrow_drop_down</i>
         </a>
       </li>
     </menu>
@@ -2704,16 +2704,16 @@ Point a `dropdown-trigger` at a `<menu>` whose `id` matches `data-target`. `Auto
 </header>
 ```
 
-To initialize the dropdown yourself:
+To initialize the menu yourself:
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.dropdown-trigger');
-  Expressive.Dropdown.init(elems);
+  const elems = document.querySelectorAll('.menu-trigger');
+  Expressive.Menu.init(elems);
 });
 ```
 
-Dropdowns open on click by default (`hover: false`). Pass `{ hover: true }` to open on hover instead.
+Menus open on click by default (`hover: false`). Pass `{ hover: true }` to open on hover instead.
 
 ### Search
 
@@ -3093,8 +3093,8 @@ Or pass a root element and per-component options. The option keys are the compon
 
 ```js
 Expressive.AutoInit(document.body, {
-  Dropdown: {
-    // pass options for Dropdown here
+  Menu: {
+    // pass options for Menu here
   },
   FloatingActionButton: {
     // pass options for FloatingActionButton here
@@ -3135,7 +3135,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Datepicker` | `.datepicker` |
-| `Dropdown` | `.dropdown-trigger` |
+| `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `Modal` | `.modal` |
 | `NavigationRail` | `.navigation-rail` |
@@ -3168,20 +3168,20 @@ Expressive.Tooltip.init(
 
 ---
 
-## Dropdown
+## Menu
 
 Material Design 3 menus, from the HTML.
 
-A `<menu>` is the surface. Each `<li>` is an item, an `<hr>` is a divider, and an `<i>` inside the item is the leading icon. The trigger’s `data-target` must match the menu’s `id`. `.dropdown-trigger` is still required — that is the JavaScript contract. `.dropdown-content` is an alias; FormSelect and Autocomplete still generate it.
+A `<menu>` is the surface. Each `<li>` is an item, an `<hr>` is a divider, and an `<i>` inside the item is the leading icon. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is still required — that is the JavaScript contract.
 
 Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface`, 4dp corners, elevation 2, at least 112dp wide. Items are 48dp, `label-large` / `on-surface`, with 12dp inset. Icons are 24dp `on-surface-variant`. Hover is an 8% state layer.
 
-`AutoInit()` starts every `.dropdown-trigger` except those marked `no-autoinit`. Menus open on click by default. M3 opens the menu below the trigger; pass `coverTrigger: false` for that. The default still covers the trigger so Select is unchanged.
+`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click by default. M3 opens the menu below the trigger; pass `coverTrigger: false` for that. The default still covers the trigger so Select is unchanged.
 
 Drop me
 
 ```html
-<button class="dropdown-trigger" data-target="menu1">Drop me</button>
+<button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
   <li><a href="#!">One</a></li>
   <li><a href="#!">Two</a></li>
@@ -3196,15 +3196,15 @@ Drop me
 </menu>
 ```
 
-For a menu inside a top app bar, see Navbar Dropdown.
+For a menu inside a top app bar, see Navbar menu.
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Dropdown`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.dropdown-trigger`.
+The IIFE bundle exposes `Expressive.Menu`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.menu-trigger`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  Expressive.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
+  Expressive.Menu.init(document.querySelectorAll('.menu-trigger'), {
     coverTrigger: false
   });
 });
@@ -3214,7 +3214,7 @@ Per-instance options can also be passed through AutoInit:
 
 ```js
 Expressive.AutoInit(document.body, {
-  Dropdown: { constrainWidth: false, coverTrigger: false }
+  Menu: { constrainWidth: false, coverTrigger: false }
 });
 ```
 
@@ -3244,7 +3244,7 @@ These two menus set `constrainWidth: false` so the list can be wider than the bu
 Left Right
 
 ```js
-Expressive.Dropdown.init(document.querySelector('#left'), {
+Expressive.Menu.init(document.querySelector('#left'), {
   alignment: 'left',
   constrainWidth: false,
   coverTrigger: false
@@ -3256,7 +3256,7 @@ Hover is off by default. Pass `hover: true` to open on mouse enter instead of cl
 Hover me
 
 ```js
-Expressive.Dropdown.init(document.querySelector('#hover'), {
+Expressive.Menu.init(document.querySelector('#hover'), {
   hover: true,
   constrainWidth: false,
   coverTrigger: false
@@ -3268,7 +3268,7 @@ Expressive.Dropdown.init(document.querySelector('#hover'), {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.Dropdown.getInstance(elem);
+const instance = Expressive.Menu.getInstance(elem);
 ```
 
 #### .open()
@@ -3310,7 +3310,7 @@ instance.destroy();
 | `el` | Element | The trigger the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
 | `id` | String | ID of the menu element. |
-| `dropdownEl` | Element | The menu element. |
+| `menuEl` | Element | The menu element. |
 | `isOpen` | Boolean | Whether the menu is open. |
 | `isScrollable` | Boolean | Whether the menu content is scrollable. |
 | `focusedIndex` | Number | Index of the focused item. |
@@ -3873,7 +3873,7 @@ instance.destroy();
 
 A slide-out menu, or a fixed sidebar on large screens.
 
-This is a slide-out menu. Nest `<details>` / `<summary>` for dropdown sections — the documentation sidebar uses that. On small screens this same drawer slides over the page.
+This is a slide-out menu. Nest `<details>` / `<summary>` for nested sections — the documentation sidebar uses that. On small screens this same drawer slides over the page.
 
 The sidenav HTML must **not** sit inside the app bar’s `<nav>`. Put a `sidenav-trigger` anywhere and set `data-target` to the sidenav’s `id`. `AutoInit()` starts every `.sidenav` except those marked `no-autoinit`.
 
@@ -3915,7 +3915,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 ```
 
-Nested sections are HTML. A `<details>` / `<summary>` inside a `.sidenav` is a dropdown; the same `name` on several details is an accordion. There is no Collapsible plugin.
+Nested sections are HTML. A `<details>` / `<summary>` inside a `.sidenav` is a nested section; the same `name` on several details is an accordion. There is no Collapsible plugin.
 
 ### Options
 
@@ -4001,7 +4001,7 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
 });
 ```
 
-#### Dropdown HTML Structure
+#### Menu HTML Structure
 
 Nest `<details>` for a section that opens in place. Same `name` on several details is an accordion. The documentation sidebar uses this for Foundations, Structure, Components, and Forms.
 
@@ -5317,9 +5317,9 @@ An `input + span` or `input + .lever` still works if you already have that marku
 
 ## Select
 
-Choose one option, or several, from a styled dropdown.
+Choose one option, or several, from a styled menu.
 
-Select turns a native `<select>` into a dropdown. Wrap it in `.input-field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
+Select turns a native `<select>` into a menu. Wrap it in `.input-field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 
 Add `multiple` to select several options. Chosen values appear as a comma-separated list.
 
@@ -5327,7 +5327,7 @@ Native `<optgroup>` elements become group headings in the menu.
 
 Put an image URL in `data-icon` on an option. Classes on that option are copied to the image; `left` floats it left. Images float right by default. There is no `icons` class on the `<select>`.
 
-Add `browser-default` to skip the dropdown and keep the native select.
+Add `browser-default` to skip the menu and keep the native select.
 
 Browser Select Choose your option Option 1 Option 2 Option 3
 
@@ -5399,7 +5399,7 @@ Per-instance options can also be passed through AutoInit:
 
 ```js
 Expressive.AutoInit(document.body, {
-  FormSelect: { dropdownOptions: { constrainWidth: false } }
+  FormSelect: { menuOptions: { constrainWidth: false } }
 });
 ```
 
@@ -5408,7 +5408,7 @@ Expressive.AutoInit(document.body, {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `classes` | String | `''` | Space-separated classes added to the generated `.select-wrapper`. |
-| `dropdownOptions` | Object | `{}` | Options passed to `Dropdown`. See Dropdown. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
+| `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
 
 There is no `selected` option. Mark options with the HTML `selected` attribute instead.
 
@@ -5430,7 +5430,7 @@ instance.getSelectedValues();
 
 #### .destroy();
 
-Destroy the plugin instance, remove the dropdown, and restore the native select.
+Destroy the plugin instance, remove the menu, and restore the native select.
 
 ```text
 instance.destroy();
@@ -5444,10 +5444,10 @@ instance.destroy();
 | `options` | Object | The options the instance was initialized with. |
 | `isMultiple` | Boolean | Whether this is a multiple select. |
 | `wrapper` | Element | The generated `.select-wrapper`. |
-| `dropdownOptions` | Element | The dropdown `ul`. |
+| `menuEl` | Element | The generated `<menu>`. |
 | `labelEl` | Element | The associated label, or `null` if none was found. |
 | `input` | Element | The text input that shows the current selection. |
-| `dropdown` | Dropdown | The Dropdown instance for this select. |
+| `menu` | Menu | The Menu instance for this select. |
 
 ### Disabled Styles
 
@@ -5947,11 +5947,11 @@ onSearch: function(text, autocomplete) {
 | --- | --- | --- | --- |
 | `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
 | `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
-| `maxDropDownHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called when the input text changes. Load or filter data, then call `setMenuItems`. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
-| `dropdownOptions` | Object | see note | Options for Dropdown. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
+| `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids (strings or numbers). |
 
@@ -6018,5 +6018,5 @@ instance.destroy();
 | `isOpen` | Boolean | Whether the suggestion menu is open. |
 | `count` | Number | Number of matching options (reset on each keyup/focus). |
 | `activeIndex` | Number | Index of the keyboard-highlighted option, or `-1`. |
-| `dropdown` | Dropdown | The Dropdown instance for this autocomplete. |
+| `menu` | Menu | The Menu instance for this autocomplete. |
 | `selectedValues` | Array | The currently selected entries. |

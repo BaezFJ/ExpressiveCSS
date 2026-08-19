@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Dropdown, DropdownOptions } from './dropdown';
+import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface AutocompleteData {
@@ -47,7 +47,7 @@ export interface AutocompleteOptions extends BaseOptions {
    * The height of the Menu which can be set via css-property.
    * @default '300px'
    */
-  maxDropDownHeight: string;
+  maxMenuHeight: string;
   /**
    * Function is called when the input text is altered and data can also be loaded asynchronously.
    * If the results are collected the items in the list can be updated via the function setMenuItems(collectedItems).
@@ -62,10 +62,10 @@ export interface AutocompleteOptions extends BaseOptions {
    */
   allowUnsafeHTML: boolean;
   /**
-   * Pass options object to select dropdown initialization.
+   * Pass options object to select menu initialization.
    * @default {}
    */
-  dropdownOptions: Partial<DropdownOptions>;
+  menuOptions: Partial<MenuOptions>;
   /**
    * Predefined selected values
    */
@@ -75,8 +75,8 @@ export interface AutocompleteOptions extends BaseOptions {
 const _defaults: AutocompleteOptions = {
   data: [], // Autocomplete data set
   onAutocomplete: null, // Callback for when autocompleted
-  dropdownOptions: {
-    // Default dropdown options
+  menuOptions: {
+    // Default menu options
     autoFocus: false,
     closeOnClick: false,
     coverTrigger: false
@@ -94,7 +94,7 @@ const _defaults: AutocompleteOptions = {
       )
     );
   },
-  maxDropDownHeight: '300px',
+  maxMenuHeight: '300px',
   allowUnsafeHTML: false,
   selected: []
 };
@@ -111,8 +111,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private $active: HTMLElement | null;
   private _mousedown: boolean;
   container: HTMLElement;
-  /** Instance of the dropdown plugin for this autocomplete. */
-  dropdown: Dropdown;
+  /** Instance of the menu plugin for this autocomplete. */
+  menu: Menu;
   static _keydown: boolean;
   selectedValues: AutocompleteData[];
   menuItems: AutocompleteData[];
@@ -134,7 +134,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.menuItems = this.options.data || [];
     this.$active = null;
     this._mousedown = false;
-    this._setupDropdown();
+    this._setupMenu();
     this._setupEventHandlers();
   }
 
@@ -197,7 +197,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   destroy() {
     this._removeEventHandlers();
-    this._removeDropdown();
+    this._removeMenu();
     this.el['Expressive_Autocomplete'] = undefined;
   }
 
@@ -230,47 +230,47 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
   }
 
-  _setupDropdown() {
+  _setupMenu() {
     this.container = document.createElement('menu');
-    this.container.style.maxHeight = this.options.maxDropDownHeight;
+    this.container.style.maxHeight = this.options.maxMenuHeight;
     this.container.id = `autocomplete-options-${Utils.guid()}`;
     this.container.classList.add('autocomplete-content');
     this.container.ariaExpanded = 'true';
     this.el.setAttribute('data-target', this.container.id);
 
     this.menuItems.forEach((menuItem) => {
-      const itemElement = this._createDropdownItem(menuItem);
+      const itemElement = this._createMenuItem(menuItem);
       this.container.append(itemElement);
     });
 
-    // ! Issue in Component Dropdown: _placeDropdown moves dom-position
+    // ! Issue in Component Menu: _placeMenu moves dom-position
     this.el.parentElement.appendChild(this.container);
 
-    // Initialize dropdown
-    const dropdownOptions = {
-      ...Autocomplete.defaults.dropdownOptions,
-      ...this.options.dropdownOptions
+    // Initialize menu
+    const menuOptions = {
+      ...Autocomplete.defaults.menuOptions,
+      ...this.options.menuOptions
     };
-    // @todo shouldn't we conditionally check if dropdownOptions.onItemClick is set in first place?
-    const userOnItemClick = dropdownOptions.onItemClick;
-    // Ensuring the select Option call when user passes custom onItemClick function to dropdown
-    dropdownOptions.onItemClick = (li) => {
+    // The wrapper is installed unconditionally: selecting the clicked entry is
+    // how the autocomplete works, not an optional extra. Only the forwarding to
+    // a user-supplied handler is conditional, and it hands over exactly what
+    // Menu would have (the clicked `li`, called on the Menu instance).
+    const userOnItemClick = menuOptions.onItemClick;
+    menuOptions.onItemClick = (li) => {
       if (!li) return;
       const entryID = li.getAttribute('data-id');
       this.selectOption(entryID);
-      // Handle user declared onItemClick if needed
-      if (userOnItemClick && typeof userOnItemClick === 'function')
-        userOnItemClick.call(this.dropdown, this.el);
+      if (typeof userOnItemClick === 'function') userOnItemClick.call(this.menu, li);
     };
-    this.dropdown = Dropdown.init(this.el, dropdownOptions);
+    this.menu = Menu.init(this.el, menuOptions);
 
     // ! Workaround for Label: move label up again
     // TODO: Just use PopperJS in future!
     const label = this.el.parentElement.querySelector('label');
     if (label) this.el.after(label);
 
-    // Sketchy removal of dropdown click handler
-    this.el.removeEventListener('click', this.dropdown._handleClick);
+    // Sketchy removal of menu click handler
+    this.el.removeEventListener('click', this.menu._handleClick);
     if(!this.options.isMultiSelect && !(this.options.selected.length === 0)) {
       const selectedValue = this.menuItems.filter((value) => value.id === this.selectedValues[0].id);
       this.el.value = selectedValue[0].text;
@@ -285,7 +285,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._updateSelectedInfo();
   }
 
-  _removeDropdown() {
+  _removeMenu() {
     this.container.ariaExpanded = 'false';
     this.container.parentNode.removeChild(this.container);
   }
@@ -404,7 +404,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     return [label.slice(0, start), label.slice(start, end + 1), label.slice(end + 1)];
   }
 
-  _createDropdownItem(entry: AutocompleteData) {
+  _createMenuItem(entry: AutocompleteData) {
     const item = document.createElement('li');
     item.setAttribute('data-id', <string>entry.id);
     item.setAttribute(
@@ -482,14 +482,14 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     return item;
   }
 
-  _renderDropdown() {
+  _renderMenu() {
     this._resetAutocomplete();
     // Check if Data is empty
     if (this.menuItems.length === 0) {
       this.menuItems = this.selectedValues; // Show selected Items
     }
     for (let i = 0; i < this.menuItems.length; i++) {
-      const item = this._createDropdownItem(this.menuItems[i]);
+      const item = this._createMenuItem(this.menuItems[i]);
       this.container.append(item);
     }
   }
@@ -530,28 +530,28 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._resetAutocomplete();
     if (inputText.length >= this.options.minLength) {
       this.isOpen = true;
-      this._renderDropdown();
+      this._renderMenu();
     }
-    // Open dropdown
-    if (!this.dropdown.isOpen) {
+    // Open menu
+    if (!this.menu.isOpen) {
       setTimeout(() => {
-        this.dropdown.open();
+        this.menu.open();
       }, 0); // TODO: why?
-    } else this.dropdown.recalculateDimensions(); // Recalculate dropdown when its already open
+    } else this.menu.recalculateDimensions(); // Recalculate menu when its already open
   };
 
   /**
    * Hide autocomplete.
    */
   close = () => {
-    this.dropdown.close();
+    this.menu.close();
   };
 
   /**
    * Updates the visible or selectable items shown in the menu.
    * @param menuItems Items to be available.
    * @param selected Selected item ids
-   * @param open Option to conditionally open dropdown
+   * @param open Option to conditionally open menu
    */
   setMenuItems(menuItems: AutocompleteData[], selected: number[] | string[] = null, open: boolean = true) {
     this.menuItems = menuItems;
@@ -562,7 +562,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       );
     }
     if (this.options.isMultiSelect) {
-      this._renderDropdown();
+      this._renderMenu();
     } else {
       this._refreshInputText();
     }
@@ -590,7 +590,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       else this.selectedValues = this.selectedValues.filter(
         (selectedEntry) => selectedEntry.id !== entry.id
       );
-      this._renderDropdown();
+      this._renderMenu();
       this.el.focus();
     } else {
       // Single-Select

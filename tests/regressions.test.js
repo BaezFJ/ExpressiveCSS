@@ -302,11 +302,11 @@ describe('optional markup does not crash a component', () => {
     instance.destroy();
   });
 
-  test('a hover dropdown when the pointer leaves the window', () => {
+  test('a hover menu when the pointer leaves the window', () => {
     document.body.innerHTML = `
-      <a class="button dropdown-trigger" data-target="dd">Drop</a>
+      <a class="button menu-trigger" data-target="dd">Drop</a>
       <menu id="dd"><li><a href="#!">one</a></li></menu>`;
-    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'), {
+    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'), {
       hover: true
     });
 
@@ -420,5 +420,49 @@ describe('retired app bar tabs', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
     assert.doesNotMatch(css, /header[^{]*\s>\s*\.tabs\s*\{/);
     assert.doesNotMatch(css, /\.tabs\.transparent\s*\{/);
+  });
+});
+
+describe('Autocomplete menuOptions.onItemClick', () => {
+  beforeEach(resetBody);
+
+  test('forwards the clicked li on the Menu instance, and still selects', () => {
+    // The wrapper Autocomplete installs used to call the user handler with
+    // the input element, so a handler written against the documented Menu
+    // contract - onItemClick(li) - got the wrong node.
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const seen = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data: [{ id: 'apple', text: 'Apple' }],
+      menuOptions: {
+        onItemClick(li) {
+          seen.push({ li, self: this });
+        }
+      }
+    });
+    try {
+      const li = instance.container.querySelector('li[data-id="apple"]');
+      fire(li, 'click');
+      assert.equal(seen.length, 1);
+      assert.equal(seen[0].li, li);
+      assert.equal(seen[0].self, instance.menu);
+      // The unconditional half of the wrapper: the entry is still selected.
+      assert.equal(el.value, 'Apple');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('selects without a user handler', () => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const instance = Expressive.Autocomplete.init(el, { data: [{ id: 'pear', text: 'Pear' }] });
+    try {
+      fire(instance.container.querySelector('li[data-id="pear"]'), 'click');
+      assert.equal(el.value, 'Pear');
+    } finally {
+      instance.destroy();
+    }
   });
 });

@@ -120,11 +120,11 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), []);
   });
 
-  test('Dropdown detaches the handlers open() adds', async () => {
+  test('Menu detaches the handlers open() adds', async () => {
     document.body.innerHTML = `
-      <a class="button dropdown-trigger" data-target="dropdown1">Drop</a>
-      <menu id="dropdown1"><li><a href="#!">one</a></li></menu>`;
-    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
+      <a class="button menu-trigger" data-target="menu1">Drop</a>
+      <menu id="menu1"><li><a href="#!">one</a></li></menu>`;
+    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
 
     instance.open();
     await tick(); // open() defers _setupTemporaryEventHandlers by a frame
@@ -132,7 +132,7 @@ describe('destroy() releases shared listeners', () => {
 
     instance.destroy();
 
-    assert.deepEqual(watch.live(), [], 'Dropdown left its temporary handlers attached');
+    assert.deepEqual(watch.live(), [], 'Menu left its temporary handlers attached');
   });
 
   test('FloatingActionButton detaches the document handlers open() adds', () => {

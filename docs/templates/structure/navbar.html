@@ -33,7 +33,7 @@
           <code>on-*</code> text class if you want a colored bar.
         </p>
         <p>
-          The bar is CSS-only. Dropdowns and the sidenav are separate
+          The bar is CSS-only. Menus and the sidenav are separate
           components that <code>AutoInit()</code> starts. A
           <code>sidenav-trigger</code> inside the bar is still required — that
           class is the Sidenav contract, not bar chrome. Tabs live in
@@ -242,15 +242,15 @@
         </table>
       </div>
 
-      <div id="navbar-dropdown" class="section scrollspy">
-        <h3>Dropdown</h3>
+      <div id="navbar-menu" class="section scrollspy">
+        <h3>Menu</h3>
         <p>
-          Point a <code>dropdown-trigger</code> at a
+          Point a <code>menu-trigger</code> at a
           <code>&lt;menu&gt;</code> whose <code>id</code> matches
           <code>data-target</code>.
-          <code>AutoInit()</code> starts every <code>.dropdown-trigger</code>.
+          <code>AutoInit()</code> starts every <code>.menu-trigger</code>.
         </p>
-        <menu id="navbar-dropdown1">
+        <menu id="navbar-menu1">
           <li><a href="#!">one</a></li>
           <li><a href="#!">two</a></li>
           <hr>
@@ -263,14 +263,14 @@
               <li><a href="#!">Sass</a></li>
               <li><a href="#!">Components</a></li>
               <li>
-                <a class="dropdown-trigger" href="#!" data-target="navbar-dropdown1">
-                  Dropdown<i class="material-symbols right">arrow_drop_down</i>
+                <a class="menu-trigger" href="#!" data-target="navbar-menu1">
+                  Menu<i class="material-symbols right">arrow_drop_down</i>
                 </a>
               </li>
             </menu>
           </nav>
         </header>
-<pre><code>&lt;menu id="dropdown1"&gt;
+<pre><code>&lt;menu id="menu1"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;one&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="#!"&gt;two&lt;/a&gt;&lt;/li&gt;
   &lt;hr&gt;
@@ -281,20 +281,20 @@
     &lt;h2&gt;Title&lt;/h2&gt;
     &lt;menu&gt;
       &lt;li&gt;
-        &lt;a class="dropdown-trigger" href="#!" data-target="dropdown1"&gt;
-          Dropdown&lt;i class="material-symbols right"&gt;arrow_drop_down&lt;/i&gt;
+        &lt;a class="menu-trigger" href="#!" data-target="menu1"&gt;
+          Menu&lt;i class="material-symbols right"&gt;arrow_drop_down&lt;/i&gt;
         &lt;/a&gt;
       &lt;/li&gt;
     &lt;/menu&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
-        <p>To initialize the dropdown yourself:</p>
+        <p>To initialize the menu yourself:</p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.dropdown-trigger');
-  Expressive.Dropdown.init(elems);
+  const elems = document.querySelectorAll('.menu-trigger');
+  Expressive.Menu.init(elems);
 });</code></pre>
         <p>
-          Dropdowns open on click by default (<code>hover: false</code>). Pass
+          Menus open on click by default (<code>hover: false</code>). Pass
           <code>{ hover: true }</code> to open on hover instead.
         </p>
       </div>
@@ -394,7 +394,7 @@
           <li><a href="#medium">Medium and large</a></li>
           <li><a href="#fixed">Fixed</a></li>
           <li><a href="#color">Color</a></li>
-          <li><a href="#navbar-dropdown">Dropdown</a></li>
+          <li><a href="#navbar-menu">Menu</a></li>
           <li><a href="#search-docs">Search</a></li>
           <li><a href="#mobile-collapse">Mobile collapse</a></li>
         </ul>

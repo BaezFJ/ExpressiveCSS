@@ -4,8 +4,7 @@
 //
 // Anatomy is the HTML. A <menu id> is the surface; each <li> is an item,
 // an <hr> is a divider, and an <i> inside the item is the leading icon.
-// The trigger is still .dropdown-trigger[data-target] — that is the JS
-// contract.
+// The trigger is .menu-trigger[data-target] — that is the JS contract.
 //
 // Tokens follow https://m3.material.io/components/menus/specs
 // plus the 1rem surface / stadium items used by fields and select.
@@ -142,7 +141,7 @@ menu[id] {
   }
 }
 
-// Nested menu. Optional, desktop-first. No second Dropdown instance —
+// Nested menu. Optional, desktop-first. No second Menu instance —
 // a <menu> inside an <li> is a flyout. Hover / :focus-within on fine
 // pointers; .open is the tap / keyboard switch.
 menu[id] li > menu {
@@ -220,6 +219,6 @@ body.keyboard-focused {
   }
 }
 
-.dropdown-trigger {
+.menu-trigger {
   cursor: pointer;
 }

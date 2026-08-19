@@ -23,7 +23,7 @@ export const AUTO_INIT_COMPONENTS = {
   Carousel: { component: Components.Carousel, selector: '.carousel' },
   Chips: { component: Components.Chips, selector: '.chips' },
   Datepicker: { component: Components.Datepicker, selector: '.datepicker' },
-  Dropdown: { component: Components.Dropdown, selector: '.dropdown-trigger' },
+  Menu: { component: Components.Menu, selector: '.menu-trigger' },
   Lightbox: { component: Components.Lightbox, selector: '.lightboxed' },
   Parallax: { component: Components.Parallax, selector: '.parallax' },
   ScrollSpy: { component: Components.ScrollSpy, selector: '.scrollspy' },

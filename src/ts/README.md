@@ -9,7 +9,7 @@ plugins/        helpers that are not Components (DockedDisplayPlugin)
 ```
 
 Imports point one way: `components/` and `behaviors/` reach into `core/`, never
-the reverse. Cross-component imports (`./dropdown` from `select.ts`) are fine.
+the reverse. Cross-component imports (`./menu` from `select.ts`) are fine.
 
 ## Adding a component
 
@@ -83,10 +83,10 @@ read-it-off-the-element access that key provides.
   `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
   one origin rect. The wrapper uses `popover="auto"` when the platform
   has it. Do not build a `#${data-target}` selector.
-- **Dropdown nested menus are markup.** A `<menu>` inside an `<li>`
+- **Menu nested menus are markup.** A `<menu>` inside an `<li>`
   is a flyout. Hover / `:focus-within` on `(hover: hover) and
   (pointer: fine)`; `.open` is the tap/keyboard switch. Do not start a
-  second Dropdown. `closeOnClick` ignores the parent row of a submenu.
+  second Menu. `closeOnClick` ignores the parent row of a submenu.
 - **FAB speed dial is CSS.** `.active` (and `:hover` when the pointer
   can hover) opens the menu. `.click-to-toggle` and `.direction-*` are
   markup switches. JS toggles the class, Escape, and click-outside.
@@ -112,7 +112,7 @@ read-it-off-the-element access that key provides.
   the form value. JS reuses an existing `.field` / `.input-field` or
   creates `.select-wrapper.field`. The caret is a CSS-masked `.caret`,
   not an SVG. `refresh()` rebuilds the option list from the native
-  control; it does not tear down the Dropdown. `.browser-default`
+  control; it does not tear down the Menu. `.browser-default`
   skips JS; `@supports (appearance: base-select)` only paints that
   native path. Do not give menu checkboxes the 56dp field chrome.
 - There is no linter config, though some files still carry `@typescript-eslint`

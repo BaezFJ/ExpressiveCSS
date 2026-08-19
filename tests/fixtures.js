@@ -27,9 +27,9 @@ export const AUTO_INIT_FIXTURES = [
   { name: 'Chips', selector: '.chips', html: `<div class="chips"></div>` },
   { name: 'Datepicker', selector: '.datepicker', html: `<input type="text" class="datepicker">` },
   {
-    name: 'Dropdown',
-    selector: '.dropdown-trigger',
-    html: `<a class="button dropdown-trigger" data-target="dropdown1">Drop</a><menu id="dropdown1"><li><a href="#!">one</a></li></menu>`
+    name: 'Menu',
+    selector: '.menu-trigger',
+    html: `<a class="button menu-trigger" data-target="menu1">Drop</a><menu id="menu1"><li><a href="#!">one</a></li></menu>`
   },
   {
     name: 'Lightbox',

@@ -168,10 +168,16 @@ def pagination():
     return render_template('structure/pagination.html')
 
 
+@app.route('/menu')
+@app.route('/menu.html')
+def menu():
+    return render_template('structure/menu.html')
+
+
 @app.route('/dropdown')
 @app.route('/dropdown.html')
 def dropdown():
-    return render_template('structure/dropdown.html')
+    return redirect(url_for('menu'), code=301)
 
 
 @app.route('/scrollspy')

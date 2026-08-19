@@ -12,7 +12,7 @@ controls, and JavaScript components in browser, ES module, and CommonJS builds.
 - Light and dark themes using CSS custom properties
 - Responsive grid and utility classes
 - Buttons, cards, forms, navigation, and other styled components
-- Interactive components including carousels, date pickers, dropdowns,
+- Interactive components including carousels, date pickers, menus,
   side navigation, tabs, tooltips, and more
 - ES module, CommonJS, browser IIFE, CSS, and TypeScript declaration outputs
 - Automatic component initialization with an opt-out mechanism

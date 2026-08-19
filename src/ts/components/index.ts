@@ -2,7 +2,7 @@
 // here it does not exist as far as the bundle is concerned.
 //
 // Each module also exports its `<Name>Options` interface; import those from the
-// component's own module (e.g. `./dropdown`) when you need the type.
+// component's own module (e.g. `./menu`) when you need the type.
 
 export { Autocomplete } from './autocomplete';
 export { FloatingActionButton } from './buttons';
@@ -11,7 +11,7 @@ export { Carousel } from './carousel';
 export { CharacterCounter } from './characterCounter';
 export { Chips } from './chips';
 export { Datepicker } from './datepicker';
-export { Dropdown } from './dropdown';
+export { Menu } from './menu';
 export { Lightbox } from './lightbox';
 export { Parallax } from './parallax';
 export { Range } from './range';

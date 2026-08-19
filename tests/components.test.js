@@ -169,7 +169,7 @@ describe('FormSelect', () => {
       <label for="pick">Pick</label>
     </div>`;
 
-  test('builds a dropdown mirroring the native options', () => {
+  test('builds a menu mirroring the native options', () => {
     document.body.innerHTML = fieldHtml;
     const select = document.querySelector('select');
     Expressive.FormSelect.init(select);
@@ -178,7 +178,7 @@ describe('FormSelect', () => {
     assert.ok(wrapper, 'no .field wrapper was created');
 
     const items = wrapper.querySelectorAll('menu[role="listbox"] li');
-    assert.equal(items.length, 3, 'dropdown does not mirror the three <option>s');
+    assert.equal(items.length, 3, 'menu does not mirror the three <option>s');
     assert.deepEqual(
       Array.from(items, (li) => li.textContent.trim()),
       ['Choose', 'One', 'Two']
@@ -214,7 +214,7 @@ describe('FormSelect', () => {
     document.body.innerHTML = fieldHtml;
     const select = document.querySelector('select');
     const instance = Expressive.FormSelect.init(select);
-    const menu = instance.dropdownOptions;
+    const menu = instance.menuEl;
 
     const extra = document.createElement('option');
     extra.value = '3';
@@ -222,7 +222,7 @@ describe('FormSelect', () => {
     select.appendChild(extra);
     instance.refresh();
 
-    assert.equal(instance.dropdownOptions, menu, 'refresh() replaced the Dropdown host');
+    assert.equal(instance.menuEl, menu, 'refresh() replaced the Menu host');
     assert.equal(menu.querySelectorAll('li').length, 4);
     assert.equal(menu.querySelectorAll('li')[3].textContent.trim(), 'Three');
     instance.destroy();
@@ -237,16 +237,16 @@ describe('FormSelect', () => {
     instance.refresh();
 
     assert.equal(instance.input.value, 'Two');
-    assert.ok(instance.dropdownOptions.querySelector('li.selected')?.textContent.includes('Two'));
+    assert.ok(instance.menuEl.querySelector('li.selected')?.textContent.includes('Two'));
     instance.destroy();
   });
 });
 
-describe('Dropdown nested menus', () => {
+describe('Menu nested menus', () => {
   beforeEach(resetBody);
 
   const html = `
-    <button type="button" class="dropdown-trigger" data-target="dn">Drop</button>
+    <button type="button" class="menu-trigger" data-target="dn">Drop</button>
     <menu id="dn">
       <li><a href="#!">One</a></li>
       <li id="more-row">
@@ -257,22 +257,22 @@ describe('Dropdown nested menus', () => {
       </li>
     </menu>`;
 
-  test('does not start a second Dropdown for the nested menu', () => {
+  test('does not start a second Menu for the nested menu', () => {
     document.body.innerHTML = html;
-    const before = Expressive.Dropdown._dropdowns.length;
-    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
-    assert.equal(Expressive.Dropdown._dropdowns.length, before + 1);
+    const before = Expressive.Menu._menus.length;
+    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
+    assert.equal(Expressive.Menu._menus.length, before + 1);
     assert.equal(
       document.getElementById('more-row').querySelector('a').getAttribute('aria-haspopup'),
       'menu'
     );
     instance.destroy();
-    assert.equal(Expressive.Dropdown._dropdowns.length, before);
+    assert.equal(Expressive.Menu._menus.length, before);
   });
 
   test('clicking a submenu parent toggles .open and keeps the root open', () => {
     document.body.innerHTML = html;
-    const instance = Expressive.Dropdown.init(document.querySelector('.dropdown-trigger'));
+    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
     const more = document.getElementById('more-row');
     instance.open();
 

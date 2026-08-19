@@ -1,5 +1,5 @@
 // CSS for sidenav nested sections. Native <details>/<summary> is the
-// dropdown; the retired Collapsible component must not leak back in.
+// section; the retired Collapsible component must not leak back in.
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';

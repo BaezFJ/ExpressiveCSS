@@ -245,19 +245,19 @@ describe('Datepicker redraws', () => {
     });
   });
 
-  test('rebuilding the selects does not leak Dropdown instances', () => {
+  test('rebuilding the selects does not leak Menu instances', () => {
     withDrawCounter(`<input type="text" class="datepicker">`, {}, (input, instance) => {
-      const before = Expressive.Dropdown._dropdowns.length;
+      const before = Expressive.Menu._menus.length;
 
       for (let i = 0; i < 14; i++) instance.nextMonth(); // crosses a year boundary
 
-      // FormSelect.destroy() has to destroy its Dropdown: the instance holds
+      // FormSelect.destroy() has to destroy its Menu: the instance holds
       // itself in the static registry until it does, so every rebuild used to
       // strand two of them permanently.
       assert.equal(
-        Expressive.Dropdown._dropdowns.length,
+        Expressive.Menu._menus.length,
         before,
-        'paging leaked Dropdown instances into the static registry'
+        'paging leaked Menu instances into the static registry'
       );
     });
   });

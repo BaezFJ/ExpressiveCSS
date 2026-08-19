@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Dropdown, DropdownOptions } from './dropdown';
+import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export interface FormSelectOptions extends BaseOptions {
@@ -9,15 +9,15 @@ export interface FormSelectOptions extends BaseOptions {
    */
   classes: string;
   /**
-   * Pass options object to select dropdown initialization.
+   * Pass options object to select menu initialization.
    * @default {}
    */
-  dropdownOptions: Partial<DropdownOptions>;
+  menuOptions: Partial<MenuOptions>;
 }
 
 const _defaults: FormSelectOptions = {
   classes: '',
-  dropdownOptions: {}
+  menuOptions: {}
 };
 
 type ValueStruct = {
@@ -34,12 +34,12 @@ export class FormSelect extends Component<FormSelectOptions> {
    * Is "null", if not detected.
    */
   labelEl: HTMLLabelElement;
-  /** Dropdown menu element. */
-  dropdownOptions: HTMLElement;
+  /** The generated menu element. */
+  menuEl: HTMLElement;
   /** Text input that shows current selected option. */
   input: HTMLInputElement;
-  /** Instance of the dropdown plugin for this select. */
-  dropdown: Dropdown;
+  /** Instance of the menu plugin for this select. */
+  menu: Menu;
   /** The field wrapper around the native select. */
   wrapper: HTMLDivElement;
   selectOptions: (HTMLOptionElement | HTMLOptGroupElement)[];
@@ -64,7 +64,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._values = [];
     this._createdWrapper = false;
     this._originalLabelFor = null;
-    this._setupDropdown();
+    this._setupMenu();
     this._setupEventHandlers();
   }
 
@@ -105,25 +105,25 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   destroy() {
     this._removeEventHandlers();
-    // The Dropdown holds itself in the static Dropdown._dropdowns registry
+    // The Menu holds itself in the static Menu._menus registry
     // until its own destroy() runs, so dropping the elements is not enough -
     // every rebuilt select used to leave an instance behind for good.
-    this.dropdown?.destroy();
-    this._removeDropdown();
+    this.menu?.destroy();
+    this._removeMenu();
     this.el.tabIndex = this.nativeTabIndex;
     this.el['Expressive_FormSelect'] = undefined;
   }
 
   /**
-   * Re-read the native `<select>` and update the generated dropdown to match.
+   * Re-read the native `<select>` and update the generated menu to match.
    *
    * Assigning `select.value` from script fires no `change` event, so nothing
    * else syncs the visible input text or the `.selected` state on the virtual
    * options. Adding or removing `<option>`s also requires this — the menu is
-   * rebuilt from the native list, the field and Dropdown instance stay put.
+   * rebuilt from the native list, the field and Menu instance stay put.
    */
   refresh() {
-    if (!this.dropdownOptions) return;
+    if (!this.menuEl) return;
     this._rebuildOptions();
     this._setValueToInput();
     this._setSelectedStates();
@@ -133,25 +133,25 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._setupOptionHandlers();
     this.el.addEventListener('change', this._handleSelectChange);
     this.input.addEventListener('click', this._handleInputClick);
-    this.dropdownOptions.addEventListener('focusin', this._handleOptionFocus);
+    this.menuEl.addEventListener('focusin', this._handleOptionFocus);
   }
 
   _removeEventHandlers() {
     this._removeOptionHandlers();
     this.el.removeEventListener('change', this._handleSelectChange);
     this.input?.removeEventListener('click', this._handleInputClick);
-    this.dropdownOptions?.removeEventListener('focusin', this._handleOptionFocus);
+    this.menuEl?.removeEventListener('focusin', this._handleOptionFocus);
   }
 
   private _setupOptionHandlers() {
-    this.dropdownOptions.querySelectorAll('li:not(.optgroup)').forEach((el) => {
+    this.menuEl.querySelectorAll('li:not(.optgroup)').forEach((el) => {
       el.addEventListener('click', this._handleOptionClick);
       el.addEventListener('keydown', this._handleOptionKeydown);
     });
   }
 
   private _removeOptionHandlers() {
-    this.dropdownOptions?.querySelectorAll('li:not(.optgroup)').forEach((el) => {
+    this.menuEl?.querySelectorAll('li:not(.optgroup)').forEach((el) => {
       el.removeEventListener('click', this._handleOptionClick);
       el.removeEventListener('keydown', this._handleOptionKeydown);
     });
@@ -211,17 +211,17 @@ export class FormSelect extends Component<FormSelectOptions> {
           new Event('change', { bubbles: true, cancelable: true, composed: true })
         );
     }
-    if (!this.isMultiple) this.dropdown?.close();
+    if (!this.isMultiple) this.menu?.close();
   }
 
   _handleInputClick = () => {
-    if (this.dropdown && this.dropdown.isOpen) {
+    if (this.menu && this.menu.isOpen) {
       this._setValueToInput();
       this._setSelectedStates();
     }
   };
 
-  _setupDropdown() {
+  _setupMenu() {
     // The DOM already knows which labels belong to this control. Building a
     // selector out of the id instead meant an id with any CSS-special
     // character either threw or matched something else entirely.
@@ -231,18 +231,18 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._hideNativeSelect();
     if (this.el.disabled) this.wrapper.classList.add('disabled');
 
-    this.dropdownOptions = document.createElement('menu');
-    this.dropdownOptions.id = `select-options-${Utils.guid()}`;
-    this.dropdownOptions.setAttribute('popover', 'auto');
-    this.dropdownOptions.setAttribute('role', 'listbox');
-    this.dropdownOptions.ariaMultiSelectable = this.isMultiple.toString();
-    if (this.isMultiple) this.dropdownOptions.classList.add('multiple-select-dropdown');
+    this.menuEl = document.createElement('menu');
+    this.menuEl.id = `select-options-${Utils.guid()}`;
+    this.menuEl.setAttribute('popover', 'auto');
+    this.menuEl.setAttribute('role', 'listbox');
+    this.menuEl.ariaMultiSelectable = this.isMultiple.toString();
+    if (this.isMultiple) this.menuEl.classList.add('multiple-select-menu');
     this._buildOptions();
-    this.wrapper.append(this.dropdownOptions);
+    this.wrapper.append(this.menuEl);
 
     this._buildInput();
     this._buildCaret();
-    this._initDropdown();
+    this._initMenu();
     this._setSelectedStates();
     if (this.labelEl) this.input.after(this.labelEl);
   }
@@ -279,10 +279,10 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _buildInput() {
     this.input = document.createElement('input');
     this.input.id = 'select-input-' + Utils.guid();
-    this.input.classList.add('dropdown-trigger');
+    this.input.classList.add('menu-trigger');
     this.input.type = 'text';
     this.input.readOnly = true;
-    this.input.setAttribute('data-target', this.dropdownOptions.id);
+    this.input.setAttribute('data-target', this.menuEl.id);
     this.input.ariaReadOnly = 'true';
     this.input.ariaRequired = this.el.hasAttribute('required').toString();
     if (this.el.disabled) this.input.disabled = true;
@@ -297,7 +297,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.input.setAttribute('role', 'combobox');
     this.input.setAttribute('aria-haspopup', 'listbox');
     this.input.ariaExpanded = 'false';
-    this.input.setAttribute('aria-controls', this.dropdownOptions.id);
+    this.input.setAttribute('aria-controls', this.menuEl.id);
     this.input.placeholder = ' ';
 
     if (this.labelEl) {
@@ -316,40 +316,40 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.wrapper.prepend(caret);
   }
 
-  private _initDropdown() {
+  private _initMenu() {
     if (this.el.disabled) return;
-    const dropdownOptions = { ...this.options.dropdownOptions };
-    dropdownOptions.coverTrigger = false;
-    const userOnOpenEnd = dropdownOptions.onOpenEnd;
-    const userOnCloseEnd = dropdownOptions.onCloseEnd;
-    dropdownOptions.onOpenEnd = () => {
-      const selectedOption = this.dropdownOptions.querySelector('.selected');
+    const menuOptions = { ...this.options.menuOptions };
+    menuOptions.coverTrigger = false;
+    const userOnOpenEnd = menuOptions.onOpenEnd;
+    const userOnCloseEnd = menuOptions.onCloseEnd;
+    menuOptions.onOpenEnd = () => {
+      const selectedOption = this.menuEl.querySelector('.selected');
       if (selectedOption) {
         Utils.keyDown = true;
-        this.dropdown.focusedIndex = [...selectedOption.parentNode.children].indexOf(selectedOption);
-        this.dropdown._focusFocusedItem();
+        this.menu.focusedIndex = [...selectedOption.parentNode.children].indexOf(selectedOption);
+        this.menu._focusFocusedItem();
         Utils.keyDown = false;
-        if (this.dropdown.isScrollable) {
+        if (this.menu.isScrollable) {
           let scrollOffset =
             selectedOption.getBoundingClientRect().top -
-            this.dropdownOptions.getBoundingClientRect().top;
-          scrollOffset -= this.dropdownOptions.clientHeight / 2;
-          this.dropdownOptions.scrollTop = scrollOffset;
+            this.menuEl.getBoundingClientRect().top;
+          scrollOffset -= this.menuEl.clientHeight / 2;
+          this.menuEl.scrollTop = scrollOffset;
         }
         if (selectedOption.id) this.input.setAttribute('aria-activedescendant', selectedOption.id);
       }
       this.input.ariaExpanded = 'true';
       if (userOnOpenEnd && typeof userOnOpenEnd === 'function')
-        userOnOpenEnd.call(this.dropdown, this.el);
+        userOnOpenEnd.call(this.menu, this.el);
     };
-    dropdownOptions.onCloseEnd = () => {
+    menuOptions.onCloseEnd = () => {
       this.input.ariaExpanded = 'false';
       this.input.removeAttribute('aria-activedescendant');
       if (userOnCloseEnd && typeof userOnCloseEnd === 'function')
-        userOnCloseEnd.call(this.dropdown, this.el);
+        userOnCloseEnd.call(this.menu, this.el);
     };
-    dropdownOptions.closeOnClick = false;
-    this.dropdown = Dropdown.init(this.input, dropdownOptions);
+    menuOptions.closeOnClick = false;
+    this.menu = Menu.init(this.input, menuOptions);
   }
 
   private _nativeOptions(): (HTMLOptGroupElement | HTMLOptionElement)[] {
@@ -383,7 +383,7 @@ export class FormSelect extends Component<FormSelectOptions> {
         groupLabel.setAttribute('role', 'presentation');
         groupLabel.textContent = realOption.getAttribute('label') ?? '';
         groupParent.replaceChildren(groupLabel);
-        this.dropdownOptions.append(groupParent);
+        this.menuEl.append(groupParent);
 
         const groupChildren = [];
         const selectOptions = <HTMLOptionElement[]>(
@@ -401,20 +401,20 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   private _rebuildOptions() {
     this._removeOptionHandlers();
-    this.dropdownOptions.replaceChildren();
+    this.menuEl.replaceChildren();
     this._buildOptions();
     this._setupOptionHandlers();
-    this.dropdown?._makeDropdownFocusable();
+    this.menu?._makeMenuFocusable();
   }
 
   _addOptionToValues(realOption: HTMLOptionElement, virtualOption: HTMLElement) {
     this._values.push({ el: realOption, optionEl: virtualOption });
   }
 
-  _removeDropdown() {
+  _removeMenu() {
     this.wrapper?.querySelector(':scope > .caret')?.remove();
     this.input?.remove();
-    this.dropdownOptions?.remove();
+    this.menuEl?.remove();
     const hide = this.el.parentElement;
     if (hide?.classList.contains('hide-select')) hide.replaceWith(this.el);
     if (this.labelEl && this._originalLabelFor !== null) {
@@ -476,7 +476,7 @@ export class FormSelect extends Component<FormSelectOptions> {
       img.ariaHidden = 'true';
       li.prepend(img);
     }
-    this.dropdownOptions.append(li);
+    this.menuEl.append(li);
     return li;
   }
 
@@ -544,7 +544,7 @@ export class FormSelect extends Component<FormSelectOptions> {
       const cb = <HTMLInputElement>value.optionEl.querySelector('input[type="checkbox"]');
       if (cb) cb.checked = optionIsSelected;
       if (optionIsSelected) {
-        this._activateOption(this.dropdownOptions, value.optionEl);
+        this._activateOption(this.menuEl, value.optionEl);
       } else {
         value.optionEl.classList.remove('selected');
         value.optionEl.ariaSelected = 'false';

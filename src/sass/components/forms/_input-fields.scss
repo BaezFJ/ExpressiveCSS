@@ -293,8 +293,8 @@ textarea {
   li {
     .highlight { color: var(--md-sys-color-on-surface); }
     img {
-      height: $dropdown-item-height - 10;
-      width: $dropdown-item-height - 10;
+      height: $menu-item-height - 10;
+      width: $menu-item-height - 10;
       margin: 5px 15px;
     }
   }

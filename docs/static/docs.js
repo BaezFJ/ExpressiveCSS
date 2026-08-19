@@ -140,33 +140,33 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  const dropdownLeft = document.getElementById('dropdown-left-trigger');
-  if (dropdownLeft) {
-    Expressive.Dropdown.init(dropdownLeft, {
+  const menuLeft = document.getElementById('menu-left-trigger');
+  if (menuLeft) {
+    Expressive.Menu.init(menuLeft, {
       alignment: 'left',
       constrainWidth: false,
     });
   }
 
-  const dropdownRight = document.getElementById('dropdown-right-trigger');
-  if (dropdownRight) {
-    Expressive.Dropdown.init(dropdownRight, {
+  const menuRight = document.getElementById('menu-right-trigger');
+  if (menuRight) {
+    Expressive.Menu.init(menuRight, {
       alignment: 'right',
       constrainWidth: false,
     });
   }
 
-  const dropdownHover = document.getElementById('dropdown-hover-trigger');
-  if (dropdownHover) {
-    Expressive.Dropdown.init(dropdownHover, {
+  const menuHover = document.getElementById('menu-hover-trigger');
+  if (menuHover) {
+    Expressive.Menu.init(menuHover, {
       hover: true,
       constrainWidth: false,
     });
   }
 
-  const dropdownNested = document.getElementById('dropdown-nested-trigger');
-  if (dropdownNested) {
-    Expressive.Dropdown.init(dropdownNested, {
+  const menuNested = document.getElementById('menu-nested-trigger');
+  if (menuNested) {
+    Expressive.Menu.init(menuNested, {
       constrainWidth: false,
       coverTrigger: false
     });

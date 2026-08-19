@@ -1,6 +1,6 @@
 @use "../../abstracts" as *;
 
-// Select (exposed dropdown).
+// Select (exposed menu).
 //
 // Anatomy is the HTML. A <select> is the control. FormSelect wraps it
 // in .field (or reuses an existing one) and paints a text field + menu.
@@ -8,7 +8,7 @@
 // expand icon (CSS, not an SVG node).
 //
 // Tokens follow https://m3.material.io/components/menus/overview
-// (exposed dropdown = text field + menu) and the filled/outlined field
+// (exposed menu = text field + menu) and the filled/outlined field
 // tokens in _input-fields.scss.
 //   field          56dp, same chrome as .field
 //   trailing icon  24dp, 12dp from the end, rotates when open
@@ -80,11 +80,11 @@ select.browser-default {
   position: relative;
   border-radius: var(--md-comp-filled-select-container-shape);
 
-  > input.dropdown-trigger {
+  > input.menu-trigger {
     border-radius: inherit;
   }
 
-  > input.dropdown-trigger {
+  > input.menu-trigger {
     padding-inline-end: 52px;
   }
 
@@ -144,7 +144,7 @@ select.browser-default {
   }
 }
 
-.field:has(> .hide-select) > input.dropdown-trigger:disabled {
+.field:has(> .hide-select) > input.menu-trigger:disabled {
   cursor: default;
   user-select: none;
 }
@@ -165,7 +165,7 @@ menu[role="listbox"] > li.selected:not(.disabled, .optgroup) {
 }
 
 // Single-select: trailing check. Multi-select already has a leading checkbox.
-menu[role="listbox"]:not(.multiple-select-dropdown) > li.selected:not(.disabled, .optgroup)::after {
+menu[role="listbox"]:not(.multiple-select-menu) > li.selected:not(.disabled, .optgroup)::after {
   content: "";
   flex: 0 0 24px;
   width: 24px;

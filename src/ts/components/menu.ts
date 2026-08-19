@@ -1,39 +1,39 @@
 import { Utils } from '../core/utils';
 import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
-export interface DropdownOptions extends BaseOptions {
+export interface MenuOptions extends BaseOptions {
   /**
    * Defines the edge the menu is aligned to.
    * @default 'left'
    */
   alignment: 'left' | 'right';
   /**
-   * If true, automatically focus dropdown el for keyboard.
+   * If true, automatically focus menu el for keyboard.
    * @default true
    */
   autoFocus: boolean;
   /**
-   * If true, constrainWidth to the size of the dropdown activator.
+   * If true, constrainWidth to the size of the menu activator.
    * @default true
    */
   constrainWidth: boolean;
   /**
-   * Provide an element that will be the bounding container of the dropdown.
+   * Provide an element that will be the bounding container of the menu.
    * @default null
    */
   container: Element;
   /**
-   * If false, the dropdown will show below the trigger.
+   * If false, the menu will show below the trigger.
    * @default true
    */
   coverTrigger: boolean;
   /**
-   * If true, close dropdown on item click.
+   * If true, close menu on item click.
    * @default true
    */
   closeOnClick: boolean;
   /**
-   * If true, the dropdown will open on hover.
+   * If true, the menu will open on hover.
    * @default false
    */
   hover: boolean;
@@ -48,22 +48,22 @@ export interface DropdownOptions extends BaseOptions {
    */
   outDuration: number;
   /**
-   * Function called when dropdown starts entering.
+   * Function called when menu starts entering.
    * @default null
    */
   onOpenStart: (el: HTMLElement) => void;
   /**
-   * Function called when dropdown finishes entering.
+   * Function called when menu finishes entering.
    * @default null
    */
   onOpenEnd: (el: HTMLElement) => void;
   /**
-   * Function called when dropdown starts exiting.
+   * Function called when menu starts exiting.
    * @default null
    */
   onCloseStart: (el: HTMLElement) => void;
   /**
-   * Function called when dropdown finishes exiting.
+   * Function called when menu finishes exiting.
    * @default null
    */
   onCloseEnd: (el: HTMLElement) => void;
@@ -74,7 +74,7 @@ export interface DropdownOptions extends BaseOptions {
   onItemClick: (el: HTMLLIElement) => void;
 }
 
-const _defaults: DropdownOptions = {
+const _defaults: MenuOptions = {
   alignment: 'left',
   autoFocus: true,
   constrainWidth: true,
@@ -91,15 +91,15 @@ const _defaults: DropdownOptions = {
   onItemClick: null
 };
 
-export class Dropdown extends Component<DropdownOptions> implements Openable {
-  static _dropdowns: Dropdown[] = [];
-  /** ID of the dropdown element. */
+export class Menu extends Component<MenuOptions> implements Openable {
+  static _menus: Menu[] = [];
+  /** ID of the menu element. */
   id: string;
-  /** The DOM element of the dropdown. */
-  dropdownEl: HTMLElement;
-  /** If the dropdown is open. */
+  /** The DOM element of the menu. */
+  menuEl: HTMLElement;
+  /** If the menu is open. */
   isOpen: boolean;
-  /** If the dropdown content is scrollable. */
+  /** If the menu content is scrollable. */
   isScrollable: boolean;
   isTouchMoving: boolean;
   /** The index of the item focused. */
@@ -107,16 +107,16 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   filterQuery: string[];
   filterTimeout: ReturnType<typeof setTimeout>;
 
-  constructor(el: HTMLElement, options: Partial<DropdownOptions>) {
-    super(el, options, Dropdown);
-    this.el['Expressive_Dropdown'] = this;
+  constructor(el: HTMLElement, options: Partial<MenuOptions>) {
+    super(el, options, Menu);
+    this.el['Expressive_Menu'] = this;
 
-    Dropdown._dropdowns.push(this);
+    Menu._menus.push(this);
     this.id = Utils.getIdFromTrigger(el);
-    this.dropdownEl = document.getElementById(this.id);
+    this.menuEl = document.getElementById(this.id);
 
     this.options = {
-      ...Dropdown.defaults,
+      ...Menu.defaults,
       ...options
     };
 
@@ -128,69 +128,69 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     this.el.ariaExpanded = 'false';
 
     // Keep the menu next to the trigger so positioning stays local.
-    this._moveDropdownToElement();
-    this._makeDropdownFocusable();
+    this._moveMenuToElement();
+    this._makeMenuFocusable();
     this._setupSubmenus();
     this._setupEventHandlers();
   }
 
-  static get defaults(): DropdownOptions {
+  static get defaults(): MenuOptions {
     return _defaults;
   }
 
   /**
-   * Initializes instance of Dropdown.
+   * Initializes instance of Menu.
    * @param el HTML element.
    * @param options Component options.
    */
-  static init(el: HTMLElement, options?: Partial<DropdownOptions>): Dropdown;
+  static init(el: HTMLElement, options?: Partial<MenuOptions>): Menu;
   /**
-   * Initializes instances of Dropdown.
+   * Initializes instances of Menu.
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<InitElement>, options?: Partial<DropdownOptions>): Dropdown[];
+  static init(els: InitElements<InitElement>, options?: Partial<MenuOptions>): Menu[];
   /**
-   * Initializes instances of Dropdown.
+   * Initializes instances of Menu.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
     els: HTMLElement | InitElements<InitElement>,
-    options: Partial<DropdownOptions> = {}
-  ): Dropdown | Dropdown[] {
-    return super.init(els, options, Dropdown);
+    options: Partial<MenuOptions> = {}
+  ): Menu | Menu[] {
+    return super.init(els, options, Menu);
   }
 
-  static getInstance(el: HTMLElement): Dropdown {
-    return el['Expressive_Dropdown'];
+  static getInstance(el: HTMLElement): Menu {
+    return el['Expressive_Menu'];
   }
 
   destroy() {
     clearTimeout(this.filterTimeout);
-    this._resetDropdownStyles();
+    this._resetMenuStyles();
     this._removeEventHandlers();
     // Temporary handlers only exist while open, but removing them is a no-op
     // otherwise and leaving them attached leaks the instance.
     this._removeTemporaryEventHandlers();
-    const index = Dropdown._dropdowns.indexOf(this);
-    if (index >= 0) Dropdown._dropdowns.splice(index, 1);
-    this.el['Expressive_Dropdown'] = undefined;
+    const index = Menu._menus.indexOf(this);
+    if (index >= 0) Menu._menus.splice(index, 1);
+    this.el['Expressive_Menu'] = undefined;
   }
 
   _setupEventHandlers() {
     // Trigger keydown handler
     this.el.addEventListener('keydown', this._handleTriggerKeydown);
     // Item click handler
-    this.dropdownEl?.addEventListener('click', this._handleDropdownClick);
-    if (this.dropdownEl?.querySelector(':scope > li > menu')) {
-      this.dropdownEl.addEventListener('mouseover', this._handleSubmenuAlign);
+    this.menuEl?.addEventListener('click', this._handleMenuClick);
+    if (this.menuEl?.querySelector(':scope > li > menu')) {
+      this.menuEl.addEventListener('mouseover', this._handleSubmenuAlign);
     }
     // Hover event handlers
     if (this.options.hover) {
       this.el.addEventListener('mouseenter', this._handleMouseEnter);
       this.el.addEventListener('mouseleave', this._handleMouseLeave);
-      this.dropdownEl.addEventListener('mouseleave', this._handleMouseLeave);
+      this.menuEl.addEventListener('mouseleave', this._handleMouseLeave);
       // Click event handlers
     } else {
       this.el.addEventListener('click', this._handleClick);
@@ -198,16 +198,16 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   }
 
   _removeEventHandlers() {
-    // `dropdownEl` is optional-chained on the way in (the trigger may point at
+    // `menuEl` is optional-chained on the way in (the trigger may point at
     // an id that does not resolve); it has to be here too, or destroy() throws
     // before it can detach anything else.
     this.el.removeEventListener('keydown', this._handleTriggerKeydown);
-    this.dropdownEl?.removeEventListener('click', this._handleDropdownClick);
-    this.dropdownEl?.removeEventListener('mouseover', this._handleSubmenuAlign);
+    this.menuEl?.removeEventListener('click', this._handleMenuClick);
+    this.menuEl?.removeEventListener('mouseover', this._handleSubmenuAlign);
     if (this.options.hover) {
       this.el.removeEventListener('mouseenter', this._handleMouseEnter);
       this.el.removeEventListener('mouseleave', this._handleMouseLeave);
-      this.dropdownEl?.removeEventListener('mouseleave', this._handleMouseLeave);
+      this.menuEl?.removeEventListener('mouseleave', this._handleMouseLeave);
     } else {
       this.el.removeEventListener('click', this._handleClick);
     }
@@ -216,20 +216,20 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   _setupTemporaryEventHandlers() {
     document.body.addEventListener('click', this._handleDocumentClick);
     document.body.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
-    this.dropdownEl?.addEventListener('keydown', this._handleDropdownKeydown);
+    this.menuEl?.addEventListener('keydown', this._handleMenuKeydown);
     window.addEventListener('resize', this._handleWindowResize);
   }
 
   _removeTemporaryEventHandlers() {
     document.body.removeEventListener('click', this._handleDocumentClick);
     document.body.removeEventListener('touchmove', this._handleDocumentTouchmove);
-    this.dropdownEl?.removeEventListener('keydown', this._handleDropdownKeydown);
+    this.menuEl?.removeEventListener('keydown', this._handleMenuKeydown);
     window.removeEventListener('resize', this._handleWindowResize);
   }
 
   _handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    //this._moveDropdown((<HTMLElement>e.target).closest('li'));
+    //this._moveMenu((<HTMLElement>e.target).closest('li'));
     if (this.isOpen) {
       this.close();
     } else {
@@ -238,7 +238,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   };
 
   _handleMouseEnter = () => {
-    //this._moveDropdown((<HTMLElement>e.target).closest('li'));
+    //this._moveMenu((<HTMLElement>e.target).closest('li'));
     this.open();
   };
 
@@ -249,14 +249,14 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
       this.close();
       return;
     }
-    const leaveToDropdownContent = !!(this.dropdownEl && toEl && this.dropdownEl.contains(toEl));
-    let leaveToActiveDropdownTrigger = false;
-    const closestTrigger = toEl.closest('.dropdown-trigger');
-    if (closestTrigger && !!closestTrigger['Expressive_Dropdown'] && closestTrigger['Expressive_Dropdown'].isOpen) {
-      leaveToActiveDropdownTrigger = true;
+    const leaveToMenuContent = !!(this.menuEl && toEl && this.menuEl.contains(toEl));
+    let leaveToActiveMenuTrigger = false;
+    const closestTrigger = toEl.closest('.menu-trigger');
+    if (closestTrigger && !!closestTrigger['Expressive_Menu'] && closestTrigger['Expressive_Menu'].isOpen) {
+      leaveToActiveMenuTrigger = true;
     }
-    // Close hover dropdown if mouse did not leave to either active dropdown-trigger or dropdown-content
-    if (!leaveToActiveDropdownTrigger && !leaveToDropdownContent) {
+    // Close hover menu if mouse did not leave to either active menu-trigger or menu-content
+    if (!leaveToActiveMenuTrigger && !leaveToMenuContent) {
       this.close();
     }
   };
@@ -264,12 +264,12 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   _handleDocumentClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
     if (this._isSubmenuTriggerClick(target)) return;
-    if (this.options.closeOnClick && this.dropdownEl?.contains(target) && !this.isTouchMoving) {
+    if (this.options.closeOnClick && this.menuEl?.contains(target) && !this.isTouchMoving) {
       // isTouchMoving to check if scrolling on mobile.
       this.close();
-    } else if (!this.dropdownEl?.contains(target)) {
+    } else if (!this.menuEl?.contains(target)) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
-      // For example, if a label for a select was clicked, that we don't close/open the dropdown
+      // For example, if a label for a select was clicked, that we don't close/open the menu
       setTimeout(() => {
         if (this.isOpen) {
           this.close();
@@ -280,7 +280,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   };
 
   _handleTriggerKeydown = (e: KeyboardEvent) => {
-    // ARROW DOWN OR ENTER WHEN SELECT IS CLOSED - open Dropdown
+    // ARROW DOWN OR ENTER WHEN SELECT IS CLOSED - open Menu
     const arrowDownOrEnter =
       Utils.keys.ARROW_DOWN.includes(e.key) || Utils.keys.ENTER.includes(e.key);
     if (arrowDownOrEnter && !this.isOpen) {
@@ -291,12 +291,12 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _handleDocumentTouchmove = (e: TouchEvent) => {
     const target = <HTMLElement>e.target;
-    if (this.dropdownEl?.contains(target)) {
+    if (this.menuEl?.contains(target)) {
       this.isTouchMoving = true;
     }
   };
 
-  _handleDropdownClick = (e: MouseEvent) => {
+  _handleMenuClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
     const li = target.closest('li');
     if (li && this._isSubmenuTriggerClick(target)) {
@@ -311,16 +311,16 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   };
 
   private _isSubmenuTriggerClick(target: HTMLElement) {
-    if (!this.dropdownEl) return false;
+    if (!this.menuEl) return false;
     const li = target.closest('li');
-    if (!li || !this.dropdownEl.contains(li)) return false;
+    if (!li || !this.menuEl.contains(li)) return false;
     const submenu = li.querySelector(':scope > menu');
     if (!submenu) return false;
     return !submenu.contains(target);
   }
 
   private _setupSubmenus() {
-    this.dropdownEl?.querySelectorAll('li').forEach((li) => {
+    this.menuEl?.querySelectorAll('li').forEach((li) => {
       if (!li.querySelector(':scope > menu')) return;
       const trigger = li.querySelector(':scope > a, :scope > button, :scope > span') ?? li;
       trigger.setAttribute('aria-haspopup', 'menu');
@@ -350,7 +350,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     const target = e.target;
     if (!(target instanceof Element)) return;
     const li = target.closest('li');
-    if (li?.querySelector(':scope > menu') && this.dropdownEl?.contains(li)) {
+    if (li?.querySelector(':scope > menu') && this.menuEl?.contains(li)) {
       this._alignSubmenu(li as HTMLElement);
     }
   };
@@ -367,7 +367,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   }
 
   private _closeSubmenus() {
-    this.dropdownEl?.querySelectorAll('li.open').forEach((li) => {
+    this.menuEl?.querySelectorAll('li.open').forEach((li) => {
       li.classList.remove('open', 'submenu-start');
       this._syncSubmenuAria(li as HTMLElement, false);
     });
@@ -377,7 +377,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     const target = e.target;
     if (!(target instanceof Element)) return null;
     const submenu = target.closest('li > menu');
-    if (submenu instanceof HTMLElement && this.dropdownEl?.contains(submenu)) return submenu;
+    if (submenu instanceof HTMLElement && this.menuEl?.contains(submenu)) return submenu;
     return null;
   }
 
@@ -385,11 +385,11 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     const target = e.target;
     if (!(target instanceof Element)) return null;
     const li = target.closest('li');
-    if (li instanceof HTMLElement && this.dropdownEl?.contains(li)) return li;
+    if (li instanceof HTMLElement && this.menuEl?.contains(li)) return li;
     return null;
   }
 
-  _handleDropdownKeydown = (e: KeyboardEvent) => {
+  _handleMenuKeydown = (e: KeyboardEvent) => {
     const arrowUpOrDown =
       Utils.keys.ARROW_DOWN.includes(e.key) || Utils.keys.ARROW_UP.includes(e.key);
     if (Utils.keys.TAB.includes(e.key)) {
@@ -416,11 +416,11 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
         parentLi.focus();
       }
     }
-    // Navigate down dropdown list
+    // Navigate down menu list
     else if (arrowUpOrDown && this.isOpen) {
       e.preventDefault();
       const direction = Utils.keys.ARROW_DOWN.includes(e.key) ? 1 : -1;
-      const list = this._containingSubmenu(e) ?? this.dropdownEl;
+      const list = this._containingSubmenu(e) ?? this.menuEl;
       let newFocusedIndex = this.focusedIndex;
       let hasFoundNewIndex = false;
       do {
@@ -451,7 +451,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
         this._toggleSubmenu(li);
         return;
       }
-      const focusedElement = li ?? this.dropdownEl.children[this.focusedIndex];
+      const focusedElement = li ?? this.menuEl.children[this.focusedIndex];
       const activatableElement = <HTMLElement>focusedElement?.querySelector('a, button');
       if (!!activatableElement) {
         activatableElement.click();
@@ -459,10 +459,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
         focusedElement.click();
       }
     }
-    // Close dropdown on ESC
+    // Close menu on ESC
     else if (Utils.keys.ESC.includes(e.key) && this.isOpen) {
       e.preventDefault();
-      const openSub = this.dropdownEl.querySelector('li.open');
+      const openSub = this.menuEl.querySelector('li.open');
       if (openSub) {
         openSub.classList.remove('open', 'submenu-start');
         this._syncSubmenuAria(openSub as HTMLElement, false);
@@ -487,7 +487,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
       const string = this.filterQuery.join('');
       // textContent rather than innerText: this scans every item on every
       // keystroke, and innerText forces a layout flush per item.
-      const list = this._containingSubmenu(e) ?? this.dropdownEl;
+      const list = this._containingSubmenu(e) ?? this.menuEl;
       const newOptionEl = Array.from(list.querySelectorAll(':scope > li')).find(
         (el) => el.textContent.trim().toLowerCase().indexOf(string) === 0
       );
@@ -503,7 +503,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   };
 
   _handleWindowResize = () => {
-    // Only re-place the dropdown if it's still visible
+    // Only re-place the menu if it's still visible
     // Accounts for elements hiding via media queries
     if (this.el.offsetParent) {
       this.recalculateDimensions();
@@ -514,40 +514,40 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     this.filterQuery = [];
   };
 
-  _resetDropdownStyles() {
-    this.dropdownEl.style.display = '';
-    this._resetDropdownPositioningStyles();
-    this.dropdownEl.style.transform = '';
-    this.dropdownEl.style.opacity = '';
+  _resetMenuStyles() {
+    this.menuEl.style.display = '';
+    this._resetMenuPositioningStyles();
+    this.menuEl.style.transform = '';
+    this.menuEl.style.opacity = '';
   }
 
-  _resetDropdownPositioningStyles() {
-    this.dropdownEl.style.width = '';
-    this.dropdownEl.style.height = '';
-    this.dropdownEl.style.left = '';
-    this.dropdownEl.style.top = '';
-    this.dropdownEl.style.transformOrigin = '';
+  _resetMenuPositioningStyles() {
+    this.menuEl.style.width = '';
+    this.menuEl.style.height = '';
+    this.menuEl.style.left = '';
+    this.menuEl.style.top = '';
+    this.menuEl.style.transformOrigin = '';
   }
 
-  _moveDropdownToElement(containerEl: HTMLElement = null) {
+  _moveMenuToElement(containerEl: HTMLElement = null) {
     if (this.options.container) {
-      this.options.container.append(this.dropdownEl);
+      this.options.container.append(this.menuEl);
       return;
     }
     if (containerEl) {
-      if (!containerEl.contains(this.dropdownEl)) containerEl.append(this.dropdownEl);
+      if (!containerEl.contains(this.menuEl)) containerEl.append(this.menuEl);
       return;
     }
-    this.el.after(this.dropdownEl);
+    this.el.after(this.menuEl);
   }
 
-  _makeDropdownFocusable() {
-    if (!this.dropdownEl) return;
-    this.dropdownEl.popover = '';
+  _makeMenuFocusable() {
+    if (!this.menuEl) return;
+    this.menuEl.popover = '';
     // Needed for arrow key navigation
-    this.dropdownEl.tabIndex = 0;
+    this.menuEl.tabIndex = 0;
     // Only set tabindex if it hasn't been set by user
-    this.dropdownEl.querySelectorAll(':scope li, :scope > hr').forEach((el) => {
+    this.menuEl.querySelectorAll(':scope li, :scope > hr').forEach((el) => {
       if (el instanceof HTMLHRElement || el.classList.contains('divider')) {
         el.setAttribute('tabindex', '-1');
         return;
@@ -559,13 +559,13 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   _focusFocusedItem() {
     if (
       this.focusedIndex >= 0 &&
-      this.focusedIndex < this.dropdownEl.children.length &&
+      this.focusedIndex < this.menuEl.children.length &&
       this.options.autoFocus
     ) {
-      (this.dropdownEl.children[this.focusedIndex] as HTMLElement).focus({
+      (this.menuEl.children[this.focusedIndex] as HTMLElement).focus({
         preventScroll: true
       });
-      this.dropdownEl.children[this.focusedIndex].scrollIntoView({
+      this.menuEl.children[this.focusedIndex].scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
         inline: 'nearest'
@@ -573,17 +573,17 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     }
   }
 
-  _getDropdownPosition(closestOverflowParent: HTMLElement) {
+  _getMenuPosition(closestOverflowParent: HTMLElement) {
     // const offsetParentBRect = this.el.offsetParent.getBoundingClientRect();
     const triggerBRect = this.el.getBoundingClientRect();
-    const dropdownBRect = this.dropdownEl.getBoundingClientRect();
+    const menuBRect = this.menuEl.getBoundingClientRect();
 
-    let idealHeight = dropdownBRect.height;
-    let idealWidth = dropdownBRect.width;
-    let idealXPos = triggerBRect.left - dropdownBRect.left;
-    let idealYPos = triggerBRect.top - dropdownBRect.top;
+    let idealHeight = menuBRect.height;
+    let idealWidth = menuBRect.width;
+    let idealXPos = triggerBRect.left - menuBRect.left;
+    let idealYPos = triggerBRect.top - menuBRect.top;
 
-    const dropdownBounds = {
+    const menuBounds = {
       left: idealXPos,
       top: idealYPos,
       height: idealHeight,
@@ -593,7 +593,7 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     const alignments = Utils.checkPossibleAlignments(
       this.el,
       closestOverflowParent,
-      dropdownBounds,
+      menuBounds,
       this.options.coverTrigger ? 0 : triggerBRect.height
     );
 
@@ -648,10 +648,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
     if (verticalAlignment === 'bottom') {
       idealYPos =
-        idealYPos - dropdownBRect.height + (this.options.coverTrigger ? triggerBRect.height : 0);
+        idealYPos - menuBRect.height + (this.options.coverTrigger ? triggerBRect.height : 0);
     }
     if (horizontalAlignment === 'right') {
-      idealXPos = idealXPos - dropdownBRect.width + triggerBRect.width;
+      idealXPos = idealXPos - menuBRect.width + triggerBRect.width;
     }
     return {
       x: idealXPos,
@@ -665,19 +665,19 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
 
   _animateIn() {
     const duration = this.options.inDuration;
-    this.dropdownEl.style.transition = 'none';
+    this.menuEl.style.transition = 'none';
     // from
-    this.dropdownEl.style.opacity = '0';
-    this.dropdownEl.style.transform = 'scale(0.3, 0.3)';
+    this.menuEl.style.opacity = '0';
+    this.menuEl.style.transform = 'scale(0.3, 0.3)';
     setTimeout(() => {
       // easeOutQuad (opacity) & easeOutQuint
-      this.dropdownEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
+      this.menuEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
       // to
-      this.dropdownEl.style.opacity = '1';
-      this.dropdownEl.style.transform = 'scale(1, 1)';
+      this.menuEl.style.opacity = '1';
+      this.menuEl.style.transform = 'scale(1, 1)';
     }, 1);
     setTimeout(() => {
-      if (this.options.autoFocus) this.dropdownEl.focus();
+      if (this.options.autoFocus) this.menuEl.focus();
       if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
     }, duration);
   }
@@ -685,12 +685,12 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   _animateOut() {
     const duration = this.options.outDuration;
     // easeOutQuad (opacity) & easeOutQuint
-    this.dropdownEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
+    this.menuEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
     // to
-    this.dropdownEl.style.opacity = '0';
-    this.dropdownEl.style.transform = 'scale(0.3, 0.3)';
+    this.menuEl.style.opacity = '0';
+    this.menuEl.style.transform = 'scale(0.3, 0.3)';
     setTimeout(() => {
-      this._resetDropdownStyles();
+      this._resetMenuStyles();
       if (typeof this.options.onCloseEnd === 'function')
         this.options.onCloseEnd.call(this, this.el);
     }, duration);
@@ -707,10 +707,10 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     return null;
   }
 
-  _placeDropdown() {
+  _placeMenu() {
     // Container here will be closest ancestor with overflow: hidden
     let closestOverflowParent: HTMLElement = this._getClosestAncestor(
-      this.dropdownEl,
+      this.menuEl,
       (ancestor: HTMLElement) => {
         return (
           !['HTML', 'BODY'].includes(ancestor.tagName) &&
@@ -721,33 +721,33 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
     // Fallback
     if (!closestOverflowParent) {
       closestOverflowParent = <HTMLElement>(
-        (!!this.dropdownEl.offsetParent ? this.dropdownEl.offsetParent : this.dropdownEl.parentNode)
+        (!!this.menuEl.offsetParent ? this.menuEl.offsetParent : this.menuEl.parentNode)
       );
     }
 
     if (getComputedStyle(closestOverflowParent).position === 'static')
       closestOverflowParent.style.position = 'relative';
 
-    //this._moveDropdown(closestOverflowParent);
+    //this._moveMenu(closestOverflowParent);
 
     // Set width before calculating positionInfo
     const idealWidth = this.options.constrainWidth
       ? this.el.getBoundingClientRect().width
-      : this.dropdownEl.getBoundingClientRect().width;
-    this.dropdownEl.style.width = idealWidth + 'px';
+      : this.menuEl.getBoundingClientRect().width;
+    this.menuEl.style.width = idealWidth + 'px';
 
-    const positionInfo = this._getDropdownPosition(closestOverflowParent);
-    this.dropdownEl.style.left = positionInfo.x + 'px';
-    this.dropdownEl.style.top = positionInfo.y + 'px';
-    this.dropdownEl.style.height = positionInfo.height + 'px';
-    this.dropdownEl.style.width = positionInfo.width + 'px';
-    this.dropdownEl.style.transformOrigin = `${
+    const positionInfo = this._getMenuPosition(closestOverflowParent);
+    this.menuEl.style.left = positionInfo.x + 'px';
+    this.menuEl.style.top = positionInfo.y + 'px';
+    this.menuEl.style.height = positionInfo.height + 'px';
+    this.menuEl.style.width = positionInfo.width + 'px';
+    this.menuEl.style.transformOrigin = `${
       positionInfo.horizontalAlignment === 'left' ? '0' : '100%'
     } ${positionInfo.verticalAlignment === 'top' ? '0' : '100%'}`;
   }
 
   /**
-   * Open dropdown.
+   * Open menu.
    */
   open = () => {
     if (this.isOpen) return;
@@ -757,18 +757,18 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
       this.options.onOpenStart.call(this, this.el);
     }
     // Reset styles
-    this._resetDropdownStyles();
-    this.dropdownEl.style.display = 'block';
-    this._placeDropdown();
+    this._resetMenuStyles();
+    this.menuEl.style.display = 'block';
+    this._placeMenu();
     this._animateIn();
     // Do this one frame later so that we don't bind an event handler that's immediately
-    // called when the event bubbles up to the document and closes the dropdown
+    // called when the event bubbles up to the document and closes the menu
     setTimeout(() => this._setupTemporaryEventHandlers(), 0);
     this.el.ariaExpanded = 'true';
   };
 
   /**
-   * Close dropdown.
+   * Close menu.
    */
   close = () => {
     if (!this.isOpen) return;
@@ -788,12 +788,12 @@ export class Dropdown extends Component<DropdownOptions> implements Openable {
   };
 
   /**
-   * While dropdown is open, you can recalculate its dimensions if its contents have changed.
+   * While menu is open, you can recalculate its dimensions if its contents have changed.
    */
   recalculateDimensions = () => {
     if (this.isOpen) {
-      this._resetDropdownPositioningStyles();
-      this._placeDropdown();
+      this._resetMenuPositioningStyles();
+      this._placeMenu();
     }
   };
 }

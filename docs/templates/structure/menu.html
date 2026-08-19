@@ -1,11 +1,11 @@
 {% extends "docs.html" %}
 {% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Dropdown - ExpressiveCSS{% endblock %}
-{% block page_title %}Dropdown{% endblock %}
+{% block title %}Menu - ExpressiveCSS{% endblock %}
+{% block page_title %}Menu{% endblock %}
 
 {% block page %}
-{{ Banner("Dropdown", "Material Design 3 menus, from the HTML.") }}
+{{ Banner("Menu", "Material Design 3 menus, from the HTML.") }}
 
 <div class="container">
   <div class="row">
@@ -17,7 +17,7 @@
           is an item, an <code>&lt;hr&gt;</code> is a divider, and an
           <code>&lt;i&gt;</code> inside the item is the leading icon. The
           trigger’s <code>data-target</code> must match the menu’s
-          <code>id</code>. <code>.dropdown-trigger</code> is still required —
+          <code>id</code>. <code>.menu-trigger</code> is still required —
           that is the JavaScript contract.
         </p>
         <p>
@@ -29,16 +29,16 @@
           <code>on-surface-variant</code>. Hover is an 8% state layer.
         </p>
         <p>
-          <code>AutoInit()</code> starts every <code>.dropdown-trigger</code>
+          <code>AutoInit()</code> starts every <code>.menu-trigger</code>
           except those marked <code>no-autoinit</code>. Menus open on click
           by default. M3 opens the menu below the trigger; pass
           <code>coverTrigger: false</code> for that. The default still
           covers the trigger so Select is unchanged.
         </p>
         <p>
-          <button type="button" class="dropdown-trigger" data-target="dropdown1">Drop me</button>
+          <button type="button" class="menu-trigger" data-target="menu1">Drop me</button>
         </p>
-        <menu id="dropdown1">
+        <menu id="menu1">
           <li><a href="#!">One</a></li>
           <li><a href="#!">Two</a></li>
           <hr>
@@ -56,7 +56,7 @@
             </a>
           </li>
         </menu>
-<pre><code>&lt;button class="dropdown-trigger" data-target="menu1"&gt;Drop me&lt;/button&gt;
+<pre><code>&lt;button class="menu-trigger" data-target="menu1"&gt;Drop me&lt;/button&gt;
 &lt;menu id="menu1"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;One&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="#!"&gt;Two&lt;/a&gt;&lt;/li&gt;
@@ -71,26 +71,26 @@
 &lt;/menu&gt;</code></pre>
         <p>
           For a menu inside a top app bar, see
-          <a href="{{ url_for('navbar') }}#navbar-dropdown">Navbar Dropdown</a>.
+          <a href="{{ url_for('navbar') }}#navbar-menu">Navbar menu</a>.
         </p>
       </div>
 
       <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
         <p>
-          The IIFE bundle exposes <code>Expressive.Dropdown</code>.
+          The IIFE bundle exposes <code>Expressive.Menu</code>.
           Call <code>init</code> yourself when you need options other than
           the defaults, or let <code>Expressive.AutoInit()</code> start
-          every <code>.dropdown-trigger</code>.
+          every <code>.menu-trigger</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  Expressive.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
+  Expressive.Menu.init(document.querySelectorAll('.menu-trigger'), {
     coverTrigger: false
   });
 });</code></pre>
         <p>Per-instance options can also be passed through AutoInit:</p>
 <pre><code>Expressive.AutoInit(document.body, {
-  Dropdown: { constrainWidth: false, coverTrigger: false }
+  Menu: { constrainWidth: false, coverTrigger: false }
 });</code></pre>
       </div>
 
@@ -200,10 +200,10 @@
           pick an edge.
         </p>
         <p>
-          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-left-trigger" data-target="dropdown-left">Left</button>
-          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-right-trigger" data-target="dropdown-right">Right</button>
+          <button type="button" class="menu-trigger no-autoinit" id="menu-left-trigger" data-target="menu-left">Left</button>
+          <button type="button" class="menu-trigger no-autoinit" id="menu-right-trigger" data-target="menu-right">Right</button>
         </p>
-        <menu id="dropdown-left">
+        <menu id="menu-left">
           <li><a href="#!">One</a></li>
           <li><a href="#!">Two</a></li>
           <hr>
@@ -215,7 +215,7 @@
             </a>
           </li>
         </menu>
-        <menu id="dropdown-right">
+        <menu id="menu-right">
           <li><a href="#!">One</a></li>
           <li><a href="#!">Two</a></li>
           <hr>
@@ -227,7 +227,7 @@
             </a>
           </li>
         </menu>
-<pre><code>Expressive.Dropdown.init(document.querySelector('#left'), {
+<pre><code>Expressive.Menu.init(document.querySelector('#left'), {
   alignment: 'left',
   constrainWidth: false,
   coverTrigger: false
@@ -237,15 +237,15 @@
           mouse enter instead of click.
         </p>
         <p>
-          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-hover-trigger" data-target="dropdown-hover">Hover me</button>
+          <button type="button" class="menu-trigger no-autoinit" id="menu-hover-trigger" data-target="menu-hover">Hover me</button>
         </p>
-        <menu id="dropdown-hover">
+        <menu id="menu-hover">
           <li><a href="#!">One</a></li>
           <li><a href="#!">Two</a></li>
           <hr>
           <li><a href="#!">Three</a></li>
         </menu>
-<pre><code>Expressive.Dropdown.init(document.querySelector('#hover'), {
+<pre><code>Expressive.Menu.init(document.querySelector('#hover'), {
   hover: true,
   constrainWidth: false,
   coverTrigger: false
@@ -262,9 +262,9 @@
           A click on the parent row does not close the root menu.
         </p>
         <p>
-          <button type="button" class="dropdown-trigger no-autoinit" id="dropdown-nested-trigger" data-target="dropdown-nested">Nested</button>
+          <button type="button" class="menu-trigger no-autoinit" id="menu-nested-trigger" data-target="menu-nested">Nested</button>
         </p>
-        <menu id="dropdown-nested">
+        <menu id="menu-nested">
           <li><a href="#!">One</a></li>
           <li>
             <a href="#!">More</a>
@@ -275,7 +275,7 @@
           </li>
           <li><a href="#!">Three</a></li>
         </menu>
-<pre><code>&lt;button class="dropdown-trigger" data-target="menu1"&gt;Nested&lt;/button&gt;
+<pre><code>&lt;button class="menu-trigger" data-target="menu1"&gt;Nested&lt;/button&gt;
 &lt;menu id="menu1"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;One&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;
@@ -293,7 +293,7 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = Expressive.Dropdown.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.Menu.getInstance(elem);</code></pre>
 
         <h5>.open()</h5>
         <p>Open the menu.</p>
@@ -339,7 +339,7 @@
               <td>ID of the menu element.</td>
             </tr>
             <tr>
-              <td><code>dropdownEl</code></td>
+              <td><code>menuEl</code></td>
               <td>Element</td>
               <td>The menu element.</td>
             </tr>

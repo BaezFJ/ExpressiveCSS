@@ -1178,7 +1178,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     // Only the day grid changes when you page within a year. Rebuilding the
     // controls as well meant tearing down and reconstructing two FormSelects -
     // each with its own <ul> of 12 or 21+ options, an input, a caret and a
-    // Dropdown - on every single draw.
+    // Menu - on every single draw.
     const key = this._controlsCacheKey(year);
     if (key === this._controlsKey && this.calendarEl.querySelector('.datepicker-controls')) {
       this._reuseControls(year, month);
@@ -1206,11 +1206,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     // @todo fix accessibility @see https://github.com/materializecss/materialize/issues/522
     FormSelect.init(yearSelect, {
       classes: 'select-year',
-      dropdownOptions: { container: document.body, constrainWidth: false }
+      menuOptions: { container: document.body, constrainWidth: false }
     });
     FormSelect.init(monthSelect, {
       classes: 'select-month',
-      dropdownOptions: { container: document.body, constrainWidth: false }
+      menuOptions: { container: document.body, constrainWidth: false }
     });
 
     // Add change handlers for select

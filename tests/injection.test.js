@@ -28,10 +28,10 @@ describe('FormSelect renders author content as text', () => {
 
     const instance = Expressive.FormSelect.init(select);
 
-    const dropdown = instance.dropdownOptions;
-    assert.equal(dropdown.querySelector('img'), null, 'the label was parsed as markup');
+    const menu = instance.menuEl;
+    assert.equal(menu.querySelector('img'), null, 'the label was parsed as markup');
     assert.equal(
-      dropdown.querySelector('.optgroup span').textContent,
+      menu.querySelector('.optgroup span').textContent,
       PAYLOAD,
       'the label should render literally'
     );
@@ -46,14 +46,14 @@ describe('FormSelect renders author content as text', () => {
 
     const instance = Expressive.FormSelect.init(select);
 
-    assert.equal(instance.dropdownOptions.querySelector('img'), null);
+    assert.equal(instance.menuEl.querySelector('img'), null);
     assert.equal(
-      instance.dropdownOptions.querySelector('li span').textContent.trim(),
+      instance.menuEl.querySelector('li span').textContent.trim(),
       '<img src=x onerror=alert(1)>'
     );
     // The multi-select structure still has to be intact.
     assert.ok(
-      instance.dropdownOptions.querySelector('label input[type="checkbox"]'),
+      instance.menuEl.querySelector('label input[type="checkbox"]'),
       'the checkbox structure was lost'
     );
   });
@@ -80,7 +80,7 @@ describe('FormSelect renders author content as text', () => {
 
     const instance = Expressive.FormSelect.init(select);
 
-    const img = instance.dropdownOptions.querySelector('img');
+    const img = instance.menuEl.querySelector('img');
     assert.ok(img, 'the option icon was not rendered');
     assert.deepEqual([...img.classList].sort(), ['a', 'b']);
   });

@@ -129,7 +129,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
       align-items: stretch;
     }
 
-    // Direct destinations only. Dropdown JS parks the menu next to the
+    // Direct destinations only. Menu JS parks the menu next to the
     // trigger, so a descendant `a` would also paint a square hover on
     // top of the menu's pill.
     > li > a {

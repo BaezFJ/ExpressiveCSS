@@ -77,7 +77,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['navbar', 'navigation_bar', 'navigation_rail', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'dropdown', 'scrollspy'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['navbar', 'navigation_bar', 'navigation_rail', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'menu', 'scrollspy'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">view_quilt</i>
                             Structure
@@ -107,8 +107,8 @@
                                 <li class="{% if request.endpoint == 'pagination' %}active{% endif %}">
                                     <a href="{{ url_for('pagination') }}">Pagination</a>
                                 </li>
-                                <li class="{% if request.endpoint == 'dropdown' %}active{% endif %}">
-                                    <a href="{{ url_for('dropdown') }}">Menu</a>
+                                <li class="{% if request.endpoint == 'menu' %}active{% endif %}">
+                                    <a href="{{ url_for('menu') }}">Menu</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'scrollspy' %}active{% endif %}">
                                     <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
@@ -251,7 +251,7 @@
                 <a href="{{ url_for('tabs') }}">Tabs</a>
                 <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
                 <a href="{{ url_for('pagination') }}">Pagination</a>
-                <a href="{{ url_for('dropdown') }}">Menu</a>
+                <a href="{{ url_for('menu') }}">Menu</a>
                 <a href="{{ url_for('scrollspy') }}">Scrollspy</a>
             </nav>
             <nav>
