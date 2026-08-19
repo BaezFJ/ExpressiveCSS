@@ -113,6 +113,12 @@
                                     <a href="/navbar.html">App bar</a>
                                 </li>
                                 <li class="">
+                                    <a href="/navigation-bar.html">Navigation bar</a>
+                                </li>
+                                <li class="">
+                                    <a href="/navigation-rail.html">Navigation rail</a>
+                                </li>
+                                <li class="">
                                     <a href="/sidenav.html">Sidenav</a>
                                 </li>
                                 <li class="">
@@ -250,7 +256,7 @@
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
                 <h1 class="primary-text">Navbar</h1>
-                <h4 class="light primary-text">Material Design 3 top and bottom app bars, from the HTML.</h4>
+                <h4 class="light primary-text">Material Design 3 top app bars, from the HTML.</h4>
             </div>
         </div>
     </section>
@@ -268,7 +274,9 @@
           Icon-only links and buttons are the leading and trailing actions.
           A <code>&lt;menu&gt;</code> (or <code>&lt;ul&gt;</code>) holds text
           destinations. There is no <code>navbar</code>, <code>nav-wrapper</code>,
-          or <code>brand-logo</code> class.
+          or <code>brand-logo</code> class. Switching between app views at
+          the bottom of the screen is a
+          <a href="/navigation-bar.html">navigation bar</a>.
         </p>
         <p>
           Tokens follow the
@@ -420,57 +428,6 @@
 &lt;/header&gt;
 
 &lt;header class="large"&gt;…&lt;/header&gt;</code></pre>
-      </div>
-
-      <div id="bottom" class="section scrollspy">
-        <h3>Bottom app bar</h3>
-        <p>
-          A <code>&lt;footer&gt;</code> whose child is a <code>&lt;nav&gt;</code>
-          — and that is not <code>page-footer</code> — is a bottom app bar.
-          80dp, elevation 2, icons on the start. A
-          <code>.btn</code> / <code>.extra circle small</code> is pushed to the end
-          as the FAB.
-        </p>
-        <footer class="mb-3">
-          <nav>
-            <button type="button" aria-label="Select">
-              <i class="material-symbols">check_box</i>
-            </button>
-            <button type="button" aria-label="Draw">
-              <i class="material-symbols">brush</i>
-            </button>
-            <button type="button" aria-label="Record">
-              <i class="material-symbols">mic</i>
-            </button>
-            <button type="button" aria-label="Image">
-              <i class="material-symbols">image</i>
-            </button>
-            <a class="button extra circle small waves-effect">
-              <i class="material-symbols">add</i>
-            </a>
-          </nav>
-        </footer>
-<pre><code>&lt;footer&gt;
-  &lt;nav&gt;
-    &lt;button type="button" aria-label="Select"&gt;
-      &lt;i class="material-symbols"&gt;check_box&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;button type="button" aria-label="Draw"&gt;
-      &lt;i class="material-symbols"&gt;brush&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;button type="button" aria-label="Record"&gt;
-      &lt;i class="material-symbols"&gt;mic&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;a class="button extra circle small"&gt;
-      &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-    &lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/footer&gt;</code></pre>
-        <p>
-          Add <code>fixed</code> to stick it to the bottom of the viewport.
-          Do not put this markup on <code>.page-footer</code> — that component
-          is the site footer, not an app bar.
-        </p>
       </div>
 
       <div id="fixed" class="section scrollspy">
@@ -727,7 +684,6 @@
           <li><a href="#destinations">Destinations</a></li>
           <li><a href="#center">Center-aligned</a></li>
           <li><a href="#medium">Medium and large</a></li>
-          <li><a href="#bottom">Bottom app bar</a></li>
           <li><a href="#fixed">Fixed</a></li>
           <li><a href="#color">Color</a></li>
           <li><a href="#navbar-tabs">Tabs</a></li>
@@ -768,6 +724,8 @@
             <nav>
                 <h2>Structure</h2>
                 <a href="/navbar.html">App bar</a>
+                <a href="/navigation-bar.html">Navigation bar</a>
+                <a href="/navigation-rail.html">Navigation rail</a>
                 <a href="/sidenav.html">Sidenav</a>
                 <a href="/footer.html">Footer</a>
                 <a href="/tabs.html">Tabs</a>

@@ -16,9 +16,23 @@ code {
   padding: 0.1em 0.35em;
 }
 
-section :is(button, a.button) {
+section :is(button, a.button):not(nav :is(button, a.button)) {
   margin-right: 0.5rem;
   margin-bottom: 0.35rem;
+}
+
+/* Embed a navigation rail without 100dvh of empty column. */
+.rail-demo {
+  display: flex;
+  height: 32rem;
+  overflow: hidden;
+  background-color: var(--md-sys-color-surface);
+  border-radius: 16px;
+}
+
+.rail-demo .navigation-rail {
+  min-height: 100%;
+  height: 100%;
 }
 
 /* Offset documentation pages so they sit beside the fixed sidenav. */
