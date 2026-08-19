@@ -17,11 +17,17 @@
                     <h3>Container</h3>
                     <p>
                         The container class is not strictly part of the grid but is important in laying out content. It
-                        allows you to center your page content. The
-                        <code>container</code> class is set to ~70% of the window width. It helps you center and contain
-                        your page content. We use the container to
-                        contain our body content.
+                        centers the page and caps how wide it can grow, so a paragraph does not stretch across a 4K
+                        monitor. Width is a percentage of the viewport (90% on phones, 85% from tablet, 70% from
+                        desktop, 75% from extra-large). A max-width token stops that percentage from swallowing the
+                        screen: <code>1280px</code> by default, <code>1920px</code> from the extra-large breakpoint
+                        (1601px). Override the tokens, or pick a modifier:
                     </p>
+                    <ul>
+                        <li><code>container</code> — default measure, 1280 then 1920.</li>
+                        <li><code>container wide</code> — 2400px cap, for dashboards and media.</li>
+                        <li><code>container max</code> — the percentage with no cap.</li>
+                    </ul>
 
                     <h5>Demo</h5>
                     <p>Try the button below to see what the page looks like without containers.</p>
@@ -64,7 +70,13 @@
   &lt;div class="container"&gt;
     &lt;!-- Page Content goes here --&gt;
   &lt;/div&gt;
-&lt;/body&gt;</code></pre>
+&lt;/body&gt;
+
+&lt;!-- dashboard / media that should keep growing --&gt;
+&lt;div class="container wide"&gt;…&lt;/div&gt;
+
+&lt;!-- percentage only, no cap --&gt;
+&lt;div class="container max"&gt;…&lt;/div&gt;</code></pre>
                 </div>
 
                 <div id="grid-intro" class="scrollspy">
@@ -137,8 +149,8 @@
                     <p>
                         To offset, simply add
                         <code>offset-s2</code> to the class where <code>s</code> signifies the screen class-prefix (s =
-                        small, m = medium, l =
-                        large) and the number after is the number of columns you want to offset by.
+                        small, m = medium, l = large, xl = extra-large, xxl = widescreen) and the number after is the
+                        number of columns you want to offset by.
                     </p>
                     <p class="error-text">
                         Attention! Offsets are calculated absolutely starting from the left. If you need relative
@@ -409,10 +421,11 @@
                         <thead>
                         <tr>
                             <th></th>
-                            <th>Mobile Devices &lt;= 600px</th>
-                            <th>Tablet Devices &gt; 600px</th>
-                            <th>Desktop Devices &gt; 992px</th>
-                            <th>Large Desktop Devices &gt; 1200px</th>
+                            <th>Mobile ≤ 600px</th>
+                            <th>Tablet ≥ 601px</th>
+                            <th>Desktop ≥ 993px</th>
+                            <th>Large desktop ≥ 1201px</th>
+                            <th>Widescreen ≥ 1601px</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -422,6 +435,7 @@
                             <td><code>.m</code></td>
                             <td><code>.l</code></td>
                             <td><code>.xl</code></td>
+                            <td><code>.xxl</code></td>
                         </tr>
                         <tr>
                             <td><strong>Container Width</strong></td>
@@ -429,6 +443,15 @@
                             <td>85%</td>
                             <td>70%</td>
                             <td>70%</td>
+                            <td>75%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max Width</strong></td>
+                            <td>1280px</td>
+                            <td>1280px</td>
+                            <td>1280px</td>
+                            <td>1280px</td>
+                            <td>1920px</td>
                         </tr>
                         <tr>
                             <td><strong>Number of Columns</strong></td>
@@ -436,9 +459,16 @@
                             <td>12</td>
                             <td>12</td>
                             <td>12</td>
+                            <td>12</td>
                         </tr>
                         </tbody>
                     </table>
+                    <p>
+                        Widescreen is Material’s extra-large window class. The twelve columns stay twelve — a 4K
+                        monitor does not need sixteen tracks, it needs a wider container and a chance to reflow
+                        (three panes, four cards). Use <code>xxl</code> for that. <code>container wide</code> raises
+                        the cap to 2400px; <code>container max</code> drops it.
+                    </p>
 
                     <h5>Adding Responsiveness</h5>
                     <p>
@@ -557,6 +587,49 @@
   &lt;div class="s12 m6 l3"&gt;s12 m6 l3&lt;/div&gt;
   &lt;div class="s12 m6 l3"&gt;s12 m6 l3&lt;/div&gt;
   &lt;div class="s12 m6 l3"&gt;s12 m6 l3&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+                    <h5>Widescreen / 4K</h5>
+                    <p>
+                        Extra-large windows can hold a third pane that would be cramped on a laptop. The aside stacks
+                        full-width until <code>xxl</code>, then sits as two columns beside an eight-column main. Four
+                        equal cards drop from 6-wide on tablet to 3-wide on a 4K monitor.
+                    </p>
+                    <div class="row">
+                        <div class="s12 l3 xxl2 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">nav s12 l3 xxl2</span>
+                        </div>
+                        <div class="s12 l9 xxl8 secondary-container on-secondary-container-text center-align py-3">
+                            <span class="flow-text">main s12 l9 xxl8</span>
+                        </div>
+                        <div class="s12 xxl2 tertiary-container on-tertiary-container-text center-align py-3">
+                            <span class="flow-text">aside s12 xxl2</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                    </div>
+                    <pre><code>&lt;div class="row"&gt;
+  &lt;div class="s12 l3 xxl2"&gt;nav&lt;/div&gt;
+  &lt;div class="s12 l9 xxl8"&gt;main&lt;/div&gt;
+  &lt;div class="s12 xxl2"&gt;aside&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="row"&gt;
+  &lt;div class="s12 m6 l4 xxl3"&gt;…&lt;/div&gt;
+  &lt;div class="s12 m6 l4 xxl3"&gt;…&lt;/div&gt;
+  &lt;div class="s12 m6 l4 xxl3"&gt;…&lt;/div&gt;
+  &lt;div class="s12 m6 l4 xxl3"&gt;…&lt;/div&gt;
 &lt;/div&gt;</code></pre>
                 </div>
             </div>

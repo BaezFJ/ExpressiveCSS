@@ -31,8 +31,16 @@
   @include bp-up("xlarge") { display: none !important; }
 }
 
+.hide-on-xxl-only {
+  @include bp-up("xxlarge") { display: none !important; }
+}
+
 .show-on-extra-large {
   @include bp-up("xlarge") { display: block !important; }
+}
+
+.show-on-xxl {
+  @include bp-up("xxlarge") { display: block !important; }
 }
 
 .show-on-large {

@@ -80,6 +80,10 @@ footer:not(:has(> nav:only-child)):not(:has(> .container)) {
   @include bp-up("xlarge") {
     grid-template-columns: repeat(5, 1fr);
   }
+
+  @include bp-up("xxlarge") {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
 
 footer:not(:has(> nav:only-child)) > .container > .row,

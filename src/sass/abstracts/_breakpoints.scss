@@ -18,10 +18,21 @@
 // and IE, and `screen` alone excludes print anyway - which these rules never
 // wanted to do, since a hidden element should stay hidden on paper.
 
+// Boundaries, not the size of the screen they target. Column prefixes
+// s / m / l / xl / xxl sit on these in order; there is no `medium` key
+// because the tablet class is `m` and the mixin name is the boundary.
+//
+// M3 window-size classes, for the ones that line up:
+//   compact      width <  600     below "small"
+//   medium       600 ≤ width < 840   (we do not split 840 out of "small")
+//   expanded     840 ≤ width < 1200  "large" is 993, close enough
+//   large       1200 ≤ width < 1600  "xlarge"
+//   extra-large  width ≥ 1600        "xxlarge"
 $breakpoints: (
-  "small": 601px,   // phone      -> tablet
-  "large": 993px,   // tablet     -> desktop
-  "xlarge": 1201px, // desktop    -> wide desktop
+  "small": 601px,     // phone        -> tablet
+  "large": 993px,     // tablet       -> desktop
+  "xlarge": 1201px,   // desktop      -> large desktop
+  "xxlarge": 1601px,  // large        -> extra-large / widescreen
 ) !default;
 
 @function breakpoint($name) {
