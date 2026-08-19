@@ -2,7 +2,7 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.4.0`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.5.0`, which is under active development.
 
 - Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
@@ -55,9 +55,8 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Auto Init
 - Navigation rail
 - Menu
-- Feature Discovery
 - Media
-- Modals
+- Dialogs
 - Bottom sheet
 - Side sheet
 - Scrollspy
@@ -75,7 +74,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Fieldsets
 - Switches
 - Select
-- Range
+- Sliders
 - Radio Buttons
 - Chips
 - Checkboxes
@@ -227,20 +226,18 @@ Opt an element out when it needs manual options:
 | Component | Selector |
 | --- | --- |
 | `Autocomplete` | `.autocomplete` |
-| `Cards` | `card activator/reveal elements` |
+| `Cards` | `article:has(> aside)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Datepicker` | `.datepicker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
-| `Modal` | `.modal` |
 | `NavigationRail` | `.navigation-rail` |
 | `Parallax` | `.parallax` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Sidenav` | `.sidenav` |
 | `Tabs` | `.tabs` |
-| `TapTarget` | `.tap-target` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fixed-action-btn` |
@@ -265,10 +262,11 @@ current?.destroy();
 The main bundle exports:
 
 - `AutoInit`, `Forms`, `Waves`, and `version`
+- `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
-- `Modal`, `Parallax`, `Range`, and `ScrollSpy`
-- `FormSelect`, `Sidenav`, `Slider`, `Tabs`, and `TapTarget`
+- `Parallax`, `Range`, and `ScrollSpy`
+- `FormSelect`, `Sidenav`, `NavigationRail`, `Slider`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
 ---
@@ -281,7 +279,7 @@ Learn how to start using Expressive and integrate it into your project.
 
 ### Download
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.4.0` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.5.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
@@ -3133,20 +3131,18 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | Name | Selector |
 | --- | --- |
 | `Autocomplete` | `.autocomplete` |
-| `Cards` | `.cards` |
+| `Cards` | `article:has(> aside)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Datepicker` | `.datepicker` |
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
-| `Modal` | `.modal` |
 | `NavigationRail` | `.navigation-rail` |
 | `Parallax` | `.parallax` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `Sidenav` | `.sidenav` |
 | `Tabs` | `.tabs` |
-| `TapTarget` | `.tap-target` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fixed-action-btn` |
@@ -3316,104 +3312,6 @@ instance.destroy();
 | `isOpen` | Boolean | Whether the menu is open. |
 | `isScrollable` | Boolean | Whether the menu content is scrollable. |
 | `focusedIndex` | Number | Index of the focused item. |
-
----
-
-## Feature Discovery
-
-Introduce a control at the moment it becomes relevant.
-
-Feature discovery prompts have more impact when they reach the right people at a relevant moment. Shown to the wrong person at the wrong time, they feel intrusive.
-
-The JavaScript component is `Expressive.TapTarget`. Put `tap-target` on the prompt and point `data-target` at the id of the element you want to highlight. `AutoInit()` starts every `.tap-target` except those marked `no-autoinit`. Clicking the origin toggles the prompt; you can also call `open()` and `close()`.
-
-Open tap target Close tap target
-
-#### I am here
-
-```text
-<!-- Element shown -->
-<a id="menu" class="btn-floating btn-large waves-effect waves-light">
-  <i class="material-icons">menu</i>
-</a>
-<!-- Tap Target Structure -->
-<div class="tap-target" data-target="menu">
-  <div class="tap-target-content">
-    <h5>Title</h5>
-    <p>A bunch of text</p>
-  </div>
-</div>
-```
-
-### Initialization
-
-The IIFE bundle exposes `Expressive.TapTarget`. Call `init` yourself when you need callbacks, or let `Expressive.AutoInit()` start every `.tap-target`.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.tap-target');
-  const instances = Expressive.TapTarget.init(elems, {
-    // specify options here
-  });
-});
-```
-
-Per-instance options can also be passed through AutoInit:
-
-```js
-Expressive.AutoInit(document.body, {
-  TapTarget: {
-    onOpen: function(origin) { /* ... */ }
-  }
-});
-```
-
-### Options
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `onOpen` | Function | `null` | Called when the tap target opens. Receives the origin element. |
-| `onClose` | Function | `null` | Called when the tap target closes. Receives the origin element. |
-
-### Methods
-
-> All methods are called on the plugin instance. You can get the instance like this:
-
-```js
-const instance = Expressive.TapTarget.getInstance(elem);
-```
-
-#### .open();
-
-Open the tap target.
-
-```text
-instance.open();
-```
-
-#### .close();
-
-Close the tap target.
-
-```text
-instance.close();
-```
-
-#### .destroy();
-
-Destroy the plugin instance and tear down its event handlers.
-
-```text
-instance.destroy();
-```
-
-### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `el` | Element | The DOM element the plugin was initialized with (the `.tap-target`). |
-| `options` | Object | The options the instance was initialized with. |
-| `isOpen` | Boolean | Whether the tap target is open. |
 
 ---
 
@@ -3650,15 +3548,15 @@ Add `fullscreen` to the slider so it fills its positioned ancestor (typically th
 
 ---
 
-## Modals
+## Dialogs
 
 Material Design 3 dialogs, from the HTML.
 
-A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. There is no `modal-header`, `modal-content`, or `modal-footer` class — those names remain as aliases. `.modal` is also an alias.
+A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. `dialog.max` is the full-screen variant. There are no `.modal`, `modal-header`, `modal-content`, or `modal-footer` classes — the element is the component.
 
 Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is 32% `scrim`. Actions sit at the end with an 8dp gap.
 
-Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. `Expressive.Modal` is still exported and `AutoInit()` still matches `.modal`, but `open()` and `close()` are empty. Do not call them.
+Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. There is no `Modal` export and nothing for `AutoInit()` to start; `Dialogs.Init()` runs at import time and only adds light-dismiss.
 
 Show Show with icon Show with long content
 
@@ -5497,13 +5395,15 @@ Browser Disabled Choose your option Option 1 Option 2 Option 3
 
 ---
 
-## Range
+## Sliders
 
 Material Design 3 sliders, from the HTML.
 
-An `<input type="range">` is the control. A wrapping `<label>` (or `.range` / `.range-field`) is the host for the value label. There is no required `<span>`. `.slider` is the carousel — do not put it on a range.
+An `<input type="range">` is the control. A wrapping `.range` (or a `<label>` / `.range-field`) is the host for the value label. `.slider` is the carousel — do not put it on a range. The plugin is `Expressive.Range` because `Slider` is already the carousel.
 
-Tokens follow the [M3 slider spec](https://m3.material.io/components/sliders/specs) (Expressive). The track is 16dp, fully rounded, with a 6dp gap around the handle. Active is `primary`; inactive is `secondary-container`. The handle is a 4×44dp `primary` stop that narrows to 2dp while pressed. The state layer is 40dp at 8% hover and 10% focus. The value label is `inverse-surface` / `inverse-on-surface`, `body-small`. Disabled is 38%. Dual-handle range and discrete ticks are not implemented.
+Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
+
+Tokens follow the [M3 slider spec](https://m3.material.io/components/sliders/specs) (Expressive). The handle is a 4dp stop with a 6dp gap to each track, narrowing to 2dp while pressed. Active is `primary`; inactive is `secondary-container`. The end of an inactive track carries a 4dp stop. The value label is a 40dp `inverse-surface` / `inverse-on-surface` bubble, `body-small`. Disabled is 38%.
 
 Range is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Range.Init()`, which starts every `input[type=range]` already in the document and keeps the active track in sync. `no-autoinit` does not apply.
 
@@ -5516,16 +5416,44 @@ Range is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Range.
 
 `min`, `max`, `step`, and `value` are the native attributes. When they are omitted, the control treats the range as 0–100. Dragging shows the current value above the handle.
 
-### Sizes
+### Variants
 
-`small` is an 8dp track and a 32dp handle. `large` is a 24dp track and a 52dp handle. Scope them on the host — unscoped `.small` / `.large` are used by other components.
+`centered` grows the active track from 50%. A range slider is two inputs in one `.range` host; the plugin keeps the start handle from passing the end one.
 
 ```html
-<div class="range small">
-  <input type="range" min="0" max="100" value="25">
+<div class="range centered">
+  <input type="range" min="0" max="100" value="30" aria-label="Centered">
 </div>
-<div class="range large">
-  <input type="range" min="0" max="100" value="75">
+
+<div class="range">
+  <input type="range" min="0" max="100" value="25" aria-label="Range start">
+  <input type="range" min="0" max="100" value="75" aria-label="Range end">
+</div>
+```
+
+### Sizes
+
+XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `medium` is M, `l` / `large` is L, and `xl` is XL. Scope them on the host — unscoped `.small` / `.large` are used by other components.
+
+```html
+<div class="range s">…</div>
+<div class="range m">…</div>
+<div class="range l">…</div>
+<div class="range xl">…</div>
+```
+
+### Inset icon, stops, value
+
+A leading `<i>` sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a `step` paints ticks along the track.
+
+```html
+<div class="range m">
+  <i class="material-symbols">volume_up</i>
+  <input type="range" min="0" max="100" value="55" aria-label="Volume">
+</div>
+
+<div class="range stops">
+  <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
 </div>
 ```
 
@@ -5534,10 +5462,11 @@ Range is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Range.
 `vertical` stands the track up. Minimum is at the bottom. The value label sits to the end of the handle.
 
 ```html
-<div class="range vertical">
+<div class="range vertical m">
   <input type="range" min="0" max="100" value="60" aria-label="Level">
 </div>
 ```
+
 
 ### Disabled
 
