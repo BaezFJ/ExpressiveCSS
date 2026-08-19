@@ -3,20 +3,56 @@
 document.addEventListener('DOMContentLoaded', () => {
   Expressive.AutoInit();
 
-  const applyTheme = (next) => {
-    document.documentElement.setAttribute('theme', next);
-    document.querySelectorAll('#theme-toggle .material-symbols, #page-theme-toggle .material-symbols')
-      .forEach((icon) => {
-        icon.textContent = next === 'dark' ? 'light_mode' : 'dark_mode';
-      });
+  const THEME_ICONS = { light: 'light_mode', dark: 'dark_mode', auto: 'contrast' };
+
+  const readTheme = () => {
+    const current = document.documentElement.getAttribute('theme');
+    return current === 'light' || current === 'dark' || current === 'auto' ? current : 'auto';
   };
 
-  document.querySelectorAll('#theme-toggle, #page-theme-toggle').forEach((btn) => {
-    btn.addEventListener('click', (event) => {
-      event.preventDefault();
-      const next = document.documentElement.getAttribute('theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
+  const applyTheme = (next) => {
+    if (next !== 'light' && next !== 'dark' && next !== 'auto') return;
+    document.documentElement.setAttribute('theme', next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      // private mode / blocked storage
+    }
+    const icon = THEME_ICONS[next];
+    document.querySelectorAll('#theme-toggle > .material-symbols').forEach((el) => {
+      el.textContent = icon;
     });
+    document.querySelectorAll('#theme-menu [data-theme]').forEach((item) => {
+      const selected = item.getAttribute('data-theme') === next;
+      item.classList.toggle('selected', selected);
+      item.setAttribute('aria-selected', selected ? 'true' : 'false');
+    });
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      const label = next === 'auto' ? 'Theme: auto' : `Theme: ${next}`;
+      toggle.title = label;
+      toggle.setAttribute('aria-label', label);
+    }
+  };
+
+  applyTheme(readTheme());
+
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle && Expressive.Menu) {
+    Expressive.Menu.init(themeToggle, {
+      alignment: 'right',
+      constrainWidth: false,
+      coverTrigger: false,
+      container: document.body,
+      onItemClick: (li) => applyTheme(li?.getAttribute('data-theme')),
+    });
+  }
+
+  document.getElementById('page-theme-toggle')?.addEventListener('click', (event) => {
+    const item = event.target.closest('[data-theme]');
+    if (!item) return;
+    event.preventDefault();
+    applyTheme(item.getAttribute('data-theme'));
   });
 
   const DEFAULT_SOURCE = '#006a79';

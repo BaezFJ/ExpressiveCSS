@@ -12,6 +12,10 @@
     <script>
         (function () {
             try {
+                var t = localStorage.getItem('theme');
+                if (t === 'light' || t === 'dark' || t === 'auto') {
+                    document.documentElement.setAttribute('theme', t);
+                }
                 var c = localStorage.getItem('md-source');
                 if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
                     document.documentElement.style.setProperty('--md-source', c);
@@ -35,9 +39,9 @@
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <i class="material-symbols">palette</i>
             </button>
-            <a id="theme-toggle" href="#" title="Toggle theme" aria-label="Toggle theme">
-                <i class="material-symbols">dark_mode</i>
-            </a>
+            <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
+                <i class="material-symbols">contrast</i>
+            </button>
         </nav>
 
         <ul class="sidenav sidenav-fixed" id="nav-mobile">
@@ -415,6 +419,27 @@
             </small>
         </div>
     </footer>
+
+    <menu id="theme-menu">
+        <li data-theme="light">
+            <button type="button">
+                <i class="material-symbols">light_mode</i>
+                Light
+            </button>
+        </li>
+        <li data-theme="dark">
+            <button type="button">
+                <i class="material-symbols">dark_mode</i>
+                Dark
+            </button>
+        </li>
+        <li data-theme="auto" class="selected">
+            <button type="button">
+                <i class="material-symbols">contrast</i>
+                Auto
+            </button>
+        </li>
+    </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
         <i class="material-symbols">palette</i>
