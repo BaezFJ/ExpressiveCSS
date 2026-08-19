@@ -1607,88 +1607,56 @@ If you want waves to form to a non-rectangular shape, there is an option for cir
 
 ## Badges
 
-Notify that there are new or unread messages or notifications.
+Notifications, counts, or status on navigation items and icons.
 
-Badges can notify you that there are new or unread messages or notifications. Add the `new` class to the badge to give it the background.
-
-### Lists
+A `<span class="badge">` is the badge. Empty is the **small** 6dp dot; text is the **large** 16dp stadium. Nest it in the icon so it sits on the upper trailing edge of the 24dp glyph. Limit the label to four characters, including `+`. The default mapping is `error` / `on-error`.
 
 ```html
-<ul class="list">
-  <li><a href="#!">Alan<span class="badge">1</span></a></li>
-  <li><a href="#!">Alan<span class="new badge">4</span></a></li>
-  <li><a href="#!">Alan</a></li>
-  <li><a href="#!">Alan<span class="badge">14</span></a></li>
-</ul>
+<i class="material-symbols">mail<span class="badge"></span></i>
+<i class="material-symbols">mail<span class="badge">1</span></i>
+<i class="material-symbols">mail<span class="badge">999+</span></i>
 ```
 
-### Badges in Dropdown
+### Small
+
+Leave the badge empty. It is a 6dp circle with no label.
+
+### Large
+
+Put a number or short label in the badge. Height is 16dp, corners are a stadium, inset is 4dp. Use `999+` when the count is larger than 999.
+
+### On navigation
+
+Nest the badge in the destination icon, or leave it as a sibling — the bar and rail place a sibling on the icon’s upper trailing corner.
 
 ```html
-<ul id="dropdown-badges" class="dropdown-content">
-  <li><a href="#!">one<span class="badge">1</span></a></li>
-  <li><a href="#!">two<span class="new badge">1</span></a></li>
-  <li><a href="#!">three</a></li>
-</ul>
-<a class="btn dropdown-trigger" href="#!" data-target="dropdown-badges">
-  Dropdown<i class="material-icons right">arrow_drop_down</i>
+<a href="#!">
+  <i class="material-symbols">inbox<span class="badge">3</span></i>
+  Inbox
 </a>
 ```
 
-### Badges in Navbar
+### In a list or sidenav
 
-```text
-<header>
-  <nav>
-    <h2>Logo</h2>
-    <menu class="hide-on-med-and-down">
-      <li><a href="#!">sass</a></li>
-      <li><a href="#!">sass <span class="new badge">4</span></a></li>
-      <li><a href="#!">sass</a></li>
-    </menu>
-  </nav>
-</header>
-```
-
-### Badges in a sidenav
-
-Put a badge on a `summary` or a destination. Nested sections are native `<details>`.
+A trailing `.badge` in a list or drawer row stays in flow on the end.
 
 ```html
-<li>
-  <details>
-    <summary>
-      <i class="material-symbols">inbox</i>
-      Inbox
-      <span class="new badge">4</span>
-    </summary>
-    <ul>
-      <li><a href="#!">Primary<span class="badge">1</span></a></li>
-    </ul>
-  </details>
-</li>
+<ul class="list">
+  <li>
+    <i class="material-symbols">inbox</i>
+    Inbox
+    <span class="badge">3</span>
+  </li>
+</ul>
 ```
 
-### Options
+### Color
 
-You can customize captions in many ways.
-
-#### Custom Caption
-
-You can explicitly set the caption in a badge using the `data-badge-caption` attribute.
+Default is `error` / `on-error`. Override with a fill + `on-*` pair when the badge is not an error/notification.
 
 ```html
-<span class="new badge" data-badge-caption="custom caption">4</span>
-<span class="badge" data-badge-caption="custom caption">4</span>
-```
-
-#### Colors
-
-You can use our color classes to set the background-color of the badge.
-
-```html
-<span class="new badge error on-error-text">4</span>
-<span class="new badge primary on-primary-text">4</span>
+<span class="badge">3</span>
+<span class="badge primary on-primary-text">1</span>
 ```
 
 ---
@@ -2872,9 +2840,8 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
     Label
   </a>
   <a href="/two">
-    <i class="material-symbols">star</i>
+    <i class="material-symbols">star<span class="badge">3</span></i>
     Label
-    <span class="badge">3</span>
   </a>
 </nav>
 ```

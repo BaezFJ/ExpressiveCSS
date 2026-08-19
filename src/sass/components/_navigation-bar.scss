@@ -46,6 +46,7 @@
   color: var(--md-sys-color-on-surface);
 
   > :is(a, button) {
+    position: relative;
     box-sizing: border-box;
     display: flex;
     flex: 1 1 0;
@@ -99,6 +100,15 @@
       pointer-events: none;
       color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
     }
+
+    // Sibling badge. Child-of-icon is handled in _badges.scss.
+    > .badge {
+      position: absolute;
+      z-index: 1;
+      top: calc(4px + (var(--md-comp-nav-bar-indicator-height) - 24px) / 2);
+      left: calc(50% + 12px);
+      transform: translate(-50%, -50%);
+    }
   }
 
   &.horizontal {
@@ -117,6 +127,13 @@
         width: var(--md-comp-nav-bar-icon-size);
         height: var(--md-comp-nav-bar-icon-size);
         border-radius: 0;
+      }
+
+      > .badge {
+        top: calc(50% - 12px);
+        left: auto;
+        inset-inline-start: calc(16px + 24px);
+        transform: translate(-50%, -50%);
       }
 
       &:hover:not(.active, [aria-current]) {

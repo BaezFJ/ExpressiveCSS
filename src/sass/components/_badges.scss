@@ -1,73 +1,93 @@
 @use "../abstracts" as *;
 
-// TODO: Make better structure
-:root {
-  --bagde-height: 22px;
-}
+// Badge. Notifications, counts, or status on navigation items and icons.
+//
+// Anatomy is the HTML: a span.badge. Empty is the small dot; text is
+// the large labelled variant. Nest the badge in the icon to anchor it
+// at the upper trailing edge of the 24dp glyph. In a list or drawer
+// row, a trailing .badge stays in flow.
+//
+// Tokens follow https://m3.material.io/components/badges/specs
+//   color          error / on-error  (the default mapping)
+//   small          6dp circle, no label
+//   large          16dp stadium, label-small, 4dp inset
+//   max            four characters, including +
 
-span.badge {
-  min-width: 3rem;
-  padding: 0 6px;
-  margin-left: 14px;
-  text-align: center;
-  font-size: 1rem;
-  line-height: var(--bagde-height);
-  height: var(--bagde-height);
-  color: var(--md-sys-color-on-surface-variant);
-  float: right;
+.badge {
+  --md-comp-badge-color: var(--md-sys-color-error);
+  --md-comp-badge-label-text-color: var(--md-sys-color-on-error);
+  --md-comp-badge-large-size: 16px;
+  --md-comp-badge-small-size: 6px;
+  --md-comp-badge-large-shape: 8px;
+  --md-comp-badge-icon-size: 24px;
+
   box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--md-comp-badge-large-size);
+  height: var(--md-comp-badge-large-size);
+  max-width: calc(4ch + 8px);
+  margin: 0;
+  padding: 0 4px;
+  overflow: hidden;
+  border-radius: var(--md-comp-badge-large-shape);
+  background-color: var(--md-comp-badge-color);
+  color: var(--md-comp-badge-label-text-color);
+  white-space: nowrap;
+  @include typescale("label-small");
+  line-height: var(--md-comp-badge-large-size);
+  font-family: $font-stack;
 
-  &.new {
-    font-weight: 300;
-    font-size: 0.8rem;
-    color:  var(--md-sys-color-on-primary);
-    background-color: var(--md-sys-color-primary);
-    border-radius: 2px;
-  }
-  &.new:after {
-    content: " new";
-  }
-
-  &[data-badge-caption]::after {
-    content: " " attr(data-badge-caption);
+  // Small. No label — a 6dp dot.
+  &:empty {
+    width: var(--md-comp-badge-small-size);
+    min-width: var(--md-comp-badge-small-size);
+    max-width: var(--md-comp-badge-small-size);
+    height: var(--md-comp-badge-small-size);
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0;
+    line-height: 0;
+    color: transparent;
   }
 }
 
-.active span.badge {
-  color: var(--md-sys-color-on-primary);
+// Child of an icon: sit on the upper trailing corner of the 24dp
+// glyph, even when the <i> is a larger indicator pill.
+:is(
+  i,
+  .material-symbols,
+  .material-symbols-outlined,
+  .material-symbols-rounded,
+  .material-symbols-sharp,
+  .material-icons
+) {
+  position: relative;
+  overflow: visible;
+
+  > .badge {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: calc((100% - var(--md-comp-badge-icon-size)) / 2);
+    inset-inline-end: calc((100% - var(--md-comp-badge-icon-size)) / 2);
+    transform: translate(50%, -50%);
+  }
 }
 
-// Special cases
-
-header:has(> nav) nav a span.badge {
-  display: inline-block;
-  float: none;
-  margin-left: 4px;
-  line-height: var(--bagde-height);
-  height: var(--bagde-height);
-  -webkit-font-smoothing: auto;
+// Trailing count in a list or drawer row stays in flow.
+.list .badge,
+.sidenav .badge,
+menu .badge {
+  position: static;
+  transform: none;
 }
 
-.list span.badge {
-  float: none;
-  margin-block: 0;
+.list .badge {
   margin-inline-start: auto;
 }
 
-.sidenav span.badge {
-  float: none;
-  margin-block: 0;
-}
-
 .sidenav summary .badge {
-  // Sit before the expand_more chevron. The chevron already has
-  // margin-inline-start: auto; another auto here would share the leftover
-  // space and float the badge away from the label.
   margin-inline-start: 14px;
-}
-
-table span.badge {
-  display: inline-block;
-  float: none;
-  margin-left: auto;
 }

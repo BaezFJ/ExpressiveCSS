@@ -5,90 +5,139 @@
 {% block page_title %}Badges{% endblock %}
 
 {% block page %}
-{{ Banner("Badges", "Notify that there are new or unread messages or notifications.") }}
+{{ Banner("Badges", "Notifications, counts, or status on navigation items and icons.") }}
 
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="lists" class="section scrollspy">
+      <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
-          Badges can notify you that there are new or unread messages or notifications. Add the
-          <code>new</code> class to the badge to give it the background.
+          Badges show notifications, counts, or status information on
+          navigation items and icons. They can hold a label or a number.
+          Two variants: <strong>small</strong> (an empty
+          <code>&lt;span class="badge"&gt;</code>, a 6dp dot) and
+          <strong>large</strong> (text inside, a 16dp stadium). Nest the
+          badge in the icon so it anchors at the upper trailing edge of
+          the 24dp glyph. Limit content to four characters, including
+          <code>+</code>.
         </p>
-        <h3>Lists</h3>
-        <ul class="list">
-          <li>
-            <a href="#!">Alan<span class="badge">1</span></a>
-          </li>
-          <li>
-            <a href="#!">Alan<span class="new badge">4</span></a>
-          </li>
-          <li>
-            <a href="#!">Alan</a>
-          </li>
-          <li>
-            <a href="#!">Alan<span class="badge">14</span></a>
-          </li>
-        </ul>
-<pre><code>&lt;ul class="list"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Alan&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Alan&lt;span class="new badge"&gt;4&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+        <p>
+          The default mapping is <code>error</code> /
+          <code>on-error</code>. Pair a fill utility with its
+          <code>on-*</code> text class only if you override it.
+        </p>
+
+        <nav class="navigation-bar mb-3" aria-label="Badge demo">
+          <a href="#!">
+            <i class="material-symbols">mail<span class="badge"></span></i>
+            Label
+          </a>
+          <a href="#!">
+            <i class="material-symbols">mail<span class="badge">1</span></i>
+            Label
+          </a>
+          <a href="#!">
+            <i class="material-symbols">mail<span class="badge">999+</span></i>
+            Label
+          </a>
+        </nav>
+<pre><code>&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;&lt;/span&gt;&lt;/i&gt;
+&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/i&gt;
+&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;999+&lt;/span&gt;&lt;/i&gt;</code></pre>
       </div>
 
-      <div id="dropdown" class="section scrollspy">
-        <h3>Badges in Dropdown</h3>
-        <ul id="dropdown-badges" class="dropdown-content">
-          <li>
-            <a href="#!">one<span class="badge">1</span></a>
-          </li>
-          <li>
-            <a href="#!">two<span class="new badge">1</span></a>
-          </li>
-          <li><a href="#!">three</a></li>
-        </ul>
-        <a class="button filled dropdown-trigger" href="#!" data-target="dropdown-badges">
-          Dropdown<i class="material-symbols right">arrow_drop_down</i>
-        </a>
-<pre><code>&lt;ul id="dropdown-badges" class="dropdown-content"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;one&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;two&lt;span class="new badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;a class="btn dropdown-trigger" href="#!" data-target="dropdown-badges"&gt;
-  Dropdown&lt;i class="material-symbols right"&gt;arrow_drop_down&lt;/i&gt;
+      <div id="small" class="section scrollspy">
+        <h3>Small</h3>
+        <p>
+          Leave the badge empty. It is a 6dp circle with no label —
+          an unread mark, not a count.
+        </p>
+        <p>
+          <button type="button" class="button extra circle" aria-label="Notifications, unread">
+            <i class="material-symbols">notifications<span class="badge"></span></i>
+          </button>
+        </p>
+<pre><code>&lt;i class="material-symbols"&gt;
+  notifications&lt;span class="badge"&gt;&lt;/span&gt;
+&lt;/i&gt;</code></pre>
+      </div>
+
+      <div id="large" class="section scrollspy">
+        <h3>Large</h3>
+        <p>
+          Put a number or short label in the badge. Height is 16dp,
+          corners are a stadium, inset is 4dp. Cap the string at four
+          characters; use <code>999+</code> when the count is larger.
+        </p>
+        <p>
+          <button type="button" class="button extra circle" aria-label="Mail, 1 unread">
+            <i class="material-symbols">mail<span class="badge">1</span></i>
+          </button>
+          <button type="button" class="button extra circle" aria-label="Mail, more than 999 unread">
+            <i class="material-symbols">mail<span class="badge">999+</span></i>
+          </button>
+        </p>
+<pre><code>&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/i&gt;
+&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;999+&lt;/span&gt;&lt;/i&gt;</code></pre>
+      </div>
+
+      <div id="navigation" class="section scrollspy">
+        <h3>On navigation</h3>
+        <p>
+          A destination can nest the badge in the icon, or keep it as a
+          sibling after the label — the bar and rail position that
+          sibling on the icon’s upper trailing corner.
+        </p>
+        <nav class="navigation-bar mb-3" aria-label="Mail">
+          <a href="#!" aria-current="page">
+            <i class="material-symbols">inbox<span class="badge">3</span></i>
+            Inbox
+          </a>
+          <a href="#!">
+            <i class="material-symbols">chat<span class="badge"></span></i>
+            Chat
+          </a>
+          <a href="#!">
+            <i class="material-symbols">group</i>
+            Groups
+          </a>
+        </nav>
+<pre><code>&lt;a href="#!"&gt;
+  &lt;i class="material-symbols"&gt;inbox&lt;span class="badge"&gt;3&lt;/span&gt;&lt;/i&gt;
+  Inbox
 &lt;/a&gt;</code></pre>
       </div>
 
-      <div id="navbar" class="section scrollspy">
-        <h3>Badges in Navbar</h3>
-        <header>
-          <nav>
-            <h2>Logo</h2>
-            <menu class="hide-on-med-and-down">
-              <li><a href="#!">sass</a></li>
-              <li>
-                <a href="#!">sass <span class="new badge">4</span></a>
-              </li>
-              <li><a href="#!">sass</a></li>
-            </menu>
-          </nav>
-        </header>
-<pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;h2&gt;Logo&lt;/h2&gt;
-    &lt;menu class="hide-on-med-and-down"&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;sass&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;sass &lt;span class="new badge"&gt;4&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;sass&lt;/a&gt;&lt;/li&gt;
-    &lt;/menu&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+      <div id="lists" class="section scrollspy">
+        <h3>In a list</h3>
+        <p>
+          A trailing <code>.badge</code> in a list or drawer row stays
+          in flow on the end, as a count, not overlapped on the leading
+          icon.
+        </p>
+        <ul class="list">
+          <li>
+            <i class="material-symbols">inbox</i>
+            Inbox
+            <span class="badge">3</span>
+          </li>
+          <li>
+            <i class="material-symbols">send</i>
+            Sent
+          </li>
+        </ul>
+<pre><code>&lt;ul class="list"&gt;
+  &lt;li&gt;
+    &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+    Inbox
+    &lt;span class="badge"&gt;3&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
       </div>
 
       <div id="sidenav" class="section scrollspy">
-        <h3>Badges in a sidenav</h3>
+        <h3>In a sidenav</h3>
         <p>
           Put a badge on a <code>summary</code> or a destination. Nested
           sections are native <code>&lt;details&gt;</code>.
@@ -99,7 +148,7 @@
               <summary>
                 <i class="material-symbols">inbox</i>
                 Inbox
-                <span class="new badge">4</span>
+                <span class="badge">4</span>
               </summary>
               <ul>
                 <li><a href="#!">Primary<span class="badge">1</span></a></li>
@@ -109,64 +158,39 @@
           </li>
           <li><a href="#!">Sent</a></li>
         </ul>
-<pre><code>&lt;li&gt;
-  &lt;details&gt;
-    &lt;summary&gt;
-      &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
-      Inbox
-      &lt;span class="new badge"&gt;4&lt;/span&gt;
-    &lt;/summary&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Primary&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/details&gt;
-&lt;/li&gt;</code></pre>
+<pre><code>&lt;summary&gt;
+  &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+  Inbox
+  &lt;span class="badge"&gt;4&lt;/span&gt;
+&lt;/summary&gt;</code></pre>
       </div>
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
-        <p class="flow-text">You can customize captions in many ways.</p>
-
-        <h5 class="light">Custom Caption</h5>
-        <ul class="list">
-          <li>
-            <a href="#!">Custom Badge Captions<span class="new badge" data-badge-caption="custom caption">4</span></a>
-          </li>
-          <li>
-            <a href="#!">Custom Badge Captions<span class="badge" data-badge-caption="custom caption">4</span></a>
-          </li>
-        </ul>
+      <div id="color" class="section scrollspy">
+        <h3>Color</h3>
         <p>
-          You can explicitly set the caption in a badge using the
-          <code>data-badge-caption</code>
-          attribute.
+          Default is <code>error</code> / <code>on-error</code>. Override
+          with a fill + <code>on-*</code> pair when the badge is not an
+          error/notification.
         </p>
-<pre><code>&lt;span class="new badge" data-badge-caption="custom caption"&gt;4&lt;/span&gt;
-&lt;span class="badge" data-badge-caption="custom caption"&gt;4&lt;/span&gt;</code></pre>
-
-        <h5 class="light">Colors</h5>
-        <ul class="list">
-          <li>
-            <a href="#!">Red<span class="new badge error on-error-text" data-badge-caption="red">4</span></a>
-          </li>
-          <li>
-            <a href="#!">Blue<span class="new badge primary on-primary-text" data-badge-caption="blue">4</span></a>
-          </li>
-        </ul>
-        <p>You can use our color classes to set the background-color of the badge.</p>
-<pre><code>&lt;span class="new badge error on-error-text"&gt;4&lt;/span&gt;
-&lt;span class="new badge primary on-primary-text"&gt;4&lt;/span&gt;</code></pre>
+        <p>
+          <i class="material-symbols">mail<span class="badge">3</span></i>
+          <i class="material-symbols">star<span class="badge primary on-primary-text">1</span></i>
+        </p>
+<pre><code>&lt;span class="badge"&gt;3&lt;/span&gt;
+&lt;span class="badge primary on-primary-text"&gt;1&lt;/span&gt;</code></pre>
       </div>
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#lists">Lists</a></li>
-          <li><a href="#dropdown">Dropdown</a></li>
-          <li><a href="#navbar">Navbar</a></li>
-          <li><a href="#sidenav">Sidenav</a></li>
-          <li><a href="#options">Options</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#small">Small</a></li>
+          <li><a href="#large">Large</a></li>
+          <li><a href="#navigation">On navigation</a></li>
+          <li><a href="#lists">In a list</a></li>
+          <li><a href="#sidenav">In a sidenav</a></li>
+          <li><a href="#color">Color</a></li>
         </ul>
       </div>
     </div>
