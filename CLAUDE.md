@@ -34,7 +34,7 @@ npm run watch          # sass --watch + esbuild --watch in parallel
 npm run clean          # remove dist/
 ```
 
-`npm test` runs a single test file with `node --test path/to/file.test.js`, or filter by name with `node --test --test-name-pattern "Collapsible"`.
+`npm test` runs a single test file with `node --test path/to/file.test.js`, or filter by name with `node --test --test-name-pattern "Sidenav"`.
 
 Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Sidenav.getInstance(el)`).
 
@@ -97,7 +97,7 @@ Other things worth knowing:
 
 **Read `src/ts/README.md` before adding code** — layout, the add-a-component steps, and the Component contract. Layers: `core/` (base class, `Utils`, types) ← `components/` (per-element widgets) and `behaviors/` (document-level enhancers: `Forms`, `Waves`); `plugins/` holds non-`Component` helpers; `index.ts` is the public entry.
 
-`src/ts/core/component.ts` defines the `Component<O extends BaseOptions>` base class. Every component follows the same shape (see `components/collapsible.ts`, `components/carousel.ts` for full examples):
+`src/ts/core/component.ts` defines the `Component<O extends BaseOptions>` base class. Every component follows the same shape (see `components/carousel.ts`, `components/sidenav.ts` for full examples):
 
 ```ts
 export interface XOptions extends BaseOptions { /* … */ }

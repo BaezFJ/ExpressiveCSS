@@ -35,6 +35,16 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   height: 100%;
 }
 
+/* In-flow sidenav so examples can sit in a docs section. */
+.sidenav.sidenav-demo {
+  position: static;
+  transform: none;
+  height: auto;
+  max-width: 20rem;
+  z-index: auto;
+  margin: 0 0 1rem;
+}
+
 /* Offset documentation pages so they sit beside the fixed sidenav. */
 @media (width >= 993px) {
   body.docs > header,

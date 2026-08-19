@@ -10,7 +10,6 @@ export { Cards } from './cards';
 export { Carousel } from './carousel';
 export { CharacterCounter } from './characterCounter';
 export { Chips } from './chips';
-export { Collapsible } from './collapsible';
 export { Datepicker } from './datepicker';
 export { Dropdown } from './dropdown';
 export { Lightbox } from './lightbox';

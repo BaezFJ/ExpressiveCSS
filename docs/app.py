@@ -215,7 +215,7 @@ def collections():
 @app.route('/collapsible')
 @app.route('/collapsible.html')
 def collapsible():
-    return render_template('components/collapsible.html')
+    return redirect(url_for('sidenav'), code=301)
 
 
 @app.route('/modals')

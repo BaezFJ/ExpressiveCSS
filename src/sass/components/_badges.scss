@@ -54,21 +54,16 @@ header:has(> nav) nav a span.badge {
   margin-inline-start: auto;
 }
 
-.collapsible span.badge {
-  margin-left: auto;
-
-  &.leading {
-    margin-right: 7px;
-    order: -1;
-  }
-}
-
-.collapsible :is(.active, [open]) span.badge:not(.new) {
-  color: var(--md-sys-color-on-surface-variant);
-}
-
 .sidenav span.badge {
-  margin-top: calc(calc(var(--md-comp-nav-drawer-line-height) * 0.5) - calc(22px * 0.5));
+  float: none;
+  margin-block: 0;
+}
+
+.sidenav summary .badge {
+  // Sit before the expand_more chevron. The chevron already has
+  // margin-inline-start: auto; another auto here would share the leftover
+  // space and float the badge away from the label.
+  margin-inline-start: 14px;
 }
 
 table span.badge {

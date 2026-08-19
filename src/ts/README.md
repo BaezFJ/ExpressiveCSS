@@ -76,11 +76,9 @@ read-it-off-the-element access that key provides.
   is a CSS scroll-snap track. The default remains the 3D coverflow, driven
   by pointer events and a shared resize listener. `destroy()` removes
   generated indicators.
-- **Collapsible is HTML.** Default anatomy is `<details>` / `<summary>`;
-  same `name` is an accordion, `.expandable` (or no `name`) lets several
-  stay open. Height is CSS (`grid-template-rows: 0fr/1fr`). JS is the
-  public `open`/`close` API, accordion for the `<ul>/<li>` alias, and
-  `aria-expanded` on non-native headers.
+- **Sidenav nested sections are HTML.** `<details>` / `<summary>` inside
+  a `.sidenav`; same `name` is an accordion. There is no Collapsible
+  plugin — the drawer styles the summary as a destination row.
 - **Tap target (Feature Discovery) is a popover + CSS.** JS writes
   `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
   one origin rect. The wrapper uses `popover="auto"` when the platform

@@ -25,11 +25,6 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="carousel"><a class="carousel-item" href="#one"><img src="http://localhost/1.jpg"></a><a class="carousel-item" href="#two"><img src="http://localhost/2.jpg"></a></div>`
   },
   { name: 'Chips', selector: '.chips', html: `<div class="chips"></div>` },
-  {
-    name: 'Collapsible',
-    selector: '.collapsible',
-    html: `<div class="collapsible"><details><summary>One</summary><p>Body one</p></details><details><summary>Two</summary><p>Body two</p></details></div>`
-  },
   { name: 'Datepicker', selector: '.datepicker', html: `<input type="text" class="datepicker">` },
   {
     name: 'Dropdown',

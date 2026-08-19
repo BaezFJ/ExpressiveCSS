@@ -22,7 +22,6 @@ export const AUTO_INIT_COMPONENTS = {
   Cards: { component: Components.Cards, selector: CARDS_SELECTOR },
   Carousel: { component: Components.Carousel, selector: '.carousel' },
   Chips: { component: Components.Chips, selector: '.chips' },
-  Collapsible: { component: Components.Collapsible, selector: '.collapsible' },
   Datepicker: { component: Components.Datepicker, selector: '.datepicker' },
   Dropdown: { component: Components.Dropdown, selector: '.dropdown-trigger' },
   Lightbox: { component: Components.Lightbox, selector: '.lightboxed' },

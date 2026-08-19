@@ -12,8 +12,8 @@ controls, and JavaScript components in browser, ES module, and CommonJS builds.
 - Light and dark themes using CSS custom properties
 - Responsive grid and utility classes
 - Buttons, cards, forms, navigation, and other styled components
-- Interactive components including carousels, collapsibles, date pickers,
-  dropdowns, side navigation, tabs, tooltips, and more
+- Interactive components including carousels, date pickers, dropdowns,
+  side navigation, tabs, tooltips, and more
 - ES module, CommonJS, browser IIFE, CSS, and TypeScript declaration outputs
 - Automatic component initialization with an opt-out mechanism
 
@@ -62,12 +62,7 @@ after the page has loaded:
 ```html
 <link rel="stylesheet" href="dist/css/expressive.min.css">
 
-<div class="collapsible">
-  <details name="intro">
-    <summary>Details</summary>
-    <p>ExpressiveCSS is ready.</p>
-  </details>
-</div>
+<a class="button tooltipped" data-tooltip="ExpressiveCSS is ready.">Hover</a>
 
 <script src="dist/js/expressive.min.js"></script>
 <script>

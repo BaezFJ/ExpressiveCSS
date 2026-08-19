@@ -35,9 +35,14 @@ describe('IIFE bundle', () => {
 
   test('the global carries AutoInit and the components', () => {
     assert.equal(typeof dom.window.Expressive.AutoInit, 'function');
-    for (const name of ['Collapsible', 'Tabs', 'Toast', 'FormSelect', 'Dialogs']) {
+    for (const name of ['Sidenav', 'Tabs', 'Toast', 'FormSelect', 'Dialogs']) {
       assert.equal(typeof dom.window.Expressive[name], 'function', `${name} missing from global`);
     }
+    assert.equal(
+      dom.window.Expressive.Collapsible,
+      undefined,
+      'retired Collapsible is still on the global'
+    );
   });
 
   test('reports ExpressiveCSS own version, matching package.json', () => {

@@ -8,83 +8,6 @@ import assert from 'node:assert/strict';
 
 import { Expressive, resetBody, fire, window } from './setup.js';
 
-const detailsHtml = `
-  <div class="collapsible">
-    <details><summary>One</summary><p>Body one</p></details>
-    <details><summary>Two</summary><p>Body two</p></details>
-  </div>`;
-
-describe('Collapsible', () => {
-  beforeEach(resetBody);
-
-  test('open() and close() toggle <details>', () => {
-    document.body.innerHTML = detailsHtml;
-    const el = document.querySelector('.collapsible');
-    const [first] = el.querySelectorAll('details');
-    const instance = Expressive.Collapsible.init(el);
-
-    assert.equal(first.open, false);
-    instance.open(0);
-    assert.equal(first.open, true);
-    instance.close(0);
-    assert.equal(first.open, false);
-  });
-
-  test('accordion open() closes the other details section', () => {
-    document.body.innerHTML = detailsHtml;
-    const el = document.querySelector('.collapsible');
-    const [first, second] = el.querySelectorAll('details');
-    const instance = Expressive.Collapsible.init(el);
-
-    instance.open(0);
-    instance.open(1);
-    assert.equal(second.open, true);
-    assert.equal(first.open, false, 'accordion left two sections open');
-  });
-
-  test('init assigns a shared name so native exclusive-open works', () => {
-    document.body.innerHTML = detailsHtml;
-    const el = document.querySelector('.collapsible');
-    Expressive.Collapsible.init(el);
-    const names = [...el.querySelectorAll('details')].map((d) => d.getAttribute('name'));
-    assert.ok(names[0]);
-    assert.equal(names[0], names[1]);
-  });
-
-  test('wraps details content and unwraps on destroy', () => {
-    document.body.innerHTML = detailsHtml;
-    const el = document.querySelector('.collapsible');
-    const [first] = el.querySelectorAll('details');
-    const instance = Expressive.Collapsible.init(el);
-
-    const body = first.querySelector(':scope > div');
-    assert.ok(body);
-    assert.equal(body.querySelector('p')?.textContent, 'Body one');
-
-    instance.destroy();
-    assert.equal(first.querySelector(':scope > div'), null);
-    assert.equal(first.querySelector(':scope > p')?.textContent, 'Body one');
-  });
-
-  test('.expandable lets several sections stay open and does not assign name', () => {
-    document.body.innerHTML = `
-      <div class="collapsible expandable">
-        <details><summary>One</summary><p>Body one</p></details>
-        <details><summary>Two</summary><p>Body two</p></details>
-      </div>`;
-    const el = document.querySelector('.collapsible');
-    const [first, second] = el.querySelectorAll('details');
-    const instance = Expressive.Collapsible.init(el);
-
-    assert.equal(instance.options.accordion, false);
-    assert.equal(first.getAttribute('name'), null);
-    instance.open(0);
-    instance.open(1);
-    assert.equal(first.open, true);
-    assert.equal(second.open, true);
-  });
-});
-
 describe('TapTarget', () => {
   beforeEach(resetBody);
 
@@ -654,5 +577,25 @@ describe('Sidenav', () => {
     const instance = Expressive.Sidenav.init(el);
     instance.destroy();
     assert.equal(Expressive.Sidenav.getInstance(el), undefined);
+  });
+
+  test('nested details sections do not need a Collapsible instance', () => {
+    document.body.innerHTML = `
+      <ul id="slide-out" class="sidenav">
+        <li>
+          <details name="nav">
+            <summary>More</summary>
+            <ul><li><a href="#!">Child</a></li></ul>
+          </details>
+        </li>
+      </ul>
+      <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
+    const el = document.querySelector('.sidenav');
+    const instance = Expressive.Sidenav.init(el);
+    assert.equal(Expressive.Collapsible, undefined);
+    const details = el.querySelector('details');
+    details.open = true;
+    assert.equal(details.open, true);
+    instance.destroy();
   });
 });

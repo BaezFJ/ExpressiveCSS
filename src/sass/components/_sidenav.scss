@@ -8,6 +8,10 @@
 // and a scrim tap close it. Drag writes --md-comp-nav-drawer-shift;
 // this file does the slide.
 //
+// Nested sections are native <details>/<summary>. Same `name` is an
+// accordion. The summary is a destination row with an expand_more
+// chevron; there is no Collapsible plugin.
+//
 // .sidenav-fixed is a breakpoint, not a JS open(): at `large` the host
 // is display: contents so the list is a docked sidebar. Below that it
 // is the same overlay drawer as any other sidenav.
@@ -152,10 +156,6 @@ dialog.sidenav {
     transform: translateX(100%);
   }
 
-  .collapsible {
-    margin: 0;
-  }
-
   li {
     list-style: none;
     display: grid;
@@ -166,11 +166,7 @@ dialog.sidenav {
     background-color: color-mix(in oklab, var(--md-sys-color-secondary) 10%, transparent);
   }
 
-  details > div > ul {
-    padding-left: 10px;
-  }
-
-  li > a {
+  :is(li > a, summary) {
     display: flex;
     align-items: center;
     margin: 0 12px;
@@ -180,22 +176,6 @@ dialog.sidenav {
     border-radius: 100px;
     font-size: var(--md-comp-nav-drawer-font-size);
     font-weight: 500;
-
-    &:not(.button, .circle, .extra) {
-      color: var(--md-sys-color-on-secondary-container);
-
-      &:hover {
-        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
-      }
-
-      @include focus-visible;
-    }
-
-    &.button,
-    &.circle,
-    &.extra {
-      margin: 10px 15px;
-    }
 
     > :is(
       .material-symbols,
@@ -208,6 +188,75 @@ dialog.sidenav {
       flex-shrink: 0;
       margin-right: 12px;
     }
+  }
+
+  li > a:not(.button, .circle, .extra),
+  summary {
+    color: var(--md-sys-color-on-secondary-container);
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+
+    @include focus-visible;
+  }
+
+  li > a.button,
+  li > a.circle,
+  li > a.extra {
+    margin: 10px 15px;
+  }
+
+  summary {
+    box-sizing: border-box;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    text-align: start;
+    list-style: none;
+    cursor: pointer;
+    appearance: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      content: none;
+    }
+
+    &::after {
+      content: "expand_more";
+      flex-shrink: 0;
+      margin-inline-start: auto;
+      font-family: var(--md-icon-font);
+      font-size: 24px;
+      font-style: normal;
+      font-variation-settings:
+        "FILL" var(--md-icon-fill),
+        "wght" var(--md-icon-weight),
+        "GRAD" var(--md-icon-grade),
+        "opsz" var(--md-icon-optical-size);
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      transition: transform var(--md-comp-nav-drawer-duration, 250ms)
+        var(--md-comp-nav-drawer-easing, ease);
+    }
+  }
+
+  details {
+    margin: 0;
+  }
+
+  details[open] > summary::after {
+    transform: rotate(180deg);
+  }
+
+  details > ul {
+    margin: 0;
+    padding: 0;
+    padding-inline-start: 10px;
+    list-style: none;
   }
 
   .divider {
@@ -333,25 +382,4 @@ dialog.sidenav-overlay:modal > .sidenav {
   }
 }
 
-.sidenav details > :not(summary) {
-  padding: 0;
-}
 
-.sidenav,
-.sidenav.sidenav-fixed {
-  .collapsible {
-    overflow: visible;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  summary {
-    border: none;
-  }
-
-  details > :not(summary) {
-    border: none;
-  }
-}

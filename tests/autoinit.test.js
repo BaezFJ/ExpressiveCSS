@@ -28,19 +28,19 @@ describe('AutoInit', () => {
   test('every fixture selector is covered exactly once', () => {
     const selectors = AUTO_INIT_FIXTURES.map((f) => f.selector);
     assert.equal(new Set(selectors).size, selectors.length, 'duplicate selector in fixtures');
-    assert.equal(AUTO_INIT_FIXTURES.length, 19);
+    assert.equal(AUTO_INIT_FIXTURES.length, 18);
   });
 
   test('skips elements marked .no-autoinit', () => {
     document.body.innerHTML = `
-      <div class="collapsible no-autoinit"><details><summary>H</summary><p>B</p></details></div>
-      <div class="collapsible"><details><summary>H</summary><p>B</p></details></div>`;
-    const [optedOut, normal] = document.querySelectorAll('.collapsible');
+      <a class="button tooltipped no-autoinit" data-tooltip="Hi">Hover</a>
+      <a class="button tooltipped" data-tooltip="Hi">Hover</a>`;
+    const [optedOut, normal] = document.querySelectorAll('.tooltipped');
 
     Expressive.AutoInit();
 
-    assert.equal(Expressive.Collapsible.getInstance(optedOut), undefined);
-    assert.ok(Expressive.Collapsible.getInstance(normal));
+    assert.equal(Expressive.Tooltip.getInstance(optedOut), undefined);
+    assert.ok(Expressive.Tooltip.getInstance(normal));
   });
 
   test('.no-autoinit is honoured on a card article', () => {
@@ -66,23 +66,23 @@ describe('AutoInit', () => {
 
   test('only touches the context it is given', () => {
     document.body.innerHTML = `
-      <div id="inside"><div class="collapsible"><details><summary>H</summary><p>B</p></details></div></div>
-      <div id="outside"><div class="collapsible"><details><summary>H</summary><p>B</p></details></div></div>`;
+      <div id="inside"><a class="button tooltipped" data-tooltip="Hi">Hover</a></div>
+      <div id="outside"><a class="button tooltipped" data-tooltip="Hi">Hover</a></div>`;
 
     Expressive.AutoInit(document.getElementById('inside'));
 
-    assert.ok(Expressive.Collapsible.getInstance(document.querySelector('#inside .collapsible')));
-    assert.equal(Expressive.Collapsible.getInstance(document.querySelector('#outside .collapsible')), undefined);
+    assert.ok(Expressive.Tooltip.getInstance(document.querySelector('#inside .tooltipped')));
+    assert.equal(Expressive.Tooltip.getInstance(document.querySelector('#outside .tooltipped')), undefined);
   });
 
   test('re-initializing an element replaces the instance instead of stacking', () => {
-    document.body.innerHTML = `<div class="collapsible"><details><summary>H</summary><p>B</p></details></div>`;
-    const el = document.querySelector('.collapsible');
+    document.body.innerHTML = `<a class="button tooltipped" data-tooltip="Hi">Hover</a>`;
+    const el = document.querySelector('.tooltipped');
 
     Expressive.AutoInit();
-    const first = Expressive.Collapsible.getInstance(el);
+    const first = Expressive.Tooltip.getInstance(el);
     Expressive.AutoInit();
-    const second = Expressive.Collapsible.getInstance(el);
+    const second = Expressive.Tooltip.getInstance(el);
 
     assert.ok(first && second);
     assert.notEqual(first, second, 'second AutoInit() did not create a new instance');

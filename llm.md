@@ -54,7 +54,6 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 
 - Auto Init
 - Navigation rail
-- Collapsible
 - Dropdown
 - Feature Discovery
 - Media
@@ -211,15 +210,14 @@ Initialize all registered components in a context:
 Expressive.AutoInit();
 
 Expressive.AutoInit(document.querySelector('#app'), {
-  Tooltip: { position: 'top' },
-  Collapsible: { accordion: false }
+  Tooltip: { position: 'top' }
 });
 ```
 
 Opt an element out when it needs manual options:
 
 ```html
-<ul class="collapsible no-autoinit">...</ul>
+<a class="button tooltipped no-autoinit" data-tooltip="Hi">Hover</a>
 ```
 
 `AutoInit()` recognizes these public components and selectors:
@@ -230,11 +228,11 @@ Opt an element out when it needs manual options:
 | `Cards` | `card activator/reveal elements` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Collapsible` | `.collapsible` |
 | `Datepicker` | `.datepicker` |
 | `Dropdown` | `.dropdown-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `Modal` | `.modal` |
+| `NavigationRail` | `.navigation-rail` |
 | `Parallax` | `.parallax` |
 | `Pushpin` | `.pushpin` |
 | `ScrollSpy` | `.scrollspy` |
@@ -267,7 +265,7 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, `Waves`, and `version`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
-- `Chips`, `Collapsible`, `Datepicker`, `Dropdown`, and `Lightbox`
+- `Chips`, `Datepicker`, `Dropdown`, and `Lightbox`
 - `Modal`, `Parallax`, `Pushpin`, `Range`, and `ScrollSpy`
 - `FormSelect`, `Sidenav`, `Slider`, `Tabs`, and `TapTarget`
 - `Timepicker`, `Toast`, and `Tooltip`
@@ -380,7 +378,7 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 
 #### Initialize JavaScript
 
-The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as collapsibles, sidenavs, and tooltips start themselves.
+The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as sidenavs, tooltips, and tabs start themselves.
 
 `AutoInit()` scans `document.body` by default. Pass a container to limit the scan, or add the `no-autoinit` class to an element that should be initialized manually.
 
@@ -1655,35 +1653,23 @@ Badges can notify you that there are new or unread messages or notifications. Ad
 </header>
 ```
 
-### Badges in Collapsibles
+### Badges in a sidenav
+
+Put a badge on a `summary` or a destination. Nested sections are native `<details>`.
 
 ```html
-<ul class="collapsible">
-  <li>
-    <div class="collapsible-header">
-      <i class="material-icons">filter_drama</i>
-      <div class="collapsible-header-content">First</div>
+<li>
+  <details>
+    <summary>
+      <i class="material-symbols">inbox</i>
+      Inbox
       <span class="new badge">4</span>
-    </div>
-    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-  </li>
-  <li>
-    <div class="collapsible-header">
-      <i class="material-icons">place</i>
-      <div class="collapsible-header-content">Second</div>
-      <span class="badge">1</span>
-    </div>
-    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-  </li>
-  <li>
-    <div class="collapsible-header">
-      <i class="material-icons">textsms</i>
-      <div class="collapsible-header-content">Third</div>
-      <span class="badge leading new">4</span>
-    </div>
-    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-  </li>
-</ul>
+    </summary>
+    <ul>
+      <li><a href="#!">Primary<span class="badge">1</span></a></li>
+    </ul>
+  </details>
+</li>
 ```
 
 ### Options
@@ -3202,11 +3188,11 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Cards` | `.cards` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Collapsible` | `.collapsible` |
 | `Datepicker` | `.datepicker` |
 | `Dropdown` | `.dropdown-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `Modal` | `.modal` |
+| `NavigationRail` | `.navigation-rail` |
 | `Parallax` | `.parallax` |
 | `Pushpin` | `.pushpin` |
 | `ScrollSpy` | `.scrollspy` |
@@ -3225,170 +3211,14 @@ Toast, CharacterCounter, and Range stay out of this table. Range still starts it
 If you want `AutoInit()` to skip an element, add the class `no-autoinit`. Initialize that element yourself with the component’s `init` method when you need options other than the defaults.
 
 ```html
-<ul class="collapsible no-autoinit">
-  <li>
-    <div class="collapsible-header">Header</div>
-    <div class="collapsible-body">Body</div>
-  </li>
-</ul>
+<a class="button tooltipped no-autoinit" data-tooltip="Hi">Hover</a>
 ```
 
 ```js
-Expressive.Collapsible.init(
-  document.querySelector('.collapsible.no-autoinit'),
-  { accordion: false }
+Expressive.Tooltip.init(
+  document.querySelector('.tooltipped.no-autoinit'),
+  { position: 'top' }
 );
-```
-
----
-
-## Collapsible
-
-Accordion sections that expand when you click them.
-
-Collapsibles hide content that is not immediately relevant. Click a header to expand or collapse its body. `AutoInit()` starts every `.collapsible` except those marked `no-autoinit`.
-
-```html
-<ul class="collapsible">
-  <li>
-    <div class="collapsible-header">
-      <i class="material-icons">filter_drama</i>First
-    </div>
-    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-  </li>
-  <li>
-    <div class="collapsible-header">
-      <i class="material-icons">place</i>Second
-    </div>
-    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-  </li>
-  <li>
-    <div class="collapsible-header">
-      <i class="material-icons">whatshot</i>Third
-    </div>
-    <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-  </li>
-</ul>
-```
-
-Headers are a flex row. Wrap the title in `collapsible-header-content` when you add extra items such as a badge so they sit before the expand icon. See Badges in Collapsibles.
-
-### Initialization
-
-The IIFE bundle exposes `Expressive.Collapsible`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.collapsible`.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.collapsible');
-  const instances = Expressive.Collapsible.init(elems, {
-    // specify options here
-  });
-});
-```
-
-Per-instance options can also be passed through AutoInit:
-
-```js
-Expressive.AutoInit(document.body, {
-  Collapsible: { accordion: true }
-});
-```
-
-#### Preselected Section
-
-Add `active` to the `li` that wraps the header to open that section on start. In accordion mode only the first active item opens; with `accordion: false` every active item opens.
-
-```html
-<li class="active">
-  <div class="collapsible-header">
-    <i class="material-icons">place</i>Second
-  </div>
-  <div class="collapsible-body"><p>Lorem ipsum dolor sit amet.</p></div>
-</li>
-```
-
-### Options
-
-You can customize each instance. Callbacks receive the `li` that opened or closed.
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `accordion` | Boolean | `true` | When `true`, only one section stays open. When `false`, several can stay open. There is no styled `expandable` class — this option is the switch. |
-| `onOpenStart` | Function | `null` | Called before a section opens. |
-| `onOpenEnd` | Function | `null` | Called after a section finishes opening. |
-| `onCloseStart` | Function | `null` | Called before a section closes. |
-| `onCloseEnd` | Function | `null` | Called after a section finishes closing. |
-| `inDuration` | Number | `300` | Open transition duration, in milliseconds. |
-| `outDuration` | Number | `300` | Close transition duration, in milliseconds. |
-
-### Methods
-
-> All methods are called on the plugin instance. You can get the instance like this:
-
-```js
-const instance = Expressive.Collapsible.getInstance(elem);
-```
-
-#### .open();
-
-Open a collapsible section.
-
-**Integer:** 0-based index of the section to open.
-
-```text
-instance.open(3);
-```
-
-#### .close();
-
-Close a collapsible section.
-
-**Integer:** 0-based index of the section to close.
-
-```text
-instance.close(3);
-```
-
-#### .destroy();
-
-Destroy the plugin instance and tear down its event handlers.
-
-```text
-instance.destroy();
-```
-
-### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `el` | Element | The DOM element the plugin was initialized with. |
-| `options` | Object | The options the instance was initialized with. |
-
-### Collapsible Types
-
-A collapsible can allow several sections to stay open, or only one at a time (accordion). Accordion is the default.
-
-#### Accordion
-
-This is the default. Opening one section closes the others.
-
-#### Expandable
-
-Pass `accordion: false` so several sections can stay open. Mark the element `no-autoinit` if you initialize it yourself, otherwise AutoInit would start it as an accordion.
-
-```js
-const elem = document.querySelector('.collapsible.no-autoinit');
-const instance = Expressive.Collapsible.init(elem, {
-  accordion: false
-});
-```
-
-#### Popout
-
-Add the `popout` class for the raised, inset look. Behavior is still accordion unless you also pass `accordion: false`.
-
-```html
-<ul class="collapsible popout">
 ```
 
 ---
@@ -4098,7 +3928,7 @@ instance.destroy();
 
 A slide-out menu, or a fixed sidebar on large screens.
 
-This is a slide-out menu. You can nest a Collapsible for dropdown sections. On small screens the documentation sidebar uses this same component.
+This is a slide-out menu. Nest `<details>` / `<summary>` for dropdown sections — the documentation sidebar uses that. On small screens this same drawer slides over the page.
 
 The sidenav HTML must **not** sit inside the app bar’s `<nav>`. Put a `sidenav-trigger` anywhere and set `data-target` to the sidenav’s `id`. `AutoInit()` starts every `.sidenav` except those marked `no-autoinit`.
 
@@ -4140,14 +3970,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 ```
 
-If the sidenav contains a collapsible, AutoInit starts that too (selector `.collapsible`). To init it yourself:
-
-```js
-const collapsibleElem = document.querySelector('.sidenav .collapsible');
-const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
-  // specify options here
-});
-```
+Nested sections are HTML. A `<details>` / `<summary>` inside a `.sidenav` is a dropdown; the same `name` on several details is an accordion. There is no Collapsible plugin.
 
 ### Options
 
@@ -4235,23 +4058,22 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
 
 #### Dropdown HTML Structure
 
-Add a collapsible menu inside the sidenav. The docs sidebar uses this for Styles and Components.
+Nest `<details>` for a section that opens in place. Same `name` on several details is an accordion. The documentation sidebar uses this for Foundations, Structure, Components, and Forms.
 
 ```html
 <ul id="slide-out" class="sidenav">
   <li><a href="#!">First Sidebar Link</a></li>
-  <li class="no-padding">
-    <ul class="collapsible">
-      <li>
-        <a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
-        <div class="collapsible-body">
-          <ul>
-            <li><a href="#!">First</a></li>
-            <li><a href="#!">Second</a></li>
-          </ul>
-        </div>
-      </li>
-    </ul>
+  <li>
+    <details name="docs-nav">
+      <summary>
+        <i class="material-symbols">palette</i>
+        Foundations
+      </summary>
+      <ul>
+        <li><a href="#!">Color</a></li>
+        <li><a href="#!">Typography</a></li>
+      </ul>
+    </details>
   </li>
 </ul>
 ```

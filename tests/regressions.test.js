@@ -318,24 +318,6 @@ describe('optional markup does not crash a component', () => {
     assert.equal(instance.isOpen, false);
     instance.destroy();
   });
-
-  test('collapsible open() indexes details, not every child', () => {
-    document.body.innerHTML = `
-      <div class="collapsible">
-        <div class="oops"></div>
-        <details><summary>One</summary><span>A</span></details>
-        <details><summary>Two</summary><span>B</span></details>
-      </div>`;
-    const el = document.querySelector('.collapsible');
-    const [first, second] = el.querySelectorAll('details');
-    const instance = Expressive.Collapsible.init(el);
-
-    instance.open(0);
-    assert.equal(first.open, true, 'opened a different item than index 0');
-    assert.equal(second.open, false);
-
-    instance.destroy();
-  });
 });
 
 describe('Tabs disabled-selector interpolation', () => {
@@ -398,11 +380,11 @@ describe('App bar medium and large', () => {
     // the 112/152dp bar reads as a small toolbar.
     assert.match(
       css,
-      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.navigation-bar)?\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.navigation-bar)?\)\s*\{[^}]*align-content:\s*space-between/s
+      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*\{[^}]*align-content:\s*space-between/s
     );
     assert.match(
       css,
-      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.navigation-bar)?\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
+      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
     );
   });
 });

@@ -31,7 +31,6 @@
                 </a>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav"{% if request.endpoint in ['color', 'themes', 'typography', 'icons', 'shadow', 'grid', 'helpers', 'media_css', 'table', 'css_transitions', 'pulse', 'waves'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">palette</i>
@@ -76,10 +75,8 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav"{% if request.endpoint in ['navbar', 'navigation_bar', 'navigation_rail', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'dropdown', 'scrollspy'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">view_quilt</i>
@@ -118,11 +115,9 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
             <li>
-                <div class="collapsible">
-                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'collapsible', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'modals', 'badges', 'tooltips', 'toasts', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">widgets</i>
                             Components
@@ -139,9 +134,6 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'lists' %}active{% endif %}">
                                     <a href="{{ url_for('lists') }}">Lists</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'collapsible' %}active{% endif %}">
-                                    <a href="{{ url_for('collapsible') }}">Collapsible</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'modals' %}active{% endif %}">
                                     <a href="{{ url_for('modals') }}">Dialogs</a>
@@ -175,10 +167,8 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
             <li>
-                <div class="collapsible">
                     <details name="docs-nav"{% if request.endpoint in ['fieldsets', 'text_inputs', 'select', 'checkboxes', 'radio_buttons', 'switches', 'range', 'chips', 'autocomplete', 'datepicker', 'timepicker'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">edit</i>
@@ -220,7 +210,6 @@
                                 </li>
                             </ul>
                     </details>
-                </div>
             </li>
         </ul>
     </header>
@@ -271,7 +260,6 @@
                 <a href="{{ url_for('floating_action_button') }}">FAB</a>
                 <a href="{{ url_for('cards') }}">Cards</a>
                 <a href="{{ url_for('lists') }}">Lists</a>
-                <a href="{{ url_for('collapsible') }}">Collapsible</a>
                 <a href="{{ url_for('modals') }}">Dialogs</a>
                 <a href="{{ url_for('badges') }}">Badges</a>
                 <a href="{{ url_for('tooltips') }}">Tooltips</a>

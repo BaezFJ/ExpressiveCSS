@@ -13,8 +13,10 @@
 
       <div id="structure" class="section scrollspy">
         <p class="flow-text">
-          This is a slide-out menu. You can nest a <a href="{{ url_for('collapsible') }}">Collapsible</a> for
-          dropdown sections. On small screens the documentation sidebar uses this same component.
+          This is a slide-out menu. Nest <code>&lt;details&gt;</code> /
+          <code>&lt;summary&gt;</code> for dropdown sections — the
+          documentation sidebar uses that. On small screens this same
+          drawer slides over the page.
         </p>
         <p>
           An overlay sidenav is a modal <code>&lt;dialog&gt;</code>.
@@ -85,11 +87,6 @@
   const instances = Expressive.Sidenav.init(elems, {
     // specify options here
   });
-});</code></pre>
-        <p>If the sidenav contains a collapsible, AutoInit starts that too (selector <code>.collapsible</code>). To init it yourself:</p>
-<pre><code>const collapsibleElem = document.querySelector('.sidenav .collapsible');
-const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
-  // specify options here
 });</code></pre>
       </div>
 
@@ -246,22 +243,53 @@ const collapsibleInstance = Expressive.Collapsible.init(collapsibleElem, {
   edge: 'right'
 });</code></pre>
 
-        <h5 class="light">Dropdown HTML Structure</h5>
-        <p>Add a collapsible menu inside the sidenav. The docs sidebar uses this for Styles and Components.</p>
+        <h5 class="light">Dropdown sections</h5>
+        <p>
+          Nest <code>&lt;details&gt;</code> for a section that opens in
+          place. Same <code>name</code> on several details is an
+          accordion. The documentation sidebar uses this for Foundations,
+          Structure, Components, and Forms.
+        </p>
+        <ul class="sidenav sidenav-demo">
+          <li><a href="#!"><i class="material-symbols">inbox</i>Inbox</a></li>
+          <li>
+            <details name="sidenav-demo" open>
+              <summary>
+                <i class="material-symbols">palette</i>
+                Foundations
+              </summary>
+              <ul>
+                <li><a href="#!">Color</a></li>
+                <li><a href="#!">Typography</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details name="sidenav-demo">
+              <summary>
+                <i class="material-symbols">view_quilt</i>
+                Structure
+              </summary>
+              <ul>
+                <li><a href="#!">App bar</a></li>
+                <li><a href="#!">Sidenav</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
 <pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="no-padding"&gt;
-    &lt;ul class="collapsible"&gt;
-      &lt;li&gt;
-        &lt;a class="collapsible-header"&gt;Dropdown&lt;i class="material-symbols"&gt;arrow_drop_down&lt;/i&gt;&lt;/a&gt;
-        &lt;div class="collapsible-body"&gt;
-          &lt;ul&gt;
-            &lt;li&gt;&lt;a href="#!"&gt;First&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a href="#!"&gt;Second&lt;/a&gt;&lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/div&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
+  &lt;li&gt;
+    &lt;details name="docs-nav"&gt;
+      &lt;summary&gt;
+        &lt;i class="material-symbols"&gt;palette&lt;/i&gt;
+        Foundations
+      &lt;/summary&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#!"&gt;Color&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#!"&gt;Typography&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/details&gt;
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
 
