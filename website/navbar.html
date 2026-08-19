@@ -278,10 +278,11 @@
           <code>on-*</code> text class if you want a colored bar.
         </p>
         <p>
-          The bar is CSS-only. Dropdowns, tabs, and the sidenav are separate
+          The bar is CSS-only. Dropdowns and the sidenav are separate
           components that <code>AutoInit()</code> starts. A
           <code>sidenav-trigger</code> inside the bar is still required — that
-          class is the Sidenav contract, not bar chrome.
+          class is the Sidenav contract, not bar chrome. Tabs live in
+          their own bar — do not nest <code>.tabs</code> in the header.
         </p>
 
         <h3>Small</h3>
@@ -483,46 +484,6 @@
         </table>
       </div>
 
-      <div id="navbar-tabs" class="section scrollspy">
-        <h3>Tabs</h3>
-        <p>
-          Put <code>.tabs</code> on a sibling of the <code>&lt;nav&gt;</code>,
-          still inside the header. The tab list is transparent against the bar.
-          <code>AutoInit()</code> starts <code>.tabs</code>.
-        </p>
-        <header class="mb-3">
-          <nav>
-            <h2>Title</h2>
-            <menu class="hide-on-med-and-down">
-              <li><a href="#!">Sass</a></li>
-              <li><a href="#!">Components</a></li>
-            </menu>
-          </nav>
-          <nav class="tabs" aria-label="Sections">
-            <a href="#navbar-test1">Test 1</a>
-            <a class="active" href="#navbar-test2">Test 2</a>
-            <a class="disabled" href="#navbar-test3">Disabled Tab</a>
-            <a href="#navbar-test4">Test 4</a>
-          </nav>
-        </header>
-        <div id="navbar-test1" class="s12 py-3">Test 1</div>
-        <div id="navbar-test2" class="s12 py-3">Test 2</div>
-        <div id="navbar-test3" class="s12 py-3">Test 3</div>
-        <div id="navbar-test4" class="s12 py-3">Test 4</div>
-<pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-  &lt;/nav&gt;
-  &lt;nav class="tabs"&gt;
-    &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
-    &lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;
-
-&lt;div id="test1"&gt;Test 1&lt;/div&gt;
-&lt;div id="test2"&gt;Test 2&lt;/div&gt;</code></pre>
-      </div>
-
       <div id="navbar-dropdown" class="section scrollspy">
         <h3>Dropdown</h3>
         <p>
@@ -675,7 +636,6 @@
           <li><a href="#medium">Medium and large</a></li>
           <li><a href="#fixed">Fixed</a></li>
           <li><a href="#color">Color</a></li>
-          <li><a href="#navbar-tabs">Tabs</a></li>
           <li><a href="#navbar-dropdown">Dropdown</a></li>
           <li><a href="#search-docs">Search</a></li>
           <li><a href="#mobile-collapse">Mobile collapse</a></li>
