@@ -340,7 +340,10 @@
           from the button’s <code>value</code>. An optional leading
           <code>&lt;i&gt;</code> is the M3 dialog icon. Tapping the scrim
           closes it too, but only if the press and the release both miss
-          the dialog.
+          the dialog. Docked panes are
+          <a href="/side-sheet.html">Side sheet</a>
+          and
+          <a href="/bottom-sheet.html">Bottom sheet</a>.
         </p>
       </div>
 
@@ -394,37 +397,11 @@
               <td>560px</td>
             </tr>
             <tr>
-              <td><code>--md-comp-basic-dialog-sheet-width</code></td>
-              <td>400px</td>
-            </tr>
-            <tr>
               <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
               <td>12px</td>
             </tr>
           </tbody>
         </table>
-      </div>
-
-      <div id="sheets" class="section scrollspy">
-        <h3>Sheets</h3>
-        <p>
-          Add <code>top</code> to dock the dialog to the top edge. Side
-          sheets and bottom sheets are separate M3 components — see
-          <a href="/side-sheet.html">Side sheet</a>
-          and
-          <a href="/bottom-sheet.html">Bottom sheet</a>.
-        </p>
-        <p>
-          <button type="button" class="tonal" onclick="document.getElementById('modal-top').showModal()">Top</button>
-        </p>
-        <dialog id="modal-top" class="top">
-          <h2>Top sheet</h2>
-          <p>Docked to the top. Useful for a compact status or filter bar.</p>
-          <form method="dialog">
-            <button type="submit" class="text" value="close">Close</button>
-          </form>
-        </dialog>
-<pre><code>&lt;dialog class="top"&gt;…&lt;/dialog&gt;</code></pre>
       </div>
 
       <div id="fullscreen" class="section scrollspy">
@@ -461,7 +438,6 @@
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#tokens">Tokens</a></li>
-          <li><a href="#sheets">Sheets</a></li>
           <li><a href="#fullscreen">Full-screen</a></li>
         </ul>
       </div>
