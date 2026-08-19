@@ -63,6 +63,12 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   scroll-margin-top: 5rem;
 }
 
+/* Pin the in-page TOC under the app bar. Native sticky replaces Pushpin. */
+.toc-wrapper {
+  position: sticky;
+  top: 5rem;
+}
+
 /* Code samples — the framework has no pre styling. */
 pre {
   background-color: var(--md-sys-color-surface-variant);
