@@ -295,7 +295,7 @@
           </li>
         </ul>
         <p>
-          <button type="button" onclick="document.getElementById('sheet-standard').show()">Show standard</button>
+          <button type="button" onclick="(function(d){ d.open ? d.close() : d.show(); })(document.getElementById('sheet-standard'))">Show standard</button>
           <button type="button" class="tonal" onclick="document.getElementById('sheet-modal').showModal()">Show modal</button>
           <button type="button" class="outlined" onclick="document.getElementById('sheet-back').showModal()">Show with back</button>
         </p>
