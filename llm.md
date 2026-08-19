@@ -3172,11 +3172,11 @@ Expressive.Tooltip.init(
 
 Material Design 3 menus, from the HTML.
 
-A `<menu>` is the surface. Each `<li>` is an item, an `<hr>` is a divider, and an `<i>` inside the item is the leading icon. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is still required — that is the JavaScript contract.
+A `<menu>` is the surface. Each `<li>` is an item. A leading `<i>` is the leading icon; a trailing `<i>` or `<kbd>` is trailing content. An `<hr>` is a divider; a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
-Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface`, 4dp corners, elevation 2, at least 112dp wide. Items are 48dp, `label-large` / `on-surface`, with 12dp inset. Icons are 24dp `on-surface-variant`. Hover is an 8% state layer.
+This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container`, 16dp corners, elevation 2, 4dp padding, 112–280dp wide. Items are 48dp with extra-small (4dp) corners, `label-large` / `on-surface`. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer that does not span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
-`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click by default. M3 opens the menu below the trigger; pass `coverTrigger: false` for that. The default still covers the trigger so Select is unchanged.
+`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger.
 
 Drop me
 
@@ -3226,7 +3226,7 @@ Expressive.AutoInit(document.body, {
 | `autoFocus` | Boolean | `true` | If true, automatically focus the menu for keyboard navigation. This option is named `autoFocus`, not `autoTrigger`. |
 | `constrainWidth` | Boolean | `true` | If true, the menu is as wide as the trigger. M3 menus are independently sized — pass `false` for that. |
 | `container` | Element | `null` | Element that will contain the menu. When omitted, the menu is moved next to the trigger. |
-| `coverTrigger` | Boolean | `true` | If false, the menu opens below the trigger. That is the M3 placement. The default still covers the trigger so Select is unchanged. |
+| `coverTrigger` | Boolean | `false` | If false, the menu opens below the trigger (the M3 placement). Pass `true` to cover the trigger. |
 | `closeOnClick` | Boolean | `true` | If true, close the menu when an item is clicked. |
 | `hover` | Boolean | `false` | If true, the menu opens on hover instead of click. |
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |

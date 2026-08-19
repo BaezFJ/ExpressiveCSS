@@ -85,8 +85,12 @@ read-it-off-the-element access that key provides.
   has it. Do not build a `#${data-target}` selector.
 - **Menu nested menus are markup.** A `<menu>` inside an `<li>`
   is a flyout. Hover / `:focus-within` on `(hover: hover) and
-  (pointer: fine)`; `.open` is the tap/keyboard switch. Do not start a
-  second Menu. `closeOnClick` ignores the parent row of a submenu.
+  (pointer: fine)`; `.open` is the tap/keyboard switch. Flyouts
+  fade and scale; the open surface rounds up and the parent rounds
+  down. Do not start a second Menu. `closeOnClick` ignores the
+  parent row of a submenu. `.selected` / `aria-selected` is the
+  tertiary selected item. `.vibrant` is the tertiary color style.
+  `.gap` groups items; `.label` is a 32dp heading.
 - **FAB speed dial is CSS.** `.active` (and `:hover` when the pointer
   can hover) opens the menu. `.click-to-toggle` and `.direction-*` are
   markup switches. JS toggles the class, Escape, and click-outside.

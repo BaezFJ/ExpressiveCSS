@@ -24,7 +24,8 @@ export interface MenuOptions extends BaseOptions {
   container: Element;
   /**
    * If false, the menu will show below the trigger.
-   * @default true
+   * That is the M3 placement. Pass `true` to cover the trigger.
+   * @default false
    */
   coverTrigger: boolean;
   /**
@@ -79,7 +80,7 @@ const _defaults: MenuOptions = {
   autoFocus: true,
   constrainWidth: true,
   container: null,
-  coverTrigger: true,
+  coverTrigger: false,
   closeOnClick: true,
   hover: false,
   inDuration: 150,
@@ -358,12 +359,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
   private _alignSubmenu(li: HTMLElement) {
     const menu = li.querySelector(':scope > menu') as HTMLElement | null;
     if (!menu) return;
-    const wasHidden = getComputedStyle(menu).display === 'none';
-    if (wasHidden) menu.style.display = 'block';
+    // Flyouts stay `display: block` (visibility/opacity hide them) so the
+    // rect is readable without temporarily painting the menu.
     li.classList.remove('submenu-start');
     const rect = menu.getBoundingClientRect();
     if (rect.right > window.innerWidth - 8) li.classList.add('submenu-start');
-    if (wasHidden) menu.style.display = '';
   }
 
   private _closeSubmenus() {
@@ -548,7 +548,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.tabIndex = 0;
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li, :scope > hr').forEach((el) => {
-      if (el instanceof HTMLHRElement || el.classList.contains('divider')) {
+      if (
+        el instanceof HTMLHRElement ||
+        el.classList.contains('divider') ||
+        el.classList.contains('gap') ||
+        el.classList.contains('label') ||
+        el.classList.contains('optgroup')
+      ) {
         el.setAttribute('tabindex', '-1');
         return;
       }
@@ -668,13 +674,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.transition = 'none';
     // from
     this.menuEl.style.opacity = '0';
-    this.menuEl.style.transform = 'scale(0.3, 0.3)';
+    this.menuEl.style.transform = 'scale(0.85)';
     setTimeout(() => {
-      // easeOutQuad (opacity) & easeOutQuint
       this.menuEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
-      // to
       this.menuEl.style.opacity = '1';
-      this.menuEl.style.transform = 'scale(1, 1)';
+      this.menuEl.style.transform = 'scale(1)';
     }, 1);
     setTimeout(() => {
       if (this.options.autoFocus) this.menuEl.focus();
@@ -688,7 +692,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.menuEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
     // to
     this.menuEl.style.opacity = '0';
-    this.menuEl.style.transform = 'scale(0.3, 0.3)';
+    this.menuEl.style.transform = 'scale(0.85)';
     setTimeout(() => {
       this._resetMenuStyles();
       if (typeof this.options.onCloseEnd === 'function')
@@ -731,9 +735,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
     //this._moveMenu(closestOverflowParent);
 
     // Set width before calculating positionInfo
+    const natural = this.menuEl.getBoundingClientRect().width;
     const idealWidth = this.options.constrainWidth
       ? this.el.getBoundingClientRect().width
-      : this.menuEl.getBoundingClientRect().width;
+      : Math.min(280, Math.max(112, natural));
     this.menuEl.style.width = idealWidth + 'px';
 
     const positionInfo = this._getMenuPosition(closestOverflowParent);

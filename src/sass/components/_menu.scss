@@ -1,18 +1,24 @@
 @use "../abstracts" as *;
 
-// Menus.
+// Vertical menus (M3 Expressive).
 //
-// Anatomy is the HTML. A <menu id> is the surface; each <li> is an item,
-// an <hr> is a divider, and an <i> inside the item is the leading icon.
-// The trigger is .menu-trigger[data-target] — that is the JS contract.
+// Anatomy is the HTML. A <menu id> is the surface; each <li> is an item.
+// A leading <i> is the leading icon; a trailing <i> or <kbd> is trailing
+// content. An <hr> is a divider. A .gap <li> splits groups. A .label
+// <li> is a 32dp group heading. A nested <menu> is a flyout. The trigger
+// is .menu-trigger[data-target] — that is the JS contract.
 //
 // Tokens follow https://m3.material.io/components/menus/specs
-// plus the 1rem surface / stadium items used by fields and select.
-//   container    surface, 1rem corners, elevation 2, 112–280dp
-//   item         48dp, 2rem corners, label-large / on-surface, 12dp inset
-//   leading icon 24dp, on-surface-variant
-//   divider      1dp outline-variant
-//   state layer  8% hover / 10% selected
+//   container    surface-container, 16dp corners, elevation 2, 112–280
+//   padding      4dp
+//   item         48dp, extra-small (4dp) corners, label-large / on-surface
+//   selected     medium (12dp) corners, tertiary-container / on-tertiary
+//   icon         20dp, on-surface-variant
+//   divider      1dp outline-variant, inset (not full-bleed)
+//   gap          6dp, more expressive than a divider
+//   label        32dp, on-surface-variant
+//   vibrant      tertiary-container surface; selected is tertiary
+//   submenu      scale + fade; focused flyout rounds up, parent rounds down
 
 $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M10 6l6 6-6 6'/%3E%3C/svg%3E");
 
@@ -22,38 +28,51 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
   border: none;
 }
 
-menu[id] {
+@mixin menu-surface {
   --md-comp-menu-container-color: var(--md-sys-color-surface-container);
-  --md-comp-menu-container-shape: 1rem;
+  --md-comp-menu-container-shape: 16px;
   --md-comp-menu-item-container-height: 48px;
+  --md-comp-menu-item-container-shape: 4px;
+  --md-comp-menu-item-selected-container-shape: 12px;
+  --md-comp-menu-item-label-text-color: var(--md-sys-color-on-surface);
+  --md-comp-menu-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-menu-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-menu-item-selected-container-color: var(--md-sys-color-tertiary-container);
+  --md-comp-menu-item-selected-label-text-color: var(--md-sys-color-on-tertiary-container);
+  --md-comp-menu-item-selected-leading-icon-color: var(--md-sys-color-on-tertiary-container);
+  --md-comp-menu-item-icon-size: 20px;
+  --md-comp-menu-supporting-text-color: var(--md-sys-color-on-surface-variant);
 
   box-sizing: border-box;
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 9999;
   min-width: 112px;
   margin: 0;
-  padding: 8px 0;
+  padding: 4px;
   list-style: none;
-  overflow-y: auto;
-  opacity: 0;
-  user-select: none;
-  transform-origin: 0 0;
   background-color: var(--md-comp-menu-container-color);
   border-radius: var(--md-comp-menu-container-shape);
-  color: var(--md-sys-color-on-surface);
+  color: var(--md-comp-menu-item-label-text-color);
   @include z-depth("2");
+  transition: border-radius 200ms ease;
+
+  &.vibrant {
+    --md-comp-menu-container-color: var(--md-sys-color-tertiary-container);
+    --md-comp-menu-item-label-text-color: var(--md-sys-color-on-tertiary-container);
+    --md-comp-menu-item-leading-icon-color: var(--md-sys-color-on-tertiary-container);
+    --md-comp-menu-item-trailing-icon-color: var(--md-sys-color-on-tertiary-container);
+    --md-comp-menu-supporting-text-color: var(--md-sys-color-on-tertiary-container);
+    --md-comp-menu-item-selected-container-color: var(--md-sys-color-tertiary);
+    --md-comp-menu-item-selected-label-text-color: var(--md-sys-color-on-tertiary);
+    --md-comp-menu-item-selected-leading-icon-color: var(--md-sys-color-on-tertiary);
+  }
 
   > li {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height: var(--md-comp-menu-item-container-height);
     cursor: pointer;
     text-align: left;
+    border-radius: var(--md-comp-menu-item-container-shape);
 
     > a,
     > button,
@@ -65,10 +84,10 @@ menu[id] {
       width: 100%;
       min-height: var(--md-comp-menu-item-container-height);
       margin: 0;
-      padding: 0 12px;
+      padding: 0 8px;
       border: 0;
       background: none;
-      color: var(--md-sys-color-on-surface);
+      color: var(--md-comp-menu-item-label-text-color);
       text-decoration: none;
       cursor: pointer;
 
@@ -83,24 +102,80 @@ menu[id] {
     > a > i,
     > button > i,
     > i {
-      flex: 0 0 24px;
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      color: var(--md-sys-color-on-surface-variant);
+      flex: 0 0 var(--md-comp-menu-item-icon-size);
+      font-size: var(--md-comp-menu-item-icon-size);
+      width: var(--md-comp-menu-item-icon-size);
+      height: var(--md-comp-menu-item-icon-size);
+      line-height: var(--md-comp-menu-item-icon-size);
+      color: var(--md-comp-menu-item-leading-icon-color);
+    }
+
+    > :is(a, button) > i:last-child:not(:only-child) {
+      margin-inline-start: auto;
+      color: var(--md-comp-menu-item-trailing-icon-color);
+    }
+
+    > :is(a, button) > :is(kbd, .shortcut) {
+      margin-inline-start: auto;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--md-comp-menu-supporting-text-color);
+      font-family: inherit;
+      @include typescale("label-large");
     }
   }
 
-  > li:not(.disabled, .divider, .optgroup) {
-    width: calc(100% - 16px);
-    margin-inline: 8px;
-    border-radius: 2rem;
+  > li:not(.disabled, .divider, .optgroup, .gap, .label) {
+    min-height: var(--md-comp-menu-item-container-height);
   }
 
-  > li:not(.disabled, .divider):hover,
-  > li.active {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  // Hover / press sit on extra-small corners and do not span the container.
+  > li:not(.disabled, .divider, .optgroup, .gap, .label):hover,
+  > li.active:not(.selected, [aria-selected="true"]) {
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-menu-item-label-text-color) 8%,
+      transparent
+    );
+  }
+
+  > li:not(.disabled, .divider, .optgroup, .gap, .label):active {
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-menu-item-label-text-color) 10%,
+      transparent
+    );
+  }
+
+  > li.selected,
+  > li[aria-selected="true"] {
+    border-radius: var(--md-comp-menu-item-selected-container-shape);
+    background-color: var(--md-comp-menu-item-selected-container-color);
+    color: var(--md-comp-menu-item-selected-label-text-color);
+
+    > :is(a, button, span) {
+      color: var(--md-comp-menu-item-selected-label-text-color);
+    }
+
+    > :is(a, button, span) > i,
+    > i {
+      color: var(--md-comp-menu-item-selected-leading-icon-color);
+    }
+  }
+
+  > li.selected:hover,
+  > li[aria-selected="true"]:hover {
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-menu-item-selected-label-text-color) 8%,
+      var(--md-comp-menu-item-selected-container-color)
+    );
+  }
+
+  > li:focus-visible {
+    outline: 3px solid var(--md-sys-color-secondary);
+    outline-offset: -3px;
   }
 
   > li.disabled {
@@ -108,22 +183,45 @@ menu[id] {
     opacity: 0.38;
   }
 
+  // Inset divider — selection and rules do not span the container.
   > hr,
   > li.divider {
     display: block;
-    width: 100%;
+    width: calc(100% - 8px);
     height: 1px;
     min-height: 0;
-    margin: 8px 0;
+    margin: 4px auto;
     padding: 0;
     border: 0;
     background-color: var(--md-sys-color-outline-variant);
     cursor: default;
+    pointer-events: none;
+    border-radius: 0;
   }
 
-  // Nested flyouts sit outside the list box; do not clip them.
-  &:has(> li > menu) {
-    overflow: visible;
+  // Gap: more expressive than a divider. One or two per menu; not in a scroller.
+  > li.gap {
+    height: 6px;
+    min-height: 6px;
+    margin: 0 -4px;
+    padding: 0;
+    pointer-events: none;
+    cursor: default;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  > li.label {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 8px;
+    pointer-events: none;
+    cursor: default;
+    color: var(--md-comp-menu-supporting-text-color);
+    @include typescale("label-large");
+    font-family: $font-stack;
   }
 
   li:has(> menu) {
@@ -132,12 +230,36 @@ menu[id] {
 
   li:has(> menu) > :is(a, button, span)::after {
     content: "";
-    flex: 0 0 24px;
-    width: 24px;
-    height: 24px;
+    flex: 0 0 var(--md-comp-menu-item-icon-size);
+    width: var(--md-comp-menu-item-icon-size);
+    height: var(--md-comp-menu-item-icon-size);
     margin-inline-start: auto;
-    background-color: var(--md-sys-color-on-surface-variant);
-    mask: $_menu-chevron center / 24px no-repeat;
+    background-color: var(--md-comp-menu-item-trailing-icon-color);
+    mask: $_menu-chevron center / 20px no-repeat;
+  }
+}
+
+menu[id] {
+  @include menu-surface;
+
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  overflow-y: auto;
+  opacity: 0;
+  user-select: none;
+  transform-origin: 0 0;
+
+  // Nested flyouts sit outside the list box; do not clip them.
+  &:has(> li > menu) {
+    overflow: visible;
+  }
+
+  // Unfocused parent rounds down while a flyout is the focus.
+  &:has(> li:is(:hover, :focus-within, .open) > menu) {
+    --md-comp-menu-container-shape: 8px;
   }
 }
 
@@ -145,77 +267,72 @@ menu[id] {
 // a <menu> inside an <li> is a flyout. Hover / :focus-within on fine
 // pointers; .open is the tap / keyboard switch.
 menu[id] li > menu {
-  --md-comp-menu-container-color: var(--md-sys-color-surface-container);
-  --md-comp-menu-container-shape: 1rem;
-  --md-comp-menu-item-container-height: 48px;
+  @include menu-surface;
 
-  box-sizing: border-box;
-  display: none;
+  display: block;
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 100%;
   z-index: 1;
-  min-width: 112px;
-  margin: 0;
-  padding: 8px 0;
-  list-style: none;
   overflow: visible;
-  opacity: 1;
-  transform: none;
-  background-color: var(--md-comp-menu-container-color);
-  border-radius: var(--md-comp-menu-container-shape);
-  color: var(--md-sys-color-on-surface);
-  @include z-depth("2");
-
-  > li {
-    box-sizing: border-box;
-    min-height: var(--md-comp-menu-item-container-height);
-  }
-
-  > li:not(.disabled, .divider, .optgroup) {
-    width: calc(100% - 16px);
-    margin-inline: 8px;
-    border-radius: 2rem;
-  }
-
-  > li:not(.disabled, .divider):hover,
-  > li.active {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
-  }
-
-  > li > :is(a, button, span) {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-sizing: border-box;
-    width: 100%;
-    min-height: var(--md-comp-menu-item-container-height);
-    padding: 0 12px;
-    color: var(--md-sys-color-on-surface);
-    text-decoration: none;
-    @include typescale("label-large");
-    font-family: $font-stack;
-  }
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-4px) scale(0.96);
+  transform-origin: 0 0;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 180ms ease,
+    border-radius 200ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   menu[id] li:is(:hover, :focus-within) > menu {
-    display: block;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    --md-comp-menu-container-shape: 20px;
   }
 }
 
 menu[id] li.open > menu {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  --md-comp-menu-container-shape: 20px;
 }
 
 menu[id] li.submenu-start > menu {
   inset-inline-start: auto;
   inset-inline-end: 100%;
+  transform-origin: 100% 0;
+}
+
+menu[id] li.submenu-start:is(:hover, :focus-within, .open) > menu {
+  transform: none;
 }
 
 body.keyboard-focused {
   menu[id] > li:focus {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-menu-item-label-text-color) 10%,
+      transparent
+    );
+  }
+
+  menu[id] > li:focus:not(.selected, [aria-selected="true"]) {
+    outline: 3px solid var(--md-sys-color-secondary);
+    outline-offset: -3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  menu[id] li > menu {
+    transition: none;
   }
 }
 

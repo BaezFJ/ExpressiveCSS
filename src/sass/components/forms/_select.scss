@@ -12,7 +12,7 @@
 // tokens in _input-fields.scss.
 //   field          56dp, same chrome as .field
 //   trailing icon  24dp, 12dp from the end, rotates when open
-//   selected item  10% on-surface + trailing check
+//   selected item  tertiary-container + trailing check
 //   optgroup       on-surface-variant, outline-variant rule
 //
 $_select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
@@ -69,8 +69,8 @@ select.browser-default {
 }
 
 .field:has(> .hide-select) {
-  // BeerCSS menu: 1rem surface, stadium items. Same radius on the
-  // field so the closed control and the open list read as one shape.
+  // Match the vertical menu's 16dp surface so the closed field and the
+  // open list read as one shape.
   --md-comp-filled-select-container-shape: 1rem;
   --md-comp-menu-container-shape: 1rem;
   --md-comp-filled-select-trailing-icon-size: 24px;
@@ -161,19 +161,21 @@ menu[role="listbox"] > li:not(.optgroup, .divider) {
 }
 
 menu[role="listbox"] > li.selected:not(.disabled, .optgroup) {
-  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+  background-color: var(--md-comp-menu-item-selected-container-color, var(--md-sys-color-tertiary-container));
+  color: var(--md-comp-menu-item-selected-label-text-color, var(--md-sys-color-on-tertiary-container));
+  border-radius: var(--md-comp-menu-item-selected-container-shape, 12px);
 }
 
 // Single-select: trailing check. Multi-select already has a leading checkbox.
 menu[role="listbox"]:not(.multiple-select-menu) > li.selected:not(.disabled, .optgroup)::after {
   content: "";
-  flex: 0 0 24px;
-  width: 24px;
-  height: 24px;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
   margin-inline-start: auto;
-  margin-inline-end: 12px;
-  background-color: var(--md-sys-color-on-surface);
-  mask: $_select-check center / 24px no-repeat;
+  margin-inline-end: 8px;
+  background-color: var(--md-comp-menu-item-selected-leading-icon-color, var(--md-sys-color-on-tertiary-container));
+  mask: $_select-check center / 20px no-repeat;
 }
 
 menu[role="listbox"] li img {
