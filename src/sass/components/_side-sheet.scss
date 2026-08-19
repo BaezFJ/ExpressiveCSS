@@ -162,7 +162,13 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
   }
 }
 
-#{$_sheet}[open] {
+// :is() so [open] applies to every alternative. `#{$_sheet}[open]` only
+// suffixes the last selector and would paint a closed .side-sheet.
+:is(#{$_sheet}):not([open]) {
+  display: none;
+}
+
+:is(#{$_sheet})[open] {
   display: flex;
   flex-direction: column;
 }

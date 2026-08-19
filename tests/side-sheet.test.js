@@ -27,6 +27,11 @@ describe('Side sheet CSS', () => {
   test('modal rounds the inner corners', () => {
     assert.match(css, /dialog\.side-sheet:modal/);
   });
+
+  test('display:flex is gated on [open] for every sheet selector', () => {
+    assert.match(css, /:is\(dialog\.side-sheet[^)]*\)\[open\]/);
+    assert.match(css, /:is\(dialog\.side-sheet[^)]*\):not\(\[open\]\)/);
+  });
 });
 
 function box(el, { left, top, width, height }) {
