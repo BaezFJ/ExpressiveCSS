@@ -172,6 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const menuRich = document.getElementById('menu-rich-trigger');
+  if (menuRich) {
+    Expressive.Menu.init(menuRich, { constrainWidth: false });
+  }
+
+  const menuVibrant = document.getElementById('menu-vibrant-trigger');
+  if (menuVibrant) {
+    Expressive.Menu.init(menuVibrant, { constrainWidth: false });
+  }
+
   const featureTapTarget = document.getElementById('feature-tap-target');
   document.getElementById('tap-target-open')?.addEventListener('click', (event) => {
     event.preventDefault();
