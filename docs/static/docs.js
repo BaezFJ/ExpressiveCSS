@@ -218,16 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     Expressive.Menu.init(menuVibrant, { constrainWidth: false });
   }
 
-  const featureTapTarget = document.getElementById('feature-tap-target');
-  document.getElementById('tap-target-open')?.addEventListener('click', (event) => {
-    event.preventDefault();
-    Expressive.TapTarget.getInstance(featureTapTarget)?.open();
-  });
-  document.getElementById('tap-target-close')?.addEventListener('click', (event) => {
-    event.preventDefault();
-    Expressive.TapTarget.getInstance(featureTapTarget)?.close();
-  });
-
   const sliders = document.querySelectorAll('.slider');
   if (sliders.length && Expressive.Slider) {
     Expressive.Slider.init(sliders);

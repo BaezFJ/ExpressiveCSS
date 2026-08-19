@@ -7,6 +7,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Removed
 
+- **Breaking:** Feature Discovery (`TapTarget`, `.tap-target`). It is not
+  an M3 component. There is no replacement class or alias.
 - **Breaking:** `dialog.top` / `dialog.top-sheet`. M3 has no top sheet;
   use a side sheet or a bottom sheet. The unused
   `--md-comp-basic-dialog-sheet-width` token is gone with them.

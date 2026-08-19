@@ -89,17 +89,6 @@ describe('FormSelect renders author content as text', () => {
 describe('ids are looked up, not interpolated into selectors', () => {
   beforeEach(resetBody);
 
-  test('TapTarget resolves a data-target containing a quote', () => {
-    document.body.innerHTML = `
-      <div class="tap-target" data-target='x"y'><div class="tap-target-content"><h5>T</h5></div></div>
-      <a id='x"y' class="button">menu</a>`;
-
-    const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
-
-    assert.equal(instance.originEl, document.getElementById('x"y'));
-    instance.destroy();
-  });
-
   test('ScrollSpy finds a hash whose id contains a quote', () => {
     document.body.innerHTML = `
       <div id='sec"tion' class="scrollspy">one</div>
@@ -132,14 +121,6 @@ describe('ids are looked up, not interpolated into selectors', () => {
     instance.destroy();
   });
 
-  test('TapTarget survives a data-target that resolves to nothing', () => {
-    document.body.innerHTML = `<div class="tap-target" data-target="missing"><div class="tap-target-content"><h5>T</h5></div></div>`;
-
-    const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
-
-    assert.equal(instance.originEl, null);
-    instance.destroy(); // must not throw
-  });
 });
 
 describe('Datepicker escapes what it splices into markup', () => {

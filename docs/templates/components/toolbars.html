@@ -5,7 +5,7 @@
 {% block page_title %}Toolbars{% endblock %}
 
 {% block page %}
-{{ Banner("Toolbars", "Material Design 3 toolbars, from the HTML.") }}
+{{ Banner("Toolbars", "Frequently used actions for the current page.") }}
 
 <div class="container">
   <div class="row">
@@ -13,157 +13,279 @@
 
       <div id="anatomy" class="section scrollspy">
         <p class="flow-text">
+          Toolbars display frequently used actions relevant to the current
+          page. Two variants: a <strong>floating</strong> toolbar and a
+          <strong>docked</strong> toolbar. Use the vibrant color style for
+          greater emphasis. They can hold buttons, icon buttons, and text
+          fields, and a floating bar can sit next to a FAB. Do not show a
+          toolbar at the same time as a
+          <a href="{{ url_for('navigation_bar') }}">navigation bar</a>.
+        </p>
+        <p>
           A <code>&lt;nav class="toolbar"&gt;</code> is the bar. Direct
           <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> children
           are the actions. An <code>&lt;i&gt;</code> is the icon; wrap a
           label in <code>&lt;span&gt;</code>. <code>.active</code> marks
-          the selected action. They are CSS only. There is no JavaScript
-          component and nothing to AutoInit.
+          the selected action. <code>.filled</code> on an action is the
+          emphasized control. They are CSS only — nothing to AutoInit.
         </p>
         <p>
           Tokens follow the
           <a href="https://m3.material.io/components/toolbars/specs">M3 toolbar spec</a>.
-          The default is the floating bar: it hugs its actions, 64dp tall,
-          32dp stadium corners, <code>surface-variant</code>, elevation 2.
-          Actions are 48dp targets with a 24dp icon, transparent at rest.
-          Selected is <code>secondary-container</code> /
-          <code>on-secondary-container</code>.
+          The default is floating: it hugs its actions, 64dp tall, 32dp
+          stadium corners, <code>surface-container</code>, elevation 2.
+          Docked is full width, the same 64dp (shorter than the old bottom
+          app bar), square, no elevation. Actions are 48dp targets with a
+          24dp icon, transparent at rest. Selected is
+          <code>secondary-container</code>.
         </p>
         <p>
           This is not the FAB-to-toolbar transition
           (<code>div.fixed-action-btn.toolbar</code>). That stays on
           <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>.
-          Do not put <code>toolbar</code> on every <code>&lt;nav&gt;</code>
-          — app bars, card actions, and radio rows stay as they are.
         </p>
+      </div>
 
-        <nav class="toolbar" aria-label="Text format">
-          <button type="button" class="circle" aria-label="Undo">
-            <i class="material-symbols">undo</i>
-          </button>
-          <button type="button" class="circle active" aria-label="Bold">
-            <i class="material-symbols">format_bold</i>
-          </button>
-          <button type="button" class="circle" aria-label="Italic">
-            <i class="material-symbols">format_italic</i>
-          </button>
-          <button type="button" class="circle" aria-label="Underline">
-            <i class="material-symbols">format_underlined</i>
-          </button>
-        </nav>
-<pre><code>&lt;nav class="toolbar" aria-label="Text format"&gt;
-  &lt;button type="button" class="circle" aria-label="Undo"&gt;
-    &lt;i class="material-symbols"&gt;undo&lt;/i&gt;
+      <div id="floating" class="section scrollspy">
+        <h3>Floating</h3>
+        <p>
+          The default. Horizontal or <code>vertical</code>. Standard or
+          <code>vibrant</code>. It can hold many controls, and it can sit
+          next to a FAB.
+        </p>
+        <p>
+          <nav class="toolbar" aria-label="Call controls">
+            <button type="button" aria-label="Stop camera">
+              <i class="material-symbols">videocam_off</i>
+            </button>
+            <button type="button" aria-label="Microphone">
+              <i class="material-symbols">mic</i>
+            </button>
+            <button type="button" class="active" aria-label="Hand">
+              <i class="material-symbols">back_hand</i>
+            </button>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </nav>
+        </p>
+<pre><code>&lt;nav class="toolbar" aria-label="Call controls"&gt;
+  &lt;button type="button" aria-label="Stop camera"&gt;
+    &lt;i class="material-symbols"&gt;videocam_off&lt;/i&gt;
   &lt;/button&gt;
-  &lt;button type="button" class="circle active" aria-label="Bold"&gt;
-    &lt;i class="material-symbols"&gt;format_bold&lt;/i&gt;
+  &lt;button type="button" class="active" aria-label="Hand"&gt;
+    &lt;i class="material-symbols"&gt;back_hand&lt;/i&gt;
   &lt;/button&gt;
-  &lt;button type="button" class="circle" aria-label="Italic"&gt;
-    &lt;i class="material-symbols"&gt;format_italic&lt;/i&gt;
+  &lt;button type="button" aria-label="More"&gt;
+    &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
   &lt;/button&gt;
 &lt;/nav&gt;</code></pre>
         <p>
           A label next to the icon needs a <code>&lt;span&gt;</code> —
           <code>:only-child</code> ignores text nodes, so
           <code>&lt;i&gt;edit&lt;/i&gt;Edit</code> would look icon-only.
+          <code>.filled</code> on an action is the emphasized control
+          (16dp corners, primary).
         </p>
-        <nav class="toolbar" aria-label="Page actions">
-          <button type="button">
-            <i class="material-symbols">edit</i>
-            <span>Edit</span>
-          </button>
-          <button type="button">
-            <i class="material-symbols">share</i>
-            <span>Share</span>
-          </button>
-          <button type="button" class="circle" aria-label="More">
-            <i class="material-symbols">more_vert</i>
-          </button>
-        </nav>
-<pre><code>&lt;nav class="toolbar"&gt;
-  &lt;button type="button"&gt;
-    &lt;i class="material-symbols"&gt;edit&lt;/i&gt;
-    &lt;span&gt;Edit&lt;/span&gt;
+        <p>
+          <nav class="toolbar" aria-label="Editor">
+            <button type="button" aria-label="Undo">
+              <i class="material-symbols">undo</i>
+            </button>
+            <button type="button" aria-label="Redo">
+              <i class="material-symbols">redo</i>
+            </button>
+            <button type="button" class="filled" aria-label="Add">
+              <i class="material-symbols">add</i>
+            </button>
+            <button type="button" aria-label="Save">
+              <i class="material-symbols">save</i>
+            </button>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </nav>
+        </p>
+<pre><code>&lt;nav class="toolbar" aria-label="Editor"&gt;
+  &lt;button type="button" aria-label="Undo"&gt;
+    &lt;i class="material-symbols"&gt;undo&lt;/i&gt;
   &lt;/button&gt;
-  &lt;button type="button" class="circle" aria-label="More"&gt;
+  &lt;button type="button" class="filled" aria-label="Add"&gt;
+    &lt;i class="material-symbols"&gt;add&lt;/i&gt;
+  &lt;/button&gt;
+  &lt;button type="button" aria-label="More"&gt;
     &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
   &lt;/button&gt;
 &lt;/nav&gt;</code></pre>
       </div>
 
-      <div id="variants" class="section scrollspy">
-        <h3>Variants</h3>
+      <div id="color" class="section scrollspy">
+        <h3>Color</h3>
         <p>
-          <code>filled</code> is the vibrant bar —
+          Standard is <code>surface-container</code>.
+          <code>vibrant</code> (or <code>filled</code> on the nav) is
           <code>primary-container</code> /
-          <code>on-primary-container</code>. Selected then uses
-          <code>surface-variant</code> so it still contrasts.
-          <code>vertical</code> stacks the actions.
+          <code>on-primary-container</code> — use it when the bar needs
+          more emphasis. Selected then uses <code>surface</code> so it
+          still contrasts.
         </p>
         <p>
-          <nav class="toolbar filled" aria-label="Vibrant format">
-            <button type="button" class="circle" aria-label="Undo">
-              <i class="material-symbols">undo</i>
-            </button>
-            <button type="button" class="circle active" aria-label="Bold">
+          <nav class="toolbar vibrant" aria-label="Text format">
+            <button type="button" class="active" aria-label="Bold">
               <i class="material-symbols">format_bold</i>
             </button>
-            <button type="button" class="circle" aria-label="Italic">
+            <button type="button" aria-label="Italic">
               <i class="material-symbols">format_italic</i>
             </button>
+            <button type="button" aria-label="Underline">
+              <i class="material-symbols">format_underlined</i>
+            </button>
+            <button type="button" aria-label="Color">
+              <i class="material-symbols">format_color_fill</i>
+            </button>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
           </nav>
+        </p>
+<pre><code>&lt;nav class="toolbar vibrant" aria-label="Text format"&gt;…&lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="vertical" class="section scrollspy">
+        <h3>Vertical</h3>
+        <p>
+          <code>vertical</code> stacks the actions. Only floating bars
+          go vertical — a docked bar stays a horizontal strip.
         </p>
         <p>
-          <nav class="toolbar vertical" aria-label="Vertical actions">
-            <button type="button" class="circle" aria-label="Add">
+          <nav class="toolbar vertical" aria-label="History">
+            <button type="button" aria-label="Undo">
+              <i class="material-symbols">undo</i>
+            </button>
+            <button type="button" aria-label="Redo">
+              <i class="material-symbols">redo</i>
+            </button>
+            <button type="button" aria-label="Add">
               <i class="material-symbols">add</i>
             </button>
-            <button type="button" class="circle active" aria-label="Edit">
-              <i class="material-symbols">edit</i>
+            <button type="button" class="active" aria-label="Format">
+              <i class="material-symbols">format_size</i>
             </button>
-            <button type="button" class="circle" aria-label="Delete">
-              <i class="material-symbols">delete</i>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
             </button>
           </nav>
         </p>
-<pre><code>&lt;nav class="toolbar filled"&gt;…&lt;/nav&gt;
-&lt;nav class="toolbar vertical"&gt;…&lt;/nav&gt;</code></pre>
+<pre><code>&lt;nav class="toolbar vertical" aria-label="History"&gt;…&lt;/nav&gt;</code></pre>
       </div>
 
       <div id="docked" class="section scrollspy">
         <h3>Docked</h3>
         <p>
-          <code>max</code> (BeerCSS) or <code>docked</code> (the M3 name)
-          stretches the bar to the full width, drops the stadium and the
-          elevation, and spaces the actions. Use it for page actions at
-          the bottom of the screen; destinations belong on a
-          <a href="{{ url_for('navigation_bar') }}">navigation bar</a>.
-          A child <code>.max</code> is a spacer, not the bar.
+          <code>docked</code> (the M3 name; <code>max</code> is the
+          BeerCSS alias) stretches the bar to the full width, drops the
+          stadium and the elevation, and spaces the actions. It replaces
+          the bottom app bar: same job, shorter (64dp, not 80). Use it
+          for page actions; destinations belong on a
+          <a href="{{ url_for('navigation_bar') }}">navigation bar</a>,
+          and the two should not appear together. A child
+          <code>.max</code> is a spacer, not the bar.
         </p>
-        <nav class="toolbar docked" aria-label="Editor">
-          <button type="button" class="circle" aria-label="Back">
-            <i class="material-symbols">arrow_back</i>
+        <nav class="toolbar docked" aria-label="Page actions">
+          <button type="button" aria-label="Download">
+            <i class="material-symbols">download</i>
           </button>
-          <button type="button" class="circle" aria-label="Add">
-            <i class="material-symbols">add</i>
+          <button type="button" aria-label="Delete">
+            <i class="material-symbols">delete</i>
           </button>
-          <span class="max"></span>
-          <button type="button" class="circle extra" aria-label="Create">
-            <i class="material-symbols">edit</i>
+          <button type="button" aria-label="Mail">
+            <i class="material-symbols">mail</i>
+          </button>
+          <button type="button" aria-label="Snooze">
+            <i class="material-symbols">snooze</i>
+          </button>
+          <button type="button" aria-label="Star">
+            <i class="material-symbols">star</i>
           </button>
         </nav>
-<pre><code>&lt;nav class="toolbar docked" aria-label="Editor"&gt;
-  &lt;button type="button" class="circle" aria-label="Back"&gt;
-    &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
+        <p class="mt-3">
+          <nav class="toolbar docked vibrant" aria-label="Editor">
+            <button type="button" aria-label="Back">
+              <i class="material-symbols">arrow_back</i>
+            </button>
+            <button type="button" aria-label="Forward">
+              <i class="material-symbols">arrow_forward</i>
+            </button>
+            <button type="button" class="filled" aria-label="Add">
+              <i class="material-symbols">add</i>
+            </button>
+            <button type="button" aria-label="Save">
+              <i class="material-symbols">save</i>
+            </button>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </nav>
+        </p>
+        <p>
+          Text actions and a spacer:
+        </p>
+        <nav class="toolbar docked" aria-label="Wizard">
+          <button type="button"><span>Back</span></button>
+          <span class="max"></span>
+          <button type="button" class="filled"><span>Next</span></button>
+        </nav>
+<pre><code>&lt;nav class="toolbar docked" aria-label="Page actions"&gt;
+  &lt;button type="button" aria-label="Download"&gt;
+    &lt;i class="material-symbols"&gt;download&lt;/i&gt;
   &lt;/button&gt;
-  &lt;button type="button" class="circle" aria-label="Add"&gt;
-    &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-  &lt;/button&gt;
+  …
+&lt;/nav&gt;
+
+&lt;nav class="toolbar docked" aria-label="Wizard"&gt;
+  &lt;button type="button"&gt;&lt;span&gt;Back&lt;/span&gt;&lt;/button&gt;
   &lt;span class="max"&gt;&lt;/span&gt;
-  &lt;button type="button" class="circle extra" aria-label="Create"&gt;
-    &lt;i class="material-symbols"&gt;edit&lt;/i&gt;
-  &lt;/button&gt;
+  &lt;button type="button" class="filled"&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
 &lt;/nav&gt;</code></pre>
+      </div>
+
+      <div id="fab" class="section scrollspy">
+        <h3>Pairing with a FAB</h3>
+        <p>
+          Wrap the toolbar and a sibling
+          <code>.extra.circle</code> FAB in
+          <code>.toolbar-group</code>. The FAB stays a FAB — 56dp, 16dp
+          corners, its own color — and sits 8dp from the bar. That is
+          the companion FAB, not the in-bar <code>.filled</code> action.
+        </p>
+        <div class="toolbar-group mb-3">
+          <nav class="toolbar vibrant" aria-label="Message actions">
+            <button type="button" aria-label="Download">
+              <i class="material-symbols">download</i>
+            </button>
+            <button type="button" aria-label="Delete">
+              <i class="material-symbols">delete</i>
+            </button>
+            <button type="button" aria-label="Mail">
+              <i class="material-symbols">mail</i>
+            </button>
+            <button type="button" aria-label="Snooze">
+              <i class="material-symbols">snooze</i>
+            </button>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </nav>
+          <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
+            <i class="material-symbols">reply</i>
+          </button>
+        </div>
+<pre><code>&lt;div class="toolbar-group"&gt;
+  &lt;nav class="toolbar vibrant" aria-label="Message actions"&gt;…&lt;/nav&gt;
+  &lt;button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply"&gt;
+    &lt;i class="material-symbols"&gt;reply&lt;/i&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
       </div>
 
       <div id="fixed" class="section scrollspy">
@@ -179,15 +301,35 @@
 &lt;nav class="toolbar vertical fixed" aria-label="Tools"&gt;…&lt;/nav&gt;
 &lt;nav class="toolbar docked fixed" aria-label="Editor"&gt;…&lt;/nav&gt;</code></pre>
       </div>
+
+      <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+        <table class="striped">
+          <thead>
+            <tr><th>Token</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--md-comp-toolbar-container-color</code></td><td><code>--md-sys-color-surface-container</code></td></tr>
+            <tr><td><code>--md-comp-toolbar-container-shape</code></td><td>32px (0 when docked)</td></tr>
+            <tr><td><code>--md-comp-toolbar-container-height</code></td><td>64px</td></tr>
+            <tr><td><code>--md-comp-toolbar-action-size</code></td><td>48px</td></tr>
+            <tr><td><code>--md-comp-toolbar-icon-size</code></td><td>24px</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
         <ul class="section table-of-contents">
-          <li><a href="#anatomy">Introduction</a></li>
-          <li><a href="#variants">Variants</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#floating">Floating</a></li>
+          <li><a href="#color">Color</a></li>
+          <li><a href="#vertical">Vertical</a></li>
           <li><a href="#docked">Docked</a></li>
+          <li><a href="#fab">Pairing with a FAB</a></li>
           <li><a href="#fixed">Fixed</a></li>
+          <li><a href="#tokens">Tokens</a></li>
         </ul>
       </div>
     </div>

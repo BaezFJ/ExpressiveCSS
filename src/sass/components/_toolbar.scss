@@ -1,24 +1,31 @@
 @use "../abstracts" as *;
 
-// Toolbars.
+// Toolbars (M3 Expressive).
 //
 // Anatomy is the HTML. A <nav class="toolbar"> is the bar. Direct
 // <button> / <a> children are the actions. An <i> is the icon; wrap a
-// label in <span>. .active marks the selected action. Helpers are only
-// for variants markup cannot express: .filled, .vertical, .max / .docked,
-// .fixed, .top, .bottom.
+// label in <span>. .active marks the selected action. A .filled action
+// is the emphasized control (the in-bar FAB). Helpers are only for
+// variants markup cannot express: .docked, .vibrant / .filled (on the
+// nav), .vertical, .fixed, .top, .bottom.
+//
+// Two variants:
+//   floating   default. Hugs its actions, 64dp, 32dp stadium,
+//              surface-container, elevation 2. Horizontal or .vertical.
+//   docked     .docked (or .max). Full width, 64dp, square, no
+//              elevation. Replaces the bottom app bar.
+//
+// Color: standard (surface-container) or .vibrant (primary-container).
+// Pair a floating bar with a FAB via .toolbar-group. Do not show a
+// toolbar at the same time as nav.navigation-bar.
 //
 // Tokens follow https://m3.material.io/components/toolbars/specs
-//   floating   hug, 64dp, 32dp stadium, surface-container, elevation 2
-//   docked     full width, 64dp, 0 radius, surface-container, no elevation
-//              (page actions; destinations belong on nav.navigation-bar)
-//   vibrant    primary-container / on-primary-container (.filled)
 //   action     48dp target, 24dp icon, transparent at rest
-//   selected   secondary-container / on-secondary-container
+//   selected   secondary-container (standard) / surface (vibrant)
+//   emphasized 48dp, 16dp corners, primary / on-primary
 //
-// nav.toolbar only — do not style every <nav> (app bars, card actions,
-// radio rows). div.fixed-action-btn.toolbar is the FAB-to-toolbar
-// transition, not this component.
+// nav.toolbar only — do not style every <nav>. div.fixed-action-btn.toolbar
+// is the FAB-to-toolbar transition, not this component.
 
 nav.toolbar {
   --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
@@ -27,6 +34,8 @@ nav.toolbar {
   --md-comp-toolbar-leading-space: 12px;
   --md-comp-toolbar-action-size: 48px;
   --md-comp-toolbar-icon-size: 24px;
+  --md-comp-toolbar-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-toolbar-selected-color: var(--md-sys-color-on-secondary-container);
 
   box-sizing: border-box;
   display: inline-flex;
@@ -48,7 +57,7 @@ nav.toolbar {
   }
 
   // Actions — transparent at rest so they sit on the container, not filled.
-  // .extra is the 56dp FAB; leave it alone so a docked bar can embed one.
+  // .extra is the 56dp companion FAB; leave it alone.
   > :is(a, button):not(.extra) {
     box-sizing: border-box;
     display: inline-flex;
@@ -81,17 +90,17 @@ nav.toolbar {
       line-height: var(--md-comp-toolbar-icon-size);
     }
 
-    &:hover:not(.active) {
+    &:hover:not(.active, .filled) {
       background-color: color-mix(in oklab, currentColor 8%, transparent);
     }
 
-    &:active:not(.active) {
+    &:active:not(.active, .filled) {
       background-color: color-mix(in oklab, currentColor 10%, transparent);
     }
 
     &.active {
-      background-color: var(--md-sys-color-secondary-container);
-      color: var(--md-sys-color-on-secondary-container);
+      background-color: var(--md-comp-toolbar-selected-container-color);
+      color: var(--md-comp-toolbar-selected-color);
     }
 
     &:disabled {
@@ -109,6 +118,46 @@ nav.toolbar {
     border-radius: 50%;
   }
 
+  // Emphasized action (the in-bar FAB). 48dp, 16dp corners, primary.
+  > :is(a, button).filled:not(.extra) {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border-radius: 16px;
+    box-shadow: none;
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-primary) 8%,
+        var(--md-sys-color-primary)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-primary) 10%,
+        var(--md-sys-color-primary)
+      );
+    }
+  }
+
+  > :is(a, button).filled:not(.extra):has(> span) {
+    height: 40px;
+    min-height: 40px;
+    padding: 0 24px;
+    border-radius: 20px;
+    width: auto;
+  }
+
+  // Text field or other control stretching between leading and trailing.
+  > .field {
+    flex: 1 1 auto;
+    align-self: center;
+    min-width: 0;
+    margin: 0;
+  }
+
   // Spacer between leading and trailing actions.
   > .max {
     flex: 1 1 auto;
@@ -118,15 +167,13 @@ nav.toolbar {
   }
 }
 
-// Vibrant. Pair with .active using the inverse of the container.
+// Vibrant color style. Pair .active with surface so it still contrasts.
+nav.toolbar.vibrant,
 nav.toolbar.filled {
   --md-comp-toolbar-container-color: var(--md-sys-color-primary-container);
+  --md-comp-toolbar-selected-container-color: var(--md-sys-color-surface);
+  --md-comp-toolbar-selected-color: var(--md-sys-color-on-surface);
   color: var(--md-sys-color-on-primary-container);
-
-  > :is(a, button).active {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    color: var(--md-sys-color-on-surface);
-  }
 }
 
 // Vertical floating bar.
@@ -144,7 +191,8 @@ nav.toolbar.vertical {
 }
 
 // Docked — full width, square, no lift. M3's replacement for the bottom
-// app bar. .max is the BeerCSS name; .docked is the M3 name.
+// app bar. Shorter than that bar (64dp, not 80). .max is the BeerCSS
+// name; .docked is the M3 name.
 nav.toolbar.max,
 nav.toolbar.docked {
   display: flex;
@@ -152,6 +200,22 @@ nav.toolbar.docked {
   --md-comp-toolbar-container-shape: 0;
   justify-content: space-around;
   @include z-depth("0");
+}
+
+// Pair a floating toolbar with a companion FAB. The FAB is a sibling,
+// not a child — typically .extra.circle.
+.toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &.vertical {
+    flex-direction: column;
+  }
+
+  > nav.toolbar {
+    margin: 0;
+  }
 }
 
 // Pin to the viewport. Floating defaults to bottom-center; docked
@@ -184,9 +248,11 @@ nav.toolbar:is(.max, .docked).fixed,
 nav.toolbar:is(.max, .docked).fixed.bottom {
   inset: auto 0 0 0;
   transform: none;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
 nav.toolbar:is(.max, .docked).fixed.top {
   inset: 0 0 auto 0;
   transform: none;
+  padding-bottom: 8px;
 }

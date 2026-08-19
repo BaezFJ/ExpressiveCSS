@@ -8,64 +8,6 @@ import assert from 'node:assert/strict';
 
 import { Expressive, resetBody, fire, window } from './setup.js';
 
-describe('TapTarget', () => {
-  beforeEach(resetBody);
-
-  const html = `
-    <div class="tap-target" data-target="menu-btn">
-      <div class="tap-target-content"><h5>Title</h5><p>Body</p></div>
-    </div>
-    <a id="menu-btn" class="button">menu</a>`;
-
-  test('open() and close() toggle isOpen and the wrapper class', () => {
-    document.body.innerHTML = html;
-    const el = document.querySelector('.tap-target');
-    const instance = Expressive.TapTarget.init(el);
-
-    assert.equal(instance.isOpen, false);
-    instance.open();
-    assert.equal(instance.isOpen, true);
-    assert.ok(el.parentElement.classList.contains('tap-target-wrapper'));
-    assert.ok(el.parentElement.classList.contains('open'));
-    instance.close();
-    assert.equal(instance.isOpen, false);
-    instance.destroy();
-  });
-
-  test('does not wrap a parent that is already a tap-target-wrapper', () => {
-    document.body.innerHTML = `
-      <div class="tap-target-wrapper">
-        <div class="tap-target" data-target="menu-btn">
-          <div class="tap-target-content"><h5>Title</h5></div>
-        </div>
-      </div>
-      <a id="menu-btn" class="button">menu</a>`;
-    const el = document.querySelector('.tap-target');
-    const parent = el.parentElement;
-    Expressive.TapTarget.init(el);
-    assert.equal(el.parentElement, parent);
-    assert.equal(parent.parentElement?.classList.contains('tap-target-wrapper'), false);
-    Expressive.TapTarget.getInstance(el).destroy();
-  });
-
-  test('opening one tap target closes another', () => {
-    document.body.innerHTML = `
-      <div class="tap-target" data-target="a"><div class="tap-target-content"><h5>A</h5></div></div>
-      <div class="tap-target" data-target="b"><div class="tap-target-content"><h5>B</h5></div></div>
-      <a id="a" class="button">A</a>
-      <a id="b" class="button">B</a>`;
-    const [first, second] = document.querySelectorAll('.tap-target');
-    const a = Expressive.TapTarget.init(first);
-    const b = Expressive.TapTarget.init(second);
-    a.open();
-    b.open();
-    assert.equal(a.isOpen, false);
-    assert.equal(b.isOpen, true);
-    a.destroy();
-    b.destroy();
-  });
-});
-
 describe('FloatingActionButton', () => {
   beforeEach(resetBody);
 

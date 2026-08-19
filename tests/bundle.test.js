@@ -58,6 +58,11 @@ describe('IIFE bundle', () => {
       undefined,
       'retired Dropdown is still on the global'
     );
+    assert.equal(
+      dom.window.Expressive.TapTarget,
+      undefined,
+      'retired TapTarget is still on the global'
+    );
   });
 
   test('reports ExpressiveCSS own version, matching package.json', () => {

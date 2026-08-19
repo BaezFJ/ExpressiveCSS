@@ -66,11 +66,6 @@ export const AUTO_INIT_FIXTURES = [
     selector: '.tabs',
     html: `<ul class="tabs"><li class="tab"><a class="active" href="#tab1">Tab 1</a></li><li class="tab"><a href="#tab2">Tab 2</a></li></ul><div id="tab1">one</div><div id="tab2">two</div>`
   },
-  {
-    name: 'TapTarget',
-    selector: '.tap-target',
-    html: `<div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div><a id="menu-btn" class="button">menu</a>`
-  },
   { name: 'Timepicker', selector: '.timepicker', html: `<input type="text" class="timepicker">` },
   {
     name: 'Tooltip',

@@ -414,6 +414,15 @@ describe('App bar medium and large', () => {
   });
 });
 
+describe('retired Feature Discovery', () => {
+  test('does not emit tap-target styles or export TapTarget', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    assert.doesNotMatch(css, /\.tap-target/);
+    assert.doesNotMatch(css, /--md-comp-tap-target/);
+    assert.equal(Expressive.TapTarget, undefined);
+  });
+});
+
 describe('retired Pushpin', () => {
   test('does not emit .pushpin or the pin classes', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');

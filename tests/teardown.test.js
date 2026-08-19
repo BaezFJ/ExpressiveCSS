@@ -179,22 +179,6 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'Sidenav left its trigger listener attached');
   });
 
-  test('TapTarget detaches its resize listener and does not add document click handlers', () => {
-    document.body.innerHTML = `
-      <div class="tap-target" data-target="menu-btn"><div class="tap-target-content"><h5>Title</h5></div></div>
-      <a id="menu-btn" class="button">menu</a>`;
-    const instance = Expressive.TapTarget.init(document.querySelector('.tap-target'));
-
-    instance.open();
-    assert.ok(!watch.live().includes('click'), 'open() attached a document click handler');
-    assert.ok(!watch.live().includes('touchend'), 'open() attached a touchend handler');
-    assert.ok(!watch.live().includes('keypress'), 'open() attached a keypress handler');
-
-    instance.destroy();
-
-    assert.deepEqual(watch.live(), []);
-  });
-
   test('the docked display plugin detaches its document click handler', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
     const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {

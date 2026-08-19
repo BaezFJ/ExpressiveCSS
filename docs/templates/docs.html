@@ -117,7 +117,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'dialogs', 'bottom_sheet', 'side_sheet', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'feature_discovery', 'toolbars'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['buttons', 'floating_action_button', 'cards', 'lists', 'dialogs', 'bottom_sheet', 'side_sheet', 'badges', 'tooltips', 'snackbar', 'preloader', 'carousel', 'media', 'parallax', 'toolbars'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">widgets</i>
                             Components
@@ -164,9 +164,6 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'parallax' %}active{% endif %}">
                                     <a href="{{ url_for('parallax') }}">Parallax</a>
-                                </li>
-                                <li class="{% if request.endpoint == 'feature_discovery' %}active{% endif %}">
-                                    <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'toolbars' %}active{% endif %}">
                                     <a href="{{ url_for('toolbars') }}">Toolbars</a>
@@ -276,7 +273,6 @@
                 <a href="{{ url_for('carousel') }}">Carousel</a>
                 <a href="{{ url_for('media') }}">Lightbox</a>
                 <a href="{{ url_for('parallax') }}">Parallax</a>
-                <a href="{{ url_for('feature_discovery') }}">Feature Discovery</a>
                 <a href="{{ url_for('toolbars') }}">Toolbars</a>
             </nav>
             <nav>

@@ -21,7 +21,6 @@ export { Sidenav } from './sidenav';
 export { NavigationRail } from './navigationRail';
 export { Slider } from './slider';
 export { Tabs } from './tabs';
-export { TapTarget } from './tapTarget';
 export { Timepicker } from './timepicker';
 export { Snackbar } from './snackbar';
 export { Tooltip } from './tooltip';

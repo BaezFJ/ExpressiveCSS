@@ -296,12 +296,6 @@ def parallax():
     return render_template('components/parallax.html')
 
 
-@app.route('/feature-discovery')
-@app.route('/feature-discovery.html')
-def feature_discovery():
-    return render_template('components/feature-discovery.html')
-
-
 @app.route('/toolbars')
 @app.route('/toolbars.html')
 def toolbars():

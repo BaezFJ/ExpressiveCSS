@@ -92,10 +92,6 @@ read-it-off-the-element access that key provides.
 - **Sidenav nested sections are HTML.** `<details>` / `<summary>` inside
   a `.sidenav`; same `name` is an accordion. There is no Collapsible
   plugin — the drawer styles the summary as a destination row.
-- **Tap target (Feature Discovery) is a popover + CSS.** JS writes
-  `--md-comp-tap-target-x` / `-y` / `-origin-size` and `data-edge` from
-  one origin rect. The wrapper uses `popover="auto"` when the platform
-  has it. Do not build a `#${data-target}` selector.
 - **Menu nested menus are markup.** A `<menu>` inside an `<li>`
   is a flyout. Hover / `:focus-within` on `(hover: hover) and
   (pointer: fine)`; `.open` is the tap/keyboard switch. Flyouts
