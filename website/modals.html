@@ -162,6 +162,9 @@
                                     <a href="/modals.html">Dialogs</a>
                                 </li>
                                 <li class="">
+                                    <a href="/bottom-sheet.html">Bottom sheet</a>
+                                </li>
+                                <li class="">
                                     <a href="/badges.html">Badges</a>
                                 </li>
                                 <li class="">
@@ -402,19 +405,17 @@
       <div id="sheets" class="section scrollspy">
         <h3>Sheets</h3>
         <p>
-          Add <code>top</code>, <code>right</code>, <code>bottom</code>, or
+          Add <code>top</code>, <code>right</code>, or
           <code>left</code> to dock the dialog to that edge. The inner
           corners keep the 28dp shape; the edge against the viewport is
-          square. <code>top-sheet</code>, <code>right-sheet</code>,
-          <code>bottom-sheet</code>, and <code>left-sheet</code> are
-          aliases. Side sheets are 400px wide
-          (<code>--md-comp-basic-dialog-sheet-width</code>); top and bottom
-          take the full width and half the viewport height.
+          square. Side sheets are 400px wide
+          (<code>--md-comp-basic-dialog-sheet-width</code>). Bottom sheets
+          are a separate component — see
+          <a href="/bottom-sheet.html">Bottom sheet</a>.
         </p>
         <p>
           <button type="button" class="tonal" onclick="document.getElementById('modal-top').showModal()">Top</button>
           <button type="button" class="tonal" onclick="document.getElementById('modal-right').showModal()">Right</button>
-          <button type="button" class="tonal" onclick="document.getElementById('modal-bottom').showModal()">Bottom</button>
           <button type="button" class="tonal" onclick="document.getElementById('modal-left').showModal()">Left</button>
         </p>
         <dialog id="modal-top" class="top">
@@ -431,13 +432,6 @@
             <button type="submit" class="text" value="close">Close</button>
           </form>
         </dialog>
-        <dialog id="modal-bottom" class="bottom">
-          <h2>Bottom sheet</h2>
-          <p>Bottom sheets are useful for a short list of actions.</p>
-          <form method="dialog">
-            <button type="submit" class="text" value="close">Close</button>
-          </form>
-        </dialog>
         <dialog id="modal-left" class="left">
           <h2>Left sheet</h2>
           <p>A side sheet docked to the start edge. Same width token as the right sheet.</p>
@@ -447,7 +441,6 @@
         </dialog>
 <pre><code>&lt;dialog class="top"&gt;…&lt;/dialog&gt;
 &lt;dialog class="right"&gt;…&lt;/dialog&gt;
-&lt;dialog class="bottom"&gt;…&lt;/dialog&gt;
 &lt;dialog class="left"&gt;…&lt;/dialog&gt;</code></pre>
       </div>
 
@@ -538,6 +531,7 @@
                 <a href="/cards.html">Cards</a>
                 <a href="/lists.html">Lists</a>
                 <a href="/modals.html">Dialogs</a>
+                <a href="/bottom-sheet.html">Bottom sheet</a>
                 <a href="/badges.html">Badges</a>
                 <a href="/tooltips.html">Tooltips</a>
                 <a href="/snackbar.html">Snackbar</a>
