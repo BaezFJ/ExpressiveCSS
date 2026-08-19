@@ -61,7 +61,8 @@ read-it-off-the-element access that key provides.
 
 - **Importing the bundle has side effects.** `index.ts` attaches document-level
   key/focus listeners and calls `Forms.Init()`, `Chips.Init()`, `Waves.Init()`,
-  `Range.Init()`, `Cards.Init()`, `Dialogs.Init()`. Order matters; the delegated
+  `Range.Init()`, `Cards.Init()`, `Dialogs.Init()`, `BottomSheets.Init()`.
+  Order matters; the delegated
   listeners those install are what several components rely on. `Dialogs.Init()`
   light-dismisses an open `<dialog>` only when both ends of a pointer gesture
   land outside its box — a drag that starts on the dialog cannot close it.
@@ -69,6 +70,10 @@ read-it-off-the-element access that key provides.
   does it on `DOMContentLoaded`). Elements opt out with `.no-autoinit`.
 - **Dialogs are native `<dialog>`.** Open with `showModal()`, close with
   `close()`. `Dialogs.Init()` light-dismisses. There is no `Modal` plugin.
+- **Bottom sheets are native `<dialog class="bottom-sheet">`.**
+  `showModal()` is modal (scrim); `show()` is standard (no scrim).
+  `BottomSheets.Init()` drag-dismisses from the top 48dp handle.
+  Compact/medium layout; 640dp max, 56dp inset from `small`.
 - **Parallax motion is CSS.** `animation-timeline: view()` on the clip; the
   component class is AutoInit/getInstance/destroy only and attaches no
   scroll listener.

@@ -58,6 +58,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Feature Discovery
 - Media
 - Modals
+- Bottom sheet
 - Scrollspy
 - Sidenav
 - Tabs
@@ -3728,22 +3729,21 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
-Add `bottom` (or the older `bottom-sheet`) for a sheet docked to the bottom with square bottom corners. It is still a native `<dialog>`.
+A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on compact and medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the small breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss.
 
-Show bottom sheet
-
-### Choose an action
-
-Bottom sheets are useful for a short list of actions.
-
-```text
-<dialog class="bottom">
-  <h2>Choose an action</h2>
-  <p>Bottom sheets are useful for a short list of actions.</p>
+```html
+<dialog class="bottom-sheet">
+  <h2>Open file</h2>
+  <div>…</div>
   <form method="dialog">
-    <button type="submit" class="text">Close</button>
+    <button type="submit" class="text" value="cancel">Cancel</button>
   </form>
 </dialog>
+```
+
+```js
+document.getElementById('sheet').showModal(); // modal, with scrim
+document.getElementById('sheet').show();      // standard, no scrim
 ```
 
 ### Full-screen

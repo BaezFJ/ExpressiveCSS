@@ -230,6 +230,12 @@ def modals():
     return render_template('components/modals.html')
 
 
+@app.route('/bottom-sheet')
+@app.route('/bottom-sheet.html')
+def bottom_sheet():
+    return render_template('components/bottom-sheet.html')
+
+
 @app.route('/badges')
 @app.route('/badges.html')
 def badges():

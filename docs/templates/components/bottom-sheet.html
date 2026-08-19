@@ -1,0 +1,139 @@
+{% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
+
+{% block title %}Bottom sheet - ExpressiveCSS{% endblock %}
+{% block page_title %}Bottom sheet{% endblock %}
+
+{% block page %}
+{{ Banner("Bottom sheet", "Secondary content anchored to the bottom of the screen.") }}
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+      <div id="anatomy" class="section scrollspy">
+        <p class="flow-text">
+          A <code>dialog.bottom-sheet</code> (or <code>.bottom</code>) is the
+          surface. Use it for additional or secondary content — not the app’s
+          main view — on compact and medium windows. People dismiss it to get
+          back to the page.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/bottom-sheets">M3 bottom sheet spec</a>.
+          The container is <code>surface-container-low</code>, 28dp top
+          corners, elevation 1. Max width is 640dp. From the small breakpoint
+          the sheet is inset 56dp from the sides. It never covers the top
+          72dp of the viewport. The drag handle is a 32×4dp bar in a 48dp
+          hit target.
+        </p>
+        <p>
+          Two variants, same sheet:
+        </p>
+        <ul class="browser-default">
+          <li>
+            <strong>Modal</strong> — <code>showModal()</code>. A scrim sits
+            behind the sheet and the page is inert. Tap the scrim, drag the
+            handle down, or submit a <code>&lt;form method="dialog"&gt;</code>
+            to dismiss.
+          </li>
+          <li>
+            <strong>Standard</strong> — <code>show()</code>. No scrim; the
+            page stays interactive. Drag the handle down or use a close
+            action to dismiss.
+          </li>
+        </ul>
+        <p>
+          <button type="button" onclick="document.getElementById('sheet-modal').showModal()">Show modal</button>
+          <button type="button" class="tonal" onclick="document.getElementById('sheet-standard').show()">Show standard</button>
+        </p>
+
+        <dialog id="sheet-modal" class="bottom-sheet">
+          <h2>Open file</h2>
+          <div>
+            <ul class="list">
+              <li>
+                <i class="material-symbols">description</i>
+                Draft.md
+              </li>
+              <li>
+                <i class="material-symbols">image</i>
+                Cover.png
+              </li>
+              <li>
+                <i class="material-symbols">folder</i>
+                Archive
+              </li>
+            </ul>
+          </div>
+          <form method="dialog">
+            <button type="submit" class="text" value="cancel">Cancel</button>
+          </form>
+        </dialog>
+
+        <dialog id="sheet-standard" class="bottom-sheet">
+          <h2>Now playing</h2>
+          <p>Secondary controls for the current track. The page behind this sheet stays usable.</p>
+          <form method="dialog">
+            <button type="submit" class="text" value="close">Close</button>
+          </form>
+        </dialog>
+<pre><code>&lt;button type="button" onclick="document.getElementById('sheet').showModal()"&gt;
+  Show modal
+&lt;/button&gt;
+
+&lt;dialog id="sheet" class="bottom-sheet"&gt;
+  &lt;h2&gt;Open file&lt;/h2&gt;
+  &lt;div&gt;…&lt;/div&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button type="submit" class="text" value="cancel"&gt;Cancel&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+        <p>
+          There is no extra class for the modal variant — <code>showModal()</code>
+          vs <code>show()</code> is the split. The handle is painted with
+          <code>::before</code>. Put a <code>.handle</code> button first if
+          you want a real control in that slot.
+        </p>
+      </div>
+
+      <div id="handle" class="section scrollspy">
+        <h3>Handle</h3>
+        <p>
+          Drag the top 48dp (or the <code>.handle</code> button) down to
+          dismiss. A flick counts. The rest of the sheet scrolls if the
+          body overflows.
+        </p>
+<pre><code>&lt;dialog class="bottom-sheet"&gt;
+  &lt;button type="button" class="handle" aria-label="Dismiss"&gt;&lt;/button&gt;
+  &lt;h2&gt;Title&lt;/h2&gt;
+  …
+&lt;/dialog&gt;</code></pre>
+      </div>
+
+      <div id="layout" class="section scrollspy">
+        <h3>Layout</h3>
+        <p>
+          Compact (below 601px) is full-bleed, flush to the bottom. From
+          the small breakpoint the sheet is at most 640dp wide with 56dp
+          side inset. It always stops 72dp short of the top. On large
+          screens a
+          <a href="{{ url_for('modals') }}#sheets">side sheet</a>
+          or a basic dialog is usually a better fit; the bottom sheet still
+          lays out if you open one.
+        </p>
+      </div>
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper mt-5">
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#handle">Handle</a></li>
+          <li><a href="#layout">Layout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

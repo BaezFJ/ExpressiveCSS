@@ -1,0 +1,137 @@
+@use "../abstracts" as *;
+
+// Bottom sheets.
+//
+// Anatomy is the HTML. A dialog.bottom-sheet (or .bottom) is the surface.
+// showModal() is the modal variant (scrim). show() is the standard variant
+// (no scrim, page stays interactive). ::before is the optional drag handle;
+// an explicit .handle button replaces it. A heading, body, and trailing
+// form[method=dialog] are the same slots as a basic dialog.
+//
+// Tokens follow https://m3.material.io/components/bottom-sheets
+//   container    surface-container-low, 28dp top corners, elevation 1
+//   max width    640dp; 56dp inset from the small breakpoint
+//   max height   viewport minus 72dp
+//   handle       32×4dp bar in a 48dp hit target, on-surface-variant
+//   scrim        modal only (UA ::backdrop + the dialog scrim token)
+//
+// Compact and medium are the intended windows. On large screens prefer a
+// side sheet or a basic dialog; the sheet still lays out (640 + 56).
+
+$_handle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='4'%3E%3Crect width='32' height='4' rx='2' fill='black'/%3E%3C/svg%3E");
+
+dialog.bottom,
+dialog.bottom-sheet {
+  --md-comp-bottom-sheet-container-color: var(--md-sys-color-surface-container-low);
+  --md-comp-bottom-sheet-container-shape: 28px;
+  --md-comp-bottom-sheet-container-max-width: 640px;
+  --md-comp-bottom-sheet-margin-inline: 56px;
+  --md-comp-bottom-sheet-top-inset: 72px;
+  --md-comp-bottom-sheet-drag-handle-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface-variant) 40%,
+    transparent
+  );
+  --md-comp-bottom-sheet-shift: 0px;
+
+  box-sizing: border-box;
+  position: fixed;
+  inset: auto 0 0;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  max-height: calc(100dvh - var(--md-comp-bottom-sheet-top-inset));
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--md-comp-bottom-sheet-container-shape)
+    var(--md-comp-bottom-sheet-container-shape) 0 0;
+  background-color: var(--md-comp-bottom-sheet-container-color);
+  color: var(--md-sys-color-on-surface);
+  outline: none;
+  @include z-depth("1");
+  translate: 0 var(--md-comp-bottom-sheet-shift);
+  transition: translate 280ms ease;
+
+  // Non-modal `show()` is not in the top layer — sit above page content
+  // and below snackbars (z-index 10000).
+  &:not(:modal) {
+    z-index: 1100;
+  }
+
+  @include bp-up("small") {
+    width: min(
+      var(--md-comp-bottom-sheet-container-max-width),
+      calc(100% - 2 * var(--md-comp-bottom-sheet-margin-inline))
+    );
+    max-width: var(--md-comp-bottom-sheet-container-max-width);
+    margin-inline: auto;
+  }
+
+  // Standard: no scrim. Modal keeps the basic-dialog backdrop.
+  &:not(:modal)::backdrop {
+    background: none;
+    backdrop-filter: none;
+  }
+
+  // Drag handle. 32×4 bar, 48dp hit. Hidden when the author supplies .handle.
+  &::before {
+    content: "";
+    box-sizing: border-box;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    align-self: center;
+    margin: 0;
+    padding: 0;
+    background-color: var(--md-comp-bottom-sheet-drag-handle-color);
+    mask: $_handle center / 32px 4px no-repeat;
+    pointer-events: none;
+  }
+
+  &:has(> .handle)::before {
+    content: none;
+    display: none;
+  }
+
+  > .handle {
+    box-sizing: border-box;
+    flex: 0 0 48px;
+    align-self: center;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: var(--md-comp-bottom-sheet-drag-handle-color);
+    mask: $_handle center / 32px 4px no-repeat;
+    cursor: grab;
+    appearance: none;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    padding-top: 8px;
+  }
+}
+
+dialog.bottom[open],
+dialog.bottom-sheet[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+@starting-style {
+  dialog.bottom[open],
+  dialog.bottom-sheet[open] {
+    translate: 0 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.bottom,
+  dialog.bottom-sheet {
+    transition: none;
+  }
+}
