@@ -23,18 +23,18 @@
         </p>
         <ol>
           <li>
-            Default: <code>:root</code> and <code>:host</code> use the
-            <code>-light</code> pair.
+            Default: <code>:root</code> and <code>:host</code> set
+            <code>color-scheme: light dark</code>, so
+            <code>light-dark()</code> follows the OS.
           </li>
           <li>
-            If the user prefers dark and you have not set a
-            <code>theme</code> attribute,
-            <code>@media (prefers-color-scheme: dark)</code> uses the
-            <code>-dark</code> pair.
+            <code>:root[theme='auto']</code> is the same follow-OS value,
+            written explicitly.
           </li>
           <li>
             <code>:root[theme='light']</code> and
-            <code>:root[theme='dark']</code> override both of the above.
+            <code>:root[theme='dark']</code> lock the scheme and override
+            the OS.
           </li>
         </ol>
         <p>
@@ -43,17 +43,16 @@
           consumers; the docs site and a normal page use <code>:root</code>.
         </p>
         <p>
-          This site always starts as
-          <code>&lt;html lang="en" theme="light"&gt;</code>. The moon icon in the
-          navbar flips that attribute between <code>light</code> and
-          <code>dark</code>. It does not read
-          <code>prefers-color-scheme</code> and it does not persist to
-          <code>localStorage</code>.
+          This site starts as
+          <code>&lt;html lang="en" theme="auto"&gt;</code>. The theme control
+          in the app bar is a menu: Light, Dark, and Auto. The choice is
+          written to <code>localStorage</code> and restored before first
+          paint so a reload does not flash the wrong scheme.
         </p>
         <article>
           <p class="title-medium mt-0">These tokens follow the page theme</p>
           <p class="mb-3">
-            Toggle the moon in the navbar — or the button in
+            Open the theme menu in the app bar — or the buttons in
             <a href="#changing-theme">Changing theme</a> — and this card, the
             buttons, and the swatches change with it.
           </p>
@@ -84,19 +83,16 @@
           you own persistence.
         </p>
         <p>
-          Without a <code>theme</code> attribute the CSS already follows
-          <code>prefers-color-scheme</code>. Once you set the attribute, that
-          media query no longer wins. The snippet below reads a stored value
-          first, then falls back to the OS preference, then writes the
-          attribute so the override is explicit.
+          Without a <code>theme</code> attribute — or with
+          <code>theme="auto"</code> — the CSS already follows the OS.
+          <code>theme="light"</code> and <code>theme="dark"</code> lock it.
+          The snippet below restores a stored choice before first paint.
         </p>
 <pre><code>&lt;script&gt;
   function getTheme() {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-    const prefersDark = window.matchMedia
-      &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return prefersDark ? 'dark' : 'light';
+    if (stored === 'dark' || stored === 'light' || stored === 'auto') return stored;
+    return 'auto';
   }
 
   function setTheme(theme) {
@@ -108,9 +104,8 @@
 &lt;/script&gt;</code></pre>
         <p>
           Keep this inline rather than in an external file so it runs before
-          the first paint. Setting <code>theme="light"</code> in the HTML and
-          never changing it — as this docs site does — locks the page to light
-          until JavaScript flips the attribute.
+          the first paint. This docs site does that in
+          <code>&lt;head&gt;</code>.
         </p>
       </div>
 
@@ -121,28 +116,26 @@
           API — there is no <code>Expressive.theme</code> helper.
         </p>
 <pre><code>document.documentElement.setAttribute('theme', 'dark');
-document.documentElement.setAttribute('theme', 'light');</code></pre>
+document.documentElement.setAttribute('theme', 'light');
+document.documentElement.setAttribute('theme', 'auto');</code></pre>
         <p>
-          Bind that to a control. The navbar moon on this site does exactly
-          that and swaps its icon; it does not write <code>localStorage</code>.
-          A consumer app that wants the choice to stick can reuse
+          Bind that to a control. The app-bar menu on this site writes one of
+          those three values and persists it with
           <code>setTheme</code> from the snippet above:
         </p>
-<pre><code>document.getElementById('theme-toggle').addEventListener('click', (event) =&gt; {
-  event.preventDefault();
-  const next = document.documentElement.getAttribute('theme') === 'dark'
-    ? 'light'
-    : 'dark';
-  setTheme(next);
+<pre><code>Expressive.Menu.init(document.getElementById('theme-toggle'), {
+  alignment: 'right',
+  constrainWidth: false,
+  onItemClick: (li) =&gt; setTheme(li.dataset.theme)
 });</code></pre>
-        <p>
-          <a id="page-theme-toggle" class="button filled" href="#" title="Switch theme">
-            <i class="material-symbols">dark_mode</i>Toggle theme
-          </a>
+        <p id="page-theme-toggle">
+          <button type="button" class="tonal" data-theme="light">Light</button>
+          <button type="button" class="tonal" data-theme="dark">Dark</button>
+          <button type="button" class="tonal" data-theme="auto">Auto</button>
         </p>
         <p>
-          The same control lives in the top-right of every docs page. After a
-          reload this site is light again.
+          The same three choices live in the top-right of every docs page.
+          Reload keeps the one you picked.
         </p>
       </div>
 

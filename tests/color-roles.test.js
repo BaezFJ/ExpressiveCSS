@@ -34,4 +34,8 @@ describe('M3 Expressive color roles', () => {
     assert.match(css, /\.on-primary-fixed-text\s*\{/);
     assert.match(css, /\.primary-fixed-dim\s*\{/);
   });
+
+  test('theme=auto follows the OS color-scheme', () => {
+    assert.match(css, /:root\[theme=(['"]?)auto\1\]\s*\{\s*color-scheme:\s*light dark/);
+  });
 });

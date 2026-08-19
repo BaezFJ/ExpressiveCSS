@@ -35,5 +35,7 @@
 /* ===================================================================== Themes */
 
 // Opting out of the OS preference. Every token above re-resolves from these.
+// `auto` is the explicit follow-OS value — same as omitting the attribute.
 :root[theme='light'] { color-scheme: light; }
 :root[theme='dark'] { color-scheme: dark; }
+:root[theme='auto'] { color-scheme: light dark; }

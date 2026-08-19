@@ -12,6 +12,10 @@
     <script>
         (function () {
             try {
+                var t = localStorage.getItem('theme');
+                if (t === 'light' || t === 'dark' || t === 'auto') {
+                    document.documentElement.setAttribute('theme', t);
+                }
                 var c = localStorage.getItem('md-source');
                 if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
                     document.documentElement.style.setProperty('--md-source', c);
