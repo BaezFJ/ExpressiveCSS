@@ -5,6 +5,23 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0-rc.0] - 2026-08-21
+
+A prerelease on the `next` dist-tag. `latest` stays on 0.6.0.
+
+The framework itself is **unchanged** from 0.6.0 — `src/ts` and `src/sass` carry
+no commits between the two tags, so the built `dist/` is identical. This exists
+to exercise the publish pipeline end to end: the `npm-publish` approval gate and
+the trusted-publisher identity, which now includes the environment name and had
+never been used for a real publish.
+
+### Changed
+
+- `homepage` in `package.json` points at <https://www.expressivecss.com> instead
+  of the GitHub readme. Registry metadata is fixed per version, so 0.6.0 keeps
+  the old link.
+
+
 ## [0.6.0] - 2026-08-21
 
 Adds the Material 3 canonical pane layouts and an LLM-oriented Material 3
@@ -122,6 +139,7 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0-rc.0...HEAD
+[0.7.0-rc.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0-rc.0
 [0.6.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.4.0...v0.5.0
