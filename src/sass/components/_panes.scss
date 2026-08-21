@@ -1,0 +1,294 @@
+@use "../abstracts" as *;
+
+// Material 3 Canonical Pane Layouts.
+//
+// Anatomy is the HTML. A container (`.panes` or `.pane-layout` or `.list-detail`)
+// contains two (or three) `.pane` children.
+//
+// Canonical Layouts:
+//   1. List-Detail (.list-detail, .panes.list-detail):
+//      - Compact (< 840px / < 601px): Single pane visible at a time.
+//      - Expanded (>= 840px): 360dp list pane + 1fr detail pane.
+//   2. Supporting Pane (.supporting-pane-layout, .panes.supporting):
+//      - 1fr primary pane + 360-400dp supporting pane (on trailing or leading side).
+//   3. Equal / Proportional (.panes.equal, .panes.proportional):
+//      - 1fr 1fr side-by-side.
+//
+// Appearances:
+//   - Coplanar (default): Full-bleed surfaces with a 1px outline-variant divider.
+//   - Separated / Floating (.separated, .floating): 16dp/24dp rounded surfaces
+//     with surface-container-low and a 24dp gap.
+//
+// Tokens follow https://m3.material.io/foundations/adaptive-design/canonical-layouts
+//   --md-comp-pane-gap                       24px
+//   --md-comp-pane-divider-color             outline-variant
+//   --md-comp-pane-container-color           surface
+//   --md-comp-pane-container-shape           0px
+//   --md-comp-pane-list-width                360px
+//   --md-comp-pane-supporting-width          360px
+//   --md-comp-pane-primary-min-width         360px
+
+.panes,
+.pane-layout,
+.list-detail,
+.supporting-pane-layout {
+  --md-comp-pane-gap: 24px;
+  --md-comp-pane-divider-color: var(--md-sys-color-outline-variant);
+  --md-comp-pane-container-color: var(--md-sys-color-surface);
+  --md-comp-pane-container-shape: 0px;
+  --md-comp-pane-list-width: 360px;
+  --md-comp-pane-supporting-width: 360px;
+  --md-comp-pane-primary-min-width: 360px;
+
+  box-sizing: border-box;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  container-type: inline-size;
+  background-color: var(--md-comp-pane-container-color);
+  color: var(--md-sys-color-on-surface);
+
+  // Default (Single-Pane on compact screens < 840px / < 601px)
+  grid-template-columns: 1fr;
+  gap: 0;
+
+  // Panes in compact mode: list/primary visible by default, detail/supporting hidden
+  // unless marked .active
+  > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
+    display: none;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+
+    &.active {
+      display: flex;
+    }
+  }
+
+  &:not(:has(> :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane).active)) {
+    > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):first-child {
+      display: flex;
+    }
+  }
+
+  // Expanded Viewports: Dual-pane side-by-side (via container query or breakpoint)
+  @media (width >= 840px) {
+    grid-template-columns: var(--md-comp-pane-list-width) 1fr;
+    gap: 0;
+
+    > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
+      display: flex !important;
+    }
+  }
+
+  @container (min-width: 840px) {
+    grid-template-columns: var(--md-comp-pane-list-width) 1fr;
+    gap: 0;
+
+    > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
+      display: flex !important;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Canonical Variants
+// ---------------------------------------------------------------------------
+
+// 1. Supporting Pane Layout
+.supporting-pane-layout,
+.panes.supporting {
+  @media (width >= 840px) {
+    grid-template-columns: 1fr var(--md-comp-pane-supporting-width);
+  }
+
+  @container (min-width: 840px) {
+    grid-template-columns: 1fr var(--md-comp-pane-supporting-width);
+  }
+
+  // Leading supporting pane (.start / .left)
+  &.start,
+  &.left {
+    @media (width >= 840px) {
+      grid-template-columns: var(--md-comp-pane-supporting-width) 1fr;
+    }
+
+    @container (min-width: 840px) {
+      grid-template-columns: var(--md-comp-pane-supporting-width) 1fr;
+    }
+  }
+}
+
+// 2. Equal / Proportional Pane Layout
+.panes.equal,
+.pane-layout.equal {
+  @media (width >= 840px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @container (min-width: 840px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+// 3. Three-Pane Layout (List + Primary Focus + Supporting)
+.panes.three-pane,
+.pane-layout.three-pane {
+  @media (width >= 1200px) {
+    grid-template-columns: var(--md-comp-pane-list-width) 1fr var(--md-comp-pane-supporting-width);
+  }
+
+  @container (min-width: 1200px) {
+    grid-template-columns: var(--md-comp-pane-list-width) 1fr var(--md-comp-pane-supporting-width);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Separated / Floating Appearance
+// ---------------------------------------------------------------------------
+.panes.separated,
+.panes.floating,
+.pane-layout.separated,
+.pane-layout.floating {
+  --md-comp-pane-container-shape: 16px;
+  --md-comp-pane-container-color: transparent;
+  gap: var(--md-comp-pane-gap);
+  padding: var(--md-comp-pane-gap);
+
+  > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
+    border: none;
+    border-radius: var(--md-comp-pane-container-shape);
+    background-color: var(--md-sys-color-surface-container-low);
+    @include z-depth("0");
+
+    &.elevated {
+      background-color: var(--md-sys-color-surface-container-low);
+      @include z-depth("1");
+    }
+
+    &.outlined {
+      background-color: var(--md-sys-color-surface);
+      border: 1px solid var(--md-comp-pane-divider-color);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Coplanar / Docked Dividers (Default)
+// ---------------------------------------------------------------------------
+:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.separated, .floating) {
+  > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):not(:last-child) {
+    @media (width >= 840px) {
+      border-inline-end: 1px solid var(--md-comp-pane-divider-color);
+    }
+
+    @container (min-width: 840px) {
+      border-inline-end: 1px solid var(--md-comp-pane-divider-color);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Pane Internal Anatomy
+// ---------------------------------------------------------------------------
+.pane,
+.list-pane,
+.primary-pane,
+.detail-pane,
+.supporting-pane {
+  box-sizing: border-box;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  // Header Bar (64dp height, Title Large, action icons)
+  > :is(header, .pane-header) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-height: 64px;
+    margin: 0;
+    padding: 8px 16px;
+    background: none;
+
+    > :is(h1, h2, h3, h4, h5, h6, .pane-title) {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      color: var(--md-sys-color-on-surface);
+      @include typescale("title-large");
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    > :is(button, a.button):has(> i:only-child) {
+      flex: 0 0 48px;
+      box-sizing: border-box;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--md-sys-color-on-surface-variant);
+      box-shadow: none;
+
+      > i {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+      }
+
+      &:hover {
+        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+      }
+
+      &:focus-visible {
+        outline: 3px solid var(--md-sys-color-secondary);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Scrollable Content Body
+  > :is(main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer)) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 16px 24px;
+  }
+
+  // Direct list inside pane (fills list seamlessly without padding clip)
+  > .list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin: 0;
+  }
+
+  // Footer / Action Bar
+  > :is(footer, .pane-footer, nav:last-child) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    min-height: 56px;
+    padding: 8px 16px;
+    border-block-start: 1px solid var(--md-comp-pane-divider-color);
+  }
+}
