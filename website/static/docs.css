@@ -288,3 +288,63 @@ header:has(> nav) > nav #source-color-toggle {
 .tabs-swipe-demo {
   --carousel-height: 8rem;
 }
+
+/* Panes docs: reading column + sticky TOC, demos use the remaining width. */
+@media (width >= 993px) {
+  .container.panes-page {
+    --md-comp-container-width: 90%;
+    --md-comp-container-max-width: 1400px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 11rem;
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+}
+
+.panes-page-body > .section > :is(p, .flow-text) {
+  max-width: 42rem;
+}
+
+.panes-page-toc .toc-wrapper {
+  margin-top: 0.5rem;
+}
+
+/* Embed a pane layout without 100% of the viewport. */
+.panes-demo {
+  --md-comp-pane-list-width: min(360px, 42%);
+  --md-comp-pane-supporting-width: min(280px, 32%);
+  height: 28rem;
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 16px;
+  margin: 0 0 1rem;
+}
+
+.panes-demo.separated,
+.panes-demo.floating {
+  background-color: var(--md-sys-color-surface-container);
+}
+
+/* Force compact (single-pane) so the docs can show .active without
+   shrinking the window. The component uses display:flex !important
+   at 840px, so inactive panes are stacked and hidden instead. */
+.panes-demo.compact {
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr;
+}
+
+.panes-demo.compact > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
+  grid-column: 1;
+  grid-row: 1;
+  visibility: hidden;
+  z-index: 0;
+  pointer-events: none;
+  border-inline-end: none !important;
+}
+
+.panes-demo.compact > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane).active,
+.panes-demo.compact:not(:has(> :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane).active)) > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):first-child {
+  visibility: visible;
+  z-index: 1;
+  pointer-events: auto;
+}
