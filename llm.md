@@ -2,7 +2,7 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.5.0`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.6.0`, which is under active development.
 
 - Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
@@ -53,6 +53,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Navigation bar
 - Navigation rail
 - Pagination
+- Panes
 - Parallax
 - Preloader
 
@@ -285,7 +286,7 @@ Learn how to start using Expressive and integrate it into your project.
 
 ### Download
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.5.0` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.6.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
@@ -2917,6 +2918,133 @@ On medium and down, wrap the page numbers in `li.pages` and mark the ends `prev`
   </li>
 </ul>
 ```
+
+---
+
+## Panes
+
+Material 3 canonical layouts — list-detail, supporting pane, and equal panes.
+
+Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container is also a `container-type: inline-size` query container, so a pane layout nested inside a narrow column collapses on its own width, not the viewport's.
+
+Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane` counts as a pane child — the specific names are for readability.
+
+### List-detail
+
+`list-detail` gives a 360px list pane and a flexible detail pane.
+
+```html
+<div class="panes list-detail">
+  <div class="list-pane">
+    <header>
+      <h2>Inbox</h2>
+    </header>
+    <ul class="list">
+      <li><a href="#!">Brunch this weekend?</a></li>
+      <li><a href="#!">Design review</a></li>
+    </ul>
+  </div>
+  <div class="detail-pane">
+    <header>
+      <button><i class="material-icons">arrow_back</i></button>
+      <h2>Brunch this weekend?</h2>
+    </header>
+    <main>
+      <p>Detail content.</p>
+    </main>
+  </div>
+</div>
+```
+
+### Compact
+
+Below 840px the container shows one pane. The first pane wins by default; add `active` to the pane you want instead, and move that class to switch panes. Above 840px `active` is ignored and every pane shows.
+
+```html
+<div class="panes list-detail">
+  <div class="list-pane">…</div>
+  <div class="detail-pane active">…</div>
+</div>
+```
+
+### Supporting pane
+
+`supporting` (or `supporting-pane-layout`) puts a flexible primary pane first and a 360px supporting pane after it. Add `start` (or `left`) to lead with the supporting pane instead.
+
+```html
+<div class="panes supporting">
+  <div class="primary-pane">…</div>
+  <div class="supporting-pane">…</div>
+</div>
+```
+
+### Equal
+
+`equal` splits the container `1fr 1fr`.
+
+```html
+<div class="panes equal">
+  <div class="pane">…</div>
+  <div class="pane">…</div>
+</div>
+```
+
+### Three-pane
+
+`three-pane` is list + primary + supporting. It stays two-up until 1200px, then expands to three columns.
+
+```html
+<div class="panes three-pane">
+  <div class="list-pane">…</div>
+  <div class="primary-pane">…</div>
+  <div class="supporting-pane">…</div>
+</div>
+```
+
+### Appearance
+
+The default is coplanar: full-bleed surfaces with a 1px `outline-variant` divider between them. `separated` (alias `floating`) instead gives each pane a 16px rounded `surface-container-low` card with a 24px gap. Inside a separated layout, a pane can take `elevated` for a shadow or `outlined` for a `surface` fill with a border.
+
+```html
+<div class="panes list-detail separated">
+  <div class="list-pane outlined">…</div>
+  <div class="detail-pane elevated">…</div>
+</div>
+```
+
+### Pane anatomy
+
+A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `main`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
+
+```html
+<div class="pane">
+  <header>
+    <button><i class="material-icons">arrow_back</i></button>
+    <h2>Title</h2>
+    <button><i class="material-icons">more_vert</i></button>
+  </header>
+  <main>
+    <p>Scrolling content.</p>
+  </main>
+  <footer>
+    <button class="button">Save</button>
+  </footer>
+</div>
+```
+
+### Tokens
+
+Set these on the container to resize a layout.
+
+| Name | Default | Description |
+| --- | --- | --- |
+| `--md-comp-pane-gap` | `24px` | Gap and padding in the separated appearance. |
+| `--md-comp-pane-divider-color` | `outline-variant` | Coplanar divider and `outlined` pane border. |
+| `--md-comp-pane-container-color` | `surface` | Container fill. |
+| `--md-comp-pane-container-shape` | `0px` (`16px` when separated) | Pane corner radius. |
+| `--md-comp-pane-list-width` | `360px` | List pane width at 840px and up. |
+| `--md-comp-pane-supporting-width` | `360px` | Supporting pane width at 840px and up. |
+| `--md-comp-pane-primary-min-width` | `360px` | Minimum width for the primary pane. |
 
 ---
 

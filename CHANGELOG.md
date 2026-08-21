@@ -5,6 +5,36 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-08-21
+
+Adds the Material 3 canonical pane layouts and an LLM-oriented Material 3
+guidelines document. No breaking changes.
+
+### Added
+
+- **Panes** (`.panes`, `.list-detail`, `.supporting-pane-layout`, `.pane-layout`,
+  CSS only) — the M3 canonical adaptive layouts. List-detail (360dp list + 1fr
+  detail), supporting pane (1fr primary + 360dp supporting, leading or trailing),
+  equal, and three-pane. Below 840px one pane shows at a time — the first, or the
+  one marked `.active`. The container is an inline-size query container, so a
+  layout nested in a narrow column collapses on its own width rather than the
+  viewport's. Coplanar by default (full-bleed with an `outline-variant` divider)
+  or `.separated` / `.floating` (16dp `surface-container-low` cards, 24dp gap,
+  with per-pane `.elevated` and `.outlined`). Panes have anatomy: a `header` is a
+  64dp title bar, `main` is the scrolling body, `footer` is a 56dp action bar.
+  Sized by `--md-comp-pane-*` tokens.
+- **`m3-guidelines.md`** — a companion to `llm.md` covering Material 3 usage,
+  anatomy, placement, adaptive design, and component behaviors: what to reach for
+  and when, rather than which classes to write.
+- A **Panes** documentation page, and a `Panes` section in `llm.md`.
+
+### Fixed
+
+- Badges anchored to an icon mirrored to the wrong side in RTL. The badge is
+  positioned with logical `inset-inline-end`, but the `translate(50%, -50%)` that
+  centres it on the icon corner is physical, so it pushed the badge inward. It is
+  now negated under `:dir(rtl)`.
+
 ## [0.5.0] - 2026-08-19
 
 The release that finishes moving the vendored Materialize surface onto Material
@@ -92,5 +122,6 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.4.0...v0.5.0
