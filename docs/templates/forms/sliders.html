@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Slider" %}
 {% set page_blurb = "Selections from a range of values." %}
@@ -43,10 +43,12 @@
             <input type="range" min="0" max="100" value="40">
           </label>
         </form>
-<pre><code>&lt;label&gt;
+{% call code() %}
+<label>
   Volume
-  &lt;input type="range" min="0" max="100" value="40"&gt;
-&lt;/label&gt;</code></pre>
+  <input type="range" min="0" max="100" value="40">
+</label>
+{% endcall %}
   {% endcall %}
 
   {% call section("variants", "Variants") %}
@@ -67,18 +69,20 @@
             <input type="range" min="0" max="100" value="75" aria-label="Range end">
           </div>
         </form>
-<pre><code>&lt;div class="range"&gt;
-  &lt;input type="range" min="0" max="100" value="40" aria-label="Standard"&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="range">
+  <input type="range" min="0" max="100" value="40" aria-label="Standard">
+</div>
 
-&lt;div class="range centered"&gt;
-  &lt;input type="range" min="0" max="100" value="30" aria-label="Centered"&gt;
-&lt;/div&gt;
+<div class="range centered">
+  <input type="range" min="0" max="100" value="30" aria-label="Centered">
+</div>
 
-&lt;div class="range"&gt;
-  &lt;input type="range" min="0" max="100" value="25" aria-label="Range start"&gt;
-  &lt;input type="range" min="0" max="100" value="75" aria-label="Range end"&gt;
-&lt;/div&gt;</code></pre>
+<div class="range">
+  <input type="range" min="0" max="100" value="25" aria-label="Range start">
+  <input type="range" min="0" max="100" value="75" aria-label="Range end">
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("sizes", "Sizes") %}
@@ -106,10 +110,12 @@
             <input type="range" min="0" max="100" value="40" aria-label="XL">
           </div>
         </form>
-<pre><code>&lt;div class="range s"&gt;…&lt;/div&gt;
-&lt;div class="range m"&gt;…&lt;/div&gt;
-&lt;div class="range l"&gt;…&lt;/div&gt;
-&lt;div class="range xl"&gt;…&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="range s">…</div>
+<div class="range m">…</div>
+<div class="range l">…</div>
+<div class="range xl">…</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("icon", "Icon, stops, value", heading="Inset icon, stops, value") %}
@@ -128,14 +134,16 @@
             <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
           </div>
         </form>
-<pre><code>&lt;div class="range m"&gt;
-  &lt;i class="material-symbols"&gt;volume_up&lt;/i&gt;
-  &lt;input type="range" min="0" max="100" value="55" aria-label="Volume"&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="range m">
+  <i class="material-symbols">volume_up</i>
+  <input type="range" min="0" max="100" value="55" aria-label="Volume">
+</div>
 
-&lt;div class="range stops"&gt;
-  &lt;input type="range" min="0" max="100" step="20" value="40" aria-label="Stops"&gt;
-&lt;/div&gt;</code></pre>
+<div class="range stops">
+  <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("vertical", "Vertical") %}
@@ -148,9 +156,11 @@
             <input type="range" min="0" max="100" value="60" aria-label="Level">
           </div>
         </form>
-<pre><code>&lt;div class="range vertical m"&gt;
-  &lt;input type="range" min="0" max="100" value="60" aria-label="Level"&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="range vertical m">
+  <input type="range" min="0" max="100" value="60" aria-label="Level">
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("disabled", "Disabled") %}
@@ -168,17 +178,21 @@
           Put the script after the inputs, or call <code>init</code>
           yourself. There are no options. For a slider added after load:
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('input[type=range]');
   Expressive.Range.init(elems);
 });
 
-Expressive.Range.init(document.querySelector('#volume'));</code></pre>
+Expressive.Range.init(document.querySelector('#volume'));
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
-<pre><code>const instance = Expressive.Range.getInstance(elem);
-instance.destroy();</code></pre>
+{% call code() %}
+const instance = Expressive.Range.getInstance(elem);
+instance.destroy();
+{% endcall %}
         <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>
   {% endcall %}
 

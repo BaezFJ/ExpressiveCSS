@@ -8,10 +8,12 @@ start, foundations, structure, components, forms. Layout chrome
 (`base.html`, `docs.html`) stays at the templates root.
 """
 
+import html
 import json
 from pathlib import Path
 
 from flask import Flask, redirect, render_template, send_from_directory, url_for
+from markupsafe import Markup
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DIST_DIR = REPO_ROOT / 'dist'
@@ -115,6 +117,16 @@ def _package_version():
 
 
 VERSION = _package_version()
+
+
+@app.template_filter('code_escape')
+def code_escape(value):
+    """Escape a code sample for display.
+
+    Angle brackets and ampersands only -- quotes are left alone, which is how
+    every sample in these docs was written by hand before the `code()` macro.
+    """
+    return Markup(html.escape(str(value), quote=False))
 
 
 @app.context_processor

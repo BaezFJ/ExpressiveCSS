@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Navigation rail" %}
@@ -63,23 +63,25 @@
             </a>
           </nav>
         </div>
-<pre><code>&lt;nav class="navigation-rail" aria-label="Main"&gt;
-  &lt;button type="button" aria-label="Menu"&gt;
-    &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;a class="button extra" href="#!"&gt;
-    &lt;i class="material-symbols"&gt;edit&lt;/i&gt;
-    &lt;span&gt;Label&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a href="/" aria-current="page"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+{% call code() %}
+<nav class="navigation-rail" aria-label="Main">
+  <button type="button" aria-label="Menu">
+    <i class="material-symbols">menu</i>
+  </button>
+  <a class="button extra" href="#!">
+    <i class="material-symbols">edit</i>
+    <span>Label</span>
+  </a>
+  <a href="/" aria-current="page">
+    <i class="material-symbols">star</i>
     Label
-  &lt;/a&gt;
-  &lt;a href="/two"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;span class="badge"&gt;3&lt;/span&gt;&lt;/i&gt;
+  </a>
+  <a href="/two">
+    <i class="material-symbols">star<span class="badge">3</span></i>
     Label
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+  </a>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("expanded", "Expanded") %}
@@ -117,22 +119,26 @@
             </a>
           </nav>
         </div>
-<pre><code>&lt;nav class="navigation-rail expanded" aria-label="Main"&gt;
+{% call code() %}
+<nav class="navigation-rail expanded" aria-label="Main">
   …
-  &lt;h3&gt;Section Header&lt;/h3&gt;
-  &lt;a href="/other"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+  <h3>Section Header</h3>
+  <a href="/other">
+    <i class="material-symbols">star</i>
     Label
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
-<pre><code>@media (width >= 601px) {
+  </a>
+</nav>
+{% endcall %}
+{% call code() %}
+@media (width >= 601px) {
   body {
     padding-left: var(--md-comp-nav-rail-collapsed-width);
   }
   body:has(.navigation-rail.expanded) {
     padding-left: var(--md-comp-nav-rail-expanded-width);
   }
-}</code></pre>
+}
+{% endcall %}
   {% endcall %}
 
   {% call section("modal", "Modal") %}
@@ -142,7 +148,9 @@
           want that overlay on tablets and desktops too — image 2 in
           the spec, a compact window expanding in place.
         </p>
-<pre><code>&lt;nav class="navigation-rail expanded modal" aria-label="Main"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}

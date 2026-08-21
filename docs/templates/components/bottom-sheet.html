@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Bottom sheet" %}
 {% set page_blurb = "Secondary content anchored to the bottom of the screen." %}
@@ -73,17 +73,19 @@
             <button type="submit" class="text" value="close">Close</button>
           </form>
         </dialog>
-<pre><code>&lt;button type="button" onclick="document.getElementById('sheet').showModal()"&gt;
+{% call code() %}
+<button type="button" onclick="document.getElementById('sheet').showModal()">
   Show modal
-&lt;/button&gt;
+</button>
 
-&lt;dialog id="sheet" class="bottom-sheet"&gt;
-  &lt;h2&gt;Open file&lt;/h2&gt;
-  &lt;div&gt;…&lt;/div&gt;
-  &lt;form method="dialog"&gt;
-    &lt;button type="submit" class="text" value="cancel"&gt;Cancel&lt;/button&gt;
-  &lt;/form&gt;
-&lt;/dialog&gt;</code></pre>
+<dialog id="sheet" class="bottom-sheet">
+  <h2>Open file</h2>
+  <div>…</div>
+  <form method="dialog">
+    <button type="submit" class="text" value="cancel">Cancel</button>
+  </form>
+</dialog>
+{% endcall %}
         <p>
           There is no extra class for the modal variant — <code>showModal()</code>
           vs <code>show()</code> is the split. The handle is painted with
@@ -98,11 +100,13 @@
           dismiss. A flick counts. The rest of the sheet scrolls if the
           body overflows.
         </p>
-<pre><code>&lt;dialog class="bottom-sheet"&gt;
-  &lt;button type="button" class="handle" aria-label="Dismiss"&gt;&lt;/button&gt;
-  &lt;h2&gt;Title&lt;/h2&gt;
+{% call code() %}
+<dialog class="bottom-sheet">
+  <button type="button" class="handle" aria-label="Dismiss"></button>
+  <h2>Title</h2>
   …
-&lt;/dialog&gt;</code></pre>
+</dialog>
+{% endcall %}
   {% endcall %}
 
   {% call section("layout", "Layout") %}

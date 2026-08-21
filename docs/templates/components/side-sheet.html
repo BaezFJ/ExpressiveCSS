@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Side sheet" %}
 {% set page_blurb = "Optional content and actions, without interrupting the main view." %}
@@ -92,17 +92,19 @@
             <p>A back icon means this region is nested inside the sheet. The page author swaps the body; the icon is the HTML.</p>
           </div>
         </dialog>
-<pre><code>&lt;dialog class="side-sheet"&gt;
-  &lt;header&gt;
-    &lt;h2&gt;Headline&lt;/h2&gt;
-    &lt;form method="dialog"&gt;
-      &lt;button type="submit" aria-label="Close"&gt;
-        &lt;i class="material-symbols"&gt;close&lt;/i&gt;
-      &lt;/button&gt;
-    &lt;/form&gt;
-  &lt;/header&gt;
-  &lt;div&gt;…&lt;/div&gt;
-&lt;/dialog&gt;</code></pre>
+{% call code() %}
+<dialog class="side-sheet">
+  <header>
+    <h2>Headline</h2>
+    <form method="dialog">
+      <button type="submit" aria-label="Close">
+        <i class="material-symbols">close</i>
+      </button>
+    </form>
+  </header>
+  <div>…</div>
+</dialog>
+{% endcall %}
         <p>
           There is no extra class for the modal variant —
           <code>showModal()</code> vs <code>show()</code> is the split.
@@ -118,17 +120,19 @@
           than one region — it does not close the sheet unless you wire it
           to.
         </p>
-<pre><code>&lt;header&gt;
-  &lt;button type="button" aria-label="Back"&gt;
-    &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;h2&gt;Headline&lt;/h2&gt;
-  &lt;form method="dialog"&gt;
-    &lt;button type="submit" aria-label="Close"&gt;
-      &lt;i class="material-symbols"&gt;close&lt;/i&gt;
-    &lt;/button&gt;
-  &lt;/form&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header>
+  <button type="button" aria-label="Back">
+    <i class="material-symbols">arrow_back</i>
+  </button>
+  <h2>Headline</h2>
+  <form method="dialog">
+    <button type="submit" aria-label="Close">
+      <i class="material-symbols">close</i>
+    </button>
+  </form>
+</header>
+{% endcall %}
   {% endcall %}
 
   {% call section("layout", "Layout") %}

@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Snackbar" %}
@@ -58,7 +58,8 @@
             <i class="material-symbols">close</i>
           </button>
         </div>
-<pre><code>new Expressive.Snackbar({ text: 'Photo saved to album' });
+{% call code() %}
+new Expressive.Snackbar({ text: 'Photo saved to album' });
 
 new Expressive.Snackbar({
   text: 'Item archived',
@@ -70,7 +71,8 @@ new Expressive.Snackbar({
   text: "Can't send photo. Retry in 5 seconds.",
   action: 'Retry',
   dismissible: true
-});</code></pre>
+});
+{% endcall %}
         <p>
           The constructor wraps <code>text</code> in a
           <code>&lt;p&gt;</code> and appends the action and close when
@@ -85,14 +87,20 @@ new Expressive.Snackbar({
           The IIFE bundle exposes <code>Expressive.Snackbar</code>. Snackbar is
           not in <code>AutoInit()</code> — construct one when you need it.
         </p>
-<pre><code>new Expressive.Snackbar({
+{% call code() %}
+new Expressive.Snackbar({
   text: 'I am a snackbar!'
-});</code></pre>
+});
+{% endcall %}
         <p>One way to hook that up is a click handler on a button:</p>
-<pre><code>&lt;button type="button" id="snackbar-basic"&gt;Show&lt;/button&gt;</code></pre>
-<pre><code>document.getElementById('snackbar-basic').addEventListener('click', function() {
+{% call code() %}
+<button type="button" id="snackbar-basic">Show</button>
+{% endcall %}
+{% call code() %}
+document.getElementById('snackbar-basic').addEventListener('click', function() {
   new Expressive.Snackbar({ text: 'I am a snackbar!' });
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("markup", "Markup") %}
@@ -110,19 +118,21 @@ new Expressive.Snackbar({
           <p>Single-line snackbar with action</p>
           <button type="button">Action</button>
         </div>
-<pre><code>&lt;div class="snackbar"&gt;
-  &lt;p&gt;Photo saved to album&lt;/p&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="snackbar">
+  <p>Photo saved to album</p>
+</div>
 
-&lt;div class="snackbar"&gt;
-  &lt;p&gt;Item archived&lt;/p&gt;
-  &lt;button type="button"&gt;Undo&lt;/button&gt;
-&lt;/div&gt;
+<div class="snackbar">
+  <p>Item archived</p>
+  <button type="button">Undo</button>
+</div>
 
-&lt;div class="snackbar active"&gt;
-  &lt;p&gt;Single-line snackbar with action&lt;/p&gt;
-  &lt;button type="button"&gt;Action&lt;/button&gt;
-&lt;/div&gt;</code></pre>
+<div class="snackbar active">
+  <p>Single-line snackbar with action</p>
+  <button type="button">Action</button>
+</div>
+{% endcall %}
         <p>
           <code>.active</code> does not dismiss itself. Add and remove the
           class, or use the constructor if you want the 4-second timer and
@@ -207,11 +217,15 @@ new Expressive.Snackbar({
 
         <h5 class="light">.dismiss();</h5>
         <p>Dismiss this snackbar with its exit animation. Runs <code>completeCallback</code> when the animation finishes.</p>
-<pre><code>instance.dismiss();</code></pre>
+{% call code() %}
+instance.dismiss();
+{% endcall %}
 
         <h5 class="light">Snackbar.dismissAll();</h5>
         <p>Dismiss every snackbar that is currently showing.</p>
-<pre><code>Expressive.Snackbar.dismissAll();</code></pre>
+{% call code() %}
+Expressive.Snackbar.dismissAll();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}
@@ -251,13 +265,17 @@ new Expressive.Snackbar({
             <p>This is snackbar nº2</p>
           </div>
         </template>
-<pre><code>&lt;button type="button" class="tonal" id="snackbar-html-1"&gt;Show Snackbar 1&lt;/button&gt;
-&lt;template id="my-snackbar-1"&gt;
-  &lt;div&gt;
-    &lt;p&gt;This is snackbar nº1 with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/template&gt;</code></pre>
-<pre><code>new Expressive.Snackbar({ snackbarId: 'my-snackbar-1' });</code></pre>
+{% call code() %}
+<button type="button" class="tonal" id="snackbar-html-1">Show Snackbar 1</button>
+<template id="my-snackbar-1">
+  <div>
+    <p>This is snackbar nº1 with a <a href="https://github.com">link</a></p>
+  </div>
+</template>
+{% endcall %}
+{% call code() %}
+new Expressive.Snackbar({ snackbarId: 'my-snackbar-1' });
+{% endcall %}
   {% endcall %}
 
   {% call section("callback", "Callback") %}
@@ -265,12 +283,14 @@ new Expressive.Snackbar({
         <p>
           <button type="button" id="snackbar-callback">Show Snackbar</button>
         </p>
-<pre><code>new Expressive.Snackbar({
+{% call code() %}
+new Expressive.Snackbar({
   text: 'I will call back when dismissed',
   completeCallback: function() {
     new Expressive.Snackbar({ text: 'Your snackbar was dismissed' });
   }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("styling", "Styling") %}
@@ -283,7 +303,8 @@ new Expressive.Snackbar({
           <button type="button" id="snackbar-rounded">Show round Snackbar</button>
           <button type="button" class="tonal" id="snackbar-top">Show at top</button>
         </p>
-<pre><code>new Expressive.Snackbar({
+{% call code() %}
+new Expressive.Snackbar({
   text: 'I am a snackbar!',
   classes: 'rounded'
 });
@@ -291,7 +312,8 @@ new Expressive.Snackbar({
 new Expressive.Snackbar({
   text: 'Posted from the top',
   classes: 'top'
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("dismissal", "Dismissing snackbars", heading="Dismiss a Snackbar Programmatically") %}
@@ -306,11 +328,15 @@ new Expressive.Snackbar({
           <button type="button" class="tonal mr-3 mb-3" id="snackbar-dismiss-one">Dismiss a snackbar</button>
           <button type="button" class="tonal mb-3" id="snackbar-dismiss-all">Dismiss all</button>
         </p>
-<pre><code>const snackbarElement = document.querySelector('.snackbar');
+{% call code() %}
+const snackbarElement = document.querySelector('.snackbar');
 const snackbarInstance = Expressive.Snackbar.getInstance(snackbarElement);
-snackbarInstance.dismiss();</code></pre>
+snackbarInstance.dismiss();
+{% endcall %}
         <h5 class="light">Dismiss all snackbars</h5>
-<pre><code>Expressive.Snackbar.dismissAll();</code></pre>
+{% call code() %}
+Expressive.Snackbar.dismissAll();
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

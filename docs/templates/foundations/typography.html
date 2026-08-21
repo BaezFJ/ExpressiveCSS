@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Typography" %}
 {% set page_blurb = "Material Design 3 type, from the HTML." %}
@@ -44,10 +44,12 @@
         <h6>Heading 6</h6>
         <p>A paragraph uses body-large. It is for longer reading, not chrome.</p>
         <p><small>Small print and figcaptions use body-small.</small></p>
-<pre><code>&lt;h1&gt;Heading 1&lt;/h1&gt;
-&lt;h2&gt;Heading 2&lt;/h2&gt;
-&lt;p&gt;A paragraph uses body-large.&lt;/p&gt;
-&lt;small&gt;Small print.&lt;/small&gt;</code></pre>
+{% call code() %}
+<h1>Heading 1</h1>
+<h2>Heading 2</h2>
+<p>A paragraph uses body-large.</p>
+<small>Small print.</small>
+{% endcall %}
         <table class="striped">
           <thead>
             <tr>
@@ -92,8 +94,10 @@
         <p class="label-large">Label Large</p>
         <p class="label-medium">Label Medium</p>
         <p class="label-small">Label Small</p>
-<pre><code>&lt;p class="display-large"&gt;Display Large&lt;/p&gt;
-&lt;span class="label-large"&gt;Label&lt;/span&gt;</code></pre>
+{% call code() %}
+<p class="display-large">Display Large</p>
+<span class="label-large">Label</span>
+{% endcall %}
         <table class="striped">
           <thead>
             <tr>
@@ -141,10 +145,12 @@
           <span class="upper">upper</span>,
           <span class="capitalize">capitalize this</span>.
         </p>
-<pre><code>&lt;em&gt;Emphasized&lt;/em&gt;
-&lt;strong&gt;strong&lt;/strong&gt;
-&lt;span class="bold"&gt;bold&lt;/span&gt;
-&lt;span class="upper"&gt;upper&lt;/span&gt;</code></pre>
+{% call code() %}
+<em>Emphasized</em>
+<strong>strong</strong>
+<span class="bold">bold</span>
+<span class="upper">upper</span>
+{% endcall %}
         <p>
           <code>large-text</code>, <code>medium-text</code>, and
           <code>small-text</code> apply the three body roles to an element
@@ -160,9 +166,11 @@
         <blockquote>
           This is an example quotation that uses the blockquote tag. Here is another line to make it look bigger.
         </blockquote>
-<pre><code>&lt;blockquote&gt;
+{% call code() %}
+<blockquote>
   This is an example quotation that uses the blockquote tag.
-&lt;/blockquote&gt;</code></pre>
+</blockquote>
+{% endcall %}
   {% endcall %}
 
   {% call section("flow", "Flow Text") %}
@@ -179,7 +187,9 @@
           of this text body change. Use the button above to toggle flow-text off
           and on to see the difference.
         </p>
-<pre><code>&lt;p class="flow-text"&gt;I am Flow Text&lt;/p&gt;</code></pre>
+{% call code() %}
+<p class="flow-text">I am Flow Text</p>
+{% endcall %}
   {% endcall %}
 
   {% call section("fontstack", "Font stack") %}
@@ -189,10 +199,12 @@
           <code>$font-stack</code> in Sass, or set <code>font-family</code>
           in your own CSS:
         </p>
-<pre><code>html,
+{% call code() %}
+html,
 button, input, optgroup, select, textarea {
   font-family: GillSans, Calibri, Trebuchet, sans-serif;
-}</code></pre>
+}
+{% endcall %}
         <p>
           The default stack is
           <code>-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif</code>.

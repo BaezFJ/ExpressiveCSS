@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Select" %}
@@ -90,54 +90,56 @@
             <option value="3">Option 3</option>
           </select>
         </p>
-<pre><code>&lt;div class="field"&gt;
-  &lt;select id="form-select-1"&gt;
-    &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-    &lt;option value="1"&gt;Option 1&lt;/option&gt;
-    &lt;option value="2"&gt;Option 2&lt;/option&gt;
-    &lt;option value="3"&gt;Option 3&lt;/option&gt;
-  &lt;/select&gt;
-  &lt;label for="form-select-1"&gt;Expressive Select&lt;/label&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="field">
+  <select id="form-select-1">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+  <label for="form-select-1">Expressive Select</label>
+</div>
 
-&lt;div class="field"&gt;
-  &lt;select id="form-select-2" multiple&gt;
-    &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-    &lt;option value="1"&gt;Option 1&lt;/option&gt;
-    &lt;option value="2"&gt;Option 2&lt;/option&gt;
-    &lt;option value="3"&gt;Option 3&lt;/option&gt;
-  &lt;/select&gt;
-  &lt;label for="form-select-2"&gt;Multiple Select&lt;/label&gt;
-&lt;/div&gt;
+<div class="field">
+  <select id="form-select-2" multiple>
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+  <label for="form-select-2">Multiple Select</label>
+</div>
 
-&lt;div class="field"&gt;
-  &lt;select id="form-select-3"&gt;
-    &lt;optgroup label="team 1"&gt;
-      &lt;option value="1"&gt;Option 1&lt;/option&gt;
-      &lt;option value="2"&gt;Option 2&lt;/option&gt;
-    &lt;/optgroup&gt;
-    &lt;optgroup label="team 2"&gt;
-      &lt;option value="3"&gt;Option 3&lt;/option&gt;
-      &lt;option value="4"&gt;Option 4&lt;/option&gt;
-    &lt;/optgroup&gt;
-  &lt;/select&gt;
-  &lt;label for="form-select-3"&gt;Optgroups&lt;/label&gt;
-&lt;/div&gt;
+<div class="field">
+  <select id="form-select-3">
+    <optgroup label="team 1">
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+    </optgroup>
+    <optgroup label="team 2">
+      <option value="3">Option 3</option>
+      <option value="4">Option 4</option>
+    </optgroup>
+  </select>
+  <label for="form-select-3">Optgroups</label>
+</div>
 
-&lt;div class="field"&gt;
-  &lt;select id="form-select-4"&gt;
-    &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-    &lt;option value="1" data-icon="photo.jpg"&gt;example 1&lt;/option&gt;
-    &lt;option value="2" data-icon="photo.jpg" class="left"&gt;example 2&lt;/option&gt;
-  &lt;/select&gt;
-  &lt;label for="form-select-4"&gt;Images in select&lt;/label&gt;
-&lt;/div&gt;
+<div class="field">
+  <select id="form-select-4">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1" data-icon="photo.jpg">example 1</option>
+    <option value="2" data-icon="photo.jpg" class="left">example 2</option>
+  </select>
+  <label for="form-select-4">Images in select</label>
+</div>
 
-&lt;label for="form-select-6"&gt;Browser Select&lt;/label&gt;
-&lt;select id="form-select-6" class="browser-default"&gt;
-  &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-  &lt;option value="1"&gt;Option 1&lt;/option&gt;
-&lt;/select&gt;</code></pre>
+<label for="form-select-6">Browser Select</label>
+<select id="form-select-6" class="browser-default">
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
+</select>
+{% endcall %}
   {% endcall %}
 
   {% call section("initialization", "Initialization") %}
@@ -147,16 +149,20 @@
           after adding a select dynamically, or after changing an existing select’s options.
           Otherwise <code>Expressive.AutoInit()</code> starts every <code>select</code>.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('select');
   const instances = Expressive.FormSelect.init(elems, {
     // specify options here
   });
-});</code></pre>
+});
+{% endcall %}
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
+{% call code() %}
+Expressive.AutoInit(document.body, {
   FormSelect: { menuOptions: { constrainWidth: false } }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -187,7 +193,9 @@
 
         <h5 class="light">.getSelectedValues();</h5>
         <p>Selected values as an array of strings.</p>
-<pre><code>instance.getSelectedValues();</code></pre>
+{% call code() %}
+instance.getSelectedValues();
+{% endcall %}
 
         <h5 class="light">.refresh();</h5>
         <p>
@@ -196,11 +204,15 @@
           <code>&lt;option&gt;</code>s. The menu is rebuilt; the field and
           Menu instance stay put.
         </p>
-<pre><code>instance.refresh();</code></pre>
+{% call code() %}
+instance.refresh();
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the menu, and restore the native select.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}
@@ -261,19 +273,21 @@
             <option value="3">Option 3</option>
           </select>
         </p>
-<pre><code>&lt;div class="field"&gt;
-  &lt;select id="form-select-7" disabled&gt;
-    &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-    &lt;option value="1"&gt;Option 1&lt;/option&gt;
-  &lt;/select&gt;
-  &lt;label for="form-select-7"&gt;Disabled Select&lt;/label&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="field">
+  <select id="form-select-7" disabled>
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+  </select>
+  <label for="form-select-7">Disabled Select</label>
+</div>
 
-&lt;label for="form-select-8"&gt;Browser Disabled&lt;/label&gt;
-&lt;select id="form-select-8" class="browser-default" disabled&gt;
-  &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-  &lt;option value="1"&gt;Option 1&lt;/option&gt;
-&lt;/select&gt;</code></pre>
+<label for="form-select-8">Browser Disabled</label>
+<select id="form-select-8" class="browser-default" disabled>
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
+</select>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

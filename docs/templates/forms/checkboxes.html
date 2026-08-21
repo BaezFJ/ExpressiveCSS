@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Checkboxes" %}
 {% set page_blurb = "Material Design 3 checkboxes, from the HTML." %}
@@ -54,19 +54,23 @@
             Brown
           </label>
         </form>
-<pre><code>&lt;label&gt;
-  &lt;input type="checkbox"&gt;
+{% call code() %}
+<label>
+  <input type="checkbox">
   Red
-&lt;/label&gt;
-&lt;label&gt;
-  &lt;input type="checkbox" checked&gt;
+</label>
+<label>
+  <input type="checkbox" checked>
   Yellow
-&lt;/label&gt;
-&lt;label&gt;
-  &lt;input type="checkbox" disabled&gt;
+</label>
+<label>
+  <input type="checkbox" disabled>
   Brown
-&lt;/label&gt;</code></pre>
-<pre><code>document.getElementById('indeterminate-checkbox').indeterminate = true;</code></pre>
+</label>
+{% endcall %}
+{% call code() %}
+document.getElementById('indeterminate-checkbox').indeterminate = true;
+{% endcall %}
         <p>
           An <code>input + span</code> still works if you already have
           that markup, or if you follow BeerCSS’s
@@ -74,10 +78,12 @@
           <code>&lt;select&gt;</code> still emits
           <code>input + span</code> that way.
         </p>
-<pre><code>&lt;label class="checkbox"&gt;
-  &lt;input type="checkbox"&gt;
-  &lt;span&gt;Yellow&lt;/span&gt;
-&lt;/label&gt;</code></pre>
+{% call code() %}
+<label class="checkbox">
+  <input type="checkbox">
+  <span>Yellow</span>
+</label>
+{% endcall %}
   {% endcall %}
 
   {% call section("row", "In a row") %}
@@ -99,16 +105,18 @@
             Green
           </label>
         </nav>
-<pre><code>&lt;nav&gt;
-  &lt;label&gt;
-    &lt;input type="checkbox" checked&gt;
+{% call code() %}
+<nav>
+  <label>
+    <input type="checkbox" checked>
     Red
-  &lt;/label&gt;
-  &lt;label&gt;
-    &lt;input type="checkbox"&gt;
+  </label>
+  <label>
+    <input type="checkbox">
     Yellow
-  &lt;/label&gt;
-&lt;/nav&gt;</code></pre>
+  </label>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("error", "Error") %}
@@ -125,10 +133,12 @@
           <input type="checkbox" checked aria-invalid="true">
           Required option
         </label>
-<pre><code>&lt;label&gt;
-  &lt;input type="checkbox" aria-invalid="true"&gt;
+{% call code() %}
+<label>
+  <input type="checkbox" aria-invalid="true">
   Accept the terms
-&lt;/label&gt;</code></pre>
+</label>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

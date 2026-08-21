@@ -47,3 +47,10 @@
   </div>
 </div>
 {% endmacro %}
+
+{#
+    A code sample. Write the markup for real -- the macro escapes it -- instead
+    of hand-typing &lt; and &gt;. Keep the body flush left: <pre> preserves the
+    indentation you give it.
+#}
+{% macro code() %}<pre><code>{{ caller()|trim|code_escape }}</code></pre>{% endmacro %}

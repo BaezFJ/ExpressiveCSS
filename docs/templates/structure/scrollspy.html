@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Scrollspy" %}
@@ -24,22 +24,24 @@
           Observation is <code>IntersectionObserver</code> — there is no
           scroll listener.
         </p>
-<pre><code>&lt;div class="row"&gt;
-  &lt;div class="s12 m9"&gt;
-    &lt;div id="introduction" class="section scrollspy"&gt;
-      &lt;p&gt;Content&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div id="structure" class="section scrollspy"&gt;
-      &lt;p&gt;Content&lt;/p&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="hide-on-small-only m3"&gt;
-    &lt;ul class="section table-of-contents"&gt;
-      &lt;li&gt;&lt;a href="#introduction"&gt;Introduction&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#structure"&gt;Structure&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="row">
+  <div class="s12 m9">
+    <div id="introduction" class="section scrollspy">
+      <p>Content</p>
+    </div>
+    <div id="structure" class="section scrollspy">
+      <p>Content</p>
+    </div>
+  </div>
+  <div class="hide-on-small-only m3">
+    <ul class="section table-of-contents">
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#structure">Structure</a></li>
+    </ul>
+  </div>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("initialization", "Initialization") %}
@@ -48,16 +50,20 @@
           Call <code>init</code> yourself when you need options other than the defaults,
           or let <code>Expressive.AutoInit()</code> start every <code>.scrollspy</code>.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.scrollspy');
   const instances = Expressive.ScrollSpy.init(elems, {
     // specify options here
   });
-});</code></pre>
+});
+{% endcall %}
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
+{% call code() %}
+Expressive.AutoInit(document.body, {
   ScrollSpy: { scrollOffset: 200 }
-});</code></pre>
+});
+{% endcall %}
         <p>
           The documentation TOC is <code>position: sticky</code>. Scrollspy
           only updates which link is active.
@@ -107,9 +113,11 @@
           Only needed when the TOC is not <code>a[href="#id"]</code>.
           Return a CSS selector. Escape any author-controlled id yourself.
         </p>
-<pre><code>function(id) {
+{% call code() %}
+function(id) {
   return '[data-section="' + CSS.escape(id) + '"]';
-}</code></pre>
+}
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
@@ -117,7 +125,9 @@
 
         <h5 class="light">.destroy();</h5>
         <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}

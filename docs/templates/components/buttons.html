@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Buttons" %}
 {% set page_blurb = "Material Design 3 common buttons, icon buttons, and FABs — from the HTML." %}
@@ -30,18 +30,20 @@
           <button type="button"><span>Send</span><i class="material-symbols">send</i></button>
           <button type="button" class="circle" aria-label="Add"><i class="material-symbols">add</i></button>
         </p>
-<pre><code>&lt;button&gt;Create&lt;/button&gt;
-&lt;button&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
-&lt;/button&gt;
-&lt;button&gt;
-  &lt;span&gt;Send&lt;/span&gt;&lt;i class="material-symbols"&gt;send&lt;/i&gt;
-&lt;/button&gt;
-&lt;button class="circle" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/button&gt;
+{% call code() %}
+<button>Create</button>
+<button>
+  <i class="material-symbols">add</i><span>Create</span>
+</button>
+<button>
+  <span>Send</span><i class="material-symbols">send</i>
+</button>
+<button class="circle" aria-label="Add">
+  <i class="material-symbols">add</i>
+</button>
 
-&lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
+<a class="button" href="#!">Link</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("filled", "Filled") %}
@@ -56,11 +58,13 @@
           <button type="button"><i class="material-symbols">add</i><span>Create</span></button>
           <a class="button" href="#!">Link</a>
         </p>
-<pre><code>&lt;button&gt;Create&lt;/button&gt;
-&lt;button&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
-&lt;/button&gt;
-&lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
+{% call code() %}
+<button>Create</button>
+<button>
+  <i class="material-symbols">add</i><span>Create</span>
+</button>
+<a class="button" href="#!">Link</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("filled-tonal", "Tonal") %}
@@ -73,10 +77,12 @@
           <button type="button" class="tonal">Create</button>
           <button type="button" class="tonal"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;button class="tonal"&gt;Create&lt;/button&gt;
-&lt;button class="tonal"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
-&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="tonal">Create</button>
+<button class="tonal">
+  <i class="material-symbols">add</i><span>Create</span>
+</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("outlined", "Outlined") %}
@@ -89,7 +95,9 @@
           <button type="button" class="outlined">Create</button>
           <button type="button" class="outlined"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;button class="outlined"&gt;Create&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="outlined">Create</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("elevated", "Elevated") %}
@@ -102,7 +110,9 @@
           <button type="button" class="elevated">Create</button>
           <button type="button" class="elevated"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;button class="elevated"&gt;Create&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="elevated">Create</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("text", "Text") %}
@@ -115,7 +125,9 @@
           <button type="button" class="text">Create</button>
           <button type="button" class="text"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;button class="text"&gt;Create&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="text">Create</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("icon", "Icon buttons") %}
@@ -131,12 +143,14 @@
           <button type="button" class="circle outlined" aria-label="Add"><i class="material-symbols">add</i></button>
           <button type="button" class="circle text" aria-label="Add"><i class="material-symbols">add</i></button>
         </p>
-<pre><code>&lt;button class="circle" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/button&gt;
-&lt;button class="circle tonal" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button class="circle outlined" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button class="circle text" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="circle" aria-label="Add">
+  <i class="material-symbols">add</i>
+</button>
+<button class="circle tonal" aria-label="Add">…</button>
+<button class="circle outlined" aria-label="Add">…</button>
+<button class="circle text" aria-label="Add">…</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("floating", "Floating") %}
@@ -152,15 +166,17 @@
           <a class="button extra circle small" href="#!" aria-label="Add"><i class="material-symbols">add</i></a>
           <button type="button" class="extend"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
-<pre><code>&lt;button class="circle extra" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/button&gt;
-&lt;a class="button extra circle small" href="#!" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/a&gt;
-&lt;button class="extend"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
-&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="circle extra" aria-label="Add">
+  <i class="material-symbols">add</i>
+</button>
+<a class="button extra circle small" href="#!" aria-label="Add">
+  <i class="material-symbols">add</i>
+</a>
+<button class="extend">
+  <i class="material-symbols">add</i><span>Create</span>
+</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("sizes", "Sizes") %}
@@ -174,9 +190,11 @@
           <button type="button">Default</button>
           <button type="button" class="large">Large</button>
         </p>
-<pre><code>&lt;button class="small"&gt;Small&lt;/button&gt;
-&lt;button&gt;Default&lt;/button&gt;
-&lt;button class="large"&gt;Large&lt;/button&gt;</code></pre>
+{% call code() %}
+<button class="small">Small</button>
+<button>Default</button>
+<button class="large">Large</button>
+{% endcall %}
         <p>
           For a form submit, use a real <code>&lt;button type="submit"&gt;</code>
           rather than an input.
@@ -184,9 +202,11 @@
         <p>
           <button type="submit"><span>Submit</span><i class="material-symbols">send</i></button>
         </p>
-<pre><code>&lt;button type="submit"&gt;
-  &lt;span&gt;Submit&lt;/span&gt;&lt;i class="material-symbols"&gt;send&lt;/i&gt;
-&lt;/button&gt;</code></pre>
+{% call code() %}
+<button type="submit">
+  <span>Submit</span><i class="material-symbols">send</i>
+</button>
+{% endcall %}
   {% endcall %}
 
   {% call section("disabled", "Disabled") %}
@@ -201,9 +221,11 @@
           <button type="button" class="text" disabled>Text</button>
           <button type="button" class="circle extra" disabled aria-label="Add"><i class="material-symbols">add</i></button>
         </p>
-<pre><code>&lt;button disabled&gt;Filled&lt;/button&gt;
-&lt;button class="tonal" disabled&gt;Tonal&lt;/button&gt;
-&lt;a class="button disabled" href="#!"&gt;Link&lt;/a&gt;</code></pre>
+{% call code() %}
+<button disabled>Filled</button>
+<button class="tonal" disabled>Tonal</button>
+<a class="button disabled" href="#!">Link</a>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

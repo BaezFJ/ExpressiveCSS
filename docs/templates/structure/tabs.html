@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Tabs" %}
@@ -39,23 +39,25 @@
         <div id="tabs-intro-flight" class="py-3">Flight</div>
         <div id="tabs-intro-luggage" class="py-3">Luggage</div>
         <div id="tabs-intro-explore" class="py-3">Explore</div>
-<pre><code>&lt;nav class="tabs" aria-label="Travel"&gt;
-  &lt;a href="#flight"&gt;
-    &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
-    &lt;span&gt;Flight&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a class="active" href="#luggage"&gt;
-    &lt;i class="material-symbols"&gt;luggage&lt;/i&gt;
-    &lt;span&gt;Luggage&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a href="#explore"&gt;
-    &lt;i class="material-symbols"&gt;explore&lt;/i&gt;
-    &lt;span&gt;Explore&lt;/span&gt;
-  &lt;/a&gt;
-&lt;/nav&gt;
-&lt;div id="flight"&gt;Flight&lt;/div&gt;
-&lt;div id="luggage"&gt;Luggage&lt;/div&gt;
-&lt;div id="explore"&gt;Explore&lt;/div&gt;</code></pre>
+{% call code() %}
+<nav class="tabs" aria-label="Travel">
+  <a href="#flight">
+    <i class="material-symbols">flight</i>
+    <span>Flight</span>
+  </a>
+  <a class="active" href="#luggage">
+    <i class="material-symbols">luggage</i>
+    <span>Luggage</span>
+  </a>
+  <a href="#explore">
+    <i class="material-symbols">explore</i>
+    <span>Explore</span>
+  </a>
+</nav>
+<div id="flight">Flight</div>
+<div id="luggage">Luggage</div>
+<div id="explore">Explore</div>
+{% endcall %}
         <p>
           Add <code>disabled</code> on the <code>&lt;a&gt;</code> (or on
           a wrapping <code>li.tab</code>) to make it inaccessible. Tabs
@@ -100,16 +102,18 @@
         <div id="tabs-sec-birds" class="py-3">Travel</div>
         <div id="tabs-sec-cats" class="py-3">Hotel</div>
         <div id="tabs-sec-dogs" class="py-3">Walks</div>
-<pre><code>&lt;nav class="tabs tabs-secondary" aria-label="Trip"&gt;
-  &lt;a href="#travel"&gt;
-    &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
-    &lt;span&gt;Travel&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a class="active" href="#hotel"&gt;
-    &lt;i class="material-symbols"&gt;hotel&lt;/i&gt;
-    &lt;span&gt;Hotel&lt;/span&gt;
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="tabs tabs-secondary" aria-label="Trip">
+  <a href="#travel">
+    <i class="material-symbols">flight</i>
+    <span>Travel</span>
+  </a>
+  <a class="active" href="#hotel">
+    <i class="material-symbols">hotel</i>
+    <span>Hotel</span>
+  </a>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("initialization", "Initialization") %}
@@ -120,12 +124,14 @@
           <code>Expressive.AutoInit()</code> start every
           <code>.tabs</code>.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.tabs');
   const instances = Expressive.Tabs.init(elems, {
     duration: 300
   });
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -163,15 +169,21 @@
         <h5 class="light">.select();</h5>
         <p>Show the panel that belongs to the tab with this id.</p>
         <p><strong>String:</strong> The id of the tab panel (without <code>#</code>).</p>
-<pre><code>instance.select('tab_id');</code></pre>
+{% call code() %}
+instance.select('tab_id');
+{% endcall %}
 
         <h5 class="light">.updateTabIndicator();</h5>
         <p>Recalculate the indicator position. Useful if the bar was hidden or resized.</p>
-<pre><code>instance.updateTabIndicator();</code></pre>
+{% call code() %}
+instance.updateTabIndicator();
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}
@@ -190,7 +202,9 @@
           <code>active</code> to its <code>&lt;a&gt;</code>, or load the
           page with a matching hash such as <code>#test2</code>.
         </p>
-<pre><code>&lt;a class="active" href="#test3"&gt;Test 3&lt;/a&gt;</code></pre>
+{% call code() %}
+<a class="active" href="#test3">Test 3</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("external", "External Links", heading="Linking to an External Page") %}
@@ -198,10 +212,12 @@
           Tabs ignore default anchor behaviour. To keep a tab as a
           normal hyperlink, set <code>target</code> on the link.
         </p>
-<pre><code>&lt;nav class="tabs"&gt;
-  &lt;a target="_blank" href="https://github.com"&gt;External link in new window&lt;/a&gt;
-  &lt;a target="_self" href="https://github.com"&gt;External link in same window&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="tabs">
+  <a target="_blank" href="https://github.com">External link in new window</a>
+  <a target="_self" href="https://github.com">External link in same window</a>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("swipeable", "Swipeable Tabs") %}
@@ -223,14 +239,18 @@
           <div id="tabs-swipe-2" class="secondary-container on-secondary-container-text center-align">Test 2</div>
           <div id="tabs-swipe-3" class="tertiary-container on-tertiary-container-text center-align">Test 3</div>
         </div>
-<pre><code>&lt;nav id="tabs-swipe-demo" class="tabs"&gt;
-  &lt;a href="#test-swipe-1"&gt;Test 1&lt;/a&gt;
-  &lt;a class="active" href="#test-swipe-2"&gt;Test 2&lt;/a&gt;
-  &lt;a href="#test-swipe-3"&gt;Test 3&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
-<pre><code>Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
+{% call code() %}
+<nav id="tabs-swipe-demo" class="tabs">
+  <a href="#test-swipe-1">Test 1</a>
+  <a class="active" href="#test-swipe-2">Test 2</a>
+  <a href="#test-swipe-3">Test 3</a>
+</nav>
+{% endcall %}
+{% call code() %}
+Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
   swipeable: true
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("fixed-width", "Fixed width") %}
@@ -251,11 +271,13 @@
         <div id="tabs-fixed-3" class="py-3">Test 3</div>
         <div id="tabs-fixed-4" class="py-3">Test 4</div>
         <div id="tabs-fixed-5" class="py-3">Test 5</div>
-<pre><code>&lt;nav class="tabs max"&gt;
-  &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
-  &lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;
-  &lt;a class="disabled" href="#test3"&gt;Disabled&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="tabs max">
+  <a href="#test1">Test 1</a>
+  <a class="active" href="#test2">Test 2</a>
+  <a class="disabled" href="#test3">Disabled</a>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("icons", "Inline icons") %}
@@ -272,16 +294,18 @@
         <div id="tabs-horiz-flight" class="py-3">Flight</div>
         <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
         <div id="tabs-horiz-explore" class="py-3">Explore</div>
-<pre><code>&lt;nav class="tabs max horizontal"&gt;
-  &lt;a href="#flight"&gt;
-    &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
-    &lt;span&gt;Flight&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a class="active" href="#luggage"&gt;
-    &lt;i class="material-symbols"&gt;luggage&lt;/i&gt;
-    &lt;span&gt;Luggage&lt;/span&gt;
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="tabs max horizontal">
+  <a href="#flight">
+    <i class="material-symbols">flight</i>
+    <span>Flight</span>
+  </a>
+  <a class="active" href="#luggage">
+    <i class="material-symbols">luggage</i>
+    <span>Luggage</span>
+  </a>
+</nav>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

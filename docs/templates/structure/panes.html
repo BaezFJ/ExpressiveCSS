@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import section, toc with context %}
+{% from "macros/page.html" import code, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Panes" %}
@@ -103,20 +103,22 @@
           </footer>
         </section>
       </div>
-<pre><code>&lt;div class="list-detail"&gt;
-  &lt;section class="list-pane"&gt;
-    &lt;header&gt;
-      &lt;h2&gt;Inbox&lt;/h2&gt;
-    &lt;/header&gt;
-    &lt;ul class="list"&gt;…&lt;/ul&gt;
-  &lt;/section&gt;
-  &lt;section class="detail-pane"&gt;
-    &lt;header&gt;
-      &lt;h2&gt;Subject&lt;/h2&gt;
-    &lt;/header&gt;
-    &lt;div&gt;…&lt;/div&gt;
-  &lt;/section&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="list-detail">
+  <section class="list-pane">
+    <header>
+      <h2>Inbox</h2>
+    </header>
+    <ul class="list">…</ul>
+  </section>
+  <section class="detail-pane">
+    <header>
+      <h2>Subject</h2>
+    </header>
+    <div>…</div>
+  </section>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("compact", "Compact") %}
@@ -175,18 +177,20 @@
           </div>
         </section>
       </div>
-<pre><code>list.querySelectorAll('a').forEach((row) =&gt; {
-  row.addEventListener('click', (event) =&gt; {
+{% call code() %}
+list.querySelectorAll('a').forEach((row) => {
+  row.addEventListener('click', (event) => {
     event.preventDefault();
     detailPane.classList.add('active');
     listPane.classList.remove('active');
   });
 });
 
-back.addEventListener('click', () =&gt; {
+back.addEventListener('click', () => {
   detailPane.classList.remove('active');
   listPane.classList.add('active');
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("supporting", "Supporting pane") %}
@@ -248,12 +252,14 @@ back.addEventListener('click', () =&gt; {
           </ul>
         </section>
       </div>
-<pre><code>&lt;div class="panes supporting"&gt;
-  &lt;section class="primary-pane"&gt;…&lt;/section&gt;
-  &lt;section class="supporting-pane"&gt;…&lt;/section&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="panes supporting">
+  <section class="primary-pane">…</section>
+  <section class="supporting-pane">…</section>
+</div>
 
-&lt;div class="panes supporting start"&gt;…&lt;/div&gt;</code></pre>
+<div class="panes supporting start">…</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("equal", "Equal") %}
@@ -280,10 +286,12 @@ back.addEventListener('click', () =&gt; {
           </div>
         </section>
       </div>
-<pre><code>&lt;div class="panes equal"&gt;
-  &lt;section class="pane"&gt;…&lt;/section&gt;
-  &lt;section class="pane"&gt;…&lt;/section&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="panes equal">
+  <section class="pane">…</section>
+  <section class="pane">…</section>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("three-pane", "Three-pane") %}
@@ -347,11 +355,13 @@ back.addEventListener('click', () =&gt; {
           </ul>
         </section>
       </div>
-<pre><code>&lt;div class="panes three-pane"&gt;
-  &lt;section class="list-pane"&gt;…&lt;/section&gt;
-  &lt;section class="detail-pane"&gt;…&lt;/section&gt;
-  &lt;section class="supporting-pane"&gt;…&lt;/section&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="panes three-pane">
+  <section class="list-pane">…</section>
+  <section class="detail-pane">…</section>
+  <section class="supporting-pane">…</section>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("appearance", "Appearance") %}
@@ -385,10 +395,12 @@ back.addEventListener('click', () =&gt; {
           </div>
         </section>
       </div>
-<pre><code>&lt;div class="panes equal separated"&gt;
-  &lt;section class="pane outlined"&gt;…&lt;/section&gt;
-  &lt;section class="pane elevated"&gt;…&lt;/section&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="panes equal separated">
+  <section class="pane outlined">…</section>
+  <section class="pane elevated">…</section>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("pane", "A pane") %}
@@ -406,21 +418,23 @@ back.addEventListener('click', () =&gt; {
         A direct <code>.list</code> fills the pane with no extra
         padding, so list rows can run edge to edge under the header.
       </p>
-<pre><code>&lt;section class="pane"&gt;
-  &lt;header&gt;
-    &lt;button type="button" aria-label="Back"&gt;
-      &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;h2&gt;Headline&lt;/h2&gt;
-    &lt;button type="button" aria-label="More"&gt;
-      &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
-    &lt;/button&gt;
-  &lt;/header&gt;
-  &lt;div&gt;…&lt;/div&gt;
-  &lt;footer&gt;
-    &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
-  &lt;/footer&gt;
-&lt;/section&gt;</code></pre>
+{% call code() %}
+<section class="pane">
+  <header>
+    <button type="button" aria-label="Back">
+      <i class="material-symbols">arrow_back</i>
+    </button>
+    <h2>Headline</h2>
+    <button type="button" aria-label="More">
+      <i class="material-symbols">more_vert</i>
+    </button>
+  </header>
+  <div>…</div>
+  <footer>
+    <button type="button" class="text">Action</button>
+  </footer>
+</section>
+{% endcall %}
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}

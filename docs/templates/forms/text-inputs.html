@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Text Inputs" %}
 {% set page_blurb = "Material Design 3 text fields, from the HTML." %}
@@ -66,23 +66,25 @@
             <small>Invalid characters. Please use 0-9 only.</small>
           </div>
         </form>
-<pre><code>&lt;div class="field"&gt;
-  &lt;input id="first_name" type="text" placeholder=" "&gt;
-  &lt;label for="first_name"&gt;First name&lt;/label&gt;
-  &lt;small&gt;Supporting text&lt;/small&gt;
-&lt;/div&gt;
+{% call code() %}
+<div class="field">
+  <input id="first_name" type="text" placeholder=" ">
+  <label for="first_name">First name</label>
+  <small>Supporting text</small>
+</div>
 
-&lt;div class="field outlined"&gt;
-  &lt;input id="last_name" type="text" placeholder=" "&gt;
-  &lt;label for="last_name"&gt;Last name&lt;/label&gt;
-&lt;/div&gt;
+<div class="field outlined">
+  <input id="last_name" type="text" placeholder=" ">
+  <label for="last_name">Last name</label>
+</div>
 
-&lt;div class="field"&gt;
-  &lt;i class="material-symbols"&gt;place&lt;/i&gt;
-  &lt;i class="material-symbols suffix"&gt;gps_fixed&lt;/i&gt;
-  &lt;input id="loc" type="text" placeholder=" "&gt;
-  &lt;label for="loc"&gt;Location&lt;/label&gt;
-&lt;/div&gt;</code></pre>
+<div class="field">
+  <i class="material-symbols">place</i>
+  <i class="material-symbols suffix">gps_fixed</i>
+  <input id="loc" type="text" placeholder=" ">
+  <label for="loc">Location</label>
+</div>
+{% endcall %}
         <p>
           Put <code>invalid</code> or <code>aria-invalid="true"</code> on the
           input for the error state. Do not put <code>error</code> on the
@@ -111,11 +113,13 @@
             <label for="password">Password</label>
           </div>
         </form>
-<pre><code>&lt;div class="field"&gt;
-  &lt;input id="email" type="email" class="validate" placeholder=" "&gt;
-  &lt;label for="email"&gt;Email&lt;/label&gt;
-  &lt;small data-error="Enter a valid email"&gt;Supporting text&lt;/small&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="field">
+  <input id="email" type="email" class="validate" placeholder=" ">
+  <label for="email">Email</label>
+  <small data-error="Enter a valid email">Supporting text</small>
+</div>
+{% endcall %}
         <p>
           <code>validate</code> also honors <code>data-length</code>: the
           field is marked <code>invalid</code> when the value is longer than
@@ -135,11 +139,13 @@
             </span>
           </p>
         </form>
-<pre><code>This is an inline input field:
-&lt;span class="field inline"&gt;
-  &lt;input id="email_inline" type="email" class="validate" placeholder=" "&gt;
-  &lt;label for="email_inline"&gt;Email&lt;/label&gt;
-&lt;/span&gt;</code></pre>
+{% call code() %}
+This is an inline input field:
+<span class="field inline">
+  <input id="email_inline" type="email" class="validate" placeholder=" ">
+  <label for="email_inline">Email</label>
+</span>
+{% endcall %}
   {% endcall %}
 
   {% call section("textarea", "Textarea") %}
@@ -161,12 +167,16 @@
             <label for="textarea2">Message</label>
           </div>
         </form>
-<pre><code>&lt;div class="field"&gt;
-  &lt;textarea id="textarea1" class="expressive-textarea" placeholder=" "&gt;&lt;/textarea&gt;
-  &lt;label for="textarea1"&gt;Textarea&lt;/label&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="field">
+  <textarea id="textarea1" class="expressive-textarea" placeholder=" "></textarea>
+  <label for="textarea1">Textarea</label>
+</div>
+{% endcall %}
         <p>If you add a textarea after load, initialize it yourself:</p>
-<pre><code>Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));</code></pre>
+{% call code() %}
+Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
+{% endcall %}
         <p>
           Setting <code>.value</code> in script does not resize the field.
           Call <code>textareaAutoResize</code> afterwards.
@@ -190,15 +200,17 @@
             </div>
           </div>
         </form>
-<pre><code>&lt;div class="file-field field"&gt;
-  &lt;button type="button"&gt;
-    &lt;span&gt;File&lt;/span&gt;
-    &lt;input type="file"&gt;
-  &lt;/button&gt;
-  &lt;div class="file-path-wrapper"&gt;
-    &lt;input class="file-path" type="text" placeholder=" "&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="file-field field">
+  <button type="button">
+    <span>File</span>
+    <input type="file">
+  </button>
+  <div class="file-path-wrapper">
+    <input class="file-path" type="text" placeholder=" ">
+  </div>
+</div>
+{% endcall %}
         <p>Add <code>multiple</code> to allow more than one file.</p>
   {% endcall %}
 
@@ -219,9 +231,11 @@
             <label for="textarea_counter">Textarea</label>
           </div>
         </form>
-<pre><code>Expressive.CharacterCounter.init(
+{% call code() %}
+Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text, #textarea2')
-);</code></pre>
+);
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

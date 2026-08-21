@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Transitions" %}
 {% set page_blurb = "Animate content in and out with a few CSS classes." %}
@@ -26,14 +26,16 @@
           <a id="scale-demo-trigger" href="#!" class="button tonal ml-4">Toggle Scale</a>
         </div>
 
-<pre><code>&lt;!-- Scaled in --&gt;
-&lt;a id="scale-demo" href="#!" class="button extra circle scale-transition"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/a&gt;
-&lt;!-- Scaled out --&gt;
-&lt;a id="scale-demo" href="#!" class="button extra circle scale-transition scale-out"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/a&gt;</code></pre>
+{% call code() %}
+<!-- Scaled in -->
+<a id="scale-demo" href="#!" class="button extra circle scale-transition">
+  <i class="material-symbols">add</i>
+</a>
+<!-- Scaled out -->
+<a id="scale-demo" href="#!" class="button extra circle scale-transition scale-out">
+  <i class="material-symbols">add</i>
+</a>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

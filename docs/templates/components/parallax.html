@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import section, toc with context %}
+{% from "macros/page.html" import code, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Parallax" %}
@@ -30,9 +30,11 @@
           and returns. Prefer an image taller than the clip, or a
           <code>srcset</code> that is; a short image has less to move.
         </p>
-<pre><code>&lt;figure class="parallax"&gt;
-  &lt;img src="images/lake.jpg" alt="A mountain lake"&gt;
-&lt;/figure&gt;</code></pre>
+{% call code() %}
+<figure class="parallax">
+  <img src="images/lake.jpg" alt="A mountain lake">
+</figure>
+{% endcall %}
   {% endcall %}
     </div>
   </div>
@@ -53,15 +55,17 @@
           <code>&lt;figcaption&gt;</code> docks to the bottom on a
           translucent surface, the same idea as a card figure.
         </p>
-<pre><code>&lt;figure class="parallax"&gt;
-  &lt;img src="images/coast.jpg" alt=""&gt;
-  &lt;figcaption&gt;A rocky coastline.&lt;/figcaption&gt;
-&lt;/figure&gt;
+{% call code() %}
+<figure class="parallax">
+  <img src="images/coast.jpg" alt="">
+  <figcaption>A rocky coastline.</figcaption>
+</figure>
 
-&lt;div class="parallax"&gt;
-  &lt;img src="images/lake.jpg" alt=""&gt;
-  &lt;h2 class="on-primary-text"&gt;Visit the lake&lt;/h2&gt;
-&lt;/div&gt;</code></pre>
+<div class="parallax">
+  <img src="images/lake.jpg" alt="">
+  <h2 class="on-primary-text">Visit the lake</h2>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}
@@ -88,11 +92,13 @@
         <figure class="parallax" style="--md-comp-parallax-height: 300px; --md-comp-parallax-travel: 40px;">
           <img src="https://picsum.photos/id/1019/1600/900" alt="Clouds over hills">
         </figure>
-<pre><code>&lt;figure class="parallax" style="--md-comp-parallax-height: 300px"&gt;
-  &lt;img src="images/hills.jpg" alt="Clouds over hills"&gt;
-&lt;/figure&gt;
+{% call code() %}
+<figure class="parallax" style="--md-comp-parallax-height: 300px">
+  <img src="images/hills.jpg" alt="Clouds over hills">
+</figure>
 
-&lt;figure class="parallax max"&gt;…&lt;/figure&gt;</code></pre>
+<figure class="parallax max">…</figure>
+{% endcall %}
         <p>
           Motion follows <code>prefers-reduced-motion</code>. When the
           user asks for less, the image stays a static cover.
@@ -105,17 +111,23 @@
           so existing <code>init</code> / <code>AutoInit</code> calls keep
           working. They do not attach scroll or resize listeners.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.parallax');
   const instances = Expressive.Parallax.init(elems);
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
-<pre><code>const instance = Expressive.Parallax.getInstance(elem);</code></pre>
+{% call code() %}
+const instance = Expressive.Parallax.getInstance(elem);
+{% endcall %}
         <h5 class="light">.destroy();</h5>
         <p>Drop the instance stash. There are no listeners to tear down.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
     </div>
 

@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Helpers" %}
 {% set page_blurb = "An overview of the helper classes for alignment, visibility, spacing, and common CSS properties." %}
@@ -17,9 +17,11 @@
         <div class="valign-demo valign-wrapper primary-container px-4">
           <p class="on-primary-container-text my-0">This should be vertically aligned</p>
         </div>
-<pre><code>&lt;div class="valign-wrapper"&gt;
-  &lt;h5&gt;This should be vertically aligned&lt;/h5&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="valign-wrapper">
+  <h5>This should be vertically aligned</h5>
+</div>
+{% endcall %}
 
         <h5>Text Align</h5>
         <p>
@@ -35,15 +37,17 @@
         <article class="surface-variant">
           <h5 class="center-align">This should be center aligned</h5>
         </article>
-<pre><code>&lt;div&gt;
-  &lt;h5 class="left-align"&gt;This should be left aligned&lt;/h5&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;h5 class="right-align"&gt;This should be right aligned&lt;/h5&gt;
-&lt;/div&gt;
-&lt;div&gt;
-  &lt;h5 class="center-align"&gt;This should be center aligned&lt;/h5&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div>
+  <h5 class="left-align">This should be left aligned</h5>
+</div>
+<div>
+  <h5 class="right-align">This should be right aligned</h5>
+</div>
+<div>
+  <h5 class="center-align">This should be center aligned</h5>
+</div>
+{% endcall %}
 
         <p>
           To center text on mobile only, add <code>center-on-small-only</code>.
@@ -55,8 +59,10 @@
           <code>left</code> or <code>right</code> to the element. <code>!important</code> is used to avoid
           specificity issues.
         </p>
-<pre><code>&lt;div class="left"&gt;...&lt;/div&gt;
-&lt;div class="right"&gt;...&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="left">...</div>
+<div class="right">...</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("hiding", "Hiding/Showing Content") %}
@@ -133,7 +139,9 @@
         </table>
         <p>
         <h5>Usage</h5>
-<pre><code>&lt;div class="hide-on-small-only"&gt;&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="hide-on-small-only"></div>
+{% endcall %}
   {% endcall %}
 
   {% call section("spacing", "Spacing Content", heading="Spacing") %}
@@ -471,9 +479,11 @@
           </tbody>
         </table>
         <h5>Usage</h5>
-<pre><code>&lt;div class="p-2"&gt;
-  &lt;h5 class="mt-1"&gt;The div has a padding 0.5rem and the h5 has a margin-top of 0.25rem&lt;/h5&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="p-2">
+  <h5 class="mt-1">The div has a padding 0.5rem and the h5 has a margin-top of 0.25rem</h5>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("formatting", "Formatting") %}
@@ -491,7 +501,9 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;h4 class="truncate"&gt;This is an extremely long title that will be truncated&lt;/h4&gt;</code></pre>
+{% call code() %}
+<h4 class="truncate">This is an extremely long title that will be truncated</h4>
+{% endcall %}
 
         <h5>Hover</h5>
         <p>
@@ -499,7 +511,9 @@
           for use on cards.
         </p>
         <article class="hoverable">Hoverable article</article>
-<pre><code>&lt;article class="hoverable"&gt;Hoverable article&lt;/article&gt;</code></pre>
+{% call code() %}
+<article class="hoverable">Hoverable article</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("browser-default", "Browser Defaults") %}
@@ -525,11 +539,13 @@
             </tr>
           </tbody>
         </table>
-<pre><code>&lt;select class="browser-default"&gt;
-  &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
-  &lt;option value="1"&gt;Option 1&lt;/option&gt;
-&lt;/select&gt;
-&lt;input class="browser-default" type="text"&gt;</code></pre>
+{% call code() %}
+<select class="browser-default">
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
+</select>
+<input class="browser-default" type="text">
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

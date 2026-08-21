@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Menu" %}
@@ -54,12 +54,14 @@
             <a href="#!">More<i class="material-symbols">more_vert</i></a>
           </li>
         </menu>
-<pre><code>&lt;button class="menu-trigger" data-target="menu1"&gt;Drop me&lt;/button&gt;
-&lt;menu id="menu1"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Refresh&lt;i class="material-symbols"&gt;refresh&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Settings&lt;i class="material-symbols"&gt;settings&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Help&lt;i class="material-symbols"&gt;help&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/menu&gt;</code></pre>
+{% call code() %}
+<button class="menu-trigger" data-target="menu1">Drop me</button>
+<menu id="menu1">
+  <li><a href="#!">Refresh<i class="material-symbols">refresh</i></a></li>
+  <li><a href="#!">Settings<i class="material-symbols">settings</i></a></li>
+  <li><a href="#!">Help<i class="material-symbols">help</i></a></li>
+</menu>
+{% endcall %}
         <p>
           For a menu inside a top app bar, see
           <a href="{{ url_for('navbar') }}#navbar-menu">Navbar menu</a>.
@@ -73,15 +75,19 @@
           the defaults, or let <code>Expressive.AutoInit()</code> start
           every <code>.menu-trigger</code>.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   Expressive.Menu.init(document.querySelectorAll('.menu-trigger'), {
     coverTrigger: false
   });
-});</code></pre>
+});
+{% endcall %}
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
+{% call code() %}
+Expressive.AutoInit(document.body, {
   Menu: { constrainWidth: false, coverTrigger: false }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -206,11 +212,13 @@
             </a>
           </li>
         </menu>
-<pre><code>Expressive.Menu.init(document.querySelector('#left'), {
+{% call code() %}
+Expressive.Menu.init(document.querySelector('#left'), {
   alignment: 'left',
   constrainWidth: false,
   coverTrigger: false
-});</code></pre>
+});
+{% endcall %}
         <p>
           Hover is off by default. Pass <code>hover: true</code> to open on
           mouse enter instead of click.
@@ -224,11 +232,13 @@
           <hr>
           <li><a href="#!">Three</a></li>
         </menu>
-<pre><code>Expressive.Menu.init(document.querySelector('#hover'), {
+{% call code() %}
+Expressive.Menu.init(document.querySelector('#hover'), {
   hover: true,
   constrainWidth: false,
   coverTrigger: false
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("selection", "Selection and groups", heading="Selection, shortcuts, and groups") %}
@@ -282,23 +292,25 @@
             </a>
           </li>
         </menu>
-<pre><code>&lt;menu id="menu-rich"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;visibility&lt;/i&gt; Item 1&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;a href="#!"&gt;
-      &lt;i class="material-symbols"&gt;content_copy&lt;/i&gt; Item 2
-      &lt;kbd&gt;⌘C&lt;/kbd&gt;
-    &lt;/a&gt;
-  &lt;/li&gt;
-  &lt;li class="selected"&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;check&lt;/i&gt; Item 3&lt;/a&gt;
-  &lt;/li&gt;
-  &lt;li class="gap" aria-hidden="true"&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;person&lt;/i&gt; Item 4&lt;/a&gt;
-    &lt;menu&gt;…&lt;/menu&gt;
-  &lt;/li&gt;
-&lt;/menu&gt;</code></pre>
+{% call code() %}
+<menu id="menu-rich">
+  <li><a href="#!"><i class="material-symbols">visibility</i> Item 1</a></li>
+  <li>
+    <a href="#!">
+      <i class="material-symbols">content_copy</i> Item 2
+      <kbd>⌘C</kbd>
+    </a>
+  </li>
+  <li class="selected">
+    <a href="#!"><i class="material-symbols">check</i> Item 3</a>
+  </li>
+  <li class="gap" aria-hidden="true"></li>
+  <li>
+    <a href="#!"><i class="material-symbols">person</i> Item 4</a>
+    <menu>…</menu>
+  </li>
+</menu>
+{% endcall %}
   {% endcall %}
 
   {% call section("color", "Color") %}
@@ -331,10 +343,12 @@
             </a>
           </li>
         </menu>
-<pre><code>&lt;menu id="menu-vibrant" class="vibrant"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;visibility&lt;/i&gt; Item 1&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="selected"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;check&lt;/i&gt; Item 2&lt;/a&gt;&lt;/li&gt;
-&lt;/menu&gt;</code></pre>
+{% call code() %}
+<menu id="menu-vibrant" class="vibrant">
+  <li><a href="#!"><i class="material-symbols">visibility</i> Item 1</a></li>
+  <li class="selected"><a href="#!"><i class="material-symbols">check</i> Item 2</a></li>
+</menu>
+{% endcall %}
   {% endcall %}
 
   {% call section("nested", "Nested menus") %}
@@ -360,17 +374,19 @@
           </li>
           <li><a href="#!">Three</a></li>
         </menu>
-<pre><code>&lt;button class="menu-trigger" data-target="menu1"&gt;Nested&lt;/button&gt;
-&lt;menu id="menu1"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;One&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;a href="#!"&gt;More&lt;/a&gt;
-    &lt;menu&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Nested one&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Nested two&lt;/a&gt;&lt;/li&gt;
-    &lt;/menu&gt;
-  &lt;/li&gt;
-&lt;/menu&gt;</code></pre>
+{% call code() %}
+<button class="menu-trigger" data-target="menu1">Nested</button>
+<menu id="menu1">
+  <li><a href="#!">One</a></li>
+  <li>
+    <a href="#!">More</a>
+    <menu>
+      <li><a href="#!">Nested one</a></li>
+      <li><a href="#!">Nested two</a></li>
+    </menu>
+  </li>
+</menu>
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
@@ -378,19 +394,27 @@
 
         <h5>.open()</h5>
         <p>Open the menu.</p>
-<pre><code>instance.open();</code></pre>
+{% call code() %}
+instance.open();
+{% endcall %}
 
         <h5>.close()</h5>
         <p>Close the menu.</p>
-<pre><code>instance.close();</code></pre>
+{% call code() %}
+instance.close();
+{% endcall %}
 
         <h5>.recalculateDimensions()</h5>
         <p>While the menu is open, recalculate its dimensions if its contents have changed.</p>
-<pre><code>instance.recalculateDimensions();</code></pre>
+{% call code() %}
+instance.recalculateDimensions();
+{% endcall %}
 
         <h5>.destroy()</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}

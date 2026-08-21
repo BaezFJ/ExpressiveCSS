@@ -354,7 +354,7 @@
   autocomplete.setMenuItems(
     autocomplete.options.data.filter(function(option) {
       return option.id.toString().toLocaleLowerCase().includes(normSearch)
-        || (option.text && option.text.toLocaleLowerCase().includes(normSearch));
+        || (option.text &amp;&amp; option.text.toLocaleLowerCase().includes(normSearch));
     })
   );
 }</code></pre>

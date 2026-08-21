@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Cards" %}
 {% set page_blurb = "Material Design 3 cards, from the HTML." %}
@@ -32,14 +32,16 @@
             <button type="button" class="tonal">Action</button>
           </nav>
         </article>
-<pre><code>&lt;article&gt;
-  &lt;h3&gt;Card title&lt;/h3&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;nav&gt;
-    &lt;button class="text"&gt;Action&lt;/button&gt;
-    &lt;button class="tonal"&gt;Action&lt;/button&gt;
-  &lt;/nav&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article>
+  <h3>Card title</h3>
+  <p>I am a very simple card.</p>
+  <nav>
+    <button class="text">Action</button>
+    <button class="tonal">Action</button>
+  </nav>
+</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("variants", "Variants") %}
@@ -69,9 +71,11 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;article&gt;…&lt;/article&gt;
-&lt;article class="filled"&gt;…&lt;/article&gt;
-&lt;article class="outlined"&gt;…&lt;/article&gt;</code></pre>
+{% call code() %}
+<article>…</article>
+<article class="filled">…</article>
+<article class="outlined">…</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("image", "Media") %}
@@ -94,16 +98,18 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;article&gt;
-  &lt;figure&gt;
-    &lt;img src="images/sample-1.jpg" alt=""&gt;
-    &lt;figcaption&gt;Card title&lt;/figcaption&gt;
-  &lt;/figure&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;nav&gt;
-    &lt;button class="text"&gt;Action&lt;/button&gt;
-  &lt;/nav&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article>
+  <figure>
+    <img src="images/sample-1.jpg" alt="">
+    <figcaption>Card title</figcaption>
+  </figure>
+  <p>I am a very simple card.</p>
+  <nav>
+    <button class="text">Action</button>
+  </nav>
+</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("fab", "FAB on media") %}
@@ -125,16 +131,18 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;article&gt;
-  &lt;figure&gt;
-    &lt;img src="images/sample-1.jpg" alt=""&gt;
-    &lt;figcaption&gt;Card title&lt;/figcaption&gt;
-    &lt;a class="button extra circle small halfway-fab" href="#!" aria-label="Add"&gt;
-      &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-    &lt;/a&gt;
-  &lt;/figure&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article>
+  <figure>
+    <img src="images/sample-1.jpg" alt="">
+    <figcaption>Card title</figcaption>
+    <a class="button extra circle small halfway-fab" href="#!" aria-label="Add">
+      <i class="material-symbols">add</i>
+    </a>
+  </figure>
+  <p>I am a very simple card.</p>
+</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("horizontal", "Horizontal") %}
@@ -153,16 +161,18 @@
             </nav>
           </div>
         </article>
-<pre><code>&lt;article class="horizontal"&gt;
-  &lt;img src="images/sample.jpg" alt=""&gt;
-  &lt;div&gt;
-    &lt;h3&gt;Card title&lt;/h3&gt;
-    &lt;p&gt;I am a very simple card.&lt;/p&gt;
-    &lt;nav&gt;
-      &lt;button class="text"&gt;Action&lt;/button&gt;
-    &lt;/nav&gt;
-  &lt;/div&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article class="horizontal">
+  <img src="images/sample.jpg" alt="">
+  <div>
+    <h3>Card title</h3>
+    <p>I am a very simple card.</p>
+    <nav>
+      <button class="text">Action</button>
+    </nav>
+  </div>
+</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("reveal", "Reveal") %}
@@ -191,22 +201,24 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;article&gt;
-  &lt;figure&gt;
-    &lt;img src="images/office.jpg" alt=""&gt;
-    &lt;div class="activator"&gt;&lt;/div&gt;
-  &lt;/figure&gt;
-  &lt;h3 class="activator"&gt;Card title
-    &lt;i class="material-symbols right"&gt;more_vert&lt;/i&gt;
-  &lt;/h3&gt;
-  &lt;p&gt;&lt;a href="#"&gt;This is a link&lt;/a&gt;&lt;/p&gt;
-  &lt;aside&gt;
-    &lt;h3&gt;
-      &lt;i class="material-symbols right"&gt;close&lt;/i&gt;Card title
-    &lt;/h3&gt;
-    &lt;p&gt;Here is some more information about this product.&lt;/p&gt;
-  &lt;/aside&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article>
+  <figure>
+    <img src="images/office.jpg" alt="">
+    <div class="activator"></div>
+  </figure>
+  <h3 class="activator">Card title
+    <i class="material-symbols right">more_vert</i>
+  </h3>
+  <p><a href="#">This is a link</a></p>
+  <aside>
+    <h3>
+      <i class="material-symbols right">close</i>Card title
+    </h3>
+    <p>Here is some more information about this product.</p>
+  </aside>
+</article>
+{% endcall %}
         <p>
           Add <code>sticky</code>
           if a trailing <code>&lt;nav&gt;</code> should stay visible under
@@ -233,15 +245,17 @@
             <div id="card-test-3">Test 3</div>
           </div>
         </article>
-<pre><code>&lt;article&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
-  &lt;nav class="tabs max"&gt;
-    &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
-    &lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;
-  &lt;/nav&gt;
-  &lt;div id="test1"&gt;Test 1&lt;/div&gt;
-  &lt;div id="test2"&gt;Test 2&lt;/div&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article>
+  <p>I am a very simple card.</p>
+  <nav class="tabs max">
+    <a href="#test1">Test 1</a>
+    <a class="active" href="#test2">Test 2</a>
+  </nav>
+  <div id="test1">Test 1</div>
+  <div id="test2">Test 2</div>
+</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("sizes", "Sizes") %}
@@ -264,9 +278,11 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;article class="small"&gt;…&lt;/article&gt;
-&lt;article class="medium"&gt;…&lt;/article&gt;
-&lt;article class="large"&gt;…&lt;/article&gt;</code></pre>
+{% call code() %}
+<article class="small">…</article>
+<article class="medium">…</article>
+<article class="large">…</article>
+{% endcall %}
   {% endcall %}
 
   {% call section("panel", "Panel") %}
@@ -282,9 +298,11 @@
             </article>
           </div>
         </div>
-<pre><code>&lt;article class="primary on-primary-text"&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
-&lt;/article&gt;</code></pre>
+{% call code() %}
+<article class="primary on-primary-text">
+  <p>I am a very simple card.</p>
+</article>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

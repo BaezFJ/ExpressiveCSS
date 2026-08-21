@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Pulse" %}
 {% set page_blurb = "Draw attention to floating buttons with a subtle, repeating pulse." %}
@@ -25,9 +25,11 @@
         </div>
 
         <h5>Pulse HTML Structure</h5>
-<pre><code>&lt;a class="button extra circle small pulse"&gt;&lt;i class="material-symbols"&gt;menu&lt;/i&gt;&lt;/a&gt;
-&lt;a class="button extra circle pulse"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;&lt;/a&gt;
-&lt;a class="button extra circle secondary on-secondary-text pulse"&gt;&lt;i class="material-symbols"&gt;edit&lt;/i&gt;&lt;/a&gt;</code></pre>
+{% call code() %}
+<a class="button extra circle small pulse"><i class="material-symbols">menu</i></a>
+<a class="button extra circle pulse"><i class="material-symbols">cloud</i></a>
+<a class="button extra circle secondary on-secondary-text pulse"><i class="material-symbols">edit</i></a>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

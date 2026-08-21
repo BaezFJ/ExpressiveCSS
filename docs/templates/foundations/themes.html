@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Themes" %}
 {% set page_blurb = "Light and dark schemes, the theme attribute, and custom tokens." %}
@@ -82,7 +82,8 @@
           <code>theme="light"</code> and <code>theme="dark"</code> lock it.
           The snippet below restores a stored choice before first paint.
         </p>
-<pre><code>&lt;script&gt;
+{% call code() %}
+<script>
   function getTheme() {
     const stored = localStorage.getItem('theme');
     if (stored === 'dark' || stored === 'light' || stored === 'auto') return stored;
@@ -95,7 +96,8 @@
   }
 
   setTheme(getTheme());
-&lt;/script&gt;</code></pre>
+</script>
+{% endcall %}
         <p>
           Keep this inline rather than in an external file so it runs before
           the first paint. This docs site does that in
@@ -108,19 +110,23 @@
           Switch schemes by writing the attribute. That is the entire public
           API — there is no <code>Expressive.theme</code> helper.
         </p>
-<pre><code>document.documentElement.setAttribute('theme', 'dark');
+{% call code() %}
+document.documentElement.setAttribute('theme', 'dark');
 document.documentElement.setAttribute('theme', 'light');
-document.documentElement.setAttribute('theme', 'auto');</code></pre>
+document.documentElement.setAttribute('theme', 'auto');
+{% endcall %}
         <p>
           Bind that to a control. The app-bar menu on this site writes one of
           those three values and persists it with
           <code>setTheme</code> from the snippet above:
         </p>
-<pre><code>Expressive.Menu.init(document.getElementById('theme-toggle'), {
+{% call code() %}
+Expressive.Menu.init(document.getElementById('theme-toggle'), {
   alignment: 'right',
   constrainWidth: false,
-  onItemClick: (li) =&gt; setTheme(li.dataset.theme)
-});</code></pre>
+  onItemClick: (li) => setTheme(li.dataset.theme)
+});
+{% endcall %}
         <p id="page-theme-toggle">
           <button type="button" class="tonal" data-theme="light">Light</button>
           <button type="button" class="tonal" data-theme="dark">Dark</button>
@@ -153,7 +159,8 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           <strong>after</strong> Expressive so equal-specificity
           <code>:root</code> rules win.
         </p>
-<pre><code>:root {
+{% call code() %}
+:root {
   --md-sys-color-primary-light: #6750a4;
   --md-sys-color-on-primary-light: #ffffff;
   --md-sys-color-primary-container-light: #eaddff;
@@ -163,19 +170,22 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
   --md-sys-color-on-primary-dark: #381e72;
   --md-sys-color-primary-container-dark: #4f378b;
   --md-sys-color-on-primary-container-dark: #eaddff;
-}</code></pre>
+}
+{% endcall %}
         <p>
           To restyle only one scheme, set the live names on the attribute
           selector. A bare <code>:root { --md-sys-color-primary: … }</code>
           loses to <code>:root[theme='dark']</code> because the attribute
           rule is more specific.
         </p>
-<pre><code>:root[theme='dark'] {
+{% call code() %}
+:root[theme='dark'] {
   --md-sys-color-primary: #d0bcff;
   --md-sys-color-on-primary: #381e72;
   --md-sys-color-surface: #1c1b1f;
   --md-sys-color-on-surface: #e6e1e5;
-}</code></pre>
+}
+{% endcall %}
         <p>
           The same custom properties inherit, so a wrapper can preview a
           palette without touching the rest of the page:
@@ -190,27 +200,31 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           <a class="button tonal mr-2 mb-2">Tonal</a>
           <a class="button outlined mr-2 mb-2">Outlined</a>
         </article>
-<pre><code>&lt;article style="
+{% call code() %}
+<article style="
   --md-sys-color-primary: #6750a4;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-primary-container: #eaddff;
   --md-sys-color-on-primary-container: #21005d;
-"&gt;
-  &lt;a class="button filled"&gt;Filled&lt;/a&gt;
-&lt;/article&gt;</code></pre>
+">
+  <a class="button filled">Filled</a>
+</article>
+{% endcall %}
         <p>
           In Sass, consume the live token. The values are hex, so
           <code>rgba(var(--md-sys-color-primary), 0.06)</code> is invalid and
           the browser drops it. Mix with transparency instead:
         </p>
-<pre><code>.my-surface {
+{% call code() %}
+.my-surface {
   background-color: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
 }
 
 .my-overlay {
   background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
-}</code></pre>
+}
+{% endcall %}
         <p>
           <code>--md-source</code> is the seed the ramps are generated from, and
           it is live: set it and every generated ramp — and every system color
@@ -220,9 +234,11 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           in <code>localStorage</code> so you can browse the rest of the docs
           in the palette you picked.
         </p>
-<pre><code>:root {
+{% call code() %}
+:root {
   --md-source: #6750a4;   /* one line; the whole theme follows */
-}</code></pre>
+}
+{% endcall %}
         <p>
           Five of the six ramps are derived this way with
           <code>oklch(from var(--md-source) …)</code>. The

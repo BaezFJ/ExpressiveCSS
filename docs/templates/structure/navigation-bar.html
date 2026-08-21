@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Navigation bar" %}
@@ -52,24 +52,26 @@
             </a>
           </nav>
         </div>
-<pre><code>&lt;nav class="navigation-bar" aria-label="Main"&gt;
-  &lt;a href="/" aria-current="page"&gt;
-    &lt;i class="material-symbols"&gt;home&lt;/i&gt;
+{% call code() %}
+<nav class="navigation-bar" aria-label="Main">
+  <a href="/" aria-current="page">
+    <i class="material-symbols">home</i>
     Home
-  &lt;/a&gt;
-  &lt;a href="/browse"&gt;
-    &lt;i class="material-symbols"&gt;explore&lt;/i&gt;
+  </a>
+  <a href="/browse">
+    <i class="material-symbols">explore</i>
     Browse
-  &lt;/a&gt;
-  &lt;a href="/radio"&gt;
-    &lt;i class="material-symbols"&gt;radio&lt;/i&gt;
+  </a>
+  <a href="/radio">
+    <i class="material-symbols">radio</i>
     Radio
-  &lt;/a&gt;
-  &lt;a href="/library"&gt;
-    &lt;i class="material-symbols"&gt;library_music&lt;/i&gt;
+  </a>
+  <a href="/library">
+    <i class="material-symbols">library_music</i>
     Library
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+  </a>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("horizontal", "Horizontal") %}
@@ -97,13 +99,15 @@
             </a>
           </nav>
         </div>
-<pre><code>&lt;nav class="navigation-bar horizontal" aria-label="Main"&gt;
-  &lt;a href="/" aria-current="page"&gt;
-    &lt;i class="material-symbols"&gt;home&lt;/i&gt;
+{% call code() %}
+<nav class="navigation-bar horizontal" aria-label="Main">
+  <a href="/" aria-current="page">
+    <i class="material-symbols">home</i>
     Home
-  &lt;/a&gt;
+  </a>
   …
-&lt;/nav&gt;</code></pre>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("fixed", "Fixed") %}
@@ -112,7 +116,9 @@
           viewport. Padding includes <code>safe-area-inset-bottom</code>
           so the destinations clear a home indicator.
         </p>
-<pre><code>&lt;nav class="navigation-bar fixed" aria-label="Main"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="navigation-bar fixed" aria-label="Main">…</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}

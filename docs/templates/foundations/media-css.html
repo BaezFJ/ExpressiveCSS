@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Media Styles" %}
 {% set page_blurb = "Responsive images and videos ready to be seen on many devices." %}
@@ -15,7 +15,9 @@
           <code>max-width: 100%</code>, <code>height: auto</code>, and 12px corners.
         </p>
         <img class="responsive-img" src="https://picsum.photos/id/1015/1200/480" alt="A wide landscape that shrinks with the container">
-<pre><code>&lt;img class="responsive-img" src="cool_pic.jpg"&gt;</code></pre>
+{% call code() %}
+<img class="responsive-img" src="cool_pic.jpg">
+{% endcall %}
 
         <h5>Circular images</h5>
         <div class="row">
@@ -36,20 +38,22 @@
           To make images appear circular, simply add
           <code>class="circle"</code> to them.
         </p>
-<pre><code>&lt;div class="s12 m8 offset-m2 l6 offset-l3"&gt;
-  &lt;article&gt;
-    &lt;div class="row valign-wrapper"&gt;
-      &lt;div class="s2"&gt;
-        &lt;img src="portrait.jpg" alt="" class="circle responsive-img"&gt;
-      &lt;/div&gt;
-      &lt;div class="s10"&gt;
-        &lt;span&gt;
+{% call code() %}
+<div class="s12 m8 offset-m2 l6 offset-l3">
+  <article>
+    <div class="row valign-wrapper">
+      <div class="s2">
+        <img src="portrait.jpg" alt="" class="circle responsive-img">
+      </div>
+      <div class="s10">
+        <span>
           This is a square image. Add the "circle" class to it to make it appear circular.
-        &lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("videos", "Videos") %}
@@ -63,9 +67,11 @@
         <div class="video-container">
           <iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" title="Embedded video" allowfullscreen></iframe>
         </div>
-<pre><code>&lt;div class="video-container"&gt;
-  &lt;iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="video-container">
+  <iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" allowfullscreen></iframe>
+</div>
+{% endcall %}
 
         <h5>Responsive Videos</h5>
         <p>
@@ -76,9 +82,11 @@
         <video class="responsive-video" controls>
           <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
         </video>
-<pre><code>&lt;video class="responsive-video" controls&gt;
-  &lt;source src="movie.mp4" type="video/mp4"&gt;
-&lt;/video&gt;</code></pre>
+{% call code() %}
+<video class="responsive-video" controls>
+  <source src="movie.mp4" type="video/mp4">
+</video>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Navbar" %}
@@ -51,16 +51,18 @@
             <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
           </nav>
         </header>
-<pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;button type="button" aria-label="Menu"&gt;
-      &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-    &lt;a href="#!" aria-label="Search"&gt;&lt;i class="material-symbols"&gt;search&lt;/i&gt;&lt;/a&gt;
-    &lt;a href="#!" aria-label="More"&gt;&lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;&lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header>
+  <nav>
+    <button type="button" aria-label="Menu">
+      <i class="material-symbols">menu</i>
+    </button>
+    <h2>Title</h2>
+    <a href="#!" aria-label="Search"><i class="material-symbols">search</i></a>
+    <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
+  </nav>
+</header>
+{% endcall %}
   {% endcall %}
 
   {% call section("destinations", "Destinations") %}
@@ -80,16 +82,18 @@
             </menu>
           </nav>
         </header>
-<pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-    &lt;menu&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a class="active" href="#!"&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
-    &lt;/menu&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header>
+  <nav>
+    <h2>Title</h2>
+    <menu>
+      <li><a href="#!">Sass</a></li>
+      <li><a href="#!">Components</a></li>
+      <li><a class="active" href="#!">JavaScript</a></li>
+    </menu>
+  </nav>
+</header>
+{% endcall %}
         <p>
           <code>active</code> goes on the link, not the list item. The state
           layer mixes <code>currentColor</code> at 8% hover and 10% active, so
@@ -113,15 +117,17 @@
             <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
           </nav>
         </header>
-<pre><code>&lt;header class="center"&gt;
-  &lt;nav&gt;
-    &lt;button type="button" aria-label="Back"&gt;
-      &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-    &lt;a href="#!" aria-label="More"&gt;&lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;&lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header class="center">
+  <nav>
+    <button type="button" aria-label="Back">
+      <i class="material-symbols">arrow_back</i>
+    </button>
+    <h2>Title</h2>
+    <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
+  </nav>
+</header>
+{% endcall %}
   {% endcall %}
 
   {% call section("medium", "Medium and large") %}
@@ -155,17 +161,19 @@
             <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
           </nav>
         </header>
-<pre><code>&lt;header class="medium"&gt;
-  &lt;nav&gt;
-    &lt;button type="button" aria-label="Back"&gt;
-      &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;h2&gt;Medium title&lt;/h2&gt;
-    &lt;a href="#!" aria-label="More"&gt;&lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;&lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;
+{% call code() %}
+<header class="medium">
+  <nav>
+    <button type="button" aria-label="Back">
+      <i class="material-symbols">arrow_back</i>
+    </button>
+    <h2>Medium title</h2>
+    <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
+  </nav>
+</header>
 
-&lt;header class="large"&gt;…&lt;/header&gt;</code></pre>
+<header class="large">…</header>
+{% endcall %}
   {% endcall %}
 
   {% call section("fixed", "Fixed") %}
@@ -183,12 +191,14 @@
           fixed bar on this page would sit on top of it, so the live example
           is the site header itself.
         </p>
-<pre><code>&lt;header class="fixed"&gt;
-  &lt;nav&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-    &lt;a href="#!" aria-label="Search"&gt;&lt;i class="material-symbols"&gt;search&lt;/i&gt;&lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header class="fixed">
+  <nav>
+    <h2>Title</h2>
+    <a href="#!" aria-label="Search"><i class="material-symbols">search</i></a>
+  </nav>
+</header>
+{% endcall %}
   {% endcall %}
 
   {% call section("color", "Color") %}
@@ -211,11 +221,13 @@
             <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
           </nav>
         </header>
-<pre><code>&lt;header class="primary on-primary-text"&gt;
-  &lt;nav&gt;
-    &lt;h2&gt;Primary&lt;/h2&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header class="primary on-primary-text">
+  <nav>
+    <h2>Primary</h2>
+  </nav>
+</header>
+{% endcall %}
         <p>Component tokens you can set on the header (or on <code>:root</code>):</p>
         {% call token_table() %}
             <tr><td><code>--md-comp-top-app-bar-container-color</code></td><td><code>--md-sys-color-surface</code></td></tr>
@@ -255,29 +267,33 @@
             </menu>
           </nav>
         </header>
-<pre><code>&lt;menu id="menu1"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;one&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;two&lt;/a&gt;&lt;/li&gt;
-  &lt;hr&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
-&lt;/menu&gt;
-&lt;header&gt;
-  &lt;nav&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-    &lt;menu&gt;
-      &lt;li&gt;
-        &lt;a class="menu-trigger" href="#!" data-target="menu1"&gt;
-          Menu&lt;i class="material-symbols right"&gt;arrow_drop_down&lt;/i&gt;
-        &lt;/a&gt;
-      &lt;/li&gt;
-    &lt;/menu&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<menu id="menu1">
+  <li><a href="#!">one</a></li>
+  <li><a href="#!">two</a></li>
+  <hr>
+  <li><a href="#!">three</a></li>
+</menu>
+<header>
+  <nav>
+    <h2>Title</h2>
+    <menu>
+      <li>
+        <a class="menu-trigger" href="#!" data-target="menu1">
+          Menu<i class="material-symbols right">arrow_drop_down</i>
+        </a>
+      </li>
+    </menu>
+  </nav>
+</header>
+{% endcall %}
         <p>To initialize the menu yourself:</p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.menu-trigger');
   Expressive.Menu.init(elems);
-});</code></pre>
+});
+{% endcall %}
         <p>
           Menus open on click by default (<code>hover: false</code>). Pass
           <code>{ hover: true }</code> to open on hover instead.
@@ -301,16 +317,18 @@
             <a href="#!" aria-label="More"><i class="material-symbols">more_vert</i></a>
           </nav>
         </header>
-<pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;button type="button" aria-label="Back"&gt;
-      &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;form role="search"&gt;
-      &lt;input type="search" placeholder="Search" aria-label="Search"&gt;
-    &lt;/form&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+{% call code() %}
+<header>
+  <nav>
+    <button type="button" aria-label="Back">
+      <i class="material-symbols">arrow_back</i>
+    </button>
+    <form role="search">
+      <input type="search" placeholder="Search" aria-label="Search">
+    </form>
+  </nav>
+</header>
+{% endcall %}
   {% endcall %}
 
   {% call section("mobile-collapse", "Mobile collapse") %}
@@ -342,29 +360,33 @@
           <li><a href="#!">JavaScript</a></li>
           <li><a href="#!">Mobile</a></li>
         </ul>
-<pre><code>&lt;header&gt;
-  &lt;nav&gt;
-    &lt;a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu"&gt;
-      &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-    &lt;/a&gt;
-    &lt;h2&gt;Title&lt;/h2&gt;
-    &lt;menu class="hide-on-med-and-down"&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="#!"&gt;Components&lt;/a&gt;&lt;/li&gt;
-    &lt;/menu&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;
+{% call code() %}
+<header>
+  <nav>
+    <a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu">
+      <i class="material-symbols">menu</i>
+    </a>
+    <h2>Title</h2>
+    <menu class="hide-on-med-and-down">
+      <li><a href="#!">Sass</a></li>
+      <li><a href="#!">Components</a></li>
+    </menu>
+  </nav>
+</header>
 
-&lt;ul class="sidenav" id="mobile-demo"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+<ul class="sidenav" id="mobile-demo">
+  <li><a href="#!">Sass</a></li>
+</ul>
+{% endcall %}
         <p>
           After you add the trigger and the sidenav, initialize Sidenav (or let
           <code>AutoInit()</code> do it).
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   Expressive.Sidenav.init(document.querySelectorAll('.sidenav'));
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

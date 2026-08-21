@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Dialogs" %}
@@ -95,18 +95,20 @@
             <button type="submit" value="accept">Accept</button>
           </form>
         </dialog>
-<pre><code>&lt;button type="button" onclick="document.getElementById('dialog1').showModal()"&gt;
+{% call code() %}
+<button type="button" onclick="document.getElementById('dialog1').showModal()">
   Show
-&lt;/button&gt;
+</button>
 
-&lt;dialog id="dialog1"&gt;
-  &lt;h2&gt;Basic dialog title&lt;/h2&gt;
-  &lt;p&gt;A dialog is a modal window that appears in front of app content.&lt;/p&gt;
-  &lt;form method="dialog"&gt;
-    &lt;button type="submit" value="cancel"&gt;Cancel&lt;/button&gt;
-    &lt;button type="submit" value="accept"&gt;Accept&lt;/button&gt;
-  &lt;/form&gt;
-&lt;/dialog&gt;</code></pre>
+<dialog id="dialog1">
+  <h2>Basic dialog title</h2>
+  <p>A dialog is a modal window that appears in front of app content.</p>
+  <form method="dialog">
+    <button type="submit" value="cancel">Cancel</button>
+    <button type="submit" value="accept">Accept</button>
+  </form>
+</dialog>
+{% endcall %}
         <p>
           A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
           submit button is pressed and sets <code>dialog.returnValue</code>
@@ -166,18 +168,20 @@
             </p>
           </div>
         </dialog>
-<pre><code>&lt;dialog class="max"&gt;
-  &lt;header&gt;
-    &lt;button type="button" aria-label="Close"&gt;
-      &lt;i class="material-symbols"&gt;close&lt;/i&gt;
-    &lt;/button&gt;
-    &lt;h2&gt;Full-screen dialog title&lt;/h2&gt;
-    &lt;form method="dialog"&gt;
-      &lt;button type="submit" value="save"&gt;Save&lt;/button&gt;
-    &lt;/form&gt;
-  &lt;/header&gt;
-  &lt;div&gt;…&lt;/div&gt;
-&lt;/dialog&gt;</code></pre>
+{% call code() %}
+<dialog class="max">
+  <header>
+    <button type="button" aria-label="Close">
+      <i class="material-symbols">close</i>
+    </button>
+    <h2>Full-screen dialog title</h2>
+    <form method="dialog">
+      <button type="submit" value="save">Save</button>
+    </form>
+  </header>
+  <div>…</div>
+</dialog>
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
@@ -188,10 +192,14 @@
         </p>
         <h5 class="light">.showModal()</h5>
         <p>Open as a modal, with the scrim (basic) or as the page (full-screen).</p>
-<pre><code>dialog.showModal();</code></pre>
+{% call code() %}
+dialog.showModal();
+{% endcall %}
         <h5 class="light">.close()</h5>
         <p>Close the dialog.</p>
-<pre><code>dialog.close();</code></pre>
+{% call code() %}
+dialog.close();
+{% endcall %}
         <p>
           A tap or click on the scrim also closes a basic dialog. Both ends
           of the gesture have to land outside the dialog’s box, so a drag

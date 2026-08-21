@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Color" %}
 {% set page_blurb = "One system: the Material Design 3 theme tokens." %}
@@ -67,8 +67,10 @@
             <div class="color-swatch surface-container on-surface-text">.surface-container</div>
           </div>
         </div>
-<pre><code>&lt;div class="primary on-primary-text"&gt;.primary&lt;/div&gt;
-&lt;span class="on-surface-text"&gt;.on-surface-text&lt;/span&gt;</code></pre>
+{% call code() %}
+<div class="primary on-primary-text">.primary</div>
+<span class="on-surface-text">.on-surface-text</span>
+{% endcall %}
         <p>
           Every role name is a background class. The same name plus
           <code>-text</code> is the foreground class
@@ -80,14 +82,16 @@
           <code>rgba(var(--md-sys-color-primary), 0.06)</code> — the tokens hold hex
           colors, so that form is invalid. Mix with transparency instead:
         </p>
-<pre><code>.my-tint {
+{% call code() %}
+.my-tint {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
 }
 
 .my-overlay {
   background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
-}</code></pre>
+}
+{% endcall %}
         <p>
           Mix <code>in oklab</code>, not <code>in srgb</code>. sRGB interpolation dips in
           lightness through the midtones, so the same percentage reads muddier on some
@@ -169,10 +173,12 @@
           stylesheet lost control of cascade order. In a component partial, read the
           token directly.
         </p>
-<pre><code>.my-panel {
+{% call code() %}
+.my-panel {
   background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
-}</code></pre>
+}
+{% endcall %}
         <p>
           There is no Sass color function any more. <code>colorFunc()</code> and the
           <code>$colors</code> map were removed with the palette — a Sass function

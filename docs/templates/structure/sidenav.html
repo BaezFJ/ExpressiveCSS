@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Sidenav" %}
@@ -49,26 +49,28 @@
           <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
           <li><a class="sidenav-close" href="#!">Close</a></li>
         </ul>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;
-    &lt;div class="user-view"&gt;
-      &lt;div class="background"&gt;
-        &lt;img src="images/office.jpg" alt=""&gt;
-      &lt;/div&gt;
-      &lt;a href="#user"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
-      &lt;a href="#name"&gt;&lt;span class="name"&gt;John Doe&lt;/span&gt;&lt;/a&gt;
-      &lt;a href="#email"&gt;&lt;span class="email"&gt;jdoe@example.com&lt;/span&gt;&lt;/a&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;First Link With Icon&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Second Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;div class="divider"&gt;&lt;/div&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="subheader"&gt;Subheader&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
-  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-&lt;/a&gt;</code></pre>
+{% call code() %}
+<ul id="slide-out" class="sidenav">
+  <li>
+    <div class="user-view">
+      <div class="background">
+        <img src="images/office.jpg" alt="">
+      </div>
+      <a href="#user"><img class="circle" src="images/portrait.jpg" alt=""></a>
+      <a href="#name"><span class="name">John Doe</span></a>
+      <a href="#email"><span class="email">jdoe@example.com</span></a>
+    </div>
+  </li>
+  <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+  <li><a href="#!">Second Link</a></li>
+  <li><div class="divider"></div></li>
+  <li><a class="subheader">Subheader</a></li>
+  <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+</ul>
+<a href="#!" data-target="slide-out" class="sidenav-trigger">
+  <i class="material-symbols">menu</i>
+</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("initialization", "Initialization") %}
@@ -77,12 +79,14 @@
           Call <code>init</code> yourself when you need options other than the defaults,
           or let <code>Expressive.AutoInit()</code> start every <code>.sidenav</code>.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.sidenav');
   const instances = Expressive.Sidenav.init(elems, {
     // specify options here
   });
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -137,15 +141,21 @@
 
         <h5 class="light">.open();</h5>
         <p>Opens the sidenav.</p>
-<pre><code>instance.open();</code></pre>
+{% call code() %}
+instance.open();
+{% endcall %}
 
         <h5 class="light">.close();</h5>
         <p>Closes the sidenav.</p>
-<pre><code>instance.close();</code></pre>
+{% call code() %}
+instance.close();
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, unwrap the dialog host, and remove the drag target and event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}
@@ -174,12 +184,14 @@
           closes an overlay sidenav. That is useful in a single-page app where the page does not
           reload. It does nothing while the sidenav is fixed on large screens.
         </p>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;&lt;a class="sidenav-close" href="#!"&gt;Clicking this will close Sidenav&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
-  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-&lt;/a&gt;</code></pre>
+{% call code() %}
+<ul id="slide-out" class="sidenav">
+  <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
+</ul>
+<a href="#!" data-target="slide-out" class="sidenav-trigger">
+  <i class="material-symbols">menu</i>
+</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("variations", "Variations") %}
@@ -197,9 +209,11 @@
           <li><a href="#!">Second Sidebar Link</a></li>
           <li><a class="sidenav-close" href="#!">Close</a></li>
         </ul>
-<pre><code>Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
+{% call code() %}
+Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
-});</code></pre>
+});
+{% endcall %}
 
         <h5 class="light">Nested sections</h5>
         <p>
@@ -235,21 +249,23 @@
             </details>
           </li>
         </ul>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;details name="docs-nav"&gt;
-      &lt;summary&gt;
-        &lt;i class="material-symbols"&gt;palette&lt;/i&gt;
+{% call code() %}
+<ul id="slide-out" class="sidenav">
+  <li><a href="#!">First Sidebar Link</a></li>
+  <li>
+    <details name="docs-nav">
+      <summary>
+        <i class="material-symbols">palette</i>
         Foundations
-      &lt;/summary&gt;
-      &lt;ul&gt;
-        &lt;li&gt;&lt;a href="#!"&gt;Color&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href="#!"&gt;Typography&lt;/a&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/details&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+      </summary>
+      <ul>
+        <li><a href="#!">Color</a></li>
+        <li><a href="#!">Typography</a></li>
+      </ul>
+    </details>
+  </li>
+</ul>
+{% endcall %}
 
         <h5 class="light">Fixed HTML Structure</h5>
         <p>
@@ -257,23 +273,27 @@
           and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
           The documentation sidebar on the left is this pattern.
         </p>
-<pre><code>&lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
-  &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
-&lt;/a&gt;</code></pre>
+{% call code() %}
+<ul id="slide-out" class="sidenav sidenav-fixed">
+  <li><a href="#!">First Sidebar Link</a></li>
+  <li><a href="#!">Second Sidebar Link</a></li>
+</ul>
+<a href="#!" data-target="slide-out" class="sidenav-trigger">
+  <i class="material-symbols">menu</i>
+</a>
+{% endcall %}
         <p>
           Offset the rest of the page by the sidenav width. The width token is
           <code>--md-comp-nav-drawer-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
           Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
         </p>
-<pre><code>@media (width >= 993px) {
+{% call code() %}
+@media (width >= 993px) {
   header, main, footer {
     padding-left: var(--md-comp-nav-drawer-width);
   }
-}</code></pre>
+}
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

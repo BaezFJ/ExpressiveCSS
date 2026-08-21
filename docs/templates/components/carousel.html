@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import options_table, token_table %}
 
 {% set page_name = "Carousel" %}
@@ -32,11 +32,13 @@
           <button type="button" class="" id="carousel-prev">Previous</button>
           <button type="button" class="" id="carousel-next">Next</button>
         </div>
-<pre><code>&lt;div class="carousel"&gt;
-  &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
-  &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
-  &lt;img src="images/sample-3.jpg" alt="Rocky coastline"&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="carousel">
+  <img src="images/sample-1.jpg" alt="Mountain lake">
+  <img src="images/sample-2.jpg" alt="Forest path">
+  <img src="images/sample-3.jpg" alt="Rocky coastline">
+</div>
+{% endcall %}
         <p>
           With no items, <code>init</code> logs an error and returns.
           The track is 400px tall; set
@@ -59,10 +61,12 @@
           <img src="https://picsum.photos/id/1018/800/400" alt="Rocky coastline">
           <img src="https://picsum.photos/id/1019/800/400" alt="Clouds over hills">
         </div>
-<pre><code>&lt;div class="carousel flat"&gt;
-  &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
-  &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="carousel flat">
+  <img src="images/sample-1.jpg" alt="Mountain lake">
+  <img src="images/sample-2.jpg" alt="Forest path">
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("content", "Content carousel") %}
@@ -92,18 +96,22 @@
             <p>This is your fourth panel</p>
           </div>
         </div>
-<pre><code>&lt;div class="carousel flat"&gt;
-  &lt;div class="carousel-fixed-item"&gt;
-    &lt;a class="btn"&gt;Button&lt;/a&gt;
-  &lt;/div&gt;
-  &lt;div class="carousel-item primary on-primary-text p-5"&gt;
-    &lt;h2&gt;First Panel&lt;/h2&gt;
-    &lt;p&gt;This is your first panel&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-<pre><code>Expressive.Carousel.init(document.querySelector('#carousel-content'), {
+{% call code() %}
+<div class="carousel flat">
+  <div class="carousel-fixed-item">
+    <a class="btn">Button</a>
+  </div>
+  <div class="carousel-item primary on-primary-text p-5">
+    <h2>First Panel</h2>
+    <p>This is your first panel</p>
+  </div>
+</div>
+{% endcall %}
+{% call code() %}
+Expressive.Carousel.init(document.querySelector('#carousel-content'), {
   indicators: true
-});</code></pre>
+});
+{% endcall %}
         <p>
           Swipeable <a href="{{ url_for('tabs') }}">tabs</a> wrap their
           panels in a flat carousel. That is the Tabs plugin.
@@ -133,15 +141,19 @@
   {% endcall %}
 
   {% call section("initialization", "Initialization") %}
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.carousel');
   const instances = Expressive.Carousel.init(elems, {
     // specify options here
   });
-});</code></pre>
-<pre><code>Expressive.AutoInit(document.body, {
+});
+{% endcall %}
+{% call code() %}
+Expressive.AutoInit(document.body, {
   Carousel: { indicators: true }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -204,17 +216,25 @@
   {% endcall %}
 
   {% call section("methods", "Methods") %}
-<pre><code>const instance = Expressive.Carousel.getInstance(elem);</code></pre>
+{% call code() %}
+const instance = Expressive.Carousel.getInstance(elem);
+{% endcall %}
         <h5 class="light">.next(); / .prev();</h5>
         <p>Move one item, or pass how many.</p>
-<pre><code>instance.next();
-instance.prev(3);</code></pre>
+{% call code() %}
+instance.next();
+instance.prev(3);
+{% endcall %}
         <h5 class="light">.set();</h5>
         <p>Move to a 0-based index. Optional one-shot <code>onCycleTo</code>.</p>
-<pre><code>instance.set(3);</code></pre>
+{% call code() %}
+instance.set(3);
+{% endcall %}
         <h5 class="light">.destroy();</h5>
         <p>Tear down listeners, generated dots, and inline transforms.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

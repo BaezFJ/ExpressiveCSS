@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Badges" %}
 {% set page_blurb = "Notifications, counts, or status on navigation items and icons." %}
@@ -37,9 +37,11 @@
             Label
           </a>
         </nav>
-<pre><code>&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;&lt;/span&gt;&lt;/i&gt;
-&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/i&gt;
-&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;999+&lt;/span&gt;&lt;/i&gt;</code></pre>
+{% call code() %}
+<i class="material-symbols">mail<span class="badge"></span></i>
+<i class="material-symbols">mail<span class="badge">1</span></i>
+<i class="material-symbols">mail<span class="badge">999+</span></i>
+{% endcall %}
   {% endcall %}
 
   {% call section("small", "Small") %}
@@ -52,9 +54,11 @@
             <i class="material-symbols">notifications<span class="badge"></span></i>
           </button>
         </p>
-<pre><code>&lt;i class="material-symbols"&gt;
-  notifications&lt;span class="badge"&gt;&lt;/span&gt;
-&lt;/i&gt;</code></pre>
+{% call code() %}
+<i class="material-symbols">
+  notifications<span class="badge"></span>
+</i>
+{% endcall %}
   {% endcall %}
 
   {% call section("large", "Large") %}
@@ -71,8 +75,10 @@
             <i class="material-symbols">mail<span class="badge">999+</span></i>
           </button>
         </p>
-<pre><code>&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/i&gt;
-&lt;i class="material-symbols"&gt;mail&lt;span class="badge"&gt;999+&lt;/span&gt;&lt;/i&gt;</code></pre>
+{% call code() %}
+<i class="material-symbols">mail<span class="badge">1</span></i>
+<i class="material-symbols">mail<span class="badge">999+</span></i>
+{% endcall %}
   {% endcall %}
 
   {% call section("navigation", "On navigation") %}
@@ -95,10 +101,12 @@
             Groups
           </a>
         </nav>
-<pre><code>&lt;a href="#!"&gt;
-  &lt;i class="material-symbols"&gt;inbox&lt;span class="badge"&gt;3&lt;/span&gt;&lt;/i&gt;
+{% call code() %}
+<a href="#!">
+  <i class="material-symbols">inbox<span class="badge">3</span></i>
   Inbox
-&lt;/a&gt;</code></pre>
+</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("lists", "In a list") %}
@@ -118,13 +126,15 @@
             Sent
           </li>
         </ul>
-<pre><code>&lt;ul class="list"&gt;
-  &lt;li&gt;
-    &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+{% call code() %}
+<ul class="list">
+  <li>
+    <i class="material-symbols">inbox</i>
     Inbox
-    &lt;span class="badge"&gt;3&lt;/span&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+    <span class="badge">3</span>
+  </li>
+</ul>
+{% endcall %}
   {% endcall %}
 
   {% call section("sidenav", "In a sidenav") %}
@@ -148,11 +158,13 @@
           </li>
           <li><a href="#!">Sent</a></li>
         </ul>
-<pre><code>&lt;summary&gt;
-  &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+{% call code() %}
+<summary>
+  <i class="material-symbols">inbox</i>
   Inbox
-  &lt;span class="badge"&gt;4&lt;/span&gt;
-&lt;/summary&gt;</code></pre>
+  <span class="badge">4</span>
+</summary>
+{% endcall %}
   {% endcall %}
 
   {% call section("color", "Color") %}
@@ -165,8 +177,10 @@
           <i class="material-symbols">mail<span class="badge">3</span></i>
           <i class="material-symbols">star<span class="badge primary on-primary-text">1</span></i>
         </p>
-<pre><code>&lt;span class="badge"&gt;3&lt;/span&gt;
-&lt;span class="badge primary on-primary-text"&gt;1&lt;/span&gt;</code></pre>
+{% call code() %}
+<span class="badge">3</span>
+<span class="badge primary on-primary-text">1</span>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Toolbars" %}
@@ -64,17 +64,19 @@
             </button>
           </nav>
         </p>
-<pre><code>&lt;nav class="toolbar" aria-label="Call controls"&gt;
-  &lt;button type="button" aria-label="Stop camera"&gt;
-    &lt;i class="material-symbols"&gt;videocam_off&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;button type="button" class="active" aria-label="Hand"&gt;
-    &lt;i class="material-symbols"&gt;back_hand&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;button type="button" aria-label="More"&gt;
-    &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
-  &lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="toolbar" aria-label="Call controls">
+  <button type="button" aria-label="Stop camera">
+    <i class="material-symbols">videocam_off</i>
+  </button>
+  <button type="button" class="active" aria-label="Hand">
+    <i class="material-symbols">back_hand</i>
+  </button>
+  <button type="button" aria-label="More">
+    <i class="material-symbols">more_vert</i>
+  </button>
+</nav>
+{% endcall %}
         <p>
           A label next to the icon needs a <code>&lt;span&gt;</code> —
           <code>:only-child</code> ignores text nodes, so
@@ -101,17 +103,19 @@
             </button>
           </nav>
         </p>
-<pre><code>&lt;nav class="toolbar" aria-label="Editor"&gt;
-  &lt;button type="button" aria-label="Undo"&gt;
-    &lt;i class="material-symbols"&gt;undo&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;button type="button" class="filled" aria-label="Add"&gt;
-    &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;button type="button" aria-label="More"&gt;
-    &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
-  &lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="toolbar" aria-label="Editor">
+  <button type="button" aria-label="Undo">
+    <i class="material-symbols">undo</i>
+  </button>
+  <button type="button" class="filled" aria-label="Add">
+    <i class="material-symbols">add</i>
+  </button>
+  <button type="button" aria-label="More">
+    <i class="material-symbols">more_vert</i>
+  </button>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("color", "Color") %}
@@ -142,7 +146,9 @@
             </button>
           </nav>
         </p>
-<pre><code>&lt;nav class="toolbar vibrant" aria-label="Text format"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="toolbar vibrant" aria-label="Text format">…</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("vertical", "Vertical") %}
@@ -169,7 +175,9 @@
             </button>
           </nav>
         </p>
-<pre><code>&lt;nav class="toolbar vertical" aria-label="History"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="toolbar vertical" aria-label="History">…</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("docked", "Docked") %}
@@ -227,18 +235,20 @@
           <span class="max"></span>
           <button type="button" class="filled"><span>Next</span></button>
         </nav>
-<pre><code>&lt;nav class="toolbar docked" aria-label="Page actions"&gt;
-  &lt;button type="button" aria-label="Download"&gt;
-    &lt;i class="material-symbols"&gt;download&lt;/i&gt;
-  &lt;/button&gt;
+{% call code() %}
+<nav class="toolbar docked" aria-label="Page actions">
+  <button type="button" aria-label="Download">
+    <i class="material-symbols">download</i>
+  </button>
   …
-&lt;/nav&gt;
+</nav>
 
-&lt;nav class="toolbar docked" aria-label="Wizard"&gt;
-  &lt;button type="button"&gt;&lt;span&gt;Back&lt;/span&gt;&lt;/button&gt;
-  &lt;span class="max"&gt;&lt;/span&gt;
-  &lt;button type="button" class="filled"&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+<nav class="toolbar docked" aria-label="Wizard">
+  <button type="button"><span>Back</span></button>
+  <span class="max"></span>
+  <button type="button" class="filled"><span>Next</span></button>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("fab", "Pairing with a FAB") %}
@@ -271,12 +281,14 @@
             <i class="material-symbols">reply</i>
           </button>
         </div>
-<pre><code>&lt;div class="toolbar-group"&gt;
-  &lt;nav class="toolbar vibrant" aria-label="Message actions"&gt;…&lt;/nav&gt;
-  &lt;button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply"&gt;
-    &lt;i class="material-symbols"&gt;reply&lt;/i&gt;
-  &lt;/button&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="toolbar-group">
+  <nav class="toolbar vibrant" aria-label="Message actions">…</nav>
+  <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
+    <i class="material-symbols">reply</i>
+  </button>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("fixed", "Fixed") %}
@@ -287,9 +299,11 @@
           <code>right</code> flips it. A docked bar sticks to the bottom
           edge; <code>top</code> sticks it to the top.
         </p>
-<pre><code>&lt;nav class="toolbar fixed" aria-label="Format"&gt;…&lt;/nav&gt;
-&lt;nav class="toolbar vertical fixed" aria-label="Tools"&gt;…&lt;/nav&gt;
-&lt;nav class="toolbar docked fixed" aria-label="Editor"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="toolbar fixed" aria-label="Format">…</nav>
+<nav class="toolbar vertical fixed" aria-label="Tools">…</nav>
+<nav class="toolbar docked fixed" aria-label="Editor">…</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}

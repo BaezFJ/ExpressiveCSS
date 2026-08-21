@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Time Picker" %}
@@ -20,10 +20,12 @@
           <input type="text" class="timepicker" id="timepicker-intro">
           <label for="timepicker-intro">Lunchtime</label>
         </div>
-<pre><code>&lt;div class="field"&gt;
-  &lt;input type="text" class="timepicker" id="lunchtime"&gt;
-  &lt;label for="lunchtime"&gt;Lunchtime&lt;/label&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="field">
+  <input type="text" class="timepicker" id="lunchtime">
+  <label for="lunchtime">Lunchtime</label>
+</div>
+{% endcall %}
         <p>
           Wrap the input in its own <code>.field</code> (or another small parent). The
           clock is appended inside that parent.
@@ -43,16 +45,20 @@
           or let <code>Expressive.AutoInit()</code> start every <code>.timepicker</code>.
           Unlike Datepicker, the default options already show the clock.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.timepicker');
   const instances = Expressive.Timepicker.init(elems, {
     // specify options here
   });
-});</code></pre>
+});
+{% endcall %}
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
+{% call code() %}
+Expressive.AutoInit(document.body, {
   Timepicker: { twelveHour: false }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("display", "Display") %}
@@ -70,9 +76,11 @@
           <code>.display-docked</code> popover that appears when the input is clicked or
           confirmed with Enter, and hides when you click outside.
         </p>
-<pre><code>Expressive.Timepicker.init(elem, {
+{% call code() %}
+Expressive.Timepicker.init(elem, {
   displayPlugin: 'docked'
-});</code></pre>
+});
+{% endcall %}
         <p>
           The popover is positioned in document coordinates and then appended to the
           input’s parent. A <code>position: relative</code> parent — including
@@ -220,9 +228,11 @@
           <input type="text" class="timepicker no-autoinit" id="timepicker-24">
           <label for="timepicker-24">24-hour</label>
         </div>
-<pre><code>Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
+{% call code() %}
+Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
@@ -231,20 +241,28 @@
         <h5 class="light">.showView();</h5>
         <p>Show the hours or minutes face.</p>
         <p><strong>String:</strong> <code>'hours'</code> or <code>'minutes'</code>.</p>
-<pre><code>instance.showView('hours');</code></pre>
+{% call code() %}
+instance.showView('hours');
+{% endcall %}
 
         <h5 class="light">.done();</h5>
         <p>Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.</p>
-<pre><code>instance.done();
-instance.done(true);</code></pre>
+{% call code() %}
+instance.done();
+instance.done(true);
+{% endcall %}
 
         <h5 class="light">.clear();</h5>
         <p>Clear the input. Same as <code>done(true)</code>.</p>
-<pre><code>instance.clear();</code></pre>
+{% call code() %}
+instance.clear();
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the clock, and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}

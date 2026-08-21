@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import section, toc with context %}
+{% from "macros/page.html" import code, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Floating Action Button" %}
@@ -35,14 +35,16 @@
           to toggle on click. <code>AutoInit()</code> starts every matching
           element except those marked <code>no-autoinit</code>. Motion is CSS.
         </p>
-<pre><code>&lt;div class="fixed-action-btn"&gt;
-  &lt;button type="button" class="button extra circle" aria-label="Edit"&gt;
-    &lt;i class="material-symbols"&gt;mode_edit&lt;/i&gt;
-  &lt;/button&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a class="button extra circle small" href="#!" aria-label="Attach"&gt;…&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="fixed-action-btn">
+  <button type="button" class="button extra circle" aria-label="Edit">
+    <i class="material-symbols">mode_edit</i>
+  </button>
+  <ul>
+    <li><a class="button extra circle small" href="#!" aria-label="Attach">…</a></li>
+  </ul>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("initialization", "Initialization") %}
@@ -52,18 +54,22 @@
           or let <code>Expressive.AutoInit()</code> start every
           <code>.fixed-action-btn</code> with the defaults below.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.fixed-action-btn');
   const instances = Expressive.FloatingActionButton.init(elems, {
     // specify options here
   });
-});</code></pre>
+});
+{% endcall %}
         <p>
           Per-instance options can also be passed through AutoInit:
         </p>
-<pre><code>Expressive.AutoInit(document.body, {
+{% call code() %}
+Expressive.AutoInit(document.body, {
   FloatingActionButton: { direction: 'top' }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -94,15 +100,21 @@
 
         <h5 class="light">.open();</h5>
         <p>Opens the FAB menu.</p>
-<pre><code>instance.open();</code></pre>
+{% call code() %}
+instance.open();
+{% endcall %}
 
         <h5 class="light">.close();</h5>
         <p>Closes the FAB menu.</p>
-<pre><code>instance.close();</code></pre>
+{% call code() %}
+instance.close();
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}
@@ -135,7 +147,9 @@
             </ul>
           </div>
         </div>
-<pre><code>&lt;div class="fixed-action-btn direction-left"&gt;…&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="fixed-action-btn direction-left">…</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("click-only", "Click Only FAB", heading="Click-only FAB") %}
@@ -158,7 +172,9 @@
             </ul>
           </div>
         </div>
-<pre><code>&lt;div class="fixed-action-btn direction-left click-to-toggle"&gt;…&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="fixed-action-btn direction-left click-to-toggle">…</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("toolbar", "FAB to Toolbar") %}
@@ -167,21 +183,25 @@
           to expand the button into a full-width bar on click. Prefer a hover
           or click-only menu unless you specifically need the bar.
         </p>
-<pre><code>&lt;div class="fixed-action-btn toolbar"&gt;
-  &lt;a class="button extra circle"&gt;
-    &lt;i class="large material-symbols"&gt;mode_edit&lt;/i&gt;
-  &lt;/a&gt;
-  &lt;ul&gt;
-    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;insert_chart&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;format_quote&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;publish&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;attach_file&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/div&gt;</code></pre>
-<pre><code>Expressive.FloatingActionButton.init(
+{% call code() %}
+<div class="fixed-action-btn toolbar">
+  <a class="button extra circle">
+    <i class="large material-symbols">mode_edit</i>
+  </a>
+  <ul>
+    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">insert_chart</i></a></li>
+    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">format_quote</i></a></li>
+    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">publish</i></a></li>
+    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">attach_file</i></a></li>
+  </ul>
+</div>
+{% endcall %}
+{% call code() %}
+Expressive.FloatingActionButton.init(
   document.querySelector('.fixed-action-btn.toolbar'),
   { toolbarEnabled: true }
-);</code></pre>
+);
+{% endcall %}
   {% endcall %}
     </div>
 

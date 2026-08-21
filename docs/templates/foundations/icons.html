@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Icons" %}
 {% set page_blurb = "Material Symbols, outlined by default. Axes and style are CSS variables." %}
@@ -23,11 +23,13 @@
           with the axis ranges so fill / weight / grade / optical size work.
           Outlined alone is enough for the default.
         </p>
-<pre><code>&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
+{% call code() %}
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
-&lt;!-- Only if you switch style to rounded or sharp --&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;</code></pre>
+<!-- Only if you switch style to rounded or sharp -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+{% endcall %}
         <p>
           Put <code>material-symbols</code> on an element and use the ligature
           as the text. <code>.material-icons</code> is kept as an alias so
@@ -51,9 +53,11 @@
             <p>Sharp</p>
           </div>
         </div>
-<pre><code>&lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;i class="material-symbols-rounded"&gt;add&lt;/i&gt;
-&lt;i class="material-symbols-sharp"&gt;add&lt;/i&gt;</code></pre>
+{% call code() %}
+<i class="material-symbols">add</i>
+<i class="material-symbols-rounded">add</i>
+<i class="material-symbols-sharp">add</i>
+{% endcall %}
         <p>
           Icons inherit the current text color, so token utilities such as
           <code>primary-text</code> work. For icons inside buttons, see
@@ -68,9 +72,11 @@
           <code>theme</code> — or set <code>--md-icon-font</code> directly.
           Either one inherits, so a subtree can use a different style.
         </p>
-<pre><code>&lt;html icon-style="rounded"&gt;
-&lt;nav icon-style="sharp"&gt;…&lt;/nav&gt;
-&lt;nav style="--md-icon-font: var(--md-icon-font-sharp)"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<html icon-style="rounded">
+<nav icon-style="sharp">…</nav>
+<nav style="--md-icon-font: var(--md-icon-font-sharp)">…</nav>
+{% endcall %}
         <p>
           Values are <code>outlined</code> (default), <code>rounded</code>,
           and <code>sharp</code>. A single icon can still opt out with
@@ -131,14 +137,16 @@
             </tr>
           </tbody>
         </table>
-<pre><code>:root {
+{% call code() %}
+:root {
   --md-icon-fill: 0;
   --md-icon-weight: 400;
   --md-icon-grade: 0;
   --md-icon-optical-size: 24;
 }
 
-&lt;i class="material-symbols" style="--md-icon-fill: 1; --md-icon-weight: 600"&gt;favorite&lt;/i&gt;</code></pre>
+<i class="material-symbols" style="--md-icon-fill: 1; --md-icon-weight: 600">favorite</i>
+{% endcall %}
         <p>
           <code>icon-filled</code> is a shortcut for
           <code>--md-icon-fill: 1</code>.
@@ -184,7 +192,9 @@
           <div class="s3 center-align">Medium</div>
           <div class="s3 center-align">Large</div>
         </div>
-<pre><code>&lt;i class="large material-symbols"&gt;insert_chart&lt;/i&gt;</code></pre>
+{% call code() %}
+<i class="large material-symbols">insert_chart</i>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

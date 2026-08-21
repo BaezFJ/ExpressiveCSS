@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Chips" %}
@@ -34,19 +34,21 @@
             <i class="close material-symbols">close</i>
           </div>
         </div>
-<pre><code>&lt;div class="chip"&gt;
-  &lt;img src="photo.jpg" alt="Contact Person"&gt; Jane Doe
-&lt;/div&gt;
-&lt;div class="chip"&gt;
+{% call code() %}
+<div class="chip">
+  <img src="photo.jpg" alt="Contact Person"> Jane Doe
+</div>
+<div class="chip">
   Tag
-  &lt;i class="close material-symbols"&gt;close&lt;/i&gt;
-&lt;/div&gt;
-&lt;div class="chip"&gt;
-  &lt;i class="material-symbols"&gt;check&lt;/i&gt;
+  <i class="close material-symbols">close</i>
+</div>
+<div class="chip">
+  <i class="material-symbols">check</i>
   Filter
-  &lt;i class="close material-symbols"&gt;close&lt;/i&gt;
-&lt;/div&gt;
-&lt;div class="chip outlined"&gt;Information&lt;/div&gt;</code></pre>
+  <i class="close material-symbols">close</i>
+</div>
+<div class="chip outlined">Information</div>
+{% endcall %}
         <p>
           Clicking <code>.close</code> removes the chip only when it sits inside a
           <code>.chips</code> container. Importing the bundle runs
@@ -61,10 +63,12 @@
           <img src="https://picsum.photos/id/64/100/100" alt="Contact Person">
           Jane Doe
         </div>
-<pre><code>&lt;div class="chip"&gt;
-  &lt;img src="photo.jpg" alt="Contact Person"&gt;
+{% call code() %}
+<div class="chip">
+  <img src="photo.jpg" alt="Contact Person">
   Jane Doe
-&lt;/div&gt;</code></pre>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("tag", "Tags") %}
@@ -75,10 +79,12 @@
             <i class="close material-symbols">close</i>
           </div>
         </div>
-<pre><code>&lt;div class="chip"&gt;
+{% call code() %}
+<div class="chip">
   Tag
-  &lt;i class="close material-symbols"&gt;close&lt;/i&gt;
-&lt;/div&gt;</code></pre>
+  <i class="close material-symbols">close</i>
+</div>
+{% endcall %}
   {% endcall %}
 
   {% call section("basic", "Plugin", heading="Javascript Plugin") %}
@@ -103,14 +109,16 @@
         <div id="chips-placeholder" class="chips no-autoinit mb-5"></div>
         <p>Autocomplete suggestions while typing:</p>
         <div id="chips-autocomplete" class="chips no-autoinit mb-5"></div>
-<pre><code>&lt;div class="chips"&gt;&lt;/div&gt;
-&lt;div class="chips chips-initial"&gt;&lt;/div&gt;
-&lt;div class="chips chips-placeholder"&gt;&lt;/div&gt;
-&lt;div class="chips chips-autocomplete"&gt;&lt;/div&gt;
-&lt;!-- Optional: provide your own input --&gt;
-&lt;div class="chips"&gt;
-  &lt;input class="custom-class"&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="chips"></div>
+<div class="chips chips-initial"></div>
+<div class="chips chips-placeholder"></div>
+<div class="chips chips-autocomplete"></div>
+<!-- Optional: provide your own input -->
+<div class="chips">
+  <input class="custom-class">
+</div>
+{% endcall %}
         <p>
           The classes <code>chips-initial</code>, <code>chips-placeholder</code>, and
           <code>chips-autocomplete</code> are only hooks for your selectors. They have
@@ -124,7 +132,8 @@
           Call <code>init</code> with <code>allowUserInput: true</code> (and any other
           options) for an editable field. Re-init after adding a container dynamically.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.chips');
   const instances = Expressive.Chips.init(elems, {
     allowUserInput: true,
@@ -138,13 +147,16 @@
       ]
     }
   });
-});</code></pre>
+});
+{% endcall %}
         <p>Chip data object. <code>id</code> is required; a chip without an id is not rendered.</p>
-<pre><code>const chip = {
+{% call code() %}
+const chip = {
   id: '4711',
   text: 'Title',
   image: ''
-};</code></pre>
+};
+{% endcall %}
   {% endcall %}
 
   {% call section("options", "Options") %}
@@ -223,27 +235,37 @@
 
         <h5 class="light">.addChip();</h5>
         <p>Add a chip. Ignored if <code>id</code> is missing, already present, or the limit is reached.</p>
-<pre><code>instance.addChip({
+{% call code() %}
+instance.addChip({
   id: 1337,
   text: 'John Doe',
   image: ''
-});</code></pre>
+});
+{% endcall %}
 
         <h5 class="light">.deleteChip();</h5>
         <p>Delete the chip at this index.</p>
-<pre><code>instance.deleteChip(3);</code></pre>
+{% call code() %}
+instance.deleteChip(3);
+{% endcall %}
 
         <h5 class="light">.selectChip();</h5>
         <p>Focus the chip at this index.</p>
-<pre><code>instance.selectChip(2);</code></pre>
+{% call code() %}
+instance.selectChip(2);
+{% endcall %}
 
         <h5 class="light">.getData();</h5>
         <p>The current chips as an array of chip data objects.</p>
-<pre><code>instance.getData();</code></pre>
+{% call code() %}
+instance.getData();
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove rendered chips, and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}

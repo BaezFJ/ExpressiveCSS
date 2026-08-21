@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Pagination" %}
 {% set page_blurb = "A list of pages. The HTML is the component." %}
@@ -37,22 +37,24 @@
             </li>
           </ol>
         </nav>
-<pre><code>&lt;nav class="pagination" aria-label="Pagination"&gt;
-  &lt;ol&gt;
-    &lt;li&gt;
-      &lt;a href="/p/1" aria-label="Previous page" aria-disabled="true"&gt;
-        &lt;i class="material-symbols"&gt;chevron_left&lt;/i&gt;
-      &lt;/a&gt;
-    &lt;/li&gt;
-    &lt;li&gt;&lt;a href="/p/1" aria-current="page"&gt;1&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="/p/2"&gt;2&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href="/p/3" aria-label="Next page"&gt;
-        &lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;
-      &lt;/a&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="pagination" aria-label="Pagination">
+  <ol>
+    <li>
+      <a href="/p/1" aria-label="Previous page" aria-disabled="true">
+        <i class="material-symbols">chevron_left</i>
+      </a>
+    </li>
+    <li><a href="/p/1" aria-current="page">1</a></li>
+    <li><a href="/p/2">2</a></li>
+    <li>
+      <a href="/p/3" aria-label="Next page">
+        <i class="material-symbols">chevron_right</i>
+      </a>
+    </li>
+  </ol>
+</nav>
+{% endcall %}
         <p>
           Items are the original compact 2rem chips. The current page
           fills with <code>primary</code>. Icon-only prev/next need an
@@ -103,7 +105,9 @@
             </li>
           </ol>
         </nav>
-<pre><code>&lt;li&gt;&lt;span aria-hidden="true"&gt;…&lt;/span&gt;&lt;/li&gt;</code></pre>
+{% call code() %}
+<li><span aria-hidden="true">…</span></li>
+{% endcall %}
   {% endcall %}
 
   {% call section("nowrap", "Nowrap") %}
@@ -135,7 +139,9 @@
             </li>
           </ol>
         </nav>
-<pre><code>&lt;nav class="pagination nowrap" aria-label="Pagination"&gt;…&lt;/nav&gt;</code></pre>
+{% call code() %}
+<nav class="pagination nowrap" aria-label="Pagination">…</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("alias", "List alias") %}
@@ -151,12 +157,14 @@
           <li><a href="#!">3</a></li>
           <li><a href="#!"><i class="material-symbols">chevron_right</i></a></li>
         </ul>
-<pre><code>&lt;ul class="pagination"&gt;
-  &lt;li class="disabled"&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;chevron_left&lt;/i&gt;&lt;/a&gt;
-  &lt;/li&gt;
-  &lt;li class="active"&gt;&lt;a href="#!"&gt;1&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+{% call code() %}
+<ul class="pagination">
+  <li class="disabled">
+    <a href="#!"><i class="material-symbols">chevron_left</i></a>
+  </li>
+  <li class="active"><a href="#!">1</a></li>
+</ul>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

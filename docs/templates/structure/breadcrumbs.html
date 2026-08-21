@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Breadcrumbs" %}
@@ -21,13 +21,15 @@
                             <li><a href="#!" aria-current="page">Data</a></li>
                         </ol>
                     </nav>
-                    <pre><code>&lt;nav aria-label="Breadcrumb"&gt;
-  &lt;ol&gt;
-    &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="/library"&gt;Library&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="/library/data" aria-current="page"&gt;Data&lt;/a&gt;&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/nav&gt;</code></pre>
+                    {% call code() %}
+<nav aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/library">Library</a></li>
+    <li><a href="/library/data" aria-current="page">Data</a></li>
+  </ol>
+</nav>
+{% endcall %}
                     <p>
                         The separator is
                         <code>--md-comp-breadcrumb-separator</code>, default
@@ -68,9 +70,11 @@
                             <li><a href="#!" aria-current="page">Data</a></li>
                         </ol>
                     </nav>
-                    <pre><code>&lt;nav aria-label="Breadcrumb" style="--md-comp-breadcrumb-separator: '›'"&gt;
+                    {% call code() %}
+<nav aria-label="Breadcrumb" style="--md-comp-breadcrumb-separator: '›'">
   …
-&lt;/nav&gt;</code></pre>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("overflow", "Overflow") %}
@@ -87,9 +91,11 @@
                             <li><a href="#!" aria-current="page">Catalog</a></li>
                         </ol>
                     </nav>
-                    <pre><code>&lt;nav class="nowrap" aria-label="Breadcrumb"&gt;
-  &lt;ol&gt;…&lt;/ol&gt;
-&lt;/nav&gt;</code></pre>
+                    {% call code() %}
+<nav class="nowrap" aria-label="Breadcrumb">
+  <ol>…</ol>
+</nav>
+{% endcall %}
   {% endcall %}
 
   {% call section("navbar", "In an app bar") %}
@@ -106,15 +112,17 @@
                             </ol>
                         </nav>
                     </header>
-                    <pre><code>&lt;header&gt;
-  &lt;nav aria-label="Breadcrumb"&gt;
-    &lt;ol&gt;
-      &lt;li&gt;&lt;a href="/"&gt;First&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="/second"&gt;Second&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href="/second/third" aria-current="page"&gt;Third&lt;/a&gt;&lt;/li&gt;
-    &lt;/ol&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;</code></pre>
+                    {% call code() %}
+<header>
+  <nav aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">First</a></li>
+      <li><a href="/second">Second</a></li>
+      <li><a href="/second/third" aria-current="page">Third</a></li>
+    </ol>
+  </nav>
+</header>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

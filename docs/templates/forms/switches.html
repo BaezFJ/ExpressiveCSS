@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Switches" %}
 {% set page_blurb = "Material Design 3 switches, from the HTML." %}
@@ -50,30 +50,34 @@
             Location
           </label>
         </p>
-<pre><code>&lt;label class="switch"&gt;
-  &lt;input type="checkbox"&gt;
+{% call code() %}
+<label class="switch">
+  <input type="checkbox">
   Wi-Fi
-&lt;/label&gt;
+</label>
 
-&lt;label class="switch"&gt;
-  &lt;input type="checkbox" checked&gt;
+<label class="switch">
+  <input type="checkbox" checked>
   Bluetooth
-&lt;/label&gt;
+</label>
 
-&lt;label class="switch"&gt;
-  &lt;input type="checkbox" disabled&gt;
+<label class="switch">
+  <input type="checkbox" disabled>
   Airplane mode
-&lt;/label&gt;</code></pre>
+</label>
+{% endcall %}
         <p>
           An <code>input + span</code> or <code>input + .lever</code> still
           works if you already have that markup.
         </p>
-<pre><code>&lt;label class="switch"&gt;
+{% call code() %}
+<label class="switch">
   Off
-  &lt;input type="checkbox"&gt;
-  &lt;span class="lever"&gt;&lt;/span&gt;
+  <input type="checkbox">
+  <span class="lever"></span>
   On
-&lt;/label&gt;</code></pre>
+</label>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

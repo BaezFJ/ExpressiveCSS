@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Radio Buttons" %}
 {% set page_blurb = "Material Design 3 radios, from the HTML." %}
@@ -45,27 +45,31 @@
             Brown
           </label>
         </form>
-<pre><code>&lt;label&gt;
-  &lt;input name="group1" type="radio" checked&gt;
+{% call code() %}
+<label>
+  <input name="group1" type="radio" checked>
   Red
-&lt;/label&gt;
-&lt;label&gt;
-  &lt;input name="group1" type="radio"&gt;
+</label>
+<label>
+  <input name="group1" type="radio">
   Yellow
-&lt;/label&gt;
-&lt;label&gt;
-  &lt;input name="group1" type="radio" disabled&gt;
+</label>
+<label>
+  <input name="group1" type="radio" disabled>
   Brown
-&lt;/label&gt;</code></pre>
+</label>
+{% endcall %}
         <p>
           An <code>input + span</code> still works if you already have that
           markup, or if you follow BeerCSS’s
           <code>&lt;label class="radio"&gt;</code> pattern.
         </p>
-<pre><code>&lt;label class="radio"&gt;
-  &lt;input type="radio" name="group1"&gt;
-  &lt;span&gt;Yellow&lt;/span&gt;
-&lt;/label&gt;</code></pre>
+{% call code() %}
+<label class="radio">
+  <input type="radio" name="group1">
+  <span>Yellow</span>
+</label>
+{% endcall %}
   {% endcall %}
 
   {% call section("row", "In a row") %}
@@ -87,16 +91,18 @@
             Green
           </label>
         </nav>
-<pre><code>&lt;nav&gt;
-  &lt;label&gt;
-    &lt;input name="group2" type="radio" checked&gt;
+{% call code() %}
+<nav>
+  <label>
+    <input name="group2" type="radio" checked>
     Red
-  &lt;/label&gt;
-  &lt;label&gt;
-    &lt;input name="group2" type="radio"&gt;
+  </label>
+  <label>
+    <input name="group2" type="radio">
     Yellow
-  &lt;/label&gt;
-&lt;/nav&gt;</code></pre>
+  </label>
+</nav>
+{% endcall %}
   {% endcall %}
 
 {% endcall %}

@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Date Picker" %}
@@ -22,13 +22,17 @@
           <input type="text" class="datepicker no-autoinit" id="datepicker-intro">
           <label for="datepicker-intro">Birthdate</label>
         </div>
-<pre><code>&lt;div class="field"&gt;
-  &lt;input type="text" class="datepicker" id="birthdate"&gt;
-  &lt;label for="birthdate"&gt;Birthdate&lt;/label&gt;
-&lt;/div&gt;</code></pre>
-<pre><code>Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
+{% call code() %}
+<div class="field">
+  <input type="text" class="datepicker" id="birthdate">
+  <label for="birthdate">Birthdate</label>
+</div>
+{% endcall %}
+{% call code() %}
+Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
   openByDefault: true
-});</code></pre>
+});
+{% endcall %}
         <p>
           Wrap the input in its own <code>.field</code> (or another small parent). The
           calendar is inserted after that parent, not after the input itself.
@@ -43,16 +47,20 @@
           AutoInit uses the defaults, so the calendar stays hidden until you pass
           <code>openByDefault</code> (or a working <code>displayPlugin</code> pair, below).
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+{% call code() %}
+document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.datepicker');
   const instances = Expressive.Datepicker.init(elems, {
     openByDefault: true
   });
-});</code></pre>
+});
+{% endcall %}
         <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
+{% call code() %}
+Expressive.AutoInit(document.body, {
   Datepicker: { openByDefault: true }
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("display", "Display") %}
@@ -73,10 +81,12 @@
           the wrapper. If <code>openByDefault</code> is still <code>false</code>, the calendar
           inside stays <code>display: none</code>. Use both:
         </p>
-<pre><code>Expressive.Datepicker.init(elem, {
+{% call code() %}
+Expressive.Datepicker.init(elem, {
   displayPlugin: 'docked',
   openByDefault: true
-});</code></pre>
+});
+{% endcall %}
         <p>
           The popover is positioned in document coordinates and then appended to the
           input’s parent. A <code>position: relative</code> parent — including
@@ -426,11 +436,13 @@
           <input type="text" id="datepicker-range-end">
           <label for="datepicker-range-end">End date</label>
         </div>
-<pre><code>Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
+{% call code() %}
+Expressive.Datepicker.init(document.getElementById('datepicker-range'), {
   openByDefault: true,
   isDateRange: true,
   dateRangeEndEl: '#datepicker-range-end'
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("multiple", "Multiple dates") %}
@@ -442,10 +454,12 @@
           <input type="text" class="datepicker no-autoinit" id="datepicker-multi">
           <label for="datepicker-multi">Dates</label>
         </div>
-<pre><code>Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {
+{% call code() %}
+Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {
   openByDefault: true,
   isMultipleSelection: true
-});</code></pre>
+});
+{% endcall %}
   {% endcall %}
 
   {% call section("methods", "Methods") %}
@@ -453,22 +467,30 @@
 
         <h5 class="light">.toString();</h5>
         <p>String form of the selected date, using <code>format</code>. You can pass another date and format.</p>
-<pre><code>instance.toString();
-instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
+{% call code() %}
+instance.toString();
+instance.toString(someDate, 'yyyy-mm-dd');
+{% endcall %}
 
         <h5 class="light">.setDate();</h5>
         <p>Select a date and move the calendar to it.</p>
         <p><strong>Date (optional):</strong> Date to select.</p>
-<pre><code>instance.setDate(new Date());</code></pre>
+{% call code() %}
+instance.setDate(new Date());
+{% endcall %}
 
         <h5 class="light">.gotoDate();</h5>
         <p>Change the visible month without changing the selection.</p>
         <p><strong>Date:</strong> Date whose month should be shown.</p>
-<pre><code>instance.gotoDate(new Date());</code></pre>
+{% call code() %}
+instance.gotoDate(new Date());
+{% endcall %}
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the calendar, and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
+{% call code() %}
+instance.destroy();
+{% endcall %}
   {% endcall %}
 
   {% call section("properties", "Properties") %}

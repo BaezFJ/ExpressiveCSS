@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Waves" %}
 {% set page_blurb = "The Material Design ink ripple, included in the Expressive JavaScript bundle." %}
@@ -19,7 +19,9 @@
           <code>waves-effect</code> on to the buttons. If you want the waves effect to be white instead, add both
           <code>waves-effect waves-light</code> as classes.
         </p>
-<pre><code>&lt;a class="waves-effect waves-light btn-large" href="#"&gt;Wave&lt;/a&gt;</code></pre>
+{% call code() %}
+<a class="waves-effect waves-light btn-large" href="#">Wave</a>
+{% endcall %}
   {% endcall %}
 
   {% call section("customization", "Customization", tag="h4") %}
@@ -29,7 +31,9 @@
           To use these, just add the corresponding class to your button. Play around with changing the background color of buttons and the waves effect to create
           something cool!
         </p>
-<pre><code>&lt;a href="#!" class="btn waves-effect"&gt;Send&lt;/a&gt;</code></pre>
+{% call code() %}
+<a href="#!" class="btn waves-effect">Send</a>
+{% endcall %}
         <ul class="list">
           <li>
             Default
@@ -53,12 +57,14 @@
             <div class="wave-demo article center-align">.wave-demo</div>
           </div>
         </div>
-<pre><code>// Trigger a red wave from the center
+{% call code() %}
+// Trigger a red wave from the center
 Expressive.Waves.renderWaveEffect(
   document.querySelector('.wave-demo'), // Target element
   null,                                 // Position {x, y}, or null for center
   { r: 255, g: 0, b: 0 }                // RGB color
-);</code></pre>
+);
+{% endcall %}
   {% endcall %}
 
   {% call section("circle", "Circle Waves", heading="Circle", tag="h4") %}
@@ -67,9 +73,11 @@ Expressive.Waves.renderWaveEffect(
           <code>waves-circle</code> in addition to <code>waves-effect</code>.
         </p>
         <h5 class="light">HTML Markup</h5>
-<pre><code>&lt;a href="#!" class="waves-effect waves-circle waves-light extra circle small"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;/a&gt;</code></pre>
+{% call code() %}
+<a href="#!" class="waves-effect waves-circle waves-light extra circle small">
+  <i class="material-symbols">add</i>
+</a>
+{% endcall %}
         <ul class="list">
           <li>
             Default

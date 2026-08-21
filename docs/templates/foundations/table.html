@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Table" %}
 {% set page_blurb = "Organize data with a few utility classes on a standard HTML table." %}
@@ -41,32 +41,34 @@
             </tr>
           </tbody>
         </table>
-<pre><code>&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Name&lt;/th&gt;
-      &lt;th&gt;Item Name&lt;/th&gt;
-      &lt;th&gt;Item Price&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Alvin&lt;/td&gt;
-      &lt;td&gt;Eclair&lt;/td&gt;
-      &lt;td&gt;$0.87&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Alan&lt;/td&gt;
-      &lt;td&gt;Jellybean&lt;/td&gt;
-      &lt;td&gt;$3.76&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Jonathan&lt;/td&gt;
-      &lt;td&gt;Lollipop&lt;/td&gt;
-      &lt;td&gt;$7.00&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;</code></pre>
+{% call code() %}
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Item Name</th>
+      <th>Item Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Alvin</td>
+      <td>Eclair</td>
+      <td>$0.87</td>
+    </tr>
+    <tr>
+      <td>Alan</td>
+      <td>Jellybean</td>
+      <td>$3.76</td>
+    </tr>
+    <tr>
+      <td>Jonathan</td>
+      <td>Lollipop</td>
+      <td>$7.00</td>
+    </tr>
+  </tbody>
+</table>
+{% endcall %}
   {% endcall %}
 
   {% call section("striped", "Striped", heading="Striped Table") %}

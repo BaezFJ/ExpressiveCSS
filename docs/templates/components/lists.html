@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Lists" %}
@@ -67,18 +67,20 @@
             <kbd>⌘C</kbd>
           </li>
         </ul>
-<pre><code>&lt;ul class="list"&gt;
-  &lt;li&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+{% call code() %}
+<ul class="list">
+  <li>
+    <i class="material-symbols">star</i>
     List item
-    &lt;kbd&gt;⌘C&lt;/kbd&gt;
-  &lt;/li&gt;
-  &lt;li aria-selected="true"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    <kbd>⌘C</kbd>
+  </li>
+  <li aria-selected="true">
+    <i class="material-symbols">star</i>
     List item
-    &lt;kbd&gt;⌘C&lt;/kbd&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+    <kbd>⌘C</kbd>
+  </li>
+</ul>
+{% endcall %}
   {% endcall %}
 
   {% call section("segmented", "Segmented") %}
@@ -119,13 +121,15 @@
             <kbd>⌘C</kbd>
           </li>
         </ul>
-<pre><code>&lt;ul class="list segmented"&gt;
-  &lt;li aria-selected="true"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+{% call code() %}
+<ul class="list segmented">
+  <li aria-selected="true">
+    <i class="material-symbols">star</i>
     List item
-    &lt;kbd&gt;⌘C&lt;/kbd&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+    <kbd>⌘C</kbd>
+  </li>
+</ul>
+{% endcall %}
   {% endcall %}
 
   {% call section("text", "Text") %}
@@ -142,12 +146,14 @@
             <p>Supporting text sits under the label and can wrap onto another line.</p>
           </li>
         </ul>
-<pre><code>&lt;li&gt;Label text only&lt;/li&gt;
-&lt;li&gt;&lt;span class="truncate"&gt;A long label…&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;
+{% call code() %}
+<li>Label text only</li>
+<li><span class="truncate">A long label…</span></li>
+<li>
   Headline
-  &lt;p&gt;Supporting text sits under the label.&lt;/p&gt;
-&lt;/li&gt;</code></pre>
+  <p>Supporting text sits under the label.</p>
+</li>
+{% endcall %}
   {% endcall %}
 
   {% call section("icons", "Icons") %}
@@ -174,11 +180,13 @@
             </button>
           </li>
         </ul>
-<pre><code>&lt;li&gt;
-  &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+{% call code() %}
+<li>
+  <i class="material-symbols">inbox</i>
   Inbox
-  &lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;
-&lt;/li&gt;</code></pre>
+  <i class="material-symbols">chevron_right</i>
+</li>
+{% endcall %}
   {% endcall %}
 
   {% call section("media", "Avatars and images") %}
@@ -202,11 +210,13 @@
             <p>56dp image, 8dp corners.</p>
           </li>
         </ul>
-<pre><code>&lt;li&gt;
-  &lt;img src="portrait.jpg" alt="" class="circle"&gt;
+{% call code() %}
+<li>
+  <img src="portrait.jpg" alt="" class="circle">
   Ada Lovelace
-  &lt;p&gt;Mathematician&lt;/p&gt;
-&lt;/li&gt;</code></pre>
+  <p>Mathematician</p>
+</li>
+{% endcall %}
   {% endcall %}
 
   {% call section("links", "Links and selection") %}
@@ -236,12 +246,14 @@
             </a>
           </li>
         </ul>
-<pre><code>&lt;li&gt;
-  &lt;a href="/inbox" aria-current="page"&gt;
-    &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+{% call code() %}
+<li>
+  <a href="/inbox" aria-current="page">
+    <i class="material-symbols">inbox</i>
     Inbox
-  &lt;/a&gt;
-&lt;/li&gt;</code></pre>
+  </a>
+</li>
+{% endcall %}
         <ul class="list">
           <li>
             <label>
@@ -262,12 +274,14 @@
             </label>
           </li>
         </ul>
-<pre><code>&lt;li&gt;
-  &lt;label&gt;
-    &lt;input type="radio" name="color"&gt;
+{% call code() %}
+<li>
+  <label>
+    <input type="radio" name="color">
     Red
-  &lt;/label&gt;
-&lt;/li&gt;</code></pre>
+  </label>
+</li>
+{% endcall %}
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}

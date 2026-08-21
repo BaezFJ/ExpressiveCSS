@@ -1,5 +1,5 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import page_body, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
 
 {% set page_name = "Shadow" %}
 {% set page_blurb = "Raise or flatten an element with the z-depth elevation classes." %}
@@ -38,35 +38,39 @@
           </div>
         </div>
 
-<pre><code>&lt;div class="row"&gt;
-  &lt;div class="s12 m4 l3"&gt;
-    &lt;div class="z-depth-0"&gt;0&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="s12 m4 l3"&gt;
-    &lt;div class="z-depth-1"&gt;1&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="s12 m4 l3"&gt;
-    &lt;div class="z-depth-2"&gt;2&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="s12 m4 l3"&gt;
-    &lt;div class="z-depth-3"&gt;3&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="s12 m4 l3"&gt;
-    &lt;div class="z-depth-4"&gt;4&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class="s12 m4 l3"&gt;
-    &lt;div class="z-depth-5"&gt;5&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+{% call code() %}
+<div class="row">
+  <div class="s12 m4 l3">
+    <div class="z-depth-0">0</div>
+  </div>
+  <div class="s12 m4 l3">
+    <div class="z-depth-1">1</div>
+  </div>
+  <div class="s12 m4 l3">
+    <div class="z-depth-2">2</div>
+  </div>
+  <div class="s12 m4 l3">
+    <div class="z-depth-3">3</div>
+  </div>
+  <div class="s12 m4 l3">
+    <div class="z-depth-4">4</div>
+  </div>
+  <div class="s12 m4 l3">
+    <div class="z-depth-5">5</div>
+  </div>
+</div>
+{% endcall %}
 
         <h5>Sass</h5>
         <p>
           The class list is generated from the same map as the mixin, so they cannot drift. Prefer the mixin inside component styles;
           <code>@extend .z-depth-2</code> across files is not supported.
         </p>
-<pre><code>.my-panel {
+{% call code() %}
+.my-panel {
   @include z-depth("2");
-}</code></pre>
+}
+{% endcall %}
         <p>
           There is also <code>z-depth-1-half</code>, used by some components for an in-between hover elevation.
         </p>
