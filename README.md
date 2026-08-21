@@ -6,6 +6,8 @@ controls, and JavaScript components in browser, ES module, and CommonJS builds.
 
 > ExpressiveCSS is currently at version `0.6.0` and under active development.
 
+Documentation: [www.expressivecss.com](https://www.expressivecss.com)
+
 ## Features
 
 - Material Design 3 color and typography tokens
@@ -149,6 +151,9 @@ uv run python docs/app.py
 
 Then open `http://127.0.0.1:5000`. The Flask app serves assets directly from
 `dist/`, so changes made by `npm run watch` appear after a browser refresh.
+
+It is the same site published at
+[www.expressivecss.com](https://www.expressivecss.com), built from `docs/`.
 
 ## Project structure
 
