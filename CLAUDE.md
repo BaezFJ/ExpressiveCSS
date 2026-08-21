@@ -60,7 +60,7 @@ Notes:
 
 ## Releasing
 
-`package.json` holds the version, but seven files state it and only one derives it. The docs **footer** is the derived one: it reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0. The other six drift silently — nothing fails if you miss one.
+`package.json` holds the version, but seven files state it and only one derives it. The docs **footer** is the derived one: it reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0. Because it reads the raw version it also sees prereleases, so it appends "(prerelease)" when `IS_PRERELEASE` is set (`'-' in VERSION`) — otherwise the site advertises a version `npm install` does not hand out. The other six drift silently — nothing fails if you miss one.
 
 **Which files you bump depends on whether `latest` moves.** They fall into two groups:
 

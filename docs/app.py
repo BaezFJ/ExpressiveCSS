@@ -118,6 +118,11 @@ def _package_version():
 
 VERSION = _package_version()
 
+# A prerelease publishes to the `next` dist-tag, so `npm install` still hands
+# readers the previous stable version. Label it rather than advertising a
+# version they cannot get. Semver puts the prerelease after a hyphen.
+IS_PRERELEASE = '-' in VERSION
+
 
 @app.template_filter('code_escape')
 def code_escape(value):
@@ -139,6 +144,7 @@ def inject_build_assets():
         'build_missing': not (DIST_DIR / 'css').is_dir(),
         'nav': NAV,
         'version': VERSION,
+        'prerelease': IS_PRERELEASE,
         # Fresh per render: section() appends to it, toc() reads it back.
         'toc_sections': [],
     }
