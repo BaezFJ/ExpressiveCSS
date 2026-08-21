@@ -10,9 +10,15 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 - Styles: compiled CSS, minified CSS, and Sass sources
 - Design system: [Material Design 3](https://m3.material.io/)
 
+This file is the markup and JavaScript API contract. For **when** to use a component, its anatomy, placement, adaptive behavior, and common mistakes, read [`m3-guidelines.md`](m3-guidelines.md) first.
+
 ---
 
 # Documentation contents
+
+### Design guidelines
+
+- Material 3 component guidelines (`m3-guidelines.md`) — usage, anatomy, placement, adaptive design, behaviors. Use this file (`llm.md`) for classes, markup, and APIs.
 
 ### Getting started
 
@@ -86,7 +92,7 @@ This file consolidates the ExpressiveCSS framework documentation for code-genera
 
 ## Framework principles
 
-ExpressiveCSS combines semantic HTML with component classes and single-purpose utilities. Use the documented HTML structure for a component, then add helpers for spacing, alignment, visibility, color, and elevation instead of duplicating those rules in custom CSS.
+ExpressiveCSS combines semantic HTML with component classes and single-purpose utilities. Choose components using [`m3-guidelines.md`](m3-guidelines.md) (window size class, one navigation pattern, one high-emphasis action, dialog vs snackbar vs sheet). Use the documented HTML structure for a component, then add helpers for spacing, alignment, visibility, color, and elevation instead of duplicating those rules in custom CSS.
 
 - Start with the native HTML element when the documentation does so, especially for buttons, links, inputs, selects, tables, and dialogs.
 - Preserve required child classes and ID relationships. JavaScript components query those selectors directly.
