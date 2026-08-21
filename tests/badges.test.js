@@ -16,7 +16,11 @@ describe('Badge', () => {
   test('large is 16dp; small empty is 6dp', () => {
     assert.match(css, /--md-comp-badge-large-size:\s*16px/);
     assert.match(css, /--md-comp-badge-small-size:\s*6px/);
-    assert.match(css, /\.badge:empty\s*\{/);
+    assert.match(css, /badge:empty\s*\{/);
+  });
+
+  test('mirrors anchored icon badge transform in RTL', () => {
+    assert.match(css, /transform:\s*translate\(-50%,\s*-50%\)/);
   });
 
   test('does not emit the Materialize caption suffix', () => {
