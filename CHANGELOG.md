@@ -5,6 +5,50 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-21
+
+Promotes 0.7.0-rc.0 to `latest`. The framework itself is **unchanged** from
+0.6.0 — `src/ts` and `src/sass` carry no commits between the tags, so the built
+`dist/` is identical. What changed is around it: package metadata, the
+LLM-facing documentation, and the docs site's own templates.
+
+### Fixed
+
+- **`llm.md` taught classes that do not exist.** It is the markup contract other
+  tools and models read, and several sections still carried Materialize-era
+  names the Material Design 3 rewrite removed. Each replacement was verified
+  against `dist/css/expressive.css` and `src/ts`:
+  - `.btn-floating`, `.btn-large` and `.btn-small` (16 references) — a FAB is
+    `circle extra`, 40dp is `circle extra small`, `extend` is the extended FAB,
+    and `circle large halfway-fab` anchors one to card media. On an `<a>` the
+    `button` class is required, since the size rules only match
+    `:where(button, a.button)`.
+  - The circular preloader was documented as the old nested `preloader-wrapper`
+    / `spinner-layer` / `circle-clipper` / `gap-patch` tree with Google brand
+    colors. It is one `<span class="preloader">` with `small` / `big` /
+    `determinate` and `--md-comp-progress-value`.
+  - `page-footer` and `footer-copyright` are gone — a bare `<footer>` with
+    `<nav>` columns and a trailing `<small>` is the component.
+  - The claim that `.card` and `.card-panel` "remain as aliases" was false;
+    `_cards.scss` is `$_card: "article"`.
+  - `carousel-slider` was renamed `flat`.
+
+  An audit of all 213 classes `llm.md` teaches now leaves four, all correct: the
+  three `chips-*` selector hooks it documents as having no styles of their own,
+  and a `custom-class` placeholder.
+
+### Changed
+
+- `homepage` in `package.json` points at <https://www.expressivecss.com>.
+  Registry metadata is fixed per version, so 0.6.0 keeps the old link.
+- The docs templates moved onto a macro layer: navigation renders from one table
+  instead of being written three times, each page names itself once, the table
+  of contents is generated from the sections that register themselves, and code
+  samples are written as real markup rather than 2,256 hand-typed entities.
+  This fixed a real drift — three sections in the grid page were missing the
+  `section` class and had lost their spacing.
+
+
 ## [0.7.0-rc.0] - 2026-08-21
 
 A prerelease on the `next` dist-tag. `latest` stays on 0.6.0.
@@ -139,7 +183,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0-rc.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0
 [0.7.0-rc.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0-rc.0
 [0.6.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.4.0...v0.5.0

@@ -8,7 +8,7 @@ ExpressiveCSS is a new front-end framework being grown out of a vendored copy of
 
 LLM-oriented docs: `llm.md` is markup and JavaScript APIs; `m3-guidelines.md` is Material 3 usage, anatomy, placement, adaptive design, and behaviors for those components.
 
-The public surface is rebranded. Instances are stashed on elements as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, `src/ts/index.ts` exports `version = '0.7.0-rc.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
+The public surface is rebranded. Instances are stashed on elements as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, `src/ts/index.ts` exports `version = '0.7.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
 
 | Upstream | Expressive |
 | --- | --- |
@@ -67,7 +67,7 @@ Notes:
 - *Must match the tag*, always: `package.json` and `src/ts/index.ts` (`export const version`) — `release.yml` compares the tag against `package.json` and aborts on a mismatch, and the version export is what the built bundle reports. Plus the line in **this file** naming what `index.ts` exports, so it stays true.
 - *Tells a reader which version to install*: `README.md`, `llm.md` (two places — the header and the "Getting started" prose), and `docs/templates/start/index.html`.
 
-For a **full release** both groups move. For a **prerelease** only the first moves: `latest` stays on the last stable version, so prose announcing the prerelease as "the project is at version x" would send readers to something `npm install` does not give them. That leaves `package.json` deliberately ahead of the prose — as it is right now at `0.7.0-rc.0` against prose at `0.6.0`. **That gap is intended; do not "fix" it.** It closes when the matching full release goes out.
+For a **full release** both groups move. For a **prerelease** only the first moves: `latest` stays on the last stable version, so prose announcing the prerelease as "the project is at version x" would send readers to something `npm install` does not give them. That leaves `package.json` deliberately ahead of the prose for the life of the prerelease — e.g. `0.7.0-rc.0` in `package.json` against `0.6.0` in the prose. **That gap is intended; do not "fix" it.** It closes when the matching full release goes out and both groups move together.
 
 Then: add the CHANGELOG entry (`## [x.y.z] - YYYY-MM-DD`, plus the two compare links at the bottom of the file), `npm run typecheck` and `npm test`, commit, annotated tag `vx.y.z`, push the branch *and* the tag, and `gh release create vx.y.z --notes-file <notes>` — **plus `--prerelease` for a prerelease**. That flag is the only thing routing the publish to the `next` dist-tag: `DIST_TAG` in `release.yml` reads `github.event.release.prerelease`, so a release cut without it publishes to `latest` no matter what the version string says. An `-rc` suffix does not protect you; the flag does.
 
