@@ -1,0 +1,37 @@
+# Dependency updates. Grouped deliberately: one PR a week per ecosystem beats
+# five, and every one of these lands on a branch that CI runs before it merges.
+version: 2
+
+updates:
+  # The workflows pin actions to a tag (@v7, @v10.0.1). Without this they go
+  # stale silently -- nothing fails, they just stop getting fixes.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+
+  # Build and test tooling only -- the package ships no runtime dependencies.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # esbuild, sass, typescript and jsdom all move often. A major is worth
+      # reading on its own; minors and patches are not worth five PRs.
+      build-tooling:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  # The docs site (Flask + Frozen-Flask), locked by uv.lock.
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      docs-site:
+        patterns: ['*']
+        update-types: [minor, patch]
