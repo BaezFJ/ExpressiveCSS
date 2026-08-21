@@ -8,6 +8,7 @@ start, foundations, structure, components, forms. Layout chrome
 (`base.html`, `docs.html`) stays at the templates root.
 """
 
+import json
 from pathlib import Path
 
 from flask import Flask, redirect, render_template, send_from_directory, url_for
@@ -18,6 +19,102 @@ DIST_DIR = REPO_ROOT / 'dist'
 app = Flask(__name__)
 
 
+def _group(label, icon, items, blurb=None):
+    """One sidenav/footer group.
+
+    `items` are `(endpoint, label)` pairs, or `(endpoint, label, icon)` for the
+    flat top-level entries that carry their own icon. `endpoints` is derived so
+    the sidenav's `<details open>` test never has to restate the group.
+    """
+    return {
+        'label': label,
+        'icon': icon,
+        'blurb': blurb,
+        'pages': [
+            {'endpoint': i[0], 'label': i[1], 'icon': i[2] if len(i) > 2 else None}
+            for i in items
+        ],
+        'endpoints': [i[0] for i in items],
+    }
+
+
+# The single source of truth for the sidenav and the footer. A group with no
+# `icon` renders flat (no `<details>`); everything else is a collapsible group.
+NAV = [
+    _group('Start', None, [
+        ('index', 'Getting started', 'home'),
+        ('auto_init', 'Auto Init', 'bolt'),
+    ], blurb='If ExpressiveCSS has helped you ship a project, open issues and '
+             'send pull requests to keep the framework moving.'),
+    _group('Foundations', 'palette', [
+        ('color', 'Color'),
+        ('themes', 'Themes'),
+        ('typography', 'Typography'),
+        ('icons', 'Icons'),
+        ('shadow', 'Elevation'),
+        ('grid', 'Grid'),
+        ('helpers', 'Helpers'),
+        ('media_css', 'Media styles'),
+        ('table', 'Table'),
+        ('css_transitions', 'Transitions'),
+        ('pulse', 'Pulse'),
+        ('waves', 'Waves'),
+    ]),
+    _group('Structure', 'view_quilt', [
+        ('navbar', 'App bar'),
+        ('navigation_bar', 'Navigation bar'),
+        ('navigation_rail', 'Navigation rail'),
+        ('sidenav', 'Sidenav'),
+        ('panes', 'Panes'),
+        ('footer', 'Footer'),
+        ('tabs', 'Tabs'),
+        ('breadcrumbs', 'Breadcrumbs'),
+        ('pagination', 'Pagination'),
+        ('menu', 'Menu'),
+        ('scrollspy', 'Scrollspy'),
+    ]),
+    _group('Components', 'widgets', [
+        ('buttons', 'Buttons'),
+        ('floating_action_button', 'FAB'),
+        ('cards', 'Cards'),
+        ('lists', 'Lists'),
+        ('dialogs', 'Dialogs'),
+        ('bottom_sheet', 'Bottom sheet'),
+        ('side_sheet', 'Side sheet'),
+        ('badges', 'Badges'),
+        ('tooltips', 'Tooltips'),
+        ('snackbar', 'Snackbar'),
+        ('preloader', 'Preloader'),
+        ('carousel', 'Carousel'),
+        ('media', 'Lightbox'),
+        ('parallax', 'Parallax'),
+        ('toolbars', 'Toolbars'),
+    ]),
+    _group('Forms', 'edit', [
+        ('fieldsets', 'Fieldsets'),
+        ('text_inputs', 'Text fields'),
+        ('select', 'Select'),
+        ('checkboxes', 'Checkboxes'),
+        ('radio_buttons', 'Radio'),
+        ('switches', 'Switches'),
+        ('sliders', 'Slider'),
+        ('chips', 'Chips'),
+        ('autocomplete', 'Autocomplete'),
+        ('datepicker', 'Date picker'),
+        ('timepicker', 'Time picker'),
+    ]),
+]
+
+
+def _package_version():
+    """The framework version, so the footer cannot drift from package.json."""
+    with (REPO_ROOT / 'package.json').open() as fh:
+        return json.load(fh)['version']
+
+
+VERSION = _package_version()
+
+
 @app.context_processor
 def inject_build_assets():
     # Unminified while developing so the source maps stay usable.
@@ -26,6 +123,8 @@ def inject_build_assets():
         'css_url': url_for('dist_file', filename=f'css/expressive{suffix}.css'),
         'js_url': url_for('dist_file', filename=f'js/expressive{suffix}.js'),
         'build_missing': not (DIST_DIR / 'css').is_dir(),
+        'nav': NAV,
+        'version': VERSION,
     }
 
 
