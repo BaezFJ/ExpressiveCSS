@@ -1,0 +1,28 @@
+{
+  "projectId": "67ea944b-4c5f-432d-9451-6573f7bdb6bf",
+  "shape": "package",
+  "pkg": "@expressivecss/expressive",
+  "globalName": "Expressive",
+  "buildCmd": "npm run build && node .design-sync/build-css.mjs",
+  "cssEntry": ".design-sync/.cache/expressive-ds.css",
+  "guidelinesGlob": [
+    "m3-guidelines.md",
+    "llm.md"
+  ],
+  "overrides": {
+    "Dialogs": {
+      "cardMode": "single",
+      "primaryStory": "Basic",
+      "viewport": "600x340"
+    },
+    "SideSheets": {
+      "cardMode": "single",
+      "primaryStory": "Modal"
+    },
+    "BottomSheets": {
+      "cardMode": "single",
+      "primaryStory": "Modal"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
