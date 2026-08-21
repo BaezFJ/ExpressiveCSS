@@ -1142,7 +1142,7 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 The `hoverable` class adds an animation for box shadow as seen below. It can be used on most elements, but is meant for use on cards.
 
 ```html
-<div class="card-panel hoverable">Hoverable Card Panel</div>
+<article class="hoverable">Hoverable Card</article>
 ```
 
 ### Browser Defaults
@@ -1186,7 +1186,7 @@ To make images appear circular, simply add `class="circle"` to them.
 
 ```html
 <div class="s12 m8 offset-m2 l6 offset-l3">
-  <div class="card-panel">
+  <article>
     <div class="row valign-wrapper">
       <div class="s2">
         <img src="portrait.jpg" alt="" class="circle responsive-img">
@@ -1197,7 +1197,7 @@ To make images appear circular, simply add `class="circle"` to them.
         </span>
       </div>
     </div>
-  </div>
+  </article>
 </div>
 ```
 
@@ -1236,9 +1236,9 @@ Draw attention to your buttons with this subtle but captivating effect. Just add
 #### Pulse HTML Structure
 
 ```html
-<a class="btn-floating pulse"><i class="material-icons">menu</i></a>
-<a class="btn-floating btn-large pulse"><i class="material-icons">cloud</i></a>
-<a class="btn-floating btn-large secondary on-secondary-text pulse"><i class="material-icons">edit</i></a>
+<a class="button circle pulse"><i class="material-icons">menu</i></a>
+<a class="button circle extra pulse"><i class="material-icons">cloud</i></a>
+<a class="button circle extra secondary on-secondary-text pulse"><i class="material-icons">edit</i></a>
 ```
 
 ---
@@ -1388,11 +1388,11 @@ Use this to scale in and out elements. Make sure to add the base transition clas
 
 ```text
 <!-- Scaled in -->
-<a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition">
+<a id="scale-demo" href="#!" class="button circle extra scale-transition">
   <i class="material-icons">add</i>
 </a>
 <!-- Scaled out -->
-<a id="scale-demo" href="#!" class="btn-floating btn-large scale-transition scale-out">
+<a id="scale-demo" href="#!" class="button circle extra scale-transition scale-out">
   <i class="material-icons">add</i>
 </a>
 ```
@@ -1568,7 +1568,7 @@ Waves creates the ink effect outlined in Material Design. It is included in the 
 The waves effect can be applied to any element. To put the waves effect on buttons, you just have to put the class `waves-effect` on to the buttons. If you want the waves effect to be white instead, add both `waves-effect waves-light` as classes.
 
 ```html
-<a class="waves-effect waves-light btn-large" href="#">Wave</a>
+<a class="button large waves-effect waves-light" href="#">Wave</a>
 ```
 
 #### Customization
@@ -1603,7 +1603,7 @@ If you want waves to form to a non-rectangular shape, there is an option for cir
 #### HTML Markup
 
 ```html
-<a href="#!" class="waves-effect waves-circle waves-light btn-floating">
+<a href="#!" class="button circle waves-effect waves-circle waves-light">
   <i class="material-icons">add</i>
 </a>
 ```
@@ -1795,7 +1795,7 @@ Add `circle` for a 40dp icon button. The variant helpers still apply: default is
 
 ### Floating
 
-A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. `btn-floating` is the 40dp small FAB and the class the Floating Action Button menu looks up. `extend` is the extended FAB — icon plus label at 56dp.
+A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. Add `small` for the 40dp FAB (`circle extra small`). `extend` is the extended FAB — icon plus label at 56dp. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
 
 Create
 
@@ -1803,7 +1803,7 @@ Create
 <button class="circle extra" aria-label="Add">
   <i class="material-icons">add</i>
 </button>
-<a class="btn-floating" href="#!" aria-label="Add">
+<a class="button circle extra small" href="#!" aria-label="Add">
   <i class="material-icons">add</i>
 </a>
 <button class="extend">
@@ -1813,7 +1813,7 @@ Create
 
 ### Sizes
 
-`small` is 32dp. Default is 40dp. `large` / `extra` / `btn-large` are 56dp. `btn-small` is an alias of `small`.
+`small` is 32dp. Default is 40dp. `large` and `extra` are 56dp.
 
 Small Default Large
 
@@ -1851,7 +1851,7 @@ Filled Tonal Outlined Text
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. A heading is the headline, a `<p>` is supporting text, a direct `<nav>` is the action row, and `<img>` or `<figure>` is media. There is no `card-content`, `card-title`, or `card-action` class. `.card` and `.card-panel` remain as aliases.
+An `<article>` is an elevated card. A heading is the headline, a `<p>` is supporting text, a direct `<nav>` is the action row, and `<img>` or `<figure>` is media. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component.
 
 Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The container is `surface` with 12dp corners. Elevated (the default) sits at elevation 1 and rises to 2 on hover. The headline is `title-medium` / `on-surface`; supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
 
@@ -1913,7 +1913,7 @@ I am a very simple card. I am good at containing small bits of information.
 
 ### FAB on media
 
-Put a `halfway-fab` inside the `<figure>` so it anchors to the image, not the whole card.
+Put a `halfway-fab` inside the `<figure>` so it anchors to the image, not the whole card. It pairs with a 56dp FAB — `button circle large halfway-fab`.
 
 I am a very simple card. I am good at containing small bits of information.
 
@@ -1922,7 +1922,7 @@ I am a very simple card. I am good at containing small bits of information.
   <figure>
     <img src="images/sample-1.jpg" alt="">
     <figcaption>Card title</figcaption>
-    <a class="btn-floating halfway-fab" href="#!" aria-label="Add">
+    <a class="button circle large halfway-fab" href="#!" aria-label="Add">
       <i class="material-icons">add</i>
     </a>
   </figure>
@@ -2018,7 +2018,7 @@ The small card is 300px tall.
 
 ### Panel
 
-A card with no slots is just padding on the container. Write that as an `<article>` with only text, or keep `.card-panel` if you already have it. Color utilities still apply — pair a fill with its `on-*` text class.
+A card with no slots is just padding on the container. Write that as an `<article>` with only text. Color utilities still apply — pair a fill with its `on-*` text class.
 
 I am a very simple card. I am good at containing small bits of information.
 
@@ -2086,7 +2086,7 @@ That AutoInit call would apply to every carousel on the page. For a single full-
 | `shift` | Number | `0` | Extra spacing on the center item. |
 | `padding` | Number | `0` | Padding between items that are not in the center. |
 | `numVisible` | Number | `5` | How many items stay visible. Capped at the number of items. |
-| `fullWidth` | Boolean | `false` | Turn the carousel into a full-width slider. Pair it with the `carousel-slider` class. |
+| `fullWidth` | Boolean | `false` | Turn the carousel into a full-width slider. Pair it with the `flat` class. |
 | `indicators` | Boolean | `false` | Show paging dots. Only drawn when there is more than one item. |
 | `noWrap` | Boolean | `false` | Stop at the first and last items instead of wrapping. A single-item carousel always behaves as if this were true. |
 | `onCycleTo` | Function | `null` | Called when a new item becomes the center. Receives the current item and whether the move was a drag. |
@@ -2156,10 +2156,10 @@ instance.destroy();
 
 ### Full Width Slider
 
-Add `carousel-slider` for the layout, and pass `fullWidth: true` so the plugin drops the perspective zoom and sizes the track to the first image. Mark the element `no-autoinit` so AutoInit does not start it as a 3D carousel.
+Add `flat` for the layout, and pass `fullWidth: true` so the plugin drops the perspective zoom and sizes the track to the first image. Mark the element `no-autoinit` so AutoInit does not start it as a 3D carousel.
 
 ```html
-<div class="carousel carousel-slider no-autoinit">
+<div class="carousel flat no-autoinit">
   <a class="carousel-item" href="#one!">
     <img src="images/sample-1.jpg" alt="Mountain lake">
   </a>
@@ -2170,7 +2170,7 @@ Add `carousel-slider` for the layout, and pass `fullWidth: true` so the plugin d
 ```
 
 ```js
-Expressive.Carousel.init(document.querySelector('.carousel-slider'), {
+Expressive.Carousel.init(document.querySelector('.carousel.flat'), {
   fullWidth: true
 });
 ```
@@ -2188,7 +2188,7 @@ Items do not have to be images. A `carousel-fixed-item` stays put over the slide
 ### Fourth Panel
 
 ```html
-<div class="carousel carousel-slider center no-autoinit">
+<div class="carousel flat center no-autoinit">
   <div class="carousel-fixed-item center">
     <a class="btn">Button</a>
   </div>
@@ -2301,18 +2301,18 @@ A circular action that can open a menu of related shortcuts.
 
 If you want a fixed floating action button, you can add multiple actions that appear on hover. The live demo is in the bottom-right corner of the page.
 
-Wrap a large `btn-floating` and a list of smaller ones in `fixed-action-btn`. That class pins the control to the corner. `AutoInit()` starts every matching element except those marked `no-autoinit`.
+Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) in `fixed-action-btn`. That class pins the control to the corner and styles its direct children. `AutoInit()` starts every matching element except those marked `no-autoinit`.
 
 ```html
 <div class="fixed-action-btn">
-  <a class="btn-floating btn-large waves-effect waves-light">
-    <i class="large material-icons">mode_edit</i>
-  </a>
+  <button type="button" class="button circle extra" aria-label="Edit">
+    <i class="material-symbols">mode_edit</i>
+  </button>
   <ul>
-    <li><a class="btn-floating error on-error-text"><i class="material-icons">insert_chart</i></a></li>
-    <li><a class="btn-floating secondary on-secondary-text"><i class="material-icons">format_quote</i></a></li>
-    <li><a class="btn-floating tertiary on-tertiary-text"><i class="material-icons">publish</i></a></li>
-    <li><a class="btn-floating primary on-primary-text"><i class="material-icons">attach_file</i></a></li>
+    <li><a class="button circle extra small error on-error-text" href="#!" aria-label="Chart"><i class="material-symbols">insert_chart</i></a></li>
+    <li><a class="button circle extra small secondary on-secondary-text" href="#!" aria-label="Quote"><i class="material-symbols">format_quote</i></a></li>
+    <li><a class="button circle extra small tertiary on-tertiary-text" href="#!" aria-label="Publish"><i class="material-symbols">publish</i></a></li>
+    <li><a class="button circle extra small primary on-primary-text" href="#!" aria-label="Attach"><i class="material-symbols">attach_file</i></a></li>
   </ul>
 </div>
 ```
@@ -2421,9 +2421,9 @@ Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu 
 
 ```html
 <div class="fixed-action-btn toolbar">
-  <a class="btn-floating btn-large">
-    <i class="large material-icons">mode_edit</i>
-  </a>
+  <button type="button" class="button circle extra" aria-label="Edit">
+    <i class="material-symbols">mode_edit</i>
+  </button>
   <ul>
     <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">insert_chart</i></a></li>
     <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">format_quote</i></a></li>
@@ -2448,7 +2448,7 @@ Site navigation and extra information at the end of a page.
 
 Footers are a good place for site navigation and extra information. This is where people look after they finish the page, or when they want more about the site.
 
-Put the page in the three HTML5 landmarks `header`, `main`, and `footer`. The footer itself is CSS-only: add `page-footer`, lay out content with the grid, and optionally add a `footer-copyright` bar. There is no JavaScript component.
+Put the page in the three HTML5 landmarks `header`, `main`, and `footer`. Anatomy is the HTML: a bare `<footer>` is the component, each `<nav>` is a column of links with an `<h2>` heading, and a trailing `<small>` is the copyright bar. There is no `page-footer` or `footer-copyright` class, and no JavaScript component.
 
 Expressive’s footer is unfilled by default. It draws a dashed top border and uses the theme tokens for paragraph and link color — not a solid primary bar.
 
@@ -2464,32 +2464,24 @@ You can use rows and columns here to organize your footer content.
 - Link 4
 
 ```html
-<footer class="page-footer">
-  <div class="container">
-    <div class="row">
-      <div class="s12 m6">
-        <h5>Footer Content</h5>
-        <p>You can use rows and columns here to organize your footer content.</p>
-      </div>
-      <div class="s12 m6">
-        <h5>Links</h5>
-        <ul>
-          <li><a href="#!">Link 1</a></li>
-          <li><a href="#!">Link 2</a></li>
-          <li><a href="#!">Link 3</a></li>
-          <li><a href="#!">Link 4</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <span>&copy; 2026 Copyright Text</span>
-      <a href="#!">More Links</a>
-    </div>
-  </div>
+<footer>
+  <nav>
+    <h2>Product</h2>
+    <p>You can use navs here to organize your footer content.</p>
+  </nav>
+  <nav>
+    <h2>Links</h2>
+    <a href="#!">Link 1</a>
+    <a href="#!">Link 2</a>
+  </nav>
+  <small>
+    <span>&copy; 2026 Copyright Text</span>
+    <a href="#!">More Links</a>
+  </small>
 </footer>
 ```
 
-`footer-copyright` is a flex row with space-between, so put the notice and the trailing link as two children. A `right` float is not required.
+The `<small>` bar is a flex row with space-between, so put the notice and the trailing link in as two children. A `right` float is not required.
 
 ### Sticky Footer
 
@@ -3126,19 +3118,29 @@ There are two linear bars: determinate and indeterminate.
 
 #### Determinate
 
-Set the filled width on `.determinate`. The bar uses the primary token on a `secondary-container` track.
+A native `<progress class="progress">` is the simplest form. The `.progress` +
+`.determinate` pair still works, and `--md-comp-progress-value` sets the fill
+without inline widths. The bar uses the primary token on a `secondary-container`
+track.
 
 ```html
+<progress class="progress" value="70" max="100"></progress>
+
 <div class="progress">
   <div class="determinate" style="width: 70%"></div>
 </div>
+
+<div class="progress" style="--md-comp-progress-value: 70%"></div>
 ```
 
 #### Indeterminate
 
-Use `.indeterminate` when you cannot report a percentage.
+Use a valueless `<progress>`, or `.indeterminate`, when you cannot report a
+percentage.
 
 ```html
+<progress class="progress"></progress>
+
 <div class="progress">
   <div class="indeterminate"></div>
 </div>
@@ -3146,62 +3148,40 @@ Use `.indeterminate` when you cannot report a percentage.
 
 ### Circular
 
-Nest the spinner in a `preloader-wrapper` and add `active` so it animates. The default size is 50px. Add `big` (64px) or `small` (36px) to change it.
-
-A bare `spinner-layer` uses the primary token. For a fixed color, add `spinner-red-only`, `spinner-blue-only`, `spinner-yellow-only`, or `spinner-green-only`. Those four classes use the Google brand hex values, not the theme tokens.
-
-```html
-<div class="preloader-wrapper big active">
-  <div class="spinner-layer spinner-blue-only">
-    <div class="circle-clipper left">
-      <div class="circle"></div>
-    </div>
-    <div class="gap-patch">
-      <div class="circle"></div>
-    </div>
-    <div class="circle-clipper right">
-      <div class="circle"></div>
-    </div>
-  </div>
-</div>
-
-<div class="preloader-wrapper active">
-  <div class="spinner-layer spinner-red-only">...</div>
-</div>
-
-<div class="preloader-wrapper small active">
-  <div class="spinner-layer spinner-green-only">...</div>
-</div>
-```
-
-### Circular Flashing Colors
-
-Stack four `spinner-layer`s with `spinner-blue`, `spinner-red`, `spinner-yellow`, and `spinner-green` (without `-only`). They fade in sequence while the wrapper rotates.
+A circular indicator is a single `<span class="preloader">`. There is no wrapper,
+no layers and no clippers — the whole spinner is one element. The default is
+40dp; add `small` (24dp) or `big` (64dp).
 
 ```html
-<div class="preloader-wrapper big active">
-  <div class="spinner-layer spinner-blue">
-    <div class="circle-clipper left"><div class="circle"></div></div>
-    <div class="gap-patch"><div class="circle"></div></div>
-    <div class="circle-clipper right"><div class="circle"></div></div>
-  </div>
-  <div class="spinner-layer spinner-red">
-    <div class="circle-clipper left"><div class="circle"></div></div>
-    <div class="gap-patch"><div class="circle"></div></div>
-    <div class="circle-clipper right"><div class="circle"></div></div>
-  </div>
-  <div class="spinner-layer spinner-yellow">
-    <div class="circle-clipper left"><div class="circle"></div></div>
-    <div class="gap-patch"><div class="circle"></div></div>
-    <div class="circle-clipper right"><div class="circle"></div></div>
-  </div>
-  <div class="spinner-layer spinner-green">
-    <div class="circle-clipper left"><div class="circle"></div></div>
-    <div class="gap-patch"><div class="circle"></div></div>
-    <div class="circle-clipper right"><div class="circle"></div></div>
-  </div>
-</div>
+<span class="preloader" role="status" aria-label="Loading"></span>
+<span class="preloader small" role="status" aria-label="Loading"></span>
+<span class="preloader big" role="status" aria-label="Loading"></span>
 ```
+
+#### Determinate
+
+Add `determinate` and set the progress with `--md-comp-progress-value`. Report
+the value to assistive technology with the `progressbar` role.
+
+```html
+<span class="preloader determinate"
+      style="--md-comp-progress-value: 70%"
+      role="progressbar" aria-valuenow="70"
+      aria-valuemin="0" aria-valuemax="100"
+      aria-label="Loading"></span>
+```
+
+#### Color
+
+The indicator follows `--md-comp-progress-indicator`, so it themes with the rest
+of the page. Override it for a one-off color — a role token, never a raw hex.
+
+```html
+<span class="preloader"
+      style="--md-comp-progress-indicator: var(--md-sys-color-error)"
+      role="status" aria-label="Loading"></span>
+```
+
 
 ---
 
