@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Floating Action Button" %}
 {% set page_blurb = "A circular action that can open a menu of related shortcuts." %}
@@ -67,16 +68,7 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+        {% call options_table() %}
             <tr>
               <td><code>direction</code></td>
               <td>String</td>
@@ -95,16 +87,12 @@
               <td><code>false</code></td>
               <td>Expand the FAB into a toolbar on click. <code>.toolbar</code> is the markup switch. See <a href="#toolbar">FAB to Toolbar</a>.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.FloatingActionButton.getInstance(elem);</code></pre>
+        {{ instance_note("FloatingActionButton") }}
 
         <h5 class="light">.open();</h5>
         <p>Opens the FAB menu.</p>
@@ -121,32 +109,13 @@
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The DOM element the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+        {% call properties_table("The DOM element the plugin was initialized with.") %}
             <tr>
               <td><code>isOpen</code></td>
               <td>Boolean</td>
               <td>Describes the open/close state of the FAB.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
 
       <div id="horizontal" class="section scrollspy">

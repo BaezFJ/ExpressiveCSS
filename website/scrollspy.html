@@ -327,16 +327,18 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+
             <tr>
               <td><code>scrollOffset</code></td>
               <td>Number</td>
@@ -371,8 +373,10 @@
               <td><code>false</code></td>
               <td>If true, keep the last section above the viewport active when nothing intersects. If there is no such section, the first one stays active.</td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
 
         <h5 class="light">getActiveElement</h5>
         <p>
@@ -386,10 +390,12 @@
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+        
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
 <pre><code>const instance = Expressive.ScrollSpy.getInstance(elem);</code></pre>
+
 
         <h5 class="light">.destroy();</h5>
         <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
@@ -398,27 +404,30 @@
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The DOM element the plugin was initialized with (the <code>.scrollspy</code> section).</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
-          </tbody>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>el</code></td>
+                    <td>Element</td>
+                    <td>The DOM element the plugin was initialized with (the <code>.scrollspy</code> section).</td>
+                </tr>
+                <tr>
+                    <td><code>options</code></td>
+                    <td>Object</td>
+                    <td>The options the instance was initialized with.</td>
+                </tr>
+
+            </tbody>
         </table>
+
       </div>
     </div>
 

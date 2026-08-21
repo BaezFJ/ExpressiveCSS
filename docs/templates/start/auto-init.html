@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import options_table %}
 
 {% set page_name = "Auto Init" %}
 {% set page_blurb = "Initialize every registered component with one function call." %}
@@ -47,16 +48,7 @@ Tooltip.init(element, { position: 'top' });</code></pre>
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
         <p><code>AutoInit(context, options)</code> takes two arguments:</p>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+        {% call options_table() %}
             <tr>
               <td><code>context</code></td>
               <td>Element</td>
@@ -69,8 +61,7 @@ Tooltip.init(element, { position: 'top' });</code></pre>
               <td><code>{}</code></td>
               <td>Options for each component, keyed by name. See that component’s page for its own options.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
         <p>
           Calling <code>AutoInit()</code> again on the same elements is safe: each component’s constructor
           destroys any existing instance on that element before creating a new one.

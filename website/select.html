@@ -422,16 +422,18 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+
             <tr>
               <td><code>classes</code></td>
               <td>String</td>
@@ -449,17 +451,21 @@
                 <code>closeOnClick</code> is forced to <code>false</code>.
               </td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
         <p>There is no <code>selected</code> option. Mark options with the HTML <code>selected</code> attribute instead.</p>
       </div>
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+        
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
 <pre><code>const instance = Expressive.FormSelect.getInstance(elem);</code></pre>
+
 
         <h5 class="light">.getSelectedValues();</h5>
         <p>Selected values as an array of strings.</p>
@@ -481,25 +487,27 @@
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The native <code>&lt;select&gt;</code> the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>el</code></td>
+                    <td>Element</td>
+                    <td>The native <code>&lt;select&gt;</code> the plugin was initialized with.</td>
+                </tr>
+                <tr>
+                    <td><code>options</code></td>
+                    <td>Object</td>
+                    <td>The options the instance was initialized with.</td>
+                </tr>
+
             <tr>
               <td><code>isMultiple</code></td>
               <td>Boolean</td>
@@ -530,8 +538,10 @@
               <td>Menu</td>
               <td>The Menu instance for this select.</td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
       </div>
 
       <div id="disabled" class="section scrollspy">

@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import token_table %}
 
 {% set page_name = "Navigation bar" %}
 {% set page_blurb = "Switch between UI views on compact and medium screens." %}
@@ -122,11 +123,7 @@
       <div id="tokens" class="section scrollspy">
         <h3>Tokens</h3>
         <p>Set these on the bar (or on <code>:root</code>):</p>
-        <table class="striped">
-          <thead>
-            <tr><th>Token</th><th>Default</th></tr>
-          </thead>
-          <tbody>
+        {% call token_table() %}
             <tr><td><code>--md-comp-nav-bar-container-color</code></td><td>on-surface 8% on surface</td></tr>
             <tr><td><code>--md-comp-nav-bar-container-height</code></td><td>64px</td></tr>
             <tr><td><code>--md-comp-nav-bar-icon-size</code></td><td>24px</td></tr>
@@ -134,8 +131,7 @@
             <tr><td><code>--md-comp-nav-bar-indicator-height</code></td><td>32px</td></tr>
             <tr><td><code>--md-comp-nav-bar-indicator-shape</code></td><td>16px (100px horizontal)</td></tr>
             <tr><td><code>--md-comp-nav-bar-active-indicator-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
     </div>
 

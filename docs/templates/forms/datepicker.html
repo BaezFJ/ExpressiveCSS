@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Date Picker" %}
 {% set page_blurb = "Select a date, a range, or several dates from a calendar." %}
@@ -101,16 +102,7 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+        {% call options_table() %}
             <tr>
               <td><code>format</code></td>
               <td>String or Function</td>
@@ -303,8 +295,7 @@
               <td><code>null</code></td>
               <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
 
       <div id="date-format" class="section scrollspy">
@@ -468,10 +459,7 @@
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Datepicker.getInstance(elem);</code></pre>
+        {{ instance_note("Datepicker") }}
 
         <h5 class="light">.toString();</h5>
         <p>String form of the selected date, using <code>format</code>. You can pass another date and format.</p>
@@ -495,25 +483,7 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The input the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+        {% call properties_table("The input the plugin was initialized with.") %}
             <tr>
               <td><code>date</code></td>
               <td>Date</td>
@@ -529,8 +499,7 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
               <td>Array</td>
               <td>The selected dates when <code>isMultipleSelection</code> is true.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
     </div>
 

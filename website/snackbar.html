@@ -395,16 +395,18 @@ new Expressive.Snackbar({
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
         <p>You can customize each snackbar with these options.</p>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+
             <tr>
               <td><code>text</code></td>
               <td>String</td>
@@ -471,16 +473,20 @@ new Expressive.Snackbar({
               <td><code>0.8</code></td>
               <td>Fraction of the snackbar’s width a drag must travel to dismiss it.</td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
       </div>
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+        
         <blockquote>
           Instance methods are called on the snackbar. You can get the instance like this:
         </blockquote>
 <pre><code>const instance = Expressive.Snackbar.getInstance(elem);</code></pre>
+
 
         <h5 class="light">.dismiss();</h5>
         <p>Dismiss this snackbar with its exit animation. Runs <code>completeCallback</code> when the animation finishes.</p>
@@ -493,25 +499,27 @@ new Expressive.Snackbar({
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The snackbar element.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>el</code></td>
+                    <td>Element</td>
+                    <td>The snackbar element.</td>
+                </tr>
+                <tr>
+                    <td><code>options</code></td>
+                    <td>Object</td>
+                    <td>The options the instance was initialized with.</td>
+                </tr>
+
             <tr>
               <td><code>panning</code></td>
               <td>Boolean</td>
@@ -522,8 +530,10 @@ new Expressive.Snackbar({
               <td>Number</td>
               <td>Milliseconds left before the snackbar dismisses.</td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
       </div>
 
       <div id="custom-html" class="section scrollspy">

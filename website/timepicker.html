@@ -352,16 +352,18 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+
             <tr>
               <td><code>duration</code></td>
               <td>Number</td>
@@ -452,8 +454,10 @@
               <td><code>null</code></td>
               <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
       </div>
 
       <div id="internationalization" class="section scrollspy">
@@ -502,10 +506,12 @@
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+        
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
 <pre><code>const instance = Expressive.Timepicker.getInstance(elem);</code></pre>
+
 
         <h5 class="light">.showView();</h5>
         <p>Show the hours or minutes face.</p>
@@ -528,25 +534,27 @@ instance.done(true);</code></pre>
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+        
         <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The input the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>el</code></td>
+                    <td>Element</td>
+                    <td>The input the plugin was initialized with.</td>
+                </tr>
+                <tr>
+                    <td><code>options</code></td>
+                    <td>Object</td>
+                    <td>The options the instance was initialized with.</td>
+                </tr>
+
             <tr>
               <td><code>time</code></td>
               <td>String</td>
@@ -572,8 +580,10 @@ instance.done(true);</code></pre>
               <td>String</td>
               <td><code>'hours'</code> or <code>'minutes'</code>.</td>
             </tr>
-          </tbody>
+        
+            </tbody>
         </table>
+
       </div>
     </div>
 

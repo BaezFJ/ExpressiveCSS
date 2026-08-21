@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Select" %}
 {% set page_blurb = "Choose one option, or several, from a styled menu." %}
@@ -163,16 +164,7 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+        {% call options_table() %}
             <tr>
               <td><code>classes</code></td>
               <td>String</td>
@@ -190,17 +182,13 @@
                 <code>closeOnClick</code> is forced to <code>false</code>.
               </td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
         <p>There is no <code>selected</code> option. Mark options with the HTML <code>selected</code> attribute instead.</p>
       </div>
 
       <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.FormSelect.getInstance(elem);</code></pre>
+        {{ instance_note("FormSelect") }}
 
         <h5 class="light">.getSelectedValues();</h5>
         <p>Selected values as an array of strings.</p>
@@ -222,25 +210,7 @@
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The native <code>&lt;select&gt;</code> the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+        {% call properties_table("The native <code>&lt;select&gt;</code> the plugin was initialized with.") %}
             <tr>
               <td><code>isMultiple</code></td>
               <td>Boolean</td>
@@ -271,8 +241,7 @@
               <td>Menu</td>
               <td>The Menu instance for this select.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
 
       <div id="disabled" class="section scrollspy">

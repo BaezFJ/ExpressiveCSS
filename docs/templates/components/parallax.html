@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import token_table %}
 
 {% set page_name = "Parallax" %}
 {% set page_blurb = "A cropped image that shifts as it crosses the viewport." %}
@@ -71,14 +72,7 @@
           and slider. Add <code>max</code> for a full-viewport hero with
           no corners.
         </p>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Token</th>
-              <th>Default</th>
-            </tr>
-          </thead>
-          <tbody>
+        {% call token_table() %}
             <tr>
               <td><code>--md-comp-parallax-height</code></td>
               <td>500px</td>
@@ -91,8 +85,7 @@
               <td><code>--md-comp-parallax-shape</code></td>
               <td>12px</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
         <figure class="parallax" style="--md-comp-parallax-height: 300px; --md-comp-parallax-travel: 40px;">
           <img src="https://picsum.photos/id/1019/1600/900" alt="Clouds over hills">
         </figure>

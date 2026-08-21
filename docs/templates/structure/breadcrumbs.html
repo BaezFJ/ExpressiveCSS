@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import token_table %}
 
 {% set page_name = "Breadcrumbs" %}
 {% set page_blurb = "The path to this page, from the HTML." %}
@@ -46,14 +47,7 @@
                 <div id="tokens" class="section scrollspy">
                     <h3>Tokens</h3>
                     <p>Override these on the <code>&lt;nav&gt;</code>.</p>
-                    <table class="striped">
-                        <thead>
-                        <tr>
-                            <th>Token</th>
-                            <th>Default</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                    {% call token_table() %}
                         <tr>
                             <td><code>--md-comp-breadcrumb-label-color</code></td>
                             <td><code>--md-sys-color-on-surface-variant</code></td>
@@ -70,8 +64,7 @@
                             <td><code>--md-comp-breadcrumb-gap</code></td>
                             <td>8px</td>
                         </tr>
-                        </tbody>
-                    </table>
+                    {% endcall %}
                     <nav aria-label="Breadcrumb" style="--md-comp-breadcrumb-separator: '›';">
                         <ol>
                             <li><a href="#!">Home</a></li>

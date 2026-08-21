@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import options_table, properties_table %}
 
 {% set page_name = "Autocomplete" %}
 {% set page_blurb = "Suggest values under a text field as the user types." %}
@@ -98,16 +99,7 @@
 
       <div id="options" class="section scrollspy">
         <h3>Options</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+        {% call options_table() %}
             <tr>
               <td><code>data</code></td>
               <td>Array</td>
@@ -167,8 +159,7 @@
               <td><code>[]</code></td>
               <td>Initial selected ids (strings or numbers).</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
 
       <div id="methods" class="section scrollspy">
@@ -207,25 +198,7 @@ instance.open();</code></pre>
 
       <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>el</code></td>
-              <td>Element</td>
-              <td>The input the plugin was initialized with.</td>
-            </tr>
-            <tr>
-              <td><code>options</code></td>
-              <td>Object</td>
-              <td>The options the instance was initialized with.</td>
-            </tr>
+        {% call properties_table("The input the plugin was initialized with.") %}
             <tr>
               <td><code>isOpen</code></td>
               <td>Boolean</td>
@@ -251,8 +224,7 @@ instance.open();</code></pre>
               <td>Array</td>
               <td>The currently selected entries.</td>
             </tr>
-          </tbody>
-        </table>
+        {% endcall %}
       </div>
     </div>
 

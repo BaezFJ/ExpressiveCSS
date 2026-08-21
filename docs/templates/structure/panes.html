@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/api.html" import token_table %}
 
 {% set page_name = "Panes" %}
 {% set page_blurb = "Material 3 canonical layouts, from the HTML." %}
@@ -430,19 +431,14 @@ back.addEventListener('click', () =&gt; {
 
     <div id="tokens" class="section scrollspy">
       <h3>Tokens</h3>
-      <table class="striped">
-        <thead>
-          <tr><th>Token</th><th>Default</th></tr>
-        </thead>
-        <tbody>
+      {% call token_table() %}
           <tr><td><code>--md-comp-pane-gap</code></td><td>24px</td></tr>
           <tr><td><code>--md-comp-pane-divider-color</code></td><td>outline-variant</td></tr>
           <tr><td><code>--md-comp-pane-container-color</code></td><td>surface</td></tr>
           <tr><td><code>--md-comp-pane-container-shape</code></td><td>0px (16px separated)</td></tr>
           <tr><td><code>--md-comp-pane-list-width</code></td><td>360px</td></tr>
           <tr><td><code>--md-comp-pane-supporting-width</code></td><td>360px</td></tr>
-        </tbody>
-      </table>
+      {% endcall %}
     </div>
   </div>
 
