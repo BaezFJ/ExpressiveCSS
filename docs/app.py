@@ -144,6 +144,12 @@ def sidenav():
     return render_template('structure/sidenav.html')
 
 
+@app.route('/panes')
+@app.route('/panes.html')
+def panes():
+    return render_template('structure/panes.html')
+
+
 @app.route('/footer')
 @app.route('/footer.html')
 def footer():

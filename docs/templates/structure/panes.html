@@ -1,0 +1,497 @@
+{% extends "docs.html" %}
+{% from "macros/banner.html" import banner as Banner %}
+
+{% block title %}Panes - ExpressiveCSS{% endblock %}
+{% block page_title %}Panes{% endblock %}
+
+{% block page %}
+{{ Banner("Panes", "Material 3 canonical layouts, from the HTML.") }}
+
+<div class="container panes-page">
+  <div class="panes-page-body">
+
+    <div id="anatomy" class="section scrollspy">
+      <p class="flow-text">
+        A <code>.panes</code> (or <code>.pane-layout</code>, or
+        <code>.list-detail</code>) is the container. Two or three
+        <code>.pane</code> children are the surfaces. There is no
+        JavaScript — the HTML is the layout.
+      </p>
+      <p>
+        Tokens follow the
+        <a href="https://m3.material.io/foundations/layout/canonical-layouts">M3 canonical layouts</a>.
+        Coplanar is the default: full-bleed surfaces and a 1dp
+        <code>outline-variant</code> divider. The split is 840px, from
+        either the viewport or the panes container itself
+        (<code>container-type: inline-size</code>). Below that, one pane
+        at a time. Give the container a height — it is
+        <code>height: 100%</code>.
+      </p>
+      <p>
+        Semantic child names are aliases of <code>.pane</code>:
+        <code>.list-pane</code>, <code>.detail-pane</code>,
+        <code>.primary-pane</code>, <code>.supporting-pane</code>.
+        Mark the visible pane on compact windows with
+        <code>active</code>. Optional content that should overlay the
+        page is a
+        <a href="{{ url_for('side_sheet') }}">side sheet</a>, not a pane.
+      </p>
+    </div>
+
+    <div id="list-detail" class="section scrollspy">
+      <h3>List-detail</h3>
+      <p>
+        The default. A 360dp list pane beside a flexible detail pane.
+        People pick a row; the detail shows that item. Use
+        <code>.list-detail</code> or a plain <code>.panes</code>.
+        Pair the list pane with a
+        <a href="{{ url_for('lists') }}">list</a>.
+      </p>
+      <div class="list-detail panes-demo" data-pane-select>
+        <section class="list-pane">
+          <header>
+            <h2>Inbox</h2>
+            <button type="button" aria-label="Search">
+              <i class="material-symbols">search</i>
+            </button>
+          </header>
+          <ul class="list">
+            <li>
+              <a href="#!" aria-current="page" data-title="Brunch this weekend?" data-body="I will be in your neighborhood doing errands this weekend. Want to grab brunch on Saturday?">
+                <i class="material-symbols">mail</i>
+                Brunch this weekend?
+                <p>Ali Connors — I will be in your neighborhood doing errands.</p>
+              </a>
+            </li>
+            <li>
+              <a href="#!" data-title="Summer BBQ" data-body="Wish I could come, but I have a prior engagement. Maybe next time?">
+                <i class="material-symbols">mail</i>
+                Summer BBQ
+                <p>Tori Text — Wish I could come, but I am out of town.</p>
+              </a>
+            </li>
+            <li>
+              <a href="#!" data-title="Birthday gift" data-body="Have any ideas about what we should get Heidi for her birthday?">
+                <i class="material-symbols">star</i>
+                Birthday gift
+                <p>Sandra Adams — Have any ideas about what we should get Heidi?</p>
+              </a>
+            </li>
+            <li>
+              <a href="#!" data-title="Recipe to try" data-body="We should eat this: grated squash, corn, and tomatillo salsa.">
+                <i class="material-symbols">mail</i>
+                Recipe to try
+                <p>Craig Gaskell — We should eat this: grated squash and corn.</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="detail-pane">
+          <header>
+            <button type="button" aria-label="Back" data-pane-back>
+              <i class="material-symbols">arrow_back</i>
+            </button>
+            <h2>Brunch this weekend?</h2>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </header>
+          <div>
+            <p data-pane-body>I will be in your neighborhood doing errands this weekend. Want to grab brunch on Saturday?</p>
+          </div>
+          <footer>
+            <button type="button" class="text">Reply</button>
+            <button type="button" class="text">Forward</button>
+          </footer>
+        </section>
+      </div>
+<pre><code>&lt;div class="list-detail"&gt;
+  &lt;section class="list-pane"&gt;
+    &lt;header&gt;
+      &lt;h2&gt;Inbox&lt;/h2&gt;
+    &lt;/header&gt;
+    &lt;ul class="list"&gt;…&lt;/ul&gt;
+  &lt;/section&gt;
+  &lt;section class="detail-pane"&gt;
+    &lt;header&gt;
+      &lt;h2&gt;Subject&lt;/h2&gt;
+    &lt;/header&gt;
+    &lt;div&gt;…&lt;/div&gt;
+  &lt;/section&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div id="compact" class="section scrollspy">
+      <h3>Compact</h3>
+      <p>
+        Below 840px every pane is hidden except
+        <code>active</code>. If none is active, the first pane shows.
+        Toggle <code>active</code> yourself when the user picks a row
+        or taps back — <code>AutoInit()</code> does not start panes.
+        On expanded windows both panes are shown regardless of
+        <code>active</code>, so the same markup works at every size.
+      </p>
+      <p>
+        The illustration below is forced to one pane so the swap is
+        visible here. Narrow the window below 840px to see the
+        component do it itself — the list-detail demo above is the
+        live compact view.
+      </p>
+      <div class="list-detail panes-demo compact" data-pane-select>
+        <section class="list-pane active">
+          <header>
+            <h2>Inbox</h2>
+          </header>
+          <ul class="list">
+            <li>
+              <a href="#!" aria-current="page" data-title="Brunch this weekend?" data-body="I will be in your neighborhood doing errands this weekend. Want to grab brunch on Saturday?">
+                <i class="material-symbols">mail</i>
+                Brunch this weekend?
+                <p>Ali Connors — I will be in your neighborhood doing errands.</p>
+              </a>
+            </li>
+            <li>
+              <a href="#!" data-title="Summer BBQ" data-body="Wish I could come, but I have a prior engagement. Maybe next time?">
+                <i class="material-symbols">mail</i>
+                Summer BBQ
+                <p>Tori Text — Wish I could come, but I am out of town.</p>
+              </a>
+            </li>
+            <li>
+              <a href="#!" data-title="Birthday gift" data-body="Have any ideas about what we should get Heidi for her birthday?">
+                <i class="material-symbols">star</i>
+                Birthday gift
+                <p>Sandra Adams — Have any ideas about what we should get Heidi?</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="detail-pane">
+          <header>
+            <button type="button" aria-label="Back" data-pane-back>
+              <i class="material-symbols">arrow_back</i>
+            </button>
+            <h2>Brunch this weekend?</h2>
+          </header>
+          <div>
+            <p data-pane-body>I will be in your neighborhood doing errands this weekend. Want to grab brunch on Saturday?</p>
+          </div>
+        </section>
+      </div>
+<pre><code>list.querySelectorAll('a').forEach((row) =&gt; {
+  row.addEventListener('click', (event) =&gt; {
+    event.preventDefault();
+    detailPane.classList.add('active');
+    listPane.classList.remove('active');
+  });
+});
+
+back.addEventListener('click', () =&gt; {
+  detailPane.classList.remove('active');
+  listPane.classList.add('active');
+});</code></pre>
+    </div>
+
+    <div id="supporting" class="section scrollspy">
+      <h3>Supporting pane</h3>
+      <p>
+        A flexible primary pane plus a 360dp supporting pane on the
+        trailing edge. Use it when the extra content is secondary — a
+        related list, inspector, or outline — and should stay in view
+        beside the focus. Add <code>supporting</code>, or use
+        <code>.supporting-pane-layout</code>.
+      </p>
+      <p>
+        <code>start</code> (or <code>left</code>) docks the supporting
+        pane on the leading edge instead.
+      </p>
+      <div class="panes supporting panes-demo">
+        <section class="primary-pane">
+          <header>
+            <h2>Article</h2>
+            <button type="button" aria-label="More">
+              <i class="material-symbols">more_vert</i>
+            </button>
+          </header>
+          <div>
+            <p>
+              The primary pane holds the focus of the screen. Supporting
+              content sits beside it on expanded windows and hides on
+              compact ones until you mark it <code>active</code>.
+            </p>
+            <p>
+              A supporting pane is in the page flow. A
+              <a href="{{ url_for('side_sheet') }}">side sheet</a>
+              overlays the page and can be dismissed.
+            </p>
+          </div>
+        </section>
+        <section class="supporting-pane">
+          <header>
+            <h2>Contents</h2>
+          </header>
+          <ul class="list">
+            <li>
+              <a href="#!">
+                <i class="material-symbols">notes</i>
+                Outline
+              </a>
+            </li>
+            <li>
+              <a href="#!" aria-current="page">
+                <i class="material-symbols">link</i>
+                Related
+              </a>
+            </li>
+            <li>
+              <a href="#!">
+                <i class="material-symbols">comment<span class="badge">3</span></i>
+                Comments
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
+<pre><code>&lt;div class="panes supporting"&gt;
+  &lt;section class="primary-pane"&gt;…&lt;/section&gt;
+  &lt;section class="supporting-pane"&gt;…&lt;/section&gt;
+&lt;/div&gt;
+
+&lt;div class="panes supporting start"&gt;…&lt;/div&gt;</code></pre>
+    </div>
+
+    <div id="equal" class="section scrollspy">
+      <h3>Equal</h3>
+      <p>
+        <code>equal</code> splits two panes 1fr / 1fr. Use it when the
+        two surfaces have the same weight — two documents, a diff, an
+        editor and a preview.
+      </p>
+      <div class="panes equal panes-demo">
+        <section class="pane">
+          <header>
+            <h2>Draft</h2>
+          </header>
+          <div>
+            <p>Write in this pane. Both columns grow equally once the window is at least 840px wide.</p>
+          </div>
+        </section>
+        <section class="pane">
+          <header>
+            <h2>Preview</h2>
+          </header>
+          <div>
+            <p>The preview stays in lockstep with the draft. Neither pane is the list; neither is supporting.</p>
+          </div>
+        </section>
+      </div>
+<pre><code>&lt;div class="panes equal"&gt;
+  &lt;section class="pane"&gt;…&lt;/section&gt;
+  &lt;section class="pane"&gt;…&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div id="three-pane" class="section scrollspy">
+      <h3>Three-pane</h3>
+      <p>
+        <code>three-pane</code> is list + focus + supporting. It
+        needs 1200px: 360dp list, a flexible middle, 360dp supporting.
+        Between 840px and 1200px the default two-column list-detail
+        grid still applies, so the third pane wraps. Below 840px it
+        is the same single-pane <code>active</code> pattern as the
+        others.
+      </p>
+      <div class="panes three-pane panes-demo">
+        <section class="list-pane">
+          <header>
+            <h2>Mail</h2>
+          </header>
+          <ul class="list">
+            <li>
+              <a href="#!" aria-current="page">
+                <i class="material-symbols">mail</i>
+                Brunch this weekend?
+              </a>
+            </li>
+            <li>
+              <a href="#!">
+                <i class="material-symbols">mail</i>
+                Summer BBQ
+              </a>
+            </li>
+            <li>
+              <a href="#!">
+                <i class="material-symbols">star</i>
+                Birthday gift
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="detail-pane">
+          <header>
+            <h2>Brunch this weekend?</h2>
+          </header>
+          <div>
+            <p>I will be in your neighborhood doing errands this weekend. Want to grab brunch on Saturday?</p>
+          </div>
+        </section>
+        <section class="supporting-pane">
+          <header>
+            <h2>Details</h2>
+          </header>
+          <ul class="list">
+            <li>
+              <i class="material-symbols">person</i>
+              Ali Connors
+              <p>From</p>
+            </li>
+            <li>
+              <i class="material-symbols">schedule</i>
+              Sat, 10:00
+              <p>When</p>
+            </li>
+          </ul>
+        </section>
+      </div>
+<pre><code>&lt;div class="panes three-pane"&gt;
+  &lt;section class="list-pane"&gt;…&lt;/section&gt;
+  &lt;section class="detail-pane"&gt;…&lt;/section&gt;
+  &lt;section class="supporting-pane"&gt;…&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div id="appearance" class="section scrollspy">
+      <h3>Appearance</h3>
+      <p>
+        Coplanar is the default: the panes share one surface, with a
+        1dp divider on expanded windows. <code>separated</code> (or
+        <code>floating</code>) insets the panes 24dp, rounds them to
+        16dp, and fills each with
+        <code>surface-container-low</code>.
+      </p>
+      <p>
+        On a separated pane, <code>elevated</code> adds elevation 1.
+        <code>outlined</code> switches the fill to <code>surface</code>
+        and draws a 1dp outline.
+      </p>
+      <div class="panes equal separated panes-demo">
+        <section class="pane outlined">
+          <header>
+            <h2>Outlined</h2>
+          </header>
+          <div>
+            <p>Surface, 1dp outline-variant stroke, no elevation.</p>
+          </div>
+        </section>
+        <section class="pane elevated">
+          <header>
+            <h2>Elevated</h2>
+          </header>
+          <div>
+            <p>Surface-container-low at elevation 1.</p>
+          </div>
+        </section>
+      </div>
+<pre><code>&lt;div class="panes equal separated"&gt;
+  &lt;section class="pane outlined"&gt;…&lt;/section&gt;
+  &lt;section class="pane elevated"&gt;…&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div id="pane" class="section scrollspy">
+      <h3>A pane</h3>
+      <p>
+        Each pane is a column. A child <code>&lt;header&gt;</code>
+        (or <code>.pane-header</code>) is the 64dp top bar: icon-only
+        buttons, then a <code>title-large</code> heading. A child
+        <code>&lt;main&gt;</code>, <code>.pane-content</code>,
+        <code>.pane-body</code>, or <code>&lt;div&gt;</code> is the
+        scrolling body. A last-child <code>&lt;footer&gt;</code>,
+        <code>.pane-footer</code>, or <code>&lt;nav&gt;</code> is the
+        56dp action bar.
+      </p>
+      <p>
+        A direct <code>.list</code> fills the pane with no extra
+        padding, so list rows can run edge to edge under the header.
+      </p>
+<pre><code>&lt;section class="pane"&gt;
+  &lt;header&gt;
+    &lt;button type="button" aria-label="Back"&gt;
+      &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
+    &lt;/button&gt;
+    &lt;h2&gt;Headline&lt;/h2&gt;
+    &lt;button type="button" aria-label="More"&gt;
+      &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
+    &lt;/button&gt;
+  &lt;/header&gt;
+  &lt;div&gt;…&lt;/div&gt;
+  &lt;footer&gt;
+    &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
+  &lt;/footer&gt;
+&lt;/section&gt;</code></pre>
+    </div>
+
+    <div id="tokens" class="section scrollspy">
+      <h3>Tokens</h3>
+      <table class="striped">
+        <thead>
+          <tr><th>Token</th><th>Default</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>--md-comp-pane-gap</code></td><td>24px</td></tr>
+          <tr><td><code>--md-comp-pane-divider-color</code></td><td>outline-variant</td></tr>
+          <tr><td><code>--md-comp-pane-container-color</code></td><td>surface</td></tr>
+          <tr><td><code>--md-comp-pane-container-shape</code></td><td>0px (16px separated)</td></tr>
+          <tr><td><code>--md-comp-pane-list-width</code></td><td>360px</td></tr>
+          <tr><td><code>--md-comp-pane-supporting-width</code></td><td>360px</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="hide-on-small-only panes-page-toc">
+    <div class="toc-wrapper mt-5">
+      <ul class="section table-of-contents">
+        <li><a href="#anatomy">Anatomy</a></li>
+        <li><a href="#list-detail">List-detail</a></li>
+        <li><a href="#compact">Compact</a></li>
+        <li><a href="#supporting">Supporting pane</a></li>
+        <li><a href="#equal">Equal</a></li>
+        <li><a href="#three-pane">Three-pane</a></li>
+        <li><a href="#appearance">Appearance</a></li>
+        <li><a href="#pane">A pane</a></li>
+        <li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-pane-select]').forEach((root) => {
+    const listPane = root.querySelector('.list-pane');
+    const detailPane = root.querySelector('.detail-pane');
+    const title = detailPane && detailPane.querySelector('header :is(h1, h2, h3, h4, h5, h6, .pane-title)');
+    const body = detailPane && detailPane.querySelector('[data-pane-body]');
+    root.querySelectorAll('.list a').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        root.querySelectorAll('.list a[aria-current]').forEach((el) => {
+          el.removeAttribute('aria-current');
+        });
+        link.setAttribute('aria-current', 'page');
+        if (title && link.dataset.title) title.textContent = link.dataset.title;
+        if (body && link.dataset.body) body.textContent = link.dataset.body;
+        if (detailPane) detailPane.classList.add('active');
+        if (listPane) listPane.classList.remove('active');
+      });
+    });
+    const back = root.querySelector('[data-pane-back]');
+    if (back && detailPane && listPane) {
+      back.addEventListener('click', () => {
+        detailPane.classList.remove('active');
+        listPane.classList.add('active');
+      });
+    }
+  });
+</script>
+{% endblock %}

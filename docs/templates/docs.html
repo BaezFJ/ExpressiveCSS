@@ -77,7 +77,7 @@
                     </details>
             </li>
             <li>
-                    <details name="docs-nav"{% if request.endpoint in ['navbar', 'navigation_bar', 'navigation_rail', 'sidenav', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'menu', 'scrollspy'] %} open{% endif %}>
+                    <details name="docs-nav"{% if request.endpoint in ['navbar', 'navigation_bar', 'navigation_rail', 'sidenav', 'panes', 'footer', 'tabs', 'breadcrumbs', 'pagination', 'menu', 'scrollspy'] %} open{% endif %}>
                         <summary>
                             <i class="material-symbols">view_quilt</i>
                             Structure
@@ -94,6 +94,9 @@
                                 </li>
                                 <li class="{% if request.endpoint == 'sidenav' %}active{% endif %}">
                                     <a href="{{ url_for('sidenav') }}">Sidenav</a>
+                                </li>
+                                <li class="{% if request.endpoint == 'panes' %}active{% endif %}">
+                                    <a href="{{ url_for('panes') }}">Panes</a>
                                 </li>
                                 <li class="{% if request.endpoint == 'footer' %}active{% endif %}">
                                     <a href="{{ url_for('footer') }}">Footer</a>
@@ -250,6 +253,7 @@
                 <a href="{{ url_for('navigation_bar') }}">Navigation bar</a>
                 <a href="{{ url_for('navigation_rail') }}">Navigation rail</a>
                 <a href="{{ url_for('sidenav') }}">Sidenav</a>
+                <a href="{{ url_for('panes') }}">Panes</a>
                 <a href="{{ url_for('footer') }}">Footer</a>
                 <a href="{{ url_for('tabs') }}">Tabs</a>
                 <a href="{{ url_for('breadcrumbs') }}">Breadcrumbs</a>
