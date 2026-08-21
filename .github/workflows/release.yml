@@ -28,12 +28,12 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    # Optional gate: create an environment named "npm-publish" in repo Settings
-    # -> Environments with yourself as a required reviewer, so every publish
-    # needs a human click. If you enable it, add the same environment name to
-    # the trusted publisher config on npmjs.com -- it is part of the identity
-    # npm matches against, and a mismatch rejects the publish.
-    # environment: npm-publish
+    # Every publish waits for a human click: the "npm-publish" environment has
+    # BaezFJ as a required reviewer, so the job pauses before it can reach the
+    # registry. The name is also part of the identity npm matches against in
+    # the trusted publisher config on npmjs.com -- the two must agree, or the
+    # OIDC exchange is rejected and the publish fails at the last step.
+    environment: npm-publish
 
     env:
       # release: prereleases go to "next", full releases to "latest".
