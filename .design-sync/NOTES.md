@@ -113,3 +113,27 @@ change to a CSS-only component must be mirrored there, because nothing validates
 it against the framework automatically — run the class audit in this file's
 history (compare every `class="..."` token in conventions.md against
 `ds-bundle/_ds_bundle.css`) after editing.
+
+## The seven components that keep the floor card
+
+Authoring was attempted or considered for every one; these are the ones where a
+static card would have been misleading rather than merely sparse:
+
+- **FormSelect** — the plugin *replaces* the native `<select>` with a generated
+  `.field` + `<menu>`. Un-enhanced, the floating label sits on top of the
+  selected value and renders as garbled overlapping text. A preview was built,
+  seen to be wrong, and withdrawn. The same select was removed from the Forms
+  preview for the same reason.
+- **Carousel** — `.carousel-item`s are positioned by the plugin. Statically they
+  stack, so a three-image carousel renders as one image and reads as a plain
+  picture. Withdrawn after seeing it.
+- **Datepicker / Timepicker** — the calendar and clock dial are built into the
+  DOM by the plugin. Reproducing that markup by hand would be a lookalike, which
+  the skill explicitly rules out.
+- **Tooltip** — the tooltip element is created on hover.
+- **Waves** — a ripple that exists only during interaction; a static card would
+  be indistinguishable from a plain button.
+- **AutoInit** — a function, not a visual component.
+
+Everything else is authored. If any of these gains a static resting state in the
+framework, it becomes authorable on the next re-sync.
