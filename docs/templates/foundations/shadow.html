@@ -1,13 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Shadow" %}
 {% set page_blurb = "Raise or flatten an element with the z-depth elevation classes." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-      <div id="shadow" class="section scrollspy">
+{% call page_body() %}
+  {% call section("shadow", "Shadows", heading=false) %}
         <p class="flow-text">
           In material design, everything should have a certain z-depth that determines how far raised or close to the page the element is.
         </p>
@@ -71,16 +70,7 @@
         <p>
           There is also <code>z-depth-1-half</code>, used by some components for an in-between hover elevation.
         </p>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#shadow">Shadows</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

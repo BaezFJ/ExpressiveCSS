@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import options_table, properties_table %}
 
 {% set page_name = "Autocomplete" %}
 {% set page_blurb = "Suggest values under a text field as the user types." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Add <code>autocomplete</code> to a text input inside <code>.field</code>.
           <code>AutoInit()</code> starts every <code>.autocomplete</code> except
@@ -32,10 +30,9 @@
   &lt;input type="text" id="autocomplete-input" class="autocomplete" placeholder=" "&gt;
   &lt;label for="autocomplete-input"&gt;Autocomplete&lt;/label&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.Autocomplete</code>.
           <code>data</code> is an array of objects:
@@ -95,10 +92,9 @@
     })
   );
 }</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>data</code></td>
@@ -159,11 +155,10 @@
               <td><code>[]</code></td>
               <td>Initial selected ids (strings or numbers).</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
@@ -194,10 +189,9 @@ instance.open();</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the menu, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The input the plugin was initialized with.") %}
             <tr>
               <td><code>isOpen</code></td>
@@ -224,21 +218,8 @@ instance.open();</code></pre>
               <td>Array</td>
               <td>The currently selected entries.</td>
             </tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

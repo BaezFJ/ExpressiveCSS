@@ -1,14 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Slider" %}
 {% set page_blurb = "Selections from a range of values." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           Sliders let people pick from a range of values. An
           <code>&lt;input type="range"&gt;</code> is the control. A wrapping
@@ -49,10 +47,9 @@
   Volume
   &lt;input type="range" min="0" max="100" value="40"&gt;
 &lt;/label&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="variants" class="section scrollspy">
-        <h3>Variants</h3>
+  {% call section("variants", "Variants") %}
         <p>
           Standard is the default. <code>centered</code> grows the active
           track from 50%. A range slider is two inputs in one
@@ -82,10 +79,9 @@
   &lt;input type="range" min="0" max="100" value="25" aria-label="Range start"&gt;
   &lt;input type="range" min="0" max="100" value="75" aria-label="Range end"&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="sizes" class="section scrollspy">
-        <h3>Sizes</h3>
+  {% call section("sizes", "Sizes") %}
         <p>
           Default is XS (16dp track, 44dp handle).
           <code>s</code> / <code>small</code> is S,
@@ -114,10 +110,9 @@
 &lt;div class="range m"&gt;…&lt;/div&gt;
 &lt;div class="range l"&gt;…&lt;/div&gt;
 &lt;div class="range xl"&gt;…&lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="icon" class="section scrollspy">
-        <h3>Inset icon, stops, value</h3>
+  {% call section("icon", "Icon, stops, value", heading="Inset icon, stops, value") %}
         <p>
           A leading <code>&lt;i&gt;</code> sits in the active track —
           M, L, and XL are tall enough. <code>stops</code> plus
@@ -141,10 +136,9 @@
 &lt;div class="range stops"&gt;
   &lt;input type="range" min="0" max="100" step="20" value="40" aria-label="Stops"&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="vertical" class="section scrollspy">
-        <h3>Vertical</h3>
+  {% call section("vertical", "Vertical") %}
         <p>
           <code>vertical</code> stands the track up. Minimum is at the
           bottom.
@@ -157,10 +151,9 @@
 <pre><code>&lt;div class="range vertical m"&gt;
   &lt;input type="range" min="0" max="100" value="60" aria-label="Level"&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="disabled" class="section scrollspy">
-        <h3>Disabled</h3>
+  {% call section("disabled", "Disabled") %}
         <p>The native <code>disabled</code> attribute drops the control to 38%.</p>
         <form>
           <label>
@@ -168,10 +161,9 @@
             <input type="range" min="0" max="100" value="30" disabled>
           </label>
         </form>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           Put the script after the inputs, or call <code>init</code>
           yourself. There are no options. For a slider added after load:
@@ -182,30 +174,13 @@
 });
 
 Expressive.Range.init(document.querySelector('#volume'));</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
 <pre><code>const instance = Expressive.Range.getInstance(elem);
 instance.destroy();</code></pre>
         <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#variants">Variants</a></li>
-          <li><a href="#sizes">Sizes</a></li>
-          <li><a href="#icon">Icon, stops, value</a></li>
-          <li><a href="#vertical">Vertical</a></li>
-          <li><a href="#disabled">Disabled</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#methods">Methods</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

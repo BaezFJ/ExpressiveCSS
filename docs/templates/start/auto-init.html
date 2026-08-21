@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import options_table %}
 
 {% set page_name = "Auto Init" %}
 {% set page_blurb = "Initialize every registered component with one function call." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Auto Init starts all of the registered Expressive components with a single call.
           The IIFE bundle exposes it as <code>Expressive.AutoInit</code>.
@@ -20,10 +18,9 @@
           <strong>not</strong> call <code>AutoInit()</code> for you. Call it after the DOM is ready.
           This documentation site does that in <code>docs.js</code> on <code>DOMContentLoaded</code>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   Expressive.AutoInit();
 });</code></pre>
@@ -43,10 +40,9 @@ AutoInit();
 
 const element = document.querySelector('.custom-tooltip');
 Tooltip.init(element, { position: 'top' });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         <p><code>AutoInit(context, options)</code> takes two arguments:</p>
         {% call options_table() %}
             <tr>
@@ -61,15 +57,14 @@ Tooltip.init(element, { position: 'top' });</code></pre>
               <td><code>{}</code></td>
               <td>Options for each component, keyed by name. See that component’s page for its own options.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
         <p>
           Calling <code>AutoInit()</code> again on the same elements is safe: each component’s constructor
           destroys any existing instance on that element before creating a new one.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="components" class="section scrollspy">
-        <h3>Components</h3>
+  {% call section("components", "Components") %}
         <p>
           These are the components <code>AutoInit()</code> starts, and the selector each one claims.
           Elements that also have <code>no-autoinit</code> are skipped.
@@ -106,10 +101,9 @@ Tooltip.init(element, { position: 'top' });</code></pre>
           Chips and Cards appear in the table as well so a later <code>AutoInit()</code> can pick up
           elements added after load.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="ignoring" class="section scrollspy">
-        <h3>Ignoring Elements</h3>
+  {% call section("ignoring", "Ignoring Elements") %}
         <p>
           If you want <code>AutoInit()</code> to skip an element, add the class
           <code>no-autoinit</code>. Initialize that element yourself with the component’s
@@ -121,20 +115,7 @@ Expressive.Tooltip.init(
   document.querySelector('.tooltipped.no-autoinit'),
   { position: 'top' }
 );</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#components">Components</a></li>
-          <li><a href="#ignoring">Ignoring Elements</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

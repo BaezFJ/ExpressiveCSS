@@ -1,13 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Transitions" %}
 {% set page_blurb = "Animate content in and out with a few CSS classes." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-      <div id="scale" class="section scrollspy">
+{% call page_body() %}
+  {% call section("scale", "Scale", heading=false) %}
         <p class="flow-text">
           We've made some custom animation classes that will transition your content with only CSS. Each CSS transition consists of a base class that applies the necessary
           styles and additional classes that control the state of the transition.
@@ -35,16 +34,7 @@
 &lt;a id="scale-demo" href="#!" class="button extra circle scale-transition scale-out"&gt;
   &lt;i class="material-symbols"&gt;add&lt;/i&gt;
 &lt;/a&gt;</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#scale">Scale</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

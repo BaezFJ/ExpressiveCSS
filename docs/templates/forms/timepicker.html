@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Time Picker" %}
 {% set page_blurb = "Pick a time from a clock face, in 12-hour or 24-hour form." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Add <code>timepicker</code> to a text input. <code>AutoInit()</code> starts every
           <code>.timepicker</code> except those marked <code>no-autoinit</code>.
@@ -36,10 +34,9 @@
           (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
           hour and minute fields.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.Timepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -56,10 +53,9 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Timepicker: { twelveHour: false }
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="display" class="section scrollspy">
-        <h3>Display</h3>
+  {% call section("display", "Display") %}
         <p>
           The clock is a <code>.timepicker-container</code> in the page. There is no overlay
           and no <code>autoClose</code> option.
@@ -90,10 +86,9 @@
           <code>duration</code> (<code>250</code>), and <code>align</code>
           (<code>'left'</code>).
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>duration</code></td>
@@ -185,11 +180,10 @@
               <td><code>null</code></td>
               <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="internationalization" class="section scrollspy">
-        <h3>Internationalization</h3>
+  {% call section("internationalization", "Internationalization") %}
         <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
         <table class="striped">
           <thead>
@@ -213,10 +207,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
+  {% endcall %}
 
-      <div id="twelve-hour" class="section scrollspy">
-        <h3>12-hour and 24-hour</h3>
+  {% call section("twelve-hour", "12-hour and 24-hour") %}
         <p>
           <code>twelveHour</code> defaults to <code>true</code>. The intro clock above is
           12-hour with AM/PM. Set <code>twelveHour: false</code> for a 24-hour dial: hours
@@ -230,10 +223,9 @@
 <pre><code>Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("Timepicker") }}
 
         <h5 class="light">.showView();</h5>
@@ -253,10 +245,9 @@ instance.done(true);</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the clock, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The input the plugin was initialized with.") %}
             <tr>
               <td><code>time</code></td>
@@ -283,24 +274,8 @@ instance.done(true);</code></pre>
               <td>String</td>
               <td><code>'hours'</code> or <code>'minutes'</code>.</td>
             </tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#display">Display</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#internationalization">Internationalization</a></li>
-          <li><a href="#twelve-hour">12-hour and 24-hour</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

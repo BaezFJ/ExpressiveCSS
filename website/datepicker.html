@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy">
+
         <p class="flow-text">
           Add <code>datepicker</code> to a text input. <code>AutoInit()</code> starts every
           <code>.datepicker</code> except those marked <code>no-autoinit</code>.
@@ -293,10 +295,13 @@
           Wrap the input in its own <code>.field</code> (or another small parent). The
           calendar is inserted after that parent, not after the input itself.
         </p>
+  
       </div>
 
-      <div id="initialization" class="section scrollspy">
+
+  <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
+
         <p>
           The IIFE bundle exposes <code>Expressive.Datepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -314,10 +319,13 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Datepicker: { openByDefault: true }
 });</code></pre>
+  
       </div>
 
-      <div id="display" class="section scrollspy">
+
+  <div id="display" class="section scrollspy">
         <h3>Display</h3>
+
         <p>
           The calendar is a <code>.datepicker-container</code> in the page. There is no overlay
           and no <code>autoClose</code> option.
@@ -356,10 +364,13 @@
           <code>container</code> renders the calendar into a specific element and does not
           hide it. Use a selector or a DOM node.
         </p>
+  
       </div>
 
-      <div id="options" class="section scrollspy">
+
+  <div id="options" class="section scrollspy">
         <h3>Options</h3>
+
         
         <table class="striped">
             <thead>
@@ -564,14 +575,17 @@
               <td><code>null</code></td>
               <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
 
-      <div id="date-format" class="section scrollspy">
+
+  <div id="date-format" class="section scrollspy">
         <h3>Date format options</h3>
+
         <p>Use these tokens in the <code>format</code> string.</p>
         <table class="striped">
           <thead>
@@ -634,10 +648,13 @@
             </tr>
           </tbody>
         </table>
+  
       </div>
 
-      <div id="internationalization" class="section scrollspy">
+
+  <div id="internationalization" class="section scrollspy">
         <h3>Internationalization</h3>
+
         <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
         <table class="striped">
           <thead>
@@ -689,10 +706,13 @@
             </tr>
           </tbody>
         </table>
+  
       </div>
 
-      <div id="date-range" class="section scrollspy">
+
+  <div id="date-range" class="section scrollspy">
         <h3>Date range</h3>
+
         <p>
           Set <code>isDateRange: true</code>. Click a start day, then an end day that is on or
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
@@ -711,10 +731,13 @@
   isDateRange: true,
   dateRangeEndEl: '#datepicker-range-end'
 });</code></pre>
+  
       </div>
 
-      <div id="multiple" class="section scrollspy">
+
+  <div id="multiple" class="section scrollspy">
         <h3>Multiple dates</h3>
+
         <p>
           Set <code>isMultipleSelection: true</code>. Click a day to add it; click it again to
           remove it. Each selected date gets its own input.
@@ -727,10 +750,13 @@
   openByDefault: true,
   isMultipleSelection: true
 });</code></pre>
+  
       </div>
 
-      <div id="methods" class="section scrollspy">
+
+  <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+
         
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
@@ -756,10 +782,13 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the calendar, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
+  
       </div>
 
-      <div id="properties" class="section scrollspy">
+
+  <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+
         
         <table class="striped">
             <thead>
@@ -796,15 +825,20 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
               <td>Array</td>
               <td>The selected dates when <code>isMultipleSelection</code> is true.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#introduction">Introduction</a></li>
           <li><a href="#initialization">Initialization</a></li>
@@ -817,10 +851,12 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

@@ -1,14 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Color" %}
 {% set page_blurb = "One system: the Material Design 3 theme tokens." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="tokens" class="section scrollspy">
+{% call page_body() %}
+  {% call section("tokens", "Theme tokens", heading=false) %}
         <p class="flow-text">
           Color in Expressive is the Material Design 3 Expressive roles —
           CSS custom properties on <code>:root</code> named
@@ -96,10 +94,9 @@
           hues than others; OKLab is perceptually uniform, so a 16% state layer looks
           like 16% everywhere.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="roles" class="section scrollspy">
-        <h3>Every role</h3>
+  {% call section("roles", "Every role") %}
         <p>
           A role is a job, not a color: <code>error</code> means "this went
           wrong", and what that looks like is the theme's business.
@@ -164,10 +161,9 @@
           the old neutral-variant well so existing pages do not break.
           New work should use the surface container scale.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="sass" class="section scrollspy">
-        <h3>Sass</h3>
+  {% call section("sass", "Sass") %}
         <p>
           Do not <code>@extend</code> these classes across files — that is how the old
           stylesheet lost control of cascade order. In a component partial, read the
@@ -183,18 +179,7 @@
           resolves at build time, which cannot follow a theme the user switches at
           runtime. The custom property can.
         </p>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#tokens">Theme tokens</a></li>
-          <li><a href="#roles">Every role</a></li>
-          <li><a href="#sass">Sass</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

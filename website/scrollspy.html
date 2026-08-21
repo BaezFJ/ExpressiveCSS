@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy">
+
         <p class="flow-text">
           Scrollspy watches a set of sections and which one is currently in view.
           The table of contents on the right of every documentation page is the live demo:
@@ -300,10 +302,13 @@
     &lt;/ul&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+  
       </div>
 
-      <div id="initialization" class="section scrollspy">
+
+  <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
+
         <p>
           The IIFE bundle exposes <code>Expressive.ScrollSpy</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -323,10 +328,13 @@
           The documentation TOC is <code>position: sticky</code>. Scrollspy
           only updates which link is active.
         </p>
+  
       </div>
 
-      <div id="options" class="section scrollspy">
+
+  <div id="options" class="section scrollspy">
         <h3>Options</h3>
+
         
         <table class="striped">
             <thead>
@@ -373,7 +381,7 @@
               <td><code>false</code></td>
               <td>If true, keep the last section above the viewport active when nothing intersects. If there is no such section, the first one stays active.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
@@ -386,10 +394,13 @@
 <pre><code>function(id) {
   return '[data-section="' + CSS.escape(id) + '"]';
 }</code></pre>
+  
       </div>
 
-      <div id="methods" class="section scrollspy">
+
+  <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+
         
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
@@ -400,10 +411,13 @@
         <h5 class="light">.destroy();</h5>
         <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
 <pre><code>instance.destroy();</code></pre>
+  
       </div>
 
-      <div id="properties" class="section scrollspy">
+
+  <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+
         
         <table class="striped">
             <thead>
@@ -428,11 +442,16 @@
             </tbody>
         </table>
 
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#introduction">Introduction</a></li>
           <li><a href="#initialization">Initialization</a></li>
@@ -440,10 +459,12 @@
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Floating Action Button" %}
@@ -21,7 +22,7 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           If you want a fixed floating action button, you can add multiple actions that appear on hover.
           The live demo is in the bottom-right corner of the page.
@@ -42,10 +43,9 @@
     &lt;li&gt;&lt;a class="button extra circle small" href="#!" aria-label="Attach"&gt;…&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.FloatingActionButton</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -64,10 +64,9 @@
 <pre><code>Expressive.AutoInit(document.body, {
   FloatingActionButton: { direction: 'top' }
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>direction</code></td>
@@ -87,11 +86,10 @@
               <td><code>false</code></td>
               <td>Expand the FAB into a toolbar on click. <code>.toolbar</code> is the markup switch. See <a href="#toolbar">FAB to Toolbar</a>.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("FloatingActionButton") }}
 
         <h5 class="light">.open();</h5>
@@ -105,21 +103,19 @@
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The DOM element the plugin was initialized with.") %}
             <tr>
               <td><code>isOpen</code></td>
               <td>Boolean</td>
               <td>Describes the open/close state of the FAB.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="horizontal" class="section scrollspy">
-        <h3>Horizontal FAB</h3>
+  {% call section("horizontal", "Horizontal", heading="Horizontal FAB") %}
         <p>Creating a horizontal FAB is easy. Set the <code>direction</code> option to <code>'left'</code> or <code>'right'</code>.</p>
         <p>
           Add <code>direction-left</code> or <code>direction-right</code>
@@ -140,10 +136,9 @@
           </div>
         </div>
 <pre><code>&lt;div class="fixed-action-btn direction-left"&gt;…&lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="click-only" class="section scrollspy">
-        <h3>Click-only FAB</h3>
+  {% call section("click-only", "Click Only FAB", heading="Click-only FAB") %}
         <p>
           To disable hover and toggle the menu when the large button is clicked — useful on touch devices —
           add <code>click-to-toggle</code> (or pass
@@ -164,10 +159,9 @@
           </div>
         </div>
 <pre><code>&lt;div class="fixed-action-btn direction-left click-to-toggle"&gt;…&lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="toolbar" class="section scrollspy">
-        <h3>FAB to Toolbar</h3>
+  {% call section("toolbar", "FAB to Toolbar") %}
         <p>
           Add <code>toolbar</code> (or pass <code>toolbarEnabled: true</code>)
           to expand the button into a full-width bar on click. Prefer a hover
@@ -188,21 +182,12 @@
   document.querySelector('.fixed-action-btn.toolbar'),
   { toolbarEnabled: true }
 );</code></pre>
-      </div>
+  {% endcall %}
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-          <li><a href="#horizontal">Horizontal</a></li>
-          <li><a href="#click-only">Click Only FAB</a></li>
-          <li><a href="#toolbar">FAB to Toolbar</a></li>
-        </ul>
+        {{ toc() }}
       </div>
     </div>
   </div>

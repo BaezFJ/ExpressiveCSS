@@ -266,7 +266,8 @@
 <div class="container panes-page">
   <div class="panes-page-body">
 
-    <div id="anatomy" class="section scrollspy">
+  <div id="anatomy" class="section scrollspy">
+
       <p class="flow-text">
         A <code>.panes</code> (or <code>.pane-layout</code>, or
         <code>.list-detail</code>) is the container. Two or three
@@ -292,10 +293,13 @@
         page is a
         <a href="/side-sheet.html">side sheet</a>, not a pane.
       </p>
-    </div>
+  
+      </div>
 
-    <div id="list-detail" class="section scrollspy">
-      <h3>List-detail</h3>
+
+  <div id="list-detail" class="section scrollspy">
+        <h3>List-detail</h3>
+
       <p>
         The default. A 360dp list pane beside a flexible detail pane.
         People pick a row; the detail shows that item. Use
@@ -375,10 +379,13 @@
     &lt;div&gt;…&lt;/div&gt;
   &lt;/section&gt;
 &lt;/div&gt;</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="compact" class="section scrollspy">
-      <h3>Compact</h3>
+
+  <div id="compact" class="section scrollspy">
+        <h3>Compact</h3>
+
       <p>
         Below 840px every pane is hidden except
         <code>active</code>. If none is active, the first pane shows.
@@ -446,10 +453,13 @@ back.addEventListener('click', () =&gt; {
   detailPane.classList.remove('active');
   listPane.classList.add('active');
 });</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="supporting" class="section scrollspy">
-      <h3>Supporting pane</h3>
+
+  <div id="supporting" class="section scrollspy">
+        <h3>Supporting pane</h3>
+
       <p>
         A flexible primary pane plus a 360dp supporting pane on the
         trailing edge. Use it when the extra content is secondary — a
@@ -514,10 +524,13 @@ back.addEventListener('click', () =&gt; {
 &lt;/div&gt;
 
 &lt;div class="panes supporting start"&gt;…&lt;/div&gt;</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="equal" class="section scrollspy">
-      <h3>Equal</h3>
+
+  <div id="equal" class="section scrollspy">
+        <h3>Equal</h3>
+
       <p>
         <code>equal</code> splits two panes 1fr / 1fr. Use it when the
         two surfaces have the same weight — two documents, a diff, an
@@ -545,10 +558,13 @@ back.addEventListener('click', () =&gt; {
   &lt;section class="pane"&gt;…&lt;/section&gt;
   &lt;section class="pane"&gt;…&lt;/section&gt;
 &lt;/div&gt;</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="three-pane" class="section scrollspy">
-      <h3>Three-pane</h3>
+
+  <div id="three-pane" class="section scrollspy">
+        <h3>Three-pane</h3>
+
       <p>
         <code>three-pane</code> is list + focus + supporting. It
         needs 1200px: 360dp list, a flexible middle, 360dp supporting.
@@ -614,10 +630,13 @@ back.addEventListener('click', () =&gt; {
   &lt;section class="detail-pane"&gt;…&lt;/section&gt;
   &lt;section class="supporting-pane"&gt;…&lt;/section&gt;
 &lt;/div&gt;</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="appearance" class="section scrollspy">
-      <h3>Appearance</h3>
+
+  <div id="appearance" class="section scrollspy">
+        <h3>Appearance</h3>
+
       <p>
         Coplanar is the default: the panes share one surface, with a
         1dp divider on expanded windows. <code>separated</code> (or
@@ -652,10 +671,13 @@ back.addEventListener('click', () =&gt; {
   &lt;section class="pane outlined"&gt;…&lt;/section&gt;
   &lt;section class="pane elevated"&gt;…&lt;/section&gt;
 &lt;/div&gt;</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="pane" class="section scrollspy">
-      <h3>A pane</h3>
+
+  <div id="pane" class="section scrollspy">
+        <h3>A pane</h3>
+
       <p>
         Each pane is a column. A child <code>&lt;header&gt;</code>
         (or <code>.pane-header</code>) is the 64dp top bar: icon-only
@@ -685,10 +707,13 @@ back.addEventListener('click', () =&gt; {
     &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
   &lt;/footer&gt;
 &lt;/section&gt;</code></pre>
-    </div>
+  
+      </div>
 
-    <div id="tokens" class="section scrollspy">
-      <h3>Tokens</h3>
+
+  <div id="tokens" class="section scrollspy">
+        <h3>Tokens</h3>
+
       
         <table class="striped">
             <thead>
@@ -705,26 +730,30 @@ back.addEventListener('click', () =&gt; {
           <tr><td><code>--md-comp-pane-container-shape</code></td><td>0px (16px separated)</td></tr>
           <tr><td><code>--md-comp-pane-list-width</code></td><td>360px</td></tr>
           <tr><td><code>--md-comp-pane-supporting-width</code></td><td>360px</td></tr>
-      
+  
             </tbody>
         </table>
 
-    </div>
+  
+      </div>
+
   </div>
 
   <div class="hide-on-small-only panes-page-toc">
     <div class="toc-wrapper mt-5">
-      <ul class="section table-of-contents">
-        <li><a href="#anatomy">Anatomy</a></li>
-        <li><a href="#list-detail">List-detail</a></li>
-        <li><a href="#compact">Compact</a></li>
-        <li><a href="#supporting">Supporting pane</a></li>
-        <li><a href="#equal">Equal</a></li>
-        <li><a href="#three-pane">Three-pane</a></li>
-        <li><a href="#appearance">Appearance</a></li>
-        <li><a href="#pane">A pane</a></li>
-        <li><a href="#tokens">Tokens</a></li>
-      </ul>
+      
+        <ul class="section table-of-contents">
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#list-detail">List-detail</a></li>
+          <li><a href="#compact">Compact</a></li>
+          <li><a href="#supporting">Supporting pane</a></li>
+          <li><a href="#equal">Equal</a></li>
+          <li><a href="#three-pane">Three-pane</a></li>
+          <li><a href="#appearance">Appearance</a></li>
+          <li><a href="#pane">A pane</a></li>
+          <li><a href="#tokens">Tokens</a></li>
+        </ul>
+
     </div>
   </div>
 </div>

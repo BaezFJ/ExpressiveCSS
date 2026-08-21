@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Sidenav" %}
 {% set page_blurb = "A slide-out menu, or a fixed sidebar on large screens." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="structure" class="section scrollspy">
+{% call page_body() %}
+  {% call section("structure", "Structure", heading=false) %}
         <p class="flow-text">
           This is a slide-out menu. Nest <code>&lt;details&gt;</code> /
           <code>&lt;summary&gt;</code> for nested sections — the
@@ -71,10 +69,9 @@
 &lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
   &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
 &lt;/a&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.Sidenav</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -86,10 +83,9 @@
     // specify options here
   });
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>edge</code></td>
@@ -133,11 +129,10 @@
               <td><code>null</code></td>
               <td>Called when the sidenav finishes closing.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("Sidenav") }}
 
         <h5 class="light">.open();</h5>
@@ -151,10 +146,9 @@
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, unwrap the dialog host, and remove the drag target and event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The DOM element the plugin was initialized with.") %}
             <tr>
               <td><code>isOpen</code></td>
@@ -171,11 +165,10 @@
               <td>Boolean</td>
               <td>Whether the sidenav is being dragged.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="close-trigger" class="section scrollspy">
-        <h3>Close Trigger</h3>
+  {% call section("close-trigger", "Close Trigger") %}
         <p>
           Add <code>sidenav-close</code> to an element inside the sidenav. A click on that element
           closes an overlay sidenav. That is useful in a single-page app where the page does not
@@ -187,10 +180,9 @@
 &lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
   &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
 &lt;/a&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="variations" class="section scrollspy">
-        <h3>Variations</h3>
+  {% call section("variations", "Variations") %}
 
         <h5 class="light">Right edge</h5>
         <p>
@@ -282,22 +274,7 @@
     padding-left: var(--md-comp-nav-drawer-width);
   }
 }</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#structure">Structure</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-          <li><a href="#close-trigger">Close Trigger</a></li>
-          <li><a href="#variations">Variations</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

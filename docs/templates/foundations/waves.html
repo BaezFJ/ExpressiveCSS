@@ -1,33 +1,28 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Waves" %}
 {% set page_blurb = "The Material Design ink ripple, included in the Expressive JavaScript bundle." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
-        <h4>Introduction</h4>
+{% call page_body() %}
+  {% call section("introduction", "Introduction", tag="h4") %}
         <p class="flow-text">
           Waves creates the ink effect outlined in Material Design. It is included in the Expressive JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
         </p>
         <a class="button waves-effect waves-light filled" href="#!">Wave</a>
-      </div>
+  {% endcall %}
 
-      <div id="applying-waves" class="section scrollspy">
-        <h4>Applying Waves</h4>
+  {% call section("applying-waves", "Applying Waves", tag="h4") %}
         <p>
           The waves effect can be applied to any element. To put the waves effect on buttons, you just have to put the class
           <code>waves-effect</code> on to the buttons. If you want the waves effect to be white instead, add both
           <code>waves-effect waves-light</code> as classes.
         </p>
 <pre><code>&lt;a class="waves-effect waves-light btn-large" href="#"&gt;Wave&lt;/a&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="customization" class="section scrollspy">
-        <h4>Customization</h4>
+  {% call section("customization", "Customization", tag="h4") %}
         <p>There are several ways to customize waves. You can use the pre-created classes, or define your own color by calling the API.</p>
         <h5 class="light">Available Classes</h5>
         <p>
@@ -64,10 +59,9 @@ Expressive.Waves.renderWaveEffect(
   null,                                 // Position {x, y}, or null for center
   { r: 255, g: 0, b: 0 }                // RGB color
 );</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="circle" class="section scrollspy">
-        <h4>Circle</h4>
+  {% call section("circle", "Circle Waves", heading="Circle", tag="h4") %}
         <p>
           If you want waves to form to a non-rectangular shape, there is an option for circular waves. Just add
           <code>waves-circle</code> in addition to <code>waves-effect</code>.
@@ -90,19 +84,7 @@ Expressive.Waves.renderWaveEffect(
             </a>
           </li>
         </ul>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#applying-waves">Applying Waves</a></li>
-          <li><a href="#customization">Customization</a></li>
-          <li><a href="#circle">Circle Waves</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

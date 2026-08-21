@@ -1,14 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Table" %}
 {% set page_blurb = "Organize data with a few utility classes on a standard HTML table." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Tables are a nice way to organize a lot of data. We provide a few utility classes to help you style your table as easily as possible.
         </p>
@@ -69,10 +67,9 @@
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="striped" class="section scrollspy">
-        <h3>Striped Table</h3>
+  {% call section("striped", "Striped", heading="Striped Table") %}
         <p>Add <code>class="striped"</code> to the table tag for a striped table.</p>
         <table class="striped">
           <thead>
@@ -105,10 +102,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
+  {% endcall %}
 
-      <div id="highlight" class="section scrollspy">
-        <h3>Highlight Table</h3>
+  {% call section("highlight", "Highlight", heading="Highlight Table") %}
         <p>Add <code>class="highlight"</code> to the table tag for a highlight table.</p>
         <table class="highlight">
           <thead>
@@ -141,10 +137,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
+  {% endcall %}
 
-      <div id="centered" class="section scrollspy">
-        <h3>Centered Table</h3>
+  {% call section("centered", "Centered", heading="Centered Table") %}
         <p>Add <code>class="centered"</code> to the table tag to center align all the text in the table.</p>
         <table class="centered">
           <thead>
@@ -177,10 +172,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
+  {% endcall %}
 
-      <div id="responsive" class="section scrollspy">
-        <h3>Responsive Table</h3>
+  {% call section("responsive", "Responsive", heading="Responsive Table") %}
         <p>
           Add <code>class="responsive-table"</code> to the table tag to make the table horizontally scrollable on smaller screen widths.
         </p>
@@ -215,20 +209,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#striped">Striped</a></li>
-          <li><a href="#highlight">Highlight</a></li>
-          <li><a href="#centered">Centered</a></li>
-          <li><a href="#responsive">Responsive</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

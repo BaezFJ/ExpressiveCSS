@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Lists" %}
 {% set page_blurb = "Continuous vertical indexes of text and images." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>.list</code> is a vertical index. Use it so people can find
           an item and act on it. There is no JavaScript — the HTML is the
@@ -29,10 +27,9 @@
           Two variants: <strong>standard</strong> (the default) and
           <code>segmented</code>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="standard" class="section scrollspy">
-        <h3>Standard</h3>
+  {% call section("standard", "Standard") %}
         <p>
           Transparent rows. The selected item is a pill in
           <code>secondary-container</code>. The leading icon fills when
@@ -82,10 +79,9 @@
     &lt;kbd&gt;⌘C&lt;/kbd&gt;
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="segmented" class="section scrollspy">
-        <h3>Segmented</h3>
+  {% call section("segmented", "Segmented") %}
         <p>
           Add <code>segmented</code>. Every row is a rounded tile;
           the selected tile uses the same <code>secondary-container</code>
@@ -130,10 +126,9 @@
     &lt;kbd&gt;⌘C&lt;/kbd&gt;
   &lt;/li&gt;
 &lt;/ul&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="text" class="section scrollspy">
-        <h3>Text</h3>
+  {% call section("text", "Text") %}
         <p>
           A row can be a single line of label text, or a label with
           supporting text underneath. Either can wrap, or take
@@ -153,10 +148,9 @@
   Headline
   &lt;p&gt;Supporting text sits under the label.&lt;/p&gt;
 &lt;/li&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="icons" class="section scrollspy">
-        <h3>Icons</h3>
+  {% call section("icons", "Icons") %}
         <p>
           A leading icon is a quick visual cue for the label. A trailing
           icon is status or an action — more, info, chevron.
@@ -185,10 +179,9 @@
   Inbox
   &lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;
 &lt;/li&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="media" class="section scrollspy">
-        <h3>Avatars and images</h3>
+  {% call section("media", "Avatars and images") %}
         <p>
           A leading <code>.circle</code> is a 40dp avatar. A bare
           <code>&lt;img&gt;</code> is a 56dp thumbnail.
@@ -214,10 +207,9 @@
   Ada Lovelace
   &lt;p&gt;Mathematician&lt;/p&gt;
 &lt;/li&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="links" class="section scrollspy">
-        <h3>Links and selection</h3>
+  {% call section("links", "Links and selection") %}
         <p>
           Wrap the row in an <code>&lt;a&gt;</code> or
           <code>&lt;label&gt;</code> to make the whole item the target.
@@ -276,10 +268,9 @@
     Red
   &lt;/label&gt;
 &lt;/li&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  {% call section("tokens", "Tokens") %}
         <p>Set these on the list (or on <code>:root</code>):</p>
         {% call token_table() %}
             <tr><td><code>--md-comp-list-item-height</code></td><td>56px</td></tr>
@@ -290,24 +281,8 @@
             <tr><td><code>--md-comp-list-selected-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
             <tr><td><code>--md-comp-list-leading-icon-size</code></td><td>24px</td></tr>
             <tr><td><code>--md-comp-list-segmented-gap</code></td><td>2px</td></tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#standard">Standard</a></li>
-          <li><a href="#segmented">Segmented</a></li>
-          <li><a href="#text">Text</a></li>
-          <li><a href="#icons">Icons</a></li>
-          <li><a href="#media">Avatars and images</a></li>
-          <li><a href="#links">Links and selection</a></li>
-          <li><a href="#tokens">Tokens</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

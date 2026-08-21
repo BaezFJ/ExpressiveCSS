@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="anatomy" class="section scrollspy">
+  <div id="anatomy" class="section scrollspy">
+
         <p class="flow-text">
           A <code>.field</code> is the container. The
           <code>&lt;label&gt;</code> after the control is the floating
@@ -351,10 +353,13 @@
           <code>.supporting-text</code> and <code>.prefix</code> /
           <code>.suffix</code> remain as aliases.
         </p>
+  
       </div>
 
-      <div id="types" class="section scrollspy">
+
+  <div id="types" class="section scrollspy">
         <h3>Input types</h3>
+
         <p>
           <code>email</code>, <code>password</code>, and the other native
           text-like types are styled the same way. <code>validate</code>
@@ -384,10 +389,13 @@
           that number. Prefer <code>maxlength</code> when you want the
           browser to cap input.
         </p>
+  
       </div>
 
-      <div id="inline" class="section scrollspy">
+
+  <div id="inline" class="section scrollspy">
         <h3>Inline</h3>
+
         <p>Add <code>inline</code> to sit the field in a line of text.</p>
         <form>
           <p>
@@ -403,10 +411,13 @@
   &lt;input id="email_inline" type="email" class="validate" placeholder=" "&gt;
   &lt;label for="email_inline"&gt;Email&lt;/label&gt;
 &lt;/span&gt;</code></pre>
+  
       </div>
 
-      <div id="textarea" class="section scrollspy">
+
+  <div id="textarea" class="section scrollspy">
         <h3>Textarea</h3>
+
         <p>
           Use <code>textarea.expressive-textarea</code> inside
           <code>.field</code>. That class name is Expressive’s; there is no
@@ -435,10 +446,13 @@
           Setting <code>.value</code> in script does not resize the field.
           Call <code>textareaAutoResize</code> afterwards.
         </p>
+  
       </div>
 
-      <div id="file" class="section scrollspy">
+
+  <div id="file" class="section scrollspy">
         <h3>File input</h3>
+
         <p>
           A <code>.file-field.field</code> pairs a button with a path field.
           <code>Forms.Init()</code> copies the chosen file name into
@@ -465,10 +479,13 @@
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
         <p>Add <code>multiple</code> to allow more than one file.</p>
+  
       </div>
 
-      <div id="character-counter" class="section scrollspy">
+
+  <div id="character-counter" class="section scrollspy">
         <h3>Character counter</h3>
+
         <p>
           Character Counter is not in <code>AutoInit()</code>. It reads
           <code>maxlength</code> (not <code>data-length</code>) and writes
@@ -488,11 +505,16 @@
 <pre><code>Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text, #textarea2')
 );</code></pre>
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#types">Input types</a></li>
@@ -501,10 +523,12 @@
           <li><a href="#file">File input</a></li>
           <li><a href="#character-counter">Character counter</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

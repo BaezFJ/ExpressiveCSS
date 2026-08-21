@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="anatomy" class="section scrollspy">
+  <div id="anatomy" class="section scrollspy">
+
         <p class="flow-text">
           A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
           is an item. A leading <code>&lt;i&gt;</code> is the leading icon;
@@ -324,10 +326,13 @@
           For a menu inside a top app bar, see
           <a href="/navbar.html#navbar-menu">Navbar menu</a>.
         </p>
+  
       </div>
 
-      <div id="initialization" class="section scrollspy">
+
+  <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
+
         <p>
           The IIFE bundle exposes <code>Expressive.Menu</code>.
           Call <code>init</code> yourself when you need options other than
@@ -343,10 +348,13 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Menu: { constrainWidth: false, coverTrigger: false }
 });</code></pre>
+  
       </div>
 
-      <div id="options" class="section scrollspy">
+
+  <div id="options" class="section scrollspy">
         <h3>Options</h3>
+
         
         <table class="striped">
             <thead>
@@ -443,7 +451,7 @@
               <td><code>null</code></td>
               <td>Called when an item is clicked. Receives the <code>li</code>.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
@@ -505,10 +513,13 @@
   constrainWidth: false,
   coverTrigger: false
 });</code></pre>
+  
       </div>
 
-      <div id="selection" class="section scrollspy">
+
+  <div id="selection" class="section scrollspy">
         <h3>Selection, shortcuts, and groups</h3>
+
         <p>
           Mark the current item with <code>.selected</code> or
           <code>aria-selected="true"</code>. Trailing
@@ -576,10 +587,13 @@
     &lt;menu&gt;…&lt;/menu&gt;
   &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
+  
       </div>
 
-      <div id="color" class="section scrollspy">
+
+  <div id="color" class="section scrollspy">
         <h3>Color</h3>
+
         <p>
           Two mappings. <strong>Standard</strong> (the default) is
           surface-based and lower emphasis.
@@ -613,10 +627,13 @@
   &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;visibility&lt;/i&gt; Item 1&lt;/a&gt;&lt;/li&gt;
   &lt;li class="selected"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;check&lt;/i&gt; Item 2&lt;/a&gt;&lt;/li&gt;
 &lt;/menu&gt;</code></pre>
+  
       </div>
 
-      <div id="nested" class="section scrollspy">
+
+  <div id="nested" class="section scrollspy">
         <h3>Nested menus</h3>
+
         <p>
           Optional and desktop-first. Put a <code>&lt;menu&gt;</code> inside an
           <code>&lt;li&gt;</code> — no extra trigger, no second instance.
@@ -650,10 +667,13 @@
     &lt;/menu&gt;
   &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
+  
       </div>
 
-      <div id="methods" class="section scrollspy">
+
+  <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+
         
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
@@ -676,10 +696,13 @@
         <h5>.destroy()</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
+  
       </div>
 
-      <div id="properties" class="section scrollspy">
+
+  <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+
         
         <table class="striped">
             <thead>
@@ -726,15 +749,20 @@
               <td>Number</td>
               <td>Index of the focused item.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#initialization">Initialization</a></li>
@@ -745,10 +773,12 @@
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

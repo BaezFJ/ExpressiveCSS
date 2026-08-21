@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy">
+
         <p class="flow-text">
           Add <code>timepicker</code> to a text input. <code>AutoInit()</code> starts every
           <code>.timepicker</code> except those marked <code>no-autoinit</code>.
@@ -294,10 +296,13 @@
           (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
           hour and minute fields.
         </p>
+  
       </div>
 
-      <div id="initialization" class="section scrollspy">
+
+  <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
+
         <p>
           The IIFE bundle exposes <code>Expressive.Timepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -314,10 +319,13 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Timepicker: { twelveHour: false }
 });</code></pre>
+  
       </div>
 
-      <div id="display" class="section scrollspy">
+
+  <div id="display" class="section scrollspy">
         <h3>Display</h3>
+
         <p>
           The clock is a <code>.timepicker-container</code> in the page. There is no overlay
           and no <code>autoClose</code> option.
@@ -348,10 +356,13 @@
           <code>duration</code> (<code>250</code>), and <code>align</code>
           (<code>'left'</code>).
         </p>
+  
       </div>
 
-      <div id="options" class="section scrollspy">
+
+  <div id="options" class="section scrollspy">
         <h3>Options</h3>
+
         
         <table class="striped">
             <thead>
@@ -454,14 +465,17 @@
               <td><code>null</code></td>
               <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
 
-      <div id="internationalization" class="section scrollspy">
+
+  <div id="internationalization" class="section scrollspy">
         <h3>Internationalization</h3>
+
         <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
         <table class="striped">
           <thead>
@@ -485,10 +499,13 @@
             </tr>
           </tbody>
         </table>
+  
       </div>
 
-      <div id="twelve-hour" class="section scrollspy">
+
+  <div id="twelve-hour" class="section scrollspy">
         <h3>12-hour and 24-hour</h3>
+
         <p>
           <code>twelveHour</code> defaults to <code>true</code>. The intro clock above is
           12-hour with AM/PM. Set <code>twelveHour: false</code> for a 24-hour dial: hours
@@ -502,10 +519,13 @@
 <pre><code>Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
   twelveHour: false
 });</code></pre>
+  
       </div>
 
-      <div id="methods" class="section scrollspy">
+
+  <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+
         
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
@@ -530,10 +550,13 @@ instance.done(true);</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the clock, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
+  
       </div>
 
-      <div id="properties" class="section scrollspy">
+
+  <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+
         
         <table class="striped">
             <thead>
@@ -580,15 +603,20 @@ instance.done(true);</code></pre>
               <td>String</td>
               <td><code>'hours'</code> or <code>'minutes'</code>.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#introduction">Introduction</a></li>
           <li><a href="#initialization">Initialization</a></li>
@@ -599,10 +627,12 @@ instance.done(true);</code></pre>
           <li><a href="#methods">Methods</a></li>
           <li><a href="#properties">Properties</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

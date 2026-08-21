@@ -1,0 +1,49 @@
+{#
+    Page scaffold. A section registers itself as it renders, and the table of
+    contents is built from what registered -- so a section id and its TOC entry
+    cannot drift apart, and `section scrollspy` is spelled in exactly one place.
+
+    Import these `with context`: they read `toc_sections` off the context.
+
+    section(id, label)                 heading is the label
+    section(id, label, heading=false)  no heading (intro sections)
+    section(id, label, heading="...")  heading text differs from the TOC entry
+    section(id, label, tag="h2")       heading level other than h3
+#}
+
+{% macro section(id, label, heading=None, tag="h3") %}
+    {%- do toc_sections.append({'id': id, 'label': label}) -%}
+      <div id="{{ id }}" class="section scrollspy">
+        {%- if heading is not false %}
+        <{{ tag }}>{{ heading if heading is not none else label }}</{{ tag }}>
+        {%- endif %}
+{{ caller() }}
+      </div>
+{% endmacro %}
+
+{# Extra, non-section entries (an off-site link, say) go in a {% call toc() %}. #}
+{% macro toc() %}
+        <ul class="section table-of-contents">
+          {%- for s in toc_sections %}
+          <li><a href="#{{ s.id }}">{{ s.label }}</a></li>
+          {%- endfor %}
+          {{- caller() if caller }}
+        </ul>
+{% endmacro %}
+
+{# `toc_extra` is a macro rendering extra <li>s for the table of contents. #}
+{% macro page_body(toc_extra=None) %}
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+{{ caller() }}
+    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper mt-5">
+{% if toc_extra %}{% call toc() %}{{ toc_extra() }}{% endcall %}{% else %}{{ toc() }}{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}

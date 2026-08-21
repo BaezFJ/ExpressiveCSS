@@ -1,13 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Buttons" %}
 {% set page_blurb = "Material Design 3 common buttons, icon buttons, and FABs — from the HTML." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>&lt;button&gt;</code> is a filled common button. An
           <code>&lt;a class="button"&gt;</code> is the same thing for a link. Put an
@@ -43,10 +42,9 @@
 &lt;/button&gt;
 
 &lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="filled" class="section scrollspy">
-        <h3>Filled</h3>
+  {% call section("filled", "Filled") %}
         <p>
           High emphasis. This is the default — the main action on a page.
           Container <code>primary</code>, label <code>on-primary</code>, no
@@ -63,10 +61,9 @@
   &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;
 &lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="filled-tonal" class="section scrollspy">
-        <h3>Tonal</h3>
+  {% call section("filled-tonal", "Tonal") %}
         <p>
           Medium emphasis. Add <code>tonal</code>. Container
           <code>secondary-container</code>, label
@@ -80,10 +77,9 @@
 &lt;button class="tonal"&gt;
   &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="outlined" class="section scrollspy">
-        <h3>Outlined</h3>
+  {% call section("outlined", "Outlined") %}
         <p>
           Medium emphasis, no fill. Add <code>outlined</code> (or
           <code>border</code>). Outline is <code>outline</code>, label is
@@ -94,10 +90,9 @@
           <button type="button" class="outlined"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="outlined"&gt;Create&lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="elevated" class="section scrollspy">
-        <h3>Elevated</h3>
+  {% call section("elevated", "Elevated") %}
         <p>
           Medium emphasis with a shadow. Container <code>surface</code>,
           label <code>primary</code>, elevation 1 at rest and 2 on hover.
@@ -108,10 +103,9 @@
           <button type="button" class="elevated"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="elevated"&gt;Create&lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="text" class="section scrollspy">
-        <h3>Text</h3>
+  {% call section("text", "Text") %}
         <p>
           Low emphasis. Add <code>text</code>. No container, label
           <code>primary</code>. Use these inside cards and dialogs so they
@@ -122,10 +116,9 @@
           <button type="button" class="text"><i class="material-symbols">add</i><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="text"&gt;Create&lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="icon" class="section scrollspy">
-        <h3>Icon buttons</h3>
+  {% call section("icon", "Icon buttons") %}
         <p>
           Add <code>circle</code> for a 40dp icon button. The variant
           helpers still apply: default is filled, <code>text</code> is the
@@ -144,10 +137,9 @@
 &lt;button class="circle tonal" aria-label="Add"&gt;…&lt;/button&gt;
 &lt;button class="circle outlined" aria-label="Add"&gt;…&lt;/button&gt;
 &lt;button class="circle text" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="floating" class="section scrollspy">
-        <h3>Floating</h3>
+  {% call section("floating", "Floating") %}
         <p>
           A FAB is <code>circle extra</code> or <code>circle large</code>:
           56dp, 16dp corners, <code>primary-container</code>, elevation 3.
@@ -169,10 +161,9 @@
 &lt;button class="extend"&gt;
   &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="sizes" class="section scrollspy">
-        <h3>Sizes</h3>
+  {% call section("sizes", "Sizes") %}
         <p>
           <code>small</code> is 32dp. Default is 40dp.
           <code>large</code> / <code>extra</code>
@@ -196,10 +187,9 @@
 <pre><code>&lt;button type="submit"&gt;
   &lt;span&gt;Submit&lt;/span&gt;&lt;i class="material-symbols"&gt;send&lt;/i&gt;
 &lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="disabled" class="section scrollspy">
-        <h3>Disabled</h3>
+  {% call section("disabled", "Disabled") %}
         <p>
           The <code>disabled</code> attribute, or the <code>disabled</code>
           class on a link. Applies to every variant.
@@ -214,25 +204,7 @@
 <pre><code>&lt;button disabled&gt;Filled&lt;/button&gt;
 &lt;button class="tonal" disabled&gt;Tonal&lt;/button&gt;
 &lt;a class="button disabled" href="#!"&gt;Link&lt;/a&gt;</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#filled">Filled</a></li>
-          <li><a href="#filled-tonal">Tonal</a></li>
-          <li><a href="#outlined">Outlined</a></li>
-          <li><a href="#elevated">Elevated</a></li>
-          <li><a href="#text">Text</a></li>
-          <li><a href="#icon">Icon buttons</a></li>
-          <li><a href="#floating">Floating</a></li>
-          <li><a href="#sizes">Sizes</a></li>
-          <li><a href="#disabled">Disabled</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

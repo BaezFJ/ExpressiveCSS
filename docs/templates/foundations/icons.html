@@ -1,14 +1,15 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Icons" %}
 {% set page_blurb = "Material Symbols, outlined by default. Axes and style are CSS variables." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="usage" class="section scrollspy">
+{%- macro toc_catalog() %}
+          <li><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Catalog</a></li>
+{%- endmacro %}
+{% call page_body(toc_extra=toc_catalog) %}
+  {% call section("usage", "Usage", heading=false) %}
         <p class="flow-text">
           Icons are Material Symbols. The default class is
           <code>material-symbols</code>; it uses the outlined family.
@@ -58,10 +59,9 @@
           <code>primary-text</code> work. For icons inside buttons, see
           <a href="{{ url_for('buttons') }}">Buttons</a>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="style" class="section scrollspy">
-        <h3>Style</h3>
+  {% call section("style", "Style") %}
         <p>
           Outlined, rounded, and sharp are font families, not variation
           axes. Set the <code>icon-style</code> attribute — the same idea as
@@ -91,10 +91,9 @@
             <p><code>sharp</code></p>
           </div>
         </div>
-      </div>
+  {% endcall %}
 
-      <div id="axes" class="section scrollspy">
-        <h3>Fill, weight, grade, optical size</h3>
+  {% call section("axes", "Axes", heading="Fill, weight, grade, optical size") %}
         <p>
           These four are variable-font axes. They inherit, so set them on
           <code>:root</code> or on a wrapper. A missing range in the Google
@@ -162,10 +161,9 @@
             <p>Weight 700</p>
           </div>
         </div>
-      </div>
+  {% endcall %}
 
-      <div id="sizes" class="section scrollspy">
-        <h3>Sizes</h3>
+  {% call section("sizes", "Sizes") %}
         <p>
           Size an icon with <code>font-size</code>, or use the preset classes
           on the <code>&lt;i&gt;</code>: <code>tiny</code> (1rem),
@@ -187,20 +185,7 @@
           <div class="s3 center-align">Large</div>
         </div>
 <pre><code>&lt;i class="large material-symbols"&gt;insert_chart&lt;/i&gt;</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#usage">Usage</a></li>
-          <li><a href="#style">Style</a></li>
-          <li><a href="#axes">Axes</a></li>
-          <li><a href="#sizes">Sizes</a></li>
-          <li><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Catalog</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

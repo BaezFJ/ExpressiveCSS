@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy">
+
         <p class="flow-text">
           Select turns a native <code>&lt;select&gt;</code> into an exposed menu —
           a text field plus a menu. Wrap it in
@@ -398,10 +400,13 @@
   &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
   &lt;option value="1"&gt;Option 1&lt;/option&gt;
 &lt;/select&gt;</code></pre>
+  
       </div>
 
-      <div id="initialization" class="section scrollspy">
+
+  <div id="initialization" class="section scrollspy">
         <h3>Initialization</h3>
+
         <p>
           The IIFE bundle exposes <code>Expressive.FormSelect</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -418,10 +423,13 @@
 <pre><code>Expressive.AutoInit(document.body, {
   FormSelect: { menuOptions: { constrainWidth: false } }
 });</code></pre>
+  
       </div>
 
-      <div id="options" class="section scrollspy">
+
+  <div id="options" class="section scrollspy">
         <h3>Options</h3>
+
         
         <table class="striped">
             <thead>
@@ -451,15 +459,18 @@
                 <code>closeOnClick</code> is forced to <code>false</code>.
               </td>
             </tr>
-        
+  
             </tbody>
         </table>
 
         <p>There is no <code>selected</code> option. Mark options with the HTML <code>selected</code> attribute instead.</p>
+  
       </div>
 
-      <div id="methods" class="section scrollspy">
+
+  <div id="methods" class="section scrollspy">
         <h3>Methods</h3>
+
         
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
@@ -483,10 +494,13 @@
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the menu, and restore the native select.</p>
 <pre><code>instance.destroy();</code></pre>
+  
       </div>
 
-      <div id="properties" class="section scrollspy">
+
+  <div id="properties" class="section scrollspy">
         <h3>Properties</h3>
+
         
         <table class="striped">
             <thead>
@@ -538,14 +552,17 @@
               <td>Menu</td>
               <td>The Menu instance for this select.</td>
             </tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
 
-      <div id="disabled" class="section scrollspy">
+
+  <div id="disabled" class="section scrollspy">
         <h3>Disabled Styles</h3>
+
         <p>
           <code>disabled</code> on the <code>&lt;select&gt;</code> disables the whole control.
           <code>disabled</code> on an <code>&lt;option&gt;</code> makes that item unselectable.
@@ -581,11 +598,16 @@
   &lt;option value="" disabled selected&gt;Choose your option&lt;/option&gt;
   &lt;option value="1"&gt;Option 1&lt;/option&gt;
 &lt;/select&gt;</code></pre>
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#introduction">Introduction</a></li>
           <li><a href="#initialization">Initialization</a></li>
@@ -594,10 +616,12 @@
           <li><a href="#properties">Properties</a></li>
           <li><a href="#disabled">Disabled Styles</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

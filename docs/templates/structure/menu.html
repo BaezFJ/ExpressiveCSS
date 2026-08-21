@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Menu" %}
 {% set page_blurb = "Material Design 3 menus, from the HTML." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
           is an item. A leading <code>&lt;i&gt;</code> is the leading icon;
@@ -66,10 +64,9 @@
           For a menu inside a top app bar, see
           <a href="{{ url_for('navbar') }}#navbar-menu">Navbar menu</a>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.Menu</code>.
           Call <code>init</code> yourself when you need options other than
@@ -85,10 +82,9 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Menu: { constrainWidth: false, coverTrigger: false }
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>alignment</code></td>
@@ -174,7 +170,7 @@
               <td><code>null</code></td>
               <td>Called when an item is clicked. Receives the <code>li</code>.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
 
         <h5>Examples</h5>
         <p>
@@ -233,10 +229,9 @@
   constrainWidth: false,
   coverTrigger: false
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="selection" class="section scrollspy">
-        <h3>Selection, shortcuts, and groups</h3>
+  {% call section("selection", "Selection and groups", heading="Selection, shortcuts, and groups") %}
         <p>
           Mark the current item with <code>.selected</code> or
           <code>aria-selected="true"</code>. Trailing
@@ -304,10 +299,9 @@
     &lt;menu&gt;…&lt;/menu&gt;
   &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="color" class="section scrollspy">
-        <h3>Color</h3>
+  {% call section("color", "Color") %}
         <p>
           Two mappings. <strong>Standard</strong> (the default) is
           surface-based and lower emphasis.
@@ -341,10 +335,9 @@
   &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;visibility&lt;/i&gt; Item 1&lt;/a&gt;&lt;/li&gt;
   &lt;li class="selected"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;check&lt;/i&gt; Item 2&lt;/a&gt;&lt;/li&gt;
 &lt;/menu&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="nested" class="section scrollspy">
-        <h3>Nested menus</h3>
+  {% call section("nested", "Nested menus") %}
         <p>
           Optional and desktop-first. Put a <code>&lt;menu&gt;</code> inside an
           <code>&lt;li&gt;</code> — no extra trigger, no second instance.
@@ -378,10 +371,9 @@
     &lt;/menu&gt;
   &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("Menu") }}
 
         <h5>.open()</h5>
@@ -399,10 +391,9 @@
         <h5>.destroy()</h5>
         <p>Destroy the plugin instance and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The trigger the plugin was initialized with.") %}
             <tr>
               <td><code>id</code></td>
@@ -429,24 +420,8 @@
               <td>Number</td>
               <td>Index of the focused item.</td>
             </tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#selection">Selection and groups</a></li>
-          <li><a href="#color">Color</a></li>
-          <li><a href="#nested">Nested menus</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

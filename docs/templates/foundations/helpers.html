@@ -1,15 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Helpers" %}
 {% set page_blurb = "An overview of the helper classes for alignment, visibility, spacing, and common CSS properties." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="valign" class="section scrollspy">
-        <h3>Alignment</h3>
+{% call page_body() %}
+  {% call section("valign", "Alignment") %}
         <p class="flow-text">Easy-to-use classes to help you align your content.</p>
 
         <h5>Vertical Align</h5>
@@ -60,10 +57,9 @@
         </p>
 <pre><code>&lt;div class="left"&gt;...&lt;/div&gt;
 &lt;div class="right"&gt;...&lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="hiding" class="section scrollspy">
-        <h3>Hiding/Showing Content</h3>
+  {% call section("hiding", "Hiding/Showing Content") %}
         <p>We provide easy to use classes to hide/show content on specific screen sizes.</p>
         <table class="striped">
           <thead>
@@ -138,10 +134,9 @@
         <p>
         <h5>Usage</h5>
 <pre><code>&lt;div class="hide-on-small-only"&gt;&lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="spacing" class="section scrollspy">
-        <h3>Spacing</h3>
+  {% call section("spacing", "Spacing Content", heading="Spacing") %}
         <p>
           These classes help space elements with margin and padding helpers for all directions. This works by combining a margin/padding prefix, a direction infix and value
           suffix.
@@ -479,10 +474,9 @@
 <pre><code>&lt;div class="p-2"&gt;
   &lt;h5 class="mt-1"&gt;The div has a padding 0.5rem and the h5 has a margin-top of 0.25rem&lt;/h5&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="formatting" class="section scrollspy">
-        <h3>Formatting</h3>
+  {% call section("formatting", "Formatting") %}
         <p>These classes help format various content on your site.</p>
 
         <h5>Truncation</h5>
@@ -506,10 +500,9 @@
         </p>
         <article class="hoverable">Hoverable article</article>
 <pre><code>&lt;article class="hoverable"&gt;Hoverable article&lt;/article&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="browser-default" class="section scrollspy">
-        <h3>Browser Defaults</h3>
+  {% call section("browser-default", "Browser Defaults") %}
         <p>
           Because we override many of the default browser styles and elements, we provide the
           <code>.browser-default</code> class to opt those elements out of the framework treatment.
@@ -537,20 +530,7 @@
   &lt;option value="1"&gt;Option 1&lt;/option&gt;
 &lt;/select&gt;
 &lt;input class="browser-default" type="text"&gt;</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#valign">Alignment</a></li>
-          <li><a href="#hiding">Hiding/Showing Content</a></li>
-          <li><a href="#spacing">Spacing Content</a></li>
-          <li><a href="#formatting">Formatting</a></li>
-          <li><a href="#browser-default">Browser Defaults</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Date Picker" %}
 {% set page_blurb = "Select a date, a range, or several dates from a calendar." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Add <code>datepicker</code> to a text input. <code>AutoInit()</code> starts every
           <code>.datepicker</code> except those marked <code>no-autoinit</code>.
@@ -35,10 +33,9 @@
           Wrap the input in its own <code>.field</code> (or another small parent). The
           calendar is inserted after that parent, not after the input itself.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.Datepicker</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -56,10 +53,9 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Datepicker: { openByDefault: true }
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="display" class="section scrollspy">
-        <h3>Display</h3>
+  {% call section("display", "Display") %}
         <p>
           The calendar is a <code>.datepicker-container</code> in the page. There is no overlay
           and no <code>autoClose</code> option.
@@ -98,10 +94,9 @@
           <code>container</code> renders the calendar into a specific element and does not
           hide it. Use a selector or a DOM node.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>format</code></td>
@@ -295,11 +290,10 @@
               <td><code>null</code></td>
               <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="date-format" class="section scrollspy">
-        <h3>Date format options</h3>
+  {% call section("date-format", "Date format", heading="Date format options") %}
         <p>Use these tokens in the <code>format</code> string.</p>
         <table class="striped">
           <thead>
@@ -362,10 +356,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
+  {% endcall %}
 
-      <div id="internationalization" class="section scrollspy">
-        <h3>Internationalization</h3>
+  {% call section("internationalization", "Internationalization") %}
         <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
         <table class="striped">
           <thead>
@@ -417,10 +410,9 @@
             </tr>
           </tbody>
         </table>
-      </div>
+  {% endcall %}
 
-      <div id="date-range" class="section scrollspy">
-        <h3>Date range</h3>
+  {% call section("date-range", "Date range") %}
         <p>
           Set <code>isDateRange: true</code>. Click a start day, then an end day that is on or
           after it. Point <code>dateRangeEndEl</code> at a second input, or omit it and a second
@@ -439,10 +431,9 @@
   isDateRange: true,
   dateRangeEndEl: '#datepicker-range-end'
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="multiple" class="section scrollspy">
-        <h3>Multiple dates</h3>
+  {% call section("multiple", "Multiple dates") %}
         <p>
           Set <code>isMultipleSelection: true</code>. Click a day to add it; click it again to
           remove it. Each selected date gets its own input.
@@ -455,10 +446,9 @@
   openByDefault: true,
   isMultipleSelection: true
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("Datepicker") }}
 
         <h5 class="light">.toString();</h5>
@@ -479,10 +469,9 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the calendar, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The input the plugin was initialized with.") %}
             <tr>
               <td><code>date</code></td>
@@ -499,26 +488,8 @@ instance.toString(someDate, 'yyyy-mm-dd');</code></pre>
               <td>Array</td>
               <td>The selected dates when <code>isMultipleSelection</code> is true.</td>
             </tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#display">Display</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#date-format">Date format</a></li>
-          <li><a href="#internationalization">Internationalization</a></li>
-          <li><a href="#date-range">Date range</a></li>
-          <li><a href="#multiple">Multiple dates</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

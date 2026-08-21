@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Scrollspy" %}
 {% set page_blurb = "Highlight the table of contents as the page scrolls." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Scrollspy watches a set of sections and which one is currently in view.
           The table of contents on the right of every documentation page is the live demo:
@@ -42,10 +40,9 @@
     &lt;/ul&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.ScrollSpy</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
@@ -65,10 +62,9 @@
           The documentation TOC is <code>position: sticky</code>. Scrollspy
           only updates which link is active.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>scrollOffset</code></td>
@@ -104,7 +100,7 @@
               <td><code>false</code></td>
               <td>If true, keep the last section above the viewport active when nothing intersects. If there is no such section, the first one stays active.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
 
         <h5 class="light">getActiveElement</h5>
         <p>
@@ -114,34 +110,19 @@
 <pre><code>function(id) {
   return '[data-section="' + CSS.escape(id) + '"]';
 }</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("ScrollSpy") }}
 
         <h5 class="light">.destroy();</h5>
         <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The DOM element the plugin was initialized with (the <code>.scrollspy</code> section).") %}{% endcall %}
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

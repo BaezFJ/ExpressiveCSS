@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Tooltips" %}
 {% set page_blurb = "Material Design 3 tooltips, from the HTML." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Introduction", heading=false) %}
         <p class="flow-text">
           A child <code>.tooltip</code> is the bubble. No
           <code>tooltipped</code> class is required. They are CSS only on
@@ -65,10 +63,9 @@
   &lt;i class="material-symbols"&gt;arrow_downward&lt;/i&gt;
   &lt;span class="tooltip bottom"&gt;Below&lt;/span&gt;
 &lt;/button&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="rich" class="section scrollspy">
-        <h3>Rich</h3>
+  {% call section("rich", "Rich") %}
         <p>
           <code>rich</code> (or BeerCSS’s <code>max</code>) is the rich
           tooltip: <code>surface</code>, elevation 2, 12dp corners,
@@ -103,10 +100,9 @@
           <code>&lt;button&gt;</code> — that would nest buttons. Put the
           bubble next to the control, wrapped in a parent.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="javascript" class="section scrollspy">
-        <h3>JavaScript</h3>
+  {% call section("javascript", "JavaScript") %}
         <p>
           The CSS path does not need AutoInit. The JS plugin is still
           there for <code>data-tooltip</code>, delayed show/hide, and
@@ -152,10 +148,9 @@
   &lt;h3&gt;Chart&lt;/h3&gt;
   &lt;p&gt;This is a tooltip with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.Tooltip</code>.
           Call <code>init</code> yourself when you need options other
@@ -173,10 +168,9 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Tooltip: { enterDelay: 200 }
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         <p>
           Constructor and <code>init</code> options.
           <code>data-tooltip</code>, <code>data-position</code>, and
@@ -246,11 +240,10 @@
               <td><code>10</code></td>
               <td>How far the tooltip moves during its transition, in pixels.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
         {{ instance_note("Tooltip") }}
 
         <p>
@@ -270,10 +263,9 @@
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="properties" class="section scrollspy">
-        <h3>Properties</h3>
+  {% call section("properties", "Properties") %}
         {% call properties_table("The DOM element the plugin was initialized with.") %}
             <tr>
               <td><code>isOpen</code></td>
@@ -295,23 +287,8 @@
               <td>Element</td>
               <td>The generated tooltip element.</td>
             </tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Introduction</a></li>
-          <li><a href="#rich">Rich</a></li>
-          <li><a href="#javascript">JavaScript</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

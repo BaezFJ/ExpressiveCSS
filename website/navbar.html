@@ -263,11 +263,13 @@
 
 
         
+
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="anatomy" class="section scrollspy">
+  <div id="anatomy" class="section scrollspy">
+
         <p class="flow-text">
           The bar is the markup. A <code>&lt;header&gt;</code> whose child is a
           <code>&lt;nav&gt;</code> is a top app bar. The heading is the headline.
@@ -321,10 +323,13 @@
     &lt;a href="#!" aria-label="More"&gt;&lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;&lt;/a&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
+  
       </div>
 
-      <div id="destinations" class="section scrollspy">
+
+  <div id="destinations" class="section scrollspy">
         <h3>Destinations</h3>
+
         <p>
           Text links go in a <code>&lt;menu&gt;</code>. Put the menu after the
           heading to align it on the end; put it first to align it on the start.
@@ -356,10 +361,13 @@
           layer mixes <code>currentColor</code> at 8% hover and 10% active, so
           it follows the theme and any fill you put on the header.
         </p>
+  
       </div>
 
-      <div id="center" class="section scrollspy">
+
+  <div id="center" class="section scrollspy">
         <h3>Center-aligned</h3>
+
         <p>
           Add <code>center</code> to the header. The headline is taken out of
           flow so the leading and trailing actions can sit on the edges without
@@ -384,10 +392,13 @@
     &lt;a href="#!" aria-label="More"&gt;&lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;&lt;/a&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
+  
       </div>
 
-      <div id="medium" class="section scrollspy">
+
+  <div id="medium" class="section scrollspy">
         <h3>Medium and large</h3>
+
         <p>
           Same markup as the small bar. <code>medium</code> is 112dp with a
           <code>headline-small</code> title on the second row.
@@ -429,10 +440,13 @@
 &lt;/header&gt;
 
 &lt;header class="large"&gt;…&lt;/header&gt;</code></pre>
+  
       </div>
 
-      <div id="fixed" class="section scrollspy">
+
+  <div id="fixed" class="section scrollspy">
         <h3>Fixed</h3>
+
         <p>
           Add <code>fixed</code> to pin a top bar with <code>position: sticky</code>.
           No wrapper is required. At rest the bar is <code>surface</code>,
@@ -453,10 +467,13 @@
     &lt;a href="#!" aria-label="Search"&gt;&lt;i class="material-symbols"&gt;search&lt;/i&gt;&lt;/a&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
+  
       </div>
 
-      <div id="color" class="section scrollspy">
+
+  <div id="color" class="section scrollspy">
         <h3>Color</h3>
+
         <p>
           The default fill is <code>surface</code>. Color utilities win because
           they live in the utilities layer — put
@@ -499,14 +516,17 @@
             <tr><td><code>--md-comp-top-app-bar-trailing-icon-color</code></td><td><code>inherit</code> (spec: <code>on-surface-variant</code>)</td></tr>
             <tr><td><code>--md-comp-top-app-bar-container-height</code></td><td>64px</td></tr>
             <tr><td><code>--md-comp-top-app-bar-leading-icon-size</code></td><td>24px</td></tr>
-        
+  
             </tbody>
         </table>
 
+  
       </div>
 
-      <div id="navbar-menu" class="section scrollspy">
+
+  <div id="navbar-menu" class="section scrollspy">
         <h3>Menu</h3>
+
         <p>
           Point a <code>menu-trigger</code> at a
           <code>&lt;menu&gt;</code> whose <code>id</code> matches
@@ -560,10 +580,13 @@
           Menus open on click by default (<code>hover: false</code>). Pass
           <code>{ hover: true }</code> to open on hover instead.
         </p>
+  
       </div>
 
-      <div id="search-docs" class="section scrollspy">
+
+  <div id="search-docs" class="section scrollspy">
         <h3>Search</h3>
+
         <p>
           A <code>&lt;form&gt;</code> in the nav fills the space between the
           leading action and anything after it. The input is unstyled against
@@ -590,10 +613,13 @@
     &lt;/form&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
+  
       </div>
 
-      <div id="mobile-collapse" class="section scrollspy">
+
+  <div id="mobile-collapse" class="section scrollspy">
         <h3>Mobile collapse</h3>
+
         <p>
           Hide the destination menu below the large breakpoint and put a
           <code>sidenav-trigger</code> in the leading slot. The trigger stays
@@ -645,11 +671,16 @@
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   Expressive.Sidenav.init(document.querySelectorAll('.sidenav'));
 });</code></pre>
+  
       </div>
+
+
+
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
+
         <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#destinations">Destinations</a></li>
@@ -661,10 +692,12 @@
           <li><a href="#search-docs">Search</a></li>
           <li><a href="#mobile-collapse">Mobile collapse</a></li>
         </ul>
+
       </div>
     </div>
   </div>
 </div>
+
 
     </main>
 

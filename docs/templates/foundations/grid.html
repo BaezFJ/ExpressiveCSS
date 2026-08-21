@@ -1,14 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Grid" %}
 {% set page_blurb = "Use Expressive's CSS Grid system to format a page in an ordered, comfortable way." %}
 
 {% block page %}
-    <div class="container">
-        <div class="row">
-            <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-                <div id="grid-container" class="section scrollspy">
+{% call page_body() %}
+  {% call section("grid-container", "Container", heading=false) %}
                     <p class="flow-text">We are using a standard 12 column fluid responsive grid system. The grid helps
                         you layout your page in an ordered, easy fashion.</p>
                     <h3>Container</h3>
@@ -74,10 +72,9 @@
 
 &lt;!-- percentage only, no cap --&gt;
 &lt;div class="container max"&gt;…&lt;/div&gt;</code></pre>
-                </div>
+  {% endcall %}
 
-                <div id="grid-intro" class="scrollspy">
-                    <h3>Introduction</h3>
+  {% call section("grid-intro", "Introduction") %}
                     <p>Take a look at this section to quickly understand how the grid works!</p>
                     <h5>12 Columns</h5>
                     <p>Our standard grid has 12 columns. No matter the size of the browser, each of these columns will
@@ -139,10 +136,9 @@
   &lt;div class="s6"&gt;6-columns (one-half)&lt;/div&gt;
   &lt;div class="s6"&gt;6-columns (one-half)&lt;/div&gt;
 &lt;/div&gt;</code></pre>
-                </div>
+  {% endcall %}
 
-                <div id="grid-offsets" class="section scrollspy">
-                    <h2>Offsets</h2>
+  {% call section("grid-offsets", "Offsets", tag="h2") %}
                     <p>
                         To offset, simply add
                         <code>offset-s2</code> to the class where <code>s</code> signifies the screen class-prefix (s =
@@ -207,10 +203,9 @@
   &lt;div class="l2"&gt;&lt;/div&gt;
   &lt;div class="l2"&gt;relative offset 2&lt;/div&gt;
 &lt;/div&gt;</code></pre>
-                </div>
+  {% endcall %}
 
-                <div id="grid-gaps" class="section scrollspy">
-                    <h2>Gaps</h2>
+  {% call section("grid-gaps", "Gaps", tag="h2") %}
                     <p>
                         There is a default gap between the columns (g-3). You can easily change the gap with the gap
                         classes. Simply add
@@ -245,10 +240,9 @@
   &lt;div class="s3"&gt;3&lt;/div&gt;
   &lt;div class="s3"&gt;4&lt;/div&gt;
 &lt;/div&gt;</code></pre>
-                </div>
+  {% endcall %}
 
-                <div id="grid-push" class="section scrollspy">
-                    <h2>Push and Pull</h2>
+  {% call section("grid-push", "Push and Pull", tag="h2") %}
                     <p class="error-text">Deprecated. CSS Grid is used now — use offsets, or empty columns, to change
                         placement.</p>
                     <p>
@@ -257,10 +251,9 @@
                         and the number is how many
                         columns to push or pull by. Those classes are no longer part of the grid.
                     </p>
-                </div>
+  {% endcall %}
 
-                <div id="grid-layouts" class="scrollspy">
-                    <h3>Creating Layouts</h3>
+  {% call section("grid-layouts", "Creating Layouts") %}
                     <p>
                         Here we will show you how to create some commonly used layouts with our grid system. Hopefully
                         these will get you more comfortable with laying out elements. To
@@ -407,10 +400,9 @@
     &lt;!-- Teal page content --&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
-                </div>
+  {% endcall %}
 
-                <div id="grid-responsive" class="scrollspy">
-                    <h3>Creating Responsive Layouts</h3>
+  {% call section("grid-responsive", "Responsive Layouts", heading="Creating Responsive Layouts") %}
                     <p>Above we showed you how to layout elements using our grid system. Now we'll show you how to
                         design your layouts so that they look great on all screen sizes.</p>
                     <h5>Screen Sizes</h5>
@@ -628,22 +620,7 @@
   &lt;div class="s12 m6 l4 xxl3"&gt;…&lt;/div&gt;
   &lt;div class="s12 m6 l4 xxl3"&gt;…&lt;/div&gt;
 &lt;/div&gt;</code></pre>
-                </div>
-            </div>
+  {% endcall %}
 
-            <div class="hide-on-small-only m3 xl3">
-                <div class="toc-wrapper mt-5">
-                    <ul class="section table-of-contents">
-                        <li><a href="#grid-container">Container</a></li>
-                        <li><a href="#grid-intro">Introduction</a></li>
-                        <li><a href="#grid-offsets">Offsets</a></li>
-                        <li><a href="#grid-gaps">Gaps</a></li>
-                        <li><a href="#grid-push">Push and Pull</a></li>
-                        <li><a href="#grid-layouts">Creating Layouts</a></li>
-                        <li><a href="#grid-responsive">Responsive Layouts</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+{% endcall %}
 {% endblock %}

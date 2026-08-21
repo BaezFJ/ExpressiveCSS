@@ -1,13 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Pulse" %}
 {% set page_blurb = "Draw attention to floating buttons with a subtle, repeating pulse." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-      <div id="pulse" class="section scrollspy">
+{% call page_body() %}
+  {% call section("pulse", "Pulse", heading=false) %}
         <p class="flow-text">
           Draw attention to your buttons with this subtle but captivating effect. Just add the class
           <code>pulse</code> to your button. Note: This is meant for floating buttons, so it may not work perfectly with every component.
@@ -29,16 +28,7 @@
 <pre><code>&lt;a class="button extra circle small pulse"&gt;&lt;i class="material-symbols"&gt;menu&lt;/i&gt;&lt;/a&gt;
 &lt;a class="button extra circle pulse"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;&lt;/a&gt;
 &lt;a class="button extra circle secondary on-secondary-text pulse"&gt;&lt;i class="material-symbols"&gt;edit&lt;/i&gt;&lt;/a&gt;</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#pulse">Pulse</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

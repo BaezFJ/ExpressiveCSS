@@ -1,4 +1,5 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Parallax" %}
@@ -13,7 +14,7 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="introduction" class="section scrollspy">
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           A <code>.parallax</code> (or <code>&lt;figure class="parallax"&gt;</code>)
           clips an <code>&lt;img&gt;</code>, <code>&lt;picture&gt;</code>, or
@@ -32,7 +33,7 @@
 <pre><code>&lt;figure class="parallax"&gt;
   &lt;img src="images/lake.jpg" alt="A mountain lake"&gt;
 &lt;/figure&gt;</code></pre>
-      </div>
+  {% endcall %}
     </div>
   </div>
 </div>
@@ -46,8 +47,7 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-      <div id="overlay" class="section scrollspy">
-        <h3>Overlay</h3>
+  {% call section("overlay", "Overlay") %}
         <p>
           A heading or <code>&lt;p&gt;</code> is centered on the image. A
           <code>&lt;figcaption&gt;</code> docks to the bottom on a
@@ -62,10 +62,9 @@
   &lt;img src="images/lake.jpg" alt=""&gt;
   &lt;h2 class="on-primary-text"&gt;Visit the lake&lt;/h2&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  {% call section("tokens", "Tokens") %}
         <p>
           Override these on the clip. Height is how much of the image you
           see; travel is how far it moves. Shape matches media, lightbox,
@@ -85,7 +84,7 @@
               <td><code>--md-comp-parallax-shape</code></td>
               <td>12px</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
         <figure class="parallax" style="--md-comp-parallax-height: 300px; --md-comp-parallax-travel: 40px;">
           <img src="https://picsum.photos/id/1019/1600/900" alt="Clouds over hills">
         </figure>
@@ -98,10 +97,9 @@
           Motion follows <code>prefers-reduced-motion</code>. When the
           user asks for less, the image stays a static cover.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
         <p>
           Optional. The IIFE still exposes <code>Expressive.Parallax</code>
           so existing <code>init</code> / <code>AutoInit</code> calls keep
@@ -111,26 +109,19 @@
   const elems = document.querySelectorAll('.parallax');
   const instances = Expressive.Parallax.init(elems);
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
 <pre><code>const instance = Expressive.Parallax.getInstance(elem);</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Drop the instance stash. There are no listeners to tear down.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
+  {% endcall %}
     </div>
 
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#overlay">Overlay</a></li>
-          <li><a href="#tokens">Tokens</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#methods">Methods</a></li>
-        </ul>
+        {{ toc() }}
       </div>
     </div>
   </div>

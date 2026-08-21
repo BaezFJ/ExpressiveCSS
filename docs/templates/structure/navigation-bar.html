@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Navigation bar" %}
 {% set page_blurb = "Switch between UI views on compact and medium screens." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>nav.navigation-bar</code> holds 3–5 destinations of equal
           importance. Destinations do not change from screen to screen.
@@ -26,10 +24,9 @@
           covers mid-size screens and a
           <a href="{{ url_for('sidenav') }}">sidenav</a> the rest.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="stacked" class="section scrollspy">
-        <h3>Stacked</h3>
+  {% call section("stacked", "Stacked") %}
         <p>
           Default. Icon above the label. The selected destination puts a
           pill behind the icon and fills the glyph. Use this in compact
@@ -73,10 +70,9 @@
     Library
   &lt;/a&gt;
 &lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="horizontal" class="section scrollspy">
-        <h3>Horizontal</h3>
+  {% call section("horizontal", "Horizontal") %}
         <p>
           Add <code>horizontal</code>. Icon and label sit on one row, and
           the selected pill wraps both. Use this in medium windows.
@@ -108,20 +104,18 @@
   &lt;/a&gt;
   …
 &lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="fixed" class="section scrollspy">
-        <h3>Fixed</h3>
+  {% call section("fixed", "Fixed") %}
         <p>
           Add <code>fixed</code> to stick the bar to the bottom of the
           viewport. Padding includes <code>safe-area-inset-bottom</code>
           so the destinations clear a home indicator.
         </p>
 <pre><code>&lt;nav class="navigation-bar fixed" aria-label="Main"&gt;…&lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  {% call section("tokens", "Tokens") %}
         <p>Set these on the bar (or on <code>:root</code>):</p>
         {% call token_table() %}
             <tr><td><code>--md-comp-nav-bar-container-color</code></td><td>on-surface 8% on surface</td></tr>
@@ -131,21 +125,8 @@
             <tr><td><code>--md-comp-nav-bar-indicator-height</code></td><td>32px</td></tr>
             <tr><td><code>--md-comp-nav-bar-indicator-shape</code></td><td>16px (100px horizontal)</td></tr>
             <tr><td><code>--md-comp-nav-bar-active-indicator-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#stacked">Stacked</a></li>
-          <li><a href="#horizontal">Horizontal</a></li>
-          <li><a href="#fixed">Fixed</a></li>
-          <li><a href="#tokens">Tokens</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

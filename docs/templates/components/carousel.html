@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import options_table, token_table %}
 
 {% set page_name = "Carousel" %}
 {% set page_blurb = "A 3D coverflow, or a linear snap track." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           A <code>.carousel</code> is a row of items. The default is a
           perspective stack: the center item is large, the others recede.
@@ -46,10 +44,9 @@
           <code>--carousel-height</code>) to change it. Coverflow items
           are half that size. Arrow keys move the focused carousel.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="flat" class="section scrollspy">
-        <h3>Flat (snap)</h3>
+  {% call section("flat", "Flat", heading="Flat (snap)") %}
         <p>
           Add <code>flat</code> for a linear track. Slides snap. Swipe
           is native scrolling — no drag physics.
@@ -66,10 +63,9 @@
   &lt;img src="images/sample-1.jpg" alt="Mountain lake"&gt;
   &lt;img src="images/sample-2.jpg" alt="Forest path"&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="content" class="section scrollspy">
-        <h3>Content carousel</h3>
+  {% call section("content", "Content carousel") %}
         <p>
           Items do not have to be images. A
           <code>carousel-fixed-item</code> stays put over the slides.
@@ -112,10 +108,9 @@
           Swipeable <a href="{{ url_for('tabs') }}">tabs</a> wrap their
           panels in a flat carousel. That is the Tabs plugin.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  {% call section("tokens", "Tokens") %}
         {% call token_table() %}
             <tr>
               <td><code>--md-comp-carousel-height</code></td>
@@ -129,16 +124,15 @@
               <td><code>--md-comp-carousel-gap</code></td>
               <td>0</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
         <p>
           <code>--carousel-height</code> is still read if you set it.
           <code>prefers-reduced-motion</code> turns off snap smoothing
           and the coverflow tween.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  {% call section("initialization", "Initialization") %}
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.carousel');
   const instances = Expressive.Carousel.init(elems, {
@@ -148,10 +142,9 @@
 <pre><code>Expressive.AutoInit(document.body, {
   Carousel: { indicators: true }
 });</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  {% call section("options", "Options") %}
         {% call options_table() %}
             <tr>
               <td><code>duration</code></td>
@@ -207,11 +200,10 @@
               <td><code>null</code></td>
               <td>Called when a new item becomes the center. Receives the current item and whether the move was a drag.</td>
             </tr>
-        {% endcall %}
-      </div>
+  {% endcall %}
+  {% endcall %}
 
-      <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  {% call section("methods", "Methods") %}
 <pre><code>const instance = Expressive.Carousel.getInstance(elem);</code></pre>
         <h5 class="light">.next(); / .prev();</h5>
         <p>Move one item, or pass how many.</p>
@@ -223,22 +215,7 @@ instance.prev(3);</code></pre>
         <h5 class="light">.destroy();</h5>
         <p>Tear down listeners, generated dots, and inline transforms.</p>
 <pre><code>instance.destroy();</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#flat">Flat</a></li>
-          <li><a href="#content">Content carousel</a></li>
-          <li><a href="#tokens">Tokens</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

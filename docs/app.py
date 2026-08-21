@@ -17,6 +17,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DIST_DIR = REPO_ROOT / 'dist'
 
 app = Flask(__name__)
+# `{% do %}` lets the section macro register itself for the table of contents.
+app.jinja_env.add_extension('jinja2.ext.do')
 
 
 def _group(label, icon, items, blurb=None):
@@ -125,6 +127,8 @@ def inject_build_assets():
         'build_missing': not (DIST_DIR / 'css').is_dir(),
         'nav': NAV,
         'version': VERSION,
+        # Fresh per render: section() appends to it, toc() reads it back.
+        'toc_sections': [],
     }
 
 

@@ -1,14 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Themes" %}
 {% set page_blurb = "Light and dark schemes, the theme attribute, and custom tokens." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="introduction" class="section scrollspy">
+{% call page_body() %}
+  {% call section("introduction", "Introduction", heading=false) %}
         <p class="flow-text">
           Expressive maps Material Design 3 color tokens onto live
           <code>--md-sys-color-*</code> custom properties. Components, buttons, and
@@ -69,10 +67,9 @@
           <a class="button tonal mr-2 mb-2">Tonal</a>
           <a class="button outlined mr-2 mb-2">Outlined</a>
         </article>
-      </div>
+  {% endcall %}
 
-      <div id="reading-theme" class="section scrollspy">
-        <h3>Reading the theme</h3>
+  {% call section("reading-theme", "Reading theme", heading="Reading the theme") %}
         <p>
           Put a short inline script in <code>&lt;head&gt;</code>, before the
           stylesheet paints, if you want to restore a saved choice and avoid a
@@ -104,10 +101,9 @@
           the first paint. This docs site does that in
           <code>&lt;head&gt;</code>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="changing-theme" class="section scrollspy">
-        <h3>Changing the theme</h3>
+  {% call section("changing-theme", "Changing theme", heading="Changing the theme") %}
         <p>
           Switch schemes by writing the attribute. That is the entire public
           API — there is no <code>Expressive.theme</code> helper.
@@ -134,10 +130,9 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           The same three choices live in the top-right of every docs page.
           Reload keeps the one you picked.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="creating-theme" class="section scrollspy">
-        <h3>Creating a theme</h3>
+  {% call section("creating-theme", "Creating a theme") %}
         <p>
           Customize by overriding the Material Design 3 tokens. Do not set
           <code>--background-color</code>, <code>--primary-color</code>, or
@@ -282,19 +277,7 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           <code>on-*</code> text class so contrast stays correct when the
           scheme flips.
         </p>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#reading-theme">Reading theme</a></li>
-          <li><a href="#changing-theme">Changing theme</a></li>
-          <li><a href="#creating-theme">Creating a theme</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

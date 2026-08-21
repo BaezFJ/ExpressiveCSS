@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Toolbars" %}
 {% set page_blurb = "Frequently used actions for the current page." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           Toolbars display frequently used actions relevant to the current
           page. Two variants: a <strong>floating</strong> toolbar and a
@@ -42,10 +40,9 @@
           (<code>div.fixed-action-btn.toolbar</code>). That stays on
           <a href="{{ url_for('floating_action_button') }}">Floating Action Button</a>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="floating" class="section scrollspy">
-        <h3>Floating</h3>
+  {% call section("floating", "Floating") %}
         <p>
           The default. Horizontal or <code>vertical</code>. Standard or
           <code>vibrant</code>. It can hold many controls, and it can sit
@@ -115,10 +112,9 @@
     &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
   &lt;/button&gt;
 &lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="color" class="section scrollspy">
-        <h3>Color</h3>
+  {% call section("color", "Color") %}
         <p>
           Standard is <code>surface-container</code>.
           <code>vibrant</code> (or <code>filled</code> on the nav) is
@@ -147,10 +143,9 @@
           </nav>
         </p>
 <pre><code>&lt;nav class="toolbar vibrant" aria-label="Text format"&gt;…&lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="vertical" class="section scrollspy">
-        <h3>Vertical</h3>
+  {% call section("vertical", "Vertical") %}
         <p>
           <code>vertical</code> stacks the actions. Only floating bars
           go vertical — a docked bar stays a horizontal strip.
@@ -175,10 +170,9 @@
           </nav>
         </p>
 <pre><code>&lt;nav class="toolbar vertical" aria-label="History"&gt;…&lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="docked" class="section scrollspy">
-        <h3>Docked</h3>
+  {% call section("docked", "Docked") %}
         <p>
           <code>docked</code> (the M3 name; <code>max</code> is the
           BeerCSS alias) stretches the bar to the full width, drops the
@@ -245,10 +239,9 @@
   &lt;span class="max"&gt;&lt;/span&gt;
   &lt;button type="button" class="filled"&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
 &lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="fab" class="section scrollspy">
-        <h3>Pairing with a FAB</h3>
+  {% call section("fab", "Pairing with a FAB") %}
         <p>
           Wrap the toolbar and a sibling
           <code>.extra.circle</code> FAB in
@@ -284,10 +277,9 @@
     &lt;i class="material-symbols"&gt;reply&lt;/i&gt;
   &lt;/button&gt;
 &lt;/div&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="fixed" class="section scrollspy">
-        <h3>Fixed</h3>
+  {% call section("fixed", "Fixed") %}
         <p>
           <code>fixed</code> pins the bar to the viewport. A floating bar
           sits 16dp from the bottom-center; add <code>top</code> to move
@@ -298,34 +290,17 @@
 <pre><code>&lt;nav class="toolbar fixed" aria-label="Format"&gt;…&lt;/nav&gt;
 &lt;nav class="toolbar vertical fixed" aria-label="Tools"&gt;…&lt;/nav&gt;
 &lt;nav class="toolbar docked fixed" aria-label="Editor"&gt;…&lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  {% call section("tokens", "Tokens") %}
         {% call token_table() %}
             <tr><td><code>--md-comp-toolbar-container-color</code></td><td><code>--md-sys-color-surface-container</code></td></tr>
             <tr><td><code>--md-comp-toolbar-container-shape</code></td><td>32px (0 when docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-container-height</code></td><td>64px</td></tr>
             <tr><td><code>--md-comp-toolbar-action-size</code></td><td>48px</td></tr>
             <tr><td><code>--md-comp-toolbar-icon-size</code></td><td>24px</td></tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#floating">Floating</a></li>
-          <li><a href="#color">Color</a></li>
-          <li><a href="#vertical">Vertical</a></li>
-          <li><a href="#docked">Docked</a></li>
-          <li><a href="#fab">Pairing with a FAB</a></li>
-          <li><a href="#fixed">Fixed</a></li>
-          <li><a href="#tokens">Tokens</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

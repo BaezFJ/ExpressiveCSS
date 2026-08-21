@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "Media" %}
 {% set page_blurb = "Lightbox and Slider for large images and slideshows." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="lightbox" class="section scrollspy">
+{% call page_body() %}
+  {% call section("lightbox", "Lightbox", heading=false) %}
         <p class="flow-text">
           Media components handle large objects such as images. For responsive images and videos without JavaScript, see
           <a href="{{ url_for('media_css') }}">Media Styles</a>.
@@ -72,7 +70,7 @@
               <td><code>null</code></td>
               <td>Called after the lightbox closes.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
 
         <h5 class="light">Methods</h5>
         {{ instance_note("Lightbox") }}
@@ -113,7 +111,7 @@
               <td>Number</td>
               <td>Original height of the image.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
 
         <h5 class="light">Captions</h5>
         <p>Add a short caption with the <code>data-caption</code> attribute.</p>
@@ -123,10 +121,9 @@
      width="250"
      alt="A path through trees"
      src="images/sample-2.jpg"&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="slider" class="section scrollspy">
-        <h3>Slider</h3>
+  {% call section("slider", "Slider") %}
         <p>
           The slider is an image slideshow. Captions transition on their own according to
           <code>center-align</code>, <code>left-align</code>, or <code>right-align</code>.
@@ -256,7 +253,7 @@
               <td><code>null</code></td>
               <td>Builds the ARIA label for each indicator. Receives the 1-based index and a boolean that is true for the current slide. If omitted, the label is the index.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
 
         <h5 class="light">Methods</h5>
         {{ instance_note("Slider") }}
@@ -291,7 +288,7 @@
               <td>Boolean</td>
               <td>Whether the slider is paused by a focus or hover event.</td>
             </tr>
-        {% endcall %}
+  {% endcall %}
 
         <h5 class="light">Fullscreen Slider</h5>
         <p>
@@ -302,17 +299,7 @@
 <pre><code>&lt;div class="slider fullscreen"&gt;
   &lt;ul class="slides"&gt;...&lt;/ul&gt;
 &lt;/div&gt;</code></pre>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#lightbox">Lightbox</a></li>
-          <li><a href="#slider">Slider</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

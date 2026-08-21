@@ -1,15 +1,13 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Navigation rail" %}
 {% set page_blurb = "Switch between UI views on mid-sized devices." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>nav.navigation-rail</code> holds 3–7 destinations plus an
           optional FAB. Put it in the same place on every screen. Use it
@@ -30,10 +28,9 @@
           A full overlay menu is a
           <a href="{{ url_for('sidenav') }}">sidenav</a>.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="collapsed" class="section scrollspy">
-        <h3>Collapsed</h3>
+  {% call section("collapsed", "Collapsed") %}
         <p>
           Default. 96dp. Icon above the label; the selected pill sits
           behind the icon. The FAB is icon-only. Offset the rest of the
@@ -83,10 +80,9 @@
     Label
   &lt;/a&gt;
 &lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="expanded" class="section scrollspy">
-        <h3>Expanded</h3>
+  {% call section("expanded", "Expanded") %}
         <p>
           Add <code>expanded</code>. Destinations become a row: icon,
           then label, with the selected pill around both. The FAB grows
@@ -137,10 +133,9 @@
     padding-left: var(--md-comp-nav-rail-expanded-width);
   }
 }</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="modal" class="section scrollspy">
-        <h3>Modal</h3>
+  {% call section("modal", "Modal") %}
         <p>
           Below the small breakpoint, <code>expanded</code> already
           overlays the page with a scrim. Add <code>modal</code> if you
@@ -148,31 +143,17 @@
           the spec, a compact window expanding in place.
         </p>
 <pre><code>&lt;nav class="navigation-rail expanded modal" aria-label="Main"&gt;…&lt;/nav&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  {% call section("tokens", "Tokens") %}
         {% call token_table() %}
             <tr><td><code>--md-comp-nav-rail-collapsed-width</code></td><td>96px</td></tr>
             <tr><td><code>--md-comp-nav-rail-expanded-width</code></td><td>280px (clamped 220–360)</td></tr>
             <tr><td><code>--md-comp-nav-rail-icon-size</code></td><td>24px</td></tr>
             <tr><td><code>--md-comp-nav-rail-indicator-width</code></td><td>56px</td></tr>
             <tr><td><code>--md-comp-nav-rail-fab-size</code></td><td>56px</td></tr>
-        {% endcall %}
-      </div>
-    </div>
+  {% endcall %}
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#collapsed">Collapsed</a></li>
-          <li><a href="#expanded">Expanded</a></li>
-          <li><a href="#modal">Modal</a></li>
-          <li><a href="#tokens">Tokens</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}

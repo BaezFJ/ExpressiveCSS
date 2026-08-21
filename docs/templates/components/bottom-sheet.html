@@ -1,14 +1,12 @@
 {% extends "docs.html" %}
+{% from "macros/page.html" import page_body, section, toc with context %}
 
 {% set page_name = "Bottom sheet" %}
 {% set page_blurb = "Secondary content anchored to the bottom of the screen." %}
 
 {% block page %}
-<div class="container">
-  <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
-
-      <div id="anatomy" class="section scrollspy">
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>dialog.bottom-sheet</code> (or <code>.bottom</code>) is the
           surface. Use it for additional or secondary content — not the app’s
@@ -92,10 +90,9 @@
           <code>::before</code>. Put a <code>.handle</code> button first if
           you want a real control in that slot.
         </p>
-      </div>
+  {% endcall %}
 
-      <div id="handle" class="section scrollspy">
-        <h3>Handle</h3>
+  {% call section("handle", "Handle") %}
         <p>
           Drag the top 48dp (or the <code>.handle</code> button) down to
           dismiss. A flick counts. The rest of the sheet scrolls if the
@@ -106,10 +103,9 @@
   &lt;h2&gt;Title&lt;/h2&gt;
   …
 &lt;/dialog&gt;</code></pre>
-      </div>
+  {% endcall %}
 
-      <div id="layout" class="section scrollspy">
-        <h3>Layout</h3>
+  {% call section("layout", "Layout") %}
         <p>
           Compact (below 601px) is full-bleed, flush to the bottom. From
           the small breakpoint the sheet is at most 640dp wide with 56dp
@@ -119,18 +115,7 @@
           or a basic dialog is usually a better fit; the bottom sheet still
           lays out if you open one.
         </p>
-      </div>
-    </div>
+  {% endcall %}
 
-    <div class="hide-on-small-only m3 xl3">
-      <div class="toc-wrapper mt-5">
-        <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#handle">Handle</a></li>
-          <li><a href="#layout">Layout</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+{% endcall %}
 {% endblock %}
