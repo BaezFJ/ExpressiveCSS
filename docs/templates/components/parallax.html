@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Parallax - ExpressiveCSS{% endblock %}
-{% block page_title %}Parallax{% endblock %}
+{% set page_name = "Parallax" %}
+{% set page_blurb = "A cropped image that shifts as it crosses the viewport." %}
 
 {% block page %}
-{{ Banner("Parallax", "A cropped image that shifts as it crosses the viewport.") }}
-
 <figure class="parallax">
   <img src="https://picsum.photos/id/1015/1600/900" alt="A mountain lake">
 </figure>

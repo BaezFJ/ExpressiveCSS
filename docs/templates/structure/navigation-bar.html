@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Navigation bar - ExpressiveCSS{% endblock %}
-{% block page_title %}Navigation bar{% endblock %}
+{% set page_name = "Navigation bar" %}
+{% set page_blurb = "Switch between UI views on compact and medium screens." %}
 
 {% block page %}
-{{ Banner("Navigation bar", "Switch between UI views on compact and medium screens.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

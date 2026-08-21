@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Autocomplete - ExpressiveCSS{% endblock %}
-{% block page_title %}Autocomplete{% endblock %}
+{% set page_name = "Autocomplete" %}
+{% set page_blurb = "Suggest values under a text field as the user types." %}
 
 {% block page %}
-{{ Banner("Autocomplete", "Suggest values under a text field as the user types.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

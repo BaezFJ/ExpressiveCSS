@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Preloader - ExpressiveCSS{% endblock %}
-{% block page_title %}Preloader{% endblock %}
+{% set page_name = "Preloader" %}
+{% set page_blurb = "Activity and progress. The HTML is the indicator." %}
 
 {% block page %}
-{{ Banner("Preloader", "Activity and progress. The HTML is the indicator.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

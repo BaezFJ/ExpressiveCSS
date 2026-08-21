@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Grid - ExpressiveCSS{% endblock %}
-{% block page_title %}Grid{% endblock %}
+{% set page_name = "Grid" %}
+{% set page_blurb = "Use Expressive's CSS Grid system to format a page in an ordered, comfortable way." %}
 
 {% block page %}
-    {{ Banner("Grid", "Use Expressive's CSS Grid system to format a page in an ordered, comfortable way.") }}
-
     <div class="container">
         <div class="row">
             <div class="s12 m8 offset-m1 xl7 offset-xl1">

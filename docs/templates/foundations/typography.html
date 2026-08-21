@@ -1,16 +1,13 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Typography - ExpressiveCSS{% endblock %}
-{% block page_title %}Typography{% endblock %}
+{% set page_name = "Typography" %}
+{% set page_blurb = "Material Design 3 type, from the HTML." %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500&display=swap">
 {% endblock %}
 
 {% block page %}
-{{ Banner("Typography", "Material Design 3 type, from the HTML.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

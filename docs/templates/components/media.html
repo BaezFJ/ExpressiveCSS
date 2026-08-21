@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Media - ExpressiveCSS{% endblock %}
-{% block page_title %}Media{% endblock %}
+{% set page_name = "Media" %}
+{% set page_blurb = "Lightbox and Slider for large images and slideshows." %}
 
 {% block page %}
-{{ Banner("Media", "Lightbox and Slider for large images and slideshows.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

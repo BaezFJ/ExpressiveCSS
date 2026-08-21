@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Auto Init - ExpressiveCSS{% endblock %}
-{% block page_title %}Auto Init{% endblock %}
+{% set page_name = "Auto Init" %}
+{% set page_blurb = "Initialize every registered component with one function call." %}
 
 {% block page %}
-{{ Banner("Auto Init", "Initialize every registered component with one function call.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

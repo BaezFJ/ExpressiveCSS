@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Pagination - ExpressiveCSS{% endblock %}
-{% block page_title %}Pagination{% endblock %}
+{% set page_name = "Pagination" %}
+{% set page_blurb = "A list of pages. The HTML is the component." %}
 
 {% block page %}
-{{ Banner("Pagination", "A list of pages. The HTML is the component.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

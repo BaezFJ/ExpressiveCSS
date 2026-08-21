@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Sidenav - ExpressiveCSS{% endblock %}
-{% block page_title %}Sidenav{% endblock %}
+{% set page_name = "Sidenav" %}
+{% set page_blurb = "A slide-out menu, or a fixed sidebar on large screens." %}
 
 {% block page %}
-{{ Banner("Sidenav", "A slide-out menu, or a fixed sidebar on large screens.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

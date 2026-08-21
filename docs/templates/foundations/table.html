@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Table - ExpressiveCSS{% endblock %}
-{% block page_title %}Table{% endblock %}
+{% set page_name = "Table" %}
+{% set page_blurb = "Organize data with a few utility classes on a standard HTML table." %}
 
 {% block page %}
-{{ Banner("Table", "Organize data with a few utility classes on a standard HTML table.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

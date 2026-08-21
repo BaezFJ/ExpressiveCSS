@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Date Picker - ExpressiveCSS{% endblock %}
-{% block page_title %}Date Picker{% endblock %}
+{% set page_name = "Date Picker" %}
+{% set page_blurb = "Select a date, a range, or several dates from a calendar." %}
 
 {% block page %}
-{{ Banner("Date Picker", "Select a date, a range, or several dates from a calendar.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

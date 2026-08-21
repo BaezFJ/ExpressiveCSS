@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Bottom sheet - ExpressiveCSS{% endblock %}
-{% block page_title %}Bottom sheet{% endblock %}
+{% set page_name = "Bottom sheet" %}
+{% set page_blurb = "Secondary content anchored to the bottom of the screen." %}
 
 {% block page %}
-{{ Banner("Bottom sheet", "Secondary content anchored to the bottom of the screen.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

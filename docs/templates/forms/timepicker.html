@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Time Picker - ExpressiveCSS{% endblock %}
-{% block page_title %}Time Picker{% endblock %}
+{% set page_name = "Time Picker" %}
+{% set page_blurb = "Pick a time from a clock face, in 12-hour or 24-hour form." %}
 
 {% block page %}
-{{ Banner("Time Picker", "Pick a time from a clock face, in 12-hour or 24-hour form.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Side sheet - ExpressiveCSS{% endblock %}
-{% block page_title %}Side sheet{% endblock %}
+{% set page_name = "Side sheet" %}
+{% set page_blurb = "Optional content and actions, without interrupting the main view." %}
 
 {% block page %}
-{{ Banner("Side sheet", "Optional content and actions, without interrupting the main view.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

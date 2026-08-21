@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Select - ExpressiveCSS{% endblock %}
-{% block page_title %}Select{% endblock %}
+{% set page_name = "Select" %}
+{% set page_blurb = "Choose one option, or several, from a styled menu." %}
 
 {% block page %}
-{{ Banner("Select", "Choose one option, or several, from a styled menu.") }}
-
 <div class="container">
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">

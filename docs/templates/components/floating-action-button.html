@@ -1,12 +1,9 @@
 {% extends "docs.html" %}
-{% from "macros/banner.html" import banner as Banner %}
 
-{% block title %}Floating Action Button - ExpressiveCSS{% endblock %}
-{% block page_title %}Floating Action Button{% endblock %}
+{% set page_name = "Floating Action Button" %}
+{% set page_blurb = "A circular action that can open a menu of related shortcuts." %}
 
 {% block page %}
-{{ Banner("Floating Action Button", "A circular action that can open a menu of related shortcuts.") }}
-
 <div class="fixed-action-btn">
   <button type="button" class="button extra circle" aria-label="Edit">
     <i class="material-symbols">mode_edit</i>
