@@ -58,6 +58,20 @@ Notes:
 - `watch:js` uses `--watch=forever`; plain `--watch` makes esbuild quit as soon as stdin closes, which silently kills it under `run-p`.
 - The build targets `es2020` and emits no vendor prefixes — no autoprefixer/postcss step exists. Browser support is the last 5 Chrome and last 5 Firefox versions, no IE, declared in `package.json` under `browserslist`; nothing reads it automatically, it documents the baseline every judgement call is made against. The Sass relies on modern CSS directly and without fallbacks: `@layer`, `light-dark()`, `color-mix()`, `clamp()`, `aspect-ratio`, `inset`, and media-query range syntax. A vendor prefix is only justified for a non-standard property with no unprefixed form (`-webkit-tap-highlight-color`, `-webkit-font-smoothing`) or an engine-private pseudo-element (`::-webkit-slider-thumb`, `::-moz-range-track`); everything else was removed.
 
+## Releasing
+
+`package.json` holds the version, but seven files state it and only one derives it. Bump together: `package.json`, `src/ts/index.ts` (`export const version`), `README.md`, the line in **this file** naming the version, `llm.md` (two places — the header and the "Getting started" prose), and `docs/templates/start/index.html`. The docs **footer** is deliberately not on that list: it reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0. Everything else still drifts silently — nothing fails if you miss one.
+
+Then: add the CHANGELOG entry (`## [x.y.z] - YYYY-MM-DD`, plus the two compare links at the bottom of the file), `npm run typecheck` and `npm test`, commit, annotated tag `vx.y.z`, push the branch *and* the tag, and `gh release create vx.y.z --notes-file <notes>`.
+
+Publishing is `release.yml` on `release: published`. The job declares `environment: npm-publish`, which has a required reviewer, so **it pauses before any step runs** — approve it in the Actions tab. Note what that means: you are approving "attempt this release", not "the tests passed". The gates come after the click — it aborts if the tag disagrees with `package.json`, if that version is already on the registry, or if typecheck or the suite fails. Full releases go to `latest`, prereleases to `next`.
+
+There is no npm token anywhere. Publishing is trusted publishing over OIDC, and npm matches a three-part identity: repository `BaezFJ/ExpressiveCSS`, workflow file `release.yml`, environment `npm-publish`. Read it with `npm trust list @expressivecss/expressive`. **Change any one of the three — rename the workflow, rename the environment, drop the `environment:` line — and the publish fails at the very last step**, after every test has passed, with an identity mismatch. npm permits exactly one entry per repository + workflow file (a second POST returns 409), so correcting it is `npm trust revoke --id=<id>` followed by `npm trust github … --env npm-publish --allow-publish`, which leaves a brief window with no trusted publisher.
+
+A successful publish triggers `pages.yml`, which rebuilds `dist/`, re-freezes `website/`, commits it, and deploys to `www.expressivecss.com`.
+
+Repository rules constrain the recovery paths. Rulesets block force pushes and deletions on master and on `refs/tags/v*`, with **no bypass actors, including the owner**. Tag *creation* stays open so a release works, but a pushed tag can never be moved or deleted — a wrong tag is fixed by releasing the next patch, not by rewriting history. To force-push legitimately, disable the ruleset in Settings → Rules, push, re-enable.
+
 ## Sass architecture
 
 **Read `src/sass/README.md` before touching styles** — it is the working guide (layer map, the two rules, where new code goes). Summary:
