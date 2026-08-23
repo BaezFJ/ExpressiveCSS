@@ -403,14 +403,29 @@ describe('App bar medium and large', () => {
     // Without these, order+100% basis leaves every icon packed at the
     // start and align-content:flex-start pins the title under them, so
     // the 112/152dp bar reads as a small toolbar.
-    assert.match(
-      css,
-      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*\{[^}]*align-content:\s*space-between/s
+    //
+    // Asserted on what the rule must *say* rather than on its exact selector
+    // text: the host became :is(nav:not(...), .bar) when a bar with no
+    // destinations stopped being a <nav>, and a literal-text regex broke on
+    // the parentheses that :is() introduced.
+    /** Every rule in the sheet whose body declares `prop: value`. */
+    const rulesDeclaring = (prop, value) =>
+      [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)]
+        .filter((m) => new RegExp(`${prop}:\\s*${value}`).test(m[2]))
+        .map((m) => m[1]);
+
+    const spaceBetween = rulesDeclaring('align-content', 'space-between').filter((sel) =>
+      /header\.(?:medium|large)\b/.test(sel)
     );
-    assert.match(
-      css,
-      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
+    assert.equal(spaceBetween.length, 1, 'exactly one app bar rule sets align-content: space-between');
+    assert.match(spaceBetween[0], /header\.medium\b/);
+    assert.match(spaceBetween[0], /header\.large\b/);
+    assert.match(spaceBetween[0], /nav:not\(\.tabs\b/, 'must not reach a tab bar');
+
+    const pushedToEnd = rulesDeclaring('margin-inline-start', 'auto').filter((sel) =>
+      /header\.(?:medium|large)\b/.test(sel)
     );
+    assert.ok(pushedToEnd.length > 0, 'no app bar rule pushes the trailing actions to the end');
   });
 });
 
@@ -531,5 +546,58 @@ describe('Autocomplete', () => {
     // If the timer survived teardown it fires in here and fails the file.
     await sleep(10);
     assert.equal(Expressive.Autocomplete.getInstance(el), undefined);
+  });
+});
+
+describe('Tabs', () => {
+  beforeEach(resetBody);
+
+  test('aria-current follows the active tab instead of staying where it was written', () => {
+    // The markup names the initially current tab. Its *value* then changes as
+    // the user clicks, which makes it the component's to maintain - the class
+    // used to move on its own and leave aria-current behind, so a screen
+    // reader kept announcing the first tab as current after switching.
+    document.body.innerHTML = `
+      <nav class="tabs" aria-label="Demo">
+        <a class="active" aria-current="page" href="#t1">One</a>
+        <a href="#t2">Two</a>
+      </nav>
+      <div id="t1">one</div><div id="t2">two</div>`;
+    const el = document.querySelector('.tabs');
+    const instance = Expressive.Tabs.init(el);
+    try {
+      const [first, second] = el.querySelectorAll('a');
+      assert.equal(first.getAttribute('aria-current'), 'page');
+
+      instance.select('t2');
+      assert.equal(second.classList.contains('active'), true);
+      assert.equal(second.getAttribute('aria-current'), 'page', 'the new tab must be current');
+      assert.equal(first.getAttribute('aria-current'), null, 'the old tab must not still be current');
+
+      // Exactly one, always.
+      assert.equal(el.querySelectorAll('[aria-current]').length, 1);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a hash-selected tab is marked current on init', () => {
+    document.body.innerHTML = `
+      <nav class="tabs" aria-label="Demo">
+        <a class="active" aria-current="page" href="#t1">One</a>
+        <a href="#t2">Two</a>
+      </nav>
+      <div id="t1">one</div><div id="t2">two</div>`;
+    const el = document.querySelector('.tabs');
+    window.location.hash = '#t2';
+    const instance = Expressive.Tabs.init(el);
+    try {
+      const [first, second] = el.querySelectorAll('a');
+      assert.equal(second.getAttribute('aria-current'), 'page');
+      assert.equal(first.getAttribute('aria-current'), null);
+    } finally {
+      instance.destroy();
+      window.location.hash = '';
+    }
   });
 });

@@ -16,6 +16,17 @@ below is the whole story for that component.
 
 ### Added
 
+- **Navigation is the third sweep** — `landmarks`, `navbar`, `navigation-bar`,
+  `navigation-rail`, `sidenav`, `breadcrumb`, `pagination`, `tabs`, `menu`,
+  `table_of_contents`, `page-footer`. **22 of 45 components are now enforced;
+  23 remain.**
+- **`m3-guidelines.md` is checked**, against `fragmentSafe` rules only. It
+  states markup as inline code spans in prose rather than as fenced examples,
+  so a rule may run against it only if it fires on a *wrong thing present*. A
+  fragment cannot be wrong about what it omits — omitting is what a fragment
+  is for.
+- `landmarks`, a component row for the cross-cutting rules that belong to no
+  single component: every `<nav>` carries a name, and `<main>` does not nest.
 - **Forms are the second sweep** — `input-fields`, `fieldset`, `checkboxes`,
   `radio-buttons`, `switches`, `select`, `file-input`, `range`, plus
   `autocomplete` and `character-counter`. **11 of 44 components are now
@@ -45,6 +56,26 @@ below is the whole story for that component.
 
 ### Changed
 
+- **Every `<nav>` now carries a name, and things that are not navigation
+  stopped claiming to be.** A row of radios or checkboxes is a
+  `<div class="inline">`, not a `<nav>` — it was a flex hook wearing a
+  landmark. The icons page used `<nav>` to mean "any element that inherits";
+  that is a `<div>`. A footer column with no links is a `<section>`. A top app
+  bar that holds only a title and controls — as the docs chrome does — is a
+  `.bar`, because an empty navigation landmark is worse than none.
+- **Breadcrumbs are an ordered list.** `<nav aria-label="Breadcrumb"><ol>`,
+  with `aria-current="page"` on the last crumb. The flat run of
+  `<a class="breadcrumb">` gave no count and no position. The Sass already
+  supported the `<ol>` form; only the documentation was behind.
+- **Pagination lives in a labelled `<nav>`** with `<ol>`, `aria-current="page"`
+  on the current link, and a `<span>` rather than an `<a href>` for a disabled
+  prev/next — a disabled link is still focusable and still navigates.
+- Tabs, the navigation bar and the navigation rail mark the active destination
+  with `aria-current="page"`, not just a class.
+- A `<menu>` separator is `<li class="divider" role="separator">`. `<menu>` is
+  a list and its content model permits only `<li>`, so a bare `<hr>` between
+  entries was invalid. It still renders.
+- The sidenav and the table of contents sit inside a labelled `<nav>`.
 - **Form markup now says what it is.** `.field` is the container; `.input-field`
   never was one (the only rule matching it is `.chips.input-field`). Field icons
   are `<span class="material-symbols" aria-hidden="true">` and name their side
@@ -76,6 +107,30 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **The drawer wrapper became a second app bar.** Wrapping the sidenav in a
+  `<nav>` while it still lived inside `<header>` made it a direct child of an
+  app bar host, so the navbar rules gave it `display: flex`, full width and a
+  64dp minimum — an empty bar-sized band under the real one, on every docs
+  page. The drawer is a sibling of the bar now, which is what
+  `m3-guidelines.md` said all along: the trigger may live in the bar, the
+  drawer must not.
+- **A `header.fixed` whose bar is a `.bar` kept its looks but lost its
+  behaviour.** The fixed selector still required a `nav` child, so such a
+  header got the app bar's appearance without `position: sticky`, its z-index
+  or the scroll-fill.
+- **A row of checkboxes stacked vertically.** `_radio-buttons.scss` learned
+  `.inline`; `_checkboxes.scss` did not, and each label is `display: flex`.
+- **Tabs announced the wrong tab as current.** `aria-current` was written into
+  the markup and then never moved: the class changed on click, the attribute
+  did not. Its value changes with interaction, so maintaining it is the
+  component's job — `Tabs` now moves the class and the attribute together, on
+  click and on a hash-selected init.
+- **`.bar` escaped its selector and styled every element that used it.** The
+  new app bar host was interpolated as a bare comma-separated list, so
+  `header.medium > #{$_bar}` expanded to `header.medium > nav:not(…), .bar` —
+  a top-level `.bar` rule applying app bar layout page-wide. Wrapping the
+  variable in `:is()` keeps it one compound selector, and the specificity
+  where it was. The existing app bar tests caught it.
 - **A field icon written as a `<span>` inherited the floating label's
   position** - 16px from the edge with `pointer-events: none`, i.e. indented
   past its own padding. Five hand-copied "everything that is not the label"
@@ -117,6 +172,16 @@ below is the whole story for that component.
 
 ### Migration
 
+- Every `<nav>` needs `aria-label` (or `aria-labelledby`).
+- `<nav>` used to lay out radios, checkboxes or switches →
+  `<div class="inline">`.
+- `<nav class="breadcrumb-wrapper">` with `<a class="breadcrumb">` →
+  `<nav aria-label="Breadcrumb"><ol><li><a>`, last crumb `aria-current="page"`.
+- `<ul class="pagination">` → `<nav class="pagination" aria-label="Pagination"><ol>`.
+  The bare list still renders.
+- `<hr>` inside a `<menu>` → `<li class="divider" role="separator"></li>`.
+- `<ul class="sidenav">` → wrap it in `<nav aria-label="…">`.
+- A top app bar with no destinations → `<div class="bar">` instead of `<nav>`.
 - `<div class="input-field">` → `<div class="field">`.
 - `<i class="material-icons">place</i>` in a field →
   `<span class="material-symbols prefix" aria-hidden="true">place</span>`. The

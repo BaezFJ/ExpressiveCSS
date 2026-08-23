@@ -88,10 +88,10 @@ document.getElementById('indeterminate-checkbox').indeterminate = true;
 
   {% call section("row", "In a row") %}
         <p>
-          Put the labels in a <code>&lt;nav&gt;</code> to sit them on one
+          Put the labels in a <code>&lt;div class="inline"&gt;</code> to sit them on one
           line. A bare group stacks vertically.
         </p>
-        <nav>
+        <div class="inline">
           <label>
             <input type="checkbox" checked>
             Red
@@ -104,9 +104,9 @@ document.getElementById('indeterminate-checkbox').indeterminate = true;
             <input type="checkbox">
             Green
           </label>
-        </nav>
+        </div>
 {% call code() %}
-<nav>
+<div class="inline">
   <label>
     <input type="checkbox" checked>
     Red
@@ -115,7 +115,7 @@ document.getElementById('indeterminate-checkbox').indeterminate = true;
     <input type="checkbox">
     Yellow
   </label>
-</nav>
+</div>
 {% endcall %}
   {% endcall %}
 

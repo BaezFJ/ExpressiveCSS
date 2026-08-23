@@ -29,7 +29,18 @@
   initial-value: 0;
 }
 
-header:has(> nav:not(.navigation-bar, .navigation-rail)) {
+// The bar itself. A top app bar that holds destinations is a <nav>; one that
+// holds only a title and controls - as the docs chrome does - is not
+// navigation and says so with `.bar`, rather than claiming a landmark and
+// then having nothing to put in it. Both look identical.
+// Wrapped in :is() so it stays ONE compound selector. A bare comma-separated
+// list breaks out of its context on interpolation: `header.medium > #{$_bar}`
+// expanded to `header.medium > nav:not(...), .bar`, which styled every .bar on
+// the page as an app bar. Same trap as $_icon in _icons-material-design.
+// :is() also keeps the specificity where nav:not(...) had it.
+$_bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
+
+header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
   --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container);
   --md-comp-top-app-bar-headline-color: var(--md-sys-color-on-surface);
@@ -51,7 +62,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   border-radius: var(--md-comp-top-app-bar-container-shape);
   width: 100%;
 
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) {
+  > #{$_bar} {
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -61,7 +72,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
     margin: 0;
   }
 
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) > :is(h1, h2, h3, h4, h5, h6) {
+  > #{$_bar} > :is(h1, h2, h3, h4, h5, h6) {
     flex: 1 1 auto;
     min-width: 0;
     margin: 0;
@@ -83,7 +94,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
+  > #{$_bar} > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -123,11 +134,11 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
+  > #{$_bar} > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) > :is(menu, ul) {
+  > #{$_bar} > :is(menu, ul) {
     display: flex;
     align-items: stretch;
     align-self: stretch;
@@ -151,7 +162,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
   // Breadcrumb trail. Layout only — colors stay on the breadcrumb tokens
   // (which this header remaps to inherit). Do not treat the crumbs as
   // destinations.
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) > ol {
+  > #{$_bar} > ol {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -163,7 +174,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
     padding-inline: 12px;
   }
 
-  > nav:not(.tabs, .navigation-bar, .navigation-rail) > form {
+  > #{$_bar} > form {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
@@ -220,7 +231,7 @@ header:has(> nav:not(.navigation-bar, .navigation-rail)) {
 
 // Center-aligned small bar. The headline is taken out of flow so leading and
 // trailing actions can sit on the edges without shifting the title.
-header.center:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
+header.center:has(> #{$_bar}) > #{$_bar} {
   position: relative;
   justify-content: space-between;
 
@@ -241,8 +252,8 @@ header.center:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
 // so leading/trailing icons would otherwise pack together at the start.
 // `space-between` parks the icon row at the top and the title at the
 // bottom — that's what makes the 112/152 height readable.
-header.medium:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail),
-header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
+header.medium:has(> #{$_bar}) > #{$_bar},
+header.large:has(> #{$_bar}) > #{$_bar} {
   flex-wrap: wrap;
   align-content: space-between;
   align-items: flex-start;
@@ -262,7 +273,7 @@ header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   }
 }
 
-header.medium:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
+header.medium:has(> #{$_bar}) > #{$_bar} {
   min-height: 112px;
   padding-bottom: 16px;
 
@@ -276,7 +287,7 @@ header.medium:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
   }
 }
 
-header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
+header.large:has(> #{$_bar}) > #{$_bar} {
   min-height: 152px;
   padding-bottom: 28px;
 
@@ -295,7 +306,7 @@ header.large:has(> nav) > nav:not(.tabs, .navigation-bar, .navigation-rail) {
 // progress; a utility class on the header sets background-color itself
 // and is not overwritten. Without animation-timeline the bar stays at
 // rest (surface), the spec default.
-header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
+header.fixed:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   position: sticky;
   top: 0;
   z-index: 997;

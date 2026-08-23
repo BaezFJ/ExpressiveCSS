@@ -31,7 +31,7 @@
 
 
     <header class="fixed">
-        <nav>
+        <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <i class="material-symbols">menu</i>
             </button>
@@ -42,212 +42,215 @@
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
                 <i class="material-symbols">contrast</i>
             </button>
-        </nav>
-
-
-    <ul class="sidenav sidenav-fixed" id="nav-mobile">
-        <li class="">
-            <a href="/getting-started.html">
-                <i class="material-symbols">home</i>
-                Getting started
-            </a>
-        </li>
-        <li class="">
-            <a href="/auto-init.html">
-                <i class="material-symbols">bolt</i>
-                Auto Init
-            </a>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">palette</i>
-                    Foundations
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/color.html">Color</a>
-                    </li>
-                    <li class="">
-                        <a href="/themes.html">Themes</a>
-                    </li>
-                    <li class="">
-                        <a href="/typography.html">Typography</a>
-                    </li>
-                    <li class="">
-                        <a href="/icons.html">Icons</a>
-                    </li>
-                    <li class="">
-                        <a href="/shadow.html">Elevation</a>
-                    </li>
-                    <li class="">
-                        <a href="/grid.html">Grid</a>
-                    </li>
-                    <li class="">
-                        <a href="/helpers.html">Helpers</a>
-                    </li>
-                    <li class="">
-                        <a href="/media-css.html">Media styles</a>
-                    </li>
-                    <li class="">
-                        <a href="/table.html">Table</a>
-                    </li>
-                    <li class="">
-                        <a href="/css-transitions.html">Transitions</a>
-                    </li>
-                    <li class="">
-                        <a href="/pulse.html">Pulse</a>
-                    </li>
-                    <li class="">
-                        <a href="/waves.html">Waves</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav" open>
-                <summary>
-                    <i class="material-symbols">view_quilt</i>
-                    Structure
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/navbar.html">App bar</a>
-                    </li>
-                    <li class="">
-                        <a href="/navigation-bar.html">Navigation bar</a>
-                    </li>
-                    <li class="">
-                        <a href="/navigation-rail.html">Navigation rail</a>
-                    </li>
-                    <li class="active">
-                        <a href="/sidenav.html">Sidenav</a>
-                    </li>
-                    <li class="">
-                        <a href="/panes.html">Panes</a>
-                    </li>
-                    <li class="">
-                        <a href="/footer.html">Footer</a>
-                    </li>
-                    <li class="">
-                        <a href="/tabs.html">Tabs</a>
-                    </li>
-                    <li class="">
-                        <a href="/breadcrumbs.html">Breadcrumbs</a>
-                    </li>
-                    <li class="">
-                        <a href="/pagination.html">Pagination</a>
-                    </li>
-                    <li class="">
-                        <a href="/menu.html">Menu</a>
-                    </li>
-                    <li class="">
-                        <a href="/scrollspy.html">Scrollspy</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">widgets</i>
-                    Components
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/buttons.html">Buttons</a>
-                    </li>
-                    <li class="">
-                        <a href="/floating-action-button.html">FAB</a>
-                    </li>
-                    <li class="">
-                        <a href="/cards.html">Cards</a>
-                    </li>
-                    <li class="">
-                        <a href="/lists.html">Lists</a>
-                    </li>
-                    <li class="">
-                        <a href="/dialogs.html">Dialogs</a>
-                    </li>
-                    <li class="">
-                        <a href="/bottom-sheet.html">Bottom sheet</a>
-                    </li>
-                    <li class="">
-                        <a href="/side-sheet.html">Side sheet</a>
-                    </li>
-                    <li class="">
-                        <a href="/badges.html">Badges</a>
-                    </li>
-                    <li class="">
-                        <a href="/tooltips.html">Tooltips</a>
-                    </li>
-                    <li class="">
-                        <a href="/snackbar.html">Snackbar</a>
-                    </li>
-                    <li class="">
-                        <a href="/preloader.html">Preloader</a>
-                    </li>
-                    <li class="">
-                        <a href="/carousel.html">Carousel</a>
-                    </li>
-                    <li class="">
-                        <a href="/media.html">Lightbox</a>
-                    </li>
-                    <li class="">
-                        <a href="/parallax.html">Parallax</a>
-                    </li>
-                    <li class="">
-                        <a href="/toolbars.html">Toolbars</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">edit</i>
-                    Forms
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/fieldsets.html">Fieldsets</a>
-                    </li>
-                    <li class="">
-                        <a href="/text-inputs.html">Text fields</a>
-                    </li>
-                    <li class="">
-                        <a href="/select.html">Select</a>
-                    </li>
-                    <li class="">
-                        <a href="/checkboxes.html">Checkboxes</a>
-                    </li>
-                    <li class="">
-                        <a href="/radio-buttons.html">Radio</a>
-                    </li>
-                    <li class="">
-                        <a href="/switches.html">Switches</a>
-                    </li>
-                    <li class="">
-                        <a href="/slider.html">Slider</a>
-                    </li>
-                    <li class="">
-                        <a href="/chips.html">Chips</a>
-                    </li>
-                    <li class="">
-                        <a href="/autocomplete.html">Autocomplete</a>
-                    </li>
-                    <li class="">
-                        <a href="/datepicker.html">Date picker</a>
-                    </li>
-                    <li class="">
-                        <a href="/timepicker.html">Time picker</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-    </ul>
-
+        </div>
     </header>
+
+
+
+    <nav aria-label="Main">
+      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+          <li class="">
+              <a href="/getting-started.html">
+                  <i class="material-symbols">home</i>
+                  Getting started
+              </a>
+          </li>
+          <li class="">
+              <a href="/auto-init.html">
+                  <i class="material-symbols">bolt</i>
+                  Auto Init
+              </a>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">palette</i>
+                      Foundations
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/color.html">Color</a>
+                      </li>
+                      <li class="">
+                          <a href="/themes.html">Themes</a>
+                      </li>
+                      <li class="">
+                          <a href="/typography.html">Typography</a>
+                      </li>
+                      <li class="">
+                          <a href="/icons.html">Icons</a>
+                      </li>
+                      <li class="">
+                          <a href="/shadow.html">Elevation</a>
+                      </li>
+                      <li class="">
+                          <a href="/grid.html">Grid</a>
+                      </li>
+                      <li class="">
+                          <a href="/helpers.html">Helpers</a>
+                      </li>
+                      <li class="">
+                          <a href="/media-css.html">Media styles</a>
+                      </li>
+                      <li class="">
+                          <a href="/table.html">Table</a>
+                      </li>
+                      <li class="">
+                          <a href="/css-transitions.html">Transitions</a>
+                      </li>
+                      <li class="">
+                          <a href="/pulse.html">Pulse</a>
+                      </li>
+                      <li class="">
+                          <a href="/waves.html">Waves</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav" open>
+                  <summary>
+                      <i class="material-symbols">view_quilt</i>
+                      Structure
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/navbar.html">App bar</a>
+                      </li>
+                      <li class="">
+                          <a href="/navigation-bar.html">Navigation bar</a>
+                      </li>
+                      <li class="">
+                          <a href="/navigation-rail.html">Navigation rail</a>
+                      </li>
+                      <li class="active">
+                          <a href="/sidenav.html">Sidenav</a>
+                      </li>
+                      <li class="">
+                          <a href="/panes.html">Panes</a>
+                      </li>
+                      <li class="">
+                          <a href="/footer.html">Footer</a>
+                      </li>
+                      <li class="">
+                          <a href="/tabs.html">Tabs</a>
+                      </li>
+                      <li class="">
+                          <a href="/breadcrumbs.html">Breadcrumbs</a>
+                      </li>
+                      <li class="">
+                          <a href="/pagination.html">Pagination</a>
+                      </li>
+                      <li class="">
+                          <a href="/menu.html">Menu</a>
+                      </li>
+                      <li class="">
+                          <a href="/scrollspy.html">Scrollspy</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">widgets</i>
+                      Components
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/buttons.html">Buttons</a>
+                      </li>
+                      <li class="">
+                          <a href="/floating-action-button.html">FAB</a>
+                      </li>
+                      <li class="">
+                          <a href="/cards.html">Cards</a>
+                      </li>
+                      <li class="">
+                          <a href="/lists.html">Lists</a>
+                      </li>
+                      <li class="">
+                          <a href="/dialogs.html">Dialogs</a>
+                      </li>
+                      <li class="">
+                          <a href="/bottom-sheet.html">Bottom sheet</a>
+                      </li>
+                      <li class="">
+                          <a href="/side-sheet.html">Side sheet</a>
+                      </li>
+                      <li class="">
+                          <a href="/badges.html">Badges</a>
+                      </li>
+                      <li class="">
+                          <a href="/tooltips.html">Tooltips</a>
+                      </li>
+                      <li class="">
+                          <a href="/snackbar.html">Snackbar</a>
+                      </li>
+                      <li class="">
+                          <a href="/preloader.html">Preloader</a>
+                      </li>
+                      <li class="">
+                          <a href="/carousel.html">Carousel</a>
+                      </li>
+                      <li class="">
+                          <a href="/media.html">Lightbox</a>
+                      </li>
+                      <li class="">
+                          <a href="/parallax.html">Parallax</a>
+                      </li>
+                      <li class="">
+                          <a href="/toolbars.html">Toolbars</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">edit</i>
+                      Forms
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/fieldsets.html">Fieldsets</a>
+                      </li>
+                      <li class="">
+                          <a href="/text-inputs.html">Text fields</a>
+                      </li>
+                      <li class="">
+                          <a href="/select.html">Select</a>
+                      </li>
+                      <li class="">
+                          <a href="/checkboxes.html">Checkboxes</a>
+                      </li>
+                      <li class="">
+                          <a href="/radio-buttons.html">Radio</a>
+                      </li>
+                      <li class="">
+                          <a href="/switches.html">Switches</a>
+                      </li>
+                      <li class="">
+                          <a href="/slider.html">Slider</a>
+                      </li>
+                      <li class="">
+                          <a href="/chips.html">Chips</a>
+                      </li>
+                      <li class="">
+                          <a href="/autocomplete.html">Autocomplete</a>
+                      </li>
+                      <li class="">
+                          <a href="/datepicker.html">Date picker</a>
+                      </li>
+                      <li class="">
+                          <a href="/timepicker.html">Time picker</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+      </ul>
+    </nav>
+
 
     <main>
         
@@ -293,41 +296,45 @@
         <p>
           <a href="#!" data-target="slide-out" class="button sidenav-trigger filled waves-effect">Toggle Sidenav</a>
         </p>
-        <ul id="slide-out" class="sidenav no-autoinit">
-          <li>
-            <div class="user-view">
-              <div class="background">
-                <img src="https://picsum.photos/id/1015/600/400" alt="">
+        <nav aria-label="Main">
+          <ul id="slide-out" class="sidenav no-autoinit">
+            <li>
+              <div class="user-view">
+                <div class="background">
+                  <img src="https://picsum.photos/id/1015/600/400" alt="">
+                </div>
+                <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
+                <a href="#name"><span class="name">John Doe</span></a>
+                <a href="#email"><span class="email">jdoe@example.com</span></a>
               </div>
-              <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
-              <a href="#name"><span class="name">John Doe</span></a>
-              <a href="#email"><span class="email">jdoe@example.com</span></a>
-            </div>
-          </li>
-          <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
-          <li><a href="#!">Second Link</a></li>
-          <li><div class="divider"></div></li>
-          <li><a class="subheader">Subheader</a></li>
-          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-          <li><a class="sidenav-close" href="#!">Close</a></li>
-        </ul>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;
-    &lt;div class="user-view"&gt;
-      &lt;div class="background"&gt;
-        &lt;img src="images/office.jpg" alt=""&gt;
+            </li>
+            <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+            <li><a href="#!">Second Link</a></li>
+            <li><div class="divider"></div></li>
+            <li><a class="subheader">Subheader</a></li>
+            <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+            <li><a class="sidenav-close" href="#!">Close</a></li>
+          </ul>
+        </nav>
+<pre><code>&lt;nav aria-label="Main"&gt;
+  &lt;ul id="slide-out" class="sidenav"&gt;
+    &lt;li&gt;
+      &lt;div class="user-view"&gt;
+        &lt;div class="background"&gt;
+          &lt;img src="images/office.jpg" alt=""&gt;
+        &lt;/div&gt;
+        &lt;a href="#user"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
+        &lt;a href="#name"&gt;&lt;span class="name"&gt;John Doe&lt;/span&gt;&lt;/a&gt;
+        &lt;a href="#email"&gt;&lt;span class="email"&gt;jdoe@example.com&lt;/span&gt;&lt;/a&gt;
       &lt;/div&gt;
-      &lt;a href="#user"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
-      &lt;a href="#name"&gt;&lt;span class="name"&gt;John Doe&lt;/span&gt;&lt;/a&gt;
-      &lt;a href="#email"&gt;&lt;span class="email"&gt;jdoe@example.com&lt;/span&gt;&lt;/a&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;First Link With Icon&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Second Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;div class="divider"&gt;&lt;/div&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="subheader"&gt;Subheader&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;First Link With Icon&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Second Link&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;div class="divider"&gt;&lt;/div&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="subheader"&gt;Subheader&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
 &lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
   &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
 &lt;/a&gt;</code></pre>
@@ -498,9 +505,11 @@
           closes an overlay sidenav. That is useful in a single-page app where the page does not
           reload. It does nothing while the sidenav is fixed on large screens.
         </p>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;&lt;a class="sidenav-close" href="#!"&gt;Clicking this will close Sidenav&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+<pre><code>&lt;nav aria-label="Main"&gt;
+  &lt;ul id="slide-out" class="sidenav"&gt;
+    &lt;li&gt;&lt;a class="sidenav-close" href="#!"&gt;Clicking this will close Sidenav&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
 &lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
   &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
 &lt;/a&gt;</code></pre>
@@ -520,11 +529,13 @@
         <p>
           <a href="#!" data-target="slide-out-right" class="button sidenav-trigger tonal waves-effect">Toggle Right Sidenav</a>
         </p>
-        <ul id="slide-out-right" class="sidenav no-autoinit">
-          <li><a href="#!">First Sidebar Link</a></li>
-          <li><a href="#!">Second Sidebar Link</a></li>
-          <li><a class="sidenav-close" href="#!">Close</a></li>
-        </ul>
+        <nav aria-label="Main">
+          <ul id="slide-out-right" class="sidenav no-autoinit">
+            <li><a href="#!">First Sidebar Link</a></li>
+            <li><a href="#!">Second Sidebar Link</a></li>
+            <li><a class="sidenav-close" href="#!">Close</a></li>
+          </ul>
+        </nav>
 <pre><code>Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
 });</code></pre>
@@ -536,48 +547,52 @@
           accordion. The documentation sidebar uses this for Foundations,
           Structure, Components, and Forms.
         </p>
-        <ul class="sidenav sidenav-demo">
-          <li><a href="#!"><i class="material-symbols">inbox</i>Inbox</a></li>
-          <li>
-            <details name="sidenav-demo" open>
-              <summary>
-                <i class="material-symbols">palette</i>
-                Foundations
-              </summary>
-              <ul>
-                <li><a href="#!">Color</a></li>
-                <li><a href="#!">Typography</a></li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <details name="sidenav-demo">
-              <summary>
-                <i class="material-symbols">view_quilt</i>
-                Structure
-              </summary>
-              <ul>
-                <li><a href="#!">App bar</a></li>
-                <li><a href="#!">Sidenav</a></li>
-              </ul>
-            </details>
-          </li>
-        </ul>
-<pre><code>&lt;ul id="slide-out" class="sidenav"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;details name="docs-nav"&gt;
-      &lt;summary&gt;
-        &lt;i class="material-symbols"&gt;palette&lt;/i&gt;
-        Foundations
-      &lt;/summary&gt;
-      &lt;ul&gt;
-        &lt;li&gt;&lt;a href="#!"&gt;Color&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href="#!"&gt;Typography&lt;/a&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/details&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+        <nav aria-label="Main">
+          <ul class="sidenav sidenav-demo">
+            <li><a href="#!"><i class="material-symbols">inbox</i>Inbox</a></li>
+            <li>
+              <details name="sidenav-demo" open>
+                <summary>
+                  <i class="material-symbols">palette</i>
+                  Foundations
+                </summary>
+                <ul>
+                  <li><a href="#!">Color</a></li>
+                  <li><a href="#!">Typography</a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details name="sidenav-demo">
+                <summary>
+                  <i class="material-symbols">view_quilt</i>
+                  Structure
+                </summary>
+                <ul>
+                  <li><a href="#!">App bar</a></li>
+                  <li><a href="#!">Sidenav</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </nav>
+<pre><code>&lt;nav aria-label="Main"&gt;
+  &lt;ul id="slide-out" class="sidenav"&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;
+      &lt;details name="docs-nav"&gt;
+        &lt;summary&gt;
+          &lt;i class="material-symbols"&gt;palette&lt;/i&gt;
+          Foundations
+        &lt;/summary&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href="#!"&gt;Color&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href="#!"&gt;Typography&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/details&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
 
         <h5 class="light">Fixed HTML Structure</h5>
         <p>
@@ -585,10 +600,12 @@
           and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
           The documentation sidebar on the left is this pattern.
         </p>
-<pre><code>&lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+<pre><code>&lt;nav aria-label="Main"&gt;
+  &lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
 &lt;a href="#!" data-target="slide-out" class="sidenav-trigger"&gt;
   &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
 &lt;/a&gt;</code></pre>
@@ -612,7 +629,8 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
 
-        <ul class="section table-of-contents">
+        <nav aria-label="On this page">
+          <ul class="section table-of-contents">
           <li><a href="#structure">Structure</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
@@ -620,7 +638,8 @@
           <li><a href="#properties">Properties</a></li>
           <li><a href="#close-trigger">Close Trigger</a></li>
           <li><a href="#variations">Variations</a></li>
-        </ul>
+          </ul>
+        </nav>
 
       </div>
     </div>
@@ -633,14 +652,14 @@
     <footer>
         <div class="container">
 
-            <nav>
-                <h2>Start</h2>
+            <nav aria-labelledby="footer-1">
+                <h2 id="footer-1">Start</h2>
                 <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
                 <a href="/getting-started.html">Getting started</a>
                 <a href="/auto-init.html">Auto Init</a>
             </nav>
-            <nav>
-                <h2>Foundations</h2>
+            <nav aria-labelledby="footer-2">
+                <h2 id="footer-2">Foundations</h2>
                 <a href="/color.html">Color</a>
                 <a href="/themes.html">Themes</a>
                 <a href="/typography.html">Typography</a>
@@ -654,8 +673,8 @@
                 <a href="/pulse.html">Pulse</a>
                 <a href="/waves.html">Waves</a>
             </nav>
-            <nav>
-                <h2>Structure</h2>
+            <nav aria-labelledby="footer-3">
+                <h2 id="footer-3">Structure</h2>
                 <a href="/navbar.html">App bar</a>
                 <a href="/navigation-bar.html">Navigation bar</a>
                 <a href="/navigation-rail.html">Navigation rail</a>
@@ -668,8 +687,8 @@
                 <a href="/menu.html">Menu</a>
                 <a href="/scrollspy.html">Scrollspy</a>
             </nav>
-            <nav>
-                <h2>Components</h2>
+            <nav aria-labelledby="footer-4">
+                <h2 id="footer-4">Components</h2>
                 <a href="/buttons.html">Buttons</a>
                 <a href="/floating-action-button.html">FAB</a>
                 <a href="/cards.html">Cards</a>
@@ -686,8 +705,8 @@
                 <a href="/parallax.html">Parallax</a>
                 <a href="/toolbars.html">Toolbars</a>
             </nav>
-            <nav>
-                <h2>Forms</h2>
+            <nav aria-labelledby="footer-5">
+                <h2 id="footer-5">Forms</h2>
                 <a href="/fieldsets.html">Fieldsets</a>
                 <a href="/text-inputs.html">Text fields</a>
                 <a href="/select.html">Select</a>

@@ -4,7 +4,9 @@
 //
 // Anatomy is the HTML. A <menu id> is the surface; each <li> is an item.
 // A leading <i> is the leading icon; a trailing <i> or <kbd> is trailing
-// content. An <hr> is a divider. A .gap <li> splits groups. A .label
+// content. An <li class="divider" role="separator"> is a divider; a bare
+// <hr> is the older form and still styled, though <menu> only permits <li>.
+// A .gap <li> splits groups. A .label
 // <li> is a 32dp group heading. A nested <menu> is a flyout. The trigger
 // is .menu-trigger[data-target] — that is the JS contract.
 //

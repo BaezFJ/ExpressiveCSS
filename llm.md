@@ -1677,10 +1677,12 @@ Breadcrumbs are a good way to display your current location. This is usually use
 ### Basic
 
 ```html
-<nav class="breadcrumb-wrapper">
-  <a href="#!" class="breadcrumb">First</a>
-  <a href="#!" class="breadcrumb">Second</a>
-  <a href="#!" class="breadcrumb">Third</a>
+<nav aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/library">Library</a></li>
+    <li><a href="/library/data" aria-current="page">Data</a></li>
+  </ol>
 </nav>
 ```
 
@@ -1688,10 +1690,12 @@ Breadcrumbs are a good way to display your current location. This is usually use
 
 ```html
 <header>
-  <nav>
-    <a href="#!" class="breadcrumb">First</a>
-    <a href="#!" class="breadcrumb">Second</a>
-    <a href="#!" class="breadcrumb">Third</a>
+  <nav aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/library">Library</a></li>
+      <li><a href="/library/data" aria-current="page">Data</a></li>
+    </ol>
   </nav>
 </header>
 ```
@@ -1986,16 +1990,16 @@ Add `sticky` (or the older `sticky-action`) if a trailing `<nav>` should stay vi
 
 ### Tabs
 
-Put a `<nav class="tabs">` between the supporting text and the tab panels. `AutoInit()` starts `.tabs`.
+Put a `<nav class="tabs" aria-label="Sections">` between the supporting text and the tab panels. `AutoInit()` starts `.tabs`.
 
 I am a very simple card. I am good at containing small bits of information.
 
 ```html
 <article>
   <p>I am a very simple card.</p>
-  <nav class="tabs max">
+  <nav class="tabs max" aria-label="Sections">
     <a href="#test1">Test 1</a>
-    <a class="active" href="#test2">Test 2</a>
+    <a class="active" aria-current="page" href="#test2">Test 2</a>
   </nav>
   <div id="test1">Test 1</div>
   <div id="test2">Test 2</div>
@@ -2465,12 +2469,12 @@ You can use rows and columns here to organize your footer content.
 
 ```html
 <footer>
-  <nav>
+  <section>
     <h2>Product</h2>
-    <p>You can use navs here to organize your footer content.</p>
-  </nav>
-  <nav>
-    <h2>Links</h2>
+    <p>A column with no links is not navigation — it is a section with a heading.</p>
+  </section>
+  <nav aria-labelledby="footer-links">
+    <h2 id="footer-links">Links</h2>
     <a href="#!">Link 1</a>
     <a href="#!">Link 2</a>
   </nav>
@@ -2575,7 +2579,7 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
 
 ```html
 <header>
-  <nav>
+  <nav aria-label="Main">
     <button type="button" aria-label="Menu">
       <i class="material-icons">menu</i>
     </button>
@@ -2592,7 +2596,7 @@ Text links go in a `<menu>`. Put the menu after the heading to align it on the e
 
 ```html
 <header>
-  <nav>
+  <nav aria-label="Main">
     <h2>Title</h2>
     <menu>
       <li><a href="#!">Sass</a></li>
@@ -2611,7 +2615,7 @@ Add `center` to the header. The headline is taken out of flow so the leading and
 
 ```html
 <header class="center">
-  <nav>
+  <nav aria-label="Main">
     <button type="button" aria-label="Back">
       <i class="material-icons">arrow_back</i>
     </button>
@@ -2627,7 +2631,7 @@ Same markup as the small bar. `medium` is 112dp with a `headline-small` title on
 
 ```html
 <header class="medium">
-  <nav>
+  <nav aria-label="Main">
     <button type="button" aria-label="Back">
       <i class="material-icons">arrow_back</i>
     </button>
@@ -2647,7 +2651,7 @@ The documentation header on this site is a fixed small bar. A second fixed bar o
 
 ```html
 <header class="fixed">
-  <nav>
+  <nav aria-label="Main">
     <h2>Title</h2>
     <a href="#!" aria-label="Search"><i class="material-icons">search</i></a>
   </nav>
@@ -2660,7 +2664,7 @@ The default fill is `surface`. Color utilities win because they live in the util
 
 ```html
 <header class="primary on-primary-text">
-  <nav>
+  <nav aria-label="Main">
     <h2>Primary</h2>
   </nav>
 </header>
@@ -2686,11 +2690,11 @@ Point a `menu-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit
 <menu id="menu1">
   <li><a href="#!">one</a></li>
   <li><a href="#!">two</a></li>
-  <hr>
+  <li class="divider" role="separator"></li>
   <li><a href="#!">three</a></li>
 </menu>
 <header>
-  <nav>
+  <nav aria-label="Main">
     <h2>Title</h2>
     <menu>
       <li>
@@ -2720,7 +2724,7 @@ A `<form>` in the nav fills the space between the leading action and anything af
 
 ```html
 <header>
-  <nav>
+  <nav aria-label="Main">
     <button type="button" aria-label="Back">
       <i class="material-icons">arrow_back</i>
     </button>
@@ -2737,7 +2741,7 @@ Hide the destination menu below the large breakpoint and put a `sidenav-trigger`
 
 ```html
 <header>
-  <nav>
+  <nav aria-label="Main">
     <a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu">
       <i class="material-icons">menu</i>
     </a>
@@ -2749,9 +2753,11 @@ Hide the destination menu below the large breakpoint and put a `sidenav-trigger`
   </nav>
 </header>
 
-<ul class="sidenav" id="mobile-demo">
-  <li><a href="#!">Sass</a></li>
-</ul>
+<nav aria-label="Main">
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="#!">Sass</a></li>
+  </ul>
+</nav>
 ```
 
 After you add the trigger and the sidenav, initialize Sidenav (or let `AutoInit()` do it).
@@ -2871,22 +2877,26 @@ Split long content into shorter, easier blocks.
 
 Add pagination links to split long content into shorter blocks. The component is CSS-only: a `pagination` list of links. There is no JavaScript plugin.
 
-Mark the current page with `active` on the `li` — that fills the link. Use `disabled` for unavailable prev/next. `waves-effect` is optional and adds the ink ripple on the item.
+The list lives in a `<nav aria-label="Pagination">` — a page's links are navigation, and the label distinguishes it from every other `<nav>` on the page.
+
+Mark the current page with `active` on the `li` **and `aria-current="page"` on its link**; the class only fills it. Use `disabled` for unavailable prev/next, and make those a `<span>` rather than an `<a href>` — a disabled link is still focusable and still navigates. Icon-only prev/next links need an `aria-label`. `waves-effect` is optional and adds the ink ripple on the item.
 
 ```html
-<ul class="pagination">
-  <li class="disabled">
-    <a href="#!"><i class="material-icons">chevron_left</i></a>
-  </li>
-  <li class="active"><a href="#!">1</a></li>
-  <li class="waves-effect"><a href="#!">2</a></li>
-  <li class="waves-effect"><a href="#!">3</a></li>
-  <li class="waves-effect"><a href="#!">4</a></li>
-  <li class="waves-effect"><a href="#!">5</a></li>
-  <li class="waves-effect">
-    <a href="#!"><i class="material-icons">chevron_right</i></a>
-  </li>
-</ul>
+<nav class="pagination" aria-label="Pagination">
+  <ol>
+    <li class="disabled">
+      <span aria-hidden="true"><i class="material-icons">chevron_left</i></span>
+    </li>
+    <li class="active"><a href="?page=1" aria-current="page">1</a></li>
+    <li class="waves-effect"><a href="?page=2">2</a></li>
+    <li class="waves-effect"><a href="?page=3">3</a></li>
+    <li class="waves-effect"><a href="?page=4">4</a></li>
+    <li class="waves-effect"><a href="?page=5">5</a></li>
+    <li class="waves-effect">
+      <a href="?page=2" aria-label="Next page"><i class="material-icons">chevron_right</i></a>
+    </li>
+  </ol>
+</nav>
 ```
 
 ### Responsive
@@ -2894,21 +2904,23 @@ Mark the current page with `active` on the `li` — that fills the link. Use `di
 On medium and down, wrap the page numbers in `li.pages` and mark the ends `prev` and `next`. The ends take 10% each; the pages take the remaining 80% and clip overflow so a long run of numbers does not wrap. On large screens the basic flat list is enough — the nested `pages` list is a block, so `next` would drop to the next line.
 
 ```html
-<ul class="pagination">
-  <li class="disabled prev">
-    <a href="#!"><i class="material-icons">chevron_left</i></a>
-  </li>
-  <li class="pages">
-    <ul>
-      <li class="active"><a href="#!">1</a></li>
-      <li class="waves-effect"><a href="#!">2</a></li>
-      <li class="waves-effect"><a href="#!">3</a></li>
-    </ul>
-  </li>
-  <li class="waves-effect next">
-    <a href="#!"><i class="material-icons">chevron_right</i></a>
-  </li>
-</ul>
+<nav class="pagination" aria-label="Pagination">
+  <ol>
+    <li class="disabled prev">
+      <span aria-hidden="true"><i class="material-icons">chevron_left</i></span>
+    </li>
+    <li class="pages">
+      <ol>
+        <li class="active"><a href="?page=1" aria-current="page">1</a></li>
+        <li class="waves-effect"><a href="?page=2">2</a></li>
+        <li class="waves-effect"><a href="?page=3">3</a></li>
+      </ol>
+    </li>
+    <li class="waves-effect next">
+      <a href="?page=2" aria-label="Next page"><i class="material-icons">chevron_right</i></a>
+    </li>
+  </ol>
+</nav>
 ```
 
 ---
@@ -3284,7 +3296,7 @@ Expressive.Tooltip.init(
 
 Material Design 3 menus, from the HTML.
 
-A `<menu>` is the surface. Each `<li>` is an item. A leading `<i>` is the leading icon; a trailing `<i>` or `<kbd>` is trailing content. An `<hr>` is a divider; a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
+A `<menu>` is the surface. Each `<li>` is an item. A leading `<i>` is the leading icon; a trailing `<i>` or `<kbd>` is trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container`, 16dp corners, elevation 2, 4dp padding, 112–280dp wide. Items are 48dp with extra-small (4dp) corners, `label-large` / `on-surface`. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer that does not span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
@@ -3297,7 +3309,7 @@ Drop me
 <menu id="menu1">
   <li><a href="#!">One</a></li>
   <li><a href="#!">Two</a></li>
-  <hr>
+  <li class="divider" role="separator"></li>
   <li><a href="#!">Three</a></li>
   <li>
     <a href="#!">
@@ -3811,7 +3823,7 @@ Highlight the table of contents as the page scrolls.
 
 Scrollspy watches a set of sections and which one is currently in view. The table of contents on the right of every documentation page is the live demo: the matching link gets `active`, and clicking a link scrolls to that section.
 
-Put `scrollspy` and an `id` on each section. In the TOC, use `table-of-contents` and point each link at `#that-id`. `AutoInit()` starts every `.scrollspy` except those marked `no-autoinit`.
+Put `scrollspy` and an `id` on each section. The table of contents is a set of destinations within the page, so it lives in a labelled `<nav>`; use `table-of-contents` on its list and point each link at `#that-id`. `AutoInit()` starts every `.scrollspy` except those marked `no-autoinit`.
 
 ```html
 <div class="row">
@@ -3827,11 +3839,13 @@ Put `scrollspy` and an `id` on each section. In the TOC, use `table-of-contents`
     </div>
   </div>
   <div class="hide-on-small-only m3">
-    <ul class="section table-of-contents">
-      <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#structure">Structure</a></li>
-      <li><a href="#initialization">Initialization</a></li>
-    </ul>
+    <nav aria-label="On this page">
+      <ul class="section table-of-contents">
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#structure">Structure</a></li>
+        <li><a href="#initialization">Initialization</a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 ```
@@ -3916,23 +3930,25 @@ The sidenav HTML must **not** sit inside the app bar’s `<nav>`. Put a `sidenav
 Toggle Sidenav
 
 ```html
-<ul id="slide-out" class="sidenav">
-  <li>
-    <div class="user-view">
-      <div class="background">
-        <img src="images/office.jpg" alt="">
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <div class="background">
+          <img src="images/office.jpg" alt="">
+        </div>
+        <a href="#user"><img class="circle" src="images/portrait.jpg" alt=""></a>
+        <a href="#name"><span class="name">John Doe</span></a>
+        <a href="#email"><span class="email">jdoe@example.com</span></a>
       </div>
-      <a href="#user"><img class="circle" src="images/portrait.jpg" alt=""></a>
-      <a href="#name"><span class="name">John Doe</span></a>
-      <a href="#email"><span class="email">jdoe@example.com</span></a>
-    </div>
-  </li>
-  <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-  <li><a href="#!">Second Link</a></li>
-  <li><div class="divider"></div></li>
-  <li><a class="subheader">Subheader</a></li>
-  <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-</ul>
+    </li>
+    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!">Second Link</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Subheader</a></li>
+    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+  </ul>
+</nav>
 <a href="#!" data-target="slide-out" class="sidenav-trigger">
   <i class="material-icons">menu</i>
 </a>
@@ -4015,9 +4031,11 @@ instance.destroy();
 Add `sidenav-close` to an element inside the sidenav. A click on that element closes an overlay sidenav. That is useful in a single-page app where the page does not reload. It does nothing while the sidenav is fixed on large screens.
 
 ```html
-<ul id="slide-out" class="sidenav">
-  <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
-</ul>
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav">
+    <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
+  </ul>
+</nav>
 <a href="#!" data-target="slide-out" class="sidenav-trigger">
   <i class="material-icons">menu</i>
 </a>
@@ -4042,21 +4060,23 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
 Nest `<details>` for a section that opens in place. Same `name` on several details is an accordion. The documentation sidebar uses this for Foundations, Structure, Components, and Forms.
 
 ```html
-<ul id="slide-out" class="sidenav">
-  <li><a href="#!">First Sidebar Link</a></li>
-  <li>
-    <details name="docs-nav">
-      <summary>
-        <i class="material-symbols">palette</i>
-        Foundations
-      </summary>
-      <ul>
-        <li><a href="#!">Color</a></li>
-        <li><a href="#!">Typography</a></li>
-      </ul>
-    </details>
-  </li>
-</ul>
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li>
+      <details name="docs-nav">
+        <summary>
+          <i class="material-symbols">palette</i>
+          Foundations
+        </summary>
+        <ul>
+          <li><a href="#!">Color</a></li>
+          <li><a href="#!">Typography</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
 ```
 
 #### Fixed HTML Structure
@@ -4064,10 +4084,12 @@ Nest `<details>` for a section that opens in place. Same `name` on several detai
 Add `sidenav-fixed` so the sidenav stays open on large screens (wider than 992px) and slides away on smaller ones. The documentation sidebar on the left is this pattern.
 
 ```html
-<ul id="slide-out" class="sidenav sidenav-fixed">
-  <li><a href="#!">First Sidebar Link</a></li>
-  <li><a href="#!">Second Sidebar Link</a></li>
-</ul>
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav sidenav-fixed">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li><a href="#!">Second Sidebar Link</a></li>
+  </ul>
+</nav>
 <a href="#!" data-target="slide-out" class="sidenav-trigger">
   <i class="material-icons">menu</i>
 </a>
@@ -4093,7 +4115,7 @@ header, main, footer {
 
 Material Design 3 tabs, from the HTML.
 
-A `<nav class="tabs">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<i>` is the icon. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
+A `<nav class="tabs" aria-label="Sections">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<i>` is the icon. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
 
 Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). Primary tabs sit on `surface`, 48dp (64dp with a stacked icon). The label is `title-small` / `on-surface-variant`; selected is `primary`. The indicator is 3dp `primary` with 3dp top corners. The icon is 24dp. A 1dp `outline-variant` divider runs under the bar. Hover is 8%; focus is 10%. Disabled is 38%.
 
@@ -4103,7 +4125,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
     <i class="material-icons">flight</i>
     <span>Flight</span>
   </a>
-  <a class="active" href="#luggage">
+  <a class="active" aria-current="page" href="#luggage">
     <i class="material-icons">luggage</i>
     <span>Luggage</span>
   </a>
@@ -4129,7 +4151,7 @@ Add `disabled` on the `<a>` (or on a wrapping `li.tab`) to make it inaccessible.
     <i class="material-icons">flight</i>
     <span>Travel</span>
   </a>
-  <a class="active" href="#hotel">
+  <a class="active" aria-current="page" href="#hotel">
     <i class="material-icons">hotel</i>
     <span>Hotel</span>
   </a>
@@ -4213,7 +4235,7 @@ The first tab is selected by default. To pick another, add `active` to its `<a>`
 Tabs ignore default anchor behaviour. To keep a tab as a normal hyperlink, set `target` on the link.
 
 ```html
-<nav class="tabs">
+<nav class="tabs" aria-label="Sections">
   <a target="_blank" href="https://github.com">External link in new window</a>
   <a target="_self" href="https://github.com">External link in same window</a>
 </nav>
@@ -4226,9 +4248,9 @@ Set `swipeable: true` to swipe between panels on touch devices. Keep the tab pan
 This demo is marked `no-autoinit` and started with `swipeable: true`.
 
 ```html
-<nav id="tabs-swipe-demo" class="tabs">
+<nav id="tabs-swipe-demo" class="tabs" aria-label="Sections">
   <a href="#test-swipe-1">Test 1</a>
-  <a class="active" href="#test-swipe-2">Test 2</a>
+  <a class="active" aria-current="page" href="#test-swipe-2">Test 2</a>
   <a href="#test-swipe-3">Test 3</a>
 </nav>
 ```
@@ -4244,9 +4266,9 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
 Add `max` (or `tabs-fixed-width`) so every tab grows equally. On compact viewports every tab bar already uses this layout.
 
 ```html
-<nav class="tabs max">
+<nav class="tabs max" aria-label="Sections">
   <a href="#test1">Test 1</a>
-  <a class="active" href="#test2">Test 2</a>
+  <a class="active" aria-current="page" href="#test2">Test 2</a>
   <a class="disabled" href="#test3">Disabled</a>
 </nav>
 ```
@@ -4256,12 +4278,12 @@ Add `max` (or `tabs-fixed-width`) so every tab grows equally. On compact viewpor
 Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-horizontal`) to put them on one line, like secondary tabs.
 
 ```html
-<nav class="tabs max horizontal">
+<nav class="tabs max horizontal" aria-label="Sections">
   <a href="#flight">
     <i class="material-icons">flight</i>
     <span>Flight</span>
   </a>
-  <a class="active" href="#luggage">
+  <a class="active" aria-current="page" href="#luggage">
     <i class="material-icons">luggage</i>
     <span>Luggage</span>
   </a>
@@ -5228,7 +5250,7 @@ Expressive.CharacterCounter.init(
 
 Grouped form sections, from the HTML.
 
-A `<fieldset>` is the group. A `<legend>` is the headline. Everything else is a field — `.field`, radios, switches, a `<nav>` of radios, a trailing `<small>` as supporting text. There is no wrapper class. They are CSS only. There is no JavaScript component and nothing to AutoInit.
+A `<fieldset>` is the group. A `<legend>` is the headline. Everything else is a field — `.field`, radios, switches, a `.inline` row of radios, a trailing `<small>` as supporting text. There is no wrapper class. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
 Material Design 3 has no fieldset component. Tokens follow the outlined grouping container used around related form content, and the [outlined text-field](https://m3.material.io/components/text-fields/specs) shape so a group of fields matches the fields. The container is 4dp corners and a 1dp `outline-variant` stroke. The legend is `title-small` / `on-surface`. Supporting text is `body-small`. Padding is 16dp; children sit 16dp apart. Disabled is 38%.
 
@@ -5248,7 +5270,7 @@ Material Design 3 has no fieldset component. Tokens follow the outlined grouping
 
 ### Choices
 
-A fieldset is also the right parent for a radio, checkbox, or switch group — the legend names the question, the `disabled` attribute disables every control inside. Put the labels in a `<nav>` to sit them on one line.
+A fieldset is also the right parent for a radio, checkbox, or switch group — the legend names the question, the `disabled` attribute disables every control inside. Put the labels in a `<div class="inline">` to sit them on one line.
 
 ```html
 <fieldset>
@@ -5266,7 +5288,7 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
 
 <fieldset>
   <legend>Plan</legend>
-  <nav>
+  <div class="inline">
     <label>
       <input name="plan" type="radio" checked>
       Monthly
@@ -5275,7 +5297,7 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
       <input name="plan" type="radio">
       Yearly
     </label>
-  </nav>
+  </div>
 </fieldset>
 ```
 
@@ -5685,12 +5707,12 @@ An `input + span` still works if you already have that markup, or if you follow 
 
 ### In a row
 
-Put the labels in a `<nav>` to sit them on one line. A bare group stacks vertically.
+Put the labels in a `<div class="inline">` to sit them on one line. A bare group stacks vertically. It is not a `<nav>`: a row of form controls is not navigation, and marking it as one spends a landmark and announces "navigation" over a set of choices.
 
 ```html
 <fieldset>
   <legend>Colour</legend>
-  <nav>
+  <div class="inline">
     <label>
       <input name="group2" type="radio" checked>
       Red
@@ -5699,7 +5721,7 @@ Put the labels in a `<nav>` to sit them on one line. A bare group stacks vertica
       <input name="group2" type="radio">
       Yellow
     </label>
-  </nav>
+  </div>
 </fieldset>
 ```
 
@@ -5956,10 +5978,10 @@ An `input + span` still works if you already have that markup, or if you follow 
 
 ### In a row
 
-Put the labels in a `<nav>` to sit them on one line. A bare group stacks vertically.
+Put the labels in a `<div class="inline">` to sit them on one line. A bare group stacks vertically. It is not a `<nav>`: a row of form controls is not navigation, and marking it as one spends a landmark and announces "navigation" over a set of choices.
 
 ```html
-<nav>
+<div class="inline">
   <label>
     <input type="checkbox" checked>
     Red
@@ -5968,7 +5990,7 @@ Put the labels in a `<nav>` to sit them on one line. A bare group stacks vertica
     <input type="checkbox">
     Yellow
   </label>
-</nav>
+</div>
 ```
 
 ### Error

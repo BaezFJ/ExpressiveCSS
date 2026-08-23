@@ -33,7 +33,7 @@
 
         <nav class="tabs" aria-label="Travel">
           <a href="#tabs-intro-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" href="#tabs-intro-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
+          <a class="active" aria-current="page" href="#tabs-intro-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
           <a href="#tabs-intro-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
         </nav>
         <div id="tabs-intro-flight" class="py-3">Flight</div>
@@ -45,7 +45,7 @@
     <i class="material-symbols">flight</i>
     <span>Flight</span>
   </a>
-  <a class="active" href="#luggage">
+  <a class="active" aria-current="page" href="#luggage">
     <i class="material-symbols">luggage</i>
     <span>Luggage</span>
   </a>
@@ -96,7 +96,7 @@
         </p>
         <nav class="tabs tabs-secondary" aria-label="Trip">
           <a href="#tabs-sec-birds"><i class="material-symbols">flight</i><span>Travel</span></a>
-          <a class="active" href="#tabs-sec-cats"><i class="material-symbols">hotel</i><span>Hotel</span></a>
+          <a class="active" aria-current="page" href="#tabs-sec-cats"><i class="material-symbols">hotel</i><span>Hotel</span></a>
           <a href="#tabs-sec-dogs"><i class="material-symbols">directions_walk</i><span>Walks</span></a>
         </nav>
         <div id="tabs-sec-birds" class="py-3">Travel</div>
@@ -108,7 +108,7 @@
     <i class="material-symbols">flight</i>
     <span>Travel</span>
   </a>
-  <a class="active" href="#hotel">
+  <a class="active" aria-current="page" href="#hotel">
     <i class="material-symbols">hotel</i>
     <span>Hotel</span>
   </a>
@@ -213,7 +213,7 @@ instance.destroy();
           normal hyperlink, set <code>target</code> on the link.
         </p>
 {% call code() %}
-<nav class="tabs">
+<nav class="tabs" aria-label="Sections">
   <a target="_blank" href="https://github.com">External link in new window</a>
   <a target="_self" href="https://github.com">External link in same window</a>
 </nav>
@@ -231,7 +231,7 @@ instance.destroy();
         <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
         <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">
           <a href="#tabs-swipe-1">Test 1</a>
-          <a class="active" href="#tabs-swipe-2">Test 2</a>
+          <a class="active" aria-current="page" href="#tabs-swipe-2">Test 2</a>
           <a href="#tabs-swipe-3">Test 3</a>
         </nav>
         <div class="tabs-swipe-demo">
@@ -240,9 +240,9 @@ instance.destroy();
           <div id="tabs-swipe-3" class="tertiary-container on-tertiary-container-text center-align">Test 3</div>
         </div>
 {% call code() %}
-<nav id="tabs-swipe-demo" class="tabs">
+<nav id="tabs-swipe-demo" class="tabs" aria-label="Sections">
   <a href="#test-swipe-1">Test 1</a>
-  <a class="active" href="#test-swipe-2">Test 2</a>
+  <a class="active" aria-current="page" href="#test-swipe-2">Test 2</a>
   <a href="#test-swipe-3">Test 3</a>
 </nav>
 {% endcall %}
@@ -261,7 +261,7 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
         </p>
         <nav class="tabs max" aria-label="Fixed width">
           <a href="#tabs-fixed-1">Test 1</a>
-          <a class="active" href="#tabs-fixed-2">Test 2</a>
+          <a class="active" aria-current="page" href="#tabs-fixed-2">Test 2</a>
           <a class="disabled" href="#tabs-fixed-3">Disabled</a>
           <a href="#tabs-fixed-4">Test 4</a>
           <a href="#tabs-fixed-5">Test 5</a>
@@ -272,9 +272,9 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
         <div id="tabs-fixed-4" class="py-3">Test 4</div>
         <div id="tabs-fixed-5" class="py-3">Test 5</div>
 {% call code() %}
-<nav class="tabs max">
+<nav class="tabs max" aria-label="Sections">
   <a href="#test1">Test 1</a>
-  <a class="active" href="#test2">Test 2</a>
+  <a class="active" aria-current="page" href="#test2">Test 2</a>
   <a class="disabled" href="#test3">Disabled</a>
 </nav>
 {% endcall %}
@@ -288,19 +288,19 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
         </p>
         <nav class="tabs max horizontal" aria-label="Inline icons">
           <a href="#tabs-horiz-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" href="#tabs-horiz-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
+          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
           <a href="#tabs-horiz-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
         </nav>
         <div id="tabs-horiz-flight" class="py-3">Flight</div>
         <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
         <div id="tabs-horiz-explore" class="py-3">Explore</div>
 {% call code() %}
-<nav class="tabs max horizontal">
+<nav class="tabs max horizontal" aria-label="Sections">
   <a href="#flight">
     <i class="material-symbols">flight</i>
     <span>Flight</span>
   </a>
-  <a class="active" href="#luggage">
+  <a class="active" aria-current="page" href="#luggage">
     <i class="material-symbols">luggage</i>
     <span>Luggage</span>
   </a>

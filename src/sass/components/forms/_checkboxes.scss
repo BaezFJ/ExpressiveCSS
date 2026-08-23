@@ -42,16 +42,19 @@ label:has(> [type="checkbox"]):not(.switch),
   font-family: $font-stack;
 }
 
-nav:has(> label > [type="checkbox"]:not(.switch *)),
-nav:has(> .checkbox) {
+// A row of checkboxes is a group of controls, not navigation - see rule 4 in
+// SEMANTICS.md. `.inline` is the documented hook; the bare <nav> is the older
+// markup and still works. _radio-buttons.scss carries the same pair.
+:is(nav, .inline):has(> label > [type="checkbox"]:not(.switch *)),
+:is(nav, .inline):has(> .checkbox) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 24px;
 }
 
-nav > label:has(> [type="checkbox"]):not(.switch),
-nav > .checkbox {
+:is(nav, .inline) > label:has(> [type="checkbox"]):not(.switch),
+:is(nav, .inline) > .checkbox {
   display: inline-flex;
 }
 

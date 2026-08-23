@@ -15,11 +15,13 @@
   "surfaces": [
     "llm.md",
     "docs/templates",
-    "tests/fixtures.js"
+    "tests/fixtures.js",
+    "m3-guidelines.md (forbid rules only)"
   ],
   "additional": [
     "autocomplete",
-    "character-counter"
+    "character-counter",
+    "landmarks"
   ],
   "components": {
     "autocomplete": {
@@ -45,9 +47,24 @@
       "rules": []
     },
     "breadcrumb": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. A trail is an ordered list, because the order is the meaning.",
+      "rules": [
+        {
+          "id": "breadcrumb-is-ordered-list",
+          "kind": "forbid",
+          "selector": ".breadcrumb-wrapper > a",
+          "fragmentSafe": true,
+          "message": "Crumbs are an ordered list - nav > ol > li > a. Loose anchors give no count and no position, so \"3 of 4\" is never announced."
+        },
+        {
+          "id": "breadcrumb-marks-current",
+          "kind": "forbid",
+          "selector": ".breadcrumb-wrapper li:last-child :is(a, span):not([aria-current])",
+          "fragmentSafe": false,
+          "message": "The last crumb is the page you are on; it needs aria-current=\"page\" to say so."
+        }
+      ]
     },
     "buttons": {
       "status": "exempt",
@@ -56,13 +73,14 @@
     },
     "cards": {
       "status": "exempt",
-      "note": "Rules written, sweep not started.",
+      "note": "Rules written, sweep not started. The card action row is a <nav> and should not be; fixing it means changing `article > nav:not(.tabs)` in _cards.scss, so it belongs to the cards sweep, not the navigation one.",
       "rules": [
         {
           "id": "card-action-row-not-nav",
           "kind": "forbid",
           "selector": "article > nav",
-          "message": "A card’s action row is buttons, not destinations. <nav> is a landmark, and one per card floods the landmark list."
+          "message": "A card’s action row is buttons, not destinations. <nav> is a landmark, and one per card floods the landmark list.",
+          "fragmentSafe": true
         }
       ]
     },
@@ -93,19 +111,22 @@
           "id": "chip-root-element",
           "kind": "forbid",
           "selector": ".chip:not(span):not(button):not(label)",
-          "message": "A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>."
+          "message": "A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>.",
+          "fragmentSafe": true
         },
         {
           "id": "chip-not-focusable-span",
           "kind": "forbid",
           "selector": "span.chip[tabindex]",
-          "message": "A display chip is not a control and must not be in the tab order. Put the action on a nested <button>."
+          "message": "A display chip is not a control and must not be in the tab order. Put the action on a nested <button>.",
+          "fragmentSafe": true
         },
         {
           "id": "chip-close-is-button",
           "kind": "forbid",
           "selector": ".chip .close:not(button)",
-          "message": "The chip delete affordance is a control: use <button type=\"button\" class=\"close\">, not <i> or <span>."
+          "message": "The chip delete affordance is a control: use <button type=\"button\" class=\"close\">, not <i> or <span>.",
+          "fragmentSafe": true
         },
         {
           "id": "chip-close-type-button",
@@ -126,7 +147,8 @@
           "id": "chip-no-i-element",
           "kind": "forbid",
           "selector": ".chip i",
-          "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\" aria-hidden=\"true\">."
+          "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\" aria-hidden=\"true\">.",
+          "fragmentSafe": true
         },
         {
           "id": "chip-icon-hidden",
@@ -192,7 +214,8 @@
           "id": "file-input-not-nested",
           "kind": "forbid",
           "selector": ":is(button, a) input[type=\"file\"]",
-          "message": "A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button."
+          "message": "A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.",
+          "fragmentSafe": true
         },
         {
           "id": "file-path-readonly",
@@ -210,13 +233,15 @@
           "id": "field-container-class",
           "kind": "forbid",
           "selector": ".input-field:not(.chips)",
-          "message": "The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`."
+          "message": "The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.",
+          "fragmentSafe": true
         },
         {
           "id": "field-icon-not-i",
           "kind": "forbid",
           "selector": ".field i",
-          "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\">."
+          "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\">.",
+          "fragmentSafe": true
         },
         {
           "id": "field-icon-hidden",
@@ -311,7 +336,8 @@
           "id": "switch-is-label",
           "kind": "forbid",
           "selector": ".switch:not(label)",
-          "message": "A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name."
+          "message": "A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.",
+          "fragmentSafe": true
         },
         {
           "id": "switch-decorative-text-hidden",
@@ -331,7 +357,8 @@
           "id": "icon-not-i-element",
           "kind": "forbid",
           "selector": "i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp, i.material-icons",
-          "message": "<i> means idiomatic text. The canonical icon element is <span class=\"material-symbols\">."
+          "message": "<i> means idiomatic text. The canonical icon element is <span class=\"material-symbols\">.",
+          "fragmentSafe": true
         },
         {
           "id": "icon-hidden-from-at",
@@ -356,39 +383,94 @@
           "id": "list-item-not-selected",
           "kind": "forbid",
           "selector": "li[aria-selected]:not([role])",
-          "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute."
+          "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.",
+          "fragmentSafe": true
         }
       ]
     },
     "menu": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "menu-children-are-list-items",
+          "kind": "forbid",
+          "selector": "menu > :not(li):not(script):not(template)",
+          "fragmentSafe": true,
+          "message": "<menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there."
+        }
+      ]
     },
     "navbar": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. The bar is <header> whose child is <nav>; the landmark rules carry it.",
       "rules": []
     },
     "navigation-bar": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "navigation-bar-marks-current",
+          "kind": "forbid",
+          "selector": ".navigation-bar a.active:not([aria-current])",
+          "fragmentSafe": false,
+          "message": "The active destination needs aria-current=\"page\"."
+        }
+      ]
     },
     "navigation-rail": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "navigation-rail-marks-current",
+          "kind": "forbid",
+          "selector": ".navigation-rail a.active:not([aria-current])",
+          "fragmentSafe": false,
+          "message": "The active destination needs aria-current=\"page\"."
+        }
+      ]
     },
     "page-footer": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "footer-nav-has-links",
+          "kind": "forbid",
+          "selector": "footer nav:not(:has(a))",
+          "fragmentSafe": false,
+          "message": "A footer column with no links is not navigation - it is a <section> with a heading. Marking it <nav> spends a landmark on prose."
+        }
+      ]
     },
     "pagination": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "pagination-in-nav",
+          "kind": "forbid",
+          "selector": ".pagination:not(nav):not(nav *)",
+          "fragmentSafe": true,
+          "message": "Pagination is navigation and belongs in a labelled <nav>, or it is just a list of numbers."
+        },
+        {
+          "id": "pagination-marks-current",
+          "kind": "forbid",
+          "selector": ".pagination .active :is(a, span):not([aria-current])",
+          "fragmentSafe": false,
+          "message": "The current page needs aria-current=\"page\". A class only colours it."
+        },
+        {
+          "id": "pagination-disabled-not-a-link",
+          "kind": "forbid",
+          "selector": ".pagination .disabled a[href]",
+          "fragmentSafe": true,
+          "message": "A disabled control that is still an <a href> stays in the tab order and still navigates. Use a <span>, or drop the href."
+        }
+      ]
     },
     "panes": {
       "status": "exempt",
@@ -421,9 +503,17 @@
       "rules": []
     },
     "sidenav": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "sidenav-in-nav",
+          "kind": "forbid",
+          "selector": ".sidenav:not(nav):not(nav *)",
+          "fragmentSafe": true,
+          "message": "A drawer of destinations is navigation. Wrap the list in a labelled <nav>."
+        }
+      ]
     },
     "slider": {
       "status": "exempt",
@@ -436,14 +526,37 @@
       "rules": []
     },
     "table_of_contents": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "toc-in-nav",
+          "kind": "forbid",
+          "selector": ".table-of-contents:not(nav):not(nav *)",
+          "fragmentSafe": true,
+          "message": "A table of contents is a set of destinations within the page. It belongs in a labelled <nav>."
+        }
+      ]
     },
     "tabs": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.",
+      "rules": [
+        {
+          "id": "tabs-not-a-tablist",
+          "kind": "forbid",
+          "selector": ".tabs[role], .tabs [role=\"tab\"], .tabs [role=\"tabpanel\"]",
+          "fragmentSafe": true,
+          "message": "tabs.ts has no keyboard handling, so a tablist role would promise arrow-key navigation nothing implements. These are links to in-page sections."
+        },
+        {
+          "id": "tabs-marks-current",
+          "kind": "forbid",
+          "selector": ".tabs a.active:not([aria-current])",
+          "fragmentSafe": false,
+          "message": "The active tab is the section you are on; aria-current says so where a class cannot."
+        }
+      ]
     },
     "timepicker": {
       "status": "exempt",
@@ -452,13 +565,14 @@
     },
     "toolbar": {
       "status": "exempt",
-      "note": "Rules written, sweep not started.",
+      "note": "Rules written, sweep not started. `nav.toolbar` is element-locked in _toolbar.scss (16 selectors, deliberately, to avoid catching div.fixed-action-btn.toolbar), so dropping the <nav> is a toolbar-sweep change.",
       "rules": [
         {
           "id": "toolbar-not-nav",
           "kind": "forbid",
           "selector": "nav.toolbar",
-          "message": "A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark."
+          "message": "A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.",
+          "fragmentSafe": true
         }
       ]
     },
@@ -471,6 +585,27 @@
       "status": "exempt",
       "note": "Not yet swept.",
       "rules": []
+    },
+    "landmarks": {
+      "status": "enforced",
+      "note": "Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.",
+      "rules": [
+        {
+          "id": "nav-needs-label",
+          "kind": "forbid",
+          "selector": "nav:not([aria-label]):not([aria-labelledby]):not(article nav):not(.tooltip nav):not(.toolbar)",
+          "fragmentSafe": false,
+          "message": "A page carries several <nav> landmarks - app bar, tabs, breadcrumbs, footer columns, drawer. Unlabelled they arrive in the landmark menu as a row of identical entries, which is worse than not being landmarks at all. Three carve-outs, each an action row that should not be <nav> at all so that labelling it would entrench the error: `article nav` (card actions, awaits the cards sweep), `.tooltip nav` (rich-tooltip actions, awaits the tooltip sweep), `.toolbar` (awaits the toolbar sweep). Delete each carve-out with its sweep."
+        },
+        {
+          "id": "main-not-nested",
+          "kind": "forbid",
+          "selector": "main main",
+          "fragmentSafe": true,
+          "message": "A document has one <main>. A pane that holds the primary content of a region is a <section> or a <div>."
+        }
+      ]
     }
-  }
+  },
+  "fragmentSafe": "Set on a rule that fires on a wrong thing being PRESENT. Only these run against m3-guidelines.md, whose markup is prose fragments: a fragment can be wrong about what it contains, but omitting something is what a fragment is for. Note this is not the same as kind=forbid - `fieldset:not(:has(> legend))` forbids, but what it detects is an omission."
 }

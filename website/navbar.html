@@ -31,7 +31,7 @@
 
 
     <header class="fixed">
-        <nav>
+        <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <i class="material-symbols">menu</i>
             </button>
@@ -42,212 +42,215 @@
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
                 <i class="material-symbols">contrast</i>
             </button>
-        </nav>
-
-
-    <ul class="sidenav sidenav-fixed" id="nav-mobile">
-        <li class="">
-            <a href="/getting-started.html">
-                <i class="material-symbols">home</i>
-                Getting started
-            </a>
-        </li>
-        <li class="">
-            <a href="/auto-init.html">
-                <i class="material-symbols">bolt</i>
-                Auto Init
-            </a>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">palette</i>
-                    Foundations
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/color.html">Color</a>
-                    </li>
-                    <li class="">
-                        <a href="/themes.html">Themes</a>
-                    </li>
-                    <li class="">
-                        <a href="/typography.html">Typography</a>
-                    </li>
-                    <li class="">
-                        <a href="/icons.html">Icons</a>
-                    </li>
-                    <li class="">
-                        <a href="/shadow.html">Elevation</a>
-                    </li>
-                    <li class="">
-                        <a href="/grid.html">Grid</a>
-                    </li>
-                    <li class="">
-                        <a href="/helpers.html">Helpers</a>
-                    </li>
-                    <li class="">
-                        <a href="/media-css.html">Media styles</a>
-                    </li>
-                    <li class="">
-                        <a href="/table.html">Table</a>
-                    </li>
-                    <li class="">
-                        <a href="/css-transitions.html">Transitions</a>
-                    </li>
-                    <li class="">
-                        <a href="/pulse.html">Pulse</a>
-                    </li>
-                    <li class="">
-                        <a href="/waves.html">Waves</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav" open>
-                <summary>
-                    <i class="material-symbols">view_quilt</i>
-                    Structure
-                </summary>
-                <ul>
-                    <li class="active">
-                        <a href="/navbar.html">App bar</a>
-                    </li>
-                    <li class="">
-                        <a href="/navigation-bar.html">Navigation bar</a>
-                    </li>
-                    <li class="">
-                        <a href="/navigation-rail.html">Navigation rail</a>
-                    </li>
-                    <li class="">
-                        <a href="/sidenav.html">Sidenav</a>
-                    </li>
-                    <li class="">
-                        <a href="/panes.html">Panes</a>
-                    </li>
-                    <li class="">
-                        <a href="/footer.html">Footer</a>
-                    </li>
-                    <li class="">
-                        <a href="/tabs.html">Tabs</a>
-                    </li>
-                    <li class="">
-                        <a href="/breadcrumbs.html">Breadcrumbs</a>
-                    </li>
-                    <li class="">
-                        <a href="/pagination.html">Pagination</a>
-                    </li>
-                    <li class="">
-                        <a href="/menu.html">Menu</a>
-                    </li>
-                    <li class="">
-                        <a href="/scrollspy.html">Scrollspy</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">widgets</i>
-                    Components
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/buttons.html">Buttons</a>
-                    </li>
-                    <li class="">
-                        <a href="/floating-action-button.html">FAB</a>
-                    </li>
-                    <li class="">
-                        <a href="/cards.html">Cards</a>
-                    </li>
-                    <li class="">
-                        <a href="/lists.html">Lists</a>
-                    </li>
-                    <li class="">
-                        <a href="/dialogs.html">Dialogs</a>
-                    </li>
-                    <li class="">
-                        <a href="/bottom-sheet.html">Bottom sheet</a>
-                    </li>
-                    <li class="">
-                        <a href="/side-sheet.html">Side sheet</a>
-                    </li>
-                    <li class="">
-                        <a href="/badges.html">Badges</a>
-                    </li>
-                    <li class="">
-                        <a href="/tooltips.html">Tooltips</a>
-                    </li>
-                    <li class="">
-                        <a href="/snackbar.html">Snackbar</a>
-                    </li>
-                    <li class="">
-                        <a href="/preloader.html">Preloader</a>
-                    </li>
-                    <li class="">
-                        <a href="/carousel.html">Carousel</a>
-                    </li>
-                    <li class="">
-                        <a href="/media.html">Lightbox</a>
-                    </li>
-                    <li class="">
-                        <a href="/parallax.html">Parallax</a>
-                    </li>
-                    <li class="">
-                        <a href="/toolbars.html">Toolbars</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">edit</i>
-                    Forms
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/fieldsets.html">Fieldsets</a>
-                    </li>
-                    <li class="">
-                        <a href="/text-inputs.html">Text fields</a>
-                    </li>
-                    <li class="">
-                        <a href="/select.html">Select</a>
-                    </li>
-                    <li class="">
-                        <a href="/checkboxes.html">Checkboxes</a>
-                    </li>
-                    <li class="">
-                        <a href="/radio-buttons.html">Radio</a>
-                    </li>
-                    <li class="">
-                        <a href="/switches.html">Switches</a>
-                    </li>
-                    <li class="">
-                        <a href="/slider.html">Slider</a>
-                    </li>
-                    <li class="">
-                        <a href="/chips.html">Chips</a>
-                    </li>
-                    <li class="">
-                        <a href="/autocomplete.html">Autocomplete</a>
-                    </li>
-                    <li class="">
-                        <a href="/datepicker.html">Date picker</a>
-                    </li>
-                    <li class="">
-                        <a href="/timepicker.html">Time picker</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-    </ul>
-
+        </div>
     </header>
+
+
+
+    <nav aria-label="Main">
+      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+          <li class="">
+              <a href="/getting-started.html">
+                  <i class="material-symbols">home</i>
+                  Getting started
+              </a>
+          </li>
+          <li class="">
+              <a href="/auto-init.html">
+                  <i class="material-symbols">bolt</i>
+                  Auto Init
+              </a>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">palette</i>
+                      Foundations
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/color.html">Color</a>
+                      </li>
+                      <li class="">
+                          <a href="/themes.html">Themes</a>
+                      </li>
+                      <li class="">
+                          <a href="/typography.html">Typography</a>
+                      </li>
+                      <li class="">
+                          <a href="/icons.html">Icons</a>
+                      </li>
+                      <li class="">
+                          <a href="/shadow.html">Elevation</a>
+                      </li>
+                      <li class="">
+                          <a href="/grid.html">Grid</a>
+                      </li>
+                      <li class="">
+                          <a href="/helpers.html">Helpers</a>
+                      </li>
+                      <li class="">
+                          <a href="/media-css.html">Media styles</a>
+                      </li>
+                      <li class="">
+                          <a href="/table.html">Table</a>
+                      </li>
+                      <li class="">
+                          <a href="/css-transitions.html">Transitions</a>
+                      </li>
+                      <li class="">
+                          <a href="/pulse.html">Pulse</a>
+                      </li>
+                      <li class="">
+                          <a href="/waves.html">Waves</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav" open>
+                  <summary>
+                      <i class="material-symbols">view_quilt</i>
+                      Structure
+                  </summary>
+                  <ul>
+                      <li class="active">
+                          <a href="/navbar.html">App bar</a>
+                      </li>
+                      <li class="">
+                          <a href="/navigation-bar.html">Navigation bar</a>
+                      </li>
+                      <li class="">
+                          <a href="/navigation-rail.html">Navigation rail</a>
+                      </li>
+                      <li class="">
+                          <a href="/sidenav.html">Sidenav</a>
+                      </li>
+                      <li class="">
+                          <a href="/panes.html">Panes</a>
+                      </li>
+                      <li class="">
+                          <a href="/footer.html">Footer</a>
+                      </li>
+                      <li class="">
+                          <a href="/tabs.html">Tabs</a>
+                      </li>
+                      <li class="">
+                          <a href="/breadcrumbs.html">Breadcrumbs</a>
+                      </li>
+                      <li class="">
+                          <a href="/pagination.html">Pagination</a>
+                      </li>
+                      <li class="">
+                          <a href="/menu.html">Menu</a>
+                      </li>
+                      <li class="">
+                          <a href="/scrollspy.html">Scrollspy</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">widgets</i>
+                      Components
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/buttons.html">Buttons</a>
+                      </li>
+                      <li class="">
+                          <a href="/floating-action-button.html">FAB</a>
+                      </li>
+                      <li class="">
+                          <a href="/cards.html">Cards</a>
+                      </li>
+                      <li class="">
+                          <a href="/lists.html">Lists</a>
+                      </li>
+                      <li class="">
+                          <a href="/dialogs.html">Dialogs</a>
+                      </li>
+                      <li class="">
+                          <a href="/bottom-sheet.html">Bottom sheet</a>
+                      </li>
+                      <li class="">
+                          <a href="/side-sheet.html">Side sheet</a>
+                      </li>
+                      <li class="">
+                          <a href="/badges.html">Badges</a>
+                      </li>
+                      <li class="">
+                          <a href="/tooltips.html">Tooltips</a>
+                      </li>
+                      <li class="">
+                          <a href="/snackbar.html">Snackbar</a>
+                      </li>
+                      <li class="">
+                          <a href="/preloader.html">Preloader</a>
+                      </li>
+                      <li class="">
+                          <a href="/carousel.html">Carousel</a>
+                      </li>
+                      <li class="">
+                          <a href="/media.html">Lightbox</a>
+                      </li>
+                      <li class="">
+                          <a href="/parallax.html">Parallax</a>
+                      </li>
+                      <li class="">
+                          <a href="/toolbars.html">Toolbars</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">edit</i>
+                      Forms
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/fieldsets.html">Fieldsets</a>
+                      </li>
+                      <li class="">
+                          <a href="/text-inputs.html">Text fields</a>
+                      </li>
+                      <li class="">
+                          <a href="/select.html">Select</a>
+                      </li>
+                      <li class="">
+                          <a href="/checkboxes.html">Checkboxes</a>
+                      </li>
+                      <li class="">
+                          <a href="/radio-buttons.html">Radio</a>
+                      </li>
+                      <li class="">
+                          <a href="/switches.html">Switches</a>
+                      </li>
+                      <li class="">
+                          <a href="/slider.html">Slider</a>
+                      </li>
+                      <li class="">
+                          <a href="/chips.html">Chips</a>
+                      </li>
+                      <li class="">
+                          <a href="/autocomplete.html">Autocomplete</a>
+                      </li>
+                      <li class="">
+                          <a href="/datepicker.html">Date picker</a>
+                      </li>
+                      <li class="">
+                          <a href="/timepicker.html">Time picker</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+      </ul>
+    </nav>
+
 
     <main>
         
@@ -304,7 +307,7 @@
           layout — the headline grows, so anything after it sits on the end.
         </p>
         <header class="mb-3">
-          <nav>
+          <nav aria-label="Main">
             <button type="button" aria-label="Menu">
               <i class="material-symbols">menu</i>
             </button>
@@ -314,7 +317,7 @@
           </nav>
         </header>
 <pre><code>&lt;header&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;button type="button" aria-label="Menu"&gt;
       &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
     &lt;/button&gt;
@@ -337,7 +340,7 @@
           when the bar has to collapse.
         </p>
         <header class="mb-3">
-          <nav>
+          <nav aria-label="Main">
             <h2>Title</h2>
             <menu>
               <li><a href="#!">Sass</a></li>
@@ -347,7 +350,7 @@
           </nav>
         </header>
 <pre><code>&lt;header&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;h2&gt;Title&lt;/h2&gt;
     &lt;menu&gt;
       &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
@@ -375,7 +378,7 @@
           the icons.
         </p>
         <header class="center mb-3">
-          <nav>
+          <nav aria-label="Main">
             <button type="button" aria-label="Back">
               <i class="material-symbols">arrow_back</i>
             </button>
@@ -384,7 +387,7 @@
           </nav>
         </header>
 <pre><code>&lt;header class="center"&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;button type="button" aria-label="Back"&gt;
       &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
     &lt;/button&gt;
@@ -408,7 +411,7 @@
           trailing icons on the end.
         </p>
         <header class="medium mb-3">
-          <nav>
+          <nav aria-label="Main">
             <button type="button" aria-label="Back">
               <i class="material-symbols">arrow_back</i>
             </button>
@@ -419,7 +422,7 @@
           </nav>
         </header>
         <header class="large mb-3">
-          <nav>
+          <nav aria-label="Main">
             <button type="button" aria-label="Back">
               <i class="material-symbols">arrow_back</i>
             </button>
@@ -430,7 +433,7 @@
           </nav>
         </header>
 <pre><code>&lt;header class="medium"&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;button type="button" aria-label="Back"&gt;
       &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
     &lt;/button&gt;
@@ -462,7 +465,7 @@
           is the site header itself.
         </p>
 <pre><code>&lt;header class="fixed"&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;h2&gt;Title&lt;/h2&gt;
     &lt;a href="#!" aria-label="Search"&gt;&lt;i class="material-symbols"&gt;search&lt;/i&gt;&lt;/a&gt;
   &lt;/nav&gt;
@@ -485,7 +488,7 @@
           spec’s muted trailing icons.
         </p>
         <header class="primary on-primary-text mb-3">
-          <nav>
+          <nav aria-label="Main">
             <button type="button" aria-label="Menu">
               <i class="material-symbols">menu</i>
             </button>
@@ -494,7 +497,7 @@
           </nav>
         </header>
 <pre><code>&lt;header class="primary on-primary-text"&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;h2&gt;Primary&lt;/h2&gt;
   &lt;/nav&gt;
 &lt;/header&gt;</code></pre>
@@ -536,11 +539,11 @@
         <menu id="navbar-menu1">
           <li><a href="#!">one</a></li>
           <li><a href="#!">two</a></li>
-          <hr>
+          <li class="divider" role="separator"></li>
           <li><a href="#!">three</a></li>
         </menu>
         <header class="mb-3">
-          <nav>
+          <nav aria-label="Main">
             <h2>Title</h2>
             <menu>
               <li><a href="#!">Sass</a></li>
@@ -556,11 +559,11 @@
 <pre><code>&lt;menu id="menu1"&gt;
   &lt;li&gt;&lt;a href="#!"&gt;one&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="#!"&gt;two&lt;/a&gt;&lt;/li&gt;
-  &lt;hr&gt;
+  &lt;li class="divider" role="separator"&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href="#!"&gt;three&lt;/a&gt;&lt;/li&gt;
 &lt;/menu&gt;
 &lt;header&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;h2&gt;Title&lt;/h2&gt;
     &lt;menu&gt;
       &lt;li&gt;
@@ -593,7 +596,7 @@
           the bar — no extra field class.
         </p>
         <header class="mb-3">
-          <nav>
+          <nav aria-label="Main">
             <button type="button" aria-label="Back">
               <i class="material-symbols">arrow_back</i>
             </button>
@@ -604,7 +607,7 @@
           </nav>
         </header>
 <pre><code>&lt;header&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;button type="button" aria-label="Back"&gt;
       &lt;i class="material-symbols"&gt;arrow_back&lt;/i&gt;
     &lt;/button&gt;
@@ -629,7 +632,7 @@
           not be a child of the <code>&lt;nav&gt;</code>.
         </p>
         <header class="mb-3">
-          <nav>
+          <nav aria-label="Main">
             <a href="#!" data-target="navbar-mobile-demo" class="sidenav-trigger" aria-label="Open menu">
               <i class="material-symbols">menu</i>
             </a>
@@ -642,14 +645,16 @@
             </menu>
           </nav>
         </header>
-        <ul class="sidenav" id="navbar-mobile-demo">
-          <li><a href="#!">Sass</a></li>
-          <li><a href="#!">Components</a></li>
-          <li><a href="#!">JavaScript</a></li>
-          <li><a href="#!">Mobile</a></li>
-        </ul>
+        <nav aria-label="Main">
+          <ul class="sidenav" id="navbar-mobile-demo">
+            <li><a href="#!">Sass</a></li>
+            <li><a href="#!">Components</a></li>
+            <li><a href="#!">JavaScript</a></li>
+            <li><a href="#!">Mobile</a></li>
+          </ul>
+        </nav>
 <pre><code>&lt;header&gt;
-  &lt;nav&gt;
+  &lt;nav aria-label="Main"&gt;
     &lt;a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu"&gt;
       &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
     &lt;/a&gt;
@@ -661,9 +666,11 @@
   &lt;/nav&gt;
 &lt;/header&gt;
 
-&lt;ul class="sidenav" id="mobile-demo"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+&lt;nav aria-label="Main"&gt;
+  &lt;ul class="sidenav" id="mobile-demo"&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Sass&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
         <p>
           After you add the trigger and the sidenav, initialize Sidenav (or let
           <code>AutoInit()</code> do it).
@@ -681,7 +688,8 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
 
-        <ul class="section table-of-contents">
+        <nav aria-label="On this page">
+          <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#destinations">Destinations</a></li>
           <li><a href="#center">Center-aligned</a></li>
@@ -691,7 +699,8 @@
           <li><a href="#navbar-menu">Menu</a></li>
           <li><a href="#search-docs">Search</a></li>
           <li><a href="#mobile-collapse">Mobile collapse</a></li>
-        </ul>
+          </ul>
+        </nav>
 
       </div>
     </div>
@@ -704,14 +713,14 @@
     <footer>
         <div class="container">
 
-            <nav>
-                <h2>Start</h2>
+            <nav aria-labelledby="footer-1">
+                <h2 id="footer-1">Start</h2>
                 <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
                 <a href="/getting-started.html">Getting started</a>
                 <a href="/auto-init.html">Auto Init</a>
             </nav>
-            <nav>
-                <h2>Foundations</h2>
+            <nav aria-labelledby="footer-2">
+                <h2 id="footer-2">Foundations</h2>
                 <a href="/color.html">Color</a>
                 <a href="/themes.html">Themes</a>
                 <a href="/typography.html">Typography</a>
@@ -725,8 +734,8 @@
                 <a href="/pulse.html">Pulse</a>
                 <a href="/waves.html">Waves</a>
             </nav>
-            <nav>
-                <h2>Structure</h2>
+            <nav aria-labelledby="footer-3">
+                <h2 id="footer-3">Structure</h2>
                 <a href="/navbar.html">App bar</a>
                 <a href="/navigation-bar.html">Navigation bar</a>
                 <a href="/navigation-rail.html">Navigation rail</a>
@@ -739,8 +748,8 @@
                 <a href="/menu.html">Menu</a>
                 <a href="/scrollspy.html">Scrollspy</a>
             </nav>
-            <nav>
-                <h2>Components</h2>
+            <nav aria-labelledby="footer-4">
+                <h2 id="footer-4">Components</h2>
                 <a href="/buttons.html">Buttons</a>
                 <a href="/floating-action-button.html">FAB</a>
                 <a href="/cards.html">Cards</a>
@@ -757,8 +766,8 @@
                 <a href="/parallax.html">Parallax</a>
                 <a href="/toolbars.html">Toolbars</a>
             </nav>
-            <nav>
-                <h2>Forms</h2>
+            <nav aria-labelledby="footer-5">
+                <h2 id="footer-5">Forms</h2>
                 <a href="/fieldsets.html">Fieldsets</a>
                 <a href="/text-inputs.html">Text fields</a>
                 <a href="/select.html">Select</a>

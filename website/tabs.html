@@ -31,7 +31,7 @@
 
 
     <header class="fixed">
-        <nav>
+        <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <i class="material-symbols">menu</i>
             </button>
@@ -42,212 +42,215 @@
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
                 <i class="material-symbols">contrast</i>
             </button>
-        </nav>
-
-
-    <ul class="sidenav sidenav-fixed" id="nav-mobile">
-        <li class="">
-            <a href="/getting-started.html">
-                <i class="material-symbols">home</i>
-                Getting started
-            </a>
-        </li>
-        <li class="">
-            <a href="/auto-init.html">
-                <i class="material-symbols">bolt</i>
-                Auto Init
-            </a>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">palette</i>
-                    Foundations
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/color.html">Color</a>
-                    </li>
-                    <li class="">
-                        <a href="/themes.html">Themes</a>
-                    </li>
-                    <li class="">
-                        <a href="/typography.html">Typography</a>
-                    </li>
-                    <li class="">
-                        <a href="/icons.html">Icons</a>
-                    </li>
-                    <li class="">
-                        <a href="/shadow.html">Elevation</a>
-                    </li>
-                    <li class="">
-                        <a href="/grid.html">Grid</a>
-                    </li>
-                    <li class="">
-                        <a href="/helpers.html">Helpers</a>
-                    </li>
-                    <li class="">
-                        <a href="/media-css.html">Media styles</a>
-                    </li>
-                    <li class="">
-                        <a href="/table.html">Table</a>
-                    </li>
-                    <li class="">
-                        <a href="/css-transitions.html">Transitions</a>
-                    </li>
-                    <li class="">
-                        <a href="/pulse.html">Pulse</a>
-                    </li>
-                    <li class="">
-                        <a href="/waves.html">Waves</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav" open>
-                <summary>
-                    <i class="material-symbols">view_quilt</i>
-                    Structure
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/navbar.html">App bar</a>
-                    </li>
-                    <li class="">
-                        <a href="/navigation-bar.html">Navigation bar</a>
-                    </li>
-                    <li class="">
-                        <a href="/navigation-rail.html">Navigation rail</a>
-                    </li>
-                    <li class="">
-                        <a href="/sidenav.html">Sidenav</a>
-                    </li>
-                    <li class="">
-                        <a href="/panes.html">Panes</a>
-                    </li>
-                    <li class="">
-                        <a href="/footer.html">Footer</a>
-                    </li>
-                    <li class="active">
-                        <a href="/tabs.html">Tabs</a>
-                    </li>
-                    <li class="">
-                        <a href="/breadcrumbs.html">Breadcrumbs</a>
-                    </li>
-                    <li class="">
-                        <a href="/pagination.html">Pagination</a>
-                    </li>
-                    <li class="">
-                        <a href="/menu.html">Menu</a>
-                    </li>
-                    <li class="">
-                        <a href="/scrollspy.html">Scrollspy</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">widgets</i>
-                    Components
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/buttons.html">Buttons</a>
-                    </li>
-                    <li class="">
-                        <a href="/floating-action-button.html">FAB</a>
-                    </li>
-                    <li class="">
-                        <a href="/cards.html">Cards</a>
-                    </li>
-                    <li class="">
-                        <a href="/lists.html">Lists</a>
-                    </li>
-                    <li class="">
-                        <a href="/dialogs.html">Dialogs</a>
-                    </li>
-                    <li class="">
-                        <a href="/bottom-sheet.html">Bottom sheet</a>
-                    </li>
-                    <li class="">
-                        <a href="/side-sheet.html">Side sheet</a>
-                    </li>
-                    <li class="">
-                        <a href="/badges.html">Badges</a>
-                    </li>
-                    <li class="">
-                        <a href="/tooltips.html">Tooltips</a>
-                    </li>
-                    <li class="">
-                        <a href="/snackbar.html">Snackbar</a>
-                    </li>
-                    <li class="">
-                        <a href="/preloader.html">Preloader</a>
-                    </li>
-                    <li class="">
-                        <a href="/carousel.html">Carousel</a>
-                    </li>
-                    <li class="">
-                        <a href="/media.html">Lightbox</a>
-                    </li>
-                    <li class="">
-                        <a href="/parallax.html">Parallax</a>
-                    </li>
-                    <li class="">
-                        <a href="/toolbars.html">Toolbars</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-        <li>
-            <details name="docs-nav">
-                <summary>
-                    <i class="material-symbols">edit</i>
-                    Forms
-                </summary>
-                <ul>
-                    <li class="">
-                        <a href="/fieldsets.html">Fieldsets</a>
-                    </li>
-                    <li class="">
-                        <a href="/text-inputs.html">Text fields</a>
-                    </li>
-                    <li class="">
-                        <a href="/select.html">Select</a>
-                    </li>
-                    <li class="">
-                        <a href="/checkboxes.html">Checkboxes</a>
-                    </li>
-                    <li class="">
-                        <a href="/radio-buttons.html">Radio</a>
-                    </li>
-                    <li class="">
-                        <a href="/switches.html">Switches</a>
-                    </li>
-                    <li class="">
-                        <a href="/slider.html">Slider</a>
-                    </li>
-                    <li class="">
-                        <a href="/chips.html">Chips</a>
-                    </li>
-                    <li class="">
-                        <a href="/autocomplete.html">Autocomplete</a>
-                    </li>
-                    <li class="">
-                        <a href="/datepicker.html">Date picker</a>
-                    </li>
-                    <li class="">
-                        <a href="/timepicker.html">Time picker</a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-    </ul>
-
+        </div>
     </header>
+
+
+
+    <nav aria-label="Main">
+      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+          <li class="">
+              <a href="/getting-started.html">
+                  <i class="material-symbols">home</i>
+                  Getting started
+              </a>
+          </li>
+          <li class="">
+              <a href="/auto-init.html">
+                  <i class="material-symbols">bolt</i>
+                  Auto Init
+              </a>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">palette</i>
+                      Foundations
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/color.html">Color</a>
+                      </li>
+                      <li class="">
+                          <a href="/themes.html">Themes</a>
+                      </li>
+                      <li class="">
+                          <a href="/typography.html">Typography</a>
+                      </li>
+                      <li class="">
+                          <a href="/icons.html">Icons</a>
+                      </li>
+                      <li class="">
+                          <a href="/shadow.html">Elevation</a>
+                      </li>
+                      <li class="">
+                          <a href="/grid.html">Grid</a>
+                      </li>
+                      <li class="">
+                          <a href="/helpers.html">Helpers</a>
+                      </li>
+                      <li class="">
+                          <a href="/media-css.html">Media styles</a>
+                      </li>
+                      <li class="">
+                          <a href="/table.html">Table</a>
+                      </li>
+                      <li class="">
+                          <a href="/css-transitions.html">Transitions</a>
+                      </li>
+                      <li class="">
+                          <a href="/pulse.html">Pulse</a>
+                      </li>
+                      <li class="">
+                          <a href="/waves.html">Waves</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav" open>
+                  <summary>
+                      <i class="material-symbols">view_quilt</i>
+                      Structure
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/navbar.html">App bar</a>
+                      </li>
+                      <li class="">
+                          <a href="/navigation-bar.html">Navigation bar</a>
+                      </li>
+                      <li class="">
+                          <a href="/navigation-rail.html">Navigation rail</a>
+                      </li>
+                      <li class="">
+                          <a href="/sidenav.html">Sidenav</a>
+                      </li>
+                      <li class="">
+                          <a href="/panes.html">Panes</a>
+                      </li>
+                      <li class="">
+                          <a href="/footer.html">Footer</a>
+                      </li>
+                      <li class="active">
+                          <a href="/tabs.html">Tabs</a>
+                      </li>
+                      <li class="">
+                          <a href="/breadcrumbs.html">Breadcrumbs</a>
+                      </li>
+                      <li class="">
+                          <a href="/pagination.html">Pagination</a>
+                      </li>
+                      <li class="">
+                          <a href="/menu.html">Menu</a>
+                      </li>
+                      <li class="">
+                          <a href="/scrollspy.html">Scrollspy</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">widgets</i>
+                      Components
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/buttons.html">Buttons</a>
+                      </li>
+                      <li class="">
+                          <a href="/floating-action-button.html">FAB</a>
+                      </li>
+                      <li class="">
+                          <a href="/cards.html">Cards</a>
+                      </li>
+                      <li class="">
+                          <a href="/lists.html">Lists</a>
+                      </li>
+                      <li class="">
+                          <a href="/dialogs.html">Dialogs</a>
+                      </li>
+                      <li class="">
+                          <a href="/bottom-sheet.html">Bottom sheet</a>
+                      </li>
+                      <li class="">
+                          <a href="/side-sheet.html">Side sheet</a>
+                      </li>
+                      <li class="">
+                          <a href="/badges.html">Badges</a>
+                      </li>
+                      <li class="">
+                          <a href="/tooltips.html">Tooltips</a>
+                      </li>
+                      <li class="">
+                          <a href="/snackbar.html">Snackbar</a>
+                      </li>
+                      <li class="">
+                          <a href="/preloader.html">Preloader</a>
+                      </li>
+                      <li class="">
+                          <a href="/carousel.html">Carousel</a>
+                      </li>
+                      <li class="">
+                          <a href="/media.html">Lightbox</a>
+                      </li>
+                      <li class="">
+                          <a href="/parallax.html">Parallax</a>
+                      </li>
+                      <li class="">
+                          <a href="/toolbars.html">Toolbars</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+          <li>
+              <details name="docs-nav">
+                  <summary>
+                      <i class="material-symbols">edit</i>
+                      Forms
+                  </summary>
+                  <ul>
+                      <li class="">
+                          <a href="/fieldsets.html">Fieldsets</a>
+                      </li>
+                      <li class="">
+                          <a href="/text-inputs.html">Text fields</a>
+                      </li>
+                      <li class="">
+                          <a href="/select.html">Select</a>
+                      </li>
+                      <li class="">
+                          <a href="/checkboxes.html">Checkboxes</a>
+                      </li>
+                      <li class="">
+                          <a href="/radio-buttons.html">Radio</a>
+                      </li>
+                      <li class="">
+                          <a href="/switches.html">Switches</a>
+                      </li>
+                      <li class="">
+                          <a href="/slider.html">Slider</a>
+                      </li>
+                      <li class="">
+                          <a href="/chips.html">Chips</a>
+                      </li>
+                      <li class="">
+                          <a href="/autocomplete.html">Autocomplete</a>
+                      </li>
+                      <li class="">
+                          <a href="/datepicker.html">Date picker</a>
+                      </li>
+                      <li class="">
+                          <a href="/timepicker.html">Time picker</a>
+                      </li>
+                  </ul>
+              </details>
+          </li>
+      </ul>
+    </nav>
+
 
     <main>
         
@@ -295,7 +298,7 @@
 
         <nav class="tabs" aria-label="Travel">
           <a href="#tabs-intro-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" href="#tabs-intro-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
+          <a class="active" aria-current="page" href="#tabs-intro-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
           <a href="#tabs-intro-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
         </nav>
         <div id="tabs-intro-flight" class="py-3">Flight</div>
@@ -306,7 +309,7 @@
     &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
     &lt;span&gt;Flight&lt;/span&gt;
   &lt;/a&gt;
-  &lt;a class="active" href="#luggage"&gt;
+  &lt;a class="active" aria-current="page" href="#luggage"&gt;
     &lt;i class="material-symbols"&gt;luggage&lt;/i&gt;
     &lt;span&gt;Luggage&lt;/span&gt;
   &lt;/a&gt;
@@ -360,7 +363,7 @@
         </p>
         <nav class="tabs tabs-secondary" aria-label="Trip">
           <a href="#tabs-sec-birds"><i class="material-symbols">flight</i><span>Travel</span></a>
-          <a class="active" href="#tabs-sec-cats"><i class="material-symbols">hotel</i><span>Hotel</span></a>
+          <a class="active" aria-current="page" href="#tabs-sec-cats"><i class="material-symbols">hotel</i><span>Hotel</span></a>
           <a href="#tabs-sec-dogs"><i class="material-symbols">directions_walk</i><span>Walks</span></a>
         </nav>
         <div id="tabs-sec-birds" class="py-3">Travel</div>
@@ -371,7 +374,7 @@
     &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
     &lt;span&gt;Travel&lt;/span&gt;
   &lt;/a&gt;
-  &lt;a class="active" href="#hotel"&gt;
+  &lt;a class="active" aria-current="page" href="#hotel"&gt;
     &lt;i class="material-symbols"&gt;hotel&lt;/i&gt;
     &lt;span&gt;Hotel&lt;/span&gt;
   &lt;/a&gt;
@@ -530,7 +533,7 @@
           Tabs ignore default anchor behaviour. To keep a tab as a
           normal hyperlink, set <code>target</code> on the link.
         </p>
-<pre><code>&lt;nav class="tabs"&gt;
+<pre><code>&lt;nav class="tabs" aria-label="Sections"&gt;
   &lt;a target="_blank" href="https://github.com"&gt;External link in new window&lt;/a&gt;
   &lt;a target="_self" href="https://github.com"&gt;External link in same window&lt;/a&gt;
 &lt;/nav&gt;</code></pre>
@@ -551,7 +554,7 @@
         <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
         <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">
           <a href="#tabs-swipe-1">Test 1</a>
-          <a class="active" href="#tabs-swipe-2">Test 2</a>
+          <a class="active" aria-current="page" href="#tabs-swipe-2">Test 2</a>
           <a href="#tabs-swipe-3">Test 3</a>
         </nav>
         <div class="tabs-swipe-demo">
@@ -559,9 +562,9 @@
           <div id="tabs-swipe-2" class="secondary-container on-secondary-container-text center-align">Test 2</div>
           <div id="tabs-swipe-3" class="tertiary-container on-tertiary-container-text center-align">Test 3</div>
         </div>
-<pre><code>&lt;nav id="tabs-swipe-demo" class="tabs"&gt;
+<pre><code>&lt;nav id="tabs-swipe-demo" class="tabs" aria-label="Sections"&gt;
   &lt;a href="#test-swipe-1"&gt;Test 1&lt;/a&gt;
-  &lt;a class="active" href="#test-swipe-2"&gt;Test 2&lt;/a&gt;
+  &lt;a class="active" aria-current="page" href="#test-swipe-2"&gt;Test 2&lt;/a&gt;
   &lt;a href="#test-swipe-3"&gt;Test 3&lt;/a&gt;
 &lt;/nav&gt;</code></pre>
 <pre><code>Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
@@ -581,7 +584,7 @@
         </p>
         <nav class="tabs max" aria-label="Fixed width">
           <a href="#tabs-fixed-1">Test 1</a>
-          <a class="active" href="#tabs-fixed-2">Test 2</a>
+          <a class="active" aria-current="page" href="#tabs-fixed-2">Test 2</a>
           <a class="disabled" href="#tabs-fixed-3">Disabled</a>
           <a href="#tabs-fixed-4">Test 4</a>
           <a href="#tabs-fixed-5">Test 5</a>
@@ -591,9 +594,9 @@
         <div id="tabs-fixed-3" class="py-3">Test 3</div>
         <div id="tabs-fixed-4" class="py-3">Test 4</div>
         <div id="tabs-fixed-5" class="py-3">Test 5</div>
-<pre><code>&lt;nav class="tabs max"&gt;
+<pre><code>&lt;nav class="tabs max" aria-label="Sections"&gt;
   &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
-  &lt;a class="active" href="#test2"&gt;Test 2&lt;/a&gt;
+  &lt;a class="active" aria-current="page" href="#test2"&gt;Test 2&lt;/a&gt;
   &lt;a class="disabled" href="#test3"&gt;Disabled&lt;/a&gt;
 &lt;/nav&gt;</code></pre>
   
@@ -610,18 +613,18 @@
         </p>
         <nav class="tabs max horizontal" aria-label="Inline icons">
           <a href="#tabs-horiz-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" href="#tabs-horiz-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
+          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
           <a href="#tabs-horiz-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
         </nav>
         <div id="tabs-horiz-flight" class="py-3">Flight</div>
         <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
         <div id="tabs-horiz-explore" class="py-3">Explore</div>
-<pre><code>&lt;nav class="tabs max horizontal"&gt;
+<pre><code>&lt;nav class="tabs max horizontal" aria-label="Sections"&gt;
   &lt;a href="#flight"&gt;
     &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
     &lt;span&gt;Flight&lt;/span&gt;
   &lt;/a&gt;
-  &lt;a class="active" href="#luggage"&gt;
+  &lt;a class="active" aria-current="page" href="#luggage"&gt;
     &lt;i class="material-symbols"&gt;luggage&lt;/i&gt;
     &lt;span&gt;Luggage&lt;/span&gt;
   &lt;/a&gt;
@@ -636,7 +639,8 @@
     <div class="hide-on-small-only m3 xl3">
       <div class="toc-wrapper mt-5">
 
-        <ul class="section table-of-contents">
+        <nav aria-label="On this page">
+          <ul class="section table-of-contents">
           <li><a href="#anatomy">Introduction</a></li>
           <li><a href="#secondary">Secondary</a></li>
           <li><a href="#initialization">Initialization</a></li>
@@ -648,7 +652,8 @@
           <li><a href="#swipeable">Swipeable Tabs</a></li>
           <li><a href="#fixed-width">Fixed width</a></li>
           <li><a href="#icons">Inline icons</a></li>
-        </ul>
+          </ul>
+        </nav>
 
       </div>
     </div>
@@ -661,14 +666,14 @@
     <footer>
         <div class="container">
 
-            <nav>
-                <h2>Start</h2>
+            <nav aria-labelledby="footer-1">
+                <h2 id="footer-1">Start</h2>
                 <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
                 <a href="/getting-started.html">Getting started</a>
                 <a href="/auto-init.html">Auto Init</a>
             </nav>
-            <nav>
-                <h2>Foundations</h2>
+            <nav aria-labelledby="footer-2">
+                <h2 id="footer-2">Foundations</h2>
                 <a href="/color.html">Color</a>
                 <a href="/themes.html">Themes</a>
                 <a href="/typography.html">Typography</a>
@@ -682,8 +687,8 @@
                 <a href="/pulse.html">Pulse</a>
                 <a href="/waves.html">Waves</a>
             </nav>
-            <nav>
-                <h2>Structure</h2>
+            <nav aria-labelledby="footer-3">
+                <h2 id="footer-3">Structure</h2>
                 <a href="/navbar.html">App bar</a>
                 <a href="/navigation-bar.html">Navigation bar</a>
                 <a href="/navigation-rail.html">Navigation rail</a>
@@ -696,8 +701,8 @@
                 <a href="/menu.html">Menu</a>
                 <a href="/scrollspy.html">Scrollspy</a>
             </nav>
-            <nav>
-                <h2>Components</h2>
+            <nav aria-labelledby="footer-4">
+                <h2 id="footer-4">Components</h2>
                 <a href="/buttons.html">Buttons</a>
                 <a href="/floating-action-button.html">FAB</a>
                 <a href="/cards.html">Cards</a>
@@ -714,8 +719,8 @@
                 <a href="/parallax.html">Parallax</a>
                 <a href="/toolbars.html">Toolbars</a>
             </nav>
-            <nav>
-                <h2>Forms</h2>
+            <nav aria-labelledby="footer-5">
+                <h2 id="footer-5">Forms</h2>
                 <a href="/fieldsets.html">Fieldsets</a>
                 <a href="/text-inputs.html">Text fields</a>
                 <a href="/select.html">Select</a>

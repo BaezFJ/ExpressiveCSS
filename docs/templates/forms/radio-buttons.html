@@ -81,12 +81,12 @@
 
   {% call section("row", "In a row") %}
         <p>
-          Put the labels in a <code>&lt;nav&gt;</code> to sit them on one
+          Put the labels in a <code>&lt;div class="inline"&gt;</code> to sit them on one
           line. A bare group stacks vertically.
         </p>
         <fieldset>
           <legend>Colour</legend>
-          <nav>
+          <div class="inline">
             <label>
               <input name="group2" type="radio" checked>
               Red
@@ -99,12 +99,12 @@
               <input name="group2" type="radio">
               Green
             </label>
-          </nav>
+          </div>
         </fieldset>
 {% call code() %}
 <fieldset>
   <legend>Colour</legend>
-  <nav>
+  <div class="inline">
     <label>
       <input name="group2" type="radio" checked>
       Red
@@ -113,7 +113,7 @@
       <input name="group2" type="radio">
       Yellow
     </label>
-  </nav>
+  </div>
 </fieldset>
 {% endcall %}
   {% endcall %}

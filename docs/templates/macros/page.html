@@ -23,12 +23,14 @@
 
 {# Extra, non-section entries (an off-site link, say) go in a {% call toc() %}. #}
 {% macro toc() %}
-        <ul class="section table-of-contents">
+        <nav aria-label="On this page">
+          <ul class="section table-of-contents">
           {%- for s in toc_sections %}
           <li><a href="#{{ s.id }}">{{ s.label }}</a></li>
           {%- endfor %}
           {{- caller() if caller }}
-        </ul>
+          </ul>
+        </nav>
 {% endmacro %}
 
 {# `toc_extra` is a macro rendering extra <li>s for the table of contents. #}
