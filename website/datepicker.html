@@ -32,7 +32,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Date Picker</h2>
@@ -48,7 +48,7 @@
 
 
     <nav aria-label="Main">
-      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+      <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
                   <span class="material-symbols" aria-hidden="true">home</span>
@@ -284,11 +284,11 @@
           to show the calendar under the field.
         </p>
         <div class="field">
-          <input type="text" class="datepicker no-autoinit" id="datepicker-intro">
+          <input type="text" class="date-picker no-autoinit" id="datepicker-intro">
           <label for="datepicker-intro">Birthdate</label>
         </div>
 <pre><code>&lt;div class="field"&gt;
-  &lt;input type="text" class="datepicker" id="birthdate"&gt;
+  &lt;input type="text" class="date-picker" id="birthdate"&gt;
   &lt;label for="birthdate"&gt;Birthdate&lt;/label&gt;
 &lt;/div&gt;</code></pre>
 <pre><code>Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
@@ -722,7 +722,7 @@
           input is created next to the first.
         </p>
         <div class="field">
-          <input type="text" class="datepicker no-autoinit" id="datepicker-range">
+          <input type="text" class="date-picker no-autoinit" id="datepicker-range">
           <label for="datepicker-range">Start date</label>
         </div>
         <div class="field mb-3">
@@ -746,7 +746,7 @@
           remove it. Each selected date gets its own input.
         </p>
         <div class="field mb-3">
-          <input type="text" class="datepicker no-autoinit" id="datepicker-multi">
+          <input type="text" class="date-picker no-autoinit" id="datepicker-multi">
           <label for="datepicker-multi">Dates</label>
         </div>
 <pre><code>Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {

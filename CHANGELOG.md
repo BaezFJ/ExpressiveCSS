@@ -14,6 +14,62 @@ The sweep is breaking, and lands over several changes before 0.8.0. Legacy
 markup keeps rendering — nothing warns at runtime — so each **Migration** entry
 below is the whole story for that component.
 
+### Changed
+
+- **Components took the names Material 3 uses for them.** Every rename is
+  additive — the old class stays in the selector list, the old export stays as
+  an alias — with one exception, called out below.
+
+  | M3 | was | now |
+  | --- | --- | --- |
+  | Slider | `.range` / `Range` | `.slider` / `Slider` |
+  | Navigation drawer | `.sidenav` / `Sidenav` | `.navigation-drawer` / `NavigationDrawer` |
+  | FAB | `.fixed-action-btn` | `.fab` |
+  | Progress indicators | `.preloader` | `.progress.circular` |
+  | Date / Time pickers | `.datepicker` / `.timepicker` | `.date-picker` / `.time-picker` |
+  | (not an M3 component) | `.slider` / `Slider` | `.slideshow` / `Slideshow` |
+
+- **`Slider` changed meaning, and that one is a break.** It was the image
+  slideshow; it is now the range control, because that is what M3 calls a
+  slider. Aliasing it would have defeated the rename. In *markup* nothing
+  breaks — a `.slider` holding a range input is the slider, one holding
+  `.slides` is still the slideshow, so both kinds of pre-0.8.0 markup keep
+  working. In *script*, `Expressive.Slider.init()` now starts a range control
+  rather than a slideshow: call `Expressive.Slideshow` instead.
+  `Expressive.Range` still resolves, to the renamed `Slider`.
+- **`.field` deliberately did not become `.text-field`.** M3 names the
+  component "Text fields", but the same container wraps `<select>`,
+  autocomplete and file inputs, so the M3 name would be wrong for most of what
+  it does.
+- Sass partials moved with their components: `_sidenav` → `_navigation-drawer`,
+  `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` →
+  `_progress`.
+
+### Fixed
+
+- **The renames reached the styling and stopped short of the behaviour.** The
+  Sass alias made `.navigation-drawer-fixed` *look* docked while the component
+  still read only `sidenav-fixed`, so at the large breakpoint a canonically
+  named drawer kept its drag target live and `open()` could turn it into a
+  modal. `_host()` in Slider knew only the legacy classes, so a dual-handle
+  control in a `.slider` host never clamped its handles and never tracked the
+  interval.
+- **A circular indicator also matched the bare linear-progress rule**, drawing
+  a linear fill over the conic one — `<span class="progress circular">` is not
+  a `<progress>` and has no determinate child, so it fell through to the
+  fallback.
+- **Four documented snippets kept the old names in script** — `.sidenav`
+  queries that matched nothing, and `Expressive.Slider.init` still being used
+  to start slideshows after `Slider` became the range control. A new check
+  reads every `Expressive.X` and every selector string in the docs and fails on
+  a name the bundle or the sheet does not have.
+- **`.fab` was not excluded from the toolbar selector** the way
+  `.fixed-action-btn` is, so a FAB-to-toolbar transition written with the new
+  name picked up toolbar styling. Found by the rename test itself, which walks
+  every rule naming an old class and fails if the new one is missing from it.
+- **`llm.md` documented a token that does not exist** — `--sidenav-width`. The
+  real one is `--md-comp-nav-drawer-width`.
+
 ### Added
 
 - **The sweep is finished — 45 of 45 components enforced.** The last pass takes

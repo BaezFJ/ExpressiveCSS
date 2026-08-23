@@ -32,7 +32,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Floating Action Button</h2>
@@ -48,7 +48,7 @@
 
 
     <nav aria-label="Main">
-      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+      <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
                   <span class="material-symbols" aria-hidden="true">home</span>
@@ -266,7 +266,7 @@
 
 
         
-<div class="fixed-action-btn">
+<div class="fab">
   <button type="button" class="button extra circle" aria-label="Edit">
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
@@ -290,13 +290,13 @@
         </p>
         <p>
           Wrap a large <code>extra circle small</code> (or <code>circle extra</code>)
-          and a list of smaller ones in <code>fixed-action-btn</code>.
+          and a list of smaller ones in <code>fab</code>.
           That class pins the control to the corner. The menu opens on
           hover when the pointer can hover; add <code>click-to-toggle</code>
           to toggle on click. <code>AutoInit()</code> starts every matching
           element except those marked <code>no-autoinit</code>. Motion is CSS.
         </p>
-<pre><code>&lt;div class="fixed-action-btn"&gt;
+<pre><code>&lt;div class="fab"&gt;
   &lt;button type="button" class="button extra circle" aria-label="Edit"&gt;
     &lt;span class="material-symbols" aria-hidden="true"&gt;mode_edit&lt;/span&gt;
   &lt;/button&gt;
@@ -315,10 +315,10 @@
           The IIFE bundle exposes <code>Expressive.FloatingActionButton</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
           or let <code>Expressive.AutoInit()</code> start every
-          <code>.fixed-action-btn</code> with the defaults below.
+          <code>.fab</code> with the defaults below.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
+  const elems = document.querySelectorAll('.fab');
   const instances = Expressive.FloatingActionButton.init(elems, {
     // specify options here
   });
@@ -446,7 +446,7 @@
           same class.
         </p>
         <div class="fab-demo">
-          <div class="fixed-action-btn direction-left" id="fab-horizontal">
+          <div class="fab direction-left" id="fab-horizontal">
             <button type="button" class="button extra circle" aria-label="Edit">
               <span class="material-symbols" aria-hidden="true">mode_edit</span>
             </button>
@@ -458,7 +458,7 @@
             </ul>
           </div>
         </div>
-<pre><code>&lt;div class="fixed-action-btn direction-left"&gt;…&lt;/div&gt;</code></pre>
+<pre><code>&lt;div class="fab direction-left"&gt;…&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -473,7 +473,7 @@
           click is used even without the class.
         </p>
         <div class="fab-demo">
-          <div class="fixed-action-btn direction-left click-to-toggle" id="fab-click-only">
+          <div class="fab direction-left click-to-toggle" id="fab-click-only">
             <button type="button" class="button extra circle" aria-label="Menu">
               <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
@@ -485,7 +485,7 @@
             </ul>
           </div>
         </div>
-<pre><code>&lt;div class="fixed-action-btn direction-left click-to-toggle"&gt;…&lt;/div&gt;</code></pre>
+<pre><code>&lt;div class="fab direction-left click-to-toggle"&gt;…&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -498,7 +498,7 @@
           to expand the button into a full-width bar on click. Prefer a hover
           or click-only menu unless you specifically need the bar.
         </p>
-<pre><code>&lt;div class="fixed-action-btn toolbar"&gt;
+<pre><code>&lt;div class="fab toolbar"&gt;
   &lt;a class="button extra circle" aria-label="Edit"&gt;&lt;span class="material-symbols large" aria-hidden="true"&gt;mode_edit&lt;/span&gt;&lt;/a&gt;
   &lt;ul&gt;
     &lt;li class="waves-effect waves-light"&gt;&lt;a href="#!" aria-label="Insert chart"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;insert_chart&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;

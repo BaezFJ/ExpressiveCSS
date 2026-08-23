@@ -1,14 +1,14 @@
 import { Utils } from '../core/utils';
 import { Component, BaseOptions, InitElements, InitElement, Openable } from '../core/component';
 
-export interface SidenavOptions extends BaseOptions {
+export interface NavigationDrawerOptions extends BaseOptions {
   /**
-   * Side of screen on which Sidenav appears.
+   * Side of screen on which NavigationDrawer appears.
    * @default 'left'
    */
   edge: 'left' | 'right';
   /**
-   * Allow swipe gestures to open/close Sidenav.
+   * Allow swipe gestures to open/close NavigationDrawer.
    * @default true
    */
   draggable: boolean;
@@ -35,7 +35,7 @@ export interface SidenavOptions extends BaseOptions {
   onCloseEnd: (elem: HTMLElement) => void;
 }
 
-const _defaults: SidenavOptions = {
+const _defaults: NavigationDrawerOptions = {
   edge: 'left',
   draggable: true,
   dragTargetWidth: '10px',
@@ -52,15 +52,15 @@ const LARGE_UP = '(width >= 993px)';
  * JS opens/closes, handles the trigger, and writes --md-comp-nav-drawer-shift
  * while dragging. CSS owns the slide, the scrim, and the large-screen dock.
  */
-export class Sidenav extends Component<SidenavOptions> implements Openable {
+export class NavigationDrawer extends Component<NavigationDrawerOptions> implements Openable {
   id: string;
   /** Describes open/close state of the overlay drawer. */
   isOpen: boolean;
-  /** Describes if sidenav has sidenav-fixed. */
+  /** Whether the drawer is docked (`navigation-drawer-fixed`). */
   isFixed: boolean;
-  /** Describes if Sidenav is being dragged. */
+  /** Describes if NavigationDrawer is being dragged. */
   isDragged: boolean;
-  static _sidenavs: Sidenav[];
+  static _sidenavs: NavigationDrawer[];
   dragTarget: HTMLElement | null;
   private _dialog: HTMLDialogElement | null;
   private _createdDialog: boolean;
@@ -73,18 +73,24 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   private _verticallyScrolling: boolean;
   private percentOpen: number;
 
-  constructor(el: HTMLElement, options: Partial<SidenavOptions>) {
-    super(el, options, Sidenav);
-    this.el['Expressive_Sidenav'] = this;
+  constructor(el: HTMLElement, options: Partial<NavigationDrawerOptions>) {
+    super(el, options, NavigationDrawer);
+    this.el['Expressive_NavigationDrawer'] = this;
 
     this.options = {
-      ...Sidenav.defaults,
+      ...NavigationDrawer.defaults,
       ...options
     };
 
     this.id = this.el.id;
     this.isOpen = false;
-    this.isFixed = this.el.classList.contains('sidenav-fixed');
+    // Both spellings: the Sass alias made `.navigation-drawer-fixed` style
+    // like the old class, but this read the old name only - so the canonical
+    // markup was treated as an overlay at the large breakpoint, leaving the
+    // drag target live and letting open() call showModal() on a docked drawer.
+    this.isFixed =
+      this.el.classList.contains('navigation-drawer-fixed') ||
+      this.el.classList.contains('sidenav-fixed');
     this.isDragged = false;
     this.dragTarget = null;
     this._dialog = null;
@@ -104,39 +110,39 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     this._setupEventHandlers();
     this._syncTriggers();
 
-    Sidenav._sidenavs.push(this);
+    NavigationDrawer._sidenavs.push(this);
   }
 
-  static get defaults(): SidenavOptions {
+  static get defaults(): NavigationDrawerOptions {
     return _defaults;
   }
 
   /**
-   * Initializes instance of Sidenav.
+   * Initializes instance of NavigationDrawer.
    * @param el HTML element.
    * @param options Component options.
    */
-  static init(el: HTMLElement, options?: Partial<SidenavOptions>): Sidenav;
+  static init(el: HTMLElement, options?: Partial<NavigationDrawerOptions>): NavigationDrawer;
   /**
-   * Initializes instances of Sidenav.
+   * Initializes instances of NavigationDrawer.
    * @param els HTML elements.
    * @param options Component options.
    */
-  static init(els: InitElements<InitElement>, options?: Partial<SidenavOptions>): Sidenav[];
+  static init(els: InitElements<InitElement>, options?: Partial<NavigationDrawerOptions>): NavigationDrawer[];
   /**
-   * Initializes instances of Sidenav.
+   * Initializes instances of NavigationDrawer.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
     els: HTMLElement | InitElements<InitElement>,
-    options: Partial<SidenavOptions> = {}
-  ): Sidenav | Sidenav[] {
-    return super.init(els, options, Sidenav);
+    options: Partial<NavigationDrawerOptions> = {}
+  ): NavigationDrawer | NavigationDrawer[] {
+    return super.init(els, options, NavigationDrawer);
   }
 
-  static getInstance(el: HTMLElement): Sidenav {
-    return el['Expressive_Sidenav'];
+  static getInstance(el: HTMLElement): NavigationDrawer {
+    return el['Expressive_NavigationDrawer'];
   }
 
   destroy() {
@@ -151,21 +157,21 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     this._clearShift();
     this._unwrapDialog();
     this._removeDragTarget();
-    this.el['Expressive_Sidenav'] = undefined;
-    const index = Sidenav._sidenavs.indexOf(this);
+    this.el['Expressive_NavigationDrawer'] = undefined;
+    const index = NavigationDrawer._sidenavs.indexOf(this);
     if (index >= 0) {
-      Sidenav._sidenavs.splice(index, 1);
+      NavigationDrawer._sidenavs.splice(index, 1);
     }
   }
 
   /**
    * Opens the overlay drawer. No-op while the sidenav is docked
-   * (sidenav-fixed at the large breakpoint).
+   * (navigation-drawer-fixed at the large breakpoint).
    */
   open = () => {
     if (this._isCurrentlyFixed() || this.isOpen || !this._dialog) return;
 
-    Sidenav._sidenavs.forEach((other) => {
+    NavigationDrawer._sidenavs.forEach((other) => {
       if (other !== this && other.isOpen) other.close();
     });
 
@@ -297,8 +303,8 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   }
 
   private _setupEventHandlers() {
-    if (Sidenav._sidenavs.length === 0) {
-      document.body.addEventListener('click', Sidenav._handleTriggerClick);
+    if (NavigationDrawer._sidenavs.length === 0) {
+      document.body.addEventListener('click', NavigationDrawer._handleTriggerClick);
     }
     const passive = { passive: true } as const;
     this.dragTarget?.addEventListener('touchmove', this._handleDragTargetDrag, passive);
@@ -311,8 +317,8 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   }
 
   private _removeEventHandlers() {
-    if (Sidenav._sidenavs.length === 1) {
-      document.body.removeEventListener('click', Sidenav._handleTriggerClick);
+    if (NavigationDrawer._sidenavs.length === 1) {
+      document.body.removeEventListener('click', NavigationDrawer._handleTriggerClick);
     }
     this.dragTarget?.removeEventListener('touchmove', this._handleDragTargetDrag);
     this.dragTarget?.removeEventListener('touchend', this._handleDragTargetRelease);
@@ -326,10 +332,10 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   private static _handleTriggerClick(e: Event) {
     const target = e.target;
     if (!(target instanceof Element)) return;
-    const trigger = target.closest('.sidenav-trigger');
+    const trigger = target.closest('.sidenav-trigger, .navigation-drawer-trigger');
     if (!trigger || !(trigger instanceof HTMLElement)) return;
     const sidenavId = Utils.getIdFromTrigger(trigger);
-    const sidenavInstance = document.getElementById(sidenavId)?.['Expressive_Sidenav'];
+    const sidenavInstance = document.getElementById(sidenavId)?.['Expressive_NavigationDrawer'];
     if (sidenavInstance) {
       sidenavInstance.open();
       e.preventDefault();
@@ -339,7 +345,7 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   private _handleCloseTriggerClick = (e: Event) => {
     const target = e.target;
     if (!(target instanceof Element)) return;
-    const closeTrigger = target.closest('.sidenav-close');
+    const closeTrigger = target.closest('.sidenav-close, .navigation-drawer-close');
     if (closeTrigger && !this._isCurrentlyFixed()) {
       this.close();
     }
@@ -445,7 +451,7 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
 
   private _syncTriggers() {
     if (!this.id) return;
-    document.querySelectorAll('.sidenav-trigger').forEach((trigger) => {
+    document.querySelectorAll('.sidenav-trigger, .navigation-drawer-trigger').forEach((trigger) => {
       if (!(trigger instanceof HTMLElement)) return;
       if (Utils.getIdFromTrigger(trigger) !== this.id) return;
       trigger.setAttribute('aria-expanded', this.isOpen ? 'true' : 'false');
@@ -454,6 +460,6 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
   }
 
   static {
-    Sidenav._sidenavs = [];
+    NavigationDrawer._sidenavs = [];
   }
 }

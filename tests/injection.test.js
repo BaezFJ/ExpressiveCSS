@@ -200,7 +200,7 @@ describe('Slider indicator labels', () => {
         <li><img src="http://localhost/2.jpg"><div class="caption">two</div></li>
       </ul></div>`;
 
-    const instance = Expressive.Slider.init(document.querySelector('.slider'), {
+    const instance = Expressive.Slideshow.init(document.querySelector('.slider'), {
       indicatorLabelFunc: () => PAYLOAD
     });
 

@@ -67,7 +67,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Bottom sheet
 - Side sheet
 - Scrollspy
-- Sidenav
+- NavigationDrawer
 - Tabs
 - Snackbar
 - Tooltips
@@ -243,13 +243,13 @@ Opt an element out when it needs manual options:
 | `Parallax` | `.parallax` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
-| `Sidenav` | `.sidenav` |
+| `NavigationDrawer` | `.navigation-drawer` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
-| `FloatingActionButton` | `.fixed-action-btn` |
+| `FloatingActionButton` | `.fab` |
 
-`Snackbar`, `CharacterCounter`, and `Range` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Waves, Range, and Cards behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Waves, Range, and Cards behaviors.
 
 ## Component lifecycle
 
@@ -272,8 +272,8 @@ The main bundle exports:
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
-- `Parallax`, `Range`, and `ScrollSpy`
-- `FormSelect`, `Sidenav`, `NavigationRail`, `Slider`, and `Tabs`
+- `Parallax`, `Slider`, and `ScrollSpy`
+- `FormSelect`, `NavigationDrawer`, `NavigationRail`, `Slider`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
 ---
@@ -384,7 +384,7 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 
 #### Initialize JavaScript
 
-The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as sidenavs, tooltips, and tabs start themselves.
+The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation drawers, tooltips, and tabs start themselves.
 
 `AutoInit()` scans `document.body` by default. Pass a container to limit the scan, or add the `no-autoinit` class to an element that should be initialized manually.
 
@@ -1644,7 +1644,7 @@ Nest the badge in the destination icon, or leave it as a sibling — the bar and
 </a>
 ```
 
-### In a list or sidenav
+### In a list or navigation drawer
 
 A trailing `.badge` in a list or drawer row stays in flow on the end.
 
@@ -2306,10 +2306,10 @@ A circular action that can open a menu of related shortcuts.
 
 If you want a fixed floating action button, you can add multiple actions that appear on hover. The live demo is in the bottom-right corner of the page.
 
-Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) in `fixed-action-btn`. That class pins the control to the corner and styles its direct children. `AutoInit()` starts every matching element except those marked `no-autoinit`.
+Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) in `fab`. That class pins the control to the corner and styles its direct children. `AutoInit()` starts every matching element except those marked `no-autoinit`.
 
 ```html
-<div class="fixed-action-btn">
+<div class="fab">
   <button type="button" class="button circle extra" aria-label="Edit">
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
@@ -2324,11 +2324,11 @@ Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) 
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.FloatingActionButton`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.fixed-action-btn` with the defaults below.
+The IIFE bundle exposes `Expressive.FloatingActionButton`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.fab` with the defaults below.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
+  const elems = document.querySelectorAll('.fab');
   const instances = Expressive.FloatingActionButton.init(elems, {
     // specify options here
   });
@@ -2397,7 +2397,7 @@ Creating a horizontal FAB is easy. Set the `direction` option to `'left'` or `'r
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
+  const elems = document.querySelectorAll('.fab');
   const instances = Expressive.FloatingActionButton.init(elems, {
     direction: 'left'
   });
@@ -2410,7 +2410,7 @@ To disable hover and toggle the menu when the large button is clicked — useful
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
+  const elems = document.querySelectorAll('.fab');
   const instances = Expressive.FloatingActionButton.init(elems, {
     direction: 'left',
     hoverEnabled: false
@@ -2425,7 +2425,7 @@ document.addEventListener('DOMContentLoaded', function() {
 Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu unless you specifically need the toolbar transition.
 
 ```html
-<div class="fixed-action-btn toolbar">
+<div class="fab toolbar">
   <button type="button" class="button circle extra" aria-label="Edit">
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
@@ -2440,7 +2440,7 @@ Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu 
 
 ```js
 Expressive.FloatingActionButton.init(
-  document.querySelector('.fixed-action-btn.toolbar'),
+  document.querySelector('.fab.toolbar'),
   { toolbarEnabled: true }
 );
 ```
@@ -2581,7 +2581,7 @@ The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. T
 
 Tokens follow the [M3 app bar spec](https://m3.material.io/components/app-bars/specs). The container is `surface` at rest, the headline is `on-surface` at `title-large`, and icons are 24dp in a 48dp target, inset 4dp. Icons inherit the header color so a fill + `on-*` pair stays readable. The small bar is 64dp tall. Pair a fill utility with its `on-*` text class if you want a colored bar.
 
-The bar is CSS-only. Menus and the sidenav are separate components that `AutoInit()` starts. A `sidenav-trigger` inside the bar is still required — that class is the Sidenav contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
+The bar is CSS-only. Menus and the navigation drawer are separate components that `AutoInit()` starts. A `navigation-drawer-trigger` inside the bar is still required — that class is the NavigationDrawer contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
 
 ### Small
 
@@ -2602,7 +2602,7 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
 
 ### Destinations
 
-Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the large breakpoint and pair it with a sidenav trigger when the bar has to collapse.
+Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the large breakpoint and pair it with a navigation drawer trigger when the bar has to collapse.
 
 ```html
 <header>
@@ -2747,12 +2747,12 @@ A `<form>` in the nav fills the space between the leading action and anything af
 
 ### Mobile collapse
 
-Hide the destination menu below the large breakpoint and put a `sidenav-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `sidenav` whose id matches `data-target`. The sidenav element itself must not be a child of the `<nav>`.
+Hide the destination menu below the large breakpoint and put a `navigation-drawer-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `navigation-drawer` whose id matches `data-target`. The drawer element itself must not be a child of the `<nav>`.
 
 ```html
 <header>
   <nav aria-label="Main">
-    <a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu">
+    <a href="#!" data-target="mobile-demo" class="navigation-drawer-trigger" aria-label="Open menu">
       <span class="material-symbols" aria-hidden="true">menu</span>
     </a>
     <h2>Title</h2>
@@ -2764,17 +2764,17 @@ Hide the destination menu below the large breakpoint and put a `sidenav-trigger`
 </header>
 
 <nav aria-label="Main">
-  <ul class="sidenav" id="mobile-demo">
+  <ul class="navigation-drawer" id="mobile-demo">
     <li><a href="#!">Sass</a></li>
   </ul>
 </nav>
 ```
 
-After you add the trigger and the sidenav, initialize Sidenav (or let `AutoInit()` do it).
+After you add the trigger and the navigation drawer, initialize NavigationDrawer (or let `AutoInit()` do it).
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  Expressive.Sidenav.init(document.querySelectorAll('.sidenav'));
+  Expressive.NavigationDrawer.init(document.querySelectorAll('.navigation-drawer'));
 });
 ```
 
@@ -2784,7 +2784,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).
 
-This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows; a navigation rail covers mid-size screens and a sidenav the rest.
+This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows; a navigation rail covers mid-size screens and a navigation drawer the rest.
 
 ### Stacked
 
@@ -3130,7 +3130,7 @@ The container height is how much of the image you see. The framework default is 
 
 ---
 
-## Preloader
+## Progress indicators
 
 Activity and progress indicators for content that takes time to load.
 
@@ -3174,14 +3174,14 @@ percentage.
 
 ### Circular
 
-A circular indicator is a single `<span class="preloader">`. There is no wrapper,
+A circular indicator is a single `<span class="progress circular">`. There is no wrapper,
 no layers and no clippers — the whole spinner is one element. The default is
 40dp; add `small` (24dp) or `big` (64dp).
 
 ```html
-<span class="preloader" role="status" aria-label="Loading"></span>
-<span class="preloader small" role="status" aria-label="Loading"></span>
-<span class="preloader big" role="status" aria-label="Loading"></span>
+<span class="progress circular" role="status" aria-label="Loading"></span>
+<span class="progress circular small" role="status" aria-label="Loading"></span>
+<span class="progress circular big" role="status" aria-label="Loading"></span>
 ```
 
 #### Determinate
@@ -3190,7 +3190,7 @@ Add `determinate` and set the progress with `--md-comp-progress-value`. Report
 the value to assistive technology with the `progressbar` role.
 
 ```html
-<span class="preloader determinate"
+<span class="progress circular determinate"
       style="--md-comp-progress-value: 70%"
       role="progressbar" aria-valuenow="70"
       aria-valuemin="0" aria-valuemax="100"
@@ -3203,7 +3203,7 @@ The indicator follows `--md-comp-progress-indicator`, so it themes with the rest
 of the page. Override it for a one-off color — a role token, never a raw hex.
 
 ```html
-<span class="preloader"
+<span class="progress circular"
       style="--md-comp-progress-indicator: var(--md-sys-color-error)"
       role="status" aria-label="Loading"></span>
 ```
@@ -3281,11 +3281,11 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Parallax` | `.parallax` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
-| `Sidenav` | `.sidenav` |
+| `NavigationDrawer` | `.navigation-drawer` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
-| `FloatingActionButton` | `.fixed-action-btn` |
+| `FloatingActionButton` | `.fab` |
 
 Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Waves, Chips, and Cards also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
@@ -3547,14 +3547,14 @@ Add a short caption with the `data-caption` attribute.
      src="images/sample-2.jpg">
 ```
 
-### Slider
+### Slideshow
 
-The slider is an image slideshow. Captions transition on their own according to `center-align`, `left-align`, or `right-align`. Indicators appear along the bottom.
+A slideshow is a full-width image sequence. Captions transition on their own according to `center-align`, `left-align`, or `right-align`. Indicators appear along the bottom.
 
-Slider is **not** in `AutoInit()`. Call `Expressive.Slider.init` yourself after the page loads. For a 3D item carousel or a full-width image track, see Carousel.
+Slideshow is **not** in `AutoInit()`. Call `Expressive.Slideshow.init` yourself after the page loads. For a 3D item carousel or a full-width image track, see Carousel.
 
 ```html
-<div class="slider">
+<div class="slideshow">
   <ul class="slides">
     <li>
       <img src="images/sample-1.jpg" alt="First slide">
@@ -3585,8 +3585,8 @@ Slider is **not** in `AutoInit()`. Call `Expressive.Slider.init` yourself after 
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.slider');
-  const instances = Expressive.Slider.init(elems, {
+  const elems = document.querySelectorAll('.slideshow');
+  const instances = Expressive.Slideshow.init(elems, {
     // specify options here
     indicatorLabelFunc: (idx, current) => {
       let label = 'Go to slide ' + idx;
@@ -3616,7 +3616,7 @@ document.addEventListener('DOMContentLoaded', function() {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.Slider.getInstance(elem);
+const instance = Expressive.Slideshow.getInstance(elem);
 ```
 
 #### .pause();
@@ -3681,7 +3681,7 @@ instance.destroy();
 Add `fullscreen` to the slider so it fills its positioned ancestor (typically the viewport if that ancestor is the page). There is no separate demo page — the class is `fullscreen` on `.slider`.
 
 ```html
-<div class="slider fullscreen">
+<div class="slideshow fullscreen">
   <ul class="slides">...</ul>
 </div>
 ```
@@ -3933,19 +3933,19 @@ instance.destroy();
 
 ---
 
-## Sidenav
+## Navigation drawer
 
 A slide-out menu, or a fixed sidebar on large screens.
 
 This is a slide-out menu. Nest `<details>` / `<summary>` for nested sections — the documentation sidebar uses that. On small screens this same drawer slides over the page.
 
-The sidenav HTML must **not** sit inside the app bar’s `<nav>`. Put a `sidenav-trigger` anywhere and set `data-target` to the sidenav’s `id`. `AutoInit()` starts every `.sidenav` except those marked `no-autoinit`.
+The drawer HTML must **not** sit inside the app bar’s `<nav>`. Put a `navigation-drawer-trigger` anywhere and set `data-target` to the navigation drawer’s `id`. `AutoInit()` starts every `.navigation-drawer` except those marked `no-autoinit`.
 
-Toggle Sidenav
+Toggle NavigationDrawer
 
 ```html
 <nav aria-label="Main">
-  <ul id="slide-out" class="sidenav">
+  <ul id="slide-out" class="navigation-drawer">
     <li>
       <div class="user-view">
         <div class="background">
@@ -3963,50 +3963,50 @@ Toggle Sidenav
     <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 ```
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.Sidenav`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.sidenav`.
+The IIFE bundle exposes `Expressive.NavigationDrawer`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.navigation-drawer`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.sidenav');
-  const instances = Expressive.Sidenav.init(elems, {
+  const elems = document.querySelectorAll('.navigation-drawer');
+  const instances = Expressive.NavigationDrawer.init(elems, {
     // specify options here
   });
 });
 ```
 
-Nested sections are HTML. A `<details>` / `<summary>` inside a `.sidenav` is a nested section; the same `name` on several details is an accordion. There is no Collapsible plugin.
+Nested sections are HTML. A `<details>` / `<summary>` inside a `.navigation-drawer` is a nested section; the same `name` on several details is an accordion. There is no Collapsible plugin.
 
 ### Options
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `edge` | String | `'left'` | Side of the screen. `'left'` or `'right'`. The constructor adds `right-aligned` when the edge is right. |
-| `draggable` | Boolean | `true` | Allow swipe gestures to open and close. Drag is disabled while the sidenav is fixed on large screens. |
+| `draggable` | Boolean | `true` | Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on large screens. |
 | `dragTargetWidth` | String | `'10px'` | Width of the screen-edge strip where a drag can start. |
 | `inDuration` | Number | `250` | Open transition duration, in milliseconds. |
 | `outDuration` | Number | `200` | Close transition duration, in milliseconds. |
-| `preventScrolling` | Boolean | `true` | Prevent the page from scrolling while an overlay sidenav is open. |
-| `onOpenStart` | Function | `null` | Called when the sidenav starts opening. |
-| `onOpenEnd` | Function | `null` | Called when the sidenav finishes opening. |
-| `onCloseStart` | Function | `null` | Called when the sidenav starts closing. |
-| `onCloseEnd` | Function | `null` | Called when the sidenav finishes closing. |
+| `preventScrolling` | Boolean | `true` | Prevent the page from scrolling while an overlay drawer is open. |
+| `onOpenStart` | Function | `null` | Called when the navigation drawer starts opening. |
+| `onOpenEnd` | Function | `null` | Called when the navigation drawer finishes opening. |
+| `onCloseStart` | Function | `null` | Called when the navigation drawer starts closing. |
+| `onCloseEnd` | Function | `null` | Called when the navigation drawer finishes closing. |
 
 ### Methods
 
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.Sidenav.getInstance(elem);
+const instance = Expressive.NavigationDrawer.getInstance(elem);
 ```
 
 #### .open();
 
-Opens the sidenav.
+Opens the navigation drawer.
 
 ```text
 instance.open();
@@ -4014,7 +4014,7 @@ instance.open();
 
 #### .close();
 
-Closes the sidenav.
+Closes the navigation drawer.
 
 ```text
 instance.close();
@@ -4034,21 +4034,21 @@ instance.destroy();
 | --- | --- | --- |
 | `el` | Element | The DOM element the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
-| `isOpen` | Boolean | Whether the sidenav is open. |
-| `isFixed` | Boolean | Whether the element has `sidenav-fixed`. |
-| `isDragged` | Boolean | Whether the sidenav is being dragged. |
+| `isOpen` | Boolean | Whether the navigation drawer is open. |
+| `isFixed` | Boolean | Whether the element has `navigation-drawer-fixed`. |
+| `isDragged` | Boolean | Whether the navigation drawer is being dragged. |
 
 ### Close Trigger
 
-Add `sidenav-close` to an element inside the sidenav. A click on that element closes an overlay sidenav. That is useful in a single-page app where the page does not reload. It does nothing while the sidenav is fixed on large screens.
+Add `navigation-drawer-close` to an element inside the drawer. A click on that element closes an overlay drawer. That is useful in a single-page app where the page does not reload. It does nothing while the navigation drawer is fixed on large screens.
 
 ```html
 <nav aria-label="Main">
-  <ul id="slide-out" class="sidenav">
-    <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
+  <ul id="slide-out" class="navigation-drawer">
+    <li><a class="navigation-drawer-close" href="#!">Clicking this will close NavigationDrawer</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 ```
 
 ### Variations
@@ -4057,10 +4057,10 @@ Add `sidenav-close` to an element inside the sidenav. A click on that element cl
 
 Pass `edge: 'right'`. Mark the element `no-autoinit` if you initialize it yourself, otherwise AutoInit would start it on the left.
 
-Toggle Right Sidenav
+Toggle Right NavigationDrawer
 
 ```js
-Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
+Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
 });
 ```
@@ -4071,7 +4071,7 @@ Nest `<details>` for a section that opens in place. Same `name` on several detai
 
 ```html
 <nav aria-label="Main">
-  <ul id="slide-out" class="sidenav">
+  <ul id="slide-out" class="navigation-drawer">
     <li><a href="#!">First Sidebar Link</a></li>
     <li>
       <details name="docs-nav">
@@ -4091,19 +4091,19 @@ Nest `<details>` for a section that opens in place. Same `name` on several detai
 
 #### Fixed HTML Structure
 
-Add `sidenav-fixed` so the sidenav stays open on large screens (wider than 992px) and slides away on smaller ones. The documentation sidebar on the left is this pattern.
+Add `navigation-drawer-fixed` so the drawer stays open on large screens (wider than 992px) and slides away on smaller ones. The documentation sidebar on the left is this pattern.
 
 ```html
 <nav aria-label="Main">
-  <ul id="slide-out" class="sidenav sidenav-fixed">
+  <ul id="slide-out" class="navigation-drawer navigation-drawer-fixed">
     <li><a href="#!">First Sidebar Link</a></li>
     <li><a href="#!">Second Sidebar Link</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 ```
 
-Offset the rest of the page by the sidenav width. The width token is `--sidenav-width` (300px). Put the padding on `header`, `main`, and `footer`.
+Offset the rest of the page by the navigation drawer width. The width token is `--md-comp-nav-drawer-width` (300px). Put the padding on `header`, `main`, and `footer`.
 
 ```css
 header, main, footer {
@@ -4682,7 +4682,7 @@ A `<div class="toolbar">` is the bar — not a `<nav>`, because a toolbar holds 
 
 Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/specs). The default is the floating bar: it hugs its actions, 64dp tall, 32dp stadium corners, `surface-variant`, elevation 2. Actions are 48dp targets with a 24dp icon, transparent at rest. Selected is `secondary-container` / `on-secondary-container`.
 
-This is not the FAB-to-toolbar transition (`div.fixed-action-btn.toolbar`). That stays on Floating Action Button. Do not put `toolbar` on every `<nav>` — app bars, card actions, and radio rows stay as they are.
+This is not the FAB-to-toolbar transition (`div.fab.toolbar`). That stays on Floating Action Button. Do not put `toolbar` on every `<nav>` — app bars, card actions, and radio rows stay as they are.
 
 ```html
 <div class="toolbar">
@@ -4764,7 +4764,7 @@ The calendar is inline, not a modal. `open()` and `close()` are deprecated no-op
 
 ```html
 <div class="field">
-  <input type="text" class="datepicker" id="birthdate">
+  <input type="text" class="date-picker" id="birthdate">
   <label for="birthdate">Birthdate</label>
 </div>
 ```
@@ -4988,7 +4988,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 ```html
 <div class="field">
-  <input type="text" class="timepicker" id="lunchtime">
+  <input type="text" class="time-picker" id="lunchtime">
   <label for="lunchtime">Lunchtime</label>
 </div>
 ```
@@ -5551,13 +5551,15 @@ Browser Disabled Choose your option Option 1 Option 2 Option 3
 
 Material Design 3 sliders, from the HTML.
 
-An `<input type="range">` is the control. A wrapping `.range` (or a `<label>` / `.range-field`) is the host for the value label. `.slider` is the carousel — do not put it on a range. The plugin is `Expressive.Range` because `Slider` is already the carousel.
+An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
+
+The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Until 0.8.0 `.slider` and `Slider` meant the image slideshow, which is now `.slideshow` / `Expressive.Slideshow` — a `.slider` that holds no range input is still treated as one, so neither kind of existing markup breaks.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
 
 Tokens follow the [M3 slider spec](https://m3.material.io/components/sliders/specs) (Expressive). The handle is a 4dp stop with a 6dp gap to each track, narrowing to 2dp while pressed. Active is `primary`; inactive is `secondary-container`. The end of an inactive track carries a 4dp stop. The value label is a 40dp `inverse-surface` / `inverse-on-surface` bubble, `body-small`. Disabled is 38%.
 
-Range is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Range.Init()`, which starts every `input[type=range]` already in the document and keeps the active track in sync. `no-autoinit` does not apply.
+Slider is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Slider.Init()`, which starts every `input[type=range]` already in the document and keeps the active track in sync. `no-autoinit` does not apply.
 
 ```html
 <label>
@@ -5570,14 +5572,14 @@ Range is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Range.
 
 ### Variants
 
-`centered` grows the active track from 50%. A range slider is two inputs in one `.range` host; the plugin keeps the start handle from passing the end one.
+`centered` grows the active track from 50%. A range slider is two inputs in one `.slider` host; the plugin keeps the start handle from passing the end one.
 
 ```html
-<div class="range centered">
+<div class="slider centered">
   <input type="range" min="0" max="100" value="30" aria-label="Centered">
 </div>
 
-<div class="range">
+<div class="slider">
   <input type="range" min="0" max="100" value="25" aria-label="Range start">
   <input type="range" min="0" max="100" value="75" aria-label="Range end">
 </div>
@@ -5588,10 +5590,10 @@ Range is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Range.
 XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `medium` is M, `l` / `large` is L, and `xl` is XL. Scope them on the host — unscoped `.small` / `.large` are used by other components.
 
 ```html
-<div class="range s">…</div>
-<div class="range m">…</div>
-<div class="range l">…</div>
-<div class="range xl">…</div>
+<div class="slider s">…</div>
+<div class="slider m">…</div>
+<div class="slider l">…</div>
+<div class="slider xl">…</div>
 ```
 
 ### Inset icon, stops, value
@@ -5599,12 +5601,12 @@ XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `me
 A leading icon sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a `step` paints ticks along the track.
 
 ```html
-<div class="range m">
+<div class="slider m">
   <span class="material-symbols" aria-hidden="true">volume_up</span>
   <input type="range" min="0" max="100" value="55" aria-label="Volume">
 </div>
 
-<div class="range stops">
+<div class="slider stops">
   <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
 </div>
 ```
@@ -5614,7 +5616,7 @@ A leading icon sits inside the active track; M, L, and XL are tall enough for it
 `vertical` stands the track up. Minimum is at the bottom. The value label sits to the end of the handle.
 
 ```html
-<div class="range vertical m">
+<div class="slider vertical m">
   <input type="range" min="0" max="100" value="60" aria-label="Level">
 </div>
 ```
@@ -5638,10 +5640,10 @@ Put the script after the inputs (as this site does), or call `init` yourself. Th
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('input[type=range]');
-  Expressive.Range.init(elems);
+  Expressive.Slider.init(elems);
 });
 
-Expressive.Range.init(document.querySelector('#volume'));
+Expressive.Slider.init(document.querySelector('#volume'));
 ```
 
 ### Methods
@@ -5649,7 +5651,7 @@ Expressive.Range.init(document.querySelector('#volume'));
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.Range.getInstance(elem);
+const instance = Expressive.Slider.getInstance(elem);
 ```
 
 #### .destroy();

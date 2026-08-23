@@ -11,7 +11,7 @@
 import { Utils } from './core/utils';
 import { Cards } from './components/cards';
 import { Chips } from './components/chips';
-import { Range } from './components/range';
+import { Slider } from './components/slider';
 import { Dialogs } from './behaviors/dialogs';
 import { BottomSheets } from './behaviors/bottomSheets';
 import { SideSheets } from './behaviors/sideSheets';
@@ -42,7 +42,7 @@ if (typeof document !== 'undefined') {
 Forms.Init();
 Chips.Init();
 Waves.Init();
-Range.Init();
+Slider.Init();
 Cards.Init();
 Dialogs.Init();
 BottomSheets.Init();

@@ -3,9 +3,8 @@
 // Sliders.
 //
 // Anatomy is the HTML. An <input type="range"> is the control. A wrapping
-// .range (or label / .range-field) is the host. .slider is the carousel —
-// do not put it on a range. The IIFE plugin is Expressive.Range because
-// Slider is the carousel.
+// .slider is the host (.range and .range-field are the older names).
+// The plugin is Expressive.Slider; Expressive.Range is kept as an alias.
 //
 // Variants (M3 Expressive):
 //   standard   default. Active from the start to the handle.
@@ -30,7 +29,12 @@
 //   stop       4dp primary dot
 //   label      40dp, inverse-surface / inverse-on-surface, body-small
 
-$_host: ".range, .range-field, label:has(> [type='range'])";
+// M3 calls this component "Slider", so `.slider` is the name - but `.slider`
+// was the image slideshow's host until 0.8.0, so the two are told apart by
+// what they contain rather than by a hard rename. A .slider holding a range
+// input is this component; one holding .slides is the slideshow. Old markup of
+// either kind keeps working, and neither can be mistaken for the other.
+$_host: ".slider:has([type='range']), .range, .range-field, label:has(> [type='range'])";
 
 :is(#{$_host}),
 input[type="range"] {

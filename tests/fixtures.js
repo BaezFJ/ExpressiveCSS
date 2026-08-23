@@ -25,7 +25,7 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="carousel"><a class="carousel-item" href="#one"><img src="http://localhost/1.jpg"></a><a class="carousel-item" href="#two"><img src="http://localhost/2.jpg"></a></div>`
   },
   { name: 'Chips', selector: '.chips', html: `<div class="chips"></div>` },
-  { name: 'Datepicker', selector: '.datepicker', html: `<input type="text" class="datepicker">` },
+  { name: 'Datepicker', selector: '.date-picker', html: `<input type="text" class="date-picker">` },
   {
     name: 'Menu',
     selector: '.menu-trigger',
@@ -58,15 +58,15 @@ export const AUTO_INIT_FIXTURES = [
   },
   {
     name: 'Sidenav',
-    selector: '.sidenav',
-    html: `<nav aria-label="Main"><ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul></nav><a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`
+    selector: '.navigation-drawer',
+    html: `<nav aria-label="Main"><ul id="slide-out" class="navigation-drawer"><li><a href="#!">First</a></li></ul></nav><a href="#" data-target="slide-out" class="navigation-drawer-trigger">menu</a>`
   },
   {
     name: 'Tabs',
     selector: '.tabs',
     html: `<nav class="tabs" aria-label="Demo"><li class="tab"><a class="active" aria-current="page" href="#tab1">Tab 1</a></li><li class="tab"><a href="#tab2">Tab 2</a></li></nav><div id="tab1">one</div><div id="tab2">two</div>`
   },
-  { name: 'Timepicker', selector: '.timepicker', html: `<input type="text" class="timepicker">` },
+  { name: 'Timepicker', selector: '.time-picker', html: `<input type="text" class="time-picker">` },
   {
     name: 'Tooltip',
     selector: '.tooltipped',
@@ -74,7 +74,7 @@ export const AUTO_INIT_FIXTURES = [
   },
   {
     name: 'FloatingActionButton',
-    selector: '.fixed-action-btn',
-    html: `<div class="fixed-action-btn"><a class="button extra circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a><ul><li><a class="button extra circle small red" aria-label="Chart"><span class="material-symbols" aria-hidden="true">chart</span></a></li></ul></div>`
+    selector: '.fab',
+    html: `<div class="fab"><a class="button extra circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a><ul><li><a class="button extra circle small red" aria-label="Chart"><span class="material-symbols" aria-hidden="true">chart</span></a></li></ul></div>`
   }
 ];

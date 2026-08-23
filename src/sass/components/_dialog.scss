@@ -150,8 +150,8 @@ dialog:not(
     .right-sheet,
     .left,
     .left-sheet,
-    .sidenav,
-    .sidenav-overlay
+    :is(.sidenav, .navigation-drawer),
+    :is(.sidenav-overlay, .navigation-drawer-overlay)
   )
   > :is(form, nav):last-child
   > :is(button, a.button):not(.tonal, .outlined, .elevated, .filled) {

@@ -210,6 +210,34 @@ Notes that matter when working on it:
   CSS-only and could not emit them, so coverage would be partial and the absence
   of a warning would read as conformance. Migration lives in the CHANGELOG.
 
+## Component naming
+
+Component names follow **Material 3's**, and the divergences that remain are
+deliberate:
+
+| M3 | ExpressiveCSS | Note |
+| --- | --- | --- |
+| Slider | `.slider` / `Slider` | Held the image slideshow until 0.8.0 |
+| Navigation drawer | `.navigation-drawer` / `NavigationDrawer` | `.sidenav` / `Sidenav` alias |
+| FAB | `.fab` | `.fixed-action-btn` alias |
+| Progress indicators | `.progress`, `.progress.circular` | `.preloader` alias |
+| Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated forms alias |
+| (none) | `.slideshow` | M3 has no slideshow; its Carousel covers the case |
+| Text fields | `.field` | **Deliberately not `.text-field`** — the same container wraps `<select>`, autocomplete and file inputs, so the M3 name would be wrong for most of its uses |
+
+Every rename is **additive**: the old class stays in the selector list, the old
+export stays as an alias, and `tests/m3-naming.test.js` asserts both — it walks
+every rule mentioning an old class and fails if the new one is not on it, which
+is how it caught `$_toolbar` excluding `.fixed-action-btn` but not `.fab`.
+
+**One rename changes meaning rather than adding a name.** `Slider` was the image
+slideshow and is now the range control, because that is what M3 calls a slider.
+Aliasing it would defeat the rename, so instead the two are told apart by
+content: `.slider:has([type='range'])` is the slider,
+`.slider:not(:has([type='range']))` is the slideshow. Pre-0.8.0 markup of either
+kind keeps working and neither can be mistaken for the other. `Expressive.Slider`
+in *script* did change meaning — that one is a documented break.
+
 ## Sass architecture
 
 **Read `src/sass/README.md` before touching styles** — it is the working guide (layer map, the two rules, where new code goes). Summary:
@@ -243,6 +271,7 @@ Other things worth knowing:
 - `abstracts/_elevation.scss` owns the shadow map; the `.z-depth-*` classes in `base/_global.scss` are generated from it, so the classes and the `z-depth()` mixin cannot drift.
 - `abstracts/_breakpoints.scss` owns the four breakpoints (`small` 601px, `large` 993px, `xlarge` 1201px, `xxlarge` 1601px) and the `bp-up()` / `bp-down()` / `bp-between()` mixins, which emit media-query range syntax (`@media (width >= 601px)`). The `600.99px`/`992.99px` values they needed are gone — range syntax has an exclusive comparator. `xxlarge` is M3 extra-large; the grid’s `.xxl` prefix and the container’s 1920px cap live there. `.container.wide` caps at 2400px, `.container.max` has no cap.
 - `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`) — mostly `!default`, several now aliasing CSS custom properties.
+- Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`.
 - `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
 - `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_parallax`, `_page-footer`, `_docked-display`, `_transitions`).
 - `utilities/_typescale.scss` generates the 15 `.display-large` … `.title-small` classes from a `$typescale-roles` list. Every property it sets must map to a token `tokens/_reference.scss` actually defines — a `var()` pointing at an undefined custom property invalidates the whole declaration silently, which is how these classes previously did nothing. `font-style` is deliberately not set: the `-font-family-style` token holds "Regular"/"Medium", which are weights, not CSS font-style keywords.

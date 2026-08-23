@@ -6,7 +6,7 @@
 {% set page_blurb = "A circular action that can open a menu of related shortcuts." %}
 
 {% block page %}
-<div class="fixed-action-btn">
+<div class="fab">
   <button type="button" class="button extra circle" aria-label="Edit">
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
@@ -29,14 +29,14 @@
         </p>
         <p>
           Wrap a large <code>extra circle small</code> (or <code>circle extra</code>)
-          and a list of smaller ones in <code>fixed-action-btn</code>.
+          and a list of smaller ones in <code>fab</code>.
           That class pins the control to the corner. The menu opens on
           hover when the pointer can hover; add <code>click-to-toggle</code>
           to toggle on click. <code>AutoInit()</code> starts every matching
           element except those marked <code>no-autoinit</code>. Motion is CSS.
         </p>
 {% call code() %}
-<div class="fixed-action-btn">
+<div class="fab">
   <button type="button" class="button extra circle" aria-label="Edit">
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
@@ -52,11 +52,11 @@
           The IIFE bundle exposes <code>Expressive.FloatingActionButton</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
           or let <code>Expressive.AutoInit()</code> start every
-          <code>.fixed-action-btn</code> with the defaults below.
+          <code>.fab</code> with the defaults below.
         </p>
 {% call code() %}
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.fixed-action-btn');
+  const elems = document.querySelectorAll('.fab');
   const instances = Expressive.FloatingActionButton.init(elems, {
     // specify options here
   });
@@ -135,7 +135,7 @@ instance.destroy();
           same class.
         </p>
         <div class="fab-demo">
-          <div class="fixed-action-btn direction-left" id="fab-horizontal">
+          <div class="fab direction-left" id="fab-horizontal">
             <button type="button" class="button extra circle" aria-label="Edit">
               <span class="material-symbols" aria-hidden="true">mode_edit</span>
             </button>
@@ -148,7 +148,7 @@ instance.destroy();
           </div>
         </div>
 {% call code() %}
-<div class="fixed-action-btn direction-left">…</div>
+<div class="fab direction-left">…</div>
 {% endcall %}
   {% endcall %}
 
@@ -160,7 +160,7 @@ instance.destroy();
           click is used even without the class.
         </p>
         <div class="fab-demo">
-          <div class="fixed-action-btn direction-left click-to-toggle" id="fab-click-only">
+          <div class="fab direction-left click-to-toggle" id="fab-click-only">
             <button type="button" class="button extra circle" aria-label="Menu">
               <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
@@ -173,7 +173,7 @@ instance.destroy();
           </div>
         </div>
 {% call code() %}
-<div class="fixed-action-btn direction-left click-to-toggle">…</div>
+<div class="fab direction-left click-to-toggle">…</div>
 {% endcall %}
   {% endcall %}
 
@@ -184,7 +184,7 @@ instance.destroy();
           or click-only menu unless you specifically need the bar.
         </p>
 {% call code() %}
-<div class="fixed-action-btn toolbar">
+<div class="fab toolbar">
   <a class="button extra circle" aria-label="Edit"><span class="material-symbols large" aria-hidden="true">mode_edit</span></a>
   <ul>
     <li class="waves-effect waves-light"><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>

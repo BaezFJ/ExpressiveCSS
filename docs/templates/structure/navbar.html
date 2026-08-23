@@ -29,10 +29,10 @@
           <code>on-*</code> text class if you want a colored bar.
         </p>
         <p>
-          The bar is CSS-only. Menus and the sidenav are separate
+          The bar is CSS-only. Menus and the navigation drawer are separate
           components that <code>AutoInit()</code> starts. A
-          <code>sidenav-trigger</code> inside the bar is still required — that
-          class is the Sidenav contract, not bar chrome. Tabs live in
+          <code>navigation-drawer-trigger</code> inside the bar is still required — that
+          class is the NavigationDrawer contract, not bar chrome. Tabs live in
           their own bar — do not nest <code>.tabs</code> in the header.
         </p>
 
@@ -69,7 +69,7 @@
         <p>
           Text links go in a <code>&lt;menu&gt;</code>. Put the menu after the
           heading to align it on the end; put it first to align it on the start.
-          Hide it below the large breakpoint and pair it with a sidenav trigger
+          Hide it below the large breakpoint and pair it with a navigation drawer trigger
           when the bar has to collapse.
         </p>
         <header class="mb-3">
@@ -334,15 +334,15 @@ document.addEventListener('DOMContentLoaded', function() {
   {% call section("mobile-collapse", "Mobile collapse") %}
         <p>
           Hide the destination menu below the large breakpoint and put a
-          <code>sidenav-trigger</code> in the leading slot. The trigger stays
+          <code>navigation-drawer-trigger</code> in the leading slot. The trigger stays
           visible at every size — it is the page-navigation control, not
-          collapse chrome. Pair it with a <code>sidenav</code> whose id
+          collapse chrome. Pair it with a <code>navigation-drawer</code> whose id
           matches <code>data-target</code>. The sidenav element itself must
           not be a child of the <code>&lt;nav&gt;</code>.
         </p>
         <header class="mb-3">
           <nav aria-label="Main — Mobile collapse">
-            <a href="#!" data-target="navbar-mobile-demo" class="sidenav-trigger" aria-label="Open menu">
+            <a href="#!" data-target="navbar-mobile-demo" class="navigation-drawer-trigger" aria-label="Open menu">
               <span class="material-symbols" aria-hidden="true">menu</span>
             </a>
             <h2>Title</h2>
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </nav>
         </header>
         <nav aria-label="Main — Mobile collapse 2">
-          <ul class="sidenav" id="navbar-mobile-demo">
+          <ul class="navigation-drawer" id="navbar-mobile-demo">
             <li><a href="#!">Sass</a></li>
             <li><a href="#!">Components</a></li>
             <li><a href="#!">JavaScript</a></li>
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {% call code() %}
 <header>
   <nav aria-label="Main">
-    <a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu">
+    <a href="#!" data-target="mobile-demo" class="navigation-drawer-trigger" aria-label="Open menu">
       <span class="material-symbols" aria-hidden="true">menu</span>
     </a>
     <h2>Title</h2>
@@ -377,18 +377,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </header>
 
 <nav aria-label="Main">
-  <ul class="sidenav" id="mobile-demo">
+  <ul class="navigation-drawer" id="mobile-demo">
     <li><a href="#!">Sass</a></li>
   </ul>
 </nav>
 {% endcall %}
         <p>
-          After you add the trigger and the sidenav, initialize Sidenav (or let
+          After you add the trigger and the navigation drawer, initialize NavigationDrawer (or let
           <code>AutoInit()</code> do it).
         </p>
 {% call code() %}
 document.addEventListener('DOMContentLoaded', function() {
-  Expressive.Sidenav.init(document.querySelectorAll('.sidenav'));
+  Expressive.NavigationDrawer.init(document.querySelectorAll('.navigation-drawer'));
 });
 {% endcall %}
   {% endcall %}

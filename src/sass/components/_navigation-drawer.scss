@@ -3,7 +3,7 @@
 // Navigation drawer.
 //
 // Overlay is a modal <dialog> (JS wraps a <ul class="sidenav"> in
-// dialog.sidenav-overlay, or the author writes <dialog class="sidenav">).
+// dialog:is(.sidenav-overlay, .navigation-drawer-overlay), or the author writes <dialog class="sidenav">).
 // showModal() puts it on the top layer; ::backdrop is the scrim; Escape
 // and a scrim tap close it. Drag writes --md-comp-nav-drawer-shift;
 // this file does the slide.
@@ -12,7 +12,7 @@
 // accordion. The summary is a destination row with an expand_more
 // chevron; there is no Collapsible plugin.
 //
-// .sidenav-fixed is a breakpoint, not a JS open(): at `large` the host
+// :is(.sidenav-fixed, .navigation-drawer-fixed) is a breakpoint, not a JS open(): at `large` the host
 // is display: contents so the list is a docked sidebar. Below that it
 // is the same overlay drawer as any other sidenav.
 //
@@ -31,8 +31,8 @@
   --md-comp-nav-drawer-width: 300px;
 }
 
-dialog.sidenav-overlay,
-dialog.sidenav {
+dialog:is(.sidenav-overlay, .navigation-drawer-overlay),
+dialog:is(.sidenav, .navigation-drawer) {
   --md-comp-nav-drawer-item-height: 48px;
   --md-comp-nav-drawer-duration: 250ms;
   --md-comp-nav-drawer-easing: ease;
@@ -96,22 +96,22 @@ dialog.sidenav {
 }
 
 @starting-style {
-  :is(dialog.sidenav-overlay, dialog.sidenav):modal {
+  :is(dialog:is(.sidenav-overlay, .navigation-drawer-overlay), dialog:is(.sidenav, .navigation-drawer)):modal {
     transform: translateX(-100%);
   }
 
-  :is(dialog.sidenav-overlay, dialog.sidenav).right-aligned:modal {
+  :is(dialog:is(.sidenav-overlay, .navigation-drawer-overlay), dialog:is(.sidenav, .navigation-drawer)).right-aligned:modal {
     transform: translateX(100%);
   }
 
-  :is(dialog.sidenav-overlay, dialog.sidenav):modal::backdrop {
+  :is(dialog:is(.sidenav-overlay, .navigation-drawer-overlay), dialog:is(.sidenav, .navigation-drawer)):modal::backdrop {
     opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  dialog.sidenav-overlay,
-  dialog.sidenav {
+  dialog:is(.sidenav-overlay, .navigation-drawer-overlay),
+  dialog:is(.sidenav, .navigation-drawer) {
     transition: none;
 
     &::backdrop {
@@ -124,12 +124,12 @@ dialog.sidenav {
 // list's position:fixed. Closed, so it is not :modal and does not
 // lock the page.
 @include bp-up("large") {
-  dialog.sidenav-overlay:has(> .sidenav-fixed):not(:modal) {
+  dialog:is(.sidenav-overlay, .navigation-drawer-overlay):has(> :is(.sidenav-fixed, .navigation-drawer-fixed)):not(:modal) {
     display: contents;
   }
 }
 
-.sidenav {
+:is(.sidenav, .navigation-drawer) {
   --md-comp-nav-drawer-item-height: 48px;
   --md-comp-nav-drawer-font-size: 14px;
   --md-comp-nav-drawer-padding: 16px;
@@ -324,10 +324,10 @@ dialog.sidenav {
 }
 
 // Overlay only: the dialog is the panel, so the list fills it. When the
-// host is `display: contents` (a docked .sidenav-fixed) this must not
+// host is `display: contents` (a docked :is(.sidenav-fixed, .navigation-drawer-fixed)) this must not
 // apply — static positioning would drop the list into the header flow
 // and it would read as part of the app bar.
-dialog.sidenav-overlay:modal > .sidenav {
+dialog:is(.sidenav-overlay, .navigation-drawer-overlay):modal > :is(.sidenav, .navigation-drawer) {
   position: static;
   inset: auto;
   width: 100%;
@@ -338,7 +338,7 @@ dialog.sidenav-overlay:modal > .sidenav {
   z-index: auto;
 }
 
-.sidenav.sidenav-fixed {
+:is(.sidenav, .navigation-drawer):is(.sidenav-fixed, .navigation-drawer-fixed) {
   transform: none;
 
   &.right-aligned {
@@ -350,7 +350,7 @@ dialog.sidenav-overlay:modal > .sidenav {
   // Uninitialized / no-js: keep a fixed drawer off-canvas. Once JS wraps
   // it, the host's display:none hides the closed drawer and this must
   // not also hide the list inside an open dialog.
-  .sidenav.sidenav-fixed {
+  :is(.sidenav, .navigation-drawer):is(.sidenav-fixed, .navigation-drawer-fixed) {
     transform: translateX(-100%);
 
     &.right-aligned {
@@ -358,7 +358,7 @@ dialog.sidenav-overlay:modal > .sidenav {
     }
   }
 
-  .sidenav .user-view {
+  :is(.sidenav, .navigation-drawer) .user-view {
     padding: var(--md-comp-nav-drawer-padding) var(--md-comp-nav-drawer-padding) 0;
   }
 }
