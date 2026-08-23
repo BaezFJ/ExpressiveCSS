@@ -83,7 +83,42 @@ function examplesFromMarkdown(file) {
 const stripJinja = (s) =>
   s.replace(/\{%[\s\S]*?%\}/g, '').replace(/\{\{[\s\S]*?\}\}/g, '');
 
-const CODE_BLOCK = /\{%\s*call code\(([^)]*)\)\s*%\}\n([\s\S]*?)\{%\s*endcall\s*%\}/g;
+// The argument list runs to the `)` that closes the call, not to the first `)`
+// in it - a reason is prose and may well contain one ("(pre-0.8.0)"). With
+// `[^)]*` such a block matched nothing at all, which is worse than it sounds:
+// it was then never removed from the rendered pass either, so an example that
+// had properly opted out got checked anyway, and the reason string was
+// truncated on top.
+const CODE_BLOCK = /\{%\s*call code\((.*?)\)\s*%\}\n([\s\S]*?)\{%\s*endcall\s*%\}/g;
+
+/** Exported for the extractor's own tests: parsing is where this can go quietly wrong. */
+export function templateExamples(src, file) {
+  const out = [];
+  let m;
+  CODE_BLOCK.lastIndex = 0;
+  while ((m = CODE_BLOCK.exec(src))) {
+    const args = m[1];
+    out.push({
+      surface: 'docs/templates',
+      location: `${file}:${src.slice(0, m.index).split('\n').length} (sample)`,
+      html: stripJinja(m[2]),
+      ignore: /check\s*=\s*false/.test(args),
+      reason: (args.match(/reason\s*=\s*["']([^"']*)["']/) ?? [])[1] ?? ''
+    });
+  }
+
+  // The rendered page, minus the code samples already taken above - they are
+  // escaped text there, and taking them twice would let a code-block opt-out
+  // be defeated by this pass.
+  out.push({
+    surface: 'docs/templates',
+    location: `${file} (rendered)`,
+    html: stripJinja(src.replace(CODE_BLOCK, '')),
+    ignore: false,
+    reason: ''
+  });
+  return out;
+}
 
 function examplesFromTemplates() {
   const out = [];
@@ -95,31 +130,7 @@ function examplesFromTemplates() {
       }
       if (!e.name.endsWith('.html')) continue;
       const file = `docs/templates/${dir}${e.name}`;
-      const src = read(file);
-
-      let m;
-      CODE_BLOCK.lastIndex = 0;
-      while ((m = CODE_BLOCK.exec(src))) {
-        const args = m[1];
-        out.push({
-          surface: 'docs/templates',
-          location: `${file}:${src.slice(0, m.index).split('\n').length} (sample)`,
-          html: stripJinja(m[2]),
-          ignore: /check\s*=\s*false/.test(args),
-          reason: (args.match(/reason\s*=\s*["']([^"']*)["']/) ?? [])[1] ?? ''
-        });
-      }
-
-      // The rendered page, minus the code samples already taken above - they
-      // are escaped text there, and taking them twice would let a code-block
-      // opt-out be defeated by this pass.
-      out.push({
-        surface: 'docs/templates',
-        location: `${file} (rendered)`,
-        html: stripJinja(src.replace(CODE_BLOCK, '')),
-        ignore: false,
-        reason: ''
-      });
+      out.push(...templateExamples(read(file), file));
     }
   };
   walk('');
@@ -209,6 +220,37 @@ describe('semantics.json', () => {
       render(data),
       'SEMANTICS.md is generated - run `npm run build:semantics`'
     );
+  });
+});
+
+describe('template extractor', () => {
+  const wrap = (args, body) =>
+    `{% block page %}\n{% call code(${args}) %}\n${body}\n{% endcall %}\n{% endblock %}`;
+
+  test('a sample is extracted and the rendered pass does not double-count it', () => {
+    const got = templateExamples(wrap('', '<span class="chip">x</span>'), 'f.html');
+    assert.equal(got.length, 2, 'one sample plus the rendered page');
+    assert.match(got[0].html, /<span class="chip">x<\/span>/);
+    assert.doesNotMatch(got[1].html, /chip/, 'the sample must be cut from the rendered pass');
+  });
+
+  test('a reason containing parentheses does not truncate the arguments', () => {
+    // With `[^)]*` this matched nothing: the block was not recognised as a
+    // sample, so it was never cut from the rendered pass and the opt-out was
+    // silently ignored - a green-looking check on markup nobody had exempted.
+    const got = templateExamples(
+      wrap('check=false, reason="0.7.0 markup (pre-sweep), kept for migration"', '<div class="chip">old</div>'),
+      'f.html'
+    );
+    assert.equal(got.length, 2);
+    assert.equal(got[0].ignore, true);
+    assert.equal(got[0].reason, '0.7.0 markup (pre-sweep), kept for migration');
+    assert.doesNotMatch(got[1].html, /chip/, 'an opted-out sample must still be cut from the rendered pass');
+  });
+
+  test('a checked sample stays checked', () => {
+    const got = templateExamples(wrap('', '<div class="chip">old</div>'), 'f.html');
+    assert.equal(got[0].ignore, false);
   });
 });
 
