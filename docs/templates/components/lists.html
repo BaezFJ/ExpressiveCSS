@@ -254,33 +254,41 @@
   </a>
 </li>
 {% endcall %}
-        <ul class="list">
-          <li>
-            <label>
-              <input type="radio" name="list-pick" checked>
-              Red
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="radio" name="list-pick">
-              Green
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="radio" name="list-pick">
-              Blue
-            </label>
-          </li>
-        </ul>
+        <fieldset>
+          <legend>Colour</legend>
+          <ul class="list">
+            <li>
+              <label>
+                <input type="radio" name="list-pick" checked>
+                Red
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="list-pick">
+                Green
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="list-pick">
+                Blue
+              </label>
+            </li>
+          </ul>
+        </fieldset>
 {% call code() %}
-<li>
-  <label>
-    <input type="radio" name="color">
-    Red
-  </label>
-</li>
+<fieldset>
+  <legend>Colour</legend>
+  <ul class="list">
+    <li>
+      <label>
+        <input type="radio" name="color">
+        Red
+      </label>
+    </li>
+  </ul>
+</fieldset>
 {% endcall %}
   {% endcall %}
 

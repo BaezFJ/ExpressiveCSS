@@ -107,6 +107,17 @@ on. The five rules:
    `components/_icons-material-design.scss`, never off the `i` element — they were
    keyed on `i` in `base/_global.scss`, which meant the canonical `<span>` form
    silently lost them.
+
+   **Inside a `.field` this bites twice.** The old icon rules used
+   `:first-of-type` / `:last-of-type`, which count elements of the same *type* —
+   unwidenable to spans, because a field is full of other spans. So a field icon
+   must name its side with `.prefix` / `.suffix`; the positional `i` rules remain
+   for old markup. And every "the label, or the span standing in for it" rule
+   must exclude the icons, or they inherit the floating label's position. That
+   exclusion is `$_not-label` in `forms/_input-fields.scss` — **one variable, five
+   rules**. It was five hand-copied lists that had already drifted, and adding
+   `.prefix` / `.suffix` to four of the five is exactly how the leading icon ended
+   up indented past its own padding.
 4. `<nav>` for genuine navigation only, each with a required `aria-label`. A card's
    action row is buttons, not destinations, and a toolbar holds commands. Note what
    rule 2 forbids here: `role="toolbar"` is a *composite* role and promises arrow-key
@@ -120,6 +131,15 @@ markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
 generated from the templates, so checking it would check the same thing twice.
 Notes that matter when working on it:
 
+- **Swept so far: chips, then the form components** (`input-fields`,
+  `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
+  `file-input`, `range`, `autocomplete`, `character-counter`). `SEMANTICS.md`
+  carries the running count.
+- **The extractor keys on the fence tag**, so a markup sample written as
+  ` ```text ` is invisible to it. 37 blocks were in that state, Fieldsets
+  entirely. A test now fails any non-`html` fence containing markup — walk the
+  fences line by line if you touch it, because an "opening fence" regex also
+  matches every closing one.
 - A component is `enforced` or `exempt`. **Exempt is the backlog and only ever
   shrinks.** The roster test asserts `semantics.json` rows match the sass partials
   plus `additional` exactly, so a new component cannot ship without a row — which

@@ -299,9 +299,9 @@
 
         <form class="row">
           <div class="s12 m6 field">
-            <input id="first_name" type="text" placeholder=" " maxlength="20">
+            <input id="first_name" type="text" placeholder=" " maxlength="20" aria-describedby="first_name-help">
             <label for="first_name">First name</label>
-            <small>Supporting text</small>
+            <small id="first_name-help">Supporting text</small>
           </div>
           <div class="s12 m6 field outlined">
             <input id="last_name" type="text" placeholder=" " maxlength="20">
@@ -316,23 +316,23 @@
             <label for="disabled_outlined">Disabled</label>
           </div>
           <div class="s12 m6 field">
-            <i class="material-symbols">place</i>
-            <i class="material-symbols suffix">gps_fixed</i>
+            <span class="material-symbols prefix" aria-hidden="true">place</span>
+            <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
             <input id="inp-location" type="text" placeholder=" " value="Planet Earth">
             <label for="inp-location">Location</label>
           </div>
           <div class="s12 m6 field outlined">
-            <i class="material-symbols">bubble_chart</i>
-            <i class="material-symbols suffix">error</i>
-            <input id="inp-error" class="invalid" type="text" placeholder=" " value="$%/'#sdf">
+            <span class="material-symbols prefix" aria-hidden="true">bubble_chart</span>
+            <span class="material-symbols suffix" aria-hidden="true">error</span>
+            <input id="inp-error" class="invalid" type="text" placeholder=" " value="$%/'#sdf" aria-invalid="true" aria-describedby="inp-error-help">
             <label for="inp-error">Failing input</label>
-            <small>Invalid characters. Please use 0-9 only.</small>
+            <small id="inp-error-help">Invalid characters. Please use 0-9 only.</small>
           </div>
         </form>
 <pre><code>&lt;div class="field"&gt;
-  &lt;input id="first_name" type="text" placeholder=" "&gt;
+  &lt;input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help"&gt;
   &lt;label for="first_name"&gt;First name&lt;/label&gt;
-  &lt;small&gt;Supporting text&lt;/small&gt;
+  &lt;small id="first_name_help"&gt;Supporting text&lt;/small&gt;
 &lt;/div&gt;
 
 &lt;div class="field outlined"&gt;
@@ -341,8 +341,8 @@
 &lt;/div&gt;
 
 &lt;div class="field"&gt;
-  &lt;i class="material-symbols"&gt;place&lt;/i&gt;
-  &lt;i class="material-symbols suffix"&gt;gps_fixed&lt;/i&gt;
+  &lt;span class="material-symbols prefix" aria-hidden="true"&gt;place&lt;/span&gt;
+  &lt;span class="material-symbols suffix" aria-hidden="true"&gt;gps_fixed&lt;/span&gt;
   &lt;input id="loc" type="text" placeholder=" "&gt;
   &lt;label for="loc"&gt;Location&lt;/label&gt;
 &lt;/div&gt;</code></pre>
@@ -369,9 +369,9 @@
         </p>
         <form class="row">
           <div class="s12 m6 field">
-            <input id="email" type="email" class="validate" placeholder=" ">
+            <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email-help">
             <label for="email">Email</label>
-            <small data-error="Enter a valid email">Supporting text</small>
+            <small id="email-help" data-error="Enter a valid email">Supporting text</small>
           </div>
           <div class="s12 m6 field">
             <input id="password" type="password" class="validate" placeholder=" " maxlength="20">
@@ -379,9 +379,9 @@
           </div>
         </form>
 <pre><code>&lt;div class="field"&gt;
-  &lt;input id="email" type="email" class="validate" placeholder=" "&gt;
+  &lt;input id="email" type="email" class="validate" placeholder=" " aria-describedby="email_help"&gt;
   &lt;label for="email"&gt;Email&lt;/label&gt;
-  &lt;small data-error="Enter a valid email"&gt;Supporting text&lt;/small&gt;
+  &lt;small id="email_help" data-error="Enter a valid email"&gt;Supporting text&lt;/small&gt;
 &lt;/div&gt;</code></pre>
         <p>
           <code>validate</code> also honors <code>data-length</code>: the
@@ -431,7 +431,7 @@
             <label for="textarea1">Textarea</label>
           </div>
           <div class="s12 field">
-            <i class="material-symbols">mode_edit</i>
+            <span class="material-symbols prefix" aria-hidden="true">mode_edit</span>
             <textarea id="textarea2" class="expressive-textarea" placeholder=" "></textarea>
             <label for="textarea2">Message</label>
           </div>
@@ -460,22 +460,18 @@
         </p>
         <form>
           <div class="file-field field">
-            <button type="button">
-              <span>File</span>
-              <input type="file">
-            </button>
+            <label class="button" for="demo-file">File</label>
+            <input id="demo-file" type="file">
             <div class="file-path-wrapper">
-              <input class="file-path" type="text" placeholder=" ">
+              <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
             </div>
           </div>
         </form>
 <pre><code>&lt;div class="file-field field"&gt;
-  &lt;button type="button"&gt;
-    &lt;span&gt;File&lt;/span&gt;
-    &lt;input type="file"&gt;
-  &lt;/button&gt;
+  &lt;label class="button" for="file_upload"&gt;File&lt;/label&gt;
+  &lt;input id="file_upload" type="file"&gt;
   &lt;div class="file-path-wrapper"&gt;
-    &lt;input class="file-path" type="text" placeholder=" "&gt;
+    &lt;input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file"&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
         <p>Add <code>multiple</code> to allow more than one file.</p>

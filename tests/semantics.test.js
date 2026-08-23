@@ -273,6 +273,35 @@ describe('documented markup', () => {
     }
   });
 
+  test('no markup hides behind a non-html fence', () => {
+    // The extractor keys on ```html, so a markup sample tagged ```text is not
+    // a documented example as far as this suite is concerned - it is invisible.
+    // 37 blocks were in that state, including every Fieldsets example, which
+    // is a third of the contract silently unchecked.
+    //
+    // Walked line by line rather than matched with one regex: an `opening
+    // fence' pattern also matches every *closing* fence, which made a first
+    // attempt report the prose between blocks.
+    const lines = read('llm.md').split('\n');
+    const mistagged = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (!lines[i].startsWith('```')) continue;
+      const lang = lines[i].slice(3).trim();
+      const body = [];
+      let j = i + 1;
+      while (j < lines.length && !lines[j].startsWith('```')) body.push(lines[j++]);
+      if (lang !== 'html' && /<[a-z][a-z0-9-]*[\s>/]/.test(body.join('\n'))) {
+        mistagged.push(`llm.md:${i + 1} (\`\`\`${lang || 'untagged'})`);
+      }
+      i = j;
+    }
+    assert.deepEqual(
+      mistagged,
+      [],
+      `these blocks contain markup but are not tagged \`\`\`html, so nothing checks them:\n  ${mistagged.join('\n  ')}`
+    );
+  });
+
   test('no unknown info string on an html block', () => {
     for (const e of examples.filter((e) => e.hasInfo && !e.ignore)) {
       assert.fail(`${e.location}: unrecognised fence info "html ${e.reason}"`);

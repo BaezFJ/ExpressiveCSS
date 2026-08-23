@@ -36,9 +36,9 @@
 
         <form class="row">
           <div class="s12 m6 field">
-            <input id="first_name" type="text" placeholder=" " maxlength="20">
+            <input id="first_name" type="text" placeholder=" " maxlength="20" aria-describedby="first_name-help">
             <label for="first_name">First name</label>
-            <small>Supporting text</small>
+            <small id="first_name-help">Supporting text</small>
           </div>
           <div class="s12 m6 field outlined">
             <input id="last_name" type="text" placeholder=" " maxlength="20">
@@ -53,24 +53,24 @@
             <label for="disabled_outlined">Disabled</label>
           </div>
           <div class="s12 m6 field">
-            <i class="material-symbols">place</i>
-            <i class="material-symbols suffix">gps_fixed</i>
+            <span class="material-symbols prefix" aria-hidden="true">place</span>
+            <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
             <input id="inp-location" type="text" placeholder=" " value="Planet Earth">
             <label for="inp-location">Location</label>
           </div>
           <div class="s12 m6 field outlined">
-            <i class="material-symbols">bubble_chart</i>
-            <i class="material-symbols suffix">error</i>
-            <input id="inp-error" class="invalid" type="text" placeholder=" " value="$%/'#sdf">
+            <span class="material-symbols prefix" aria-hidden="true">bubble_chart</span>
+            <span class="material-symbols suffix" aria-hidden="true">error</span>
+            <input id="inp-error" class="invalid" type="text" placeholder=" " value="$%/'#sdf" aria-invalid="true" aria-describedby="inp-error-help">
             <label for="inp-error">Failing input</label>
-            <small>Invalid characters. Please use 0-9 only.</small>
+            <small id="inp-error-help">Invalid characters. Please use 0-9 only.</small>
           </div>
         </form>
 {% call code() %}
 <div class="field">
-  <input id="first_name" type="text" placeholder=" ">
+  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
-  <small>Supporting text</small>
+  <small id="first_name_help">Supporting text</small>
 </div>
 
 <div class="field outlined">
@@ -79,8 +79,8 @@
 </div>
 
 <div class="field">
-  <i class="material-symbols">place</i>
-  <i class="material-symbols suffix">gps_fixed</i>
+  <span class="material-symbols prefix" aria-hidden="true">place</span>
+  <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
   <input id="loc" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
@@ -104,9 +104,9 @@
         </p>
         <form class="row">
           <div class="s12 m6 field">
-            <input id="email" type="email" class="validate" placeholder=" ">
+            <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email-help">
             <label for="email">Email</label>
-            <small data-error="Enter a valid email">Supporting text</small>
+            <small id="email-help" data-error="Enter a valid email">Supporting text</small>
           </div>
           <div class="s12 m6 field">
             <input id="password" type="password" class="validate" placeholder=" " maxlength="20">
@@ -115,9 +115,9 @@
         </form>
 {% call code() %}
 <div class="field">
-  <input id="email" type="email" class="validate" placeholder=" ">
+  <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email_help">
   <label for="email">Email</label>
-  <small data-error="Enter a valid email">Supporting text</small>
+  <small id="email_help" data-error="Enter a valid email">Supporting text</small>
 </div>
 {% endcall %}
         <p>
@@ -162,7 +162,7 @@ This is an inline input field:
             <label for="textarea1">Textarea</label>
           </div>
           <div class="s12 field">
-            <i class="material-symbols">mode_edit</i>
+            <span class="material-symbols prefix" aria-hidden="true">mode_edit</span>
             <textarea id="textarea2" class="expressive-textarea" placeholder=" "></textarea>
             <label for="textarea2">Message</label>
           </div>
@@ -191,23 +191,19 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
         </p>
         <form>
           <div class="file-field field">
-            <button type="button">
-              <span>File</span>
-              <input type="file">
-            </button>
+            <label class="button" for="demo-file">File</label>
+            <input id="demo-file" type="file">
             <div class="file-path-wrapper">
-              <input class="file-path" type="text" placeholder=" ">
+              <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
             </div>
           </div>
         </form>
 {% call code() %}
 <div class="file-field field">
-  <button type="button">
-    <span>File</span>
-    <input type="file">
-  </button>
+  <label class="button" for="file_upload">File</label>
+  <input id="file_upload" type="file">
   <div class="file-path-wrapper">
-    <input class="file-path" type="text" placeholder=" ">
+    <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
   </div>
 </div>
 {% endcall %}

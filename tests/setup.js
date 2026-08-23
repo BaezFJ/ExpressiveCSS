@@ -90,6 +90,9 @@ if (!('innerText' in window.HTMLElement.prototype)) {
 }
 
 if (!window.Element.prototype.scrollTo) window.Element.prototype.scrollTo = () => {};
+// jsdom does no layout, so it ships no scrollIntoView. Autocomplete calls it
+// to keep the arrowed-to entry visible.
+if (!window.Element.prototype.scrollIntoView) window.Element.prototype.scrollIntoView = () => {};
 if (!window.scrollTo) window.scrollTo = () => {};
 globalThis.scrollTo = window.scrollTo;
 

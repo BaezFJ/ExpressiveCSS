@@ -16,6 +16,21 @@ below is the whole story for that component.
 
 ### Added
 
+- **Forms are the second sweep** — `input-fields`, `fieldset`, `checkboxes`,
+  `radio-buttons`, `switches`, `select`, `file-input`, `range`, plus
+  `autocomplete` and `character-counter`. **11 of 44 components are now
+  enforced; 33 remain.**
+- `Autocomplete` announces itself. The input is a `combobox` with
+  `aria-autocomplete="list"` and `aria-controls`; the suggestion list is a
+  `listbox`; every entry is an `option` with an id and `aria-selected`; and
+  arrowing sets `aria-activedescendant`. It previously had **none** of these -
+  the highlight moved with a class nothing but a sighted user could follow.
+  Rule 2 permits the roles because the keyboard contract was already there.
+- `CharacterCounter` writes into a polite, atomic live region, so the remaining
+  count is announced instead of silently running out.
+- A test fails any markup sample in `llm.md` fenced as ` ```text ` instead of
+  ` ```html `. The extractor keys on the tag, so 37 blocks - including every
+  Fieldsets example - were markup no check could see.
 - **`SEMANTICS.md`**, the normative per-component markup standard, generated
   from `semantics.json` by `npm run build:semantics`. `CONTEXT.md` defines the
   vocabulary it uses.
@@ -30,6 +45,16 @@ below is the whole story for that component.
 
 ### Changed
 
+- **Form markup now says what it is.** `.field` is the container; `.input-field`
+  never was one (the only rule matching it is `.chips.input-field`). Field icons
+  are `<span class="material-symbols" aria-hidden="true">` and name their side
+  with `prefix` or `suffix`. Supporting text carries an `id` and the control
+  points at it with `aria-describedby`, or it is never read out with the field.
+  Radios live in a `<fieldset>` with a `<legend>` naming the question. A file
+  input is a `<label>` pointing at the input rather than a `<button>` wrapping
+  it, and the path field is `readonly`. Switch on/off captions are
+  `aria-hidden`, because as bare text they made the switch announce itself as
+  "Off On".
 - **Chips are the first component swept.** Each kind of chip is now written
   with the element that says what it is — the four Material 3 types plus a
   non-interactive display chip, across three root elements: display is
@@ -51,6 +76,19 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **A field icon written as a `<span>` inherited the floating label's
+  position** - 16px from the edge with `pointer-events: none`, i.e. indented
+  past its own padding. Five hand-copied "everything that is not the label"
+  exclusion lists had already drifted from each other; they are now one
+  `$_not-label` variable, which is what stops the sixth from being missed.
+- The field icon modifiers were keyed on `i` with `:first-of-type` /
+  `:last-of-type`. Those count elements of the same *type*, so they could not
+  be widened to spans at all - a field is full of other spans. The documented
+  markup names the side instead; the positional `i` rules stay for old markup.
+- **`Autocomplete.destroy()` left a timer running.** `open()` defers
+  `menu.open()` to `setTimeout(0)`; destroying in the same tick let it fire
+  against a menu whose element was gone. It surfaced only as an uncaught
+  error *after* the test had passed.
 - **A rendered chip was a `<div tabindex="0">` with no role and no accessible
   name** — in the tab order, announcing nothing. The chip is no longer a
   control; its delete button is, and that button carries the name.
@@ -65,6 +103,16 @@ below is the whole story for that component.
 
 ### Migration
 
+- `<div class="input-field">` → `<div class="field">`.
+- `<i class="material-icons">place</i>` in a field →
+  `<span class="material-symbols prefix" aria-hidden="true">place</span>`. The
+  side is now required.
+- `<small>help</small>` in a field → give it an `id` and add
+  `aria-describedby` to the control.
+- Radios → wrap the group in `<fieldset><legend>`.
+- `<button><input type="file"></button>` →
+  `<label class="button" for="x">File</label><input id="x" type="file">`, and
+  add `readonly` to `input.file-path`.
 - `<div class="chip">` → `<span class="chip">`, or `<button type="button"
   class="chip">` if it is actionable. A filter chip becomes a checkbox and its
   label.
