@@ -30,7 +30,7 @@ const MARKUP = `<div class="carousel">
 describe('Carousel slides', () => {
   beforeEach(resetBody);
 
-  test('a hidden slide is inert, so it holds no tab stop', () => {
+  test('a hidden slide holds no tab stop, but is still clickable', () => {
     document.body.innerHTML = MARKUP;
     const el = document.querySelector('.carousel');
     const instance = Expressive.Carousel.init(el);
@@ -38,13 +38,27 @@ describe('Carousel slides', () => {
       const hidden = [...el.querySelectorAll('[aria-hidden="true"]')];
       assert.ok(hidden.length > 0, 'expected some slides to be hidden');
       for (const slide of hidden) {
-        assert.ok(slide.hasAttribute('inert'), `${slide.getAttribute('href')} is hidden but not inert`);
+        assert.equal(slide.getAttribute('tabindex'), '-1', `${slide.getAttribute('href')} is hidden but still tabbable`);
+        // Not inert: in coverflow the neighbours are visible, and clicking one
+        // is how the carousel advances. inert would take them out of
+        // hit-testing and leave the thing mouse-dead.
+        assert.equal(slide.hasAttribute('inert'), false, 'a visible neighbour must stay clickable');
       }
-      // and the rule agrees
       assert.equal(el.querySelectorAll(RULE.selector).length, 0, RULE.message);
     } finally {
       instance.destroy();
     }
+  });
+
+  test('destroy() hands the slides back', () => {
+    document.body.innerHTML = MARKUP;
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el);
+    instance.destroy();
+    // Nothing owns these attributes once the component is gone, so leaving
+    // them on kept every slide but one out of the tab order for good.
+    assert.equal(el.querySelectorAll('[aria-hidden]').length, 0);
+    assert.equal(el.querySelectorAll('[tabindex]').length, 0);
   });
 
   test('the visible slide is neither hidden nor inert', () => {
@@ -56,7 +70,7 @@ describe('Carousel slides', () => {
         (s) => !s.hasAttribute('aria-hidden')
       );
       assert.equal(shown.length, 1, 'exactly one slide is current');
-      assert.equal(shown[0].hasAttribute('inert'), false);
+      assert.equal(shown[0].hasAttribute('tabindex'), false);
     } finally {
       instance.destroy();
     }

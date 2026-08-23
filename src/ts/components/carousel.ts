@@ -290,6 +290,11 @@ export class Carousel extends Component<CarouselOptions> {
       el.style.zIndex = '';
       el.style.opacity = '';
       el.style.visibility = '';
+      // Hand the slides back as they were found. Leaving these on meant a
+      // destroyed carousel kept every slide but one out of the tab order and
+      // unreadable, with nothing left to put them back.
+      el.removeAttribute('aria-hidden');
+      el.removeAttribute('tabindex');
     });
   }
 
@@ -593,14 +598,17 @@ export class Carousel extends Component<CarouselOptions> {
     this.images.forEach((el, i) => {
       if (i === index) {
         el.removeAttribute('aria-hidden');
-        el.removeAttribute('inert');
+        el.removeAttribute('tabindex');
       } else {
-        // `inert` as well as aria-hidden. A slide is an <a>, so hiding it from
-        // assistive technology while leaving it in the tab order put focus on
-        // a link the user had no way to perceive - the worst of both. inert
-        // takes it out of both, and out of hit-testing.
+        // A slide is an <a>, so hiding it from assistive technology while
+        // leaving it in the tab order put focus on a link the user had no way
+        // to perceive. tabindex="-1" takes away the tab stop and nothing else.
+        //
+        // Not `inert`, which also removes the slide from hit-testing: in
+        // coverflow the neighbouring slides are visible and clicking one is
+        // how you advance to it, so inert made the carousel mouse-dead.
         el.setAttribute('aria-hidden', 'true');
-        el.setAttribute('inert', '');
+        el.setAttribute('tabindex', '-1');
       }
     });
   }

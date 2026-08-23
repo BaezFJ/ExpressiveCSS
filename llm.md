@@ -3134,6 +3134,8 @@ Activity and progress indicators for content that takes time to load.
 
 If content will take a while to load, give the user feedback. Expressive ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
 
+Prefer `<progress>`: it reports itself, and its value with it. A `<div class="progress">` is a bar drawn with CSS and reports nothing, so it needs `role="progressbar"` — and if it is determinate, `aria-valuenow` as well. A progressbar with no value is an *indeterminate* one by definition, which is a lie if the bar visibly shows 70%.
+
 ### Linear
 
 There are two linear bars: determinate and indeterminate.
@@ -3148,11 +3150,11 @@ track.
 ```html
 <progress class="progress" value="70" max="100"></progress>
 
-<div class="progress" role="progressbar">
+<div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
   <div class="determinate" style="width: 70%"></div>
 </div>
 
-<div class="progress" role="progressbar" style="--md-comp-progress-value: 70%"></div>
+<div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="--md-comp-progress-value: 70%"></div>
 ```
 
 #### Indeterminate

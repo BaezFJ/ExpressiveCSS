@@ -121,8 +121,8 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn))";
     }
   }
 
-  // Icon-only — .circle, or an <i> with no <span> sibling.
-  > :is(a, button):not(.extra):is(.circle, :has(> i):not(:has(> span))) {
+  // Icon-only - .circle, or an icon with no label beside it.
+  > :is(a, button):not(.extra):is(.circle, :has(> #{$icon}):not(:has(> #{$icon-label}))) {
     width: var(--md-comp-toolbar-action-size);
     padding: 0;
     border-radius: 50%;
@@ -152,7 +152,7 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn))";
     }
   }
 
-  > :is(a, button).filled:not(.extra):has(> span) {
+  > :is(a, button).filled:not(.extra):has(> #{$icon-label}) {
     height: 40px;
     min-height: 40px;
     padding: 0 24px;

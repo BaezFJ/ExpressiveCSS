@@ -90,7 +90,9 @@ below is the whole story for that component.
   already has. Including the one `Sidenav` builds: it copies the drawer's name
   onto the dialog, because once that dialog opens modally the `<nav>` holding
   the label is outside it.
-- A **`<div class="progress">` reports progress** with `role="progressbar"`.
+- A **`<div class="progress">` reports progress** with `role="progressbar"`, and
+  a determinate one reports `aria-valuenow` too — a progressbar with no value
+  *is* an indeterminate one, which is a lie if the bar visibly shows 70%.
   `<progress>` reports itself; a div drawn with CSS reports nothing.
 - A **CSS-only `.tooltip` is referenced with `aria-describedby`.** Inside its
   control it was swallowed — with an `aria-label` present the label wins and
@@ -226,7 +228,8 @@ below is the whole story for that component.
 - `<nav class="toolbar">` → `<div class="toolbar">`.
 - A card's `<nav>` action row → `<div class="actions">`.
 - `<dialog>` → add `aria-labelledby` pointing at its heading.
-- `<div class="progress">` → add `role="progressbar"`.
+- `<div class="progress">` → add `role="progressbar"`, plus `aria-valuenow`
+  when it is determinate.
 - `<img class="lightboxed">` → add `tabindex="0" role="button"`.
 - `<li aria-selected="true">` → `<li class="selected">`.
 - Every `<nav>` needs `aria-label` (or `aria-labelledby`).

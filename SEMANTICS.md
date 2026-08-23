@@ -95,9 +95,9 @@ Swept 0.8.0. Off-screen slides are inert, not merely hidden. Checked at runtime 
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `hidden-subtree-holds-nothing-focusable` | forbid | `[aria-hidden="true"]:has(:is(a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])))` | must not match |
+| `hidden-subtree-holds-nothing-focusable` | forbid | `[aria-hidden="true"]:has(:is(a[href], button, input, select, textarea, [tabindex]):not([tabindex="-1"]):not([disabled]))` | must not match |
 
-- **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still reachable by Tab: focus lands on a control the user has no way to perceive. Mark the subtree `inert`, which removes it from both.
+- **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
 
 ### character-counter
 
@@ -392,8 +392,10 @@ Swept 0.8.0.
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `div-progress-reports-progress` | forbid | `div.progress:not([role="progressbar"])` | must not match |
+| `determinate-progress-reports-its-value` | forbid | `[role="progressbar"]:has(> .determinate):not([aria-valuenow])` | must not match |
 
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
+- **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
 
 ### pulse
 

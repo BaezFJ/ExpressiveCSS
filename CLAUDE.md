@@ -101,7 +101,14 @@ on. The five rules:
    component that promises and does not deliver is worse than one that says
    nothing. `tabs.ts` has no keyboard handling at all, so Tabs are navigation
    (`<nav>` + anchors + `aria-current`), not a tablist. Same for Carousel.
-3. Icons are `<span class="material-symbols">`, and each one declares itself:
+3. **Never tell an icon from a label by its element.** `$icon` and `$icon-label`
+   in `abstracts/_variables` are the one place that distinction is made; five
+   selectors used to make it themselves with `i` versus `span`, and all five
+   broke silently the day the canonical icon became a `<span>` — icon+label
+   buttons lost their leading inset, icon-only toolbar actions turned into text
+   pills. `i` stays in `$icon` for pre-0.8.0 markup.
+
+   Icons are `<span class="material-symbols">`, and each one declares itself:
    `aria-hidden="true"` for decoration (the usual case, with the enclosing
    control carrying the name) or `role="img"` plus a label when the icon reports
    something no neighbouring text does. **Hiding an icon hides everything inside
