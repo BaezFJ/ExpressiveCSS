@@ -5575,11 +5575,11 @@ Slider is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Slide
 `centered` grows the active track from 50%. A range slider is two inputs in one `.slider` host; the plugin keeps the start handle from passing the end one.
 
 ```html
-<div class="slideshow centered">
+<div class="slider centered">
   <input type="range" min="0" max="100" value="30" aria-label="Centered">
 </div>
 
-<div class="slideshow">
+<div class="slider">
   <input type="range" min="0" max="100" value="25" aria-label="Range start">
   <input type="range" min="0" max="100" value="75" aria-label="Range end">
 </div>
@@ -5590,10 +5590,10 @@ Slider is not in `AutoInit()`. Importing the IIFE bundle calls `Expressive.Slide
 XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `medium` is M, `l` / `large` is L, and `xl` is XL. Scope them on the host — unscoped `.small` / `.large` are used by other components.
 
 ```html
-<div class="slideshow s">…</div>
-<div class="slideshow m">…</div>
-<div class="slideshow l">…</div>
-<div class="slideshow xl">…</div>
+<div class="slider s">…</div>
+<div class="slider m">…</div>
+<div class="slider l">…</div>
+<div class="slider xl">…</div>
 ```
 
 ### Inset icon, stops, value
@@ -5601,12 +5601,12 @@ XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `me
 A leading icon sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a `step` paints ticks along the track.
 
 ```html
-<div class="slideshow m">
+<div class="slider m">
   <span class="material-symbols" aria-hidden="true">volume_up</span>
   <input type="range" min="0" max="100" value="55" aria-label="Volume">
 </div>
 
-<div class="slideshow stops">
+<div class="slider stops">
   <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
 </div>
 ```
@@ -5616,7 +5616,7 @@ A leading icon sits inside the active track; M, L, and XL are tall enough for it
 `vertical` stands the track up. Minimum is at the bottom. The value label sits to the end of the handle.
 
 ```html
-<div class="slideshow vertical m">
+<div class="slider vertical m">
   <input type="range" min="0" max="100" value="60" aria-label="Level">
 </div>
 ```

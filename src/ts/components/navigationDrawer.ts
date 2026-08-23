@@ -56,7 +56,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
   id: string;
   /** Describes open/close state of the overlay drawer. */
   isOpen: boolean;
-  /** Describes if sidenav has sidenav-fixed. */
+  /** Whether the drawer is docked (`navigation-drawer-fixed`). */
   isFixed: boolean;
   /** Describes if NavigationDrawer is being dragged. */
   isDragged: boolean;
@@ -84,7 +84,13 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
 
     this.id = this.el.id;
     this.isOpen = false;
-    this.isFixed = this.el.classList.contains('sidenav-fixed');
+    // Both spellings: the Sass alias made `.navigation-drawer-fixed` style
+    // like the old class, but this read the old name only - so the canonical
+    // markup was treated as an overlay at the large breakpoint, leaving the
+    // drag target live and letting open() call showModal() on a docked drawer.
+    this.isFixed =
+      this.el.classList.contains('navigation-drawer-fixed') ||
+      this.el.classList.contains('sidenav-fixed');
     this.isDragged = false;
     this.dragTarget = null;
     this._dialog = null;
@@ -160,7 +166,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
 
   /**
    * Opens the overlay drawer. No-op while the sidenav is docked
-   * (sidenav-fixed at the large breakpoint).
+   * (navigation-drawer-fixed at the large breakpoint).
    */
   open = () => {
     if (this._isCurrentlyFixed() || this.isOpen || !this._dialog) return;

@@ -337,7 +337,7 @@ Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an al
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `sidenav-in-nav` | forbid | `.sidenav:not(nav):not(nav *)` | must not match |
+| `sidenav-in-nav` | forbid | `:is(.navigation-drawer, .sidenav):not(nav):not(nav *)` | must not match |
 
 - **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
 

@@ -482,7 +482,7 @@
         {
           "id": "sidenav-in-nav",
           "kind": "forbid",
-          "selector": ".sidenav:not(nav):not(nav *)",
+          "selector": ":is(.navigation-drawer, .sidenav):not(nav):not(nav *)",
           "fragmentSafe": true,
           "message": "A drawer of destinations is navigation. Wrap the list in a labelled <nav>."
         }

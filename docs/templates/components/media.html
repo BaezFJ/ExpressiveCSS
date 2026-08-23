@@ -144,7 +144,7 @@ instance.destroy();
         </p>
         <p>
           Slider is <strong>not</strong> in <code>AutoInit()</code>. Call
-          <code>Expressive.Slider.init</code> yourself after the page loads.
+          <code>Expressive.Slideshow.init</code> yourself after the page loads.
           For a 3D item carousel or a full-width image track, see
           <a href="{{ url_for('carousel') }}">Carousel</a>.
         </p>
@@ -212,7 +212,7 @@ instance.destroy();
 {% call code() %}
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.slideshow');
-  const instances = Expressive.Slider.init(elems, {
+  const instances = Expressive.Slideshow.init(elems, {
     // specify options here
     indicatorLabelFunc: (idx, current) => {
       let label = 'Go to slide ' + idx;

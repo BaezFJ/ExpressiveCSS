@@ -81,8 +81,11 @@ progress.progress {
   transition: width 0.3s linear;
 }
 
-// Bare div.progress with a value token, no child.
-.progress:not(:is(progress)):not(:has(> .determinate, > .indeterminate)) {
+// Bare div.progress with a value token, no child. :not(.circular) because a
+// `<span class="progress circular">` is not a <progress>, has no determinate
+// child, and so matched this too - drawing a linear fill on top of the conic
+// circular indicator.
+.progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)) {
   &::after {
     content: "";
     position: absolute;

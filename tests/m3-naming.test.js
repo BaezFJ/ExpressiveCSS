@@ -13,7 +13,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, resetBody, window } from './setup.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -90,4 +90,45 @@ describe('AutoInit accepts both spellings', () => {
       });
     }
   }
+});
+
+describe('the renames reach behaviour, not just styling', () => {
+  beforeEach(resetBody);
+
+  test('a canonically-named fixed drawer is treated as fixed', () => {
+    // The Sass alias made `.navigation-drawer-fixed` *look* docked while the
+    // component still read only `sidenav-fixed`, so at the large breakpoint it
+    // kept the drag target live and open() could showModal() a docked drawer.
+    for (const cls of ['navigation-drawer-fixed', 'sidenav-fixed']) {
+      document.body.innerHTML = `<ul class="navigation-drawer ${cls}" id="d"><li><a href="#!">One</a></li></ul>`;
+      const instance = Expressive.NavigationDrawer.init(document.getElementById('d'));
+      try {
+        assert.equal(instance.isFixed, true, `${cls} was not treated as fixed`);
+      } finally {
+        instance.destroy();
+      }
+    }
+  });
+
+  test('a dual-handle slider finds a .slider host and clamps against it', () => {
+    // _host() knew only the legacy classes, so the canonical host returned
+    // null: handles never clamped and the shared fractions never tracked.
+    document.body.innerHTML =
+      `<div class="slider"><input type="range" min="0" max="100" value="25" aria-label="From">` +
+      `<input type="range" min="0" max="100" value="75" aria-label="To"></div>`;
+    const host = document.querySelector('.slider');
+    const [start, end] = host.querySelectorAll('input[type=range]');
+    const a = Expressive.Slider.init(start);
+    const b = Expressive.Slider.init(end);
+    try {
+      assert.equal(a._host(), host, 'the .slider host was not found');
+      start.value = '95';
+      start.dispatchEvent(new window.Event('change', { bubbles: true }));
+      assert.equal(start.value, '75', 'the start handle did not clamp to the end one');
+      assert.equal(host.style.getPropertyValue('--md-comp-slider-end-fraction'), '75%');
+    } finally {
+      a.destroy();
+      b.destroy();
+    }
+  });
 });

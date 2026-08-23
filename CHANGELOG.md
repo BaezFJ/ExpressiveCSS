@@ -47,6 +47,22 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **The renames reached the styling and stopped short of the behaviour.** The
+  Sass alias made `.navigation-drawer-fixed` *look* docked while the component
+  still read only `sidenav-fixed`, so at the large breakpoint a canonically
+  named drawer kept its drag target live and `open()` could turn it into a
+  modal. `_host()` in Slider knew only the legacy classes, so a dual-handle
+  control in a `.slider` host never clamped its handles and never tracked the
+  interval.
+- **A circular indicator also matched the bare linear-progress rule**, drawing
+  a linear fill over the conic one — `<span class="progress circular">` is not
+  a `<progress>` and has no determinate child, so it fell through to the
+  fallback.
+- **Four documented snippets kept the old names in script** — `.sidenav`
+  queries that matched nothing, and `Expressive.Slider.init` still being used
+  to start slideshows after `Slider` became the range control. A new check
+  reads every `Expressive.X` and every selector string in the docs and fails on
+  a name the bundle or the sheet does not have.
 - **`.fab` was not excluded from the toolbar selector** the way
   `.fixed-action-btn` is, so a FAB-to-toolbar transition written with the new
   name picked up toolbar styling. Found by the rename test itself, which walks
