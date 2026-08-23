@@ -294,6 +294,100 @@ describe('semantics.json', () => {
   });
 });
 
+describe('prose that names markup', () => {
+  // The fragment reader only sees `<tag ...>` forms, so a selector-style
+  // mention - `nav.toolbar` in a sentence or an anatomy table - was invisible
+  // to it. Five declarations of `nav.toolbar` survived the sweep that forbade
+  // it, in the very file the sweep had added as a surface.
+  //
+  // Derived from the rules rather than listed: any fragment-safe forbid rule
+  // whose selector is a plain `tag.class` is a shape the prose must not name
+  // either. A deliberate negation ("not `nav.toolbar`") is allowed, because
+  // saying what something is not is how the docs record a rename.
+  const forbiddenShapes = Object.values(data.components)
+    .filter((c) => c.status === 'enforced')
+    .flatMap((c) => c.rules)
+    .filter((r) => r.kind === 'forbid' && r.fragmentSafe)
+    .flatMap((r) => r.selector.split(',').map((x) => x.trim()))
+    .filter((sel) => /^[a-z]+\.[\w-]+$/.test(sel));
+
+  test('the rules yield shapes to look for', () => {
+    assert.ok(forbiddenShapes.length > 0, 'no tag.class forbid rules to derive from');
+  });
+
+  test('no document names a shape its own rules forbid', () => {
+    const failures = [];
+    for (const file of ['llm.md', 'm3-guidelines.md']) {
+      const src = read(file);
+      for (const m of src.matchAll(/`([^`\n]+)`/g)) {
+        const shape = m[1].trim();
+        if (!forbiddenShapes.includes(shape)) continue;
+        const before = src.slice(Math.max(0, m.index - 24), m.index);
+        if (/\b(not|no|never|instead of|rather than)\s+$/i.test(before)) continue;
+        const line = src.slice(0, m.index).split('\n').length;
+        failures.push(`${file}:${line} names \`${shape}\`, which ${'`'}forbid${'`'} rules reject`);
+      }
+    }
+    assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);
+  });
+});
+
+describe('composed pages', () => {
+  // website/ was excluded as a *surface* because it is generated from the
+  // templates - checking its fragments would check them twice. A whole page is
+  // a different question. Rules like main-not-nested and dialog-is-named are
+  // document-level, chrome and content only meet here, and a landmark name is
+  // only ambiguous relative to the other landmarks on the same page. The
+  // duplicate-name check below has no rule behind it for that reason: there is
+  // no fragment it could be written against.
+  //
+  // 57 pages, well under a second.
+  //
+  // These read the *committed* website/, which is only as current as the last
+  // freeze - a template-only change would leave this passing against a
+  // snapshot of the previous state. CI closes that: it re-runs freeze.py and
+  // fails if the diff is non-empty, which is the check CLAUDE.md already
+  // prescribed for template changes and nothing had automated.
+  const pages = readdirSync(new URL('website/', root))
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => ({ file: `website/${f}`, html: read(`website/${f}`) }));
+
+  test('the frozen site exists to check', () => {
+    assert.ok(pages.length > 20, `only ${pages.length} frozen pages - run freeze.py`);
+  });
+
+  test('every page satisfies every enforced rule', () => {
+    const failures = [];
+    for (const { file, html } of pages) {
+      for (const v of violations(html, enforcedRules)) {
+        failures.push(`${file}\n    [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
+      }
+    }
+    assert.deepEqual(failures, [], `\n${failures.slice(0, 12).join('\n\n')}\n`);
+  });
+
+  test('no two landmarks on a page share a name', () => {
+    // Two <nav>s both called "Main" is a landmark menu with two identical rows,
+    // which is the problem labelling them was meant to solve. Shipped once.
+    const failures = [];
+    for (const { file, html } of pages) {
+      const { document } = new JSDOM(html).window;
+      const names = [...document.querySelectorAll('nav')].map((n) => {
+        const l = n.getAttribute('aria-label');
+        if (l) return l.trim();
+        const ref = n.getAttribute('aria-labelledby');
+        return ref ? (document.getElementById(ref)?.textContent ?? '').trim() : '';
+      });
+      const seen = new Set();
+      for (const n of names) {
+        if (n && seen.has(n)) failures.push(`${file}: two landmarks named "${n}"`);
+        seen.add(n);
+      }
+    }
+    assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);
+  });
+});
+
 describe('template extractor', () => {
   const wrap = (args, body) =>
     `{% block page %}\n{% call code(${args}) %}\n${body}\n{% endcall %}\n{% endblock %}`;

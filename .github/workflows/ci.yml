@@ -47,6 +47,27 @@ jobs:
       - run: npm run test:run
         if: matrix.node != 20
 
+      # website/ is generated from docs/templates by freeze.py and committed.
+      # tests/semantics.test.js checks those frozen pages as whole documents -
+      # main nesting, dialog naming, duplicate landmark names - which is only
+      # meaningful if they match the templates they came from. Nothing else
+      # enforces that: a template-only change leaves the old HTML in place and
+      # the composed checks pass against a snapshot of the previous state.
+      #
+      # This is also the diff CLAUDE.md already prescribes for verifying any
+      # template change; it was just never automated.
+      - name: Verify the frozen site matches the templates
+        if: matrix.node == 24
+        run: |
+          pipx install uv || pip install uv
+          uv run python freeze.py
+          if ! git diff --quiet -- website/; then
+            echo "::error::website/ is stale - run 'uv run python freeze.py' and commit the result"
+            git diff --stat -- website/
+            exit 1
+          fi
+          echo "  OK       website/ is in step with docs/templates"
+
       # Catches the failure mode where dist/ is gitignored and nothing rebuilds
       # it: proves `prepack` regenerates every exports target from clean.
       - name: Verify the published tarball

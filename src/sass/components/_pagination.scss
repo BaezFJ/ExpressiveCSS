@@ -4,7 +4,9 @@
 // <ol> (or <ul>) of page links. The current page is aria-current="page".
 // A bare <ul class="pagination"> stays as an alias.
 //
-// .active / .disabled / .prev / .next / .pages still work.
+// .active / .disabled / .pages still work. .prev / .next are accepted but
+// inert - nothing matches them. They used to drive a 10%/80% split, which
+// .nowrap replaced with scrolling.
 // .nowrap (or the old li.pages nest) scrolls a long run instead of wrapping.
 //
 // Tokens (defaults match the original compact pager):
