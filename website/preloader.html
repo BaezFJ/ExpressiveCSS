@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Preloader</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -295,23 +295,23 @@
           <code>.determinate</code>, or set
           <code>--md-comp-progress-value</code> on the bar.
         </p>
-        <div class="progress">
+        <div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
           <div class="determinate" style="width: 70%"></div>
         </div>
-<pre><code>&lt;div class="progress"&gt;
+<pre><code>&lt;div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"&gt;
   &lt;div class="determinate" style="width: 70%"&gt;&lt;/div&gt;
 &lt;/div&gt;
 
-&lt;div class="progress" style="--md-comp-progress-value: 70%"&gt;&lt;/div&gt;</code></pre>
+&lt;div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="--md-comp-progress-value: 70%"&gt;&lt;/div&gt;</code></pre>
 
         <h5 class="light">Indeterminate</h5>
         <progress class="progress"></progress>
 <pre><code>&lt;progress class="progress"&gt;&lt;/progress&gt;</code></pre>
         <p>The child class is the alias:</p>
-        <div class="progress">
+        <div class="progress" role="progressbar">
           <div class="indeterminate"></div>
         </div>
-<pre><code>&lt;div class="progress"&gt;
+<pre><code>&lt;div class="progress" role="progressbar"&gt;
   &lt;div class="indeterminate"&gt;&lt;/div&gt;
 &lt;/div&gt;</code></pre>
   
@@ -488,26 +488,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

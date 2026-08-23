@@ -251,6 +251,15 @@ export class Sidenav extends Component<SidenavOptions> implements Openable {
     }
     const dialog = document.createElement('dialog');
     dialog.classList.add('sidenav-overlay');
+    // Carry the drawer's name onto the dialog. A <dialog> takes no name from
+    // its contents, so without this the drawer opened announced as just
+    // "dialog" - and the label the author wrote on the wrapping <nav> is
+    // outside the modal once it opens, where nothing will read it.
+    const named = this.el.closest('[aria-label], [aria-labelledby]') ?? this.el;
+    const label = named.getAttribute('aria-label');
+    const labelledBy = named.getAttribute('aria-labelledby');
+    if (label) dialog.setAttribute('aria-label', label);
+    else if (labelledBy) dialog.setAttribute('aria-labelledby', labelledBy);
     this.el.replaceWith(dialog);
     dialog.appendChild(this.el);
     this._dialog = dialog;

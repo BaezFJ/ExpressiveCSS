@@ -1,5 +1,20 @@
 @use "sass:math";
 
+// "Is this child an icon, or is it the label?" - a question several components
+// ask, and every one of them used to answer it by element: <i> was the icon,
+// <span> was the label. That broke the day the canonical icon became a <span>,
+// silently, in five selectors at once: icon+label buttons lost their leading
+// inset, icon-only toolbar actions stopped being 48dp circles and picked up the
+// text-action pill instead.
+//
+// So the answer lives in one place. `i` stays in the list for markup written
+// before 0.8.0. Interpolate it inside :is() - never as a bare comma list, which
+// breaks out of its context (see $_bar in components/_navbar).
+$icon: ":is(i, .material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons)" !default;
+
+// The label beside an icon: any span that is not itself an icon.
+$icon-label: "span:not(.material-symbols):not(.material-symbols-outlined):not(.material-symbols-rounded):not(.material-symbols-sharp):not(.material-icons)" !default;
+
 // Colors
 //
 // The 2014 Material palette ($colors + colorFunc()) is gone. It generated 532

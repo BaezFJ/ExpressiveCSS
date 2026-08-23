@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Toolbars</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -318,32 +318,32 @@
           next to a FAB.
         </p>
         <p>
-          <nav class="toolbar" aria-label="Call controls">
+          <div class="toolbar">
             <button type="button" aria-label="Stop camera">
-              <i class="material-symbols">videocam_off</i>
+              <span class="material-symbols" aria-hidden="true">videocam_off</span>
             </button>
             <button type="button" aria-label="Microphone">
-              <i class="material-symbols">mic</i>
+              <span class="material-symbols" aria-hidden="true">mic</span>
             </button>
             <button type="button" class="active" aria-label="Hand">
-              <i class="material-symbols">back_hand</i>
+              <span class="material-symbols" aria-hidden="true">back_hand</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
-<pre><code>&lt;nav class="toolbar" aria-label="Call controls"&gt;
+<pre><code>&lt;div class="toolbar"&gt;
   &lt;button type="button" aria-label="Stop camera"&gt;
-    &lt;i class="material-symbols"&gt;videocam_off&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;videocam_off&lt;/span&gt;
   &lt;/button&gt;
   &lt;button type="button" class="active" aria-label="Hand"&gt;
-    &lt;i class="material-symbols"&gt;back_hand&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;back_hand&lt;/span&gt;
   &lt;/button&gt;
   &lt;button type="button" aria-label="More"&gt;
-    &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;more_vert&lt;/span&gt;
   &lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+&lt;/div&gt;</code></pre>
         <p>
           A label next to the icon needs a <code>&lt;span&gt;</code> —
           <code>:only-child</code> ignores text nodes, so
@@ -352,35 +352,35 @@
           (16dp corners, primary).
         </p>
         <p>
-          <nav class="toolbar" aria-label="Editor">
+          <div class="toolbar">
             <button type="button" aria-label="Undo">
-              <i class="material-symbols">undo</i>
+              <span class="material-symbols" aria-hidden="true">undo</span>
             </button>
             <button type="button" aria-label="Redo">
-              <i class="material-symbols">redo</i>
+              <span class="material-symbols" aria-hidden="true">redo</span>
             </button>
             <button type="button" class="filled" aria-label="Add">
-              <i class="material-symbols">add</i>
+              <span class="material-symbols" aria-hidden="true">add</span>
             </button>
             <button type="button" aria-label="Save">
-              <i class="material-symbols">save</i>
+              <span class="material-symbols" aria-hidden="true">save</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
-<pre><code>&lt;nav class="toolbar" aria-label="Editor"&gt;
+<pre><code>&lt;div class="toolbar"&gt;
   &lt;button type="button" aria-label="Undo"&gt;
-    &lt;i class="material-symbols"&gt;undo&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;undo&lt;/span&gt;
   &lt;/button&gt;
   &lt;button type="button" class="filled" aria-label="Add"&gt;
-    &lt;i class="material-symbols"&gt;add&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
   &lt;/button&gt;
   &lt;button type="button" aria-label="More"&gt;
-    &lt;i class="material-symbols"&gt;more_vert&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;more_vert&lt;/span&gt;
   &lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -397,25 +397,25 @@
           still contrasts.
         </p>
         <p>
-          <nav class="toolbar vibrant" aria-label="Text format">
+          <div class="toolbar vibrant">
             <button type="button" class="active" aria-label="Bold">
-              <i class="material-symbols">format_bold</i>
+              <span class="material-symbols" aria-hidden="true">format_bold</span>
             </button>
             <button type="button" aria-label="Italic">
-              <i class="material-symbols">format_italic</i>
+              <span class="material-symbols" aria-hidden="true">format_italic</span>
             </button>
             <button type="button" aria-label="Underline">
-              <i class="material-symbols">format_underlined</i>
+              <span class="material-symbols" aria-hidden="true">format_underlined</span>
             </button>
             <button type="button" aria-label="Color">
-              <i class="material-symbols">format_color_fill</i>
+              <span class="material-symbols" aria-hidden="true">format_color_fill</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
-<pre><code>&lt;nav class="toolbar vibrant" aria-label="Text format"&gt;…&lt;/nav&gt;</code></pre>
+<pre><code>&lt;div class="toolbar vibrant"&gt;…&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -428,25 +428,25 @@
           go vertical — a docked bar stays a horizontal strip.
         </p>
         <p>
-          <nav class="toolbar vertical" aria-label="History">
+          <div class="toolbar vertical">
             <button type="button" aria-label="Undo">
-              <i class="material-symbols">undo</i>
+              <span class="material-symbols" aria-hidden="true">undo</span>
             </button>
             <button type="button" aria-label="Redo">
-              <i class="material-symbols">redo</i>
+              <span class="material-symbols" aria-hidden="true">redo</span>
             </button>
             <button type="button" aria-label="Add">
-              <i class="material-symbols">add</i>
+              <span class="material-symbols" aria-hidden="true">add</span>
             </button>
             <button type="button" class="active" aria-label="Format">
-              <i class="material-symbols">format_size</i>
+              <span class="material-symbols" aria-hidden="true">format_size</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
-<pre><code>&lt;nav class="toolbar vertical" aria-label="History"&gt;…&lt;/nav&gt;</code></pre>
+<pre><code>&lt;div class="toolbar vertical"&gt;…&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -464,62 +464,62 @@
           and the two should not appear together. A child
           <code>.max</code> is a spacer, not the bar.
         </p>
-        <nav class="toolbar docked" aria-label="Page actions">
+        <div class="toolbar docked">
           <button type="button" aria-label="Download">
-            <i class="material-symbols">download</i>
+            <span class="material-symbols" aria-hidden="true">download</span>
           </button>
           <button type="button" aria-label="Delete">
-            <i class="material-symbols">delete</i>
+            <span class="material-symbols" aria-hidden="true">delete</span>
           </button>
           <button type="button" aria-label="Mail">
-            <i class="material-symbols">mail</i>
+            <span class="material-symbols" aria-hidden="true">mail</span>
           </button>
           <button type="button" aria-label="Snooze">
-            <i class="material-symbols">snooze</i>
+            <span class="material-symbols" aria-hidden="true">snooze</span>
           </button>
           <button type="button" aria-label="Star">
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
           </button>
-        </nav>
+        </div>
         <p class="mt-3">
-          <nav class="toolbar docked vibrant" aria-label="Editor">
+          <div class="toolbar docked vibrant">
             <button type="button" aria-label="Back">
-              <i class="material-symbols">arrow_back</i>
+              <span class="material-symbols" aria-hidden="true">arrow_back</span>
             </button>
             <button type="button" aria-label="Forward">
-              <i class="material-symbols">arrow_forward</i>
+              <span class="material-symbols" aria-hidden="true">arrow_forward</span>
             </button>
             <button type="button" class="filled" aria-label="Add">
-              <i class="material-symbols">add</i>
+              <span class="material-symbols" aria-hidden="true">add</span>
             </button>
             <button type="button" aria-label="Save">
-              <i class="material-symbols">save</i>
+              <span class="material-symbols" aria-hidden="true">save</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
         <p>
           Text actions and a spacer:
         </p>
-        <nav class="toolbar docked" aria-label="Wizard">
+        <div class="toolbar docked">
           <button type="button"><span>Back</span></button>
           <span class="max"></span>
           <button type="button" class="filled"><span>Next</span></button>
-        </nav>
-<pre><code>&lt;nav class="toolbar docked" aria-label="Page actions"&gt;
+        </div>
+<pre><code>&lt;div class="toolbar docked"&gt;
   &lt;button type="button" aria-label="Download"&gt;
-    &lt;i class="material-symbols"&gt;download&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;download&lt;/span&gt;
   &lt;/button&gt;
   …
-&lt;/nav&gt;
+&lt;/div&gt;
 
-&lt;nav class="toolbar docked" aria-label="Wizard"&gt;
+&lt;div class="toolbar docked"&gt;
   &lt;button type="button"&gt;&lt;span&gt;Back&lt;/span&gt;&lt;/button&gt;
   &lt;span class="max"&gt;&lt;/span&gt;
   &lt;button type="button" class="filled"&gt;&lt;span&gt;Next&lt;/span&gt;&lt;/button&gt;
-&lt;/nav&gt;</code></pre>
+&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -535,31 +535,31 @@
           the companion FAB, not the in-bar <code>.filled</code> action.
         </p>
         <div class="toolbar-group mb-3">
-          <nav class="toolbar vibrant" aria-label="Message actions">
+          <div class="toolbar vibrant">
             <button type="button" aria-label="Download">
-              <i class="material-symbols">download</i>
+              <span class="material-symbols" aria-hidden="true">download</span>
             </button>
             <button type="button" aria-label="Delete">
-              <i class="material-symbols">delete</i>
+              <span class="material-symbols" aria-hidden="true">delete</span>
             </button>
             <button type="button" aria-label="Mail">
-              <i class="material-symbols">mail</i>
+              <span class="material-symbols" aria-hidden="true">mail</span>
             </button>
             <button type="button" aria-label="Snooze">
-              <i class="material-symbols">snooze</i>
+              <span class="material-symbols" aria-hidden="true">snooze</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
           <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
-            <i class="material-symbols">reply</i>
+            <span class="material-symbols" aria-hidden="true">reply</span>
           </button>
         </div>
 <pre><code>&lt;div class="toolbar-group"&gt;
-  &lt;nav class="toolbar vibrant" aria-label="Message actions"&gt;…&lt;/nav&gt;
+  &lt;div class="toolbar vibrant"&gt;…&lt;/div&gt;
   &lt;button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply"&gt;
-    &lt;i class="material-symbols"&gt;reply&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;reply&lt;/span&gt;
   &lt;/button&gt;
 &lt;/div&gt;</code></pre>
   
@@ -576,9 +576,9 @@
           <code>right</code> flips it. A docked bar sticks to the bottom
           edge; <code>top</code> sticks it to the top.
         </p>
-<pre><code>&lt;nav class="toolbar fixed" aria-label="Format"&gt;…&lt;/nav&gt;
-&lt;nav class="toolbar vertical fixed" aria-label="Tools"&gt;…&lt;/nav&gt;
-&lt;nav class="toolbar docked fixed" aria-label="Editor"&gt;…&lt;/nav&gt;</code></pre>
+<pre><code>&lt;div class="toolbar fixed"&gt;…&lt;/div&gt;
+&lt;div class="toolbar vertical fixed"&gt;…&lt;/div&gt;
+&lt;div class="toolbar docked fixed"&gt;…&lt;/div&gt;</code></pre>
   
       </div>
 
@@ -717,26 +717,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

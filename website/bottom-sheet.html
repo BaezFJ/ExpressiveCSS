@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Bottom sheet</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -309,20 +309,20 @@
           <button type="button" class="tonal" onclick="document.getElementById('sheet-standard').show()">Show standard</button>
         </p>
 
-        <dialog id="sheet-modal" class="bottom-sheet">
-          <h2>Open file</h2>
+        <dialog id="sheet-modal" class="bottom-sheet" aria-labelledby="open-file-title">
+          <h2 id="open-file-title">Open file</h2>
           <div>
             <ul class="list">
               <li>
-                <i class="material-symbols">description</i>
+                <span class="material-symbols" aria-hidden="true">description</span>
                 Draft.md
               </li>
               <li>
-                <i class="material-symbols">image</i>
+                <span class="material-symbols" aria-hidden="true">image</span>
                 Cover.png
               </li>
               <li>
-                <i class="material-symbols">folder</i>
+                <span class="material-symbols" aria-hidden="true">folder</span>
                 Archive
               </li>
             </ul>
@@ -332,8 +332,8 @@
           </form>
         </dialog>
 
-        <dialog id="sheet-standard" class="bottom-sheet">
-          <h2>Now playing</h2>
+        <dialog id="sheet-standard" class="bottom-sheet" aria-labelledby="now-playing-title">
+          <h2 id="now-playing-title">Now playing</h2>
           <p>Secondary controls for the current track. The page behind this sheet stays usable.</p>
           <form method="dialog">
             <button type="submit" class="text" value="close">Close</button>
@@ -343,8 +343,8 @@
   Show modal
 &lt;/button&gt;
 
-&lt;dialog id="sheet" class="bottom-sheet"&gt;
-  &lt;h2&gt;Open file&lt;/h2&gt;
+&lt;dialog id="sheet" class="bottom-sheet" aria-labelledby="open-file-title"&gt;
+  &lt;h2 id="open-file-title"&gt;Open file&lt;/h2&gt;
   &lt;div&gt;…&lt;/div&gt;
   &lt;form method="dialog"&gt;
     &lt;button type="submit" class="text" value="cancel"&gt;Cancel&lt;/button&gt;
@@ -368,9 +368,9 @@
           dismiss. A flick counts. The rest of the sheet scrolls if the
           body overflows.
         </p>
-<pre><code>&lt;dialog class="bottom-sheet"&gt;
+<pre><code>&lt;dialog class="bottom-sheet" aria-labelledby="title-title"&gt;
   &lt;button type="button" class="handle" aria-label="Dismiss"&gt;&lt;/button&gt;
-  &lt;h2&gt;Title&lt;/h2&gt;
+  &lt;h2 id="title-title"&gt;Title&lt;/h2&gt;
   …
 &lt;/dialog&gt;</code></pre>
   
@@ -496,26 +496,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

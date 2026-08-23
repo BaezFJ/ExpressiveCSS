@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Tabs</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -297,24 +297,24 @@
         </p>
 
         <nav class="tabs" aria-label="Travel">
-          <a href="#tabs-intro-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-intro-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
-          <a href="#tabs-intro-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
+          <a href="#tabs-intro-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
+          <a class="active" aria-current="page" href="#tabs-intro-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a href="#tabs-intro-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
         </nav>
         <div id="tabs-intro-flight" class="py-3">Flight</div>
         <div id="tabs-intro-luggage" class="py-3">Luggage</div>
         <div id="tabs-intro-explore" class="py-3">Explore</div>
 <pre><code>&lt;nav class="tabs" aria-label="Travel"&gt;
   &lt;a href="#flight"&gt;
-    &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;flight&lt;/span&gt;
     &lt;span&gt;Flight&lt;/span&gt;
   &lt;/a&gt;
   &lt;a class="active" aria-current="page" href="#luggage"&gt;
-    &lt;i class="material-symbols"&gt;luggage&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;luggage&lt;/span&gt;
     &lt;span&gt;Luggage&lt;/span&gt;
   &lt;/a&gt;
   &lt;a href="#explore"&gt;
-    &lt;i class="material-symbols"&gt;explore&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;explore&lt;/span&gt;
     &lt;span&gt;Explore&lt;/span&gt;
   &lt;/a&gt;
 &lt;/nav&gt;
@@ -362,20 +362,20 @@
           icons inline, a 2dp indicator. Use it to further split a pane.
         </p>
         <nav class="tabs tabs-secondary" aria-label="Trip">
-          <a href="#tabs-sec-birds"><i class="material-symbols">flight</i><span>Travel</span></a>
-          <a class="active" aria-current="page" href="#tabs-sec-cats"><i class="material-symbols">hotel</i><span>Hotel</span></a>
-          <a href="#tabs-sec-dogs"><i class="material-symbols">directions_walk</i><span>Walks</span></a>
+          <a href="#tabs-sec-birds"><span class="material-symbols" aria-hidden="true">flight</span><span>Travel</span></a>
+          <a class="active" aria-current="page" href="#tabs-sec-cats"><span class="material-symbols" aria-hidden="true">hotel</span><span>Hotel</span></a>
+          <a href="#tabs-sec-dogs"><span class="material-symbols" aria-hidden="true">directions_walk</span><span>Walks</span></a>
         </nav>
         <div id="tabs-sec-birds" class="py-3">Travel</div>
         <div id="tabs-sec-cats" class="py-3">Hotel</div>
         <div id="tabs-sec-dogs" class="py-3">Walks</div>
 <pre><code>&lt;nav class="tabs tabs-secondary" aria-label="Trip"&gt;
   &lt;a href="#travel"&gt;
-    &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;flight&lt;/span&gt;
     &lt;span&gt;Travel&lt;/span&gt;
   &lt;/a&gt;
   &lt;a class="active" aria-current="page" href="#hotel"&gt;
-    &lt;i class="material-symbols"&gt;hotel&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;hotel&lt;/span&gt;
     &lt;span&gt;Hotel&lt;/span&gt;
   &lt;/a&gt;
 &lt;/nav&gt;</code></pre>
@@ -612,20 +612,20 @@
           put them on one line, like secondary tabs.
         </p>
         <nav class="tabs max horizontal" aria-label="Inline icons">
-          <a href="#tabs-horiz-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
-          <a href="#tabs-horiz-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
+          <a href="#tabs-horiz-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
+          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a href="#tabs-horiz-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
         </nav>
         <div id="tabs-horiz-flight" class="py-3">Flight</div>
         <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
         <div id="tabs-horiz-explore" class="py-3">Explore</div>
 <pre><code>&lt;nav class="tabs max horizontal" aria-label="Sections"&gt;
   &lt;a href="#flight"&gt;
-    &lt;i class="material-symbols"&gt;flight&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;flight&lt;/span&gt;
     &lt;span&gt;Flight&lt;/span&gt;
   &lt;/a&gt;
   &lt;a class="active" aria-current="page" href="#luggage"&gt;
-    &lt;i class="material-symbols"&gt;luggage&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;luggage&lt;/span&gt;
     &lt;span&gt;Luggage&lt;/span&gt;
   &lt;/a&gt;
 &lt;/nav&gt;</code></pre>
@@ -744,26 +744,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

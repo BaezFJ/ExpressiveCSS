@@ -33,36 +33,36 @@
           treated as a label.
         </p>
         <p>
-          <button type="button" class="circle" aria-label="Add">
-            <i class="material-symbols">add</i>
-            <span class="tooltip">Add to album</span>
+          <button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
+            <span class="material-symbols" aria-hidden="true">add</span>
+            <span class="tooltip" id="tip-add-to-album">Add to album</span>
           </button>
-          <button type="button" class="circle" aria-label="Above">
-            <i class="material-symbols">arrow_upward</i>
-            <span class="tooltip">Above</span>
+          <button type="button" class="circle" aria-label="Above" aria-describedby="tip-above">
+            <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+            <span class="tooltip" id="tip-above">Above</span>
           </button>
-          <button type="button" class="circle" aria-label="Below">
-            <i class="material-symbols">arrow_downward</i>
-            <span class="tooltip bottom">Below</span>
+          <button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
+            <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+            <span class="tooltip bottom" id="tip-below">Below</span>
           </button>
-          <button type="button" class="circle" aria-label="Start">
-            <i class="material-symbols">arrow_back</i>
-            <span class="tooltip left">Start</span>
+          <button type="button" class="circle" aria-label="Start" aria-describedby="tip-start">
+            <span class="material-symbols" aria-hidden="true">arrow_back</span>
+            <span class="tooltip left" id="tip-start">Start</span>
           </button>
-          <button type="button" class="circle" aria-label="End">
-            <i class="material-symbols">arrow_forward</i>
-            <span class="tooltip right">End</span>
+          <button type="button" class="circle" aria-label="End" aria-describedby="tip-end">
+            <span class="material-symbols" aria-hidden="true">arrow_forward</span>
+            <span class="tooltip right" id="tip-end">End</span>
           </button>
         </p>
 {% call code() %}
-<button type="button" class="circle" aria-label="Add">
-  <i class="material-symbols">add</i>
-  <span class="tooltip">Add to album</span>
+<button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
+  <span class="material-symbols" aria-hidden="true">add</span>
+  <span class="tooltip" id="tip-add-to-album">Add to album</span>
 </button>
 
-<button type="button" class="circle" aria-label="Below">
-  <i class="material-symbols">arrow_downward</i>
-  <span class="tooltip bottom">Below</span>
+<button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
+  <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+  <span class="tooltip bottom" id="tip-below">Below</span>
 </button>
 {% endcall %}
   {% endcall %}
@@ -144,7 +144,7 @@
         <div id="tooltip-content" style="display: none;">
           <h3>Chart</h3>
           <p>This is a tooltip with a <a href="https://github.com">link</a>
-          and a <i class="material-symbols">insert_chart</i>.</p>
+          and a <span class="material-symbols" aria-hidden="true">insert_chart</span>.</p>
         </div>
 {% call code() %}
 <a class="tooltipped" href="#!"

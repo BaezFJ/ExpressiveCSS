@@ -24,23 +24,23 @@
         </p>
 
         <nav class="navigation-bar mb-3" aria-label="Badge demo">
-          <a href="#!">
-            <i class="material-symbols">mail<span class="badge"></span></i>
+          <a href="#!" aria-label="Mail, unread">
+            <span class="material-symbols" aria-hidden="true">mail<span class="badge"></span></span>
             Label
           </a>
-          <a href="#!">
-            <i class="material-symbols">mail<span class="badge">1</span></i>
+          <a href="#!" aria-label="Mail, 1 unread">
+            <span class="material-symbols" aria-hidden="true">mail<span class="badge">1</span></span>
             Label
           </a>
-          <a href="#!">
-            <i class="material-symbols">mail<span class="badge">999+</span></i>
+          <a href="#!" aria-label="Mail, 999+ unread">
+            <span class="material-symbols" aria-hidden="true">mail<span class="badge">999+</span></span>
             Label
           </a>
         </nav>
 {% call code() %}
-<i class="material-symbols">mail<span class="badge"></span></i>
-<i class="material-symbols">mail<span class="badge">1</span></i>
-<i class="material-symbols">mail<span class="badge">999+</span></i>
+<span class="material-symbols" role="img" aria-label="Mail, unread">mail<span class="badge"></span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
 {% endcall %}
   {% endcall %}
 
@@ -51,13 +51,11 @@
         </p>
         <p>
           <button type="button" class="button extra circle" aria-label="Notifications, unread">
-            <i class="material-symbols">notifications<span class="badge"></span></i>
+            <span class="material-symbols" role="img" aria-label="Notifications, unread">notifications<span class="badge"></span></span>
           </button>
         </p>
 {% call code() %}
-<i class="material-symbols">
-  notifications<span class="badge"></span>
-</i>
+<span class="material-symbols" role="img" aria-label="Notifications, unread">notifications<span class="badge"></span></span>
 {% endcall %}
   {% endcall %}
 
@@ -69,15 +67,15 @@
         </p>
         <p>
           <button type="button" class="button extra circle" aria-label="Mail, 1 unread">
-            <i class="material-symbols">mail<span class="badge">1</span></i>
+            <span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
           </button>
           <button type="button" class="button extra circle" aria-label="Mail, more than 999 unread">
-            <i class="material-symbols">mail<span class="badge">999+</span></i>
+            <span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
           </button>
         </p>
 {% call code() %}
-<i class="material-symbols">mail<span class="badge">1</span></i>
-<i class="material-symbols">mail<span class="badge">999+</span></i>
+<span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
 {% endcall %}
   {% endcall %}
 
@@ -89,21 +87,21 @@
         </p>
         <nav class="navigation-bar mb-3" aria-label="Mail">
           <a href="#!" aria-current="page">
-            <i class="material-symbols">inbox<span class="badge">3</span></i>
+            <span class="material-symbols" role="img" aria-label="Inbox, 3 unread">inbox<span class="badge">3</span></span>
             Inbox
           </a>
-          <a href="#!">
-            <i class="material-symbols">chat<span class="badge"></span></i>
+          <a href="#!" aria-label="Chat, unread">
+            <span class="material-symbols" aria-hidden="true">chat<span class="badge"></span></span>
             Chat
           </a>
           <a href="#!">
-            <i class="material-symbols">group</i>
+            <span class="material-symbols" aria-hidden="true">group</span>
             Groups
           </a>
         </nav>
 {% call code() %}
-<a href="#!">
-  <i class="material-symbols">inbox<span class="badge">3</span></i>
+<a href="#!" aria-label="Inbox, 3 unread">
+  <span class="material-symbols" aria-hidden="true">inbox<span class="badge">3</span></span>
   Inbox
 </a>
 {% endcall %}
@@ -117,19 +115,19 @@
         </p>
         <ul class="list">
           <li>
-            <i class="material-symbols">inbox</i>
+            <span class="material-symbols" aria-hidden="true">inbox</span>
             Inbox
             <span class="badge">3</span>
           </li>
           <li>
-            <i class="material-symbols">send</i>
+            <span class="material-symbols" aria-hidden="true">send</span>
             Sent
           </li>
         </ul>
 {% call code() %}
 <ul class="list">
   <li>
-    <i class="material-symbols">inbox</i>
+    <span class="material-symbols" aria-hidden="true">inbox</span>
     Inbox
     <span class="badge">3</span>
   </li>
@@ -147,7 +145,7 @@
             <li>
               <details open>
                 <summary>
-                  <i class="material-symbols">inbox</i>
+                  <span class="material-symbols" aria-hidden="true">inbox</span>
                   Inbox
                   <span class="badge">4</span>
                 </summary>
@@ -162,7 +160,7 @@
         </nav>
 {% call code() %}
 <summary>
-  <i class="material-symbols">inbox</i>
+  <span class="material-symbols" aria-hidden="true">inbox</span>
   Inbox
   <span class="badge">4</span>
 </summary>
@@ -176,8 +174,8 @@
           error/notification.
         </p>
         <p>
-          <i class="material-symbols">mail<span class="badge">3</span></i>
-          <i class="material-symbols">star<span class="badge primary on-primary-text">1</span></i>
+          <span class="material-symbols" role="img" aria-label="Mail, 3 unread">mail<span class="badge">3</span></span>
+          <span class="material-symbols" aria-hidden="true">star<span class="badge primary on-primary-text">1</span></span>
         </p>
 {% call code() %}
 <span class="badge">3</span>

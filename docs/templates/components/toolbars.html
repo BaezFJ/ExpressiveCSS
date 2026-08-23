@@ -49,33 +49,33 @@
           next to a FAB.
         </p>
         <p>
-          <nav class="toolbar" aria-label="Call controls">
+          <div class="toolbar">
             <button type="button" aria-label="Stop camera">
-              <i class="material-symbols">videocam_off</i>
+              <span class="material-symbols" aria-hidden="true">videocam_off</span>
             </button>
             <button type="button" aria-label="Microphone">
-              <i class="material-symbols">mic</i>
+              <span class="material-symbols" aria-hidden="true">mic</span>
             </button>
             <button type="button" class="active" aria-label="Hand">
-              <i class="material-symbols">back_hand</i>
+              <span class="material-symbols" aria-hidden="true">back_hand</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
 {% call code() %}
-<nav class="toolbar" aria-label="Call controls">
+<div class="toolbar">
   <button type="button" aria-label="Stop camera">
-    <i class="material-symbols">videocam_off</i>
+    <span class="material-symbols" aria-hidden="true">videocam_off</span>
   </button>
   <button type="button" class="active" aria-label="Hand">
-    <i class="material-symbols">back_hand</i>
+    <span class="material-symbols" aria-hidden="true">back_hand</span>
   </button>
   <button type="button" aria-label="More">
-    <i class="material-symbols">more_vert</i>
+    <span class="material-symbols" aria-hidden="true">more_vert</span>
   </button>
-</nav>
+</div>
 {% endcall %}
         <p>
           A label next to the icon needs a <code>&lt;span&gt;</code> —
@@ -85,36 +85,36 @@
           (16dp corners, primary).
         </p>
         <p>
-          <nav class="toolbar" aria-label="Editor">
+          <div class="toolbar">
             <button type="button" aria-label="Undo">
-              <i class="material-symbols">undo</i>
+              <span class="material-symbols" aria-hidden="true">undo</span>
             </button>
             <button type="button" aria-label="Redo">
-              <i class="material-symbols">redo</i>
+              <span class="material-symbols" aria-hidden="true">redo</span>
             </button>
             <button type="button" class="filled" aria-label="Add">
-              <i class="material-symbols">add</i>
+              <span class="material-symbols" aria-hidden="true">add</span>
             </button>
             <button type="button" aria-label="Save">
-              <i class="material-symbols">save</i>
+              <span class="material-symbols" aria-hidden="true">save</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
 {% call code() %}
-<nav class="toolbar" aria-label="Editor">
+<div class="toolbar">
   <button type="button" aria-label="Undo">
-    <i class="material-symbols">undo</i>
+    <span class="material-symbols" aria-hidden="true">undo</span>
   </button>
   <button type="button" class="filled" aria-label="Add">
-    <i class="material-symbols">add</i>
+    <span class="material-symbols" aria-hidden="true">add</span>
   </button>
   <button type="button" aria-label="More">
-    <i class="material-symbols">more_vert</i>
+    <span class="material-symbols" aria-hidden="true">more_vert</span>
   </button>
-</nav>
+</div>
 {% endcall %}
   {% endcall %}
 
@@ -128,26 +128,26 @@
           still contrasts.
         </p>
         <p>
-          <nav class="toolbar vibrant" aria-label="Text format">
+          <div class="toolbar vibrant">
             <button type="button" class="active" aria-label="Bold">
-              <i class="material-symbols">format_bold</i>
+              <span class="material-symbols" aria-hidden="true">format_bold</span>
             </button>
             <button type="button" aria-label="Italic">
-              <i class="material-symbols">format_italic</i>
+              <span class="material-symbols" aria-hidden="true">format_italic</span>
             </button>
             <button type="button" aria-label="Underline">
-              <i class="material-symbols">format_underlined</i>
+              <span class="material-symbols" aria-hidden="true">format_underlined</span>
             </button>
             <button type="button" aria-label="Color">
-              <i class="material-symbols">format_color_fill</i>
+              <span class="material-symbols" aria-hidden="true">format_color_fill</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
 {% call code() %}
-<nav class="toolbar vibrant" aria-label="Text format">…</nav>
+<div class="toolbar vibrant">…</div>
 {% endcall %}
   {% endcall %}
 
@@ -157,26 +157,26 @@
           go vertical — a docked bar stays a horizontal strip.
         </p>
         <p>
-          <nav class="toolbar vertical" aria-label="History">
+          <div class="toolbar vertical">
             <button type="button" aria-label="Undo">
-              <i class="material-symbols">undo</i>
+              <span class="material-symbols" aria-hidden="true">undo</span>
             </button>
             <button type="button" aria-label="Redo">
-              <i class="material-symbols">redo</i>
+              <span class="material-symbols" aria-hidden="true">redo</span>
             </button>
             <button type="button" aria-label="Add">
-              <i class="material-symbols">add</i>
+              <span class="material-symbols" aria-hidden="true">add</span>
             </button>
             <button type="button" class="active" aria-label="Format">
-              <i class="material-symbols">format_size</i>
+              <span class="material-symbols" aria-hidden="true">format_size</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
 {% call code() %}
-<nav class="toolbar vertical" aria-label="History">…</nav>
+<div class="toolbar vertical">…</div>
 {% endcall %}
   {% endcall %}
 
@@ -191,63 +191,63 @@
           and the two should not appear together. A child
           <code>.max</code> is a spacer, not the bar.
         </p>
-        <nav class="toolbar docked" aria-label="Page actions">
+        <div class="toolbar docked">
           <button type="button" aria-label="Download">
-            <i class="material-symbols">download</i>
+            <span class="material-symbols" aria-hidden="true">download</span>
           </button>
           <button type="button" aria-label="Delete">
-            <i class="material-symbols">delete</i>
+            <span class="material-symbols" aria-hidden="true">delete</span>
           </button>
           <button type="button" aria-label="Mail">
-            <i class="material-symbols">mail</i>
+            <span class="material-symbols" aria-hidden="true">mail</span>
           </button>
           <button type="button" aria-label="Snooze">
-            <i class="material-symbols">snooze</i>
+            <span class="material-symbols" aria-hidden="true">snooze</span>
           </button>
           <button type="button" aria-label="Star">
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
           </button>
-        </nav>
+        </div>
         <p class="mt-3">
-          <nav class="toolbar docked vibrant" aria-label="Editor">
+          <div class="toolbar docked vibrant">
             <button type="button" aria-label="Back">
-              <i class="material-symbols">arrow_back</i>
+              <span class="material-symbols" aria-hidden="true">arrow_back</span>
             </button>
             <button type="button" aria-label="Forward">
-              <i class="material-symbols">arrow_forward</i>
+              <span class="material-symbols" aria-hidden="true">arrow_forward</span>
             </button>
             <button type="button" class="filled" aria-label="Add">
-              <i class="material-symbols">add</i>
+              <span class="material-symbols" aria-hidden="true">add</span>
             </button>
             <button type="button" aria-label="Save">
-              <i class="material-symbols">save</i>
+              <span class="material-symbols" aria-hidden="true">save</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
         </p>
         <p>
           Text actions and a spacer:
         </p>
-        <nav class="toolbar docked" aria-label="Wizard">
+        <div class="toolbar docked">
           <button type="button"><span>Back</span></button>
           <span class="max"></span>
           <button type="button" class="filled"><span>Next</span></button>
-        </nav>
+        </div>
 {% call code() %}
-<nav class="toolbar docked" aria-label="Page actions">
+<div class="toolbar docked">
   <button type="button" aria-label="Download">
-    <i class="material-symbols">download</i>
+    <span class="material-symbols" aria-hidden="true">download</span>
   </button>
   …
-</nav>
+</div>
 
-<nav class="toolbar docked" aria-label="Wizard">
+<div class="toolbar docked">
   <button type="button"><span>Back</span></button>
   <span class="max"></span>
   <button type="button" class="filled"><span>Next</span></button>
-</nav>
+</div>
 {% endcall %}
   {% endcall %}
 
@@ -260,32 +260,32 @@
           the companion FAB, not the in-bar <code>.filled</code> action.
         </p>
         <div class="toolbar-group mb-3">
-          <nav class="toolbar vibrant" aria-label="Message actions">
+          <div class="toolbar vibrant">
             <button type="button" aria-label="Download">
-              <i class="material-symbols">download</i>
+              <span class="material-symbols" aria-hidden="true">download</span>
             </button>
             <button type="button" aria-label="Delete">
-              <i class="material-symbols">delete</i>
+              <span class="material-symbols" aria-hidden="true">delete</span>
             </button>
             <button type="button" aria-label="Mail">
-              <i class="material-symbols">mail</i>
+              <span class="material-symbols" aria-hidden="true">mail</span>
             </button>
             <button type="button" aria-label="Snooze">
-              <i class="material-symbols">snooze</i>
+              <span class="material-symbols" aria-hidden="true">snooze</span>
             </button>
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
-          </nav>
+          </div>
           <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
-            <i class="material-symbols">reply</i>
+            <span class="material-symbols" aria-hidden="true">reply</span>
           </button>
         </div>
 {% call code() %}
 <div class="toolbar-group">
-  <nav class="toolbar vibrant" aria-label="Message actions">…</nav>
+  <div class="toolbar vibrant">…</div>
   <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
-    <i class="material-symbols">reply</i>
+    <span class="material-symbols" aria-hidden="true">reply</span>
   </button>
 </div>
 {% endcall %}
@@ -300,9 +300,9 @@
           edge; <code>top</code> sticks it to the top.
         </p>
 {% call code() %}
-<nav class="toolbar fixed" aria-label="Format">…</nav>
-<nav class="toolbar vertical fixed" aria-label="Tools">…</nav>
-<nav class="toolbar docked fixed" aria-label="Editor">…</nav>
+<div class="toolbar fixed">…</div>
+<div class="toolbar vertical fixed">…</div>
+<div class="toolbar docked fixed">…</div>
 {% endcall %}
   {% endcall %}
 

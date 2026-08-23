@@ -10,7 +10,8 @@
   ],
   "ruleKinds": {
     "forbid": "selector must match nothing in a checked example",
-    "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)"
+    "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)",
+    "require-accessible-name": "every element matching selector must end up with a non-empty accessible name (aria-label, aria-labelledby, or text that is not inside an aria-hidden subtree)"
   },
   "surfaces": [
     "llm.md",
@@ -37,13 +38,20 @@
       ]
     },
     "badges": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. A badge nested in an icon is positioned against the glyph, so hiding the icon hides the count with it.",
+      "rules": [
+        {
+          "id": "badge-count-survives-a-hidden-icon",
+          "kind": "forbid",
+          "selector": ":is(a, button):not([aria-label]):not([aria-labelledby]) [aria-hidden=\"true\"] .badge:not(:empty)",
+          "message": "A badge inside a hidden icon is hidden with it - aria-hidden=\"false\" on a descendant does not undo that. Put the count in the control name (aria-label=\"Inbox, 3 unread\"), or move the badge out of the icon into the flow."
+        }
+      ]
     },
     "bottom-sheet": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
       "rules": []
     },
     "breadcrumb": {
@@ -67,27 +75,42 @@
       ]
     },
     "buttons": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "icon-only-control-is-named",
+          "kind": "require-accessible-name",
+          "selector": ":is(a, button):has([aria-hidden=\"true\"])",
+          "message": "Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label."
+        }
+      ]
     },
     "cards": {
-      "status": "exempt",
-      "note": "Rules written, sweep not started. The card action row is a <nav> and should not be; fixing it means changing `article > nav:not(.tabs)` in _cards.scss, so it belongs to the cards sweep, not the navigation one.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. The action row is buttons, not destinations.",
       "rules": [
         {
           "id": "card-action-row-not-nav",
           "kind": "forbid",
-          "selector": "article > nav",
-          "message": "A card’s action row is buttons, not destinations. <nav> is a landmark, and one per card floods the landmark list.",
-          "fragmentSafe": true
+          "selector": "article nav:not(.tabs)",
+          "fragmentSafe": true,
+          "message": "A card’s action row is a row of buttons. <nav> is a landmark, and one per card floods the landmark list. Use <div class=\"actions\">."
         }
       ]
     },
     "carousel": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. Off-screen slides are inert, not merely hidden. Checked at runtime in tests/carousel-a11y.test.js.",
+      "rules": [
+        {
+          "id": "hidden-subtree-holds-nothing-focusable",
+          "kind": "forbid",
+          "selector": "[aria-hidden=\"true\"]:has(:is(a[href], button, input, select, textarea, [tabindex]):not([tabindex=\"-1\"]):not([disabled]))",
+          "fragmentSafe": true,
+          "message": "Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex=\"-1\"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible."
+        }
+      ]
     },
     "character-counter": {
       "status": "enforced",
@@ -168,18 +191,25 @@
       ]
     },
     "datepicker": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.",
       "rules": []
     },
     "dialog": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "dialog-is-named",
+          "kind": "forbid",
+          "selector": "dialog:not([aria-label]):not([aria-labelledby])",
+          "message": "A <dialog> takes no name from its heading. Point aria-labelledby at that heading, or give it an aria-label - otherwise it opens announced as just \"dialog\"."
+        }
+      ]
     },
     "docked-display": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. A positioning wrapper the picker plugins generate; it introduces no author-facing markup.",
       "rules": []
     },
     "forms/checkboxes": {
@@ -350,8 +380,8 @@
       ]
     },
     "icons-material-design": {
-      "status": "exempt",
-      "note": "Rules written, sweep not started. ~100 <i class=\"material-icons\"> examples remain in llm.md.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. The canonical icon is <span class=\"material-symbols\">, and an icon is either decoration or an image - never unannounced text.",
       "rules": [
         {
           "id": "icon-not-i-element",
@@ -361,23 +391,29 @@
           "fragmentSafe": true
         },
         {
-          "id": "icon-hidden-from-at",
-          "kind": "require-attr",
-          "selector": ".material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons",
-          "attr": "aria-hidden",
-          "equals": "true",
-          "message": "The ligature is text and is announced. Decorative icons carry aria-hidden=\"true\"; the control carries the label."
+          "id": "icon-hidden-or-labelled",
+          "kind": "forbid",
+          "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-icons:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
+          "message": "The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden=\"true\", with the enclosing control carrying the name - or an image in its own right, role=\"img\" with a label. It is never left as bare text."
         }
       ]
     },
     "lightbox": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "lightbox-trigger-is-operable",
+          "kind": "forbid",
+          "selector": "img.lightboxed:not([tabindex]):not(:is(a, button) > img)",
+          "fragmentSafe": true,
+          "message": "A .lightboxed image opens an overlay on click, which makes it a control - and a bare <img> is not focusable and not operable from the keyboard. Wrap it in a <button>, or give it tabindex=\"0\" and a role."
+        }
+      ]
     },
     "list": {
-      "status": "exempt",
-      "note": "Rules written, sweep not started.",
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
       "rules": [
         {
           "id": "list-item-not-selected",
@@ -473,33 +509,62 @@
       ]
     },
     "panes": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "pane-is-not-main",
+          "kind": "forbid",
+          "selector": ":is(.panes, .pane-layout, .list-detail, .supporting-pane-layout) main",
+          "fragmentSafe": true,
+          "message": "A document has one <main>, and a pane is a region inside it, not another one. Use <section>."
+        }
+      ]
     },
     "parallax": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "parallax-image-declares-itself",
+          "kind": "forbid",
+          "selector": ".parallax img:not([alt])",
+          "fragmentSafe": true,
+          "message": "A parallax image is decoration nine times out of ten, and decoration says so with alt=\"\". Without any alt the file name is read out."
+        }
+      ]
     },
     "preloader": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "div-progress-reports-progress",
+          "kind": "forbid",
+          "selector": "div.progress:not([role=\"progressbar\"])",
+          "message": "<progress> reports itself. A <div class=\"progress\"> is a bar drawn with CSS and reports nothing - it needs role=\"progressbar\", plus aria-valuenow/min/max when it is determinate."
+        },
+        {
+          "id": "determinate-progress-reports-its-value",
+          "kind": "forbid",
+          "selector": "[role=\"progressbar\"]:has(> .determinate):not([aria-valuenow])",
+          "message": "role=\"progressbar\" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100."
+        }
+      ]
     },
     "pulse": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. A decorative animation on an existing element - it states no markup of its own.",
       "rules": []
     },
     "scrollspy": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. A behaviour on existing sections. Its table of contents is covered by table_of_contents.",
       "rules": []
     },
     "side-sheet": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
       "rules": []
     },
     "sidenav": {
@@ -516,13 +581,13 @@
       ]
     },
     "slider": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. The control is input[type=range]; the rules live on forms/range.",
       "rules": []
     },
     "snackbar": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. Generated markup: role=\"status\" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.",
       "rules": []
     },
     "table_of_contents": {
@@ -559,13 +624,13 @@
       ]
     },
     "timepicker": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.",
       "rules": []
     },
     "toolbar": {
-      "status": "exempt",
-      "note": "Rules written, sweep not started. `nav.toolbar` is element-locked in _toolbar.scss (16 selectors, deliberately, to avoid catching div.fixed-action-btn.toolbar), so dropping the <nav> is a toolbar-sweep change.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. A toolbar holds commands, not destinations.",
       "rules": [
         {
           "id": "toolbar-not-nav",
@@ -577,13 +642,20 @@
       ]
     },
     "tooltip": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "css-tooltip-is-described-by",
+          "kind": "forbid",
+          "selector": ":is(a, button):has(> .tooltip):not([aria-describedby])",
+          "message": "A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it."
+        }
+      ]
     },
     "transitions": {
-      "status": "exempt",
-      "note": "Not yet swept.",
+      "status": "enforced",
+      "note": "Swept 0.8.0. Class-driven animation applied to whatever element already exists; no markup contract.",
       "rules": []
     },
     "landmarks": {

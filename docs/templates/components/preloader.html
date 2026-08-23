@@ -31,15 +31,15 @@
           <code>.determinate</code>, or set
           <code>--md-comp-progress-value</code> on the bar.
         </p>
-        <div class="progress">
+        <div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
           <div class="determinate" style="width: 70%"></div>
         </div>
 {% call code() %}
-<div class="progress">
+<div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
   <div class="determinate" style="width: 70%"></div>
 </div>
 
-<div class="progress" style="--md-comp-progress-value: 70%"></div>
+<div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="--md-comp-progress-value: 70%"></div>
 {% endcall %}
 
         <h5 class="light">Indeterminate</h5>
@@ -48,11 +48,11 @@
 <progress class="progress"></progress>
 {% endcall %}
         <p>The child class is the alias:</p>
-        <div class="progress">
+        <div class="progress" role="progressbar">
           <div class="indeterminate"></div>
         </div>
 {% call code() %}
-<div class="progress">
+<div class="progress" role="progressbar">
   <div class="indeterminate"></div>
 </div>
 {% endcall %}

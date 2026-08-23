@@ -8,13 +8,13 @@
 {% block page %}
 <div class="fixed-action-btn">
   <button type="button" class="button extra circle" aria-label="Edit">
-    <i class="material-symbols">mode_edit</i>
+    <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
   <ul>
-    <li><a class="button extra circle small error on-error-text" href="#!" aria-label="Chart"><i class="material-symbols">insert_chart</i></a></li>
-    <li><a class="button extra circle small secondary on-secondary-text" href="#!" aria-label="Quote"><i class="material-symbols">format_quote</i></a></li>
-    <li><a class="button extra circle small tertiary on-tertiary-text" href="#!" aria-label="Publish"><i class="material-symbols">publish</i></a></li>
-    <li><a class="button extra circle small primary on-primary-text" href="#!" aria-label="Attach"><i class="material-symbols">attach_file</i></a></li>
+    <li><a class="button extra circle small error on-error-text" href="#!" aria-label="Chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li><a class="button extra circle small secondary on-secondary-text" href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li><a class="button extra circle small tertiary on-tertiary-text" href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li><a class="button extra circle small primary on-primary-text" href="#!" aria-label="Attach"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
   </ul>
 </div>
 
@@ -38,7 +38,7 @@
 {% call code() %}
 <div class="fixed-action-btn">
   <button type="button" class="button extra circle" aria-label="Edit">
-    <i class="material-symbols">mode_edit</i>
+    <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
   <ul>
     <li><a class="button extra circle small" href="#!" aria-label="Attach">…</a></li>
@@ -137,13 +137,13 @@ instance.destroy();
         <div class="fab-demo">
           <div class="fixed-action-btn direction-left" id="fab-horizontal">
             <button type="button" class="button extra circle" aria-label="Edit">
-              <i class="material-symbols">mode_edit</i>
+              <span class="material-symbols" aria-hidden="true">mode_edit</span>
             </button>
             <ul>
-              <li><a class="button extra circle small error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
-              <li><a class="button extra circle small secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
-              <li><a class="button extra circle small tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
-              <li><a class="button extra circle small primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
+              <li><a class="button extra circle small error on-error-text" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+              <li><a class="button extra circle small secondary on-secondary-text" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+              <li><a class="button extra circle small tertiary on-tertiary-text" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+              <li><a class="button extra circle small primary on-primary-text" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
             </ul>
           </div>
         </div>
@@ -162,13 +162,13 @@ instance.destroy();
         <div class="fab-demo">
           <div class="fixed-action-btn direction-left click-to-toggle" id="fab-click-only">
             <button type="button" class="button extra circle" aria-label="Menu">
-              <i class="material-symbols">menu</i>
+              <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <ul>
-              <li><a class="button extra circle small error on-error-text"><i class="material-symbols">insert_chart</i></a></li>
-              <li><a class="button extra circle small secondary on-secondary-text"><i class="material-symbols">format_quote</i></a></li>
-              <li><a class="button extra circle small tertiary on-tertiary-text"><i class="material-symbols">publish</i></a></li>
-              <li><a class="button extra circle small primary on-primary-text"><i class="material-symbols">attach_file</i></a></li>
+              <li><a class="button extra circle small error on-error-text" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+              <li><a class="button extra circle small secondary on-secondary-text" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+              <li><a class="button extra circle small tertiary on-tertiary-text" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+              <li><a class="button extra circle small primary on-primary-text" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
             </ul>
           </div>
         </div>
@@ -185,14 +185,12 @@ instance.destroy();
         </p>
 {% call code() %}
 <div class="fixed-action-btn toolbar">
-  <a class="button extra circle">
-    <i class="large material-symbols">mode_edit</i>
-  </a>
+  <a class="button extra circle" aria-label="Edit"><span class="material-symbols large" aria-hidden="true">mode_edit</span></a>
   <ul>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">insert_chart</i></a></li>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">format_quote</i></a></li>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">publish</i></a></li>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-symbols">attach_file</i></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
   </ul>
 </div>
 {% endcall %}

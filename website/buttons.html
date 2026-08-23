@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Buttons</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -292,19 +292,19 @@
         </p>
         <p>
           <button type="button">Create</button>
-          <button type="button"><i class="material-symbols">add</i><span>Create</span></button>
-          <button type="button"><span>Send</span><i class="material-symbols">send</i></button>
-          <button type="button" class="circle" aria-label="Add"><i class="material-symbols">add</i></button>
+          <button type="button"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+          <button type="button"><span>Send</span><span class="material-symbols" aria-hidden="true">send</span></button>
+          <button type="button" class="circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
         </p>
 <pre><code>&lt;button&gt;Create&lt;/button&gt;
 &lt;button&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;
 &lt;button&gt;
-  &lt;span&gt;Send&lt;/span&gt;&lt;i class="material-symbols"&gt;send&lt;/i&gt;
+  &lt;span&gt;Send&lt;/span&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;send&lt;/span&gt;
 &lt;/button&gt;
 &lt;button class="circle" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
 &lt;/button&gt;
 
 &lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
@@ -323,12 +323,12 @@
         </p>
         <p>
           <button type="button">Create</button>
-          <button type="button"><i class="material-symbols">add</i><span>Create</span></button>
+          <button type="button"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <a class="button" href="#!">Link</a>
         </p>
 <pre><code>&lt;button&gt;Create&lt;/button&gt;
 &lt;button&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;
 &lt;a class="button" href="#!"&gt;Link&lt;/a&gt;</code></pre>
   
@@ -345,11 +345,11 @@
         </p>
         <p>
           <button type="button" class="tonal">Create</button>
-          <button type="button" class="tonal"><i class="material-symbols">add</i><span>Create</span></button>
+          <button type="button" class="tonal"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="tonal"&gt;Create&lt;/button&gt;
 &lt;button class="tonal"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;</code></pre>
   
       </div>
@@ -365,7 +365,7 @@
         </p>
         <p>
           <button type="button" class="outlined">Create</button>
-          <button type="button" class="outlined"><i class="material-symbols">add</i><span>Create</span></button>
+          <button type="button" class="outlined"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="outlined"&gt;Create&lt;/button&gt;</code></pre>
   
@@ -382,7 +382,7 @@
         </p>
         <p>
           <button type="button" class="elevated">Create</button>
-          <button type="button" class="elevated"><i class="material-symbols">add</i><span>Create</span></button>
+          <button type="button" class="elevated"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="elevated"&gt;Create&lt;/button&gt;</code></pre>
   
@@ -399,7 +399,7 @@
         </p>
         <p>
           <button type="button" class="text">Create</button>
-          <button type="button" class="text"><i class="material-symbols">add</i><span>Create</span></button>
+          <button type="button" class="text"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="text"&gt;Create&lt;/button&gt;</code></pre>
   
@@ -416,13 +416,13 @@
           <code>outlined</code> match the common-button colors.
         </p>
         <p>
-          <button type="button" class="circle" aria-label="Add"><i class="material-symbols">add</i></button>
-          <button type="button" class="circle tonal" aria-label="Add"><i class="material-symbols">add</i></button>
-          <button type="button" class="circle outlined" aria-label="Add"><i class="material-symbols">add</i></button>
-          <button type="button" class="circle text" aria-label="Add"><i class="material-symbols">add</i></button>
+          <button type="button" class="circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+          <button type="button" class="circle tonal" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+          <button type="button" class="circle outlined" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+          <button type="button" class="circle text" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
         </p>
 <pre><code>&lt;button class="circle" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
 &lt;/button&gt;
 &lt;button class="circle tonal" aria-label="Add"&gt;…&lt;/button&gt;
 &lt;button class="circle outlined" aria-label="Add"&gt;…&lt;/button&gt;
@@ -442,18 +442,18 @@
           label at 56dp.
         </p>
         <p>
-          <button type="button" class="circle extra" aria-label="Add"><i class="material-symbols">add</i></button>
-          <a class="button extra circle small" href="#!" aria-label="Add"><i class="material-symbols">add</i></a>
-          <button type="button" class="extend"><i class="material-symbols">add</i><span>Create</span></button>
+          <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+          <a class="button extra circle small" href="#!" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
+          <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 <pre><code>&lt;button class="circle extra" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
 &lt;/button&gt;
 &lt;a class="button extra circle small" href="#!" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
 &lt;/a&gt;
 &lt;button class="extend"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;&lt;span&gt;Create&lt;/span&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;</code></pre>
   
       </div>
@@ -480,10 +480,10 @@
           rather than an input.
         </p>
         <p>
-          <button type="submit"><span>Submit</span><i class="material-symbols">send</i></button>
+          <button type="submit"><span>Submit</span><span class="material-symbols" aria-hidden="true">send</span></button>
         </p>
 <pre><code>&lt;button type="submit"&gt;
-  &lt;span&gt;Submit&lt;/span&gt;&lt;i class="material-symbols"&gt;send&lt;/i&gt;
+  &lt;span&gt;Submit&lt;/span&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;send&lt;/span&gt;
 &lt;/button&gt;</code></pre>
   
       </div>
@@ -501,7 +501,7 @@
           <button type="button" class="tonal" disabled>Tonal</button>
           <button type="button" class="outlined" disabled>Outlined</button>
           <button type="button" class="text" disabled>Text</button>
-          <button type="button" class="circle extra" disabled aria-label="Add"><i class="material-symbols">add</i></button>
+          <button type="button" class="circle extra" disabled aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
         </p>
 <pre><code>&lt;button disabled&gt;Filled&lt;/button&gt;
 &lt;button class="tonal" disabled&gt;Tonal&lt;/button&gt;
@@ -620,26 +620,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

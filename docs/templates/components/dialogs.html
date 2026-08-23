@@ -51,8 +51,8 @@
           <button type="button" class="outlined" onclick="document.getElementById('dialog-extra').showModal()">Show with extra content</button>
         </p>
 
-        <dialog id="dialog-basic">
-          <h2>Basic dialog title</h2>
+        <dialog id="dialog-basic" aria-labelledby="basic-dialog-title-title">
+          <h2 id="basic-dialog-title-title">Basic dialog title</h2>
           <p>A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision.</p>
           <form method="dialog">
             <button type="submit" value="action-2">Text button</button>
@@ -60,9 +60,9 @@
           </form>
         </dialog>
 
-        <dialog id="dialog-icon">
-          <i class="material-symbols">place</i>
-          <h2>Use location services?</h2>
+        <dialog id="dialog-icon" aria-labelledby="use-location-services-title">
+          <span class="material-symbols" aria-hidden="true">place</span>
+          <h2 id="use-location-services-title">Use location services?</h2>
           <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
           <form method="dialog">
             <button type="submit" value="disagree">Disagree</button>
@@ -70,9 +70,9 @@
           </form>
         </dialog>
 
-        <dialog id="dialog-extra">
-          <i class="material-symbols">restart_alt</i>
-          <h2>Reset settings?</h2>
+        <dialog id="dialog-extra" aria-labelledby="reset-settings-title">
+          <span class="material-symbols" aria-hidden="true">restart_alt</span>
+          <h2 id="reset-settings-title">Reset settings?</h2>
           <p>This will reset your app preferences back to their default settings. The following accounts will also be signed out:</p>
           <hr>
           <ul class="list">
@@ -100,8 +100,8 @@
   Show
 </button>
 
-<dialog id="dialog1">
-  <h2>Basic dialog title</h2>
+<dialog id="dialog1" aria-labelledby="basic-dialog-title-title">
+  <h2 id="basic-dialog-title-title">Basic dialog title</h2>
   <p>A dialog is a modal window that appears in front of app content.</p>
   <form method="dialog">
     <button type="submit" value="cancel">Cancel</button>
@@ -135,12 +135,12 @@
         <p>
           <button type="button" class="outlined" onclick="document.getElementById('dialog-max').showModal()">Show full-screen</button>
         </p>
-        <dialog id="dialog-max" class="max">
+        <dialog id="dialog-max" class="max" aria-labelledby="full-screen-dialog-title-title">
           <header>
             <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
-              <i class="material-symbols">close</i>
+              <span class="material-symbols" aria-hidden="true">close</span>
             </button>
-            <h2>Full-screen dialog title</h2>
+            <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
             <form method="dialog">
               <button type="submit" value="save">Save</button>
             </form>
@@ -169,12 +169,12 @@
           </div>
         </dialog>
 {% call code() %}
-<dialog class="max">
+<dialog class="max" aria-labelledby="full-screen-dialog-title-title">
   <header>
     <button type="button" aria-label="Close">
-      <i class="material-symbols">close</i>
+      <span class="material-symbols" aria-hidden="true">close</span>
     </button>
-    <h2>Full-screen dialog title</h2>
+    <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
     <form method="dialog">
       <button type="submit" value="save">Save</button>
     </form>

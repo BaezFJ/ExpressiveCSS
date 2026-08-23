@@ -1236,9 +1236,9 @@ Draw attention to your buttons with this subtle but captivating effect. Just add
 #### Pulse HTML Structure
 
 ```html
-<a class="button circle pulse"><i class="material-icons">menu</i></a>
-<a class="button circle extra pulse"><i class="material-icons">cloud</i></a>
-<a class="button circle extra secondary on-secondary-text pulse"><i class="material-icons">edit</i></a>
+<a class="button circle pulse" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<a class="button circle extra pulse" aria-label="Cloud"><span class="material-symbols" aria-hidden="true">cloud</span></a>
+<a class="button circle extra secondary on-secondary-text pulse" aria-label="Edit"><span class="material-symbols" aria-hidden="true">edit</span></a>
 ```
 
 ---
@@ -1388,13 +1388,9 @@ Use this to scale in and out elements. Make sure to add the base transition clas
 
 ```html
 <!-- Scaled in -->
-<a id="scale-demo" href="#!" class="button circle extra scale-transition">
-  <i class="material-icons">add</i>
-</a>
+<a id="scale-demo" href="#!" class="button circle extra scale-transition" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
 <!-- Scaled out -->
-<a id="scale-demo" href="#!" class="button circle extra scale-transition scale-out">
-  <i class="material-icons">add</i>
-</a>
+<a id="scale-demo" href="#!" class="button circle extra scale-transition scale-out" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
 ```
 
 ---
@@ -1603,9 +1599,7 @@ If you want waves to form to a non-rectangular shape, there is an option for cir
 #### HTML Markup
 
 ```html
-<a href="#!" class="button circle waves-effect waves-circle waves-light">
-  <i class="material-icons">add</i>
-</a>
+<a href="#!" class="button circle waves-effect waves-circle waves-light" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
 ```
 
 ---
@@ -1618,10 +1612,17 @@ Notifications, counts, or status on navigation items and icons.
 
 A `<span class="badge">` is the badge. Empty is the **small** 6dp dot; text is the **large** 16dp stadium. Nest it in the icon so it sits on the upper trailing edge of the 24dp glyph. Limit the label to four characters, including `+`. The default mapping is `error` / `on-error`.
 
+Nesting has a consequence worth stating: **a badge inside a hidden icon is hidden with it.** `aria-hidden="true"` covers the whole subtree, and `aria-hidden="false"` on a descendant does not undo that — so a count that only exists inside a decorative icon is a count nobody hears. Two ways out, depending on what surrounds it:
+
+- Inside a control, put the count in the control's name — `<a aria-label="Inbox, 3 unread">` — and leave the icon decorative.
+- Standing alone, make the icon the image: `role="img"` with a label that includes the count.
+
+A badge that sits in the flow beside the label, rather than inside the icon, is announced normally and needs neither.
+
 ```html
-<i class="material-symbols">mail<span class="badge"></span></i>
-<i class="material-symbols">mail<span class="badge">1</span></i>
-<i class="material-symbols">mail<span class="badge">999+</span></i>
+<span class="material-symbols" role="img" aria-label="Mail, unread">mail<span class="badge"></span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
 ```
 
 ### Small
@@ -1637,8 +1638,8 @@ Put a number or short label in the badge. Height is 16dp, corners are a stadium,
 Nest the badge in the destination icon, or leave it as a sibling — the bar and rail place a sibling on the icon’s upper trailing corner.
 
 ```html
-<a href="#!">
-  <i class="material-symbols">inbox<span class="badge">3</span></i>
+<a href="#!" aria-label="Inbox, 3 unread">
+  <span class="material-symbols" aria-hidden="true">inbox<span class="badge">3</span></span>
   Inbox
 </a>
 ```
@@ -1650,7 +1651,7 @@ A trailing `.badge` in a list or drawer row stays in flow on the end.
 ```html
 <ul class="list">
   <li>
-    <i class="material-symbols">inbox</i>
+    <span class="material-symbols" aria-hidden="true">inbox</span>
     Inbox
     <span class="badge">3</span>
   </li>
@@ -1715,13 +1716,13 @@ Create Create Send
 ```html
 <button>Create</button>
 <button>
-  <i class="material-icons">add</i><span>Create</span>
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <button>
-  <span>Send</span><i class="material-icons">send</i>
+  <span>Send</span><span class="material-symbols" aria-hidden="true">send</span>
 </button>
 <button class="circle" aria-label="Add">
-  <i class="material-icons">add</i>
+  <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 
 <a class="button" href="#!">Link</a>
@@ -1736,7 +1737,7 @@ Create Create Link
 ```html
 <button>Create</button>
 <button>
-  <i class="material-icons">add</i><span>Create</span>
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <a class="button" href="#!">Link</a>
 ```
@@ -1750,7 +1751,7 @@ Create Create
 ```html
 <button class="tonal">Create</button>
 <button class="tonal">
-  <i class="material-icons">add</i><span>Create</span>
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 ```
 
@@ -1790,7 +1791,7 @@ Add `circle` for a 40dp icon button. The variant helpers still apply: default is
 
 ```html
 <button class="circle" aria-label="Add">
-  <i class="material-icons">add</i>
+  <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 <button class="circle tonal" aria-label="Add">…</button>
 <button class="circle outlined" aria-label="Add">…</button>
@@ -1805,13 +1806,13 @@ Create
 
 ```html
 <button class="circle extra" aria-label="Add">
-  <i class="material-icons">add</i>
+  <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 <a class="button circle extra small" href="#!" aria-label="Add">
-  <i class="material-icons">add</i>
+  <span class="material-symbols" aria-hidden="true">add</span>
 </a>
 <button class="extend">
-  <i class="material-icons">add</i><span>Create</span>
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 ```
 
@@ -1833,7 +1834,7 @@ Submit
 
 ```html
 <button type="submit">
-  <span>Submit</span><i class="material-icons">send</i>
+  <span>Submit</span><span class="material-symbols" aria-hidden="true">send</span>
 </button>
 ```
 
@@ -1867,10 +1868,10 @@ I am a very simple card. I am good at containing small bits of information. I am
 <article>
   <h3>Card title</h3>
   <p>I am a very simple card.</p>
-  <nav>
+  <div class="actions">
     <button class="text">Action</button>
     <button class="tonal">Action</button>
-  </nav>
+  </div>
 </article>
 ```
 
@@ -1909,9 +1910,9 @@ I am a very simple card. I am good at containing small bits of information.
     <figcaption>Card title</figcaption>
   </figure>
   <p>I am a very simple card.</p>
-  <nav>
+  <div class="actions">
     <button class="text">Action</button>
-  </nav>
+  </div>
 </article>
 ```
 
@@ -1927,7 +1928,7 @@ I am a very simple card. I am good at containing small bits of information.
     <img src="images/sample-1.jpg" alt="">
     <figcaption>Card title</figcaption>
     <a class="button circle large halfway-fab" href="#!" aria-label="Add">
-      <i class="material-icons">add</i>
+      <span class="material-symbols" aria-hidden="true">add</span>
     </a>
   </figure>
   <p>I am a very simple card.</p>
@@ -1948,9 +1949,9 @@ I am a very simple card. I am good at containing small bits of information.
   <div>
     <h3>Card title</h3>
     <p>I am a very simple card.</p>
-    <nav>
+    <div class="actions">
       <button class="text">Action</button>
-    </nav>
+    </div>
   </div>
 </article>
 ```
@@ -1974,12 +1975,12 @@ Here is some more information about this product that is only revealed once clic
     <div class="activator"></div>
   </figure>
   <h3 class="activator">Card title
-    <i class="material-icons right">more_vert</i>
+    <span class="material-symbols right" aria-hidden="true">more_vert</span>
   </h3>
   <p><a href="#">This is a link</a></p>
   <aside>
     <h3>
-      <i class="material-icons right">close</i>Card title
+      <span class="material-symbols right" aria-hidden="true">close</span>Card title
     </h3>
     <p>Here is some more information about this product.</p>
   </aside>
@@ -2233,12 +2234,12 @@ Transparent rows. The selected item is a pill in `secondary-container`. The lead
 ```html
 <ul class="list">
   <li>
-    <i class="material-symbols">star</i>
+    <span class="material-symbols" aria-hidden="true">star</span>
     List item
     <kbd>⌘C</kbd>
   </li>
-  <li aria-selected="true">
-    <i class="material-symbols">star</i>
+  <li class="selected">
+    <span class="material-symbols" aria-hidden="true">star</span>
     List item
     <kbd>⌘C</kbd>
   </li>
@@ -2251,8 +2252,8 @@ Add `segmented`. Every row is a rounded tile; the selected tile uses the same `s
 
 ```html
 <ul class="list segmented">
-  <li aria-selected="true">
-    <i class="material-symbols">star</i>
+  <li class="selected">
+    <span class="material-symbols" aria-hidden="true">star</span>
     List item
     <kbd>⌘C</kbd>
   </li>
@@ -2278,9 +2279,9 @@ A leading icon is a quick visual cue for the label. A trailing icon is status or
 
 ```html
 <li>
-  <i class="material-symbols">inbox</i>
+  <span class="material-symbols" aria-hidden="true">inbox</span>
   Inbox
-  <i class="material-symbols">chevron_right</i>
+  <span class="material-symbols" aria-hidden="true">chevron_right</span>
 </li>
 ```
 
@@ -2291,7 +2292,7 @@ Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-c
 ```html
 <li>
   <a href="/inbox" aria-current="page">
-    <i class="material-symbols">inbox</i>
+    <span class="material-symbols" aria-hidden="true">inbox</span>
     Inbox
   </a>
 </li>
@@ -2310,13 +2311,13 @@ Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) 
 ```html
 <div class="fixed-action-btn">
   <button type="button" class="button circle extra" aria-label="Edit">
-    <i class="material-symbols">mode_edit</i>
+    <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
   <ul>
-    <li><a class="button circle extra small error on-error-text" href="#!" aria-label="Chart"><i class="material-symbols">insert_chart</i></a></li>
-    <li><a class="button circle extra small secondary on-secondary-text" href="#!" aria-label="Quote"><i class="material-symbols">format_quote</i></a></li>
-    <li><a class="button circle extra small tertiary on-tertiary-text" href="#!" aria-label="Publish"><i class="material-symbols">publish</i></a></li>
-    <li><a class="button circle extra small primary on-primary-text" href="#!" aria-label="Attach"><i class="material-symbols">attach_file</i></a></li>
+    <li><a class="button circle extra small error on-error-text" href="#!" aria-label="Chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li><a class="button circle extra small secondary on-secondary-text" href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li><a class="button circle extra small tertiary on-tertiary-text" href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li><a class="button circle extra small primary on-primary-text" href="#!" aria-label="Attach"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
   </ul>
 </div>
 ```
@@ -2426,13 +2427,13 @@ Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu 
 ```html
 <div class="fixed-action-btn toolbar">
   <button type="button" class="button circle extra" aria-label="Edit">
-    <i class="material-symbols">mode_edit</i>
+    <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
   <ul>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">insert_chart</i></a></li>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">format_quote</i></a></li>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">publish</i></a></li>
-    <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">attach_file</i></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li class="waves-effect waves-light"><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
   </ul>
 </div>
 ```
@@ -2511,6 +2512,15 @@ Google Material Icons and Material Symbols, sized with a few helper classes.
 
 Expressive uses Google’s Material Icons and every Material Symbols set — outlined, rounded, and sharp. The class names are Google’s. Expressive does not rename them, because the font stylesheet you load is what defines them.
 
+**An icon is a `<span>`, not an `<i>`.** `<i>` means idiomatic text — a term, a thought, a phrase in another language — and an icon is none of those. `<i>` still renders; it is not the documented form.
+
+**An icon is either decoration or an image, and it has to say which.** The glyph is produced by a ligature, so the icon's text content is real text and a screen reader reads it: `<span class="material-symbols">add</span>` is announced as "add". Two correct forms:
+
+- Decoration — `aria-hidden="true"`. The enclosing control carries the name, so an icon-only button needs its own `aria-label`. This is almost always what you want.
+- An image in its own right — `role="img"` with an `aria-label`. Use this when the icon reports something no neighbouring text does, such as a badge count.
+
+The size and float modifiers (`tiny`, `small`, `medium`, `large`, `left`, `right`) hang off the icon class, not off `<i>`, so they follow either element.
+
 Google publishes a [searchable Material Icons list](https://fonts.google.com/icons?icon.set=Material+Icons) and a [Material Symbols list](https://fonts.google.com/icons?icon.set=Material+Symbols). Those catalogs are the source for ligature names. You can also download the fonts from the [Material Icons guide](https://developers.google.com/fonts/docs/material_icons).
 
 The Expressive stylesheet does not ship the font files. Include one or more of these lines in `<head>`:
@@ -2537,10 +2547,10 @@ Rounded
 Sharp
 
 ```html
-<i class="material-icons">add</i>
-<i class="material-symbols-outlined">add</i>
-<i class="material-symbols-rounded">add</i>
-<i class="material-symbols-sharp">add</i>
+<span class="material-symbols" aria-hidden="true">add</span>
+<span class="material-symbols-outlined" aria-hidden="true">add</span>
+<span class="material-symbols-rounded" aria-hidden="true">add</span>
+<span class="material-symbols-sharp" aria-hidden="true">add</span>
 ```
 
 Icons inherit the current text color, so token utilities such as `primary-text` work. For icons inside buttons, see Buttons.
@@ -2555,10 +2565,10 @@ The same size classes apply to Material Symbols.
 
 ```html
 <!-- Sizes: tiny 1rem, small 2rem, medium 4rem, large 6rem -->
-<i class="large material-icons">insert_chart</i>
-<i class="large material-symbols-outlined">insert_chart</i>
-<i class="large material-symbols-rounded">insert_chart</i>
-<i class="large material-symbols-sharp">insert_chart</i>
+<span class="material-symbols large" aria-hidden="true">insert_chart</span>
+<span class="material-symbols-outlined large" aria-hidden="true">insert_chart</span>
+<span class="material-symbols-rounded large" aria-hidden="true">insert_chart</span>
+<span class="material-symbols-sharp large" aria-hidden="true">insert_chart</span>
 ```
 
 ---
@@ -2581,11 +2591,11 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
 <header>
   <nav aria-label="Main">
     <button type="button" aria-label="Menu">
-      <i class="material-icons">menu</i>
+      <span class="material-symbols" aria-hidden="true">menu</span>
     </button>
     <h2>Title</h2>
-    <a href="#!" aria-label="Search"><i class="material-icons">search</i></a>
-    <a href="#!" aria-label="More"><i class="material-icons">more_vert</i></a>
+    <a href="#!" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>
+    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
   </nav>
 </header>
 ```
@@ -2617,10 +2627,10 @@ Add `center` to the header. The headline is taken out of flow so the leading and
 <header class="center">
   <nav aria-label="Main">
     <button type="button" aria-label="Back">
-      <i class="material-icons">arrow_back</i>
+      <span class="material-symbols" aria-hidden="true">arrow_back</span>
     </button>
     <h2>Title</h2>
-    <a href="#!" aria-label="More"><i class="material-icons">more_vert</i></a>
+    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
   </nav>
 </header>
 ```
@@ -2633,10 +2643,10 @@ Same markup as the small bar. `medium` is 112dp with a `headline-small` title on
 <header class="medium">
   <nav aria-label="Main">
     <button type="button" aria-label="Back">
-      <i class="material-icons">arrow_back</i>
+      <span class="material-symbols" aria-hidden="true">arrow_back</span>
     </button>
     <h2>Medium title</h2>
-    <a href="#!" aria-label="More"><i class="material-icons">more_vert</i></a>
+    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
   </nav>
 </header>
 
@@ -2653,7 +2663,7 @@ The documentation header on this site is a fixed small bar. A second fixed bar o
 <header class="fixed">
   <nav aria-label="Main">
     <h2>Title</h2>
-    <a href="#!" aria-label="Search"><i class="material-icons">search</i></a>
+    <a href="#!" aria-label="Search"><span class="material-symbols" aria-hidden="true">search</span></a>
   </nav>
 </header>
 ```
@@ -2699,7 +2709,7 @@ Point a `menu-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit
     <menu>
       <li>
         <a class="menu-trigger" href="#!" data-target="menu1">
-          Menu<i class="material-icons right">arrow_drop_down</i>
+          Menu<span class="material-symbols right" aria-hidden="true">arrow_drop_down</span>
         </a>
       </li>
     </menu>
@@ -2726,7 +2736,7 @@ A `<form>` in the nav fills the space between the leading action and anything af
 <header>
   <nav aria-label="Main">
     <button type="button" aria-label="Back">
-      <i class="material-icons">arrow_back</i>
+      <span class="material-symbols" aria-hidden="true">arrow_back</span>
     </button>
     <form role="search">
       <input type="search" placeholder="Search" aria-label="Search">
@@ -2743,7 +2753,7 @@ Hide the destination menu below the large breakpoint and put a `sidenav-trigger`
 <header>
   <nav aria-label="Main">
     <a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu">
-      <i class="material-icons">menu</i>
+      <span class="material-symbols" aria-hidden="true">menu</span>
     </a>
     <h2>Title</h2>
     <menu class="hide-on-med-and-down">
@@ -2783,19 +2793,19 @@ Default. Icon above the label. The selected destination puts a pill behind the i
 ```html
 <nav class="navigation-bar" aria-label="Main">
   <a href="/" aria-current="page">
-    <i class="material-symbols">home</i>
+    <span class="material-symbols" aria-hidden="true">home</span>
     Home
   </a>
   <a href="/browse">
-    <i class="material-symbols">explore</i>
+    <span class="material-symbols" aria-hidden="true">explore</span>
     Browse
   </a>
   <a href="/radio">
-    <i class="material-symbols">radio</i>
+    <span class="material-symbols" aria-hidden="true">radio</span>
     Radio
   </a>
   <a href="/library">
-    <i class="material-symbols">library_music</i>
+    <span class="material-symbols" aria-hidden="true">library_music</span>
     Library
   </a>
 </nav>
@@ -2808,7 +2818,7 @@ Add `horizontal`. Icon and label sit on one row, and the selected pill wraps bot
 ```html
 <nav class="navigation-bar horizontal" aria-label="Main">
   <a href="/" aria-current="page">
-    <i class="material-symbols">home</i>
+    <span class="material-symbols" aria-hidden="true">home</span>
     Home
   </a>
   …
@@ -2834,18 +2844,18 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
 ```html
 <nav class="navigation-rail" aria-label="Main">
   <button type="button" aria-label="Menu">
-    <i class="material-symbols">menu</i>
+    <span class="material-symbols" aria-hidden="true">menu</span>
   </button>
   <a class="button extra" href="#!">
-    <i class="material-symbols">edit</i>
+    <span class="material-symbols" aria-hidden="true">edit</span>
     <span>Label</span>
   </a>
   <a href="/" aria-current="page">
-    <i class="material-symbols">star</i>
+    <span class="material-symbols" aria-hidden="true">star</span>
     Label
   </a>
-  <a href="/two">
-    <i class="material-symbols">star<span class="badge">3</span></i>
+  <a href="/two" aria-label="Starred, 3 unread">
+    <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
     Label
   </a>
 </nav>
@@ -2885,7 +2895,7 @@ Mark the current page with `active` on the `li` **and `aria-current="page"` on i
 <nav class="pagination" aria-label="Pagination">
   <ol>
     <li class="disabled">
-      <span aria-hidden="true"><i class="material-icons">chevron_left</i></span>
+      <span aria-hidden="true"><span class="material-symbols" aria-hidden="true">chevron_left</span></span>
     </li>
     <li class="active"><a href="?page=1" aria-current="page">1</a></li>
     <li class="waves-effect"><a href="?page=2">2</a></li>
@@ -2893,7 +2903,7 @@ Mark the current page with `active` on the `li` **and `aria-current="page"` on i
     <li class="waves-effect"><a href="?page=4">4</a></li>
     <li class="waves-effect"><a href="?page=5">5</a></li>
     <li class="waves-effect">
-      <a href="?page=2" aria-label="Next page"><i class="material-icons">chevron_right</i></a>
+      <a href="?page=2" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></a>
     </li>
   </ol>
 </nav>
@@ -2907,7 +2917,7 @@ On medium and down, wrap the page numbers in `li.pages` and mark the ends `prev`
 <nav class="pagination" aria-label="Pagination">
   <ol>
     <li class="disabled prev">
-      <span aria-hidden="true"><i class="material-icons">chevron_left</i></span>
+      <span aria-hidden="true"><span class="material-symbols" aria-hidden="true">chevron_left</span></span>
     </li>
     <li class="pages">
       <ol>
@@ -2917,7 +2927,7 @@ On medium and down, wrap the page numbers in `li.pages` and mark the ends `prev`
       </ol>
     </li>
     <li class="waves-effect next">
-      <a href="?page=2" aria-label="Next page"><i class="material-icons">chevron_right</i></a>
+      <a href="?page=2" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></a>
     </li>
   </ol>
 </nav>
@@ -2950,12 +2960,12 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
   </div>
   <div class="detail-pane">
     <header>
-      <button><i class="material-icons">arrow_back</i></button>
+      <button aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button>
       <h2>Brunch this weekend?</h2>
     </header>
-    <main>
+    <section>
       <p>Detail content.</p>
-    </main>
+    </section>
   </div>
 </div>
 ```
@@ -3023,13 +3033,13 @@ A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar —
 ```html
 <div class="pane">
   <header>
-    <button><i class="material-icons">arrow_back</i></button>
+    <button aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button>
     <h2>Title</h2>
-    <button><i class="material-icons">more_vert</i></button>
+    <button aria-label="More options"><span class="material-symbols" aria-hidden="true">more_vert</span></button>
   </header>
-  <main>
+  <section>
     <p>Scrolling content.</p>
-  </main>
+  </section>
   <footer>
     <button class="button">Save</button>
   </footer>
@@ -3124,6 +3134,8 @@ Activity and progress indicators for content that takes time to load.
 
 If content will take a while to load, give the user feedback. Expressive ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
 
+Prefer `<progress>`: it reports itself, and its value with it. A `<div class="progress">` is a bar drawn with CSS and reports nothing, so it needs `role="progressbar"` — and if it is determinate, `aria-valuenow` as well. A progressbar with no value is an *indeterminate* one by definition, which is a lie if the bar visibly shows 70%.
+
 ### Linear
 
 There are two linear bars: determinate and indeterminate.
@@ -3138,11 +3150,11 @@ track.
 ```html
 <progress class="progress" value="70" max="100"></progress>
 
-<div class="progress">
+<div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
   <div class="determinate" style="width: 70%"></div>
 </div>
 
-<div class="progress" style="--md-comp-progress-value: 70%"></div>
+<div class="progress" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="--md-comp-progress-value: 70%"></div>
 ```
 
 #### Indeterminate
@@ -3153,7 +3165,7 @@ percentage.
 ```html
 <progress class="progress"></progress>
 
-<div class="progress">
+<div class="progress" role="progressbar">
   <div class="indeterminate"></div>
 </div>
 ```
@@ -3313,7 +3325,7 @@ Drop me
   <li><a href="#!">Three</a></li>
   <li>
     <a href="#!">
-      <i class="material-icons">cloud</i>
+      <span class="material-symbols" aria-hidden="true">cloud</span>
       <span>Five</span>
     </a>
   </li>
@@ -3452,7 +3464,7 @@ Media components handle large objects such as images. For responsive images and 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 
 ```html
-<img class="lightboxed" width="650" alt="A mountain lake" src="images/sample-1.jpg">
+<img class="lightboxed" tabindex="0" role="button" width="650" alt="A mountain lake" src="images/sample-1.jpg">
 ```
 
 #### Initialization
@@ -3526,7 +3538,7 @@ instance.destroy();
 Add a short caption with the `data-caption` attribute.
 
 ```html
-<img class="lightboxed"
+<img class="lightboxed" tabindex="0" role="button"
      data-caption="A path through trees in a park"
      width="250"
      alt="A path through trees"
@@ -3707,8 +3719,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   Show
 </button>
 
-<dialog id="dialog1">
-  <h2>Use location services?</h2>
+<dialog id="dialog1" aria-labelledby="use-location-services-title">
+  <h2 id="use-location-services-title">Use location services?</h2>
   <p>Let the app use your location to suggest nearby stops.</p>
   <form method="dialog">
     <button type="submit" class="text" value="disagree">Disagree</button>
@@ -3757,8 +3769,8 @@ Override these on the `<dialog>` if you need a different surface or width.
 A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on compact and medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the small breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss.
 
 ```html
-<dialog class="bottom-sheet">
-  <h2>Open file</h2>
+<dialog class="bottom-sheet" aria-labelledby="open-file-title">
+  <h2 id="open-file-title">Open file</h2>
   <div>…</div>
   <form method="dialog">
     <button type="submit" class="text" value="cancel">Cancel</button>
@@ -3776,12 +3788,12 @@ document.getElementById('sheet').show();      // standard, no scrim
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
 
 ```html
-<dialog class="side-sheet">
+<dialog class="side-sheet" aria-labelledby="headline-title">
   <header>
-    <h2>Headline</h2>
+    <h2 id="headline-title">Headline</h2>
     <form method="dialog">
       <button type="submit" aria-label="Close">
-        <i class="material-symbols">close</i>
+        <span class="material-symbols" aria-hidden="true">close</span>
       </button>
     </form>
   </header>
@@ -3805,8 +3817,8 @@ Show full-screen
 A full-screen dialog fills the viewport. Put the primary action in the form at the end.
 
 ```html
-<dialog class="max">
-  <h2>New message</h2>
+<dialog class="max" aria-labelledby="new-message-title">
+  <h2 id="new-message-title">New message</h2>
   <p>A full-screen dialog fills the viewport.</p>
   <form method="dialog">
     <button type="submit" class="text">Close</button>
@@ -3942,16 +3954,14 @@ Toggle Sidenav
         <a href="#email"><span class="email">jdoe@example.com</span></a>
       </div>
     </li>
-    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
     <li><a href="#!">Second Link</a></li>
     <li><div class="divider"></div></li>
     <li><a class="subheader">Subheader</a></li>
     <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger">
-  <i class="material-icons">menu</i>
-</a>
+<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 ```
 
 ### Initialization
@@ -4036,9 +4046,7 @@ Add `sidenav-close` to an element inside the sidenav. A click on that element cl
     <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger">
-  <i class="material-icons">menu</i>
-</a>
+<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 ```
 
 ### Variations
@@ -4066,7 +4074,7 @@ Nest `<details>` for a section that opens in place. Same `name` on several detai
     <li>
       <details name="docs-nav">
         <summary>
-          <i class="material-symbols">palette</i>
+          <span class="material-symbols" aria-hidden="true">palette</span>
           Foundations
         </summary>
         <ul>
@@ -4090,9 +4098,7 @@ Add `sidenav-fixed` so the sidenav stays open on large screens (wider than 992px
     <li><a href="#!">Second Sidebar Link</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger">
-  <i class="material-icons">menu</i>
-</a>
+<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 ```
 
 Offset the rest of the page by the sidenav width. The width token is `--sidenav-width` (300px). Put the padding on `header`, `main`, and `footer`.
@@ -4122,15 +4128,15 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 ```html
 <nav class="tabs" aria-label="Travel">
   <a href="#flight">
-    <i class="material-icons">flight</i>
+    <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Flight</span>
   </a>
   <a class="active" aria-current="page" href="#luggage">
-    <i class="material-icons">luggage</i>
+    <span class="material-symbols" aria-hidden="true">luggage</span>
     <span>Luggage</span>
   </a>
   <a href="#explore">
-    <i class="material-icons">explore</i>
+    <span class="material-symbols" aria-hidden="true">explore</span>
     <span>Explore</span>
   </a>
 </nav>
@@ -4148,11 +4154,11 @@ Add `disabled` on the `<a>` (or on a wrapping `li.tab`) to make it inaccessible.
 ```html
 <nav class="tabs tabs-secondary" aria-label="Trip">
   <a href="#travel">
-    <i class="material-icons">flight</i>
+    <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Travel</span>
   </a>
   <a class="active" aria-current="page" href="#hotel">
-    <i class="material-icons">hotel</i>
+    <span class="material-symbols" aria-hidden="true">hotel</span>
     <span>Hotel</span>
   </a>
 </nav>
@@ -4280,11 +4286,11 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-h
 ```html
 <nav class="tabs max horizontal" aria-label="Sections">
   <a href="#flight">
-    <i class="material-icons">flight</i>
+    <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Flight</span>
   </a>
   <a class="active" aria-current="page" href="#luggage">
-    <i class="material-icons">luggage</i>
+    <span class="material-symbols" aria-hidden="true">luggage</span>
     <span>Luggage</span>
   </a>
 </nav>
@@ -4516,14 +4522,14 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 Add to album Above Below Start End
 
 ```html
-<button type="button" class="circle" aria-label="Add">
-  <i class="material-icons">add</i>
-  <span class="tooltip">Add to album</span>
+<button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
+  <span class="material-symbols" aria-hidden="true">add</span>
+  <span class="tooltip" id="tip-add-to-album">Add to album</span>
 </button>
 
-<button type="button" class="circle" aria-label="Below">
-  <i class="material-icons">arrow_downward</i>
-  <span class="tooltip bottom">Below</span>
+<button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
+  <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+  <span class="tooltip bottom" id="tip-below">Below</span>
 </button>
 ```
 
@@ -4541,9 +4547,9 @@ This stop is stored on the device so it still opens without a signal.
   <div class="tooltip rich bottom">
     <h3>Saved offline</h3>
     <p>This stop is stored on the device so it still opens without a signal.</p>
-    <nav>
+    <div class="actions">
       <button type="button" class="text">Got it</button>
-    </nav>
+    </div>
   </div>
 </div>
 ```
@@ -4670,38 +4676,38 @@ instance.destroy();
 
 Material Design 3 toolbars, from the HTML.
 
-A `<nav class="toolbar">` is the bar. Direct `<button>` or `<a>` children are the actions. An `<i>` is the icon; wrap a label in `<span>`. `.active` marks the selected action. They are CSS only. There is no JavaScript component and nothing to AutoInit.
+A `<div class="toolbar">` is the bar. Direct `<button>` or `<a>` children are the actions. An `<i>` is the icon; wrap a label in `<span>`. `.active` marks the selected action. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
 Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/specs). The default is the floating bar: it hugs its actions, 64dp tall, 32dp stadium corners, `surface-variant`, elevation 2. Actions are 48dp targets with a 24dp icon, transparent at rest. Selected is `secondary-container` / `on-secondary-container`.
 
 This is not the FAB-to-toolbar transition (`div.fixed-action-btn.toolbar`). That stays on Floating Action Button. Do not put `toolbar` on every `<nav>` — app bars, card actions, and radio rows stay as they are.
 
 ```html
-<nav class="toolbar" aria-label="Text format">
+<div class="toolbar">
   <button type="button" class="circle" aria-label="Undo">
-    <i class="material-icons">undo</i>
+    <span class="material-symbols" aria-hidden="true">undo</span>
   </button>
   <button type="button" class="circle active" aria-label="Bold">
-    <i class="material-icons">format_bold</i>
+    <span class="material-symbols" aria-hidden="true">format_bold</span>
   </button>
   <button type="button" class="circle" aria-label="Italic">
-    <i class="material-icons">format_italic</i>
+    <span class="material-symbols" aria-hidden="true">format_italic</span>
   </button>
-</nav>
+</div>
 ```
 
 A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, so `<i>edit</i>Edit` would look icon-only.
 
 ```html
-<nav class="toolbar">
+<div class="toolbar">
   <button type="button">
-    <i class="material-icons">edit</i>
+    <span class="material-symbols" aria-hidden="true">edit</span>
     <span>Edit</span>
   </button>
   <button type="button" class="circle" aria-label="More">
-    <i class="material-icons">more_vert</i>
+    <span class="material-symbols" aria-hidden="true">more_vert</span>
   </button>
-</nav>
+</div>
 ```
 
 ### Variants
@@ -4709,8 +4715,8 @@ A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, 
 `filled` is the vibrant bar — `primary-container` / `on-primary-container`. Selected then uses `surface-variant` so it still contrasts. `vertical` stacks the actions.
 
 ```html
-<nav class="toolbar filled">…</nav>
-<nav class="toolbar vertical">…</nav>
+<div class="toolbar filled">…</div>
+<div class="toolbar vertical">…</div>
 ```
 
 ### Docked
@@ -4718,18 +4724,18 @@ A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, 
 `max` (BeerCSS) or `docked` (the M3 name) stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
 
 ```html
-<nav class="toolbar docked" aria-label="Editor">
+<div class="toolbar docked">
   <button type="button" class="circle" aria-label="Back">
-    <i class="material-icons">arrow_back</i>
+    <span class="material-symbols" aria-hidden="true">arrow_back</span>
   </button>
   <button type="button" class="circle" aria-label="Add">
-    <i class="material-icons">add</i>
+    <span class="material-symbols" aria-hidden="true">add</span>
   </button>
   <span class="max"></span>
   <button type="button" class="circle extra" aria-label="Create">
-    <i class="material-icons">edit</i>
+    <span class="material-symbols" aria-hidden="true">edit</span>
   </button>
-</nav>
+</div>
 ```
 
 ### Fixed
@@ -4737,9 +4743,9 @@ A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, 
 `fixed` pins the bar to the viewport. A floating bar sits 16dp from the bottom-center; add `top` to move it to the top. A vertical bar sits on the start edge; `right` flips it. A docked bar sticks to the bottom edge; `top` sticks it to the top.
 
 ```html
-<nav class="toolbar fixed" aria-label="Format">…</nav>
-<nav class="toolbar vertical fixed" aria-label="Tools">…</nav>
-<nav class="toolbar docked fixed" aria-label="Editor">…</nav>
+<div class="toolbar fixed">…</div>
+<div class="toolbar vertical fixed">…</div>
+<div class="toolbar docked fixed">…</div>
 ```
 
 ---
@@ -5308,7 +5314,7 @@ The default is outlined. `filled` is a `surface-variant` well with no stroke —
 ```html
 <fieldset class="filled">
   <legend>
-    <i class="material-icons">place</i>
+    <span class="material-symbols" aria-hidden="true">place</span>
     Address
   </legend>
   <div class="field outlined">…</div>
@@ -5592,7 +5598,7 @@ A leading `<i>` sits inside the active track; M, L, and XL are tall enough for i
 
 ```html
 <div class="range m">
-  <i class="material-symbols">volume_up</i>
+  <span class="material-symbols" aria-hidden="true">volume_up</span>
   <input type="range" min="0" max="100" value="55" aria-label="Volume">
 </div>
 

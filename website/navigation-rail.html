@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Navigation rail</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -308,44 +308,44 @@
         <div class="rail-demo mb-3">
           <nav class="navigation-rail" aria-label="Main">
             <button type="button" aria-label="Menu">
-              <i class="material-symbols">menu</i>
+              <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <a class="button extra" href="#!">
-              <i class="material-symbols">edit</i>
+              <span class="material-symbols" aria-hidden="true">edit</span>
               <span>Label</span>
             </a>
             <a href="#!" aria-current="page">
-              <i class="material-symbols">star</i>
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Label
+            </a>
+            <a href="#!" aria-label="Starred, 3 unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
+              Label
+            </a>
+            <a href="#!" aria-label="Starred, unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge"></span></span>
               Label
             </a>
             <a href="#!">
-              <i class="material-symbols">star<span class="badge">3</span></i>
-              Label
-            </a>
-            <a href="#!">
-              <i class="material-symbols">star<span class="badge"></span></i>
-              Label
-            </a>
-            <a href="#!">
-              <i class="material-symbols">star</i>
+              <span class="material-symbols" aria-hidden="true">star</span>
               Label
             </a>
           </nav>
         </div>
 <pre><code>&lt;nav class="navigation-rail" aria-label="Main"&gt;
   &lt;button type="button" aria-label="Menu"&gt;
-    &lt;i class="material-symbols"&gt;menu&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;
   &lt;/button&gt;
   &lt;a class="button extra" href="#!"&gt;
-    &lt;i class="material-symbols"&gt;edit&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;edit&lt;/span&gt;
     &lt;span&gt;Label&lt;/span&gt;
   &lt;/a&gt;
   &lt;a href="/" aria-current="page"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;star&lt;/span&gt;
     Label
   &lt;/a&gt;
-  &lt;a href="/two"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;span class="badge"&gt;3&lt;/span&gt;&lt;/i&gt;
+  &lt;a href="/two" aria-label="Starred, 3 unread"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;star&lt;span class="badge"&gt;3&lt;/span&gt;&lt;/span&gt;
     Label
   &lt;/a&gt;
 &lt;/nav&gt;</code></pre>
@@ -365,27 +365,27 @@
         <div class="rail-demo mb-3">
           <nav class="navigation-rail expanded" aria-label="Main">
             <button type="button" aria-label="Menu">
-              <i class="material-symbols">menu</i>
+              <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <a class="button extra" href="#!">
-              <i class="material-symbols">edit</i>
+              <span class="material-symbols" aria-hidden="true">edit</span>
               <span>Label</span>
             </a>
             <a href="#!" aria-current="page">
-              <i class="material-symbols">star</i>
+              <span class="material-symbols" aria-hidden="true">star</span>
               Label
             </a>
-            <a href="#!">
-              <i class="material-symbols">star<span class="badge">3</span></i>
+            <a href="#!" aria-label="Starred, 3 unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
               Label
             </a>
             <h3>Section Header</h3>
             <a href="#!">
-              <i class="material-symbols">star</i>
+              <span class="material-symbols" aria-hidden="true">star</span>
               Label
             </a>
             <a href="#!">
-              <i class="material-symbols">star</i>
+              <span class="material-symbols" aria-hidden="true">star</span>
               Label
             </a>
           </nav>
@@ -394,7 +394,7 @@
   …
   &lt;h3&gt;Section Header&lt;/h3&gt;
   &lt;a href="/other"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;star&lt;/span&gt;
     Label
   &lt;/a&gt;
 &lt;/nav&gt;</code></pre>
@@ -555,26 +555,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

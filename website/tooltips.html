@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Tooltips</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -298,35 +298,35 @@
           treated as a label.
         </p>
         <p>
-          <button type="button" class="circle" aria-label="Add">
-            <i class="material-symbols">add</i>
-            <span class="tooltip">Add to album</span>
+          <button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
+            <span class="material-symbols" aria-hidden="true">add</span>
+            <span class="tooltip" id="tip-add-to-album">Add to album</span>
           </button>
-          <button type="button" class="circle" aria-label="Above">
-            <i class="material-symbols">arrow_upward</i>
-            <span class="tooltip">Above</span>
+          <button type="button" class="circle" aria-label="Above" aria-describedby="tip-above">
+            <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+            <span class="tooltip" id="tip-above">Above</span>
           </button>
-          <button type="button" class="circle" aria-label="Below">
-            <i class="material-symbols">arrow_downward</i>
-            <span class="tooltip bottom">Below</span>
+          <button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
+            <span class="material-symbols" aria-hidden="true">arrow_downward</span>
+            <span class="tooltip bottom" id="tip-below">Below</span>
           </button>
-          <button type="button" class="circle" aria-label="Start">
-            <i class="material-symbols">arrow_back</i>
-            <span class="tooltip left">Start</span>
+          <button type="button" class="circle" aria-label="Start" aria-describedby="tip-start">
+            <span class="material-symbols" aria-hidden="true">arrow_back</span>
+            <span class="tooltip left" id="tip-start">Start</span>
           </button>
-          <button type="button" class="circle" aria-label="End">
-            <i class="material-symbols">arrow_forward</i>
-            <span class="tooltip right">End</span>
+          <button type="button" class="circle" aria-label="End" aria-describedby="tip-end">
+            <span class="material-symbols" aria-hidden="true">arrow_forward</span>
+            <span class="tooltip right" id="tip-end">End</span>
           </button>
         </p>
-<pre><code>&lt;button type="button" class="circle" aria-label="Add"&gt;
-  &lt;i class="material-symbols"&gt;add&lt;/i&gt;
-  &lt;span class="tooltip"&gt;Add to album&lt;/span&gt;
+<pre><code>&lt;button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+  &lt;span class="tooltip" id="tip-add-to-album"&gt;Add to album&lt;/span&gt;
 &lt;/button&gt;
 
-&lt;button type="button" class="circle" aria-label="Below"&gt;
-  &lt;i class="material-symbols"&gt;arrow_downward&lt;/i&gt;
-  &lt;span class="tooltip bottom"&gt;Below&lt;/span&gt;
+&lt;button type="button" class="circle" aria-label="Below" aria-describedby="tip-below"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_downward&lt;/span&gt;
+  &lt;span class="tooltip bottom" id="tip-below"&gt;Below&lt;/span&gt;
 &lt;/button&gt;</code></pre>
   
       </div>
@@ -411,7 +411,7 @@
         <div id="tooltip-content" style="display: none;">
           <h3>Chart</h3>
           <p>This is a tooltip with a <a href="https://github.com">link</a>
-          and a <i class="material-symbols">insert_chart</i>.</p>
+          and a <span class="material-symbols" aria-hidden="true">insert_chart</span>.</p>
         </div>
 <pre><code>&lt;a class="tooltipped" href="#!"
    data-position="bottom" data-tooltip-id="tooltip-content"&gt;
@@ -730,26 +730,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

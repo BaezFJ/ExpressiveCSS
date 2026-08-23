@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Dialogs</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -320,8 +320,8 @@
           <button type="button" class="outlined" onclick="document.getElementById('dialog-extra').showModal()">Show with extra content</button>
         </p>
 
-        <dialog id="dialog-basic">
-          <h2>Basic dialog title</h2>
+        <dialog id="dialog-basic" aria-labelledby="basic-dialog-title-title">
+          <h2 id="basic-dialog-title-title">Basic dialog title</h2>
           <p>A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision.</p>
           <form method="dialog">
             <button type="submit" value="action-2">Text button</button>
@@ -329,9 +329,9 @@
           </form>
         </dialog>
 
-        <dialog id="dialog-icon">
-          <i class="material-symbols">place</i>
-          <h2>Use location services?</h2>
+        <dialog id="dialog-icon" aria-labelledby="use-location-services-title">
+          <span class="material-symbols" aria-hidden="true">place</span>
+          <h2 id="use-location-services-title">Use location services?</h2>
           <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
           <form method="dialog">
             <button type="submit" value="disagree">Disagree</button>
@@ -339,9 +339,9 @@
           </form>
         </dialog>
 
-        <dialog id="dialog-extra">
-          <i class="material-symbols">restart_alt</i>
-          <h2>Reset settings?</h2>
+        <dialog id="dialog-extra" aria-labelledby="reset-settings-title">
+          <span class="material-symbols" aria-hidden="true">restart_alt</span>
+          <h2 id="reset-settings-title">Reset settings?</h2>
           <p>This will reset your app preferences back to their default settings. The following accounts will also be signed out:</p>
           <hr>
           <ul class="list">
@@ -368,8 +368,8 @@
   Show
 &lt;/button&gt;
 
-&lt;dialog id="dialog1"&gt;
-  &lt;h2&gt;Basic dialog title&lt;/h2&gt;
+&lt;dialog id="dialog1" aria-labelledby="basic-dialog-title-title"&gt;
+  &lt;h2 id="basic-dialog-title-title"&gt;Basic dialog title&lt;/h2&gt;
   &lt;p&gt;A dialog is a modal window that appears in front of app content.&lt;/p&gt;
   &lt;form method="dialog"&gt;
     &lt;button type="submit" value="cancel"&gt;Cancel&lt;/button&gt;
@@ -406,12 +406,12 @@
         <p>
           <button type="button" class="outlined" onclick="document.getElementById('dialog-max').showModal()">Show full-screen</button>
         </p>
-        <dialog id="dialog-max" class="max">
+        <dialog id="dialog-max" class="max" aria-labelledby="full-screen-dialog-title-title">
           <header>
             <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
-              <i class="material-symbols">close</i>
+              <span class="material-symbols" aria-hidden="true">close</span>
             </button>
-            <h2>Full-screen dialog title</h2>
+            <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
             <form method="dialog">
               <button type="submit" value="save">Save</button>
             </form>
@@ -439,12 +439,12 @@
             </p>
           </div>
         </dialog>
-<pre><code>&lt;dialog class="max"&gt;
+<pre><code>&lt;dialog class="max" aria-labelledby="full-screen-dialog-title-title"&gt;
   &lt;header&gt;
     &lt;button type="button" aria-label="Close"&gt;
-      &lt;i class="material-symbols"&gt;close&lt;/i&gt;
+      &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
     &lt;/button&gt;
-    &lt;h2&gt;Full-screen dialog title&lt;/h2&gt;
+    &lt;h2 id="full-screen-dialog-title-title"&gt;Full-screen dialog title&lt;/h2&gt;
     &lt;form method="dialog"&gt;
       &lt;button type="submit" value="save"&gt;Save&lt;/button&gt;
     &lt;/form&gt;
@@ -627,26 +627,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

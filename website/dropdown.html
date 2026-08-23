@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Menu</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -307,23 +307,23 @@
         </p>
         <menu id="menu1">
           <li>
-            <a href="#!">Refresh<i class="material-symbols">refresh</i></a>
+            <a href="#!">Refresh<span class="material-symbols" aria-hidden="true">refresh</span></a>
           </li>
           <li>
-            <a href="#!">Settings<i class="material-symbols">settings</i></a>
+            <a href="#!">Settings<span class="material-symbols" aria-hidden="true">settings</span></a>
           </li>
           <li>
-            <a href="#!">Help<i class="material-symbols">help</i></a>
+            <a href="#!">Help<span class="material-symbols" aria-hidden="true">help</span></a>
           </li>
           <li>
-            <a href="#!">More<i class="material-symbols">more_vert</i></a>
+            <a href="#!">More<span class="material-symbols" aria-hidden="true">more_vert</span></a>
           </li>
         </menu>
 <pre><code>&lt;button class="menu-trigger" data-target="menu1"&gt;Drop me&lt;/button&gt;
 &lt;menu id="menu1"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Refresh&lt;i class="material-symbols"&gt;refresh&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Settings&lt;i class="material-symbols"&gt;settings&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Help&lt;i class="material-symbols"&gt;help&lt;/i&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Refresh&lt;span class="material-symbols" aria-hidden="true"&gt;refresh&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Settings&lt;span class="material-symbols" aria-hidden="true"&gt;settings&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Help&lt;span class="material-symbols" aria-hidden="true"&gt;help&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/menu&gt;</code></pre>
         <p>
           For a menu inside a top app bar, see
@@ -476,7 +476,7 @@
           <li><a href="#!">Three</a></li>
           <li>
             <a href="#!">
-              <i class="material-symbols">view_module</i>
+              <span class="material-symbols" aria-hidden="true">view_module</span>
               <span>Four</span>
             </a>
           </li>
@@ -488,7 +488,7 @@
           <li><a href="#!">Three</a></li>
           <li>
             <a href="#!">
-              <i class="material-symbols">cloud</i>
+              <span class="material-symbols" aria-hidden="true">cloud</span>
               <span>Five</span>
             </a>
           </li>
@@ -538,27 +538,27 @@
         <menu id="menu-rich">
           <li>
             <a href="#!">
-              <i class="material-symbols">visibility</i>
+              <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
             </a>
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">content_copy</i>
+              <span class="material-symbols" aria-hidden="true">content_copy</span>
               Item 2
               <kbd>⌘C</kbd>
             </a>
           </li>
           <li class="selected">
             <a href="#!">
-              <i class="material-symbols">check</i>
+              <span class="material-symbols" aria-hidden="true">check</span>
               Item 3
             </a>
           </li>
           <li class="gap" aria-hidden="true"></li>
           <li>
             <a href="#!">
-              <i class="material-symbols">person</i>
+              <span class="material-symbols" aria-hidden="true">person</span>
               Item 4
             </a>
             <menu>
@@ -568,25 +568,25 @@
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">settings</i>
+              <span class="material-symbols" aria-hidden="true">settings</span>
               Item 5
             </a>
           </li>
         </menu>
 <pre><code>&lt;menu id="menu-rich"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;visibility&lt;/i&gt; Item 1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;visibility&lt;/span&gt; Item 1&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;
     &lt;a href="#!"&gt;
-      &lt;i class="material-symbols"&gt;content_copy&lt;/i&gt; Item 2
+      &lt;span class="material-symbols" aria-hidden="true"&gt;content_copy&lt;/span&gt; Item 2
       &lt;kbd&gt;⌘C&lt;/kbd&gt;
     &lt;/a&gt;
   &lt;/li&gt;
   &lt;li class="selected"&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;check&lt;/i&gt; Item 3&lt;/a&gt;
+    &lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;check&lt;/span&gt; Item 3&lt;/a&gt;
   &lt;/li&gt;
   &lt;li class="gap" aria-hidden="true"&gt;&lt;/li&gt;
   &lt;li&gt;
-    &lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;person&lt;/i&gt; Item 4&lt;/a&gt;
+    &lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;person&lt;/span&gt; Item 4&lt;/a&gt;
     &lt;menu&gt;…&lt;/menu&gt;
   &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
@@ -609,26 +609,26 @@
         <menu id="menu-vibrant" class="vibrant">
           <li>
             <a href="#!">
-              <i class="material-symbols">visibility</i>
+              <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
             </a>
           </li>
           <li class="selected">
             <a href="#!">
-              <i class="material-symbols">check</i>
+              <span class="material-symbols" aria-hidden="true">check</span>
               Item 2
             </a>
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">settings</i>
+              <span class="material-symbols" aria-hidden="true">settings</span>
               Item 3
             </a>
           </li>
         </menu>
 <pre><code>&lt;menu id="menu-vibrant" class="vibrant"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;visibility&lt;/i&gt; Item 1&lt;/a&gt;&lt;/li&gt;
-  &lt;li class="selected"&gt;&lt;a href="#!"&gt;&lt;i class="material-symbols"&gt;check&lt;/i&gt; Item 2&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;visibility&lt;/span&gt; Item 1&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="selected"&gt;&lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;check&lt;/span&gt; Item 2&lt;/a&gt;&lt;/li&gt;
 &lt;/menu&gt;</code></pre>
   
       </div>
@@ -868,26 +868,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

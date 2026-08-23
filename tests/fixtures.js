@@ -34,12 +34,12 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Lightbox',
     selector: '.lightboxed',
-    html: `<img class="lightboxed" width="100" src="http://localhost/1.jpg">`
+    html: `<img class="lightboxed" tabindex="0" role="button" width="100" src="http://localhost/1.jpg" alt="Sample">`
   },
   {
     name: 'Parallax',
     selector: '.parallax',
-    html: `<div class="parallax"><img src="http://localhost/1.jpg"></div>`
+    html: `<div class="parallax"><img src="http://localhost/1.jpg" alt=""></div>`
   },
   {
     name: 'ScrollSpy',
@@ -54,7 +54,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'NavigationRail',
     selector: '.navigation-rail',
-    html: `<nav class="navigation-rail" aria-label="Main"><button type="button" aria-label="Menu"><i class="material-symbols">menu</i></button><a href="#!" aria-current="page"><i class="material-symbols">star</i>Label</a></nav>`
+    html: `<nav class="navigation-rail" aria-label="Main"><button type="button" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button><a href="#!" aria-current="page"><span class="material-symbols" aria-hidden="true">star</span>Label</a></nav>`
   },
   {
     name: 'Sidenav',
@@ -75,6 +75,6 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'FloatingActionButton',
     selector: '.fixed-action-btn',
-    html: `<div class="fixed-action-btn"><a class="button extra circle"><i class="material-symbols">add</i></a><ul><li><a class="button extra circle small red"><i class="material-symbols">chart</i></a></li></ul></div>`
+    html: `<div class="fixed-action-btn"><a class="button extra circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a><ul><li><a class="button extra circle small red" aria-label="Chart"><span class="material-symbols" aria-hidden="true">chart</span></a></li></ul></div>`
   }
 ];

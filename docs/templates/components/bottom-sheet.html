@@ -43,20 +43,20 @@
           <button type="button" class="tonal" onclick="document.getElementById('sheet-standard').show()">Show standard</button>
         </p>
 
-        <dialog id="sheet-modal" class="bottom-sheet">
-          <h2>Open file</h2>
+        <dialog id="sheet-modal" class="bottom-sheet" aria-labelledby="open-file-title">
+          <h2 id="open-file-title">Open file</h2>
           <div>
             <ul class="list">
               <li>
-                <i class="material-symbols">description</i>
+                <span class="material-symbols" aria-hidden="true">description</span>
                 Draft.md
               </li>
               <li>
-                <i class="material-symbols">image</i>
+                <span class="material-symbols" aria-hidden="true">image</span>
                 Cover.png
               </li>
               <li>
-                <i class="material-symbols">folder</i>
+                <span class="material-symbols" aria-hidden="true">folder</span>
                 Archive
               </li>
             </ul>
@@ -66,8 +66,8 @@
           </form>
         </dialog>
 
-        <dialog id="sheet-standard" class="bottom-sheet">
-          <h2>Now playing</h2>
+        <dialog id="sheet-standard" class="bottom-sheet" aria-labelledby="now-playing-title">
+          <h2 id="now-playing-title">Now playing</h2>
           <p>Secondary controls for the current track. The page behind this sheet stays usable.</p>
           <form method="dialog">
             <button type="submit" class="text" value="close">Close</button>
@@ -78,8 +78,8 @@
   Show modal
 </button>
 
-<dialog id="sheet" class="bottom-sheet">
-  <h2>Open file</h2>
+<dialog id="sheet" class="bottom-sheet" aria-labelledby="open-file-title">
+  <h2 id="open-file-title">Open file</h2>
   <div>…</div>
   <form method="dialog">
     <button type="submit" class="text" value="cancel">Cancel</button>
@@ -101,9 +101,9 @@
           body overflows.
         </p>
 {% call code() %}
-<dialog class="bottom-sheet">
+<dialog class="bottom-sheet" aria-labelledby="title-title">
   <button type="button" class="handle" aria-label="Dismiss"></button>
-  <h2>Title</h2>
+  <h2 id="title-title">Title</h2>
   …
 </dialog>
 {% endcall %}

@@ -43,7 +43,7 @@
                 <a href="#email"><span class="email">jdoe@example.com</span></a>
               </div>
             </li>
-            <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+            <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
             <li><a href="#!">Second Link</a></li>
             <li><div class="divider"></div></li>
             <li><a class="subheader">Subheader</a></li>
@@ -64,16 +64,14 @@
         <a href="#email"><span class="email">jdoe@example.com</span></a>
       </div>
     </li>
-    <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
     <li><a href="#!">Second Link</a></li>
     <li><div class="divider"></div></li>
     <li><a class="subheader">Subheader</a></li>
     <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger">
-  <i class="material-symbols">menu</i>
-</a>
+<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 {% endcall %}
   {% endcall %}
 
@@ -194,9 +192,7 @@ instance.destroy();
     <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger">
-  <i class="material-symbols">menu</i>
-</a>
+<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 {% endcall %}
   {% endcall %}
 
@@ -232,11 +228,11 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
         </p>
         <nav aria-label="Main">
           <ul class="sidenav sidenav-demo">
-            <li><a href="#!"><i class="material-symbols">inbox</i>Inbox</a></li>
+            <li><a href="#!"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a></li>
             <li>
               <details name="sidenav-demo" open>
                 <summary>
-                  <i class="material-symbols">palette</i>
+                  <span class="material-symbols" aria-hidden="true">palette</span>
                   Foundations
                 </summary>
                 <ul>
@@ -248,7 +244,7 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
             <li>
               <details name="sidenav-demo">
                 <summary>
-                  <i class="material-symbols">view_quilt</i>
+                  <span class="material-symbols" aria-hidden="true">view_quilt</span>
                   Structure
                 </summary>
                 <ul>
@@ -266,7 +262,7 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
     <li>
       <details name="docs-nav">
         <summary>
-          <i class="material-symbols">palette</i>
+          <span class="material-symbols" aria-hidden="true">palette</span>
           Foundations
         </summary>
         <ul>
@@ -292,9 +288,7 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
     <li><a href="#!">Second Sidebar Link</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="sidenav-trigger">
-  <i class="material-symbols">menu</i>
-</a>
+<a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
 {% endcall %}
         <p>
           Offset the rest of the page by the sidenav width. The width token is

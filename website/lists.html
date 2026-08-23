@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Lists</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -306,44 +306,44 @@
         </p>
         <ul class="list">
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
-          <li aria-selected="true">
-            <i class="material-symbols">star</i>
-            List item
-            <kbd>⌘C</kbd>
-          </li>
-          <li>
-            <i class="material-symbols">star</i>
+          <li class="selected">
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
         </ul>
 <pre><code>&lt;ul class="list"&gt;
   &lt;li&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;star&lt;/span&gt;
     List item
     &lt;kbd&gt;⌘C&lt;/kbd&gt;
   &lt;/li&gt;
-  &lt;li aria-selected="true"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+  &lt;li class="selected"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;star&lt;/span&gt;
     List item
     &lt;kbd&gt;⌘C&lt;/kbd&gt;
   &lt;/li&gt;
@@ -362,39 +362,39 @@
         </p>
         <ul class="list segmented">
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
-          <li aria-selected="true">
-            <i class="material-symbols">star</i>
-            List item
-            <kbd>⌘C</kbd>
-          </li>
-          <li>
-            <i class="material-symbols">star</i>
+          <li class="selected">
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
           <li>
-            <i class="material-symbols">star</i>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
             List item
             <kbd>⌘C</kbd>
           </li>
         </ul>
 <pre><code>&lt;ul class="list segmented"&gt;
-  &lt;li aria-selected="true"&gt;
-    &lt;i class="material-symbols"&gt;star&lt;/i&gt;
+  &lt;li class="selected"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;star&lt;/span&gt;
     List item
     &lt;kbd&gt;⌘C&lt;/kbd&gt;
   &lt;/li&gt;
@@ -438,27 +438,27 @@
         </p>
         <ul class="list">
           <li>
-            <i class="material-symbols">inbox</i>
+            <span class="material-symbols" aria-hidden="true">inbox</span>
             Inbox
-            <i class="material-symbols">chevron_right</i>
+            <span class="material-symbols" aria-hidden="true">chevron_right</span>
           </li>
           <li>
-            <i class="material-symbols">send</i>
+            <span class="material-symbols" aria-hidden="true">send</span>
             Sent
-            <i class="material-symbols">info</i>
+            <span class="material-symbols" aria-hidden="true">info</span>
           </li>
           <li>
-            <i class="material-symbols">delete</i>
+            <span class="material-symbols" aria-hidden="true">delete</span>
             Trash
             <button type="button" aria-label="More">
-              <i class="material-symbols">more_vert</i>
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
           </li>
         </ul>
 <pre><code>&lt;li&gt;
-  &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;inbox&lt;/span&gt;
   Inbox
-  &lt;i class="material-symbols"&gt;chevron_right&lt;/i&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;chevron_right&lt;/span&gt;
 &lt;/li&gt;</code></pre>
   
       </div>
@@ -478,7 +478,7 @@
             <p>Mathematician</p>
           </li>
           <li>
-            <i class="material-symbols circle">person</i>
+            <span class="material-symbols circle" aria-hidden="true">person</span>
             Icon avatar
           </li>
           <li>
@@ -508,26 +508,26 @@
         <ul class="list">
           <li>
             <a href="#!">
-              <i class="material-symbols">mail</i>
+              <span class="material-symbols" aria-hidden="true">mail</span>
               Inbox
             </a>
           </li>
           <li>
             <a href="#!" aria-current="page">
-              <i class="material-symbols">star</i>
+              <span class="material-symbols" aria-hidden="true">star</span>
               Starred
             </a>
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">snooze</i>
+              <span class="material-symbols" aria-hidden="true">snooze</span>
               Snoozed
             </a>
           </li>
         </ul>
 <pre><code>&lt;li&gt;
   &lt;a href="/inbox" aria-current="page"&gt;
-    &lt;i class="material-symbols"&gt;inbox&lt;/i&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;inbox&lt;/span&gt;
     Inbox
   &lt;/a&gt;
 &lt;/li&gt;</code></pre>
@@ -707,26 +707,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

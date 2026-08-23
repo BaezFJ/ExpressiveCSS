@@ -60,14 +60,17 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     overflow: hidden;
   }
 
-  // :only-child ignores text nodes, so "<i>add</i>Create" would look like
-  // an icon button. Wrap the label in a <span> (BeerCSS) for the 16dp
+  // :only-child ignores text nodes, so "<span icon>add</span>Create" would look
+  // like an icon button. Wrap the label in a <span> (BeerCSS) for the 16dp
   // leading inset; otherwise the icon still sits on the flex gap.
-  &:has(> i + span) {
+  //
+  // $icon / $icon-label rather than i / span: the icon is a <span> now, so
+  // "i followed by span" stopped matching anything.
+  &:has(> #{$icon} + #{$icon-label}) {
     padding-inline-start: var(--md-comp-filled-button-with-icon-leading-space);
   }
 
-  &:has(> span + i) {
+  &:has(> #{$icon-label} + #{$icon}) {
     padding-inline-end: var(--md-comp-filled-button-with-icon-leading-space);
   }
 
@@ -77,7 +80,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     padding: 0;
     border-radius: 50%;
 
-    > i {
+    > #{$icon} {
       font-size: 24px;
       width: 24px;
       height: 24px;

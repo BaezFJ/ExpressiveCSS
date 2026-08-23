@@ -44,12 +44,12 @@
           <button type="button" class="outlined" onclick="document.getElementById('sheet-back').showModal()">Show with back</button>
         </p>
 
-        <dialog id="sheet-standard" class="side-sheet">
+        <dialog id="sheet-standard" class="side-sheet" aria-labelledby="headline-title">
           <header>
-            <h2>Headline</h2>
+            <h2 id="headline-title">Headline</h2>
             <form method="dialog">
               <button type="submit" aria-label="Close">
-                <i class="material-symbols">close</i>
+                <span class="material-symbols" aria-hidden="true">close</span>
               </button>
             </form>
           </header>
@@ -58,12 +58,12 @@
           </div>
         </dialog>
 
-        <dialog id="sheet-modal" class="side-sheet">
+        <dialog id="sheet-modal" class="side-sheet" aria-labelledby="headline-title">
           <header>
-            <h2>Headline</h2>
+            <h2 id="headline-title">Headline</h2>
             <form method="dialog">
               <button type="submit" aria-label="Close">
-                <i class="material-symbols">close</i>
+                <span class="material-symbols" aria-hidden="true">close</span>
               </button>
             </form>
           </header>
@@ -76,15 +76,15 @@
           </form>
         </dialog>
 
-        <dialog id="sheet-back" class="side-sheet">
+        <dialog id="sheet-back" class="side-sheet" aria-labelledby="headline-title">
           <header>
             <button type="button" aria-label="Back" onclick="this.closest('dialog').close()">
-              <i class="material-symbols">arrow_back</i>
+              <span class="material-symbols" aria-hidden="true">arrow_back</span>
             </button>
-            <h2>Headline</h2>
+            <h2 id="headline-title">Headline</h2>
             <form method="dialog">
               <button type="submit" aria-label="Close">
-                <i class="material-symbols">close</i>
+                <span class="material-symbols" aria-hidden="true">close</span>
               </button>
             </form>
           </header>
@@ -93,12 +93,12 @@
           </div>
         </dialog>
 {% call code() %}
-<dialog class="side-sheet">
+<dialog class="side-sheet" aria-labelledby="headline-title">
   <header>
-    <h2>Headline</h2>
+    <h2 id="headline-title">Headline</h2>
     <form method="dialog">
       <button type="submit" aria-label="Close">
-        <i class="material-symbols">close</i>
+        <span class="material-symbols" aria-hidden="true">close</span>
       </button>
     </form>
   </header>
@@ -123,12 +123,12 @@
 {% call code() %}
 <header>
   <button type="button" aria-label="Back">
-    <i class="material-symbols">arrow_back</i>
+    <span class="material-symbols" aria-hidden="true">arrow_back</span>
   </button>
   <h2>Headline</h2>
   <form method="dialog">
     <button type="submit" aria-label="Close">
-      <i class="material-symbols">close</i>
+      <span class="material-symbols" aria-hidden="true">close</span>
     </button>
   </form>
 </header>

@@ -27,19 +27,19 @@
         <article class="mb-3">
           <h3>Card title</h3>
           <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-          <nav>
+          <div class="actions">
             <button type="button" class="text">Action</button>
             <button type="button" class="tonal">Action</button>
-          </nav>
+          </div>
         </article>
 {% call code() %}
 <article>
   <h3>Card title</h3>
   <p>I am a very simple card.</p>
-  <nav>
+  <div class="actions">
     <button class="text">Action</button>
     <button class="tonal">Action</button>
-  </nav>
+  </div>
 </article>
 {% endcall %}
   {% endcall %}
@@ -92,9 +92,9 @@
                 <figcaption>Card title</figcaption>
               </figure>
               <p>I am a very simple card. I am good at containing small bits of information.</p>
-              <nav>
+              <div class="actions">
                 <button type="button" class="text">Action</button>
-              </nav>
+              </div>
             </article>
           </div>
         </div>
@@ -105,9 +105,9 @@
     <figcaption>Card title</figcaption>
   </figure>
   <p>I am a very simple card.</p>
-  <nav>
+  <div class="actions">
     <button class="text">Action</button>
-  </nav>
+  </div>
 </article>
 {% endcall %}
   {% endcall %}
@@ -124,7 +124,7 @@
                 <img src="https://picsum.photos/id/1015/800/400" alt="">
                 <figcaption>Card title</figcaption>
                 <a class="button extra circle small halfway-fab" href="#!" aria-label="Add">
-                  <i class="material-symbols">add</i>
+                  <span class="material-symbols" aria-hidden="true">add</span>
                 </a>
               </figure>
               <p>I am a very simple card. I am good at containing small bits of information.</p>
@@ -137,7 +137,7 @@
     <img src="images/sample-1.jpg" alt="">
     <figcaption>Card title</figcaption>
     <a class="button extra circle small halfway-fab" href="#!" aria-label="Add">
-      <i class="material-symbols">add</i>
+      <span class="material-symbols" aria-hidden="true">add</span>
     </a>
   </figure>
   <p>I am a very simple card.</p>
@@ -156,9 +156,9 @@
           <div>
             <h3>Card title</h3>
             <p>I am a very simple card. I am good at containing small bits of information.</p>
-            <nav>
+            <div class="actions">
               <button type="button" class="text">Action</button>
-            </nav>
+            </div>
           </div>
         </article>
 {% call code() %}
@@ -167,9 +167,9 @@
   <div>
     <h3>Card title</h3>
     <p>I am a very simple card.</p>
-    <nav>
+    <div class="actions">
       <button class="text">Action</button>
-    </nav>
+    </div>
   </div>
 </article>
 {% endcall %}
@@ -192,10 +192,10 @@
                 <img src="https://picsum.photos/id/180/800/400" alt="">
                 <div class="activator"></div>
               </figure>
-              <h3 class="activator">Card title<i class="material-symbols right">more_vert</i></h3>
+              <h3 class="activator">Card title<span class="material-symbols right" aria-hidden="true">more_vert</span></h3>
               <p><a href="#!">This is a link</a></p>
               <aside>
-                <h3><i class="material-symbols right">close</i>Card title</h3>
+                <h3><span class="material-symbols right" aria-hidden="true">close</span>Card title</h3>
                 <p>Here is some more information about this product that is only revealed once clicked on.</p>
               </aside>
             </article>
@@ -208,12 +208,12 @@
     <div class="activator"></div>
   </figure>
   <h3 class="activator">Card title
-    <i class="material-symbols right">more_vert</i>
+    <span class="material-symbols right" aria-hidden="true">more_vert</span>
   </h3>
   <p><a href="#">This is a link</a></p>
   <aside>
     <h3>
-      <i class="material-symbols right">close</i>Card title
+      <span class="material-symbols right" aria-hidden="true">close</span>Card title
     </h3>
     <p>Here is some more information about this product.</p>
   </aside>
@@ -272,9 +272,9 @@
               <img src="https://picsum.photos/id/1015/800/400" alt="">
               <h3>Small</h3>
               <p>The small card is 300px tall.</p>
-              <nav>
+              <div class="actions">
                 <button type="button" class="text">Action</button>
-              </nav>
+              </div>
             </article>
           </div>
         </div>

@@ -25,7 +25,7 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**22 of 45 components enforced; 23 remaining.**
+**45 of 45 components enforced; 0 remaining.**
 
 ## Enforced
 
@@ -39,6 +39,24 @@ Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.
 
 - **autocomplete-options-are-options** - The suggestion list is a listbox; every entry in it is an option.
 
+### badges
+
+Swept 0.8.0. A badge nested in an icon is positioned against the glyph, so hiding the icon hides the count with it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `badge-count-survives-a-hidden-icon` | forbid | `:is(a, button):not([aria-label]):not([aria-labelledby]) [aria-hidden="true"] .badge:not(:empty)` | must not match |
+
+- **badge-count-survives-a-hidden-icon** - A badge inside a hidden icon is hidden with it - aria-hidden="false" on a descendant does not undo that. Put the count in the control name (aria-label="Inbox, 3 unread"), or move the badge out of the icon into the flow.
+
+### bottom-sheet
+
+Swept 0.8.0. A <dialog>, so the dialog rules carry it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
 ### breadcrumb
 
 Swept 0.8.0. A trail is an ordered list, because the order is the meaning.
@@ -50,6 +68,36 @@ Swept 0.8.0. A trail is an ordered list, because the order is the meaning.
 
 - **breadcrumb-is-ordered-list** - Crumbs are an ordered list - nav > ol > li > a. Loose anchors give no count and no position, so "3 of 4" is never announced.
 - **breadcrumb-marks-current** - The last crumb is the page you are on; it needs aria-current="page" to say so.
+
+### buttons
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must have `undefined` |
+
+- **icon-only-control-is-named** - Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
+
+### cards
+
+Swept 0.8.0. The action row is buttons, not destinations.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `card-action-row-not-nav` | forbid | `article nav:not(.tabs)` | must not match |
+
+- **card-action-row-not-nav** - A card’s action row is a row of buttons. <nav> is a landmark, and one per card floods the landmark list. Use <div class="actions">.
+
+### carousel
+
+Swept 0.8.0. Off-screen slides are inert, not merely hidden. Checked at runtime in tests/carousel-a11y.test.js.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `hidden-subtree-holds-nothing-focusable` | forbid | `[aria-hidden="true"]:has(:is(a[href], button, input, select, textarea, [tabindex]):not([tabindex="-1"]):not([disabled]))` | must not match |
+
+- **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
 
 ### character-counter
 
@@ -84,6 +132,32 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-no-i-element** - <i> means idiomatic text, not icon. Use <span class="material-symbols" aria-hidden="true">.
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
+
+### datepicker
+
+Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
+### dialog
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `dialog-is-named` | forbid | `dialog:not([aria-label]):not([aria-labelledby])` | must not match |
+
+- **dialog-is-named** - A <dialog> takes no name from its heading. Point aria-labelledby at that heading, or give it an aria-label - otherwise it opens announced as just "dialog".
+
+### docked-display
+
+Swept 0.8.0. A positioning wrapper the picker plugins generate; it introduces no author-facing markup.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
 
 ### forms/checkboxes
 
@@ -185,6 +259,18 @@ Swept 0.8.0.
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
 
+### icons-material-design
+
+Swept 0.8.0. The canonical icon is <span class="material-symbols">, and an icon is either decoration or an image - never unannounced text.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `icon-not-i-element` | forbid | `i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp, i.material-icons` | must not match |
+| `icon-hidden-or-labelled` | forbid | `.material-symbols:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby]), .material-icons:not([aria-hidden="true"]):not([role="img"][aria-label]):not([role="img"][aria-labelledby])` | must not match |
+
+- **icon-not-i-element** - <i> means idiomatic text. The canonical icon element is <span class="material-symbols">.
+- **icon-hidden-or-labelled** - The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden="true", with the enclosing control carrying the name - or an image in its own right, role="img" with a label. It is never left as bare text.
+
 ### landmarks
 
 Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.
@@ -196,6 +282,26 @@ Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.
 
 - **nav-needs-label** - A page carries several <nav> landmarks - app bar, tabs, breadcrumbs, footer columns, drawer. Unlabelled they arrive in the landmark menu as a row of identical entries, which is worse than not being landmarks at all. Three carve-outs, each an action row that should not be <nav> at all so that labelling it would entrench the error: `article nav` (card actions, awaits the cards sweep), `.tooltip nav` (rich-tooltip actions, awaits the tooltip sweep), `.toolbar` (awaits the toolbar sweep). Delete each carve-out with its sweep.
 - **main-not-nested** - A document has one <main>. A pane that holds the primary content of a region is a <section> or a <div>.
+
+### lightbox
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `lightbox-trigger-is-operable` | forbid | `img.lightboxed:not([tabindex]):not(:is(a, button) > img)` | must not match |
+
+- **lightbox-trigger-is-operable** - A .lightboxed image opens an overlay on click, which makes it a control - and a bare <img> is not focusable and not operable from the keyboard. Wrap it in a <button>, or give it tabindex="0" and a role.
+
+### list
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `list-item-not-selected` | forbid | `li[aria-selected]:not([role])` | must not match |
+
+- **list-item-not-selected** - aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.
 
 ### menu
 
@@ -259,6 +365,62 @@ Swept 0.8.0.
 - **pagination-marks-current** - The current page needs aria-current="page". A class only colours it.
 - **pagination-disabled-not-a-link** - A disabled control that is still an <a href> stays in the tab order and still navigates. Use a <span>, or drop the href.
 
+### panes
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `pane-is-not-main` | forbid | `:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout) main` | must not match |
+
+- **pane-is-not-main** - A document has one <main>, and a pane is a region inside it, not another one. Use <section>.
+
+### parallax
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `parallax-image-declares-itself` | forbid | `.parallax img:not([alt])` | must not match |
+
+- **parallax-image-declares-itself** - A parallax image is decoration nine times out of ten, and decoration says so with alt="". Without any alt the file name is read out.
+
+### preloader
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `div-progress-reports-progress` | forbid | `div.progress:not([role="progressbar"])` | must not match |
+| `determinate-progress-reports-its-value` | forbid | `[role="progressbar"]:has(> .determinate):not([aria-valuenow])` | must not match |
+
+- **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
+- **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+
+### pulse
+
+Swept 0.8.0. A decorative animation on an existing element - it states no markup of its own.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
+### scrollspy
+
+Swept 0.8.0. A behaviour on existing sections. Its table of contents is covered by table_of_contents.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
+### side-sheet
+
+Swept 0.8.0. A <dialog>, so the dialog rules carry it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
 ### sidenav
 
 Swept 0.8.0.
@@ -268,6 +430,22 @@ Swept 0.8.0.
 | `sidenav-in-nav` | forbid | `.sidenav:not(nav):not(nav *)` | must not match |
 
 - **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
+
+### slider
+
+Swept 0.8.0. The control is input[type=range]; the rules live on forms/range.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
+### snackbar
+
+Swept 0.8.0. Generated markup: role="status" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
 
 ### table_of_contents
 
@@ -291,33 +469,46 @@ Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
 - **tabs-not-a-tablist** - tabs.ts has no keyboard handling, so a tablist role would promise arrow-key navigation nothing implements. These are links to in-page sections.
 - **tabs-marks-current** - The active tab is the section you are on; aria-current says so where a class cannot.
 
+### timepicker
+
+Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
+### toolbar
+
+Swept 0.8.0. A toolbar holds commands, not destinations.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `toolbar-not-nav` | forbid | `nav.toolbar` | must not match |
+
+- **toolbar-not-nav** - A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.
+
+### tooltip
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `css-tooltip-is-described-by` | forbid | `:is(a, button):has(> .tooltip):not([aria-describedby])` | must not match |
+
+- **css-tooltip-is-described-by** - A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it.
+
+### transitions
+
+Swept 0.8.0. Class-driven animation applied to whatever element already exists; no markup contract.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
 ## Exempt
 
 Not yet swept. Rules listed here are recorded but do not run.
 
 | Component | Rules written | Note |
 | --- | --- | --- |
-| `badges` | 0 | Not yet swept. |
-| `bottom-sheet` | 0 | Not yet swept. |
-| `buttons` | 0 | Not yet swept. |
-| `cards` | 1 | Rules written, sweep not started. The card action row is a <nav> and should not be; fixing it means changing `article > nav:not(.tabs)` in _cards.scss, so it belongs to the cards sweep, not the navigation one. |
-| `carousel` | 0 | Not yet swept. |
-| `datepicker` | 0 | Not yet swept. |
-| `dialog` | 0 | Not yet swept. |
-| `docked-display` | 0 | Not yet swept. |
-| `icons-material-design` | 2 | Rules written, sweep not started. ~100 <i class="material-icons"> examples remain in llm.md. |
-| `lightbox` | 0 | Not yet swept. |
-| `list` | 1 | Rules written, sweep not started. |
-| `panes` | 0 | Not yet swept. |
-| `parallax` | 0 | Not yet swept. |
-| `preloader` | 0 | Not yet swept. |
-| `pulse` | 0 | Not yet swept. |
-| `scrollspy` | 0 | Not yet swept. |
-| `side-sheet` | 0 | Not yet swept. |
-| `slider` | 0 | Not yet swept. |
-| `snackbar` | 0 | Not yet swept. |
-| `timepicker` | 0 | Not yet swept. |
-| `toolbar` | 1 | Rules written, sweep not started. `nav.toolbar` is element-locked in _toolbar.scss (16 selectors, deliberately, to avoid catching div.fixed-action-btn.toolbar), so dropping the <nav> is a toolbar-sweep change. |
-| `tooltip` | 0 | Not yet swept. |
-| `transitions` | 0 | Not yet swept. |
 
