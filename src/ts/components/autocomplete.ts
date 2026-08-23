@@ -109,6 +109,28 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   activeIndex: number;
   private oldVal: string;
   private $active: HTMLElement | null;
+  private _openTimer: ReturnType<typeof setTimeout> | undefined;
+
+  /**
+   * The active entry, for both the eye and the screen reader. The class alone
+   * was invisible to assistive technology; aria-activedescendant on the input
+   * is what reports the move.
+   *
+   * Deliberately does not touch aria-selected. Active and selected are two
+   * different things - in a multi-select the checkboxes track real choices,
+   * and folding the highlight into aria-selected would announce a committed
+   * choice as unselected the moment the user arrowed past it.
+   */
+  private _setActive(item: HTMLElement | null) {
+    this.$active?.classList.remove('active');
+    this.$active = item;
+    if (item) {
+      item.classList.add('active');
+      this.el.setAttribute('aria-activedescendant', item.id);
+    } else {
+      this.el.removeAttribute('aria-activedescendant');
+    }
+  }
   private _mousedown: boolean;
   container: HTMLElement;
   /** Instance of the menu plugin for this autocomplete. */
@@ -196,6 +218,13 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   destroy() {
+    // open() defers menu.open() to a timer. Without cancelling it, destroying
+    // an autocomplete that was opened in the same tick let the callback run
+    // against a menu whose element had already been removed.
+    if (this._openTimer !== undefined) {
+      clearTimeout(this._openTimer);
+      this._openTimer = undefined;
+    }
     this._removeEventHandlers();
     this._removeMenu();
     this.el['Expressive_Autocomplete'] = undefined;
@@ -236,6 +265,15 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.id = `autocomplete-options-${Utils.guid()}`;
     this.container.classList.add('autocomplete-content');
     this.container.ariaExpanded = 'true';
+    // An autocomplete is the textbook combobox, and this one already
+    // implements the keyboard contract the roles promise - Up and Down move
+    // the active entry, Enter commits it - so it is allowed to claim them.
+    // It had none: the suggestions were an unlabelled list of <li>, and the
+    // highlight moved with a class no assistive technology could see.
+    this.container.setAttribute('role', 'listbox');
+    this.el.setAttribute('role', 'combobox');
+    this.el.setAttribute('aria-autocomplete', 'list');
+    this.el.setAttribute('aria-controls', this.container.id);
     this.el.setAttribute('data-target', this.container.id);
 
     this.menuItems.forEach((menuItem) => {
@@ -355,10 +393,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       if (Utils.keys.ARROW_UP.includes(e.key) && this.activeIndex > 0) this.activeIndex--;
       if (Utils.keys.ARROW_DOWN.includes(e.key) && this.activeIndex < numItems - 1)
         this.activeIndex++;
-      this.$active?.classList.remove('active');
+      this._setActive(null);
       if (this.activeIndex >= 0) {
-        this.$active = this.container.querySelectorAll('li')[this.activeIndex];
-        this.$active?.classList.add('active');
+        this._setActive(this.container.querySelectorAll('li')[this.activeIndex]);
         // Focus selected
         this.container.children[this.activeIndex].scrollIntoView({
           behavior: 'smooth',
@@ -383,7 +420,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _resetCurrentElementPosition() {
     this.activeIndex = -1;
-    this.$active?.classList.remove('active');
+    this._setActive(null);
   }
 
   _resetAutocomplete() {
@@ -406,6 +443,14 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _createMenuItem(entry: AutocompleteData) {
     const item = document.createElement('li');
+    item.id = `autocomplete-option-${Utils.guid()}`;
+    item.setAttribute('role', 'option');
+    // role=option promises a selection state on every entry, not just the
+    // chosen one - and it has to be the *real* one. A multi-select entry that
+    // is already committed is selected whether or not it is the highlighted
+    // row.
+    const isSelected = this.selectedValues.some((sel) => sel.id === entry.id);
+    item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     item.setAttribute('data-id', <string>entry.id);
     item.setAttribute(
       'style',
@@ -419,7 +464,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       selection.style.textAlign = 'center';
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.checked = this.selectedValues.some((sel) => sel.id === entry.id);
+      checkbox.checked = isSelected;
       const spacer = document.createElement('span');
       spacer.style.paddingLeft = '21px';
       selection.append(checkbox, spacer);
@@ -534,7 +579,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     // Open menu
     if (!this.menu.isOpen) {
-      setTimeout(() => {
+      // Cancel first: two open() calls before the callback fires would leave
+      // the earlier timer untracked, and destroy() can only cancel the one it
+      // knows about.
+      if (this._openTimer !== undefined) clearTimeout(this._openTimer);
+      this._openTimer = setTimeout(() => {
+        this._openTimer = undefined;
         this.menu.open();
       }, 0); // TODO: why?
     } else this.menu.recalculateDimensions(); // Recalculate menu when its already open

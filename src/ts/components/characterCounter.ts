@@ -83,6 +83,13 @@ export class CharacterCounter extends Component<BaseOptions> {
   _setupCounter() {
     this.counterEl = document.createElement('span');
     this.counterEl.classList.add('character-counter');
+    // The count is the whole point of the component and it changes as the
+    // user types, so it has to be a live region - otherwise a screen reader
+    // user reaches the limit without ever being told one existed. Polite so
+    // it waits for a pause instead of interrupting every keystroke, and
+    // atomic so "18/20" is read as one figure rather than a changed digit.
+    this.counterEl.setAttribute('aria-live', 'polite');
+    this.counterEl.setAttribute('aria-atomic', 'true');
     this.counterEl.style.float = 'right';
     this.counterEl.style.fontSize = '12px';
     this.counterEl.style.height = '1';

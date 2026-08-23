@@ -12,6 +12,10 @@
 
   input.file-path { width: 100%; }
 
+  // The trigger. `label.button` is the documented form - it wraps the file
+  // input, which is how clicking it opens the picker with no script. <button>
+  // and .btn are the older markup and still work.
+  > label.button,
   > button,
   > .btn {
     position: relative;
@@ -24,7 +28,10 @@
     cursor: pointer;
   }
 
-  input[type=file] {
+  // Scoped to the trigger, not to .file-field. `inset: 0` against the field
+  // stretched the invisible input across the whole row, so clicking the path
+  // display - or any empty space - opened the file picker.
+  :is(label.button, button, .btn) input[type=file] {
     position: absolute;
     inset: 0;
     cursor: pointer;

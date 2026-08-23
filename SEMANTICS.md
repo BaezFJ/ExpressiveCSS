@@ -25,9 +25,29 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**1 of 44 components enforced; 43 remaining.**
+**11 of 44 components enforced; 33 remaining.**
 
 ## Enforced
+
+### autocomplete
+
+Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.test.js.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `autocomplete-options-are-options` | forbid | `.autocomplete-content li:not([role="option"])` | must not match |
+
+- **autocomplete-options-are-options** - The suggestion list is a listbox; every entry in it is an option.
+
+### character-counter
+
+Swept 0.8.0. Checked at runtime in tests/character-counter.test.js.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `counter-is-announced` | require-attr | `.character-counter` | must have `aria-live` = `polite` |
+
+- **counter-is-announced** - The count changes as the user types, so it has to be a live region or the remaining characters are never announced.
 
 ### chips
 
@@ -53,31 +73,121 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
 
+### forms/checkboxes
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `checkbox-labelled` | forbid | `input[type="checkbox"]:not([id]):not(label *):not(.chip-input)` | must not match |
+
+- **checkbox-labelled** - A checkbox must be inside its <label> or carry an id a label points at.
+
+### forms/fieldset
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `fieldset-has-legend` | forbid | `fieldset:not(:has(> legend))` | must not match |
+
+- **fieldset-has-legend** - A fieldset without a legend groups controls visually but names nothing.
+
+### forms/file-input
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `file-input-not-nested` | forbid | `:is(button, a) input[type="file"]` | must not match |
+| `file-path-readonly` | forbid | `input.file-path:not([readonly])` | must not match |
+
+- **file-input-not-nested** - A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.
+- **file-path-readonly** - The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded.
+
+### forms/input-fields
+
+Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `field-container-class` | forbid | `.input-field:not(.chips)` | must not match |
+| `field-icon-not-i` | forbid | `.field i` | must not match |
+| `field-icon-hidden` | require-attr | `.field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp, .field .material-icons` | must have `aria-hidden` = `true` |
+| `field-icon-side` | forbid | `.field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons):not(.prefix):not(.suffix)` | must not match |
+| `field-label-for` | require-attr | `.field > label:not(:has(input, select, textarea))` | must have `for` |
+| `field-control-id` | require-attr | `.field > :is(input, textarea, select)` | must have `id` |
+| `field-supporting-text-id` | require-attr | `.field > small` | must have `id` |
+| `field-supporting-text-linked` | forbid | `.field:has(> small) > :is(input, textarea, select):not([aria-describedby])` | must not match |
+
+- **field-container-class** - The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
+- **field-icon-not-i** - <i> means idiomatic text, not icon. Use <span class="material-symbols">.
+- **field-icon-hidden** - The ligature is read aloud. A field icon is decoration; the label names the control.
+- **field-icon-side** - A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
+- **field-label-for** - A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
+- **field-control-id** - Without an id the label has nothing to point at.
+- **field-supporting-text-id** - Supporting and error text has to be referenceable to be announced with the control.
+- **field-supporting-text-linked** - A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
+
+### forms/radio-buttons
+
+Swept 0.8.0. A radio is one of a set, and the set needs a name.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `radio-in-fieldset` | forbid | `input[type="radio"]:not(fieldset *)` | must not match |
+| `radio-labelled` | forbid | `input[type="radio"]:not([id]):not(label *)` | must not match |
+
+- **radio-in-fieldset** - A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
+- **radio-labelled** - A radio must be inside its <label> or carry an id a label points at.
+
+### forms/range
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `range-labelled` | forbid | `input[type="range"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)` | must not match |
+
+- **range-labelled** - A range announces only its value unless something names it.
+
+### forms/select
+
+Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `option-has-selected-state` | forbid | `li[role="option"]:not([aria-selected])` | must not match |
+
+- **option-has-selected-state** - role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen.
+
+### forms/switches
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `switch-is-label` | forbid | `.switch:not(label)` | must not match |
+| `switch-decorative-text-hidden` | require-attr | `.switch > span:not(.lever)` | must have `aria-hidden` = `true` |
+
+- **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
+- **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
+
 ## Exempt
 
 Not yet swept. Rules listed here are recorded but do not run.
 
 | Component | Rules written | Note |
 | --- | --- | --- |
-| `autocomplete` | 0 | Not yet swept. |
 | `badges` | 0 | Not yet swept. |
 | `bottom-sheet` | 0 | Not yet swept. |
 | `breadcrumb` | 0 | Not yet swept. |
 | `buttons` | 0 | Not yet swept. |
 | `cards` | 1 | Rules written, sweep not started. |
 | `carousel` | 0 | Not yet swept. |
-| `character-counter` | 0 | Not yet swept. |
 | `datepicker` | 0 | Not yet swept. |
 | `dialog` | 0 | Not yet swept. |
 | `docked-display` | 0 | Not yet swept. |
-| `forms/checkboxes` | 0 | Not yet swept. |
-| `forms/fieldset` | 0 | Not yet swept. |
-| `forms/file-input` | 0 | Not yet swept. |
-| `forms/input-fields` | 0 | Not yet swept. |
-| `forms/radio-buttons` | 0 | Not yet swept. |
-| `forms/range` | 0 | Not yet swept. |
-| `forms/select` | 0 | Not yet swept. |
-| `forms/switches` | 0 | Not yet swept. |
 | `icons-material-design` | 2 | Rules written, sweep not started. ~100 <i class="material-icons"> examples remain in llm.md. |
 | `lightbox` | 0 | Not yet swept. |
 | `list` | 1 | Rules written, sweep not started. |

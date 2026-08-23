@@ -37,6 +37,17 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   font-family: $font-stack;
 }
 
+// A .field is full of spans that are not the floating label: supporting text,
+// the character counter, the file path, the select caret, and - since field
+// icons stopped being <i> - the leading and trailing icons. Every rule that
+// styles "the label, or the span standing in for it" has to exclude all of
+// them, and there are five such rules. They were five hand-copied lists that
+// had already drifted (.file-path was in two of them), and adding .prefix /
+// .suffix to four of five is exactly the bug this variable prevents: the
+// leading icon inherited the label's position and sat at 16px with
+// pointer-events: none.
+$_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix, .suffix";
+
 .field {
   --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-container-highest);
   --md-comp-filled-text-field-container-shape: 1rem;
@@ -72,16 +83,16 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     }
 
     &:focus:not([readonly]) + label,
-    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter, .caret) {
+    &:focus:not([readonly]) + span:not(#{$_not-label}) {
       color: var(--input-color);
     }
 
     &:focus:not([readonly]) + label,
     &:not([placeholder=" "]) + label,
     &:not(:placeholder-shown) + label,
-    &:focus:not([readonly]) + span:not(.supporting-text, .character-counter, .caret),
-    &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter, .caret),
-    &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter, .caret) {
+    &:focus:not([readonly]) + span:not(#{$_not-label}),
+    &:not([placeholder=" "]) + span:not(#{$_not-label}),
+    &:not(:placeholder-shown) + span:not(#{$_not-label}) {
       transform: scale(calc(12 / 16));
       top: 8px;
     }
@@ -123,8 +134,10 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
     user-select: none;
   }
 
-  > label,
-  > span:not(.supporting-text, .character-counter, .file-path, .caret) {
+  // :not(.button) - the file input's trigger is a <label> and is a button, not
+  // this field's floating label.
+  > label:not(.button),
+  > span:not(#{$_not-label}) {
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
     position: absolute;
@@ -160,7 +173,15 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   // Shared icon box. Position is set on the leading / trailing rules;
   // a lone <i> matches several of the :is() items and must not pick
   // a side here.
-  > i:is(.prefix, .suffix, :first-of-type, :last-of-type, :last-child) {
+  //
+  // The `i` rules are the legacy path and still work. They cannot be widened
+  // to the canonical <span class="material-symbols"> form, because they lean
+  // on :first-of-type / :last-of-type - which count elements of the same
+  // *type*, and a field is full of other spans (.supporting-text, .caret,
+  // .character-counter, .file-path). So the documented markup names the side
+  // explicitly with .prefix / .suffix, and those rules key on nothing else.
+  > i:is(.prefix, .suffix, :first-of-type, :last-of-type, :last-child),
+  > :is(.prefix, .suffix) {
     position: absolute;
     top: 16px;
     display: flex;
@@ -174,28 +195,41 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   }
 
   > i:first-of-type:not(.suffix):not(:last-child),
-  > i.prefix {
+  > i.prefix,
+  > .prefix {
     left: 12px;
     pointer-events: none;
   }
 
   > i.suffix,
   > i:last-of-type:not(:first-of-type),
-  > i:last-child:not(:first-child):not(.prefix) {
+  > i:last-child:not(:first-child):not(.prefix),
+  > .suffix {
     right: 12px;
+    // Both icons inherited this from the floating-label rule until they were
+    // excluded from it. .prefix restates it below; .suffix has to as well, or
+    // the trailing icon swallows the click that should focus the input.
+    pointer-events: none;
   }
 
-  &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix) {
+  &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) {
     > :is(input, textarea) {
       padding-left: 52px;
     }
 
-    > :is(label, span:not(.supporting-text, .character-counter, .file-path, .caret)) {
+    // The exclusion list is what stops this indenting things that are not the
+    // floating label. .prefix / .suffix joined it when field icons stopped
+    // being <i> and became spans - without them the leading icon was pushed
+    // to 52px, i.e. indented past its own padding.
+    > :is(
+      label,
+      span:not(#{$_not-label})
+    ) {
       left: 52px;
     }
   }
 
-  &:has(> i.suffix, > i:last-of-type:not(:first-of-type), > i:last-child:not(:first-child):not(.prefix)) {
+  &:has(> i.suffix, > i:last-of-type:not(:first-of-type), > i:last-child:not(:first-child):not(.prefix), > .suffix) {
     > :is(input, textarea) {
       padding-right: 52px;
     }
@@ -220,9 +254,9 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
       &:focus:not([readonly]) + label,
       &:not([placeholder=" "]) + label,
       &:not(:placeholder-shown) + label,
-      &:focus:not([readonly]) + span:not(.supporting-text, .character-counter, .caret),
-      &:not([placeholder=" "]) + span:not(.supporting-text, .character-counter, .caret),
-      &:not(:placeholder-shown) + span:not(.supporting-text, .character-counter, .caret) {
+      &:focus:not([readonly]) + span:not(#{$_not-label}),
+      &:not([placeholder=" "]) + span:not(#{$_not-label}),
+      &:not(:placeholder-shown) + span:not(#{$_not-label}) {
         top: -8px;
         left: 16px;
         margin-left: -4px;

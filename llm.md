@@ -891,7 +891,7 @@ We have provided detailed documentation as well as specific code examples to hel
 
 You can see how easy it is to create layouts using the grid system. Just remember to make sure your column numbers add up to 12 for an even layout.
 
-```text
+```html
 <!-- Navbar goes here -->
 <!-- Page Layout here -->
 <div class="row">
@@ -931,7 +931,7 @@ In the previous examples, we only defined the size for small screens using `s12`
 
 In this example below, we take the same layout from above, but we make it responsive by defining how many columns the div should take up on each screen size. Try resizing your browser and watch the layout change below.
 
-```text
+```html
 <!-- Navbar goes here -->
 <!-- Page Layout here -->
 <div class="row">
@@ -1133,7 +1133,7 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 
 #### This is an extremely long title that will be truncated
 
-```text
+```html
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
 ```
 
@@ -1386,7 +1386,7 @@ We've made some custom animation classes that will transition your content with 
 
 Use this to scale in and out elements. Make sure to add the base transition class `scale-transition`. Then add the class `scale-out` to scale the element down until it is hidden. To start something as hidden, add the class `scale-out` first, and then add the class `scale-in` to scale the element up until it is shown.
 
-```text
+```html
 <!-- Scaled in -->
 <a id="scale-demo" href="#!" class="button circle extra scale-transition">
   <i class="material-icons">add</i>
@@ -1425,7 +1425,7 @@ A paragraph uses body-large. It is for longer reading, not chrome.
 
 Small print and figcaptions use body-small.
 
-```text
+```html
 <h1>Heading 1</h1>
 <h2>Heading 2</h2>
 <p>A paragraph uses body-large.</p>
@@ -1478,7 +1478,7 @@ Label Medium
 
 Label Small
 
-```text
+```html
 <p class="display-large">Display Large</p>
 <span class="label-large">Label</span>
 ```
@@ -1507,7 +1507,7 @@ Label Small
 
 *Emphasized*, **strong**, italic, bold, light, thin, underline, upper, capitalize this.
 
-```text
+```html
 <em>Emphasized</em>
 <strong>strong</strong>
 <span class="bold">bold</span>
@@ -1522,7 +1522,7 @@ Blockquotes emphasize a quote or citation. The left bar uses `--md-sys-color-pri
 
 > This is an example quotation that uses the blockquote tag. Here is another line to make it look bigger.
 
-```text
+```html
 <blockquote>
   This is an example quotation that uses the blockquote tag.
 </blockquote>
@@ -1536,7 +1536,7 @@ Toggle flow-text
 
 To see Flow Text in action, slowly resize your browser and watch the size of this text body change. Use the button above to toggle flow-text off and on to see the difference.
 
-```text
+```html
 <p class="flow-text">I am Flow Text</p>
 ```
 
@@ -1686,7 +1686,7 @@ Breadcrumbs are a good way to display your current location. This is usually use
 
 ### Navbar style
 
-```text
+```html
 <header>
   <nav>
     <a href="#!" class="breadcrumb">First</a>
@@ -1859,7 +1859,7 @@ Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs).
 
 I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.
 
-```text
+```html
 <article>
   <h3>Card title</h3>
   <p>I am a very simple card.</p>
@@ -1886,7 +1886,7 @@ Surface-variant, no elevation.
 
 Surface plus a 1dp outline.
 
-```text
+```html
 <article>…</article>
 <article class="filled">…</article>
 <article class="outlined">…</article>
@@ -1898,7 +1898,7 @@ A direct `<img>` is full-bleed across the top. Wrap it in a `<figure>` if you wa
 
 I am a very simple card. I am good at containing small bits of information.
 
-```text
+```html
 <article>
   <figure>
     <img src="images/sample-1.jpg" alt="">
@@ -1917,7 +1917,7 @@ Put a `halfway-fab` inside the `<figure>` so it anchors to the image, not the wh
 
 I am a very simple card. I am good at containing small bits of information.
 
-```text
+```html
 <article>
   <figure>
     <img src="images/sample-1.jpg" alt="">
@@ -1938,7 +1938,7 @@ Add `horizontal`. The image takes the start; wrap the headline, text, and action
 
 I am a very simple card. I am good at containing small bits of information.
 
-```text
+```html
 <article class="horizontal">
   <img src="images/sample.jpg" alt="">
   <div>
@@ -1963,7 +1963,7 @@ This is a link
 
 Here is some more information about this product that is only revealed once clicked on.
 
-```text
+```html
 <article>
   <figure>
     <img src="images/office.jpg" alt="">
@@ -1990,7 +1990,7 @@ Put a `<nav class="tabs">` between the supporting text and the tab panels. `Auto
 
 I am a very simple card. I am good at containing small bits of information.
 
-```text
+```html
 <article>
   <p>I am a very simple card.</p>
   <nav class="tabs max">
@@ -2010,7 +2010,7 @@ I am a very simple card. I am good at containing small bits of information.
 
 The small card is 300px tall.
 
-```text
+```html
 <article class="small">…</article>
 <article class="medium">…</article>
 <article class="large">…</article>
@@ -2022,7 +2022,7 @@ A card with no slots is just padding on the container. Write that as an `<articl
 
 I am a very simple card. I am good at containing small bits of information.
 
-```text
+```html
 <article class="primary on-primary-text">
   <p>I am a very simple card.</p>
 </article>
@@ -2511,7 +2511,7 @@ Google publishes a [searchable Material Icons list](https://fonts.google.com/ico
 
 The Expressive stylesheet does not ship the font files. Include one or more of these lines in `<head>`:
 
-```text
+```html
 <!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Material Symbols — Outlined -->
@@ -2532,7 +2532,7 @@ Rounded
 
 Sharp
 
-```text
+```html
 <i class="material-icons">add</i>
 <i class="material-symbols-outlined">add</i>
 <i class="material-symbols-rounded">add</i>
@@ -2549,7 +2549,7 @@ Size an icon with `font-size`, or use the preset classes on the `<i>`: `tiny` (1
 
 The same size classes apply to Material Symbols.
 
-```text
+```html
 <!-- Sizes: tiny 1rem, small 2rem, medium 4rem, large 6rem -->
 <i class="large material-icons">insert_chart</i>
 <i class="large material-symbols-outlined">insert_chart</i>
@@ -2573,7 +2573,7 @@ The bar is CSS-only. Menus and the sidenav are separate components that `AutoIni
 
 Default. Leading icon, headline, trailing actions. DOM order is the layout — the headline grows, so anything after it sits on the end.
 
-```text
+```html
 <header>
   <nav>
     <button type="button" aria-label="Menu">
@@ -2590,7 +2590,7 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
 
 Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the large breakpoint and pair it with a sidenav trigger when the bar has to collapse.
 
-```text
+```html
 <header>
   <nav>
     <h2>Title</h2>
@@ -2609,7 +2609,7 @@ Text links go in a `<menu>`. Put the menu after the heading to align it on the e
 
 Add `center` to the header. The headline is taken out of flow so the leading and trailing actions can sit on the edges without shifting it. Keep the title short enough that it does not run under the icons.
 
-```text
+```html
 <header class="center">
   <nav>
     <button type="button" aria-label="Back">
@@ -2625,7 +2625,7 @@ Add `center` to the header. The headline is taken out of flow so the leading and
 
 Same markup as the small bar. `medium` is 112dp with a `headline-small` title on the second row. `large` is 152dp with `headline-medium`. The title is `order`ed onto the bottom row so the first row can hold the leading icon on the start and the trailing icons on the end.
 
-```text
+```html
 <header class="medium">
   <nav>
     <button type="button" aria-label="Back">
@@ -2645,7 +2645,7 @@ Add `fixed` to pin a top bar with `position: sticky`. No wrapper is required. At
 
 The documentation header on this site is a fixed small bar. A second fixed bar on this page would sit on top of it, so the live example is the site header itself.
 
-```text
+```html
 <header class="fixed">
   <nav>
     <h2>Title</h2>
@@ -2658,7 +2658,7 @@ The documentation header on this site is a fixed small bar. A second fixed bar o
 
 The default fill is `surface`. Color utilities win because they live in the utilities layer — put `primary on-primary-text` (or any fill + `on-*` pair) on the header. Icons inherit the header color. Set `--md-comp-top-app-bar-leading-icon-color` to `var(--md-sys-color-on-surface-variant)` if you want the spec’s muted trailing icons.
 
-```text
+```html
 <header class="primary on-primary-text">
   <nav>
     <h2>Primary</h2>
@@ -2682,7 +2682,7 @@ Component tokens you can set on the header (or on `:root`):
 
 Point a `menu-trigger` at a `<menu>` whose `id` matches `data-target`. `AutoInit()` starts every `.menu-trigger`.
 
-```text
+```html
 <menu id="menu1">
   <li><a href="#!">one</a></li>
   <li><a href="#!">two</a></li>
@@ -2718,7 +2718,7 @@ Menus open on click by default (`hover: false`). Pass `{ hover: true }` to open 
 
 A `<form>` in the nav fills the space between the leading action and anything after it. The input is unstyled against the bar — no extra field class.
 
-```text
+```html
 <header>
   <nav>
     <button type="button" aria-label="Back">
@@ -2735,7 +2735,7 @@ A `<form>` in the nav fills the space between the leading action and anything af
 
 Hide the destination menu below the large breakpoint and put a `sidenav-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `sidenav` whose id matches `data-target`. The sidenav element itself must not be a child of the `<nav>`.
 
-```text
+```html
 <header>
   <nav>
     <a href="#!" data-target="mobile-demo" class="sidenav-trigger" aria-label="Open menu">
@@ -3792,7 +3792,7 @@ Show full-screen
 
 A full-screen dialog fills the viewport. Put the primary action in the form at the end.
 
-```text
+```html
 <dialog class="max">
   <h2>New message</h2>
   <p>A full-screen dialog fills the viewport.</p>
@@ -4733,7 +4733,7 @@ Add `datepicker` to a text input. `AutoInit()` starts every `.datepicker` except
 The calendar is inline, not a modal. `open()` and `close()` are deprecated no-ops. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
 
 ```html
-<div class="input-field">
+<div class="field">
   <input type="text" class="datepicker" id="birthdate">
   <label for="birthdate">Birthdate</label>
 </div>
@@ -4957,7 +4957,7 @@ Add `timepicker` to a text input. `AutoInit()` starts every `.timepicker` except
 The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are deprecated no-ops.
 
 ```html
-<div class="input-field">
+<div class="field">
   <input type="text" class="timepicker" id="lunchtime">
   <label for="lunchtime">Lunchtime</label>
 </div>
@@ -5113,7 +5113,9 @@ Deprecated. Both log a warning and do nothing. The clock is not a modal.
 
 Material Design 3 text fields, from the HTML.
 
-A `.field` (or the older `.input-field`) is the container. The `<label>` after the control is the floating label. A leading `<i>` is the leading icon. `<small>` is supporting text. The default is the M3 filled field; add `outlined` (or `border`) for the outlined variant.
+A `.field` is the container. The `<label>` after the control is the floating label, so it must carry `for` — it sits after the control and cannot wrap it. An icon names its side with `prefix` or `suffix` and is `aria-hidden`, because the ligature is real text. `<small>` is supporting text: give it an `id` and point the control at it with `aria-describedby`, or it is never read out with the field. The default is the M3 filled field; add `outlined` (or `border`) for the outlined variant.
+
+`.input-field` is **not** the container and never was — the only rule matching it in the sheet is `.chips.input-field`.
 
 Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fields/specs). Height is 56dp. Filled is a `surface-variant` well with 4dp top corners and a 1dp / 2dp bottom indicator. Outlined is a 1dp / 2dp `outline` at 4dp. The label is `body-large` at rest and `body-small` floated. Input text is `body-large` / `on-surface`. Icons are 24dp, 12dp from the edge.
 
@@ -5121,9 +5123,9 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 
 ```html
 <div class="field">
-  <input id="first_name" type="text" placeholder=" ">
+  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
-  <small>Supporting text</small>
+  <small id="first_name_help">Supporting text</small>
 </div>
 
 <div class="field outlined">
@@ -5132,14 +5134,16 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 </div>
 
 <div class="field">
-  <i class="material-icons">place</i>
-  <i class="material-icons suffix">gps_fixed</i>
+  <span class="material-symbols prefix" aria-hidden="true">place</span>
+  <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
   <input id="loc" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
 ```
 
-Put `invalid` or `aria-invalid="true"` on the input for the error state. Do not put `error` on the wrapper — that class is a color utility and fills the field. `.supporting-text` and `.prefix` / `.suffix` remain as aliases.
+Put `invalid` or `aria-invalid="true"` on the input for the error state. Do not put `error` on the wrapper — that class is a color utility and fills the field.
+
+A side is required on a field icon. The old markup let a bare `<i>` fall to whichever side its position implied, but that rule counted elements of the same *type* (`:first-of-type`), which only ever worked while icons were `<i>` and nothing else in the field was. `.prefix` / `.suffix` say it outright and work on any element.
 
 ### Input types
 
@@ -5147,9 +5151,9 @@ Put `invalid` or `aria-invalid="true"` on the input for the error state. Do not 
 
 ```html
 <div class="field">
-  <input id="email" type="email" class="validate" placeholder=" ">
+  <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email_help">
   <label for="email">Email</label>
-  <small data-error="Enter a valid email">Supporting text</small>
+  <small id="email_help" data-error="Enter a valid email">Supporting text</small>
 </div>
 ```
 
@@ -5161,7 +5165,7 @@ Add `inline` to sit the field in a line of text.
 
 This is an inline input field: Email
 
-```text
+```html
 This is an inline input field:
 <span class="field inline">
   <input id="email_inline" type="email" class="validate" placeholder=" ">
@@ -5192,14 +5196,16 @@ Setting `.value` in script does not resize the field. Call `textareaAutoResize` 
 
 A `.file-field.field` pairs a button with a path field. `Forms.Init()` copies the chosen file name into `input.file-path`.
 
+The trigger is a `<label>` **wrapping** the file input, not a `<button>` wrapping it. The distinction is not pedantry: `<button>` forbids interactive content, so a control inside it is invalid and yields two overlapping hit targets, whereas a `<label>` containing its own control is the pattern the spec is written around. Wrapping also means the label is what the invisible input is sized against, so the picker opens from the button and nowhere else. The path field is `readonly` — it only ever shows what the file input holds, so offering an edit that is thrown away is a lie — and takes an `aria-label` because it has no visible label of its own.
+
 ```html
 <div class="file-field field">
-  <button type="button">
-    <span>File</span>
+  <label class="button">
+    File
     <input type="file">
-  </button>
+  </label>
   <div class="file-path-wrapper">
-    <input class="file-path" type="text" placeholder=" ">
+    <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
   </div>
 </div>
 ```
@@ -5226,7 +5232,7 @@ A `<fieldset>` is the group. A `<legend>` is the headline. Everything else is a 
 
 Material Design 3 has no fieldset component. Tokens follow the outlined grouping container used around related form content, and the [outlined text-field](https://m3.material.io/components/text-fields/specs) shape so a group of fields matches the fields. The container is 4dp corners and a 1dp `outline-variant` stroke. The legend is `title-small` / `on-surface`. Supporting text is `body-small`. Padding is 16dp; children sit 16dp apart. Disabled is 38%.
 
-```text
+```html
 <fieldset>
   <legend>Name</legend>
   <div class="field">
@@ -5244,7 +5250,7 @@ Material Design 3 has no fieldset component. Tokens follow the outlined grouping
 
 A fieldset is also the right parent for a radio, checkbox, or switch group — the legend names the question, the `disabled` attribute disables every control inside. Put the labels in a `<nav>` to sit them on one line.
 
-```text
+```html
 <fieldset>
   <legend>Notify me about</legend>
   <label class="switch">
@@ -5277,7 +5283,7 @@ A fieldset is also the right parent for a radio, checkbox, or switch group — t
 
 The default is outlined. `filled` is a `surface-variant` well with no stroke — pair it with `outlined` fields so the wells stay distinct. `rounded` is 12dp corners (M3 medium, like a card). `outlined` and `border` name the default if you need to say it.
 
-```text
+```html
 <fieldset class="filled">
   <legend>
     <i class="material-icons">place</i>
@@ -5296,7 +5302,7 @@ The default is outlined. `filled` is a `surface-variant` well with no stroke —
 
 The HTML `disabled` attribute on a fieldset disables every control inside it. The legend and outline drop to 38%.
 
-```text
+```html
 <fieldset disabled>
   <legend>Billing</legend>
   <div class="field">…</div>
@@ -5340,12 +5346,14 @@ Location
 
 An `input + span` or `input + .lever` still works if you already have that markup.
 
+The on/off captions are decoration. Left as bare text they are folded into the label, and the switch announces itself as "Off On" — so hide them and name the control itself. A switch whose only text is a caption needs an `aria-label`, because hiding both leaves it with no name at all.
+
 ```html
 <label class="switch">
-  Off
-  <input type="checkbox">
+  <span aria-hidden="true">Off</span>
+  <input type="checkbox" aria-label="Dark mode">
   <span class="lever"></span>
-  On
+  <span aria-hidden="true">On</span>
 </label>
 ```
 
@@ -5368,7 +5376,7 @@ Add `browser-default` to skip the menu and keep the native select.
 Browser Select Choose your option Option 1 Option 2 Option 3
 
 ```html
-<div class="input-field">
+<div class="field">
   <select id="form-select-1">
     <option value="" disabled selected>Choose your option</option>
     <option value="1">Option 1</option>
@@ -5378,7 +5386,7 @@ Browser Select Choose your option Option 1 Option 2 Option 3
   <label for="form-select-1">Expressive Select</label>
 </div>
 
-<div class="input-field">
+<div class="field">
   <select id="form-select-2" multiple>
     <option value="" disabled selected>Choose your option</option>
     <option value="1">Option 1</option>
@@ -5388,7 +5396,7 @@ Browser Select Choose your option Option 1 Option 2 Option 3
   <label for="form-select-2">Multiple Select</label>
 </div>
 
-<div class="input-field">
+<div class="field">
   <select id="form-select-3">
     <optgroup label="team 1">
       <option value="1">Option 1</option>
@@ -5402,7 +5410,7 @@ Browser Select Choose your option Option 1 Option 2 Option 3
   <label for="form-select-3">Optgroups</label>
 </div>
 
-<div class="input-field">
+<div class="field">
   <select id="form-select-4">
     <option value="" disabled selected>Choose your option</option>
     <option value="1" data-icon="photo.jpg">example 1</option>
@@ -5492,7 +5500,7 @@ instance.destroy();
 Browser Disabled Choose your option Option 1 Option 2 Option 3
 
 ```html
-<div class="input-field">
+<div class="field">
   <select id="form-select-7" disabled>
     <option value="" disabled selected>Choose your option</option>
     <option value="1">Option 1</option>
@@ -5639,32 +5647,40 @@ Material Design 3 radios, from the HTML.
 
 A `<label>` wrapping `<input type="radio">` is the control. The label text is a sibling of the input — no extra class, no required `<span>`. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
+A radio only means anything as one of a set, so the set is a `<fieldset>` and the `<legend>` names the question the radios answer. Without it the options are announced one by one with nothing saying what is being chosen.
+
 Tokens follow the [M3 radio spec](https://m3.material.io/components/radio-button/specs). The icon is a 20dp ring with a 2dp stroke. Selected is `primary` with a 10dp inner disc (the M3 gap). The state layer is 40dp at 8% hover and 10% focus. The touch target is 48dp. The label is `body-large` / `on-surface`. Disabled is `on-surface` at 38%.
 
 Use the same `name` on every radio in a group. Add `disabled` to disable one. `with-gap` is a no-op — the selected state is always the ring plus inner disc.
 
 ```html
-<label>
-  <input name="group1" type="radio" checked>
-  Red
-</label>
-<label>
-  <input name="group1" type="radio">
-  Yellow
-</label>
-<label>
-  <input name="group1" type="radio" disabled>
-  Brown
-</label>
+<fieldset>
+  <legend>Colour</legend>
+  <label>
+    <input name="group1" type="radio" checked>
+    Red
+  </label>
+  <label>
+    <input name="group1" type="radio">
+    Yellow
+  </label>
+  <label>
+    <input name="group1" type="radio" disabled>
+    Brown
+  </label>
+</fieldset>
 ```
 
 An `input + span` still works if you already have that markup, or if you follow BeerCSS’s `<label class="radio">` pattern.
 
 ```html
-<label class="radio">
-  <input type="radio" name="group1">
-  <span>Yellow</span>
-</label>
+<fieldset>
+  <legend>Colour</legend>
+  <label class="radio">
+    <input type="radio" name="group1">
+    <span>Yellow</span>
+  </label>
+</fieldset>
 ```
 
 ### In a row
@@ -5672,16 +5688,19 @@ An `input + span` still works if you already have that markup, or if you follow 
 Put the labels in a `<nav>` to sit them on one line. A bare group stacks vertically.
 
 ```html
-<nav>
-  <label>
-    <input name="group2" type="radio" checked>
-    Red
-  </label>
-  <label>
-    <input name="group2" type="radio">
-    Yellow
-  </label>
-</nav>
+<fieldset>
+  <legend>Colour</legend>
+  <nav>
+    <label>
+      <input name="group2" type="radio" checked>
+      Red
+    </label>
+    <label>
+      <input name="group2" type="radio">
+      Yellow
+    </label>
+  </nav>
+</fieldset>
 ```
 
 ---
@@ -5974,8 +5993,8 @@ Add `autocomplete` to a text input inside `.input-field`. `AutoInit()` starts ev
 Set `isMultiSelect: true` to pick several values. A count appears on the field.
 
 ```html
-<div class="input-field">
-  <i class="material-icons prefix">textsms</i>
+<div class="field">
+  <span class="material-symbols prefix" aria-hidden="true">textsms</span>
   <input type="text" id="autocomplete-input" class="autocomplete" placeholder=" ">
   <label for="autocomplete-input">Autocomplete</label>
 </div>

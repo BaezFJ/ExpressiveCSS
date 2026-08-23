@@ -23,9 +23,16 @@
   ],
   "components": {
     "autocomplete": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.test.js.",
+      "rules": [
+        {
+          "id": "autocomplete-options-are-options",
+          "kind": "forbid",
+          "selector": ".autocomplete-content li:not([role=\"option\"])",
+          "message": "The suggestion list is a listbox; every entry in it is an option."
+        }
+      ]
     },
     "badges": {
       "status": "exempt",
@@ -65,9 +72,18 @@
       "rules": []
     },
     "character-counter": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. Checked at runtime in tests/character-counter.test.js.",
+      "rules": [
+        {
+          "id": "counter-is-announced",
+          "kind": "require-attr",
+          "selector": ".character-counter",
+          "attr": "aria-live",
+          "equals": "polite",
+          "message": "The count changes as the user types, so it has to be a live region or the remaining characters are never announced."
+        }
+      ]
     },
     "chips": {
       "status": "enforced",
@@ -145,44 +161,167 @@
       "rules": []
     },
     "forms/checkboxes": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "checkbox-labelled",
+          "kind": "forbid",
+          "selector": "input[type=\"checkbox\"]:not([id]):not(label *):not(.chip-input)",
+          "message": "A checkbox must be inside its <label> or carry an id a label points at."
+        }
+      ]
     },
     "forms/fieldset": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "fieldset-has-legend",
+          "kind": "forbid",
+          "selector": "fieldset:not(:has(> legend))",
+          "message": "A fieldset without a legend groups controls visually but names nothing."
+        }
+      ]
     },
     "forms/file-input": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "file-input-not-nested",
+          "kind": "forbid",
+          "selector": ":is(button, a) input[type=\"file\"]",
+          "message": "A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button."
+        },
+        {
+          "id": "file-path-readonly",
+          "kind": "forbid",
+          "selector": "input.file-path:not([readonly])",
+          "message": "The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded."
+        }
+      ]
     },
     "forms/input-fields": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.",
+      "rules": [
+        {
+          "id": "field-container-class",
+          "kind": "forbid",
+          "selector": ".input-field:not(.chips)",
+          "message": "The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`."
+        },
+        {
+          "id": "field-icon-not-i",
+          "kind": "forbid",
+          "selector": ".field i",
+          "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\">."
+        },
+        {
+          "id": "field-icon-hidden",
+          "kind": "require-attr",
+          "selector": ".field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp, .field .material-icons",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "The ligature is read aloud. A field icon is decoration; the label names the control."
+        },
+        {
+          "id": "field-icon-side",
+          "kind": "forbid",
+          "selector": ".field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons):not(.prefix):not(.suffix)",
+          "message": "A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>."
+        },
+        {
+          "id": "field-label-for",
+          "kind": "require-attr",
+          "selector": ".field > label:not(:has(input, select, textarea))",
+          "attr": "for",
+          "message": "A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not."
+        },
+        {
+          "id": "field-control-id",
+          "kind": "require-attr",
+          "selector": ".field > :is(input, textarea, select)",
+          "attr": "id",
+          "message": "Without an id the label has nothing to point at."
+        },
+        {
+          "id": "field-supporting-text-id",
+          "kind": "require-attr",
+          "selector": ".field > small",
+          "attr": "id",
+          "message": "Supporting and error text has to be referenceable to be announced with the control."
+        },
+        {
+          "id": "field-supporting-text-linked",
+          "kind": "forbid",
+          "selector": ".field:has(> small) > :is(input, textarea, select):not([aria-describedby])",
+          "message": "A field with supporting text must point at it with aria-describedby, or the text is never read out with the control."
+        }
+      ]
     },
     "forms/radio-buttons": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. A radio is one of a set, and the set needs a name.",
+      "rules": [
+        {
+          "id": "radio-in-fieldset",
+          "kind": "forbid",
+          "selector": "input[type=\"radio\"]:not(fieldset *)",
+          "message": "A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered."
+        },
+        {
+          "id": "radio-labelled",
+          "kind": "forbid",
+          "selector": "input[type=\"radio\"]:not([id]):not(label *)",
+          "message": "A radio must be inside its <label> or carry an id a label points at."
+        }
+      ]
     },
     "forms/range": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "range-labelled",
+          "kind": "forbid",
+          "selector": "input[type=\"range\"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)",
+          "message": "A range announces only its value unless something names it."
+        }
+      ]
     },
     "forms/select": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",
+      "rules": [
+        {
+          "id": "option-has-selected-state",
+          "kind": "forbid",
+          "selector": "li[role=\"option\"]:not([aria-selected])",
+          "message": "role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen."
+        }
+      ]
     },
     "forms/switches": {
-      "status": "exempt",
-      "note": "Not yet swept.",
-      "rules": []
+      "status": "enforced",
+      "note": "Swept 0.8.0.",
+      "rules": [
+        {
+          "id": "switch-is-label",
+          "kind": "forbid",
+          "selector": ".switch:not(label)",
+          "message": "A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name."
+        },
+        {
+          "id": "switch-decorative-text-hidden",
+          "kind": "require-attr",
+          "selector": ".switch > span:not(.lever)",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "On/off captions inside the label are folded into the accessible name, which then reads \"Off On\". Hide them and let the label text name the switch."
+        }
+      ]
     },
     "icons-material-design": {
       "status": "exempt",

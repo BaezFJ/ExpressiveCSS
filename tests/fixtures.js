@@ -49,7 +49,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'FormSelect',
     selector: 'select',
-    html: `<div class="field"><select><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label>Pick</label></div>`
+    html: `<div class="field"><select id="fs"><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label for="fs">Pick</label></div>`
   },
   {
     name: 'NavigationRail',

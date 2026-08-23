@@ -70,12 +70,19 @@
           An <code>input + span</code> or <code>input + .lever</code> still
           works if you already have that markup.
         </p>
+        <p>
+          The on/off captions are decoration. Left as bare text they are folded
+          into the label, and the switch announces itself as “Off On” — so hide
+          them and name the control itself. A switch whose only text is a
+          caption needs an <code>aria-label</code>, because hiding both leaves
+          it with no name at all.
+        </p>
 {% call code() %}
 <label class="switch">
-  Off
-  <input type="checkbox">
+  <span aria-hidden="true">Off</span>
+  <input type="checkbox" aria-label="Dark mode">
   <span class="lever"></span>
-  On
+  <span aria-hidden="true">On</span>
 </label>
 {% endcall %}
   {% endcall %}

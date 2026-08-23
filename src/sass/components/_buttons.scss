@@ -41,7 +41,12 @@
 // it ties the state rules and wins on order.
 $_not-btn: ".datepicker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip";
 
-$_btn: "button:not(#{$_not-btn}), a.button";
+// `label.button` is here for the file input: the control has to be a <label>
+// so that clicking it reaches the <input type="file"> it wraps, but it is a
+// button to look at and to use. Without it the label fell through to the
+// floating-label rule in forms/_input-fields and rendered as invisible,
+// unclickable field furniture.
+$_btn: "button:not(#{$_not-btn}), a.button, label.button";
 
 :where(#{$_btn}) {
   @include btn;

@@ -513,3 +513,23 @@ describe('Chips', () => {
     }
   });
 });
+
+describe('Autocomplete', () => {
+  beforeEach(resetBody);
+
+  test('destroying right after open() does not fire a timer at a dead menu', async () => {
+    // open() defers menu.open() to setTimeout(0) and destroy() did not cancel
+    // it, so tearing down in the same tick let the callback run against a menu
+    // whose element had been removed. It surfaced as an uncaught
+    // "The provided value is not of type 'Element'" *after* the test had
+    // passed, which is why nothing caught it for so long.
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac2"><label for="ac2">A</label></div>`;
+    const el = document.getElementById('ac2');
+    const instance = Expressive.Autocomplete.init(el, { data: [{ id: 'a', text: 'Apple' }] });
+    instance.open();
+    instance.destroy();
+    // If the timer survived teardown it fires in here and fails the file.
+    await sleep(10);
+    assert.equal(Expressive.Autocomplete.getInstance(el), undefined);
+  });
+});
