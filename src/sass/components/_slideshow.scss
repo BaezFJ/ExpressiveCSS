@@ -1,6 +1,12 @@
 @use "../abstracts" as *;
 
-.slider {
+// The image slideshow. M3 has no such component - its Carousel covers the
+// case - so this takes a plain name and gives up `.slider`, which M3 uses for
+// the range control. `.slider` still works here as long as it is not holding a
+// range input; forms/_range claims the other half of that test.
+$_slideshow: ":is(.slideshow, .slider:not(:has([type='range'])))";
+
+#{$_slideshow} {
   position: relative;
   height: 400px;
   width: 100%;

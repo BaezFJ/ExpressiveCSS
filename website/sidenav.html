@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sidenav - ExpressiveCSS</title>
+    <title>NavigationDrawer - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -32,10 +32,10 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Sidenav</h2>
+            <h2>NavigationDrawer</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -48,7 +48,7 @@
 
 
     <nav aria-label="Main">
-      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+      <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
                   <span class="material-symbols" aria-hidden="true">home</span>
@@ -258,7 +258,7 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="primary-text display-large">Sidenav</h1>
+                <h1 class="primary-text display-large">NavigationDrawer</h1>
                 <h4 class="light primary-text headline-large">A slide-out menu, or a fixed sidebar on large screens.</h4>
             </div>
         </div>
@@ -281,23 +281,23 @@
         </p>
         <p>
           An overlay sidenav is a modal <code>&lt;dialog&gt;</code>.
-          The framework wraps your <code>&lt;ul class="sidenav"&gt;</code>;
+          The framework wraps your <code>&lt;ul class="navigation-drawer"&gt;</code>;
           <code>Escape</code> and a tap on the backdrop close it.
-          A <code>sidenav-fixed</code> drawer stays open on large screens as CSS —
+          A <code>navigation-drawer-fixed</code> drawer stays open on large screens as CSS —
           no resize listener, no overlay.
         </p>
         <p>
           The sidenav HTML must <strong>not</strong> sit inside the app bar’s
           <code>&lt;nav&gt;</code>.
-          Put a <code>sidenav-trigger</code> anywhere and set <code>data-target</code> to the sidenav’s
-          <code>id</code>. <code>AutoInit()</code> starts every <code>.sidenav</code> except those marked
+          Put a <code>navigation-drawer-trigger</code> anywhere and set <code>data-target</code> to the navigation drawer’s
+          <code>id</code>. <code>AutoInit()</code> starts every <code>.navigation-drawer</code> except those marked
           <code>no-autoinit</code>.
         </p>
         <p>
-          <a href="#!" data-target="slide-out" class="button sidenav-trigger filled waves-effect">Toggle Sidenav</a>
+          <a href="#!" data-target="slide-out" class="button navigation-drawer-trigger filled waves-effect">Toggle NavigationDrawer</a>
         </p>
         <nav aria-label="Main — Structure">
-          <ul id="slide-out" class="sidenav no-autoinit">
+          <ul id="slide-out" class="navigation-drawer no-autoinit">
             <li>
               <div class="user-view">
                 <div class="background">
@@ -313,11 +313,11 @@
             <li><div class="divider"></div></li>
             <li><a class="subheader">Subheader</a></li>
             <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-            <li><a class="sidenav-close" href="#!">Close</a></li>
+            <li><a class="navigation-drawer-close" href="#!">Close</a></li>
           </ul>
         </nav>
 <pre><code>&lt;nav aria-label="Main"&gt;
-  &lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;ul id="slide-out" class="navigation-drawer"&gt;
     &lt;li&gt;
       &lt;div class="user-view"&gt;
         &lt;div class="background"&gt;
@@ -335,7 +335,7 @@
     &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
+&lt;a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
   
       </div>
 
@@ -344,13 +344,13 @@
         <h3>Initialization</h3>
 
         <p>
-          The IIFE bundle exposes <code>Expressive.Sidenav</code>.
+          The IIFE bundle exposes <code>Expressive.NavigationDrawer</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
-          or let <code>Expressive.AutoInit()</code> start every <code>.sidenav</code>.
+          or let <code>Expressive.AutoInit()</code> start every <code>.navigation-drawer</code>.
         </p>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.sidenav');
-  const instances = Expressive.Sidenav.init(elems, {
+  const instances = Expressive.NavigationDrawer.init(elems, {
     // specify options here
   });
 });</code></pre>
@@ -383,7 +383,7 @@
               <td><code>draggable</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>Allow swipe gestures to open and close. Drag is disabled while the sidenav is fixed on large screens.</td>
+              <td>Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on large screens.</td>
             </tr>
             <tr>
               <td><code>dragTargetWidth</code></td>
@@ -395,25 +395,25 @@
               <td><code>onOpenStart</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the sidenav starts opening.</td>
+              <td>Called when the navigation drawer starts opening.</td>
             </tr>
             <tr>
               <td><code>onOpenEnd</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the sidenav finishes opening.</td>
+              <td>Called when the navigation drawer finishes opening.</td>
             </tr>
             <tr>
               <td><code>onCloseStart</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the sidenav starts closing.</td>
+              <td>Called when the navigation drawer starts closing.</td>
             </tr>
             <tr>
               <td><code>onCloseEnd</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the sidenav finishes closing.</td>
+              <td>Called when the navigation drawer finishes closing.</td>
             </tr>
   
             </tbody>
@@ -430,15 +430,15 @@
         <blockquote>
           All methods are called on the plugin instance. You can get the instance like this:
         </blockquote>
-<pre><code>const instance = Expressive.Sidenav.getInstance(elem);</code></pre>
+<pre><code>const instance = Expressive.NavigationDrawer.getInstance(elem);</code></pre>
 
 
         <h5 class="light">.open();</h5>
-        <p>Opens the sidenav.</p>
+        <p>Opens the navigation drawer.</p>
 <pre><code>instance.open();</code></pre>
 
         <h5 class="light">.close();</h5>
-        <p>Closes the sidenav.</p>
+        <p>Closes the navigation drawer.</p>
 <pre><code>instance.close();</code></pre>
 
         <h5 class="light">.destroy();</h5>
@@ -480,12 +480,12 @@
             <tr>
               <td><code>isFixed</code></td>
               <td>Boolean</td>
-              <td>Whether the element has <code>sidenav-fixed</code>.</td>
+              <td>Whether the element has <code>navigation-drawer-fixed</code>.</td>
             </tr>
             <tr>
               <td><code>isDragged</code></td>
               <td>Boolean</td>
-              <td>Whether the sidenav is being dragged.</td>
+              <td>Whether the navigation drawer is being dragged.</td>
             </tr>
   
             </tbody>
@@ -499,16 +499,16 @@
         <h3>Close Trigger</h3>
 
         <p>
-          Add <code>sidenav-close</code> to an element inside the sidenav. A click on that element
+          Add <code>navigation-drawer-close</code> to an element inside the navigation drawer. A click on that element
           closes an overlay sidenav. That is useful in a single-page app where the page does not
-          reload. It does nothing while the sidenav is fixed on large screens.
+          reload. It does nothing while the navigation drawer is fixed on large screens.
         </p>
 <pre><code>&lt;nav aria-label="Main"&gt;
-  &lt;ul id="slide-out" class="sidenav"&gt;
-    &lt;li&gt;&lt;a class="sidenav-close" href="#!"&gt;Clicking this will close Sidenav&lt;/a&gt;&lt;/li&gt;
+  &lt;ul id="slide-out" class="navigation-drawer"&gt;
+    &lt;li&gt;&lt;a class="navigation-drawer-close" href="#!"&gt;Clicking this will close NavigationDrawer&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
+&lt;a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
   
       </div>
 
@@ -523,16 +523,16 @@
           yourself, otherwise AutoInit would start it on the left.
         </p>
         <p>
-          <a href="#!" data-target="slide-out-right" class="button sidenav-trigger tonal waves-effect">Toggle Right Sidenav</a>
+          <a href="#!" data-target="slide-out-right" class="button navigation-drawer-trigger tonal waves-effect">Toggle Right NavigationDrawer</a>
         </p>
         <nav aria-label="Main — Variations">
-          <ul id="slide-out-right" class="sidenav no-autoinit">
+          <ul id="slide-out-right" class="navigation-drawer no-autoinit">
             <li><a href="#!">First Sidebar Link</a></li>
             <li><a href="#!">Second Sidebar Link</a></li>
-            <li><a class="sidenav-close" href="#!">Close</a></li>
+            <li><a class="navigation-drawer-close" href="#!">Close</a></li>
           </ul>
         </nav>
-<pre><code>Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
+<pre><code>Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
 });</code></pre>
 
@@ -544,7 +544,7 @@
           Structure, Components, and Forms.
         </p>
         <nav aria-label="Main — Variations 2">
-          <ul class="sidenav sidenav-demo">
+          <ul class="sidenav navigation-drawer-demo">
             <li><a href="#!"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a></li>
             <li>
               <details name="sidenav-demo" open>
@@ -566,14 +566,14 @@
                 </summary>
                 <ul>
                   <li><a href="#!">App bar</a></li>
-                  <li><a href="#!">Sidenav</a></li>
+                  <li><a href="#!">NavigationDrawer</a></li>
                 </ul>
               </details>
             </li>
           </ul>
         </nav>
 <pre><code>&lt;nav aria-label="Main"&gt;
-  &lt;ul id="slide-out" class="sidenav"&gt;
+  &lt;ul id="slide-out" class="navigation-drawer"&gt;
     &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;
       &lt;details name="docs-nav"&gt;
@@ -592,19 +592,19 @@
 
         <h5 class="light">Fixed HTML Structure</h5>
         <p>
-          Add <code>sidenav-fixed</code> so the sidenav stays open on large screens (993px and up)
+          Add <code>navigation-drawer-fixed</code> so the navigation drawer stays open on large screens (993px and up)
           and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
           The documentation sidebar on the left is this pattern.
         </p>
 <pre><code>&lt;nav aria-label="Main"&gt;
-  &lt;ul id="slide-out" class="sidenav sidenav-fixed"&gt;
+  &lt;ul id="slide-out" class="navigation-drawer navigation-drawer-fixed"&gt;
     &lt;li&gt;&lt;a href="#!"&gt;First Sidebar Link&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
-&lt;a href="#!" data-target="slide-out" class="sidenav-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
+&lt;a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
         <p>
-          Offset the rest of the page by the sidenav width. The width token is
+          Offset the rest of the page by the navigation drawer width. The width token is
           <code>--md-comp-nav-drawer-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
           Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
         </p>

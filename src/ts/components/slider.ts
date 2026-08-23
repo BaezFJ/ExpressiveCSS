@@ -1,72 +1,18 @@
-import { Utils } from '../core/utils';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
+import { Utils } from '../core/utils';
 
-export interface SliderOptions extends BaseOptions {
-  /**
-   * Set to false to hide slide indicators.
-   * @default true
-   */
-  indicators: boolean;
-  /**
-   * Set height of slider.
-   * @default 400
-   */
-  height: number;
-  /**
-   * Set the duration of the transition animation in ms.
-   * @default 500
-   */
-  duration: number;
-  /**
-   * Set the duration between transitions in ms.
-   * @default 6000
-   */
-  interval: number;
-  /**
-   * If slider should pause when keyboard focus is received.
-   * @default true
-   */
-  pauseOnFocus: boolean;
-  /**
-   * If slider should pause when is hovered by a pointer.
-   * @default true
-   */
-  pauseOnHover: boolean;
-  /**
-   * Optional function used to generate ARIA label to indicators (for accessibility purposes).
-   * @param index Current index, starting from "1".
-   * @param current A which indicates whether it is the current element or not
-   * @returns a string to be used as label indicator.
-   * @default null
-   */
-  indicatorLabelFunc: (index: number, current: boolean) => string;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface SliderOptions extends BaseOptions {}
 
-const _defaults: SliderOptions = {
-  indicators: true,
-  height: 400,
-  duration: 500,
-  interval: 6000,
-  pauseOnFocus: true,
-  pauseOnHover: true,
-  indicatorLabelFunc: null // Function which will generate a label for the indicators (ARIA)
-};
+const _defaults: SliderOptions = {};
 
 export class Slider extends Component<SliderOptions> {
-  /** Index of current slide. */
-  activeIndex: number;
-  interval: ReturnType<typeof setTimeout>;
-  eventPause: boolean;
-  _slider: HTMLUListElement;
-  _slides: HTMLLIElement[];
-  _activeSlide: HTMLLIElement;
-  _indicators: HTMLLIElement[];
-  _hovered: boolean;
-  _focused: boolean;
-  _focusCurrent: boolean;
-  _sliderId: string;
+  declare el: HTMLInputElement;
+  private _mousedown: boolean;
+  value: HTMLElement;
+  thumb: HTMLElement;
 
-  constructor(el: HTMLElement, options: Partial<SliderOptions>) {
+  constructor(el: HTMLInputElement, options: Partial<SliderOptions>) {
     super(el, options, Slider);
     this.el['Expressive_Slider'] = this;
 
@@ -75,75 +21,13 @@ export class Slider extends Component<SliderOptions> {
       ...options
     };
 
-    // init props
-    this.interval = null;
-    this.eventPause = false;
-    this._hovered = false;
-    this._focused = false;
-    this._focusCurrent = false;
-
-    // setup
-    this._slider = this.el.querySelector('.slides');
-    this._slides = Array.from(this._slider.querySelectorAll('li'));
-    this.activeIndex = this._slides.findIndex((li) => li.classList.contains('active'));
-
-    if (this.activeIndex !== -1) {
-      this._activeSlide = this._slides[this.activeIndex];
-    }
-
-    this._setSliderHeight();
-
-    // Sets element id if it does not have one
-    if (this._slider.hasAttribute('id')) this._sliderId = this._slider.getAttribute('id');
-    else {
-      this._sliderId = 'slider-' + Utils.guid();
-      this._slider.setAttribute('id', this._sliderId);
-    }
-
-    const placeholderBase64 =
-      'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-    // Set initial positions of captions
-    this._slides.forEach((slide) => {
-      // Caption
-      //const caption = <HTMLElement|null>slide.querySelector('.caption');
-      //if (caption) this._animateCaptionIn(caption, 0);
-      // Set Images as Background Images
-      const img = slide.querySelector('img');
-      if (img) {
-        if (img.src !== placeholderBase64) {
-          img.style.backgroundImage = 'url(' + img.src + ')';
-          img.src = placeholderBase64;
-        }
-      }
-      // Sets slide as focusable by code
-      if (!slide.hasAttribute('tabindex')) slide.setAttribute('tabindex', '-1');
-      // Removes initial visibility from "inactive" slides
-      slide.style.visibility = 'hidden';
-    });
-
-    this._setupIndicators();
-
-    // Show active slide
-    if (this._activeSlide) {
-      this._activeSlide.style.display = 'block';
-      this._activeSlide.style.visibility = 'visible';
-    } else {
-      this.activeIndex = 0;
-      this._slides[0].classList.add('active');
-      this._slides[0].style.visibility = 'visible';
-      this._activeSlide = this._slides[0];
-      this._animateSlide(this._slides[0], true);
-      // Update indicators
-      if (this.options.indicators) {
-        this._indicators[this.activeIndex].children[0].classList.add('active');
-      }
-    }
+    this._mousedown = false;
+    this._setupThumb();
+    this._sync();
     this._setupEventHandlers();
-    // auto scroll
-    this.start();
   }
 
-  static get defaults() {
+  static get defaults(): SliderOptions {
     return _defaults;
   }
 
@@ -152,305 +36,191 @@ export class Slider extends Component<SliderOptions> {
    * @param el HTML element.
    * @param options Component options.
    */
-  static init(el: HTMLElement, options?: Partial<SliderOptions>): Slider;
-  /**
-   * Initializes instances of Slider.
-   * @param els HTML elements.
-   * @param options Component options.
-   */
-  static init(els: InitElements<InitElement>, options?: Partial<SliderOptions>): Slider[];
+  static init(el: HTMLInputElement, options?: Partial<SliderOptions>): Slider;
   /**
    * Initializes instances of Slider.
    * @param els HTML elements.
    * @param options Component options.
    */
   static init(
-    els: HTMLElement | InitElements<InitElement>,
+    els: InitElements<HTMLInputElement | InitElement>,
+    options?: Partial<SliderOptions>
+  ): Slider[];
+  /**
+   * Initializes instances of Slider.
+   * @param els HTML elements.
+   * @param options Component options.
+   */
+  static init(
+    els: HTMLInputElement | InitElements<HTMLInputElement | InitElement>,
     options: Partial<SliderOptions> = {}
   ): Slider | Slider[] {
     return super.init(els, options, Slider);
   }
 
-  static getInstance(el: HTMLElement): Slider {
+  static getInstance(el: HTMLInputElement): Slider {
     return el['Expressive_Slider'];
   }
 
   destroy() {
-    this.pause();
-    this._removeIndicators();
     this._removeEventHandlers();
+    this._removeThumb();
     this.el['Expressive_Slider'] = undefined;
   }
 
-  private _setupEventHandlers() {
-    if (this.options.pauseOnFocus) {
-      this.el.addEventListener('focusin', this._handleAutoPauseFocus);
-      this.el.addEventListener('focusout', this._handleAutoStartFocus);
-    }
-    if (this.options.pauseOnHover) {
-      this.el.addEventListener('mouseenter', this._handleAutoPauseHover);
-      this.el.addEventListener('mouseleave', this._handleAutoStartHover);
-    }
-    if (this.options.indicators) {
-      this._indicators.forEach((el) => {
-        el.addEventListener('click', this._handleIndicatorClick);
-      });
-    }
-    document.addEventListener('visibilitychange', this._handleVisibilityChange);
+  _setupEventHandlers() {
+    this.el.addEventListener('change', this._handleRangeChange);
+    this.el.addEventListener('mousedown', this._handleRangeMousedownTouchstart);
+    this.el.addEventListener('touchstart', this._handleRangeMousedownTouchstart);
+    this.el.addEventListener('input', this._handleRangeInputMousemoveTouchmove);
+    this.el.addEventListener('mousemove', this._handleRangeInputMousemoveTouchmove);
+    // Never calls preventDefault, so it does not need to block scrolling.
+    this.el.addEventListener('touchmove', this._handleRangeInputMousemoveTouchmove, {
+      passive: true
+    });
+    this.el.addEventListener('mouseup', this._handleRangeMouseupTouchend);
+    this.el.addEventListener('touchend', this._handleRangeMouseupTouchend);
+    this.el.addEventListener('blur', this._handleRangeBlurMouseoutTouchleave);
+    this.el.addEventListener('mouseout', this._handleRangeBlurMouseoutTouchleave);
+    this.el.addEventListener('touchleave', this._handleRangeBlurMouseoutTouchleave);
   }
 
-  private _removeEventHandlers() {
-    if (this.options.pauseOnFocus) {
-      this.el.removeEventListener('focusin', this._handleAutoPauseFocus);
-      this.el.removeEventListener('focusout', this._handleAutoStartFocus);
-    }
-    if (this.options.pauseOnHover) {
-      this.el.removeEventListener('mouseenter', this._handleAutoPauseHover);
-      this.el.removeEventListener('mouseleave', this._handleAutoStartHover);
-    }
-    if (this.options.indicators) {
-      this._indicators.forEach((el) => {
-        el.removeEventListener('click', this._handleIndicatorClick);
-      });
-    }
-    document.removeEventListener('visibilitychange', this._handleVisibilityChange);
+  _removeEventHandlers() {
+    this.el.removeEventListener('change', this._handleRangeChange);
+    this.el.removeEventListener('mousedown', this._handleRangeMousedownTouchstart);
+    this.el.removeEventListener('touchstart', this._handleRangeMousedownTouchstart);
+    this.el.removeEventListener('input', this._handleRangeInputMousemoveTouchmove);
+    this.el.removeEventListener('mousemove', this._handleRangeInputMousemoveTouchmove);
+    this.el.removeEventListener('touchmove', this._handleRangeInputMousemoveTouchmove);
+    this.el.removeEventListener('mouseup', this._handleRangeMouseupTouchend);
+    this.el.removeEventListener('touchend', this._handleRangeMouseupTouchend);
+    this.el.removeEventListener('blur', this._handleRangeBlurMouseoutTouchleave);
+    this.el.removeEventListener('mouseout', this._handleRangeBlurMouseoutTouchleave);
+    this.el.removeEventListener('touchleave', this._handleRangeBlurMouseoutTouchleave);
   }
 
-  // Nobody is watching a backgrounded tab. Browsers clamp the timer rather
-  // than stopping it, so without this the slider keeps cycling slides - and
-  // running their transitions - out of sight.
-  private _handleVisibilityChange = () => {
-    if (document.hidden) {
-      if (this.interval != null) this._pause(true);
-    } else if (
-      this.eventPause &&
-      !(this.options.pauseOnHover && this._hovered) &&
-      !(this.options.pauseOnFocus && this._focused)
-    ) {
-      this.start();
+  _handleRangeChange = () => {
+    this._clampDual();
+    this._sync();
+    this.thumb.classList.add('active');
+  };
+
+  _handleRangeMousedownTouchstart = (e: MouseEvent | TouchEvent) => {
+    this._mousedown = true;
+    this.el.classList.add('active');
+    this._clampDual();
+    this._sync();
+    if (e.type !== 'input') {
+      this.thumb.classList.add('active');
     }
   };
 
-  private _handleIndicatorClick = (e: MouseEvent) => {
-    const el = (<HTMLElement>e.target).parentElement;
-    const currIndex = [...el.parentNode.children].indexOf(el);
-    this._focusCurrent = true;
-    this.set(currIndex);
-  };
-
-  private _handleAutoPauseHover = () => {
-    this._hovered = true;
-    if (this.interval != null) {
-      this._pause(true);
+  _handleRangeInputMousemoveTouchmove = () => {
+    if (this._mousedown) {
+      this._clampDual();
+      this._sync();
+      this.thumb.classList.add('active');
     }
   };
 
-  private _handleAutoPauseFocus = () => {
-    this._focused = true;
-    if (this.interval != null) {
-      this._pause(true);
+  _handleRangeMouseupTouchend = () => {
+    this._mousedown = false;
+    this.el.classList.remove('active');
+  };
+
+  _handleRangeBlurMouseoutTouchleave = () => {
+    if (!this._mousedown) {
+      this.thumb.classList.remove('active');
     }
   };
 
-  private _handleAutoStartHover = () => {
-    this._hovered = false;
-    if (!(this.options.pauseOnFocus && this._focused) && this.eventPause) {
-      this.start();
-    }
-  };
-
-  private _handleAutoStartFocus = () => {
-    this._focused = false;
-    if (!(this.options.pauseOnHover && this._hovered) && this.eventPause) {
-      this.start();
-    }
-  };
-
-  private _handleInterval = () => {
-    const activeElem = this._slider.querySelector('.active');
-    let newActiveIndex = [...activeElem.parentNode.children].indexOf(activeElem);
-    if (this._slides.length === newActiveIndex + 1)
-      newActiveIndex = 0; // loop to start
-    else newActiveIndex += 1;
-    this.set(newActiveIndex);
-  };
-
-  private _animateSlide(slide: HTMLElement, isDirectionIn: boolean): void {
-    let dx = 0,
-      dy = 0;
-    // from
-    slide.style.opacity = isDirectionIn ? '0' : '1';
-    setTimeout(() => {
-      slide.style.transition = `opacity ${this.options.duration}ms ease`;
-      // to
-      slide.style.opacity = isDirectionIn ? '1' : '0';
-    }, 1);
-    // Caption
-    const caption: HTMLElement = slide.querySelector('.caption');
-    if (!caption) return;
-    if (caption.classList.contains('center-align')) dy = -100;
-    else if (caption.classList.contains('right-align')) dx = 100;
-    else if (caption.classList.contains('left-align')) dx = -100;
-    // from
-    caption.style.opacity = isDirectionIn ? '0' : '1';
-    caption.style.transform = isDirectionIn ? `translate(${dx}px, ${dy}px)` : `translate(0, 0)`;
-    setTimeout(() => {
-      caption.style.transition = `opacity ${this.options.duration}ms ease, transform ${this.options.duration}ms ease`;
-      // to
-      caption.style.opacity = isDirectionIn ? '1' : '0';
-      caption.style.transform = isDirectionIn ? `translate(0, 0)` : `translate(${dx}px, ${dy}px)`;
-    }, this.options.duration); // delay
+  _setupThumb() {
+    this.thumb = document.createElement('span');
+    this.value = document.createElement('span');
+    this.thumb.classList.add('thumb');
+    this.value.classList.add('value');
+    this.thumb.append(this.value);
+    this.el.after(this.thumb);
   }
 
-  private _setSliderHeight() {
-    // If fullscreen, do nothing
-    if (!this.el.classList.contains('fullscreen')) {
-      if (this.options.indicators) {
-        // Add height if indicators are present
-        this.el.style.height = this.options.height + 40 + 'px'; //.css('height', this.options.height + 40 + 'px');
-      } else {
-        this.el.style.height = this.options.height + 'px';
-      }
-      this._slider.style.height = this.options.height + 'px';
+  _removeThumb() {
+    this.thumb.remove();
+  }
+
+  _isVertical(): boolean {
+    return !!this.el.closest('.vertical');
+  }
+
+  _host(): HTMLElement | null {
+    return this.el.closest('.range, .range-field, label');
+  }
+
+  _clampDual() {
+    const host = this._host();
+    const peers = host?.querySelectorAll('input[type="range"]');
+    if (!peers || peers.length !== 2) return;
+    const start = peers[0] as HTMLInputElement;
+    const end = peers[1] as HTMLInputElement;
+    if (this.el === start && +start.value > +end.value) start.value = end.value;
+    if (this.el === end && +end.value < +start.value) end.value = start.value;
+  }
+
+  _fraction(el: HTMLInputElement): number {
+    const max = parseFloat(el.max) || 100;
+    const min = parseFloat(el.min) || 0;
+    const val = parseFloat(el.value) || 0;
+    return max === min ? 0 : (val - min) / (max - min);
+  }
+
+  _sync() {
+    const percent = this._fraction(this.el);
+    const fraction = `${percent * 100}%`;
+
+    // Read before writing. This runs on every pointer move during a drag, and
+    // setting the custom property first made each of the four offset reads
+    // below flush a fresh layout.
+    const left = this.el.offsetLeft;
+    const top = this.el.offsetTop;
+    const width = this.el.offsetWidth;
+    const height = this.el.offsetHeight;
+
+    this.el.style.setProperty('--md-comp-slider-active-fraction', fraction);
+
+    const host = this._host();
+    const peers = host?.querySelectorAll('input[type="range"]');
+    if (host && peers && peers.length === 2) {
+      const nums = Array.from(peers).map((el) => this._fraction(el as HTMLInputElement));
+      host.style.setProperty('--md-comp-slider-start-fraction', `${Math.min(...nums) * 100}%`);
+      host.style.setProperty('--md-comp-slider-end-fraction', `${Math.max(...nums) * 100}%`);
     }
-  }
-
-  private _setupIndicators() {
-    if (this.options.indicators) {
-      const ul = document.createElement('ul');
-      ul.classList.add('indicators');
-
-      const arrLi = [];
-      this._slides.forEach((el, i) => {
-        const label = this.options.indicatorLabelFunc
-          ? this.options.indicatorLabelFunc.call(this, i + 1, i === 0)
-          : `${i + 1}`;
-        const li = document.createElement('li');
-        li.classList.add('indicator-item');
-        // setAttribute, not an interpolated attribute in markup: the label
-        // comes from indicatorLabelFunc and a quote in it would break out.
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.classList.add('indicator-item-btn');
-        button.setAttribute('aria-label', label);
-        button.setAttribute('aria-controls', this._sliderId);
-        li.appendChild(button);
-        arrLi.push(li);
-        ul.append(li);
-      });
-
-      this.el.append(ul);
-      this._indicators = arrLi;
-    }
-  }
-
-  private _removeIndicators() {
-    this.el.querySelector('ul.indicators').remove(); //find('ul.indicators').remove();
-  }
-
-  set(index: number) {
-    // Wrap around indices.
-    if (index >= this._slides.length) index = 0;
-    else if (index < 0) index = this._slides.length - 1;
-
-    // Only do if index changes
-    if (this.activeIndex === index) return;
-
-    this._activeSlide = this._slides[this.activeIndex];
-    const _caption = <HTMLElement | null>this._activeSlide.querySelector('.caption');
-
-    this._activeSlide.classList.remove('active');
-    // Enables every slide
-    this._slides.forEach((slide) => (slide.style.visibility = 'visible'));
-
-    //--- Hide active Slide + Caption
-    this._activeSlide.style.opacity = '0';
-    setTimeout(() => {
-      this._slides.forEach((slide) => {
-        if (slide.classList.contains('active')) return;
-        slide.style.opacity = '0';
-        slide.style.transform = 'translate(0, 0)';
-        // Disables invisible slides (for assistive technologies)
-        slide.style.visibility = 'hidden';
-      });
-    }, this.options.duration);
-
-    // Hide active Caption - a slide is not required to have one.
-    //this._animateCaptionIn(_caption, this.options.duration);
-    if (_caption) _caption.style.opacity = '0';
-
-    // Update indicators
-    if (this.options.indicators) {
-      const activeIndicator = this._indicators[this.activeIndex].children[0];
-      const nextIndicator = this._indicators[index].children[0];
-      activeIndicator.classList.remove('active');
-      nextIndicator.classList.add('active');
-      if (typeof this.options.indicatorLabelFunc === 'function') {
-        activeIndicator.ariaLabel = this.options.indicatorLabelFunc.call(
-          this,
-          this.activeIndex,
-          false
-        );
-        nextIndicator.ariaLabel = this.options.indicatorLabelFunc.call(this, index, true);
+    if (host?.classList.contains('stops')) {
+      const max = parseFloat(this.el.max) || 100;
+      const min = parseFloat(this.el.min) || 0;
+      const step = parseFloat(this.el.step);
+      if (step > 0 && Number.isFinite(step)) {
+        const n = Math.round((max - min) / step) + 1;
+        host.style.setProperty('--md-comp-slider-stop-count', String(Math.max(2, n)));
       }
     }
 
-    //--- Show new Slide + Caption
-    this._animateSlide(this._slides[index], true);
-    this._slides[index].classList.add('active');
-    this.activeIndex = index;
-
-    // Reset interval, if allowed. This check prevents autostart
-    // when slider is paused, since it can be changed though indicators.
-    if (this.interval != null) {
-      this.start();
+    this.value.textContent = this.el.value;
+    if (this._isVertical()) {
+      this.thumb.style.left = `${left + width / 2}px`;
+      this.thumb.style.top = `${top + (1 - percent) * height}px`;
+    } else {
+      this.thumb.style.left = `${left + percent * width}px`;
+      this.thumb.style.top = `${top}px`;
     }
   }
 
-  _pause(fromEvent: boolean) {
-    clearInterval(this.interval);
-    this.eventPause = fromEvent;
-    this.interval = null;
+  /**
+   * Initializes every range input in the current document.
+   */
+  static Init() {
+    // Deferred like every other Init(): this ran at import time, so a bundle
+    // loaded in <head> found no inputs at all.
+    Utils.onDocumentReady(() => {
+      Slider.init(document.querySelectorAll('input[type=range]') as NodeListOf<HTMLInputElement>, {});
+    });
   }
-
-  /**
-   * Pause slider autoslide.
-   */
-  pause = () => {
-    this._pause(false);
-  };
-
-  /**
-   * Start slider autoslide.
-   */
-  start = () => {
-    clearInterval(this.interval);
-    this.interval = setInterval(
-      this._handleInterval,
-      this.options.duration + this.options.interval
-    );
-    this.eventPause = false;
-  };
-
-  /**
-   * Move to next slider.
-   */
-  next = () => {
-    let newIndex = this.activeIndex + 1;
-    // Wrap around indices.
-    if (newIndex >= this._slides.length) newIndex = 0;
-    else if (newIndex < 0) newIndex = this._slides.length - 1;
-    this.set(newIndex);
-  };
-
-  /**
-   * Move to prev slider.
-   */
-  prev = () => {
-    let newIndex = this.activeIndex - 1;
-    // Wrap around indices.
-    if (newIndex >= this._slides.length) newIndex = 0;
-    else if (newIndex < 0) newIndex = this._slides.length - 1;
-    this.set(newIndex);
-  };
 }

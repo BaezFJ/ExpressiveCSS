@@ -32,7 +32,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Media</h2>
@@ -48,7 +48,7 @@
 
 
     <nav aria-label="Main">
-      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+      <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
                   <span class="material-symbols" aria-hidden="true">home</span>
@@ -447,7 +447,7 @@
           For a 3D item carousel or a full-width image track, see
           <a href="/carousel.html">Carousel</a>.
         </p>
-        <div class="slider">
+        <div class="slideshow">
           <ul class="slides">
             <li>
               <img src="https://picsum.photos/id/1015/800/400" alt="First slide">
@@ -479,7 +479,7 @@
             </li>
           </ul>
         </div>
-<pre><code>&lt;div class="slider"&gt;
+<pre><code>&lt;div class="slideshow"&gt;
   &lt;ul class="slides"&gt;
     &lt;li&gt;
       &lt;img src="images/sample-1.jpg" alt="First slide"&gt;
@@ -507,7 +507,7 @@
 
         <h5 class="light">Initialization</h5>
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.slider');
+  const elems = document.querySelectorAll('.slideshow');
   const instances = Expressive.Slider.init(elems, {
     // specify options here
     indicatorLabelFunc: (idx, current) =&gt; {
@@ -647,9 +647,9 @@
         <p>
           Add <code>fullscreen</code> to the slider so it fills its positioned ancestor
           (typically the viewport if that ancestor is the page). There is no separate demo page —
-          the class is <code>fullscreen</code> on <code>.slider</code>.
+          the class is <code>fullscreen</code> on <code>.slideshow</code>.
         </p>
-<pre><code>&lt;div class="slider fullscreen"&gt;
+<pre><code>&lt;div class="slideshow fullscreen"&gt;
   &lt;ul class="slides"&gt;...&lt;/ul&gt;
 &lt;/div&gt;</code></pre>
   

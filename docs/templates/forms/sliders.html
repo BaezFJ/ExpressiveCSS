@@ -11,7 +11,7 @@
           Sliders let people pick from a range of values. An
           <code>&lt;input type="range"&gt;</code> is the control. A wrapping
           <code>.range</code> (or a <code>&lt;label&gt;</code>) is the host.
-          <code>.slider</code> is the carousel — do not put it on a range.
+          <code>.slideshow</code> is the image slideshow, a different component; it held this name until 0.8.0.
           The plugin is <code>Expressive.Range</code> because
           <code>Slider</code> is already the carousel.
         </p>
@@ -58,27 +58,27 @@
           <code>.range</code> host.
         </p>
         <form>
-          <div class="range">
+          <div class="slider">
             <input type="range" min="0" max="100" value="40" aria-label="Standard">
           </div>
-          <div class="range centered">
+          <div class="slider centered">
             <input type="range" min="0" max="100" value="30" aria-label="Centered">
           </div>
-          <div class="range">
+          <div class="slider">
             <input type="range" min="0" max="100" value="25" aria-label="Range start">
             <input type="range" min="0" max="100" value="75" aria-label="Range end">
           </div>
         </form>
 {% call code() %}
-<div class="range">
+<div class="slider">
   <input type="range" min="0" max="100" value="40" aria-label="Standard">
 </div>
 
-<div class="range centered">
+<div class="slider centered">
   <input type="range" min="0" max="100" value="30" aria-label="Centered">
 </div>
 
-<div class="range">
+<div class="slider">
   <input type="range" min="0" max="100" value="25" aria-label="Range start">
   <input type="range" min="0" max="100" value="75" aria-label="Range end">
 </div>
@@ -94,27 +94,27 @@
           <code>xl</code> is XL. Scope them on the host.
         </p>
         <form>
-          <div class="range">
+          <div class="slider">
             <input type="range" min="0" max="100" value="40" aria-label="XS">
           </div>
-          <div class="range s">
+          <div class="slider s">
             <input type="range" min="0" max="100" value="40" aria-label="S">
           </div>
-          <div class="range m">
+          <div class="slider m">
             <input type="range" min="0" max="100" value="40" aria-label="M">
           </div>
-          <div class="range l">
+          <div class="slider l">
             <input type="range" min="0" max="100" value="40" aria-label="L">
           </div>
-          <div class="range xl">
+          <div class="slider xl">
             <input type="range" min="0" max="100" value="40" aria-label="XL">
           </div>
         </form>
 {% call code() %}
-<div class="range s">…</div>
-<div class="range m">…</div>
-<div class="range l">…</div>
-<div class="range xl">…</div>
+<div class="slider s">…</div>
+<div class="slider m">…</div>
+<div class="slider l">…</div>
+<div class="slider xl">…</div>
 {% endcall %}
   {% endcall %}
 
@@ -126,21 +126,21 @@
           shows the value in a 40dp bubble.
         </p>
         <form>
-          <div class="range m">
+          <div class="slider m">
             <span class="material-symbols" aria-hidden="true">volume_up</span>
             <input type="range" min="0" max="100" value="55" aria-label="Volume">
           </div>
-          <div class="range stops">
+          <div class="slider stops">
             <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
           </div>
         </form>
 {% call code() %}
-<div class="range m">
+<div class="slider m">
   <span class="material-symbols" aria-hidden="true">volume_up</span>
   <input type="range" min="0" max="100" value="55" aria-label="Volume">
 </div>
 
-<div class="range stops">
+<div class="slider stops">
   <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
 </div>
 {% endcall %}
@@ -152,12 +152,12 @@
           bottom.
         </p>
         <form>
-          <div class="range vertical m">
+          <div class="slider vertical m">
             <input type="range" min="0" max="100" value="60" aria-label="Level">
           </div>
         </form>
 {% call code() %}
-<div class="range vertical m">
+<div class="slider vertical m">
   <input type="range" min="0" max="100" value="60" aria-label="Level">
 </div>
 {% endcall %}

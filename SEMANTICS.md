@@ -227,16 +227,6 @@ Swept 0.8.0. A radio is one of a set, and the set needs a name.
 - **radio-in-fieldset** - A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
 - **radio-labelled** - A radio must be inside its <label> or carry an id a label points at.
 
-### forms/range
-
-Swept 0.8.0.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `range-labelled` | forbid | `input[type="range"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)` | must not match |
-
-- **range-labelled** - A range announces only its value unless something names it.
-
 ### forms/select
 
 Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.
@@ -246,6 +236,16 @@ Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select
 | `option-has-selected-state` | forbid | `li[role="option"]:not([aria-selected])` | must not match |
 
 - **option-has-selected-state** - role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen.
+
+### forms/slider
+
+Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `range-labelled` | forbid | `input[type="range"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)` | must not match |
+
+- **range-labelled** - A range announces only its value unless something names it.
 
 ### forms/switches
 
@@ -331,6 +331,16 @@ Swept 0.8.0.
 
 - **navigation-bar-marks-current** - The active destination needs aria-current="page".
 
+### navigation-drawer
+
+Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an alias.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `sidenav-in-nav` | forbid | `.sidenav:not(nav):not(nav *)` | must not match |
+
+- **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
+
 ### navigation-rail
 
 Swept 0.8.0.
@@ -385,9 +395,9 @@ Swept 0.8.0.
 
 - **parallax-image-declares-itself** - A parallax image is decoration nine times out of ten, and decoration says so with alt="". Without any alt the file name is read out.
 
-### preloader
+### progress
 
-Swept 0.8.0.
+Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -421,19 +431,9 @@ Swept 0.8.0. A <dialog>, so the dialog rules carry it.
 | --- | --- | --- | --- |
 
 
-### sidenav
+### slideshow
 
-Swept 0.8.0.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `sidenav-in-nav` | forbid | `.sidenav:not(nav):not(nav *)` | must not match |
-
-- **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
-
-### slider
-
-Swept 0.8.0. The control is input[type=range]; the rules live on forms/range.
+Swept 0.8.0. Renamed from slider, which M3 uses for the range control; a `.slider` holding no range input is still a slideshow.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

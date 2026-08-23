@@ -67,29 +67,29 @@
         </p>
         <div class="row py-5">
           <div class="s4 center-align">
-            <span class="preloader big" role="status" aria-label="Loading"></span>
+            <span class="progress circular big" role="status" aria-label="Loading"></span>
           </div>
           <div class="s4 center-align">
-            <span class="preloader" role="status" aria-label="Loading"></span>
+            <span class="progress circular" role="status" aria-label="Loading"></span>
           </div>
           <div class="s4 center-align">
-            <span class="preloader small" role="status" aria-label="Loading"></span>
+            <span class="progress circular small" role="status" aria-label="Loading"></span>
           </div>
         </div>
 {% call code() %}
-<span class="preloader" role="status" aria-label="Loading"></span>
-<span class="preloader small" role="status" aria-label="Loading"></span>
-<span class="preloader big" role="status" aria-label="Loading"></span>
+<span class="progress circular" role="status" aria-label="Loading"></span>
+<span class="progress circular small" role="status" aria-label="Loading"></span>
+<span class="progress circular big" role="status" aria-label="Loading"></span>
 {% endcall %}
         <p>
           Add <code>determinate</code> and set
           <code>--md-comp-progress-value</code> for a known percentage.
         </p>
         <p>
-          <span class="preloader determinate" style="--md-comp-progress-value: 70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Loading"></span>
+          <span class="progress circular determinate" style="--md-comp-progress-value: 70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="Loading"></span>
         </p>
 {% call code() %}
-<span class="preloader determinate"
+<span class="progress circular determinate"
       style="--md-comp-progress-value: 70%"
       role="progressbar" aria-valuenow="70"
       aria-valuemin="0" aria-valuemax="100"
@@ -104,20 +104,20 @@
         </p>
         <div class="row py-5">
           <div class="s3 center-align">
-            <span class="preloader" role="status" aria-label="Loading"></span>
+            <span class="progress circular" role="status" aria-label="Loading"></span>
           </div>
           <div class="s3 center-align">
-            <span class="preloader" style="--md-comp-progress-indicator: var(--md-sys-color-error)" role="status" aria-label="Loading"></span>
+            <span class="progress circular" style="--md-comp-progress-indicator: var(--md-sys-color-error)" role="status" aria-label="Loading"></span>
           </div>
           <div class="s3 center-align">
-            <span class="preloader" style="--md-comp-progress-indicator: var(--md-sys-color-tertiary)" role="status" aria-label="Loading"></span>
+            <span class="progress circular" style="--md-comp-progress-indicator: var(--md-sys-color-tertiary)" role="status" aria-label="Loading"></span>
           </div>
           <div class="s3 center-align">
-            <span class="preloader" style="--md-comp-progress-indicator: var(--md-sys-color-secondary)" role="status" aria-label="Loading"></span>
+            <span class="progress circular" style="--md-comp-progress-indicator: var(--md-sys-color-secondary)" role="status" aria-label="Loading"></span>
           </div>
         </div>
 {% call code() %}
-<span class="preloader"
+<span class="progress circular"
       style="--md-comp-progress-indicator: var(--md-sys-color-error)"
       role="status" aria-label="Loading"></span>
 {% endcall %}

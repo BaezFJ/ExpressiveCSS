@@ -39,7 +39,7 @@
 // specificity; `.chip .close` would make it two and shift every button rule.
 // The delete button needs no entry: `.chip .close` is already two classes, so
 // it ties the state rules and wins on order.
-$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip";
+$_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip";
 
 // `label.button` is here for the file input: the control has to be a <label>
 // so that clicking it reaches the <input type="file"> it wraps, but it is a
@@ -175,7 +175,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 }
 
 // FAB. Icon-only .extra / .large is the 56dp regular FAB. Add .small for
-// the 40dp small FAB. The speed-dial host is .fixed-action-btn.
+// the 40dp small FAB. The speed-dial host is .fab.
 :where(#{$_btn}).extra.circle,
 :where(#{$_btn}).large.circle {
   display: inline-flex;
@@ -249,9 +249,14 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   @include btn-disabled;
 }
 
+// The FAB host. M3 names this component "FAB"; `.fixed-action-btn` is the
+// Materialize name and stays as an alias. Interpolate inside :is() - a bare
+// comma list breaks out of its context (see $_bar in _navbar).
+$_fab: ":is(.fab, .fixed-action-btn)";
+
 // Speed dial. .active (and :hover when the pointer can hover) opens the
 // menu. Motion is CSS. .click-to-toggle is the markup switch for click
-// mode. .fixed-action-btn stays the public class.
+// mode. `.fab` is the public class; .fixed-action-btn is the old alias.
 //
 // Tokens:
 //   --md-comp-fab-offset            16px from the corner
@@ -262,7 +267,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 //   --md-comp-fab-easing            soft ease-in-out
 //   --md-comp-fab-travel            center-to-center step into the main disc
 //   --md-comp-fab-hidden-transform  toward / into the main button
-.fixed-action-btn {
+#{$_fab} {
   --md-comp-fab-offset: 16px;
   --md-comp-fab-z: 997;
   --md-comp-fab-menu-gap: 16px;
@@ -475,7 +480,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 }
 
 @media (hover: hover) {
-  .fixed-action-btn:not(.click-to-toggle):hover :is(ul, menu) {
+  #{$_fab}:not(.click-to-toggle):hover :is(ul, menu) {
     visibility: visible;
     transition-delay: 0s;
 
@@ -488,7 +493,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fixed-action-btn {
+  #{$_fab} {
     --md-comp-fab-duration: 0s;
     --md-comp-fab-stagger: 0s;
   }

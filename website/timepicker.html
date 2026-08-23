@@ -32,7 +32,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Time Picker</h2>
@@ -48,7 +48,7 @@
 
 
     <nav aria-label="Main">
-      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+      <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
                   <span class="material-symbols" aria-hidden="true">home</span>
@@ -282,11 +282,11 @@
           visible. There is no <code>openByDefault</code> flag.
         </p>
         <div class="field mb-3">
-          <input type="text" class="timepicker" id="timepicker-intro">
+          <input type="text" class="time-picker" id="timepicker-intro">
           <label for="timepicker-intro">Lunchtime</label>
         </div>
 <pre><code>&lt;div class="field"&gt;
-  &lt;input type="text" class="timepicker" id="lunchtime"&gt;
+  &lt;input type="text" class="time-picker" id="lunchtime"&gt;
   &lt;label for="lunchtime"&gt;Lunchtime&lt;/label&gt;
 &lt;/div&gt;</code></pre>
         <p>
@@ -516,7 +516,7 @@
           <code>HH:MM</code> with no meridian.
         </p>
         <div class="field mb-3">
-          <input type="text" class="timepicker no-autoinit" id="timepicker-24">
+          <input type="text" class="time-picker no-autoinit" id="timepicker-24">
           <label for="timepicker-24">24-hour</label>
         </div>
 <pre><code>Expressive.Timepicker.init(document.getElementById('timepicker-24'), {

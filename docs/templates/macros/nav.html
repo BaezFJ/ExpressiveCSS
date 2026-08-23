@@ -1,12 +1,12 @@
 {#
-    Sidenav and footer navigation, both rendered from the NAV table in app.py.
+    NavigationDrawer and footer navigation, both rendered from the NAV table in app.py.
     The endpoint is passed in rather than read off `request` so these macros can
     be imported without context.
 #}
 
-{% macro sidenav(nav, current) %}
+{% macro navigation_drawer(nav, current) %}
     <nav aria-label="Main">
-      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+      <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
           {%- for group in nav %}
               {%- if not group.icon %}
                   {#- The top-level entries: no group, own icon. -#}

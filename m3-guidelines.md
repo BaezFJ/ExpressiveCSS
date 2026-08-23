@@ -28,8 +28,8 @@ These are the mistakes generated Material UIs make most often. Treat them as inv
 - **Color roles, never hex.** Use `primary`, `on-surface`, `error`, and the other `--md-sys-color-*` roles. Do not hard-code `#6750A4`.
 - **Native HTML first.** `<button>`, `<a class="button">`, `<dialog>`, `<input>`, `<select>`, `<progress>`, `<label>`.
 - **A visual icon is not an accessible name.** Icon-only controls need `aria-label` (and a tooltip if the control has no visible text).
-- **Do not mix peer navigation components.** Never show a navigation bar and a navigation rail at the same time. Never pin a sidenav and a rail as two persistent side columns.
-- **Do not put the sidenav markup inside the app bar’s `<nav>`.** The trigger may live in the bar; the drawer must not.
+- **Do not mix peer navigation components.** Never show a navigation bar and a navigation rail at the same time. Never pin a navigation drawer and a rail as two persistent side columns.
+- **Do not put the navigation drawer markup inside the app bar’s `<nav>`.** The trigger may live in the bar; the drawer must not.
 - **Do not nest tabs in the app bar.** Tabs are their own bar under the app bar, or inside a pane.
 - **Dialogs are high priority. Snackbars are low priority.** Do not use a dialog to say “Saved.” Do not use a snackbar to confirm a destructive action.
 - **Switches take effect immediately.** If the user still has to press Save, use checkboxes.
@@ -93,15 +93,15 @@ Top-level destinations (Home, Library, Settings) are **peer destinations**. They
 | --- | --- | --- | --- |
 | 2–5 peers | Navigation bar (stacked) | Navigation bar (horizontal) **or** collapsed rail | Collapsed or expanded rail |
 | 6–7 peers | Modal expanded rail (opened from the app-bar menu button) | Collapsed rail, expand for labels | Expanded rail |
-| Nested / many | Modal sidenav | Modal sidenav or expanded rail | Expanded rail or `sidenav-fixed` for a documentation-style tree |
+| Nested / many | Modal navigation drawer | Modal drawer or expanded rail | Expanded rail or `navigation-drawer-fixed` for a documentation-style tree |
 
 M3 Expressive (May 2025) **prefers an expanded navigation rail over a navigation drawer** for the same job. In ExpressiveCSS:
 
 - Use `.navigation-rail` / `.navigation-rail.expanded` for 3–7 peer destinations.
-- Use `.sidenav` when destinations nest (`<details>` / `<summary>`), when you need a user header, or when a compact screen needs a modal overflow menu that is not a rail.
-- `.sidenav.sidenav-fixed` is a persistent sidebar from the `large` breakpoint up. Do not combine it with a rail.
+- Use `.navigation-drawer` when destinations nest (`<details>` / `<summary>`), when you need a user header, or when a compact screen needs a modal overflow menu that is not a rail.
+- `.navigation-drawer.navigation-drawer-fixed` is a persistent sidebar from the `large` breakpoint up. Do not combine it with a rail.
 
-The **app bar** is not navigation between app views. It names the current page and holds 1–2 actions. Pair it with a bar, a rail, or a sidenav — it does not replace them.
+The **app bar** is not navigation between app views. It names the current page and holds 1–2 actions. Pair it with a bar, a rail, or a navigation drawer — it does not replace them.
 
 ---
 
@@ -199,7 +199,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 | --- | --- |
 | 3–5 peers, compact / medium window | **Navigation bar** |
 | 3–7 peers, medium+ window | **Navigation rail** (collapsed; expand for labels) |
-| Nested sections, user header, overflow menu | **Sidenav** (modal on compact, `sidenav-fixed` on large) |
+| Nested sections, user header, overflow menu | **NavigationDrawer** (modal on compact, `navigation-drawer-fixed` on large) |
 | Related content *inside* a page | **Tabs** (not app navigation) |
 | Path from home to this page | **Breadcrumbs** |
 | Pages of a large collection | **Pagination** or infinite list, not tabs |
@@ -213,7 +213,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 | Secondary action next to a filled button | **Tonal** or **outlined** button |
 | Action inside a dialog, card, or snackbar | **Text button** |
 | Minor action, no room for a label | **Icon button** (`circle`) + tooltip |
-| Several related shortcuts from a FAB | **FAB speed-dial** (`fixed-action-btn`), not a second FAB |
+| Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
 | Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked) |
 | Smart / automated action, or a filter / input token | **Chip** (see chip types) |
 | Confirm or cancel in a blocking prompt | Dialog **text buttons**, not a FAB |
@@ -284,17 +284,17 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 
 DOM order is layout: the headline grows; everything after it sits on the end.
 
-**Placement.** Top of the window or the pane. Stays put while body content scrolls. On compact, the leading icon opens the sidenav or the modal expanded rail.
+**Placement.** Top of the window or the pane. Stays put while body content scrolls. On compact, the leading icon opens the navigation drawer or the modal expanded rail.
 
 **Adaptive.** Compact: leading menu + title + 1–2 icons. Medium+: text destinations may appear in a `<menu>` after the title; still pair with a rail, not with a second nav bar. Large/XL: a medium or large title is acceptable.
 
-**Behavior.** CSS-only. Menus and Sidenav are separate components. A `sidenav-trigger` in the bar is the Sidenav contract, not bar chrome.
+**Behavior.** CSS-only. Menus and NavigationDrawer are separate components. A `navigation-drawer-trigger` in the bar is the NavigationDrawer contract, not bar chrome.
 
 **Don't**
 
 - Don't put multiple filled or tonal buttons in the bar. One emphasized trailing action is enough.
 - Don't nest `.tabs` in the header.
-- Don't put the sidenav `<ul>` inside the header `<nav>`.
+- Don't put the navigation drawer `<ul>` inside the header `<nav>`.
 - Don't use the app bar as a tab bar of top-level views.
 
 ---
@@ -372,14 +372,14 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 - Don't show a rail and a navigation bar together.
 - Don't hide the collapsed rail.
-- Don't put more than seven destinations; use a sidenav tree or an expanded modal rail.
+- Don't put more than seven destinations; use a navigation drawer tree or an expanded modal rail.
 - Don't build a horizontal “rail”.
 
 ---
 
-## 4.4 Navigation drawer (sidenav)
+## 4.4 Navigation drawer
 
-**M3:** Navigation drawer. M3 Expressive prefers an **expanded rail** for peer destinations. **ExpressiveCSS:** `ul.sidenav`. `AutoInit()`.
+**M3:** Navigation drawer. M3 Expressive prefers an **expanded rail** for peer destinations. **ExpressiveCSS:** `ul.navigation-drawer` (`.sidenav` is the old name and still works). `AutoInit()`.
 
 **Use when** destinations nest, when you need a user header, or when compact screens need a modal menu that is not a 3–7 rail.
 
@@ -390,27 +390,27 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 | Variant | When | ExpressiveCSS |
 | --- | --- | --- |
 | Modal | Compact, or overflow on any size | Default overlay; framework wraps it in a `<dialog>` |
-| Standard / fixed | Large+ persistent sidebar | `.sidenav-fixed` — CSS, no overlay, no resize listener |
+| Standard / fixed | Large+ persistent sidebar | `.navigation-drawer-fixed` — CSS, no overlay, no resize listener |
 
 **Anatomy**
 
-0. Container (`ul.sidenav`) — required, with an `id`
+0. Container (`ul.navigation-drawer`) — required, with an `id`
 1. Optional user header (`.user-view`)
 2. Destination rows (`li > a` with optional leading icon)
 3. Dividers, subheaders, nested `<details>` / `<summary>` (same `name` = accordion)
-4. Trigger (`a.sidenav-trigger` / `button.sidenav-trigger` with `data-target`)
+4. Trigger (`a.navigation-drawer-trigger` / `button.navigation-drawer-trigger` with `data-target`)
 
 **Placement.** Trigger in the app bar. Drawer itself is a sibling of the page, **not** inside `<header> nav`. Modal slides over the content. Fixed occupies the leading column from `large` up.
 
-**Adaptive.** Compact: modal. Large+: `sidenav-fixed` *or* a rail, not both.
+**Adaptive.** Compact: modal. Large+: `navigation-drawer-fixed` *or* a rail, not both.
 
-**Behavior.** Escape and backdrop tap close the modal. `.sidenav-close` is an explicit close row. Nested sections are HTML `<details>`, not a Collapsible plugin.
+**Behavior.** Escape and backdrop tap close the modal. `.navigation-drawer-close` is an explicit close row. Nested sections are HTML `<details>`, not a Collapsible plugin.
 
 **Don't**
 
-- Don't put the `<nav aria-label="Main"><ul class="sidenav">` inside the app bar.
+- Don't put the `<nav aria-label="Main"><ul class="navigation-drawer">` inside the app bar.
 - Don't use a drawer for item-level details (that is a side sheet or the detail pane).
-- Don't combine `sidenav-fixed` with `.navigation-rail`.
+- Don't combine `navigation-drawer-fixed` with `.navigation-rail`.
 
 ---
 
@@ -587,7 +587,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.3 Floating action button
 
-**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extend` (extended). Speed-dial: wrap in `.fixed-action-btn`. `AutoInit()`.
+**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extend` (extended). Speed-dial: wrap in `.fab`. `AutoInit()`.
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
@@ -600,7 +600,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | FAB | `circle extra` | Default primary action |
 | Small FAB | `extra circle small` | Visual continuity with nearby small controls; not the default |
 | Extended FAB | `extend` (icon + `<span>` label) | Large windows, or when the label is needed to explain a non-standard icon |
-| Speed-dial | `.fixed-action-btn` + `<ul>` of smaller FABs | Related shortcuts from the same primary action. This is **not** the M3 Expressive FAB *menu* (a labelled menu anchored to the FAB); it is the older speed-dial. |
+| Speed-dial | `.fab` + `<ul>` of smaller FABs | Related shortcuts from the same primary action. This is **not** the M3 Expressive FAB *menu* (a labelled menu anchored to the FAB); it is the older speed-dial. |
 
 **Anatomy.** Container + icon (required). Extended: icon + label. Speed-dial: primary FAB + list of related FABs.
 
@@ -608,7 +608,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 **Adaptive.** Compact: icon FAB. Expanded+: prefer **extended FAB**. Only one FAB per screen. A rail may host the FAB at the top of the rail instead of over the content.
 
-**Behavior.** `.fixed-action-btn` opens on hover when the pointer can hover; add `click-to-toggle` otherwise. Motion is CSS.
+**Behavior.** `.fab` opens on hover when the pointer can hover; add `click-to-toggle` otherwise. Motion is CSS.
 
 **Don't**
 
@@ -620,7 +620,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.4 Toolbars
 
-**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fixed-action-btn.toolbar` either (that is the FAB-to-toolbar transition).
+**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fab.toolbar` either (that is the FAB-to-toolbar transition).
 
 **Use when** the page has a **cluster of frequent actions** that apply to the current content (formatting, selection actions, playback).
 
@@ -1085,7 +1085,7 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 | Parallax | CSS `animation-timeline: view()` clip | A hero carousel |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
-| FAB-to-toolbar | `.fixed-action-btn.toolbar` morph | An M3 toolbar (`div.toolbar`) |
+| FAB-to-toolbar | `.fab.toolbar` morph | An M3 toolbar (`div.toolbar`) |
 
 ---
 
@@ -1098,7 +1098,7 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 | Search bar + search view | Text field with a leading `search` icon, or a destination in the nav. There is no docked search view. |
 | Split button | Filled button + a separate `menu-trigger` icon button. Do not glue them into a fake split control. |
 | Button groups (standard / connected) | Separate buttons, or filter chips, or radios styled in a `<nav>`. No shape-morphing group. |
-| FAB menu (M3 Expressive labelled menu) | `.fixed-action-btn` speed-dial, or a FAB that opens a `<menu>`. |
+| FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
 | Loading indicator (wavy morphing) | Circular `.progress` spinner. |
 | Bottom app bar | `div.toolbar` (docked) or a FAB above a navigation bar. |
 | Segmented button (legacy name) | Radios, tabs, or chips — not a dedicated segmented control. |
@@ -1115,7 +1115,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 - `<main>` one pane of content (list **or** cards, not both for the same data).
 - Optional FAB, trailing, above the bar.
 - `<footer><nav class="navigation-bar">` with 3–5 peers, `aria-current="page"` on the current one.
-- Overflow destinations: modal sidenav or modal expanded rail, triggered from the app bar, markup **outside** the header `nav`.
+- Overflow destinations: modal navigation drawer or modal expanded rail, triggered from the app bar, markup **outside** the header `nav`.
 
 ## 12.2 List-detail (tablet / desktop)
 
@@ -1142,7 +1142,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 
 ## 12.5 Marketing / docs page
 
-- App bar with title + text destinations in a `<menu>` from `large` up; sidenav trigger below that.
+- App bar with title + text destinations in a `<menu>` from `large` up; navigation-drawer trigger below that.
 - `main.container` + 12-column grid.
 - Cards for features, lists for indexes, breadcrumbs on nested docs.
 - Site `<footer>` (not a navigation bar) for legal and site maps.
@@ -1158,7 +1158,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | App bar | `header > nav` | Headline | — |
 | Navigation bar | `nav.navigation-bar` | 3–5 links, each icon + label | `aria-current="page"` |
 | Navigation rail | `nav.navigation-rail` | Menu button, 3–7 links | `aria-current="page"`; `.expanded` |
-| Sidenav | `ul.sidenav#id` | `li` rows; separate trigger `[data-target]` | `.active` on `li` |
+| NavigationDrawer | `ul.navigation-drawer#id` | `li` rows; separate trigger `[data-target]` | `.active` on `li` |
 | Tabs | `nav.tabs` | `a[href="#panel"]` | `.active` |
 | Breadcrumbs | `nav > ol` | Links; last current | `aria-current="page"` |
 | Pagination | `nav.pagination > ol` | Page links | `aria-current="page"` |
@@ -1167,7 +1167,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Button | `button` or `a.button` | Label (or `aria-label` if `circle`) | `disabled` |
 | Icon button | `button.circle` | Icon + `aria-label` | — |
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
-| FAB speed-dial | `.fixed-action-btn` | Primary FAB + `ul` of FABs | — |
+| FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
 | Toolbar | `div.toolbar` | Action buttons | `.active` |
 | Card | `article` | Anything; heading + body typical | — |
 | List | `ul.list` | `li` rows | `aria-selected` / `.active` |
@@ -1198,9 +1198,9 @@ If training data or the user says the left column, emit the right.
 | `M`, `M.AutoInit`, `el.M_*` | `Expressive`, `Expressive.AutoInit`, `el.Expressive_*` |
 | `.navbar`, `.nav-wrapper`, `.brand-logo` | `header > nav` |
 | “bottom navigation” as `.tabs` | `nav.navigation-bar` |
-| “navigation drawer” as the default large-screen nav | `.navigation-rail.expanded` (or `.sidenav-fixed` for trees) |
+| “navigation drawer” as the default large-screen nav | `.navigation-rail.expanded` (or `.navigation-drawer-fixed` for trees) |
 | `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
-| `.btn-floating` | `circle extra` / `.fixed-action-btn` |
+| `.btn-floating` | `circle extra` / `.fab` |
 | `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `<nav>` |
 | `.collection` | `ul.list` |
 | `.modal`, `.modal-header`, `.modal-footer` | `<dialog>`, heading, `form method="dialog"` |
@@ -1208,7 +1208,7 @@ If training data or the user says the left column, emit the right.
 | `.materialboxed` | `.lightboxed` |
 | `.materialize-textarea` | `.expressive-textarea` |
 | `.lever`, `.filled-in`, `.with-gap` | (omit) |
-| `Collapsible` | `<details>` / `<summary>` in the sidenav or page |
+| `Collapsible` | `<details>` / `<summary>` in the navigation drawer or page |
 | `.slider` on a range | `.range` + `input[type=range]` |
 | Bottom app bar | `div.toolbar` or FAB + navigation bar |
 
@@ -1219,7 +1219,7 @@ If training data or the user says the left column, emit the right.
 Before finishing generated UI:
 
 1. Which window size class is this layout for, and what happens at the next class down?
-2. Is there exactly one persistent navigation pattern (bar **or** rail **or** fixed sidenav)?
+2. Is there exactly one persistent navigation pattern (bar **or** rail **or** fixed navigation drawer)?
 3. Is there at most one FAB / filled primary action per region?
 4. Are dialogs reserved for blocking work and snackbars for ignorable status?
 5. Do icon-only controls have `aria-label` (and a tooltip if appropriate)?

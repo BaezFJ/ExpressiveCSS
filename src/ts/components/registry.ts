@@ -22,20 +22,20 @@ export const AUTO_INIT_COMPONENTS = {
   Cards: { component: Components.Cards, selector: CARDS_SELECTOR },
   Carousel: { component: Components.Carousel, selector: '.carousel' },
   Chips: { component: Components.Chips, selector: '.chips' },
-  Datepicker: { component: Components.Datepicker, selector: '.datepicker' },
+  Datepicker: { component: Components.Datepicker, selector: '.datepicker, .date-picker' },
   Menu: { component: Components.Menu, selector: '.menu-trigger' },
   Lightbox: { component: Components.Lightbox, selector: '.lightboxed' },
   Parallax: { component: Components.Parallax, selector: '.parallax' },
   ScrollSpy: { component: Components.ScrollSpy, selector: '.scrollspy' },
   FormSelect: { component: Components.FormSelect, selector: 'select' },
-  Sidenav: { component: Components.Sidenav, selector: '.sidenav' },
+  NavigationDrawer: { component: Components.NavigationDrawer, selector: '.sidenav, .navigation-drawer' },
   NavigationRail: { component: Components.NavigationRail, selector: '.navigation-rail' },
   Tabs: { component: Components.Tabs, selector: '.tabs' },
-  Timepicker: { component: Components.Timepicker, selector: '.timepicker' },
+  Timepicker: { component: Components.Timepicker, selector: '.timepicker, .time-picker' },
   Tooltip: { component: Components.Tooltip, selector: '.tooltipped' },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
-    selector: '.fixed-action-btn'
+    selector: '.fab, .fixed-action-btn'
   }
 };
 

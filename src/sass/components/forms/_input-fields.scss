@@ -334,7 +334,7 @@ textarea {
   }
 }
 
-.datepicker-date-input {
+:is(.datepicker-date-input, .date-picker-date-input) {
   position: relative;
   text-indent: -9999px;
 

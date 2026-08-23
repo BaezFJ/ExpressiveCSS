@@ -17,6 +17,9 @@
 //   --md-comp-progress-circular-size    48px
 //   --md-comp-progress-circular-thickness  4px
 
+// M3 names this component "Progress indicators", linear and circular. The
+// class is `.progress`; `.preloader` is the Materialize name for the circular
+// one and stays as an alias, as does `.progress.circular`.
 .progress,
 .preloader {
   --md-comp-progress-track: var(--md-sys-color-secondary-container);
@@ -133,7 +136,9 @@ progress.progress:indeterminate {
 // Circular — one element
 // ---------------------------------------------------------------------------
 
-.preloader {
+// The circular indicator. `.progress.circular` is the M3-aligned name;
+// `.preloader` is the Materialize one and still works.
+:is(.preloader, .progress.circular) {
   box-sizing: border-box;
   display: inline-block;
   width: var(--md-comp-progress-circular-size);

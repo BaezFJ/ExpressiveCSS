@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/nav.html" import sidenav, footer_nav %}
+{% from "macros/nav.html" import navigation_drawer, footer_nav %}
 {% from "macros/banner.html" import banner as Banner %}
 
 {% block body_class %}docs{% endblock %}
@@ -7,7 +7,7 @@
 {% block content %}
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>{% block page_title %}{{ page_name or "ExpressiveCSS" }}{% endblock %}</h2>
@@ -24,7 +24,7 @@
    "The trigger may live in the bar; the drawer must not." Inside <header> the
    wrapper was also a direct child of an app bar host, so the navbar rules
    styled it as a second 64dp bar. #}
-{{ sidenav(nav, request.endpoint) }}
+{{ navigation_drawer(nav, request.endpoint) }}
 
     <main>
         {% if page_name %}{{ Banner(page_name, page_blurb) }}{% endif %}

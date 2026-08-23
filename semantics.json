@@ -334,18 +334,6 @@
         }
       ]
     },
-    "forms/range": {
-      "status": "enforced",
-      "note": "Swept 0.8.0.",
-      "rules": [
-        {
-          "id": "range-labelled",
-          "kind": "forbid",
-          "selector": "input[type=\"range\"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)",
-          "message": "A range announces only its value unless something names it."
-        }
-      ]
-    },
     "forms/select": {
       "status": "enforced",
       "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",
@@ -355,6 +343,18 @@
           "kind": "forbid",
           "selector": "li[role=\"option\"]:not([aria-selected])",
           "message": "role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen."
+        }
+      ]
+    },
+    "forms/slider": {
+      "status": "enforced",
+      "note": "Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.",
+      "rules": [
+        {
+          "id": "range-labelled",
+          "kind": "forbid",
+          "selector": "input[type=\"range\"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)",
+          "message": "A range announces only its value unless something names it."
         }
       ]
     },
@@ -395,6 +395,26 @@
           "kind": "forbid",
           "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-icons:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
           "message": "The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden=\"true\", with the enclosing control carrying the name - or an image in its own right, role=\"img\" with a label. It is never left as bare text."
+        }
+      ]
+    },
+    "landmarks": {
+      "status": "enforced",
+      "note": "Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.",
+      "rules": [
+        {
+          "id": "nav-needs-label",
+          "kind": "forbid",
+          "selector": "nav:not([aria-label]):not([aria-labelledby]):not(article nav):not(.tooltip nav):not(.toolbar)",
+          "fragmentSafe": false,
+          "message": "A page carries several <nav> landmarks - app bar, tabs, breadcrumbs, footer columns, drawer. Unlabelled they arrive in the landmark menu as a row of identical entries, which is worse than not being landmarks at all. Three carve-outs, each an action row that should not be <nav> at all so that labelling it would entrench the error: `article nav` (card actions, awaits the cards sweep), `.tooltip nav` (rich-tooltip actions, awaits the tooltip sweep), `.toolbar` (awaits the toolbar sweep). Delete each carve-out with its sweep."
+        },
+        {
+          "id": "main-not-nested",
+          "kind": "forbid",
+          "selector": "main main",
+          "fragmentSafe": true,
+          "message": "A document has one <main>. A pane that holds the primary content of a region is a <section> or a <div>."
         }
       ]
     },
@@ -452,6 +472,19 @@
           "selector": ".navigation-bar a.active:not([aria-current])",
           "fragmentSafe": false,
           "message": "The active destination needs aria-current=\"page\"."
+        }
+      ]
+    },
+    "navigation-drawer": {
+      "status": "enforced",
+      "note": "Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an alias.",
+      "rules": [
+        {
+          "id": "sidenav-in-nav",
+          "kind": "forbid",
+          "selector": ".sidenav:not(nav):not(nav *)",
+          "fragmentSafe": true,
+          "message": "A drawer of destinations is navigation. Wrap the list in a labelled <nav>."
         }
       ]
     },
@@ -534,9 +567,9 @@
         }
       ]
     },
-    "preloader": {
+    "progress": {
       "status": "enforced",
-      "note": "Swept 0.8.0.",
+      "note": "Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.",
       "rules": [
         {
           "id": "div-progress-reports-progress",
@@ -567,22 +600,9 @@
       "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
       "rules": []
     },
-    "sidenav": {
+    "slideshow": {
       "status": "enforced",
-      "note": "Swept 0.8.0.",
-      "rules": [
-        {
-          "id": "sidenav-in-nav",
-          "kind": "forbid",
-          "selector": ".sidenav:not(nav):not(nav *)",
-          "fragmentSafe": true,
-          "message": "A drawer of destinations is navigation. Wrap the list in a labelled <nav>."
-        }
-      ]
-    },
-    "slider": {
-      "status": "enforced",
-      "note": "Swept 0.8.0. The control is input[type=range]; the rules live on forms/range.",
+      "note": "Swept 0.8.0. Renamed from slider, which M3 uses for the range control; a `.slider` holding no range input is still a slideshow.",
       "rules": []
     },
     "snackbar": {
@@ -657,26 +677,6 @@
       "status": "enforced",
       "note": "Swept 0.8.0. Class-driven animation applied to whatever element already exists; no markup contract.",
       "rules": []
-    },
-    "landmarks": {
-      "status": "enforced",
-      "note": "Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.",
-      "rules": [
-        {
-          "id": "nav-needs-label",
-          "kind": "forbid",
-          "selector": "nav:not([aria-label]):not([aria-labelledby]):not(article nav):not(.tooltip nav):not(.toolbar)",
-          "fragmentSafe": false,
-          "message": "A page carries several <nav> landmarks - app bar, tabs, breadcrumbs, footer columns, drawer. Unlabelled they arrive in the landmark menu as a row of identical entries, which is worse than not being landmarks at all. Three carve-outs, each an action row that should not be <nav> at all so that labelling it would entrench the error: `article nav` (card actions, awaits the cards sweep), `.tooltip nav` (rich-tooltip actions, awaits the tooltip sweep), `.toolbar` (awaits the toolbar sweep). Delete each carve-out with its sweep."
-        },
-        {
-          "id": "main-not-nested",
-          "kind": "forbid",
-          "selector": "main main",
-          "fragmentSafe": true,
-          "message": "A document has one <main>. A pane that holds the primary content of a region is a <section> or a <div>."
-        }
-      ]
     }
   },
   "fragmentSafe": "Set on a rule that fires on a wrong thing being PRESENT. Only these run against m3-guidelines.md, whose markup is prose fragments: a fragment can be wrong about what it contains, but omitting something is what a fragment is for. Note this is not the same as kind=forbid - `fieldset:not(:has(> legend))` forbids, but what it detects is an omission."

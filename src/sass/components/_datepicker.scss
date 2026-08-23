@@ -1,6 +1,6 @@
 @use "../abstracts" as *;
 
-.datepicker-container {
+:is(.datepicker-container, .date-picker-container) {
   display: flex;
   flex-direction: column;
   max-width: 325px;
@@ -8,7 +8,7 @@
   background-color: var(--md-sys-color-surface);
 }
 
-.datepicker-controls {
+:is(.datepicker-controls, .date-picker-controls) {
   display: flex;
   justify-content: space-between;
   width: 280px;
@@ -86,7 +86,7 @@
 
 
 /* Date Display */
-.datepicker-date-display {
+:is(.datepicker-date-display, .date-picker-date-display) {
   flex: 1 auto;
   // @removed since v2.2.1-dev regarding Material M3 standards
   // background-color: var(--md-sys-color-primary);
@@ -118,11 +118,11 @@
 
 
 /* Calendar */
-.datepicker-calendar-container {
+:is(.datepicker-calendar-container, .date-picker-calendar-container) {
   flex: 2.5 auto;
 }
 
-.datepicker-table {
+:is(.datepicker-table, .date-picker-table) {
   width: 280px;
   font-size: 1rem;
   margin: 0 auto;
@@ -145,7 +145,7 @@
     color: var(--md-sys-color-on-surface-variant);
   }
 
-  .datepicker-day {
+  :is(.datepicker-day, .date-picker-day) {
     padding: 0;
     color: var(--md-sys-color-on-background);
     // border-radius: 50%;
@@ -162,17 +162,17 @@
 }
 
 // @todo
-.datepicker-day.has-event {}
+:is(.datepicker-day, .date-picker-day).has-event {}
 // @todo
-.datepicker-day.is-inrange {}
+:is(.datepicker-day, .date-picker-day).is-inrange {}
 // @todo
-.datepicker-day.is-startrange {}
+:is(.datepicker-day, .date-picker-day).is-startrange {}
 // @todo
-.datepicker-day.is-endrange {}
+:is(.datepicker-day, .date-picker-day).is-endrange {}
 
-.datepicker-day.is-daterange-start,
-.datepicker-day.is-daterange-end,
-.datepicker-day.is-daterange {
+:is(.datepicker-day, .date-picker-day).is-daterange-start,
+:is(.datepicker-day, .date-picker-day).is-daterange-end,
+:is(.datepicker-day, .date-picker-day).is-daterange {
   position: relative;
 
   &:before {
@@ -186,20 +186,20 @@
   }
 }
 
-.datepicker-day.is-daterange-start:before,
-.datepicker-day.is-daterange-end:before {
+:is(.datepicker-day, .date-picker-day).is-daterange-start:before,
+:is(.datepicker-day, .date-picker-day).is-daterange-end:before {
   width: 50%;
 }
 
-.datepicker-day.is-daterange-start:before {
+:is(.datepicker-day, .date-picker-day).is-daterange-start:before {
   left: 50%;
 }
 
-.datepicker-day.is-daterange .datepicker-day-button:before {
+:is(.datepicker-day, .date-picker-day).is-daterange :is(.datepicker-day-button, .date-picker-day-button):before {
   background-color: var(--md-sys-color-primary-container);
 }
 
-.datepicker-day-button {
+:is(.datepicker-day-button, .date-picker-day-button) {
   background-color: transparent;
   border: none;
   line-height: 34px;
@@ -239,7 +239,7 @@
 }
 
 /* Footer */
-.datepicker-footer {
+:is(.datepicker-footer, .date-picker-footer) {
   width: 280px;
   margin: 0 auto;
   padding-bottom: 5px;
@@ -247,15 +247,15 @@
   justify-content: space-between;
 }
 
-.datepicker-cancel,
-.datepicker-clear,
-.datepicker-today,
-.datepicker-done {
+:is(.datepicker-cancel, .date-picker-cancel),
+:is(.datepicker-clear, .date-picker-clear),
+:is(.datepicker-today, .date-picker-today),
+:is(.datepicker-done, .date-picker-done) {
   color: var(--md-sys-color-primary);
   padding: 0 1rem;
 }
 
-.datepicker-clear {
+:is(.datepicker-clear, .date-picker-clear) {
   color: var(--md-sys-color-error);
 }
 

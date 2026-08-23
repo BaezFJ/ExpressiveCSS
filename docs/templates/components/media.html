@@ -148,7 +148,7 @@ instance.destroy();
           For a 3D item carousel or a full-width image track, see
           <a href="{{ url_for('carousel') }}">Carousel</a>.
         </p>
-        <div class="slider">
+        <div class="slideshow">
           <ul class="slides">
             <li>
               <img src="https://picsum.photos/id/1015/800/400" alt="First slide">
@@ -181,7 +181,7 @@ instance.destroy();
           </ul>
         </div>
 {% call code() %}
-<div class="slider">
+<div class="slideshow">
   <ul class="slides">
     <li>
       <img src="images/sample-1.jpg" alt="First slide">
@@ -211,7 +211,7 @@ instance.destroy();
         <h5 class="light">Initialization</h5>
 {% call code() %}
 document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.slider');
+  const elems = document.querySelectorAll('.slideshow');
   const instances = Expressive.Slider.init(elems, {
     // specify options here
     indicatorLabelFunc: (idx, current) => {
@@ -322,10 +322,10 @@ instance.destroy();
         <p>
           Add <code>fullscreen</code> to the slider so it fills its positioned ancestor
           (typically the viewport if that ancestor is the page). There is no separate demo page —
-          the class is <code>fullscreen</code> on <code>.slider</code>.
+          the class is <code>fullscreen</code> on <code>.slideshow</code>.
         </p>
 {% call code() %}
-<div class="slider fullscreen">
+<div class="slideshow fullscreen">
   <ul class="slides">...</ul>
 </div>
 {% endcall %}
