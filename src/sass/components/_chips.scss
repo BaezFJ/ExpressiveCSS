@@ -1,5 +1,10 @@
 @use "../abstracts" as *;
 
+// A chip is written with the element that says what it is: <span> for a
+// display or input chip, <button> for assist / suggestion, and
+// <input type="checkbox"> + <label> for filter. The class styles all three
+// elements, so everything below has to survive on any of them - hence the
+// resets.
 .chip {
   --font-size: 14px;
   --font-size-icon: 18px;
@@ -13,20 +18,66 @@
   margin: 0;
   height: 32px;
   padding-left: var(--padding);
-  padding-right: var(--padding);  
+  padding-right: var(--padding);
   font-size: var(--font-size);
-  font-weight: 500;    
+  font-weight: 500;
   border-radius: 8px;
   align-items: center;
   user-select: none;
   vertical-align: top;
 
-  &:focus,
+  // Button and label defaults that would otherwise show through.
+  appearance: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
+
+  // Selected. `.active` is the pre-0.8.0 name and still works; `:focus` used
+  // to stand in for selection here, which meant a chip could not show focus
+  // and selection as the different things they are.
+  &.selected,
   &.active {
-    outline: none;
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
   }
+
+  @include focus-visible();
+}
+
+// Interactive chips only. A display chip is a <span> and is not a control.
+:is(button, label).chip {
+  cursor: pointer;
+
+  &:hover {
+    background-color: color-mix(
+      in oklab,
+      var(--md-sys-color-on-surface-variant) 8%,
+      var(--md-sys-color-surface-container-low)
+    );
+  }
+}
+
+// Filter chip. The checkbox carries the state and the form value; the label is
+// the chip. Kept focusable rather than `display: none` so it stays reachable.
+.chip-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.chip-input:checked + .chip {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.chip-input:focus-visible + .chip {
+  @include focus-ring();
 }
 
 .chip.outlined {
@@ -49,6 +100,7 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
+// The delete affordance is a real <button>, so it needs the button reset too.
 .chip .close {
   border-radius: 50%;
   height: 24px;
@@ -58,6 +110,13 @@
   justify-content: center;
   align-content: center;
   cursor: pointer;
+  appearance: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+
+  @include focus-visible();
 }
 
 .chip .close:hover {

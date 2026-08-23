@@ -5,6 +5,75 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+Start of the HTML semantics sweep. Component markup is being corrected so that
+the element states what a component is, with the ARIA that element choice
+implies. Scope is deliberately bounded: keyboard interaction, focus management
+and colour contrast are **not** part of it.
+
+The sweep is breaking, and lands over several changes before 0.8.0. Legacy
+markup keeps rendering — nothing warns at runtime — so each **Migration** entry
+below is the whole story for that component.
+
+### Added
+
+- **`SEMANTICS.md`**, the normative per-component markup standard, generated
+  from `semantics.json` by `npm run build:semantics`. `CONTEXT.md` defines the
+  vocabulary it uses.
+- **`tests/semantics.test.js`** enforces it against all three surfaces that
+  state markup: `llm.md`, `docs/templates/**` and `tests/fixtures.js`. A
+  component is `enforced` or `exempt`; the exempt list is the remaining backlog
+  and only shrinks. A component cannot be added without a row, so anything new
+  is checked from its first commit. A single example can opt out with a stated
+  reason (` ```html ignore-semantics: why `, or `code(check=false, reason=…)`).
+- `Chips` gains an `i18n` option (`{ remove: 'Remove' }`) for the delete
+  button's accessible name.
+
+### Changed
+
+- **Chips are the first component swept.** Each kind of chip is now written
+  with the element that says what it is — the four Material 3 types plus a
+  non-interactive display chip, across three root elements: display is
+  `<span class="chip">`, assist and suggestion are
+  `<button type="button" class="chip">`, filter is
+  `<input type="checkbox" class="chip-input">` + `<label class="chip">`, and an
+  input chip is a `<span class="chip">` holding a
+  `<button type="button" class="close" aria-label>`. A filter chip's state is
+  `:checked`, so it needs no JavaScript.
+- Selection is the `selected` class rather than `:focus`, which previously had
+  to stand in for it. `active` still works.
+- Icons inside a chip are `<span class="material-symbols" aria-hidden="true">`.
+  The ligature is real text and was being read out next to the label.
+- The icon modifiers `.left`, `.right`, `.tiny`, `.small`, `.medium` and
+  `.large` no longer depend on the element being `<i>`. They were keyed on `i`
+  in `base/_global.scss`, so writing an icon as a `<span>` silently dropped
+  them; `.left` and `.right` moved onto the icon class list, where the sizes
+  already were.
+
+### Fixed
+
+- **A rendered chip was a `<div tabindex="0">` with no role and no accessible
+  name** — in the tab order, announcing nothing. The chip is no longer a
+  control; its delete button is, and that button carries the name.
+- The chip delete affordance was an `<i class="close">`: not focusable, not
+  labelled, and unreachable without a mouse. It is now a real
+  `<button type="button">`.
+- `.chip:focus` set `outline: none`, which would have removed the focus
+  indicator from the newly focusable chips. Focus now goes through the
+  `focus-visible` mixin.
+- `closeIconClass` was documented with a default of `'material-icons'`; the
+  code has always defaulted to `'material-symbols'`.
+
+### Migration
+
+- `<div class="chip">` → `<span class="chip">`, or `<button type="button"
+  class="chip">` if it is actionable. A filter chip becomes a checkbox and its
+  label.
+- `<i class="close material-icons">close</i>` →
+  `<button type="button" class="close" aria-label="Remove …"><span
+  class="material-symbols" aria-hidden="true">close</span></button>`.
+- `.chip.active` still works; `.chip.selected` is the name going forward.
+- Old chip markup still renders. It is no longer documented.
+
 ## [0.7.0] - 2026-08-21
 
 Promotes 0.7.0-rc.0 to `latest`. The framework itself is **unchanged** from

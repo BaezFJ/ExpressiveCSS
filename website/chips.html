@@ -271,49 +271,106 @@
   <div id="introduction" class="section scrollspy">
 
         <p class="flow-text">
-          A chip is a <code>.chip</code>. Add an <code>img</code> for a contact, a
-          <code>.close</code> icon for a dismissible tag, or <code>outlined</code> for
-          a bordered style. Static chips are CSS. The JavaScript plugin lives on a
-          <code>.chips</code> wrapper.
+          A chip is a <code>.chip</code>, and the element says which kind it is — the
+          four Material 3 chip types, plus a non-interactive display chip, across three
+          root elements. Add <code>outlined</code> for a bordered style.
+          Static chips are CSS. The JavaScript plugin lives on a <code>.chips</code>
+          wrapper.
         </p>
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Element</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Display</td>
+              <td><code>&lt;span class="chip"&gt;</code></td>
+              <td>Presents information. Not a control, not in the tab order.</td>
+            </tr>
+            <tr>
+              <td>Assist, suggestion</td>
+              <td><code>&lt;button type="button" class="chip"&gt;</code></td>
+              <td>One action on press.</td>
+            </tr>
+            <tr>
+              <td>Filter</td>
+              <td><code>&lt;input type="checkbox" class="chip-input"&gt;</code> + <code>&lt;label class="chip"&gt;</code></td>
+              <td>Multi-select and toggleable, and it carries a value into the form. No JavaScript.</td>
+            </tr>
+            <tr>
+              <td>Input</td>
+              <td><code>&lt;span class="chip"&gt;</code> + a nested <code>&lt;button class="close"&gt;</code></td>
+              <td>The chip is a token; the delete button is the control.</td>
+            </tr>
+          </tbody>
+        </table>
         <div class="chips mb-5">
-          <div class="chip">
-            <img src="https://picsum.photos/id/64/100/100" alt="Contact Person"> Jane Doe
-          </div>
-          <div class="chip">
+          <span class="chip outlined">Information</span>
+          <span class="chip">
+            <img src="https://picsum.photos/id/64/100/100" alt=""> Jane Doe
+          </span>
+          <button type="button" class="chip">
+            <span class="material-symbols" aria-hidden="true">event</span>
+            Add to calendar
+          </button>
+          <input type="checkbox" class="chip-input" id="demo-filter-flights">
+          <label class="chip" for="demo-filter-flights">
+            <span class="material-symbols" aria-hidden="true">check</span>
+            Flights
+          </label>
+          <span class="chip">
             Tag
-            <i class="close material-symbols">close</i>
-          </div>
-          <div class="chip">
-            <i class="material-symbols">check</i>
-            Filter
-            <i class="close material-symbols">close</i>
-          </div>
-          <div class="chip outlined">Information</div>
-          <div class="chip outlined">
-            <i class="material-symbols">check</i>
-            Filter
-            <i class="close material-symbols">close</i>
-          </div>
+            <button type="button" class="close" aria-label="Remove Tag">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </span>
         </div>
-<pre><code>&lt;div class="chip"&gt;
-  &lt;img src="photo.jpg" alt="Contact Person"&gt; Jane Doe
-&lt;/div&gt;
-&lt;div class="chip"&gt;
+<pre><code>&lt;span class="chip outlined"&gt;Information&lt;/span&gt;
+
+&lt;span class="chip"&gt;
+  &lt;img src="photo.jpg" alt=""&gt; Jane Doe
+&lt;/span&gt;
+
+&lt;button type="button" class="chip"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;event&lt;/span&gt;
+  Add to calendar
+&lt;/button&gt;
+
+&lt;input type="checkbox" class="chip-input" id="filter-flights"&gt;
+&lt;label class="chip" for="filter-flights"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;check&lt;/span&gt;
+  Flights
+&lt;/label&gt;
+
+&lt;span class="chip"&gt;
   Tag
-  &lt;i class="close material-symbols"&gt;close&lt;/i&gt;
-&lt;/div&gt;
-&lt;div class="chip"&gt;
-  &lt;i class="material-symbols"&gt;check&lt;/i&gt;
-  Filter
-  &lt;i class="close material-symbols"&gt;close&lt;/i&gt;
-&lt;/div&gt;
-&lt;div class="chip outlined"&gt;Information&lt;/div&gt;</code></pre>
+  &lt;button type="button" class="close" aria-label="Remove Tag"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/span&gt;</code></pre>
+        <p>
+          The delete button needs its own <code>aria-label</code> naming the chip it
+          removes, because its only content is an icon. The icon is
+          <code>aria-hidden</code> in every chip: the ligature is real text and is
+          otherwise read out alongside the label.
+        </p>
+        <p>
+          A filter chip's selected state is <code>:checked</code> on its input, so it
+          needs no script. Everywhere else the selected look is the
+          <code>selected</code> class (<code>active</code> is the pre-0.8.0 name and
+          still works).
+        </p>
         <p>
           Clicking <code>.close</code> removes the chip only when it sits inside a
           <code>.chips</code> container. Importing the bundle runs
           <code>Chips.Init()</code> on <code>DOMContentLoaded</code>, which wires that
           click. A lone <code>.chip</code> does not remove itself.
+        </p>
+        <p>
+          Before 0.8.0 every chip was a <code>&lt;div class="chip"&gt;</code> and the
+          delete affordance was an <code>&lt;i class="close"&gt;</code> — focusable via
+          <code>tabindex</code> but with no role and no name. That markup still
+          renders; it is no longer correct and is not documented.
         </p>
   
       </div>
@@ -322,15 +379,18 @@
   <div id="contact" class="section scrollspy">
         <h3>Contacts</h3>
 
-        <p>Put an image inside the chip.</p>
-        <div class="chip mb-3">
-          <img src="https://picsum.photos/id/64/100/100" alt="Contact Person">
+        <p>
+          Put an image inside the chip. The name next to it is the accessible name
+          already, so the image is decorative — <code>alt=""</code>.
+        </p>
+        <span class="chip mb-3">
+          <img src="https://picsum.photos/id/64/100/100" alt="">
           Jane Doe
-        </div>
-<pre><code>&lt;div class="chip"&gt;
-  &lt;img src="photo.jpg" alt="Contact Person"&gt;
+        </span>
+<pre><code>&lt;span class="chip"&gt;
+  &lt;img src="photo.jpg" alt=""&gt;
   Jane Doe
-&lt;/div&gt;</code></pre>
+&lt;/span&gt;</code></pre>
   
       </div>
 
@@ -338,17 +398,25 @@
   <div id="tag" class="section scrollspy">
         <h3>Tags</h3>
 
-        <p>Put a close icon with class <code>close</code> inside the chip.</p>
+        <p>
+          Put a <code>button.close</code> inside the chip. Give it
+          <code>type="button"</code> so it cannot submit a surrounding form, and an
+          <code>aria-label</code> naming what it removes.
+        </p>
         <div class="chips mb-3">
-          <div class="chip">
+          <span class="chip">
             Tag
-            <i class="close material-symbols">close</i>
-          </div>
+            <button type="button" class="close" aria-label="Remove Tag">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </span>
         </div>
-<pre><code>&lt;div class="chip"&gt;
+<pre><code>&lt;span class="chip"&gt;
   Tag
-  &lt;i class="close material-symbols"&gt;close&lt;/i&gt;
-&lt;/div&gt;</code></pre>
+  &lt;button type="button" class="close" aria-label="Remove Tag"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/span&gt;</code></pre>
   
       </div>
 
@@ -358,12 +426,13 @@
 
         <p>
           The plugin turns a <code>.chips</code> container into an editable tag field.
-          Type a value and press Enter to add a chip. Delete with the close icon, or
-          select a chip and press Backspace or Delete.
+          Type a value and press Enter to add a chip. Delete with the chip's delete
+          button, or select a chip and press Backspace or Delete. Selecting a chip
+          marks it <code>selected</code> and moves focus to its delete button.
         </p>
         <p>
           <code>allowUserInput</code> defaults to <code>false</code>. Without it there
-          is no text field and rendered chips have no close icon. Pass
+          is no text field and rendered chips have no delete button. Pass
           <code>allowUserInput: true</code> for the interactive field.
           <code>AutoInit()</code> starts every <code>.chips</code> except
           <code>no-autoinit</code>, but it uses the defaults, so those wrappers stay
@@ -464,13 +533,19 @@
               <td><code>closeIconClass</code></td>
               <td>String</td>
               <td><code>'material-symbols'</code></td>
-              <td>Class on the close icon.</td>
+              <td>Class on the icon inside the delete button.</td>
             </tr>
             <tr>
               <td><code>allowUserInput</code></td>
               <td>Boolean</td>
               <td><code>false</code></td>
-              <td>If true, render a text field and close icons so the user can add and remove chips.</td>
+              <td>If true, render a text field and a delete button per chip, so the user can add and remove chips.</td>
+            </tr>
+            <tr>
+              <td><code>i18n</code></td>
+              <td>Object</td>
+              <td><code>{ remove: 'Remove' }</code></td>
+              <td>Strings the component generates. <code>remove</code> prefixes the delete button's accessible name, giving "Remove Apple".</td>
             </tr>
             <tr>
               <td><code>autocompleteOptions</code></td>

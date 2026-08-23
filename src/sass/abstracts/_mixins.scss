@@ -152,10 +152,17 @@
 }
 
 // Focus with Keyboard
+// The ring itself, for the rare selector that cannot be written as
+// `&:focus-visible` on the focused element - a filter chip draws its ring on
+// the <label>, but the focus is on the checkbox before it.
+@mixin focus-ring {
+  outline: 3px solid var(--md-sys-color-secondary);
+  outline-offset: 2px;
+}
+
 @mixin focus-visible {
   &:focus-visible {
-    outline: 3px solid var(--md-sys-color-secondary);
-    outline-offset: 2px;
+    @include focus-ring();
   }
 }
 

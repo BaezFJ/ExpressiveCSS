@@ -52,5 +52,14 @@
     A code sample. Write the markup for real -- the macro escapes it -- instead
     of hand-typing &lt; and &gt;. Keep the body flush left: <pre> preserves the
     indentation you give it.
+
+    tests/semantics.test.js checks every one of these against SEMANTICS.md. A
+    sample that deliberately shows non-conforming markup -- a migration
+    before/after, say -- opts out with check=false and a reason:
+
+        {% raw %}{% call code(check=false, reason="0.7.0 markup, shown for migration") %}{% endraw %}
+
+    The reason is required; the test fails on a bare opt-out, so an exemption
+    always says why it is still earned. Neither argument renders.
 #}
-{% macro code() %}<pre><code>{{ caller()|trim|code_escape }}</code></pre>{% endmacro %}
+{% macro code(check=true, reason="") %}<pre><code>{{ caller()|trim|code_escape }}</code></pre>{% endmacro %}

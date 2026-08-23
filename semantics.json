@@ -1,0 +1,337 @@
+{
+  "about": "Normative HTML semantics for ExpressiveCSS components. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. CONTEXT.md defines the vocabulary.",
+  "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
+  "rules": [
+    "Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.",
+    "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs and Carousel do not qualify: tabs are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`.",
+    "Icons are `<span class=\"material-symbols\" aria-hidden=\"true\">`. `<i>` keeps working but is undocumented.",
+    "`<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.",
+    "Every user-facing string the framework generates has an `i18n` option."
+  ],
+  "ruleKinds": {
+    "forbid": "selector must match nothing in a checked example",
+    "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)"
+  },
+  "surfaces": [
+    "llm.md",
+    "docs/templates",
+    "tests/fixtures.js"
+  ],
+  "additional": [
+    "autocomplete",
+    "character-counter"
+  ],
+  "components": {
+    "autocomplete": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "badges": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "bottom-sheet": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "breadcrumb": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "buttons": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "cards": {
+      "status": "exempt",
+      "note": "Rules written, sweep not started.",
+      "rules": [
+        {
+          "id": "card-action-row-not-nav",
+          "kind": "forbid",
+          "selector": "article > nav",
+          "message": "A card’s action row is buttons, not destinations. <nav> is a landmark, and one per card floods the landmark list."
+        }
+      ]
+    },
+    "carousel": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "character-counter": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "chips": {
+      "status": "enforced",
+      "note": "Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip, across three root elements; the delete affordance is a real button.",
+      "rules": [
+        {
+          "id": "chip-root-element",
+          "kind": "forbid",
+          "selector": ".chip:not(span):not(button):not(label)",
+          "message": "A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>."
+        },
+        {
+          "id": "chip-not-focusable-span",
+          "kind": "forbid",
+          "selector": "span.chip[tabindex]",
+          "message": "A display chip is not a control and must not be in the tab order. Put the action on a nested <button>."
+        },
+        {
+          "id": "chip-close-is-button",
+          "kind": "forbid",
+          "selector": ".chip .close:not(button)",
+          "message": "The chip delete affordance is a control: use <button type=\"button\" class=\"close\">, not <i> or <span>."
+        },
+        {
+          "id": "chip-close-type-button",
+          "kind": "require-attr",
+          "selector": ".chip button.close",
+          "attr": "type",
+          "equals": "button",
+          "message": "A <button> inside a form defaults to type=submit. Chip delete buttons must set type=\"button\"."
+        },
+        {
+          "id": "chip-close-has-label",
+          "kind": "require-attr",
+          "selector": ".chip button.close",
+          "attr": "aria-label",
+          "message": "The delete button contains only an icon, so it needs an accessible name naming the chip it removes."
+        },
+        {
+          "id": "chip-no-i-element",
+          "kind": "forbid",
+          "selector": ".chip i",
+          "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\" aria-hidden=\"true\">."
+        },
+        {
+          "id": "chip-icon-hidden",
+          "kind": "require-attr",
+          "selector": ".chip :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden."
+        },
+        {
+          "id": "filter-chip-label-for",
+          "kind": "require-attr",
+          "selector": "label.chip",
+          "attr": "for",
+          "message": "A filter chip is <input type=\"checkbox\"> + <label class=\"chip\">; the label must point at its input."
+        }
+      ]
+    },
+    "datepicker": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "dialog": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "docked-display": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/checkboxes": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/fieldset": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/file-input": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/input-fields": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/radio-buttons": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/range": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/select": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "forms/switches": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "icons-material-design": {
+      "status": "exempt",
+      "note": "Rules written, sweep not started. ~100 <i class=\"material-icons\"> examples remain in llm.md.",
+      "rules": [
+        {
+          "id": "icon-not-i-element",
+          "kind": "forbid",
+          "selector": "i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp, i.material-icons",
+          "message": "<i> means idiomatic text. The canonical icon element is <span class=\"material-symbols\">."
+        },
+        {
+          "id": "icon-hidden-from-at",
+          "kind": "require-attr",
+          "selector": ".material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "The ligature is text and is announced. Decorative icons carry aria-hidden=\"true\"; the control carries the label."
+        }
+      ]
+    },
+    "lightbox": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "list": {
+      "status": "exempt",
+      "note": "Rules written, sweep not started.",
+      "rules": [
+        {
+          "id": "list-item-not-selected",
+          "kind": "forbid",
+          "selector": "li[aria-selected]:not([role])",
+          "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute."
+        }
+      ]
+    },
+    "menu": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "navbar": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "navigation-bar": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "navigation-rail": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "page-footer": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "pagination": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "panes": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "parallax": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "preloader": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "pulse": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "scrollspy": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "side-sheet": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "sidenav": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "slider": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "snackbar": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "table_of_contents": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "tabs": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "timepicker": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "toolbar": {
+      "status": "exempt",
+      "note": "Rules written, sweep not started.",
+      "rules": [
+        {
+          "id": "toolbar-not-nav",
+          "kind": "forbid",
+          "selector": "nav.toolbar",
+          "message": "A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark."
+        }
+      ]
+    },
+    "tooltip": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    },
+    "transitions": {
+      "status": "exempt",
+      "note": "Not yet swept.",
+      "rules": []
+    }
+  }
+}
