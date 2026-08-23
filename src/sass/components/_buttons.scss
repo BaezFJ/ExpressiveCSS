@@ -26,7 +26,20 @@
 }
 
 // Widget chrome that happens to be a <button> — not a common button.
-$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .indicator-item-btn";
+//
+// `.chip` earns its place here now that assist and suggestion chips are real
+// buttons. The base rules were harmless (`.chip` and `:where(…):not(…)` are
+// both one class, and chips is forwarded after buttons, so the chip won), but
+// the state rules are not: `:where(…):not(…):hover` is *two* — a class from
+// the `:not()` and the pseudo-class — so hovering, focusing or pressing a chip
+// repainted it with the filled-button background while it kept the chip's own
+// text colour.
+//
+// Every entry stays a single class so the `:not()` keeps its one-class
+// specificity; `.chip .close` would make it two and shift every button rule.
+// The delete button needs no entry: `.chip .close` is already two classes, so
+// it ties the state rules and wins on order.
+$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip";
 
 $_btn: "button:not(#{$_not-btn}), a.button";
 
