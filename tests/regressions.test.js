@@ -403,14 +403,29 @@ describe('App bar medium and large', () => {
     // Without these, order+100% basis leaves every icon packed at the
     // start and align-content:flex-start pins the title under them, so
     // the 112/152dp bar reads as a small toolbar.
-    assert.match(
-      css,
-      /header\.medium:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*,\s*header\.large:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*\{[^}]*align-content:\s*space-between/s
+    //
+    // Asserted on what the rule must *say* rather than on its exact selector
+    // text: the host became :is(nav:not(...), .bar) when a bar with no
+    // destinations stopped being a <nav>, and a literal-text regex broke on
+    // the parentheses that :is() introduced.
+    /** Every rule in the sheet whose body declares `prop: value`. */
+    const rulesDeclaring = (prop, value) =>
+      [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)]
+        .filter((m) => new RegExp(`${prop}:\\s*${value}`).test(m[2]))
+        .map((m) => m[1]);
+
+    const spaceBetween = rulesDeclaring('align-content', 'space-between').filter((sel) =>
+      /header\.(?:medium|large)\b/.test(sel)
     );
-    assert.match(
-      css,
-      /header\.(?:medium|large):has\(>\s*nav\)\s*>\s*nav:not\(\.tabs(?:,\s*\.[\w-]+)*\)\s*>\s*:is\([^)]+\)\s*\+\s*\*\s*\{[^}]*margin-inline-start:\s*auto/
+    assert.equal(spaceBetween.length, 1, 'exactly one app bar rule sets align-content: space-between');
+    assert.match(spaceBetween[0], /header\.medium\b/);
+    assert.match(spaceBetween[0], /header\.large\b/);
+    assert.match(spaceBetween[0], /nav:not\(\.tabs\b/, 'must not reach a tab bar');
+
+    const pushedToEnd = rulesDeclaring('margin-inline-start', 'auto').filter((sel) =>
+      /header\.(?:medium|large)\b/.test(sel)
     );
+    assert.ok(pushedToEnd.length > 0, 'no app bar rule pushes the trailing actions to the end');
   });
 });
 

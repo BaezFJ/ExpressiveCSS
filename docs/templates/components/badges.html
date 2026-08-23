@@ -142,22 +142,24 @@
           Put a badge on a <code>summary</code> or a destination. Nested
           sections are native <code>&lt;details&gt;</code>.
         </p>
-        <ul class="sidenav sidenav-demo">
-          <li>
-            <details open>
-              <summary>
-                <i class="material-symbols">inbox</i>
-                Inbox
-                <span class="badge">4</span>
-              </summary>
-              <ul>
-                <li><a href="#!">Primary<span class="badge">1</span></a></li>
-                <li><a href="#!">Social</a></li>
-              </ul>
-            </details>
-          </li>
-          <li><a href="#!">Sent</a></li>
-        </ul>
+        <nav aria-label="Main">
+          <ul class="sidenav sidenav-demo">
+            <li>
+              <details open>
+                <summary>
+                  <i class="material-symbols">inbox</i>
+                  Inbox
+                  <span class="badge">4</span>
+                </summary>
+                <ul>
+                  <li><a href="#!">Primary<span class="badge">1</span></a></li>
+                  <li><a href="#!">Social</a></li>
+                </ul>
+              </details>
+            </li>
+            <li><a href="#!">Sent</a></li>
+          </ul>
+        </nav>
 {% call code() %}
 <summary>
   <i class="material-symbols">inbox</i>

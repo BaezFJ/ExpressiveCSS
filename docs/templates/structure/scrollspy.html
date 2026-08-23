@@ -18,7 +18,7 @@
         </p>
         <p>
           Put <code>scrollspy</code> and an <code>id</code> on each section.
-          In the TOC, use <code>table-of-contents</code> and point each link at
+          The TOC is a set of destinations within the page, so it lives in a labelled <code>&lt;nav&gt;</code>; put <code>table-of-contents</code> on its list and point each link at
           <code>#that-id</code>. <code>AutoInit()</code> starts every
           <code>.scrollspy</code> except those marked <code>no-autoinit</code>.
           Observation is <code>IntersectionObserver</code> — there is no
@@ -35,10 +35,12 @@
     </div>
   </div>
   <div class="hide-on-small-only m3">
-    <ul class="section table-of-contents">
-      <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#structure">Structure</a></li>
-    </ul>
+    <nav aria-label="On this page">
+      <ul class="section table-of-contents">
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#structure">Structure</a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 {% endcall %}

@@ -5,43 +5,45 @@
 #}
 
 {% macro sidenav(nav, current) %}
-    <ul class="sidenav sidenav-fixed" id="nav-mobile">
-        {%- for group in nav %}
-            {%- if not group.icon %}
-                {#- The top-level entries: no group, own icon. -#}
-                {%- for page in group['pages'] %}
-        <li class="{% if current == page.endpoint %}active{% endif %}">
-            <a href="{{ url_for(page.endpoint) }}">
-                <i class="material-symbols">{{ page.icon }}</i>
-                {{ page.label }}
-            </a>
-        </li>
-                {%- endfor %}
-            {%- else %}
-        <li>
-            <details name="docs-nav"{% if current in group.endpoints %} open{% endif %}>
-                <summary>
-                    <i class="material-symbols">{{ group.icon }}</i>
-                    {{ group.label }}
-                </summary>
-                <ul>
-                    {%- for page in group['pages'] %}
-                    <li class="{% if current == page.endpoint %}active{% endif %}">
-                        <a href="{{ url_for(page.endpoint) }}">{{ page.label }}</a>
-                    </li>
-                    {%- endfor %}
-                </ul>
-            </details>
-        </li>
-            {%- endif %}
-        {%- endfor %}
-    </ul>
+    <nav aria-label="Main">
+      <ul class="sidenav sidenav-fixed" id="nav-mobile">
+          {%- for group in nav %}
+              {%- if not group.icon %}
+                  {#- The top-level entries: no group, own icon. -#}
+                  {%- for page in group['pages'] %}
+          <li class="{% if current == page.endpoint %}active{% endif %}">
+              <a href="{{ url_for(page.endpoint) }}">
+                  <i class="material-symbols">{{ page.icon }}</i>
+                  {{ page.label }}
+              </a>
+          </li>
+                  {%- endfor %}
+              {%- else %}
+          <li>
+              <details name="docs-nav"{% if current in group.endpoints %} open{% endif %}>
+                  <summary>
+                      <i class="material-symbols">{{ group.icon }}</i>
+                      {{ group.label }}
+                  </summary>
+                  <ul>
+                      {%- for page in group['pages'] %}
+                      <li class="{% if current == page.endpoint %}active{% endif %}">
+                          <a href="{{ url_for(page.endpoint) }}">{{ page.label }}</a>
+                      </li>
+                      {%- endfor %}
+                  </ul>
+              </details>
+          </li>
+              {%- endif %}
+          {%- endfor %}
+      </ul>
+    </nav>
 {% endmacro %}
 
 {% macro footer_nav(nav) %}
     {%- for group in nav %}
-            <nav>
-                <h2>{{ group.label }}</h2>
+            <nav aria-labelledby="footer-{{ loop.index }}">
+                <h2 id="footer-{{ loop.index }}">{{ group.label }}</h2>
                 {%- if group.blurb %}
                 <p>{{ group.blurb }}</p>
                 {%- endif %}

@@ -33,15 +33,18 @@ label:has(> [type="radio"]),
   font-family: $font-stack;
 }
 
-nav:has(> label > [type="radio"]) {
+// A row of radios is a group of controls, not navigation - see rule 4 in
+// SEMANTICS.md. `.inline` is the documented hook; the bare <nav> is the older
+// markup and still works.
+:is(nav, .inline):has(> label > [type="radio"]) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 24px;
 }
 
-nav > label:has(> [type="radio"]),
-nav > .radio {
+:is(nav, .inline) > label:has(> [type="radio"]),
+:is(nav, .inline) > .radio {
   display: inline-flex;
 }
 

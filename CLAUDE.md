@@ -123,6 +123,20 @@ on. The five rules:
    rule 2 forbids here: `role="toolbar"` is a *composite* role and promises arrow-key
    navigation, so a toolbar drops `<nav>` without gaining `role` until someone builds
    that keyboard model.
+
+   The rule is written with three carve-outs — `article nav`, `.tooltip nav`,
+   `.toolbar` — each an action row that should not be `<nav>` at all, where
+   *labelling* it would entrench the error. **Delete each carve-out with the sweep
+   that owns it.** Two hosts are element-locked and are why those sweeps are
+   separate: `article > nav:not(.tabs)` in `_cards.scss`, and 16 `nav.toolbar`
+   selectors in `_toolbar.scss` (deliberately, to miss `div.fixed-action-btn.toolbar`).
+
+   The app bar took the same treatment: `$_bar` in `_navbar.scss` is
+   `:is(nav:not(…), .bar)`, so a bar holding only a title and controls is a
+   `.bar` rather than an empty landmark. **Wrap any such variable in `:is()`** —
+   interpolating a bare comma-separated list breaks out of its context, and
+   `header.medium > #{$_bar}` duly emitted a top-level `.bar` rule that styled
+   every `.bar` on the page. Same trap as `$_icon`.
 5. Every user-facing string the framework generates gets an `i18n` option
    (Datepicker and Timepicker already had one; Chips now does).
 
@@ -131,10 +145,18 @@ markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
 generated from the templates, so checking it would check the same thing twice.
 Notes that matter when working on it:
 
-- **Swept so far: chips, then the form components** (`input-fields`,
+- **Swept so far: chips, the form components, then navigation** (`input-fields`,
   `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
-  `file-input`, `range`, `autocomplete`, `character-counter`). `SEMANTICS.md`
-  carries the running count.
+  `file-input`, `range`, `autocomplete`, `character-counter`; then `landmarks`,
+  `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
+  `pagination`, `tabs`, `menu`, `table_of_contents`, `page-footer`).
+  `SEMANTICS.md` carries the running count.
+- **`m3-guidelines.md` is a fourth surface, checked differently.** It states
+  markup as inline code spans in prose, not as fenced examples, so only rules
+  marked `fragmentSafe` run against it — the ones that fire on a *wrong thing
+  present*. That is **not** the same as `kind: "forbid"`:
+  `fieldset:not(:has(> legend))` forbids, but what it detects is an omission,
+  and a fragment omits by nature.
 - **The extractor keys on the fence tag**, so a markup sample written as
   ` ```text ` is invisible to it. 37 blocks were in that state, Fieldsets
   entirely. A test now fails any non-`html` fence containing markup — walk the

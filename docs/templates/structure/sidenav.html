@@ -31,42 +31,46 @@
         <p>
           <a href="#!" data-target="slide-out" class="button sidenav-trigger filled waves-effect">Toggle Sidenav</a>
         </p>
-        <ul id="slide-out" class="sidenav no-autoinit">
-          <li>
-            <div class="user-view">
-              <div class="background">
-                <img src="https://picsum.photos/id/1015/600/400" alt="">
+        <nav aria-label="Main">
+          <ul id="slide-out" class="sidenav no-autoinit">
+            <li>
+              <div class="user-view">
+                <div class="background">
+                  <img src="https://picsum.photos/id/1015/600/400" alt="">
+                </div>
+                <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
+                <a href="#name"><span class="name">John Doe</span></a>
+                <a href="#email"><span class="email">jdoe@example.com</span></a>
               </div>
-              <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
-              <a href="#name"><span class="name">John Doe</span></a>
-              <a href="#email"><span class="email">jdoe@example.com</span></a>
-            </div>
-          </li>
-          <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
-          <li><a href="#!">Second Link</a></li>
-          <li><div class="divider"></div></li>
-          <li><a class="subheader">Subheader</a></li>
-          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-          <li><a class="sidenav-close" href="#!">Close</a></li>
-        </ul>
+            </li>
+            <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+            <li><a href="#!">Second Link</a></li>
+            <li><div class="divider"></div></li>
+            <li><a class="subheader">Subheader</a></li>
+            <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+            <li><a class="sidenav-close" href="#!">Close</a></li>
+          </ul>
+        </nav>
 {% call code() %}
-<ul id="slide-out" class="sidenav">
-  <li>
-    <div class="user-view">
-      <div class="background">
-        <img src="images/office.jpg" alt="">
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <div class="background">
+          <img src="images/office.jpg" alt="">
+        </div>
+        <a href="#user"><img class="circle" src="images/portrait.jpg" alt=""></a>
+        <a href="#name"><span class="name">John Doe</span></a>
+        <a href="#email"><span class="email">jdoe@example.com</span></a>
       </div>
-      <a href="#user"><img class="circle" src="images/portrait.jpg" alt=""></a>
-      <a href="#name"><span class="name">John Doe</span></a>
-      <a href="#email"><span class="email">jdoe@example.com</span></a>
-    </div>
-  </li>
-  <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
-  <li><a href="#!">Second Link</a></li>
-  <li><div class="divider"></div></li>
-  <li><a class="subheader">Subheader</a></li>
-  <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-</ul>
+    </li>
+    <li><a href="#!"><i class="material-symbols">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!">Second Link</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Subheader</a></li>
+    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+  </ul>
+</nav>
 <a href="#!" data-target="slide-out" class="sidenav-trigger">
   <i class="material-symbols">menu</i>
 </a>
@@ -185,9 +189,11 @@ instance.destroy();
           reload. It does nothing while the sidenav is fixed on large screens.
         </p>
 {% call code() %}
-<ul id="slide-out" class="sidenav">
-  <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
-</ul>
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav">
+    <li><a class="sidenav-close" href="#!">Clicking this will close Sidenav</a></li>
+  </ul>
+</nav>
 <a href="#!" data-target="slide-out" class="sidenav-trigger">
   <i class="material-symbols">menu</i>
 </a>
@@ -204,11 +210,13 @@ instance.destroy();
         <p>
           <a href="#!" data-target="slide-out-right" class="button sidenav-trigger tonal waves-effect">Toggle Right Sidenav</a>
         </p>
-        <ul id="slide-out-right" class="sidenav no-autoinit">
-          <li><a href="#!">First Sidebar Link</a></li>
-          <li><a href="#!">Second Sidebar Link</a></li>
-          <li><a class="sidenav-close" href="#!">Close</a></li>
-        </ul>
+        <nav aria-label="Main">
+          <ul id="slide-out-right" class="sidenav no-autoinit">
+            <li><a href="#!">First Sidebar Link</a></li>
+            <li><a href="#!">Second Sidebar Link</a></li>
+            <li><a class="sidenav-close" href="#!">Close</a></li>
+          </ul>
+        </nav>
 {% call code() %}
 Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
   edge: 'right'
@@ -222,49 +230,53 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
           accordion. The documentation sidebar uses this for Foundations,
           Structure, Components, and Forms.
         </p>
-        <ul class="sidenav sidenav-demo">
-          <li><a href="#!"><i class="material-symbols">inbox</i>Inbox</a></li>
-          <li>
-            <details name="sidenav-demo" open>
-              <summary>
-                <i class="material-symbols">palette</i>
-                Foundations
-              </summary>
-              <ul>
-                <li><a href="#!">Color</a></li>
-                <li><a href="#!">Typography</a></li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <details name="sidenav-demo">
-              <summary>
-                <i class="material-symbols">view_quilt</i>
-                Structure
-              </summary>
-              <ul>
-                <li><a href="#!">App bar</a></li>
-                <li><a href="#!">Sidenav</a></li>
-              </ul>
-            </details>
-          </li>
-        </ul>
+        <nav aria-label="Main">
+          <ul class="sidenav sidenav-demo">
+            <li><a href="#!"><i class="material-symbols">inbox</i>Inbox</a></li>
+            <li>
+              <details name="sidenav-demo" open>
+                <summary>
+                  <i class="material-symbols">palette</i>
+                  Foundations
+                </summary>
+                <ul>
+                  <li><a href="#!">Color</a></li>
+                  <li><a href="#!">Typography</a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details name="sidenav-demo">
+                <summary>
+                  <i class="material-symbols">view_quilt</i>
+                  Structure
+                </summary>
+                <ul>
+                  <li><a href="#!">App bar</a></li>
+                  <li><a href="#!">Sidenav</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </nav>
 {% call code() %}
-<ul id="slide-out" class="sidenav">
-  <li><a href="#!">First Sidebar Link</a></li>
-  <li>
-    <details name="docs-nav">
-      <summary>
-        <i class="material-symbols">palette</i>
-        Foundations
-      </summary>
-      <ul>
-        <li><a href="#!">Color</a></li>
-        <li><a href="#!">Typography</a></li>
-      </ul>
-    </details>
-  </li>
-</ul>
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li>
+      <details name="docs-nav">
+        <summary>
+          <i class="material-symbols">palette</i>
+          Foundations
+        </summary>
+        <ul>
+          <li><a href="#!">Color</a></li>
+          <li><a href="#!">Typography</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
 {% endcall %}
 
         <h5 class="light">Fixed HTML Structure</h5>
@@ -274,10 +286,12 @@ Expressive.Sidenav.init(document.querySelector('#slide-out-right'), {
           The documentation sidebar on the left is this pattern.
         </p>
 {% call code() %}
-<ul id="slide-out" class="sidenav sidenav-fixed">
-  <li><a href="#!">First Sidebar Link</a></li>
-  <li><a href="#!">Second Sidebar Link</a></li>
-</ul>
+<nav aria-label="Main">
+  <ul id="slide-out" class="sidenav sidenav-fixed">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li><a href="#!">Second Sidebar Link</a></li>
+  </ul>
+</nav>
 <a href="#!" data-target="slide-out" class="sidenav-trigger">
   <i class="material-symbols">menu</i>
 </a>

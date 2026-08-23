@@ -3,7 +3,8 @@
 // Site footer.
 //
 // Anatomy is the HTML. A <footer> is the landmark. A heading is a column
-// title. A <nav> (or ul) is a link list. The last child <small> is the
+// title. A <nav> (or ul) is a link list; a column with no links is a
+// <section>. The last child <small> is the
 // legal bar. A footer whose only child is nav.navigation-bar is the
 // navigation bar, not this component.
 //
@@ -91,7 +92,9 @@ footer:not(:has(> nav:only-child)) > .row {
   grid-column: 1 / -1;
 }
 
-footer:not(:has(> nav:only-child)) nav {
+// A column with no links is a <section>, not a <nav> - see rule 4. Both are
+// columns to look at.
+footer:not(:has(> nav:only-child)) :is(nav, section) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

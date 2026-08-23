@@ -408,7 +408,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 **Don't**
 
-- Don't put the `<ul class="sidenav">` inside the app bar.
+- Don't put the `<nav aria-label="Main"><ul class="sidenav">` inside the app bar.
 - Don't use a drawer for item-level details (that is a side sheet or the detail pane).
 - Don't combine `sidenav-fixed` with `.navigation-rail`.
 

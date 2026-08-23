@@ -59,12 +59,12 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: 'Sidenav',
     selector: '.sidenav',
-    html: `<ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul><a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`
+    html: `<nav aria-label="Main"><ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul></nav><a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`
   },
   {
     name: 'Tabs',
     selector: '.tabs',
-    html: `<ul class="tabs"><li class="tab"><a class="active" href="#tab1">Tab 1</a></li><li class="tab"><a href="#tab2">Tab 2</a></li></ul><div id="tab1">one</div><div id="tab2">two</div>`
+    html: `<nav class="tabs" aria-label="Demo"><li class="tab"><a class="active" aria-current="page" href="#tab1">Tab 1</a></li><li class="tab"><a href="#tab2">Tab 2</a></li></nav><div id="tab1">one</div><div id="tab2">two</div>`
   },
   { name: 'Timepicker', selector: '.timepicker', html: `<input type="text" class="timepicker">` },
   {

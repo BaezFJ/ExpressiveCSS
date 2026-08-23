@@ -146,18 +146,13 @@
 
   {% call section("alias", "List alias") %}
         <p>
-          A bare <code>&lt;ul class="pagination"&gt;</code> still works.
+          A bare <code>&lt;ul class="pagination"&gt;</code> still renders.
           <code>active</code>, <code>disabled</code>, <code>prev</code>,
-          <code>next</code>, and <code>pages</code> stay as aliases.
+          <code>next</code>, and <code>pages</code> stay as aliases. It is not
+          the documented form: outside a labelled <code>&lt;nav&gt;</code> the
+          list is a row of numbers with nothing saying it paginates anything.
         </p>
-        <ul class="pagination">
-          <li class="disabled"><a href="#!"><i class="material-symbols">chevron_left</i></a></li>
-          <li class="active"><a href="#!">1</a></li>
-          <li><a href="#!">2</a></li>
-          <li><a href="#!">3</a></li>
-          <li><a href="#!"><i class="material-symbols">chevron_right</i></a></li>
-        </ul>
-{% call code() %}
+{% call code(check=false, reason="pre-0.8.0 list alias, shown so readers recognise it") %}
 <ul class="pagination">
   <li class="disabled">
     <a href="#!"><i class="material-symbols">chevron_left</i></a>

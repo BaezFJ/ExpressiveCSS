@@ -234,9 +234,9 @@
         </p>
         <article class="mb-3">
           <p>I am a very simple card. I am good at containing small bits of information.</p>
-          <nav class="tabs max">
+          <nav class="tabs max" aria-label="Sections">
             <a href="#card-test-1">Test 1</a>
-            <a class="active" href="#card-test-2">Test 2</a>
+            <a class="active" aria-current="page" href="#card-test-2">Test 2</a>
             <a href="#card-test-3">Test 3</a>
           </nav>
           <div class="px-4 pb-4">
@@ -248,9 +248,9 @@
 {% call code() %}
 <article>
   <p>I am a very simple card.</p>
-  <nav class="tabs max">
+  <nav class="tabs max" aria-label="Sections">
     <a href="#test1">Test 1</a>
-    <a class="active" href="#test2">Test 2</a>
+    <a class="active" aria-current="page" href="#test2">Test 2</a>
   </nav>
   <div id="test1">Test 1</div>
   <div id="test2">Test 2</div>

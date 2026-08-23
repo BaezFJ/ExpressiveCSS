@@ -17,7 +17,7 @@ Element choice, landmark structure, and the ARIA that element choice implies. Ke
 ## Enforcement
 
 `tests/semantics.test.js` runs every rule below against three surfaces:
-`llm.md`, `docs/templates`, `tests/fixtures.js`.
+`llm.md`, `docs/templates`, `tests/fixtures.js`, `m3-guidelines.md (forbid rules only)`.
 
 A rule runs only when its component is **enforced**. An **exempt** component
 has not been swept yet; the exempt list only ever shrinks, and a component
@@ -25,7 +25,7 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**11 of 44 components enforced; 33 remaining.**
+**22 of 45 components enforced; 23 remaining.**
 
 ## Enforced
 
@@ -38,6 +38,18 @@ Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.
 | `autocomplete-options-are-options` | forbid | `.autocomplete-content li:not([role="option"])` | must not match |
 
 - **autocomplete-options-are-options** - The suggestion list is a listbox; every entry in it is an option.
+
+### breadcrumb
+
+Swept 0.8.0. A trail is an ordered list, because the order is the meaning.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `breadcrumb-is-ordered-list` | forbid | `.breadcrumb-wrapper > a` | must not match |
+| `breadcrumb-marks-current` | forbid | `.breadcrumb-wrapper li:last-child :is(a, span):not([aria-current])` | must not match |
+
+- **breadcrumb-is-ordered-list** - Crumbs are an ordered list - nav > ol > li > a. Loose anchors give no count and no position, so "3 of 4" is never announced.
+- **breadcrumb-marks-current** - The last crumb is the page you are on; it needs aria-current="page" to say so.
 
 ### character-counter
 
@@ -173,6 +185,112 @@ Swept 0.8.0.
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
 
+### landmarks
+
+Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `nav-needs-label` | forbid | `nav:not([aria-label]):not([aria-labelledby]):not(article nav):not(.tooltip nav):not(.toolbar)` | must not match |
+| `main-not-nested` | forbid | `main main` | must not match |
+
+- **nav-needs-label** - A page carries several <nav> landmarks - app bar, tabs, breadcrumbs, footer columns, drawer. Unlabelled they arrive in the landmark menu as a row of identical entries, which is worse than not being landmarks at all. Three carve-outs, each an action row that should not be <nav> at all so that labelling it would entrench the error: `article nav` (card actions, awaits the cards sweep), `.tooltip nav` (rich-tooltip actions, awaits the tooltip sweep), `.toolbar` (awaits the toolbar sweep). Delete each carve-out with its sweep.
+- **main-not-nested** - A document has one <main>. A pane that holds the primary content of a region is a <section> or a <div>.
+
+### menu
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `menu-children-are-list-items` | forbid | `menu > :not(li):not(script):not(template)` | must not match |
+
+- **menu-children-are-list-items** - <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+
+### navbar
+
+Swept 0.8.0. The bar is <header> whose child is <nav>; the landmark rules carry it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
+### navigation-bar
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `navigation-bar-marks-current` | forbid | `.navigation-bar a.active:not([aria-current])` | must not match |
+
+- **navigation-bar-marks-current** - The active destination needs aria-current="page".
+
+### navigation-rail
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `navigation-rail-marks-current` | forbid | `.navigation-rail a.active:not([aria-current])` | must not match |
+
+- **navigation-rail-marks-current** - The active destination needs aria-current="page".
+
+### page-footer
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `footer-nav-has-links` | forbid | `footer nav:not(:has(a))` | must not match |
+
+- **footer-nav-has-links** - A footer column with no links is not navigation - it is a <section> with a heading. Marking it <nav> spends a landmark on prose.
+
+### pagination
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `pagination-in-nav` | forbid | `.pagination:not(nav):not(nav *)` | must not match |
+| `pagination-marks-current` | forbid | `.pagination .active :is(a, span):not([aria-current])` | must not match |
+| `pagination-disabled-not-a-link` | forbid | `.pagination .disabled a[href]` | must not match |
+
+- **pagination-in-nav** - Pagination is navigation and belongs in a labelled <nav>, or it is just a list of numbers.
+- **pagination-marks-current** - The current page needs aria-current="page". A class only colours it.
+- **pagination-disabled-not-a-link** - A disabled control that is still an <a href> stays in the tab order and still navigates. Use a <span>, or drop the href.
+
+### sidenav
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `sidenav-in-nav` | forbid | `.sidenav:not(nav):not(nav *)` | must not match |
+
+- **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
+
+### table_of_contents
+
+Swept 0.8.0.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `toc-in-nav` | forbid | `.table-of-contents:not(nav):not(nav *)` | must not match |
+
+- **toc-in-nav** - A table of contents is a set of destinations within the page. It belongs in a labelled <nav>.
+
+### tabs
+
+Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `tabs-not-a-tablist` | forbid | `.tabs[role], .tabs [role="tab"], .tabs [role="tabpanel"]` | must not match |
+| `tabs-marks-current` | forbid | `.tabs a.active:not([aria-current])` | must not match |
+
+- **tabs-not-a-tablist** - tabs.ts has no keyboard handling, so a tablist role would promise arrow-key navigation nothing implements. These are links to in-page sections.
+- **tabs-marks-current** - The active tab is the section you are on; aria-current says so where a class cannot.
+
 ## Exempt
 
 Not yet swept. Rules listed here are recorded but do not run.
@@ -181,9 +299,8 @@ Not yet swept. Rules listed here are recorded but do not run.
 | --- | --- | --- |
 | `badges` | 0 | Not yet swept. |
 | `bottom-sheet` | 0 | Not yet swept. |
-| `breadcrumb` | 0 | Not yet swept. |
 | `buttons` | 0 | Not yet swept. |
-| `cards` | 1 | Rules written, sweep not started. |
+| `cards` | 1 | Rules written, sweep not started. The card action row is a <nav> and should not be; fixing it means changing `article > nav:not(.tabs)` in _cards.scss, so it belongs to the cards sweep, not the navigation one. |
 | `carousel` | 0 | Not yet swept. |
 | `datepicker` | 0 | Not yet swept. |
 | `dialog` | 0 | Not yet swept. |
@@ -191,25 +308,16 @@ Not yet swept. Rules listed here are recorded but do not run.
 | `icons-material-design` | 2 | Rules written, sweep not started. ~100 <i class="material-icons"> examples remain in llm.md. |
 | `lightbox` | 0 | Not yet swept. |
 | `list` | 1 | Rules written, sweep not started. |
-| `menu` | 0 | Not yet swept. |
-| `navbar` | 0 | Not yet swept. |
-| `navigation-bar` | 0 | Not yet swept. |
-| `navigation-rail` | 0 | Not yet swept. |
-| `page-footer` | 0 | Not yet swept. |
-| `pagination` | 0 | Not yet swept. |
 | `panes` | 0 | Not yet swept. |
 | `parallax` | 0 | Not yet swept. |
 | `preloader` | 0 | Not yet swept. |
 | `pulse` | 0 | Not yet swept. |
 | `scrollspy` | 0 | Not yet swept. |
 | `side-sheet` | 0 | Not yet swept. |
-| `sidenav` | 0 | Not yet swept. |
 | `slider` | 0 | Not yet swept. |
 | `snackbar` | 0 | Not yet swept. |
-| `table_of_contents` | 0 | Not yet swept. |
-| `tabs` | 0 | Not yet swept. |
 | `timepicker` | 0 | Not yet swept. |
-| `toolbar` | 1 | Rules written, sweep not started. |
+| `toolbar` | 1 | Rules written, sweep not started. `nav.toolbar` is element-locked in _toolbar.scss (16 selectors, deliberately, to avoid catching div.fixed-action-btn.toolbar), so dropping the <nav> is a toolbar-sweep change. |
 | `tooltip` | 0 | Not yet swept. |
 | `transitions` | 0 | Not yet swept. |
 

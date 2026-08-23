@@ -4,7 +4,7 @@
 //
 // Anatomy is the HTML. A <fieldset> is the group. A <legend> is the
 // headline. Direct children are the fields — .field, radios, switches,
-// a <nav> of radios, a trailing <small> as supporting text. No wrapper
+// a .inline row of radios, a trailing <small> as supporting text. No wrapper
 // class. .filled / .border / .rounded are helpers markup cannot express.
 //
 // M3 has no fieldset component. Tokens follow the outlined grouping
@@ -64,7 +64,7 @@ fieldset {
     margin-block-start: 16px;
   }
 
-  // Switches are inline-flex. Make a bare group stack; a <nav> keeps
+  // Switches are inline-flex. Make a bare group stack; .inline keeps
   // radios on one line. Consecutive 48dp rows don't need the 16dp gap.
   > label,
   > .switch {

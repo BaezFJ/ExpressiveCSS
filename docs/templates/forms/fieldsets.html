@@ -60,7 +60,7 @@
           A fieldset is also the right parent for a radio, checkbox, or
           switch group — the legend names the question, the
           <code>disabled</code> attribute disables every control inside.
-          Put the labels in a <code>&lt;nav&gt;</code> to sit them on one
+          Put the labels in a <code>&lt;div class="inline"&gt;</code> to sit them on one
           line.
         </p>
         <fieldset>
@@ -81,7 +81,7 @@
         </fieldset>
         <fieldset>
           <legend>Plan</legend>
-          <nav>
+          <div class="inline">
             <label>
               <input name="fs-plan" type="radio" checked>
               Monthly
@@ -90,7 +90,7 @@
               <input name="fs-plan" type="radio">
               Yearly
             </label>
-          </nav>
+          </div>
         </fieldset>
 {% call code() %}
 <fieldset>
@@ -108,7 +108,7 @@
 
 <fieldset>
   <legend>Plan</legend>
-  <nav>
+  <div class="inline">
     <label>
       <input name="plan" type="radio" checked>
       Monthly
@@ -117,7 +117,7 @@
       <input name="plan" type="radio">
       Yearly
     </label>
-  </nav>
+  </div>
 </fieldset>
 {% endcall %}
   {% endcall %}

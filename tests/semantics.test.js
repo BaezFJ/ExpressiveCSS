@@ -137,6 +137,39 @@ function examplesFromTemplates() {
   return out;
 }
 
+/**
+ * m3-guidelines.md states markup as inline code spans in prose, not as fenced
+ * examples - `<nav aria-label="Breadcrumb"><ol>` inside a sentence. Most are
+ * bare element mentions.
+ *
+ * So only rules marked `fragmentSafe` run against it: the ones that fire on a
+ * wrong thing being *present*. Naming `<nav class="toolbar">` teaches a nav
+ * misuse wherever it appears, but omitting a label is what a fragment is for.
+ *
+ * `fragmentSafe` is not the same as `kind: "forbid"`, which is what a first
+ * attempt assumed: `fieldset:not(:has(> legend))` forbids, yet what it detects
+ * is an omission, and it duly flagged four sentences that merely mention
+ * `<fieldset>`.
+ */
+function examplesFromGuidelines() {
+  const file = 'm3-guidelines.md';
+  const src = read(file);
+  const out = [];
+  const re = /`([^`\n]*<[a-z][a-z0-9-]*[^`\n]*)`/g;
+  let m;
+  while ((m = re.exec(src))) {
+    out.push({
+      surface: file,
+      location: `${file}:${src.slice(0, m.index).split('\n').length} (fragment)`,
+      html: m[1],
+      fragmentSafe: true,
+      ignore: false,
+      reason: ''
+    });
+  }
+  return out;
+}
+
 function examplesFromFixtures() {
   return AUTO_INIT_FIXTURES.map((f) => ({
     surface: 'tests/fixtures.js',
@@ -150,7 +183,8 @@ function examplesFromFixtures() {
 const examples = [
   ...examplesFromMarkdown('llm.md'),
   ...examplesFromTemplates(),
-  ...examplesFromFixtures()
+  ...examplesFromFixtures(),
+  ...examplesFromGuidelines()
 ];
 
 // --- rule engine ------------------------------------------------------------
@@ -159,10 +193,11 @@ const enforcedRules = Object.entries(data.components)
   .filter(([, c]) => c.status === 'enforced')
   .flatMap(([name, c]) => c.rules.map((r) => ({ ...r, component: name })));
 
-function violations(html, rules) {
+function violations(html, rules, { fragmentSafe = false } = {}) {
   const { document } = new JSDOM(`<!doctype html><body>${html}</body>`).window;
   const found = [];
   for (const rule of rules) {
+    if (fragmentSafe && !rule.fragmentSafe) continue;
     const hits = [...document.querySelectorAll(rule.selector)];
     if (rule.kind === 'forbid') {
       for (const el of hits) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
@@ -258,7 +293,7 @@ describe('documented markup', () => {
   test('surfaces yield examples to check', () => {
     // Guards the extractors: a regex that silently stops matching would turn
     // this whole suite into a no-op that passes.
-    for (const surface of ['llm.md', 'docs/templates', 'tests/fixtures.js']) {
+    for (const surface of ['llm.md', 'docs/templates', 'tests/fixtures.js', 'm3-guidelines.md']) {
       const n = examples.filter((e) => e.surface === surface).length;
       assert.ok(n > 0, `no examples extracted from ${surface}`);
     }
@@ -282,8 +317,9 @@ describe('documented markup', () => {
     // Walked line by line rather than matched with one regex: an `opening
     // fence' pattern also matches every *closing* fence, which made a first
     // attempt report the prose between blocks.
-    const lines = read('llm.md').split('\n');
     const mistagged = [];
+    for (const file of ['llm.md', 'm3-guidelines.md']) {
+    const lines = read(file).split('\n');
     for (let i = 0; i < lines.length; i++) {
       if (!lines[i].startsWith('```')) continue;
       const lang = lines[i].slice(3).trim();
@@ -291,9 +327,10 @@ describe('documented markup', () => {
       let j = i + 1;
       while (j < lines.length && !lines[j].startsWith('```')) body.push(lines[j++]);
       if (lang !== 'html' && /<[a-z][a-z0-9-]*[\s>/]/.test(body.join('\n'))) {
-        mistagged.push(`llm.md:${i + 1} (\`\`\`${lang || 'untagged'})`);
+        mistagged.push(`${file}:${i + 1} (\`\`\`${lang || 'untagged'})`);
       }
       i = j;
+    }
     }
     assert.deepEqual(
       mistagged,
@@ -312,7 +349,7 @@ describe('documented markup', () => {
     const failures = [];
     for (const e of examples) {
       if (e.ignore) continue;
-      for (const v of violations(e.html, enforcedRules))
+      for (const v of violations(e.html, enforcedRules, { fragmentSafe: e.fragmentSafe }))
         failures.push(`${e.location}\n    [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
     }
     assert.deepEqual(failures, [], `\n${failures.join('\n\n')}\n`);
