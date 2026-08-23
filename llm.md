@@ -5690,53 +5690,78 @@ Put the labels in a `<nav>` to sit them on one line. A bare group stacks vertica
 
 Small blocks for contacts, tags, and filters.
 
-A chip is a `.chip`. Add an `img` for a contact, a `.close` icon for a dismissible tag, or `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
+A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
+
+| Type | Element | Why |
+| --- | --- | --- |
+| Display | `<span class="chip">` | Presents information. Not a control, not in the tab order. |
+| Assist, suggestion | `<button type="button" class="chip">` | One action on press. |
+| Filter | `<input type="checkbox" class="chip-input">` + `<label class="chip">` | Multi-select and toggleable, and it carries a value into the form. No JavaScript. |
+| Input | `<span class="chip">` + a nested `<button class="close">` | The chip is a token; the delete button is the control. |
 
 ```html
-<div class="chip">
-  <img src="photo.jpg" alt="Contact Person"> Jane Doe
-</div>
-<div class="chip">
+<span class="chip outlined">Information</span>
+
+<span class="chip">
+  <img src="photo.jpg" alt=""> Jane Doe
+</span>
+
+<button type="button" class="chip">
+  <span class="material-symbols" aria-hidden="true">event</span>
+  Add to calendar
+</button>
+
+<input type="checkbox" class="chip-input" id="filter-flights">
+<label class="chip" for="filter-flights">
+  <span class="material-symbols" aria-hidden="true">check</span>
+  Flights
+</label>
+
+<span class="chip">
   Tag
-  <i class="close material-icons">close</i>
-</div>
-<div class="chip">
-  <i class="material-icons">check</i>
-  Filter
-  <i class="close material-icons">close</i>
-</div>
-<div class="chip outlined">Information</div>
+  <button type="button" class="close" aria-label="Remove Tag">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</span>
 ```
+
+The delete button needs its own `aria-label` naming the chip it removes, because its only content is an icon. The icon is `aria-hidden` in every chip: the ligature is real text and is otherwise read out alongside the label.
+
+A filter chip's selected state is `:checked` on its input, so it needs no script. Everywhere else the selected look is the `selected` class (`active` is the pre-0.8.0 name and still works).
 
 Clicking `.close` removes the chip only when it sits inside a `.chips` container. Importing the bundle runs `Chips.Init()` on `DOMContentLoaded`, which wires that click. A lone `.chip` does not remove itself.
 
+Before 0.8.0 every chip was a `<div class="chip">` and the delete affordance was an `<i class="close">` — focusable via `tabindex` but with no role and no name. That markup still renders; it is no longer correct and is not documented.
+
 ### Contacts
 
-Put an image inside the chip.
+Put an image inside the chip. The name next to it is the accessible name already, so the image is decorative — `alt=""`.
 
 ```html
-<div class="chip">
-  <img src="photo.jpg" alt="Contact Person">
+<span class="chip">
+  <img src="photo.jpg" alt="">
   Jane Doe
-</div>
+</span>
 ```
 
 ### Tags
 
-Put a close icon with class `close` inside the chip.
+Put a `button.close` inside the chip. Give it `type="button"` so it cannot submit a surrounding form, and an `aria-label` naming what it removes.
 
 ```html
-<div class="chip">
+<span class="chip">
   Tag
-  <i class="close material-icons">close</i>
-</div>
+  <button type="button" class="close" aria-label="Remove Tag">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</span>
 ```
 
 ### Javascript Plugin
 
-The plugin turns a `.chips` container into an editable tag field. Type a value and press Enter to add a chip. Delete with the close icon, or select a chip and press Backspace or Delete.
+The plugin turns a `.chips` container into an editable tag field. Type a value and press Enter to add a chip. Delete with the chip's delete button, or select a chip and press Backspace or Delete. Selecting a chip marks it `selected` and moves focus to its delete button.
 
-`allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no close icon. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
+`allowUserInput` defaults to `false`. Without it there is no text field and rendered chips have no delete button. Pass `allowUserInput: true` for the interactive field. `AutoInit()` starts every `.chips` except `no-autoinit`, but it uses the defaults, so those wrappers stay display-only until you call `init` with options.
 
 Empty field — type a tag and press Enter:
 
@@ -5798,8 +5823,9 @@ const chip = {
 | `data` | Array | `[]` | Initial chips. Each item is a chip data object. |
 | `placeholder` | String | `''` | Placeholder when there are no chips. Requires `allowUserInput`. |
 | `secondaryPlaceholder` | String | `''` | Placeholder after at least one chip exists. |
-| `closeIconClass` | String | `'material-icons'` | Class on the close icon. Use a Material Symbols class if that is the font you load. |
-| `allowUserInput` | Boolean | `false` | If true, render a text field and close icons so the user can add and remove chips. |
+| `closeIconClass` | String | `'material-symbols'` | Class on the icon inside the delete button. |
+| `allowUserInput` | Boolean | `false` | If true, render a text field and a delete button per chip, so the user can add and remove chips. |
+| `i18n` | Object | `{ remove: 'Remove' }` | Strings the component generates. `remove` prefixes the delete button's accessible name, giving "Remove Apple". |
 | `autocompleteOptions` | Object | `{}` | Options passed to Autocomplete on the input. A non-empty object enables autocomplete. |
 | `autocompleteOnly` | Boolean | `false` | If true, Enter will not add a value that is not in the autocomplete list. |
 | `limit` | Number | `Infinity` | Maximum number of chips. |

@@ -17,6 +17,11 @@ export interface ChipData {
   image?: string;
 }
 
+export interface ChipsI18nOptions {
+  /** Prefix for the delete button's accessible name. */
+  remove: string;
+}
+
 export interface ChipsOptions extends BaseOptions {
   /**
    * Set the chip data.
@@ -59,6 +64,12 @@ export interface ChipsOptions extends BaseOptions {
    */
   allowUserInput: boolean;
   /**
+   * Strings the component generates. `remove` prefixes the delete button's
+   * accessible name, giving "Remove Apple".
+   * @default { remove: 'Remove' }
+   */
+  i18n: Partial<ChipsI18nOptions>;
+  /**
    * Callback for chip add.
    * @default null
    */
@@ -84,6 +95,7 @@ const _defaults: ChipsOptions = {
   autocompleteOnly: false,
   limit: Infinity,
   allowUserInput: false,
+  i18n: { remove: 'Remove' },
   onChipAdd: null,
   onChipSelect: null,
   onChipDelete: null
@@ -102,6 +114,21 @@ export class Chips extends Component<ChipsOptions> {
   static _keydown: boolean;
   private _selectedChip: HTMLElement;
 
+  /**
+   * Selection is drawn by a class now, not by `:focus`, so it does not clear
+   * itself when focus moves - every path that changes the selection has to go
+   * through here or the class and the field drift apart.
+   *
+   * Deliberately no `aria-selected`: the chip is not an option in a listbox,
+   * and putting the attribute on an element with no such role is the same
+   * defect the semantics standard exists to remove.
+   */
+  private _setSelected(chip: HTMLElement | null) {
+    this._selectedChip?.classList.remove('selected');
+    this._selectedChip = chip;
+    chip?.classList.add('selected');
+  }
+
   constructor(el: HTMLElement, options: Partial<ChipsOptions>) {
     super(el, options, Chips);
     this.el['Expressive_Chips'] = this;
@@ -110,6 +137,9 @@ export class Chips extends Component<ChipsOptions> {
       ...Chips.defaults,
       ...options
     };
+    // Spreading options over the defaults replaces the i18n object wholesale,
+    // so passing one string would drop the rest. Same fix as Datepicker.
+    if (options?.i18n) this.options.i18n = { ...Chips.defaults.i18n, ...options.i18n };
 
     this.el.classList.add('chips');
     this.chipsData = [];
@@ -202,7 +232,9 @@ export class Chips extends Component<ChipsOptions> {
 
   _handleChipClick = (e: MouseEvent) => {
     const _chip = (<HTMLElement>e.target).closest('.chip');
-    const clickedClose = (<HTMLElement>e.target).classList.contains('close');
+    // closest, not classList: the close button now wraps an icon span, so a
+    // click on the glyph reports the span as the target.
+    const clickedClose = !!(<HTMLElement>e.target).closest('.close');
     if (_chip) {
       // Index into the chip list, not into the container's children: the
       // container also holds the label and the input, so counting children
@@ -239,7 +271,7 @@ export class Chips extends Component<ChipsOptions> {
       if (currChips._selectedChip) {
         const index = currChips._chips.indexOf(currChips._selectedChip);
         currChips.deleteChip(index);
-        currChips._selectedChip = null;
+        currChips._setSelected(null);
         // Make sure selectIndex doesn't go negative
         selectIndex = Math.max(index - 1, 0);
       }
@@ -254,7 +286,12 @@ export class Chips extends Component<ChipsOptions> {
     } else if (Utils.keys.ARROW_RIGHT.includes(e.key)) {
       if (currChips._selectedChip) {
         const selectIndex = currChips._chips.indexOf(currChips._selectedChip) + 1;
-        if (selectIndex >= currChips.chipsData.length) currChips._input.focus();
+        if (selectIndex >= currChips.chipsData.length) {
+          // Walking off the end returns to the input, so nothing is selected
+          // any more - without this the last chip kept the class.
+          currChips._setSelected(null);
+          currChips._input.focus();
+        }
         else currChips.selectChip(selectIndex);
       }
     }
@@ -268,7 +305,7 @@ export class Chips extends Component<ChipsOptions> {
     if (!Chips._keydown && document.hidden) {
       const chips = (<HTMLElement>e.target).closest('.chips');
       const currChips: Chips = chips?.['Expressive_Chips'];
-      if (currChips) currChips._selectedChip = null;
+      if (currChips) currChips._setSelected(null);
     }
   }
 
@@ -302,11 +339,15 @@ export class Chips extends Component<ChipsOptions> {
     }
   };
 
-  _renderChip(chip: ChipData): HTMLDivElement {
+  _renderChip(chip: ChipData): HTMLElement {
     if (!chip.id) return;
-    const renderedChip = document.createElement('div');
+    const label = chip.text || <string>chip.id;
+    // <span>, not <div>: a chip is inline, and the container itself is not a
+    // control. It used to be a <div tabindex="0"> with no role - focusable,
+    // and announcing nothing.
+    const renderedChip = document.createElement('span');
     renderedChip.classList.add('chip');
-    renderedChip.innerText = chip.text || <string>chip.id;
+    renderedChip.innerText = label;
     // attach image if needed
     if (chip.image) {
       const img = document.createElement('img');
@@ -314,11 +355,21 @@ export class Chips extends Component<ChipsOptions> {
       renderedChip.insertBefore(img, renderedChip.firstChild);
     }
     if (this.options.allowUserInput) {
-      renderedChip.setAttribute('tabindex', '0');
-      const closeIcon = document.createElement('i');
-      closeIcon.classList.add(this.options.closeIconClass, 'close');
+      // The delete affordance is the control, so it is the <button> and it
+      // carries the name. `type` is explicit because a bare button inside a
+      // form submits it.
+      const closeButton = document.createElement('button');
+      closeButton.type = 'button';
+      closeButton.classList.add('close');
+      closeButton.setAttribute('aria-label', `${this.options.i18n.remove} ${label}`);
+      // The ligature is text and is read out, so the glyph is hidden and the
+      // button's own label is what gets announced.
+      const closeIcon = document.createElement('span');
+      closeIcon.classList.add(this.options.closeIconClass);
+      closeIcon.setAttribute('aria-hidden', 'true');
       closeIcon.innerText = 'close';
-      renderedChip.appendChild(closeIcon);
+      closeButton.appendChild(closeIcon);
+      renderedChip.appendChild(closeButton);
     }
     return renderedChip;
   }
@@ -408,6 +459,7 @@ export class Chips extends Component<ChipsOptions> {
   deleteChip(chipIndex: number) {
     const chip = this._chips[chipIndex];
     if (!chip) return;
+    if (this._selectedChip === chip) this._setSelected(null);
     chip.remove();
     this._chips.splice(chipIndex, 1);
     this.chipsData.splice(chipIndex, 1);
@@ -425,8 +477,10 @@ export class Chips extends Component<ChipsOptions> {
   selectChip(chipIndex: number) {
     const chip = this._chips[chipIndex];
     if (!chip) return;
-    this._selectedChip = chip;
-    chip.focus();
+    this._setSelected(chip);
+    // The chip is not a control any more, so focus goes to the one thing in it
+    // that is - the delete button.
+    (chip.querySelector('.close') as HTMLElement | null)?.focus();
     // fire chipSelect callback
     if (typeof this.options.onChipSelect === 'function') {
       this.options.onChipSelect(this.el, chip);
@@ -443,7 +497,9 @@ export class Chips extends Component<ChipsOptions> {
       chips.forEach((el) => {
         el.addEventListener('click', (e) => {
           if (el['Expressive_Chips']) return;
-          if ((<HTMLElement>e.target).classList.contains('close')) {
+          // closest: the close button wraps an icon span, so a click on the
+          // glyph reports the span.
+          if ((<HTMLElement>e.target).closest('.close')) {
             const chip = (<HTMLElement>e.target).closest('.chip');
             if (chip) chip.remove();
           }

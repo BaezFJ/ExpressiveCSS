@@ -54,6 +54,15 @@ $_icon: ".material-symbols, .material-symbols-outlined, .material-symbols-rounde
   // Nest so each class in $_icon gets the suffix. `#{$_icon}.tiny` would
   // only attach `.tiny` to the last item and leave every other icon
   // matching the bare `.material-symbols` selector — including `.large`.
+  // Float helpers, moved off the `i` element selector in base/_global so they
+  // survive the canonical <span class="material-symbols"> form.
+  &.left {
+    float: left;
+    margin-left: -8px;
+  }
+  &.right {
+    float: right;
+  }
   &.tiny {
     font-size: 1rem;
     --md-icon-optical-size: 20;

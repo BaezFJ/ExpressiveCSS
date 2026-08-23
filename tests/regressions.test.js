@@ -484,3 +484,32 @@ describe('Autocomplete menuOptions.onItemClick', () => {
     }
   });
 });
+
+describe('Chips', () => {
+  test('a chip is excluded from the generic button rules', () => {
+    // Assist and suggestion chips are real <button>s, which put them inside
+    // `:where(button:not(...), a.button)`. The base rules were a harmless tie
+    // that chips won on source order, but the *state* rules carry an extra
+    // pseudo-class - `:where(...):not(...):hover` is two components against
+    // `.chip`'s one - so hovering, focusing or pressing a chip repainted it
+    // with the filled-button background while it kept the chip's own text
+    // colour. Excluding `.chip` in $_not-btn is what stops that.
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const buttonSelectors = css.match(/:where\(button:not\([^)]*\)/g) ?? [];
+    assert.ok(buttonSelectors.length > 0, 'the generic button selector should exist');
+    for (const sel of new Set(buttonSelectors)) {
+      assert.match(sel, /\.chip\b/, `\`${sel}\` must exclude .chip`);
+    }
+  });
+
+  test('excluding a chip does not widen the button selector specificity', () => {
+    // Every entry in $_not-btn has to stay a single class. A descendant
+    // selector such as `.chip .close` would make the `:not()` two classes and
+    // silently shift the specificity of every button rule in the sheet.
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const args = css.match(/:where\(button:not\(([^)]*)\)/)[1];
+    for (const entry of args.split(',').map((s) => s.trim())) {
+      assert.match(entry, /^\.[\w-]+$/, `\`${entry}\` must be a bare class`);
+    }
+  });
+});

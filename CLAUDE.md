@@ -33,6 +33,7 @@ npm run typecheck      # tsc --noEmit, no output
 npm test               # rebuild every JS bundle + the CSS, then run the jsdom suite
 npm run test:run       # run tests against the existing dist/ bundle
 npm run watch          # sass --watch + esbuild --watch in parallel
+npm run build:semantics # semantics.json -> SEMANTICS.md
 npm run clean          # remove dist/
 ```
 
@@ -78,6 +79,60 @@ There is no npm token anywhere. Publishing is trusted publishing over OIDC, and 
 A successful publish triggers `pages.yml`, which rebuilds `dist/`, re-freezes `website/`, commits it, and deploys to `www.expressivecss.com`.
 
 Repository rules constrain the recovery paths. Rulesets block force pushes and deletions on master and on `refs/tags/v*`, with **no bypass actors, including the owner**. Tag *creation* stays open so a release works, but a pushed tag can never be moved or deleted — a wrong tag is fixed by releasing the next patch, not by rewriting history. To force-push legitimately, disable the ruleset in Settings → Rules, push, re-enable.
+
+## HTML semantics
+
+`SEMANTICS.md` is the normative markup standard: which element each component is
+written with, and the ARIA that element choice implies. It is **generated** from
+`semantics.json` — edit the JSON, run `npm run build:semantics`, commit both.
+`CONTEXT.md` is the glossary for the terms it uses (*static semantics*, *dynamic
+state*, *composite role*, *display chip*); it is a glossary and nothing else.
+
+Scope is element choice, landmarks, and implied ARIA. Keyboard interaction, focus
+management and contrast are deliberately **out**, which is what rule 2 below turns
+on. The five rules:
+
+1. Static semantics are the author's, dynamic state is the framework's. Element,
+   role, landmark, `aria-hidden` on decoration and the *presence* of a label go in
+   the markup; only a state's changing *value* (`aria-expanded="true"`) is the
+   component's. Label *text* is authored content — hence rule 5.
+2. **A component may declare a composite role only if its keyboard contract is
+   implemented and tested.** `role="tablist"` promises arrow-key navigation; a
+   component that promises and does not deliver is worse than one that says
+   nothing. `tabs.ts` has no keyboard handling at all, so Tabs are navigation
+   (`<nav>` + anchors + `aria-current`), not a tablist. Same for Carousel.
+3. Icons are `<span class="material-symbols" aria-hidden="true">`. The ligature is
+   real text and is announced. `<i>` still works and is undocumented. The size and
+   float modifiers hang off the `$_icon` class list in
+   `components/_icons-material-design.scss`, never off the `i` element — they were
+   keyed on `i` in `base/_global.scss`, which meant the canonical `<span>` form
+   silently lost them.
+4. `<nav>` for genuine navigation only, each with a required `aria-label`. A card's
+   action row is buttons, not destinations, and a toolbar holds commands. Note what
+   rule 2 forbids here: `role="toolbar"` is a *composite* role and promises arrow-key
+   navigation, so a toolbar drops `<nav>` without gaining `role` until someone builds
+   that keyboard model.
+5. Every user-facing string the framework generates gets an `i18n` option
+   (Datepicker and Timepicker already had one; Chips now does).
+
+`tests/semantics.test.js` enforces the rules against the three surfaces that state
+markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
+generated from the templates, so checking it would check the same thing twice.
+Notes that matter when working on it:
+
+- A component is `enforced` or `exempt`. **Exempt is the backlog and only ever
+  shrinks.** The roster test asserts `semantics.json` rows match the sass partials
+  plus `additional` exactly, so a new component cannot ship without a row — which
+  is what makes it enforced from its first commit.
+- The check **must never initialize a component**. It parses with jsdom and reads
+  the DOM. Chips/Snackbar/Slider own intervals, and a live timer wedges the whole
+  `node --test` run with no output.
+- One example can opt out with a stated reason: ` ```html ignore-semantics: why `
+  in Markdown, `code(check=false, reason="why")` in a template. A reason is
+  required — the test fails on a bare opt-out.
+- Legacy markup breaks **silently**. No runtime warnings: 26+ components are
+  CSS-only and could not emit them, so coverage would be partial and the absence
+  of a warning would read as conformance. Migration lives in the CHANGELOG.
 
 ## Sass architecture
 
