@@ -165,6 +165,17 @@ below is the whole story for that component.
   releases ago, was still used in a waves example. `.prev` / `.next` are
   accepted but inert, and the responsive-pagination prose still described the
   10%/80% split they used to drive, which `.nowrap` scrolling replaced.
+- **`m3-guidelines.md` declared `nav.toolbar` five times** — a shape
+  `semantics.json` forbids — plus the toolbars page prose, which still called
+  the bar a `<nav>` after the markup beside it had been changed. The fragment
+  reader could not see any of it: it looks for `<tag …>` forms, and a
+  selector-style mention in a sentence or an anatomy table has no angle
+  brackets. A check now derives every `tag.class` shape from the fragment-safe
+  forbid rules and fails when a document names one, allowing a deliberate
+  negation so a rename can still be recorded.
+- **Icon anatomy prose omitted `aria-hidden`** on three pages while the next
+  sentence claimed the icon was hidden — so a reader following it would build
+  a button announced as "add Create".
 - **Prose lagged the sweeps.** The code blocks were rewritten mechanically and
   the sentences around them were not: a dozen places still called the icon an
   `<i>`, cards still described a `<nav>` action row, lists and menus still

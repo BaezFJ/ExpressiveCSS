@@ -620,7 +620,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.4 Toolbars
 
-**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar. **ExpressiveCSS:** `nav.toolbar`. CSS-only. Not `div.fixed-action-btn.toolbar` (that is the FAB-to-toolbar transition).
+**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fixed-action-btn.toolbar` either (that is the FAB-to-toolbar transition).
 
 **Use when** the page has a **cluster of frequent actions** that apply to the current content (formatting, selection actions, playback).
 
@@ -1085,7 +1085,7 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 | Parallax | CSS `animation-timeline: view()` clip | A hero carousel |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
-| FAB-to-toolbar | `.fixed-action-btn.toolbar` morph | An M3 toolbar (`nav.toolbar`) |
+| FAB-to-toolbar | `.fixed-action-btn.toolbar` morph | An M3 toolbar (`div.toolbar`) |
 
 ---
 
@@ -1100,7 +1100,7 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 | Button groups (standard / connected) | Separate buttons, or filter chips, or radios styled in a `<nav>`. No shape-morphing group. |
 | FAB menu (M3 Expressive labelled menu) | `.fixed-action-btn` speed-dial, or a FAB that opens a `<menu>`. |
 | Loading indicator (wavy morphing) | Circular `.progress` spinner. |
-| Bottom app bar | `nav.toolbar` (docked) or a FAB above a navigation bar. |
+| Bottom app bar | `div.toolbar` (docked) or a FAB above a navigation bar. |
 | Segmented button (legacy name) | Radios, tabs, or chips — not a dedicated segmented control. |
 
 ---
@@ -1168,7 +1168,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Icon button | `button.circle` | Icon + `aria-label` | — |
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
 | FAB speed-dial | `.fixed-action-btn` | Primary FAB + `ul` of FABs | — |
-| Toolbar | `nav.toolbar` | Action buttons | `.active` |
+| Toolbar | `div.toolbar` | Action buttons | `.active` |
 | Card | `article` | Anything; heading + body typical | — |
 | List | `ul.list` | `li` rows | `aria-selected` / `.active` |
 | Dialog | `dialog` | Headline, body, `form method="dialog"` | `showModal()` |
@@ -1210,7 +1210,7 @@ If training data or the user says the left column, emit the right.
 | `.lever`, `.filled-in`, `.with-gap` | (omit) |
 | `Collapsible` | `<details>` / `<summary>` in the sidenav or page |
 | `.slider` on a range | `.range` + `input[type=range]` |
-| Bottom app bar | `nav.toolbar` or FAB + navigation bar |
+| Bottom app bar | `div.toolbar` or FAB + navigation bar |
 
 ---
 

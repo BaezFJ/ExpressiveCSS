@@ -18,9 +18,11 @@
           <a href="{{ url_for('navigation_bar') }}">navigation bar</a>.
         </p>
         <p>
-          A <code>&lt;nav class="toolbar"&gt;</code> is the bar. Direct
+          A <code>&lt;div class="toolbar"&gt;</code> is the bar — not a
+          <code>&lt;nav&gt;</code>, because a toolbar holds commands rather than
+          destinations. Direct
           <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> children
-          are the actions. A <code>&lt;span class="material-symbols"&gt;</code> is the icon; wrap a
+          are the actions. A <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon; wrap a
           label in its own <code>&lt;span&gt;</code>, and give an icon-only
           action an <code>aria-label</code>. <code>.active</code> marks
           the selected action. <code>.filled</code> on an action is the

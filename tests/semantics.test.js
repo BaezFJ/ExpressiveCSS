@@ -294,6 +294,44 @@ describe('semantics.json', () => {
   });
 });
 
+describe('prose that names markup', () => {
+  // The fragment reader only sees `<tag ...>` forms, so a selector-style
+  // mention - `nav.toolbar` in a sentence or an anatomy table - was invisible
+  // to it. Five declarations of `nav.toolbar` survived the sweep that forbade
+  // it, in the very file the sweep had added as a surface.
+  //
+  // Derived from the rules rather than listed: any fragment-safe forbid rule
+  // whose selector is a plain `tag.class` is a shape the prose must not name
+  // either. A deliberate negation ("not `nav.toolbar`") is allowed, because
+  // saying what something is not is how the docs record a rename.
+  const forbiddenShapes = Object.values(data.components)
+    .filter((c) => c.status === 'enforced')
+    .flatMap((c) => c.rules)
+    .filter((r) => r.kind === 'forbid' && r.fragmentSafe)
+    .flatMap((r) => r.selector.split(',').map((x) => x.trim()))
+    .filter((sel) => /^[a-z]+\.[\w-]+$/.test(sel));
+
+  test('the rules yield shapes to look for', () => {
+    assert.ok(forbiddenShapes.length > 0, 'no tag.class forbid rules to derive from');
+  });
+
+  test('no document names a shape its own rules forbid', () => {
+    const failures = [];
+    for (const file of ['llm.md', 'm3-guidelines.md']) {
+      const src = read(file);
+      for (const m of src.matchAll(/`([^`\n]+)`/g)) {
+        const shape = m[1].trim();
+        if (!forbiddenShapes.includes(shape)) continue;
+        const before = src.slice(Math.max(0, m.index - 24), m.index);
+        if (/\b(not|no|never|instead of|rather than)\s+$/i.test(before)) continue;
+        const line = src.slice(0, m.index).split('\n').length;
+        failures.push(`${file}:${line} names \`${shape}\`, which ${'`'}forbid${'`'} rules reject`);
+      }
+    }
+    assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);
+  });
+});
+
 describe('composed pages', () => {
   // website/ was excluded as a *surface* because it is generated from the
   // templates - checking its fragments would check them twice. A whole page is
