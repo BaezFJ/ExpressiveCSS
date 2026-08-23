@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Icons</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -298,25 +298,25 @@
         </p>
         <div class="row py-5">
           <div class="s3 center-align">
-            <i class="medium material-symbols">add</i>
+            <span class="material-symbols medium" aria-hidden="true">add</span>
             <p>Default</p>
           </div>
           <div class="s3 center-align">
-            <i class="medium material-symbols-outlined">add</i>
+            <span class="material-symbols-outlined medium" aria-hidden="true">add</span>
             <p>Outlined</p>
           </div>
           <div class="s3 center-align">
-            <i class="medium material-symbols-rounded">add</i>
+            <span class="material-symbols-rounded medium" aria-hidden="true">add</span>
             <p>Rounded</p>
           </div>
           <div class="s3 center-align">
-            <i class="medium material-symbols-sharp">add</i>
+            <span class="material-symbols-sharp medium" aria-hidden="true">add</span>
             <p>Sharp</p>
           </div>
         </div>
-<pre><code>&lt;i class="material-symbols"&gt;add&lt;/i&gt;
-&lt;i class="material-symbols-rounded"&gt;add&lt;/i&gt;
-&lt;i class="material-symbols-sharp"&gt;add&lt;/i&gt;</code></pre>
+<pre><code>&lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+&lt;span class="material-symbols-rounded" aria-hidden="true"&gt;add&lt;/span&gt;
+&lt;span class="material-symbols-sharp" aria-hidden="true"&gt;add&lt;/span&gt;</code></pre>
         <p>
           Icons inherit the current text color, so token utilities such as
           <code>primary-text</code> work. For icons inside buttons, see
@@ -346,15 +346,15 @@
         </p>
         <div class="row py-3">
           <div class="s4 center-align" icon-style="outlined">
-            <i class="medium material-symbols">settings</i>
+            <span class="material-symbols medium" aria-hidden="true">settings</span>
             <p><code>outlined</code></p>
           </div>
           <div class="s4 center-align" icon-style="rounded">
-            <i class="medium material-symbols">settings</i>
+            <span class="material-symbols medium" aria-hidden="true">settings</span>
             <p><code>rounded</code></p>
           </div>
           <div class="s4 center-align" icon-style="sharp">
-            <i class="medium material-symbols">settings</i>
+            <span class="material-symbols medium" aria-hidden="true">settings</span>
             <p><code>sharp</code></p>
           </div>
         </div>
@@ -409,26 +409,26 @@
   --md-icon-optical-size: 24;
 }
 
-&lt;i class="material-symbols" style="--md-icon-fill: 1; --md-icon-weight: 600"&gt;favorite&lt;/i&gt;</code></pre>
+&lt;span class="material-symbols" style="--md-icon-fill: 1; --md-icon-weight: 600" aria-hidden="true"&gt;favorite&lt;/span&gt;</code></pre>
         <p>
           <code>icon-filled</code> is a shortcut for
           <code>--md-icon-fill: 1</code>.
         </p>
         <div class="row py-3">
           <div class="s3 center-align">
-            <i class="medium material-symbols">favorite</i>
+            <span class="material-symbols medium" aria-hidden="true">favorite</span>
             <p>Empty</p>
           </div>
           <div class="s3 center-align">
-            <i class="medium material-symbols icon-filled">favorite</i>
+            <span class="material-symbols medium icon-filled" aria-hidden="true">favorite</span>
             <p>Filled</p>
           </div>
           <div class="s3 center-align">
-            <i class="medium material-symbols" style="--md-icon-weight: 200">settings</i>
+            <span class="material-symbols medium" style="--md-icon-weight: 200" aria-hidden="true">settings</span>
             <p>Weight 200</p>
           </div>
           <div class="s3 center-align">
-            <i class="medium material-symbols" style="--md-icon-weight: 700">settings</i>
+            <span class="material-symbols medium" style="--md-icon-weight: 700" aria-hidden="true">settings</span>
             <p>Weight 700</p>
           </div>
         </div>
@@ -448,10 +448,10 @@
           size.
         </p>
         <div class="row pt-5">
-          <div class="s3 center-align"><i class="tiny material-symbols">insert_chart</i></div>
-          <div class="s3 center-align"><i class="small material-symbols">insert_chart</i></div>
-          <div class="s3 center-align"><i class="medium material-symbols">insert_chart</i></div>
-          <div class="s3 center-align"><i class="large material-symbols">insert_chart</i></div>
+          <div class="s3 center-align"><span class="material-symbols tiny" aria-hidden="true">insert_chart</span></div>
+          <div class="s3 center-align"><span class="material-symbols small" aria-hidden="true">insert_chart</span></div>
+          <div class="s3 center-align"><span class="material-symbols medium" aria-hidden="true">insert_chart</span></div>
+          <div class="s3 center-align"><span class="material-symbols large" aria-hidden="true">insert_chart</span></div>
         </div>
         <div class="row pb-5">
           <div class="s3 center-align">Tiny</div>
@@ -459,7 +459,7 @@
           <div class="s3 center-align">Medium</div>
           <div class="s3 center-align">Large</div>
         </div>
-<pre><code>&lt;i class="large material-symbols"&gt;insert_chart&lt;/i&gt;</code></pre>
+<pre><code>&lt;span class="material-symbols large" aria-hidden="true"&gt;insert_chart&lt;/span&gt;</code></pre>
   
       </div>
 
@@ -569,26 +569,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

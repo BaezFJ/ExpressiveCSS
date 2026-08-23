@@ -42,24 +42,24 @@
         </p>
         <menu id="menu1">
           <li>
-            <a href="#!">Refresh<i class="material-symbols">refresh</i></a>
+            <a href="#!">Refresh<span class="material-symbols" aria-hidden="true">refresh</span></a>
           </li>
           <li>
-            <a href="#!">Settings<i class="material-symbols">settings</i></a>
+            <a href="#!">Settings<span class="material-symbols" aria-hidden="true">settings</span></a>
           </li>
           <li>
-            <a href="#!">Help<i class="material-symbols">help</i></a>
+            <a href="#!">Help<span class="material-symbols" aria-hidden="true">help</span></a>
           </li>
           <li>
-            <a href="#!">More<i class="material-symbols">more_vert</i></a>
+            <a href="#!">More<span class="material-symbols" aria-hidden="true">more_vert</span></a>
           </li>
         </menu>
 {% call code() %}
 <button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
-  <li><a href="#!">Refresh<i class="material-symbols">refresh</i></a></li>
-  <li><a href="#!">Settings<i class="material-symbols">settings</i></a></li>
-  <li><a href="#!">Help<i class="material-symbols">help</i></a></li>
+  <li><a href="#!">Refresh<span class="material-symbols" aria-hidden="true">refresh</span></a></li>
+  <li><a href="#!">Settings<span class="material-symbols" aria-hidden="true">settings</span></a></li>
+  <li><a href="#!">Help<span class="material-symbols" aria-hidden="true">help</span></a></li>
 </menu>
 {% endcall %}
         <p>
@@ -195,7 +195,7 @@ Expressive.AutoInit(document.body, {
           <li><a href="#!">Three</a></li>
           <li>
             <a href="#!">
-              <i class="material-symbols">view_module</i>
+              <span class="material-symbols" aria-hidden="true">view_module</span>
               <span>Four</span>
             </a>
           </li>
@@ -207,7 +207,7 @@ Expressive.AutoInit(document.body, {
           <li><a href="#!">Three</a></li>
           <li>
             <a href="#!">
-              <i class="material-symbols">cloud</i>
+              <span class="material-symbols" aria-hidden="true">cloud</span>
               <span>Five</span>
             </a>
           </li>
@@ -257,27 +257,27 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         <menu id="menu-rich">
           <li>
             <a href="#!">
-              <i class="material-symbols">visibility</i>
+              <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
             </a>
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">content_copy</i>
+              <span class="material-symbols" aria-hidden="true">content_copy</span>
               Item 2
               <kbd>⌘C</kbd>
             </a>
           </li>
           <li class="selected">
             <a href="#!">
-              <i class="material-symbols">check</i>
+              <span class="material-symbols" aria-hidden="true">check</span>
               Item 3
             </a>
           </li>
           <li class="gap" aria-hidden="true"></li>
           <li>
             <a href="#!">
-              <i class="material-symbols">person</i>
+              <span class="material-symbols" aria-hidden="true">person</span>
               Item 4
             </a>
             <menu>
@@ -287,26 +287,26 @@ Expressive.Menu.init(document.querySelector('#hover'), {
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">settings</i>
+              <span class="material-symbols" aria-hidden="true">settings</span>
               Item 5
             </a>
           </li>
         </menu>
 {% call code() %}
 <menu id="menu-rich">
-  <li><a href="#!"><i class="material-symbols">visibility</i> Item 1</a></li>
+  <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1</a></li>
   <li>
     <a href="#!">
-      <i class="material-symbols">content_copy</i> Item 2
+      <span class="material-symbols" aria-hidden="true">content_copy</span> Item 2
       <kbd>⌘C</kbd>
     </a>
   </li>
   <li class="selected">
-    <a href="#!"><i class="material-symbols">check</i> Item 3</a>
+    <a href="#!"><span class="material-symbols" aria-hidden="true">check</span> Item 3</a>
   </li>
   <li class="gap" aria-hidden="true"></li>
   <li>
-    <a href="#!"><i class="material-symbols">person</i> Item 4</a>
+    <a href="#!"><span class="material-symbols" aria-hidden="true">person</span> Item 4</a>
     <menu>…</menu>
   </li>
 </menu>
@@ -326,27 +326,27 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         <menu id="menu-vibrant" class="vibrant">
           <li>
             <a href="#!">
-              <i class="material-symbols">visibility</i>
+              <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
             </a>
           </li>
           <li class="selected">
             <a href="#!">
-              <i class="material-symbols">check</i>
+              <span class="material-symbols" aria-hidden="true">check</span>
               Item 2
             </a>
           </li>
           <li>
             <a href="#!">
-              <i class="material-symbols">settings</i>
+              <span class="material-symbols" aria-hidden="true">settings</span>
               Item 3
             </a>
           </li>
         </menu>
 {% call code() %}
 <menu id="menu-vibrant" class="vibrant">
-  <li><a href="#!"><i class="material-symbols">visibility</i> Item 1</a></li>
-  <li class="selected"><a href="#!"><i class="material-symbols">check</i> Item 2</a></li>
+  <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1</a></li>
+  <li class="selected"><a href="#!"><span class="material-symbols" aria-hidden="true">check</span> Item 2</a></li>
 </menu>
 {% endcall %}
   {% endcall %}

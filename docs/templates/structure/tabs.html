@@ -32,9 +32,9 @@
         </p>
 
         <nav class="tabs" aria-label="Travel">
-          <a href="#tabs-intro-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-intro-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
-          <a href="#tabs-intro-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
+          <a href="#tabs-intro-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
+          <a class="active" aria-current="page" href="#tabs-intro-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a href="#tabs-intro-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
         </nav>
         <div id="tabs-intro-flight" class="py-3">Flight</div>
         <div id="tabs-intro-luggage" class="py-3">Luggage</div>
@@ -42,15 +42,15 @@
 {% call code() %}
 <nav class="tabs" aria-label="Travel">
   <a href="#flight">
-    <i class="material-symbols">flight</i>
+    <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Flight</span>
   </a>
   <a class="active" aria-current="page" href="#luggage">
-    <i class="material-symbols">luggage</i>
+    <span class="material-symbols" aria-hidden="true">luggage</span>
     <span>Luggage</span>
   </a>
   <a href="#explore">
-    <i class="material-symbols">explore</i>
+    <span class="material-symbols" aria-hidden="true">explore</span>
     <span>Explore</span>
   </a>
 </nav>
@@ -95,9 +95,9 @@
           icons inline, a 2dp indicator. Use it to further split a pane.
         </p>
         <nav class="tabs tabs-secondary" aria-label="Trip">
-          <a href="#tabs-sec-birds"><i class="material-symbols">flight</i><span>Travel</span></a>
-          <a class="active" aria-current="page" href="#tabs-sec-cats"><i class="material-symbols">hotel</i><span>Hotel</span></a>
-          <a href="#tabs-sec-dogs"><i class="material-symbols">directions_walk</i><span>Walks</span></a>
+          <a href="#tabs-sec-birds"><span class="material-symbols" aria-hidden="true">flight</span><span>Travel</span></a>
+          <a class="active" aria-current="page" href="#tabs-sec-cats"><span class="material-symbols" aria-hidden="true">hotel</span><span>Hotel</span></a>
+          <a href="#tabs-sec-dogs"><span class="material-symbols" aria-hidden="true">directions_walk</span><span>Walks</span></a>
         </nav>
         <div id="tabs-sec-birds" class="py-3">Travel</div>
         <div id="tabs-sec-cats" class="py-3">Hotel</div>
@@ -105,11 +105,11 @@
 {% call code() %}
 <nav class="tabs tabs-secondary" aria-label="Trip">
   <a href="#travel">
-    <i class="material-symbols">flight</i>
+    <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Travel</span>
   </a>
   <a class="active" aria-current="page" href="#hotel">
-    <i class="material-symbols">hotel</i>
+    <span class="material-symbols" aria-hidden="true">hotel</span>
     <span>Hotel</span>
   </a>
 </nav>
@@ -287,9 +287,9 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
           put them on one line, like secondary tabs.
         </p>
         <nav class="tabs max horizontal" aria-label="Inline icons">
-          <a href="#tabs-horiz-flight"><i class="material-symbols">flight</i><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><i class="material-symbols">luggage</i><span>Luggage</span></a>
-          <a href="#tabs-horiz-explore"><i class="material-symbols">explore</i><span>Explore</span></a>
+          <a href="#tabs-horiz-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
+          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a href="#tabs-horiz-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
         </nav>
         <div id="tabs-horiz-flight" class="py-3">Flight</div>
         <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
@@ -297,11 +297,11 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
 {% call code() %}
 <nav class="tabs max horizontal" aria-label="Sections">
   <a href="#flight">
-    <i class="material-symbols">flight</i>
+    <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Flight</span>
   </a>
   <a class="active" aria-current="page" href="#luggage">
-    <i class="material-symbols">luggage</i>
+    <span class="material-symbols" aria-hidden="true">luggage</span>
     <span>Luggage</span>
   </a>
 </nav>

@@ -24,10 +24,20 @@
 //   selected   secondary-container (standard) / surface (vibrant)
 //   emphasized 48dp, 16dp corners, primary / on-primary
 //
-// nav.toolbar only — do not style every <nav>. div.fixed-action-btn.toolbar
+// #{$_toolbar} only — do not style every <nav>. div.fixed-action-btn.toolbar
 // is the FAB-to-toolbar transition, not this component.
 
-nav.toolbar {
+// The host. A toolbar holds commands, not destinations, so it is not a <nav>
+// (rule 4) - and not role="toolbar" either, because that is a composite role
+// promising arrow-key navigation nothing here implements (rule 2). The <nav>
+// form is the older markup and still works.
+//
+// Wrapped in :is() so it stays one compound selector: interpolating a bare
+// comma-separated list breaks out of its context. That mistake shipped once
+// already, in $_bar.
+$_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn))";
+
+#{$_toolbar} {
   --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
   --md-comp-toolbar-container-shape: 32px;
   --md-comp-toolbar-container-height: 64px;
@@ -168,8 +178,8 @@ nav.toolbar {
 }
 
 // Vibrant color style. Pair .active with surface so it still contrasts.
-nav.toolbar.vibrant,
-nav.toolbar.filled {
+#{$_toolbar}.vibrant,
+#{$_toolbar}.filled {
   --md-comp-toolbar-container-color: var(--md-sys-color-primary-container);
   --md-comp-toolbar-selected-container-color: var(--md-sys-color-surface);
   --md-comp-toolbar-selected-color: var(--md-sys-color-on-surface);
@@ -177,7 +187,7 @@ nav.toolbar.filled {
 }
 
 // Vertical floating bar.
-nav.toolbar.vertical {
+#{$_toolbar}.vertical {
   flex-direction: column;
   min-width: var(--md-comp-toolbar-container-height);
   min-height: var(--md-comp-toolbar-container-height);
@@ -193,8 +203,8 @@ nav.toolbar.vertical {
 // Docked — full width, square, no lift. M3's replacement for the bottom
 // app bar. Shorter than that bar (64dp, not 80). .max is the BeerCSS
 // name; .docked is the M3 name.
-nav.toolbar.max,
-nav.toolbar.docked {
+#{$_toolbar}.max,
+#{$_toolbar}.docked {
   display: flex;
   width: 100%;
   --md-comp-toolbar-container-shape: 0;
@@ -213,45 +223,45 @@ nav.toolbar.docked {
     flex-direction: column;
   }
 
-  > nav.toolbar {
+  > #{$_toolbar} {
     margin: 0;
   }
 }
 
 // Pin to the viewport. Floating defaults to bottom-center; docked
 // defaults to the bottom edge.
-nav.toolbar.fixed {
+#{$_toolbar}.fixed {
   position: fixed;
   z-index: 996;
   inset: auto auto 16px 50%;
   transform: translateX(-50%);
 }
 
-nav.toolbar.fixed.top {
+#{$_toolbar}.fixed.top {
   inset: 16px auto auto 50%;
 }
 
-nav.toolbar.fixed.bottom {
+#{$_toolbar}.fixed.bottom {
   inset: auto auto 16px 50%;
 }
 
-nav.toolbar.vertical.fixed {
+#{$_toolbar}.vertical.fixed {
   inset: 50% auto auto 16px;
   transform: translateY(-50%);
 }
 
-nav.toolbar.vertical.fixed.right {
+#{$_toolbar}.vertical.fixed.right {
   inset: 50% 16px auto auto;
 }
 
-nav.toolbar:is(.max, .docked).fixed,
-nav.toolbar:is(.max, .docked).fixed.bottom {
+#{$_toolbar}:is(.max, .docked).fixed,
+#{$_toolbar}:is(.max, .docked).fixed.bottom {
   inset: auto 0 0 0;
   transform: none;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
-nav.toolbar:is(.max, .docked).fixed.top {
+#{$_toolbar}:is(.max, .docked).fixed.top {
   inset: 0 0 auto 0;
   transform: none;
   padding-bottom: 8px;

@@ -3,7 +3,7 @@
 // Cards.
 //
 // Anatomy is the HTML. An <article> is an elevated card. A heading is the
-// headline, a <p> is supporting text, a direct <nav> (not .tabs) is the
+// headline, a <p> is supporting text, a direct .actions (not .tabs) is the
 // action row,
 // <img> / <figure> is media. Helpers switch the M3 variant (filled, outlined)
 // or the layout (horizontal).
@@ -90,7 +90,10 @@ article > header {
 }
 
 // Action row. nav.tabs is a tab bar, not actions — leave it to _tabs.scss.
-article > nav:not(.tabs) {
+// Action row. A row of buttons, not destinations - `.actions` is the
+// documented form and the bare <nav> is the older one. nav.tabs is a tab bar,
+// not actions - leave it to _tabs.scss.
+article > :is(nav:not(.tabs), .actions) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -189,7 +192,7 @@ article.small, article.medium, article.large {
     overflow: hidden;
   }
 
-  > nav:not(.tabs) {
+  > :is(nav:not(.tabs), .actions) {
     margin-top: auto;
   }
 }
@@ -243,7 +246,7 @@ article > aside[aria-expanded="true"] {
   }
 }
 
-article.sticky > nav {
+article.sticky > :is(nav, .actions) {
   position: relative;
   z-index: 4;
   background-color: inherit;

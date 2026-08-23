@@ -16,6 +16,15 @@ below is the whole story for that component.
 
 ### Added
 
+- **The sweep is finished — 45 of 45 components enforced.** The last pass takes
+  the remaining 23: icons, badges, buttons, cards, toolbar, list, tooltip,
+  preloader, dialog, panes, carousel, parallax, lightbox, and the ten that
+  state no markup of their own and now say so in writing.
+- A third rule kind, **`require-accessible-name`**. It is the one question a
+  selector cannot ask: whether a control ends up with a name depends on text
+  *nodes*, and CSS cannot see them — `:has(> .icon:only-child)` counts
+  elements, so it flags `<a><span icon/>Five</a>`, a link that is perfectly
+  well named. The check reads the content instead.
 - **Navigation is the third sweep** — `landmarks`, `navbar`, `navigation-bar`,
   `navigation-rail`, `sidenav`, `breadcrumb`, `pagination`, `tabs`, `menu`,
   `table_of_contents`, `page-footer`. **22 of 45 components are now enforced;
@@ -56,6 +65,41 @@ below is the whole story for that component.
 
 ### Changed
 
+- **An icon is a `<span>`, and it says whether it is decoration or an image.**
+  465 `<i class="material-icons">` became
+  `<span class="material-symbols" aria-hidden="true">`. `<i>` means idiomatic
+  text and an icon is none of those; more to the point the glyph comes from a
+  ligature, so the icon's content is real text and was being read out — every
+  icon-only button announced itself twice, as "add, Add". An icon is now
+  either `aria-hidden` with the control carrying the name, or `role="img"`
+  with a label of its own.
+- **Hiding every icon exposed the controls that had nothing else.** 47
+  icon-only links and buttons had no accessible name at all once the glyph
+  stopped being read; they carry one now.
+- **A badge nested in an icon is hidden with it.** `aria-hidden` covers the
+  subtree and `aria-hidden="false"` on a descendant does not undo that, so a
+  count that lived only inside a decorative icon was a count nobody heard.
+  Inside a control the name carries it (`aria-label="Inbox, 3 unread"`);
+  standing alone the icon becomes the image.
+- A **toolbar is a `<div class="toolbar">`**, not a `<nav>` — it holds
+  commands, not destinations — and not `role="toolbar"` either, which is a
+  composite role promising arrow keys nothing here implements.
+- A **card's action row is a `<div class="actions">`**. A row of buttons is not
+  a landmark, and one per card floods the landmark list.
+- A **`<dialog>` is named**, by `aria-labelledby` pointing at the heading it
+  already has. Including the one `Sidenav` builds: it copies the drawer's name
+  onto the dialog, because once that dialog opens modally the `<nav>` holding
+  the label is outside it.
+- A **`<div class="progress">` reports progress** with `role="progressbar"`.
+  `<progress>` reports itself; a div drawn with CSS reports nothing.
+- A **CSS-only `.tooltip` is referenced with `aria-describedby`.** Inside its
+  control it was swallowed — with an `aria-label` present the label wins and
+  the tooltip was never announced at all.
+- **`.lightboxed` images are operable.** They open an overlay on click, which
+  makes them controls, and a bare `<img>` is not focusable. The keypress
+  handler was already there; only `tabindex` and a role were missing.
+- `aria-selected` came off plain `<li>`, and a pane is a `<section>`, not a
+  second `<main>`.
 - **Every `<nav>` now carries a name, and things that are not navigation
   stopped claiming to be.** A row of radios or checkboxes is a
   `<div class="inline">`, not a `<nav>` — it was a flex hook wearing a
@@ -107,6 +151,10 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **Off-screen carousel slides were hidden but still focusable.** A slide is an
+  `<a>`, and `aria-hidden` alone left the tab stop in place — focus landed on a
+  link the user had no way to perceive. They are `inert` now, which removes
+  them from the tab order, from assistive technology and from hit-testing.
 - **The drawer wrapper became a second app bar.** Wrapping the sidenav in a
   `<nav>` while it still lived inside `<header>` made it a direct child of an
   app bar host, so the navbar rules gave it `display: flex`, full width and a
@@ -172,6 +220,15 @@ below is the whole story for that component.
 
 ### Migration
 
+- `<i class="material-icons">add</i>` →
+  `<span class="material-symbols" aria-hidden="true">add</span>`, and the
+  control around it needs an `aria-label` if the icon was its only content.
+- `<nav class="toolbar">` → `<div class="toolbar">`.
+- A card's `<nav>` action row → `<div class="actions">`.
+- `<dialog>` → add `aria-labelledby` pointing at its heading.
+- `<div class="progress">` → add `role="progressbar"`.
+- `<img class="lightboxed">` → add `tabindex="0" role="button"`.
+- `<li aria-selected="true">` → `<li class="selected">`.
 - Every `<nav>` needs `aria-label` (or `aria-labelledby`).
 - `<nav>` used to lay out radios, checkboxes or switches →
   `<div class="inline">`.

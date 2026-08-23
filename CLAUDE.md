@@ -101,7 +101,12 @@ on. The five rules:
    component that promises and does not deliver is worse than one that says
    nothing. `tabs.ts` has no keyboard handling at all, so Tabs are navigation
    (`<nav>` + anchors + `aria-current`), not a tablist. Same for Carousel.
-3. Icons are `<span class="material-symbols" aria-hidden="true">`. The ligature is
+3. Icons are `<span class="material-symbols">`, and each one declares itself:
+   `aria-hidden="true"` for decoration (the usual case, with the enclosing
+   control carrying the name) or `role="img"` plus a label when the icon reports
+   something no neighbouring text does. **Hiding an icon hides everything inside
+   it** — that is how a badge count nested in an icon becomes inaudible, and
+   `aria-hidden="false"` on the descendant does not rescue it. The ligature is
    real text and is announced. `<i>` still works and is undocumented. The size and
    float modifiers hang off the `$_icon` class list in
    `components/_icons-material-design.scss`, never off the `i` element — they were
@@ -145,12 +150,22 @@ markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
 generated from the templates, so checking it would check the same thing twice.
 Notes that matter when working on it:
 
-- **Swept so far: chips, the form components, then navigation** (`input-fields`,
+- **The sweep is complete: 45 of 45 enforced.** Chips, then forms, then
+  navigation, then the rest (`input-fields`,
   `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
   `file-input`, `range`, `autocomplete`, `character-counter`; then `landmarks`,
   `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
-  `pagination`, `tabs`, `menu`, `table_of_contents`, `page-footer`).
-  `SEMANTICS.md` carries the running count.
+  `pagination`, `tabs`, `menu`, `table_of_contents`, `page-footer`; then icons,
+  badges, buttons, cards, toolbar, list, tooltip, preloader, dialog, panes,
+  carousel, parallax, lightbox, and ten rows that state no markup of their own
+  and say so in their note). **The exempt list is empty — keep it that way.** A
+  new component ships enforced or the roster test fails.
+- **Three rule kinds**, and the third exists for one reason. `forbid` and
+  `require-attr` are selector-level; `require-accessible-name` is not, because
+  whether a control ends up named depends on text *nodes* and CSS cannot see
+  them. `:has(> .icon:only-child)` counts elements, so it flags
+  `<a><span icon/>Five</a>`. Reach for it only when that is genuinely the
+  problem.
 - **`m3-guidelines.md` is a fourth surface, checked differently.** It states
   markup as inline code spans in prose, not as fenced examples, so only rules
   marked `fragmentSafe` run against it — the ones that fire on a *wrong thing

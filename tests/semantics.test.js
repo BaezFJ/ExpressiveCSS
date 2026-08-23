@@ -80,8 +80,12 @@ function examplesFromMarkdown(file) {
  * escape hatch: the first templated example added would have been waved
  * through without anyone opting it out.
  */
+// Statements produce no output and are removed. Expressions DO produce text,
+// so they become a placeholder rather than vanishing - deleting them turned
+// `<a><span icon/>{{ page.label }}</a>` into an apparently nameless control
+// and the accessible-name rule duly flagged the docs' own sidenav.
 const stripJinja = (s) =>
-  s.replace(/\{%[\s\S]*?%\}/g, '').replace(/\{\{[\s\S]*?\}\}/g, '');
+  s.replace(/\{%[\s\S]*?%\}/g, '').replace(/\{\{[\s\S]*?\}\}/g, 'x');
 
 // The argument list runs to the `)` that closes the call, not to the first `)`
 // in it - a reason is prose and may well contain one ("(pre-0.8.0)"). With
@@ -193,6 +197,30 @@ const enforcedRules = Object.entries(data.components)
   .filter(([, c]) => c.status === 'enforced')
   .flatMap(([name, c]) => c.rules.map((r) => ({ ...r, component: name })));
 
+/**
+ * Enough of the accessible-name computation to answer "is this control
+ * nameless?" - aria-label, then aria-labelledby, then the text that is left
+ * once the aria-hidden subtrees are taken out. Not the full algorithm: no
+ * title, no <label>, no alt on a descendant image, because a control relying
+ * on those is not what this is looking for.
+ */
+function accessibleName(el, document) {
+  const label = el.getAttribute('aria-label');
+  if (label && label.trim()) return label.trim();
+  const ref = el.getAttribute('aria-labelledby');
+  if (ref) {
+    const text = ref
+      .split(/\s+/)
+      .map((id) => document.getElementById(id)?.textContent ?? '')
+      .join(' ')
+      .trim();
+    if (text) return text;
+  }
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+  return clone.textContent.trim();
+}
+
 function violations(html, rules, { fragmentSafe = false } = {}) {
   const { document } = new JSDOM(`<!doctype html><body>${html}</body>`).window;
   const found = [];
@@ -206,6 +234,14 @@ function violations(html, rules, { fragmentSafe = false } = {}) {
         const v = el.getAttribute(rule.attr);
         const ok = rule.equals ? v === rule.equals : v !== null && v !== '';
         if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
+      }
+    } else if (rule.kind === 'require-accessible-name') {
+      // The one thing a selector cannot ask. "Has no accessible name" depends
+      // on text *nodes*, and CSS cannot see them: `:has(> .icon:only-child)`
+      // counts elements, so it flags <a><span icon/>Five</a> - a link that is
+      // perfectly well named. This reads the content instead.
+      for (const el of hits) {
+        if (!accessibleName(el, document)) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
       }
     } else {
       throw new Error(`unknown rule kind: ${rule.kind}`);

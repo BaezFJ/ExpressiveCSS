@@ -591,8 +591,17 @@ export class Carousel extends Component<CarouselOptions> {
 
   private _syncA11y(index: number) {
     this.images.forEach((el, i) => {
-      if (i === index) el.removeAttribute('aria-hidden');
-      else el.setAttribute('aria-hidden', 'true');
+      if (i === index) {
+        el.removeAttribute('aria-hidden');
+        el.removeAttribute('inert');
+      } else {
+        // `inert` as well as aria-hidden. A slide is an <a>, so hiding it from
+        // assistive technology while leaving it in the tab order put focus on
+        // a link the user had no way to perceive - the worst of both. inert
+        // takes it out of both, and out of hit-testing.
+        el.setAttribute('aria-hidden', 'true');
+        el.setAttribute('inert', '');
+      }
     });
   }
 

@@ -33,14 +33,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Pulse</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -51,20 +51,20 @@
       <ul class="sidenav sidenav-fixed" id="nav-mobile">
           <li class="">
               <a href="/getting-started.html">
-                  <i class="material-symbols">home</i>
+                  <span class="material-symbols" aria-hidden="true">home</span>
                   Getting started
               </a>
           </li>
           <li class="">
               <a href="/auto-init.html">
-                  <i class="material-symbols">bolt</i>
+                  <span class="material-symbols" aria-hidden="true">bolt</span>
                   Auto Init
               </a>
           </li>
           <li>
               <details name="docs-nav" open>
                   <summary>
-                      <i class="material-symbols">palette</i>
+                      <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
                   </summary>
                   <ul>
@@ -110,7 +110,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">view_quilt</i>
+                      <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
                   </summary>
                   <ul>
@@ -153,7 +153,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">widgets</i>
+                      <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
                   </summary>
                   <ul>
@@ -208,7 +208,7 @@
           <li>
               <details name="docs-nav">
                   <summary>
-                      <i class="material-symbols">edit</i>
+                      <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
                   </summary>
                   <ul>
@@ -280,20 +280,20 @@
 
         <div class="row py-5">
           <div class="s4 center-align">
-            <a class="button extra circle small pulse"><i class="material-symbols">menu</i></a>
+            <a class="button extra circle small pulse" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
           </div>
           <div class="s4 center-align">
-            <a class="button extra circle pulse"><i class="material-symbols">cloud</i></a>
+            <a class="button extra circle pulse" aria-label="Cloud"><span class="material-symbols" aria-hidden="true">cloud</span></a>
           </div>
           <div class="s4 center-align">
-            <a class="button extra circle secondary on-secondary-text pulse"><i class="material-symbols">edit</i></a>
+            <a class="button extra circle secondary on-secondary-text pulse" aria-label="Edit"><span class="material-symbols" aria-hidden="true">edit</span></a>
           </div>
         </div>
 
         <h5>Pulse HTML Structure</h5>
-<pre><code>&lt;a class="button extra circle small pulse"&gt;&lt;i class="material-symbols"&gt;menu&lt;/i&gt;&lt;/a&gt;
-&lt;a class="button extra circle pulse"&gt;&lt;i class="material-symbols"&gt;cloud&lt;/i&gt;&lt;/a&gt;
-&lt;a class="button extra circle secondary on-secondary-text pulse"&gt;&lt;i class="material-symbols"&gt;edit&lt;/i&gt;&lt;/a&gt;</code></pre>
+<pre><code>&lt;a class="button extra circle small pulse" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;
+&lt;a class="button extra circle pulse" aria-label="Cloud"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;cloud&lt;/span&gt;&lt;/a&gt;
+&lt;a class="button extra circle secondary on-secondary-text pulse" aria-label="Edit"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;edit&lt;/span&gt;&lt;/a&gt;</code></pre>
   
       </div>
 
@@ -399,26 +399,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

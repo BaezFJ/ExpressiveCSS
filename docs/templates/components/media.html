@@ -21,9 +21,9 @@
           <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
           <code>no-autoinit</code>.
         </p>
-        <img class="lightboxed responsive-img" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
+        <img class="lightboxed responsive-img" tabindex="0" role="button" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
 {% call code() %}
-<img class="lightboxed" width="650" alt="A mountain lake" src="images/sample-1.jpg">
+<img class="lightboxed" tabindex="0" role="button" width="650" alt="A mountain lake" src="images/sample-1.jpg">
 {% endcall %}
 
         <h5 class="light">Initialization</h5>
@@ -125,9 +125,9 @@ instance.destroy();
 
         <h5 class="light">Captions</h5>
         <p>Add a short caption with the <code>data-caption</code> attribute.</p>
-        <img class="lightboxed" data-caption="A path through trees in a park" width="250" alt="A path through trees" src="https://picsum.photos/id/1016/800/400">
+        <img class="lightboxed" tabindex="0" role="button" data-caption="A path through trees in a park" width="250" alt="A path through trees" src="https://picsum.photos/id/1016/800/400">
 {% call code() %}
-<img class="lightboxed"
+<img class="lightboxed" tabindex="0" role="button"
      data-caption="A path through trees in a park"
      width="250"
      alt="A path through trees"

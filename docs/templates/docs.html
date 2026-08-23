@@ -8,14 +8,14 @@
     <header class="fixed">
         <div class="bar">
             <button type="button" class="sidenav-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
-                <i class="material-symbols">menu</i>
+                <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>{% block page_title %}{{ page_name or "ExpressiveCSS" }}{% endblock %}</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
-                <i class="material-symbols">palette</i>
+                <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
             <button type="button" id="theme-toggle" class="menu-trigger no-autoinit" data-target="theme-menu" title="Theme" aria-label="Choose theme" aria-haspopup="menu" aria-controls="theme-menu">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
             </button>
         </div>
     </header>
@@ -44,26 +44,26 @@
     <menu id="theme-menu">
         <li data-theme="light">
             <button type="button">
-                <i class="material-symbols">light_mode</i>
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
         <li data-theme="dark">
             <button type="button">
-                <i class="material-symbols">dark_mode</i>
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
         <li data-theme="auto" class="selected">
             <button type="button">
-                <i class="material-symbols">contrast</i>
+                <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
             </button>
         </li>
     </menu>
 
     <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <i class="material-symbols">palette</i>
+        <span class="material-symbols" aria-hidden="true">palette</span>
         <h2 id="source-color-title">Source color</h2>
         <div>
             <p>

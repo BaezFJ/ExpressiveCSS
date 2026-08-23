@@ -13,7 +13,7 @@
                   {%- for page in group['pages'] %}
           <li class="{% if current == page.endpoint %}active{% endif %}">
               <a href="{{ url_for(page.endpoint) }}">
-                  <i class="material-symbols">{{ page.icon }}</i>
+                  <span class="material-symbols" aria-hidden="true">{{ page.icon }}</span>
                   {{ page.label }}
               </a>
           </li>
@@ -22,7 +22,7 @@
           <li>
               <details name="docs-nav"{% if current in group.endpoints %} open{% endif %}>
                   <summary>
-                      <i class="material-symbols">{{ group.icon }}</i>
+                      <span class="material-symbols" aria-hidden="true">{{ group.icon }}</span>
                       {{ group.label }}
                   </summary>
                   <ul>
