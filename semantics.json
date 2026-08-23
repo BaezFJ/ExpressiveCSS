@@ -235,9 +235,9 @@
         {
           "id": "field-label-for",
           "kind": "require-attr",
-          "selector": ".field > label",
+          "selector": ".field > label:not(:has(input, select, textarea))",
           "attr": "for",
-          "message": "The floating label sits after the control, so it cannot wrap it - association has to be explicit."
+          "message": "A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not."
         },
         {
           "id": "field-control-id",

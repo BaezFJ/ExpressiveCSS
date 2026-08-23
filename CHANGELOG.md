@@ -85,10 +85,24 @@ below is the whole story for that component.
   `:last-of-type`. Those count elements of the same *type*, so they could not
   be widened to spans at all - a field is full of other spans. The documented
   markup names the side instead; the positional `i` rules stay for old markup.
+- **The file input trigger is a `<label>` wrapping its control**, not a label
+  pointing at a sibling. `label.button` joins the button selector list, and the
+  floating-label rule now excludes it — without both, the trigger rendered as
+  invisible, unclickable field furniture. Wrapping also scopes the invisible
+  input to the button, so the picker no longer opens from a click anywhere in
+  the field.
+- **The trailing field icon swallowed clicks.** Excluding the icons from the
+  floating-label rule took `pointer-events: none` with it; `.prefix` restated
+  it, `.suffix` did not.
+- **`aria-selected` no longer doubles as the highlight.** Active and selected
+  are different things: folding the arrow-key highlight into `aria-selected`
+  announced a committed multi-select choice as unselected the moment the user
+  arrowed past it. The highlight is `aria-activedescendant` alone.
 - **`Autocomplete.destroy()` left a timer running.** `open()` defers
   `menu.open()` to `setTimeout(0)`; destroying in the same tick let it fire
   against a menu whose element was gone. It surfaced only as an uncaught
-  error *after* the test had passed.
+  error *after* the test had passed. Calling `open()` twice before the callback
+  fired also orphaned the first timer, which `destroy()` could not then cancel.
 - **A rendered chip was a `<div tabindex="0">` with no role and no accessible
   name** — in the tab order, announcing nothing. The chip is no longer a
   control; its delete button is, and that button carries the name.

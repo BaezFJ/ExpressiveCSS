@@ -191,8 +191,10 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
         </p>
         <form>
           <div class="file-field field">
-            <label class="button" for="demo-file">File</label>
-            <input id="demo-file" type="file">
+            <label class="button">
+              File
+              <input type="file">
+            </label>
             <div class="file-path-wrapper">
               <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
             </div>
@@ -200,8 +202,10 @@ Expressive.Forms.InitTextarea(document.querySelector('#textarea1'));
         </form>
 {% call code() %}
 <div class="file-field field">
-  <label class="button" for="file_upload">File</label>
-  <input id="file_upload" type="file">
+  <label class="button">
+    File
+    <input type="file">
+  </label>
   <div class="file-path-wrapper">
     <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
   </div>

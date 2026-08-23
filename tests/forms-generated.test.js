@@ -143,10 +143,55 @@ describe('Autocomplete generated combobox', () => {
       const active = inst.container.querySelector('li.active');
       assert.ok(active, 'expected an active entry');
       assert.equal(el.getAttribute('aria-activedescendant'), active.id);
-      assert.equal(active.getAttribute('aria-selected'), 'true');
+      // Highlighting is NOT selecting. aria-activedescendant reports the move;
+      // aria-selected stays whatever the entry's real selection state is.
+      assert.equal(active.getAttribute('aria-selected'), 'false');
     } finally {
       inst.destroy();
     }
+  });
+
+  test('a committed multi-select choice reads as selected, highlighted or not', () => {
+    document.body.innerHTML =
+      '<div class="field"><input class="autocomplete" type="text" id="ms"><label for="ms">A</label></div>';
+    const inst = Expressive.Autocomplete.init(document.getElementById('ms'), {
+      isMultiSelect: true,
+      selected: ['a'],
+      data: [
+        { id: 'a', text: 'Apple' },
+        { id: 'b', text: 'Apricot' }
+      ]
+    });
+    try {
+      const el = document.getElementById('ms');
+      type(el, 'ap');
+      const byId = (id) => inst.container.querySelector(`li[data-id="${id}"]`);
+      // 'a' was passed in as already chosen; its checkbox is ticked, so the
+      // option has to say so too. Reporting it false because it is not the
+      // highlighted row is the bug this guards.
+      assert.equal(byId('a').querySelector('input[type="checkbox"]').checked, true);
+      assert.equal(byId('a').getAttribute('aria-selected'), 'true');
+      assert.equal(byId('b').getAttribute('aria-selected'), 'false');
+
+      // Arrowing onto 'b' must not unselect 'a'.
+      key(el, 'ArrowDown');
+      assert.equal(byId('a').getAttribute('aria-selected'), 'true');
+    } finally {
+      inst.destroy();
+    }
+  });
+
+  test('open() twice before the timer fires leaves nothing behind', async () => {
+    const inst = mount();
+    try {
+      inst.open();
+      inst.open();
+    } finally {
+      inst.destroy();
+    }
+    // A second open() used to overwrite the tracked timer, so destroy()
+    // cancelled only the later one and the first fired at a dead menu.
+    await new Promise((r) => setTimeout(r, 10));
   });
 });
 

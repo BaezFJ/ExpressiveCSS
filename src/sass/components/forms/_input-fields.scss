@@ -134,7 +134,9 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
-  > label,
+  // :not(.button) - the file input's trigger is a <label> and is a button, not
+  // this field's floating label.
+  > label:not(.button),
   > span:not(#{$_not-label}) {
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
@@ -204,6 +206,10 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   > i:last-child:not(:first-child):not(.prefix),
   > .suffix {
     right: 12px;
+    // Both icons inherited this from the floating-label rule until they were
+    // excluded from it. .prefix restates it below; .suffix has to as well, or
+    // the trailing icon swallows the click that should focus the input.
+    pointer-events: none;
   }
 
   &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) {

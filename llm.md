@@ -5196,12 +5196,14 @@ Setting `.value` in script does not resize the field. Call `textareaAutoResize` 
 
 A `.file-field.field` pairs a button with a path field. `Forms.Init()` copies the chosen file name into `input.file-path`.
 
-The button is a `<label>` pointing at the file input, not a `<button>` wrapping it — a control inside a control is invalid HTML and gives two overlapping hit targets. The path field is `readonly`: it only ever shows what the file input holds, so offering an edit that is thrown away is a lie. It takes an `aria-label` because it has no visible label of its own.
+The trigger is a `<label>` **wrapping** the file input, not a `<button>` wrapping it. The distinction is not pedantry: `<button>` forbids interactive content, so a control inside it is invalid and yields two overlapping hit targets, whereas a `<label>` containing its own control is the pattern the spec is written around. Wrapping also means the label is what the invisible input is sized against, so the picker opens from the button and nowhere else. The path field is `readonly` — it only ever shows what the file input holds, so offering an edit that is thrown away is a lie — and takes an `aria-label` because it has no visible label of its own.
 
 ```html
 <div class="file-field field">
-  <label class="button" for="file_upload">File</label>
-  <input id="file_upload" type="file">
+  <label class="button">
+    File
+    <input type="file">
+  </label>
   <div class="file-path-wrapper">
     <input class="file-path" type="text" placeholder=" " readonly aria-label="Selected file">
   </div>

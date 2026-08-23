@@ -114,16 +114,18 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   /**
    * The active entry, for both the eye and the screen reader. The class alone
    * was invisible to assistive technology; aria-activedescendant on the input
-   * is what actually reports the move, and aria-selected is the state
-   * role=option requires.
+   * is what reports the move.
+   *
+   * Deliberately does not touch aria-selected. Active and selected are two
+   * different things - in a multi-select the checkboxes track real choices,
+   * and folding the highlight into aria-selected would announce a committed
+   * choice as unselected the moment the user arrowed past it.
    */
   private _setActive(item: HTMLElement | null) {
     this.$active?.classList.remove('active');
-    this.$active?.setAttribute('aria-selected', 'false');
     this.$active = item;
     if (item) {
       item.classList.add('active');
-      item.setAttribute('aria-selected', 'true');
       this.el.setAttribute('aria-activedescendant', item.id);
     } else {
       this.el.removeAttribute('aria-activedescendant');
@@ -444,8 +446,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     item.id = `autocomplete-option-${Utils.guid()}`;
     item.setAttribute('role', 'option');
     // role=option promises a selection state on every entry, not just the
-    // chosen one.
-    item.setAttribute('aria-selected', 'false');
+    // chosen one - and it has to be the *real* one. A multi-select entry that
+    // is already committed is selected whether or not it is the highlighted
+    // row.
+    const isSelected = this.selectedValues.some((sel) => sel.id === entry.id);
+    item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     item.setAttribute('data-id', <string>entry.id);
     item.setAttribute(
       'style',
@@ -459,7 +464,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       selection.style.textAlign = 'center';
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.checked = this.selectedValues.some((sel) => sel.id === entry.id);
+      checkbox.checked = isSelected;
       const spacer = document.createElement('span');
       spacer.style.paddingLeft = '21px';
       selection.append(checkbox, spacer);
@@ -574,6 +579,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     // Open menu
     if (!this.menu.isOpen) {
+      // Cancel first: two open() calls before the callback fires would leave
+      // the earlier timer untracked, and destroy() can only cancel the one it
+      // knows about.
+      if (this._openTimer !== undefined) clearTimeout(this._openTimer);
       this._openTimer = setTimeout(() => {
         this._openTimer = undefined;
         this.menu.open();

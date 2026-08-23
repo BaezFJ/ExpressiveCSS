@@ -115,7 +115,7 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 | `field-icon-not-i` | forbid | `.field i` | must not match |
 | `field-icon-hidden` | require-attr | `.field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp, .field .material-icons` | must have `aria-hidden` = `true` |
 | `field-icon-side` | forbid | `.field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons):not(.prefix):not(.suffix)` | must not match |
-| `field-label-for` | require-attr | `.field > label` | must have `for` |
+| `field-label-for` | require-attr | `.field > label:not(:has(input, select, textarea))` | must have `for` |
 | `field-control-id` | require-attr | `.field > :is(input, textarea, select)` | must have `id` |
 | `field-supporting-text-id` | require-attr | `.field > small` | must have `id` |
 | `field-supporting-text-linked` | forbid | `.field:has(> small) > :is(input, textarea, select):not([aria-describedby])` | must not match |
@@ -124,7 +124,7 @@ Swept 0.8.0. .field is the container; icons name their side and are hidden; supp
 - **field-icon-not-i** - <i> means idiomatic text, not icon. Use <span class="material-symbols">.
 - **field-icon-hidden** - The ligature is read aloud. A field icon is decoration; the label names the control.
 - **field-icon-side** - A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
-- **field-label-for** - The floating label sits after the control, so it cannot wrap it - association has to be explicit.
+- **field-label-for** - A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
 - **field-control-id** - Without an id the label has nothing to point at.
 - **field-supporting-text-id** - Supporting and error text has to be referenceable to be announced with the control.
 - **field-supporting-text-linked** - A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
