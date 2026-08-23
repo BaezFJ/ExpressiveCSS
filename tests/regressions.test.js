@@ -601,3 +601,28 @@ describe('Tabs', () => {
     }
   });
 });
+
+describe('Footer', () => {
+  test('the legal bar is found through a .container wrapper', () => {
+    // `.container` is a supported columns wrapper for the footer - the column
+    // rules already reach through it - but the copyright-bar selector only
+    // matched a direct `footer > small`, so a footer written the documented
+    // way got an unstyled legal row. The docs' own chrome had it for months.
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const bar = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].find(
+      (m) => /min-height:\s*var\(--md-comp-footer-legal-height\)/.test(m[2])
+    );
+    assert.ok(bar, 'no rule sets the footer legal-bar height');
+    // Split on the selector list: `[^,]*` happily spans "> .container >", so a
+    // looser pattern passes with the direct-child form deleted.
+    const parts = bar[1].split(',').map((x) => x.trim());
+    assert.ok(
+      parts.some((p) => p.endsWith('> small:last-child') && !p.includes('.container')),
+      `no direct-child form in: ${parts.join(' | ')}`
+    );
+    assert.ok(
+      parts.some((p) => p.endsWith('.container > small:last-child')),
+      `no .container form in: ${parts.join(' | ')}`
+    );
+  });
+});

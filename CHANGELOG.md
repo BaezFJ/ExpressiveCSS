@@ -153,6 +153,11 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **The footer's legal bar was unstyled whenever the footer used `.container`.**
+  `.container` is a supported columns wrapper — the column rules already reach
+  through it — but the copyright-bar selector only matched a direct
+  `footer > small`, so the documented grid layout produced a bare copyright
+  row. The docs' own chrome had it on every page.
 - **The docs taught four classes that do not exist.** `.page-footer` and
   `.footer-copyright` were described as aliases that "stay" — nothing in the
   sheet matches either; `carousel-slider` was said to still enable flat mode,

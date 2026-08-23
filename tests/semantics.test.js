@@ -304,6 +304,12 @@ describe('composed pages', () => {
   // no fragment it could be written against.
   //
   // 57 pages, well under a second.
+  //
+  // These read the *committed* website/, which is only as current as the last
+  // freeze - a template-only change would leave this passing against a
+  // snapshot of the previous state. CI closes that: it re-runs freeze.py and
+  // fails if the diff is non-empty, which is the check CLAUDE.md already
+  // prescribed for template changes and nothing had automated.
   const pages = readdirSync(new URL('website/', root))
     .filter((f) => f.endsWith('.html'))
     .map((f) => ({ file: `website/${f}`, html: read(`website/${f}`) }));
