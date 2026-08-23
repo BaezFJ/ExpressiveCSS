@@ -294,6 +294,56 @@ describe('semantics.json', () => {
   });
 });
 
+describe('composed pages', () => {
+  // website/ was excluded as a *surface* because it is generated from the
+  // templates - checking its fragments would check them twice. A whole page is
+  // a different question. Rules like main-not-nested and dialog-is-named are
+  // document-level, chrome and content only meet here, and a landmark name is
+  // only ambiguous relative to the other landmarks on the same page. The
+  // duplicate-name check below has no rule behind it for that reason: there is
+  // no fragment it could be written against.
+  //
+  // 57 pages, well under a second.
+  const pages = readdirSync(new URL('website/', root))
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => ({ file: `website/${f}`, html: read(`website/${f}`) }));
+
+  test('the frozen site exists to check', () => {
+    assert.ok(pages.length > 20, `only ${pages.length} frozen pages - run freeze.py`);
+  });
+
+  test('every page satisfies every enforced rule', () => {
+    const failures = [];
+    for (const { file, html } of pages) {
+      for (const v of violations(html, enforcedRules)) {
+        failures.push(`${file}\n    [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
+      }
+    }
+    assert.deepEqual(failures, [], `\n${failures.slice(0, 12).join('\n\n')}\n`);
+  });
+
+  test('no two landmarks on a page share a name', () => {
+    // Two <nav>s both called "Main" is a landmark menu with two identical rows,
+    // which is the problem labelling them was meant to solve. Shipped once.
+    const failures = [];
+    for (const { file, html } of pages) {
+      const { document } = new JSDOM(html).window;
+      const names = [...document.querySelectorAll('nav')].map((n) => {
+        const l = n.getAttribute('aria-label');
+        if (l) return l.trim();
+        const ref = n.getAttribute('aria-labelledby');
+        return ref ? (document.getElementById(ref)?.textContent ?? '').trim() : '';
+      });
+      const seen = new Set();
+      for (const n of names) {
+        if (n && seen.has(n)) failures.push(`${file}: two landmarks named "${n}"`);
+        seen.add(n);
+      }
+    }
+    assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);
+  });
+});
+
 describe('template extractor', () => {
   const wrap = (args, body) =>
     `{% block page %}\n{% call code(${args}) %}\n${body}\n{% endcall %}\n{% endblock %}`;

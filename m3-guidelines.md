@@ -553,7 +553,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | Outlined | `outlined` | transparent + `outline` | Secondary, low fill |
 | Text | `text` | no container | Dialogs, cards, snackbars, inline |
 
-**Anatomy.** Label (required) + container + optional icon. Put the icon in `<i>` and wrap the label in `<span>` — there is no `icon-left` class. `disabled` on the element.
+**Anatomy.** Label (required) + container + optional icon. Put the icon in `<span class="material-symbols" aria-hidden="true">` and wrap the label in its own `<span>` — there is no `icon-left` class; the order of the two spans is the placement. `disabled` on the element.
 
 **Placement.** In the action region of the parent (dialog end-aligned row, card `<nav>`, form end). Don't scatter filled buttons down a scrolling page.
 
@@ -633,7 +633,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | Floating (default) | Hugs content, 64 dp, stadium, elevation 2 | Contextual to the body |
 | Docked | Full width, square, no elevation, bottom only | Global actions that stay the same across pages — and only if there is no navigation bar |
 
-**Anatomy.** Container + action children (`button` / `a`). Icon in `<i>`, label in `<span>`. `.active` selected. `.filled` emphasized. Optional vibrant color style.
+**Anatomy.** Container (`div.toolbar`, not `<nav>`) + action children (`button` / `a`). Icon in `<span class="material-symbols" aria-hidden="true">`, label in its own `<span>`; an icon-only action needs an `aria-label`. `.active` selected. `.filled` emphasized. Optional vibrant color style.
 
 **Placement.** Floating: over the content, often bottom-center or next to a FAB. Docked: bottom of the window only. 16 dp horizontal padding minimum; 48 dp targets; don't pack too many controls.
 

@@ -15,13 +15,17 @@
           icons, text, and actions in the same place on every row.
         </p>
         <p>
-          The leading visual is the first <code>&lt;i&gt;</code>,
+          The leading visual is the first icon,
           <code>&lt;img&gt;</code>, or <code>&lt;input&gt;</code>. The
-          trailing action is the last <code>&lt;i&gt;</code>,
+          trailing action is the last icon,
           <code>&lt;kbd&gt;</code>, <code>&lt;button&gt;</code>,
           <code>&lt;time&gt;</code>, or <code>.meta</code>. A following
           <code>&lt;p&gt;</code> is supporting text. Mark the current row
-          with <code>aria-selected="true"</code> (or <code>active</code>).
+          with <code>active</code> or <code>selected</code> — <strong>not</strong>
+          <code>aria-selected</code>, which is not valid on a plain
+          <code>listitem</code>. It needs a role (<code>option</code>,
+          <code>tab</code>, <code>row</code>, <code>treeitem</code>), and each of
+          those brings a keyboard contract with it.
         </p>
         <p>
           Two variants: <strong>standard</strong> (the default) and

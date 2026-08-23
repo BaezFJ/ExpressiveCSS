@@ -153,6 +153,23 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **The docs taught four classes that do not exist.** `.page-footer` and
+  `.footer-copyright` were described as aliases that "stay" — nothing in the
+  sheet matches either; `carousel-slider` was said to still enable flat mode,
+  but only `.flat` and `fullWidth` are read; and `btn-large`, removed three
+  releases ago, was still used in a waves example. `.prev` / `.next` are
+  accepted but inert, and the responsive-pagination prose still described the
+  10%/80% split they used to drive, which `.nowrap` scrolling replaced.
+- **Prose lagged the sweeps.** The code blocks were rewritten mechanically and
+  the sentences around them were not: a dozen places still called the icon an
+  `<i>`, cards still described a `<nav>` action row, lists and menus still
+  taught `aria-selected` on a plain `<li>`, and the pickers told you to wrap an
+  input in `.input-field` — four sections after `llm.md` says that class is not
+  the container and never was.
+- **A docs page could carry 31 landmarks called "Main."** Every app bar demo on
+  a page is a specimen, and they all had the canonical label. The live demos
+  are named by their section now; the samples a reader copies keep the plain
+  name.
 - **Off-screen carousel slides were hidden but still focusable.** A slide is an
   `<a>`, and `aria-hidden` alone left the tab stop in place — focus landed on a
   link the user had no way to perceive. They are `inert` now, which removes

@@ -63,7 +63,10 @@
 {% endcall %}
         <p>
           The grid still works if you prefer columns. <code>.page-footer</code> and
-          <code>.footer-copyright</code> stay as aliases.
+          <code>.footer-copyright</code> are <strong>not</strong> aliases — no rule in
+          the sheet matches either, and a bare <code>&lt;footer&gt;</code> with
+          <code>&lt;nav&gt;</code> columns and a trailing <code>&lt;small&gt;</code>
+          is the component.
         </p>
 {% call code() %}
 <footer>
@@ -80,22 +83,22 @@
         </ul>
       </div>
     </div>
-    <div class="footer-copyright">
+    <small>
       <span>&copy; 2026 Copyright Text</span>
-    </div>
+    </small>
   </div>
 </footer>
 {% endcall %}
         <p>
-          <code>footer-copyright</code> is a wrapping flex row with space-between.
-          Put the notice and the trailing link as two children. A <code>right</code>
-          float is not required.
+          The trailing <code>&lt;small&gt;</code> is the copyright bar: a wrapping
+          flex row with space-between. Put the notice and the trailing link as two
+          children. A <code>right</code> float is not required.
         </p>
   {% endcall %}
 
   {% call section("sticky-footer", "Sticky Footer") %}
         <p>
-          When <code>footer.page-footer</code> is a direct child of <code>body</code>,
+          When the <code>&lt;footer&gt;</code> is a direct child of <code>body</code>,
           the page is at least the viewport tall and <code>main</code> grows so the
           footer sits at the bottom on a short page. That is not a fixed footer,
           and it is not a navigation bar.

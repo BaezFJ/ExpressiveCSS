@@ -173,6 +173,18 @@ Notes that matter when working on it:
   them. `:has(> .icon:only-child)` counts elements, so it flags
   `<a><span icon/>Five</a>`. Reach for it only when that is genuinely the
   problem.
+- **`website/` is checked as whole pages, not as a fourth surface.** Its
+  fragments come from the templates and checking those twice would be
+  pointless, but a composed page answers questions a fragment cannot: `<main>`
+  nesting, whether a dialog is named, and whether two landmarks on the same
+  page share a name — that last has no rule behind it, because there is no
+  fragment to write one against. It found 31 landmarks called "Main" on the
+  navbar page. 57 pages, under a second.
+- **Docs pages are demos, and a demo is a specimen.** A page stacking ten app
+  bar examples needs ten distinguishable names, so the live demos are labelled
+  by their section (`Main — Center-aligned`) while the `code()` samples keep the
+  plain canonical name a reader should copy. The chrome owns the unqualified
+  one.
 - **`m3-guidelines.md` is a fourth surface, checked differently.** It states
   markup as inline code spans in prose, not as fenced examples, so only rules
   marked `fragmentSafe` run against it — the ones that fire on a *wrong thing
@@ -275,6 +287,15 @@ These were all learned from bugs in the vendored source:
 - Scroll and touch handlers that never call `preventDefault()` are registered `{ passive: true }`, and anything running per pointer-move or per scroll reads layout before it writes style.
 
 ## docs/
+
+**Every class the docs teach must exist in the sheet**, or be a deliberate hook
+(a JS selector like `.tooltipped`, or a documented style-free one like
+`chips-initial`). Three ways this rots, all of which have happened: a class is
+removed from the Sass and the prose keeps teaching it; the prose asserts an
+alias "still works" when nothing matches it (`.page-footer`, `.footer-copyright`,
+`carousel-slider`, `.prev` / `.next` were all claimed and all inert); or a code
+block is swept and the sentence around it is not. Grep the compiled
+`dist/css/expressive.css` for a class before documenting it.
 
 The Flask app serves the npm build **directly out of `dist/`** via the `dist_file` route (`/dist/<path:filename>`) — there is no copy step, so `npm run watch` + browser reload is the dev loop. `docs/static/` holds only docs-site chrome (`docs.css`, `docs.js`), never framework styles.
 

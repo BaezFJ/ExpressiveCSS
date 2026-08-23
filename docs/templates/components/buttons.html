@@ -10,9 +10,11 @@
         <p class="flow-text">
           A <code>&lt;button&gt;</code> is a filled common button. An
           <code>&lt;a class="button"&gt;</code> is the same thing for a link. Put an
-          <code>&lt;i&gt;</code> and wrap the label in a
+          <code>&lt;span class="material-symbols"&gt;</code> icon before or after the label and wrap the label in its own
           <code>&lt;span&gt;</code> — there is no <code>icon-left</code> /
-          <code>icon-right</code> class. Add <code>circle</code> for a 40dp
+          <code>icon-right</code> class; the order of the two spans is the
+          placement. An icon-only button needs an <code>aria-label</code>,
+          because the icon is hidden from assistive technology. Add <code>circle</code> for a 40dp
           icon button.
         </p>
         <p>

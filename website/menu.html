@@ -275,9 +275,12 @@
 
         <p class="flow-text">
           A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
-          is an item. A leading <code>&lt;i&gt;</code> is the leading icon;
-          a trailing <code>&lt;i&gt;</code> or <code>&lt;kbd&gt;</code> is
-          trailing content. An <code>&lt;hr&gt;</code> is a divider;
+          is an item. A leading icon is the leading icon;
+          a trailing icon or <code>&lt;kbd&gt;</code> is
+          trailing content. An
+          <code>&lt;li class="divider" role="separator"&gt;</code> is a divider —
+          <code>&lt;menu&gt;</code> is a list and permits only <code>&lt;li&gt;</code>,
+          so a bare <code>&lt;hr&gt;</code> there is invalid (it still renders);
           a <code>.gap</code> splits groups; a <code>.label</code> is a
           heading. A nested <code>&lt;menu&gt;</code> is a flyout. The
           trigger’s <code>data-target</code> must match the menu’s
@@ -524,8 +527,9 @@
         <h3>Selection, shortcuts, and groups</h3>
 
         <p>
-          Mark the current item with <code>.selected</code> or
-          <code>aria-selected="true"</code>. Trailing
+          Mark the current item with <code>.selected</code>. Not
+          <code>aria-selected</code>: a <code>&lt;menu&gt;</code> is a list, and the
+          attribute is not valid on a plain <code>listitem</code>. Trailing
           <code>&lt;kbd&gt;</code> is a keyboard shortcut. A
           <code>.gap</code> item splits groups — more expressive than a
           divider, and limited to one or two per menu. A

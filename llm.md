@@ -1707,7 +1707,7 @@ Breadcrumbs are a good way to display your current location. This is usually use
 
 Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
 
-A `<button>` is a filled common button. An `<a class="button">` (or the older `.btn`) is the same thing for a link. Put an `<i>` and wrap the label in a `<span>` — there is no `icon-left` / `icon-right` class. Add `circle` for a 40dp icon button.
+A `<button>` is a filled common button. An `<a class="button">` (or the older `.btn`) is the same thing for a link. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a 40dp icon button, and give it an `aria-label`: the icon is hidden, so it is the only name the button would have.
 
 Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/specs). Default height is 40dp, label is `label-large`, corners are 20dp (a stadium), icons are 18dp with an 8dp gap, and the horizontal inset is 24dp (16dp next to an icon). State layers are 8% hover and 10% focus or press. Disabled is `on-surface` at 38% on a 12% container.
 
@@ -1856,7 +1856,7 @@ Filled Tonal Outlined Text
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. A heading is the headline, a `<p>` is supporting text, a direct `<nav>` is the action row, and `<img>` or `<figure>` is media. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component.
+An `<article>` is an elevated card. A heading is the headline, a `<p>` is supporting text, a direct `<div class="actions">` is the action row, and `<img>` or `<figure>` is media. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component. The action row is not a `<nav>`: a row of buttons is not a set of destinations, and one landmark per card floods the landmark list.
 
 Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The container is `surface` with 12dp corners. Elevated (the default) sits at elevation 1 and rises to 2 on hover. The headline is `title-medium` / `on-surface`; supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
 
@@ -2223,7 +2223,7 @@ Swipeable tabs wrap their panels in a carousel. That is the Tabs plugin, not a c
 
 Continuous, vertical indexes of text and images. Use a list so people can find an item and act on it. There is no JavaScript — the HTML is the component.
 
-The leading visual is the first `<i>`, `<img>`, or `<input>`. The trailing action is the last `<i>`, `<kbd>`, `<button>`, `<time>`, or `.meta`. A following `<p>` is supporting text. Mark the current row with `aria-selected="true"` (or `active`).
+The leading visual is the first icon, `<img>`, or `<input>`. The trailing action is the last icon, `<kbd>`, `<button>`, `<time>`, or `.meta`. A following `<p>` is supporting text. Mark the current row with `active` or `selected` — **not** `aria-selected`, which is not valid on a plain `listitem` and needs a role (`option`, `tab`, `row`, `treeitem`) that brings a keyboard contract with it.
 
 Two variants: standard (the default) and `segmented`.
 
@@ -2557,7 +2557,7 @@ Icons inherit the current text color, so token utilities such as `primary-text` 
 
 ### Icon Sizes
 
-Size an icon with `font-size`, or use the preset classes on the `<i>`: `tiny` (1rem), `small` (2rem), `medium` (4rem), and `large` (6rem).
+Size an icon with `font-size`, or use the preset classes on the icon: `tiny` (1rem), `small` (2rem), `medium` (4rem), and `large` (6rem). They hang off the icon class, so they work on a `<span>` or a legacy `<i>` alike.
 
 ### Symbol Sizes
 
@@ -2911,7 +2911,9 @@ Mark the current page with `active` on the `li` **and `aria-current="page"` on i
 
 ### Responsive
 
-On medium and down, wrap the page numbers in `li.pages` and mark the ends `prev` and `next`. The ends take 10% each; the pages take the remaining 80% and clip overflow so a long run of numbers does not wrap. On large screens the basic flat list is enough — the nested `pages` list is a block, so `next` would drop to the next line.
+Add `nowrap` to keep a long run on one row and scroll it sideways instead of wrapping. The older `li.pages` nest does the same thing and is still styled.
+
+`prev` and `next` are accepted and inert: they have no rules in the sheet. The 10%/80% split they used to drive is gone — a long run scrolls now rather than being clipped.
 
 ```html
 <nav class="pagination" aria-label="Pagination">
@@ -3308,7 +3310,7 @@ Expressive.Tooltip.init(
 
 Material Design 3 menus, from the HTML.
 
-A `<menu>` is the surface. Each `<li>` is an item. A leading `<i>` is the leading icon; a trailing `<i>` or `<kbd>` is trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
+A `<menu>` is the surface. Each `<li>` is an item. A leading icon is the leading icon; a trailing icon or `<kbd>` is trailing content. An `<li class="divider" role="separator">` is a divider — `<menu>` is a list and its content model permits only `<li>`, so a bare `<hr>` between entries is invalid (it still renders); a `.gap` splits groups; a `.label` is a heading. A nested `<menu>` is a flyout. The trigger’s `data-target` must match the menu’s `id`. `.menu-trigger` is the JavaScript contract.
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container`, 16dp corners, elevation 2, 4dp padding, 112–280dp wide. Items are 48dp with extra-small (4dp) corners, `label-large` / `on-surface`. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer that does not span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
@@ -3729,7 +3731,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 </dialog>
 ```
 
-A `<form method="dialog">` closes the dialog when a submit button is pressed and sets `dialog.returnValue` from the button’s `value`. An optional leading `<i>` is the M3 dialog icon.
+A `<form method="dialog">` closes the dialog when a submit button is pressed and sets `dialog.returnValue` from the button’s `value`. An optional leading icon is the M3 dialog icon.
 
 ### Methods
 
@@ -4121,7 +4123,7 @@ header, main, footer {
 
 Material Design 3 tabs, from the HTML.
 
-A `<nav class="tabs" aria-label="Sections">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<i>` is the icon. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
+A `<nav class="tabs" aria-label="Sections">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<span class="material-symbols">` is the icon. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
 
 Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). Primary tabs sit on `surface`, 48dp (64dp with a stacked icon). The label is `title-small` / `on-surface-variant`; selected is `primary`. The indicator is 3dp `primary` with 3dp top corners. The icon is 24dp. A 1dp `outline-variant` divider runs under the bar. Hover is 8%; focus is 10%. Disabled is 38%.
 
@@ -4676,7 +4678,7 @@ instance.destroy();
 
 Material Design 3 toolbars, from the HTML.
 
-A `<div class="toolbar">` is the bar. Direct `<button>` or `<a>` children are the actions. An `<i>` is the icon; wrap a label in `<span>`. `.active` marks the selected action. They are CSS only. There is no JavaScript component and nothing to AutoInit.
+A `<div class="toolbar">` is the bar — not a `<nav>`, because a toolbar holds commands rather than destinations. Direct `<button>` or `<a>` children are the actions. A `<span class="material-symbols">` is the icon; wrap a label in its own `<span>`. An action with an icon and no label needs an `aria-label`. `.active` marks the selected action. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
 Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/specs). The default is the floating bar: it hugs its actions, 64dp tall, 32dp stadium corners, `surface-variant`, elevation 2. Actions are 48dp targets with a 24dp icon, transparent at rest. Selected is `secondary-container` / `on-secondary-container`.
 
@@ -4773,7 +4775,7 @@ Expressive.Datepicker.init(document.querySelectorAll('.datepicker'), {
 });
 ```
 
-Wrap the input in its own `.input-field` (or another small parent). The calendar is inserted after that parent, not after the input itself.
+Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The calendar is inserted after that parent, not after the input itself.
 
 ### Initialization
 
@@ -4815,7 +4817,7 @@ Expressive.Datepicker.init(elem, {
 });
 ```
 
-The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — including `.input-field` — shifts that position, so the calendar will not sit next to the field. Prefer a static wrapper if you use docked, or keep the calendar inline with `openByDefault`.
+The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — `.field` among them — shifts that position, so the calendar will not sit next to the field. Prefer a static wrapper if you use docked, or keep the calendar inline with `openByDefault`.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
 
@@ -4991,7 +4993,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 </div>
 ```
 
-Wrap the input in its own `.input-field` (or another small parent). The clock is appended inside that parent.
+Wrap the input in its own small parent — a `.field`, or a bare `<div>`. The clock is appended inside that parent.
 
 Click a hour on the dial, then a minute. With the default `autoSubmit: true`, finishing the minute writes the input (`HH:MM AM` or `HH:MM PM`). You can also type in the digital hour and minute fields.
 
@@ -5032,7 +5034,7 @@ Expressive.Timepicker.init(elem, {
 });
 ```
 
-The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — including `.input-field` — shifts that position, so the clock will not sit next to the field. Prefer a static wrapper if you use docked, or keep the clock inline.
+The popover is positioned in document coordinates and then appended to the input’s parent. A `position: relative` parent — `.field` among them — shifts that position, so the clock will not sit next to the field. Prefer a static wrapper if you use docked, or keep the clock inline.
 
 Optional `displayPluginOptions`: `margin` (default `5`), `transition` (`10`), `duration` (`250`), and `align` (`'left'`).
 
@@ -5391,7 +5393,7 @@ The on/off captions are decoration. Left as bare text they are folded into the l
 
 Choose one option, or several, from a styled menu.
 
-Select turns a native `<select>` into a menu. Wrap it in `.input-field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
+Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 
 Add `multiple` to select several options. Chosen values appear as a comma-separated list.
 
@@ -5594,7 +5596,7 @@ XS is the default: a 16dp track and a 44dp handle. `s` / `small` is S, `m` / `me
 
 ### Inset icon, stops, value
 
-A leading `<i>` sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a `step` paints ticks along the track.
+A leading icon sits inside the active track; M, L, and XL are tall enough for it. `stops` plus a `step` paints ticks along the track.
 
 ```html
 <div class="range m">
@@ -6016,7 +6018,7 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 
 Suggest values under a text field as the user types.
 
-Add `autocomplete` to a text input inside `.input-field`. `AutoInit()` starts every `.autocomplete` except `no-autoinit`, but the default `data` list is empty — pass options (or call `init`) to give it something to suggest.
+Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every `.autocomplete` except `no-autoinit`, but the default `data` list is empty — pass options (or call `init`) to give it something to suggest.
 
 Set `isMultiSelect: true` to pick several values. A count appears on the field.
 
