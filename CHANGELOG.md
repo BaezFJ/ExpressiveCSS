@@ -107,6 +107,24 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **The drawer wrapper became a second app bar.** Wrapping the sidenav in a
+  `<nav>` while it still lived inside `<header>` made it a direct child of an
+  app bar host, so the navbar rules gave it `display: flex`, full width and a
+  64dp minimum — an empty bar-sized band under the real one, on every docs
+  page. The drawer is a sibling of the bar now, which is what
+  `m3-guidelines.md` said all along: the trigger may live in the bar, the
+  drawer must not.
+- **A `header.fixed` whose bar is a `.bar` kept its looks but lost its
+  behaviour.** The fixed selector still required a `nav` child, so such a
+  header got the app bar's appearance without `position: sticky`, its z-index
+  or the scroll-fill.
+- **A row of checkboxes stacked vertically.** `_radio-buttons.scss` learned
+  `.inline`; `_checkboxes.scss` did not, and each label is `display: flex`.
+- **Tabs announced the wrong tab as current.** `aria-current` was written into
+  the markup and then never moved: the class changed on click, the attribute
+  did not. Its value changes with interaction, so maintaining it is the
+  component's job — `Tabs` now moves the class and the attribute together, on
+  click and on a hash-selected init.
 - **`.bar` escaped its selector and styled every element that used it.** The
   new app bar host was interpolated as a bare comma-separated list, so
   `header.medium > #{$_bar}` expanded to `header.medium > nav:not(…), .bar` —

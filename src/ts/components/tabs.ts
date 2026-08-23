@@ -157,16 +157,13 @@ export class Tabs extends Component<TabsOptions> {
     }
     // Act as regular link if target attribute is specified.
     if (tabLink.hasAttribute('target')) return;
-    // Make the old tab inactive.
-    this._activeTabLink.classList.remove('active');
     const _oldContent = this._content;
     // Update the variables with the new link and content
-
-    this._activeTabLink = tabLink;
     if (tabLink.hash) this._content = document.querySelector(tabLink.hash);
     this._tabLinks = this._queryTabLinks();
-    // Make the tab active
-    this._activeTabLink.classList.add('active');
+    // Moves the class and aria-current together, off the old tab and onto this
+    // one - they used to be able to disagree.
+    this._setActiveTabLink(tabLink);
     const prevIndex = this._index;
     this._index = Math.max(Array.from(this._tabLinks).indexOf(tabLink), 0);
 
@@ -206,6 +203,27 @@ export class Tabs extends Component<TabsOptions> {
     this._indicator.style.right = this._calcRightPos(this._activeTabLink) + 'px';
   }
 
+  /**
+   * Which tab is current, for the eye and for assistive technology.
+   *
+   * The class alone is a colour. `aria-current` is the part a screen reader
+   * reads, and because tabs are navigation rather than a tablist (rule 2 -
+   * there is no keyboard model here to back a tablist), "current" is exactly
+   * the right word for it. Its *value* changes as the user clicks, which makes
+   * maintaining it the component's job, not the author's - see CONTEXT.md on
+   * static semantics versus dynamic state. Writing it once in the markup and
+   * never moving it left the old tab announcing itself as current.
+   */
+  private _setActiveTabLink(tabLink: HTMLAnchorElement) {
+    Array.from(this._tabLinks).forEach((a: HTMLAnchorElement) => {
+      a.classList.remove('active');
+      a.removeAttribute('aria-current');
+    });
+    this._activeTabLink = tabLink;
+    tabLink.classList.add('active');
+    tabLink.setAttribute('aria-current', 'page');
+  }
+
   _setupActiveTabLink() {
     // If the location.hash matches one of the links, use that as the active tab.
     this._activeTabLink = Array.from(this._tabLinks).find(
@@ -219,8 +237,7 @@ export class Tabs extends Component<TabsOptions> {
       }
       this._activeTabLink = activeTabLink as HTMLAnchorElement;
     }
-    Array.from(this._tabLinks).forEach((a: HTMLAnchorElement) => a.classList.remove('active'));
-    this._activeTabLink.classList.add('active');
+    this._setActiveTabLink(this._activeTabLink);
 
     this._index = Math.max(Array.from(this._tabLinks).indexOf(this._activeTabLink), 0);
     if (this._activeTabLink && this._activeTabLink.hash) {

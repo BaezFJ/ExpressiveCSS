@@ -548,3 +548,56 @@ describe('Autocomplete', () => {
     assert.equal(Expressive.Autocomplete.getInstance(el), undefined);
   });
 });
+
+describe('Tabs', () => {
+  beforeEach(resetBody);
+
+  test('aria-current follows the active tab instead of staying where it was written', () => {
+    // The markup names the initially current tab. Its *value* then changes as
+    // the user clicks, which makes it the component's to maintain - the class
+    // used to move on its own and leave aria-current behind, so a screen
+    // reader kept announcing the first tab as current after switching.
+    document.body.innerHTML = `
+      <nav class="tabs" aria-label="Demo">
+        <a class="active" aria-current="page" href="#t1">One</a>
+        <a href="#t2">Two</a>
+      </nav>
+      <div id="t1">one</div><div id="t2">two</div>`;
+    const el = document.querySelector('.tabs');
+    const instance = Expressive.Tabs.init(el);
+    try {
+      const [first, second] = el.querySelectorAll('a');
+      assert.equal(first.getAttribute('aria-current'), 'page');
+
+      instance.select('t2');
+      assert.equal(second.classList.contains('active'), true);
+      assert.equal(second.getAttribute('aria-current'), 'page', 'the new tab must be current');
+      assert.equal(first.getAttribute('aria-current'), null, 'the old tab must not still be current');
+
+      // Exactly one, always.
+      assert.equal(el.querySelectorAll('[aria-current]').length, 1);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a hash-selected tab is marked current on init', () => {
+    document.body.innerHTML = `
+      <nav class="tabs" aria-label="Demo">
+        <a class="active" aria-current="page" href="#t1">One</a>
+        <a href="#t2">Two</a>
+      </nav>
+      <div id="t1">one</div><div id="t2">two</div>`;
+    const el = document.querySelector('.tabs');
+    window.location.hash = '#t2';
+    const instance = Expressive.Tabs.init(el);
+    try {
+      const [first, second] = el.querySelectorAll('a');
+      assert.equal(second.getAttribute('aria-current'), 'page');
+      assert.equal(first.getAttribute('aria-current'), null);
+    } finally {
+      instance.destroy();
+      window.location.hash = '';
+    }
+  });
+});

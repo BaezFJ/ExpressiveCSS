@@ -306,7 +306,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 // progress; a utility class on the header sets background-color itself
 // and is not overwritten. Without animation-timeline the bar stays at
 // rest (surface), the spec default.
-header.fixed:has(> nav:not(.navigation-bar, .navigation-rail)) {
+header.fixed:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   position: sticky;
   top: 0;
   z-index: 997;

@@ -18,9 +18,13 @@
                 <i class="material-symbols">contrast</i>
             </button>
         </div>
-
-{{ sidenav(nav, request.endpoint) }}
     </header>
+
+{# The drawer is a sibling of the bar, not a child of it. m3-guidelines.md:32:
+   "The trigger may live in the bar; the drawer must not." Inside <header> the
+   wrapper was also a direct child of an app bar host, so the navbar rules
+   styled it as a second 64dp bar. #}
+{{ sidenav(nav, request.endpoint) }}
 
     <main>
         {% if page_name %}{{ Banner(page_name, page_blurb) }}{% endif %}
