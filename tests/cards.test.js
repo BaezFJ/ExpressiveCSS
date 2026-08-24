@@ -34,7 +34,7 @@ describe('Cards CSS', () => {
     assert.match(css, /--md-comp-card-content-padding:\s*16px/);
     assert.match(css, /--md-comp-card-between-space:\s*8px/);
     assert.match(css, /--md-comp-card-icon-size:\s*24px/);
-    assert.match(css, /:where\(\.card-collection\)\s*\{[^}]*gap:\s*var\(--md-comp-card-between-space\)/s);
+    assert.match(css, /--md-comp-card-collection-gap:\s*8px/);
   });
 
   test('rounds and clips direct card media, including primary-action media', () => {
@@ -117,6 +117,39 @@ describe('Cards CSS', () => {
       /article\.horizontal\s*>\s*\.actions\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*4[^}]*align-self:\s*end[^}]*justify-content:\s*flex-end/s
     );
     assert.doesNotMatch(css, /article\.horizontal\s*>\s*div\s*\{/);
+  });
+
+  test('lays out coplanar card collections as grids, lists, mosaics, staggered flows, or carousels', () => {
+    assert.match(
+      css,
+      /:where\(\.card-collection\)\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*var\(--md-comp-card-collection-grid-template-columns\)[^}]*gap:\s*var\(--md-comp-card-collection-gap\)/s
+    );
+    assert.match(
+      css,
+      /:where\(\.card-collection article\):not\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*var\(--md-comp-card-collection-resting-shadow\)\s*!important/s
+    );
+    assert.match(
+      css,
+      /:where\(\.card-collection article\):is\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*var\(--md-comp-card-collection-picked-up-shadow\)\s*!important/s
+    );
+    assert.match(
+      css,
+      /\.card-collection\.list\s*\{[^}]*grid-template-columns:[^}]*margin:\s*0/s
+    );
+    assert.match(css, /\.card-collection\.staggered/);
+    assert.match(css, /\.card-collection\.mosaic/);
+    assert.match(
+      css,
+      /\.card-collection\.carousel\s*\{[^}]*--md-comp-carousel-gap:\s*var\(--md-comp-card-collection-gap\)/s
+    );
+    assert.match(
+      css,
+      /\.card-collection\.carousel\.flat[\s\S]*article\.carousel-item\s*\{[^}]*flex:\s*0 0 var\(--md-comp-card-collection-carousel-card-width\)/
+    );
+    assert.doesNotMatch(
+      css,
+      /\.card-collection-(?:list|staggered|mosaic|carousel)\b/
+    );
   });
 
   test('applies interaction states only through a primary action', () => {

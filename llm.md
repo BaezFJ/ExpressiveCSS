@@ -1919,13 +1919,38 @@ A static card has no hover treatment. To make the card an entry point, wrap its 
 
 ### Collections
 
-Cards in a collection share a resting elevation. Add `card-collection` to a grid or row to use M3's maximum 8dp spacing between cards. Keep sorting and filtering controls outside the collection.
+`card-collection` creates a responsive grid with no more than 8dp between cards. Every card is coplanar at rest; add `picked-up` or `dragged` only while it is being moved. Add `list`, `staggered`, `mosaic`, or `carousel flat` for the other collection layouts. Sorting and filtering controls stay outside the collection.
 
 ```html
-<div class="row card-collection">
-  <div class="s12 m6"><article>…</article></div>
-  <div class="s12 m6"><article>…</article></div>
-</div>
+<!-- Responsive grid (the default). Override the track token as needed. -->
+<section class="card-collection" aria-label="Dinner menu">
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+</section>
+
+<!-- List -->
+<section class="card-collection list" aria-label="Dinner menu">
+  <article class="outlined"><h3>Pho</h3><p>$12</p></article>
+  <article class="outlined"><h3>Quinoa Salad</h3><p>$10</p></article>
+</section>
+
+<!-- Intrinsic-height staggered grid -->
+<section class="card-collection staggered" aria-label="Dinner menu">
+  <article class="outlined"><h3>Pho</h3><p>$12</p></article>
+  <article class="outlined"><h3>Combo #2</h3><p>Two entrées, three sides, and two drinks · $28</p></article>
+</section>
+
+<!-- Dense mosaic. Set spans per card from application data. -->
+<section class="card-collection mosaic" aria-label="Dinner menu">
+  <article style="--md-comp-card-collection-row-span: 3">…</article>
+  <article style="--md-comp-card-collection-column-span: 2; --md-comp-card-collection-row-span: 4">…</article>
+</section>
+
+<!-- Snap carousel. AutoInit starts the existing Carousel component. -->
+<section class="card-collection carousel flat" aria-label="Dinner menu">
+  <article class="outlined carousel-item"><h3>Pho</h3><p>$12</p></article>
+  <article class="outlined carousel-item"><h3>Quinoa Salad</h3><p>$10</p></article>
+</section>
 ```
 
 ### Media

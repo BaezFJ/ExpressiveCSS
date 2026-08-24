@@ -329,12 +329,105 @@ article > .primary-action > figure > figcaption > svg {
   fill: currentColor;
 }
 
-// Collections are coplanar and use no more than the specified 8dp between
-// cards. Combine with `.row` when the framework's responsive columns are
-// wanted; this component-layer gap overrides the base grid gap.
+// Collections are a grid by default. The full track definition is a token so
+// applications can supply fixed, responsive, or asymmetric columns without
+// fighting component selectors. Every card rests on the same plane; only the
+// picked-up / dragged state rises above its neighbours.
 :where(.card-collection) {
-  --md-comp-card-between-space: 8px;
-  gap: var(--md-comp-card-between-space);
+  --md-comp-card-collection-gap: 8px;
+  --md-comp-card-collection-min-card-width: 240px;
+  --md-comp-card-collection-grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--md-comp-card-collection-min-card-width)), 1fr)
+  );
+  --md-comp-card-collection-resting-shadow: none;
+  --md-comp-card-collection-picked-up-shadow:
+    0 8px 17px 2px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12),
+    0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  --md-comp-card-collection-mosaic-row-size: 80px;
+  --md-comp-card-collection-carousel-height: 320px;
+  --md-comp-card-collection-carousel-card-width: min(82%, 360px);
+
+  display: grid;
+  grid-template-columns: var(--md-comp-card-collection-grid-template-columns);
+  gap: var(--md-comp-card-collection-gap);
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.card-collection article):not(.dragged, .picked-up) {
+  box-shadow: var(--md-comp-card-collection-resting-shadow) !important;
+}
+
+:where(.card-collection article):is(.dragged, .picked-up) {
+  z-index: 4;
+  box-shadow: var(--md-comp-card-collection-picked-up-shadow) !important;
+}
+
+:where(.card-collection article):not(.horizontal) {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+:where(.card-collection article):not(.horizontal) > .actions {
+  margin-block-start: auto;
+}
+
+// A list is the same collection with one column. The cards retain their own
+// vertical / horizontal orientation.
+.card-collection.list {
+  --md-comp-card-collection-grid-template-columns: minmax(0, 1fr);
+
+  margin: 0;
+}
+
+// Staggered uses multicolumn flow for masonry-like intrinsic card heights.
+:where(.card-collection.staggered) {
+  display: block;
+  columns: var(
+    --md-comp-card-collection-staggered-column-width,
+    var(--md-comp-card-collection-min-card-width)
+  );
+  column-gap: var(--md-comp-card-collection-gap);
+}
+
+:where(.card-collection.staggered) > article {
+  break-inside: avoid;
+  width: 100%;
+  margin-block: 0 var(--md-comp-card-collection-gap);
+}
+
+// Mosaic keeps source order in a dense grid. Per-card custom properties make
+// spans data-driven instead of baking a decorative nth-child pattern into the
+// framework.
+:where(.card-collection.mosaic) {
+  grid-auto-flow: dense;
+  grid-auto-rows: var(--md-comp-card-collection-mosaic-row-size);
+}
+
+:where(.card-collection.mosaic) > article {
+  grid-column: span var(--md-comp-card-collection-column-span, 1);
+  grid-row: span var(--md-comp-card-collection-row-span, 2);
+}
+
+// Reuse the flat Carousel component for a horizontally scrolling collection.
+// Carousel.Init()/AutoInit() supplies the track and interaction behavior.
+.card-collection.carousel {
+  --carousel-height: var(--md-comp-card-collection-carousel-height);
+  --md-comp-carousel-gap: var(--md-comp-card-collection-gap);
+
+  display: block;
+}
+
+.card-collection.carousel.flat
+  > .carousel-track
+  > article.carousel-item {
+  flex: 0 0 var(--md-comp-card-collection-carousel-card-width);
+  width: var(--md-comp-card-collection-carousel-card-width);
+  height: 100%;
 }
 
 // Horizontal uses the same direct semantic slots as the vertical card. Grid

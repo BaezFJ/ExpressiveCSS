@@ -396,19 +396,126 @@
         <h3>Collections</h3>
 
         <p>
-          Cards in a collection share a resting elevation. Add
-          <code>card-collection</code> to a grid or row to use M3's maximum
-          8dp spacing between cards. Keep sorting and filtering controls
-          outside the collection.
+          <code>card-collection</code> creates a responsive grid with no more
+          than 8dp between cards. Every card is coplanar at rest; add
+          <code>picked-up</code> or <code>dragged</code> only while it is being
+          moved. Add <code>list</code>, <code>staggered</code>,
+          <code>mosaic</code>, or <code>carousel flat</code> for the other collection
+          layouts. Sorting and filtering controls stay outside the collection.
         </p>
-        <div class="row card-collection">
-          <div class="s12 m6"><article><h3>First</h3><p>Related content.</p></article></div>
-          <div class="s12 m6"><article><h3>Second</h3><p>Related content.</p></article></div>
-        </div>
-<pre><code>&lt;div class="row card-collection"&gt;
-  &lt;div class="s12 m6"&gt;&lt;article&gt;…&lt;/article&gt;&lt;/div&gt;
-  &lt;div class="s12 m6"&gt;&lt;article&gt;…&lt;/article&gt;&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+
+        <h4>Responsive grid</h4>
+        <p>
+          The default uses auto-fit columns. Change the minimum card width or
+          replace the complete grid track token when the content needs a
+          different column strategy.
+        </p>
+        <section
+          class="card-collection mb-3"
+          style="--md-comp-card-collection-min-card-width: 160px"
+          aria-label="Featured menu grid"
+        >
+          <article class="outlined"><h3>Pho</h3><p>$12</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined"><h3>Burrito Bowl</h3><p>$9</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined"><h3>Quinoa Salad</h3><p>$10</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+        </section>
+
+        <h4>List</h4>
+        <p>
+          <code>list</code> keeps one card per row while
+          preserving the shared resting plane and 8dp spacing.
+        </p>
+        <section class="card-collection list mb-3" aria-label="Menu list">
+          <article class="outlined"><h3>Pho</h3><p>Rice noodles, herbs, and aromatic broth · $12</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined"><h3>Quinoa Salad</h3><p>Roasted vegetables, herbs, and lemon dressing · $10</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+        </section>
+
+        <h4>Staggered grid</h4>
+        <p>
+          <code>staggered</code> packs intrinsic card heights
+          into masonry-like columns. Source order flows down each column.
+        </p>
+        <section
+          class="card-collection staggered mb-3"
+          style="--md-comp-card-collection-staggered-column-width: 160px"
+          aria-label="Staggered menu"
+        >
+          <article class="outlined"><h3>Pho</h3><p>$12</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined"><h3>Combo #2</h3><p>Two entrées, three sides, and two drinks · $28</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined"><h3>Pumpkin Soup</h3><p>$8</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined"><h3>Combo #1</h3><p>Entrée, side, and drink · $14</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+        </section>
+
+        <h4>Mosaic grid</h4>
+        <p>
+          <code>mosaic</code> uses dense grid placement. Set
+          column and row spans on individual cards from application data.
+        </p>
+        <section
+          class="card-collection mosaic mb-3"
+          style="--md-comp-card-collection-grid-template-columns: repeat(2, minmax(0, 1fr)); --md-comp-card-collection-mosaic-row-size: 56px"
+          aria-label="Dinner menu"
+        >
+          <article class="outlined" style="--md-comp-card-collection-row-span: 3">
+            <h3>Pho</h3><p>$12</p>
+            <div class="actions"><button type="button" class="tonal">Order</button></div>
+          </article>
+          <article class="outlined" style="--md-comp-card-collection-row-span: 5">
+            <h3>Combo: Entrée, side, and drink</h3><p>$14</p>
+            <div class="actions"><button type="button" class="tonal">Order</button></div>
+          </article>
+          <article class="outlined" style="--md-comp-card-collection-row-span: 4">
+            <h3>Combo #2: 2 entrées, 3 sides, and 2 drinks</h3><p>$28</p>
+            <div class="actions"><button type="button" class="tonal">Order</button></div>
+          </article>
+          <article class="outlined" style="--md-comp-card-collection-row-span: 3">
+            <h3>Quinoa Salad</h3><p>$10</p>
+            <div class="actions"><button type="button" class="tonal">Order</button></div>
+          </article>
+        </section>
+
+        <h4>Carousel</h4>
+        <p>
+          Add <code>carousel flat</code>. Add <code>carousel-item</code> to every
+          card; <code>AutoInit()</code> supplies the snap track.
+        </p>
+        <section
+          class="card-collection carousel flat mb-3"
+          aria-label="Menu carousel"
+        >
+          <article class="outlined carousel-item"><h3>Pho</h3><p>Rice noodles, herbs, and aromatic broth · $12</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined carousel-item"><h3>Quinoa Salad</h3><p>Roasted vegetables, herbs, and lemon dressing · $10</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+          <article class="outlined carousel-item"><h3>Combo #1</h3><p>Entrée, side, and drink · $14</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
+        </section>
+<pre><code>&lt;!-- Responsive grid (the default). Override the track token as needed. --&gt;
+&lt;section class="card-collection" aria-label="Dinner menu"&gt;
+  &lt;article class="outlined"&gt;…&lt;/article&gt;
+  &lt;article class="outlined"&gt;…&lt;/article&gt;
+&lt;/section&gt;
+
+&lt;!-- List --&gt;
+&lt;section class="card-collection list" aria-label="Dinner menu"&gt;
+  &lt;article class="outlined"&gt;&lt;h3&gt;Pho&lt;/h3&gt;&lt;p&gt;$12&lt;/p&gt;&lt;/article&gt;
+  &lt;article class="outlined"&gt;&lt;h3&gt;Quinoa Salad&lt;/h3&gt;&lt;p&gt;$10&lt;/p&gt;&lt;/article&gt;
+&lt;/section&gt;
+
+&lt;!-- Intrinsic-height staggered grid --&gt;
+&lt;section class="card-collection staggered" aria-label="Dinner menu"&gt;
+  &lt;article class="outlined"&gt;&lt;h3&gt;Pho&lt;/h3&gt;&lt;p&gt;$12&lt;/p&gt;&lt;/article&gt;
+  &lt;article class="outlined"&gt;&lt;h3&gt;Combo #2&lt;/h3&gt;&lt;p&gt;Two entrées, three sides, and two drinks · $28&lt;/p&gt;&lt;/article&gt;
+&lt;/section&gt;
+
+&lt;!-- Dense mosaic. Set spans per card from application data. --&gt;
+&lt;section class="card-collection mosaic" aria-label="Dinner menu"&gt;
+  &lt;article style="--md-comp-card-collection-row-span: 3"&gt;…&lt;/article&gt;
+  &lt;article style="--md-comp-card-collection-column-span: 2; --md-comp-card-collection-row-span: 4"&gt;…&lt;/article&gt;
+&lt;/section&gt;
+
+&lt;!-- Snap carousel. AutoInit starts the existing Carousel component. --&gt;
+&lt;section class="card-collection carousel flat" aria-label="Dinner menu"&gt;
+  &lt;article class="outlined carousel-item"&gt;&lt;h3&gt;Pho&lt;/h3&gt;&lt;p&gt;$12&lt;/p&gt;&lt;/article&gt;
+  &lt;article class="outlined carousel-item"&gt;&lt;h3&gt;Quinoa Salad&lt;/h3&gt;&lt;p&gt;$10&lt;/p&gt;&lt;/article&gt;
+&lt;/section&gt;</code></pre>
 
       </div>
 
