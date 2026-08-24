@@ -7,7 +7,7 @@
 //
 // Canonical Layouts:
 //   1. List-Detail (.list-detail, .panes.list-detail):
-//      - Compact (< 840px / < 601px): Single pane visible at a time.
+//      - Compact and Medium (< 840px): Single pane visible at a time.
 //      - Expanded (>= 840px): 360dp list pane + 1fr detail pane.
 //   2. Supporting Pane (.supporting-pane-layout, .panes.supporting):
 //      - 1fr primary pane + 360-400dp supporting pane (on trailing or leading side).
@@ -51,7 +51,7 @@
   background-color: var(--md-comp-pane-container-color);
   color: var(--md-sys-color-on-surface);
 
-  // Default (Single-Pane on compact screens < 840px / < 601px)
+  // Default: single pane on Compact and Medium windows (< 840px).
   grid-template-columns: 1fr;
   gap: 0;
 
@@ -75,7 +75,7 @@
   }
 
   // Expanded Viewports: Dual-pane side-by-side (via container query or breakpoint)
-  @media (width >= 840px) {
+  @include bp-up("expanded") {
     grid-template-columns: var(--md-comp-pane-list-width) 1fr;
     gap: 0;
 
@@ -101,7 +101,7 @@
 // 1. Supporting Pane Layout
 .supporting-pane-layout,
 .panes.supporting {
-  @media (width >= 840px) {
+  @include bp-up("expanded") {
     grid-template-columns: 1fr var(--md-comp-pane-supporting-width);
   }
 
@@ -112,7 +112,7 @@
   // Leading supporting pane (.start / .left)
   &.start,
   &.left {
-    @media (width >= 840px) {
+    @include bp-up("expanded") {
       grid-template-columns: var(--md-comp-pane-supporting-width) 1fr;
     }
 
@@ -125,7 +125,7 @@
 // 2. Equal / Proportional Pane Layout
 .panes.equal,
 .pane-layout.equal {
-  @media (width >= 840px) {
+  @include bp-up("expanded") {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -137,7 +137,7 @@
 // 3. Three-Pane Layout (List + Primary Focus + Supporting)
 .panes.three-pane,
 .pane-layout.three-pane {
-  @media (width >= 1200px) {
+  @include bp-up("large") {
     grid-template-columns: var(--md-comp-pane-list-width) 1fr var(--md-comp-pane-supporting-width);
   }
 
@@ -181,7 +181,7 @@
 // ---------------------------------------------------------------------------
 :is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.separated, .floating) {
   > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane):not(:last-child) {
-    @media (width >= 840px) {
+    @include bp-up("expanded") {
       border-inline-end: 1px solid var(--md-comp-pane-divider-color);
     }
 

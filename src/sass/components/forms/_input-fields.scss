@@ -302,7 +302,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
 
 .searchbar.has-sidebar {
   margin-left: 0;
-  @include bp-up("large") {
+  @include bp-up("expanded") {
     margin-left: 300px;
   }
 }

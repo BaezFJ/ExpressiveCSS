@@ -53,7 +53,7 @@ $menu-item-height: 50px !default;
 
 // Media query ranges now live in abstracts/_breakpoints.scss, which states
 // each boundary once and emits range syntax - see the note there about why
-// the 600.99px / 992.99px / 1200.99px values are gone.
+// the old fractional max-width values are gone.
 
 // Grid
 $gutter-width: 1.5rem !default;

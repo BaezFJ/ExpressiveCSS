@@ -524,11 +524,11 @@ describe('Sidenav', () => {
     instance.destroy();
   });
 
-  test('fixed at the large breakpoint does not showModal', () => {
+  test('fixed at the Expanded breakpoint does not showModal', () => {
     document.body.innerHTML = `<ul id="nav" class="sidenav sidenav-fixed"><li><a href="#!">A</a></li></ul>`;
     const original = window.matchMedia;
     window.matchMedia = (query) => ({
-      matches: query.includes('993'),
+      matches: query.includes('840'),
       media: query,
       onchange: null,
       addListener() {},

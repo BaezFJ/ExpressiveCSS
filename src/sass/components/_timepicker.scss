@@ -235,7 +235,7 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
 }
 
 /* Media Queries */
-@include bp-up("large") {
+@include bp-up("expanded") {
   :is(.timepicker-container, .time-picker-container) {
     width: auto;
     max-width: 620px;

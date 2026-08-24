@@ -1,71 +1,93 @@
 @use "../abstracts" as *;
 
-// Showing and hiding, globally and per breakpoint.
-// Queries come from bp-up / bp-down / bp-between in abstracts/_breakpoints.scss.
+// Showing and hiding by the exact M3 window size classes.
+// The Materialize-era small/med/xxl names remain aliases for compatibility.
 
 .hide { display: none !important; }
 
-.hide-on-small-only {
-  @include bp-down("small") { display: none !important; }
+.hide-on-compact-only,
+.hide-on-small-only,
+.hide-on-small-and-down {
+  @include bp-down("medium") { display: none !important; }
 }
 
 .hide-on-med-and-down {
-  @include bp-down("large") { display: none !important; }
+  @include bp-down("expanded") { display: none !important; }
 }
 
 .hide-on-med-and-up {
-  @include bp-up("small") { display: none !important; }
+  @include bp-up("medium") { display: none !important; }
 }
 
+.hide-on-medium-only,
 .hide-on-med-only {
-  @include bp-between("small", "large") {
+  @include bp-between("medium", "expanded") {
     display: none !important;
   }
 }
 
+.hide-on-expanded-only {
+  @include bp-between("expanded", "large") {
+    display: none !important;
+  }
+}
+
+.hide-on-expanded-and-up {
+  @include bp-up("expanded") { display: none !important; }
+}
+
 .hide-on-large-only {
-  @include bp-up("large") { display: none !important; }
+  @include bp-between("large", "extra-large") {
+    display: none !important;
+  }
 }
 
-.hide-on-extra-large-only {
-  @include bp-up("xlarge") { display: none !important; }
-}
-
+.hide-on-extra-large-only,
 .hide-on-xxl-only {
-  @include bp-up("xxlarge") { display: none !important; }
+  @include bp-up("extra-large") { display: none !important; }
 }
 
-.show-on-extra-large {
-  @include bp-up("xlarge") { display: block !important; }
-}
-
-.show-on-xxl {
-  @include bp-up("xxlarge") { display: block !important; }
-}
-
-.show-on-large {
-  @include bp-up("large") { display: block !important; }
+.show-on-compact,
+.show-on-small {
+  @include bp-down("medium") { display: block !important; }
 }
 
 .show-on-medium {
-  @include bp-between("small", "large") {
+  @include bp-between("medium", "expanded") {
     display: block !important;
   }
 }
 
-.show-on-small {
-  @include bp-down("small") { display: block !important; }
+.show-on-expanded {
+  @include bp-between("expanded", "large") {
+    display: block !important;
+  }
+}
+
+.show-on-expanded-and-up {
+  @include bp-up("expanded") { display: block !important; }
+}
+
+.show-on-large {
+  @include bp-between("large", "extra-large") {
+    display: block !important;
+  }
+}
+
+.show-on-extra-large,
+.show-on-xxl {
+  @include bp-up("extra-large") { display: block !important; }
 }
 
 .show-on-medium-and-up {
-  @include bp-up("small") { display: block !important; }
+  @include bp-up("medium") { display: block !important; }
 }
 
 .show-on-medium-and-down {
-  @include bp-down("large") { display: block !important; }
+  @include bp-down("expanded") { display: block !important; }
 }
 
-// Center text on mobile
+// Center text on Compact windows.
 .center-on-small-only {
-  @include bp-down("small") { text-align: center; }
+  @include bp-down("medium") { text-align: center; }
 }

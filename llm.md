@@ -208,7 +208,7 @@ The live Material tokens use the `--md-sys-color-<role>` naming scheme. Override
 
 ## Responsive model
 
-ExpressiveCSS uses a 12-column grid. Its named boundaries are small at `601px`, large at `993px`, and extra-large at `1201px`. Grid classes use prefixes such as `s`, `m`, `l`, and `xl`; the Grid section below is authoritative for exact sizing and offset syntax.
+ExpressiveCSS uses the exact M3 window size classes: Compact `< 600px`, Medium `600–839px`, Expanded `840–1199px`, Large `1200–1599px`, and Extra-large `>= 1600px`. The 12-column grid maps those classes to `.s`, `.m`, `.l`, `.xl`, and `.xxl` prefixes respectively.
 
 ## JavaScript initialization
 
@@ -747,7 +747,7 @@ To get a feel of how the grid is used in HTML, take a look at the code below whi
 </div>
 ```
 
-Note: For now, just know that the `s1` stands for small-1 which in plain English means "1 column on small screens".
+`s1` means one column at the Compact/default size and up.
 
 #### Columns live inside Rows
 
@@ -763,7 +763,7 @@ Remember when you are creating your layout that all columns must be contained in
 
 ### Offsets
 
-To offset, simply add `offset-s2` to the class where `s` signifies the screen class-prefix (s = small, m = medium, l = large) and the number after is the number of columns you want to offset by.
+To offset, simply add `offset-s2` to the class where the prefix identifies the window size (`s` = Compact, `m` = Medium, `l` = Expanded, `xl` = Large, `xxl` = Extra-large) and the number is how many columns to offset.
 
 Attention! Offsets are calculated absolutely starting from the left. If you need relative offsets, add empty columns to the row.
 
@@ -910,15 +910,15 @@ Above we showed you how to layout elements using our grid system. Now we'll show
 
 #### Screen Sizes
 
-|  | Mobile Devices <= 600px | Tablet Devices > 600px | Desktop Devices > 992px | Large Desktop Devices > 1200px |
-| --- | --- | --- | --- | --- |
-| **Class Prefix** | `.s` | `.m` | `.l` | `.xl` |
-| **Container Width** | 90% | 85% | 70% | 70% |
-| **Number of Columns** | 12 | 12 | 12 | 12 |
+|  | Compact `< 600px` | Medium `600–839px` | Expanded `840–1199px` | Large `1200–1599px` | Extra-large `>= 1600px` |
+| --- | --- | --- | --- | --- | --- |
+| **Class Prefix** | `.s` | `.m` | `.l` | `.xl` | `.xxl` |
+| **Container Width** | 90% | 85% | 70% | 70% | 75% |
+| **Number of Columns** | 12 | 12 | 12 | 12 | 12 |
 
 #### Adding Responsiveness
 
-In the previous examples, we only defined the size for small screens using `s12`. This is fine if we want a fixed layout since the rules propagate upwards. By just saying s12, we are essentially saying `s12 m12 l12`. But by explicitly defining the size we can make our website more responsive.
+In the previous examples, we only defined the Compact/default size using `s12`. This is fine if we want a fixed layout since the rules propagate upwards. By just saying `s12`, we are essentially saying `s12 m12 l12 xl12 xxl12`. Define later prefixes when the layout should change at wider window size classes.
 
 ```html
 <div class="row">
@@ -938,16 +938,16 @@ In this example below, we take the same layout from above, but we make it respon
   <div class="s12 m4 l3">
     <!-- Grey navigation panel
           This content will be:
-      3-columns-wide on large screens,
-      4-columns-wide on medium screens,
-      12-columns-wide on small screens -->
+      3-columns-wide on Expanded and wider screens,
+      4-columns-wide on Medium screens,
+      12-columns-wide on Compact screens -->
   </div>
   <div class="s12 m8 l9">
     <!-- Teal page content
           This content will be:
-      9-columns-wide on large screens,
-      8-columns-wide on medium screens,
-      12-columns-wide on small screens -->
+      9-columns-wide on Expanded and wider screens,
+      8-columns-wide on Medium screens,
+      12-columns-wide on Compact screens -->
   </div>
 </div>
 ```
@@ -1029,25 +1029,25 @@ We provide easy to use classes to hide/show content on specific screen sizes.
 | Class | Screen Range |
 | --- | --- |
 | `**.hide**` | Hidden for all Devices |
-| `**.hide-on-small-only**` | Hidden for Mobile Only |
-| `**.hide-on-med-only**` | Hidden for Tablet Only |
-| `**.hide-on-med-and-down**` | Hidden for Tablet and Below |
-| `**.hide-on-med-and-up**` | Hidden for Tablet and Above |
-| `**.hide-on-large-only**` | Hidden for Desktop Only |
-| `**.hide-on-extra-large-only**` | Hidden for Large Desktop Only |
-| `**.show-on-small**` | Show for Mobile Only |
-| `**.show-on-medium**` | Show for Tablet Only |
-| `**.show-on-large**` | Show for Desktop Only |
-| `**.show-on-extra-large**` | Show for Large Desktop Only |
-| `**.show-on-medium-and-up**` | Show for Tablet and Above |
-| `**.show-on-medium-and-down**` | Show for Tablet and Below |
+| `.hide-on-compact-only` | Hidden on Compact (`< 600px`) |
+| `.hide-on-medium-only` | Hidden on Medium (`600–839px`) |
+| `.hide-on-expanded-only` | Hidden on Expanded (`840–1199px`) |
+| `.hide-on-large-only` | Hidden on Large (`1200–1599px`) |
+| `.hide-on-extra-large-only` | Hidden on Extra-large (`>= 1600px`) |
+| `.show-on-compact` | Shown on Compact (`< 600px`) |
+| `.show-on-medium` | Shown on Medium (`600–839px`) |
+| `.show-on-expanded` | Shown on Expanded (`840–1199px`) |
+| `.show-on-large` | Shown on Large (`1200–1599px`) |
+| `.show-on-extra-large` | Shown on Extra-large (`>= 1600px`) |
+| `.show-on-medium-and-up` | Shown from Medium (`>= 600px`) |
+| `.show-on-medium-and-down` | Shown on Compact and Medium (`< 840px`) |
 
-`.hide-on-small-and-down` is an alias of `.hide-on-small-only`.
+Legacy `small`, `med`, and `xxl` utility names remain aliases for compatibility.
 
 #### Usage
 
 ```html
-<div class="hide-on-small-only"></div>
+<div class="hide-on-compact-only"></div>
 ```
 
 ### Spacing
@@ -1547,7 +1547,7 @@ button, input, optgroup, select, textarea {
 }
 ```
 
-The default stack is `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif`. Form controls inherit that stack. Root `font-size` is 14px on small screens, 14.5px from the large breakpoint, and 15px from xlarge, so rem-based lengths grow slightly on wider viewports. Headings use the token sizes in px, so they do not follow that ladder.
+The default stack is `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif`. Form controls inherit that stack. Root `font-size` is 14px on Compact and Medium windows, 14.5px from Expanded, and 15px from Large, so rem-based lengths grow slightly on wider viewports. Headings use the token sizes in px, so they do not follow that ladder.
 
 ---
 
@@ -2602,7 +2602,7 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
 
 ### Destinations
 
-Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the large breakpoint and pair it with a navigation drawer trigger when the bar has to collapse.
+Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the Expanded breakpoint and pair it with a navigation drawer trigger when the bar has to collapse.
 
 ```html
 <header>
@@ -2747,7 +2747,7 @@ A `<form>` in the nav fills the space between the leading action and anything af
 
 ### Mobile collapse
 
-Hide the destination menu below the large breakpoint and put a `navigation-drawer-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `navigation-drawer` whose id matches `data-target`. The drawer element itself must not be a child of the `<nav>`.
+Hide the destination menu below the Expanded breakpoint and put a `navigation-drawer-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `navigation-drawer` whose id matches `data-target`. The drawer element itself must not be a child of the `<nav>`.
 
 ```html
 <header>
@@ -2869,7 +2869,7 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
 Offset the rest of the page:
 
 ```css
-@media (width >= 601px) {
+@media (width >= 600px) {
   body {
     padding-left: var(--md-comp-nav-rail-collapsed-width);
   }
@@ -3768,7 +3768,7 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
-A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on compact and medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the small breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss.
+A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="open-file-title">
@@ -3935,9 +3935,9 @@ instance.destroy();
 
 ## Navigation drawer
 
-A slide-out menu, or a fixed sidebar on large screens.
+A slide-out menu, or a fixed sidebar on Expanded and wider windows.
 
-This is a slide-out menu. Nest `<details>` / `<summary>` for nested sections — the documentation sidebar uses that. On small screens this same drawer slides over the page.
+This is a slide-out menu. Nest `<details>` / `<summary>` for nested sections — the documentation sidebar uses that. On Compact and Medium windows this same drawer slides over the page.
 
 The drawer HTML must **not** sit inside the app bar’s `<nav>`. Put a `navigation-drawer-trigger` anywhere and set `data-target` to the navigation drawer’s `id`. `AutoInit()` starts every `.navigation-drawer` except those marked `no-autoinit`.
 
@@ -3986,7 +3986,7 @@ Nested sections are HTML. A `<details>` / `<summary>` inside a `.navigation-draw
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `edge` | String | `'left'` | Side of the screen. `'left'` or `'right'`. The constructor adds `right-aligned` when the edge is right. |
-| `draggable` | Boolean | `true` | Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on large screens. |
+| `draggable` | Boolean | `true` | Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on Expanded and wider windows. |
 | `dragTargetWidth` | String | `'10px'` | Width of the screen-edge strip where a drag can start. |
 | `inDuration` | Number | `250` | Open transition duration, in milliseconds. |
 | `outDuration` | Number | `200` | Close transition duration, in milliseconds. |
@@ -4040,7 +4040,7 @@ instance.destroy();
 
 ### Close Trigger
 
-Add `navigation-drawer-close` to an element inside the drawer. A click on that element closes an overlay drawer. That is useful in a single-page app where the page does not reload. It does nothing while the navigation drawer is fixed on large screens.
+Add `navigation-drawer-close` to an element inside the drawer. A click on that element closes an overlay drawer. That is useful in a single-page app where the page does not reload. It does nothing while the navigation drawer is fixed on Expanded and wider windows.
 
 ```html
 <nav aria-label="Main">
@@ -4091,7 +4091,7 @@ Nest `<details>` for a section that opens in place. Same `name` on several detai
 
 #### Fixed HTML Structure
 
-Add `navigation-drawer-fixed` so the drawer stays open on large screens (wider than 992px) and slides away on smaller ones. The documentation sidebar on the left is this pattern.
+Add `navigation-drawer-fixed` so the drawer stays open on Expanded and wider windows (`>= 840px`) and slides away below that boundary. The documentation sidebar on the left is this pattern.
 
 ```html
 <nav aria-label="Main">
@@ -4306,7 +4306,7 @@ Material Design 3 snackbars, from the HTML.
 
 Snackbars show short updates about app processes at the bottom of the screen. They should not interrupt browsing. A `.snackbar` is the bar. A `<p>` is the supporting text. A trailing `<button>` is the optional action; a `.circle` button is the optional close.
 
-Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`, two lines max. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On compact viewports the bar is inset 8dp from the edges; from the small breakpoint up it hugs content (344–672dp) and sits centered 24dp from the bottom.
+Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`, two lines max. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On Compact viewports the bar is inset 8dp from the edges; from the Medium breakpoint up it hugs content (344–672dp) and sits centered 24dp from the bottom.
 
 A snackbar can time out on its own (4 seconds, or 10 with an action) or stay until the user acts (`displayLength: Infinity`). Only one shows at a time. The live region is `role="status"` / `aria-live="polite"` and does not steal focus. Snackbar is not in `AutoInit()`.
 
@@ -4360,7 +4360,7 @@ document.getElementById('snackbar-basic').addEventListener('click', function() {
 
 ### Markup
 
-The same anatomy works as static HTML. Without `.active` the bar is in-flow — useful for previews. With `.active` it pins to the bottom of the viewport, centered from the small breakpoint.
+The same anatomy works as static HTML. Without `.active` the bar is in-flow — useful for previews. With `.active` it pins to the bottom of the viewport, centered from the Medium breakpoint.
 
 Show static snackbar
 

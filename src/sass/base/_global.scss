@@ -96,7 +96,7 @@ td, th {
 }
 
 // Responsive Table
-@include bp-down("large") {
+@include bp-down("expanded") {
 
   table.responsive-table {
     width: 100%;
@@ -161,4 +161,3 @@ td, th {
     }
   }
 }
-

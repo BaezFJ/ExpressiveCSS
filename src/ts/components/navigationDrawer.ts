@@ -45,12 +45,12 @@ const _defaults: NavigationDrawerOptions = {
   onCloseEnd: null
 };
 
-const LARGE_UP = '(width >= 993px)';
+const EXPANDED_UP = '(width >= 840px)';
 
 /**
  * Navigation drawer. Overlay is a modal <dialog>; fixed is a breakpoint.
  * JS opens/closes, handles the trigger, and writes --md-comp-nav-drawer-shift
- * while dragging. CSS owns the slide, the scrim, and the large-screen dock.
+ * while dragging. CSS owns the slide, the scrim, and the Expanded+ dock.
  */
 export class NavigationDrawer extends Component<NavigationDrawerOptions> implements Openable {
   id: string;
@@ -86,7 +86,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
     this.isOpen = false;
     // Both spellings: the Sass alias made `.navigation-drawer-fixed` style
     // like the old class, but this read the old name only - so the canonical
-    // markup was treated as an overlay at the large breakpoint, leaving the
+    // markup was treated as an overlay at the Expanded breakpoint, leaving the
     // drag target live and letting open() call showModal() on a docked drawer.
     this.isFixed =
       this.el.classList.contains('navigation-drawer-fixed') ||
@@ -103,7 +103,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
     this._initialScrollTop = 0;
     this._verticallyScrolling = false;
 
-    this._mql = window.matchMedia(LARGE_UP);
+    this._mql = window.matchMedia(EXPANDED_UP);
     this._setupDialog();
     this._createDragTarget();
     this._setupClasses();
@@ -166,7 +166,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
 
   /**
    * Opens the overlay drawer. No-op while the sidenav is docked
-   * (navigation-drawer-fixed at the large breakpoint).
+   * (navigation-drawer-fixed at the Expanded breakpoint).
    */
   open = () => {
     if (this._isCurrentlyFixed() || this.isOpen || !this._dialog) return;

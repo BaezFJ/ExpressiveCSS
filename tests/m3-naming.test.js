@@ -97,7 +97,7 @@ describe('the renames reach behaviour, not just styling', () => {
 
   test('a canonically-named fixed drawer is treated as fixed', () => {
     // The Sass alias made `.navigation-drawer-fixed` *look* docked while the
-    // component still read only `sidenav-fixed`, so at the large breakpoint it
+    // component still read only `sidenav-fixed`, so at the Expanded breakpoint it
     // kept the drag target live and open() could showModal() a docked drawer.
     for (const cls of ['navigation-drawer-fixed', 'sidenav-fixed']) {
       document.body.innerHTML = `<ul class="navigation-drawer ${cls}" id="d"><li><a href="#!">One</a></li></ul>`;

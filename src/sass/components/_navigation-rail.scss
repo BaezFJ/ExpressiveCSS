@@ -283,7 +283,7 @@
     }
   }
 
-  @include bp-down("small") {
+  @include bp-down("medium") {
     &.expanded:not(.modal) {
       position: fixed;
       inset: 0 auto 0 0;

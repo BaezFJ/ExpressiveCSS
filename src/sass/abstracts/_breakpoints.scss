@@ -1,38 +1,36 @@
 @use "sass:map";
 @use "sass:list";
 
-// Breakpoints, as media-query range syntax.
+// Material 3 window size classes, expressed as media-query boundaries.
 //
 // The old form built a query by interpolating a whole string:
 //
 //   $medium-and-down: "only screen and (max-width : 992.99px)";
 //   @media #{$medium-and-down} { ... }
 //
-// which needed the `.99` because `max-width: 993px` and `min-width: 993px`
-// both match at exactly 993px. Range syntax has an exclusive comparator, so
-// the fractional values are gone and the boundary is stated once:
+// which needed the `.99` because inclusive max/min queries both match on the
+// boundary pixel. Range syntax has an exclusive comparator, so fractional
+// values are unnecessary and every boundary is stated once:
 //
-//   @include bp-down("large") { ... }   ->  @media (width < 993px)
+//   @include bp-down("expanded") { ... }   ->  @media (width < 840px)
 //
 // `only screen` went with them: it existed to hide queries from Netscape 4
 // and IE, and `screen` alone excludes print anyway - which these rules never
 // wanted to do, since a hidden element should stay hidden on paper.
 
-// Boundaries, not the size of the screen they target. Column prefixes
-// s / m / l / xl / xxl sit on these in order; there is no `medium` key
-// because the tablet class is `m` and the mixin name is the boundary.
-//
-// M3 window-size classes, for the ones that line up:
-//   compact      width <  600     below "small"
-//   medium       600 ≤ width < 840   (we do not split 840 out of "small")
-//   expanded     840 ≤ width < 1200  "large" is 993, close enough
-//   large       1200 ≤ width < 1600  "xlarge"
-//   extra-large  width ≥ 1600        "xxlarge"
+// Compact starts at zero and is the unwrapped/default style. The remaining
+// entries are the exact lower bounds from the M3 adaptive-layout spec:
+//   compact       0 ≤ width <  600
+//   medium      600 ≤ width <  840
+//   expanded    840 ≤ width < 1200
+//   large      1200 ≤ width < 1600
+//   extra-large       width ≥ 1600
 $breakpoints: (
-  "small": 601px,     // phone        -> tablet
-  "large": 993px,     // tablet       -> desktop
-  "xlarge": 1201px,   // desktop      -> large desktop
-  "xxlarge": 1601px,  // large        -> extra-large / widescreen
+  "compact": 0px,
+  "medium": 600px,
+  "expanded": 840px,
+  "large": 1200px,
+  "extra-large": 1600px,
 ) !default;
 
 @function breakpoint($name) {

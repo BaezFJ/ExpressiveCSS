@@ -114,7 +114,7 @@ read-it-off-the-element access that key provides.
   `showModal()` / `::backdrop` / Escape replace the overlay div, body
   overflow lock, and tabindex carpet bomb. Drag writes
   `--md-comp-nav-drawer-shift`; do not write `transform` or `opacity`.
-  `.sidenav-fixed` is `matchMedia('(width >= 993px)')`, not a resize
+  `.sidenav-fixed` is `matchMedia('(width >= 840px)')`, not a resize
   `open()`. `inDuration` / `outDuration` / `preventScrolling` are
   accepted and ignored.
 - **Card reveal is CSS.** `aside` / `.card-reveal` rests at

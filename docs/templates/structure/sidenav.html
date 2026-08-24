@@ -3,7 +3,7 @@
 {% from "macros/api.html" import instance_note, options_table, properties_table %}
 
 {% set page_name = "NavigationDrawer" %}
-{% set page_blurb = "A slide-out menu, or a fixed sidebar on large screens." %}
+{% set page_blurb = "A slide-out menu, or a fixed sidebar on Expanded and wider screens." %}
 
 {% block page %}
 {% call page_body() %}
@@ -11,14 +11,14 @@
         <p class="flow-text">
           This is a slide-out menu. Nest <code>&lt;details&gt;</code> /
           <code>&lt;summary&gt;</code> for nested sections — the
-          documentation sidebar uses that. On small screens this same
+          documentation sidebar uses that. On Compact and Medium windows this same
           drawer slides over the page.
         </p>
         <p>
           An overlay sidenav is a modal <code>&lt;dialog&gt;</code>.
           The framework wraps your <code>&lt;ul class="navigation-drawer"&gt;</code>;
           <code>Escape</code> and a tap on the backdrop close it.
-          A <code>navigation-drawer-fixed</code> drawer stays open on large screens as CSS —
+          A <code>navigation-drawer-fixed</code> drawer stays open from Expanded as CSS —
           no resize listener, no overlay.
         </p>
         <p>
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <td><code>draggable</code></td>
               <td>Boolean</td>
               <td><code>true</code></td>
-              <td>Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on large screens.</td>
+              <td>Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on Expanded and wider windows.</td>
             </tr>
             <tr>
               <td><code>dragTargetWidth</code></td>
@@ -165,7 +165,7 @@ instance.destroy();
             <tr>
               <td><code>isOpen</code></td>
               <td>Boolean</td>
-              <td>Whether the overlay drawer is open. Stays false while a fixed sidenav is docked on large screens.</td>
+              <td>Whether the overlay drawer is open. Stays false while a fixed sidenav is docked on Expanded and wider windows.</td>
             </tr>
             <tr>
               <td><code>isFixed</code></td>
@@ -184,7 +184,7 @@ instance.destroy();
         <p>
           Add <code>navigation-drawer-close</code> to an element inside the navigation drawer. A click on that element
           closes an overlay sidenav. That is useful in a single-page app where the page does not
-          reload. It does nothing while the navigation drawer is fixed on large screens.
+          reload. It does nothing while the navigation drawer is fixed on Expanded and wider windows.
         </p>
 {% call code() %}
 <nav aria-label="Main">
@@ -277,7 +277,7 @@ Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
 
         <h5 class="light">Fixed HTML Structure</h5>
         <p>
-          Add <code>navigation-drawer-fixed</code> so the navigation drawer stays open on large screens (993px and up)
+          Add <code>navigation-drawer-fixed</code> so the navigation drawer stays open from Expanded (840px and up)
           and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
           The documentation sidebar on the left is this pattern.
         </p>
@@ -296,7 +296,7 @@ Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
           Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
         </p>
 {% call code() %}
-@media (width >= 993px) {
+@media (width >= 840px) {
   header, main, footer {
     padding-left: var(--md-comp-nav-drawer-width);
   }

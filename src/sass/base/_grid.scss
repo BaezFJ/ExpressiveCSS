@@ -1,15 +1,16 @@
 @use "../abstracts" as *;
 
-// 12-column CSS Grid. Prefixes map onto $breakpoints; s is the mobile
-// default (no query). xxl is M3 extra-large — the class that actually
-// sees a 4K or ultrawide window, since xlarge starts at 1201px.
+// 12-column CSS Grid. The historical prefixes remain public markup, but each
+// now maps exactly to an M3 window size class: s = Compact, m = Medium,
+// l = Expanded, xl = Large, xxl = Extra-large. Compact is the default and
+// therefore needs no media query.
 $grid-columns: 12;
 $grid-prefixes: (
   "s": null,
-  "m": "small",
-  "l": "large",
-  "xl": "xlarge",
-  "xxl": "xxlarge",
+  "m": "medium",
+  "l": "expanded",
+  "xl": "large",
+  "xxl": "extra-large",
 );
 
 @mixin grid-spans($prefix) {
@@ -33,13 +34,13 @@ $grid-prefixes: (
   max-width: var(--md-comp-container-max-width);
 }
 
-@include bp-up("small") {
+@include bp-up("medium") {
   .container {
     --md-comp-container-width: 85%;
   }
 }
 
-@include bp-up("large") {
+@include bp-up("expanded") {
   .container {
     --md-comp-container-width: 70%;
   }
@@ -49,7 +50,7 @@ $grid-prefixes: (
 // max-width snapped it back to 1280. Extra-large lifts the cap to 1920
 // (binds once 75% of the viewport exceeds it, around 2560) and opens
 // the measure a little so QHD lands on that cap instead of 1792.
-@include bp-up("xxlarge") {
+@include bp-up("extra-large") {
   .container {
     --md-comp-container-width: 75%;
     --md-comp-container-max-width: 1920px;
@@ -73,7 +74,7 @@ $grid-prefixes: (
 body {
   --gap-size: #{$gutter-width};
 
-  @include bp-up("xxlarge") {
+  @include bp-up("extra-large") {
     --gap-size: 2rem;
   }
 }

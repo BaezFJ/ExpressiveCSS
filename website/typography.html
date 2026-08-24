@@ -34,7 +34,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Typography</h2>
@@ -481,8 +481,8 @@ button, input, optgroup, select, textarea {
           The default stack is
           <code>-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif</code>.
           Form controls inherit that stack. Root <code>font-size</code> is
-          14px on small screens, 14.5px from the large breakpoint, and 15px
-          from xlarge, so rem-based lengths grow slightly on wider
+          14px on Compact and Medium windows, 14.5px from Expanded, and 15px
+          from Large, so rem-based lengths grow slightly on wider
           viewports. Headings use the token sizes in px, so they do not
           follow that ladder.
         </p>

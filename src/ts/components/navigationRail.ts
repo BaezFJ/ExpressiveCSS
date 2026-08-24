@@ -26,7 +26,7 @@ const _defaults: NavigationRailOptions = {
   onCloseEnd: null
 };
 
-const COMPACT = '(width < 601px)';
+const COMPACT = '(width < 600px)';
 
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class

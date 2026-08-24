@@ -23,11 +23,11 @@ html {
   // Deliberately still a two-step ladder rather than a fluid clamp(): the root
   // font size is the basis of every rem in the sheet, so making it continuous
   // would move every computed length at every viewport width.
-  @include bp-up("large") {
+  @include bp-up("expanded") {
     font-size: 14.5px;
   }
 
-  @include bp-up("xlarge") {
+  @include bp-up("large") {
     font-size: 15px;
   }
 }
@@ -78,7 +78,7 @@ strong, b { font-weight: 500; }
 // 30px of viewport width from 360px to 960px. clamp() expresses the same line
 // as one declaration - and continuously, so the type no longer jumps.
 //
-// The whole fluid range sits below the "large" breakpoint, so 1rem is
+// The whole fluid range finishes before the Large breakpoint, so 1rem is
 // $root-font-size throughout it and the conversion below is exact.
 $_flow-min-px: math.div($flow-text-min, 1rem) * $root-font-size;
 $_flow-max-px: math.div($flow-text-max, 1rem) * $root-font-size;

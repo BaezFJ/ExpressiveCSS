@@ -13,10 +13,10 @@
                     <p>
                         The container class is not strictly part of the grid but is important in laying out content. It
                         centers the page and caps how wide it can grow, so a paragraph does not stretch across a 4K
-                        monitor. Width is a percentage of the viewport (90% on phones, 85% from tablet, 70% from
-                        desktop, 75% from extra-large). A max-width token stops that percentage from swallowing the
+                        monitor. Width is a percentage of the viewport (90% on Compact, 85% from Medium, 70% from
+                        Expanded, 75% from Extra-large). A max-width token stops that percentage from swallowing the
                         screen: <code>1280px</code> by default, <code>1920px</code> from the extra-large breakpoint
-                        (1601px). Override the tokens, or pick a modifier:
+                        (1600px). Override the tokens, or pick a modifier:
                     </p>
                     <ul>
                         <li><code>container</code> — default measure, 1280 then 1920.</li>
@@ -115,7 +115,7 @@
 {% endcall %}
                     <p>
                         Note: For now, just know that the
-                        <code>s1</code> stands for small-1 which in plain English means "1 column on small screens".
+                        <code>s1</code> is one column at the Compact/default size and up.
                     </p>
 
                     <h5>Columns live inside Rows</h5>
@@ -426,11 +426,11 @@
                         <thead>
                         <tr>
                             <th></th>
-                            <th>Mobile ≤ 600px</th>
-                            <th>Tablet ≥ 601px</th>
-                            <th>Desktop ≥ 993px</th>
-                            <th>Large desktop ≥ 1201px</th>
-                            <th>Widescreen ≥ 1601px</th>
+                            <th>Compact &lt; 600px</th>
+                            <th>Medium 600–839px</th>
+                            <th>Expanded 840–1199px</th>
+                            <th>Large 1200–1599px</th>
+                            <th>Extra-large ≥ 1600px</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -477,7 +477,7 @@
 
                     <h5>Adding Responsiveness</h5>
                     <p>
-                        In the previous examples, we only defined the size for small screens using <code>s12</code>.
+                        In the previous examples, we only defined the Compact/default size using <code>s12</code>.
                         This is fine if we want a fixed layout
                         since the rules propagate upwards. By just saying s12, we are essentially saying <code>s12 m12
                         l12</code>. But by explicitly defining
@@ -543,16 +543,16 @@
   <div class="s12 m4 l3">
     <!-- Grey navigation panel
           This content will be:
-      3-columns-wide on large screens,
-      4-columns-wide on medium screens,
-      12-columns-wide on small screens -->
+      3-columns-wide on Expanded and larger screens,
+      4-columns-wide on Medium screens,
+      12-columns-wide on Compact screens -->
   </div>
   <div class="s12 m8 l9">
     <!-- Teal page content
           This content will be:
-      9-columns-wide on large screens,
-      8-columns-wide on medium screens,
-      12-columns-wide on small screens -->
+      9-columns-wide on Expanded and larger screens,
+      8-columns-wide on Medium screens,
+      12-columns-wide on Compact screens -->
   </div>
 </div>
 {% endcall %}

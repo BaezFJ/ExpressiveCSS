@@ -32,7 +32,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Helpers</h2>
@@ -345,66 +345,65 @@
               <td>Hidden for all Devices</td>
             </tr>
             <tr>
-              <td><code><strong>.hide-on-small-only</strong></code></td>
-              <td>Hidden for Mobile Only</td>
+              <td><code><strong>.hide-on-compact-only</strong></code></td>
+              <td>Hidden on Compact (&lt; 600px)</td>
             </tr>
             <tr>
-              <td><code><strong>.hide-on-med-only</strong></code></td>
-              <td>Hidden for Tablet Only</td>
+              <td><code><strong>.hide-on-medium-only</strong></code></td>
+              <td>Hidden on Medium (600–839px)</td>
             </tr>
             <tr>
-              <td><code><strong>.hide-on-med-and-down</strong></code></td>
-              <td>Hidden for Tablet and Below</td>
+              <td><code><strong>.hide-on-expanded-only</strong></code></td>
+              <td>Hidden on Expanded (840–1199px)</td>
             </tr>
             <tr>
-              <td><code><strong>.hide-on-med-and-up</strong></code></td>
-              <td>Hidden for Tablet and Above</td>
+              <td><code><strong>.hide-on-expanded-and-up</strong></code></td>
+              <td>Hidden on Expanded and wider (≥ 840px)</td>
             </tr>
             <tr>
               <td><code><strong>.hide-on-large-only</strong></code></td>
-              <td>Hidden for Desktop Only</td>
+              <td>Hidden on Large (1200–1599px)</td>
             </tr>
             <tr>
               <td><code><strong>.hide-on-extra-large-only</strong></code></td>
-              <td>Hidden for Large Desktop and above (≥ 1201px)</td>
+              <td>Hidden on Extra-large (≥ 1600px)</td>
             </tr>
             <tr>
-              <td><code><strong>.hide-on-xxl-only</strong></code></td>
-              <td>Hidden for Widescreen and above (≥ 1601px)</td>
-            </tr>
-            <tr>
-              <td><code><strong>.show-on-small</strong></code></td>
-              <td>Show for Mobile Only</td>
+              <td><code><strong>.show-on-compact</strong></code></td>
+              <td>Shown on Compact (&lt; 600px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-medium</strong></code></td>
-              <td>Show for Tablet Only</td>
+              <td>Shown on Medium (600–839px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-expanded</strong></code></td>
+              <td>Shown on Expanded (840–1199px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-large</strong></code></td>
-              <td>Show for Desktop Only</td>
+              <td>Shown on Large (1200–1599px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-extra-large</strong></code></td>
-              <td>Show for Large Desktop and above (≥ 1201px)</td>
-            </tr>
-            <tr>
-              <td><code><strong>.show-on-xxl</strong></code></td>
-              <td>Show for Widescreen and above (≥ 1601px)</td>
+              <td>Shown on Extra-large (≥ 1600px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-medium-and-up</strong></code></td>
-              <td>Show for Tablet and Above</td>
+              <td>Shown on Medium and wider (≥ 600px)</td>
             </tr>
             <tr>
               <td><code><strong>.show-on-medium-and-down</strong></code></td>
-              <td>Show for Tablet and Below</td>
+              <td>Shown on Compact and Medium (&lt; 840px)</td>
             </tr>
           </tbody>
         </table>
         <p>
+          Legacy <code>small</code>, <code>med</code>, and <code>xxl</code>
+          utility names remain aliases for compatibility.
+        </p>
         <h5>Usage</h5>
-<pre><code>&lt;div class="hide-on-small-only"&gt;&lt;/div&gt;</code></pre>
+<pre><code>&lt;div class="hide-on-compact-only"&gt;&lt;/div&gt;</code></pre>
   
       </div>
 

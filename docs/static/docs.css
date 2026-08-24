@@ -46,7 +46,7 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
 }
 
 /* Offset documentation pages so they sit beside the fixed sidenav. */
-@media (width >= 993px) {
+@media (width >= 840px) {
   body.docs > header,
   body.docs > main,
   body.docs > footer {
@@ -430,7 +430,7 @@ header:has(> nav) > nav #source-color-toggle {
 }
 
 /* Panes docs: reading column + sticky TOC, demos use the remaining width. */
-@media (width >= 993px) {
+@media (width >= 840px) {
   .container.panes-page {
     --md-comp-container-width: 90%;
     --md-comp-container-max-width: 1400px;

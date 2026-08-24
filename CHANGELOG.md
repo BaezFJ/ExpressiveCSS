@@ -16,6 +16,16 @@ below is the whole story for that component.
 
 ### Changed
 
+- **Responsive breakpoints now match Material 3 exactly.** Compact is below
+  600px, Medium is 600–839px, Expanded is 840–1199px, Large is
+  1200–1599px, and Extra-large starts at 1600px. The Sass keys are now
+  `compact`, `medium`, `expanded`, `large`, and `extra-large`; consumers that
+  used `small`, `xlarge`, or `xxlarge` must migrate, and code that used
+  `bp-up("large")` for the old desktop boundary should use
+  `bp-up("expanded")`. Grid markup keeps `.s` / `.m` / `.l` / `.xl` /
+  `.xxl`, mapped to those five classes in order. Visibility helpers now name
+  and isolate the same M3 ranges; legacy `small`, `med`, and `xxl` spellings
+  remain aliases where their meaning is unambiguous.
 - **Components took the names Material 3 uses for them.** Every rename is
   additive — the old class stays in the selector list, the old export stays as
   an alias — with one exception, called out below.
@@ -49,7 +59,7 @@ below is the whole story for that component.
 
 - **The renames reached the styling and stopped short of the behaviour.** The
   Sass alias made `.navigation-drawer-fixed` *look* docked while the component
-  still read only `sidenav-fixed`, so at the large breakpoint a canonically
+  still read only `sidenav-fixed`, so at the Expanded breakpoint a canonically
   named drawer kept its drag target live and `open()` could turn it into a
   modal. `_host()` in Slider knew only the legacy classes, so a dual-handle
   control in a `.slider` host never clamped its handles and never tracked the

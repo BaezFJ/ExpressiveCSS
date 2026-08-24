@@ -70,19 +70,19 @@ footer:not(:has(> nav:only-child)):not(:has(> .container)) {
   gap: var(--md-comp-footer-gap);
   grid-template-columns: 1fr;
 
-  @include bp-up("small") {
+  @include bp-up("medium") {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include bp-up("large") {
+  @include bp-up("expanded") {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  @include bp-up("xlarge") {
+  @include bp-up("large") {
     grid-template-columns: repeat(5, 1fr);
   }
 
-  @include bp-up("xxlarge") {
+  @include bp-up("extra-large") {
     grid-template-columns: repeat(6, 1fr);
   }
 }

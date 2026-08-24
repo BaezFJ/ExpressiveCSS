@@ -360,7 +360,7 @@ describe('Select caret position', () => {
 });
 
 describe('App bar sidenav trigger', () => {
-  test('a sidenav-trigger inside a top app bar is not hidden on large screens', () => {
+  test('a sidenav-trigger inside a top app bar is not hidden on wider screens', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
     // Materialize hid header > nav > .sidenav-trigger at the large
     // breakpoint. An M3 app bar keeps the leading page-navigation

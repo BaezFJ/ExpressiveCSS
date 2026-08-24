@@ -65,21 +65,26 @@ fine — it crosses no boundary.
 
 ## Breakpoints
 
-Four of them, in `abstracts/_breakpoints.scss`, reached through mixins:
+The five Material 3 window size classes live in
+`abstracts/_breakpoints.scss` and are reached through mixins:
 
 ```scss
-@include bp-up("small")   { }   // @media (width >= 601px)
-@include bp-down("large") { }   // @media (width < 993px)
-@include bp-between("small", "large") { }
+@include bp-up("medium") { }                    // width >= 600px
+@include bp-down("expanded") { }                // width < 840px
+@include bp-between("expanded", "large") { }   // 840px–1199px
 ```
 
-Names are `small` (601px), `large` (993px), `xlarge` (1201px), `xxlarge`
-(1601px) — the boundary a query sits on, not the size of the screen it
-targets. `xxlarge` is M3 extra-large (desktop / widescreen); the 12-column
-grid grows a `.xxl` prefix there, and `.container` lifts its 1280px cap to
-1920px. Range syntax has an exclusive comparator, so the old `600.99px` /
-`992.99px` values used to stop `max-width` and `min-width` both matching on
-the boundary pixel are gone, and each boundary is written once.
+| M3 class | Width | Grid prefix |
+| --- | --- | --- |
+| Compact | `< 600px` | `.s` (default) |
+| Medium | `600–839px` | `.m` |
+| Expanded | `840–1199px` | `.l` |
+| Large | `1200–1599px` | `.xl` |
+| Extra-large | `>= 1600px` | `.xxl` |
+
+The grid prefixes remain unchanged for markup compatibility. At Extra-large,
+`.container` lifts its 1280px cap to 1920px. Range syntax uses exclusive
+comparators, so each boundary is written once without fractional max-widths.
 
 ## Theming
 

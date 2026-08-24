@@ -10,7 +10,7 @@
 //
 // Tokens follow https://m3.material.io/components/bottom-sheets
 //   container    surface-container-low, 28dp top corners, elevation 1
-//   max width    640dp; 56dp inset from the small breakpoint
+//   max width    640dp; 56dp inset from the Medium breakpoint
 //   max height   viewport minus 72dp
 //   handle       32×4dp bar in a 48dp hit target, on-surface-variant
 //   scrim        modal only (UA ::backdrop + the dialog scrim token)
@@ -60,7 +60,7 @@ dialog.bottom-sheet {
     z-index: 1100;
   }
 
-  @include bp-up("small") {
+  @include bp-up("medium") {
     width: min(
       var(--md-comp-bottom-sheet-container-max-width),
       calc(100% - 2 * var(--md-comp-bottom-sheet-margin-inline))

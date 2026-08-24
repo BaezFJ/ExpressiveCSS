@@ -123,7 +123,7 @@ dialog:is(.sidenav, .navigation-drawer) {
 // Docked sidebar: the host must not be a box, or it would steal the
 // list's position:fixed. Closed, so it is not :modal and does not
 // lock the page.
-@include bp-up("large") {
+@include bp-up("expanded") {
   dialog:is(.sidenav-overlay, .navigation-drawer-overlay):has(> :is(.sidenav-fixed, .navigation-drawer-fixed)):not(:modal) {
     display: contents;
   }
@@ -346,7 +346,7 @@ dialog:is(.sidenav-overlay, .navigation-drawer-overlay):modal > :is(.sidenav, .n
   }
 }
 
-@include bp-down("large") {
+@include bp-down("expanded") {
   // Uninitialized / no-js: keep a fixed drawer off-canvas. Once JS wraps
   // it, the host's display:none hides the closed drawer and this must
   // not also hide the list inside an open dialog.
@@ -376,11 +376,10 @@ dialog:is(.sidenav-overlay, .navigation-drawer-overlay):modal > :is(.sidenav, .n
   }
 }
 
-@include bp-up("large") {
+@include bp-up("expanded") {
   .drag-target[data-fixed] {
     display: none;
     pointer-events: none;
   }
 }
-
 

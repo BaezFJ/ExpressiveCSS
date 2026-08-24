@@ -14,7 +14,7 @@
 //   action       label-large / inverse-primary text button
 //   close        24dp icon, inverse-on-surface
 //   inset        8dp compact, 24dp from the bottom on larger screens
-//   placement    bottom of the UI; centered from the small breakpoint
+//   placement    bottom of the UI; centered from the Medium breakpoint
 //
 // Snackbars must not interrupt browsing: the container is pointer-events
 // none except on the bar, and the live region is polite. One at a time
@@ -48,7 +48,7 @@ $_bar: ".snackbar";
     pointer-events: auto;
   }
 
-  @include bp-up("small") {
+  @include bp-up("medium") {
     --md-comp-snackbar-container-margin-leading: 24px;
     --md-comp-snackbar-container-margin-trailing: 24px;
     --md-comp-snackbar-container-margin-bottom: 24px;
@@ -95,7 +95,7 @@ $_bar: ".snackbar";
   @include z-depth("3");
   cursor: default;
 
-  @include bp-up("small") {
+  @include bp-up("medium") {
     width: max-content;
     min-width: min(344px, 100%);
   }
@@ -226,7 +226,7 @@ $_bar: ".snackbar";
 
 // Static overlay. In-flow without this (docs previews). Not AutoInit —
 // add and remove the class yourself, or use the constructor for timing.
-// Default: bottom of the UI, centered from the small breakpoint.
+// Default: bottom of the UI, centered from the Medium breakpoint.
 #{$_bar}.active {
   position: fixed;
   z-index: 10000;
@@ -238,7 +238,7 @@ $_bar: ".snackbar";
   width: max-content;
   max-width: min(672px, calc(100% - 48px));
 
-  @include bp-down("small") {
+  @include bp-down("medium") {
     left: 8px;
     right: 8px;
     bottom: max(8px, env(safe-area-inset-bottom, 0px));
@@ -251,7 +251,7 @@ $_bar: ".snackbar";
     top: 24px;
     bottom: auto;
 
-    @include bp-down("small") {
+    @include bp-down("medium") {
       top: 8px;
       left: 8px;
       right: 8px;

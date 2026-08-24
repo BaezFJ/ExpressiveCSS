@@ -32,7 +32,7 @@
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="navigation-drawer-trigger hide-on-large-only" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>Bottom sheet</h2>
@@ -283,7 +283,7 @@
           Tokens follow the
           <a href="https://m3.material.io/components/bottom-sheets">M3 bottom sheet spec</a>.
           The container is <code>surface-container-low</code>, 28dp top
-          corners, elevation 1. Max width is 640dp. From the small breakpoint
+          corners, elevation 1. Max width is 640dp. From the Medium breakpoint
           the sheet is inset 56dp from the sides. It never covers the top
           72dp of the viewport. The drag handle is a 32×4dp bar in a 48dp
           hit target.
@@ -381,8 +381,8 @@
         <h3>Layout</h3>
 
         <p>
-          Compact (below 601px) is full-bleed, flush to the bottom. From
-          the small breakpoint the sheet is at most 640dp wide with 56dp
+          Compact (below 600px) is full-bleed, flush to the bottom. From
+          the Medium breakpoint the sheet is at most 640dp wide with 56dp
           side inset. It always stops 72dp short of the top. On large
           screens a
           <a href="/side-sheet.html">side sheet</a>

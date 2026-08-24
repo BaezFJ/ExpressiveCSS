@@ -47,15 +47,19 @@ Material layouts are designed against **window size classes**, not against “ph
 
 | Class | Width | Typical devices | ExpressiveCSS hook |
 | --- | --- | --- | --- |
-| Compact | `< 600 dp` | Phone portrait | Default. Below the `small` breakpoint (`601px`). |
-| Medium | `600–839 dp` | Tablet / foldable portrait | From `small` (`m` grid prefix, `601px`) up to just under 840. |
-| Expanded | `840–1199 dp` | Phone landscape, tablet landscape, small desktop | Panes split at `840px` (container query). Grid `l` is `993px`. |
-| Large | `1200–1599 dp` | Desktop | Grid `xl` is `1201px`. |
-| Extra-large | `≥ 1600 dp` | Wide / ultra-wide desktop | Grid `xxl` is `1601px`. |
+| Compact | `< 600 dp` | Phone portrait | Default; `.s` grid prefix. |
+| Medium | `600–839 dp` | Tablet / foldable portrait | `medium`; `.m` grid prefix. |
+| Expanded | `840–1199 dp` | Phone landscape, tablet landscape, small desktop | `expanded`; `.l` grid prefix. Panes split at 840dp. |
+| Large | `1200–1599 dp` | Desktop | `large`; `.xl` grid prefix. |
+| Extra-large | `≥ 1600 dp` | Wide / ultra-wide desktop | `extra-large`; `.xxl` grid prefix. |
 
-ExpressiveCSS breakpoints (`small` 601, `large` 993, `xlarge` 1201, `xxlarge` 1601) are the implementation. Prefer the Material class names in reasoning, then emit the matching grid / hide / pane classes.
+These are the implementation boundaries as well as the design vocabulary. Use
+the Material class names in reasoning, then emit the matching grid, visibility,
+or pane classes.
 
-Hide/show helpers: `hide-on-small-and-down`, `hide-on-med-and-down`, `hide-on-large-only`, `show-on-large`, and the rest documented in `llm.md`. Do not invent a second breakpoint system.
+Hide/show helpers use the same names: `hide-on-compact-only`,
+`hide-on-medium-only`, `hide-on-expanded-only`, `hide-on-large-only`,
+`hide-on-extra-large-only`, and their `show-on-*` counterparts.
 
 ## 1.2 What changes with window size
 
@@ -99,7 +103,7 @@ M3 Expressive (May 2025) **prefers an expanded navigation rail over a navigation
 
 - Use `.navigation-rail` / `.navigation-rail.expanded` for 3–7 peer destinations.
 - Use `.navigation-drawer` when destinations nest (`<details>` / `<summary>`), when you need a user header, or when a compact screen needs a modal overflow menu that is not a rail.
-- `.navigation-drawer.navigation-drawer-fixed` is a persistent sidebar from the `large` breakpoint up. Do not combine it with a rail.
+- `.navigation-drawer.navigation-drawer-fixed` is a persistent sidebar from the `expanded` breakpoint up. Do not combine it with a rail.
 
 The **app bar** is not navigation between app views. It names the current page and holds 1–2 actions. Pair it with a bar, a rail, or a navigation drawer — it does not replace them.
 
