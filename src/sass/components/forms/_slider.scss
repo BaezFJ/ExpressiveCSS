@@ -123,7 +123,7 @@ input[type="range"] {
 }
 
 // Inset icon. Sits in the active track; M / L / XL are the intended sizes.
-:is(#{$_host}) > i:first-child {
+:is(#{$_host}) > #{$icon}:first-child {
   position: absolute;
   z-index: 1;
   left: var(--md-comp-slider-stop-inset);
@@ -137,7 +137,7 @@ input[type="range"] {
   pointer-events: none;
 }
 
-:is(#{$_host}).vertical > i:first-child {
+:is(#{$_host}).vertical > #{$icon}:first-child {
   left: 50%;
   top: auto;
   bottom: var(--md-comp-slider-stop-inset);
