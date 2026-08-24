@@ -2941,7 +2941,7 @@ Add `nowrap` to keep a long run on one row and scroll it sideways instead of wra
 
 Material 3 canonical layouts — list-detail, supporting pane, and equal panes.
 
-Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container is also a `container-type: inline-size` query container, so a pane layout nested inside a narrow column collapses on its own width, not the viewport's.
+Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Compact windows (`< 600px`) use 16px inline margins. Every wider layout uses 24px inline margins and 24px spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container is also a `container-type: inline-size` query container, so a pane layout nested inside a narrow column collapses on its own width, not the viewport's.
 
 Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane` counts as a pane child — the specific names are for readability.
 
@@ -2974,7 +2974,7 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
 
 ### Compact
 
-Below 840px the container shows one pane. The first pane wins by default; add `active` to the pane you want instead, and move that class to switch panes. Above 840px `active` is ignored and every pane shows.
+On Compact windows (`< 600px`) the container has 16px inline margins. Medium and wider windows use 24px inline margins and 24px spacers. On Compact and Medium windows (`< 840px`) the container shows one pane. The first pane wins by default; add `active` to the pane you want instead, and move that class to switch panes. At 840px and up `active` is ignored and every pane shows.
 
 ```html
 <div class="panes list-detail">
@@ -3054,7 +3054,8 @@ Set these on the container to resize a layout.
 
 | Name | Default | Description |
 | --- | --- | --- |
-| `--md-comp-pane-gap` | `24px` | Gap and padding in the separated appearance. |
+| `--md-comp-pane-margin` | `16px` Compact; `24px` Medium and wider | Inline window-edge margin. |
+| `--md-comp-pane-gap` | `24px` | Medium-and-wider spacers; gap and padding in the separated appearance. |
 | `--md-comp-pane-divider-color` | `outline-variant` | Coplanar divider and `outlined` pane border. |
 | `--md-comp-pane-container-color` | `surface` | Container fill. |
 | `--md-comp-pane-container-shape` | `0px` (`16px` when separated) | Pane corner radius. |

@@ -16,6 +16,8 @@ below is the whole story for that component.
 
 ### Changed
 
+- Pane layouts now use M3 spacing: 16dp inline margins on Compact, then
+  24dp margins and 24dp spacers on Medium through Extra-large.
 - **Responsive breakpoints now match Material 3 exactly.** Compact is below
   600px, Medium is 600–839px, Expanded is 840–1199px, Large is
   1200–1599px, and Extra-large starts at 1600px. The Sass keys are now

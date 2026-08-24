@@ -20,6 +20,7 @@
 //     with surface-container-low and a 24dp gap.
 //
 // Tokens follow https://m3.material.io/foundations/adaptive-design/canonical-layouts
+//   --md-comp-pane-margin                    16px Compact / 24px Medium+
 //   --md-comp-pane-gap                       24px
 //   --md-comp-pane-divider-color             outline-variant
 //   --md-comp-pane-container-color           surface
@@ -54,6 +55,21 @@
   // Default: single pane on Compact and Medium windows (< 840px).
   grid-template-columns: 1fr;
   gap: 0;
+
+  // M3 layout margins are the inline space between content and the window
+  // edges. Keep the full-height pane model and inset layouts below Large.
+  @include bp-down("medium") {
+    --md-comp-pane-margin: 16px;
+    width: calc(100% - (2 * var(--md-comp-pane-margin)));
+    margin-inline: var(--md-comp-pane-margin);
+  }
+
+  @include bp-between("medium", "expanded") {
+    --md-comp-pane-margin: 24px;
+    width: calc(100% - (2 * var(--md-comp-pane-margin)));
+    margin-inline: var(--md-comp-pane-margin);
+    gap: var(--md-comp-pane-gap);
+  }
 
   // Panes in compact mode: list/primary visible by default, detail/supporting hidden
   // unless marked .active
@@ -91,6 +107,29 @@
     > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
       display: flex !important;
     }
+  }
+
+  // This follows both two-pane rules so their base gap cannot cancel the M3
+  // Expanded spacer when the viewport and container queries both match.
+  @include bp-between("expanded", "large") {
+    --md-comp-pane-margin: 24px;
+    width: calc(100% - (2 * var(--md-comp-pane-margin)));
+    margin-inline: var(--md-comp-pane-margin);
+    gap: var(--md-comp-pane-gap);
+  }
+
+  @include bp-between("large", "extra-large") {
+    --md-comp-pane-margin: 24px;
+    width: calc(100% - (2 * var(--md-comp-pane-margin)));
+    margin-inline: var(--md-comp-pane-margin);
+    gap: var(--md-comp-pane-gap);
+  }
+
+  @include bp-up("extra-large") {
+    --md-comp-pane-margin: 24px;
+    width: calc(100% - (2 * var(--md-comp-pane-margin)));
+    margin-inline: var(--md-comp-pane-margin);
+    gap: var(--md-comp-pane-gap);
   }
 }
 

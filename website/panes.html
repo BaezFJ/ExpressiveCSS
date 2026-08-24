@@ -284,8 +284,9 @@
         <code>outline-variant</code> divider. The split is 840px, from
         either the viewport or the panes container itself
         (<code>container-type: inline-size</code>). Below that, one pane
-        at a time. Give the container a height — it is
-        <code>height: 100%</code>.
+        at a time. Compact windows add 16dp inline margins; every wider
+        layout uses 24dp margins and 24dp spacers. Give the container a
+        height — it is <code>height: 100%</code>.
       </p>
       <p>
         Semantic child names are aliases of <code>.pane</code>:
@@ -390,11 +391,14 @@
         <h3>Compact</h3>
 
       <p>
-        Below 840px every pane is hidden except
+        On Compact windows (below 600px), the layout has 16dp inline
+        margins. Medium, Expanded, Large, and Extra-large windows use
+        24dp inline margins and 24dp spacers. On Compact and Medium
+        windows (below 840px), every pane is hidden except
         <code>active</code>. If none is active, the first pane shows.
         Toggle <code>active</code> yourself when the user picks a row
         or taps back — <code>AutoInit()</code> does not start panes.
-        On expanded windows both panes are shown regardless of
+        On Expanded windows both panes are shown regardless of
         <code>active</code>, so the same markup works at every size.
       </p>
       <p>
@@ -727,6 +731,10 @@ back.addEventListener('click', () =&gt; {
             </thead>
             <tbody>
 
+          <tr>
+            <td><code>--md-comp-pane-margin</code></td>
+            <td>16px Compact; 24px Medium and wider</td>
+          </tr>
           <tr><td><code>--md-comp-pane-gap</code></td><td>24px</td></tr>
           <tr><td><code>--md-comp-pane-divider-color</code></td><td>outline-variant</td></tr>
           <tr><td><code>--md-comp-pane-container-color</code></td><td>surface</td></tr>

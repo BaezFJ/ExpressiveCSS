@@ -75,7 +75,7 @@ On compact, bottom sheets are the right way to offer extra actions. From medium 
 
 ## 1.3 Canonical pane layouts
 
-Panes are the layout, not a widget. ExpressiveCSS: a `.panes` / `.pane-layout` / `.list-detail` container with two or three `.pane` children. No JavaScript. Give the container a height (`height: 100%`). The split is 840 dp, from the viewport **or** the container (`container-type: inline-size`).
+Panes are the layout, not a widget. ExpressiveCSS: a `.panes` / `.pane-layout` / `.list-detail` container with two or three `.pane` children. No JavaScript. Give the container a height (`height: 100%`). Compact windows use 16 dp inline margins; every wider layout uses 24 dp margins and 24 dp spacers. The split is 840 dp, from the viewport **or** the container (`container-type: inline-size`).
 
 | Layout | Compact | Expanded+ | ExpressiveCSS |
 | --- | --- | --- | --- |
