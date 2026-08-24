@@ -69,6 +69,24 @@ below is the whole story for that component.
   every rule naming an old class and fails if the new one is missing from it.
 - **`llm.md` documented a token that does not exist** — `--sidenav-width`. The
   real one is `--md-comp-nav-drawer-width`.
+- **The top app bar told an icon from a label by its element.** The 48dp
+  circular target was keyed on `<i>`, and the canonical icon is a
+  `<span class="material-symbols">` — so every bar written the way the docs
+  teach, this site's own header included, lost the rule outright. The leading
+  action fell through to the generic button pill (72×40, tonal fill), the
+  trailing icon links were swept up by the *text-destination* rule and drawn at
+  `label-large` with 12dp padding, and the headline sat 76px from the edge
+  instead of the spec's 56. Keyed on the shared `$icon` list now, the way
+  `_buttons` and `_toolbar` already were.
+- **The medium and large app bars missed their spec insets**, and a
+  title-only one put the headline where the icons belong. The expanded
+  headline sat 20dp from the inline edge rather than 16, medium left 16dp
+  above the container bottom rather than 20, and the icon row sat 4dp high
+  instead of centred in the 64dp row the bar collapses to. Separately, a bar
+  with no icons has a single flex line, and `align-content: space-between`
+  packs one line to the *top* — so the headline rose to the icon row. The top
+  row now has a height of its own and the headline a basis that cannot share
+  a line with it.
 
 ### Added
 

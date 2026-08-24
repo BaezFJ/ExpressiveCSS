@@ -429,6 +429,75 @@ describe('App bar medium and large', () => {
   });
 });
 
+describe('App bar icon actions', () => {
+  test('an icon-only action is found by the icon class list, not by <i>', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    // The canonical icon is <span class="material-symbols">. Keying the
+    // 48dp circular target on `i` meant every bar written the documented
+    // way lost it: the leading action fell through to the generic button
+    // pill (72x40, tonal fill) and the trailing ones were swept up by the
+    // text-destination rule and rendered at label-large with 12dp padding.
+    const iconAction = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)]
+      .map((m) => ({ sel: m[1], body: m[2] }))
+      .filter(
+        (r) =>
+          /header:has\(>/.test(r.sel) &&
+          /:is\(a, button\)/.test(r.sel) &&
+          /only-child/.test(r.sel) &&
+          /border-radius:\s*50%/.test(r.body)
+      );
+    assert.equal(iconAction.length, 1, 'exactly one app bar icon-action rule');
+    assert.match(iconAction[0].sel, /\.material-symbols/);
+    assert.match(iconAction[0].body, /width:\s*48px/);
+    assert.match(iconAction[0].body, /height:\s*48px/);
+
+    // ...and the destination rule has to exclude the same set, or an
+    // icon-only link matches both.
+    const destination = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)]
+      .map((m) => ({ sel: m[1], body: m[2] }))
+      .filter((r) => /header:has\(>/.test(r.sel) && /a:not\(:has\(>/.test(r.sel));
+    assert.ok(destination.length > 0, 'no app bar text-destination rule');
+    for (const rule of destination) {
+      assert.match(rule.sel, /a:not\(:has\(>\s*:is\(i, \.material-symbols/);
+    }
+  });
+});
+
+describe('App bar medium and large geometry', () => {
+  test('the top row is 64dp and the headline sits on the spec insets', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const bodyOf = (test) =>
+      [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].filter((m) => test(m[1])).map((m) => m[2]);
+
+    // 8dp centres the 48dp targets in the 64dp row the bar collapses to;
+    // 4dp put them 4dp high and left the title 4dp short of its inset.
+    const shared = bodyOf(
+      (sel) => /header\.medium\b/.test(sel) && /header\.large\b/.test(sel) && !/::before/.test(sel)
+    );
+    assert.ok(shared.some((b) => /padding-top:\s*8px/.test(b)));
+
+    // A title-only bar has one flex line, and space-between pins one line
+    // to the *top* - the headline landed where the icons belong. The
+    // spacer gives the icon row a height of its own; the headline's basis
+    // has to exceed the line or it fits beside that zero-width spacer.
+    const spacer = bodyOf((sel) => /header\.medium\b/.test(sel) && /::before/.test(sel));
+    assert.ok(spacer.some((b) => /height:\s*48px/.test(b)), 'no 48dp top-row spacer');
+    const headline = bodyOf(
+      (sel) => /header\.medium\b/.test(sel) && /h1, h2/.test(sel) && !/\+ \*/.test(sel)
+    );
+    assert.ok(headline.some((b) => /flex:\s*1 1 calc\(100% \+ 1px\)/.test(b)));
+
+    // Expanded headline: 16dp from the inline edges (4dp of it paid by the
+    // bar), 20dp above the bottom on medium and 28dp on large.
+    const medium = bodyOf((sel) => /header\.medium\b/.test(sel) && !/header\.large\b/.test(sel));
+    assert.ok(medium.some((b) => /padding-bottom:\s*20px/.test(b)));
+    assert.ok(medium.some((b) => /padding:\s*0 12px/.test(b)));
+    const large = bodyOf((sel) => /header\.large\b/.test(sel) && !/header\.medium\b/.test(sel));
+    assert.ok(large.some((b) => /padding-bottom:\s*28px/.test(b)));
+    assert.ok(large.some((b) => /padding:\s*0 12px/.test(b)));
+  });
+});
+
 describe('retired Feature Discovery', () => {
   test('does not emit tap-target styles or export TapTarget', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
