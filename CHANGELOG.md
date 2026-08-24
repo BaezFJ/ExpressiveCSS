@@ -129,6 +129,22 @@ below is the whole story for that component.
   `md.comp.navigation-bar.active-indicator.width` is 64dp and
   `md.comp.navigation-rail.active-indicator.width` is 56dp; both were 56 here.
   The rail is unchanged; the bar is now 64×32.
+- **The remaining four components, and the cascade bug hiding underneath
+  them.** `_buttons`, `_navigation-rail`, `_snackbar` and `forms/_slider` asked
+  `> i` the same way. Two failed harder than the rest: the navigation rail
+  hides its FAB *label* with `> :not(i)`, so once the icon became a `<span>`
+  that rule hid the icon instead and the FAB rendered as an empty 56dp box;
+  and the FAB toolbar's collapsed actions kept `opacity: 0`.
+
+  Fixing `_buttons` exposed a second defect. A component icon rule and the base
+  `.material-symbols` rule both carry a class, so they tie on specificity and
+  source order alone decides — and `icons-material-design` was forwarded
+  *after* `buttons`, `list` and `badges`. Those three silently lost the tie, so
+  a button drew an 18px box around a 24px glyph. Icons now load first, which is
+  the order every other component already had. **A standard button's icon is
+  now 18dp** (`--md-comp-filled-button-icon-size`) rather than the 24dp font
+  default; circle, FAB and extended buttons stay 24dp. `list` and `badges` are
+  unchanged — their tokens already matched the default.
 
 ### Added
 

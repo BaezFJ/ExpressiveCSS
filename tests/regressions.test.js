@@ -949,3 +949,106 @@ describe('Icon-only header actions and the indicator width', () => {
     assert.match(css, /--md-comp-nav-rail-indicator-width:\s*56px/);
   });
 });
+
+describe('Icon selectors keyed on <i>, second sweep', () => {
+  // The four components left over from the first sweep. Same defect, but two
+  // of them fail in ways the first eleven did not:
+  //
+  //  - the navigation rail hides its FAB *label* with `> :not(i)`, so once the
+  //    icon became a <span> that rule hid the icon and showed nothing;
+  //  - `_buttons` sizes its glyph from a token, and lost the declaration to
+  //    the base `.material-symbols` rule on source order alone.
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+  const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
+    selector: m[1].trim(),
+    body: m[2]
+  }));
+  const find = (where, what) =>
+    rules.filter((r) => where.test(r.selector) && what.test(r.body));
+
+  function assertIconIsAClass(label, where, what) {
+    const hits = find(where, what);
+    assert.ok(hits.length > 0, `${label}: no rule matched - the probe is stale`);
+    for (const hit of hits) {
+      assert.match(
+        hit.selector,
+        /\.material-symbols/,
+        `${label}: rule is keyed on the bare <i> element:\n  ${hit.selector}`
+      );
+    }
+  }
+
+  test('button glyphs are sized from the button icon token', () => {
+    assertIconIsAClass(
+      'buttons',
+      /button/,
+      /font-size:\s*var\(--md-comp-filled-button-icon-size\)/
+    );
+  });
+
+  test('the base icon rule loads before the components that override it', () => {
+    // Both selectors carry a class, so they tie on specificity and source
+    // order alone decides. With icons forwarded 4th, `buttons` lost the tie
+    // and a button rendered an 18px box around a 24px glyph.
+    const base = css.search(/\.material-symbols[^{]*\{[^}]*font-size:\s*24px/);
+    const btn = css.search(/font-size:\s*var\(--md-comp-filled-button-icon-size\)/);
+    assert.ok(base > -1 && btn > -1, 'probe is stale - one of the rules is gone');
+    assert.ok(
+      base < btn,
+      'the base .material-symbols rule must come first, or component icon sizes lose the tie'
+    );
+  });
+
+  test('the FAB toolbar hides the icons of its collapsed actions', () => {
+    assertIconIsAClass('fab toolbar', /toolbar/, /opacity:\s*0/);
+  });
+
+  test('navigation rail draws the active indicator pill', () => {
+    assertIconIsAClass(
+      'nav-rail indicator box',
+      /\.navigation-rail\b/,
+      // The rail's own hamburger button is sized to the indicator too, and is
+      // right to carry no icon class - so pair the width with the transition
+      // that only the glyph rule declares.
+      /width:\s*var\(--md-comp-nav-rail-indicator-width\)[\s\S]*transition:\s*background-color/
+    );
+    assertIconIsAClass(
+      'nav-rail indicator fill',
+      /\.navigation-rail\b[\s\S]*(\.active|\[aria-current\])\s*>/,
+      /background-color:\s*var\(--md-comp-nav-rail-active-indicator-color\)/
+    );
+  });
+
+  test('the rail FAB hides its label and not its icon', () => {
+    // `> :not(i)` is "everything that is not the glyph". The icon is a <span>,
+    // so this visually hid the icon itself - the FAB rendered as an empty box.
+    const hidden = find(/\.navigation-rail\b/, /clip-path:\s*inset\(50%\)/);
+    assert.ok(hidden.length > 0, 'no rule visually hides the rail FAB label');
+    for (const hit of hidden) {
+      assert.match(
+        hit.selector,
+        /:not\([^)]*\.material-symbols/,
+        `rail label-hiding rule swallows the icon:\n  ${hit.selector}`
+      );
+    }
+  });
+
+  test('snackbar leading icon and icon button are sized', () => {
+    assertIconIsAClass(
+      'snackbar leading',
+      /\.snackbar\b/,
+      // Pair with `font-size`, or this also catches the icon *button*: it
+      // sets the same colour and the same `flex` on itself, and correctly
+      // names no icon. Only the glyph rule sizes type.
+      /font-size:[\s\S]*color:\s*var\(--md-comp-snackbar-icon-color\)/
+    );
+  });
+
+  test('the slider inset icon sits in the active track', () => {
+    assertIconIsAClass(
+      'slider inset icon',
+      /\.slider\b|\.range\b/,
+      /font-size:\s*var\(--md-comp-slider-icon-size\)/
+    );
+  });
+});

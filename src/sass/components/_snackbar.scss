@@ -116,7 +116,7 @@ $_bar: ".snackbar";
   }
 
   // Optional leading icon (BeerCSS). M3 snackbars have no leading icon.
-  > i:first-child {
+  > #{$icon}:first-child {
     flex: 0 0 auto;
     font-size: 24px;
     width: 24px;
@@ -186,7 +186,7 @@ $_bar: ".snackbar";
     color: var(--md-comp-snackbar-icon-color);
     box-shadow: none;
 
-    > i {
+    > #{$icon} {
       font-size: 24px;
       width: 24px;
       height: 24px;

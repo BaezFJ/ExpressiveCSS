@@ -76,7 +76,7 @@
     appearance: none;
     @include focus-visible;
 
-    > i {
+    > #{$icon} {
       font-size: var(--md-comp-nav-rail-icon-size);
       width: var(--md-comp-nav-rail-icon-size);
       height: var(--md-comp-nav-rail-icon-size);
@@ -105,7 +105,7 @@
     background-color: var(--md-sys-color-primary-container);
     text-decoration: none;
 
-    > :not(i) {
+    > :not(#{$icon}) {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -138,7 +138,7 @@
     @include typescale("label-medium");
     @include focus-visible;
 
-    > i {
+    > #{$icon} {
       display: flex;
       flex-shrink: 0;
       align-items: center;
@@ -152,7 +152,7 @@
       transition: background-color var(--md-comp-nav-rail-duration) ease;
     }
 
-    &:hover:not(.active, [aria-current]) > i {
+    &:hover:not(.active, [aria-current]) > #{$icon} {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
     }
 
@@ -160,7 +160,7 @@
     &[aria-current] {
       color: var(--md-sys-color-on-surface);
 
-      > i {
+      > #{$icon} {
         background-color: var(--md-comp-nav-rail-active-indicator-color);
         color: var(--md-comp-nav-rail-active-color);
         --md-icon-fill: 1;
@@ -210,7 +210,7 @@
       color: var(--md-sys-color-on-primary-container);
       background-color: var(--md-sys-color-primary-container);
 
-      > :not(i) {
+      > :not(#{$icon}) {
         position: static;
         width: auto;
         height: auto;
@@ -230,7 +230,7 @@
       border-radius: var(--md-comp-nav-rail-indicator-shape);
       text-align: start;
 
-      > i {
+      > #{$icon} {
         width: var(--md-comp-nav-rail-icon-size);
         height: var(--md-comp-nav-rail-icon-size);
         border-radius: 0;
@@ -239,7 +239,7 @@
       &:hover:not(.active, [aria-current]) {
         background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
 
-        > i {
+        > #{$icon} {
           background-color: transparent;
         }
       }
@@ -249,7 +249,7 @@
         background-color: var(--md-comp-nav-rail-active-indicator-color);
         color: var(--md-comp-nav-rail-active-color);
 
-        > i {
+        > #{$icon} {
           background-color: transparent;
           color: inherit;
         }
