@@ -67,14 +67,14 @@
     padding: 8px var(--md-comp-list-item-padding);
     @include typescale("body-large");
 
-    > :is(i, img, input):first-child {
+    > :is(#{$icon}, img, input):first-child {
       grid-column: 1;
       grid-row: 1 / -1;
       align-self: center;
       flex-shrink: 0;
     }
 
-    > i:first-child:not(.circle) {
+    > #{$icon}:first-child:not(.circle) {
       font-size: var(--md-comp-list-leading-icon-size);
       width: var(--md-comp-list-leading-icon-size);
       height: var(--md-comp-list-leading-icon-size);
@@ -88,14 +88,14 @@
       border-radius: 8px;
     }
 
-    > :is(img, i).circle {
+    > :is(img, #{$icon}).circle {
       width: var(--md-comp-list-avatar-size);
       height: var(--md-comp-list-avatar-size);
       border-radius: 50%;
       object-fit: cover;
     }
 
-    > i.circle {
+    > #{$icon}.circle {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -105,8 +105,11 @@
       color: var(--md-sys-color-on-primary-container);
     }
 
+    // $icon-label, not a bare `span`: the canonical icon is a <span> too, so
+    // this rule used to pull the leading icon out of column 1 and into the
+    // text column - the icon rules above went dead and this one over-matched.
     > div:not(.meta),
-    > span {
+    > #{$icon-label} {
       grid-column: 2;
       min-width: 0;
     }
@@ -120,14 +123,14 @@
       @include typescale("body-medium");
     }
 
-    > :is(i, kbd, button, time, .meta, .badge, .button, a):last-child:not(:first-child) {
+    > :is(#{$icon}, kbd, button, time, .meta, .badge, .button, a):last-child:not(:first-child) {
       grid-column: 3;
       grid-row: 1 / -1;
       justify-self: end;
       align-self: center;
     }
 
-    > i:last-child:not(:first-child) {
+    > #{$icon}:last-child:not(:first-child) {
       font-size: var(--md-comp-list-trailing-icon-size);
       width: var(--md-comp-list-trailing-icon-size);
       height: var(--md-comp-list-trailing-icon-size);
@@ -147,7 +150,7 @@
     }
 
     > button:last-child:not(:first-child):not(.button),
-    > a:last-child:not(:first-child):not(.button):has(> i:only-child) {
+    > a:last-child:not(:first-child):not(.button):has(> #{$icon}:only-child) {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -195,7 +198,7 @@
     background-color: var(--md-comp-list-selected-container-color);
     color: var(--md-comp-list-selected-color);
 
-    i,
+    #{$icon},
     p,
     kbd,
     time,
@@ -203,8 +206,8 @@
       color: inherit;
     }
 
-    > i:first-child,
-    > :is(a, label):only-child > i:first-child {
+    > #{$icon}:first-child,
+    > :is(a, label):only-child > #{$icon}:first-child {
       --md-icon-fill: 1;
     }
   }

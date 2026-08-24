@@ -137,7 +137,7 @@ $_sheet: "dialog.side-sheet, dialog.right, dialog.right-sheet, dialog.left, dial
     color: var(--md-sys-color-on-surface-variant);
     box-shadow: none;
 
-    > i {
+    > #{$icon} {
       font-size: 24px;
       width: 24px;
       height: 24px;
