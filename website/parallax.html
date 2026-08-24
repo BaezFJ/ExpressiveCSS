@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
-    <link rel="stylesheet" href="/static/docs.css">
+    <link rel="stylesheet" href="/static/docs.css?v=0.7.0">
     
     <script>
         (function () {
@@ -258,8 +258,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="primary-text display-large">Parallax</h1>
-                <h4 class="light primary-text headline-large">A cropped image that shifts as it crosses the viewport.</h4>
+                <h1 class="docs-page-title display-large on-primary-container-text">Parallax</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A cropped image that shifts as it crosses the viewport.</p>
             </div>
         </div>
     </section>
@@ -274,7 +274,7 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-  <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy docs-section">
 
         <p class="flow-text">
           A <code>.parallax</code> (or <code>&lt;figure class="parallax"&gt;</code>)
@@ -310,8 +310,8 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1">
 
-  <div id="overlay" class="section scrollspy">
-        <h3>Overlay</h3>
+  <div id="overlay" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Overlay</h3>
 
         <p>
           A heading or <code>&lt;p&gt;</code> is centered on the image. A
@@ -331,8 +331,8 @@
       </div>
 
 
-  <div id="tokens" class="section scrollspy">
-        <h3>Tokens</h3>
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
 
         <p>
           Override these on the clip. Height is how much of the image you
@@ -382,8 +382,8 @@
       </div>
 
 
-  <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  <div id="initialization" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Initialization</h3>
 
         <p>
           Optional. The IIFE still exposes <code>Expressive.Parallax</code>
@@ -398,8 +398,8 @@
       </div>
 
 
-  <div id="methods" class="section scrollspy">
-        <h3>Methods</h3>
+  <div id="methods" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Methods</h3>
 
 <pre><code>const instance = Expressive.Parallax.getInstance(elem);</code></pre>
         <h5 class="light">.destroy();</h5>

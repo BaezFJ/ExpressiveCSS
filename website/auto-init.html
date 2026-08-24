@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
-    <link rel="stylesheet" href="/static/docs.css">
+    <link rel="stylesheet" href="/static/docs.css?v=0.7.0">
     
     <script>
         (function () {
@@ -258,8 +258,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="primary-text display-large">Auto Init</h1>
-                <h4 class="light primary-text headline-large">Initialize every registered component with one function call.</h4>
+                <h1 class="docs-page-title display-large on-primary-container-text">Auto Init</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">Initialize every registered component with one function call.</p>
             </div>
         </div>
     </section>
@@ -269,9 +269,9 @@
 
 <div class="container">
   <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy docs-section">
 
         <p class="flow-text">
           Auto Init starts all of the registered Expressive components with a single call.
@@ -287,8 +287,8 @@
       </div>
 
 
-  <div id="initialization" class="section scrollspy">
-        <h3>Initialization</h3>
+  <div id="initialization" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Initialization</h3>
 
 <pre><code>document.addEventListener('DOMContentLoaded', function() {
   Expressive.AutoInit();
@@ -313,8 +313,8 @@ Tooltip.init(element, { position: 'top' });</code></pre>
       </div>
 
 
-  <div id="options" class="section scrollspy">
-        <h3>Options</h3>
+  <div id="options" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Options</h3>
 
         <p><code>AutoInit(context, options)</code> takes two arguments:</p>
         
@@ -353,8 +353,8 @@ Tooltip.init(element, { position: 'top' });</code></pre>
       </div>
 
 
-  <div id="components" class="section scrollspy">
-        <h3>Components</h3>
+  <div id="components" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Components</h3>
 
         <p>
           These are the components <code>AutoInit()</code> starts, and the selector each one claims.
@@ -396,8 +396,8 @@ Tooltip.init(element, { position: 'top' });</code></pre>
       </div>
 
 
-  <div id="ignoring" class="section scrollspy">
-        <h3>Ignoring Elements</h3>
+  <div id="ignoring" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Ignoring Elements</h3>
 
         <p>
           If you want <code>AutoInit()</code> to skip an element, add the class

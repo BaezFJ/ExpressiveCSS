@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
-    <link rel="stylesheet" href="/static/docs.css">
+    <link rel="stylesheet" href="/static/docs.css?v=0.7.0">
     
     <script>
         (function () {
@@ -258,8 +258,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="primary-text display-large">Themes</h1>
-                <h4 class="light primary-text headline-large">Light and dark schemes, the theme attribute, and custom tokens.</h4>
+                <h1 class="docs-page-title display-large on-primary-container-text">Themes</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">Light and dark schemes, the theme attribute, and custom tokens.</p>
             </div>
         </div>
     </section>
@@ -269,9 +269,9 @@
 
 <div class="container">
   <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="introduction" class="section scrollspy">
+  <div id="introduction" class="section scrollspy docs-section">
 
         <p class="flow-text">
           Expressive maps Material Design 3 color tokens onto live
@@ -337,8 +337,8 @@
       </div>
 
 
-  <div id="reading-theme" class="section scrollspy">
-        <h3>Reading the theme</h3>
+  <div id="reading-theme" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Reading the theme</h3>
 
         <p>
           Put a short inline script in <code>&lt;head&gt;</code>, before the
@@ -375,8 +375,8 @@
       </div>
 
 
-  <div id="changing-theme" class="section scrollspy">
-        <h3>Changing the theme</h3>
+  <div id="changing-theme" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Changing the theme</h3>
 
         <p>
           Switch schemes by writing the attribute. That is the entire public
@@ -408,8 +408,8 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
       </div>
 
 
-  <div id="creating-theme" class="section scrollspy">
-        <h3>Creating a theme</h3>
+  <div id="creating-theme" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Creating a theme</h3>
 
         <p>
           Customize by overriding the Material Design 3 tokens. Do not set
