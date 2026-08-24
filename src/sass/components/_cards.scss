@@ -3,10 +3,10 @@
 // Cards.
 //
 // Anatomy is the HTML. An <article> is an elevated card. A heading is the
-// headline, a <p> is supporting text, a direct .actions (not .tabs) is the
-// action row,
-// <img> / <figure> is media. Helpers switch the M3 variant (filled, outlined)
-// or the layout (horizontal).
+// headline, .subhead is the subhead, a <p> is supporting text, direct media
+// is <img> / <picture> / <figure>, and direct .actions (not .tabs) is the
+// action row. Helpers switch the M3 variant (filled, outlined) or the layout
+// (horizontal).
 //
 // Tokens follow https://m3.material.io/components/cards/specs
 //   container  surface-container-low, 12dp corners
@@ -27,6 +27,13 @@ $_card: "article";
   --md-comp-outlined-card-disabled-outline-color: var(--md-sys-color-outline);
   --md-comp-card-container-color: var(--md-comp-elevated-card-container-color);
   --md-comp-card-container-shape: 12px;
+  --md-comp-card-media-shape: var(--md-comp-card-container-shape);
+  --md-comp-card-media-overlay-container-color: var(--md-sys-color-surface);
+  --md-comp-card-media-overlay-ink-color: var(--md-sys-color-on-surface);
+  --md-comp-card-media-overlay-shape: 8px;
+  --md-comp-card-headline-color: var(--md-sys-color-on-surface);
+  --md-comp-card-subhead-color: var(--md-sys-color-on-surface);
+  --md-comp-card-supporting-text-color: var(--md-sys-color-on-surface-variant);
   --md-comp-card-content-padding: 16px;
   --md-comp-card-between-space: 8px;
   --md-comp-card-icon-color: var(--md-sys-color-primary);
@@ -197,7 +204,7 @@ article > :is(header, .primary-action) > :is(h1, h2, h3, h4, h5, h6) {
   font-weight: var(--md-sys-typescale-title-medium-font-weight);
   line-height: var(--md-sys-typescale-title-medium-line-height);
   letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
-  color: var(--md-sys-color-on-surface);
+  color: var(--md-comp-card-headline-color);
 }
 
 article > p,
@@ -209,7 +216,21 @@ article > :is(header, .primary-action) > p {
   font-weight: var(--md-sys-typescale-body-medium-font-weight);
   line-height: var(--md-sys-typescale-body-medium-line-height);
   letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--md-comp-card-supporting-text-color);
+}
+
+// Optional subhead between the headline and supporting copy. Keep the class
+// on a paragraph so the document retains useful reading semantics.
+article > p.subhead,
+article > :is(header, .primary-action) > p.subhead {
+  margin: 0;
+  padding: 4px var(--md-comp-card-content-padding) 0;
+  font-family: var(--md-sys-typescale-title-small-font-family-name);
+  font-size: var(--md-sys-typescale-title-small-font-size);
+  font-weight: var(--md-sys-typescale-title-small-font-weight);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing);
+  color: var(--md-comp-card-subhead-color);
 }
 
 article > :is(h1, h2, h3, h4, h5, h6) + p,
@@ -247,6 +268,8 @@ article > .primary-action > figure {
   display: block;
   width: 100%;
   margin: 0;
+  border-radius: var(--md-comp-card-media-shape);
+  overflow: hidden;
 }
 
 article > img,
@@ -258,6 +281,7 @@ article > .primary-action > figure img {
   display: block;
   width: 100%;
   object-fit: cover;
+  border-radius: var(--md-comp-card-media-shape);
 }
 
 article > figure {
@@ -271,16 +295,39 @@ article > .primary-action > figure {
 article > figure > figcaption,
 article > .primary-action > figure > figcaption {
   position: absolute;
-  inset-inline: 0;
-  bottom: 0;
+  inset-inline-start: var(--md-comp-card-content-padding);
+  inset-inline-end: auto;
+  bottom: var(--md-comp-card-content-padding);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--md-comp-card-between-space);
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: calc(100% - (2 * var(--md-comp-card-content-padding)));
   margin: 0;
-  padding: 16px;
-  color: var(--md-sys-color-on-surface);
-  background: color-mix(in oklab, var(--md-sys-color-surface) 72%, transparent);
+  padding: 8px 12px;
+  color: var(--md-comp-card-media-overlay-ink-color);
+  background-color: var(--md-comp-card-media-overlay-container-color);
+  border-radius: var(--md-comp-card-media-overlay-shape);
   font-family: var(--md-sys-typescale-title-medium-font-family-name);
   font-size: var(--md-sys-typescale-title-medium-font-size);
   font-weight: var(--md-sys-typescale-title-medium-font-weight);
   line-height: var(--md-sys-typescale-title-medium-line-height);
+}
+
+// Keep meaningful icons on the same opaque role pair as caption text. The
+// surface/on-surface pairing isolates both from unpredictable image colors.
+article > figure > figcaption > :is(.material-symbols, .card-icon, svg),
+article > .primary-action > figure > figcaption > :is(.material-symbols, .card-icon, svg) {
+  flex: 0 0 auto;
+  color: inherit;
+  font-size: var(--md-comp-card-icon-size);
+  line-height: 1;
+}
+
+article > figure > figcaption > svg,
+article > .primary-action > figure > figcaption > svg {
+  fill: currentColor;
 }
 
 // Collections are coplanar and use no more than the specified 8dp between

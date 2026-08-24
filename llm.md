@@ -1856,9 +1856,9 @@ Filled Tonal Outlined Text
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. A heading is the headline, a `<p>` is supporting text, a direct `<div class="actions">` is the action row, and `<img>` or `<figure>` is media. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component. The action row is not a `<nav>`: a row of buttons is not a set of destinations, and one landmark per card floods the landmark list.
+An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, `<p class="supporting-text">` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component. The action row is not a `<nav>`: a row of buttons is not a set of destinations, and one landmark per card floods the landmark list.
 
-Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The elevated container is `surface-container-low` with 12dp corners. The default sits at elevation 1; an interactive card rises to 2 on hover. The headline is `title-medium` / `on-surface`; supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
+Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The elevated container is `surface-container-low` with 12dp corners. The default sits at elevation 1; an interactive card rises to 2 on hover. The headline is `title-medium` / `on-surface`, the subhead is `title-small` / `on-surface`, and supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
 
 ### Card title
 
@@ -1866,11 +1866,15 @@ I am a very simple card. I am good at containing small bits of information. I am
 
 ```html
 <article>
-  <h3>Card title</h3>
-  <p>I am a very simple card.</p>
+  <header>
+    <h3>Weekend in the mountains</h3>
+    <p class="subhead">Three-day itinerary</p>
+  </header>
+  <p class="supporting-text">Explore trails and overlooks.</p>
+  <img src="images/mountains.jpg" alt="Mountain valley beneath a cloudy sky">
   <div class="actions">
-    <button type="button" class="text">Action</button>
-    <button type="button" class="tonal">Action</button>
+    <button type="button" class="text">Share</button>
+    <button type="button" class="tonal">View trip</button>
   </div>
 </article>
 ```
@@ -1926,7 +1930,7 @@ Cards in a collection share a resting elevation. Add `card-collection` to a grid
 
 ### Media
 
-A direct `<img>` is full-bleed across the top. Wrap it in a `<figure>` if you want a caption on the image — `<figcaption>` sits on a translucent surface scrim. M3 recommends keeping text off images when possible; always verify accessible contrast when layering is necessary.
+A direct `<img>` is full-bleed across the top and its media surface has rounded corners matching the card. Wrap it in a `<figure>` if you want a caption on the image. The `<figcaption>` is an opaque, rounded bounding shape using the paired `surface` and `on-surface` roles, so image colors cannot reduce the contrast of its text or icons. Normal text must retain at least 4.5:1 contrast; large text and meaningful icons require at least 3:1. Recheck those ratios if you override either color token.
 
 I am a very simple card. I am good at containing small bits of information.
 
@@ -1934,7 +1938,10 @@ I am a very simple card. I am good at containing small bits of information.
 <article>
   <figure>
     <img src="images/sample-1.jpg" alt="">
-    <figcaption>Card title</figcaption>
+    <figcaption>
+      <span class="material-symbols" aria-hidden="true">landscape</span>
+      <span>Card title</span>
+    </figcaption>
   </figure>
   <p>I am a very simple card.</p>
   <div class="actions">

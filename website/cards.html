@@ -274,10 +274,12 @@
   <div id="anatomy" class="section scrollspy">
 
         <p class="flow-text">
-          An <code>&lt;article&gt;</code> is an elevated card. A heading is the
-          headline, a <code>&lt;p&gt;</code> is supporting text, a direct
-          <code>.actions</code> is the action row, and
-          <code>&lt;img&gt;</code> or <code>&lt;figure&gt;</code> is media.
+          An <code>&lt;article&gt;</code> is an elevated card. Any heading is the
+          headline, <code>&lt;p class="subhead"&gt;</code> is the optional
+          subhead, <code>&lt;p class="supporting-text"&gt;</code> is supporting
+          copy, direct <code>&lt;img&gt;</code>, <code>&lt;picture&gt;</code>, or
+          <code>&lt;figure&gt;</code> is media, and direct <code>.actions</code>
+          is the action row. Include only the slots the content needs.
           There is no <code>card-content</code>, <code>card-title</code>, or
           <code>card-action</code> class.
         </p>
@@ -287,24 +289,33 @@
           The elevated container is <code>surface-container-low</code> with
           12dp corners. The default sits at elevation 1; an interactive card
           rises to 2 on hover. The
-          headline is <code>title-medium</code> / <code>on-surface</code>;
+          headline is <code>title-medium</code> / <code>on-surface</code>, the
+          subhead is <code>title-small</code> / <code>on-surface</code>, and
           supporting text is <code>body-medium</code> /
           <code>on-surface-variant</code>. Inset is 16dp.
         </p>
         <article class="mb-3">
-          <h3>Card title</h3>
-          <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+          <header>
+            <h3>Weekend in the mountains</h3>
+            <p class="subhead">Three-day itinerary</p>
+          </header>
+          <p class="supporting-text">Explore trails, overlooks, and places to rest along the way.</p>
+          <img src="https://picsum.photos/id/1018/800/360" alt="Mountain valley beneath a cloudy sky">
           <div class="actions">
-            <button type="button" class="text">Action</button>
-            <button type="button" class="tonal">Action</button>
+            <button type="button" class="text">Share</button>
+            <button type="button" class="tonal">View trip</button>
           </div>
         </article>
 <pre><code>&lt;article&gt;
-  &lt;h3&gt;Card title&lt;/h3&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
+  &lt;header&gt;
+    &lt;h3&gt;Weekend in the mountains&lt;/h3&gt;
+    &lt;p class="subhead"&gt;Three-day itinerary&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;p class="supporting-text"&gt;Explore trails and overlooks.&lt;/p&gt;
+  &lt;img src="images/mountains.jpg" alt="Mountain valley beneath a cloudy sky"&gt;
   &lt;div class="actions"&gt;
-    &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
-    &lt;button type="button" class="tonal"&gt;Action&lt;/button&gt;
+    &lt;button type="button" class="text"&gt;Share&lt;/button&gt;
+    &lt;button type="button" class="tonal"&gt;View trip&lt;/button&gt;
   &lt;/div&gt;
 &lt;/article&gt;</code></pre>
   
@@ -406,18 +417,22 @@
         <h3>Media</h3>
 
         <p>
-          A direct <code>&lt;img&gt;</code> is full-bleed across the top.
+          A direct <code>&lt;img&gt;</code> is full-bleed across the top and its
+          media surface has rounded corners matching the card.
           Wrap it in a <code>&lt;figure&gt;</code> if you want a caption on
-          the image — <code>&lt;figcaption&gt;</code> sits on a translucent
-          surface scrim. M3 recommends keeping text off images when possible;
-          always verify accessible contrast when layering is necessary.
+          the image. The <code>&lt;figcaption&gt;</code> is an opaque, rounded
+          bounding shape using the paired <code>surface</code> and
+          <code>on-surface</code> roles, so image colors cannot reduce the
+          contrast of its text or icons. Normal text must retain at least
+          4.5:1 contrast; large text and meaningful icons require at least
+          3:1. Recheck those ratios if you override either color token.
         </p>
         <div class="row">
           <div class="s12 m7">
             <article>
               <figure>
                 <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <figcaption>Card title</figcaption>
+                <figcaption><span class="material-symbols" aria-hidden="true">landscape</span><span>Card title</span></figcaption>
               </figure>
               <p>I am a very simple card. I am good at containing small bits of information.</p>
               <div class="actions">
@@ -429,7 +444,10 @@
 <pre><code>&lt;article&gt;
   &lt;figure&gt;
     &lt;img src="images/sample-1.jpg" alt=""&gt;
-    &lt;figcaption&gt;Card title&lt;/figcaption&gt;
+    &lt;figcaption&gt;
+      &lt;span class="material-symbols" aria-hidden="true"&gt;landscape&lt;/span&gt;
+      &lt;span&gt;Card title&lt;/span&gt;
+    &lt;/figcaption&gt;
   &lt;/figure&gt;
   &lt;p&gt;I am a very simple card.&lt;/p&gt;
   &lt;div class="actions"&gt;

@@ -27,21 +27,76 @@ describe('Cards CSS', () => {
 
   test('uses 12dp shape, 16dp content padding, 8dp collection spacing, and 24dp icons', () => {
     assert.match(css, /--md-comp-card-container-shape:\s*12px/);
+    assert.match(
+      css,
+      /--md-comp-card-media-shape:\s*var\(--md-comp-card-container-shape\)/
+    );
     assert.match(css, /--md-comp-card-content-padding:\s*16px/);
     assert.match(css, /--md-comp-card-between-space:\s*8px/);
     assert.match(css, /--md-comp-card-icon-size:\s*24px/);
     assert.match(css, /:where\(\.card-collection\)\s*\{[^}]*gap:\s*var\(--md-comp-card-between-space\)/s);
   });
 
+  test('rounds and clips direct card media, including primary-action media', () => {
+    assert.match(
+      css,
+      /article\s*>\s*img,[^{]+article\s*>\s*\.primary-action\s*>\s*figure\s*\{[^}]*border-radius:\s*var\(--md-comp-card-media-shape\)[^}]*overflow:\s*hidden/s
+    );
+    assert.match(
+      css,
+      /article\s*>\s*\.primary-action\s*>\s*figure img\s*\{[^}]*border-radius:\s*var\(--md-comp-card-media-shape\)/s
+    );
+  });
+
+  test('puts image text and icons on an opaque contrasting bounding shape', () => {
+    assert.match(
+      css,
+      /--md-comp-card-media-overlay-container-color:\s*var\(--md-sys-color-surface\)/
+    );
+    assert.match(
+      css,
+      /--md-comp-card-media-overlay-ink-color:\s*var\(--md-sys-color-on-surface\)/
+    );
+    assert.match(
+      css,
+      /article\s*>\s*figure\s*>\s*figcaption,[^{]+\{[^}]*background-color:\s*var\(--md-comp-card-media-overlay-container-color\)[^}]*border-radius:\s*var\(--md-comp-card-media-overlay-shape\)/s
+    );
+    assert.doesNotMatch(
+      css,
+      /article\s*>\s*figure\s*>\s*figcaption,[^{]+\{[^}]*background:\s*color-mix/s
+    );
+    assert.match(
+      css,
+      /figcaption\s*>\s*:is\(\.material-symbols, \.card-icon, svg\)[^{]*\{[^}]*color:\s*inherit/s
+    );
+  });
+
   test('uses M3 supporting text color and type roles', () => {
     assert.match(
       css,
-      /article\s*>\s*p,[^{]+\{[^}]*font-size:\s*var\(--md-sys-typescale-body-medium-font-size\)[^}]*color:\s*var\(--md-sys-color-on-surface-variant\)/s
+      /article\s*>\s*p,[^{]+\{[^}]*font-size:\s*var\(--md-sys-typescale-body-medium-font-size\)[^}]*color:\s*var\(--md-comp-card-supporting-text-color\)/s
     );
     assert.doesNotMatch(
       css,
       /article\s*>\s*p[\s\S]{0,600}color-mix\(in oklab,\s*currentColor 72%/
     );
+  });
+
+  test('supports headline, subhead, supporting text, media, and actions anatomy', () => {
+    assert.match(
+      css,
+      /--md-comp-card-headline-color:\s*var\(--md-sys-color-on-surface\)/
+    );
+    assert.match(
+      css,
+      /article\s*>\s*p\.subhead,[^{]+\{[^}]*font-size:\s*var\(--md-sys-typescale-title-small-font-size\)[^}]*color:\s*var\(--md-comp-card-subhead-color\)/s
+    );
+    assert.match(
+      css,
+      /--md-comp-card-supporting-text-color:\s*var\(--md-sys-color-on-surface-variant\)/
+    );
+    assert.match(css, /article\s*>\s*figure,[^{]+\.primary-action\s*>\s*figure\s*\{/s);
+    assert.match(css, /article\s*>\s*:is\(nav:not\(\.tabs\), \.actions\)\s*\{/);
   });
 
   test('applies interaction states only through a primary action', () => {
