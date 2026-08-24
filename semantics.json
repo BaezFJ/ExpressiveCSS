@@ -97,7 +97,7 @@
     },
     "carousel": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Off-screen slides are inert, not merely hidden. Checked at runtime in tests/carousel-a11y.test.js.",
+      "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js.",
       "rules": [
         {
           "id": "hidden-subtree-holds-nothing-focusable",

@@ -144,7 +144,7 @@ describe('Cards CSS', () => {
     );
     assert.match(
       css,
-      /\.card-collection\.carousel\.flat[\s\S]*article\.carousel-item\s*\{[^}]*flex:\s*0 0 var\(--md-comp-card-collection-carousel-card-width\)/
+      /\.card-collection\.carousel\s*\{[^}]*--md-comp-carousel-uncontained-item-width:\s*var\(\s*--md-comp-card-collection-carousel-card-width\s*\)/s
     );
     assert.doesNotMatch(
       css,

@@ -85,10 +85,14 @@ read-it-off-the-element access that key provides.
 - **Parallax motion is CSS.** `animation-timeline: view()` on the clip; the
   component class is AutoInit/getInstance/destroy only and attaches no
   scroll listener.
-- **Carousel has two layouts.** `.flat` (and `.carousel-slider` / `fullWidth`)
-  is a CSS scroll-snap track. The default remains the 3D coverflow, driven
-  by pointer events and a shared resize listener. `destroy()` removes
-  generated indicators.
+- **Carousel defaults to Material 3 multi-browse.** `.uncontained`, `.hero`,
+  `.hero.center-aligned`, and `.full-screen` select the other M3 layouts.
+  Native tracks use container-aware sizing, fine-pointer dragging, and
+  keyboard navigation. Full-screen automatically becomes a horizontal hero
+  in landscape or at Expanded widths.
+  `.flat` / `fullWidth` remains the full-width compatibility track used by
+  swipeable tabs. The former 3D behavior is available only as `.coverflow`.
+  `destroy()` removes generated labels, size roles, indicators, and wrappers.
 - **Sidenav nested sections are HTML.** `<details>` / `<summary>` inside
   a `.sidenav`; same `name` is an accordion. There is no Collapsible
   plugin — the drawer styles the summary as a destination row.

@@ -413,21 +413,16 @@ article > .primary-action > figure > figcaption > svg {
   grid-row: span var(--md-comp-card-collection-row-span, 2);
 }
 
-// Reuse the flat Carousel component for a horizontally scrolling collection.
+// Reuse the M3 uncontained Carousel for a horizontally scrolling collection.
 // Carousel.Init()/AutoInit() supplies the track and interaction behavior.
 .card-collection.carousel {
   --carousel-height: var(--md-comp-card-collection-carousel-height);
   --md-comp-carousel-gap: var(--md-comp-card-collection-gap);
+  --md-comp-carousel-uncontained-item-width: var(
+    --md-comp-card-collection-carousel-card-width
+  );
 
   display: block;
-}
-
-.card-collection.carousel.flat
-  > .carousel-track
-  > article.carousel-item {
-  flex: 0 0 var(--md-comp-card-collection-carousel-card-width);
-  width: var(--md-comp-card-collection-carousel-card-width);
-  height: 100%;
 }
 
 // Horizontal uses the same direct semantic slots as the vertical card. Grid

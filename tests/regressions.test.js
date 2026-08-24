@@ -126,7 +126,7 @@ describe('Carousel', () => {
 
   test('item transforms are written to the standard transform property', () => {
     document.body.innerHTML = `
-      <div class="carousel">
+      <div class="carousel coverflow">
         <a class="carousel-item active" href="#one">one</a>
         <a class="carousel-item" href="#two">two</a>
       </div>`;

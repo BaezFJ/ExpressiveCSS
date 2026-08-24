@@ -4,12 +4,9 @@
 // or mutates at runtime is checked here, against the same rules where one
 // applies.
 //
-// Off-screen carousel slides.
-//
-// A slide is an <a>. Marking it aria-hidden while leaving it focusable is the
-// worst of both worlds: the tab stop is still there, and what it lands on is
-// unannounced. This is the rule `hidden-subtree-holds-nothing-focusable`
-// states, applied to the DOM the component maintains rather than to markup.
+// Runtime carousel semantics. Material 3 carousels expose every item because
+// several items can be visible at once. The legacy coverflow still hides its
+// off-screen items and therefore has to remove them from the tab order.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -30,20 +27,18 @@ const MARKUP = `<div class="carousel">
 describe('Carousel slides', () => {
   beforeEach(resetBody);
 
-  test('a hidden slide holds no tab stop, but is still clickable', () => {
+  test('M3 items stay exposed and the container is not a tab stop', () => {
     document.body.innerHTML = MARKUP;
     const el = document.querySelector('.carousel');
     const instance = Expressive.Carousel.init(el);
     try {
-      const hidden = [...el.querySelectorAll('[aria-hidden="true"]')];
-      assert.ok(hidden.length > 0, 'expected some slides to be hidden');
-      for (const slide of hidden) {
-        assert.equal(slide.getAttribute('tabindex'), '-1', `${slide.getAttribute('href')} is hidden but still tabbable`);
-        // Not inert: in coverflow the neighbours are visible, and clicking one
-        // is how the carousel advances. inert would take them out of
-        // hit-testing and leave the thing mouse-dead.
-        assert.equal(slide.hasAttribute('inert'), false, 'a visible neighbour must stay clickable');
-      }
+      const items = [...el.querySelectorAll('.carousel-item')];
+      assert.equal(el.getAttribute('role'), 'region');
+      assert.equal(el.getAttribute('aria-roledescription'), 'carousel');
+      assert.equal(el.hasAttribute('tabindex'), false, 'focus belongs on the first item');
+      assert.equal(el.querySelectorAll('[aria-hidden="true"]').length, 0);
+      assert.match(items[0].getAttribute('aria-label'), /Item 1 of 3/);
+      assert.match(items[2].getAttribute('aria-label'), /Item 3 of 3/);
       assert.equal(el.querySelectorAll(RULE.selector).length, 0, RULE.message);
     } finally {
       instance.destroy();
@@ -55,22 +50,43 @@ describe('Carousel slides', () => {
     const el = document.querySelector('.carousel');
     const instance = Expressive.Carousel.init(el);
     instance.destroy();
-    // Nothing owns these attributes once the component is gone, so leaving
-    // them on kept every slide but one out of the tab order for good.
+    // Nothing owns generated semantics once the component is gone.
     assert.equal(el.querySelectorAll('[aria-hidden]').length, 0);
     assert.equal(el.querySelectorAll('[tabindex]').length, 0);
+    assert.equal(el.querySelectorAll('[aria-roledescription]').length, 0);
+    assert.equal(el.querySelectorAll('[aria-label]').length, 0);
+    assert.equal(el.hasAttribute('role'), false);
+    assert.equal(el.hasAttribute('aria-roledescription'), false);
+    assert.equal(el.hasAttribute('aria-label'), false);
   });
 
-  test('the visible slide is neither hidden nor inert', () => {
+  test('arrow keys move focus between M3 items', () => {
     document.body.innerHTML = MARKUP;
     const el = document.querySelector('.carousel');
     const instance = Expressive.Carousel.init(el);
     try {
-      const shown = [...el.querySelectorAll('.carousel-item')].filter(
-        (s) => !s.hasAttribute('aria-hidden')
+      const items = [...el.querySelectorAll('.carousel-item')];
+      items[0].focus();
+      items[0].dispatchEvent(
+        new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true })
       );
-      assert.equal(shown.length, 1, 'exactly one slide is current');
-      assert.equal(shown[0].hasAttribute('tabindex'), false);
+      assert.equal(instance.center, 1);
+      assert.equal(document.activeElement, items[1]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('legacy coverflow hides off-screen links without leaving tab stops', () => {
+    document.body.innerHTML = MARKUP;
+    const el = document.querySelector('.carousel');
+    el.classList.add('coverflow');
+    const instance = Expressive.Carousel.init(el);
+    try {
+      const hidden = [...el.querySelectorAll('[aria-hidden="true"]')];
+      assert.ok(hidden.length > 0);
+      hidden.forEach((slide) => assert.equal(slide.getAttribute('tabindex'), '-1'));
+      assert.equal(el.querySelectorAll(RULE.selector).length, 0, RULE.message);
     } finally {
       instance.destroy();
     }

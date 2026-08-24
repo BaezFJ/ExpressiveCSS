@@ -128,7 +128,7 @@
           than 8dp between cards. Every card is coplanar at rest; add
           <code>picked-up</code> or <code>dragged</code> only while it is being
           moved. Add <code>list</code>, <code>staggered</code>,
-          <code>mosaic</code>, or <code>carousel flat</code> for the other collection
+          <code>mosaic</code>, or <code>carousel uncontained</code> for the other collection
           layouts. Sorting and filtering controls stay outside the collection.
         </p>
 
@@ -204,11 +204,11 @@
 
         <h4>Carousel</h4>
         <p>
-          Add <code>carousel flat</code>. Add <code>carousel-item</code> to every
-          card; <code>AutoInit()</code> supplies the snap track.
+          Add <code>carousel uncontained</code>. Add <code>carousel-item</code>
+          to every card; <code>AutoInit()</code> supplies the M3 scroll track.
         </p>
         <section
-          class="card-collection carousel flat mb-3"
+          class="card-collection carousel uncontained mb-3"
           aria-label="Menu carousel"
         >
           <article class="outlined carousel-item"><h3>Pho</h3><p>Rice noodles, herbs, and aromatic broth · $12</p><div class="actions"><button type="button" class="tonal">Order</button></div></article>
@@ -240,8 +240,8 @@
   <article style="--md-comp-card-collection-column-span: 2; --md-comp-card-collection-row-span: 4">…</article>
 </section>
 
-<!-- Snap carousel. AutoInit starts the existing Carousel component. -->
-<section class="card-collection carousel flat" aria-label="Dinner menu">
+<!-- M3 uncontained carousel. AutoInit starts the Carousel component. -->
+<section class="card-collection carousel uncontained" aria-label="Dinner menu">
   <article class="outlined carousel-item"><h3>Pho</h3><p>$12</p></article>
   <article class="outlined carousel-item"><h3>Quinoa Salad</h3><p>$10</p></article>
 </section>

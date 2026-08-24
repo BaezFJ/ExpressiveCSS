@@ -1056,19 +1056,19 @@ Three **selection controls**. They are not interchangeable.
 
 ## 9.2 Carousel
 
-**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = 3D coverflow. `.flat` / `carousel-slider` / `fullWidth` = CSS scroll-snap track. `AutoInit()`. This is **not** the Media “slider” (crossfading captions).
+**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `.flat` / `fullWidth` is retained only for full-width compatibility such as swipeable tabs; `.coverflow` is the explicit legacy 3D layout. `AutoInit()`. This is **not** the Media “slider” (crossfading captions).
 
 **Use when** items are **visual** and the user is browsing, not searching for a specific row (that is a list).
 
 **Don't use** for text-heavy settings, or as the only way to reach items on a vertically scrolling page without a “Show all” path.
 
-**Anatomy.** Track + items (image-first, optional short text). Optional indicators (generated; `destroy()` removes them).
+**Anatomy.** Track + items (image-first, optional short text). Use no more than two text lines at compact widths. Text over media uses the opaque `.carousel-item-content` bounding shape.
 
-**Adaptive.** Compact: fewer visible items, larger hero. Expanded+: multi-browse (large + medium + small items) if you use a flat track. Full-screen is a vertical immersive gallery, not a header carousel.
+**Adaptive.** Compact: fewer visible items and no more than three text-heavy items on screen. Larger windows fit more large and medium items. Full-screen is a vertical immersive gallery for portrait compact and medium windows, not a landscape or expanded layout.
 
-**Behavior.** Default coverflow is pointer-driven. Flat is snap-scrolling. Prefer snap for multi-browse / hero.
+**Behavior.** Multi-browse and hero snap; uncontained scrolls freely unless `.snap` is added; full-screen snaps vertically in portrait compact and medium layouts, then automatically adapts to a horizontal hero in landscape or at Expanded widths. Items resize as the active item changes and media gets subtle parallax. Rendered container width controls how many large items fit, so resizing a pane updates the track. Fine pointers can drag the track; trackpad scrolling remains native. Reduced motion removes parallax and width morphing.
 
-**Accessibility.** On a vertical page, provide a “Show all” button (or a header arrow) that opens a vertical list of the same items.
+**Accessibility.** Focus begins on the first item, not the container. Arrow keys move between items; Home and End move to the first and last items. On a vertical page, provide a “Show all” button 4dp below the carousel (or a 48dp header arrow) that opens a vertical list of the same items. Do not overlay previous/next controls.
 
 ---
 

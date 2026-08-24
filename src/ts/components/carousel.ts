@@ -1,6 +1,12 @@
 import { Utils } from '../core/utils';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
+export interface CarouselI18nOptions {
+  carousel: string;
+  item: string;
+  of: string;
+}
+
 export interface CarouselOptions extends BaseOptions {
   /**
    * Transition duration in milliseconds (coverflow). Snap mode uses CSS.
@@ -28,7 +34,7 @@ export interface CarouselOptions extends BaseOptions {
    */
   numVisible: number;
   /**
-   * Linear snap track instead of 3D coverflow.
+   * Full-width compatibility track. Material 3 layouts are already linear.
    * Also implied by `.flat`.
    * @default false
    */
@@ -49,6 +55,10 @@ export interface CarouselOptions extends BaseOptions {
    * @default null
    */
   onCycleTo: (current: Element, dragged: boolean) => void;
+  /**
+   * Accessible names generated for an unlabeled carousel and its items.
+   */
+  i18n: Partial<CarouselI18nOptions>;
 }
 
 const _defaults: CarouselOptions = {
@@ -60,7 +70,12 @@ const _defaults: CarouselOptions = {
   fullWidth: false,
   indicators: false,
   noWrap: false,
-  onCycleTo: null
+  onCycleTo: null,
+  i18n: {
+    carousel: 'Carousel',
+    item: 'Item',
+    of: 'of'
+  }
 };
 
 export class Carousel extends Component<CarouselOptions> {
@@ -95,6 +110,28 @@ export class Carousel extends Component<CarouselOptions> {
   private _ignoreScroll: boolean = false;
   private _trackRaf: number = null;
   private _started: boolean = false;
+  private _vertical: boolean = false;
+  private _resizeObserver: ResizeObserver | null = null;
+  private _usesWindowResize: boolean = false;
+  private _dragPointerId: number | null = null;
+  private _dragStartX: number = 0;
+  private _dragStartY: number = 0;
+  private _dragStartScroll: number = 0;
+  private _suppressClick: boolean = false;
+  private _suppressClickTimeout: ReturnType<typeof setTimeout> = null;
+  private _generatedContainerRole: boolean = false;
+  private _generatedContainerLabel: boolean = false;
+  private _generatedContainerDescription: boolean = false;
+  private _generatedWideLayout: boolean = false;
+  private _generatedItemTabIndexes = new Set<HTMLElement>();
+  private _generatedItemLabels = new Set<HTMLElement>();
+  private _generatedItemDescriptions = new Set<HTMLElement>();
+  private _generatedItemSizes = new Set<HTMLElement>();
+  private _authoredItemSizes = new Set<HTMLElement>();
+  private _itemA11yOriginal = new Map<
+    HTMLElement,
+    { ariaHidden: string | null; tabIndex: string | null }
+  >();
 
   private get _scroller(): HTMLElement {
     return this._trackEl ?? this.el;
@@ -114,15 +151,22 @@ export class Carousel extends Component<CarouselOptions> {
       ...Carousel.defaults,
       ...options
     };
+    if (options?.i18n) {
+      this.options.i18n = { ...Carousel.defaults.i18n, ...options.i18n };
+    }
 
+    // Material 3 layouts are native scroll tracks. The former 3D behavior is
+    // retained only as an explicit `.coverflow` migration path.
     this._flat =
+      !this.el.classList.contains('coverflow') ||
       this.options.fullWidth ||
       this.el.classList.contains('flat');
-    if (this._flat) {
+    if (this.options.fullWidth || this.el.classList.contains('flat')) {
       this.el.classList.add('flat');
       this.options.fullWidth = true;
       this.options.dist = 0;
     }
+    this._vertical = this.el.classList.contains('full-screen');
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.options.duration = 1;
@@ -137,6 +181,13 @@ export class Carousel extends Component<CarouselOptions> {
       console.error('Carousel: no .carousel-item elements to show');
       return;
     }
+    this.images.forEach((item) => {
+      this._itemA11yOriginal.set(item, {
+        ariaHidden: item.getAttribute('aria-hidden'),
+        tabIndex: item.getAttribute('tabindex')
+      });
+      if (item.hasAttribute('data-carousel-size')) this._authoredItemSizes.add(item);
+    });
 
     this.hasMultipleSlides = this.images.length > 1;
     this.showIndicators = this.options.indicators && this.hasMultipleSlides;
@@ -146,6 +197,7 @@ export class Carousel extends Component<CarouselOptions> {
 
     this.images.forEach((item) => item.classList.add('carousel-item'));
     if (this._flat) this._wrapTrack();
+    this._syncAdaptiveMode();
 
     const firstItem = this.images[0];
     this.itemWidth = firstItem.clientWidth || this.el.clientWidth || 1;
@@ -154,8 +206,7 @@ export class Carousel extends Component<CarouselOptions> {
 
     if (this.showIndicators) this._setupIndicators();
 
-    this.el.tabIndex = this.el.tabIndex >= 0 ? this.el.tabIndex : 0;
-    this.el.setAttribute('aria-roledescription', 'carousel');
+    this._setupAccessibility();
 
     this._setupEventHandlers();
     this._started = true;
@@ -167,6 +218,7 @@ export class Carousel extends Component<CarouselOptions> {
       );
       this.center = start;
       this._syncActive(start, false);
+      this._updateParallax();
       this._scrollToIndex(start, false);
     } else {
       this._scroll(this.offset);
@@ -209,6 +261,46 @@ export class Carousel extends Component<CarouselOptions> {
     });
   }
 
+  private _setupAccessibility() {
+    if (!this.el.hasAttribute('role')) {
+      this.el.setAttribute('role', 'region');
+      this._generatedContainerRole = true;
+    }
+    if (!this.el.hasAttribute('aria-label') && !this.el.hasAttribute('aria-labelledby')) {
+      this.el.setAttribute('aria-label', this.options.i18n.carousel);
+      this._generatedContainerLabel = true;
+    }
+    if (!this.el.hasAttribute('aria-roledescription')) {
+      this.el.setAttribute('aria-roledescription', 'carousel');
+      this._generatedContainerDescription = true;
+    }
+
+    const naturallyFocusable =
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+      'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    this.images.forEach((item, index) => {
+      if (!item.hasAttribute('aria-roledescription')) {
+        item.setAttribute('aria-roledescription', 'slide');
+        this._generatedItemDescriptions.add(item);
+      }
+
+      if (!item.hasAttribute('aria-label') && !item.hasAttribute('aria-labelledby')) {
+        const mediaName = item.querySelector('img[alt]')?.getAttribute('alt')?.trim();
+        const textName = item.textContent?.replace(/\s+/g, ' ').trim();
+        const name = mediaName || textName;
+        const position = `${this.options.i18n.item} ${index + 1} ${this.options.i18n.of} ${this.count}`;
+        item.setAttribute('aria-label', name ? `${name}, ${position}` : position);
+        this._generatedItemLabels.add(item);
+      }
+
+      if (!item.matches(naturallyFocusable) && !item.querySelector(naturallyFocusable)) {
+        item.tabIndex = 0;
+        this._generatedItemTabIndexes.add(item);
+      }
+    });
+  }
+
   private _setupIndicators() {
     const existing = Array.from(this.el.children).find(
       (el): el is HTMLElement => el instanceof HTMLElement && el.classList.contains('indicators')
@@ -242,14 +334,36 @@ export class Carousel extends Component<CarouselOptions> {
     if (this.showIndicators && this._indicators) {
       this._indicators.addEventListener('click', this._handleIndicatorClick);
     }
-    Carousel._live.add(this);
-    if (!Carousel._resizeListening) {
-      window.addEventListener('resize', Carousel._onResize, { passive: true });
-      Carousel._resizeListening = true;
+    if (typeof ResizeObserver !== 'undefined') {
+      this._resizeObserver = new ResizeObserver(() => this._handleThrottledResize());
+      this._resizeObserver.observe(this.el);
+    }
+
+    // Coverflow depends on viewport geometry. Full-screen also needs a window
+    // signal when orientation changes without changing the container width.
+    // ResizeObserver handles every other native track, including pane resizes.
+    this._usesWindowResize =
+      !this._resizeObserver || !this._flat || this.el.classList.contains('full-screen');
+    if (this._usesWindowResize) {
+      Carousel._live.add(this);
+      if (!Carousel._resizeListening) {
+        window.addEventListener('resize', Carousel._onResize, {
+          passive: true
+        });
+        Carousel._resizeListening = true;
+      }
     }
 
     if (this._flat) {
-      this._scroller.addEventListener('scroll', this._handleFlatScroll, { passive: true });
+      this._scroller.addEventListener('scroll', this._handleFlatScroll, {
+        passive: true
+      });
+      this._scroller.addEventListener('pointerdown', this._handleTrackPointerDown);
+      this._scroller.addEventListener('pointermove', this._handleTrackPointerMove);
+      this._scroller.addEventListener('pointerup', this._handleTrackPointerUp);
+      this._scroller.addEventListener('pointercancel', this._handleTrackPointerUp);
+      this._scroller.addEventListener('click', this._handleTrackClick, true);
+      this._scroller.addEventListener('dragstart', this._handleTrackDragStart);
       return;
     }
 
@@ -266,16 +380,26 @@ export class Carousel extends Component<CarouselOptions> {
       this._indicators.removeEventListener('click', this._handleIndicatorClick);
     }
     this._scroller.removeEventListener('scroll', this._handleFlatScroll);
+    this._scroller.removeEventListener('pointerdown', this._handleTrackPointerDown);
+    this._scroller.removeEventListener('pointermove', this._handleTrackPointerMove);
+    this._scroller.removeEventListener('pointerup', this._handleTrackPointerUp);
+    this._scroller.removeEventListener('pointercancel', this._handleTrackPointerUp);
+    this._scroller.removeEventListener('click', this._handleTrackClick, true);
+    this._scroller.removeEventListener('dragstart', this._handleTrackDragStart);
     this.el.removeEventListener('pointerdown', this._handleCarouselTap);
     this.el.removeEventListener('pointermove', this._handleCarouselDrag);
     this.el.removeEventListener('pointerup', this._handleCarouselRelease);
     this.el.removeEventListener('pointercancel', this._handleCarouselRelease);
     this.el.removeEventListener('click', this._handleCarouselClick);
 
-    Carousel._live.delete(this);
-    if (Carousel._live.size === 0 && Carousel._resizeListening) {
-      window.removeEventListener('resize', Carousel._onResize);
-      Carousel._resizeListening = false;
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = null;
+    if (this._usesWindowResize) {
+      Carousel._live.delete(this);
+      if (Carousel._live.size === 0 && Carousel._resizeListening) {
+        window.removeEventListener('resize', Carousel._onResize);
+        Carousel._resizeListening = false;
+      }
     }
   }
 
@@ -283,6 +407,7 @@ export class Carousel extends Component<CarouselOptions> {
     this._removeEventHandlers();
     if (this._trackRaf !== null) cancelAnimationFrame(this._trackRaf);
     window.clearTimeout(this.scrollingTimeout);
+    window.clearTimeout(this._suppressClickTimeout);
     if (this._ownIndicators) this._indicators?.remove();
     this._unwrapTrack();
     this.images.forEach((el) => {
@@ -290,15 +415,95 @@ export class Carousel extends Component<CarouselOptions> {
       el.style.zIndex = '';
       el.style.opacity = '';
       el.style.visibility = '';
-      // Hand the slides back as they were found. Leaving these on meant a
-      // destroyed carousel kept every slide but one out of the tab order and
-      // unreadable, with nothing left to put them back.
-      el.removeAttribute('aria-hidden');
-      el.removeAttribute('tabindex');
+      el.style.removeProperty('--md-comp-carousel-item-parallax');
+      if (this._generatedItemLabels.has(el)) el.removeAttribute('aria-label');
+      if (this._generatedItemDescriptions.has(el)) el.removeAttribute('aria-roledescription');
+      if (this._generatedItemSizes.has(el)) el.removeAttribute('data-carousel-size');
+      const original = this._itemA11yOriginal.get(el);
+      if (original?.ariaHidden === null) el.removeAttribute('aria-hidden');
+      else if (original) el.setAttribute('aria-hidden', original.ariaHidden);
+      if (original?.tabIndex === null) el.removeAttribute('tabindex');
+      else if (original) el.setAttribute('tabindex', original.tabIndex);
     });
+    if (this._generatedContainerRole) this.el.removeAttribute('role');
+    if (this._generatedContainerLabel) this.el.removeAttribute('aria-label');
+    if (this._generatedContainerDescription) this.el.removeAttribute('aria-roledescription');
+    if (this._generatedWideLayout) {
+      this.el.classList.remove(
+        'multi-wide',
+        'multi-large',
+        'multi-extra-large',
+        'full-screen-horizontal'
+      );
+    }
   }
 
   _handleThrottledResize = Utils.throttle(() => this._handleResize(), 200);
+
+  _handleTrackPointerDown = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    this.pressed = true;
+    this.dragged = false;
+    this._suppressClick = false;
+    this._dragPointerId = e.pointerId;
+    this._dragStartX = e.clientX;
+    this._dragStartY = e.clientY;
+    this._dragStartScroll = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
+    try {
+      this._scroller.setPointerCapture(e.pointerId);
+    } catch {
+      // Pointer capture is optional in older browsers and test DOMs.
+    }
+  };
+
+  _handleTrackPointerMove = (e: PointerEvent) => {
+    if (!this.pressed || e.pointerId !== this._dragPointerId) return;
+    const deltaX = e.clientX - this._dragStartX;
+    const deltaY = e.clientY - this._dragStartY;
+    const primaryDelta = this._vertical ? deltaY : deltaX;
+    const crossDelta = this._vertical ? deltaX : deltaY;
+
+    if (!this.dragged) {
+      if (Math.abs(primaryDelta) < 6 || Math.abs(primaryDelta) <= Math.abs(crossDelta)) return;
+      this.dragged = true;
+      this.el.classList.add('dragging');
+    }
+
+    if (this._vertical) this._scroller.scrollTop = this._dragStartScroll - deltaY;
+    else this._scroller.scrollLeft = this._dragStartScroll - deltaX;
+    e.preventDefault();
+  };
+
+  _handleTrackPointerUp = (e: PointerEvent) => {
+    if (!this.pressed || e.pointerId !== this._dragPointerId) return;
+    this.pressed = false;
+    this._dragPointerId = null;
+    this.el.classList.remove('dragging');
+    try {
+      this._scroller.releasePointerCapture(e.pointerId);
+    } catch {
+      // Pointer capture may already have been released.
+    }
+
+    if (!this.dragged) return;
+    this._suppressClick = true;
+    window.clearTimeout(this._suppressClickTimeout);
+    this._suppressClickTimeout = setTimeout(() => {
+      this._suppressClick = false;
+    }, 0);
+    this._syncActive(this._nearestIndex(), true);
+  };
+
+  _handleTrackClick = (e: MouseEvent) => {
+    if (!this._suppressClick) return;
+    this._suppressClick = false;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  };
+
+  _handleTrackDragStart = (e: DragEvent) => {
+    if ((e.target as HTMLElement).closest('img, picture, video')) e.preventDefault();
+  };
 
   _handleCarouselTap = (e: PointerEvent) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -391,7 +596,10 @@ export class Carousel extends Component<CarouselOptions> {
       e.stopPropagation();
     }
     if (clickedIndex < 0) {
-      if (e.clientX - (e.target as HTMLElement).getBoundingClientRect().left > this.el.clientWidth / 2) {
+      if (
+        e.clientX - (e.target as HTMLElement).getBoundingClientRect().left >
+        this.el.clientWidth / 2
+      ) {
         this.next();
       } else {
         this.prev();
@@ -413,25 +621,48 @@ export class Carousel extends Component<CarouselOptions> {
   _handleKeydown = (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
     if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
-    if (Utils.keys.ARROW_RIGHT.includes(e.key)) {
+    const forward = this._vertical ? e.key === 'ArrowDown' : Utils.keys.ARROW_RIGHT.includes(e.key);
+    const backward = this._vertical ? e.key === 'ArrowUp' : Utils.keys.ARROW_LEFT.includes(e.key);
+    if (e.key === 'Home') {
+      e.preventDefault();
+      this.set(0);
+      this._focusItem(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      this.set(this.count - 1);
+      this._focusItem(this.count - 1);
+    } else if (forward) {
       e.preventDefault();
       this.next();
-    } else if (Utils.keys.ARROW_LEFT.includes(e.key)) {
+      this._focusItem(this.center);
+    } else if (backward) {
       e.preventDefault();
       this.prev();
+      this._focusItem(this.center);
     }
   };
 
   _handleFlatScroll = () => {
-    if (this._ignoreScroll) return;
-    const index = this._nearestIndex();
-    if (index !== this.center) this._syncActive(index, this.dragged);
+    if (!this.el.classList.contains('scrolling')) this.el.classList.add('scrolling');
+    window.clearTimeout(this.scrollingTimeout);
+    this.scrollingTimeout = setTimeout(() => this.el.classList.remove('scrolling'), 120);
+    if (this._trackRaf !== null) return;
+    this._trackRaf = requestAnimationFrame(() => {
+      this._trackRaf = null;
+      this._updateParallax();
+      if (this._ignoreScroll) return;
+      const index = this._nearestIndex();
+      if (index !== this.center) this._syncActive(index, this.dragged);
+    });
   };
 
   _handleResize = () => {
     if (!this.images.length) return;
+    this._syncAdaptiveMode();
     if (this._flat) {
+      this._syncLayoutRoles(this.center);
       this._scrollToIndex(this.center, false);
+      this._updateParallax();
       return;
     }
     if (this.options.fullWidth) {
@@ -618,7 +849,11 @@ export class Carousel extends Component<CarouselOptions> {
     this.center = index;
     this.images.forEach((el, i) => el.classList.toggle('active', i === index));
     this._paintIndicators(index);
-    this._syncA11y(index);
+    if (this._flat) {
+      this._syncLayoutRoles(index);
+    } else {
+      this._syncA11y(index);
+    }
     const curr = this.images[index];
     if (prev !== index && typeof this.options.onCycleTo === 'function') {
       this.options.onCycleTo.call(this, curr, dragged);
@@ -627,6 +862,109 @@ export class Carousel extends Component<CarouselOptions> {
       this.oneTimeCallback.call(this, curr, dragged);
       this.oneTimeCallback = null;
     }
+  }
+
+  private _syncLayoutRoles(index: number) {
+    if (!this._flat) return;
+
+    const setSize = (item: HTMLElement, size: 'large' | 'medium' | 'small') => {
+      if (this._authoredItemSizes.has(item)) return;
+      item.setAttribute('data-carousel-size', size);
+      this._generatedItemSizes.add(item);
+    };
+
+    this.images.forEach((item) => setSize(item, 'large'));
+
+    if (
+      this.el.classList.contains('flat') ||
+      this.el.classList.contains('uncontained') ||
+      (this.el.classList.contains('full-screen') && this._vertical)
+    ) {
+      return;
+    }
+
+    if (
+      this.el.classList.contains('hero') ||
+      this.el.classList.contains('full-screen-horizontal')
+    ) {
+      const next = this.images[index + 1];
+      if (next) setSize(next, 'small');
+      if (this.el.classList.contains('center-aligned')) {
+        const previous = this.images[index - 1];
+        if (previous) setSize(previous, 'small');
+      }
+      return;
+    }
+
+    const width = this.el.clientWidth;
+    const desiredLargeCount = width >= 1600 ? 4 : width >= 1200 ? 3 : width >= 600 ? 2 : 1;
+    const largeCount = Math.min(desiredLargeCount, Math.max(1, this.count - 2));
+    this.el.classList.remove('multi-wide', 'multi-large', 'multi-extra-large');
+    if (largeCount === 2) this.el.classList.add('multi-wide');
+    else if (largeCount === 3) this.el.classList.add('multi-large');
+    else if (largeCount >= 4) this.el.classList.add('multi-extra-large');
+    this._generatedWideLayout = this._generatedWideLayout || largeCount > 1;
+
+    for (let offset = 1; offset < largeCount; offset += 1) {
+      const item = this.images[index + offset];
+      if (item) setSize(item, 'large');
+    }
+    const medium = this.images[index + largeCount];
+    const small = this.images[index + largeCount + 1];
+    if (medium) setSize(medium, 'medium');
+    if (small) setSize(small, 'small');
+  }
+
+  private _syncAdaptiveMode() {
+    if (!this.el.classList.contains('full-screen')) return;
+    const landscape = window.matchMedia('(orientation: landscape)').matches;
+    const horizontal = this.el.clientWidth >= 840 || landscape;
+    const wasVertical = this._vertical;
+    this._vertical = !horizontal;
+    this.el.classList.toggle('full-screen-horizontal', horizontal);
+    this._generatedWideLayout = this._generatedWideLayout || horizontal;
+
+    if (this._started && wasVertical !== this._vertical) {
+      this._scroller.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+    }
+  }
+
+  private _focusItem(index: number) {
+    const item = this.images[index];
+    if (!item) return;
+    const focusable = item.matches(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+        'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+      ? item
+      : item.querySelector<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+            'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+    (focusable ?? item).focus({ preventScroll: true });
+  }
+
+  private _updateParallax() {
+    if (!this._flat) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.images.forEach((item) =>
+        item.style.setProperty('--md-comp-carousel-item-parallax', '0px')
+      );
+      return;
+    }
+
+    const scrollerRect = this._scroller.getBoundingClientRect();
+    const viewportCenter = this._vertical
+      ? scrollerRect.top + scrollerRect.height / 2
+      : scrollerRect.left + scrollerRect.width / 2;
+    const viewportSize = Math.max(1, this._vertical ? scrollerRect.height : scrollerRect.width);
+
+    this.images.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const itemCenter = this._vertical ? rect.top + rect.height / 2 : rect.left + rect.width / 2;
+      const progress = Math.max(-1, Math.min(1, (itemCenter - viewportCenter) / viewportSize));
+      item.style.setProperty('--md-comp-carousel-item-parallax', `${progress * -24}px`);
+    });
   }
 
   private _wrapTrack() {
@@ -645,11 +983,17 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   private _nearestIndex(): number {
-    const left = this._scroller.scrollLeft;
+    const centered = this.el.classList.contains('center-aligned');
+    const position = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
+    const viewportCenter =
+      position + (this._vertical ? this._scroller.clientHeight : this._scroller.clientWidth) / 2;
     let best = 0;
     let bestDist = Infinity;
     this.images.forEach((el, i) => {
-      const dist = Math.abs(el.offsetLeft - left);
+      const start = this._vertical ? el.offsetTop : el.offsetLeft;
+      const size = this._vertical ? el.offsetHeight : el.offsetWidth;
+      const target = centered ? start + size / 2 : start;
+      const dist = Math.abs(target - (centered ? viewportCenter : position));
       if (dist < bestDist) {
         bestDist = dist;
         best = i;
@@ -661,13 +1005,26 @@ export class Carousel extends Component<CarouselOptions> {
   private _scrollToIndex(n: number, smooth = true) {
     const el = this.images[n];
     if (!el) return;
-    const left = el.offsetLeft;
-    if (Math.abs(this._scroller.scrollLeft - left) < 1) {
+    const centered = this.el.classList.contains('center-aligned');
+    const style = getComputedStyle(this._scroller);
+    const inlinePadding = Number.parseFloat(style.paddingInlineStart) || 0;
+    const blockPadding = Number.parseFloat(style.paddingBlockStart) || 0;
+    const left = centered
+      ? el.offsetLeft - (this._scroller.clientWidth - el.offsetWidth) / 2
+      : el.offsetLeft - inlinePadding;
+    const top = el.offsetTop - blockPadding;
+    const current = this._vertical ? this._scroller.scrollTop : this._scroller.scrollLeft;
+    const target = this._vertical ? top : left;
+    if (Math.abs(current - target) < 1) {
       this._syncActive(n, false);
       return;
     }
     this._ignoreScroll = true;
-    this._scroller.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' });
+    this._scroller.scrollTo({
+      left: this._vertical ? 0 : left,
+      top: this._vertical ? top : 0,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
     const done = () => {
       this._ignoreScroll = false;
     };
@@ -732,7 +1089,7 @@ export class Carousel extends Component<CarouselOptions> {
 
   set(n: number, callback?: CarouselOptions['onCycleTo']) {
     if (n === undefined || isNaN(n)) n = 0;
-    if (n > this.count || n < 0) {
+    if (n >= this.count || n < 0) {
       if (this.noWrap) return;
       n = this._wrap(n);
     }

@@ -1,34 +1,223 @@
 @use "../abstracts" as *;
 
-// Carousel. Two layouts, one class:
-//   .carousel           3D coverflow (JS)
-//   .carousel.flat      linear snap track (CSS).
+// Material 3 carousel.
 //
-// Anatomy: direct children move. .carousel-item is optional. Indicators and
-// .carousel-fixed-item are chrome, not slides.
+// The default is multi-browse. Add one layout class for the other M3
+// arrangements:
+//   .uncontained             equal-width items, free scrolling
+//   .uncontained.multi-aspect intrinsic widths from each item's aspect ratio
+//   .hero                    one large item and one small preview
+//   .hero.center-aligned     one centered large item and two small previews
+//   .full-screen             vertical, edge-to-edge, mandatory snap
 //
-// Tokens:
-//   --md-comp-carousel-height   400px  (--carousel-height still wins)
-//   --md-comp-carousel-shape    12px
-//   --md-comp-carousel-gap      0
+// `.flat` remains a full-width compatibility layout for swipeable tabs and
+// older integrations. `.coverflow` retains the former 3D presentation as an
+// explicit legacy opt-in; it is not a Material 3 layout.
+//
+// Material measurements:
+//   inline padding      16dp (0 for full-screen)
+//   block padding        8dp (0 for full-screen)
+//   item gap             8dp (16dp for full-screen)
+//   item shape          28dp
+//   small item width 40–56dp
 
 .carousel {
-  --md-comp-carousel-height: 400px;
-  --md-comp-carousel-shape: 12px;
-  --md-comp-carousel-gap: 0px;
+  --md-comp-carousel-height: 240px;
+  --md-comp-carousel-shape: 28px;
+  --md-comp-carousel-pressed-shape: 20px;
+  --md-comp-carousel-gap: 8px;
+  --md-comp-carousel-inline-padding: 16px;
+  --md-comp-carousel-block-padding: 8px;
+  --md-comp-carousel-large-item-width: clamp(150px, 52%, 480px);
+  --md-comp-carousel-medium-item-width: clamp(
+    64px,
+    calc(
+      100% - var(--md-comp-carousel-large-item-width) - clamp(
+          var(--md-comp-carousel-small-item-min-width),
+          12%,
+          var(--md-comp-carousel-small-item-max-width)
+        ) -
+        16px
+    ),
+    240px
+  );
+  --md-comp-carousel-small-item-min-width: 40px;
+  --md-comp-carousel-small-item-max-width: 56px;
+  --md-comp-carousel-uncontained-item-width: min(78%, 320px);
+  --md-comp-carousel-state-layer-color: var(--md-sys-color-on-surface);
+  --md-comp-carousel-hover-state-layer-opacity: 0.08;
+  --md-comp-carousel-focus-state-layer-opacity: 0.1;
+  --md-comp-carousel-pressed-state-layer-opacity: 0.1;
+  --md-comp-carousel-disabled-opacity: 0.38;
+  --md-comp-carousel-focus-indicator-color: var(--md-sys-color-secondary);
+  --md-comp-carousel-focus-indicator-thickness: 3px;
+  --md-comp-carousel-focus-indicator-offset: 2px;
 
-  overflow: hidden;
   position: relative;
   width: 100%;
   height: var(--carousel-height, var(--md-comp-carousel-height));
-  border-radius: var(--md-comp-carousel-shape);
+  overflow: hidden;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
 
-  .carousel-item > img,
-  .carousel-item > video {
-    display: block;
+  > .carousel-track {
+    display: flex;
+    align-items: stretch;
+    gap: var(--md-comp-carousel-gap);
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    margin: 0;
+    padding: var(--md-comp-carousel-block-padding)
+      var(--md-comp-carousel-inline-padding);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-inline: var(--md-comp-carousel-inline-padding);
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-inline: contain;
+    touch-action: pan-x;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    img,
+    video {
+      -webkit-user-drag: none;
+    }
+  }
+
+  .carousel-track > .carousel-item {
+    isolation: isolate;
+    flex: 0 0 var(--md-comp-carousel-large-item-width);
+    width: var(--md-comp-carousel-large-item-width);
+    min-width: 0;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--md-comp-carousel-shape);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    transition:
+      flex-basis 300ms cubic-bezier(0.2, 0, 0, 1),
+      width 300ms cubic-bezier(0.2, 0, 0, 1),
+      border-radius 200ms cubic-bezier(0.2, 0, 0, 1);
+
+    &[data-carousel-size="medium"] {
+      flex-basis: var(--md-comp-carousel-medium-item-width);
+      width: var(--md-comp-carousel-medium-item-width);
+    }
+
+    &[data-carousel-size="small"] {
+      flex-basis: clamp(
+        var(--md-comp-carousel-small-item-min-width),
+        12%,
+        var(--md-comp-carousel-small-item-max-width)
+      );
+      width: clamp(
+        var(--md-comp-carousel-small-item-min-width),
+        12%,
+        var(--md-comp-carousel-small-item-max-width)
+      );
+    }
+
+    &[data-carousel-size="small"] > .carousel-item-content {
+      display: none;
+    }
+
+    &[data-carousel-size="medium"] > .carousel-item-content p {
+      display: none;
+    }
+
+    > img,
+    > video,
+    > picture,
+    > picture > img {
+      display: block;
+      width: calc(100% + 48px);
+      max-width: none;
+      height: 100%;
+      object-fit: cover;
+      transform: translateX(var(--md-comp-carousel-item-parallax, 0px));
+      transition: transform 100ms linear;
+    }
+
+    > .carousel-item-content {
+      position: absolute;
+      inset: auto 12px 12px;
+      z-index: 2;
+      width: fit-content;
+      max-width: calc(100% - 24px);
+      padding: 8px 12px;
+      border-radius: 12px;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h2,
+      h3 {
+        @include typescale("title-medium");
+      }
+
+      p {
+        @include typescale("body-medium");
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    // Cards already own an M3 state layer. Other interactive carousel items
+    // get the same state feedback without covering their content controls.
+    &:not(article)::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      border-radius: inherit;
+      background-color: var(--md-comp-carousel-state-layer-color);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease-out;
+    }
+
+    &:not(article):hover::after {
+      opacity: var(--md-comp-carousel-hover-state-layer-opacity);
+    }
+
+    &:not(article):focus-visible::after,
+    &:not(article):focus-within::after {
+      opacity: var(--md-comp-carousel-focus-state-layer-opacity);
+    }
+
+    &:focus-visible,
+    &:focus-within {
+      z-index: 4;
+      outline: var(--md-comp-carousel-focus-indicator-thickness) solid
+        var(--md-comp-carousel-focus-indicator-color);
+      outline-offset: var(--md-comp-carousel-focus-indicator-offset);
+    }
+
+    &:not(article):active {
+      border-radius: var(--md-comp-carousel-pressed-shape);
+    }
+
+    &:not(article):active::after {
+      opacity: var(--md-comp-carousel-pressed-state-layer-opacity);
+    }
+
+    &:is(.disabled, [aria-disabled="true"]) {
+      opacity: var(--md-comp-carousel-disabled-opacity);
+      pointer-events: none;
+    }
   }
 
   .indicators {
@@ -39,9 +228,9 @@
     list-style: none;
     position: absolute;
     inset: auto 0 0;
-    z-index: 2;
+    z-index: 4;
     margin: 0;
-    padding: 16px 0;
+    padding: 8px 0;
     border: 0;
     background: none;
 
@@ -55,9 +244,13 @@
       padding: 0;
       border: 0;
       border-radius: 50%;
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 45%, transparent);
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-surface) 45%,
+        transparent
+      );
       cursor: pointer;
-      transition: background-color 0.2s ease-out;
+      transition: background-color 200ms ease-out;
 
       &:is(.active, [aria-current="true"]) {
         background-color: var(--md-sys-color-primary);
@@ -68,8 +261,336 @@
   }
 }
 
-// Coverflow. JS writes transform / opacity / visibility on each item.
-.carousel:not(.flat) {
+// Contained layouts keep every visible item complete. These surface guards
+// reserve the 16dp edge padding so the following item cannot peek through it.
+.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::before,
+.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::after,
+.carousel.full-screen-horizontal::before,
+.carousel.full-screen-horizontal::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 3;
+  width: var(--md-comp-carousel-inline-padding);
+  background-color: var(--md-sys-color-surface);
+  pointer-events: none;
+}
+
+.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::before,
+.carousel.full-screen-horizontal::before {
+  inset-inline-start: 0;
+}
+
+.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::after,
+.carousel.full-screen-horizontal::after {
+  inset-inline-end: 0;
+}
+
+// At 600dp or more, multi-browse adds a second large item. The remaining
+// medium width is solved from the container so every visible item is complete.
+.carousel.multi-wide {
+  --md-comp-carousel-large-item-width: clamp(180px, 36%, 480px);
+  --md-comp-carousel-medium-item-width: min(
+    240px,
+    max(
+      64px,
+      calc(
+        100% - var(--md-comp-carousel-large-item-width) - var(
+            --md-comp-carousel-large-item-width
+          ) - clamp(
+            var(--md-comp-carousel-small-item-min-width),
+            8%,
+            var(--md-comp-carousel-small-item-max-width)
+          ) -
+          24px
+      )
+    )
+  );
+
+  .carousel-track > .carousel-item[data-carousel-size="small"] {
+    flex-basis: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      8%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+    width: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      8%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+  }
+}
+
+// Large and extra-large containers fit additional large items while keeping
+// the medium item smaller than its large neighbours and the final item whole.
+.carousel.multi-large {
+  --md-comp-carousel-large-item-width: clamp(180px, 27%, 480px);
+  --md-comp-carousel-medium-item-width: min(
+    240px,
+    max(
+      64px,
+      calc(
+        100% - var(--md-comp-carousel-large-item-width) - var(
+            --md-comp-carousel-large-item-width
+          ) - var(--md-comp-carousel-large-item-width) - clamp(
+            var(--md-comp-carousel-small-item-min-width),
+            6%,
+            var(--md-comp-carousel-small-item-max-width)
+          ) -
+          32px
+      )
+    )
+  );
+
+  .carousel-track > .carousel-item[data-carousel-size="small"] {
+    flex-basis: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      6%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+    width: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      6%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+  }
+}
+
+.carousel.multi-extra-large {
+  --md-comp-carousel-large-item-width: clamp(180px, 22%, 480px);
+  --md-comp-carousel-medium-item-width: min(
+    240px,
+    max(
+      64px,
+      calc(
+        100% - var(--md-comp-carousel-large-item-width) - var(
+            --md-comp-carousel-large-item-width
+          ) - var(--md-comp-carousel-large-item-width) - var(
+            --md-comp-carousel-large-item-width
+          ) - clamp(
+            var(--md-comp-carousel-small-item-min-width),
+            4%,
+            var(--md-comp-carousel-small-item-max-width)
+          ) -
+          40px
+      )
+    )
+  );
+
+  .carousel-track > .carousel-item[data-carousel-size="small"] {
+    flex-basis: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      4%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+    width: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      4%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+  }
+}
+
+// Uncontained items keep one width and may stop anywhere. `.snap` is an
+// optional, still-conforming alternative for products that prefer snapping.
+.carousel.uncontained {
+  > .carousel-track {
+    padding-inline-end: 0;
+    scroll-snap-type: none;
+  }
+
+  .carousel-track > .carousel-item {
+    flex-basis: var(--md-comp-carousel-uncontained-item-width);
+    width: var(--md-comp-carousel-uncontained-item-width);
+    scroll-snap-stop: normal;
+  }
+
+  &.snap > .carousel-track {
+    scroll-snap-type: x mandatory;
+  }
+}
+
+.carousel.uncontained.multi-aspect .carousel-track > .carousel-item {
+  flex-basis: auto;
+  width: auto;
+  min-width: calc(
+    (var(--carousel-height, var(--md-comp-carousel-height)) - 16px) * 0.5625
+  );
+  max-width: calc(
+    (var(--carousel-height, var(--md-comp-carousel-height)) - 16px) * 1.7778
+  );
+  aspect-ratio: var(--md-comp-carousel-item-aspect-ratio, auto);
+}
+
+// Hero always previews the next item. Center-aligned adds the leading preview
+// by aligning the active large item to the center of the container.
+.carousel.hero {
+  --md-comp-carousel-large-item-width: min(calc(100% - 96px), 720px);
+
+  .carousel-track > .carousel-item[data-carousel-size="small"] {
+    flex-basis: clamp(
+      var(--md-comp-carousel-small-item-min-width),
+      12%,
+      var(--md-comp-carousel-small-item-max-width)
+    );
+  }
+
+  &.center-aligned {
+    --md-comp-carousel-large-item-width: min(calc(100% - 176px), 720px);
+
+    > .carousel-track {
+      scroll-padding-inline: 50%;
+    }
+
+    .carousel-track > .carousel-item {
+      scroll-snap-align: center;
+    }
+  }
+}
+
+// Full-screen is the one vertical M3 layout. It is intended for portrait
+// compact and medium windows; authors should choose a different layout in
+// landscape or at expanded breakpoints.
+.carousel.full-screen {
+  --md-comp-carousel-gap: 16px;
+  --md-comp-carousel-inline-padding: 0px;
+  --md-comp-carousel-block-padding: 0px;
+  --md-comp-carousel-shape: 0px;
+
+  height: 100dvh;
+
+  > .carousel-track {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-padding: 0;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-inline: auto;
+    overscroll-behavior-block: contain;
+    touch-action: pan-y;
+  }
+
+  .carousel-track > .carousel-item {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+
+    > img,
+    > video,
+    > picture,
+    > picture > img {
+      width: 100%;
+      height: calc(100% + 48px);
+      transform: translateY(var(--md-comp-carousel-item-parallax, 0px));
+    }
+  }
+}
+
+// The immersive feed adapts to a horizontal hero on landscape and expanded
+// windows. JS adds this internal class from the rendered container geometry.
+.carousel.full-screen.full-screen-horizontal {
+  --md-comp-carousel-gap: 8px;
+  --md-comp-carousel-inline-padding: 16px;
+  --md-comp-carousel-block-padding: 8px;
+  --md-comp-carousel-shape: 28px;
+  // Fill the content box with one large item, one 8dp gap, and one 56dp
+  // preview. Track padding sits outside the percentage basis.
+  --md-comp-carousel-large-item-width: calc(100% - 64px);
+
+  height: var(--carousel-height, var(--md-comp-carousel-height));
+
+  > .carousel-track {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding: var(--md-comp-carousel-block-padding)
+      var(--md-comp-carousel-inline-padding);
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+    overscroll-behavior-block: auto;
+    touch-action: pan-x;
+  }
+
+  .carousel-track > .carousel-item {
+    flex: 0 0 var(--md-comp-carousel-large-item-width);
+    width: var(--md-comp-carousel-large-item-width);
+    height: auto;
+    border-radius: var(--md-comp-carousel-shape);
+
+    &[data-carousel-size="small"] {
+      flex-basis: clamp(
+        var(--md-comp-carousel-small-item-min-width),
+        12%,
+        var(--md-comp-carousel-small-item-max-width)
+      );
+      width: clamp(
+        var(--md-comp-carousel-small-item-min-width),
+        12%,
+        var(--md-comp-carousel-small-item-max-width)
+      );
+    }
+
+    > img,
+    > video,
+    > picture,
+    > picture > img {
+      width: calc(100% + 48px);
+      height: 100%;
+      transform: translateX(var(--md-comp-carousel-item-parallax, 0px));
+    }
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .carousel:not(.coverflow) > .carousel-track {
+    cursor: grab;
+  }
+
+  .carousel.dragging {
+    > .carousel-track {
+      cursor: grabbing;
+      scroll-behavior: auto;
+      scroll-snap-type: none;
+      user-select: none;
+    }
+
+    .carousel-item {
+      pointer-events: none;
+    }
+  }
+}
+
+// Full-width compatibility mode for tabs and existing integrations.
+.carousel.flat {
+  --md-comp-carousel-gap: 0px;
+  --md-comp-carousel-inline-padding: 0px;
+  --md-comp-carousel-block-padding: 0px;
+  --md-comp-carousel-shape: 0px;
+
+  .carousel-track > .carousel-item {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .carousel-fixed-item {
+    position: absolute;
+    inset: auto 0 20px;
+    z-index: 4;
+
+    &.with-indicators {
+      bottom: 68px;
+    }
+  }
+}
+
+// Legacy 3D coverflow. Kept only so existing markup has a migration path.
+// JS writes transform / opacity / visibility on each item.
+.carousel.coverflow {
+  --md-comp-carousel-shape: 12px;
+
+  border-radius: var(--md-comp-carousel-shape);
   perspective: 500px;
   transform-style: preserve-3d;
   transform-origin: 0% 50%;
@@ -87,69 +608,47 @@
   }
 }
 
-// Linear track. The outer box clips and holds chrome (dots, fixed item).
-// Slides live in .carousel-track so they can scroll without taking the
-// controls with them — abspos children of an overflow:auto box scroll too.
-.carousel.flat {
-  overflow: hidden;
-  perspective: none;
-  transform: none;
-
-  > .carousel-track {
-    display: flex;
-    gap: var(--md-comp-carousel-gap);
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    touch-action: pan-x;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+@include bp-up("medium") {
+  .carousel {
+    --md-comp-carousel-height: 320px;
   }
+}
 
-  .carousel-track > .carousel-item {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    position: relative;
-    visibility: visible;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-
-  .carousel-fixed-item {
-    position: absolute;
-    inset: auto 0 20px;
-    z-index: 1;
-
-    &.with-indicators {
-      bottom: 68px;
-    }
-  }
-
-  .carousel-item {
-    h2 {
-      @include typescale("headline-small");
-      margin: 0 0 8px;
-    }
-
-    p {
-      @include typescale("body-medium");
-      margin: 0;
-    }
+@include bp-up("expanded") {
+  .carousel {
+    --md-comp-carousel-height: 360px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .carousel.flat > .carousel-track {
-    scroll-behavior: auto;
+  .carousel:not(.coverflow) {
+    --md-comp-carousel-inline-padding: 0px;
+
+    > .carousel-track {
+      scroll-behavior: auto;
+    }
+
+    .carousel-track > .carousel-item {
+      flex-basis: var(--md-comp-carousel-uncontained-item-width);
+      width: var(--md-comp-carousel-uncontained-item-width);
+      transition: none;
+
+      > img,
+      > video,
+      > picture,
+      > picture > img {
+        width: 100%;
+        transform: none;
+        transition: none;
+      }
+    }
+  }
+
+  .carousel.full-screen:not(.full-screen-horizontal)
+    .carousel-track
+    > .carousel-item {
+    flex-basis: 100%;
+    width: 100%;
   }
 }
 

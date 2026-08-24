@@ -1919,7 +1919,7 @@ A static card has no hover treatment. To make the card an entry point, wrap its 
 
 ### Collections
 
-`card-collection` creates a responsive grid with no more than 8dp between cards. Every card is coplanar at rest; add `picked-up` or `dragged` only while it is being moved. Add `list`, `staggered`, `mosaic`, or `carousel flat` for the other collection layouts. Sorting and filtering controls stay outside the collection.
+`card-collection` creates a responsive grid with no more than 8dp between cards. Every card is coplanar at rest; add `picked-up` or `dragged` only while it is being moved. Add `list`, `staggered`, `mosaic`, or `carousel uncontained` for the other collection layouts. Sorting and filtering controls stay outside the collection.
 
 ```html
 <!-- Responsive grid (the default). Override the track token as needed. -->
@@ -1946,8 +1946,8 @@ A static card has no hover treatment. To make the card an entry point, wrap its 
   <article style="--md-comp-card-collection-column-span: 2; --md-comp-card-collection-row-span: 4">…</article>
 </section>
 
-<!-- Snap carousel. AutoInit starts the existing Carousel component. -->
-<section class="card-collection carousel flat" aria-label="Dinner menu">
+<!-- M3 uncontained carousel. AutoInit starts the Carousel component. -->
+<section class="card-collection carousel uncontained" aria-label="Dinner menu">
   <article class="outlined carousel-item"><h3>Pho</h3><p>$12</p></article>
   <article class="outlined carousel-item"><h3>Quinoa Salad</h3><p>$10</p></article>
 </section>
@@ -2091,64 +2091,101 @@ The small card is 300px tall.
 
 ## Carousel
 
-A 3D item carousel, or a full-width slider.
+A Material 3 adaptive carousel for visual collections.
 
-A carousel is a row of items you can drag or swipe. The default is a perspective stack: the center item is large, the others recede. Touch and mouse both work.
-
-`AutoInit()` starts every `.carousel` except those marked `no-autoinit`. This is not the Slider on the Media page — that is a separate component on `.slider`.
+The default is multi-browse: one large, one medium, and one small item adapt as the active item changes. `AutoInit()` starts every `.carousel` except those marked `no-autoinit`. Give the container an accessible name and every direct item the `carousel-item` class.
 
 ```html
-<div class="carousel">
-  <a class="carousel-item" href="#one!">
-    <img src="images/sample-1.jpg" alt="Mountain lake">
+<div class="carousel" aria-label="Featured landscapes">
+  <a class="carousel-item" href="mountain-lake.html">
+    <img src="images/mountain-lake.jpg" alt="Mountain lake">
+    <span class="carousel-item-content">Mountain lake</span>
   </a>
-  <a class="carousel-item" href="#two!">
-    <img src="images/sample-2.jpg" alt="Forest path">
+  <a class="carousel-item" href="forest-path.html">
+    <img src="images/forest-path.jpg" alt="Forest path">
+    <span class="carousel-item-content">Forest path</span>
   </a>
-  <a class="carousel-item" href="#three!">
-    <img src="images/sample-3.jpg" alt="Rocky coastline">
+  <a class="carousel-item" href="rocky-coastline.html">
+    <img src="images/rocky-coastline.jpg" alt="Rocky coastline">
+    <span class="carousel-item-content">Rocky coastline</span>
   </a>
 </div>
+<div class="mt-1"><a class="button text" href="all-landscapes.html">Show all</a></div>
 ```
 
-Every child that should move needs `carousel-item`. With no items, `init` logs an error and returns without starting. The track is 400px tall; set `--carousel-height` on the carousel to change it. Default items are half that size.
+The text treatment is an opaque `surface` / `on-surface` bounding shape, so its contrast does not depend on the image. Keep item text brief and avoid more than two lines at compact widths. The component uses 8dp gaps, 16dp inline padding, 8dp block padding, 28dp corners, and 40–56dp small items.
+
+### Layouts
+
+| Layout | Class | Use |
+| --- | --- | --- |
+| Multi-browse | `.carousel` | Many simple visual items; snap-scrolling. |
+| Uncontained | `.carousel.uncontained` | Text-heavy or customized equal-width items; free scrolling. Add `.snap` to snap. |
+| Multi-aspect uncontained | `.carousel.uncontained.multi-aspect` | Sources that genuinely range from 9:16 to 16:9. Set `--md-comp-carousel-item-aspect-ratio` per item. |
+| Hero | `.carousel.hero` | One large visual and one 40–56dp preview; snap-scrolling. |
+| Center-aligned hero | `.carousel.hero.center-aligned` | One centered large visual and two previews. |
+| Full-screen | `.carousel.full-screen` | Vertical immersive feed in portrait compact and medium layouts only. |
+
+```html
+<div class="carousel uncontained" aria-label="Travel stories">…</div>
+<div class="carousel hero" aria-label="Featured destinations">…</div>
+<div class="carousel hero center-aligned" aria-label="Featured destinations">…</div>
+<div class="carousel full-screen" aria-label="Featured stories">…</div>
+```
+
+Multi-browse, hero, and full-screen snap. Uncontained uses free scrolling unless `snap` is added. The rendered container width fits two, three, or four large items at medium, large, and extra-large widths, including pane-only resizes. Fine pointers can drag the track while trackpads keep native scrolling. Full-screen is vertical and edge-to-edge in portrait compact and medium layouts, then automatically adapts to a horizontal hero in landscape or at expanded widths.
+
+On a vertically scrolling page, put a **Show all** action 4dp below every horizontal carousel. It should open a normal vertically scrolling view of the same items. If there is a heading, a 48dp arrow action may sit beside the heading instead. Do not overlay previous/next controls or place them beside the carousel edges.
+
+Focus starts on the first item rather than the container. Left/right arrows move through horizontal items. Up/down arrows move through portrait full-screen items and otherwise leave the carousel. Home/End move to the first/last item. Reduced-motion mode removes parallax and size morphing, uses equal widths, and disables smooth scrolling.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-carousel-height` | 240px compact; 320px medium; 360px expanded |
+| `--md-comp-carousel-shape` | 28px |
+| `--md-comp-carousel-pressed-shape` | 20px |
+| `--md-comp-carousel-gap` | 8px |
+| `--md-comp-carousel-inline-padding` | 16px |
+| `--md-comp-carousel-block-padding` | 8px |
+| `--md-comp-carousel-large-item-width` | Responsive, capped by layout |
+| `--md-comp-carousel-medium-item-width` | Responsive |
+| `--md-comp-carousel-small-item-min-width` | 40px |
+| `--md-comp-carousel-small-item-max-width` | 56px |
+| `--md-comp-carousel-uncontained-item-width` | `min(78%, 320px)` |
+| `--md-comp-carousel-item-aspect-ratio` | Per item, multi-aspect only |
+
+The older `--carousel-height` author hook is still read.
 
 ### Initialization
-
-The IIFE bundle exposes `Expressive.Carousel`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.carousel`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.carousel');
-  const instances = Expressive.Carousel.init(elems, {
-    // specify options here
-  });
+  const instances = Expressive.Carousel.init(elems);
 });
 ```
-
-Per-instance options can also be passed through AutoInit:
 
 ```js
 Expressive.AutoInit(document.body, {
-  Carousel: { indicators: true }
+  Carousel: {
+    i18n: { carousel: 'Galería', item: 'Elemento', of: 'de' }
+  }
 });
 ```
-
-That AutoInit call would apply to every carousel on the page. For a single full-width instance, mark it `no-autoinit` and call `init` yourself.
 
 ### Options
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `duration` | Number | `200` | Transition duration, in milliseconds. |
-| `dist` | Number | `-100` | Perspective zoom. `0` keeps every item the same size. Full-width mode forces this to `0`. |
-| `shift` | Number | `0` | Extra spacing on the center item. |
-| `padding` | Number | `0` | Padding between items that are not in the center. |
-| `numVisible` | Number | `5` | How many items stay visible. Capped at the number of items. |
-| `fullWidth` | Boolean | `false` | Turn the carousel into a full-width slider. Pair it with the `flat` class. |
-| `indicators` | Boolean | `false` | Show paging dots. Only drawn when there is more than one item. |
-| `noWrap` | Boolean | `false` | Stop at the first and last items instead of wrapping. A single-item carousel always behaves as if this were true. |
-| `onCycleTo` | Function | `null` | Called when a new item becomes the center. Receives the current item and whether the move was a drag. |
+| `duration` | Number | `200` | Programmatic scroll timing and legacy coverflow tween, in milliseconds. |
+| `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
+| `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
+| `noWrap` | Boolean | `false` | End behavior for legacy coverflow. M3 tracks always stop at their ends. |
+| `onCycleTo` | Function | `null` | Called when the active item changes. |
+| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of' }` | Generated accessible label strings. |
+| `dist`, `shift`, `padding`, `numVisible` | Number | Legacy | Used only by the explicit `.coverflow` compatibility layout. |
 
 ### Methods
 
@@ -2158,48 +2195,12 @@ That AutoInit call would apply to every carousel on the page. For a single full-
 const instance = Expressive.Carousel.getInstance(elem);
 ```
 
-#### .next();
+`next()` and `prev()` move one item or an optional item count. `set(index, callback)` moves to a zero-based item index. `destroy()` removes generated labels, size roles, indicators, listeners, and the scroll-track wrapper.
 
-Move to the next item, or skip forward a given number of items.
-
-**Integer (optional):** How many items to advance. Defaults to 1.
-
-```text
+```js
 instance.next();
-instance.next(3);
-```
-
-#### .prev();
-
-Move to the previous item, or skip back a given number of items.
-
-**Integer (optional):** How many items to go back. Defaults to 1.
-
-```text
-instance.prev();
 instance.prev(3);
-```
-
-#### .set();
-
-Move to the item at a given index.
-
-**Integer:** 0-based index of the item.
-
-**Function (optional):** A one-shot `onCycleTo` callback for this move.
-
-```text
 instance.set(3);
-instance.set(3, function(current, dragged) {
-  // ran once, after this move
-});
-```
-
-#### .destroy();
-
-Destroy the plugin instance and tear down its event handlers.
-
-```text
 instance.destroy();
 ```
 
@@ -2209,67 +2210,7 @@ instance.destroy();
 | --- | --- | --- |
 | `el` | Element | The DOM element the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
-| `pressed` | Boolean | Whether the carousel is being clicked or tapped. |
-| `dragged` | Boolean | Whether the carousel is currently being dragged. |
 | `center` | Number | The index of the center item. |
-
-### Full Width Slider
-
-Add `flat` for the layout, and pass `fullWidth: true` so the plugin drops the perspective zoom and sizes the track to the first image. Mark the element `no-autoinit` so AutoInit does not start it as a 3D carousel.
-
-```html
-<div class="carousel flat no-autoinit">
-  <a class="carousel-item" href="#one!">
-    <img src="images/sample-1.jpg" alt="Mountain lake">
-  </a>
-  <a class="carousel-item" href="#two!">
-    <img src="images/sample-2.jpg" alt="Forest path">
-  </a>
-</div>
-```
-
-```js
-Expressive.Carousel.init(document.querySelector('.carousel.flat'), {
-  fullWidth: true
-});
-```
-
-### Content carousel
-
-Items do not have to be images. A `carousel-fixed-item` stays put over the slides — useful for a button that should not move with the content. This demo also turns `indicators` on.
-
-### First Panel
-
-### Second Panel
-
-### Third Panel
-
-### Fourth Panel
-
-```html
-<div class="carousel flat center no-autoinit">
-  <div class="carousel-fixed-item center">
-    <a class="btn">Button</a>
-  </div>
-  <div class="carousel-item primary on-primary-text p-5">
-    <h2>First Panel</h2>
-    <p>This is your first panel</p>
-  </div>
-  <div class="carousel-item secondary on-secondary-text p-5">
-    <h2>Second Panel</h2>
-    <p>This is your second panel</p>
-  </div>
-</div>
-```
-
-```js
-Expressive.Carousel.init(document.querySelector('#carousel-content'), {
-  fullWidth: true,
-  indicators: true
-});
-```
-
-Swipeable tabs wrap their panels in a carousel. That is the Tabs plugin, not a carousel you start yourself.
 
 ---
 
@@ -3606,7 +3547,7 @@ Add a short caption with the `data-caption` attribute.
 
 A slideshow is a full-width image sequence. Captions transition on their own according to `center-align`, `left-align`, or `right-align`. Indicators appear along the bottom.
 
-Slideshow is **not** in `AutoInit()`. Call `Expressive.Slideshow.init` yourself after the page loads. For a 3D item carousel or a full-width image track, see Carousel.
+Slideshow is **not** in `AutoInit()`. Call `Expressive.Slideshow.init` yourself after the page loads. For an adaptive Material 3 visual collection, see Carousel.
 
 ```html
 <div class="slideshow">

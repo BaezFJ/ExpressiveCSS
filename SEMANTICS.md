@@ -91,7 +91,7 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 ### carousel
 
-Swept 0.8.0. Off-screen slides are inert, not merely hidden. Checked at runtime in tests/carousel-a11y.test.js.
+Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
