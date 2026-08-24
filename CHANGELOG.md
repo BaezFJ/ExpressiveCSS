@@ -84,6 +84,19 @@ below is the whole story for that component.
   circles; in a list, `> span { grid-column: 2 }` swallowed the leading icon
   and drew it inside the text column. Icons now go through `$icon` and labels
   through `$icon-label`, which is what those variables are for.
+- **A labelled header action was squeezed into the icon-button circle.**
+  `:only-child` counts elements, not text nodes, so
+  `<button><span icon/> Save</button>` reads as icon-only and took the 48dp
+  circle with its label overflowing — while the complementary
+  `:not(:has(…))` branch excluded it from the text-button treatment, leaving
+  no way to write it at all. CSS cannot see the text node, so `.button` is now
+  the author's opt-out on dialog and pane headers, matching the escape hatch
+  the app bar already had. Writing the label as its own `<span>` works too, and
+  always did.
+- **The navigation bar's active indicator was the navigation rail's.**
+  `md.comp.navigation-bar.active-indicator.width` is 64dp and
+  `md.comp.navigation-rail.active-indicator.width` is 56dp; both were 56 here.
+  The rail is unchanged; the bar is now 64×32.
 
 ### Added
 

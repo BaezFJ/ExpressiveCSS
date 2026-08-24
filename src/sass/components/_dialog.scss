@@ -215,7 +215,12 @@ dialog.max {
   }
 
   // Close is a 48dp icon button. 4dp bar inset + 12dp to the glyph = 16dp.
-  > header > :is(button, a):has(> #{$icon}:only-child) {
+  // `:only-child` counts elements, not text nodes, so `<button><span icon/>
+  // Save</button>` reads as icon-only and would be squeezed into the 48dp
+  // circle. CSS cannot see the text node; `.button` is the author's opt-out,
+  // and sends such an action to the general button rules instead. Same
+  // escape hatch the app bar already has.
+  > header > :is(button, a):not(.button):has(> #{$icon}:only-child) {
     display: inline-flex;
     flex: 0 0 48px;
     align-items: center;

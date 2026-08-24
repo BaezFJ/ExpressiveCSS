@@ -15,7 +15,7 @@
 //   --md-comp-nav-bar-container-color
 //   --md-comp-nav-bar-container-height          64px
 //   --md-comp-nav-bar-icon-size                 24px
-//   --md-comp-nav-bar-indicator-width           56px
+//   --md-comp-nav-bar-indicator-width           64px
 //   --md-comp-nav-bar-indicator-height          32px
 //   --md-comp-nav-bar-indicator-shape           16px / 100px horizontal
 //   --md-comp-nav-bar-active-indicator-color    secondary-container
@@ -27,7 +27,10 @@
   --md-comp-nav-bar-container-color: var(--md-sys-color-surface-container);
   --md-comp-nav-bar-container-height: 64px;
   --md-comp-nav-bar-icon-size: 24px;
-  --md-comp-nav-bar-indicator-width: 56px;
+  // 64dp, not the rail's 56dp: md.comp.navigation-bar.active-indicator.width
+  // is 64 while md.comp.navigation-rail.active-indicator.width is 56. Both were
+  // 56 here, which is the rail's value copied onto the bar.
+  --md-comp-nav-bar-indicator-width: 64px;
   --md-comp-nav-bar-indicator-height: 32px;
   --md-comp-nav-bar-indicator-shape: 16px;
   --md-comp-nav-bar-active-indicator-color: var(--md-sys-color-secondary-container);

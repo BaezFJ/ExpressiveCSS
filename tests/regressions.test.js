@@ -796,3 +796,57 @@ describe('Icon selectors keyed on the <i> element', () => {
     assertIconIsAClass('fieldset', /^fieldset\b/, /margin-inline-end:\s*8px/);
   });
 });
+
+describe('Icon-only header actions and the indicator width', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+  const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
+    selector: m[1].trim(),
+    body: m[2]
+  }));
+
+  test('a header action can opt out of the icon-button treatment', () => {
+    // `:only-child` counts elements, not text nodes, so
+    // `<button><span icon/> Save</button>` reads as icon-only and gets squeezed
+    // into the 48dp circle with its label overflowing. CSS cannot see the text
+    // node, so there is no selector that gets this right on its own - `.button`
+    // is the author's opt-out, and before this there was none at all.
+    // Positive form only. The complementary text-button branch spells it
+    // `:not(:has(...))` and is right to carry no opt-out.
+    const ICON_ONLY =
+      /(?<!:not\():has\(>\s*:is\([^)]*\.material-symbols[^)]*\):only-child\)/;
+    const iconOnly = rules.filter((r) => ICON_ONLY.test(r.selector));
+    assert.ok(iconOnly.length > 0, 'no icon-only branch found - the probe is stale');
+    for (const hit of iconOnly) {
+      // Split on top-level commas only - `:is(a, label)` carries its own, and
+      // a naive split lands mid-selector. Same trap as the Footer test above.
+      const arms = [];
+      let depth = 0;
+      let cur = '';
+      for (const ch of hit.selector) {
+        if (ch === '(') depth++;
+        else if (ch === ')') depth--;
+        if (ch === ',' && depth === 0) { arms.push(cur); cur = ''; continue; }
+        cur += ch;
+      }
+      arms.push(cur);
+      for (const arm of arms.map((s) => s.trim())) {
+        // Test for the icon-only `:has()` specifically - the app bar host also
+        // uses `:has()`, and a bare check matches arms that carry only that.
+        if (!ICON_ONLY.test(arm)) continue;
+        assert.match(
+          arm,
+          /:not\([^)]*\.button[^)]*\)|button:not\(\.button\)/,
+          `icon-only branch has no .button opt-out:\n  ${arm}`
+        );
+      }
+    }
+  });
+
+  test('the navigation bar active indicator is 64dp wide, not the rail 56dp', () => {
+    // md.comp.navigation-bar.active-indicator.width is 64;
+    // md.comp.navigation-rail.active-indicator.width is 56. Both were 56 here.
+    assert.match(css, /--md-comp-nav-bar-indicator-width:\s*64px/);
+    assert.match(css, /--md-comp-nav-bar-indicator-height:\s*32px/);
+    assert.match(css, /--md-comp-nav-rail-indicator-width:\s*56px/);
+  });
+});
