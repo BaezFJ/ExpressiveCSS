@@ -69,19 +69,51 @@ below is the whole story for that component.
   every rule naming an old class and fails if the new one is missing from it.
 - **`llm.md` documented a token that does not exist** — `--sidenav-width`. The
   real one is `--md-comp-nav-drawer-width`.
-- **Eleven components styled their icons by element, so every icon rule was
-  dead against documented markup.** The canonical icon is
-  `<span class="material-symbols">`, but the app bar, navigation bar, dialog,
-  panes, list, tabs, pagination, side sheet, toolbar, menu and fieldset legend
-  each still asked `> i`. Nothing warned; the rules simply stopped applying —
+- **The top app bar told an icon from a label by its element.** The 48dp
+  circular target was keyed on `<i>`, and the canonical icon is a
+  `<span class="material-symbols">` — so every bar written the way the docs
+  teach, this site's own header included, lost the rule outright. The leading
+  action fell through to the generic button pill (72×40, tonal fill), the
+  trailing icon links were swept up by the *text-destination* rule and drawn at
+  `label-large` with 12dp padding, and the headline sat 76px from the edge
+  instead of the spec's 56. Keyed on the shared `$icon` list now, the way
+  `_buttons` and `_toolbar` already were.
+- **Five more tokens were declared or referenced but not both**, found by the
+  new check below. The time picker's AM/PM buttons referenced Materialize's
+  `--btn-padding` and `--btn-border-radius`, which no longer exist — the
+  declarations were invalid at computed-value time, which does *not* fall back
+  to the rule underneath, so the padding rendered as 0 while a base button rule
+  offered 24px. They now say the 0 they have always rendered as. The checkbox
+  and radio `state-layer-size` tokens were declared and read by nothing, with
+  the 40dp geometry written out as pre-computed `11px` / `10px` shadow spreads;
+  the spreads derive from the tokens now, to the same pixel.
+
+- **The app bar's trailing icon token was declared and used by nothing.**
+  Both icon actions took the *leading* token, so the documented way to opt into
+  the spec's muted trailing icons changed nothing. The two are told apart the
+  way the rest of the bar is — by DOM order, leading before the headline and
+  trailing after it — and each token now colours its own side.
+- **The medium and large app bars missed their spec insets**, and a
+  title-only one put the headline where the icons belong. The expanded
+  headline sat 20dp from the inline edge rather than 16, medium left 16dp
+  above the container bottom rather than 20, and the icon row sat 4dp high
+  instead of centred in the 64dp row the bar collapses to. Separately, a bar
+  with no icons has a single flex line, and `align-content: space-between`
+  packs one line to the *top* — so the headline rose to the icon row. The top
+  row now has a height of its own and the headline a basis that cannot share
+  a line with it.
+- **Ten more components had the same defect as the app bar above.** The
+  canonical icon is `<span class="material-symbols">`, but the navigation bar,
+  dialog, panes, list, tabs, pagination, side sheet, toolbar, menu and
+  fieldset legend each still asked `> i`. Nothing warned; the rules simply stopped applying —
   the navigation bar lost its active-indicator pill, a tab with an icon kept
   the short container, menu icons rendered at 24dp instead of 20dp.
 
   Three of them broke twice over, because the rule on the *other* side of the
   question over-matched instead. `:has(> i:only-child)` failing meant the
-  dialog and app bar close buttons fell into the `:not(:has(…))` **text
-  button** branch and rendered as auto-width 40dp pills rather than 48dp
-  circles; in a list, `> span { grid-column: 2 }` swallowed the leading icon
+  dialog's close button fell into the `:not(:has(…))` **text button** branch
+  and rendered as an auto-width 40dp pill rather than a 48dp circle; in a
+  list, `> span { grid-column: 2 }` swallowed the leading icon
   and drew it inside the text column. Icons now go through `$icon` and labels
   through `$icon-label`, which is what those variables are for.
 - **A labelled header action was squeezed into the icon-button circle.**
@@ -99,6 +131,17 @@ below is the whole story for that component.
   The rail is unchanged; the bar is now 64×32.
 
 ### Added
+
+- **A token liveness check** (`tests/tokens.test.js`). Two failure modes, both
+  silent — no syntax error, nothing in a browser console. A `var()` naming a
+  token nothing declares makes its whole declaration invalid at computed-value
+  time: it still wins the cascade and *then* resolves to unset, so the property
+  falls to inherited-or-initial rather than to the rule underneath. And a token
+  declared and read by nobody is a promise the sheet does not keep. Only
+  `--md-comp-*` is checked for being read — `--md-sys-*` and `--md-ref-*` are
+  the public palette, where 111 unread ramp entries are the point. Unread
+  component tokens can be exempted with a stated reason, and the check fails on
+  a stale exemption too, so the list can only shrink.
 
 - **The sweep is finished — 45 of 45 components enforced.** The last pass takes
   the remaining 23: icons, badges, buttons, cards, toolbar, list, tooltip,
