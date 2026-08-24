@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": [
+        "run",
+        "flask",
+        "--app",
+        "docs/app.py",
+        "run",
+        "--debug",
+        "--port",
+        "5055"
+      ],
+      "port": 5055
+    }
+  ]
+}
