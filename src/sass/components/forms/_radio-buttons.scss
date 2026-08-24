@@ -30,7 +30,6 @@ label:has(> [type="radio"]),
   user-select: none;
   color: var(--md-sys-color-on-surface);
   @include typescale("body-large");
-  font-family: $font-stack;
 }
 
 // A row of radios is a group of controls, not navigation - see rule 4 in

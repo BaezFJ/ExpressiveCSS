@@ -140,7 +140,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="dist/css/expressive.min.css">
   </head>
   <body>
@@ -157,7 +157,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. The two Google Fonts stylesheets above are the same ones the docs site loads: variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes) and Roboto 400 / 500. The framework does not ship those font files. Drop the Symbols link only if the page has no icon-font markup; drop Roboto only if you override the type-scale font. The older Material Icons stylesheet is optional and is not required for `.material-symbols`.
+The IIFE bundle exposes the global `Expressive` object. The two Google Fonts stylesheets above are the same ones the docs site loads: variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. The framework does not ship those font files. Drop the Symbols link only if the page has no icon-font markup; replace the typeface link if you override the brand/plain tokens. The older Material Icons stylesheet is optional and is not required for `.material-symbols`.
 
 ## ES module setup
 
@@ -1403,7 +1403,7 @@ The type scale is the HTML. `<h1>`–`<h6>` are display and headline roles, `<p>
 
 Tokens follow the [M3 type system](https://m3.material.io/styles/typography/overview). Each role sets family, size, weight, line-height, and letter-spacing from `--md-sys-typescale-*`. They do not set `font-style` — the token named `-font-family-style` holds “Regular” / “Medium”, which are weights, not CSS `font-style` keywords.
 
-Those tokens name Roboto. The framework does not ship the font files. This page loads Roboto so the samples match the spec; your app should do the same if you want the scale as designed. Body copy falls back to the system stack if Roboto is missing.
+M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. The framework does not ship either font file, so applications should load them or override the reference tokens.
 
 ### Semantic map
 
@@ -1430,15 +1430,15 @@ Small print and figcaptions use body-small.
 
 | Element | Role | Size | Weight |
 | --- | --- | --- | --- |
-| `h1` | display-small | 36px | 400 |
-| `h2` | headline-large | 32px | 400 |
-| `h3` | headline-medium | 28px | 400 |
-| `h4` | headline-small | 24px | 400 |
-| `h5` | title-large | 22px | 400 |
-| `h6` | title-medium | 16px | 500 |
-| `p` | body-large | 16px | 400 |
-| `small`, `figcaption` | body-small | 12px | 400 |
-| `body` | body-medium | 14px | 400 |
+| `h1` | display-small | 2.25rem | 400 |
+| `h2` | headline-large | 2rem | 400 |
+| `h3` | headline-medium | 1.75rem | 400 |
+| `h4` | headline-small | 1.5rem | 400 |
+| `h5` | title-large | 1.375rem | 400 |
+| `h6` | title-medium | 1rem | 500 |
+| `p` | body-large | 1rem | 400 |
+| `small`, `figcaption` | body-small | 0.75rem | 400 |
+| `body` | body-medium | 0.875rem | 400 |
 
 ### The fifteen roles
 
@@ -1481,21 +1481,21 @@ Label Small
 
 | Class | Size | Weight | Line height | Tracking |
 | --- | --- | --- | --- | --- |
-| `display-large` | 57px | 400 | 64px | −0.25px |
-| `display-medium` | 45px | 400 | 52px | 0 |
-| `display-small` | 36px | 400 | 44px | 0 |
-| `headline-large` | 32px | 400 | 40px | 0 |
-| `headline-medium` | 28px | 400 | 36px | 0 |
-| `headline-small` | 24px | 400 | 32px | 0 |
-| `title-large` | 22px | 400 | 28px | 0 |
-| `title-medium` | 16px | 500 | 24px | 0.15px |
-| `title-small` | 14px | 500 | 20px | 0.10px |
-| `body-large` | 16px | 400 | 24px | 0.50px |
-| `body-medium` | 14px | 400 | 20px | 0.25px |
-| `body-small` | 12px | 400 | 16px | 0.40px |
-| `label-large` | 14px | 500 | 20px | 0.10px |
-| `label-medium` | 12px | 500 | 16px | 0.50px |
-| `label-small` | 11px | 500 | 16px | 0.50px |
+| `display-large` | 3.5625rem | 400 | 4rem | −0.015625rem |
+| `display-medium` | 2.8125rem | 400 | 3.25rem | 0 |
+| `display-small` | 2.25rem | 400 | 2.75rem | 0 |
+| `headline-large` | 2rem | 400 | 2.5rem | 0 |
+| `headline-medium` | 1.75rem | 400 | 2.25rem | 0 |
+| `headline-small` | 1.5rem | 400 | 2rem | 0 |
+| `title-large` | 1.375rem | 400 | 1.75rem | 0 |
+| `title-medium` | 1rem | 500 | 1.5rem | 0.009375rem |
+| `title-small` | 0.875rem | 500 | 1.25rem | 0.00625rem |
+| `body-large` | 1rem | 400 | 1.5rem | 0.03125rem |
+| `body-medium` | 0.875rem | 400 | 1.25rem | 0.015625rem |
+| `body-small` | 0.75rem | 400 | 1rem | 0.025rem |
+| `label-large` | 0.875rem | 500 | 1.25rem | 0.00625rem |
+| `label-medium` | 0.75rem | 500 | 1rem | 0.03125rem |
+| `label-small` | 0.6875rem | 500 | 1rem | 0.03125rem |
 
 ### Emphasis
 
@@ -1536,18 +1536,18 @@ To see Flow Text in action, slowly resize your browser and watch the size of thi
 <p class="flow-text">I am Flow Text</p>
 ```
 
-### Font stack
+### Typeface tokens
 
-Body type uses a system stack. Roboto is a name on the type-scale tokens, not a file the package serves. Override `$font-stack` in Sass, or set `font-family` in your own CSS:
+Override the brand and plain reference tokens to customize the scale while preserving each role's M3 size, weight, line height, and tracking:
 
-```text
-html,
-button, input, optgroup, select, textarea {
-  font-family: GillSans, Calibri, Trebuchet, sans-serif;
+```css
+:root {
+  --md-ref-typeface-brand: "Roboto Flex";
+  --md-ref-typeface-plain: "Roboto";
 }
 ```
 
-The default stack is `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif`. Form controls inherit that stack. Root `font-size` is 14px on Compact and Medium windows, 14.5px from Expanded, and 15px from Large, so rem-based lengths grow slightly on wider viewports. Headings use the token sizes in px, so they do not follow that ladder.
+The default order is Roboto, Noto Sans, then the generic sans-serif family. ExpressiveCSS leaves the root font size to the browser and expresses the M3 scale in rem using the standard 16px conversion, so browser text-size preferences continue to work.
 
 ---
 

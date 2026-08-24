@@ -102,7 +102,6 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
         background: none;
       }
       @include typescale("label-large");
-      font-family: $font-stack;
     }
 
     > a > #{$icon},
@@ -227,7 +226,6 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     cursor: default;
     color: var(--md-comp-menu-supporting-text-color);
     @include typescale("label-large");
-    font-family: $font-stack;
   }
 
   li:has(> menu) {

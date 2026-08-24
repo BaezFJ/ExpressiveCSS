@@ -89,7 +89,6 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
     cursor: pointer;
     appearance: none;
     @include typescale("label-large");
-    font-family: $font-stack;
     @include focus-visible;
 
     > #{$icon} {

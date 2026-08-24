@@ -33,7 +33,6 @@ footer:not(:has(> .navigation-bar:only-child)) {
     margin: 0 0 8px;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-medium");
-    font-family: $font-stack;
   }
 
   a:not(.button, .circle, .extra) {
@@ -46,7 +45,6 @@ footer:not(:has(> .navigation-bar:only-child)) {
     margin: 0 0 8px;
     color: var(--md-sys-color-on-surface);
     @include typescale("title-small");
-    font-family: $font-stack;
   }
 
   ul {
@@ -112,7 +110,6 @@ footer:not(:has(> nav:only-child)) ul a:not(.button, .circle, .extra) {
   margin-inline-start: -12px;
   border-radius: 2rem;
   @include typescale("label-large");
-  font-family: $font-stack;
 
   &:hover {
     background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
@@ -137,7 +134,6 @@ footer:not(:has(> nav:only-child)) > .container > small:last-child {
   border-top: 1px solid var(--md-sys-color-outline-variant);
   color: var(--md-sys-color-on-surface-variant);
   @include typescale("body-small");
-  font-family: $font-stack;
 
   a:not(.button) {
     color: var(--md-sys-color-primary);

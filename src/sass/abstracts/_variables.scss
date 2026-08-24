@@ -61,12 +61,14 @@ $element-top-margin: math.div($gutter-width, 3) !default;
 $element-bottom-margin: math.div($gutter-width * 2, 3) !default;
 
 // Typography
-$font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !default;
+// M3's typeface tokens choose Roboto by default. Noto Sans is the first
+// fallback so unsupported scripts keep a compatible visual style.
+$font-stack: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback) !default;
 $text-color: var(--md-sys-color-on-background) !default;
 
-// Base of the html font-size ladder in base/_typography.scss. Flow text is
-// derived from it, so the two cannot drift.
-$root-font-size: 14px !default;
+// Modern browsers default to 16px. M3's web conversion is SP_SIZE / 16 = rem;
+// flow text uses the same basis without overriding the user's browser setting.
+$root-font-size: 16px !default;
 
 // Flow text: font-size interpolates between these two across the viewport
 // range below. This used to be a @while loop emitting 21 media queries.

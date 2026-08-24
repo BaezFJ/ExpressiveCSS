@@ -34,7 +34,6 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
   height: 56px;
   background-color: transparent;
   @include typescale("body-large");
-  font-family: $font-stack;
 }
 
 // A .field is full of spans that are not the floating label: supporting text,
@@ -147,7 +146,6 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     transform-origin: top left;
     pointer-events: none;
     @include typescale("body-large");
-    font-family: $font-stack;
     transition: left 0.2s ease-out, top 0.2s ease-out, transform 0.2s ease-out, color 0.2s ease-out;
   }
 
@@ -158,7 +156,6 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     padding: 0 16px;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-small");
-    font-family: $font-stack;
   }
 
   > .character-counter {
@@ -167,7 +164,6 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     padding: 0 16px;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-small");
-    font-family: $font-stack;
   }
 
   // Shared icon box. Position is set on the leading / trailing rules;

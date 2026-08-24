@@ -83,7 +83,6 @@ $_tab: "> a, > .tab > a";
     cursor: pointer;
     appearance: none;
     @include typescale("title-small");
-    font-family: $font-stack;
     transition: color .2s ease, background-color .2s ease;
 
     > #{$icon} {

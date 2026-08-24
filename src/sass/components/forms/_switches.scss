@@ -32,7 +32,6 @@
   -webkit-tap-highlight-color: transparent;
   color: var(--md-sys-color-on-surface);
   @include typescale("body-large");
-  font-family: $font-stack;
 }
 
 .switch label {

@@ -34,7 +34,6 @@ select {
   background-color: var(--md-comp-filled-select-container-color);
   color: var(--md-comp-filled-select-input-text-color);
   @include typescale("body-large");
-  font-family: $font-stack;
 
   &:focus {
     outline: 2px solid var(--md-sys-color-primary);

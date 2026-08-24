@@ -8,7 +8,7 @@
 //   h1 display-small     h2 headline-large    h3 headline-medium
 //   h4 headline-small    h5 title-large       h6 title-medium
 //   p  body-large        small / figcaption   body-small
-//   body                  body-medium (matches the 14px root)
+//   body                  body-medium
 //
 // Display-large / display-medium stay as utility classes — they are too
 // large for a default <h1>. Component slots (app bar, card, dialog) set
@@ -18,23 +18,10 @@ html {
   font-family: $font-stack;
   font-weight: var(--md-sys-typescale-body-medium-font-weight);
   color: $text-color;
-  font-size: $root-font-size;
-
-  // Deliberately still a two-step ladder rather than a fluid clamp(): the root
-  // font size is the basis of every rem in the sheet, so making it continuous
-  // would move every computed length at every viewport width.
-  @include bp-up("expanded") {
-    font-size: 14.5px;
-  }
-
-  @include bp-up("large") {
-    font-size: 15px;
-  }
 }
 
 body {
   @include typescale("body-medium");
-  font-family: $font-stack;
 }
 
 h1 { @include typescale("display-small"); }
@@ -59,14 +46,12 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 
 p {
   @include typescale("body-large");
-  font-family: $font-stack;
   margin: 0 0 1em;
 }
 
 small,
 figcaption {
   @include typescale("body-small");
-  font-family: $font-stack;
 }
 
 em { font-style: italic; }
@@ -78,8 +63,9 @@ strong, b { font-weight: 500; }
 // 30px of viewport width from 360px to 960px. clamp() expresses the same line
 // as one declaration - and continuously, so the type no longer jumps.
 //
-// The whole fluid range finishes before the Large breakpoint, so 1rem is
-// $root-font-size throughout it and the conversion below is exact.
+// M3 uses the browser's 16px default as the rem conversion basis. Do not set
+// the root size here: leaving it to the browser preserves the user's preferred
+// text size while the default computation remains exact.
 $_flow-min-px: math.div($flow-text-min, 1rem) * $root-font-size;
 $_flow-max-px: math.div($flow-text-max, 1rem) * $root-font-size;
 $_flow-slope: math.div($_flow-max-px - $_flow-min-px, $flow-text-to - $flow-text-from);
