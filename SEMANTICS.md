@@ -25,7 +25,7 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**45 of 45 components enforced; 0 remaining.**
+**46 of 46 components enforced; 0 remaining.**
 
 ## Enforced
 
@@ -158,6 +158,18 @@ Swept 0.8.0. A positioning wrapper the picker plugins generate; it introduces no
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### expanding-card
+
+Added 0.8.0. The compact article opens a named native dialog; its media and back actions are buttons.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `expanding-card-trigger-is-button` | forbid | `article.expanding-card .expanding-card-trigger:not(button)` | must not match |
+| `expanding-card-close-is-button` | forbid | `dialog.expanding-card-dialog .expanding-card-close:not(button)` | must not match |
+
+- **expanding-card-trigger-is-button** - The media-sized trigger opens a dialog, so use a button for native keyboard and disabled behavior.
+- **expanding-card-close-is-button** - The back affordance closes the expanded surface, so use a button for native keyboard behavior.
 
 ### forms/checkboxes
 

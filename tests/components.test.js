@@ -3,72 +3,72 @@
 // produce. jsdom has no layout, so these deliberately assert on classes,
 // structure and text - never on measured geometry or transitions.
 
-import { test, describe, beforeEach } from 'node:test';
-import assert from 'node:assert/strict';
+import { test, describe, beforeEach } from "node:test";
+import assert from "node:assert/strict";
 
-import { Expressive, resetBody, fire, window } from './setup.js';
+import { Expressive, resetBody, fire, window } from "./setup.js";
 
-describe('FloatingActionButton', () => {
+describe("FloatingActionButton", () => {
   beforeEach(resetBody);
 
-  test('open() and close() toggle .active', () => {
+  test("open() and close() toggle .active", () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn">
         <a class="button extra circle">+</a>
         <ul><li><a class="button extra circle small">e</a></li></ul>
       </div>`;
-    const el = document.querySelector('.fixed-action-btn');
+    const el = document.querySelector(".fixed-action-btn");
     const instance = Expressive.FloatingActionButton.init(el);
-    const trigger = el.querySelector(':scope > a');
+    const trigger = el.querySelector(":scope > a");
 
-    assert.equal(el.classList.contains('active'), false);
-    assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+    assert.equal(el.classList.contains("active"), false);
+    assert.equal(trigger.getAttribute("aria-expanded"), "false");
     instance.open();
-    assert.equal(el.classList.contains('active'), true);
-    assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+    assert.equal(el.classList.contains("active"), true);
+    assert.equal(trigger.getAttribute("aria-expanded"), "true");
     instance.close();
-    assert.equal(el.classList.contains('active'), false);
+    assert.equal(el.classList.contains("active"), false);
     instance.destroy();
   });
 
-  test('.click-to-toggle and direction-* in markup are honoured', () => {
+  test(".click-to-toggle and direction-* in markup are honoured", () => {
     document.body.innerHTML = `
       <div class="fixed-action-btn direction-left click-to-toggle">
         <button type="button" class="button extra circle">+</button>
         <ul><li><button type="button" class="button extra circle small">e</button></li></ul>
       </div>`;
-    const el = document.querySelector('.fixed-action-btn');
+    const el = document.querySelector(".fixed-action-btn");
     const instance = Expressive.FloatingActionButton.init(el);
 
-    assert.equal(instance.options.direction, 'left');
+    assert.equal(instance.options.direction, "left");
     assert.equal(instance.options.hoverEnabled, false);
     instance.destroy();
   });
 });
 
-describe('Tabs', () => {
+describe("Tabs", () => {
   beforeEach(resetBody);
 
-  test('select() moves the active link', () => {
+  test("select() moves the active link", () => {
     document.body.innerHTML = `
       <ul class="tabs">
         <li class="tab"><a class="active" href="#tab1">Tab 1</a></li>
         <li class="tab"><a href="#tab2">Tab 2</a></li>
       </ul>
       <div id="tab1">one</div><div id="tab2">two</div>`;
-    const instance = Expressive.Tabs.init(document.querySelector('.tabs'));
-    const [link1, link2] = document.querySelectorAll('.tabs .tab a');
+    const instance = Expressive.Tabs.init(document.querySelector(".tabs"));
+    const [link1, link2] = document.querySelectorAll(".tabs .tab a");
 
-    assert.equal(link1.classList.contains('active'), true);
+    assert.equal(link1.classList.contains("active"), true);
 
-    instance.select('tab2');
+    instance.select("tab2");
 
-    assert.equal(link2.classList.contains('active'), true);
-    assert.equal(link1.classList.contains('active'), false);
+    assert.equal(link2.classList.contains("active"), true);
+    assert.equal(link1.classList.contains("active"), false);
     instance.destroy();
   });
 
-  test('nav.tabs click hides the old panel and shows the hashed one', () => {
+  test("nav.tabs click hides the old panel and shows the hashed one", () => {
     document.body.innerHTML = `
       <article>
         <nav class="tabs max">
@@ -82,23 +82,40 @@ describe('Tabs', () => {
           <div id="card-test-3">Test 3</div>
         </div>
       </article>`;
-    const instance = Expressive.Tabs.init(document.querySelector('.tabs'));
+    const instance = Expressive.Tabs.init(document.querySelector(".tabs"));
     try {
-      assert.equal(document.getElementById('card-test-1').style.display, 'none');
-      assert.equal(document.getElementById('card-test-3').style.display, 'none');
+      assert.equal(
+        document.getElementById("card-test-1").style.display,
+        "none",
+      );
+      assert.equal(
+        document.getElementById("card-test-3").style.display,
+        "none",
+      );
 
       document.querySelector('a[href="#card-test-1"]').click();
 
-      assert.equal(document.getElementById('card-test-1').style.display, 'block');
-      assert.equal(document.getElementById('card-test-2').style.display, 'none');
-      assert.equal(document.querySelector('a[href="#card-test-1"]').classList.contains('active'), true);
+      assert.equal(
+        document.getElementById("card-test-1").style.display,
+        "block",
+      );
+      assert.equal(
+        document.getElementById("card-test-2").style.display,
+        "none",
+      );
+      assert.equal(
+        document
+          .querySelector('a[href="#card-test-1"]')
+          .classList.contains("active"),
+        true,
+      );
     } finally {
       instance.destroy();
     }
   });
 });
 
-describe('FormSelect', () => {
+describe("FormSelect", () => {
   beforeEach(resetBody);
 
   const fieldHtml = `
@@ -111,80 +128,86 @@ describe('FormSelect', () => {
       <label for="pick">Pick</label>
     </div>`;
 
-  test('builds a menu mirroring the native options', () => {
+  test("builds a menu mirroring the native options", () => {
     document.body.innerHTML = fieldHtml;
-    const select = document.querySelector('select');
+    const select = document.querySelector("select");
     Expressive.FormSelect.init(select);
 
-    const wrapper = document.querySelector('.field');
-    assert.ok(wrapper, 'no .field wrapper was created');
+    const wrapper = document.querySelector(".field");
+    assert.ok(wrapper, "no .field wrapper was created");
 
     const items = wrapper.querySelectorAll('menu[role="listbox"] li');
-    assert.equal(items.length, 3, 'menu does not mirror the three <option>s');
+    assert.equal(items.length, 3, "menu does not mirror the three <option>s");
     assert.deepEqual(
       Array.from(items, (li) => li.textContent.trim()),
-      ['Choose', 'One', 'Two']
+      ["Choose", "One", "Two"],
     );
   });
 
-  test('reuses an existing .field instead of nesting another', () => {
+  test("reuses an existing .field instead of nesting another", () => {
     document.body.innerHTML = fieldHtml;
-    const field = document.querySelector('.field');
-    const instance = Expressive.FormSelect.init(document.querySelector('select'));
+    const field = document.querySelector(".field");
+    const instance = Expressive.FormSelect.init(
+      document.querySelector("select"),
+    );
 
     assert.equal(instance.wrapper, field);
-    assert.ok(field.querySelector(':scope > .hide-select'));
-    assert.equal(document.querySelectorAll('.field').length, 1);
-    assert.equal(field.querySelectorAll('.field').length, 0);
+    assert.ok(field.querySelector(":scope > .hide-select"));
+    assert.equal(document.querySelectorAll(".field").length, 1);
+    assert.equal(field.querySelectorAll(".field").length, 0);
     instance.destroy();
-    assert.equal(document.querySelector('select').parentElement, field);
+    assert.equal(document.querySelector("select").parentElement, field);
   });
 
-  test('the fake field is a combobox and the caret is not an SVG', () => {
+  test("the fake field is a combobox and the caret is not an SVG", () => {
     document.body.innerHTML = fieldHtml;
-    const instance = Expressive.FormSelect.init(document.querySelector('select'));
+    const instance = Expressive.FormSelect.init(
+      document.querySelector("select"),
+    );
 
-    assert.equal(instance.input.getAttribute('role'), 'combobox');
-    assert.equal(instance.input.getAttribute('aria-haspopup'), 'listbox');
-    assert.ok(instance.input.id.startsWith('select-input-'));
-    assert.equal(instance.wrapper.querySelector('svg'), null);
-    assert.ok(instance.wrapper.querySelector(':scope > .caret'));
+    assert.equal(instance.input.getAttribute("role"), "combobox");
+    assert.equal(instance.input.getAttribute("aria-haspopup"), "listbox");
+    assert.ok(instance.input.id.startsWith("select-input-"));
+    assert.equal(instance.wrapper.querySelector("svg"), null);
+    assert.ok(instance.wrapper.querySelector(":scope > .caret"));
     instance.destroy();
   });
 
-  test('refresh() rebuilds the menu after options change', () => {
+  test("refresh() rebuilds the menu after options change", () => {
     document.body.innerHTML = fieldHtml;
-    const select = document.querySelector('select');
+    const select = document.querySelector("select");
     const instance = Expressive.FormSelect.init(select);
     const menu = instance.menuEl;
 
-    const extra = document.createElement('option');
-    extra.value = '3';
-    extra.textContent = 'Three';
+    const extra = document.createElement("option");
+    extra.value = "3";
+    extra.textContent = "Three";
     select.appendChild(extra);
     instance.refresh();
 
-    assert.equal(instance.menuEl, menu, 'refresh() replaced the Menu host');
-    assert.equal(menu.querySelectorAll('li').length, 4);
-    assert.equal(menu.querySelectorAll('li')[3].textContent.trim(), 'Three');
+    assert.equal(instance.menuEl, menu, "refresh() replaced the Menu host");
+    assert.equal(menu.querySelectorAll("li").length, 4);
+    assert.equal(menu.querySelectorAll("li")[3].textContent.trim(), "Three");
     instance.destroy();
   });
 
-  test('refresh() syncs a programmatic value change', () => {
+  test("refresh() syncs a programmatic value change", () => {
     document.body.innerHTML = fieldHtml;
-    const select = document.querySelector('select');
+    const select = document.querySelector("select");
     const instance = Expressive.FormSelect.init(select);
 
-    select.value = '2';
+    select.value = "2";
     instance.refresh();
 
-    assert.equal(instance.input.value, 'Two');
-    assert.ok(instance.menuEl.querySelector('li.selected')?.textContent.includes('Two'));
+    assert.equal(instance.input.value, "Two");
+    assert.ok(
+      instance.menuEl.querySelector("li.selected")?.textContent.includes("Two"),
+    );
     instance.destroy();
   });
 });
 
-describe('Menu nested menus', () => {
+describe("Menu nested menus", () => {
   beforeEach(resetBody);
 
   const html = `
@@ -199,42 +222,49 @@ describe('Menu nested menus', () => {
       </li>
     </menu>`;
 
-  test('does not start a second Menu for the nested menu', () => {
+  test("does not start a second Menu for the nested menu", () => {
     document.body.innerHTML = html;
     const before = Expressive.Menu._menus.length;
-    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
+    const instance = Expressive.Menu.init(
+      document.querySelector(".menu-trigger"),
+    );
     assert.equal(Expressive.Menu._menus.length, before + 1);
     assert.equal(
-      document.getElementById('more-row').querySelector('a').getAttribute('aria-haspopup'),
-      'menu'
+      document
+        .getElementById("more-row")
+        .querySelector("a")
+        .getAttribute("aria-haspopup"),
+      "menu",
     );
     instance.destroy();
     assert.equal(Expressive.Menu._menus.length, before);
   });
 
-  test('clicking a submenu parent toggles .open and keeps the root open', () => {
+  test("clicking a submenu parent toggles .open and keeps the root open", () => {
     document.body.innerHTML = html;
-    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
-    const more = document.getElementById('more-row');
+    const instance = Expressive.Menu.init(
+      document.querySelector(".menu-trigger"),
+    );
+    const more = document.getElementById("more-row");
     instance.open();
 
-    fire(more.querySelector('a'), 'click');
+    fire(more.querySelector("a"), "click");
     assert.equal(instance.isOpen, true);
-    assert.equal(more.classList.contains('open'), true);
-    assert.equal(more.querySelector('a').getAttribute('aria-expanded'), 'true');
+    assert.equal(more.classList.contains("open"), true);
+    assert.equal(more.querySelector("a").getAttribute("aria-expanded"), "true");
 
-    fire(more.querySelector('a'), 'click');
-    assert.equal(more.classList.contains('open'), false);
+    fire(more.querySelector("a"), "click");
+    assert.equal(more.classList.contains("open"), false);
     assert.equal(instance.isOpen, true);
 
-    fire(more.querySelector('a'), 'click');
+    fire(more.querySelector("a"), "click");
     instance.close();
-    assert.equal(more.classList.contains('open'), false);
+    assert.equal(more.classList.contains("open"), false);
     instance.destroy();
   });
 });
 
-describe('Cards reveal', () => {
+describe("Cards reveal", () => {
   beforeEach(resetBody);
 
   const html = `
@@ -247,121 +277,195 @@ describe('Cards reveal', () => {
       </aside>
     </article>`;
 
-  test('open() keeps the reveal expanded until close()', () => {
+  test("open() keeps the reveal expanded until close()", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('article');
-    const reveal = el.querySelector('aside');
+    const el = document.querySelector("article");
+    const reveal = el.querySelector("aside");
     const instance = Expressive.Cards.init(el);
 
     instance.open();
     assert.equal(instance.isOpen, true);
-    assert.equal(reveal.getAttribute('aria-expanded'), 'true');
-    assert.equal(el.style.transform, '', 'open() wrote an inline transform');
-    assert.equal(reveal.style.transform, '', 'the reveal transform is CSS, not inline');
+    assert.equal(reveal.getAttribute("aria-expanded"), "true");
+    assert.equal(el.style.transform, "", "open() wrote an inline transform");
+    assert.equal(
+      reveal.style.transform,
+      "",
+      "the reveal transform is CSS, not inline",
+    );
 
     instance.open();
-    assert.equal(instance.isOpen, true, 'a second open() closed the reveal');
+    assert.equal(instance.isOpen, true, "a second open() closed the reveal");
 
     instance.close();
     assert.equal(instance.isOpen, false);
-    assert.equal(reveal.getAttribute('aria-expanded'), 'false');
+    assert.equal(reveal.getAttribute("aria-expanded"), "false");
 
     instance.open();
-    assert.equal(instance.isOpen, true, 'the reveal could not be opened again');
+    assert.equal(instance.isOpen, true, "the reveal could not be opened again");
     instance.destroy();
   });
 
-  test('clicking the activator opens the reveal', () => {
+  test("clicking the activator opens the reveal", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('article');
+    const el = document.querySelector("article");
     const instance = Expressive.Cards.init(el);
 
-    const activator = el.querySelector('.activator');
-    fire(activator, 'click');
+    const activator = el.querySelector(".activator");
+    fire(activator, "click");
     assert.equal(instance.isOpen, true);
-    assert.equal(el.querySelector('aside').getAttribute('aria-expanded'), 'true');
-    assert.equal(activator.getAttribute('aria-expanded'), 'true');
+    assert.equal(
+      el.querySelector("aside").getAttribute("aria-expanded"),
+      "true",
+    );
+    assert.equal(activator.getAttribute("aria-expanded"), "true");
 
-    fire(activator, 'click');
+    fire(activator, "click");
     assert.equal(instance.isOpen, false);
-    assert.equal(el.querySelector('aside').getAttribute('aria-expanded'), 'false');
-    assert.equal(activator.getAttribute('aria-expanded'), 'false');
+    assert.equal(
+      el.querySelector("aside").getAttribute("aria-expanded"),
+      "false",
+    );
+    assert.equal(activator.getAttribute("aria-expanded"), "false");
     instance.destroy();
   });
 
-  test('Space toggles a non-native activator without removing it from the tab order', () => {
+  test("Space toggles a non-native activator without removing it from the tab order", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('article');
+    const el = document.querySelector("article");
     const instance = Expressive.Cards.init(el);
-    const activator = el.querySelector('.activator');
+    const activator = el.querySelector(".activator");
 
-    assert.equal(activator.getAttribute('role'), 'button');
+    assert.equal(activator.getAttribute("role"), "button");
     assert.equal(activator.tabIndex, 0);
     activator.dispatchEvent(
-      new window.KeyboardEvent('keypress', {
+      new window.KeyboardEvent("keypress", {
         bubbles: true,
         cancelable: true,
-        key: ' '
-      })
+        key: " ",
+      }),
     );
     assert.equal(instance.isOpen, true);
     assert.equal(activator.tabIndex, 0);
 
     activator.dispatchEvent(
-      new window.KeyboardEvent('keypress', {
+      new window.KeyboardEvent("keypress", {
         bubbles: true,
         cancelable: true,
-        key: ' '
-      })
+        key: " ",
+      }),
     );
     assert.equal(instance.isOpen, false);
     instance.destroy();
   });
 });
 
-describe('CharacterCounter', () => {
+describe("ExpandingCard", () => {
   beforeEach(resetBody);
 
-  test('counts input against maxlength and flags overflow', () => {
-    document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="5"></div>`;
-    const input = document.querySelector('#t');
-    Expressive.CharacterCounter.init(input);
-    const counter = document.querySelector('.character-counter');
-    assert.ok(counter, 'no counter element was appended');
+  const html = `
+    <article class="expanding-card">
+      <figure>
+        <img src="http://localhost/album.jpg" alt="Album art">
+        <button type="button" class="expanding-card-trigger">Open album</button>
+      </figure>
+      <dialog id="album-detail" class="expanding-card-dialog">
+        <button type="button" class="expanding-card-close">Back</button>
+        <figure class="expanding-card-hero"><img src="http://localhost/album.jpg" alt="Album art"></figure>
+        <div class="expanding-card-content">Details</div>
+      </dialog>
+    </article>`;
 
-    input.value = 'abc';
-    fire(input, 'input', window.InputEvent);
-    assert.equal(counter.innerHTML, '3/5');
-    assert.equal(input.classList.contains('invalid'), false);
+  test("opens the full-screen dialog and synchronizes the trigger state", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector(".expanding-card");
+    const trigger = el.querySelector(".expanding-card-trigger");
+    const dialog = el.querySelector(".expanding-card-dialog");
+    const instance = Expressive.ExpandingCard.init(el);
 
-    input.value = 'abcdefg';
-    fire(input, 'input', window.InputEvent);
-    assert.equal(counter.innerHTML, '7/5');
-    assert.equal(input.classList.contains('invalid'), true, 'over-length input was not flagged');
+    fire(trigger, "click");
+    assert.equal(instance.isOpen, true);
+    assert.equal(dialog.open, true);
+    assert.equal(dialog.classList.contains("expanded"), true);
+    assert.equal(dialog.getAttribute("aria-expanded"), "true");
+    assert.equal(trigger.getAttribute("aria-expanded"), "true");
+    assert.equal(trigger.getAttribute("aria-controls"), "album-detail");
+    instance.destroy();
   });
-});
 
-describe('Snackbar', () => {
-  beforeEach(resetBody);
+  test("the back action reverses the card and returns focus", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector(".expanding-card");
+    const trigger = el.querySelector(".expanding-card-trigger");
+    const dialog = el.querySelector(".expanding-card-dialog");
+    const instance = Expressive.ExpandingCard.init(el);
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = () => ({ ...originalMatchMedia(""), matches: true });
 
-  test('renders its message into a snackbar container', () => {
-    const snackbar = new Expressive.Snackbar({ text: 'Saved' });
     try {
-      assert.ok(document.querySelector('#snackbar-container'), 'no snackbar container was created');
-      assert.ok(snackbar.el.classList.contains('snackbar'));
-      assert.equal(snackbar.el.textContent.trim(), 'Saved');
-      assert.equal(snackbar.el.querySelector('p')?.textContent, 'Saved');
+      instance.open();
+      fire(dialog.querySelector(".expanding-card-close"), "click");
+      assert.equal(instance.isOpen, false);
+      assert.equal(dialog.open, false);
+      assert.equal(dialog.classList.contains("expanded"), false);
+      assert.equal(trigger.getAttribute("aria-expanded"), "false");
+      assert.equal(document.activeElement, trigger);
+    } finally {
+      window.matchMedia = originalMatchMedia;
+      instance.destroy();
+    }
+  });
+});
+
+describe("CharacterCounter", () => {
+  beforeEach(resetBody);
+
+  test("counts input against maxlength and flags overflow", () => {
+    document.body.innerHTML = `<div class="field"><input id="t" type="text" maxlength="5"></div>`;
+    const input = document.querySelector("#t");
+    Expressive.CharacterCounter.init(input);
+    const counter = document.querySelector(".character-counter");
+    assert.ok(counter, "no counter element was appended");
+
+    input.value = "abc";
+    fire(input, "input", window.InputEvent);
+    assert.equal(counter.innerHTML, "3/5");
+    assert.equal(input.classList.contains("invalid"), false);
+
+    input.value = "abcdefg";
+    fire(input, "input", window.InputEvent);
+    assert.equal(counter.innerHTML, "7/5");
+    assert.equal(
+      input.classList.contains("invalid"),
+      true,
+      "over-length input was not flagged",
+    );
+  });
+});
+
+describe("Snackbar", () => {
+  beforeEach(resetBody);
+
+  test("renders its message into a snackbar container", () => {
+    const snackbar = new Expressive.Snackbar({ text: "Saved" });
+    try {
+      assert.ok(
+        document.querySelector("#snackbar-container"),
+        "no snackbar container was created",
+      );
+      assert.ok(snackbar.el.classList.contains("snackbar"));
+      assert.equal(snackbar.el.textContent.trim(), "Saved");
+      assert.equal(snackbar.el.querySelector("p")?.textContent, "Saved");
       assert.equal(Expressive.Snackbar.getInstance(snackbar.el), snackbar);
     } finally {
       snackbar.dismiss();
     }
   });
 
-  test('renders an action button and a close affordance', () => {
+  test("renders an action button and a close affordance", () => {
     let acted = false;
     const snackbar = new Expressive.Snackbar({
-      text: 'Item archived',
-      action: 'Undo',
+      text: "Item archived",
+      action: "Undo",
       onAction: () => {
         acted = true;
       },
@@ -369,33 +473,45 @@ describe('Snackbar', () => {
       displayLength: Infinity,
     });
     try {
-      const action = snackbar.el.querySelector('button:not(.circle)');
-      const close = snackbar.el.querySelector('button.circle');
-      assert.ok(action, 'action button was not created');
-      assert.equal(action.textContent, 'Undo');
-      assert.ok(close, 'close button was not created');
+      const action = snackbar.el.querySelector("button:not(.circle)");
+      const close = snackbar.el.querySelector("button.circle");
+      assert.ok(action, "action button was not created");
+      assert.equal(action.textContent, "Undo");
+      assert.ok(close, "close button was not created");
 
       action.click();
-      assert.equal(acted, true, 'onAction was not called');
+      assert.equal(acted, true, "onAction was not called");
     } finally {
       snackbar.dismiss();
     }
   });
 
-  test('a new snackbar replaces the one that is showing', () => {
-    const first = new Expressive.Snackbar({ text: 'First', displayLength: Infinity });
-    const second = new Expressive.Snackbar({ text: 'Second', displayLength: Infinity });
+  test("a new snackbar replaces the one that is showing", () => {
+    const first = new Expressive.Snackbar({
+      text: "First",
+      displayLength: Infinity,
+    });
+    const second = new Expressive.Snackbar({
+      text: "Second",
+      displayLength: Infinity,
+    });
     try {
       assert.equal(first.el.isConnected, false);
-      assert.equal(second.el.textContent.trim(), 'Second');
-      assert.equal(document.querySelectorAll('#snackbar-container .snackbar').length, 1);
+      assert.equal(second.el.textContent.trim(), "Second");
+      assert.equal(
+        document.querySelectorAll("#snackbar-container .snackbar").length,
+        1,
+      );
     } finally {
       second.dismiss();
     }
   });
 
-  test('an action snackbar stays longer unless displayLength is set', () => {
-    const snackbar = new Expressive.Snackbar({ text: 'Archived', action: 'Undo' });
+  test("an action snackbar stays longer unless displayLength is set", () => {
+    const snackbar = new Expressive.Snackbar({
+      text: "Archived",
+      action: "Undo",
+    });
     try {
       assert.equal(snackbar.options.displayLength, 10000);
     } finally {
@@ -403,11 +519,14 @@ describe('Snackbar', () => {
     }
   });
 
-  test('is a polite live region and does not take focus', () => {
-    const snackbar = new Expressive.Snackbar({ text: 'Saved', displayLength: Infinity });
+  test("is a polite live region and does not take focus", () => {
+    const snackbar = new Expressive.Snackbar({
+      text: "Saved",
+      displayLength: Infinity,
+    });
     try {
-      assert.equal(snackbar.el.getAttribute('role'), 'status');
-      assert.equal(snackbar.el.getAttribute('aria-live'), 'polite');
+      assert.equal(snackbar.el.getAttribute("role"), "status");
+      assert.equal(snackbar.el.getAttribute("aria-live"), "polite");
       assert.notEqual(document.activeElement, snackbar.el);
     } finally {
       snackbar.dismiss();
@@ -415,7 +534,7 @@ describe('Snackbar', () => {
   });
 });
 
-describe('Sidenav', () => {
+describe("Sidenav", () => {
   beforeEach(resetBody);
 
   const html = `
@@ -425,57 +544,60 @@ describe('Sidenav', () => {
     </ul>
     <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
 
-  test('wraps the list in a dialog host', () => {
+  test("wraps the list in a dialog host", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
 
-    assert.equal(el.parentElement.tagName, 'DIALOG');
-    assert.ok(el.parentElement.classList.contains('sidenav-overlay'));
+    assert.equal(el.parentElement.tagName, "DIALOG");
+    assert.ok(el.parentElement.classList.contains("sidenav-overlay"));
     instance.destroy();
-    assert.equal(el.parentElement.tagName, 'BODY');
-    assert.equal(document.querySelector('dialog.sidenav-overlay'), null);
+    assert.equal(el.parentElement.tagName, "BODY");
+    assert.equal(document.querySelector("dialog.sidenav-overlay"), null);
   });
 
-  test('does not wrap a parent that is already a sidenav-overlay dialog', () => {
+  test("does not wrap a parent that is already a sidenav-overlay dialog", () => {
     document.body.innerHTML = `
       <dialog class="sidenav-overlay">
         <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
       </dialog>`;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const parent = el.parentElement;
     const instance = Expressive.Sidenav.init(el);
     assert.equal(el.parentElement, parent);
-    assert.equal(parent.parentElement?.classList.contains('sidenav-overlay'), false);
+    assert.equal(
+      parent.parentElement?.classList.contains("sidenav-overlay"),
+      false,
+    );
     instance.destroy();
   });
 
-  test('does not wrap a dialog.sidenav', () => {
+  test("does not wrap a dialog.sidenav", () => {
     document.body.innerHTML = `<dialog id="slide-out" class="sidenav"><p>nav</p></dialog>`;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
-    assert.equal(el.parentElement.tagName, 'BODY');
-    assert.equal(el.tagName, 'DIALOG');
+    assert.equal(el.parentElement.tagName, "BODY");
+    assert.equal(el.tagName, "DIALOG");
     instance.open();
     assert.equal(el.open, true);
     instance.destroy();
   });
 
-  test('open() and close() toggle the modal dialog', () => {
+  test("open() and close() toggle the modal dialog", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
-    const trigger = document.querySelector('.sidenav-trigger');
+    const el = document.querySelector(".sidenav");
+    const trigger = document.querySelector(".sidenav-trigger");
     const instance = Expressive.Sidenav.init(el);
     const dialog = el.parentElement;
 
     assert.equal(instance.isOpen, false);
     assert.equal(dialog.open, false);
-    assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+    assert.equal(trigger.getAttribute("aria-expanded"), "false");
 
     instance.open();
     assert.equal(instance.isOpen, true);
     assert.equal(dialog.open, true);
-    assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+    assert.equal(trigger.getAttribute("aria-expanded"), "true");
 
     instance.close();
     assert.equal(instance.isOpen, false);
@@ -483,43 +605,43 @@ describe('Sidenav', () => {
     instance.destroy();
   });
 
-  test('a trigger click opens the sidenav', () => {
+  test("a trigger click opens the sidenav", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
 
-    fire(document.querySelector('.sidenav-trigger'), 'click');
+    fire(document.querySelector(".sidenav-trigger"), "click");
     assert.equal(instance.isOpen, true);
     instance.destroy();
   });
 
-  test('sidenav-close closes an overlay sidenav', () => {
+  test("sidenav-close closes an overlay sidenav", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
     instance.open();
 
-    fire(el.querySelector('.sidenav-close'), 'click');
+    fire(el.querySelector(".sidenav-close"), "click");
     assert.equal(instance.isOpen, false);
     instance.destroy();
   });
 
-  test('a native dialog close event syncs isOpen', () => {
+  test("a native dialog close event syncs isOpen", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
     instance.open();
     // jsdom's close() does not fire the event the UA sends for Escape / scrim.
-    el.parentElement.dispatchEvent(new window.Event('close'));
+    el.parentElement.dispatchEvent(new window.Event("close"));
     assert.equal(instance.isOpen, false);
     instance.destroy();
   });
 
-  test('opening one sidenav closes another', () => {
+  test("opening one sidenav closes another", () => {
     document.body.innerHTML = `
       <ul id="a" class="sidenav"><li><a href="#!">A</a></li></ul>
       <ul id="b" class="sidenav"><li><a href="#!">B</a></li></ul>`;
-    const [first, second] = document.querySelectorAll('.sidenav');
+    const [first, second] = document.querySelectorAll(".sidenav");
     const a = Expressive.Sidenav.init(first);
     const b = Expressive.Sidenav.init(second);
     a.open();
@@ -530,51 +652,51 @@ describe('Sidenav', () => {
     b.destroy();
   });
 
-  test('does not write body overflow or tabIndex', () => {
+  test("does not write body overflow or tabIndex", () => {
     document.body.innerHTML = `
       ${html}
       <nav><div class="nav-wrapper"><ul><li><a href="#!">Top</a></li></ul></div></nav>`;
-    const el = document.querySelector('.sidenav');
-    const topLink = document.querySelector('.nav-wrapper a');
+    const el = document.querySelector(".sidenav");
+    const topLink = document.querySelector(".nav-wrapper a");
     const instance = Expressive.Sidenav.init(el);
 
     instance.open();
-    assert.equal(document.body.style.overflow, '');
+    assert.equal(document.body.style.overflow, "");
     assert.equal(topLink.tabIndex, 0);
-    assert.equal(el.querySelector('a').tabIndex, 0);
+    assert.equal(el.querySelector("a").tabIndex, 0);
 
     instance.close();
-    assert.equal(document.body.style.overflow, '');
+    assert.equal(document.body.style.overflow, "");
     instance.destroy();
   });
 
-  test('does not write inline transform or transition', () => {
+  test("does not write inline transform or transition", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
     instance.open();
-    assert.equal(el.style.transform, '');
-    assert.equal(el.style.transition, '');
-    assert.equal(el.parentElement.style.transform, '');
+    assert.equal(el.style.transform, "");
+    assert.equal(el.style.transition, "");
+    assert.equal(el.parentElement.style.transform, "");
     instance.close();
     instance.destroy();
   });
 
-  test('fixed at the Expanded breakpoint does not showModal', () => {
+  test("fixed at the Expanded breakpoint does not showModal", () => {
     document.body.innerHTML = `<ul id="nav" class="sidenav sidenav-fixed"><li><a href="#!">A</a></li></ul>`;
     const original = window.matchMedia;
     window.matchMedia = (query) => ({
-      matches: query.includes('840'),
+      matches: query.includes("840"),
       media: query,
       onchange: null,
       addListener() {},
       removeListener() {},
       addEventListener() {},
       removeEventListener() {},
-      dispatchEvent: () => false
+      dispatchEvent: () => false,
     });
     try {
-      const el = document.querySelector('.sidenav');
+      const el = document.querySelector(".sidenav");
       const instance = Expressive.Sidenav.init(el);
       instance.open();
       assert.equal(instance.isOpen, false);
@@ -585,15 +707,15 @@ describe('Sidenav', () => {
     }
   });
 
-  test('destroy() clears the instance off the element', () => {
+  test("destroy() clears the instance off the element", () => {
     document.body.innerHTML = html;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
     instance.destroy();
     assert.equal(Expressive.Sidenav.getInstance(el), undefined);
   });
 
-  test('nested details sections do not need a Collapsible instance', () => {
+  test("nested details sections do not need a Collapsible instance", () => {
     document.body.innerHTML = `
       <ul id="slide-out" class="sidenav">
         <li>
@@ -604,10 +726,10 @@ describe('Sidenav', () => {
         </li>
       </ul>
       <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
-    const el = document.querySelector('.sidenav');
+    const el = document.querySelector(".sidenav");
     const instance = Expressive.Sidenav.init(el);
     assert.equal(Expressive.Collapsible, undefined);
-    const details = el.querySelector('details');
+    const details = el.querySelector("details");
     details.open = true;
     assert.equal(details.open, true);
     instance.destroy();

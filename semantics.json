@@ -19,11 +19,7 @@
     "tests/fixtures.js",
     "m3-guidelines.md (forbid rules only)"
   ],
-  "additional": [
-    "autocomplete",
-    "character-counter",
-    "landmarks"
-  ],
+  "additional": ["autocomplete", "character-counter", "landmarks"],
   "components": {
     "autocomplete": {
       "status": "enforced",
@@ -211,6 +207,24 @@
       "status": "enforced",
       "note": "Swept 0.8.0. A positioning wrapper the picker plugins generate; it introduces no author-facing markup.",
       "rules": []
+    },
+    "expanding-card": {
+      "status": "enforced",
+      "note": "Added 0.8.0. The compact article opens a named native dialog; its media and back actions are buttons.",
+      "rules": [
+        {
+          "id": "expanding-card-trigger-is-button",
+          "kind": "forbid",
+          "selector": "article.expanding-card .expanding-card-trigger:not(button)",
+          "message": "The media-sized trigger opens a dialog, so use a button for native keyboard and disabled behavior."
+        },
+        {
+          "id": "expanding-card-close-is-button",
+          "kind": "forbid",
+          "selector": "dialog.expanding-card-dialog .expanding-card-close:not(button)",
+          "message": "The back affordance closes the expanded surface, so use a button for native keyboard behavior."
+        }
+      ]
     },
     "forms/checkboxes": {
       "status": "enforced",

@@ -4,26 +4,27 @@
 // Each module also exports its `<Name>Options` interface; import those from the
 // component's own module (e.g. `./menu`) when you need the type.
 
-export { Autocomplete } from './autocomplete';
-export { FloatingActionButton } from './buttons';
-export { Cards } from './cards';
-export { Carousel } from './carousel';
-export { CharacterCounter } from './characterCounter';
-export { Chips } from './chips';
-export { Datepicker } from './datepicker';
-export { Menu } from './menu';
-export { Lightbox } from './lightbox';
-export { Parallax } from './parallax';
-export { Slider } from './slider';
-export { ScrollSpy } from './scrollspy';
-export { FormSelect } from './select';
-export { NavigationDrawer } from './navigationDrawer';
-export { NavigationRail } from './navigationRail';
-export { Slideshow } from './slideshow';
-export { Tabs } from './tabs';
-export { Timepicker } from './timepicker';
-export { Snackbar } from './snackbar';
-export { Tooltip } from './tooltip';
+export { Autocomplete } from "./autocomplete";
+export { FloatingActionButton } from "./buttons";
+export { Cards } from "./cards";
+export { ExpandingCard } from "./expandingCard";
+export { Carousel } from "./carousel";
+export { CharacterCounter } from "./characterCounter";
+export { Chips } from "./chips";
+export { Datepicker } from "./datepicker";
+export { Menu } from "./menu";
+export { Lightbox } from "./lightbox";
+export { Parallax } from "./parallax";
+export { Slider } from "./slider";
+export { ScrollSpy } from "./scrollspy";
+export { FormSelect } from "./select";
+export { NavigationDrawer } from "./navigationDrawer";
+export { NavigationRail } from "./navigationRail";
+export { Slideshow } from "./slideshow";
+export { Tabs } from "./tabs";
+export { Timepicker } from "./timepicker";
+export { Snackbar } from "./snackbar";
+export { Tooltip } from "./tooltip";
 
 // Names retired in 0.8.0, kept so existing imports keep resolving.
 //
@@ -32,5 +33,5 @@ export { Tooltip } from './tooltip';
 // one rename in the set that changes an existing name's *meaning* rather than
 // adding a second one, so it is called out in the changelog rather than
 // aliased - aliasing `Slider` to the slideshow would defeat the point.
-export { Slider as Range } from './slider';
-export { NavigationDrawer as Sidenav } from './navigationDrawer';
+export { Slider as Range } from "./slider";
+export { NavigationDrawer as Sidenav } from "./navigationDrawer";

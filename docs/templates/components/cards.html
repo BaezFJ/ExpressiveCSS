@@ -277,6 +277,94 @@
 {% endcall %}
   {% endcall %}
 
+  {% call section("expanding", "Expanding card") %}
+        <p>
+          An expanding card performs a shared-container transition from a
+          compact feed item into a full-screen modal detail surface. Use an
+          <code>&lt;article class="expanding-card"&gt;</code> with a direct
+          <code>&lt;dialog class="expanding-card-dialog"&gt;</code>. Keep the
+          same hero image in both states so the media appears to grow with the
+          container. <code>ExpandingCard.Init()</code> and
+          <code>AutoInit()</code> wire up the modal, measured clip origin,
+          back action, focus return, Escape, and reduced motion.
+        </p>
+        <div class="row">
+          <div class="s12 m10 l10">
+            <article class="outlined expanding-card">
+              <figure>
+                <img src="https://picsum.photos/id/1068/800/420" alt="Plants in patterned vases against a blue wall">
+                <button type="button" class="expanding-card-trigger waves-effect" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
+              </figure>
+              <header class="expanding-card-summary">
+                <h3>Listen to Glass Souls</h3>
+                <p class="subhead">From your recent favorites</p>
+              </header>
+              <dialog id="glass-souls-card" class="expanding-card-dialog" aria-labelledby="glass-souls-title">
+                <button type="button" class="expanding-card-close" aria-label="Back">
+                  <span class="material-symbols" aria-hidden="true">arrow_back</span>
+                </button>
+                <figure class="expanding-card-hero">
+                  <img src="https://picsum.photos/id/1068/1200/900" alt="Plants in patterned vases against a blue wall">
+                </figure>
+                <div class="expanding-card-content">
+                  <header class="expanding-card-detail-header">
+                    <h2 id="glass-souls-title">Glass Souls’ Biggest Hits</h2>
+                    <div class="expanding-card-actions">
+                      <button type="button" class="expanding-card-favorite" aria-label="Favorite album"><span class="material-symbols" aria-hidden="true">favorite</span></button>
+                      <button type="button" class="expanding-card-play" aria-label="Play album"><span class="material-symbols" aria-hidden="true">play_arrow</span></button>
+                    </div>
+                  </header>
+                  <div class="expanding-card-track">
+                    <strong>Fragile</strong>
+                    <small>Glass Souls</small>
+                    <time datetime="PT3M34S">3:34</time>
+                  </div>
+                </div>
+              </dialog>
+            </article>
+          </div>
+        </div>
+{% call code() %}
+<article class="outlined expanding-card">
+  <figure>
+    <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
+    <button type="button" class="expanding-card-trigger waves-effect"
+            aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
+  </figure>
+  <header class="expanding-card-summary">
+    <h3>Listen to Glass Souls</h3>
+    <p class="subhead">From your recent favorites</p>
+  </header>
+  <dialog id="glass-souls-card" class="expanding-card-dialog"
+          aria-labelledby="glass-souls-title">
+    <button type="button" class="expanding-card-close" aria-label="Back">
+      <span class="material-symbols" aria-hidden="true">arrow_back</span>
+    </button>
+    <figure class="expanding-card-hero">
+      <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
+    </figure>
+    <div class="expanding-card-content">
+      <header class="expanding-card-detail-header">
+        <h2 id="glass-souls-title">Glass Souls’ Biggest Hits</h2>
+        <div class="expanding-card-actions">
+          <button type="button" class="expanding-card-favorite" aria-label="Favorite album">
+            <span class="material-symbols" aria-hidden="true">favorite</span>
+          </button>
+          <button type="button" class="expanding-card-play" aria-label="Play album">
+            <span class="material-symbols" aria-hidden="true">play_arrow</span>
+          </button>
+        </div>
+      </header>
+      <div class="expanding-card-track">
+        <strong>Fragile</strong><small>Glass Souls</small>
+        <time datetime="PT3M34S">3:34</time>
+      </div>
+    </div>
+  </dialog>
+</article>
+{% endcall %}
+  {% endcall %}
+
   {% call section("tabs", "Tabs") %}
         <p>
           Put a <code>&lt;nav class="tabs"&gt;</code> between the

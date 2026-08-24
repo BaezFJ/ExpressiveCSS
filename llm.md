@@ -2008,6 +2008,41 @@ Here is some more information about this product that is only revealed once clic
 </article>
 ```
 
+### Expanding card
+
+An expanding card performs a shared-container transition from a compact feed item into a full-screen modal detail surface. Use an `<article class="expanding-card">` with a direct `<dialog class="expanding-card-dialog">`. Keep the same hero image in both states so the media appears to grow with the container. `ExpandingCard.Init()` and `AutoInit()` wire up the modal, measured clip origin, back action, focus return, Escape, and reduced motion.
+
+```html
+<article class="outlined expanding-card">
+  <figure>
+    <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
+    <button type="button" class="expanding-card-trigger waves-effect" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
+  </figure>
+  <header class="expanding-card-summary">
+    <h3>Listen to Glass Souls</h3>
+    <p class="subhead">From your recent favorites</p>
+  </header>
+  <dialog id="glass-souls-card" class="expanding-card-dialog" aria-labelledby="glass-souls-title">
+    <button type="button" class="expanding-card-close" aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button>
+    <figure class="expanding-card-hero">
+      <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
+    </figure>
+    <div class="expanding-card-content">
+      <header class="expanding-card-detail-header">
+        <h2 id="glass-souls-title">Glass Souls’ Biggest Hits</h2>
+        <div class="expanding-card-actions">
+          <button type="button" class="expanding-card-favorite" aria-label="Favorite album"><span class="material-symbols" aria-hidden="true">favorite</span></button>
+          <button type="button" class="expanding-card-play" aria-label="Play album"><span class="material-symbols" aria-hidden="true">play_arrow</span></button>
+        </div>
+      </header>
+      <div class="expanding-card-track">
+        <strong>Fragile</strong><small>Glass Souls</small><time datetime="PT3M34S">3:34</time>
+      </div>
+    </div>
+  </dialog>
+</article>
+```
+
 ### Tabs
 
 Put a `<nav class="tabs" aria-label="Sections">` between the supporting text and the tab panels. `AutoInit()` starts `.tabs`.

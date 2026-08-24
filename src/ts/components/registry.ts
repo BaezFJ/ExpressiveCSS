@@ -1,6 +1,7 @@
-import { InitElements, InitElement } from '../core/component';
-import * as Components from './index';
-import { CARDS_SELECTOR } from './cards';
+import { InitElements, InitElement } from "../core/component";
+import * as Components from "./index";
+import { CARDS_SELECTOR } from "./cards";
+import { EXPANDING_CARD_SELECTOR } from "./expandingCard";
 
 /**
  * The components `AutoInit()` starts, in initialization order, with the
@@ -16,27 +17,46 @@ import { CARDS_SELECTOR } from './cards';
  * CharacterCounter, Range, ...) simply stays out of this table.
  */
 export const AUTO_INIT_COMPONENTS = {
-  Autocomplete: { component: Components.Autocomplete, selector: '.autocomplete' },
+  Autocomplete: {
+    component: Components.Autocomplete,
+    selector: ".autocomplete",
+  },
   // Shared with Cards.Init() - see CARDS_SELECTOR. This entry used to read
   // '.cards', which no card markup uses.
   Cards: { component: Components.Cards, selector: CARDS_SELECTOR },
-  Carousel: { component: Components.Carousel, selector: '.carousel' },
-  Chips: { component: Components.Chips, selector: '.chips' },
-  Datepicker: { component: Components.Datepicker, selector: '.datepicker, .date-picker' },
-  Menu: { component: Components.Menu, selector: '.menu-trigger' },
-  Lightbox: { component: Components.Lightbox, selector: '.lightboxed' },
-  Parallax: { component: Components.Parallax, selector: '.parallax' },
-  ScrollSpy: { component: Components.ScrollSpy, selector: '.scrollspy' },
-  FormSelect: { component: Components.FormSelect, selector: 'select' },
-  NavigationDrawer: { component: Components.NavigationDrawer, selector: '.sidenav, .navigation-drawer' },
-  NavigationRail: { component: Components.NavigationRail, selector: '.navigation-rail' },
-  Tabs: { component: Components.Tabs, selector: '.tabs' },
-  Timepicker: { component: Components.Timepicker, selector: '.timepicker, .time-picker' },
-  Tooltip: { component: Components.Tooltip, selector: '.tooltipped' },
+  ExpandingCard: {
+    component: Components.ExpandingCard,
+    selector: EXPANDING_CARD_SELECTOR,
+  },
+  Carousel: { component: Components.Carousel, selector: ".carousel" },
+  Chips: { component: Components.Chips, selector: ".chips" },
+  Datepicker: {
+    component: Components.Datepicker,
+    selector: ".datepicker, .date-picker",
+  },
+  Menu: { component: Components.Menu, selector: ".menu-trigger" },
+  Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
+  Parallax: { component: Components.Parallax, selector: ".parallax" },
+  ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
+  FormSelect: { component: Components.FormSelect, selector: "select" },
+  NavigationDrawer: {
+    component: Components.NavigationDrawer,
+    selector: ".sidenav, .navigation-drawer",
+  },
+  NavigationRail: {
+    component: Components.NavigationRail,
+    selector: ".navigation-rail",
+  },
+  Tabs: { component: Components.Tabs, selector: ".tabs" },
+  Timepicker: {
+    component: Components.Timepicker,
+    selector: ".timepicker, .time-picker",
+  },
+  Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
-    selector: '.fab, .fixed-action-btn'
-  }
+    selector: ".fab, .fixed-action-btn",
+  },
 };
 
 type Registry = typeof AUTO_INIT_COMPONENTS;
@@ -46,7 +66,9 @@ type Registry = typeof AUTO_INIT_COMPONENTS;
  * above - each key takes that component's own options type.
  */
 export type AutoInitOptions = {
-  [K in keyof Registry]?: Partial<InstanceType<Registry[K]['component']>['options']>;
+  [K in keyof Registry]?: Partial<
+    InstanceType<Registry[K]["component"]>["options"]
+  >;
 };
 
 /** The shape every entry in the table satisfies; see the cast in AutoInit. */
@@ -61,7 +83,7 @@ type AutoInitable = {
  */
 export function AutoInit(
   context: HTMLElement = document.body,
-  options?: Partial<AutoInitOptions>
+  options?: Partial<AutoInitOptions>,
 ) {
   for (const name of Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[]) {
     const { component, selector } = AUTO_INIT_COMPONENTS[name];
