@@ -1952,21 +1952,26 @@ I am a very simple card. I am good at containing small bits of information.
 
 ### Horizontal
 
-Add `horizontal`. The image takes the start; wrap the headline, text, and actions in a `<div>` so they stack beside it.
-
-### Card title
-
-I am a very simple card. I am good at containing small bits of information.
+The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it.
 
 ```html
-<article class="horizontal">
-  <img src="images/sample.jpg" alt="">
-  <div>
-    <h3>Card title</h3>
-    <p>I am a very simple card.</p>
-    <div class="actions">
-      <button type="button" class="text">Action</button>
-    </div>
+<!-- Vertical -->
+<article class="outlined">
+  <img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance">
+  <h3>Performances at The Hideout</h3>
+  <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+  <div class="actions">
+    <button type="button" class="tonal">Get tickets</button>
+  </div>
+</article>
+
+<!-- Horizontal: only the orientation class changes. -->
+<article class="outlined horizontal">
+  <img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance">
+  <h3>Performances at The Hideout</h3>
+  <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+  <div class="actions">
+    <button type="button" class="tonal">Get tickets</button>
   </div>
 </article>
 ```

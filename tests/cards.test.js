@@ -101,6 +101,24 @@ describe('Cards CSS', () => {
     assert.doesNotMatch(css, /\.card-(?:tabs|panel)\b/);
   });
 
+  test('repositions the same direct card slots in horizontal orientation', () => {
+    assert.match(css, /--md-comp-card-horizontal-media-width:\s*40%/);
+    assert.match(css, /--md-comp-card-horizontal-min-height:\s*240px/);
+    assert.match(
+      css,
+      /article\.horizontal\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:[^}]*var\(--md-comp-card-horizontal-media-width\)/s
+    );
+    assert.match(
+      css,
+      /article\.horizontal\s*>\s*img,[^{]+article\.horizontal\s*>\s*figure\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*1\s*\/\s*-1/s
+    );
+    assert.match(
+      css,
+      /article\.horizontal\s*>\s*\.actions\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*4[^}]*align-self:\s*end[^}]*justify-content:\s*flex-end/s
+    );
+    assert.doesNotMatch(css, /article\.horizontal\s*>\s*div\s*\{/);
+  });
+
   test('applies interaction states only through a primary action', () => {
     assert.match(css, /:where\(article\)\s*>\s*\.primary-action\s*\{/);
     assert.match(css, /:has\(>\s*\.primary-action:hover\)::after/);

@@ -462,28 +462,49 @@
         <h3>Horizontal</h3>
 
         <p>
-          Add <code>horizontal</code>. The image takes the start; wrap the
-          headline, text, and actions in a <code>&lt;div&gt;</code> so they
-          stack beside it.
+          The same card can use two orientations without changing its content
+          order. Add <code>horizontal</code> to move the media to the start and
+          stack the headline, supporting text, and action beside it.
         </p>
-        <article class="horizontal mb-3">
-          <img src="https://picsum.photos/id/64/200/280" alt="">
-          <div>
-            <h3>Card title</h3>
-            <p>I am a very simple card. I am good at containing small bits of information.</p>
-            <div class="actions">
-              <button type="button" class="text">Action</button>
-            </div>
+        <div class="row">
+          <div class="s12 xxl5">
+            <article class="outlined mb-3">
+              <img src="https://picsum.photos/id/453/900/520" alt="Musician playing guitar during a live performance">
+              <h3>Performances at The Hideout</h3>
+              <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+              <div class="actions">
+                <button type="button" class="tonal">Get tickets</button>
+              </div>
+            </article>
           </div>
-        </article>
-<pre><code>&lt;article class="horizontal"&gt;
-  &lt;img src="images/sample.jpg" alt=""&gt;
-  &lt;div&gt;
-    &lt;h3&gt;Card title&lt;/h3&gt;
-    &lt;p&gt;I am a very simple card.&lt;/p&gt;
-    &lt;div class="actions"&gt;
-      &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
-    &lt;/div&gt;
+          <div class="s12 xxl7">
+            <article class="outlined horizontal mb-3">
+              <img src="https://picsum.photos/id/453/900/520" alt="Musician playing guitar during a live performance">
+              <h3>Performances at The Hideout</h3>
+              <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+              <div class="actions">
+                <button type="button" class="tonal">Get tickets</button>
+              </div>
+            </article>
+          </div>
+        </div>
+<pre><code>&lt;!-- Vertical --&gt;
+&lt;article class="outlined"&gt;
+  &lt;img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance"&gt;
+  &lt;h3&gt;Performances at The Hideout&lt;/h3&gt;
+  &lt;p&gt;Watch exclusive live performances at The Hideout every Saturday starting at 7pm.&lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button type="button" class="tonal"&gt;Get tickets&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/article&gt;
+
+&lt;!-- Horizontal: only the orientation class changes. --&gt;
+&lt;article class="outlined horizontal"&gt;
+  &lt;img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance"&gt;
+  &lt;h3&gt;Performances at The Hideout&lt;/h3&gt;
+  &lt;p&gt;Watch exclusive live performances at The Hideout every Saturday starting at 7pm.&lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button type="button" class="tonal"&gt;Get tickets&lt;/button&gt;
   &lt;/div&gt;
 &lt;/article&gt;</code></pre>
   

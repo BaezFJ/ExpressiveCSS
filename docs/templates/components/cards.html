@@ -186,29 +186,50 @@
 
   {% call section("horizontal", "Horizontal") %}
         <p>
-          Add <code>horizontal</code>. The image takes the start; wrap the
-          headline, text, and actions in a <code>&lt;div&gt;</code> so they
-          stack beside it.
+          The same card can use two orientations without changing its content
+          order. Add <code>horizontal</code> to move the media to the start and
+          stack the headline, supporting text, and action beside it.
         </p>
-        <article class="horizontal mb-3">
-          <img src="https://picsum.photos/id/64/200/280" alt="">
-          <div>
-            <h3>Card title</h3>
-            <p>I am a very simple card. I am good at containing small bits of information.</p>
-            <div class="actions">
-              <button type="button" class="text">Action</button>
-            </div>
+        <div class="row">
+          <div class="s12 xxl5">
+            <article class="outlined mb-3">
+              <img src="https://picsum.photos/id/453/900/520" alt="Musician playing guitar during a live performance">
+              <h3>Performances at The Hideout</h3>
+              <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+              <div class="actions">
+                <button type="button" class="tonal">Get tickets</button>
+              </div>
+            </article>
           </div>
-        </article>
+          <div class="s12 xxl7">
+            <article class="outlined horizontal mb-3">
+              <img src="https://picsum.photos/id/453/900/520" alt="Musician playing guitar during a live performance">
+              <h3>Performances at The Hideout</h3>
+              <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+              <div class="actions">
+                <button type="button" class="tonal">Get tickets</button>
+              </div>
+            </article>
+          </div>
+        </div>
 {% call code() %}
-<article class="horizontal">
-  <img src="images/sample.jpg" alt="">
-  <div>
-    <h3>Card title</h3>
-    <p>I am a very simple card.</p>
-    <div class="actions">
-      <button type="button" class="text">Action</button>
-    </div>
+<!-- Vertical -->
+<article class="outlined">
+  <img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance">
+  <h3>Performances at The Hideout</h3>
+  <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+  <div class="actions">
+    <button type="button" class="tonal">Get tickets</button>
+  </div>
+</article>
+
+<!-- Horizontal: only the orientation class changes. -->
+<article class="outlined horizontal">
+  <img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance">
+  <h3>Performances at The Hideout</h3>
+  <p>Watch exclusive live performances at The Hideout every Saturday starting at 7pm.</p>
+  <div class="actions">
+    <button type="button" class="tonal">Get tickets</button>
   </div>
 </article>
 {% endcall %}

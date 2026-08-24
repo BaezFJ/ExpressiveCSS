@@ -48,6 +48,8 @@ $_card: "article";
   --md-comp-card-focus-indicator-color: var(--md-sys-color-secondary);
   --md-comp-card-focus-indicator-thickness: 3px;
   --md-comp-card-focus-indicator-offset: 2px;
+  --md-comp-card-horizontal-media-width: 40%;
+  --md-comp-card-horizontal-min-height: 240px;
 
   position: relative;
   box-sizing: border-box;
@@ -335,19 +337,25 @@ article > .primary-action > figure > figcaption > svg {
   gap: var(--md-comp-card-between-space);
 }
 
-// Horizontal: media on the start, body stacked beside it.
+// Horizontal uses the same direct semantic slots as the vertical card. Grid
+// moves the media to the start and stacks headline, subhead, supporting text,
+// and actions beside it without requiring a second content wrapper.
 article.horizontal {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns:
+    minmax(0, var(--md-comp-card-horizontal-media-width))
+    minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  min-height: var(--md-comp-card-horizontal-min-height);
   overflow: hidden;
 
   > img,
   > picture,
   > figure {
-    flex: 0 0 40%;
-    max-width: 40%;
-    width: 40%;
+    grid-column: 1;
+    grid-row: 1 / -1;
+    width: 100%;
+    height: 100%;
     align-self: stretch;
   }
 
@@ -358,11 +366,27 @@ article.horizontal {
     object-fit: cover;
   }
 
-  > div {
-    flex: 1 1 auto;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
+  > :is(h1, h2, h3, h4, h5, h6),
+  > header {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  > p.subhead {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  > p:not(.subhead) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  > .actions {
+    grid-column: 2;
+    grid-row: 4;
+    align-self: end;
+    justify-content: flex-end;
   }
 }
 
@@ -399,10 +423,9 @@ article.small, article.medium, article.large {
 article.horizontal.small,
 article.horizontal.medium,
 article.horizontal.large {
-  flex-direction: row;
+  display: grid;
 
   > img, > picture, > figure {
-    flex: 0 0 40%;
     max-height: none;
   }
 }
