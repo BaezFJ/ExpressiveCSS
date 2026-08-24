@@ -1,0 +1,99 @@
+// Material 3 cards: variants, measurements, and interactive states.
+import { describe, test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+describe('Cards CSS', () => {
+  test('maps the three variants to the M3 container roles', () => {
+    assert.match(
+      css,
+      /--md-comp-elevated-card-container-color:\s*var\(--md-sys-color-surface-container-low\)/
+    );
+    assert.match(
+      css,
+      /--md-comp-filled-card-container-color:\s*var\(--md-sys-color-surface-container-highest\)/
+    );
+    assert.match(
+      css,
+      /--md-comp-outlined-card-container-color:\s*var\(--md-sys-color-surface\)/
+    );
+    assert.match(
+      css,
+      /--md-comp-outlined-card-outline-color:\s*var\(--md-sys-color-outline-variant\)/
+    );
+  });
+
+  test('uses 12dp shape, 16dp content padding, 8dp collection spacing, and 24dp icons', () => {
+    assert.match(css, /--md-comp-card-container-shape:\s*12px/);
+    assert.match(css, /--md-comp-card-content-padding:\s*16px/);
+    assert.match(css, /--md-comp-card-between-space:\s*8px/);
+    assert.match(css, /--md-comp-card-icon-size:\s*24px/);
+    assert.match(css, /:where\(\.card-collection\)\s*\{[^}]*gap:\s*var\(--md-comp-card-between-space\)/s);
+  });
+
+  test('uses M3 supporting text color and type roles', () => {
+    assert.match(
+      css,
+      /article\s*>\s*p,[^{]+\{[^}]*font-size:\s*var\(--md-sys-typescale-body-medium-font-size\)[^}]*color:\s*var\(--md-sys-color-on-surface-variant\)/s
+    );
+    assert.doesNotMatch(
+      css,
+      /article\s*>\s*p[\s\S]{0,600}color-mix\(in oklab,\s*currentColor 72%/
+    );
+  });
+
+  test('applies interaction states only through a primary action', () => {
+    assert.match(css, /:where\(article\)\s*>\s*\.primary-action\s*\{/);
+    assert.match(css, /:has\(>\s*\.primary-action:hover\)::after/);
+    assert.match(css, /:has\(>\s*\.primary-action:focus-visible\)::after/);
+    assert.match(css, /:has\(>\s*\.primary-action:active\)::after/);
+    assert.doesNotMatch(css, /:where\(article\):hover\s*\{/);
+  });
+
+  test('uses M3 state-layer and focus-indicator values', () => {
+    assert.match(css, /--md-comp-card-hover-state-layer-opacity:\s*0\.08/);
+    assert.match(css, /--md-comp-card-focus-state-layer-opacity:\s*0\.10/);
+    assert.match(css, /--md-comp-card-pressed-state-layer-opacity:\s*0\.10/);
+    assert.match(css, /--md-comp-card-dragged-state-layer-opacity:\s*0\.16/);
+    assert.match(css, /--md-comp-card-focus-indicator-thickness:\s*3px/);
+    assert.match(css, /--md-comp-card-focus-indicator-offset:\s*2px/);
+    assert.match(
+      css,
+      /--md-comp-card-focus-indicator-color:\s*var\(--md-sys-color-secondary\)/
+    );
+  });
+
+  test('raises hovered and dragged cards to the specified elevations', () => {
+    assert.match(
+      css,
+      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:(?!\s*none)/s
+    );
+    assert.match(
+      css,
+      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:(?!\s*none)/s
+    );
+    assert.match(css, /:where\(article\)\.dragged\s*\{[^}]*box-shadow:(?!\s*none)/s);
+  });
+
+  test('publishes disabled container and outlined-stroke opacity', () => {
+    assert.match(css, /--md-comp-card-disabled-container-opacity:\s*38%/);
+    assert.match(css, /--md-comp-outlined-card-disabled-outline-opacity:\s*12%/);
+    assert.match(
+      css,
+      /\.primary-action\[aria-disabled=true\][\s\S]*?pointer-events:\s*none/
+    );
+  });
+
+  test('expands reveals with the page below Expanded and scrolls internally above it', () => {
+    assert.match(
+      css,
+      /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*position:\s*relative[^}]*inset:\s*auto/s
+    );
+    assert.match(
+      css,
+      /@media\s*\(width\s*>=\s*840px\)[\s\S]*?article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*position:\s*absolute[^}]*overflow-y:\s*auto/s
+    );
+  });
+});

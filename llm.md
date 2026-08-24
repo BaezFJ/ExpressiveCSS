@@ -1858,7 +1858,7 @@ Material Design 3 cards, from the HTML.
 
 An `<article>` is an elevated card. A heading is the headline, a `<p>` is supporting text, a direct `<div class="actions">` is the action row, and `<img>` or `<figure>` is media. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component. The action row is not a `<nav>`: a row of buttons is not a set of destinations, and one landmark per card floods the landmark list.
 
-Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The container is `surface` with 12dp corners. Elevated (the default) sits at elevation 1 and rises to 2 on hover. The headline is `title-medium` / `on-surface`; supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
+Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The elevated container is `surface-container-low` with 12dp corners. The default sits at elevation 1; an interactive card rises to 2 on hover. The headline is `title-medium` / `on-surface`; supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
 
 ### Card title
 
@@ -1869,23 +1869,23 @@ I am a very simple card. I am good at containing small bits of information. I am
   <h3>Card title</h3>
   <p>I am a very simple card.</p>
   <div class="actions">
-    <button class="text">Action</button>
-    <button class="tonal">Action</button>
+    <button type="button" class="text">Action</button>
+    <button type="button" class="tonal">Action</button>
   </div>
 </article>
 ```
 
 ### Variants
 
-Default is elevated. `filled` uses `surface-variant` at rest (no shadow). `outlined` (or `border`) draws a 1dp `outline-variant` stroke.
+Default is elevated. `filled` uses `surface-container-highest` at rest (no shadow). `outlined` (or `border`) draws a 1dp `outline-variant` stroke over `surface`.
 
 ### Elevated
 
-The default. Surface, elevation 1.
+Surface-container-low, elevation 1.
 
 ### Filled
 
-Surface-variant, no elevation.
+Surface-container-highest, no elevation.
 
 ### Outlined
 
@@ -1897,9 +1897,36 @@ Surface plus a 1dp outline.
 <article class="outlined">…</article>
 ```
 
+### Primary action and states
+
+A static card has no hover treatment. To make the card an entry point, wrap its primary content in a direct `<a class="primary-action">`. That gives the card M3 hover, focus, pressed, and focus-indicator states while keeping secondary buttons outside the link. Toggle `dragged` during reordering, or put `aria-disabled="true"` on the primary action for the disabled appearance.
+
+```html
+<article>
+  <a class="primary-action" href="/reservation/42">
+    <h3>Upcoming reservation</h3>
+    <p>Open the reservation details.</p>
+  </a>
+  <div class="actions">
+    <button type="button" class="text">Share</button>
+  </div>
+</article>
+```
+
+### Collections
+
+Cards in a collection share a resting elevation. Add `card-collection` to a grid or row to use M3's maximum 8dp spacing between cards. Keep sorting and filtering controls outside the collection.
+
+```html
+<div class="row card-collection">
+  <div class="s12 m6"><article>…</article></div>
+  <div class="s12 m6"><article>…</article></div>
+</div>
+```
+
 ### Media
 
-A direct `<img>` is full-bleed across the top. Wrap it in a `<figure>` if you want a caption on the image — `<figcaption>` sits on the media.
+A direct `<img>` is full-bleed across the top. Wrap it in a `<figure>` if you want a caption on the image — `<figcaption>` sits on a translucent surface scrim. M3 recommends keeping text off images when possible; always verify accessible contrast when layering is necessary.
 
 I am a very simple card. I am good at containing small bits of information.
 
@@ -1911,27 +1938,8 @@ I am a very simple card. I am good at containing small bits of information.
   </figure>
   <p>I am a very simple card.</p>
   <div class="actions">
-    <button class="text">Action</button>
+    <button type="button" class="text">Action</button>
   </div>
-</article>
-```
-
-### FAB on media
-
-Put a `halfway-fab` inside the `<figure>` so it anchors to the image, not the whole card. It pairs with a 56dp FAB — `button circle large halfway-fab`.
-
-I am a very simple card. I am good at containing small bits of information.
-
-```html
-<article>
-  <figure>
-    <img src="images/sample-1.jpg" alt="">
-    <figcaption>Card title</figcaption>
-    <a class="button circle large halfway-fab" href="#!" aria-label="Add">
-      <span class="material-symbols" aria-hidden="true">add</span>
-    </a>
-  </figure>
-  <p>I am a very simple card.</p>
 </article>
 ```
 
@@ -1950,7 +1958,7 @@ I am a very simple card. I am good at containing small bits of information.
     <h3>Card title</h3>
     <p>I am a very simple card.</p>
     <div class="actions">
-      <button class="text">Action</button>
+      <button type="button" class="text">Action</button>
     </div>
   </div>
 </article>
@@ -1958,7 +1966,7 @@ I am a very simple card. I am good at containing small bits of information.
 
 ### Reveal
 
-An `<aside>` (or `.card-reveal`) slides over the card. Mark the control that opens it with `activator` — that class is the JavaScript contract. The first heading inside the aside closes it. `Cards.Init()` (and `AutoInit()` on `.cards`) wires this up; a card with no aside is CSS-only.
+An `<aside>` (or `.card-reveal`) reveals more card content. Mark the control that opens it with `activator` — that class is the JavaScript contract. The first heading inside the aside closes it. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires this up; a card with no aside is CSS-only. On Compact and Medium layouts the reveal expands the card so the page scrolls; at Expanded and wider it may scroll inside the card, matching M3's platform guidance.
 
 ### Card titlemore_vert
 
@@ -1987,7 +1995,7 @@ Here is some more information about this product that is only revealed once clic
 </article>
 ```
 
-Add `sticky` (or the older `sticky-action`) if a trailing `<nav>` should stay visible under the reveal.
+Add `sticky` if a trailing `.actions` row should stay visible under the reveal.
 
 ### Tabs
 

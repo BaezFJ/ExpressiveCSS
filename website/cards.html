@@ -276,7 +276,7 @@
         <p class="flow-text">
           An <code>&lt;article&gt;</code> is an elevated card. A heading is the
           headline, a <code>&lt;p&gt;</code> is supporting text, a direct
-          <code>&lt;nav&gt;</code> is the action row, and
+          <code>.actions</code> is the action row, and
           <code>&lt;img&gt;</code> or <code>&lt;figure&gt;</code> is media.
           There is no <code>card-content</code>, <code>card-title</code>, or
           <code>card-action</code> class.
@@ -284,8 +284,9 @@
         <p>
           Tokens follow the
           <a href="https://m3.material.io/components/cards/specs">M3 card spec</a>.
-          The container is <code>surface</code> with 12dp corners. Elevated
-          (the default) sits at elevation 1 and rises to 2 on hover. The
+          The elevated container is <code>surface-container-low</code> with
+          12dp corners. The default sits at elevation 1; an interactive card
+          rises to 2 on hover. The
           headline is <code>title-medium</code> / <code>on-surface</code>;
           supporting text is <code>body-medium</code> /
           <code>on-surface-variant</code>. Inset is 16dp.
@@ -302,8 +303,8 @@
   &lt;h3&gt;Card title&lt;/h3&gt;
   &lt;p&gt;I am a very simple card.&lt;/p&gt;
   &lt;div class="actions"&gt;
-    &lt;button class="text"&gt;Action&lt;/button&gt;
-    &lt;button class="tonal"&gt;Action&lt;/button&gt;
+    &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
+    &lt;button type="button" class="tonal"&gt;Action&lt;/button&gt;
   &lt;/div&gt;
 &lt;/article&gt;</code></pre>
   
@@ -315,21 +316,21 @@
 
         <p>
           Default is elevated. <code>filled</code> uses
-          <code>surface-variant</code> at rest (no shadow).
+          <code>surface-container-highest</code> at rest (no shadow).
           <code>outlined</code> (or <code>border</code>) draws a 1dp
-          <code>outline-variant</code> stroke.
+          <code>outline-variant</code> stroke over <code>surface</code>.
         </p>
         <div class="row">
           <div class="s12 m4">
             <article>
               <h3>Elevated</h3>
-              <p>The default. Surface, elevation 1.</p>
+              <p>Surface-container-low, elevation 1.</p>
             </article>
           </div>
           <div class="s12 m4">
             <article class="filled">
               <h3>Filled</h3>
-              <p>Surface-variant, no elevation.</p>
+              <p>Surface-container-highest, no elevation.</p>
             </article>
           </div>
           <div class="s12 m4">
@@ -346,13 +347,70 @@
       </div>
 
 
+  <div id="interaction" class="section scrollspy">
+        <h3>Primary action and states</h3>
+
+        <p>
+          A static card has no hover treatment. To make the card an entry
+          point, wrap its primary content in a direct
+          <code>&lt;a class="primary-action"&gt;</code>. That gives the card M3
+          hover, focus, pressed, and focus-indicator states while keeping
+          secondary buttons outside the link. Toggle <code>dragged</code>
+          during reordering, or put <code>aria-disabled="true"</code> on the
+          primary action for the disabled appearance.
+        </p>
+        <article class="mb-3">
+          <a class="primary-action" href="#interaction">
+            <h3>Upcoming reservation</h3>
+            <p>Open the reservation details.</p>
+          </a>
+          <div class="actions">
+            <button type="button" class="text">Share</button>
+          </div>
+        </article>
+<pre><code>&lt;article&gt;
+  &lt;a class="primary-action" href="/reservation/42"&gt;
+    &lt;h3&gt;Upcoming reservation&lt;/h3&gt;
+    &lt;p&gt;Open the reservation details.&lt;/p&gt;
+  &lt;/a&gt;
+  &lt;div class="actions"&gt;
+    &lt;button type="button" class="text"&gt;Share&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="collections" class="section scrollspy">
+        <h3>Collections</h3>
+
+        <p>
+          Cards in a collection share a resting elevation. Add
+          <code>card-collection</code> to a grid or row to use M3's maximum
+          8dp spacing between cards. Keep sorting and filtering controls
+          outside the collection.
+        </p>
+        <div class="row card-collection">
+          <div class="s12 m6"><article><h3>First</h3><p>Related content.</p></article></div>
+          <div class="s12 m6"><article><h3>Second</h3><p>Related content.</p></article></div>
+        </div>
+<pre><code>&lt;div class="row card-collection"&gt;
+  &lt;div class="s12 m6"&gt;&lt;article&gt;…&lt;/article&gt;&lt;/div&gt;
+  &lt;div class="s12 m6"&gt;&lt;article&gt;…&lt;/article&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+      </div>
+
+
   <div id="image" class="section scrollspy">
         <h3>Media</h3>
 
         <p>
           A direct <code>&lt;img&gt;</code> is full-bleed across the top.
           Wrap it in a <code>&lt;figure&gt;</code> if you want a caption on
-          the image — <code>&lt;figcaption&gt;</code> sits on the media.
+          the image — <code>&lt;figcaption&gt;</code> sits on a translucent
+          surface scrim. M3 recommends keeping text off images when possible;
+          always verify accessible contrast when layering is necessary.
         </p>
         <div class="row">
           <div class="s12 m7">
@@ -375,43 +433,8 @@
   &lt;/figure&gt;
   &lt;p&gt;I am a very simple card.&lt;/p&gt;
   &lt;div class="actions"&gt;
-    &lt;button class="text"&gt;Action&lt;/button&gt;
+                &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
   &lt;/div&gt;
-&lt;/article&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="fab" class="section scrollspy">
-        <h3>FAB on media</h3>
-
-        <p>
-          Put a <code>halfway-fab</code> inside the <code>&lt;figure&gt;</code>
-          so it anchors to the image, not the whole card.
-        </p>
-        <div class="row">
-          <div class="s12 m7">
-            <article>
-              <figure>
-                <img src="https://picsum.photos/id/1015/800/400" alt="">
-                <figcaption>Card title</figcaption>
-                <a class="button extra circle small halfway-fab" href="#!" aria-label="Add">
-                  <span class="material-symbols" aria-hidden="true">add</span>
-                </a>
-              </figure>
-              <p>I am a very simple card. I am good at containing small bits of information.</p>
-            </article>
-          </div>
-        </div>
-<pre><code>&lt;article&gt;
-  &lt;figure&gt;
-    &lt;img src="images/sample-1.jpg" alt=""&gt;
-    &lt;figcaption&gt;Card title&lt;/figcaption&gt;
-    &lt;a class="button extra circle small halfway-fab" href="#!" aria-label="Add"&gt;
-      &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-    &lt;/a&gt;
-  &lt;/figure&gt;
-  &lt;p&gt;I am a very simple card.&lt;/p&gt;
 &lt;/article&gt;</code></pre>
   
       </div>
@@ -441,7 +464,7 @@
     &lt;h3&gt;Card title&lt;/h3&gt;
     &lt;p&gt;I am a very simple card.&lt;/p&gt;
     &lt;div class="actions"&gt;
-      &lt;button class="text"&gt;Action&lt;/button&gt;
+      &lt;button type="button" class="text"&gt;Action&lt;/button&gt;
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/article&gt;</code></pre>
@@ -453,13 +476,16 @@
         <h3>Reveal</h3>
 
         <p>
-          An <code>&lt;aside&gt;</code> slides
-          over the card. Mark the control that opens it with
+          An <code>&lt;aside&gt;</code> reveals more card content. Mark the
+          control that opens it with
           <code>activator</code> — that class is the JavaScript contract.
           The first heading inside the aside closes it.
-          <code>Cards.Init()</code> (and <code>AutoInit()</code> on
-          <code>.cards</code>) wires this up; a card with no aside is
-          CSS-only.
+          <code>Cards.Init()</code> (and <code>AutoInit()</code> on an
+          <code>&lt;article&gt;</code> containing an <code>&lt;aside&gt;</code>)
+          wires this up; a card with no aside is CSS-only.
+          On Compact and Medium layouts the reveal expands the card so the
+          page scrolls; at Expanded and wider it may scroll inside the card,
+          matching M3's platform guidance.
         </p>
         <div class="row">
           <div class="s12 m7">
@@ -495,7 +521,7 @@
 &lt;/article&gt;</code></pre>
         <p>
           Add <code>sticky</code>
-          if a trailing <code>&lt;nav&gt;</code> should stay visible under
+          if a trailing <code>.actions</code> row should stay visible under
           the reveal.
         </p>
   
@@ -597,8 +623,9 @@
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
           <li><a href="#variants">Variants</a></li>
+          <li><a href="#interaction">Primary action and states</a></li>
+          <li><a href="#collections">Collections</a></li>
           <li><a href="#image">Media</a></li>
-          <li><a href="#fab">FAB on media</a></li>
           <li><a href="#horizontal">Horizontal</a></li>
           <li><a href="#reveal">Reveal</a></li>
           <li><a href="#tabs">Tabs</a></li>

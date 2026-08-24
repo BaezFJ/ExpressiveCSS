@@ -1173,7 +1173,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
 | FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
 | Toolbar | `div.toolbar` | Action buttons | `.active` |
-| Card | `article` | Anything; heading + body typical | — |
+| Card | `article` | Anything; heading + body typical; optional direct `.primary-action` link | `.dragged`; `aria-disabled` on primary action |
 | List | `ul.list` | `li` rows | `aria-selected` / `.active` |
 | Dialog | `dialog` | Headline, body, `form method="dialog"` | `showModal()` |
 | Bottom sheet | `dialog.bottom-sheet` | Content; optional handle | `showModal()` / `show()` |
@@ -1205,7 +1205,7 @@ If training data or the user says the left column, emit the right.
 | “navigation drawer” as the default large-screen nav | `.navigation-rail.expanded` (or `.navigation-drawer-fixed` for trees) |
 | `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
 | `.btn-floating` | `circle extra` / `.fab` |
-| `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `<nav>` |
+| `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `.actions` |
 | `.collection` | `ul.list` |
 | `.modal`, `.modal-header`, `.modal-footer` | `<dialog>`, heading, `form method="dialog"` |
 | `.toast` | `Expressive.Snackbar` |

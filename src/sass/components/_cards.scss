@@ -10,9 +10,9 @@
 //
 // Tokens follow https://m3.material.io/components/cards/specs
 //   container  surface-container-low, 12dp corners
-//   elevated   level 1, hover level 2
-//   filled     surface-container-highest, level 0
-//   outlined   surface + 1dp outline, level 0
+//   elevated   level 1; interactive hover level 2
+//   filled     surface-container-highest, level 0; interactive hover level 1
+//   outlined   surface + 1dp outline, level 0; interactive hover level 1
 //   headline   title-medium / on-surface
 //   body       body-medium / on-surface-variant
 //   padding    16dp
@@ -21,43 +21,177 @@ $_card: "article";
 
 :where(#{$_card}) {
   --md-comp-elevated-card-container-color: var(--md-sys-color-surface-container-low);
-  --md-comp-elevated-card-container-shape: 12px;
+  --md-comp-filled-card-container-color: var(--md-sys-color-surface-container-highest);
+  --md-comp-outlined-card-container-color: var(--md-sys-color-surface);
+  --md-comp-outlined-card-outline-color: var(--md-sys-color-outline-variant);
+  --md-comp-outlined-card-disabled-outline-color: var(--md-sys-color-outline);
+  --md-comp-card-container-color: var(--md-comp-elevated-card-container-color);
+  --md-comp-card-container-shape: 12px;
+  --md-comp-card-content-padding: 16px;
+  --md-comp-card-between-space: 8px;
+  --md-comp-card-icon-color: var(--md-sys-color-primary);
+  --md-comp-card-icon-size: 24px;
+  --md-comp-card-state-layer-color: var(--md-sys-color-on-surface);
+  --md-comp-card-hover-state-layer-opacity: 0.08;
+  --md-comp-card-focus-state-layer-opacity: 0.10;
+  --md-comp-card-pressed-state-layer-opacity: 0.10;
+  --md-comp-card-dragged-state-layer-opacity: 0.16;
+  --md-comp-card-disabled-container-opacity: 38%;
+  --md-comp-outlined-card-disabled-outline-opacity: 12%;
+  --md-comp-card-focus-indicator-color: var(--md-sys-color-secondary);
+  --md-comp-card-focus-indicator-thickness: 3px;
+  --md-comp-card-focus-indicator-offset: 2px;
 
   position: relative;
   box-sizing: border-box;
-  background-color: var(--md-comp-elevated-card-container-color);
+  background-color: var(--md-comp-card-container-color);
   color: var(--md-sys-color-on-surface);
-  border-radius: var(--md-comp-elevated-card-container-shape);
+  border-radius: var(--md-comp-card-container-shape);
   overflow: hidden;
-  transition: box-shadow .2s ease-out;
+  transition: background-color .2s ease-out, box-shadow .2s ease-out;
+}
+
+// M3 state layers belong only to an interactive card. A direct
+// `.primary-action` link supplies the card's large action area without making
+// secondary buttons invalid nested controls.
+:where(#{$_card})::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background-color: var(--md-comp-card-state-layer-color);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease-out;
+}
+
+:where(#{$_card}) > .primary-action {
+  display: block;
+  color: inherit;
+  border-radius: inherit;
+  outline: 0;
 }
 
 // Default is elevated. :where() keeps specificity at zero so .outlined wins.
 :where(#{$_card}):not(.filled, .outlined, .border) {
   @include z-depth("1");
-
-  &:hover {
-    @include z-depth("2");
-  }
 }
 
 :where(#{$_card}).filled {
+  --md-comp-card-container-color: var(--md-comp-filled-card-container-color);
   @include z-depth("0");
-  background-color: var(--md-sys-color-surface-container-highest);
 }
 
 :where(#{$_card}).outlined,
 :where(#{$_card}).border {
+  --md-comp-card-container-color: var(--md-comp-outlined-card-container-color);
   @include z-depth("0");
-  border: 1px solid var(--md-sys-color-outline-variant);
+  border: 1px solid var(--md-comp-outlined-card-outline-color);
+}
+
+// Hovered cards lift one level and apply an 8% on-surface state layer.
+:where(#{$_card}):not(.filled, .outlined, .border):has(> .primary-action:hover) {
+  @include z-depth("2");
+}
+
+:where(#{$_card}):is(.filled, .outlined, .border):has(> .primary-action:hover) {
+  @include z-depth("1");
+}
+
+:where(#{$_card}):has(> .primary-action:hover)::after {
+  opacity: var(--md-comp-card-hover-state-layer-opacity);
+}
+
+// Focus and press retain their variant elevation. Focus gets M3's external
+// 3dp indicator at a 2dp offset; the outlined variant also darkens its stroke.
+:where(#{$_card}):has(> .primary-action:focus-visible) {
+  outline: var(--md-comp-card-focus-indicator-thickness) solid var(--md-comp-card-focus-indicator-color);
+  outline-offset: var(--md-comp-card-focus-indicator-offset);
+}
+
+:where(#{$_card}):has(> .primary-action:focus-visible)::after {
+  opacity: var(--md-comp-card-focus-state-layer-opacity);
+}
+
+:where(#{$_card}):is(.outlined, .border):has(> .primary-action:focus-visible) {
+  border-color: var(--md-sys-color-on-surface);
+}
+
+:where(#{$_card}):has(> .primary-action:active)::after {
+  opacity: var(--md-comp-card-pressed-state-layer-opacity);
+}
+
+// A reorder interaction toggles `.dragged`; every variant rises to level 3.
+:where(#{$_card}).dragged {
+  @include z-depth("3");
+}
+
+:where(#{$_card}).dragged::after {
+  opacity: var(--md-comp-card-dragged-state-layer-opacity);
+}
+
+// Disabled tokens differ by variant in M3. `aria-disabled` belongs on the
+// primary action; `.disabled` / article[aria-disabled] cover app-controlled
+// cards that do not use a link.
+:where(#{$_card}):is(.disabled, [aria-disabled="true"]),
+:where(#{$_card}):has(> .primary-action[aria-disabled="true"]) {
+  @include z-depth("0");
+  outline: 0;
+}
+
+:where(#{$_card}):not(.filled, .outlined, .border):is(.disabled, [aria-disabled="true"]),
+:where(#{$_card}):not(.filled, .outlined, .border):has(> .primary-action[aria-disabled="true"]) {
+  background-color: color-mix(
+    in oklab,
+    var(--md-sys-color-surface) var(--md-comp-card-disabled-container-opacity),
+    transparent
+  );
+}
+
+:where(#{$_card}).filled:is(.disabled, [aria-disabled="true"]),
+:where(#{$_card}).filled:has(> .primary-action[aria-disabled="true"]) {
+  background-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) var(--md-comp-card-disabled-container-opacity),
+    transparent
+  );
+}
+
+:where(#{$_card}):is(.outlined, .border):is(.disabled, [aria-disabled="true"]),
+:where(#{$_card}):is(.outlined, .border):has(> .primary-action[aria-disabled="true"]) {
+  background-color: var(--md-comp-outlined-card-container-color);
+  border-color: color-mix(
+    in oklab,
+    var(--md-comp-outlined-card-disabled-outline-color) var(--md-comp-outlined-card-disabled-outline-opacity),
+    transparent
+  );
+}
+
+:where(#{$_card}):is(.disabled, [aria-disabled="true"])::after,
+:where(#{$_card}):has(> .primary-action[aria-disabled="true"])::after {
+  opacity: 0;
+}
+
+:where(#{$_card}).disabled,
+:where(#{$_card})[aria-disabled="true"],
+:where(#{$_card}) > .primary-action[aria-disabled="true"] {
+  pointer-events: none;
+}
+
+:where(#{$_card}) .card-icon {
+  width: var(--md-comp-card-icon-size);
+  height: var(--md-comp-card-icon-size);
+  color: var(--md-comp-card-icon-color);
+  font-size: var(--md-comp-card-icon-size);
 }
 
 // --- Semantic children ----------------------------------------------------
 
 article > :is(h1, h2, h3, h4, h5, h6),
-article > header > :is(h1, h2, h3, h4, h5, h6) {
+article > :is(header, .primary-action) > :is(h1, h2, h3, h4, h5, h6) {
   margin: 0;
-  padding: 16px 16px 0;
+  padding: var(--md-comp-card-content-padding) var(--md-comp-card-content-padding) 0;
   font-family: var(--md-sys-typescale-title-medium-font-family-name);
   font-size: var(--md-sys-typescale-title-medium-font-size);
   font-weight: var(--md-sys-typescale-title-medium-font-weight);
@@ -67,19 +201,19 @@ article > header > :is(h1, h2, h3, h4, h5, h6) {
 }
 
 article > p,
-article > header > p {
+article > :is(header, .primary-action) > p {
   margin: 0;
-  padding: 8px 16px 16px;
+  padding: var(--md-comp-card-between-space) var(--md-comp-card-content-padding) var(--md-comp-card-content-padding);
   font-family: var(--md-sys-typescale-body-medium-font-family-name);
   font-size: var(--md-sys-typescale-body-medium-font-size);
   font-weight: var(--md-sys-typescale-body-medium-font-weight);
   line-height: var(--md-sys-typescale-body-medium-line-height);
   letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
-  color: color-mix(in oklab, currentColor 72%, transparent);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 article > :is(h1, h2, h3, h4, h5, h6) + p,
-article > header > :is(h1, h2, h3, h4, h5, h6) + p {
+article > :is(header, .primary-action) > :is(h1, h2, h3, h4, h5, h6) + p {
   padding-top: 0;
 }
 
@@ -94,17 +228,22 @@ article > header {
 // documented form and the bare <nav> is the older one. nav.tabs is a tab bar,
 // not actions - leave it to _tabs.scss.
 article > :is(nav:not(.tabs), .actions) {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: var(--md-comp-card-between-space);
   padding: 4px 8px 8px 8px;
   margin: 0;
 }
 
 article > img,
 article > picture,
-article > figure {
+article > figure,
+article > .primary-action > img,
+article > .primary-action > picture,
+article > .primary-action > figure {
   display: block;
   width: 100%;
   margin: 0;
@@ -112,7 +251,10 @@ article > figure {
 
 article > img,
 article > picture img,
-article > figure img {
+article > figure img,
+article > .primary-action > img,
+article > .primary-action > picture img,
+article > .primary-action > figure img {
   display: block;
   width: 100%;
   object-fit: cover;
@@ -122,7 +264,12 @@ article > figure {
   position: relative;
 }
 
-article > figure > figcaption {
+article > .primary-action > figure {
+  position: relative;
+}
+
+article > figure > figcaption,
+article > .primary-action > figure > figcaption {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
@@ -134,6 +281,14 @@ article > figure > figcaption {
   font-size: var(--md-sys-typescale-title-medium-font-size);
   font-weight: var(--md-sys-typescale-title-medium-font-weight);
   line-height: var(--md-sys-typescale-title-medium-line-height);
+}
+
+// Collections are coplanar and use no more than the specified 8dp between
+// cards. Combine with `.row` when the framework's responsive columns are
+// wanted; this component-layer gap overrides the base grid gap.
+:where(.card-collection) {
+  --md-comp-card-between-space: 8px;
+  gap: var(--md-comp-card-between-space);
 }
 
 // Horizontal: media on the start, body stacked beside it.
@@ -208,11 +363,9 @@ article.horizontal.large {
   }
 }
 
-// Reveal overlay. aside is the panel. Parked under the card (translateY 100%)
-// and clipped by overflow:hidden. Open is aria-expanded="true" → slide up
-// to cover. Do not use inset:0 as the closed geometry and then
-// translateY(-100%): that slides the panel *off* the card, and isOpen stays
-// true so a second click is a no-op.
+// Reveal panel. Closed, it is parked below the clipped card. Open, it enters
+// normal flow on smaller windows so the card and page expand; desktop/tablet
+// layouts switch it back to an internal overlay below.
 article > aside {
   --md-comp-card-reveal-duration: 300ms;
   --md-comp-card-reveal-easing: ease;
@@ -222,7 +375,7 @@ article > aside {
   z-index: 3;
   box-sizing: border-box;
   padding: 16px;
-  overflow-y: auto;
+  overflow-y: visible;
   background-color: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
   transform: translateY(100%);
@@ -234,10 +387,27 @@ article > aside {
 }
 
 article > aside[aria-expanded="true"] {
+  position: relative;
+  inset: auto;
   transform: translateY(0);
   visibility: visible;
   pointer-events: auto;
   transition: transform var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing);
+}
+
+// M3 avoids nested card scrolling on smaller screens. From Expanded upward,
+// desktop/tablet layouts may keep an expanded panel inside the card.
+@include bp-up("expanded") {
+  article > aside[aria-expanded="true"] {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+  }
+
+  article.sticky > aside {
+    bottom: auto;
+    height: calc(100% - 52px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -250,9 +420,4 @@ article.sticky > :is(nav, .actions) {
   position: relative;
   z-index: 4;
   background-color: inherit;
-}
-
-article.sticky > aside {
-  bottom: auto;
-  height: calc(100% - 52px);
 }
