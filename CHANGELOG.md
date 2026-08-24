@@ -78,6 +78,11 @@ below is the whole story for that component.
   `label-large` with 12dp padding, and the headline sat 76px from the edge
   instead of the spec's 56. Keyed on the shared `$icon` list now, the way
   `_buttons` and `_toolbar` already were.
+- **The app bar's trailing icon token was declared and used by nothing.**
+  Both icon actions took the *leading* token, so the documented way to opt into
+  the spec's muted trailing icons changed nothing. The two are told apart the
+  way the rest of the bar is — by DOM order, leading before the headline and
+  trailing after it — and each token now colours its own side.
 - **The medium and large app bars missed their spec insets**, and a
   title-only one put the headline where the icons belong. The expanded
   headline sat 20dp from the inline edge rather than 16, medium left 16dp

@@ -463,6 +463,36 @@ describe('App bar icon actions', () => {
   });
 });
 
+describe('App bar trailing icon token', () => {
+  test('the trailing token colours the actions after the headline, and nothing else', () => {
+    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({ sel: m[1], body: m[2] }));
+
+    // The token was declared and consumed by nothing, so the documented way
+    // to opt into the spec's muted trailing icons did nothing at all - and
+    // the docs had just been corrected to point at it.
+    const uses = rules.filter((r) =>
+      /color:\s*var\(--md-comp-top-app-bar-trailing-icon-color\)/.test(r.body)
+    );
+    assert.equal(uses.length, 1, 'the trailing icon token must be consumed by exactly one rule');
+
+    // Scoped by DOM order: leading is before the headline, trailing after.
+    assert.match(uses[0].sel, /:is\(h1, h2, h3, h4, h5, h6\)\s*~/);
+    assert.match(uses[0].sel, /\.material-symbols/);
+
+    const declared = rules.filter((r) =>
+      /--md-comp-top-app-bar-trailing-icon-color:/.test(r.body)
+    );
+    assert.ok(declared.length > 0, 'the trailing icon token must still be declared');
+
+    // The leading token keeps its own rule - one token per side.
+    const leading = rules.filter((r) =>
+      /color:\s*var\(--md-comp-top-app-bar-leading-icon-color\)/.test(r.body)
+    );
+    assert.equal(leading.length, 1);
+  });
+});
+
 describe('App bar medium and large geometry', () => {
   test('the top row is 64dp and the headline sits on the spec insets', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
