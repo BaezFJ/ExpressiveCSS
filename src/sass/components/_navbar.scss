@@ -12,8 +12,15 @@
 // (https://m3.material.io/components/app-bars/specs):
 //   container      surface, 64dp small / 112 medium / 152 large
 //   headline       on-surface, title-large (small), headline-small/medium
-//   icons          on-surface-variant, 24dp in a 48dp target, 4dp inset
-//   on scroll      surface-container fill (not elevation) so the bar
+//   icons          24dp in a 48dp target, 4dp inset. The spec mutes the
+//                  trailing ones (on-surface-variant) and leaves the leading
+//                  one on-surface; both inherit here instead, so a fill +
+//                  on-* pair on the header stays readable. The two tokens
+//                  below are the opt-in to the spec colors.
+//   medium/large   headline 16dp from the inline edges, 20dp (medium) /
+//                  28dp (large) above the container bottom
+//   on scroll      surface-container fill (not elevation - the spec's
+//                  level2 elevation carries a transparent shadow) so the bar
 //                  separates from the body. A color utility on the
 //                  header still wins — it sets background-color itself.
 
@@ -44,8 +51,10 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
   --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container);
   --md-comp-top-app-bar-headline-color: var(--md-sys-color-on-surface);
-  // Inherit so a fill + on-* pair on the header recolors the icons.
-  // Set this to --md-sys-color-on-surface-variant for the spec mute.
+  // Inherit so a fill + on-* pair on the header recolors the icons. The spec
+  // splits them - leading on-surface, trailing on-surface-variant - and each
+  // token below is the opt-in for its own side. Leading is everything before
+  // the headline; trailing is everything after it.
   --md-comp-top-app-bar-leading-icon-color: inherit;
   --md-comp-top-app-bar-trailing-icon-color: inherit;
   --md-comp-top-app-bar-container-height: 64px;
@@ -94,7 +103,11 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > #{$_bar} > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
+  // $icon, not `i`: the canonical icon is a <span class="material-symbols">, and
+  // keying on the element meant every bar written the documented way lost this
+  // rule — the leading action fell through to the generic button pill and the
+  // trailing ones were picked up by the text-destination rule below.
+  > #{$_bar} > :is(a, button):not(.button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -116,7 +129,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
     text-decoration: none;
     @include focus-visible;
 
-    > i {
+    > #{$icon} {
       display: block;
       font-size: var(--md-comp-top-app-bar-leading-icon-size);
       width: var(--md-comp-top-app-bar-leading-icon-size);
@@ -133,8 +146,16 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
     }
   }
 
+  // Trailing actions are the ones that follow the headline - DOM order is the
+  // anatomy, here as everywhere else in this file. Without this the trailing
+  // token was declared and consumed by nothing, so the documented way to opt
+  // into the spec's muted trailing icons did nothing at all.
+  > #{$_bar} > :is(h1, h2, h3, h4, h5, h6) ~ :is(a, button):not(.button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
+    color: var(--md-comp-top-app-bar-trailing-icon-color);
+  }
+
   // Text destinations, either loose or grouped in a menu/list.
-  > #{$_bar} > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
+  > #{$_bar} > a:not(:has(> #{$icon}:only-child)):not(.button):not(.circle):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 
@@ -258,11 +279,26 @@ header.large:has(> #{$_bar}) > #{$_bar} {
   align-content: space-between;
   align-items: flex-start;
   height: auto;
-  padding-top: 4px;
+  // 8dp so the 48dp icon targets are centred in the 64dp top row, the
+  // same row the bar collapses to.
+  padding-top: 8px;
+
+  // The top row is 64dp whether or not it holds icons. Without this
+  // zero-width spacer a title-only bar has a single flex line and
+  // `space-between` pins it to the *top*, so the headline sits where the
+  // icons belong instead of on the bottom row.
+  &::before {
+    content: "";
+    flex: 0 0 0;
+    height: 48px;
+  }
 
   > :is(h1, h2, h3, h4, h5, h6) {
     order: 1;
-    flex: 1 0 100%;
+    // Wider than the line, so it always breaks onto its own one - a basis of
+    // exactly 100% still fits beside the zero-width spacer above, which put
+    // the headline back on the icon row. It shrinks to fit once there.
+    flex: 1 1 calc(100% + 1px);
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
@@ -275,10 +311,10 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 
 header.medium:has(> #{$_bar}) > #{$_bar} {
   min-height: 112px;
-  padding-bottom: 16px;
+  padding-bottom: 20px;
 
   > :is(h1, h2, h3, h4, h5, h6) {
-    padding: 4px 12px 0 16px;
+    padding: 0 12px;
     font-family: var(--md-sys-typescale-headline-small-font-family-name);
     font-size: var(--md-sys-typescale-headline-small-font-size);
     font-weight: var(--md-sys-typescale-headline-small-font-weight);
@@ -292,7 +328,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
   padding-bottom: 28px;
 
   > :is(h1, h2, h3, h4, h5, h6) {
-    padding: 12px 12px 0 16px;
+    padding: 0 12px;
     font-family: var(--md-sys-typescale-headline-medium-font-family-name);
     font-size: var(--md-sys-typescale-headline-medium-font-size);
     font-weight: var(--md-sys-typescale-headline-medium-font-weight);

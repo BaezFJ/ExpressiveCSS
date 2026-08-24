@@ -69,8 +69,52 @@ below is the whole story for that component.
   every rule naming an old class and fails if the new one is missing from it.
 - **`llm.md` documented a token that does not exist** — `--sidenav-width`. The
   real one is `--md-comp-nav-drawer-width`.
+- **The top app bar told an icon from a label by its element.** The 48dp
+  circular target was keyed on `<i>`, and the canonical icon is a
+  `<span class="material-symbols">` — so every bar written the way the docs
+  teach, this site's own header included, lost the rule outright. The leading
+  action fell through to the generic button pill (72×40, tonal fill), the
+  trailing icon links were swept up by the *text-destination* rule and drawn at
+  `label-large` with 12dp padding, and the headline sat 76px from the edge
+  instead of the spec's 56. Keyed on the shared `$icon` list now, the way
+  `_buttons` and `_toolbar` already were.
+- **Five more tokens were declared or referenced but not both**, found by the
+  new check below. The time picker's AM/PM buttons referenced Materialize's
+  `--btn-padding` and `--btn-border-radius`, which no longer exist — the
+  declarations were invalid at computed-value time, which does *not* fall back
+  to the rule underneath, so the padding rendered as 0 while a base button rule
+  offered 24px. They now say the 0 they have always rendered as. The checkbox
+  and radio `state-layer-size` tokens were declared and read by nothing, with
+  the 40dp geometry written out as pre-computed `11px` / `10px` shadow spreads;
+  the spreads derive from the tokens now, to the same pixel.
+
+- **The app bar's trailing icon token was declared and used by nothing.**
+  Both icon actions took the *leading* token, so the documented way to opt into
+  the spec's muted trailing icons changed nothing. The two are told apart the
+  way the rest of the bar is — by DOM order, leading before the headline and
+  trailing after it — and each token now colours its own side.
+- **The medium and large app bars missed their spec insets**, and a
+  title-only one put the headline where the icons belong. The expanded
+  headline sat 20dp from the inline edge rather than 16, medium left 16dp
+  above the container bottom rather than 20, and the icon row sat 4dp high
+  instead of centred in the 64dp row the bar collapses to. Separately, a bar
+  with no icons has a single flex line, and `align-content: space-between`
+  packs one line to the *top* — so the headline rose to the icon row. The top
+  row now has a height of its own and the headline a basis that cannot share
+  a line with it.
 
 ### Added
+
+- **A token liveness check** (`tests/tokens.test.js`). Two failure modes, both
+  silent — no syntax error, nothing in a browser console. A `var()` naming a
+  token nothing declares makes its whole declaration invalid at computed-value
+  time: it still wins the cascade and *then* resolves to unset, so the property
+  falls to inherited-or-initial rather than to the rule underneath. And a token
+  declared and read by nobody is a promise the sheet does not keep. Only
+  `--md-comp-*` is checked for being read — `--md-sys-*` and `--md-ref-*` are
+  the public palette, where 111 unread ramp entries are the point. Unread
+  component tokens can be exempted with a stated reason, and the check fails on
+  a stale exemption too, so the list can only shrink.
 
 - **The sweep is finished — 45 of 45 components enforced.** The last pass takes
   the remaining 23: icons, badges, buttons, cards, toolbar, list, tooltip,
