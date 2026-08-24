@@ -2043,24 +2043,6 @@ An expanding card performs a shared-container transition from a compact feed ite
 </article>
 ```
 
-### Tabs
-
-Put a `<nav class="tabs" aria-label="Sections">` between the supporting text and the tab panels. `AutoInit()` starts `.tabs`.
-
-I am a very simple card. I am good at containing small bits of information.
-
-```html
-<article>
-  <p>I am a very simple card.</p>
-  <nav class="tabs max" aria-label="Sections">
-    <a href="#test1">Test 1</a>
-    <a class="active" aria-current="page" href="#test2">Test 2</a>
-  </nav>
-  <div id="test1">Test 1</div>
-  <div id="test2">Test 2</div>
-</article>
-```
-
 ### Sizes
 
 `small`, `medium`, and `large` lock the height at 300px, 400px, and 500px so a row of cards lines up. Media takes the top 60%; the action row sticks to the bottom. These sizes are not in the M3 spec — they are optional layout helpers.
@@ -2073,18 +2055,6 @@ The small card is 300px tall.
 <article class="small">…</article>
 <article class="medium">…</article>
 <article class="large">…</article>
-```
-
-### Panel
-
-A card with no slots is just padding on the container. Write that as an `<article>` with only text. Color utilities still apply — pair a fill with its `on-*` text class.
-
-I am a very simple card. I am good at containing small bits of information.
-
-```html
-<article class="primary on-primary-text">
-  <p>I am a very simple card.</p>
-</article>
 ```
 
 ---

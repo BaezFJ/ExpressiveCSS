@@ -85,9 +85,9 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `card-action-row-not-nav` | forbid | `article nav:not(.tabs)` | must not match |
+| `card-action-row-not-nav` | forbid | `article nav` | must not match |
 
-- **card-action-row-not-nav** - A card’s action row is a row of buttons. <nav> is a landmark, and one per card floods the landmark list. Use <div class="actions">.
+- **card-action-row-not-nav** - Cards do not contain navigation or tabs. Put navigation outside the card and use <div class="actions"> for its action buttons.
 
 ### carousel
 

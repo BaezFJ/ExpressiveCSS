@@ -4,8 +4,8 @@
 //
 // Anatomy is the HTML. An <article> is an elevated card. A heading is the
 // headline, .subhead is the subhead, a <p> is supporting text, direct media
-// is <img> / <picture> / <figure>, and direct .actions (not .tabs) is the
-// action row. Helpers switch the M3 variant (filled, outlined) or the layout
+// is <img> / <picture> / <figure>, and direct .actions is the action row.
+// Helpers switch the M3 variant (filled, outlined) or the layout
 // (horizontal).
 //
 // Tokens follow https://m3.material.io/components/cards/specs
@@ -244,11 +244,8 @@ article > header {
   color: inherit;
 }
 
-// Action row. nav.tabs is a tab bar, not actions — leave it to _tabs.scss.
-// Action row. A row of buttons, not destinations - `.actions` is the
-// documented form and the bare <nav> is the older one. nav.tabs is a tab bar,
-// not actions - leave it to _tabs.scss.
-article > :is(nav:not(.tabs), .actions) {
+// Action row. A row of buttons, not destinations.
+article > .actions {
   position: relative;
   z-index: 3;
   display: flex;
@@ -394,7 +391,7 @@ article.small, article.medium, article.large {
     overflow: hidden;
   }
 
-  > :is(nav:not(.tabs), .actions) {
+  > .actions {
     margin-top: auto;
   }
 }

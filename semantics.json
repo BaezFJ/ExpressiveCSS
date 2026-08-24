@@ -89,9 +89,9 @@
         {
           "id": "card-action-row-not-nav",
           "kind": "forbid",
-          "selector": "article nav:not(.tabs)",
+          "selector": "article nav",
           "fragmentSafe": true,
-          "message": "A card’s action row is a row of buttons. <nav> is a landmark, and one per card floods the landmark list. Use <div class=\"actions\">."
+          "message": "Cards do not contain navigation or tabs. Put navigation outside the card and use <div class=\"actions\"> for its action buttons."
         }
       ]
     },

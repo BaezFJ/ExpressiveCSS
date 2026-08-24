@@ -365,38 +365,6 @@
 {% endcall %}
   {% endcall %}
 
-  {% call section("tabs", "Tabs") %}
-        <p>
-          Put a <code>&lt;nav class="tabs"&gt;</code> between the
-          supporting text and the tab panels.
-          <code>AutoInit()</code> starts <code>.tabs</code>.
-        </p>
-        <article class="mb-3">
-          <p>I am a very simple card. I am good at containing small bits of information.</p>
-          <nav class="tabs max" aria-label="Sections">
-            <a href="#card-test-1">Test 1</a>
-            <a class="active" aria-current="page" href="#card-test-2">Test 2</a>
-            <a href="#card-test-3">Test 3</a>
-          </nav>
-          <div class="px-4 pb-4">
-            <div id="card-test-1">Test 1</div>
-            <div id="card-test-2">Test 2</div>
-            <div id="card-test-3">Test 3</div>
-          </div>
-        </article>
-{% call code() %}
-<article>
-  <p>I am a very simple card.</p>
-  <nav class="tabs max" aria-label="Sections">
-    <a href="#test1">Test 1</a>
-    <a class="active" aria-current="page" href="#test2">Test 2</a>
-  </nav>
-  <div id="test1">Test 1</div>
-  <div id="test2">Test 2</div>
-</article>
-{% endcall %}
-  {% endcall %}
-
   {% call section("sizes", "Sizes") %}
         <p>
           <code>small</code>, <code>medium</code>, and <code>large</code>
@@ -421,26 +389,6 @@
 <article class="small">…</article>
 <article class="medium">…</article>
 <article class="large">…</article>
-{% endcall %}
-  {% endcall %}
-
-  {% call section("panel", "Panel") %}
-        <p>
-          A card with no slots is just padding on the container. Write that
-          as an <code>&lt;article&gt;</code> with only text. Color utilities
-          still apply — pair a fill with its <code>on-*</code> text class.
-        </p>
-        <div class="row">
-          <div class="s12 m5">
-            <article class="primary on-primary-text">
-              <p>I am a very simple card. I am good at containing small bits of information.</p>
-            </article>
-          </div>
-        </div>
-{% call code() %}
-<article class="primary on-primary-text">
-  <p>I am a very simple card.</p>
-</article>
 {% endcall %}
   {% endcall %}
 

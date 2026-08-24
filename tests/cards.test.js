@@ -96,7 +96,9 @@ describe('Cards CSS', () => {
       /--md-comp-card-supporting-text-color:\s*var\(--md-sys-color-on-surface-variant\)/
     );
     assert.match(css, /article\s*>\s*figure,[^{]+\.primary-action\s*>\s*figure\s*\{/s);
-    assert.match(css, /article\s*>\s*:is\(nav:not\(\.tabs\), \.actions\)\s*\{/);
+    assert.match(css, /article\s*>\s*\.actions\s*\{/);
+    assert.doesNotMatch(css, /article\s*>[^\{]*nav[^\{]*\{/);
+    assert.doesNotMatch(css, /\.card-(?:tabs|panel)\b/);
   });
 
   test('applies interaction states only through a primary action', () => {
