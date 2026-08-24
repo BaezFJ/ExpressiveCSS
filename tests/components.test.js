@@ -276,9 +276,45 @@ describe('Cards reveal', () => {
     const el = document.querySelector('article');
     const instance = Expressive.Cards.init(el);
 
-    fire(el.querySelector('.activator'), 'click');
+    const activator = el.querySelector('.activator');
+    fire(activator, 'click');
     assert.equal(instance.isOpen, true);
     assert.equal(el.querySelector('aside').getAttribute('aria-expanded'), 'true');
+    assert.equal(activator.getAttribute('aria-expanded'), 'true');
+
+    fire(activator, 'click');
+    assert.equal(instance.isOpen, false);
+    assert.equal(el.querySelector('aside').getAttribute('aria-expanded'), 'false');
+    assert.equal(activator.getAttribute('aria-expanded'), 'false');
+    instance.destroy();
+  });
+
+  test('Space toggles a non-native activator without removing it from the tab order', () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector('article');
+    const instance = Expressive.Cards.init(el);
+    const activator = el.querySelector('.activator');
+
+    assert.equal(activator.getAttribute('role'), 'button');
+    assert.equal(activator.tabIndex, 0);
+    activator.dispatchEvent(
+      new window.KeyboardEvent('keypress', {
+        bubbles: true,
+        cancelable: true,
+        key: ' '
+      })
+    );
+    assert.equal(instance.isOpen, true);
+    assert.equal(activator.tabIndex, 0);
+
+    activator.dispatchEvent(
+      new window.KeyboardEvent('keypress', {
+        bubbles: true,
+        cancelable: true,
+        key: ' '
+      })
+    );
+    assert.equal(instance.isOpen, false);
     instance.destroy();
   });
 });

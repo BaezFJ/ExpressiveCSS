@@ -141,14 +141,20 @@ describe('Cards CSS', () => {
     );
   });
 
-  test('expands reveals with the page below Expanded and scrolls internally above it', () => {
+  test('expands reveals in flow while keeping the summary and media in place', () => {
     assert.match(
       css,
-      /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*position:\s*relative[^}]*inset:\s*auto/s
+      /article\s*>\s*aside\s*\{[^}]*position:\s*relative[^}]*height:\s*0[^}]*overflow:\s*clip/s
     );
     assert.match(
       css,
-      /@media\s*\(width\s*>=\s*840px\)[\s\S]*?article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*position:\s*absolute[^}]*overflow-y:\s*auto/s
+      /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*height:\s*auto[^}]*opacity:\s*1/s
     );
+    assert.match(css, /article\s*>\s*figure\s*>\s*\.card-reveal-trigger\s*\{[^}]*position:\s*absolute[^}]*inset:\s*0/s);
+    assert.match(
+      css,
+      /\.card-reveal-trigger:is\(:hover, :focus, :active\)\s*\{[^}]*background:\s*none[^}]*box-shadow:\s*none/s
+    );
+    assert.doesNotMatch(css, /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*overflow-y:\s*auto/s);
   });
 });

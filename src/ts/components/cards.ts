@@ -40,9 +40,18 @@ export class Cards extends Component<CardsOptions> implements Openable {
 
     this.cardReveal = this.el.querySelector(':scope > aside');
     if (this.cardReveal) {
-      this._activators = Array.from(this.el.querySelectorAll('.activator'));
+      this._activators = Array.from(
+        this.el.querySelectorAll<HTMLElement>('.activator')
+      ).filter(
+        (activator: HTMLElement) => !this.cardReveal.contains(activator)
+      );
       this._activators.forEach((el: HTMLElement) => {
-        if (el) el.tabIndex = 0;
+        if (!el) return;
+        el.tabIndex = 0;
+        el.ariaExpanded = 'false';
+        if (!el.matches('a[href], button, input, select, textarea')) {
+          el.setAttribute('role', 'button');
+        }
       });
 
       this.cardRevealClose = this.cardReveal.querySelector(
@@ -116,15 +125,15 @@ export class Cards extends Component<CardsOptions> implements Openable {
   };
 
   _handleKeypressEvent: (e: KeyboardEvent) => void = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (Utils.keys.ENTER.includes(e.key) || e.key === ' ') {
+      e.preventDefault();
       this._handleRevealEvent();
     }
   };
 
   _handleRevealEvent = () => {
-    // Reveal Card
-    this._activators.forEach((el: HTMLElement) => (el.tabIndex = -1));
-    this.open();
+    if (this.isOpen) this.close();
+    else this.open();
   };
 
   _setupRevealCloseEventHandlers = () => {
@@ -150,6 +159,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     if (this.isOpen || !this.cardReveal) return;
     this.isOpen = true;
     this.cardReveal.ariaExpanded = 'true';
+    this._activators.forEach((el: HTMLElement) => (el.ariaExpanded = 'true'));
     // A reveal without a title has no close affordance; that is allowed.
     if (this.cardRevealClose) this.cardRevealClose.tabIndex = 0;
     if (typeof this.options.onOpen === 'function') {
@@ -165,7 +175,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
     if (!this.isOpen || !this.cardReveal) return;
     this.isOpen = false;
     this.cardReveal.ariaExpanded = 'false';
-    this._activators.forEach((el: HTMLElement) => (el.tabIndex = 0));
+    this._activators.forEach((el: HTMLElement) => (el.ariaExpanded = 'false'));
     if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
     if (typeof this.options.onClose === 'function') {
       this.options.onClose.call(this);

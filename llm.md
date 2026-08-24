@@ -1973,7 +1973,7 @@ I am a very simple card. I am good at containing small bits of information.
 
 ### Reveal
 
-An `<aside>` (or `.card-reveal`) reveals more card content. Mark the control that opens it with `activator` — that class is the JavaScript contract. The first heading inside the aside closes it. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires this up; a card with no aside is CSS-only. On Compact and Medium layouts the reveal expands the card so the page scrolls; at Expanded and wider it may scroll inside the card, matching M3's platform guidance.
+An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger.activator` button over the media; the same button opens and closes the details. Add `waves-effect` to reproduce the M3 tap ripple. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires up `aria-expanded`, Enter, and Space. The reveal grows the card instead of covering or internally scrolling it. A first heading inside the aside remains an optional close target.
 
 ### Card titlemore_vert
 
@@ -1984,25 +1984,29 @@ This is a link
 Here is some more information about this product that is only revealed once clicked on.
 
 ```html
-<article>
+<article class="filled">
   <figure>
-    <img src="images/office.jpg" alt="">
-    <div class="activator"></div>
+    <img src="images/ana-russo.jpg" alt="Portrait of Ana Russo">
+    <button type="button" class="card-reveal-trigger activator waves-effect waves-light" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
   </figure>
-  <h3 class="activator">Card title
-    <span class="material-symbols right" aria-hidden="true">more_vert</span>
-  </h3>
-  <p><a href="#">This is a link</a></p>
-  <aside>
-    <h3>
-      <span class="material-symbols right" aria-hidden="true">close</span>Card title
-    </h3>
-    <p>Here is some more information about this product.</p>
+  <header class="card-reveal-summary">
+    <h3>Ana Russo</h3>
+    <p class="subhead">Sibling</p>
+  </header>
+  <aside id="ana-contact" aria-expanded="false">
+    <address class="reveal-actions">
+      <a class="reveal-action" href="tel:+16505551234">
+        <span class="material-symbols" aria-hidden="true">call</span>
+        <span>(650) 555-1234</span>
+      </a>
+      <a class="reveal-action" href="mailto:hey@anarusso.com">
+        <span class="material-symbols" aria-hidden="true">mail</span>
+        <span>hey@anarusso.com</span>
+      </a>
+    </address>
   </aside>
 </article>
 ```
-
-Add `sticky` if a trailing `.actions` row should stay visible under the reveal.
 
 ### Tabs
 
