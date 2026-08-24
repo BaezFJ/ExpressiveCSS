@@ -51,7 +51,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 :where(#{$_btn}) {
   @include btn;
 
-  > i {
+  > #{$icon} {
     flex: 0 0 auto;
     font-size: var(--md-comp-filled-button-icon-size);
     width: var(--md-comp-filled-button-icon-size);
@@ -166,7 +166,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 
   @include focus-visible;
 
-  > i {
+  > #{$icon} {
     font-size: 24px;
     width: 24px;
     height: 24px;
@@ -195,7 +195,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   @include z-depth("3");
   @include focus-visible;
 
-  > i {
+  > #{$icon} {
     font-size: 24px;
     width: 24px;
     height: 24px;
@@ -226,7 +226,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     height: 40px;
     border-radius: 12px;
 
-    > i {
+    > #{$icon} {
       font-size: 24px;
     }
   }
@@ -435,7 +435,7 @@ $_fab: ":is(.fab, .fixed-action-btn)";
       width: 100%;
       height: 56px;
 
-      > :is(a, button) > i {
+      > :is(a, button) > #{$icon} {
         opacity: 0;
       }
 

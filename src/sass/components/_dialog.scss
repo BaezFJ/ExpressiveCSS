@@ -59,7 +59,7 @@ dialog[open] {
 }
 
 // Optional leading icon (M3 basic dialog).
-dialog > i:first-child {
+dialog > #{$icon}:first-child {
   flex: 0 0 auto;
   align-self: center;
   margin: 24px 24px 0;
@@ -78,7 +78,7 @@ dialog > :is(h1, h2, h3, h4, h5, h6) {
   @include typescale("headline-small");
 }
 
-dialog > i:first-child + :is(h1, h2, h3, h4, h5, h6) {
+dialog > #{$icon}:first-child + :is(h1, h2, h3, h4, h5, h6) {
   padding-top: 16px;
   text-align: center;
 }
@@ -98,7 +98,7 @@ dialog > p {
   @include typescale("body-medium");
 }
 
-dialog > i:first-child + :is(h1, h2, h3, h4, h5, h6) + p {
+dialog > #{$icon}:first-child + :is(h1, h2, h3, h4, h5, h6) + p {
   text-align: center;
 }
 
@@ -215,7 +215,12 @@ dialog.max {
   }
 
   // Close is a 48dp icon button. 4dp bar inset + 12dp to the glyph = 16dp.
-  > header > :is(button, a):has(> i:only-child) {
+  // `:only-child` counts elements, not text nodes, so `<button><span icon/>
+  // Save</button>` reads as icon-only and would be squeezed into the 48dp
+  // circle. CSS cannot see the text node; `.button` is the author's opt-out,
+  // and sends such an action to the general button rules instead. Same
+  // escape hatch the app bar already has.
+  > header > :is(button, a):not(.button):has(> #{$icon}:only-child) {
     display: inline-flex;
     flex: 0 0 48px;
     align-items: center;
@@ -231,7 +236,7 @@ dialog.max {
     color: var(--md-sys-color-on-surface-variant);
     box-shadow: none;
 
-    > i {
+    > #{$icon} {
       font-size: 24px;
       width: 24px;
       height: 24px;
@@ -249,7 +254,7 @@ dialog.max {
   }
 
   // Confirming action in the header is a text button, not an icon.
-  > header :is(button, a.button):not(:has(> i:only-child)) {
+  > header :is(button, a.button):not(:has(> #{$icon}:only-child)) {
     @include btn-flat;
     width: auto;
     min-width: 0;

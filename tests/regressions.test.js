@@ -725,3 +725,330 @@ describe('Footer', () => {
     );
   });
 });
+
+describe('Icon selectors keyed on the <i> element', () => {
+  // The canonical icon is `<span class="material-symbols">`, so any selector
+  // that says `i` stops matching documented markup - silently, because CSS
+  // has no way to complain. `$icon` / `$icon-label` in abstracts/_variables
+  // are the single place that distinction is made; these components each
+  // made it themselves, and every one of them was dead on its own docs page.
+  //
+  // Asserted on the *rule that carries the declaration* rather than on
+  // literal selector text: `$icon` interpolates to a six-arm `:is()` whose
+  // spelling is not the point, and nesting it inside another `:is()` (as
+  // _list.scss does) changes the text again.
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+  const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
+    selector: m[1].trim(),
+    body: m[2]
+  }));
+
+  /** The rules whose selector matches `where` and whose body matches `what`. */
+  const find = (where, what) =>
+    rules.filter((r) => where.test(r.selector) && what.test(r.body));
+
+  /**
+   * Every rule that applies `what` under `where` must name the icon by class,
+   * not only by element - otherwise it is dead against `<span>` markup.
+   */
+  function assertIconIsAClass(label, where, what) {
+    const hits = find(where, what);
+    assert.ok(hits.length > 0, `${label}: no rule matched - the probe is stale`);
+    for (const hit of hits) {
+      assert.match(
+        hit.selector,
+        /\.material-symbols/,
+        `${label}: rule is keyed on the bare <i> element:\n  ${hit.selector}`
+      );
+    }
+  }
+
+  test('app bar icon-only actions are a 48dp circle', () => {
+    assertIconIsAClass(
+      'navbar',
+      /^header.*:is\(a, button\)/,
+      /border-radius:\s*50%/
+    );
+  });
+
+  test('navigation bar draws the active indicator pill', () => {
+    // The pill is drawn on the icon itself, so the box and the fill are
+    // two rules. `.horizontal` fills the *host* instead, hence `>` here.
+    assertIconIsAClass(
+      'navigation-bar indicator box',
+      /^\.navigation-bar\b/,
+      /width:\s*var\(--md-comp-nav-bar-indicator-width\)/
+    );
+    assertIconIsAClass(
+      'navigation-bar indicator fill',
+      /\.navigation-bar\b[\s\S]*(\.active|\[aria-current\])\s*>/,
+      /background-color:\s*var\(--md-comp-nav-bar-active-indicator-color\)/
+    );
+  });
+
+  test('dialog header close button is an icon button, not a text button', () => {
+    assertIconIsAClass(
+      'dialog close',
+      /^dialog\b.*header.*:has\(/,
+      /flex:\s*0 0 48px/
+    );
+    // The other half of the same test: a header button that is *not*
+    // icon-only takes the text-button branch. Keyed on `i`, the icon-only
+    // close fell into it and rendered as an auto-width 40dp pill.
+    assertIconIsAClass(
+      'dialog header text button',
+      /^dialog\b.*header.*:not\(:has\(/,
+      /border-radius:\s*20px/
+    );
+    assertIconIsAClass(
+      'dialog leading icon',
+      /^dialog\s*>/,
+      /color:\s*var\(--md-sys-color-secondary\)/
+    );
+  });
+
+  test('pane header icon-only actions are a 48dp circle', () => {
+    assertIconIsAClass('panes', /^\.pane\b.*header/, /flex:\s*0 0 48px/);
+  });
+
+  test('list leading and trailing icons land in the icon columns', () => {
+    // The label rule is `> span`, so an icon span was pulled into
+    // grid-column 2 - the leading icon rendered inside the text column.
+    assertIconIsAClass('list leading', /^\.list\s*>\s*li\b/, /grid-column:\s*1/);
+    assertIconIsAClass('list trailing', /^\.list\s*>\s*li\b/, /grid-column:\s*3/);
+    const label = find(/^\.list\s*>\s*li\b[^{]*\bspan\b/, /grid-column:\s*2/);
+    assert.ok(label.length > 0, 'no rule puts the list label in column 2');
+    for (const hit of label) {
+      assert.match(
+        hit.selector,
+        /span:not\([^)]*\.material-symbols/,
+        `list label rule swallows the icon span:\n  ${hit.selector}`
+      );
+    }
+  });
+
+  test('list leading avatar keeps its circle treatment', () => {
+    assertIconIsAClass(
+      'list circle',
+      /^\.list\s*>\s*li\b/,
+      /background-color:\s*var\(--md-sys-color-primary-container\)/
+    );
+  });
+
+  test('a tab with an icon gets the taller stacked container', () => {
+    assertIconIsAClass(
+      'tabs',
+      /^\.tabs\b/,
+      /min-height:\s*var\(--md-comp-primary-tab-with-icon-container-height\)/
+    );
+    assertIconIsAClass(
+      'tabs icon',
+      /^\.tabs\b/,
+      /font-size:\s*var\(--md-comp-primary-tab-icon-size\)/
+    );
+  });
+
+  test('pagination icons take the pagination icon size', () => {
+    assertIconIsAClass(
+      'pagination',
+      /^\.pagination\b/,
+      /font-size:\s*var\(--md-comp-pagination-icon-size\)/
+    );
+  });
+
+  test('side sheet header icons are sized to 24dp', () => {
+    assertIconIsAClass(
+      'side-sheet',
+      /\.side-sheet\b.*header/,
+      /font-size:\s*24px/
+    );
+  });
+
+  test('toolbar icons do not shrink', () => {
+    assertIconIsAClass(
+      'toolbar',
+      /\.toolbar\b/,
+      /font-size:\s*var\(--md-comp-toolbar-icon-size\)/
+    );
+  });
+
+  test('menu item icons take the 20dp menu icon size', () => {
+    assertIconIsAClass(
+      'menu',
+      /^menu\[id\]/,
+      /font-size:\s*var\(--md-comp-menu-item-icon-size\)/
+    );
+    // The menu item host is `> a, > button, > span`; a bare icon child would
+    // otherwise be stretched to a full-width 48dp row.
+    const host = find(/^menu\[id\]\s*>\s*li\b/, /min-height:\s*var\(--md-comp-menu-item-container-height\)/);
+    assert.ok(host.length > 0, 'no rule sets the menu item height');
+    for (const hit of host) {
+      assert.doesNotMatch(
+        hit.selector,
+        /(^|[\s,>(])span(?![-\w])(?!:not)/,
+        `menu item host rule swallows a bare icon span:\n  ${hit.selector}`
+      );
+    }
+  });
+
+  test('a legend icon is 18dp with its trailing gap', () => {
+    assertIconIsAClass('fieldset', /^fieldset\b/, /margin-inline-end:\s*8px/);
+  });
+});
+
+describe('Icon-only header actions and the indicator width', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+  const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
+    selector: m[1].trim(),
+    body: m[2]
+  }));
+
+  test('a header action can opt out of the icon-button treatment', () => {
+    // `:only-child` counts elements, not text nodes, so
+    // `<button><span icon/> Save</button>` reads as icon-only and gets squeezed
+    // into the 48dp circle with its label overflowing. CSS cannot see the text
+    // node, so there is no selector that gets this right on its own - `.button`
+    // is the author's opt-out, and before this there was none at all.
+    // Positive form only. The complementary text-button branch spells it
+    // `:not(:has(...))` and is right to carry no opt-out.
+    const ICON_ONLY =
+      /(?<!:not\():has\(>\s*:is\([^)]*\.material-symbols[^)]*\):only-child\)/;
+    const iconOnly = rules.filter((r) => ICON_ONLY.test(r.selector));
+    assert.ok(iconOnly.length > 0, 'no icon-only branch found - the probe is stale');
+    for (const hit of iconOnly) {
+      // Split on top-level commas only - `:is(a, label)` carries its own, and
+      // a naive split lands mid-selector. Same trap as the Footer test above.
+      const arms = [];
+      let depth = 0;
+      let cur = '';
+      for (const ch of hit.selector) {
+        if (ch === '(') depth++;
+        else if (ch === ')') depth--;
+        if (ch === ',' && depth === 0) { arms.push(cur); cur = ''; continue; }
+        cur += ch;
+      }
+      arms.push(cur);
+      for (const arm of arms.map((s) => s.trim())) {
+        // Test for the icon-only `:has()` specifically - the app bar host also
+        // uses `:has()`, and a bare check matches arms that carry only that.
+        if (!ICON_ONLY.test(arm)) continue;
+        assert.match(
+          arm,
+          /:not\([^)]*\.button[^)]*\)|button:not\(\.button\)/,
+          `icon-only branch has no .button opt-out:\n  ${arm}`
+        );
+      }
+    }
+  });
+
+  test('the navigation bar active indicator is 64dp wide, not the rail 56dp', () => {
+    // md.comp.navigation-bar.active-indicator.width is 64;
+    // md.comp.navigation-rail.active-indicator.width is 56. Both were 56 here.
+    assert.match(css, /--md-comp-nav-bar-indicator-width:\s*64px/);
+    assert.match(css, /--md-comp-nav-bar-indicator-height:\s*32px/);
+    assert.match(css, /--md-comp-nav-rail-indicator-width:\s*56px/);
+  });
+});
+
+describe('Icon selectors keyed on <i>, second sweep', () => {
+  // The four components left over from the first sweep. Same defect, but two
+  // of them fail in ways the first eleven did not:
+  //
+  //  - the navigation rail hides its FAB *label* with `> :not(i)`, so once the
+  //    icon became a <span> that rule hid the icon and showed nothing;
+  //  - `_buttons` sizes its glyph from a token, and lost the declaration to
+  //    the base `.material-symbols` rule on source order alone.
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+  const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
+    selector: m[1].trim(),
+    body: m[2]
+  }));
+  const find = (where, what) =>
+    rules.filter((r) => where.test(r.selector) && what.test(r.body));
+
+  function assertIconIsAClass(label, where, what) {
+    const hits = find(where, what);
+    assert.ok(hits.length > 0, `${label}: no rule matched - the probe is stale`);
+    for (const hit of hits) {
+      assert.match(
+        hit.selector,
+        /\.material-symbols/,
+        `${label}: rule is keyed on the bare <i> element:\n  ${hit.selector}`
+      );
+    }
+  }
+
+  test('button glyphs are sized from the button icon token', () => {
+    assertIconIsAClass(
+      'buttons',
+      /button/,
+      /font-size:\s*var\(--md-comp-filled-button-icon-size\)/
+    );
+  });
+
+  test('the base icon rule loads before the components that override it', () => {
+    // Both selectors carry a class, so they tie on specificity and source
+    // order alone decides. With icons forwarded 4th, `buttons` lost the tie
+    // and a button rendered an 18px box around a 24px glyph.
+    const base = css.search(/\.material-symbols[^{]*\{[^}]*font-size:\s*24px/);
+    const btn = css.search(/font-size:\s*var\(--md-comp-filled-button-icon-size\)/);
+    assert.ok(base > -1 && btn > -1, 'probe is stale - one of the rules is gone');
+    assert.ok(
+      base < btn,
+      'the base .material-symbols rule must come first, or component icon sizes lose the tie'
+    );
+  });
+
+  test('the FAB toolbar hides the icons of its collapsed actions', () => {
+    assertIconIsAClass('fab toolbar', /toolbar/, /opacity:\s*0/);
+  });
+
+  test('navigation rail draws the active indicator pill', () => {
+    assertIconIsAClass(
+      'nav-rail indicator box',
+      /\.navigation-rail\b/,
+      // The rail's own hamburger button is sized to the indicator too, and is
+      // right to carry no icon class - so pair the width with the transition
+      // that only the glyph rule declares.
+      /width:\s*var\(--md-comp-nav-rail-indicator-width\)[\s\S]*transition:\s*background-color/
+    );
+    assertIconIsAClass(
+      'nav-rail indicator fill',
+      /\.navigation-rail\b[\s\S]*(\.active|\[aria-current\])\s*>/,
+      /background-color:\s*var\(--md-comp-nav-rail-active-indicator-color\)/
+    );
+  });
+
+  test('the rail FAB hides its label and not its icon', () => {
+    // `> :not(i)` is "everything that is not the glyph". The icon is a <span>,
+    // so this visually hid the icon itself - the FAB rendered as an empty box.
+    const hidden = find(/\.navigation-rail\b/, /clip-path:\s*inset\(50%\)/);
+    assert.ok(hidden.length > 0, 'no rule visually hides the rail FAB label');
+    for (const hit of hidden) {
+      assert.match(
+        hit.selector,
+        /:not\([^)]*\.material-symbols/,
+        `rail label-hiding rule swallows the icon:\n  ${hit.selector}`
+      );
+    }
+  });
+
+  test('snackbar leading icon and icon button are sized', () => {
+    assertIconIsAClass(
+      'snackbar leading',
+      /\.snackbar\b/,
+      // Pair with `font-size`, or this also catches the icon *button*: it
+      // sets the same colour and the same `flex` on itself, and correctly
+      // names no icon. Only the glyph rule sizes type.
+      /font-size:[\s\S]*color:\s*var\(--md-comp-snackbar-icon-color\)/
+    );
+  });
+
+  test('the slider inset icon sits in the active track', () => {
+    assertIconIsAClass(
+      'slider inset icon',
+      /\.slider\b|\.range\b/,
+      /font-size:\s*var\(--md-comp-slider-icon-size\)/
+    );
+  });
+});

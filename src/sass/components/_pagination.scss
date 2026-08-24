@@ -91,11 +91,13 @@
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
     }
 
-    &:has(> span) {
+    // "Does this control carry a text label?" - the icon is a <span>, so a
+    // bare `span` here answers yes for every icon-only prev/next button.
+    &:has(> #{$icon-label}) {
       width: auto;
     }
 
-    > i {
+    > #{$icon} {
       font-size: var(--md-comp-pagination-icon-size);
       width: var(--md-comp-pagination-icon-size);
       height: var(--md-comp-pagination-icon-size);
@@ -126,7 +128,7 @@
     cursor: default;
   }
 
-  li > span {
+  li > #{$icon-label} {
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;

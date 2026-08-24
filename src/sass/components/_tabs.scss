@@ -86,7 +86,7 @@ $_tab: "> a, > .tab > a";
     font-family: $font-stack;
     transition: color .2s ease, background-color .2s ease;
 
-    > i {
+    > #{$icon} {
       flex: 0 0 auto;
       font-size: var(--md-comp-primary-tab-icon-size);
       width: var(--md-comp-primary-tab-icon-size);
@@ -135,7 +135,7 @@ $_tab: "> a, > .tab > a";
   // Stacked icon + label is 64dp (primary).
   &:not(.horizontal) {
     #{$_tab} {
-      &:has(> i) {
+      &:has(> #{$icon}) {
         min-height: var(--md-comp-primary-tab-with-icon-container-height);
         padding-block: 8px;
       }

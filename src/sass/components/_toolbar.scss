@@ -92,7 +92,7 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
     font-family: $font-stack;
     @include focus-visible;
 
-    > i {
+    > #{$icon} {
       flex: 0 0 auto;
       font-size: var(--md-comp-toolbar-icon-size);
       width: var(--md-comp-toolbar-icon-size);

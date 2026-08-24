@@ -1,10 +1,16 @@
 // One line per component. Order is cascade order, so keep related widgets
 // together and append new components at the end unless order matters.
 
+// Icons first: it is the base glyph default (font-size, line-height) that a
+// component's own icon rule is meant to override. `$icon` interpolates to an
+// :is() carrying classes, so a component rule ties with the base rule on
+// specificity and the winner is decided by source order alone - with icons
+// loaded 4th, `buttons`, `list` and `badges` silently lost that tie. That is
+// why a button icon rendered as an 18px box around a 24px glyph.
+@forward "icons-material-design";
 @forward "buttons";
 @forward "list";
 @forward "badges";
-@forward "icons-material-design";
 @forward "navbar";
 @forward "navigation-bar";
 @forward "navigation-rail";

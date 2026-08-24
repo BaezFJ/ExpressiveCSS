@@ -76,9 +76,13 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     text-align: left;
     border-radius: var(--md-comp-menu-item-container-shape);
 
+    // The bare-span arm is the non-interactive item. It has to exclude icons,
+    // which are spans as well and are a legal direct child of the <li> (see
+    // the `> #{$icon}` arm below) - otherwise one gets stretched to a
+    // full-width 48dp row.
     > a,
     > button,
-    > span {
+    > #{$icon-label} {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -101,9 +105,9 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       font-family: $font-stack;
     }
 
-    > a > i,
-    > button > i,
-    > i {
+    > a > #{$icon},
+    > button > #{$icon},
+    > #{$icon} {
       flex: 0 0 var(--md-comp-menu-item-icon-size);
       font-size: var(--md-comp-menu-item-icon-size);
       width: var(--md-comp-menu-item-icon-size);
@@ -112,7 +116,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       color: var(--md-comp-menu-item-leading-icon-color);
     }
 
-    > :is(a, button) > i:last-child:not(:only-child) {
+    > :is(a, button) > #{$icon}:last-child:not(:only-child) {
       margin-inline-start: auto;
       color: var(--md-comp-menu-item-trailing-icon-color);
     }
@@ -156,12 +160,12 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     background-color: var(--md-comp-menu-item-selected-container-color);
     color: var(--md-comp-menu-item-selected-label-text-color);
 
-    > :is(a, button, span) {
+    > :is(a, button, #{$icon-label}) {
       color: var(--md-comp-menu-item-selected-label-text-color);
     }
 
-    > :is(a, button, span) > i,
-    > i {
+    > :is(a, button, #{$icon-label}) > #{$icon},
+    > #{$icon} {
       color: var(--md-comp-menu-item-selected-leading-icon-color);
     }
   }
@@ -230,7 +234,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     position: relative;
   }
 
-  li:has(> menu) > :is(a, button, span)::after {
+  li:has(> menu) > :is(a, button, #{$icon-label})::after {
     content: "";
     flex: 0 0 var(--md-comp-menu-item-icon-size);
     width: var(--md-comp-menu-item-icon-size);
