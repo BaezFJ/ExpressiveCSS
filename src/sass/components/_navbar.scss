@@ -94,7 +94,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
-  > #{$_bar} > :is(a, button):not(.button):not(.circle):not(.extra):has(> i:only-child) {
+  > #{$_bar} > :is(a, button):not(.button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -116,7 +116,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
     text-decoration: none;
     @include focus-visible;
 
-    > i {
+    > #{$icon} {
       display: block;
       font-size: var(--md-comp-top-app-bar-leading-icon-size);
       width: var(--md-comp-top-app-bar-leading-icon-size);
@@ -134,7 +134,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > #{$_bar} > a:not(:has(> i:only-child)):not(.button):not(.circle):not(.breadcrumb) {
+  > #{$_bar} > a:not(:has(> #{$icon}:only-child)):not(.button):not(.circle):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 

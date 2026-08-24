@@ -69,6 +69,21 @@ below is the whole story for that component.
   every rule naming an old class and fails if the new one is missing from it.
 - **`llm.md` documented a token that does not exist** — `--sidenav-width`. The
   real one is `--md-comp-nav-drawer-width`.
+- **Eleven components styled their icons by element, so every icon rule was
+  dead against documented markup.** The canonical icon is
+  `<span class="material-symbols">`, but the app bar, navigation bar, dialog,
+  panes, list, tabs, pagination, side sheet, toolbar, menu and fieldset legend
+  each still asked `> i`. Nothing warned; the rules simply stopped applying —
+  the navigation bar lost its active-indicator pill, a tab with an icon kept
+  the short container, menu icons rendered at 24dp instead of 20dp.
+
+  Three of them broke twice over, because the rule on the *other* side of the
+  question over-matched instead. `:has(> i:only-child)` failing meant the
+  dialog and app bar close buttons fell into the `:not(:has(…))` **text
+  button** branch and rendered as auto-width 40dp pills rather than 48dp
+  circles; in a list, `> span { grid-column: 2 }` swallowed the leading icon
+  and drew it inside the text column. Icons now go through `$icon` and labels
+  through `$icon-label`, which is what those variables are for.
 
 ### Added
 

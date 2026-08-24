@@ -66,7 +66,7 @@
     @include typescale("label-medium");
     @include focus-visible;
 
-    > i {
+    > #{$icon} {
       display: flex;
       flex-shrink: 0;
       align-items: center;
@@ -80,7 +80,7 @@
       transition: background-color 0.2s ease-out;
     }
 
-    &:hover:not(.active, [aria-current]) > i {
+    &:hover:not(.active, [aria-current]) > #{$icon} {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
     }
 
@@ -88,7 +88,7 @@
     &[aria-current] {
       color: var(--md-sys-color-on-surface);
 
-      > i {
+      > #{$icon} {
         background-color: var(--md-comp-nav-bar-active-indicator-color);
         color: var(--md-comp-nav-bar-active-color);
         --md-icon-fill: 1;
@@ -123,7 +123,7 @@
       padding: 8px 16px;
       border-radius: var(--md-comp-nav-bar-indicator-shape);
 
-      > i {
+      > #{$icon} {
         width: var(--md-comp-nav-bar-icon-size);
         height: var(--md-comp-nav-bar-icon-size);
         border-radius: 0;
@@ -139,7 +139,7 @@
       &:hover:not(.active, [aria-current]) {
         background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
 
-        > i {
+        > #{$icon} {
           background-color: transparent;
         }
       }
@@ -149,7 +149,7 @@
         background-color: var(--md-comp-nav-bar-active-indicator-color);
         color: var(--md-comp-nav-bar-active-color);
 
-        > i {
+        > #{$icon} {
           background-color: transparent;
           color: inherit;
         }
