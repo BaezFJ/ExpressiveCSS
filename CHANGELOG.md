@@ -78,6 +78,16 @@ below is the whole story for that component.
   `label-large` with 12dp padding, and the headline sat 76px from the edge
   instead of the spec's 56. Keyed on the shared `$icon` list now, the way
   `_buttons` and `_toolbar` already were.
+- **Five more tokens were declared or referenced but not both**, found by the
+  new check below. The time picker's AM/PM buttons referenced Materialize's
+  `--btn-padding` and `--btn-border-radius`, which no longer exist — the
+  declarations were invalid at computed-value time, which does *not* fall back
+  to the rule underneath, so the padding rendered as 0 while a base button rule
+  offered 24px. They now say the 0 they have always rendered as. The checkbox
+  and radio `state-layer-size` tokens were declared and read by nothing, with
+  the 40dp geometry written out as pre-computed `11px` / `10px` shadow spreads;
+  the spreads derive from the tokens now, to the same pixel.
+
 - **The app bar's trailing icon token was declared and used by nothing.**
   Both icon actions took the *leading* token, so the documented way to opt into
   the spec's muted trailing icons changed nothing. The two are told apart the
@@ -94,6 +104,17 @@ below is the whole story for that component.
   a line with it.
 
 ### Added
+
+- **A token liveness check** (`tests/tokens.test.js`). Two failure modes, both
+  silent — no syntax error, nothing in a browser console. A `var()` naming a
+  token nothing declares makes its whole declaration invalid at computed-value
+  time: it still wins the cascade and *then* resolves to unset, so the property
+  falls to inherited-or-initial rather than to the rule underneath. And a token
+  declared and read by nobody is a promise the sheet does not keep. Only
+  `--md-comp-*` is checked for being read — `--md-sys-*` and `--md-ref-*` are
+  the public palette, where 111 unread ramp entries are the point. Unread
+  component tokens can be exempted with a stated reason, and the check fails on
+  a stale exemption too, so the list can only shrink.
 
 - **The sweep is finished — 45 of 45 components enforced.** The last pass takes
   the remaining 23: icons, badges, buttons, cards, toolbar, list, tooltip,
