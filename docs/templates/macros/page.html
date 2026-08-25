@@ -34,15 +34,19 @@
         </nav>
 {% endmacro %}
 
-{# `toc_extra` is a macro rendering extra <li>s for the table of contents. #}
-{% macro page_body(toc_extra=None) %}
-<div class="container">
+{#
+    `toc_extra` renders extra <li>s for the table of contents. The class
+    arguments let pages with wide, interactive demos keep this same scaffold
+    instead of recreating its content and TOC structure.
+#}
+{% macro page_body(toc_extra=None, container_class="", content_class="s12 m8 offset-m1 xl7 offset-xl1", toc_class="m3 xl3") %}
+<div class="container{% if container_class %} {{ container_class }}{% endif %}">
   <div class="row">
-    <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
+    <div class="{{ content_class }} docs-page-content">
 {{ caller() }}
     </div>
 
-    <div class="hide-on-small-only m3 xl3">
+    <div class="hide-on-small-only {{ toc_class }}">
       <div class="toc-wrapper mt-5">
 {% if toc_extra %}{% call toc() %}{{ toc_extra() }}{% endcall %}{% else %}{{ toc() }}{% endif %}
       </div>

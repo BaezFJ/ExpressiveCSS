@@ -1,13 +1,12 @@
 {% extends "docs.html" %}
-{% from "macros/page.html" import code, section, toc with context %}
+{% from "macros/page.html" import code, page_body, section with context %}
 {% from "macros/api.html" import token_table %}
 
 {% set page_name = "Panes" %}
 {% set page_blurb = "Material 3 canonical layouts, from the HTML." %}
 
 {% block page %}
-<div class="container panes-page">
-  <div class="panes-page-body">
+{% call page_body(container_class="panes-page", content_class="s12 m9 l10", toc_class="m3 l2") %}
 
   {% call section("anatomy", "Anatomy", heading=false) %}
       <p class="flow-text">
@@ -455,14 +454,7 @@ back.addEventListener('click', () => {
           <tr><td><code>--md-comp-pane-supporting-width</code></td><td>360px</td></tr>
   {% endcall %}
   {% endcall %}
-  </div>
-
-  <div class="hide-on-small-only panes-page-toc">
-    <div class="toc-wrapper mt-5">
-      {{ toc() }}
-    </div>
-  </div>
-</div>
+{% endcall %}
 
 <script>
   document.querySelectorAll('[data-pane-select]').forEach((root) => {

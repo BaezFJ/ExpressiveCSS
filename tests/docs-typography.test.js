@@ -15,6 +15,10 @@ const baseTemplate = readFileSync(
   new URL('../docs/templates/base.html', import.meta.url),
   'utf8'
 );
+const panesTemplate = readFileSync(
+  new URL('../docs/templates/structure/panes.html', import.meta.url),
+  'utf8'
+);
 
 describe('Documentation typography', () => {
   test('uses ExpressiveCSS display and headline roles in the shared banner', () => {
@@ -74,5 +78,17 @@ describe('Documentation typography', () => {
       baseTemplate,
       /url_for\('static', filename='docs\.css', v=version\)/
     );
+  });
+
+  test('keeps the wide Panes page on the shared content and TOC scaffold', () => {
+    assert.match(
+      pageMacro,
+      /page_body\(toc_extra=None, container_class="", content_class=/
+    );
+    assert.match(
+      panesTemplate,
+      /page_body\(container_class="panes-page", content_class="s12 m9 l10", toc_class="m3 l2"\)/
+    );
+    assert.doesNotMatch(panesTemplate, /panes-page-(?:body|toc)/);
   });
 });

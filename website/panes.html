@@ -266,8 +266,11 @@
 
 
         
+
 <div class="container panes-page">
-  <div class="panes-page-body">
+  <div class="row">
+    <div class="s12 m9 l10 docs-page-content">
+
 
   <div id="anatomy" class="section scrollspy docs-section">
 
@@ -748,11 +751,12 @@ back.addEventListener('click', () =&gt; {
   
       </div>
 
-  </div>
 
-  <div class="hide-on-small-only panes-page-toc">
-    <div class="toc-wrapper mt-5">
-      
+    </div>
+
+    <div class="hide-on-small-only m3 l2">
+      <div class="toc-wrapper mt-5">
+
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
@@ -767,9 +771,11 @@ back.addEventListener('click', () =&gt; {
           </ul>
         </nav>
 
+      </div>
     </div>
   </div>
 </div>
+
 
 <script>
   document.querySelectorAll('[data-pane-select]').forEach((root) => {
