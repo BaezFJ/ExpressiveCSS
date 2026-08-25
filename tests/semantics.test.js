@@ -82,42 +82,60 @@ function rolesBlockedBy(rule, compositeRoles) {
   return [...out];
 }
 
-/** Everything wrong with one component's conformance declaration, as messages. */
-function conformanceProblems(name, c, compositeRoles) {
-  const out = [];
-  const declared = c.conformance;
+/**
+ * The two ways a component can account for a role its rules block.
+ *
+ * They are not the same fact. *Withheld* is a promise the code cannot keep yet
+ * and will take once it can; *rejected* is a role the component will never take
+ * because it implements a different pattern. Recording a rejection as debt
+ * states something false about the code, and the reverse check below cannot
+ * tell them apart on its own - a blocked role looks identical either way.
+ */
+const DECLARATIONS = [
+  { field: 'conformance', role: 'withheld_role', why: 'blocked_on' },
+  { field: 'rejects', role: 'rejected_role', why: 'because' }
+];
 
-  if (declared) {
-    for (const k of ['withheld_role', 'blocked_on', 'rule']) {
-      if (!declared[k]) out.push(`${name}: conformance needs ${k}`);
+/** Everything wrong with how a component accounts for the roles it blocks. */
+function declarationProblems(name, c, compositeRoles) {
+  const out = [];
+  const declared = DECLARATIONS.filter((d) => c[d.field]).map((d) => ({ ...d, value: c[d.field] }));
+
+  for (const { field, role, why, value } of declared) {
+    for (const k of [role, why, 'rule']) {
+      if (!value[k]) out.push(`${name}: ${field} needs ${k}`);
     }
-    if (declared.withheld_role && !compositeRoles.includes(declared.withheld_role)) {
+    if (value[role] && !compositeRoles.includes(value[role])) {
       out.push(
-        `${name}: ${declared.withheld_role} is not a composite role - a component does not ` +
-          'withhold a role that promises nothing beyond its element'
+        `${name}: ${value[role]} is not a composite role - a component neither withholds nor ` +
+          'rejects a role that promises nothing beyond its element'
       );
     }
-    const ref = c.rules.find((r) => r.id === declared.rule);
-    if (declared.rule && !ref) {
-      out.push(`${name}: conformance references ${declared.rule}, which is not a rule on this component`);
+    const ref = c.rules.find((r) => r.id === value.rule);
+    if (value.rule && !ref) {
+      out.push(`${name}: ${field} references ${value.rule}, which is not a rule on this component`);
     } else if (ref && ref.kind !== 'forbid') {
-      out.push(`${name}: ${ref.id} is ${ref.kind}, but withholding is expressed by forbidding`);
-    } else if (ref && declared.withheld_role && !rolesBlockedBy(ref, compositeRoles).includes(declared.withheld_role)) {
-      out.push(`${name}: ${ref.id} does not block ${declared.withheld_role}`);
+      out.push(`${name}: ${ref.id} is ${ref.kind}, but keeping a role out is expressed by forbidding`);
+    } else if (ref && value[role] && !rolesBlockedBy(ref, compositeRoles).includes(value[role])) {
+      out.push(`${name}: ${ref.id} does not block ${value[role]}`);
     }
   }
 
-  // The reverse edge: withholding a role silently is what this exists to catch.
+  // The reverse edge: blocking a role without saying why is what this catches.
   for (const r of c.rules) {
     const blocked = rolesBlockedBy(r, compositeRoles);
     if (!blocked.length) continue;
-    if (!declared) {
+    if (!declared.length) {
       out.push(
-        `${name}: ${r.id} blocks ${blocked.join('/')} but no conformance debt is declared - ` +
-          'a withheld role must say which role and what it waits on'
+        `${name}: ${r.id} blocks ${blocked.join('/')} but nothing accounts for it - declare ` +
+          'conformance debt if the code will keep the promise later, or a rejection if it never will'
       );
-    } else if (r.id !== declared.rule && declared.withheld_role && !blocked.includes(declared.withheld_role)) {
-      out.push(`${name}: ${r.id} blocks ${blocked.join('/')}, but the declared role is ${declared.withheld_role}`);
+      continue;
+    }
+    // A rule a declaration names is the forward check's business, not this one.
+    if (declared.some((d) => d.value.rule === r.id)) continue;
+    if (!declared.some((d) => blocked.includes(d.value[d.role]))) {
+      out.push(`${name}: ${r.id} blocks ${blocked.join('/')}, which no declaration accounts for`);
     }
   }
   return out;
@@ -383,35 +401,31 @@ describe('semantics.json', () => {
     assert.equal(new Set(ids).size, ids.length, 'duplicate rule id');
   });
 
-  test('every conformance declaration is well formed, and none is silent', () => {
+  test('every declaration is well formed, and no blocked role is unaccounted for', () => {
     const problems = Object.entries(data.components).flatMap(([n, c]) =>
-      conformanceProblems(n, c, data.compositeRoles)
+      declarationProblems(n, c, data.compositeRoles)
     );
     assert.deepEqual(problems, [], problems.join('\n'));
   });
 
-  test('a malformed conformance declaration is caught', () => {
+  test('a malformed declaration is caught', () => {
     const roles = ['tablist', 'toolbar'];
     const rule = { id: 'x-not-a-tablist', kind: 'forbid', selector: '.x[role]', message: 'm' };
-    const bad = (conformance, rules = [rule]) => conformanceProblems('x', { rules, conformance }, roles);
+    const bad = (conformance, rules = [rule]) => declarationProblems('x', { rules, conformance }, roles);
+    const ok = { withheld_role: 'tablist', blocked_on: 'keyboard model', rule: 'x-not-a-tablist' };
 
-    assert.equal(bad({ withheld_role: 'tablist', blocked_on: 'keyboard model' }).length, 1, 'missing rule');
-    assert.equal(bad({ withheld_role: 'tablist', rule: 'x-not-a-tablist' }).length, 1, 'missing blocked_on');
-    assert.equal(bad({ blocked_on: 'keyboard model', rule: 'x-not-a-tablist' }).length, 1, 'missing role');
+    assert.equal(bad({ ...ok, rule: undefined }).length, 1, 'missing rule');
+    assert.equal(bad({ ...ok, blocked_on: undefined }).length, 1, 'missing blocked_on');
+    assert.equal(bad({ ...ok, withheld_role: undefined }).length, 1, 'missing role');
     assert.ok(
-      bad({ withheld_role: 'button', blocked_on: 'k', rule: 'x-not-a-tablist' }).some((m) =>
-        m.includes('not a composite role')
+      bad({ ...ok, withheld_role: 'button' }).some((m) => m.includes('not a composite role')),
+      'a simple role is neither withheld nor rejected'
+    );
+    assert.ok(bad({ ...ok, rule: 'nope' }).some((m) => m.includes('not a rule')), 'dangling rule reference');
+    assert.ok(
+      bad({ ...ok, rule: 'r' }, [{ id: 'r', kind: 'require-attr', attr: 'role', selector: '.x', message: 'm' }]).some(
+        (m) => m.includes('expressed by forbidding')
       ),
-      'a simple role is not withheld'
-    );
-    assert.ok(
-      bad({ withheld_role: 'tablist', blocked_on: 'k', rule: 'nope' }).some((m) => m.includes('not a rule')),
-      'dangling rule reference'
-    );
-    assert.ok(
-      bad({ withheld_role: 'tablist', blocked_on: 'k', rule: 'r' }, [
-        { id: 'r', kind: 'require-attr', attr: 'role', selector: '.x', message: 'm' }
-      ]).some((m) => m.includes('withholding is expressed by forbidding')),
       'the referenced rule must forbid'
     );
     assert.ok(
@@ -420,8 +434,28 @@ describe('semantics.json', () => {
       ]).some((m) => m.includes('does not block toolbar')),
       'the rule must block the declared role, and says so exactly once'
     );
-    assert.ok(bad(undefined).some((m) => m.includes('no conformance debt is declared')), 'silent withholding');
-    assert.deepEqual(bad({ withheld_role: 'tablist', blocked_on: 'keyboard model', rule: 'x-not-a-tablist' }), []);
+    assert.ok(bad(undefined).some((m) => m.includes('nothing accounts for it')), 'blocking with no account');
+    assert.deepEqual(bad(ok), []);
+  });
+
+  test('a rejection accounts for a blocked role without claiming debt', () => {
+    const roles = ['tablist'];
+    const rules = [{ id: 'x-not-a-tablist', kind: 'forbid', selector: '.x[role="tablist"]', message: 'm' }];
+    const rejects = { rejected_role: 'tablist', because: 'implements a different pattern', rule: 'x-not-a-tablist' };
+
+    assert.deepEqual(declarationProblems('x', { rules, rejects }, roles), [], 'a rejection satisfies the reverse edge');
+    assert.ok(
+      declarationProblems('x', { rules, rejects: { ...rejects, because: undefined } }, roles).some((m) =>
+        m.includes('rejects needs because')
+      ),
+      'a rejection must say why'
+    );
+    assert.ok(
+      declarationProblems('x', { rules, rejects: { ...rejects, rejected_role: 'grid' } }, roles).some((m) =>
+        m.includes('not a composite role')
+      ),
+      'and name a role from the vocabulary'
+    );
   });
 
   test('the composite-role vocabulary is pinned', () => {

@@ -59,7 +59,11 @@ export function render(data) {
   l.push('demands does not exist yet. Each one below names the role it withholds, what that');
   l.push('waits on, and the rule that keeps the role out of markup meanwhile.');
   l.push('');
-  l.push('The composite roles that can be withheld: ' + data.compositeRoles.map(code).join(', ') + '.');
+  l.push('A component may also *reject* a role: one it will never take because it implements a');
+  l.push('different pattern. That is not debt - the code is not behind, it went another way - and');
+  l.push('the same rule-linking applies, so neither can be recorded without enforcement.');
+  l.push('');
+  l.push('The composite roles that can be withheld or rejected: ' + data.compositeRoles.map(code).join(', ') + '.');
   l.push('');
   const declares = indebted.length === 1 ? 'declares' : 'declare';
   l.push(`**${indebted.length} of ${names.length} components ${declares} conformance debt.**`);
@@ -97,6 +101,11 @@ function renderComponent(name, c) {
         `and ${code(rule)} enforces that.`,
       ''
     );
+  }
+  if (c.rejects) {
+    const { rejected_role: role, because, rule } = c.rejects;
+    l.push(`**Rejected role:** ${code(role)} is not withheld but declined - ${esc(because)}. ` +
+      `${code(rule)} enforces that.`, '');
   }
   l.push('| Rule | Kind | Selector | Requirement |');
   l.push('| --- | --- | --- | --- |');
