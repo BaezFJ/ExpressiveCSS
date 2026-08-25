@@ -430,3 +430,17 @@ not one view with two rules** — Frozen-Flask writes one file per *endpoint*, s
 a shared view silently freezes only one of its URLs.
 
 `website/` is generated, which makes it the regression test for any template change: `uv run python freeze.py`, then diff. Modulo whitespace the output must be identical — that is how all five macro refactors were verified.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `BaezFJ/ExpressiveCSS`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical roles, each label string equal to its name. None of them exist in the repo yet — they are created on first use. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` at the repo root, ADRs in `adr/` — **not** `docs/adr/`, because `docs/` is the Flask docs-site app. See `docs/agents/domain.md`.
