@@ -113,7 +113,9 @@ function renderComponent(name, c) {
     const req =
       r.kind === 'forbid'
         ? 'must not match'
-        : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
+        : r.kind === 'forbid-composite-roles'
+          ? 'must not match with any composite role'
+          : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
     l.push(`| ${code(r.id)} | ${r.kind} | ${code(r.selector)} | ${req} |`);
   }
   l.push('');

@@ -27,6 +27,22 @@ const data = JSON.parse(read('semantics.json'));
 
 // --- conformance ------------------------------------------------------------
 
+const FORBID_KINDS = ['forbid', 'forbid-composite-roles'];
+
+/**
+ * What a rule actually matches.
+ *
+ * `forbid-composite-roles` states the component's own selector and is expanded
+ * over the vocabulary, so the ten roles are named once in semantics.json rather
+ * than once per component - and adding one tightens every such rule instead of
+ * leaving each a role short. Expansion is root-only on purpose: a slide may
+ * legitimately contain a menu, it just may not *be* one.
+ */
+function expandedSelector(rule, compositeRoles) {
+  if (rule.kind !== 'forbid-composite-roles') return rule.selector;
+  return compositeRoles.map((r) => `${rule.selector}[role="${r}"]`).join(', ');
+}
+
 /** Top-level comma split: a comma inside `:not(a, b)` belongs to that compound. */
 function splitCompounds(selector) {
   const out = [];
@@ -64,6 +80,7 @@ function splitCompounds(selector) {
  * Tabs withholds `tablist` without naming it.
  */
 function rolesBlockedBy(rule, compositeRoles) {
+  if (rule.kind === 'forbid-composite-roles') return [...compositeRoles];
   if (rule.kind !== 'forbid') return [];
   const out = new Set();
   for (const compound of splitCompounds(rule.selector)) {
@@ -114,7 +131,7 @@ function declarationProblems(name, c, compositeRoles) {
     const ref = c.rules.find((r) => r.id === value.rule);
     if (value.rule && !ref) {
       out.push(`${name}: ${field} references ${value.rule}, which is not a rule on this component`);
-    } else if (ref && ref.kind !== 'forbid') {
+    } else if (ref && !FORBID_KINDS.includes(ref.kind)) {
       out.push(`${name}: ${ref.id} is ${ref.kind}, but keeping a role out is expressed by forbidding`);
     } else if (ref && value[role] && !rolesBlockedBy(ref, compositeRoles).includes(value[role])) {
       out.push(`${name}: ${ref.id} does not block ${value[role]}`);
@@ -342,8 +359,8 @@ function violations(html, rules, { fragmentSafe = false } = {}) {
   const found = [];
   for (const rule of rules) {
     if (fragmentSafe && !rule.fragmentSafe) continue;
-    const hits = [...document.querySelectorAll(rule.selector)];
-    if (rule.kind === 'forbid') {
+    const hits = [...document.querySelectorAll(expandedSelector(rule, data.compositeRoles))];
+    if (FORBID_KINDS.includes(rule.kind)) {
       for (const el of hits) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
     } else if (rule.kind === 'require-attr') {
       for (const el of hits) {
@@ -389,7 +406,10 @@ describe('semantics.json', () => {
         if (r.kind === 'require-attr') assert.ok(r.attr, `${r.id}: require-attr needs attr`);
         // A malformed selector must fail here, not silently match nothing.
         assert.doesNotThrow(
-          () => new JSDOM('<!doctype html><body>').window.document.querySelectorAll(r.selector),
+          () =>
+            new JSDOM('<!doctype html><body>').window.document.querySelectorAll(
+              expandedSelector(r, data.compositeRoles)
+            ),
           `${r.id}: invalid selector`
         );
       }
@@ -458,6 +478,20 @@ describe('semantics.json', () => {
     );
   });
 
+  test('a component that keeps one composite role out keeps them all out', () => {
+    // Naming one role and leaving the other nine legal reproduces, narrower, the
+    // gap the declaration mechanism exists to close: a component that is not a
+    // composite widget is not any of them.
+    const slipping = [];
+    for (const [name, c] of Object.entries(data.components)) {
+      if (!DECLARATIONS.some((d) => c[d.field])) continue;
+      const blocked = new Set(c.rules.flatMap((r) => rolesBlockedBy(r, data.compositeRoles)));
+      const missed = data.compositeRoles.filter((r) => !blocked.has(r));
+      if (missed.length) slipping.push(`${name}: ${missed.join(', ')}`);
+    }
+    assert.deepEqual(slipping, [], slipping.join('\n'));
+  });
+
   test('the composite-role vocabulary is pinned', () => {
     assert.deepEqual(
       data.compositeRoles,
@@ -518,7 +552,7 @@ describe('prose that names markup', () => {
   const forbiddenShapes = Object.values(data.components)
     .filter((c) => c.status === 'enforced')
     .flatMap((c) => c.rules)
-    .filter((r) => r.kind === 'forbid' && r.fragmentSafe)
+    .filter((r) => FORBID_KINDS.includes(r.kind) && r.fragmentSafe)
     .flatMap((r) => r.selector.split(',').map((x) => x.trim()))
     .filter((sel) => /^[a-z]+\.[\w-]+$/.test(sel));
 

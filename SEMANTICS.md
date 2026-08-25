@@ -110,15 +110,17 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule names tablist rather than forbidding every role, because role="group" with aria-roledescription="carousel" is the pattern carousel.ts writes.
 
-**Rejected role:** `tablist` is not withheld but declined - it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls. `carousel-not-a-tablist` enforces that.
+**Rejected role:** `tablist` is not withheld but declined - it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls. `carousel-not-a-composite-widget` enforces that.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `hidden-subtree-holds-nothing-focusable` | forbid | `[aria-hidden="true"]:has(:is(a[href], button, input, select, textarea, [tabindex]):not([tabindex="-1"]):not([disabled]))` | must not match |
-| `carousel-not-a-tablist` | forbid | `.carousel[role="tablist"], .carousel [role="tab"]` | must not match |
+| `carousel-not-a-composite-widget` | forbid-composite-roles | `.carousel` | must not match with any composite role |
+| `carousel-indicators-are-not-tabs` | forbid | `.carousel [role="tab"]` | must not match |
 
 - **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
-- **carousel-not-a-tablist** - A carousel takes no tablist role here; its indicators are independent controls.
+- **carousel-not-a-composite-widget** - A carousel takes no composite role; it is a group of slides with independent controls.
+- **carousel-indicators-are-not-tabs** - Carousel indicators are independent controls, not tabs.
 
 ### character-counter
 
@@ -526,15 +528,15 @@ Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the cont
 
 Swept 0.8.0. A toolbar holds commands, not destinations. The role rule is written without an exception, so it also covers div.fixed-action-btn.toolbar, which $_toolbar excludes: a withheld role is withheld everywhere, and the FAB transition has no more claim to it.
 
-**Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-an-aria-toolbar` enforces that.
+**Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-a-composite-widget` enforces that.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `toolbar-not-nav` | forbid | `nav.toolbar` | must not match |
-| `toolbar-not-an-aria-toolbar` | forbid | `.toolbar[role="toolbar"]` | must not match |
+| `toolbar-not-a-composite-widget` | forbid-composite-roles | `.toolbar` | must not match with any composite role |
 
 - **toolbar-not-nav** - A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.
-- **toolbar-not-an-aria-toolbar** - A toolbar takes no toolbar role here; its buttons are reached with Tab, not arrow keys.
+- **toolbar-not-a-composite-widget** - A toolbar takes no composite role; its buttons are reached with Tab, not arrow keys.
 
 ### tooltip
 
