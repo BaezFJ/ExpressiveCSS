@@ -13,6 +13,22 @@ than by a class name on a generic one — an article is a card, a footer is the
 page footer. Under this reading a class is a modifier of a component, never
 what makes it one.
 
+**Component.** A part of the framework an author writes markup for. The
+defining property is authored markup: if there is no element a page author
+writes in order to get it, it is not a component, however much style or script
+stands behind it. Distinct from a foundation and a behavior, both of which an
+author reaches for without writing anything new.
+
+**Foundation.** A token or style system with no markup of its own — color,
+typography, elevation, shape, motion, state layers. A foundation is consumed by
+components rather than placed on a page, and its surface is custom properties
+and utility classes rather than elements.
+
+**Behavior.** Document-level script that attaches to markup the author has
+already written, rather than defining markup of its own. The defining property
+is that removing a behavior leaves the markup valid and meaningful; removing a
+component removes the element.
+
 **Static semantics.** Anything about a component knowable without user
 interaction: its element, its role, whether it is a landmark, the hiding of
 decorative content, and the *presence* of an accessible name. The defining
@@ -44,6 +60,13 @@ interactive.
 file. *Enforced*: its rules run and a violation fails the suite. *Exempt*: its
 rules are recorded but do not run, because the component has not been swept
 yet.
+
+**Conformance debt.** A promise a component's markup does not yet make because
+the code behind it cannot keep it — most often a composite role withheld until
+its keyboard model exists. It is recorded per component, naming the role being
+withheld and what the withholding is blocked on. Distinct from *exempt*, which
+is about whether a component's rules run at all: a fully enforced component can
+still carry conformance debt.
 
 **Surface.** A place in the repository that states component markup and can
 therefore drift from the standard. Generated output is not a surface of its
