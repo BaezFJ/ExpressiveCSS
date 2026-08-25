@@ -53,7 +53,7 @@ uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
 Notes:
 
 - Tests are `node:test` + jsdom in `tests/`, run against the **built** bundles — so a stale bundle tests stale code; `npm test` rebuilds first. Two artifacts are needed, not one: `tests/setup.js` imports `dist/js/expressive.mjs`, and `bundle.test.js` reads the IIFE `dist/js/expressive.js`. That is why `test` runs `build:js` (all four formats) rather than `build:js:esm` — building only the ESM bundle passes locally off a warm `dist/` and fails on a clean checkout. `test` also runs `build:css`, because `regressions.test.js` asserts against the compiled `dist/css/expressive.css`; the same warm-`dist/` trap sank the v0.4.0 publish, which CI missed because `ci.yml` runs a full `npm run build` before `test:run` while `release.yml` runs `npm test`. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
-- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and Snackbar/Slider/Carousel own intervals, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. Tear down in a `finally`.
+- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and any pending timer keeps it alive, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. `setInterval` lives in exactly one component (`slideshow.ts`); the hazard is much wider than that, because eight more schedule `setTimeout`s — `menu`, `timepicker`, `carousel`, `tooltip`, `autocomplete`, `lightbox`, `snackbar`, `expandingCard`. Tear down in a `finally`.
 - jsdom does no layout — `getBoundingClientRect()` and every `offset*`/`client*` read returns 0. Geometry-dependent tests stub the rect on the element (`regressions.test.js`), and counting stubbed rect calls is how the scroll-path tests assert layout work. jsdom also lazily attaches its own `handleFocusEvent`/`handleKeyboardEvent`/`handleMouseEvent` to `window` once a form control is involved; listener-leak tests filter those by name.
 - To confirm a new test actually catches the bug it names: `git stash push -- src/ts`, `npm run build:js`, run the one file, `git stash pop` — **as separate Bash calls**, so a hung run can't strand the stash.
 - There is no linter. Several files carry `@typescript-eslint` disable comments inherited from upstream with no ESLint config behind them.
@@ -212,8 +212,9 @@ on. The five rules:
    `.toolbar` — each an action row that should not be `<nav>` at all, where
    *labelling* it would entrench the error. **Delete each carve-out with the sweep
    that owns it.** Two hosts are element-locked and are why those sweeps are
-   separate: `article > nav:not(.tabs)` in `_cards.scss`, and 16 `nav.toolbar`
-   selectors in `_toolbar.scss` (deliberately, to miss `div.fixed-action-btn.toolbar`).
+   separate: `article > nav:not(.tabs)` in `_cards.scss`, and the `$_toolbar`
+   variable in `_toolbar.scss` — `:is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))`,
+   written that way deliberately, to miss `div.fixed-action-btn.toolbar`.
 
    The app bar took the same treatment: `$_bar` in `_navbar.scss` is
    `:is(nav:not(…), .bar)`, so a bar holding only a title and controls is a
@@ -273,8 +274,9 @@ Notes that matter when working on it:
   plus `additional` exactly, so a new component cannot ship without a row — which
   is what makes it enforced from its first commit.
 - The check **must never initialize a component**. It parses with jsdom and reads
-  the DOM. Chips/Snackbar/Slider own intervals, and a live timer wedges the whole
-  `node --test` run with no output.
+  the DOM. Components schedule timers (`slideshow` an interval, eight others
+  `setTimeout`s), and a live timer wedges the whole `node --test` run with no
+  output.
 - One example can opt out with a stated reason: ` ```html ignore-semantics: why `
   in Markdown, `code(check=false, reason="why")` in a template. A reason is
   required — the test fails on a bare opt-out.
