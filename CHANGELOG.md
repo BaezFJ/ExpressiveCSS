@@ -175,6 +175,19 @@ below is the whole story for that component.
   the remaining 23: icons, badges, buttons, cards, toolbar, list, tooltip,
   preloader, dialog, panes, carousel, parallax, lightbox, and the ten that
   state no markup of their own and now say so in writing.
+- Two ways to account for a composite role a component keeps out of its markup.
+  **Conformance debt** (`conformance`) is a promise deferred until the code can
+  keep it — Tabs and Toolbar withhold `tablist` and `toolbar` pending a keyboard
+  model. A **rejected role** (`rejects`) is a promise declined: Carousel's
+  keyboard contract is implemented and tested, and it writes the ARIA carousel
+  pattern instead, so `tablist` is not owed. Both link to the rule that enforces
+  them, and the suite refuses either without the other in both directions, so a
+  role cannot be withheld silently and debt cannot be recorded without teeth.
+- A fourth rule kind, **`forbid-composite-roles`**. The rule states the
+  component's own selector and the checker expands it over the composite-role
+  vocabulary, so the ten roles are named once rather than once per component and
+  adding one tightens every such rule. It replaced two hand-written rules that
+  each named a single role and left the other nine legal.
 - A third rule kind, **`require-accessible-name`**. It is the one question a
   selector cannot ask: whether a control ends up with a name depends on text
   *nodes*, and CSS cannot see them — `:has(> .icon:only-child)` counts

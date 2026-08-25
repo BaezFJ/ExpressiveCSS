@@ -108,9 +108,9 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 ### carousel
 
-Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule names tablist rather than forbidding every role, because role="group" with aria-roledescription="carousel" is the pattern carousel.ts writes.
+Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule keeps out every composite role but not every role: role="group" with aria-roledescription="carousel" is the pattern carousel.ts writes and stays legal.
 
-**Rejected role:** `tablist` is not withheld but declined - it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls. `carousel-not-a-composite-widget` enforces that.
+**Rejected role:** `tablist` is not withheld but declined - it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls. `carousel-not-a-composite-widget` enforces that, keeping every composite role out.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -528,7 +528,7 @@ Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the cont
 
 Swept 0.8.0. A toolbar holds commands, not destinations. The role rule is written without an exception, so it also covers div.fixed-action-btn.toolbar, which $_toolbar excludes: a withheld role is withheld everywhere, and the FAB transition has no more claim to it.
 
-**Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-a-composite-widget` enforces that.
+**Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-a-composite-widget` enforces that, keeping every composite role out.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

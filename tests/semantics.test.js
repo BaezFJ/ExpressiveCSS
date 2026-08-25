@@ -404,6 +404,15 @@ describe('semantics.json', () => {
         assert.ok(r.id && r.message, `${name}: rule needs an id and a message`);
         assert.ok(Object.keys(data.ruleKinds).includes(r.kind), `${r.id}: bad kind ${r.kind}`);
         if (r.kind === 'require-attr') assert.ok(r.attr, `${r.id}: require-attr needs attr`);
+        if (r.kind === 'forbid-composite-roles') {
+          // rolesBlockedBy reports all ten for this kind without reading the
+          // selector, so a conditional base would enforce narrower than it claims.
+          assert.doesNotMatch(r.selector, /:(not|has)\(/, `${r.id}: a composite-role base must be categorical`);
+          // And it must be the component's own root. Scoped to a descendant
+          // (`.carousel .indicator`) it would report blocking all ten while
+          // leaving the root uncaught - the invariant rests on this.
+          assert.doesNotMatch(r.selector, /[\s>+~]/, `${r.id}: a composite-role base must be the component root`);
+        }
         // A malformed selector must fail here, not silently match nothing.
         assert.doesNotThrow(
           () =>
@@ -478,10 +487,18 @@ describe('semantics.json', () => {
     );
   });
 
-  test('a component that keeps one composite role out keeps them all out', () => {
+  test('a component that declares against a composite role blocks every one', () => {
     // Naming one role and leaving the other nine legal reproduces, narrower, the
     // gap the declaration mechanism exists to close: a component that is not a
     // composite widget is not any of them.
+    //
+    // Known limit: this reads "has a declaration" as "is not a composite widget",
+    // which holds for every component today but would not for one that legitimately
+    // takes a composite role while withholding another - a Menu implementing
+    // `role="menu"` with a tested keyboard model, say, that still withholds
+    // `menubar`. Rule 2 permits that, and this test would wrongly forbid it. Give
+    // the component a way to record the role it takes before adding such a case;
+    // do not weaken this into a warning.
     const slipping = [];
     for (const [name, c] of Object.entries(data.components)) {
       if (!DECLARATIONS.some((d) => c[d.field])) continue;
@@ -553,7 +570,7 @@ describe('prose that names markup', () => {
     .filter((c) => c.status === 'enforced')
     .flatMap((c) => c.rules)
     .filter((r) => FORBID_KINDS.includes(r.kind) && r.fragmentSafe)
-    .flatMap((r) => r.selector.split(',').map((x) => x.trim()))
+    .flatMap((r) => expandedSelector(r, data.compositeRoles).split(',').map((x) => x.trim()))
     .filter((sel) => /^[a-z]+\.[\w-]+$/.test(sel));
 
   test('the rules yield shapes to look for', () => {
@@ -570,7 +587,7 @@ describe('prose that names markup', () => {
         const before = src.slice(Math.max(0, m.index - 24), m.index);
         if (/\b(not|no|never|instead of|rather than)\s+$/i.test(before)) continue;
         const line = src.slice(0, m.index).split('\n').length;
-        failures.push(`${file}:${line} names \`${shape}\`, which ${'`'}forbid${'`'} rules reject`);
+        failures.push(`${file}:${line} names \`${shape}\`, which a forbidding rule rejects`);
       }
     }
     assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);
