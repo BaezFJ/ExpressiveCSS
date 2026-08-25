@@ -71,6 +71,13 @@ jobs:
 
       - run: uv sync --frozen
 
+      # Must precede the freeze, which serves llms.txt straight off disk. It
+      # states the version, so a release commit leaves it stale -- regenerated
+      # here for the same reason website/ is, rather than checked, so nobody
+      # has to remember it at release time.
+      - name: Regenerate llms.txt
+        run: uv run --frozen python scripts/gen_llms.py
+
       # Frozen-Flask walks docs/app.py's 98 routes and writes website/. It also
       # picks up the /dist/... URLs the templates build with url_for, so
       # website/dist/ comes from the build above.
@@ -81,8 +88,9 @@ jobs:
         run: |
           set -euo pipefail
           # -A, not diff: freeze can add pages for new routes, and untracked
-          # files are invisible to `git diff`. website/dist/ stays ignored.
-          git add -A website
+          # files are invisible to `git diff`. website/dist/ stays ignored, as
+          # do the three frozen copies of files already in the repo.
+          git add -A website llms.txt
           if git diff --cached --quiet; then
             echo "website/ is already up to date, nothing to commit"
             exit 0
@@ -106,6 +114,9 @@ jobs:
 
           # The freshly frozen pages, plus static/.
           cp -R website/. _site/
+
+          # llm.md, m3-guidelines.md and llms-full.txt ride along in that copy:
+          # the freeze wrote them even though git ignores them under website/.
 
           # Framework assets, freshly built. Frozen-Flask also emits website/dist
           # from the same files, but this is replaced rather than merged so the
@@ -160,7 +171,11 @@ jobs:
             dist/css/expressive.min.css \
             dist/js/expressive.min.js \
             static/docs.css \
-            static/docs.js
+            static/docs.js \
+            llms.txt \
+            llms-full.txt \
+            llm.md \
+            m3-guidelines.md
           do
             if [ -s "_site/$f" ]; then
               echo "  OK       $f"
