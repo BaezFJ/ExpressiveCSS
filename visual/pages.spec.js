@@ -34,6 +34,10 @@ const pages = readdirSync(new URL('website/', root))
   .filter((f) => f.endsWith('.html'))
   .sort();
 
+/** The docs-site chrome, masked identically in both passes. See the note at the shutter. */
+const CHROME_MASK = (page, slug) =>
+  slug === 'sidenav' ? [] : [page.locator('#nav-mobile')];
+
 for (const file of pages) {
   const slug = file.replace(/\.html$/, '');
 
@@ -167,7 +171,8 @@ for (const file of pages) {
       // regardless of how fast the machine is.
       await page.clock.runFor(3000);
 
-      // Components own intervals (Snackbar, Slider, Carousel) and Playwright's
+      // Components schedule timers (`slideshow` an interval, eight others
+      // `setTimeout`s) and Playwright's
       // `animations: 'disabled'` only reaches CSS. Freezing transitions stops
       // a component that is mid-transition when the shutter opens from
       // photographing a half-applied state.
@@ -179,6 +184,32 @@ for (const file of pages) {
           transition-delay: 0s !important;
         }`,
       });
+
+      // The docs chrome is not the framework, and it moves for reasons this
+      // suite cannot sanction: macros/nav.html renders the sidenav *and* the
+      // footer from NAV, so documenting one component relinks all 57 pages.
+      //
+      // Hiding the footer, not masking it, is the whole fix. A mask paints over
+      // pixels and leaves the image the same size; the failure was a *dimension*
+      // mismatch - 388x7118 against 388x7166, one footer link row taller.
+      // Painting that row pink leaves the page 48px taller and still failing.
+      // Hidden in both passes, page height stops depending on how many pages
+      // are documented.
+      //
+      // The sidenav is masked instead. Its box is viewport-height either way so
+      // it costs no height, and `display: none` on a fixed drawer risks
+      // reflowing the content beside it.
+      //
+      // Both selectors must match the *base* revision too, which is why neither
+      // is a hook added to a template. This spec is the head's, but the base
+      // pass serves the base worktree's docs/app.py - a new id would exist on
+      // one side only, and the footer would be hidden in one pass and not the
+      // other. `body > footer` is the chrome's own shape on any revision: it is
+      // a sibling of <main>, while the four demo footers on the Footer page sit
+      // inside it. #nav-mobile likewise already exists. Component coverage is
+      // untouched: the Sidenav page demos ~30 drawers in its body and none of
+      // them is #nav-mobile.
+      await page.addStyleTag({ content: 'body > footer { display: none !important; }' });
 
       // A page this branch adds has no baseline, and photographing it against
       // one that does not exist is not a regression. Only the *comparison* is
@@ -210,6 +241,7 @@ for (const file of pages) {
             fullPage: true,
             animations: 'disabled',
             caret: 'hide',
+            mask: CHROME_MASK(page, slug),
           });
           if (previous?.equals(frame)) break;
           previous = frame;
@@ -217,7 +249,7 @@ for (const file of pages) {
         }
       }
 
-      await expect(page).toHaveScreenshot(shot, { fullPage: true });
+      await expect(page).toHaveScreenshot(shot, { fullPage: true, mask: CHROME_MASK(page, slug) });
     });
   }
 }

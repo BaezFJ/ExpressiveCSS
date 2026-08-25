@@ -143,6 +143,37 @@ job is `visual.yml`, pull requests only.
   pass, which does loop, was settled -- a stable-but-wrong diff of 11,711
   pixels on collections, 2,733 on range. The base pass now loops on its own
   until two captures match.
+- **The docs chrome is taken out of the picture, and how differs per element.**
+  `macros/nav.html` renders the sidenav *and* the footer from `NAV`, so
+  documenting one component relinked all 57 pages and failed the whole suite.
+  The footer is **hidden**, not masked: the failure was a *dimension* mismatch
+  (388x7118 against 388x7166, one link row taller), and a mask paints pixels
+  without changing the image size, so the page stays 48px taller and still
+  fails. The sidenav is **masked** instead -- its box is viewport-height either
+  way so it costs no height, and `display: none` on a fixed drawer risks
+  reflowing the content beside it.
+
+  **Both selectors have to match the base revision too.** The spec is always the
+  head's, but the base pass serves the base worktree's `docs/app.py`, so a hook
+  added to a template exists on one side only and the footer would be hidden in
+  one pass and not the other. `body > footer` is the chrome's own shape on any
+  revision -- a sibling of `<main>`, while the Footer page's demo footers sit
+  inside it -- and `#nav-mobile` already existed.
+
+  **The Sidenav page is exempt from the mask, and must stay exempt.** Its three
+  demo drawers are off-canvas and never photographed, so `#nav-mobile` is the
+  only drawer that renders there: masking it everywhere silently ended all
+  visual coverage of the component. Verified both directions -- a deliberate
+  restyle fails `sidenav` at expanded/large/large-dark (not compact, where the
+  drawer is off-canvas) and fails `footer` at all four.
+
+  The exemption has one limit worth knowing. The drawer renders each `NAV`
+  group as a `<details>` and opens only the current page's, so adding a page
+  moves the drawer *only* on pages in that same group. `sidenav` lives under
+  Structure, so a Foundations page never touches it -- but a page added to
+  **Structure** will move those four shots. That is a legible failure, not
+  noise, and far better than the 228 it replaces.
+
 - **`visual/serve.py`, not `flask --app`.** Werkzeug logs ~1,400 access lines a
   pass, which buries the results; the wrapper quiets that logger so stderr
   stays free for real failures. Silencing stderr wholesale was the first
