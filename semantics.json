@@ -469,7 +469,7 @@
           "id": "list-item-not-selected",
           "kind": "forbid",
           "selector": "li[aria-selected]:not([role])",
-          "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role\u2019s keyboard contract, or drop the attribute.",
+          "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.",
           "fragmentSafe": true
         }
       ]
@@ -701,7 +701,7 @@
           "kind": "forbid",
           "selector": ".tabs[role], .tabs [role=\"tab\"], .tabs [role=\"tabpanel\"]",
           "fragmentSafe": true,
-          "message": "These are links to in-page sections, not tabs."
+          "message": "A tab strip takes no ARIA role here; these are links to in-page sections."
         },
         {
           "id": "tabs-marks-current",

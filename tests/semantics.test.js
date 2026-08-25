@@ -65,7 +65,11 @@ function rolesBlockedBy(rule, compositeRoles) {
   if (rule.kind !== 'forbid') return [];
   const s = withoutNegations(rule.selector);
   if (/\[role\]/.test(s)) return [...compositeRoles];
-  return compositeRoles.filter((r) => new RegExp(`\\[role\\s*=\\s*["']?${r}["']?\\s*\\]`).test(s));
+  // Roles are a fixed vocabulary in semantics.json, pinned below as bare
+  // identifiers, so interpolating one into a regex cannot inject syntax.
+  return compositeRoles.filter((r) =>
+    new RegExp(`\\[role\\s*[~|^$*]?=\\s*["']?${r}["']?\\s*\\]`).test(s)
+  );
 }
 
 /** Everything wrong with one component's conformance declaration, as messages. */
@@ -102,7 +106,7 @@ function conformanceProblems(name, c, compositeRoles) {
         `${name}: ${r.id} blocks ${blocked.join('/')} but no conformance debt is declared - ` +
           'a withheld role must say which role and what it waits on'
       );
-    } else if (declared.withheld_role && !blocked.includes(declared.withheld_role)) {
+    } else if (r.id !== declared.rule && declared.withheld_role && !blocked.includes(declared.withheld_role)) {
       out.push(`${name}: ${r.id} blocks ${blocked.join('/')}, but the declared role is ${declared.withheld_role}`);
     }
   }
@@ -403,11 +407,23 @@ describe('semantics.json', () => {
     assert.ok(
       bad({ withheld_role: 'toolbar', blocked_on: 'k', rule: 'r' }, [
         { id: 'r', kind: 'forbid', selector: '.x[role="tablist"]', message: 'm' }
-      ]).some((m) => m.includes('the declared role is toolbar')),
-      'the rule must block the declared role'
+      ]).some((m) => m.includes('does not block toolbar')),
+      'the rule must block the declared role, and says so exactly once'
     );
     assert.ok(bad(undefined).some((m) => m.includes('no conformance debt is declared')), 'silent withholding');
     assert.deepEqual(bad({ withheld_role: 'tablist', blocked_on: 'keyboard model', rule: 'x-not-a-tablist' }), []);
+  });
+
+  test('the composite-role vocabulary is pinned', () => {
+    assert.deepEqual(
+      data.compositeRoles,
+      ['combobox', 'grid', 'listbox', 'menu', 'menubar', 'radiogroup', 'tablist', 'toolbar', 'tree', 'treegrid'],
+      'ARIA 1.2 composite widget roles, plus toolbar for its arrow-key contract. Dropping one ' +
+        'silently stops detecting a component that withholds it - which is the whole check'
+    );
+    for (const r of data.compositeRoles) {
+      assert.match(r, /^[a-z]+$/, `${r}: roles are interpolated into a regex, so they must be bare`);
+    }
   });
 
   test('a negated role is not read as a blocked one', () => {
