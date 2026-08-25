@@ -1,6 +1,6 @@
 {% extends "docs.html" %}
 {% from "macros/page.html" import code, section, toc with context %}
-{% from "macros/api.html" import instance_note, options_table, properties_table %}
+{% from "macros/api.html" import instance_note, options_table, properties_table, token_table %}
 
 {% set page_name = "Floating Action Button" %}
 {% set page_blurb = "A circular action that can open a menu of related shortcuts." %}
@@ -47,6 +47,139 @@
 {% endcall %}
   {% endcall %}
 
+  {% call section("sizes", "Sizes", heading="FAB sizes") %}
+        <p>
+          A FAB is <code>circle extra</code> (or its alias
+          <code>circle large</code>): 56dp, 16dp corners,
+          <code>primary-container</code>, elevation 3. Three size classes
+          go alongside the <code>extra</code>. The corner grows with the
+          container, so a bigger FAB is not simply a scaled-up one.
+        </p>
+        <div class="fab-size-demo">
+          <div>
+            <button type="button" class="circle extra small" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>small</code><br>40dp</span>
+          </div>
+          <div>
+            <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small">default<br>56dp</span>
+          </div>
+          <div>
+            <button type="button" class="circle extra medium" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>medium</code><br>80dp</span>
+          </div>
+          <div>
+            <button type="button" class="circle extra large" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>large</code><br>96dp</span>
+          </div>
+        </div>
+{% call code() %}
+<button type="button" class="circle extra small" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button type="button" class="circle extra" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button type="button" class="circle extra medium" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button type="button" class="circle extra large" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+{% endcall %}
+        <div class="docs-table-scroll">
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Size</th>
+                    <th>Class</th>
+                    <th>Container</th>
+                    <th>Corner</th>
+                    <th>Icon</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Small</td><td><code>circle extra small</code></td><td>40dp</td><td>12dp</td><td>24dp</td></tr>
+                <tr><td>Default</td><td><code>circle extra</code></td><td>56dp</td><td>16dp</td><td>24dp</td></tr>
+                <tr><td>Medium</td><td><code>circle extra medium</code></td><td>80dp</td><td>20dp</td><td>26dp</td></tr>
+                <tr><td>Large</td><td><code>circle extra large</code></td><td>96dp</td><td>28dp</td><td>36dp</td></tr>
+            </tbody>
+        </table>
+        </div>
+        <p>
+          The large size needs the <code>extra</code>:
+          <code>circle large</code> on its own is the alias for the default
+          56dp FAB, and keeps that meaning.
+        </p>
+        <p>
+          On an <code>&lt;a&gt;</code>, add <code>button</code> — the size
+          classes only match <code>button</code> or <code>a.button</code>.
+        </p>
+{% call code() %}
+<a class="button circle extra medium" href="#!" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</a>
+{% endcall %}
+        <p>
+          Each size is the same four custom properties, so a one-off size is
+          a matter of resetting them rather than writing new rules.
+        </p>
+        <div class="docs-table-scroll">
+        {% call token_table() %}
+            <tr><td><code>--md-comp-fab-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-container-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-container-shape</code></td><td>16px</td></tr>
+            <tr><td><code>--md-comp-fab-icon-size</code></td><td>24px</td></tr>
+        {% endcall %}
+        </div>
+  {% endcall %}
+
+  {% call section("extended", "Extended", heading="Extended FAB") %}
+        <p>
+          <code>extend</code> is the extended FAB: an icon plus a label at
+          56dp, 16dp corners, 8dp between the two. Wrap the label in its own
+          <code>&lt;span&gt;</code> — the order of the two spans is the
+          placement, and the wrapper is what earns the 16dp leading inset.
+        </p>
+        <div class="fab-size-demo">
+          <div>
+            <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend</code><br>16dp / 20dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend small</code><br>16dp / 16dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend"><span>Create</span><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>extend</code><br>trailing icon</span>
+          </div>
+        </div>
+{% call code() %}
+<button type="button" class="extend">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button type="button" class="extend small">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+{% endcall %}
+        <p>
+          <code>extend small</code> is the small extended FAB: the same 56dp
+          on a symmetric 16dp inset. Both keep the label at
+          <code>label-large</code> — the size class does not shrink the type.
+        </p>
+        <div class="docs-table-scroll">
+        {% call token_table() %}
+            <tr><td><code>--md-comp-extended-fab-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-extended-fab-container-shape</code></td><td>16px</td></tr>
+            <tr><td><code>--md-comp-extended-fab-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-extended-fab-leading-space</code></td><td>16px</td></tr>
+            <tr><td><code>--md-comp-extended-fab-icon-label-space</code></td><td>8px</td></tr>
+            <tr><td><code>--md-comp-extended-fab-trailing-space</code></td><td>20px (16px on <code>small</code>)</td></tr>
+        {% endcall %}
+        </div>
+  {% endcall %}
+
   {% call section("initialization", "Initialization") %}
         <p>
           The IIFE bundle exposes <code>Expressive.FloatingActionButton</code>.
@@ -73,6 +206,7 @@ Expressive.AutoInit(document.body, {
   {% endcall %}
 
   {% call section("options", "Options") %}
+        <div class="docs-table-scroll">
         {% call options_table() %}
             <tr>
               <td><code>direction</code></td>
@@ -93,6 +227,7 @@ Expressive.AutoInit(document.body, {
               <td>Expand the FAB into a toolbar on click. <code>.toolbar</code> is the markup switch. See <a href="#toolbar">FAB to Toolbar</a>.</td>
             </tr>
   {% endcall %}
+        </div>
   {% endcall %}
 
   {% call section("methods", "Methods") %}

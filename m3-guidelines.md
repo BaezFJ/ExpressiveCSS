@@ -145,7 +145,7 @@ Elevation is a last resort. Prefer tonal fill or an outline before a shadow. Dia
 
 ## 2.3 Shape and size (M3 Expressive)
 
-Buttons, icon buttons, and FABs share a size scale. Default common buttons in this framework are **40 dp** (Material small) with stadium corners. FABs are **56 dp** with 16 dp corners (`circle extra`). Icon buttons are **40 dp** (`circle`).
+Buttons, icon buttons, and FABs share a size scale. Default common buttons in this framework are **40 dp** (Material small) with stadium corners. FABs are **56 dp** with 16 dp corners (`circle extra`), or 40 dp / 80 dp / 96 dp with `small` / `medium` / `large`. Icon buttons are **40 dp** (`circle`).
 
 Scale a control up only to create hierarchy or to match a large window. Extra-large buttons are hero moments, not form chrome.
 
@@ -591,7 +591,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.3 Floating action button
 
-**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extend` (extended). Speed-dial: wrap in `.fab`. `AutoInit()`.
+**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), `extend` (extended), `extend small` (small extended). Speed-dial: wrap in `.fab`. `AutoInit()`.
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
@@ -603,7 +603,10 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | --- | --- | --- |
 | FAB | `circle extra` | Default primary action |
 | Small FAB | `extra circle small` | Visual continuity with nearby small controls; not the default |
+| Medium FAB | `extra circle medium` | 80 dp: one prominent action on a large window, where a 56 dp disc reads as undersized |
+| Large FAB | `extra circle large` | 96 dp: the action *is* the screen's purpose. Needs the `extra` — `circle large` alone is the default FAB |
 | Extended FAB | `extend` (icon + `<span>` label) | Large windows, or when the label is needed to explain a non-standard icon |
+| Small extended FAB | `extend small` | 56 dp on a symmetric 16 dp inset — the tighter of the two when the label is short |
 | Speed-dial | `.fab` + `<ul>` of smaller FABs | Related shortcuts from the same primary action. This is **not** the M3 Expressive FAB *menu* (a labelled menu anchored to the FAB); it is the older speed-dial. |
 
 **Anatomy.** Container + icon (required). Extended: icon + label. Speed-dial: primary FAB + list of related FABs.

@@ -12,6 +12,8 @@
 //   icon 18dp, 8dp gap, 24dp inset (16dp next to an icon)
 //   state layer 8% hover / 10% focus+press
 //   FAB 56dp (extra/large icon-only), primary-container, 16dp corners
+//   FAB sizes 40dp small / 56dp default / 80dp medium / 96dp large,
+//     24 / 24 / 26 / 36dp icon, 12 / 16 / 20 / 28dp corners
 
 :root {
   --md-comp-filled-button-container-color: var(--md-sys-color-primary);
@@ -138,10 +140,40 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 }
 
 // Extended FAB: 56dp, large corners, primary-container, icon + label.
+//
+// Tokens (M3 md.comp.extended-fab.*):
+//   --md-comp-extended-fab-container-height   56dp
+//   --md-comp-extended-fab-container-shape    16dp, corner.large
+//   --md-comp-extended-fab-icon-size          24dp
+//   --md-comp-extended-fab-leading-space      16dp
+//   --md-comp-extended-fab-icon-label-space   8dp
+//   --md-comp-extended-fab-trailing-space     20dp
+// .small resets those six; nothing else varies by size.
+//
+// `font-size` is restated because the size classes are the same one class
+// this rule is: `.small` sets label-medium and would otherwise shrink the
+// label of a `extend small`, which is label-large at every extended size.
 :where(#{$_btn}).extend {
-  height: 56px;
-  padding-inline: 16px 20px;
-  border-radius: 16px;
+  --md-comp-extended-fab-container-height: 56px;
+  --md-comp-extended-fab-container-shape: 16px;
+  --md-comp-extended-fab-icon-size: 24px;
+  --md-comp-extended-fab-leading-space: 16px;
+  --md-comp-extended-fab-icon-label-space: 8px;
+  --md-comp-extended-fab-trailing-space: 20px;
+
+  // The base with-icon rule is `:has(> icon + label)` - two classes, so it
+  // outranks this one-class rule on the leading edge and its token wins
+  // there. Point that token at the extended FAB's own space instead of
+  // fighting it: `.small` sets it to the 12dp of a 32dp common button, which
+  // is how `extend small` came out at a 12dp leading inset.
+  --md-comp-filled-button-with-icon-leading-space: var(--md-comp-extended-fab-leading-space);
+
+  gap: var(--md-comp-extended-fab-icon-label-space);
+  height: var(--md-comp-extended-fab-container-height);
+  padding-inline: var(--md-comp-extended-fab-leading-space)
+    var(--md-comp-extended-fab-trailing-space);
+  border-radius: var(--md-comp-extended-fab-container-shape);
+  font-size: var(--md-sys-typescale-label-large-font-size);
   color: var(--md-sys-color-on-primary-container);
   background-color: var(--md-sys-color-primary-container);
   @include z-depth("3");
@@ -167,25 +199,49 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   @include focus-visible;
 
   > #{$icon} {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    font-size: var(--md-comp-extended-fab-icon-size);
+    width: var(--md-comp-extended-fab-icon-size);
+    height: var(--md-comp-extended-fab-icon-size);
+    line-height: var(--md-comp-extended-fab-icon-size);
+  }
+
+  // Small extended FAB: 56dp on a symmetric 16dp inset.
+  &.small {
+    --md-comp-extended-fab-container-height: 56px;
+    --md-comp-extended-fab-container-shape: 16px;
+    --md-comp-extended-fab-icon-size: 24px;
+    --md-comp-extended-fab-leading-space: 16px;
+    --md-comp-extended-fab-icon-label-space: 8px;
+    --md-comp-extended-fab-trailing-space: 16px;
   }
 }
 
 // FAB. Icon-only .extra / .large is the 56dp regular FAB. Add .small for
 // the 40dp small FAB. The speed-dial host is .fab.
+//
+// Tokens (M3 md.comp.fab.*):
+//   --md-comp-fab-container-height  56dp
+//   --md-comp-fab-container-width   56dp
+//   --md-comp-fab-container-shape   16dp, corner.large - rounded, not a pill
+//   --md-comp-fab-icon-size         24dp
+// .small, .medium and .extra.large reset those four; nothing else varies
+// by size.
 :where(#{$_btn}).extra.circle,
 :where(#{$_btn}).large.circle {
+  --md-comp-fab-container-height: 56px;
+  --md-comp-fab-container-width: 56px;
+  --md-comp-fab-container-shape: 16px;
+  --md-comp-fab-icon-size: 24px;
+
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: var(--md-comp-fab-container-width);
+  height: var(--md-comp-fab-container-height);
   padding: 0;
   border: none;
-  border-radius: 16px;
+  border-radius: var(--md-comp-fab-container-shape);
   color: var(--md-sys-color-on-primary-container);
   background-color: var(--md-sys-color-primary-container);
   text-decoration: none;
@@ -196,10 +252,10 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   @include focus-visible;
 
   > #{$icon} {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    font-size: var(--md-comp-fab-icon-size);
+    width: var(--md-comp-fab-icon-size);
+    height: var(--md-comp-fab-icon-size);
+    line-height: var(--md-comp-fab-icon-size);
     color: inherit;
   }
 
@@ -221,14 +277,20 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     );
   }
 
+  // Small FAB: 40dp container, corner.medium, icon stays 24dp.
   &.small {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    --md-comp-fab-container-height: 40px;
+    --md-comp-fab-container-width: 40px;
+    --md-comp-fab-container-shape: 12px;
+  }
 
-    > #{$icon} {
-      font-size: 24px;
-    }
+  // Medium FAB: 80dp container, 26dp icon. The corner continues the size
+  // ladder - 12dp small, 16dp default, 20dp here (corner.large-increased).
+  &.medium {
+    --md-comp-fab-container-height: 80px;
+    --md-comp-fab-container-width: 80px;
+    --md-comp-fab-container-shape: 20px;
+    --md-comp-fab-icon-size: 26px;
   }
 
   &.halfway-fab {
@@ -241,6 +303,20 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
       inset-inline-start: 24px;
     }
   }
+}
+
+// Large FAB: 96dp container, corner.extra-large, 36dp icon.
+//
+// `.large` is *also* the alias for the default FAB - `circle large` is
+// `circle extra` - so the size only applies next to `.extra`, and the markup
+// is `circle extra large`. Nesting it as `&.large` inside the block above
+// would compile `.large.circle.large` as well, and every aliased 56dp FAB on
+// a page would silently grow to 96dp.
+:where(#{$_btn}).extra.circle.large {
+  --md-comp-fab-container-height: 96px;
+  --md-comp-fab-container-width: 96px;
+  --md-comp-fab-container-shape: 28px;
+  --md-comp-fab-icon-size: 36px;
 }
 
 :where(#{$_btn}):disabled,

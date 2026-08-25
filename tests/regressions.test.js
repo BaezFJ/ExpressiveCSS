@@ -27,6 +27,25 @@ function fixRect(el, width, height) {
   });
 }
 
+/** Split a selector list on its top-level commas — `:not(a, b)` has its own. */
+function splitSelectors(list) {
+  const out = [];
+  let depth = 0;
+  let current = '';
+  for (const ch of list) {
+    if (ch === '(') depth += 1;
+    else if (ch === ')') depth -= 1;
+    if (ch === ',' && depth === 0) {
+      out.push(current);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  out.push(current);
+  return out.filter((s) => s.trim());
+}
+
 describe('FloatingActionButton toolbar mode', () => {
   beforeEach(resetBody);
 
@@ -330,6 +349,103 @@ describe('Tabs disabled-selector interpolation', () => {
       /\.tabs\s*>\s*a\s*,\s*\.tabs\s*>\s*\.tab\s*>\s*a\.disabled/
     );
     assert.match(css, /\.tabs\s*>\s*a\.disabled/);
+  });
+});
+
+describe('FAB container shape', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+  test('the .circle utility does not round the FAB off into a disc', () => {
+    // Utilities are emitted after components and win by layer order, so a
+    // bare `.circle` beat the FAB's own corner: every FAB documented as
+    // `circle extra` rendered at 50% while `.fab-backdrop` stayed at 16dp.
+    assert.doesNotMatch(css, /\.circle\s*\{\s*border-radius:\s*50%/);
+    assert.match(css, /\.circle:not\(\.extra, \.large\)\s*\{\s*border-radius:\s*50%/);
+  });
+
+  test('the sizes reset the container tokens as one block', () => {
+    // Each size is only these four tokens - a size that re-declared
+    // `width`/`height` instead would have to re-state the corner too, which
+    // is how the small FAB kept a 16dp corner at 40dp before.
+    const size = (cls) =>
+      new RegExp(`\\.extra\\.circle\\.${cls}[^{]*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+
+    const small = size('small');
+    assert.match(small, /--md-comp-fab-container-height:\s*40px/);
+    assert.match(small, /--md-comp-fab-container-width:\s*40px/);
+    assert.match(small, /--md-comp-fab-container-shape:\s*12px/);
+
+    const medium = size('medium');
+    assert.match(medium, /--md-comp-fab-container-height:\s*80px/);
+    assert.match(medium, /--md-comp-fab-container-width:\s*80px/);
+    assert.match(medium, /--md-comp-fab-container-shape:\s*20px/);
+    assert.match(medium, /--md-comp-fab-icon-size:\s*26px/);
+
+    const large = size('large');
+    assert.match(large, /--md-comp-fab-container-height:\s*96px/);
+    assert.match(large, /--md-comp-fab-container-width:\s*96px/);
+    assert.match(large, /--md-comp-fab-container-shape:\s*28px/);
+    assert.match(large, /--md-comp-fab-icon-size:\s*36px/);
+  });
+
+  test('the large size does not resize a FAB written as `circle large`', () => {
+    // `.large` is the alias for the default FAB, so `&.large` nested in the
+    // FAB block would also compile `.large.circle.large` and grow every
+    // aliased 56dp FAB to 96dp. The size has to name `.extra`.
+    const rules = css
+      .split('}')
+      .filter((rule) => /--md-comp-fab-container-height:\s*96px/.test(rule));
+    assert.ok(rules.length > 0, 'no rule sizes the large FAB');
+    for (const rule of rules) {
+      // Everything between the enclosing layer's brace and this rule's own.
+      const head = rule.slice(0, rule.lastIndexOf('{'));
+      for (const selector of splitSelectors(head.slice(head.lastIndexOf('{') + 1))) {
+        assert.match(
+          selector,
+          /\.extra\b/,
+          `large-FAB rule matches without .extra:\n  ${selector.trim()}`
+        );
+      }
+    }
+  });
+
+  test('the extended FAB sizes itself from its own token family', () => {
+    const rule = /\.extend\b[^{]*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    assert.match(rule, /height:\s*var\(--md-comp-extended-fab-container-height\)/);
+    assert.match(rule, /gap:\s*var\(--md-comp-extended-fab-icon-label-space\)/);
+    assert.match(
+      rule,
+      /padding-inline:\s*var\(--md-comp-extended-fab-leading-space\) var\(--md-comp-extended-fab-trailing-space\)/
+    );
+    assert.match(rule, /border-radius:\s*var\(--md-comp-extended-fab-container-shape\)/);
+    // `.small` is label-medium and the same one class this rule is, so an
+    // `extend small` loses label-large unless the extended FAB restates it.
+    assert.match(rule, /font-size:\s*var\(--md-sys-typescale-label-large-font-size\)/);
+    // `:has(> icon + label)` is two classes and wins the leading edge, so
+    // the extended FAB has to feed that rule its own space - otherwise
+    // `.small` pulls the inset to a 32dp common button's 12dp.
+    assert.match(
+      rule,
+      /--md-comp-filled-button-with-icon-leading-space:\s*var\(--md-comp-extended-fab-leading-space\)/
+    );
+
+    const small = /\.extend\.small[^{]*\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    assert.match(small, /--md-comp-extended-fab-container-height:\s*56px/);
+    assert.match(small, /--md-comp-extended-fab-container-shape:\s*16px/);
+    assert.match(small, /--md-comp-extended-fab-icon-size:\s*24px/);
+    assert.match(small, /--md-comp-extended-fab-leading-space:\s*16px/);
+    assert.match(small, /--md-comp-extended-fab-icon-label-space:\s*8px/);
+    assert.match(small, /--md-comp-extended-fab-trailing-space:\s*16px/);
+  });
+
+  test('the FAB states its container and icon size as tokens', () => {
+    assert.match(css, /--md-comp-fab-container-height:\s*56px/);
+    assert.match(css, /--md-comp-fab-container-width:\s*56px/);
+    assert.match(css, /--md-comp-fab-container-shape:\s*16px/);
+    assert.match(css, /--md-comp-fab-icon-size:\s*24px/);
+    assert.match(css, /border-radius:\s*var\(--md-comp-fab-container-shape\)/);
+    assert.match(css, /width:\s*var\(--md-comp-fab-container-width\)/);
+    assert.match(css, /height:\s*var\(--md-comp-fab-container-height\)/);
   });
 });
 

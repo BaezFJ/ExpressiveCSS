@@ -25,7 +25,11 @@
 
 // Shape and text behaviour
 .no-select { user-select: none; }
-.circle { border-radius: 50%; }
+// A FAB is `circle extra` / `circle large`, and its container shape is
+// 16dp rounded corners, not a full round - so the utility skips it. Layer
+// order puts utilities after components, which is why the exclusion has to
+// live here: no selector in `components` can outrank this one.
+.circle:not(.extra, .large) { border-radius: 50%; }
 .center-block { display: block; margin-left: auto; margin-right: auto; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .no-padding { padding: 0 !important; }

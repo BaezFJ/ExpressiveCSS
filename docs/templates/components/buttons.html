@@ -159,14 +159,24 @@
         <p>
           A FAB is <code>circle extra</code> or <code>circle large</code>:
           56dp, 16dp corners, <code>primary-container</code>, elevation 3.
-          <code>extra circle small</code> is the 40dp small FAB.
+          <code>extra circle small</code> is the 40dp small FAB,
+          <code>extra circle medium</code> the 80dp medium one (20dp
+          corners, 26dp icon) and <code>extra circle large</code> the 96dp
+          large one (28dp corners, 36dp icon). The large size needs the
+          <code>extra</code>: <code>circle large</code> on its own is the
+          alias for the default 56dp FAB.
           <code>extend</code> is the extended FAB — icon plus
-          label at 56dp.
+          label at 56dp, 16dp corners, 8dp between the two.
+          <code>extend small</code> is the small extended FAB: the same
+          56dp on a symmetric 16dp inset.
         </p>
         <p>
           <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
           <a class="button extra circle small" href="#!" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
+          <button type="button" class="circle extra medium" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+          <button type="button" class="circle extra large" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
           <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+          <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 {% call code() %}
 <button class="circle extra" aria-label="Add">
@@ -175,7 +185,16 @@
 <a class="button extra circle small" href="#!" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </a>
+<button class="circle extra medium" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button class="circle extra large" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
 <button class="extend">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button class="extend small">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 {% endcall %}

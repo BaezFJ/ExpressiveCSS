@@ -1800,7 +1800,7 @@ Add `circle` for a 40dp icon button. The variant helpers still apply: default is
 
 ### Floating
 
-A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. Add `small` for the 40dp FAB (`circle extra small`). `extend` is the extended FAB — icon plus label at 56dp. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
+A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. The sizes are `circle extra small` (40dp, 12dp corners), `circle extra medium` (80dp, 20dp corners, 26dp icon) and `circle extra large` (96dp, 28dp corners, 36dp icon) — the large size needs the `extra`, because `circle large` on its own is the alias for the default 56dp FAB. `extend` is the extended FAB — icon plus label at 56dp, 16dp corners, 8dp between icon and label. Add `small` (`extend small`) for the small extended FAB: the same 56dp on a symmetric 16dp inset. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
 
 Create
 
@@ -1811,7 +1811,16 @@ Create
 <a class="button circle extra small" href="#!" aria-label="Add">
   <span class="material-symbols" aria-hidden="true">add</span>
 </a>
+<button class="circle extra medium" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button class="circle extra large" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
 <button class="extend">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button class="extend small">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 ```
