@@ -143,6 +143,33 @@ job is `visual.yml`, pull requests only.
   pass, which does loop, was settled -- a stable-but-wrong diff of 11,711
   pixels on collections, 2,733 on range. The base pass now loops on its own
   until two captures match.
+- **The docs chrome is taken out of the picture, and how differs per element.**
+  `macros/nav.html` renders the sidenav *and* the footer from `NAV`, so
+  documenting one component relinked all 57 pages and failed the whole suite.
+  The footer is **hidden**, not masked: the failure was a *dimension* mismatch
+  (388x7118 against 388x7166, one link row taller), and a mask paints pixels
+  without changing the image size, so the page stays 48px taller and still
+  fails. The sidenav is **masked** instead -- its box is viewport-height either
+  way so it costs no height, and `display: none` on a fixed drawer risks
+  reflowing the content beside it.
+
+  **Both selectors have to match the base revision too.** The spec is always the
+  head's, but the base pass serves the base worktree's `docs/app.py`, so a hook
+  added to a template exists on one side only and the footer would be hidden in
+  one pass and not the other. `body > footer` is the chrome's own shape on any
+  revision -- a sibling of `<main>`, while the Footer page's demo footers sit
+  inside it -- and `#nav-mobile` already existed.
+
+  **Masking the chrome costs no component coverage, but check that rather than
+  assuming it.** The Sidenav page's `.navigation-drawer-demo` is made static
+  with `transform: none` by `docs.css`, so it sits in flow and is photographed;
+  the two `#slide-out` drawers beside it are off-canvas and never were. A
+  deliberate restyle of `.navigation-drawer, .sidenav` fails `sidenav` at all
+  four widths with the mask on, and a restyled footer fails `footer` at all
+  four. Probing this needs a `background-color`, not an `outline` - an outline
+  draws outside the element box, escapes the mask, and fails 175 shots that are
+  perfectly fine.
+
 - **`visual/serve.py`, not `flask --app`.** Werkzeug logs ~1,400 access lines a
   pass, which buries the results; the wrapper quiets that logger so stderr
   stays free for real failures. Silencing stderr wholesale was the first
