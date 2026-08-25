@@ -229,6 +229,19 @@ describe("Menu nested menus", () => {
       document.querySelector(".menu-trigger"),
     );
     assert.equal(Expressive.Menu._menus.length, before + 1);
+    assert.equal(document.getElementById("dn").getAttribute("role"), "menu");
+    assert.equal(
+      document.querySelector("#dn > li").getAttribute("role"),
+      "menuitem",
+    );
+    assert.equal(
+      document.querySelector("#dn li menu").getAttribute("role"),
+      "menu",
+    );
+    assert.equal(
+      document.querySelector(".menu-trigger").getAttribute("aria-controls"),
+      "dn",
+    );
     assert.equal(
       document
         .getElementById("more-row")
@@ -260,6 +273,77 @@ describe("Menu nested menus", () => {
     fire(more.querySelector("a"), "click");
     instance.close();
     assert.equal(more.classList.contains("open"), false);
+    instance.destroy();
+  });
+
+  test("Space and Arrow Up open the menu and focus its first item", async () => {
+    document.body.innerHTML = html;
+    const trigger = document.querySelector(".menu-trigger");
+    let instance = Expressive.Menu.init(trigger, { inDuration: 0 });
+
+    trigger.dispatchEvent(
+      new window.KeyboardEvent("keydown", {
+        key: " ",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    assert.equal(instance.isOpen, true);
+    assert.equal(document.activeElement.textContent.trim(), "One");
+    instance.destroy();
+
+    document.body.innerHTML = html;
+    const arrowTrigger = document.querySelector(".menu-trigger");
+    instance = Expressive.Menu.init(arrowTrigger, { inDuration: 0 });
+    arrowTrigger.dispatchEvent(
+      new window.KeyboardEvent("keydown", {
+        key: "ArrowUp",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    assert.equal(instance.isOpen, true);
+    assert.equal(document.activeElement.textContent.trim(), "One");
+    instance.destroy();
+  });
+
+  test("disabled items remain focusable but cannot be activated", () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="disabled-menu">Drop</button>
+      <menu id="disabled-menu">
+        <li class="disabled"><a href="#!">Redo</a></li>
+      </menu>`;
+    let clicks = 0;
+    const instance = Expressive.Menu.init(
+      document.querySelector(".menu-trigger"),
+      {
+        onItemClick: () => clicks++,
+      },
+    );
+    const row = document.querySelector("#disabled-menu > li");
+
+    assert.equal(row.tabIndex, 0);
+    assert.equal(row.getAttribute("aria-disabled"), "true");
+    fire(row.querySelector("a"), "click");
+    assert.equal(clicks, 0);
+    instance.destroy();
+  });
+
+  test("preserves radio and checkbox menu item roles", () => {
+    document.body.innerHTML = `
+      <button type="button" class="menu-trigger" data-target="choice-menu">Choose</button>
+      <menu id="choice-menu">
+        <li role="menuitemradio" aria-checked="true"><button type="button">One</button></li>
+        <li role="menuitemcheckbox" aria-checked="false"><button type="button">Two</button></li>
+      </menu>`;
+    const instance = Expressive.Menu.init(document.querySelector(".menu-trigger"));
+    const items = document.querySelectorAll("#choice-menu > li");
+
+    assert.equal(items[0].getAttribute("role"), "menuitemradio");
+    assert.equal(items[0].getAttribute("aria-checked"), "true");
+    assert.equal(items[1].getAttribute("role"), "menuitemcheckbox");
     instance.destroy();
   });
 });

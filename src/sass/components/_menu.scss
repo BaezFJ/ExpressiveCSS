@@ -10,14 +10,18 @@
 // <li> is a 32dp group heading. A nested <menu> is a flyout. The trigger
 // is .menu-trigger[data-target] — that is the JS contract.
 //
-// Tokens follow https://m3.material.io/components/menus/specs
-//   container    surface-container, 16dp corners, elevation 2, 112–280
-//   padding      4dp
-//   item         48dp, extra-small (4dp) corners, label-large / on-surface
+// Tokens are md.comp.menus - the expressive family, not baseline
+// md.comp.menu, which is a different component with its own values.
+// https://m3.material.io/components/menus/specs
+//   container    surface-container-low, 16dp corners, level 2, 112–280
+//   group        2dp padding, 2dp gap, 8dp corners
+//   item         44dp, 16dp insets, 4dp corners, label-large / on-surface
+//   end items    12dp outer corner, 4dp inner
+//   state layer  hover 8%, focus / pressed 10%
 //   selected     medium (12dp) corners, tertiary-container / on-tertiary
 //   icon         20dp, on-surface-variant
 //   divider      1dp outline-variant, inset (not full-bleed)
-//   gap          6dp, more expressive than a divider
+//   gap          2dp, more expressive than a divider
 //   label        32dp, on-surface-variant
 //   vibrant      tertiary-container surface; selected is tertiary
 //   submenu      scale + fade; focused flyout rounds up, parent rounds down
@@ -31,24 +35,43 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 @mixin menu-surface {
-  --md-comp-menu-container-color: var(--md-sys-color-surface-container);
+  --md-comp-menu-container-color: var(--md-sys-color-surface-container-low);
   --md-comp-menu-container-shape: 16px;
-  --md-comp-menu-item-container-height: 48px;
+  --md-comp-menu-group-shape: 8px;
+  --md-comp-menu-container-inactive-shape: var(--md-comp-menu-group-shape);
+  --md-comp-menu-group-padding: 2px;
+  --md-comp-menu-gap: 2px;
+  --md-comp-menu-item-container-height: 44px;
   --md-comp-menu-item-container-shape: 4px;
+  --md-comp-menu-item-edge-shape: 12px;
   --md-comp-menu-item-selected-container-shape: 12px;
+  --md-comp-menu-item-leading-space: 16px;
+  --md-comp-menu-item-trailing-space: 16px;
+  --md-comp-menu-item-between-space: 12px;
   --md-comp-menu-item-label-text-color: var(--md-sys-color-on-surface);
-  --md-comp-menu-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
-  --md-comp-menu-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
-  --md-comp-menu-item-selected-container-color: var(--md-sys-color-tertiary-container);
-  --md-comp-menu-item-selected-label-text-color: var(--md-sys-color-on-tertiary-container);
-  --md-comp-menu-item-selected-leading-icon-color: var(--md-sys-color-on-tertiary-container);
+  --md-comp-menu-item-leading-icon-color: var(
+    --md-sys-color-on-surface-variant
+  );
+  --md-comp-menu-item-trailing-icon-color: var(
+    --md-sys-color-on-surface-variant
+  );
+  --md-comp-menu-item-selected-container-color: var(
+    --md-sys-color-tertiary-container
+  );
+  --md-comp-menu-item-selected-label-text-color: var(
+    --md-sys-color-on-tertiary-container
+  );
+  --md-comp-menu-item-selected-leading-icon-color: var(
+    --md-sys-color-on-tertiary-container
+  );
   --md-comp-menu-item-icon-size: 20px;
   --md-comp-menu-supporting-text-color: var(--md-sys-color-on-surface-variant);
 
   box-sizing: border-box;
   min-width: 112px;
+  max-width: 280px;
   margin: 0;
-  padding: 4px;
+  padding: var(--md-comp-menu-group-padding);
   list-style: none;
   background-color: var(--md-comp-menu-container-color);
   border-radius: var(--md-comp-menu-container-shape);
@@ -58,13 +81,25 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
   &.vibrant {
     --md-comp-menu-container-color: var(--md-sys-color-tertiary-container);
-    --md-comp-menu-item-label-text-color: var(--md-sys-color-on-tertiary-container);
-    --md-comp-menu-item-leading-icon-color: var(--md-sys-color-on-tertiary-container);
-    --md-comp-menu-item-trailing-icon-color: var(--md-sys-color-on-tertiary-container);
-    --md-comp-menu-supporting-text-color: var(--md-sys-color-on-tertiary-container);
+    --md-comp-menu-item-label-text-color: var(
+      --md-sys-color-on-tertiary-container
+    );
+    --md-comp-menu-item-leading-icon-color: var(
+      --md-sys-color-on-tertiary-container
+    );
+    --md-comp-menu-item-trailing-icon-color: var(
+      --md-sys-color-on-tertiary-container
+    );
+    --md-comp-menu-supporting-text-color: var(
+      --md-sys-color-on-tertiary-container
+    );
     --md-comp-menu-item-selected-container-color: var(--md-sys-color-tertiary);
-    --md-comp-menu-item-selected-label-text-color: var(--md-sys-color-on-tertiary);
-    --md-comp-menu-item-selected-leading-icon-color: var(--md-sys-color-on-tertiary);
+    --md-comp-menu-item-selected-label-text-color: var(
+      --md-sys-color-on-tertiary
+    );
+    --md-comp-menu-item-selected-leading-icon-color: var(
+      --md-sys-color-on-tertiary
+    );
   }
 
   > li {
@@ -85,12 +120,14 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     > #{$icon-label} {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: var(--md-comp-menu-item-between-space);
       box-sizing: border-box;
       width: 100%;
       min-height: var(--md-comp-menu-item-container-height);
       margin: 0;
-      padding: 0 8px;
+      padding-block: 8px;
+      padding-inline: var(--md-comp-menu-item-leading-space)
+        var(--md-comp-menu-item-trailing-space);
       border: 0;
       background: none;
       color: var(--md-comp-menu-item-label-text-color);
@@ -104,6 +141,19 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       @include typescale("label-large");
     }
 
+    > :is(a, button) > .menu-item-text {
+      display: flex;
+      min-width: 0;
+      flex: 1 1 auto;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    > :is(a, button) .supporting-text {
+      color: var(--md-comp-menu-supporting-text-color);
+      @include typescale("body-small");
+    }
+
     > a > #{$icon},
     > button > #{$icon},
     > #{$icon} {
@@ -115,7 +165,16 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       color: var(--md-comp-menu-item-leading-icon-color);
     }
 
-    > :is(a, button) > #{$icon}:last-child:not(:only-child) {
+    // A lone icon is ambiguous to CSS. In `<a>Label<span icon/></a>` and
+    // `<a><span icon/>Label</a>` the span is :first-child, :last-child AND
+    // :only-child in both cases - the label is a text node, and selectors
+    // cannot see text. So :not(:only-child) only ever caught rows carrying two
+    // icons, and every text-plus-trailing-icon row silently kept its icon
+    // butted against the label instead of flush right.
+    //
+    // Leading stays the default; a trailing icon names its side, the same way
+    // a field icon must (see rule 3 in CLAUDE.md).
+    > :is(a, button) > #{$icon}:is(.suffix, :last-child:not(:only-child)) {
       margin-inline-start: auto;
       color: var(--md-comp-menu-item-trailing-icon-color);
     }
@@ -129,15 +188,39 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       font-family: inherit;
       @include typescale("label-large");
     }
+
+    > :is(a, button) > .badge {
+      margin-inline-start: auto;
+    }
   }
 
-  > li:not(.disabled, .divider, .optgroup, .gap, .label) {
+  > li:not(.divider, .optgroup, .gap, .label) {
     min-height: var(--md-comp-menu-item-container-height);
   }
 
+  > li:not(.divider, .optgroup, .gap, .label):first-child {
+    border-radius: var(--md-comp-menu-item-edge-shape)
+      var(--md-comp-menu-item-edge-shape)
+      var(--md-comp-menu-item-container-shape)
+      var(--md-comp-menu-item-container-shape);
+  }
+
+  > li:not(.divider, .optgroup, .gap, .label):last-child {
+    border-radius: var(--md-comp-menu-item-container-shape)
+      var(--md-comp-menu-item-container-shape)
+      var(--md-comp-menu-item-edge-shape) var(--md-comp-menu-item-edge-shape);
+  }
+
   // Hover / press sit on extra-small corners and do not span the container.
-  > li:not(.disabled, .divider, .optgroup, .gap, .label):hover,
-  > li.active:not(.selected, [aria-selected="true"]) {
+  > li:not(
+      .disabled,
+      [aria-disabled="true"],
+      .divider,
+      .optgroup,
+      .gap,
+      .label
+    ):hover,
+  > li.active:not(.selected, [aria-selected="true"], [aria-checked="true"]) {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-label-text-color) 8%,
@@ -145,7 +228,14 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     );
   }
 
-  > li:not(.disabled, .divider, .optgroup, .gap, .label):active {
+  > li:not(
+      .disabled,
+      [aria-disabled="true"],
+      .divider,
+      .optgroup,
+      .gap,
+      .label
+    ):active {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-label-text-color) 10%,
@@ -153,8 +243,12 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     );
   }
 
-  > li.selected,
-  > li[aria-selected="true"] {
+  // :not(.divider) only buys specificity: menu-item.selected.shape is 12dp
+  // unconditionally, so it has to outrank the first/last-child edge rule that
+  // would otherwise leave a selected end item with 4dp inner corners.
+  > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):not(
+      .divider
+    ) {
     border-radius: var(--md-comp-menu-item-selected-container-shape);
     background-color: var(--md-comp-menu-item-selected-container-color);
     color: var(--md-comp-menu-item-selected-label-text-color);
@@ -167,13 +261,28 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     > #{$icon} {
       color: var(--md-comp-menu-item-selected-leading-icon-color);
     }
+
+    > :is(a, button, #{$icon-label}) :is(.supporting-text, kbd, .shortcut) {
+      color: var(--md-comp-menu-item-selected-label-text-color);
+    }
   }
 
-  > li.selected:hover,
-  > li[aria-selected="true"]:hover {
+  > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):hover {
     background-color: color-mix(
       in oklab,
       var(--md-comp-menu-item-selected-label-text-color) 8%,
+      var(--md-comp-menu-item-selected-container-color)
+    );
+  }
+
+  > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):is(
+      :focus,
+      :focus-visible,
+      :active
+    ) {
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-menu-item-selected-label-text-color) 10%,
       var(--md-comp-menu-item-selected-container-color)
     );
   }
@@ -183,7 +292,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     outline-offset: -3px;
   }
 
-  > li.disabled {
+  > li:is(.disabled, [aria-disabled="true"]) {
     pointer-events: none;
     opacity: 0.38;
   }
@@ -206,9 +315,9 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
   // Gap: more expressive than a divider. One or two per menu; not in a scroller.
   > li.gap {
-    height: 6px;
-    min-height: 6px;
-    margin: 0 -4px;
+    height: var(--md-comp-menu-gap);
+    min-height: var(--md-comp-menu-gap);
+    margin: 0 calc(-1 * var(--md-comp-menu-group-padding));
     padding: 0;
     pointer-events: none;
     cursor: default;
@@ -226,6 +335,119 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     cursor: default;
     color: var(--md-comp-menu-supporting-text-color);
     @include typescale("label-large");
+  }
+
+  // Grouped layout: each run of items between .gap separators becomes its
+  // own coplanar surface. Standard remains the default continuous surface.
+  &.grouped {
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.14))
+      drop-shadow(0 1px 4px rgba(0, 0, 0, 0.12));
+
+    > li:not(.divider, .optgroup, .gap, .label) {
+      padding-inline: var(--md-comp-menu-group-padding);
+      background-color: var(--md-comp-menu-container-color);
+      border-radius: 0;
+    }
+
+    > li:not(.divider, .optgroup, .gap, .label):first-child,
+    > li.gap + li:not(.divider, .optgroup, .gap, .label) {
+      padding-block-start: var(--md-comp-menu-group-padding);
+      border-start-start-radius: var(--md-comp-menu-group-shape);
+      border-start-end-radius: var(--md-comp-menu-group-shape);
+    }
+
+    > li:not(.divider, .optgroup, .gap, .label):has(+ li.gap),
+    > li:not(.divider, .optgroup, .gap, .label):last-child {
+      padding-block-end: var(--md-comp-menu-group-padding);
+      border-end-start-radius: var(--md-comp-menu-group-shape);
+      border-end-end-radius: var(--md-comp-menu-group-shape);
+    }
+
+    > li.gap {
+      margin: 0;
+    }
+
+    // State layers belong to the inset item while the group surface remains.
+    > li:not(
+        .disabled,
+        [aria-disabled="true"],
+        .divider,
+        .optgroup,
+        .gap,
+        .label
+      ):hover,
+    > li.active,
+    > li.selected,
+    > li[aria-selected="true"],
+    > li[aria-checked="true"] {
+      background-color: var(--md-comp-menu-container-color);
+    }
+
+    > li:not(
+        .disabled,
+        [aria-disabled="true"],
+        .divider,
+        .optgroup,
+        .gap,
+        .label
+      ):hover
+      > :is(a, button, #{$icon-label}),
+    > li.active:not(.selected, [aria-selected="true"], [aria-checked="true"])
+      > :is(a, button, #{$icon-label}) {
+      border-radius: var(--md-comp-menu-item-container-shape);
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-label-text-color) 8%,
+        transparent
+      );
+    }
+
+    > li:not(
+        .disabled,
+        [aria-disabled="true"],
+        .divider,
+        .optgroup,
+        .gap,
+        .label
+      ):active
+      > :is(a, button, #{$icon-label}) {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-label-text-color) 10%,
+        transparent
+      );
+    }
+
+    > li:is(.selected, [aria-selected="true"], [aria-checked="true"])
+      > :is(a, button, #{$icon-label}) {
+      border-radius: var(--md-comp-menu-item-selected-container-shape);
+      background-color: var(--md-comp-menu-item-selected-container-color);
+    }
+
+    > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):hover
+      > :is(a, button, #{$icon-label}) {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-selected-label-text-color) 8%,
+        var(--md-comp-menu-item-selected-container-color)
+      );
+    }
+
+    > li:is(.selected, [aria-selected="true"], [aria-checked="true"]):is(
+        :focus,
+        :focus-visible,
+        :active
+      )
+      > :is(a, button, #{$icon-label}) {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-menu-item-selected-label-text-color) 10%,
+        var(--md-comp-menu-item-selected-container-color)
+      );
+    }
   }
 
   li:has(> menu) {
@@ -263,7 +485,9 @@ menu[id] {
 
   // Unfocused parent rounds down while a flyout is the focus.
   &:has(> li:is(:hover, :focus-within, .open) > menu) {
-    --md-comp-menu-container-shape: 8px;
+    --md-comp-menu-container-shape: var(
+      --md-comp-menu-container-inactive-shape
+    );
   }
 }
 
@@ -297,7 +521,7 @@ menu[id] li > menu {
     opacity: 1;
     pointer-events: auto;
     transform: none;
-    --md-comp-menu-container-shape: 20px;
+    --md-comp-menu-container-shape: 16px;
   }
 }
 
@@ -306,7 +530,7 @@ menu[id] li.open > menu {
   opacity: 1;
   pointer-events: auto;
   transform: none;
-  --md-comp-menu-container-shape: 20px;
+  --md-comp-menu-container-shape: 16px;
 }
 
 menu[id] li.submenu-start > menu {
@@ -328,13 +552,33 @@ body.keyboard-focused {
     );
   }
 
-  menu[id] > li:focus:not(.selected, [aria-selected="true"]) {
+  menu[id]
+    > li:focus:not(.selected, [aria-selected="true"], [aria-checked="true"]) {
     outline: 3px solid var(--md-sys-color-secondary);
     outline-offset: -3px;
+  }
+
+  menu[id].grouped > li:focus {
+    background-color: var(--md-comp-menu-container-color);
+  }
+
+  menu[id].grouped
+    > li:focus:not(.selected, [aria-selected="true"], [aria-checked="true"])
+    > :is(a, button, span:not(.material-symbols, .badge, .supporting-text)) {
+    border-radius: var(--md-comp-menu-item-container-shape);
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-menu-item-label-text-color) 10%,
+      transparent
+    );
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  menu[id] {
+    transition: none !important;
+  }
+
   menu[id] li > menu {
     transition: none;
   }
@@ -342,4 +586,12 @@ body.keyboard-focused {
 
 .menu-trigger {
   cursor: pointer;
+
+  // The trigger stays in its pressed state for as long as its menu is open.
+  &[aria-expanded="true"] {
+    background-image: linear-gradient(
+      color-mix(in oklab, currentcolor 10%, transparent),
+      color-mix(in oklab, currentcolor 10%, transparent)
+    );
+  }
 }

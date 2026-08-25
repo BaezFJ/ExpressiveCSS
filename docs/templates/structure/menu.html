@@ -10,8 +10,10 @@
   {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
-          is an item. A leading icon is the leading icon;
-          a trailing icon or <code>&lt;kbd&gt;</code> is
+          is an item. An icon leads its label by default; add
+          <code>.suffix</code> to send it to the trailing edge, since a lone
+          icon is indistinguishable from a leading one in CSS. A
+          <code>&lt;kbd&gt;</code> or a <code>.badge</code> is always
           trailing content. An
           <code>&lt;li class="divider" role="separator"&gt;</code> is a divider —
           <code>&lt;menu&gt;</code> is a list and permits only <code>&lt;li&gt;</code>,
@@ -24,14 +26,17 @@
         <p>
           This is the M3 Expressive <em>vertical menu</em>. Tokens follow the
           <a href="https://m3.material.io/components/menus/specs">M3 menu spec</a>.
-          The container is <code>surface-container</code>, 16dp corners,
-          elevation 2, 4dp padding, 112–280dp wide. Items are 48dp with
-          extra-small (4dp) corners, <code>label-large</code> /
-          <code>on-surface</code>. Icons are 20dp
+          The container is <code>surface-container-low</code>, large (16dp)
+          corners, level 2 elevation, 2dp group padding, and 112–280dp wide.
+          Items are at least 44dp tall, with 16dp edge spacing, extra-small
+          (4dp) corners, <code>label-large</code> /
+          <code>on-surface</code>; the first and last item round their outer
+          corners to 12dp. Icons are 20dp
           <code>on-surface-variant</code>. Selected items use medium (12dp)
           corners and <code>tertiary-container</code> /
-          <code>on-tertiary-container</code>. Hover is an 8% state layer
-          that does not span the container. Dividers are inset.
+          <code>on-tertiary-container</code>. Hover is an 8% state layer,
+          focus and press 10%, none of which span the container. Dividers
+          are inset.
         </p>
         <p>
           <code>AutoInit()</code> starts every <code>.menu-trigger</code>
@@ -45,24 +50,24 @@
         </p>
         <menu id="menu1">
           <li>
-            <a href="#!">Refresh<span class="material-symbols" aria-hidden="true">refresh</span></a>
+            <a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a>
           </li>
           <li>
-            <a href="#!">Settings<span class="material-symbols" aria-hidden="true">settings</span></a>
+            <a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a>
           </li>
           <li>
-            <a href="#!">Help<span class="material-symbols" aria-hidden="true">help</span></a>
+            <a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a>
           </li>
           <li>
-            <a href="#!">More<span class="material-symbols" aria-hidden="true">more_vert</span></a>
+            <a href="#!">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></a>
           </li>
         </menu>
 {% call code() %}
 <button class="menu-trigger" data-target="menu1">Drop me</button>
 <menu id="menu1">
-  <li><a href="#!">Refresh<span class="material-symbols" aria-hidden="true">refresh</span></a></li>
-  <li><a href="#!">Settings<span class="material-symbols" aria-hidden="true">settings</span></a></li>
-  <li><a href="#!">Help<span class="material-symbols" aria-hidden="true">help</span></a></li>
+  <li><a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a></li>
+  <li><a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a></li>
+  <li><a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a></li>
 </menu>
 {% endcall %}
         <p>
@@ -70,6 +75,79 @@
           <a href="{{ url_for('navbar') }}#navbar-menu">Navbar menu</a>.
         </p>
   {% endcall %}
+
+  {% call section("guidelines", "Guidelines", heading="Usage and adaptive behavior") %}
+        <p>
+          Use a menu for a temporary set of actions. Keep actions that must
+          remain visible in a <a href="{{ url_for('toolbars') }}">toolbar</a>.
+          On Compact windows, consider replacing long or complex menus with a
+          <a href="{{ url_for('bottom_sheet') }}">bottom sheet</a>. Menus and
+          nested flyouts work best in context on Medium and wider layouts.
+        </p>
+        <p>
+          The component repositions a menu when its preferred edge would be
+          clipped. Nested menus open beside their parent item and switch sides
+          near the viewport edge. Use dividers in scrollable menus; don’t use
+          gaps there. Keep each row to one action, and keep icons decorative
+          when the visible label already names the action.
+        </p>
+        <p>
+          When opened, focus moves to the first item. Space, Enter, Arrow Down,
+          and Arrow Up open the menu; arrows move between items; letters use
+          typeahead; Escape closes it and returns focus to the trigger.
+          Disabled items remain focusable so their presence and label are
+          discoverable, but they cannot be selected.
+        </p>
+{% endcall %}
+
+  {% call section("layout-types", "Layout types", heading="Standard and grouped") %}
+        <p>
+          <strong>Standard</strong> is the default: every item shares one
+          continuous menu surface. <strong>Grouped</strong> separates related
+          runs into coplanar surfaces. Add <code>.grouped</code> to the menu
+          and place an inert <code>&lt;li class="gap"&gt;</code> between groups.
+          The gap is skipped by pointer and keyboard navigation.
+        </p>
+        <div class="row">
+          <div class="col s12 m6">
+            <h6>1. Standard</h6>
+            <button type="button" class="menu-trigger no-autoinit" id="menu-standard-trigger" data-target="menu-standard">Open standard menu</button>
+            <menu id="menu-standard">
+              <li><a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a></li>
+              <li><a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a></li>
+              <li><a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a></li>
+              <li><a href="#!">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></a></li>
+            </menu>
+          </div>
+          <div class="col s12 m6">
+            <h6>2. Grouped</h6>
+            <button type="button" class="menu-trigger no-autoinit" id="menu-grouped-trigger" data-target="menu-grouped">Open grouped menu</button>
+            <menu id="menu-grouped" class="grouped">
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span>Item 1</a></li>
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">content_copy</span>Item 2<kbd>⌘C</kbd></a></li>
+              <li class="selected"><a href="#!"><span class="material-symbols" aria-hidden="true">check</span>Item 3</a></li>
+              <li class="gap" aria-hidden="true"></li>
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">person</span>Item 4</a></li>
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">settings</span>Item 5</a></li>
+            </menu>
+          </div>
+        </div>
+{% call code() %}
+<!-- Standard is the default: it has no modifier class. -->
+<menu id="standard-menu">
+  <li><a href="#!">Refresh</a></li>
+  <li><a href="#!">Settings</a></li>
+</menu>
+
+<!-- A gap starts a new grouped surface. -->
+<menu id="grouped-menu" class="grouped">
+  <li><a href="#!">Item 1</a></li>
+  <li class="selected"><a href="#!">Item 2</a></li>
+  <li class="gap" aria-hidden="true"></li>
+  <li><a href="#!">Item 3</a></li>
+</menu>
+{% endcall %}
+{% endcall %}
 
   {% call section("initialization", "Initialization") %}
         <p>
@@ -246,9 +324,12 @@ Expressive.Menu.init(document.querySelector('#hover'), {
 
   {% call section("selection", "Selection and groups", heading="Selection, shortcuts, and groups") %}
         <p>
-          Mark the current item with <code>.selected</code>. Not
-          <code>aria-selected</code>: a <code>&lt;menu&gt;</code> is a list, and the
-          attribute is not valid on a plain <code>listitem</code>. Trailing
+          Mark an ordinary current item with <code>.selected</code>. For a
+          single-select or multi-select menu, give items
+          <code>role="menuitemradio"</code> or
+          <code>role="menuitemcheckbox"</code> and synchronize
+          <code>aria-checked</code>. Don’t put <code>aria-selected</code> on a
+          menu item. Trailing
           <code>&lt;kbd&gt;</code> is a keyboard shortcut. A
           <code>.gap</code> item splits groups — more expressive than a
           divider, and limited to one or two per menu. A
@@ -258,17 +339,21 @@ Expressive.Menu.init(document.querySelector('#hover'), {
         <p>
           <button type="button" class="menu-trigger no-autoinit" id="menu-rich-trigger" data-target="menu-rich">Edit</button>
         </p>
-        <menu id="menu-rich">
+        <menu id="menu-rich" class="grouped">
           <li>
             <a href="#!">
               <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
+              <span class="badge">4</span>
             </a>
           </li>
           <li>
             <a href="#!">
               <span class="material-symbols" aria-hidden="true">content_copy</span>
-              Item 2
+              <span class="menu-item-text">
+                <span>Item 2</span>
+                <span class="supporting-text">Supporting text</span>
+              </span>
               <kbd>⌘C</kbd>
             </a>
           </li>
@@ -295,13 +380,23 @@ Expressive.Menu.init(document.querySelector('#hover'), {
               Item 5
             </a>
           </li>
+          <li class="disabled" aria-disabled="true">
+            <a href="#!" tabindex="-1">
+              <span class="material-symbols" aria-hidden="true">redo</span>
+              Redo
+            </a>
+          </li>
         </menu>
 {% call code() %}
-<menu id="menu-rich">
-  <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1</a></li>
+<menu id="menu-rich" class="grouped">
+  <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span> Item 1 <span class="badge">4</span></a></li>
   <li>
     <a href="#!">
-      <span class="material-symbols" aria-hidden="true">content_copy</span> Item 2
+      <span class="material-symbols" aria-hidden="true">content_copy</span>
+      <span class="menu-item-text">
+        <span>Item 2</span>
+        <span class="supporting-text">Supporting text</span>
+      </span>
       <kbd>⌘C</kbd>
     </a>
   </li>
@@ -312,6 +407,9 @@ Expressive.Menu.init(document.querySelector('#hover'), {
   <li>
     <a href="#!"><span class="material-symbols" aria-hidden="true">person</span> Item 4</a>
     <menu>…</menu>
+  </li>
+  <li class="disabled" aria-disabled="true">
+    <a href="#!" tabindex="-1"><span class="material-symbols" aria-hidden="true">redo</span> Redo</a>
   </li>
 </menu>
 {% endcall %}

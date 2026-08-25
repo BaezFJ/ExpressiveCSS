@@ -887,19 +887,19 @@ back.addEventListener('click', () =&gt; {
     </footer>
 
     <menu id="theme-menu">
-        <li data-theme="light">
+        <li data-theme="light" role="menuitemradio" aria-checked="false">
             <button type="button">
                 <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
-        <li data-theme="dark">
+        <li data-theme="dark" role="menuitemradio" aria-checked="false">
             <button type="button">
                 <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
-        <li data-theme="auto" class="selected">
+        <li data-theme="auto" class="selected" role="menuitemradio" aria-checked="true">
             <button type="button">
                 <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
@@ -951,7 +951,7 @@ back.addEventListener('click', () =&gt; {
 
 <script src="/dist/js/expressive.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
-<script src="/static/docs.js"></script>
+<script src="/static/docs.js?v=0.7.0"></script>
 <script src="/static/code-blocks.js"></script>
 </body>
 </html>

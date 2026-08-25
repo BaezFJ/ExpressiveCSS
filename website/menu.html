@@ -275,8 +275,10 @@
 
         <p class="flow-text">
           A <code>&lt;menu&gt;</code> is the surface. Each <code>&lt;li&gt;</code>
-          is an item. A leading icon is the leading icon;
-          a trailing icon or <code>&lt;kbd&gt;</code> is
+          is an item. An icon leads its label by default; add
+          <code>.suffix</code> to send it to the trailing edge, since a lone
+          icon is indistinguishable from a leading one in CSS. A
+          <code>&lt;kbd&gt;</code> or a <code>.badge</code> is always
           trailing content. An
           <code>&lt;li class="divider" role="separator"&gt;</code> is a divider —
           <code>&lt;menu&gt;</code> is a list and permits only <code>&lt;li&gt;</code>,
@@ -289,14 +291,17 @@
         <p>
           This is the M3 Expressive <em>vertical menu</em>. Tokens follow the
           <a href="https://m3.material.io/components/menus/specs">M3 menu spec</a>.
-          The container is <code>surface-container</code>, 16dp corners,
-          elevation 2, 4dp padding, 112–280dp wide. Items are 48dp with
-          extra-small (4dp) corners, <code>label-large</code> /
-          <code>on-surface</code>. Icons are 20dp
+          The container is <code>surface-container-low</code>, large (16dp)
+          corners, level 2 elevation, 2dp group padding, and 112–280dp wide.
+          Items are at least 44dp tall, with 16dp edge spacing, extra-small
+          (4dp) corners, <code>label-large</code> /
+          <code>on-surface</code>; the first and last item round their outer
+          corners to 12dp. Icons are 20dp
           <code>on-surface-variant</code>. Selected items use medium (12dp)
           corners and <code>tertiary-container</code> /
-          <code>on-tertiary-container</code>. Hover is an 8% state layer
-          that does not span the container. Dividers are inset.
+          <code>on-tertiary-container</code>. Hover is an 8% state layer,
+          focus and press 10%, none of which span the container. Dividers
+          are inset.
         </p>
         <p>
           <code>AutoInit()</code> starts every <code>.menu-trigger</code>
@@ -310,29 +315,108 @@
         </p>
         <menu id="menu1">
           <li>
-            <a href="#!">Refresh<span class="material-symbols" aria-hidden="true">refresh</span></a>
+            <a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a>
           </li>
           <li>
-            <a href="#!">Settings<span class="material-symbols" aria-hidden="true">settings</span></a>
+            <a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a>
           </li>
           <li>
-            <a href="#!">Help<span class="material-symbols" aria-hidden="true">help</span></a>
+            <a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a>
           </li>
           <li>
-            <a href="#!">More<span class="material-symbols" aria-hidden="true">more_vert</span></a>
+            <a href="#!">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></a>
           </li>
         </menu>
 <pre><code>&lt;button class="menu-trigger" data-target="menu1"&gt;Drop me&lt;/button&gt;
 &lt;menu id="menu1"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Refresh&lt;span class="material-symbols" aria-hidden="true"&gt;refresh&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Settings&lt;span class="material-symbols" aria-hidden="true"&gt;settings&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;Help&lt;span class="material-symbols" aria-hidden="true"&gt;help&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Refresh&lt;span class="material-symbols suffix" aria-hidden="true"&gt;refresh&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Settings&lt;span class="material-symbols suffix" aria-hidden="true"&gt;settings&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Help&lt;span class="material-symbols suffix" aria-hidden="true"&gt;help&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/menu&gt;</code></pre>
         <p>
           For a menu inside a top app bar, see
           <a href="/navbar.html#navbar-menu">Navbar menu</a>.
         </p>
   
+      </div>
+
+
+  <div id="guidelines" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Usage and adaptive behavior</h3>
+
+        <p>
+          Use a menu for a temporary set of actions. Keep actions that must
+          remain visible in a <a href="/toolbars.html">toolbar</a>.
+          On Compact windows, consider replacing long or complex menus with a
+          <a href="/bottom-sheet.html">bottom sheet</a>. Menus and
+          nested flyouts work best in context on Medium and wider layouts.
+        </p>
+        <p>
+          The component repositions a menu when its preferred edge would be
+          clipped. Nested menus open beside their parent item and switch sides
+          near the viewport edge. Use dividers in scrollable menus; don’t use
+          gaps there. Keep each row to one action, and keep icons decorative
+          when the visible label already names the action.
+        </p>
+        <p>
+          When opened, focus moves to the first item. Space, Enter, Arrow Down,
+          and Arrow Up open the menu; arrows move between items; letters use
+          typeahead; Escape closes it and returns focus to the trigger.
+          Disabled items remain focusable so their presence and label are
+          discoverable, but they cannot be selected.
+        </p>
+
+      </div>
+
+
+  <div id="layout-types" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Standard and grouped</h3>
+
+        <p>
+          <strong>Standard</strong> is the default: every item shares one
+          continuous menu surface. <strong>Grouped</strong> separates related
+          runs into coplanar surfaces. Add <code>.grouped</code> to the menu
+          and place an inert <code>&lt;li class="gap"&gt;</code> between groups.
+          The gap is skipped by pointer and keyboard navigation.
+        </p>
+        <div class="row">
+          <div class="col s12 m6">
+            <h6>1. Standard</h6>
+            <button type="button" class="menu-trigger no-autoinit" id="menu-standard-trigger" data-target="menu-standard">Open standard menu</button>
+            <menu id="menu-standard">
+              <li><a href="#!">Refresh<span class="material-symbols suffix" aria-hidden="true">refresh</span></a></li>
+              <li><a href="#!">Settings<span class="material-symbols suffix" aria-hidden="true">settings</span></a></li>
+              <li><a href="#!">Help<span class="material-symbols suffix" aria-hidden="true">help</span></a></li>
+              <li><a href="#!">More<span class="material-symbols suffix" aria-hidden="true">more_vert</span></a></li>
+            </menu>
+          </div>
+          <div class="col s12 m6">
+            <h6>2. Grouped</h6>
+            <button type="button" class="menu-trigger no-autoinit" id="menu-grouped-trigger" data-target="menu-grouped">Open grouped menu</button>
+            <menu id="menu-grouped" class="grouped">
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">visibility</span>Item 1</a></li>
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">content_copy</span>Item 2<kbd>⌘C</kbd></a></li>
+              <li class="selected"><a href="#!"><span class="material-symbols" aria-hidden="true">check</span>Item 3</a></li>
+              <li class="gap" aria-hidden="true"></li>
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">person</span>Item 4</a></li>
+              <li><a href="#!"><span class="material-symbols" aria-hidden="true">settings</span>Item 5</a></li>
+            </menu>
+          </div>
+        </div>
+<pre><code>&lt;!-- Standard is the default: it has no modifier class. --&gt;
+&lt;menu id="standard-menu"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Refresh&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Settings&lt;/a&gt;&lt;/li&gt;
+&lt;/menu&gt;
+
+&lt;!-- A gap starts a new grouped surface. --&gt;
+&lt;menu id="grouped-menu" class="grouped"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Item 1&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="selected"&gt;&lt;a href="#!"&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="gap" aria-hidden="true"&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;Item 3&lt;/a&gt;&lt;/li&gt;
+&lt;/menu&gt;</code></pre>
+
       </div>
 
 
@@ -527,9 +611,12 @@
         <h3 class="docs-section-title headline-medium">Selection, shortcuts, and groups</h3>
 
         <p>
-          Mark the current item with <code>.selected</code>. Not
-          <code>aria-selected</code>: a <code>&lt;menu&gt;</code> is a list, and the
-          attribute is not valid on a plain <code>listitem</code>. Trailing
+          Mark an ordinary current item with <code>.selected</code>. For a
+          single-select or multi-select menu, give items
+          <code>role="menuitemradio"</code> or
+          <code>role="menuitemcheckbox"</code> and synchronize
+          <code>aria-checked</code>. Don’t put <code>aria-selected</code> on a
+          menu item. Trailing
           <code>&lt;kbd&gt;</code> is a keyboard shortcut. A
           <code>.gap</code> item splits groups — more expressive than a
           divider, and limited to one or two per menu. A
@@ -539,17 +626,21 @@
         <p>
           <button type="button" class="menu-trigger no-autoinit" id="menu-rich-trigger" data-target="menu-rich">Edit</button>
         </p>
-        <menu id="menu-rich">
+        <menu id="menu-rich" class="grouped">
           <li>
             <a href="#!">
               <span class="material-symbols" aria-hidden="true">visibility</span>
               Item 1
+              <span class="badge">4</span>
             </a>
           </li>
           <li>
             <a href="#!">
               <span class="material-symbols" aria-hidden="true">content_copy</span>
-              Item 2
+              <span class="menu-item-text">
+                <span>Item 2</span>
+                <span class="supporting-text">Supporting text</span>
+              </span>
               <kbd>⌘C</kbd>
             </a>
           </li>
@@ -576,12 +667,22 @@
               Item 5
             </a>
           </li>
+          <li class="disabled" aria-disabled="true">
+            <a href="#!" tabindex="-1">
+              <span class="material-symbols" aria-hidden="true">redo</span>
+              Redo
+            </a>
+          </li>
         </menu>
-<pre><code>&lt;menu id="menu-rich"&gt;
-  &lt;li&gt;&lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;visibility&lt;/span&gt; Item 1&lt;/a&gt;&lt;/li&gt;
+<pre><code>&lt;menu id="menu-rich" class="grouped"&gt;
+  &lt;li&gt;&lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;visibility&lt;/span&gt; Item 1 &lt;span class="badge"&gt;4&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;
     &lt;a href="#!"&gt;
-      &lt;span class="material-symbols" aria-hidden="true"&gt;content_copy&lt;/span&gt; Item 2
+      &lt;span class="material-symbols" aria-hidden="true"&gt;content_copy&lt;/span&gt;
+      &lt;span class="menu-item-text"&gt;
+        &lt;span&gt;Item 2&lt;/span&gt;
+        &lt;span class="supporting-text"&gt;Supporting text&lt;/span&gt;
+      &lt;/span&gt;
       &lt;kbd&gt;⌘C&lt;/kbd&gt;
     &lt;/a&gt;
   &lt;/li&gt;
@@ -592,6 +693,9 @@
   &lt;li&gt;
     &lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;person&lt;/span&gt; Item 4&lt;/a&gt;
     &lt;menu&gt;…&lt;/menu&gt;
+  &lt;/li&gt;
+  &lt;li class="disabled" aria-disabled="true"&gt;
+    &lt;a href="#!" tabindex="-1"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;redo&lt;/span&gt; Redo&lt;/a&gt;
   &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
   
@@ -773,6 +877,8 @@
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#guidelines">Guidelines</a></li>
+          <li><a href="#layout-types">Layout types</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#selection">Selection and groups</a></li>
@@ -870,19 +976,19 @@
     </footer>
 
     <menu id="theme-menu">
-        <li data-theme="light">
+        <li data-theme="light" role="menuitemradio" aria-checked="false">
             <button type="button">
                 <span class="material-symbols" aria-hidden="true">light_mode</span>
                 Light
             </button>
         </li>
-        <li data-theme="dark">
+        <li data-theme="dark" role="menuitemradio" aria-checked="false">
             <button type="button">
                 <span class="material-symbols" aria-hidden="true">dark_mode</span>
                 Dark
             </button>
         </li>
-        <li data-theme="auto" class="selected">
+        <li data-theme="auto" class="selected" role="menuitemradio" aria-checked="true">
             <button type="button">
                 <span class="material-symbols" aria-hidden="true">contrast</span>
                 Auto
@@ -934,7 +1040,7 @@
 
 <script src="/dist/js/expressive.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
-<script src="/static/docs.js"></script>
+<script src="/static/docs.js?v=0.7.0"></script>
 <script src="/static/code-blocks.js"></script>
 </body>
 </html>

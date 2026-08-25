@@ -152,7 +152,15 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   margin-top: 0.375rem;
 }
 
-.docs-page-content .docs-section > :is(p, ul, ol, blockquote) a:not(.button) {
+/* A Menu is injected as a sibling of its trigger, so a trigger written inside
+   a prose paragraph leaves the whole popover inside that <p>. This rule is for
+   prose links and must not reach into component markup that lands there - the
+   framework's own `text-decoration: none` cannot defend itself, because these
+   docs styles are unlayered and beat anything in @layer components. */
+.docs-page-content
+  .docs-section
+  > :is(p, ul, ol, blockquote)
+  a:not(.button, menu a) {
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.18em;

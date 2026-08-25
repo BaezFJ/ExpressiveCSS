@@ -891,6 +891,27 @@ describe('Icon selectors keyed on the <i> element', () => {
     }
   });
 
+  test('a trailing menu icon is named, not inferred from :only-child', () => {
+    // `<a>Label<span icon/></a>` and `<a><span icon/>Label</a>` are the same
+    // to a selector: the label is a text node, so the icon is :first-child,
+    // :last-child AND :only-child either way. The old guard was a bare
+    // :not(:only-child), which therefore only ever fired on rows carrying two
+    // icons - every text-plus-trailing-icon row kept its icon butted against
+    // the label instead of flush right.
+    const trailing = find(
+      /^menu\[id\][^,]*>\s*:is\(a, button\)\s*>/,
+      /margin-inline-start:\s*auto/
+    ).filter((hit) => /material-symbols/.test(hit.selector));
+    assert.ok(trailing.length > 0, 'no trailing menu icon rule found');
+    for (const hit of trailing) {
+      assert.match(
+        hit.selector,
+        /\.suffix/,
+        `trailing menu icon rule still infers the side positionally:\n  ${hit.selector}`
+      );
+    }
+  });
+
   test('a legend icon is 18dp with its trailing gap', () => {
     assertIconIsAClass('fieldset', /^fieldset\b/, /margin-inline-end:\s*8px/);
   });

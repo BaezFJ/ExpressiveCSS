@@ -99,11 +99,15 @@ read-it-off-the-element access that key provides.
 - **Menu nested menus are markup.** A `<menu>` inside an `<li>`
   is a flyout. Hover / `:focus-within` on `(hover: hover) and
   (pointer: fine)`; `.open` is the tap/keyboard switch. Flyouts
-  fade and scale; the open surface rounds up and the parent rounds
-  down. Do not start a second Menu. `closeOnClick` ignores the
-  parent row of a submenu. `.selected` / `aria-selected` is the
+  fade and scale; the active surface uses 12dp corners and the parent
+  contracts to 8dp. Do not start a second Menu. `closeOnClick` ignores the
+  parent row of a submenu. `.selected` / `aria-checked="true"` is the
   tertiary selected item. `.vibrant` is the tertiary color style.
-  `.gap` groups items; `.label` is a 32dp heading.
+  Standard is the default continuous surface. Add `.grouped` and separate
+  item runs with `.gap` to render distinct coplanar surfaces; `.label` is a
+  32dp heading. Standard and grouped menus receive
+  `menu` / `menuitem` roles, focus their first item when opened, and keep
+  disabled items focusable but inert.
 - **FAB speed dial is CSS.** `.active` (and `:hover` when the pointer
   can hover) opens the menu. `.click-to-toggle` and `.direction-*` are
   markup switches. JS toggles the class, Escape, and click-outside.

@@ -92,6 +92,8 @@ const _defaults: MenuOptions = {
   onItemClick: null
 };
 
+const SPACE_KEYS = [' ', 'Spacebar'];
+
 export class Menu extends Component<MenuOptions> implements Openable {
   static _menus: Menu[] = [];
   /** ID of the menu element. */
@@ -127,9 +129,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this.focusedIndex = -1;
     this.filterQuery = [];
     this.el.ariaExpanded = 'false';
+    if (!this.el.hasAttribute('aria-haspopup')) this.el.setAttribute('aria-haspopup', 'menu');
+    if (this.id && !this.el.hasAttribute('aria-controls'))
+      this.el.setAttribute('aria-controls', this.id);
 
     // Keep the menu next to the trigger so positioning stays local.
     this._moveMenuToElement();
+    this._setupAccessibility();
     this._makeMenuFocusable();
     this._setupSubmenus();
     this._setupEventHandlers();
@@ -216,7 +222,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _setupTemporaryEventHandlers() {
     document.body.addEventListener('click', this._handleDocumentClick);
-    document.body.addEventListener('touchmove', this._handleDocumentTouchmove, { passive: true });
+    document.body.addEventListener('touchmove', this._handleDocumentTouchmove, {
+      passive: true
+    });
     this.menuEl?.addEventListener('keydown', this._handleMenuKeydown);
     window.addEventListener('resize', this._handleWindowResize);
   }
@@ -253,7 +261,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const leaveToMenuContent = !!(this.menuEl && toEl && this.menuEl.contains(toEl));
     let leaveToActiveMenuTrigger = false;
     const closestTrigger = toEl.closest('.menu-trigger');
-    if (closestTrigger && !!closestTrigger['Expressive_Menu'] && closestTrigger['Expressive_Menu'].isOpen) {
+    if (
+      closestTrigger &&
+      !!closestTrigger['Expressive_Menu'] &&
+      closestTrigger['Expressive_Menu'].isOpen
+    ) {
       leaveToActiveMenuTrigger = true;
     }
     // Close hover menu if mouse did not leave to either active menu-trigger or menu-content
@@ -281,10 +293,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
   };
 
   _handleTriggerKeydown = (e: KeyboardEvent) => {
-    // ARROW DOWN OR ENTER WHEN SELECT IS CLOSED - open Menu
-    const arrowDownOrEnter =
-      Utils.keys.ARROW_DOWN.includes(e.key) || Utils.keys.ENTER.includes(e.key);
-    if (arrowDownOrEnter && !this.isOpen) {
+    // M3: Space, Enter, Arrow Down, and Arrow Up open a closed menu.
+    const opensMenu =
+      SPACE_KEYS.includes(e.key) ||
+      Utils.keys.ENTER.includes(e.key) ||
+      Utils.keys.ARROW_DOWN.includes(e.key) ||
+      Utils.keys.ARROW_UP.includes(e.key);
+    if (opensMenu && !this.isOpen) {
       e.preventDefault();
       this.open();
     }
@@ -300,16 +315,51 @@ export class Menu extends Component<MenuOptions> implements Openable {
   _handleMenuClick = (e: MouseEvent) => {
     const target = <HTMLElement>e.target;
     const li = target.closest('li');
+    if (li?.matches('.disabled, [aria-disabled="true"]')) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
     if (li && this._isSubmenuTriggerClick(target)) {
       e.preventDefault();
       e.stopPropagation();
       this._toggleSubmenu(li);
       return;
     }
-    if (typeof this.options.onItemClick === 'function') {
+    if (li && typeof this.options.onItemClick === 'function') {
       this.options.onItemClick.call(this, li);
     }
   };
+
+  private _setupAccessibility() {
+    if (!this.menuEl) return;
+    if (!this.menuEl.hasAttribute('role')) this.menuEl.setAttribute('role', 'menu');
+
+    const menus = [this.menuEl, ...this.menuEl.querySelectorAll('menu')];
+    menus.forEach((menu) => {
+      if (!menu.hasAttribute('role')) menu.setAttribute('role', 'menu');
+      if (menu.getAttribute('role') !== 'menu') return;
+
+      menu.querySelectorAll(':scope > li').forEach((li) => {
+        if (li.classList.contains('divider')) {
+          if (!li.hasAttribute('role')) li.setAttribute('role', 'separator');
+          return;
+        }
+        if (li.classList.contains('gap')) {
+          li.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        if (li.classList.contains('label') || li.classList.contains('optgroup')) {
+          if (!li.hasAttribute('role')) li.setAttribute('role', 'presentation');
+          return;
+        }
+        if (!li.hasAttribute('role')) li.setAttribute('role', 'menuitem');
+        if (li.classList.contains('disabled') && !li.hasAttribute('aria-disabled')) {
+          li.setAttribute('aria-disabled', 'true');
+        }
+      });
+    });
+  }
 
   private _isSubmenuTriggerClick(target: HTMLElement) {
     if (!this.menuEl) return false;
@@ -395,8 +445,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (Utils.keys.TAB.includes(e.key)) {
       e.preventDefault();
       this.close();
-    }
-    else if (Utils.keys.ARROW_RIGHT.includes(e.key) && this.isOpen) {
+    } else if (Utils.keys.ARROW_RIGHT.includes(e.key) && this.isOpen) {
       const li = this._focusedRow(e);
       if (li?.querySelector(':scope > menu')) {
         e.preventDefault();
@@ -435,19 +484,19 @@ export class Menu extends Component<MenuOptions> implements Openable {
       } while (newFocusedIndex < list.children.length && newFocusedIndex >= 0);
 
       if (hasFoundNewIndex) {
-        if (this.focusedIndex >= 0)
-          list.children[this.focusedIndex]?.classList.remove('active');
+        if (this.focusedIndex >= 0) list.children[this.focusedIndex]?.classList.remove('active');
         this.focusedIndex = newFocusedIndex;
         const item = list.children[this.focusedIndex] as HTMLElement;
         item.classList.add('active');
         item.focus({ preventScroll: true });
       }
     }
-    // ENTER selects choice on focused item
-    else if (Utils.keys.ENTER.includes(e.key) && this.isOpen) {
+    // SPACE OR ENTER selects the focused item.
+    else if ((Utils.keys.ENTER.includes(e.key) || SPACE_KEYS.includes(e.key)) && this.isOpen) {
       const li = this._focusedRow(e);
+      e.preventDefault();
+      if (li?.matches('.disabled, [aria-disabled="true"]')) return;
       if (li?.querySelector(':scope > menu')) {
-        e.preventDefault();
         this._toggleSubmenu(li);
         return;
       }
@@ -480,7 +529,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
       ...Utils.keys.ARROW_UP,
       ...Utils.keys.ENTER,
       ...Utils.keys.ESC,
-      ...Utils.keys.TAB
+      ...Utils.keys.TAB,
+      ...SPACE_KEYS
     ];
     if (isLetter && !specialKeys.includes(e.key)) {
       this.filterQuery.push(keyText);
@@ -544,8 +594,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
   _makeMenuFocusable() {
     if (!this.menuEl) return;
     this.menuEl.popover = '';
-    // Needed for arrow key navigation
-    this.menuEl.tabIndex = 0;
+    // Focus moves directly to menu items; the surface itself is not a stop.
+    this.menuEl.tabIndex = -1;
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li, :scope > hr').forEach((el) => {
       if (
@@ -560,6 +610,16 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
       if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '0');
     });
+  }
+
+  private _focusInitialItem() {
+    if (!this.menuEl || !this.options.autoFocus) return;
+    const first = Array.from(this.menuEl.children).find(
+      (child) => child instanceof HTMLElement && child.tabIndex !== -1
+    ) as HTMLElement | undefined;
+    if (!first) return;
+    this.focusedIndex = Array.from(this.menuEl.children).indexOf(first);
+    first.focus({ preventScroll: true });
   }
 
   _focusFocusedItem() {
@@ -681,7 +741,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       this.menuEl.style.transform = 'scale(1)';
     }, 1);
     setTimeout(() => {
-      if (this.options.autoFocus) this.menuEl.focus();
+      this._focusInitialItem();
       if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
     }, duration);
   }
