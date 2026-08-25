@@ -551,9 +551,9 @@ header:has(> nav) > nav #source-color-toggle {
   height: 70px;
 }
 
-.fab-demo .fixed-action-btn {
+.fab-demo :is(.fab, .fixed-action-btn) {
   position: absolute;
-  right: 24px;
+  inset-inline-end: 24px;
   bottom: 0;
 }
 
