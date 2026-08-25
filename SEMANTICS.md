@@ -34,7 +34,7 @@ waits on, and the rule that keeps the role out of markup meanwhile.
 
 The composite roles that can be withheld: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**1 of 46 components declares conformance debt.**
+**3 of 46 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -106,11 +106,15 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js.
 
+**Conformance debt:** `tablist` is withheld pending keyboard model, and `carousel-not-a-tablist` enforces that.
+
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `hidden-subtree-holds-nothing-focusable` | forbid | `[aria-hidden="true"]:has(:is(a[href], button, input, select, textarea, [tabindex]):not([tabindex="-1"]):not([disabled]))` | must not match |
+| `carousel-not-a-tablist` | forbid | `.carousel[role="tablist"], .carousel [role="tab"]` | must not match |
 
 - **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
+- **carousel-not-a-tablist** - A carousel takes no tablist role here; its indicators are independent controls.
 
 ### character-counter
 
@@ -518,11 +522,15 @@ Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the cont
 
 Swept 0.8.0. A toolbar holds commands, not destinations.
 
+**Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-an-aria-toolbar` enforces that.
+
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `toolbar-not-nav` | forbid | `nav.toolbar` | must not match |
+| `toolbar-not-an-aria-toolbar` | forbid | `.toolbar[role="toolbar"]` | must not match |
 
 - **toolbar-not-nav** - A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.
+- **toolbar-not-an-aria-toolbar** - A toolbar takes no ARIA role here; its buttons are reached with Tab, not arrow keys.
 
 ### tooltip
 
