@@ -12,7 +12,7 @@
 //
 // This file parses markup and never initializes a component: per CLAUDE.md a
 // test that leaves a live timer wedges the whole `node --test` run with no
-// output at all, and Chips/Snackbar/Slider own intervals.
+// output at all, and nine components schedule timers.
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
@@ -24,6 +24,104 @@ import { render } from '../scripts/gen-semantics.mjs';
 const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 const data = JSON.parse(read('semantics.json'));
+
+// --- conformance ------------------------------------------------------------
+
+/** Top-level comma split: a comma inside `:not(a, b)` belongs to that compound. */
+function splitCompounds(selector) {
+  const out = [];
+  let depth = 0;
+  let cur = '';
+  for (const ch of selector) {
+    if (ch === '(') depth++;
+    else if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) {
+      out.push(cur);
+      cur = '';
+      continue;
+    }
+    cur += ch;
+  }
+  return [...out, cur];
+}
+
+/**
+ * The composite roles a rule blocks from appearing.
+ *
+ * Only a compound that forbids the role *categorically* counts. A compound
+ * carrying `:not()` or `:has()` is conditional - it rejects some elements that
+ * have the role rather than the role itself. `[role="listbox"]:not([aria-label])`
+ * forbids unnamed listboxes and withholds nothing; reading it as withholding
+ * would demand conformance debt for a rule that is merely requiring a label.
+ * The same skip covers the mirror case, `li[aria-selected]:not([role])`, which
+ * forbids the *absence* of a role.
+ *
+ * That trade is deliberate and errs toward missing a withheld role rather than
+ * inventing one: a false positive forces a bogus declaration, while a false
+ * negative leaves a gap the generated summary already admits to.
+ *
+ * A bare `[role]` blocks every role, composite ones included - which is how
+ * Tabs withholds `tablist` without naming it.
+ */
+function rolesBlockedBy(rule, compositeRoles) {
+  if (rule.kind !== 'forbid') return [];
+  const out = new Set();
+  for (const compound of splitCompounds(rule.selector)) {
+    if (/:(not|has)\(/.test(compound)) continue;
+    if (/\[role\]/.test(compound)) {
+      compositeRoles.forEach((r) => out.add(r));
+      continue;
+    }
+    for (const r of compositeRoles) {
+      // Pinned as bare identifiers below. Guarding here too keeps a malformed
+      // entry reporting as a vocabulary failure, not an invalid-regex throw.
+      if (!/^[a-z]+$/.test(r)) continue;
+      if (new RegExp(`\\[role\\s*[~|^$*]?=\\s*["']?${r}["']?\\s*\\]`).test(compound)) out.add(r);
+    }
+  }
+  return [...out];
+}
+
+/** Everything wrong with one component's conformance declaration, as messages. */
+function conformanceProblems(name, c, compositeRoles) {
+  const out = [];
+  const declared = c.conformance;
+
+  if (declared) {
+    for (const k of ['withheld_role', 'blocked_on', 'rule']) {
+      if (!declared[k]) out.push(`${name}: conformance needs ${k}`);
+    }
+    if (declared.withheld_role && !compositeRoles.includes(declared.withheld_role)) {
+      out.push(
+        `${name}: ${declared.withheld_role} is not a composite role - a component does not ` +
+          'withhold a role that promises nothing beyond its element'
+      );
+    }
+    const ref = c.rules.find((r) => r.id === declared.rule);
+    if (declared.rule && !ref) {
+      out.push(`${name}: conformance references ${declared.rule}, which is not a rule on this component`);
+    } else if (ref && ref.kind !== 'forbid') {
+      out.push(`${name}: ${ref.id} is ${ref.kind}, but withholding is expressed by forbidding`);
+    } else if (ref && declared.withheld_role && !rolesBlockedBy(ref, compositeRoles).includes(declared.withheld_role)) {
+      out.push(`${name}: ${ref.id} does not block ${declared.withheld_role}`);
+    }
+  }
+
+  // The reverse edge: withholding a role silently is what this exists to catch.
+  for (const r of c.rules) {
+    const blocked = rolesBlockedBy(r, compositeRoles);
+    if (!blocked.length) continue;
+    if (!declared) {
+      out.push(
+        `${name}: ${r.id} blocks ${blocked.join('/')} but no conformance debt is declared - ` +
+          'a withheld role must say which role and what it waits on'
+      );
+    } else if (r.id !== declared.rule && declared.withheld_role && !blocked.includes(declared.withheld_role)) {
+      out.push(`${name}: ${r.id} blocks ${blocked.join('/')}, but the declared role is ${declared.withheld_role}`);
+    }
+  }
+  return out;
+}
 
 // --- roster -----------------------------------------------------------------
 
@@ -283,6 +381,85 @@ describe('semantics.json', () => {
   test('rule ids are unique across components', () => {
     const ids = Object.values(data.components).flatMap((c) => c.rules.map((r) => r.id));
     assert.equal(new Set(ids).size, ids.length, 'duplicate rule id');
+  });
+
+  test('every conformance declaration is well formed, and none is silent', () => {
+    const problems = Object.entries(data.components).flatMap(([n, c]) =>
+      conformanceProblems(n, c, data.compositeRoles)
+    );
+    assert.deepEqual(problems, [], problems.join('\n'));
+  });
+
+  test('a malformed conformance declaration is caught', () => {
+    const roles = ['tablist', 'toolbar'];
+    const rule = { id: 'x-not-a-tablist', kind: 'forbid', selector: '.x[role]', message: 'm' };
+    const bad = (conformance, rules = [rule]) => conformanceProblems('x', { rules, conformance }, roles);
+
+    assert.equal(bad({ withheld_role: 'tablist', blocked_on: 'keyboard model' }).length, 1, 'missing rule');
+    assert.equal(bad({ withheld_role: 'tablist', rule: 'x-not-a-tablist' }).length, 1, 'missing blocked_on');
+    assert.equal(bad({ blocked_on: 'keyboard model', rule: 'x-not-a-tablist' }).length, 1, 'missing role');
+    assert.ok(
+      bad({ withheld_role: 'button', blocked_on: 'k', rule: 'x-not-a-tablist' }).some((m) =>
+        m.includes('not a composite role')
+      ),
+      'a simple role is not withheld'
+    );
+    assert.ok(
+      bad({ withheld_role: 'tablist', blocked_on: 'k', rule: 'nope' }).some((m) => m.includes('not a rule')),
+      'dangling rule reference'
+    );
+    assert.ok(
+      bad({ withheld_role: 'tablist', blocked_on: 'k', rule: 'r' }, [
+        { id: 'r', kind: 'require-attr', attr: 'role', selector: '.x', message: 'm' }
+      ]).some((m) => m.includes('withholding is expressed by forbidding')),
+      'the referenced rule must forbid'
+    );
+    assert.ok(
+      bad({ withheld_role: 'toolbar', blocked_on: 'k', rule: 'r' }, [
+        { id: 'r', kind: 'forbid', selector: '.x[role="tablist"]', message: 'm' }
+      ]).some((m) => m.includes('does not block toolbar')),
+      'the rule must block the declared role, and says so exactly once'
+    );
+    assert.ok(bad(undefined).some((m) => m.includes('no conformance debt is declared')), 'silent withholding');
+    assert.deepEqual(bad({ withheld_role: 'tablist', blocked_on: 'keyboard model', rule: 'x-not-a-tablist' }), []);
+  });
+
+  test('the composite-role vocabulary is pinned', () => {
+    assert.deepEqual(
+      data.compositeRoles,
+      ['combobox', 'grid', 'listbox', 'menu', 'menubar', 'radiogroup', 'tablist', 'toolbar', 'tree', 'treegrid'],
+      'ARIA 1.2 composite widget roles, plus toolbar for its arrow-key contract. Dropping one ' +
+        'silently stops detecting a component that withholds it - which is the whole check'
+    );
+    for (const r of data.compositeRoles) {
+      assert.match(r, /^[a-z]+$/, `${r}: roles are interpolated into a regex, so they must be bare`);
+    }
+  });
+
+  test('only a categorical prohibition counts as blocking a role', () => {
+    const roles = ['tablist', 'listbox'];
+    const forbid = (selector) => rolesBlockedBy({ id: 'r', kind: 'forbid', selector, message: 'm' }, roles);
+
+    assert.deepEqual(forbid('.x[role]').sort(), ['listbox', 'tablist'], 'a bare [role] blocks every role');
+    assert.deepEqual(forbid('.x[role="listbox"]'), ['listbox']);
+    assert.deepEqual(forbid('.x[role~="listbox"]'), ['listbox'], 'the [role~=] family too');
+
+    // Forbids the *absence* of a role, so it withholds nothing.
+    assert.deepEqual(forbid('li[aria-selected]:not([role])'), []);
+    // Forbids unnamed listboxes, not listboxes. Reading this as withholding
+    // would demand conformance debt from a rule that requires a label.
+    assert.deepEqual(forbid('[role="listbox"]:not([aria-label])'), []);
+    assert.deepEqual(forbid('[role="listbox"]:has(> .bad)'), []);
+
+    // A comma inside :not() must not split the compound.
+    assert.deepEqual(forbid('.x:not(.a, .b)[role]'), [], 'still conditional despite the comma');
+    assert.deepEqual(forbid('.x:not(.a, .b), .y[role="tablist"]'), ['tablist'], 'the other compound still counts');
+
+    // A malformed vocabulary entry reports as a vocabulary failure, not a regex throw.
+    assert.doesNotThrow(() => rolesBlockedBy({ id: 'r', kind: 'forbid', selector: '.x[role="a"]', message: 'm' }, ['a(']));
+
+    // Only forbid rules withhold.
+    assert.deepEqual(rolesBlockedBy({ id: 'r', kind: 'require-attr', selector: '.x[role]', attr: 'a', message: 'm' }, roles), []);
   });
 
   test('SEMANTICS.md is not stale', () => {

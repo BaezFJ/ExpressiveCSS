@@ -53,6 +53,21 @@ export function render(data) {
   l.push('');
   l.push(`**${enforced.length} of ${names.length} components enforced; ${exempt.length} remaining.**`);
   l.push('');
+  const indebted = names.filter((n) => data.components[n].conformance);
+  l.push('**Conformance debt** is a separate axis from enforced/exempt: a fully enforced');
+  l.push('component may still withhold a composite role because the keyboard contract rule 2');
+  l.push('demands does not exist yet. Each one below names the role it withholds, what that');
+  l.push('waits on, and the rule that keeps the role out of markup meanwhile.');
+  l.push('');
+  l.push('The composite roles that can be withheld: ' + data.compositeRoles.map(code).join(', ') + '.');
+  l.push('');
+  const declares = indebted.length === 1 ? 'declares' : 'declare';
+  l.push(`**${indebted.length} of ${names.length} components ${declares} conformance debt.**`);
+  l.push('');
+  l.push('That is a count of *declarations*, not of debt. The suite pairs a declaration with a');
+  l.push('rule and a role-blocking rule with a declaration, so neither can exist alone - but a');
+  l.push('role withheld by convention, with no rule behind it, is invisible to it.');
+  l.push('');
 
   l.push('## Enforced');
   l.push('');
@@ -75,6 +90,14 @@ export function render(data) {
 function renderComponent(name, c) {
   const l = [`### ${name}`, ''];
   if (c.note) l.push(c.note, '');
+  if (c.conformance) {
+    const { withheld_role: role, blocked_on: blocked, rule } = c.conformance;
+    l.push(
+      `**Conformance debt:** ${code(role)} is withheld pending ${esc(blocked)}, ` +
+        `and ${code(rule)} enforces that.`,
+      ''
+    );
+  }
   l.push('| Rule | Kind | Selector | Requirement |');
   l.push('| --- | --- | --- | --- |');
   for (const r of c.rules) {

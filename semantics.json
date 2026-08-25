@@ -13,6 +13,18 @@
     "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)",
     "require-accessible-name": "every element matching selector must end up with a non-empty accessible name (aria-label, aria-labelledby, or text that is not inside an aria-hidden subtree)"
   },
+  "compositeRoles": [
+    "combobox",
+    "grid",
+    "listbox",
+    "menu",
+    "menubar",
+    "radiogroup",
+    "tablist",
+    "toolbar",
+    "tree",
+    "treegrid"
+  ],
   "surfaces": [
     "llm.md",
     "docs/templates",
@@ -678,13 +690,18 @@
     "tabs": {
       "status": "enforced",
       "note": "Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.",
+      "conformance": {
+        "withheld_role": "tablist",
+        "blocked_on": "keyboard model",
+        "rule": "tabs-not-a-tablist"
+      },
       "rules": [
         {
           "id": "tabs-not-a-tablist",
           "kind": "forbid",
           "selector": ".tabs[role], .tabs [role=\"tab\"], .tabs [role=\"tabpanel\"]",
           "fragmentSafe": true,
-          "message": "tabs.ts has no keyboard handling, so a tablist role would promise arrow-key navigation nothing implements. These are links to in-page sections."
+          "message": "A tab strip takes no ARIA role here; these are links to in-page sections."
         },
         {
           "id": "tabs-marks-current",

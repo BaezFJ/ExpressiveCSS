@@ -27,6 +27,19 @@ a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 
 **46 of 46 components enforced; 0 remaining.**
 
+**Conformance debt** is a separate axis from enforced/exempt: a fully enforced
+component may still withhold a composite role because the keyboard contract rule 2
+demands does not exist yet. Each one below names the role it withholds, what that
+waits on, and the rule that keeps the role out of markup meanwhile.
+
+The composite roles that can be withheld: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
+
+**1 of 46 components declares conformance debt.**
+
+That is a count of *declarations*, not of debt. The suite pairs a declaration with a
+rule and a role-blocking rule with a declaration, so neither can exist alone - but a
+role withheld by convention, with no rule behind it, is invisible to it.
+
 ## Enforced
 
 ### autocomplete
@@ -483,12 +496,14 @@ Swept 0.8.0.
 
 Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.
 
+**Conformance debt:** `tablist` is withheld pending keyboard model, and `tabs-not-a-tablist` enforces that.
+
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `tabs-not-a-tablist` | forbid | `.tabs[role], .tabs [role="tab"], .tabs [role="tabpanel"]` | must not match |
 | `tabs-marks-current` | forbid | `.tabs a.active:not([aria-current])` | must not match |
 
-- **tabs-not-a-tablist** - tabs.ts has no keyboard handling, so a tablist role would promise arrow-key navigation nothing implements. These are links to in-page sections.
+- **tabs-not-a-tablist** - A tab strip takes no ARIA role here; these are links to in-page sections.
 - **tabs-marks-current** - The active tab is the section you are on; aria-current says so where a class cannot.
 
 ### timepicker
