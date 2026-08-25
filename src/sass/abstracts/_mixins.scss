@@ -175,3 +175,18 @@
   line-height: var(--md-sys-typescale-#{$role}-line-height);
   letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
 }
+
+/// The state layer some controls draw as a ring rather than an overlay.
+///
+/// Checkboxes and radio buttons have no room for an overlay pseudo-element, so
+/// they grow a `box-shadow` from the control's edge out to the state layer
+/// size. `color-mix()` wants a percentage where the token is a number, hence
+/// the `* 100%`.
+@mixin state-layer-ring($outer, $inner, $color, $state) {
+  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2)
+    color-mix(
+      in oklab,
+      #{$color} calc(var(--md-sys-state-#{$state}-state-layer-opacity) * 100%),
+      transparent
+    );
+}

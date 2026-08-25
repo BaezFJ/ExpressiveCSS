@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dialogs - ExpressiveCSS</title>
+    <title>State layers - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -35,7 +35,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Dialogs</h2>
+            <h2>State layers</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -62,7 +62,7 @@
               </a>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
@@ -101,8 +101,8 @@
                       <li class="">
                           <a href="/pulse.html">Pulse</a>
                       </li>
-                      <li class="">
-                          <a href="/state-layers.html">State layers</a>
+                      <li class="active">
+                          <a href="/state-layers.html" aria-current="page">State layers</a>
                       </li>
                       <li class="">
                           <a href="/waves.html">Waves</a>
@@ -154,7 +154,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -172,8 +172,8 @@
                       <li class="">
                           <a href="/lists.html">Lists</a>
                       </li>
-                      <li class="active">
-                          <a href="/dialogs.html" aria-current="page">Dialogs</a>
+                      <li class="">
+                          <a href="/dialogs.html">Dialogs</a>
                       </li>
                       <li class="">
                           <a href="/bottom-sheet.html">Bottom sheet</a>
@@ -261,8 +261,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Dialogs</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Important prompts in a user flow. Dedicated to a single task.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">State layers</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">The translucent overlay a component paints over itself for hover, focus, pressed and dragged.</p>
             </div>
         </div>
     </section>
@@ -274,256 +274,75 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="anatomy" class="section scrollspy docs-section">
+  <div id="about" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">About</h3>
 
-        <p class="flow-text">
-          Use a dialog so people act on information — confirm a high-risk
-          action, finish one task, or read the copy that belongs to that
-          task. Two variants, same element: a basic dialog and a
-          full-screen dialog. There is no
-          <code>modal-header</code>, <code>modal-content</code>, or
-          <code>modal-footer</code> class.
-        </p>
-        <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/dialogs/specs">M3 dialog spec</a>.
-          The basic container is <code>surface-container-high</code>, 28dp
-          corners, 280–560dp, elevation 3. The headline is
-          <code>headline-small</code> / <code>on-surface</code>; supporting
-          text is <code>body-medium</code> /
-          <code>on-surface-variant</code>. Actions are text buttons, end
-          aligned, with an 8dp gap. Padding is 24dp (16dp between the
-          headline and the body). The scrim is 32% <code>scrim</code> with
-          a 12px blur. Opening with <code>showModal()</code> also stops
-          the page behind it from scrolling.
-        </p>
-        <p>
-          Open it with <code>showModal()</code> and close it with
-          <code>close()</code> — the Dialog API, not a plugin.
-        </p>
+    <p class="flow-text">
+      A state layer is the translucent wash a component paints over itself to show that you are
+      hovering it, that it has focus, or that you are pressing it. Material 3 uses it in place of
+      the ink ripple, and it is a <em>foundation</em>: you never write markup for one. Components
+      paint it behind themselves, and these tokens decide how strong it is.
+    </p>
+    <p>
+      Because the opacity lives in one place, changing it changes every component at once, at
+      runtime, with no rebuild.
+    </p>
   
       </div>
 
 
-  <div id="basic" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Basic</h3>
+  <div id="opacities" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Opacities</h3>
 
-        <p>
-          A <code>&lt;dialog&gt;</code> is the surface. A heading is the
-          headline, a <code>&lt;p&gt;</code> (or a wrapping
-          <code>&lt;div&gt;</code>) is supporting text, and the last child
-          <code>&lt;form method="dialog"&gt;</code> or <code>&lt;nav&gt;</code>
-          is the action row. An optional leading icon centers the headline. An
-          <code>&lt;hr&gt;</code> is the divider when extra content follows the
-          copy.
-        </p>
-        <p>
-          <button type="button" onclick="document.getElementById('dialog-basic').showModal()">Show</button>
-          <button type="button" class="tonal" onclick="document.getElementById('dialog-icon').showModal()">Show with icon</button>
-          <button type="button" class="outlined" onclick="document.getElementById('dialog-extra').showModal()">Show with extra content</button>
-        </p>
-
-        <dialog id="dialog-basic" aria-labelledby="basic-dialog-title-title">
-          <h2 id="basic-dialog-title-title">Basic dialog title</h2>
-          <p>A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision.</p>
-          <form method="dialog">
-            <button type="submit" value="action-2">Text button</button>
-            <button type="submit" value="action-1">Text button</button>
-          </form>
-        </dialog>
-
-        <dialog id="dialog-icon" aria-labelledby="use-location-services-title">
-          <span class="material-symbols" aria-hidden="true">place</span>
-          <h2 id="use-location-services-title">Use location services?</h2>
-          <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
-          <form method="dialog">
-            <button type="submit" value="disagree">Disagree</button>
-            <button type="submit" value="agree">Agree</button>
-          </form>
-        </dialog>
-
-        <dialog id="dialog-extra" aria-labelledby="reset-settings-title">
-          <span class="material-symbols" aria-hidden="true">restart_alt</span>
-          <h2 id="reset-settings-title">Reset settings?</h2>
-          <p>This will reset your app preferences back to their default settings. The following accounts will also be signed out:</p>
-          <hr>
-          <ul class="list">
-            <li>
-              <img src="https://picsum.photos/id/64/80/80" alt="" class="circle">
-              leevillanuevanotes@google.com
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/91/80/80" alt="" class="circle">
-              alloalejandro@google.com
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/177/80/80" alt="" class="circle">
-              oliortega@google.com
-            </li>
-          </ul>
-          <hr>
-          <form method="dialog">
-            <button type="submit" value="cancel">Cancel</button>
-            <button type="submit" value="accept">Accept</button>
-          </form>
-        </dialog>
-<pre><code>&lt;button type="button" onclick="document.getElementById('dialog1').showModal()"&gt;
-  Show
-&lt;/button&gt;
-
-&lt;dialog id="dialog1" aria-labelledby="basic-dialog-title-title"&gt;
-  &lt;h2 id="basic-dialog-title-title"&gt;Basic dialog title&lt;/h2&gt;
-  &lt;p&gt;A dialog is a modal window that appears in front of app content.&lt;/p&gt;
-  &lt;form method="dialog"&gt;
-    &lt;button type="submit" value="cancel"&gt;Cancel&lt;/button&gt;
-    &lt;button type="submit" value="accept"&gt;Accept&lt;/button&gt;
-  &lt;/form&gt;
-&lt;/dialog&gt;</code></pre>
-        <p>
-          A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
-          submit button is pressed and sets <code>dialog.returnValue</code>
-          from the button’s <code>value</code>. Action buttons are text
-          buttons by default — add <code>filled</code>, <code>tonal</code>,
-          or <code>outlined</code> if you need more emphasis. Tapping the
-          scrim closes it too, but only if the press and the release both
-          miss the dialog. Docked panes are
-          <a href="/side-sheet.html">Side sheet</a>
-          and
-          <a href="/bottom-sheet.html">Bottom sheet</a>.
-        </p>
+    <table class="striped">
+      <thead><tr><th>Token</th><th>Value</th><th>Applies when</th></tr></thead>
+      <tbody>
+        <tr><td><code>--md-sys-state-hover-state-layer-opacity</code></td><td>0.08</td><td>The pointer is over the control.</td></tr>
+        <tr><td><code>--md-sys-state-focus-state-layer-opacity</code></td><td>0.1</td><td>The control has visible focus.</td></tr>
+        <tr><td><code>--md-sys-state-pressed-state-layer-opacity</code></td><td>0.1</td><td>The control is being pressed.</td></tr>
+        <tr><td><code>--md-sys-state-dragged-state-layer-opacity</code></td><td>0.16</td><td>The control is being dragged.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      These are the <code>md.sys.state</code> values from the Material 3 token set. Focus and
+      pressed are both <code>0.1</code>.
+    </p>
   
       </div>
 
 
-  <div id="fullscreen" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Full-screen</h3>
+  <div id="overriding" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Overriding</h3>
 
-        <p>
-          Add <code>max</code> when the task needs the whole viewport —
-          typically on compact windows, or any time the dialog holds a
-          form. There is no scrim and no corner radius. A
-          <code>&lt;header&gt;</code> is the 64dp top bar: a close icon,
-          a <code>title-large</code> headline, and the confirming text
-          button. Body content is inset 24dp.
-        </p>
-        <p>
-          <button type="button" class="outlined" onclick="document.getElementById('dialog-max').showModal()">Show full-screen</button>
-        </p>
-        <dialog id="dialog-max" class="max" aria-labelledby="full-screen-dialog-title-title">
-          <header>
-            <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
-              <span class="material-symbols" aria-hidden="true">close</span>
-            </button>
-            <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
-            <form method="dialog">
-              <button type="submit" value="save">Save</button>
-            </form>
-          </header>
-          <div>
-            <div class="field outlined">
-              <input id="fs-event" type="text" placeholder=" " value="Input">
-              <label for="fs-event">Event name</label>
-            </div>
-            <div class="row">
-              <div class="s12 m6 field outlined">
-                <input id="fs-from" type="text" placeholder=" " value="Input">
-                <label for="fs-from">From</label>
-              </div>
-              <div class="s12 m6 field outlined">
-                <input id="fs-to" type="text" placeholder=" " value="Input">
-                <label for="fs-to">To</label>
-              </div>
-            </div>
-            <p>
-              <label>
-                <input type="checkbox" id="fs-all-day">
-                All day
-              </label>
-            </p>
-          </div>
-        </dialog>
-<pre><code>&lt;dialog class="max" aria-labelledby="full-screen-dialog-title-title"&gt;
-  &lt;header&gt;
-    &lt;button type="button" aria-label="Close"&gt;
-      &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
-    &lt;/button&gt;
-    &lt;h2 id="full-screen-dialog-title-title"&gt;Full-screen dialog title&lt;/h2&gt;
-    &lt;form method="dialog"&gt;
-      &lt;button type="submit" value="save"&gt;Save&lt;/button&gt;
-    &lt;/form&gt;
-  &lt;/header&gt;
-  &lt;div&gt;…&lt;/div&gt;
-&lt;/dialog&gt;</code></pre>
+    <p>
+      Set the token on <code>:root</code> to change every component, or on a subtree to change
+      only what is inside it.
+    </p>
+<pre><code>&lt;style&gt;
+  :root { --md-sys-state-hover-state-layer-opacity: 0.12; }
+&lt;/style&gt;</code></pre>
+    <p>
+      Components that expose their own state layer token read from these, so you can still reach
+      for one component without touching the rest. The component token is the override point; the
+      value behind it comes from the foundation.
+    </p>
+<pre><code>&lt;style&gt;
+  .my-panel { --md-comp-card-hover-state-layer-opacity: 0.04; }
+&lt;/style&gt;</code></pre>
   
       </div>
 
 
-  <div id="methods" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
+  <div id="shapes" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Two shapes</h3>
 
-        <p>
-          Call these on the <code>&lt;dialog&gt;</code> element. See
-          <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement" target="_blank" rel="noopener">HTMLDialogElement</a>
-          for the full API.
-        </p>
-        <h5 class="light">.showModal()</h5>
-        <p>Open as a modal, with the scrim (basic) or as the page (full-screen).</p>
-<pre><code>dialog.showModal();</code></pre>
-        <h5 class="light">.close()</h5>
-        <p>Close the dialog.</p>
-<pre><code>dialog.close();</code></pre>
-        <p>
-          A tap or click on the scrim also closes a basic dialog. Both ends
-          of the gesture have to land outside the dialog’s box, so a drag
-          that starts on the dialog — selecting text, missing a button —
-          cannot dismiss it. Set <code>closedby="none"</code> or
-          <code>closedby="closerequest"</code> to opt out.
-        </p>
+    <p>
+      Most components draw the layer as an overlay filling the control. Checkboxes and radio
+      buttons have no room for one, so they draw it as a ring growing out from the control's edge
+      to the state layer size. Both read the same opacity, so they stay in step.
+    </p>
   
       </div>
-
-
-  <div id="tokens" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Tokens</h3>
-
-        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.</p>
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Token</th>
-                    <th>Default</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-color</code></td>
-              <td><code>--md-sys-color-surface-container-high</code></td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-shape</code></td>
-              <td>28px</td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-min-width</code></td>
-              <td>280px</td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-max-width</code></td>
-              <td>560px</td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
-              <td>12px</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-  
-      </div>
-
 
 
     </div>
@@ -533,11 +352,10 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#basic">Basic</a></li>
-          <li><a href="#fullscreen">Full-screen</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#tokens">Tokens</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#opacities">Opacities</a></li>
+          <li><a href="#overriding">Overriding</a></li>
+          <li><a href="#shapes">Two shapes</a></li>
           </ul>
         </nav>
 

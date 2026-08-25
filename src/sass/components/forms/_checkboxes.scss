@@ -82,17 +82,32 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
   }
 
   &:hover {
-    box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-on-surface),
+    "hover"
+  );
   }
 
   &:checked:hover,
   &:indeterminate:hover {
-    box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-primary),
+    "hover"
+  );
   }
 
   &:focus-visible,
   &.tabbed:focus {
-    box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-primary),
+    "focus"
+  );
     outline: none;
   }
 
@@ -111,7 +126,12 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
 
   &.invalid:hover,
   &[aria-invalid="true"]:hover {
-    box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-error) 8%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-error),
+    "hover"
+  );
   }
 
   &:disabled {
@@ -241,16 +261,31 @@ $_cb-span: "*:not(.switch) > [type='checkbox'] + span:not(.lever, .supporting-te
 }
 
 *:not(.switch) > [type="checkbox"]:hover + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
-  box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-on-surface),
+    "hover"
+  );
 }
 
 *:not(.switch) > [type="checkbox"]:is(:checked, :indeterminate):hover + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
-  box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+  @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-primary),
+    "hover"
+  );
 }
 
 *:not(.switch) > [type="checkbox"]:focus-visible + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,
 *:not(.switch) > [type="checkbox"].tabbed:focus + span:not(.lever, .supporting-text, .character-counter, .file-path)::before {
-  box-shadow: 0 0 0 calc((var(--md-comp-checkbox-state-layer-size) - var(--md-comp-checkbox-container-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+  @include state-layer-ring(
+    var(--md-comp-checkbox-state-layer-size),
+    var(--md-comp-checkbox-container-size),
+    var(--md-sys-color-primary),
+    "focus"
+  );
 }
 
 *:not(.switch) > [type="checkbox"].invalid + span:not(.lever, .supporting-text, .character-counter, .file-path)::before,

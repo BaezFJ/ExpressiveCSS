@@ -1,0 +1,23 @@
+// Material Design 3 state layer opacities.
+//
+// A state layer is the translucent overlay a component paints over itself to
+// show hover, focus, pressed or dragged. M3 replaced the ripple with it, which
+// is why this is a foundation and not a component: no author writes markup for
+// it, components put it behind themselves.
+//
+// Values are md.sys.state.* from DSP 34.0.21, verified against
+// material-web/tokens/versions/latest/sass/_md-sys-state.scss. Note focus and
+// pressed are 0.1, not the 0.12 quoted in some secondary sources.
+//
+// Two shapes consume these. An overlay pseudo-element uses the number as an
+// `opacity` directly; a ring drawn with `color-mix()` needs a percentage, so it
+// multiplies by 100% - see the `state-layer-ring` mixin in abstracts.
+
+@use "../abstracts" as *;
+
+:root {
+  --md-sys-state-hover-state-layer-opacity: 0.08;
+  --md-sys-state-focus-state-layer-opacity: 0.1;
+  --md-sys-state-pressed-state-layer-opacity: 0.1;
+  --md-sys-state-dragged-state-layer-opacity: 0.16;
+}
