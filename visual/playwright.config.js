@@ -21,8 +21,8 @@ const port = Number(process.env.VISUAL_PORT ?? 5111);
 // still runs out of the main checkout, where .venv and uv.lock live -- and
 // Playwright spawns webServer with its cwd at *this* directory, so a relative
 // default resolves to visual/docs/app.py and flask exits 2.
-const appPath =
-  process.env.VISUAL_APP ?? join(dirname(fileURLToPath(import.meta.url)), '..', 'docs/app.py');
+const HERE = dirname(fileURLToPath(import.meta.url));
+const appPath = process.env.VISUAL_APP ?? join(HERE, '..', 'docs/app.py');
 
 export default defineConfig({
   testDir: '.',
@@ -84,14 +84,15 @@ export default defineConfig({
   },
 
   webServer: {
-    command: `uv run flask --app "${appPath}" run --port ${port}`,
+    command: `uv run python "${join(HERE, 'serve.py')}" "${appPath}" ${port}`,
     url: `http://127.0.0.1:${port}/getting-started.html`,
     reuseExistingServer: false,
-    // Werkzeug writes an access line per request to stderr -- roughly 1,400
-    // lines a pass, which buries the results. The spec asserts on the response
-    // status instead, so a 500 fails the page that caused it, by name.
+    // serve.py quiets Werkzeug's per-request access log, so stderr can stay
+    // open for the failures worth seeing. Silencing it outright was the first
+    // attempt and it cost real time: a server that would not start reported
+    // nothing but "Exit code: 1".
     stdout: 'ignore',
-    stderr: 'ignore',
+    stderr: 'pipe',
     timeout: 60_000,
   },
 });

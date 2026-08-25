@@ -50,6 +50,44 @@ for (const file of pages) {
         localStorage.removeItem('md-source');
       }, variant.theme);
 
+      // A full-page screenshot resizes the viewport to reach beyond it, and
+      // Carousel legitimately reacts: it observes its element with a
+      // ResizeObserver and recomputes item offsets on a throttled window
+      // resize. Whether that recompute lands before or after the pixel
+      // readback is a race, and it is the one that failed `carousel @
+      // expanded` in CI on a tree with no source change.
+      //
+      // The state worth photographing is the settled one; the mid-capture
+      // resize is the tool perturbing the page, not the framework misbehaving.
+      // So record every observer and resize listener as they are registered,
+      // and cut them loose once the page has settled -- generic, so a
+      // component that starts observing tomorrow is covered without a change
+      // here.
+      await page.addInitScript(() => {
+        const observers = [];
+        const Native = window.ResizeObserver;
+        if (Native) {
+          window.ResizeObserver = class extends Native {
+            constructor(callback) {
+              super(callback);
+              observers.push(this);
+            }
+          };
+        }
+
+        const listeners = [];
+        const add = window.addEventListener.bind(window);
+        window.addEventListener = (type, fn, options) => {
+          if (type === 'resize') listeners.push([fn, options]);
+          return add(type, fn, options);
+        };
+
+        window.__visualFreezeLayout = () => {
+          observers.forEach((o) => o.disconnect());
+          listeners.forEach(([fn, options]) => window.removeEventListener('resize', fn, options));
+        };
+      });
+
       // highlight.js comes from cdnjs and rewrites every code block after
       // load. code-blocks.js already guards on `window.hljs`, so blocking it
       // leaves the samples unhighlighted and identical on both sides -- far
@@ -86,12 +124,20 @@ for (const file of pages) {
       await page.route('**://www.youtube.com/**', (r) => r.abort());
       await page.route('**://interactive-examples.mdn.mozilla.net/**', (r) => r.abort());
 
-      // The time and date pickers open on *now*: the minute digit ticked over
-      // between the two passes and four timepicker shots failed on a tree with
-      // no source change at all. Fixing the clock rather than masking the
-      // region keeps the picker itself under test. setFixedTime, not
-      // install(): it pins Date without pausing timers, which components own.
-      await page.clock.setFixedTime(FIXED_NOW);
+      // The time and date pickers open on *now*, so the minute digit ticked
+      // over between the two passes and four timepicker shots failed on a tree
+      // with no source change at all.
+      //
+      // install(), not setFixedTime(). Freezing Date outright looks like the
+      // smaller hammer and is the wrong one here: Carousel._autoScroll eases
+      // by `amplitude * exp(-elapsed / duration)` where elapsed is a Date.now()
+      // delta, so with Date frozen elapsed is always 0, the easing never
+      // decays below its threshold, and the carousel never reaches its target.
+      // A fake clock that *advances on command* gives both halves: the pickers
+      // read one fixed instant at init, and runFor below carries every finite
+      // animation to its end deterministically rather than photographing it
+      // mid-flight.
+      await page.clock.install({ time: FIXED_NOW });
 
       await page.setViewportSize({ width: variant.width, height: variant.height });
 
@@ -115,6 +161,12 @@ for (const file of pages) {
         { timeout: 15_000 },
       );
 
+      // Run the fake clock forward far enough for every easing loop to land on
+      // its target and every init timeout to have fired. Deterministic by
+      // construction: the same number of milliseconds elapses on both passes
+      // regardless of how fast the machine is.
+      await page.clock.runFor(3000);
+
       // Components own intervals (Snackbar, Slider, Carousel) and Playwright's
       // `animations: 'disabled'` only reaches CSS. Freezing transitions stops
       // a component that is mid-transition when the shutter opens from
@@ -136,6 +188,33 @@ for (const file of pages) {
       // job green.
       if (MODE === 'head' && !existsSync(new URL(`visual/__shots__/${shot}`, root))) {
         test.skip(true, 'no baseline: page is new on this revision');
+      }
+
+      // Last thing before the shutter: everything above has settled, so stop
+      // the page reacting to the capture's own viewport change.
+      await page.evaluate(() => window.__visualFreezeLayout?.());
+
+      // The base pass has to stabilise by hand, and this asymmetry is subtle
+      // enough to be worth spelling out. toHaveScreenshot re-captures until
+      // two consecutive frames agree -- but only when it has something to
+      // compare against. Writing a *missing* snapshot under
+      // --update-snapshots is a single shot with no loop, so the baseline
+      // could be an unsettled frame while the head pass, which does loop, is
+      // settled. That produced a stable-but-wrong diff on a different pair of
+      // pages every run: 11,711 pixels on collections, 2,733 on range, with
+      // no source change between the two revisions.
+      if (MODE === 'base') {
+        let previous = null;
+        for (let attempt = 0; attempt < 10; attempt++) {
+          const frame = await page.screenshot({
+            fullPage: true,
+            animations: 'disabled',
+            caret: 'hide',
+          });
+          if (previous?.equals(frame)) break;
+          previous = frame;
+          await page.clock.runFor(150);
+        }
       }
 
       await expect(page).toHaveScreenshot(shot, { fullPage: true });

@@ -108,15 +108,49 @@ job is `visual.yml`, pull requests only.
   assembles. The page *list* still comes from `website/*.html`, so it covers
   exactly what ships. A page this branch adds has no baseline: the base pass
   skips it on the 404, the head pass skips it on the missing file.
-- **cdnjs is blocked, Google Fonts is not.** highlight.js rewrites every code
-  block after load, and `code-blocks.js` already guards on `window.hljs`, so
-  blocking it leaves the samples unhighlighted and identical on both sides
-  rather than page-sized diffs whenever the CDN is slow. The icon font is the
-  opposite case: icon sizing is one of the regressions this exists to catch
-  (24px -> 18px shipped once), so it must load, and `document.fonts.ready` is
+- **Every non-font third party is stubbed.** picsum.photos serves 51 demo
+  images and is fulfilled with an SVG of exactly the requested size; the live
+  YouTube iframe and MDN video on `media-css.html` are aborted; cdnjs is
+  aborted because highlight.js rewrites every code block after load and
+  `code-blocks.js` already guards on `window.hljs`. An image landing between
+  two stabilisation captures changes the page height, which is precisely how
+  the first CI run failed (1440x8729 against 1440x8786). The icon font is the
+  one exception: icon sizing is a regression this exists to catch (24px ->
+  18px shipped once), so Google Fonts loads and `document.fonts.ready` is
   awaited before the shutter.
-- Werkzeug's access log is silenced (~1,400 lines a pass). The spec asserts on
-  the response status instead, so a 500 fails the page that caused it, by name.
+- **`page.clock.install()` then `runFor`, never `setFixedTime`.** The pickers
+  open on *now*, so the clock has to be pinned or the minute digit ticks over
+  between the two passes. But freezing `Date` outright breaks
+  `Carousel._autoScroll`, which eases by `amplitude * exp(-elapsed /
+  duration)` over a `Date.now()` delta: with `elapsed` permanently 0 the
+  easing never decays below its threshold and the carousel never reaches its
+  target. A fake clock that advances *on command* gives both -- one fixed
+  instant at init, then a fixed number of milliseconds of animation, the same
+  on any machine.
+- **Freeze layout reactions at the shutter, and stabilise the base pass by
+  hand.** Two separate races, both of which failed a different page on every
+  run with no source change between the revisions. First: a full-page
+  screenshot resizes the viewport to reach beyond it, Carousel observes its
+  element with a ResizeObserver and recomputes item offsets on a throttled
+  resize, and whether that lands before the pixel readback is a coin flip. The
+  spec records every observer and `resize` listener as they register and
+  disconnects them once the page has settled -- the settled state is what is
+  worth photographing, and the mid-capture resize is the tool perturbing the
+  page. Second, and subtler: `toHaveScreenshot` re-captures until two
+  consecutive frames agree, *but only when it has something to compare
+  against*. Writing a missing snapshot under `--update-snapshots` is a single
+  shot with no loop, so a baseline could be an unsettled frame while the head
+  pass, which does loop, was settled -- a stable-but-wrong diff of 11,711
+  pixels on collections, 2,733 on range. The base pass now loops on its own
+  until two captures match.
+- **`visual/serve.py`, not `flask --app`.** Werkzeug logs ~1,400 access lines a
+  pass, which buries the results; the wrapper quiets that logger so stderr
+  stays free for real failures. Silencing stderr wholesale was the first
+  attempt and it hid a server that would not start at all -- Playwright could
+  only report "Exit code: 1". The wrapper registers the module in
+  `sys.modules` *before* executing it, because `Flask(__name__)` resolves its
+  template root through `sys.modules[import_name].__file__` and otherwise
+  points it at the cwd, where no template is found.
 
 ## HTML semantics
 
