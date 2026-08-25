@@ -35,8 +35,7 @@ const pages = readdirSync(new URL('website/', root))
   .sort();
 
 /** The docs-site chrome, masked identically in both passes. See the note at the shutter. */
-const CHROME_MASK = (page, slug) =>
-  slug === 'sidenav' ? [] : [page.locator('#nav-mobile')];
+const CHROME_MASK = (page) => [page.locator('#nav-mobile')];
 
 for (const file of pages) {
   const slug = file.replace(/\.html$/, '');
@@ -241,7 +240,7 @@ for (const file of pages) {
             fullPage: true,
             animations: 'disabled',
             caret: 'hide',
-            mask: CHROME_MASK(page, slug),
+            mask: CHROME_MASK(page),
           });
           if (previous?.equals(frame)) break;
           previous = frame;
@@ -249,7 +248,7 @@ for (const file of pages) {
         }
       }
 
-      await expect(page).toHaveScreenshot(shot, { fullPage: true, mask: CHROME_MASK(page, slug) });
+      await expect(page).toHaveScreenshot(shot, { fullPage: true, mask: CHROME_MASK(page) });
     });
   }
 }

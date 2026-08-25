@@ -160,19 +160,15 @@ job is `visual.yml`, pull requests only.
   revision -- a sibling of `<main>`, while the Footer page's demo footers sit
   inside it -- and `#nav-mobile` already existed.
 
-  **The Sidenav page is exempt from the mask, and must stay exempt.** Its three
-  demo drawers are off-canvas and never photographed, so `#nav-mobile` is the
-  only drawer that renders there: masking it everywhere silently ended all
-  visual coverage of the component. Verified both directions -- a deliberate
-  restyle fails `sidenav` at expanded/large/large-dark (not compact, where the
-  drawer is off-canvas) and fails `footer` at all four.
-
-  The exemption has one limit worth knowing. The drawer renders each `NAV`
-  group as a `<details>` and opens only the current page's, so adding a page
-  moves the drawer *only* on pages in that same group. `sidenav` lives under
-  Structure, so a Foundations page never touches it -- but a page added to
-  **Structure** will move those four shots. That is a legible failure, not
-  noise, and far better than the 228 it replaces.
+  **Masking the chrome costs no component coverage, but check that rather than
+  assuming it.** The Sidenav page's `.navigation-drawer-demo` is made static
+  with `transform: none` by `docs.css`, so it sits in flow and is photographed;
+  the two `#slide-out` drawers beside it are off-canvas and never were. A
+  deliberate restyle of `.navigation-drawer, .sidenav` fails `sidenav` at all
+  four widths with the mask on, and a restyled footer fails `footer` at all
+  four. Probing this needs a `background-color`, not an `outline` - an outline
+  draws outside the element box, escapes the mask, and fails 175 shots that are
+  perfectly fine.
 
 - **`visual/serve.py`, not `flask --app`.** Werkzeug logs ~1,400 access lines a
   pass, which buries the results; the wrapper quiets that logger so stderr
