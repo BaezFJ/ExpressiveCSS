@@ -1,0 +1,96 @@
+# ExpressiveCSS
+
+> A Material Design 3 front-end framework for the web: design tokens, light and dark themes, a responsive grid, styled form controls, and interactive components, built with Sass and TypeScript.
+
+Package `@expressivecss/expressive`, version 0.7.0. Distributed as compiled CSS, Sass sources, and JavaScript in ES module, CommonJS, and browser IIFE form. Targets the last five Chrome and Firefox versions.
+
+Read the two primary documents in order. `m3-guidelines.md` decides *which*
+component a job calls for, how it is structured, and where it sits;
+`llm.md` states the markup, class names, tokens, and JavaScript APIs this
+framework actually ships. Where they disagree with the Material 3 spec,
+`llm.md` wins on what exists and the spec wins on design intent.
+
+The public surface is not Materialize's. There is no `.btn`, `.card-content`,
+`.nav-wrapper`, `.brand-logo`, `.modal-header`, `.lever`, or `.filled-in` --
+components are carried by the HTML element (`<button>`, `<article>`,
+`<dialog>`, `<footer>`), and a class modifies a component rather than making
+one. Icons are Material Symbols in a `<span class="material-symbols">`.
+
+## Primary documentation
+
+- [Material 3 design guidelines](https://www.expressivecss.com/m3-guidelines.md): Which component to use, its anatomy, placement, adaptive behavior, and the mistakes generated Material UIs make most often. Read this first.
+- [Markup and JavaScript API reference](https://www.expressivecss.com/llm.md): Every component: class names, canonical markup, options, methods, events, and CSS custom properties.
+- [Complete documentation, single file](https://www.expressivecss.com/llms-full.txt): Both documents above concatenated, for one-fetch ingestion.
+
+## Start
+
+- [Getting started](https://www.expressivecss.com/getting-started.html): Learn how to start using Expressive and integrate it into your project.
+- [Auto Init](https://www.expressivecss.com/auto-init.html): Initialize every registered component with one function call.
+
+## Foundations
+
+- [Color](https://www.expressivecss.com/color.html): One system: the Material Design 3 theme tokens.
+- [Themes](https://www.expressivecss.com/themes.html): Light and dark schemes, the theme attribute, and custom tokens.
+- [Typography](https://www.expressivecss.com/typography.html): Material Design 3 type, from the HTML.
+- [Icons](https://www.expressivecss.com/icons.html): Material Symbols, outlined by default. Axes and style are CSS variables.
+- [Elevation](https://www.expressivecss.com/shadow.html): Raise or flatten an element with the z-depth elevation classes.
+- [Grid](https://www.expressivecss.com/grid.html): Use Expressive's CSS Grid system to format a page in an ordered, comfortable way.
+- [Helpers](https://www.expressivecss.com/helpers.html): An overview of the helper classes for alignment, visibility, spacing, and common CSS properties.
+- [Media styles](https://www.expressivecss.com/media-css.html): Responsive images and videos ready to be seen on many devices.
+- [Table](https://www.expressivecss.com/table.html): Organize data with a few utility classes on a standard HTML table.
+- [Transitions](https://www.expressivecss.com/css-transitions.html): Animate content in and out with a few CSS classes.
+- [Pulse](https://www.expressivecss.com/pulse.html): Draw attention to floating buttons with a subtle, repeating pulse.
+- [Waves](https://www.expressivecss.com/waves.html): The Material Design ink ripple, included in the Expressive JavaScript bundle.
+
+## Structure
+
+- [App bar](https://www.expressivecss.com/navbar.html): Material Design 3 top app bars, from the HTML.
+- [Navigation bar](https://www.expressivecss.com/navigation-bar.html): Switch between UI views on compact and medium screens.
+- [Navigation rail](https://www.expressivecss.com/navigation-rail.html): Switch between UI views on mid-sized devices.
+- [Sidenav](https://www.expressivecss.com/sidenav.html): A slide-out menu, or a fixed sidebar on Expanded and wider screens.
+- [Panes](https://www.expressivecss.com/panes.html): Material 3 canonical layouts, from the HTML.
+- [Footer](https://www.expressivecss.com/footer.html): Site navigation and extra information at the end of a page.
+- [Tabs](https://www.expressivecss.com/tabs.html): Material Design 3 tabs, from the HTML.
+- [Breadcrumbs](https://www.expressivecss.com/breadcrumbs.html): The path to this page, from the HTML.
+- [Pagination](https://www.expressivecss.com/pagination.html): A list of pages. The HTML is the component.
+- [Menu](https://www.expressivecss.com/menu.html): Material Design 3 menus, from the HTML.
+- [Scrollspy](https://www.expressivecss.com/scrollspy.html): Highlight the table of contents as the page scrolls.
+
+## Components
+
+- [Buttons](https://www.expressivecss.com/buttons.html): Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
+- [FAB](https://www.expressivecss.com/floating-action-button.html): A circular action that can open a menu of related shortcuts.
+- [Cards](https://www.expressivecss.com/cards.html): Material Design 3 cards, from the HTML.
+- [Lists](https://www.expressivecss.com/lists.html): Continuous vertical indexes of text and images.
+- [Dialogs](https://www.expressivecss.com/dialogs.html): Important prompts in a user flow. Dedicated to a single task.
+- [Bottom sheet](https://www.expressivecss.com/bottom-sheet.html): Secondary content anchored to the bottom of the screen.
+- [Side sheet](https://www.expressivecss.com/side-sheet.html): Optional content and actions, without interrupting the main view.
+- [Badges](https://www.expressivecss.com/badges.html): Notifications, counts, or status on navigation items and icons.
+- [Tooltips](https://www.expressivecss.com/tooltips.html): Material Design 3 tooltips, from the HTML.
+- [Snackbar](https://www.expressivecss.com/snackbar.html): Material Design 3 snackbars, from the HTML.
+- [Preloader](https://www.expressivecss.com/preloader.html): Activity and progress. The HTML is the indicator.
+- [Carousel](https://www.expressivecss.com/carousel.html): Material 3 adaptive carousels for visual collections.
+- [Lightbox](https://www.expressivecss.com/media.html): Lightbox and Slider for large images and slideshows.
+- [Parallax](https://www.expressivecss.com/parallax.html): A cropped image that shifts as it crosses the viewport.
+- [Toolbars](https://www.expressivecss.com/toolbars.html): Frequently used actions for the current page.
+
+## Forms
+
+- [Fieldsets](https://www.expressivecss.com/fieldsets.html): Grouped form sections, from the HTML.
+- [Text fields](https://www.expressivecss.com/text-inputs.html): Material Design 3 text fields, from the HTML.
+- [Select](https://www.expressivecss.com/select.html): Choose one option, or several, from a styled menu.
+- [Checkboxes](https://www.expressivecss.com/checkboxes.html): Material Design 3 checkboxes, from the HTML.
+- [Radio](https://www.expressivecss.com/radio-buttons.html): Material Design 3 radios, from the HTML.
+- [Switches](https://www.expressivecss.com/switches.html): Material Design 3 switches, from the HTML.
+- [Slider](https://www.expressivecss.com/slider.html): Selections from a range of values.
+- [Chips](https://www.expressivecss.com/chips.html): Small blocks for contacts, tags, and filters.
+- [Autocomplete](https://www.expressivecss.com/autocomplete.html): Suggest values under a text field as the user types.
+- [Date picker](https://www.expressivecss.com/datepicker.html): Select a date, a range, or several dates from a calendar.
+- [Time picker](https://www.expressivecss.com/timepicker.html): Pick a time from a clock face, in 12-hour or 24-hour form.
+
+## Optional
+
+- [Source repository](https://github.com/BaezFJ/ExpressiveCSS): issues, source, and the build.
+- [Changelog](https://github.com/BaezFJ/ExpressiveCSS/blob/master/CHANGELOG.md): releases, and the migration notes for every breaking change.
+- [HTML semantics standard](https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md): the element and ARIA contract each component is written against.
+- [npm package](https://www.npmjs.com/package/@expressivecss/expressive): install and version history.

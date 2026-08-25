@@ -8,6 +8,15 @@ build/
 *.map
 .sass-cache/
 
+# Frozen copies of files that already live in this repository. The freeze
+# writes them (the deploy copies website/ verbatim) but committing them would
+# put ~570 KB of duplicated prose in git and rewrite it on every docs change.
+# website/llms.txt is deliberately not here: it is small and generated, and a
+# reader should see it. Same arrangement as website/dist/, covered by `dist/`.
+website/llm.md
+website/m3-guidelines.md
+website/llms-full.txt
+
 # Python environments, bytecode, and packaging
 .venv/
 venv/

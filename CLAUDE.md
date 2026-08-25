@@ -334,4 +334,25 @@ The bundle only self-initializes Forms/Chips/Waves/Range/Cards — `docs/static/
 
 Templates are macro-driven; hand-writing the chrome is what caused every docs bug found so far. `NAV` in `app.py` is the single source for the sidenav *and* the footer (the `<details open>` test reads a derived endpoint list), and the footer version comes from `package.json`. A page declares `page_name` / `page_blurb` and `docs.html` builds the `<title>`, the app bar heading and the banner from them. `macros/page.html` holds the rest: `section(id, label)` registers itself in `toc_sections` (a fresh list per render, from the context processor) so `toc()` can generate the table of contents — write a section once and its TOC entry follows; `page_body()` wraps the standard two-column scaffold and emits that TOC; `code()` escapes a sample so you write real markup instead of `&lt;`. `macros/api.html` owns the Options/Properties/Tokens table headers and the methods `instance_note`. `{% do %}` is enabled for the registration, and the page macros must be imported `with context` because they read `toc_sections`.
 
+`llms.txt` is generated too, by `scripts/gen_llms.py` (`npm run build:llms`,
+which needs `uv`). It is the [llms.txt](https://llmstxt.org) link index for the
+site: an H1, a summary, then one `##` section per `NAV` group with one link per
+page, each link's note being that page's own `page_blurb`. Nothing in it is
+authored — the page list is `NAV`, the version and base URL are `package.json`,
+so **adding a page to `NAV` adds it here and nowhere else**. It is committed at
+the repo root, and `pages.yml` regenerates and commits it beside `website/`
+rather than checking it, because it states the version and a release commit
+would otherwise leave it stale. `tests/llms.test.js` asserts the property
+regenerating restores: every `NAV` page linked once, under its own group, at a
+URL `website/` actually has.
+
+`/llms-full.txt` is *not* generated — the route concatenates `m3-guidelines.md`
+and `llm.md` per request, in that reading order, so there is no third copy to
+keep in step. All four LLM URLs (`/llms.txt`, `/llms-full.txt`, `/llm.md`,
+`/m3-guidelines.md`) are Flask routes so `flask run` serves what the site
+serves; the three large ones are gitignored under `website/` the way
+`website/dist/` is, since they duplicate files already in the repo. **Two views,
+not one view with two rules** — Frozen-Flask writes one file per *endpoint*, so
+a shared view silently freezes only one of its URLs.
+
 `website/` is generated, which makes it the regression test for any template change: `uv run python freeze.py`, then diff. Modulo whitespace the output must be identical — that is how all five macro refactors were verified.
