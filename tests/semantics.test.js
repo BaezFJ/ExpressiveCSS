@@ -27,49 +27,59 @@ const data = JSON.parse(read('semantics.json'));
 
 // --- conformance ------------------------------------------------------------
 
-/**
- * Selector text with every `:not(...)` argument removed.
- *
- * Negation inverts what a forbid rule blocks, so the two must not be conflated:
- * `.tabs[role]` forbids every role, while `li[aria-selected]:not([role])`
- * forbids the *absence* of one. Scanning the raw selector would read both as
- * "blocks a role" and flag the list rule that is doing the opposite.
- */
-function withoutNegations(selector) {
-  let out = '';
-  for (let i = 0; i < selector.length; ) {
-    if (!selector.startsWith(':not(', i)) {
-      out += selector[i++];
+/** Top-level comma split: a comma inside `:not(a, b)` belongs to that compound. */
+function splitCompounds(selector) {
+  const out = [];
+  let depth = 0;
+  let cur = '';
+  for (const ch of selector) {
+    if (ch === '(') depth++;
+    else if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) {
+      out.push(cur);
+      cur = '';
       continue;
     }
-    let depth = 0;
-    i += 4; // land on the '('
-    for (; i < selector.length; i++) {
-      if (selector[i] === '(') depth++;
-      else if (selector[i] === ')' && --depth === 0) {
-        i++;
-        break;
-      }
-    }
+    cur += ch;
   }
-  return out;
+  return [...out, cur];
 }
 
 /**
  * The composite roles a rule blocks from appearing.
+ *
+ * Only a compound that forbids the role *categorically* counts. A compound
+ * carrying `:not()` or `:has()` is conditional - it rejects some elements that
+ * have the role rather than the role itself. `[role="listbox"]:not([aria-label])`
+ * forbids unnamed listboxes and withholds nothing; reading it as withholding
+ * would demand conformance debt for a rule that is merely requiring a label.
+ * The same skip covers the mirror case, `li[aria-selected]:not([role])`, which
+ * forbids the *absence* of a role.
+ *
+ * That trade is deliberate and errs toward missing a withheld role rather than
+ * inventing one: a false positive forces a bogus declaration, while a false
+ * negative leaves a gap the generated summary already admits to.
  *
  * A bare `[role]` blocks every role, composite ones included - which is how
  * Tabs withholds `tablist` without naming it.
  */
 function rolesBlockedBy(rule, compositeRoles) {
   if (rule.kind !== 'forbid') return [];
-  const s = withoutNegations(rule.selector);
-  if (/\[role\]/.test(s)) return [...compositeRoles];
-  // Roles are a fixed vocabulary in semantics.json, pinned below as bare
-  // identifiers, so interpolating one into a regex cannot inject syntax.
-  return compositeRoles.filter((r) =>
-    new RegExp(`\\[role\\s*[~|^$*]?=\\s*["']?${r}["']?\\s*\\]`).test(s)
-  );
+  const out = new Set();
+  for (const compound of splitCompounds(rule.selector)) {
+    if (/:(not|has)\(/.test(compound)) continue;
+    if (/\[role\]/.test(compound)) {
+      compositeRoles.forEach((r) => out.add(r));
+      continue;
+    }
+    for (const r of compositeRoles) {
+      // Pinned as bare identifiers below. Guarding here too keeps a malformed
+      // entry reporting as a vocabulary failure, not an invalid-regex throw.
+      if (!/^[a-z]+$/.test(r)) continue;
+      if (new RegExp(`\\[role\\s*[~|^$*]?=\\s*["']?${r}["']?\\s*\\]`).test(compound)) out.add(r);
+    }
+  }
+  return [...out];
 }
 
 /** Everything wrong with one component's conformance declaration, as messages. */
@@ -426,12 +436,30 @@ describe('semantics.json', () => {
     }
   });
 
-  test('a negated role is not read as a blocked one', () => {
-    const roles = ['tablist'];
-    // `li[aria-selected]:not([role])` forbids the absence of a role, not a role.
-    const negated = { id: 'r', kind: 'forbid', selector: 'li[aria-selected]:not([role])', message: 'm' };
-    assert.deepEqual(rolesBlockedBy(negated, roles), []);
-    assert.deepEqual(rolesBlockedBy({ ...negated, selector: '.x[role]' }, roles), ['tablist']);
+  test('only a categorical prohibition counts as blocking a role', () => {
+    const roles = ['tablist', 'listbox'];
+    const forbid = (selector) => rolesBlockedBy({ id: 'r', kind: 'forbid', selector, message: 'm' }, roles);
+
+    assert.deepEqual(forbid('.x[role]').sort(), ['listbox', 'tablist'], 'a bare [role] blocks every role');
+    assert.deepEqual(forbid('.x[role="listbox"]'), ['listbox']);
+    assert.deepEqual(forbid('.x[role~="listbox"]'), ['listbox'], 'the [role~=] family too');
+
+    // Forbids the *absence* of a role, so it withholds nothing.
+    assert.deepEqual(forbid('li[aria-selected]:not([role])'), []);
+    // Forbids unnamed listboxes, not listboxes. Reading this as withholding
+    // would demand conformance debt from a rule that requires a label.
+    assert.deepEqual(forbid('[role="listbox"]:not([aria-label])'), []);
+    assert.deepEqual(forbid('[role="listbox"]:has(> .bad)'), []);
+
+    // A comma inside :not() must not split the compound.
+    assert.deepEqual(forbid('.x:not(.a, .b)[role]'), [], 'still conditional despite the comma');
+    assert.deepEqual(forbid('.x:not(.a, .b), .y[role="tablist"]'), ['tablist'], 'the other compound still counts');
+
+    // A malformed vocabulary entry reports as a vocabulary failure, not a regex throw.
+    assert.doesNotThrow(() => rolesBlockedBy({ id: 'r', kind: 'forbid', selector: '.x[role="a"]', message: 'm' }, ['a(']));
+
+    // Only forbid rules withhold.
+    assert.deepEqual(rolesBlockedBy({ id: 'r', kind: 'require-attr', selector: '.x[role]', attr: 'a', message: 'm' }, roles), []);
   });
 
   test('SEMANTICS.md is not stale', () => {
