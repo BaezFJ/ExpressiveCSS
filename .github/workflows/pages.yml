@@ -15,6 +15,13 @@ on:
       - 'docs/**'
       - 'src/**'
       - 'freeze.py'
+      # The site serves these three verbatim at /llm.md, /m3-guidelines.md and
+      # (concatenated) /llms-full.txt, and gen_llms.py writes llms.txt. None of
+      # them sits under docs/, so without these entries a commit touching only
+      # a primary document deploys nothing and the published copies go stale.
+      - 'llm.md'
+      - 'm3-guidelines.md'
+      - 'scripts/gen_llms.py'
       - 'package.json'
       - 'package-lock.json'
       - 'pyproject.toml'
