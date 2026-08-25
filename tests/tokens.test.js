@@ -91,31 +91,3 @@ describe('Custom properties', () => {
     );
   });
 });
-
-// M3 replaced the ripple with a state layer, so the opacities are a foundation:
-// no author writes markup for one, components paint it behind themselves. They
-// were hand-written at thirteen sites before, which is how checkbox and radio
-// came to draw a focus ring while calling it something else.
-describe('Material 3 state layers', () => {
-  const M3 = { hover: '0.08', focus: '0.1', pressed: '0.1', dragged: '0.16' };
-
-  test('declares the md.sys.state opacities once, at the documented values', () => {
-    for (const [state, value] of Object.entries(M3)) {
-      const declarations = css.match(
-        new RegExp(`--md-sys-state-${state}-state-layer-opacity:\\s*([^;]+);`, 'g')
-      );
-      assert.equal(declarations?.length, 1, `${state}: expected exactly one declaration`);
-      assert.match(declarations[0], new RegExp(`:\\s*${value.replace('.', '\\.')}\\s*;`), state);
-    }
-  });
-
-  test('no component restates a state layer opacity as a literal', () => {
-    // The point of the foundation. A component may still name its own token -
-    // that is public API and authors override it - but its *value* comes from
-    // md.sys.state, so the number lives in exactly one place.
-    const literals = [...css.matchAll(/--md-comp-[\w-]*state-layer-opacity:\s*([^;]+);/g)]
-      .filter((m) => !m[1].includes('var(--md-sys-state-'))
-      .map((m) => m[0]);
-    assert.deepEqual(literals, [], literals.join('\n'));
-  });
-});

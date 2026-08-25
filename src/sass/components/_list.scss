@@ -184,7 +184,7 @@
   > li:not(.active):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-surface) 8%,
+      var(--md-sys-color-on-surface) state-opacity("hover"),
       var(--md-comp-list-item-container-color)
     );
   }

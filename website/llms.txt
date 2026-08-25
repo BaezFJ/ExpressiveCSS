@@ -40,6 +40,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Table](https://www.expressivecss.com/table.html): Organize data with a few utility classes on a standard HTML table.
 - [Transitions](https://www.expressivecss.com/css-transitions.html): Animate content in and out with a few CSS classes.
 - [Pulse](https://www.expressivecss.com/pulse.html): Draw attention to floating buttons with a subtle, repeating pulse.
+- [State layers](https://www.expressivecss.com/state-layers.html): The translucent overlay a component paints over itself for hover, focus, pressed and dragged.
 - [Waves](https://www.expressivecss.com/waves.html): The Material Design ink ripple, included in the Expressive JavaScript bundle.
 
 ## Structure

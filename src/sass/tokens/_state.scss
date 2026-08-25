@@ -15,7 +15,8 @@
 
 @use "../abstracts" as *;
 
-:root {
+:root,
+:host {
   --md-sys-state-hover-state-layer-opacity: 0.08;
   --md-sys-state-focus-state-layer-opacity: 0.1;
   --md-sys-state-pressed-state-layer-opacity: 0.1;

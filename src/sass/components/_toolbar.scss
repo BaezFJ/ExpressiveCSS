@@ -137,7 +137,7 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
     &:hover {
       background-color: color-mix(
         in oklab,
-        var(--md-sys-color-on-primary) 8%,
+        var(--md-sys-color-on-primary) state-opacity("hover"),
         var(--md-sys-color-primary)
       );
     }
@@ -145,7 +145,7 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
     &:active {
       background-color: color-mix(
         in oklab,
-        var(--md-sys-color-on-primary) 10%,
+        var(--md-sys-color-on-primary) state-opacity("pressed"),
         var(--md-sys-color-primary)
       );
     }

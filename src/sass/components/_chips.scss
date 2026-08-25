@@ -51,7 +51,7 @@
   &:hover {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-surface-variant) 8%,
+      var(--md-sys-color-on-surface-variant) state-opacity("hover"),
       var(--md-sys-color-surface-container-low)
     );
   }
@@ -120,7 +120,7 @@
 }
 
 .chip .close:hover {
-  background-color: color-mix(in oklab, var(--md-sys-color-on-surface-variant) 8%, transparent);
+  background-color: color-mix(in oklab, var(--md-sys-color-on-surface-variant) state-opacity("hover"), transparent);
 }
 
 //--------------------------

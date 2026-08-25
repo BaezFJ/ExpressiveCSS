@@ -83,7 +83,7 @@
     }
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
   }
 
@@ -153,7 +153,7 @@
     }
 
     &:hover:not(.active, [aria-current]) > #{$icon} {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
     &.active,
@@ -237,7 +237,7 @@
       }
 
       &:hover:not(.active, [aria-current]) {
-        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
 
         > #{$icon} {
           background-color: transparent;

@@ -96,13 +96,13 @@ $_tab: "> a, > .tab > a";
 
     &:hover {
       color: var(--md-sys-color-on-surface);
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
     &:focus-visible,
     &:focus {
       color: var(--md-sys-color-on-surface);
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("focus"), transparent);
       outline: none;
     }
 
@@ -112,12 +112,12 @@ $_tab: "> a, > .tab > a";
     }
 
     &.active:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
     }
 
     &.active:focus-visible,
     &.active:focus {
-      background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
     }
 
     // Disabled — on the <a>. The wrapping `.tab.disabled` case is

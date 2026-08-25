@@ -88,7 +88,7 @@
     @include focus-visible;
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
     // "Does this control carry a text label?" - the icon is a <span>, so a

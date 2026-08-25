@@ -103,16 +103,16 @@
   }
 
   &:hover {
-    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
   }
 
   &:checked:hover {
-    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
   }
 
   &:focus-visible,
   &.tabbed:focus {
-    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
     outline: none;
   }
 
@@ -185,19 +185,19 @@
 
 .switch [type="checkbox"]:hover + .lever,
 .switch [type="checkbox"]:hover + span {
-  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
 }
 
 .switch [type="checkbox"]:checked:hover + .lever,
 .switch [type="checkbox"]:checked:hover + span {
-  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
 }
 
 .switch [type="checkbox"]:focus-visible + .lever,
 .switch [type="checkbox"].tabbed:focus + .lever,
 .switch [type="checkbox"]:focus-visible + span,
 .switch [type="checkbox"].tabbed:focus + span {
-  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+  box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
 }
 
 .switch [type="checkbox"]:disabled + .lever,
