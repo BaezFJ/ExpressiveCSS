@@ -557,6 +557,33 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   bottom: 0;
 }
 
+/* A reference table wider than a compact window scrolls in place, rather
+   than pushing the whole page sideways. */
+.docs-table-scroll {
+  overflow-x: auto;
+}
+
+/* FAB page: the size and extended examples, each disc over its caption. */
+.fab-size-demo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-block: 1.5rem;
+}
+
+.fab-size-demo > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.fab-size-demo .body-small {
+  color: var(--md-sys-color-on-surface-variant);
+  text-align: center;
+}
+
 /* Tabs page: swipeable panels become a carousel (default 400px). */
 .tabs-swipe-demo {
   --carousel-height: 8rem;
