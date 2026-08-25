@@ -29,6 +29,15 @@ __pycache__/
 .eggs/
 pip-wheel-metadata/
 
+# Visual regression. Nothing here is committed on purpose: __shots__/ is the
+# base revision photographed at the start of each run (100+ MB of PNG),
+# .visual-base/ is the git worktree it was served from, and report/ and
+# results/ are that run's output. See visual/run.mjs.
+visual/__shots__/
+visual/report/
+visual/results/
+.visual-base/
+
 # Test, coverage, and tool caches
 .coverage
 .coverage.*

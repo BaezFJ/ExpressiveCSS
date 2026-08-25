@@ -34,6 +34,8 @@ npm test               # rebuild every JS bundle + the CSS, then run the jsdom s
 npm run test:run       # run tests against the existing dist/ bundle
 npm run watch          # sass --watch + esbuild --watch in parallel
 npm run build:semantics # semantics.json -> SEMANTICS.md
+npm run build:llms     # NAV + package.json -> llms.txt (needs uv)
+npm run test:visual    # screenshot the merge base, then this tree, and diff
 npm run clean          # remove dist/
 ```
 
@@ -79,6 +81,42 @@ There is no npm token anywhere. Publishing is trusted publishing over OIDC, and 
 A successful publish triggers `pages.yml`, which rebuilds `dist/`, re-freezes `website/`, commits it, and deploys to `www.expressivecss.com`.
 
 Repository rules constrain the recovery paths. Rulesets block force pushes and deletions on master and on `refs/tags/v*`, with **no bypass actors, including the owner**. Tag *creation* stays open so a release works, but a pushed tag can never be moved or deleted — a wrong tag is fixed by releasing the next patch, not by rewriting history. To force-push legitimately, disable the ruleset in Settings → Rules, push, re-enable.
+
+## Visual regression
+
+`npm run test:visual` photographs the merge base, then this working tree, and
+reports every page that moved. `npm run test:visual:report` opens the diffs.
+`visual/run.mjs` is the orchestrator and its header states the usage; the CI
+job is `visual.yml`, pull requests only.
+
+- **No baselines are committed, on purpose.** 57 pages x 4 variants of
+  full-page PNG is 100+ MB per revision. Each run instead builds the base
+  revision in a throwaway git worktree (`.visual-base/`, node_modules
+  symlinked so both passes use the same sass and esbuild), photographs it into
+  `visual/__shots__/`, then compares. Nothing binary enters git, there is no
+  "update the snapshots" ritual to forget, and the comparison is always the
+  branch against its own merge base rather than against whatever was blessed
+  months ago. The cost is one extra build per run.
+- **The tolerance is `maxDiffPixels`, never a ratio.** These are full-page
+  screenshots of long pages, and 0.001 of a 1440x9000 page is 12,960 pixels --
+  enough to swallow a 20px -> 4px corner radius on every button on the buttons
+  page, which is exactly what it did when this was first written. Real changes
+  are small in absolute terms and the pages they sit on are enormous, so a
+  ratio scales the tolerance with the wrong thing.
+- **It serves the Flask app, not `website/`.** The frozen pages use
+  root-absolute URLs that only resolve inside the `_site` tree `pages.yml`
+  assembles. The page *list* still comes from `website/*.html`, so it covers
+  exactly what ships. A page this branch adds has no baseline: the base pass
+  skips it on the 404, the head pass skips it on the missing file.
+- **cdnjs is blocked, Google Fonts is not.** highlight.js rewrites every code
+  block after load, and `code-blocks.js` already guards on `window.hljs`, so
+  blocking it leaves the samples unhighlighted and identical on both sides
+  rather than page-sized diffs whenever the CDN is slow. The icon font is the
+  opposite case: icon sizing is one of the regressions this exists to catch
+  (24px -> 18px shipped once), so it must load, and `document.fonts.ready` is
+  awaited before the shutter.
+- Werkzeug's access log is silenced (~1,400 lines a pass). The spec asserts on
+  the response status instead, so a 500 fails the page that caused it, by name.
 
 ## HTML semantics
 

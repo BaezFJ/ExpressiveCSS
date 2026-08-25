@@ -1,0 +1,59 @@
+name: Visual regression
+
+# Only on pull requests, and only when something that can move a pixel changed.
+# There is nothing to compare a push to master against but its own parent,
+# which is the diff the pull request already showed.
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'src/sass/**'
+      - 'src/ts/**'
+      - 'docs/**'
+      - '.github/workflows/visual.yml'
+      - 'visual/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Full history: visual/run.mjs compares against the merge base, which a
+      # shallow clone does not have.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+
+      - run: uv sync --frozen
+
+      - run: npx playwright install --with-deps chromium
+
+      # Builds both revisions and serves each through the Flask docs app; see
+      # visual/run.mjs. A failure here means pages moved, which is often
+      # intended -- the report is the thing to read, not the exit code.
+      - run: npm run test:visual
+
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: visual-report
+          path: visual/report/
+          retention-days: 14
