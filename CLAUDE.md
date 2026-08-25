@@ -172,7 +172,16 @@ on. The five rules:
    implemented and tested.** `role="tablist"` promises arrow-key navigation; a
    component that promises and does not deliver is worse than one that says
    nothing. `tabs.ts` has no keyboard handling at all, so Tabs are navigation
-   (`<nav>` + anchors + `aria-current`), not a tablist. Same for Carousel.
+   (`<nav>` + anchors + `aria-current`), not a tablist — a role it *withholds*
+   until the keyboard model exists.
+
+   **Carousel is not the same case, though this file long said it was.**
+   `carousel.ts` implements arrows plus Home/End with focus movement and is
+   tested for it, so nothing is owed. It declines `tablist` because it writes
+   the ARIA carousel pattern instead — `aria-roledescription` on a group, with
+   independent indicator controls. That is a *rejected* role, and conflating the
+   two puts a false statement about the code into `semantics.json`: debt says
+   "coming once the code catches up", and Carousel's code is not behind.
 3. **Never tell an icon from a label by its element.** `$icon` and `$icon-label`
    in `abstracts/_variables` are the one place that distinction is made; five
    selectors used to make it themselves with `i` versus `span`, and all five

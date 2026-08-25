@@ -68,6 +68,12 @@ withheld and what the withholding is blocked on. Distinct from *exempt*, which
 is about whether a component's rules run at all: a fully enforced component can
 still carry conformance debt.
 
+**Rejected role.** A composite role a component will never declare, because it
+implements a different pattern that the role would misdescribe. The defining
+property is that nothing is owed: the code is not behind, it went another way.
+Distinct from *conformance debt* in exactly that — debt is a promise deferred
+until the code can keep it, a rejection is a promise declined.
+
 **Surface.** A place in the repository that states component markup and can
 therefore drift from the standard. Generated output is not a surface of its
 own — it inherits whatever its source states.

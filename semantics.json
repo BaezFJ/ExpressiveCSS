@@ -3,7 +3,7 @@
   "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
   "rules": [
     "Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.",
-    "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs and Carousel do not qualify: tabs are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`.",
+    "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.",
     "Icons are `<span class=\"material-symbols\" aria-hidden=\"true\">`. `<i>` keeps working but is undocumented.",
     "`<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.",
     "Every user-facing string the framework generates has an `i18n` option."
@@ -113,10 +113,10 @@
     },
     "carousel": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js.",
-      "conformance": {
-        "withheld_role": "tablist",
-        "blocked_on": "keyboard model",
+      "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule names tablist rather than forbidding every role, because role=\"group\" with aria-roledescription=\"carousel\" is the pattern carousel.ts writes.",
+      "rejects": {
+        "rejected_role": "tablist",
+        "because": "it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls",
         "rule": "carousel-not-a-tablist"
       },
       "rules": [
@@ -731,7 +731,7 @@
     },
     "toolbar": {
       "status": "enforced",
-      "note": "Swept 0.8.0. A toolbar holds commands, not destinations.",
+      "note": "Swept 0.8.0. A toolbar holds commands, not destinations. The role rule is written without an exception, so it also covers div.fixed-action-btn.toolbar, which $_toolbar excludes: a withheld role is withheld everywhere, and the FAB transition has no more claim to it.",
       "conformance": {
         "withheld_role": "toolbar",
         "blocked_on": "keyboard model",
@@ -750,7 +750,7 @@
           "kind": "forbid",
           "selector": ".toolbar[role=\"toolbar\"]",
           "fragmentSafe": true,
-          "message": "A toolbar takes no ARIA role here; its buttons are reached with Tab, not arrow keys."
+          "message": "A toolbar takes no toolbar role here; its buttons are reached with Tab, not arrow keys."
         }
       ]
     },

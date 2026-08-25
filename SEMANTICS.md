@@ -9,7 +9,7 @@ Normative HTML semantics for ExpressiveCSS components. This data file is the sin
 Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.
 
 1. Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.
-2. A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs and Carousel do not qualify: tabs are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`.
+2. A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.
 3. Icons are `<span class="material-symbols" aria-hidden="true">`. `<i>` keeps working but is undocumented.
 4. `<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.
 5. Every user-facing string the framework generates has an `i18n` option.
@@ -32,9 +32,13 @@ component may still withhold a composite role because the keyboard contract rule
 demands does not exist yet. Each one below names the role it withholds, what that
 waits on, and the rule that keeps the role out of markup meanwhile.
 
-The composite roles that can be withheld: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
+A component may also *reject* a role: one it will never take because it implements a
+different pattern. That is not debt - the code is not behind, it went another way - and
+the same rule-linking applies, so neither can be recorded without enforcement.
 
-**3 of 46 components declare conformance debt.**
+The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
+
+**2 of 46 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -104,9 +108,9 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 ### carousel
 
-Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js.
+Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule names tablist rather than forbidding every role, because role="group" with aria-roledescription="carousel" is the pattern carousel.ts writes.
 
-**Conformance debt:** `tablist` is withheld pending keyboard model, and `carousel-not-a-tablist` enforces that.
+**Rejected role:** `tablist` is not withheld but declined - it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls. `carousel-not-a-tablist` enforces that.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -520,7 +524,7 @@ Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the cont
 
 ### toolbar
 
-Swept 0.8.0. A toolbar holds commands, not destinations.
+Swept 0.8.0. A toolbar holds commands, not destinations. The role rule is written without an exception, so it also covers div.fixed-action-btn.toolbar, which $_toolbar excludes: a withheld role is withheld everywhere, and the FAB transition has no more claim to it.
 
 **Conformance debt:** `toolbar` is withheld pending keyboard model, and `toolbar-not-an-aria-toolbar` enforces that.
 
@@ -530,7 +534,7 @@ Swept 0.8.0. A toolbar holds commands, not destinations.
 | `toolbar-not-an-aria-toolbar` | forbid | `.toolbar[role="toolbar"]` | must not match |
 
 - **toolbar-not-nav** - A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.
-- **toolbar-not-an-aria-toolbar** - A toolbar takes no ARIA role here; its buttons are reached with Tab, not arrow keys.
+- **toolbar-not-an-aria-toolbar** - A toolbar takes no toolbar role here; its buttons are reached with Tab, not arrow keys.
 
 ### tooltip
 
