@@ -75,6 +75,8 @@
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",
     "test:watch": "node --test --watch",
+    "test:visual": "node visual/run.mjs",
+    "test:visual:report": "playwright show-report visual/report",
     "watch": "run-p watch:css watch:js",
     "watch:css": "sass --watch src/sass/expressive.scss:dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
     "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap --watch=forever"
@@ -89,6 +91,7 @@
     "not dead"
   ],
   "devDependencies": {
+    "@playwright/test": "^1.56.0",
     "esbuild": "^0.28.2",
     "jsdom": "^30.0.1",
     "npm-run-all2": "^9.0.3",
