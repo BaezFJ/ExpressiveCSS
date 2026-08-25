@@ -62,6 +62,7 @@ NAV = [
         ('table', 'Table'),
         ('css_transitions', 'Transitions'),
         ('pulse', 'Pulse'),
+        ('state_layers', 'State layers'),
         ('waves', 'Waves'),
     ]),
     _group('Structure', 'view_quilt', [
@@ -231,6 +232,12 @@ def css_transitions():
 @app.route('/pulse.html')
 def pulse():
     return render_template('foundations/pulse.html')
+
+
+@app.route('/state-layers')
+@app.route('/state-layers.html')
+def state_layers():
+    return render_template('foundations/state-layers.html')
 
 
 @app.route('/waves')

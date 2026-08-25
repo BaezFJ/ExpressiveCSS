@@ -2,3 +2,4 @@
 
 @forward "reference";  // raw ramps + resolved light/dark pairs
 @forward "theme";      // maps the pairs onto the live --md-sys-color-* names
+@forward "state";      // md.sys.state.* state layer opacities

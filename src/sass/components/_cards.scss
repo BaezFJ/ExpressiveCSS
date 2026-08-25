@@ -39,10 +39,10 @@ $_card: "article";
   --md-comp-card-icon-color: var(--md-sys-color-primary);
   --md-comp-card-icon-size: 24px;
   --md-comp-card-state-layer-color: var(--md-sys-color-on-surface);
-  --md-comp-card-hover-state-layer-opacity: 0.08;
-  --md-comp-card-focus-state-layer-opacity: 0.10;
-  --md-comp-card-pressed-state-layer-opacity: 0.10;
-  --md-comp-card-dragged-state-layer-opacity: 0.16;
+  --md-comp-card-hover-state-layer-opacity: var(--md-sys-state-hover-state-layer-opacity);
+  --md-comp-card-focus-state-layer-opacity: var(--md-sys-state-focus-state-layer-opacity);
+  --md-comp-card-pressed-state-layer-opacity: var(--md-sys-state-pressed-state-layer-opacity);
+  --md-comp-card-dragged-state-layer-opacity: var(--md-sys-state-dragged-state-layer-opacity);
   --md-comp-card-disabled-container-opacity: 38%;
   --md-comp-outlined-card-disabled-outline-opacity: 12%;
   --md-comp-card-focus-indicator-color: var(--md-sys-color-secondary);
@@ -638,7 +638,11 @@ article > aside > .reveal-actions > .reveal-action {
 }
 
 article > aside > .reveal-actions > .reveal-action:hover {
-  background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  background-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) calc(var(--md-sys-state-hover-state-layer-opacity) * 100%),
+    transparent
+  );
 }
 
 article > aside > .reveal-actions > .reveal-action > :is(.material-symbols, .card-icon, svg) {

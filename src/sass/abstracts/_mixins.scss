@@ -1,5 +1,25 @@
+@use "sass:list";
 @use "./elevation" as *;
 @use "./variables" as *;
+
+$_state-layers: ("hover", "focus", "pressed", "dragged");
+
+/// A state layer opacity, as the percentage `color-mix()` wants.
+///
+/// The tokens hold numbers (0.08), because an overlay uses one as `opacity`
+/// directly. A tint mixed with `color-mix()` needs a percentage, so it is
+/// multiplied here rather than at forty-odd call sites.
+///
+/// Validated for the same reason `z-depth()` validates: a typo would produce a
+/// `var()` naming a token nothing declares, which invalidates the whole
+/// declaration at computed-value time - silently, and in a way nothing but the
+/// rendered page would show.
+@function state-opacity($state) {
+  @if not list.index($_state-layers, $state) {
+    @error "Unknown state layer #{$state}. Expected one of #{$_state-layers}.";
+  }
+  @return calc(var(--md-sys-state-#{$state}-state-layer-opacity) * 100%);
+}
 
 
 // Common-button geometry. M3 default is 40dp, label-large, 20dp corners
@@ -36,8 +56,8 @@
   transition: background-color .2s ease-out, box-shadow .2s ease-out;
 }
 
-// State layers are 8% hover / 10% focus+press of the on-color, mixed in oklab
-// onto the container. Filled and tonal have no elevation.
+// State layers mix the on-color into the container in oklab; the opacities come
+// from md.sys.state via `state-opacity()`. Filled and tonal have no elevation.
 
 @mixin btn-filled {
   color: var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary));
@@ -46,7 +66,7 @@
   &:hover {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary) 8%,
+      var(--md-sys-color-on-primary) state-opacity("hover"),
       var(--md-sys-color-primary)
     );
   }
@@ -55,7 +75,7 @@
   &:focus {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary) 10%,
+      var(--md-sys-color-on-primary) state-opacity("focus"),
       var(--md-sys-color-primary)
     );
   }
@@ -70,7 +90,7 @@
   &:hover {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-secondary-container) 8%,
+      var(--md-sys-color-on-secondary-container) state-opacity("hover"),
       var(--md-sys-color-secondary-container)
     );
   }
@@ -79,7 +99,7 @@
   &:focus {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-secondary-container) 10%,
+      var(--md-sys-color-on-secondary-container) state-opacity("focus"),
       var(--md-sys-color-secondary-container)
     );
   }
@@ -94,13 +114,13 @@
 
   &:hover {
     @include z-depth("2");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, var(--md-sys-color-surface-container-low));
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), var(--md-sys-color-surface-container-low));
   }
 
   &:active,
   &:focus {
     @include z-depth("1");
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface-container-low));
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), var(--md-sys-color-surface-container-low));
   }
 
   @include focus-visible();
@@ -112,12 +132,12 @@
   border: 1px solid var(--md-sys-color-outline);
 
   &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
   }
 
   &:active,
   &:focus {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
   }
 
   @include focus-visible();
@@ -130,12 +150,12 @@
   border-color: transparent;
 
   &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
   }
 
   &:active,
   &:focus {
-    background-color: color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
   }
 
   @include focus-visible();
@@ -174,4 +194,19 @@
   font-weight: var(--md-sys-typescale-#{$role}-font-weight);
   line-height: var(--md-sys-typescale-#{$role}-line-height);
   letter-spacing: var(--md-sys-typescale-#{$role}-letter-spacing);
+}
+
+/// The state layer some controls draw as a ring rather than an overlay.
+///
+/// Checkboxes and radio buttons have no room for an overlay pseudo-element, so
+/// they grow a `box-shadow` from the control's edge out to the state layer
+/// size. `color-mix()` wants a percentage where the token is a number, hence
+/// the `* 100%`.
+@mixin state-layer-ring($outer, $inner, $color, $state) {
+  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2)
+    color-mix(
+      in oklab,
+      #{$color} state-opacity($state),
+      transparent
+    );
 }

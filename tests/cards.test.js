@@ -161,10 +161,10 @@ describe('Cards CSS', () => {
   });
 
   test('uses M3 state-layer and focus-indicator values', () => {
-    assert.match(css, /--md-comp-card-hover-state-layer-opacity:\s*0\.08/);
-    assert.match(css, /--md-comp-card-focus-state-layer-opacity:\s*0\.10/);
-    assert.match(css, /--md-comp-card-pressed-state-layer-opacity:\s*0\.10/);
-    assert.match(css, /--md-comp-card-dragged-state-layer-opacity:\s*0\.16/);
+    assert.match(css, /--md-comp-card-hover-state-layer-opacity:\s*var\(--md-sys-state-hover-state-layer-opacity\)/);
+    assert.match(css, /--md-comp-card-focus-state-layer-opacity:\s*var\(--md-sys-state-focus-state-layer-opacity\)/);
+    assert.match(css, /--md-comp-card-pressed-state-layer-opacity:\s*var\(--md-sys-state-pressed-state-layer-opacity\)/);
+    assert.match(css, /--md-comp-card-dragged-state-layer-opacity:\s*var\(--md-sys-state-dragged-state-layer-opacity\)/);
     assert.match(css, /--md-comp-card-focus-indicator-thickness:\s*3px/);
     assert.match(css, /--md-comp-card-focus-indicator-offset:\s*2px/);
     assert.match(

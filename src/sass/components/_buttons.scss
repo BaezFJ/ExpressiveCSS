@@ -182,7 +182,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     @include z-depth("4");
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary-container) 8%,
+      var(--md-sys-color-on-primary-container) state-opacity("hover"),
       var(--md-sys-color-primary-container)
     );
   }
@@ -191,7 +191,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   &:focus {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary-container) 10%,
+      var(--md-sys-color-on-primary-container) state-opacity("focus"),
       var(--md-sys-color-primary-container)
     );
   }
@@ -263,7 +263,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     @include z-depth("4");
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary-container) 8%,
+      var(--md-sys-color-on-primary-container) state-opacity("hover"),
       var(--md-sys-color-primary-container)
     );
   }
@@ -272,7 +272,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   &:focus {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary-container) 10%,
+      var(--md-sys-color-on-primary-container) state-opacity("focus"),
       var(--md-sys-color-primary-container)
     );
   }

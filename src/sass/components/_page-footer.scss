@@ -112,7 +112,7 @@ footer:not(:has(> nav:only-child)) ul a:not(.button, .circle, .extra) {
   @include typescale("label-large");
 
   &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
   }
 }
 

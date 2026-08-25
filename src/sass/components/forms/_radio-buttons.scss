@@ -75,16 +75,31 @@ label:has(> [type="radio"]) > [type="radio"],
   }
 
   &:hover {
-    box-shadow: 0 0 0 calc((var(--md-comp-radio-button-state-layer-size) - var(--md-comp-radio-button-icon-size)) / 2) color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-radio-button-state-layer-size),
+    var(--md-comp-radio-button-icon-size),
+    var(--md-sys-color-on-surface),
+    "hover"
+  );
   }
 
   &:checked:hover {
-    box-shadow: 0 0 0 calc((var(--md-comp-radio-button-state-layer-size) - var(--md-comp-radio-button-icon-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-radio-button-state-layer-size),
+    var(--md-comp-radio-button-icon-size),
+    var(--md-sys-color-primary),
+    "hover"
+  );
   }
 
   &:focus-visible,
   &.tabbed:focus {
-    box-shadow: 0 0 0 calc((var(--md-comp-radio-button-state-layer-size) - var(--md-comp-radio-button-icon-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+    @include state-layer-ring(
+    var(--md-comp-radio-button-state-layer-size),
+    var(--md-comp-radio-button-icon-size),
+    var(--md-sys-color-primary),
+    "focus"
+  );
     outline: none;
   }
 
@@ -165,16 +180,31 @@ label:has(> [type="radio"]:disabled),
 }
 
 [type="radio"]:hover + span::before {
-  box-shadow: 0 0 0 calc((var(--md-comp-radio-button-state-layer-size) - var(--md-comp-radio-button-icon-size)) / 2) color-mix(in oklab, var(--md-sys-color-on-surface) 8%, transparent);
+  @include state-layer-ring(
+    var(--md-comp-radio-button-state-layer-size),
+    var(--md-comp-radio-button-icon-size),
+    var(--md-sys-color-on-surface),
+    "hover"
+  );
 }
 
 [type="radio"]:checked:hover + span::before {
-  box-shadow: 0 0 0 calc((var(--md-comp-radio-button-state-layer-size) - var(--md-comp-radio-button-icon-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 8%, transparent);
+  @include state-layer-ring(
+    var(--md-comp-radio-button-state-layer-size),
+    var(--md-comp-radio-button-icon-size),
+    var(--md-sys-color-primary),
+    "hover"
+  );
 }
 
 [type="radio"]:focus-visible + span::before,
 [type="radio"].tabbed:focus + span::before {
-  box-shadow: 0 0 0 calc((var(--md-comp-radio-button-state-layer-size) - var(--md-comp-radio-button-icon-size)) / 2) color-mix(in oklab, var(--md-sys-color-primary) 10%, transparent);
+  @include state-layer-ring(
+    var(--md-comp-radio-button-state-layer-size),
+    var(--md-comp-radio-button-icon-size),
+    var(--md-sys-color-primary),
+    "focus"
+  );
 }
 
 [type="radio"]:disabled + span {
