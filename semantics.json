@@ -19,7 +19,11 @@
     "tests/fixtures.js",
     "m3-guidelines.md (forbid rules only)"
   ],
-  "additional": ["autocomplete", "character-counter", "landmarks"],
+  "additional": [
+    "autocomplete",
+    "character-counter",
+    "landmarks"
+  ],
   "components": {
     "autocomplete": {
       "status": "enforced",
@@ -499,6 +503,40 @@
           "selector": ":is(.navigation-drawer, .sidenav):not(nav):not(nav *)",
           "fragmentSafe": true,
           "message": "A drawer of destinations is navigation. Wrap the list in a labelled <nav>."
+        },
+        {
+          "id": "drawer-trigger-is-button",
+          "kind": "forbid",
+          "selector": ":is(.navigation-drawer-trigger, .sidenav-trigger):not(button)",
+          "fragmentSafe": true,
+          "message": "The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type=\"button\"> with data-target - an <a href=\"#!\"> announces as a link and adds a history entry for a drawer that never navigates."
+        },
+        {
+          "id": "drawer-close-is-button",
+          "kind": "forbid",
+          "selector": ":is(.navigation-drawer-close, .sidenav-close):not(button)",
+          "fragmentSafe": true,
+          "message": "The close row dismisses the drawer, so it is a command: use <button type=\"button\" class=\"navigation-drawer-close\">. Same call as expanding-card-close-is-button."
+        },
+        {
+          "id": "drawer-subheader-not-a-link",
+          "kind": "forbid",
+          "selector": ":is(.navigation-drawer, .sidenav) a.subheader",
+          "fragmentSafe": true,
+          "message": "A subheader labels the rows under it and goes nowhere. Write it as <span class=\"subheader\">; the <a> carried no href, and the sheet had to neutralise it with pointer-events: none."
+        },
+        {
+          "id": "drawer-marks-current",
+          "kind": "forbid",
+          "selector": ":is(.navigation-drawer, .sidenav) :is(li.active > a, a.active):not([aria-current])",
+          "fragmentSafe": true,
+          "message": "The current destination needs aria-current=\"page\". .active is a paint: it colours the row and says nothing to a screen reader. Same call as navigation-rail-marks-current."
+        },
+        {
+          "id": "drawer-avatar-link-is-named",
+          "kind": "require-accessible-name",
+          "selector": ":is(.navigation-drawer, .sidenav) .user-view > a:has(> img)",
+          "message": "A link wrapping only a decorative <img alt=\"\"> has no name left - it arrives in the links list as the bare URL. Give the link an aria-label."
         }
       ]
     },

@@ -2747,9 +2747,9 @@ Hide the destination menu below the Expanded breakpoint and put a `navigation-dr
 ```html
 <header>
   <nav aria-label="Main">
-    <a href="#!" data-target="mobile-demo" class="navigation-drawer-trigger" aria-label="Open menu">
+    <button type="button" data-target="mobile-demo" class="navigation-drawer-trigger" aria-label="Open menu">
       <span class="material-symbols" aria-hidden="true">menu</span>
-    </a>
+    </button>
     <h2>Title</h2>
     <menu class="hide-on-med-and-down">
       <li><a href="#!">Sass</a></li>
@@ -3947,7 +3947,7 @@ Toggle NavigationDrawer
         <div class="background">
           <img src="images/office.jpg" alt="">
         </div>
-        <a href="#user"><img class="circle" src="images/portrait.jpg" alt=""></a>
+        <a href="#user" aria-label="Profile"><img class="circle" src="images/portrait.jpg" alt=""></a>
         <a href="#name"><span class="name">John Doe</span></a>
         <a href="#email"><span class="email">jdoe@example.com</span></a>
       </div>
@@ -3955,11 +3955,11 @@ Toggle NavigationDrawer
     <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
     <li><a href="#!">Second Link</a></li>
     <li><div class="divider"></div></li>
-    <li><a class="subheader">Subheader</a></li>
+    <li><span class="subheader">Subheader</span></li>
     <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
 ```
 
 ### Initialization
@@ -4041,10 +4041,10 @@ Add `navigation-drawer-close` to an element inside the drawer. A click on that e
 ```html
 <nav aria-label="Main">
   <ul id="slide-out" class="navigation-drawer">
-    <li><a class="navigation-drawer-close" href="#!">Clicking this will close NavigationDrawer</a></li>
+    <li><button type="button" class="navigation-drawer-close">Clicking this will close NavigationDrawer</button></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
 ```
 
 ### Variations
@@ -4096,7 +4096,7 @@ Add `navigation-drawer-fixed` so the drawer stays open on Expanded and wider win
     <li><a href="#!">Second Sidebar Link</a></li>
   </ul>
 </nav>
-<a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
+<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
 ```
 
 Offset the rest of the page by the navigation drawer width. The width token is `--md-comp-nav-drawer-width` (300px). Put the padding on `header`, `main`, and `footer`.

@@ -350,8 +350,18 @@ Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an al
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `sidenav-in-nav` | forbid | `:is(.navigation-drawer, .sidenav):not(nav):not(nav *)` | must not match |
+| `drawer-trigger-is-button` | forbid | `:is(.navigation-drawer-trigger, .sidenav-trigger):not(button)` | must not match |
+| `drawer-close-is-button` | forbid | `:is(.navigation-drawer-close, .sidenav-close):not(button)` | must not match |
+| `drawer-subheader-not-a-link` | forbid | `:is(.navigation-drawer, .sidenav) a.subheader` | must not match |
+| `drawer-marks-current` | forbid | `:is(.navigation-drawer, .sidenav) :is(li.active > a, a.active):not([aria-current])` | must not match |
+| `drawer-avatar-link-is-named` | require-accessible-name | `:is(.navigation-drawer, .sidenav) .user-view > a:has(> img)` | must have `undefined` |
 
 - **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
+- **drawer-trigger-is-button** - The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type="button"> with data-target - an <a href="#!"> announces as a link and adds a history entry for a drawer that never navigates.
+- **drawer-close-is-button** - The close row dismisses the drawer, so it is a command: use <button type="button" class="navigation-drawer-close">. Same call as expanding-card-close-is-button.
+- **drawer-subheader-not-a-link** - A subheader labels the rows under it and goes nowhere. Write it as <span class="subheader">; the <a> carried no href, and the sheet had to neutralise it with pointer-events: none.
+- **drawer-marks-current** - The current destination needs aria-current="page". .active is a paint: it colours the row and says nothing to a screen reader. Same call as navigation-rail-marks-current.
+- **drawer-avatar-link-is-named** - A link wrapping only a decorative <img alt=""> has no name left - it arrives in the links list as the bare URL. Give the link an aria-label.
 
 ### navigation-rail
 

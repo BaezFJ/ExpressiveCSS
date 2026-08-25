@@ -124,7 +124,7 @@
                           <a href="/navigation-rail.html">Navigation rail</a>
                       </li>
                       <li class="active">
-                          <a href="/sidenav.html">Sidenav</a>
+                          <a href="/sidenav.html" aria-current="page">Sidenav</a>
                       </li>
                       <li class="">
                           <a href="/panes.html">Panes</a>
@@ -294,7 +294,7 @@
           <code>no-autoinit</code>.
         </p>
         <p>
-          <a href="#!" data-target="slide-out" class="button navigation-drawer-trigger filled waves-effect">Toggle NavigationDrawer</a>
+          <button type="button" data-target="slide-out" class="button navigation-drawer-trigger filled waves-effect">Toggle NavigationDrawer</button>
         </p>
         <nav aria-label="Main — Structure">
           <ul id="slide-out" class="navigation-drawer no-autoinit">
@@ -303,7 +303,7 @@
                 <div class="background">
                   <img src="https://picsum.photos/id/1015/600/400" alt="">
                 </div>
-                <a href="#user"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
+                <a href="#user" aria-label="Profile"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
                 <a href="#name"><span class="name">John Doe</span></a>
                 <a href="#email"><span class="email">jdoe@example.com</span></a>
               </div>
@@ -311,9 +311,9 @@
             <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
             <li><a href="#!">Second Link</a></li>
             <li><div class="divider"></div></li>
-            <li><a class="subheader">Subheader</a></li>
+            <li><span class="subheader">Subheader</span></li>
             <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-            <li><a class="navigation-drawer-close" href="#!">Close</a></li>
+            <li><button type="button" class="navigation-drawer-close">Close</button></li>
           </ul>
         </nav>
 <pre><code>&lt;nav aria-label="Main"&gt;
@@ -323,7 +323,7 @@
         &lt;div class="background"&gt;
           &lt;img src="images/office.jpg" alt=""&gt;
         &lt;/div&gt;
-        &lt;a href="#user"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
+        &lt;a href="#user" aria-label="Profile"&gt;&lt;img class="circle" src="images/portrait.jpg" alt=""&gt;&lt;/a&gt;
         &lt;a href="#name"&gt;&lt;span class="name"&gt;John Doe&lt;/span&gt;&lt;/a&gt;
         &lt;a href="#email"&gt;&lt;span class="email"&gt;jdoe@example.com&lt;/span&gt;&lt;/a&gt;
       &lt;/div&gt;
@@ -331,11 +331,11 @@
     &lt;li&gt;&lt;a href="#!"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;cloud&lt;/span&gt;First Link With Icon&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a href="#!"&gt;Second Link&lt;/a&gt;&lt;/li&gt;
     &lt;li&gt;&lt;div class="divider"&gt;&lt;/div&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a class="subheader"&gt;Subheader&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;span class="subheader"&gt;Subheader&lt;/span&gt;&lt;/li&gt;
     &lt;li&gt;&lt;a class="waves-effect" href="#!"&gt;Third Link With Waves&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
-&lt;a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
+&lt;button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/button&gt;</code></pre>
   
       </div>
 
@@ -505,10 +505,10 @@
         </p>
 <pre><code>&lt;nav aria-label="Main"&gt;
   &lt;ul id="slide-out" class="navigation-drawer"&gt;
-    &lt;li&gt;&lt;a class="navigation-drawer-close" href="#!"&gt;Clicking this will close NavigationDrawer&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button type="button" class="navigation-drawer-close"&gt;Clicking this will close NavigationDrawer&lt;/button&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
-&lt;a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
+&lt;button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/button&gt;</code></pre>
   
       </div>
 
@@ -523,13 +523,13 @@
           yourself, otherwise AutoInit would start it on the left.
         </p>
         <p>
-          <a href="#!" data-target="slide-out-right" class="button navigation-drawer-trigger tonal waves-effect">Toggle Right NavigationDrawer</a>
+          <button type="button" data-target="slide-out-right" class="button navigation-drawer-trigger tonal waves-effect">Toggle Right NavigationDrawer</button>
         </p>
         <nav aria-label="Main — Variations">
           <ul id="slide-out-right" class="navigation-drawer no-autoinit">
             <li><a href="#!">First Sidebar Link</a></li>
             <li><a href="#!">Second Sidebar Link</a></li>
-            <li><a class="navigation-drawer-close" href="#!">Close</a></li>
+            <li><button type="button" class="navigation-drawer-close">Close</button></li>
           </ul>
         </nav>
 <pre><code>Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
@@ -544,7 +544,7 @@
           Structure, Components, and Forms.
         </p>
         <nav aria-label="Main — Variations 2">
-          <ul class="sidenav navigation-drawer-demo">
+          <ul class="sidenav navigation-drawer-demo no-autoinit">
             <li><a href="#!"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a></li>
             <li>
               <details name="sidenav-demo" open>
@@ -602,7 +602,7 @@
     &lt;li&gt;&lt;a href="#!"&gt;Second Sidebar Link&lt;/a&gt;&lt;/li&gt;
   &lt;/ul&gt;
 &lt;/nav&gt;
-&lt;a href="#!" data-target="slide-out" class="navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/a&gt;</code></pre>
+&lt;button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;&lt;/button&gt;</code></pre>
         <p>
           Offset the rest of the page by the navigation drawer width. The width token is
           <code>--md-comp-nav-drawer-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).

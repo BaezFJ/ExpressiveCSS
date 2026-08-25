@@ -36,7 +36,7 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
 }
 
 /* In-flow sidenav so examples can sit in a docs section. */
-.sidenav.sidenav-demo {
+:is(.sidenav, .navigation-drawer).navigation-drawer-demo {
   position: static;
   transform: none;
   height: auto;
@@ -407,7 +407,7 @@ body.containers-off .container {
 }
 
 /* Navbar seed-color action picks up the live primary so the icon tracks the seed. */
-header:has(> nav) > nav #source-color-toggle {
+header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   color: var(--md-sys-color-primary);
 }
 

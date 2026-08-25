@@ -26,10 +26,28 @@
 //   --md-comp-nav-drawer-font-size      14px
 //   --md-comp-nav-drawer-padding        16px
 //   --md-comp-nav-drawer-line-height    item height
+//   --md-comp-nav-drawer-user-view-shape
+//                                       16px, bottom corners of the header
+//   --md-comp-nav-drawer-user-view-scrim
+//                                       gradient laid over the header image
+//   --md-comp-nav-drawer-user-view-ink-color
+//                                       text colour over that scrim
 
 :root {
   --md-comp-nav-drawer-width: 300px;
 }
+
+// A drawer row is whatever element the list item holds: a destination
+// <a>, the <summary> of a nested section, the <button> a command row is
+// written with (.navigation-drawer-close), and the plain element a
+// .subheader label is. Keyed on `li > a`, the row layout disappeared the
+// moment a row stopped being an anchor - the same trap $_icon documents.
+// $_row-control is the subset that is operable: it takes the hover and
+// focus treatment, a label does not. Both are wrapped in :is() - a bare
+// comma list breaks out of its context (see $_bar in _navbar).
+$_row: ":is(li > :is(a, button, .subheader), summary)";
+$_row-control: ":is(li > :is(a, button):not(.button, .circle, .extra), summary)";
+
 
 dialog:is(.sidenav-overlay, .navigation-drawer-overlay),
 dialog:is(.sidenav, .navigation-drawer) {
@@ -41,6 +59,14 @@ dialog:is(.sidenav, .navigation-drawer) {
   --md-comp-nav-drawer-font-size: 14px;
   --md-comp-nav-drawer-padding: 16px;
   --md-comp-nav-drawer-line-height: var(--md-comp-nav-drawer-item-height);
+  --md-comp-nav-drawer-user-view-shape: 16px;
+  --md-comp-nav-drawer-user-view-ink-color: var(--md-ref-palette-neutral100);
+  --md-comp-nav-drawer-user-view-scrim: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--md-sys-color-scrim) 15%, transparent) 0%,
+    color-mix(in oklab, var(--md-sys-color-scrim) 50%, transparent) 55%,
+    color-mix(in oklab, var(--md-sys-color-scrim) 80%, transparent) 100%
+  );
 
   box-sizing: border-box;
   width: var(--md-comp-nav-drawer-width);
@@ -134,6 +160,14 @@ dialog:is(.sidenav, .navigation-drawer) {
   --md-comp-nav-drawer-font-size: 14px;
   --md-comp-nav-drawer-padding: 16px;
   --md-comp-nav-drawer-line-height: var(--md-comp-nav-drawer-item-height);
+  --md-comp-nav-drawer-user-view-shape: 16px;
+  --md-comp-nav-drawer-user-view-ink-color: var(--md-ref-palette-neutral100);
+  --md-comp-nav-drawer-user-view-scrim: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--md-sys-color-scrim) 15%, transparent) 0%,
+    color-mix(in oklab, var(--md-sys-color-scrim) 50%, transparent) 55%,
+    color-mix(in oklab, var(--md-sys-color-scrim) 80%, transparent) 100%
+  );
 
   box-sizing: border-box;
   position: fixed;
@@ -162,12 +196,12 @@ dialog:is(.sidenav, .navigation-drawer) {
     align-content: center;
   }
 
-  li.active > a:not(.button, .circle, .extra) {
+  li.active > :is(a, button):not(.button, .circle, .extra) {
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
   }
 
-  :is(li > a, summary) {
+  #{$_row} {
     display: flex;
     align-items: center;
     margin: 0 12px;
@@ -191,8 +225,7 @@ dialog:is(.sidenav, .navigation-drawer) {
     }
   }
 
-  li > a:not(.button, .circle, .extra),
-  summary {
+  #{$_row-control} {
     color: var(--md-sys-color-on-surface-variant);
 
     &:hover {
@@ -202,14 +235,18 @@ dialog:is(.sidenav, .navigation-drawer) {
     @include focus-visible;
   }
 
-  li > a.button,
-  li > a.circle,
-  li > a.extra {
+  li > :is(a, button):is(.button, .circle, .extra) {
     margin: 10px 15px;
   }
 
-  summary {
+  // Every <button> is a styled button ($_btn in _buttons is `button:not(...)`),
+  // so a command row has to be stripped back to a row the same way <summary>
+  // is. The chevron below stays summary-only.
+  :is(summary, li > button:not(.button, .circle, .extra)) {
     box-sizing: border-box;
+    // A <button> centres its own content, so a command row's label sat in the
+    // middle of the row while every anchor row started at the inset.
+    justify-content: flex-start;
     border: 0;
     background: transparent;
     font: inherit;
@@ -217,7 +254,9 @@ dialog:is(.sidenav, .navigation-drawer) {
     list-style: none;
     cursor: pointer;
     appearance: none;
+  }
 
+  summary {
     &::-webkit-details-marker {
       display: none;
     }
@@ -287,11 +326,28 @@ dialog:is(.sidenav, .navigation-drawer) {
       }
     }
 
+    // The header image is clipped by .background, so the radius goes on the
+    // clipping box rather than the <img>: the image is a child of an
+    // overflow: hidden box, and rounding the child alone leaves the box's own
+    // square corners painting behind it.
     .background {
       overflow: hidden;
       position: absolute;
       inset: 0;
       z-index: -1;
+      border-end-start-radius: var(--md-comp-nav-drawer-user-view-shape);
+      border-end-end-radius: var(--md-comp-nav-drawer-user-view-shape);
+
+      // The name and email sit on whatever photograph the author supplied, so
+      // the scrim is what makes them legible - bottom-weighted, because that
+      // is where the text is. It rides inside .background so the rounded
+      // corners clip it too.
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--md-comp-nav-drawer-user-view-scrim);
+      }
     }
 
     .circle,
@@ -309,6 +365,17 @@ dialog:is(.sidenav, .navigation-drawer) {
     .email {
       font-size: var(--md-comp-nav-drawer-font-size);
       line-height: calc(var(--md-comp-nav-drawer-line-height) * 0.5);
+    }
+
+    // Over an image the surface roles mean nothing and the link colour these
+    // spans inherit is unreadable on a mid-tone photograph. Scoped to
+    // :has(> .background): with no image the header is on the drawer surface
+    // and must keep tracking the theme, where fixed light ink would vanish.
+    &:has(> .background) {
+      .name,
+      .email {
+        color: var(--md-comp-nav-drawer-user-view-ink-color);
+      }
     }
 
     .name {

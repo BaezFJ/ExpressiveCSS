@@ -402,13 +402,13 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 1. Optional user header (`.user-view`)
 2. Destination rows (`li > a` with optional leading icon)
 3. Dividers, subheaders, nested `<details>` / `<summary>` (same `name` = accordion)
-4. Trigger (`a.navigation-drawer-trigger` / `button.navigation-drawer-trigger` with `data-target`)
+4. Trigger (`button.navigation-drawer-trigger` with `data-target`) — it opens a dialog, so it is a button, not a link
 
 **Placement.** Trigger in the app bar. Drawer itself is a sibling of the page, **not** inside `<header> nav`. Modal slides over the content. Fixed occupies the leading column from `large` up.
 
 **Adaptive.** Compact: modal. Large+: `navigation-drawer-fixed` *or* a rail, not both.
 
-**Behavior.** Escape and backdrop tap close the modal. `.navigation-drawer-close` is an explicit close row. Nested sections are HTML `<details>`, not a Collapsible plugin.
+**Behavior.** Escape and backdrop tap close the modal. `button.navigation-drawer-close` is an explicit close row. Nested sections are HTML `<details>`, not a Collapsible plugin.
 
 **Don't**
 

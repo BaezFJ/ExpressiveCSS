@@ -68,7 +68,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: "Sidenav",
     selector: ".navigation-drawer",
-    html: `<nav aria-label="Main"><ul id="slide-out" class="navigation-drawer"><li><a href="#!">First</a></li></ul></nav><a href="#" data-target="slide-out" class="navigation-drawer-trigger">menu</a>`,
+    html: `<nav aria-label="Main"><ul id="slide-out" class="navigation-drawer"><li><a href="#!">First</a></li></ul></nav><button type="button" data-target="slide-out" class="navigation-drawer-trigger">menu</button>`,
   },
   {
     name: "Tabs",

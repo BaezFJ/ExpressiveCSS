@@ -12,7 +12,7 @@
                   {#- The top-level entries: no group, own icon. -#}
                   {%- for page in group['pages'] %}
           <li class="{% if current == page.endpoint %}active{% endif %}">
-              <a href="{{ url_for(page.endpoint) }}">
+              <a href="{{ url_for(page.endpoint) }}"{% if current == page.endpoint %} aria-current="page"{% endif %}>
                   <span class="material-symbols" aria-hidden="true">{{ page.icon }}</span>
                   {{ page.label }}
               </a>
@@ -28,7 +28,7 @@
                   <ul>
                       {%- for page in group['pages'] %}
                       <li class="{% if current == page.endpoint %}active{% endif %}">
-                          <a href="{{ url_for(page.endpoint) }}">{{ page.label }}</a>
+                          <a href="{{ url_for(page.endpoint) }}"{% if current == page.endpoint %} aria-current="page"{% endif %}>{{ page.label }}</a>
                       </li>
                       {%- endfor %}
                   </ul>
