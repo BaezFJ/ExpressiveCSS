@@ -91,6 +91,11 @@ export function render(data) {
   return l.join('\n') + '\n';
 }
 
+/** Whether the rule a declaration names keeps every composite role out, not just the declared one. */
+function blocksEveryRole(c, rule) {
+  return c.rules.some((r) => r.id === rule && r.kind === 'forbid-composite-roles');
+}
+
 function renderComponent(name, c) {
   const l = [`### ${name}`, ''];
   if (c.note) l.push(c.note, '');
@@ -98,14 +103,19 @@ function renderComponent(name, c) {
     const { withheld_role: role, blocked_on: blocked, rule } = c.conformance;
     l.push(
       `**Conformance debt:** ${code(role)} is withheld pending ${esc(blocked)}, ` +
-        `and ${code(rule)} enforces that.`,
+        `and ${code(rule)} enforces that` +
+        (blocksEveryRole(c, rule) ? ', keeping every composite role out.' : '.'),
       ''
     );
   }
   if (c.rejects) {
     const { rejected_role: role, because, rule } = c.rejects;
-    l.push(`**Rejected role:** ${code(role)} is not withheld but declined - ${esc(because)}. ` +
-      `${code(rule)} enforces that.`, '');
+    l.push(
+      `**Rejected role:** ${code(role)} is not withheld but declined - ${esc(because)}. ` +
+        `${code(rule)} enforces that` +
+        (blocksEveryRole(c, rule) ? ', keeping every composite role out.' : '.'),
+      ''
+    );
   }
   l.push('| Rule | Kind | Selector | Requirement |');
   l.push('| --- | --- | --- | --- |');
@@ -113,7 +123,9 @@ function renderComponent(name, c) {
     const req =
       r.kind === 'forbid'
         ? 'must not match'
-        : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
+        : r.kind === 'forbid-composite-roles'
+          ? 'must not match with any composite role'
+          : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
     l.push(`| ${code(r.id)} | ${r.kind} | ${code(r.selector)} | ${req} |`);
   }
   l.push('');

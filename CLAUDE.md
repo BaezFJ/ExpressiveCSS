@@ -249,12 +249,23 @@ Notes that matter when working on it:
   carousel, parallax, lightbox, and ten rows that state no markup of their own
   and say so in their note). **The exempt list is empty — keep it that way.** A
   new component ships enforced or the roster test fails.
-- **Three rule kinds**, and the third exists for one reason. `forbid` and
-  `require-attr` are selector-level; `require-accessible-name` is not, because
+- **Four rule kinds, and the last two exist for opposite reasons.** `forbid` and
+  `require-attr` are selector-level. `require-accessible-name` is not, because
   whether a control ends up named depends on text *nodes* and CSS cannot see
   them. `:has(> .icon:only-child)` counts elements, so it flags
   `<a><span icon/>Five</a>`. Reach for it only when that is genuinely the
   problem.
+
+  `forbid-composite-roles` **is** selector-level — it is a macro. The rule
+  states the component's own selector and the checker expands it over
+  `compositeRoles`, so the ten roles are named once in `semantics.json` rather
+  than once per component, and adding one tightens every such rule instead of
+  leaving each a role short. It exists because the alternative had already
+  failed: Carousel and Toolbar each named a single role and left the other nine
+  legal. Expansion is root-only and the base selector must be the component's
+  root with no `:not()` or `:has()` — a conditional or descendant base would
+  report blocking all ten while enforcing something narrower, and the invariant
+  that every declaring component blocks every composite role rests on it.
 - **`website/` is checked as whole pages, not as a fourth surface.** Its
   fragments come from the templates and checking those twice would be
   pointless, but a composed page answers questions a fragment cannot: `<main>`

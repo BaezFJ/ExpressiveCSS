@@ -10,6 +10,7 @@
   ],
   "ruleKinds": {
     "forbid": "selector must match nothing in a checked example",
+    "forbid-composite-roles": "selector must match nothing in a checked example once expanded over `compositeRoles` - the component may not *be* a composite widget of any kind",
     "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)",
     "require-accessible-name": "every element matching selector must end up with a non-empty accessible name (aria-label, aria-labelledby, or text that is not inside an aria-hidden subtree)"
   },
@@ -113,11 +114,11 @@
     },
     "carousel": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule names tablist rather than forbidding every role, because role=\"group\" with aria-roledescription=\"carousel\" is the pattern carousel.ts writes.",
+      "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule keeps out every composite role but not every role: role=\"group\" with aria-roledescription=\"carousel\" is the pattern carousel.ts writes and stays legal.",
       "rejects": {
         "rejected_role": "tablist",
         "because": "it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls",
-        "rule": "carousel-not-a-tablist"
+        "rule": "carousel-not-a-composite-widget"
       },
       "rules": [
         {
@@ -128,11 +129,18 @@
           "message": "Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex=\"-1\"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible."
         },
         {
-          "id": "carousel-not-a-tablist",
-          "kind": "forbid",
-          "selector": ".carousel[role=\"tablist\"], .carousel [role=\"tab\"]",
+          "id": "carousel-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".carousel",
           "fragmentSafe": true,
-          "message": "A carousel takes no tablist role here; its indicators are independent controls."
+          "message": "A carousel takes no composite role; it is a group of slides with independent controls."
+        },
+        {
+          "id": "carousel-indicators-are-not-tabs",
+          "kind": "forbid",
+          "selector": ".carousel [role=\"tab\"]",
+          "fragmentSafe": true,
+          "message": "Carousel indicators are independent controls, not tabs."
         }
       ]
     },
@@ -735,7 +743,7 @@
       "conformance": {
         "withheld_role": "toolbar",
         "blocked_on": "keyboard model",
-        "rule": "toolbar-not-an-aria-toolbar"
+        "rule": "toolbar-not-a-composite-widget"
       },
       "rules": [
         {
@@ -746,11 +754,11 @@
           "fragmentSafe": true
         },
         {
-          "id": "toolbar-not-an-aria-toolbar",
-          "kind": "forbid",
-          "selector": ".toolbar[role=\"toolbar\"]",
+          "id": "toolbar-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".toolbar",
           "fragmentSafe": true,
-          "message": "A toolbar takes no toolbar role here; its buttons are reached with Tab, not arrow keys."
+          "message": "A toolbar takes no composite role; its buttons are reached with Tab, not arrow keys."
         }
       ]
     },
