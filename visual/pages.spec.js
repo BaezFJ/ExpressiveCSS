@@ -41,13 +41,6 @@ for (const file of pages) {
     const shot = `${slug}--${variant.name}.png`;
 
     test(`${slug} @ ${variant.name}`, async ({ page }) => {
-      // A page this branch adds has no baseline, and photographing it against
-      // one that does not exist is not a regression. The base pass skips it
-      // because the old revision 404s; this is the head side of that.
-      if (MODE === 'head' && !existsSync(new URL(`visual/__shots__/${shot}`, root))) {
-        test.skip(true, 'no baseline: page is new on this revision');
-      }
-
       // The theme is read from localStorage by an inline script in base.html
       // before first paint, so seeding it here avoids photographing a flash of
       // the other scheme. --md-source is cleared for the same reason: a stored
@@ -65,6 +58,33 @@ for (const file of pages) {
       // regression this suite exists to catch, and both passes run minutes
       // apart against the same font files.
       await page.route('**/cdnjs.cloudflare.com/**', (r) => r.abort());
+
+      // The 51 demo images come from picsum.photos, and their *arrival* is
+      // what broke the first CI run: an image that lands between two
+      // stabilisation captures changes the page height, and toHaveScreenshot
+      // reported 1440x8729 against 1440x8786 on the parallax and carousel
+      // pages. Serving a stand-in of exactly the requested size removes the
+      // network from the loop entirely -- these tests are about this
+      // framework's CSS, not about a photograph. The size is the last two path
+      // segments (/id/1015/800/400).
+      await page.route('**picsum.photos/**', (route) => {
+        const [, w = '800', h = '600'] = route.request().url().match(/(\d+)\/(\d+)\/?$/) ?? [];
+        route.fulfill({
+          status: 200,
+          contentType: 'image/svg+xml',
+          body:
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" ` +
+            `viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="#8a8f98"/>` +
+            `<path d="M0 0 L${w} ${h}M${w} 0 L0 ${h}" stroke="#71767e" stroke-width="2"/></svg>`,
+        });
+      });
+
+      // media-css.html embeds a live YouTube iframe and an MDN video. Neither
+      // is this framework's output, both are a network round trip, and a
+      // player that renders its poster frame a moment later is one more thing
+      // that has to settle before the shutter.
+      await page.route('**://www.youtube.com/**', (r) => r.abort());
+      await page.route('**://interactive-examples.mdn.mozilla.net/**', (r) => r.abort());
 
       // The time and date pickers open on *now*: the minute digit ticked over
       // between the two passes and four timepicker shots failed on a tree with
@@ -86,6 +106,15 @@ for (const file of pages) {
       // size.
       await page.evaluate(() => document.fonts.ready);
 
+      // `load` covers images the parser found, but not one a component adds,
+      // and a half-decoded image is laid out at a different height than a
+      // finished one.
+      await page.waitForFunction(
+        () => Array.from(document.images).every((i) => i.complete),
+        null,
+        { timeout: 15_000 },
+      );
+
       // Components own intervals (Snackbar, Slider, Carousel) and Playwright's
       // `animations: 'disabled'` only reaches CSS. Freezing transitions stops
       // a component that is mid-transition when the shutter opens from
@@ -98,6 +127,16 @@ for (const file of pages) {
           transition-delay: 0s !important;
         }`,
       });
+
+      // A page this branch adds has no baseline, and photographing it against
+      // one that does not exist is not a regression. Only the *comparison* is
+      // skipped, and only here at the end: skipping before the navigation
+      // above would mean a new page never gets requested at all, so a route
+      // that 404s or a component that throws on init would sail through this
+      // job green.
+      if (MODE === 'head' && !existsSync(new URL(`visual/__shots__/${shot}`, root))) {
+        test.skip(true, 'no baseline: page is new on this revision');
+      }
 
       await expect(page).toHaveScreenshot(shot, { fullPage: true });
     });

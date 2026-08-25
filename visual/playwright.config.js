@@ -10,13 +10,19 @@
 // _site tree pages.yml assembles, and the app renders the same templates the
 // freeze does.
 
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
 import { defineConfig, devices } from '@playwright/test';
 
 const port = Number(process.env.VISUAL_PORT ?? 5111);
 
-// Absolute so the base pass can point Flask at a git worktree while `uv` still
-// runs out of the main checkout, where .venv and uv.lock live.
-const appPath = process.env.VISUAL_APP ?? 'docs/app.py';
+// Absolute, always. The base pass points Flask at a git worktree while `uv`
+// still runs out of the main checkout, where .venv and uv.lock live -- and
+// Playwright spawns webServer with its cwd at *this* directory, so a relative
+// default resolves to visual/docs/app.py and flask exits 2.
+const appPath =
+  process.env.VISUAL_APP ?? join(dirname(fileURLToPath(import.meta.url)), '..', 'docs/app.py');
 
 export default defineConfig({
   testDir: '.',
@@ -65,6 +71,12 @@ export default defineConfig({
       // thing. 100 leaves room for antialiasing on a font that arrived a
       // moment later, and nothing else.
       maxDiffPixels: 100,
+      // toHaveScreenshot re-captures until two consecutive frames agree. The
+      // default budget is enough on a developer's machine and was not on a CI
+      // runner, where the staggered FAB open animation had not finished
+      // settling. Finite motion needs room to end; infinite motion is a bug in
+      // the fixture and more time will not save it.
+      timeout: 15_000,
       animations: 'disabled',
       caret: 'hide',
       scale: 'css',

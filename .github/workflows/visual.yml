@@ -10,6 +10,13 @@ on:
       - 'src/sass/**'
       - 'src/ts/**'
       - 'docs/**'
+      # sass and esbuild decide what the sheet and the bundle look like, and a
+      # dependency bump is exactly when nobody is looking at pixels. The
+      # version in package.json also renders into every page's footer, so a
+      # release bump reports 57 pages moved -- that is the check working, not
+      # failing.
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/visual.yml'
       - 'visual/**'
 
