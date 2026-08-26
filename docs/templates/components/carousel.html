@@ -217,8 +217,9 @@
   the tab is in the background, and
   <code>prefers-reduced-motion: reduce</code> suppresses auto-advance
   altogether. An explicit <code>noWrap</code> stops it after one pass instead
-  of looping; every native track forces <code>noWrap</code> for the arrow keys,
-  so the timer reads the author's own value rather than that one.
+  of looping. Arrow keys and <code>set()</code> stop at the ends either way
+  &mdash; a scroll track has ends, and auto-advance is the one caller that can
+  loop back past them.
 </p>
   {% endcall %}
 

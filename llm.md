@@ -2514,9 +2514,9 @@ An `interval` makes the carousel advance on its own, so the pause contract is
 mandatory: it always pauses on hover, on focus within, and while the tab is
 hidden, and `prefers-reduced-motion: reduce` suppresses auto-advance entirely.
 No option disables any of that. An explicit `noWrap: true` stops auto-advance
-after one pass instead of looping; every native track forces `noWrap` for the
-arrow keys, and the timer reads the author's own value rather than that one. A
-`height` gives the indicators their own row below the track (`.fixed-height`)
+after one pass instead of looping. Arrow keys and `set()` stop at the ends
+either way — a scroll track has ends, and auto-advance is the one caller that
+can loop back past them. A `height` gives the indicators their own row below the track (`.fixed-height`)
 instead of laying them over the media; markup can do the same by carrying
 `.fixed-height` and setting `--carousel-height`.
 

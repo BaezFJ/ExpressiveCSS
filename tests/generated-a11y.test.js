@@ -75,7 +75,6 @@ describe('Carousel slides', () => {
       instance.destroy();
     }
   });
-
 });
 
 describe('Sidenav overlay dialog', () => {
