@@ -1,5 +1,10 @@
 import { installSheetDrag } from './sheetDrag';
 
+const startDocked = (dialog: HTMLDialogElement): boolean =>
+  dialog.classList.contains('left') ||
+  dialog.classList.contains('left-sheet') ||
+  dialog.classList.contains('start');
+
 /**
  * Drag-to-dismiss for side sheets (`dialog.side-sheet` / `.right` / `.left`).
  *
@@ -8,11 +13,6 @@ import { installSheetDrag } from './sheetDrag';
  * {@link Dialogs}. The drag itself is {@link installSheetDrag}, shared with
  * the bottom sheet.
  */
-const startDocked = (dialog: HTMLDialogElement): boolean =>
-  dialog.classList.contains('left') ||
-  dialog.classList.contains('left-sheet') ||
-  dialog.classList.contains('start');
-
 export class SideSheets {
   static Init() {
     installSheetDrag({

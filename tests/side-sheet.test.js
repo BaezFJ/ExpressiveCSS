@@ -103,4 +103,25 @@ describe('Side sheet drag', () => {
     tap(dialog, 'pointerup', { x: 700, y: 200 });
     assert.equal(dialog.open, true);
   });
+
+  // A start-docked sheet leaves toward the start edge, so its dismissal
+  // direction is the negative one and its handle is the *right* 24dp. That
+  // flip is the one thing behaviors/sheetDrag.ts parameterises which the
+  // end-docked cases above cannot reach.
+  test('a start-docked sheet dismisses toward the start edge', () => {
+    const dialog = openSheet('left');
+    tap(dialog, 'pointerdown', { x: 790, y: 200 });
+    tap(dialog, 'pointermove', { x: 690, y: 200 });
+    tap(dialog, 'pointerup', { x: 690, y: 200 });
+    assert.equal(dialog.open, false);
+  });
+
+  test('a start-docked sheet ignores a drag the other way', () => {
+    const dialog = openSheet('left');
+    tap(dialog, 'pointerdown', { x: 790, y: 200 });
+    tap(dialog, 'pointermove', { x: 890, y: 200 });
+    tap(dialog, 'pointerup', { x: 890, y: 200 });
+    assert.equal(dialog.open, true);
+    assert.equal(dialog.style.getPropertyValue('--md-comp-side-sheet-shift'), '0px');
+  });
 });

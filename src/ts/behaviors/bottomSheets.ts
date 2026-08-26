@@ -1,6 +1,8 @@
 import { installSheetDrag } from './sheetDrag';
 import { Utils } from '../core/utils';
 
+const SHEET_SELECTOR = 'dialog.bottom-sheet, dialog.bottom';
+
 /**
  * Drag-to-dismiss for `dialog.bottom-sheet` / `dialog.bottom`.
  *
@@ -17,8 +19,6 @@ import { Utils } from '../core/utils';
  * handle written as any other element is decoration and does nothing here -
  * Escape still closes the sheet either way, natively.
  */
-const SHEET_SELECTOR = 'dialog.bottom-sheet, dialog.bottom';
-
 export class BottomSheets {
   /**
    * Whether the last pointer sequence moved. A drag ends with a `click` on the

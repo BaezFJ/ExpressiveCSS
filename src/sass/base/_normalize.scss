@@ -53,8 +53,9 @@
 //                                      quirk (13px Chromium, 12px Firefox).
 //   hr { box-sizing: content-box }     matches the UA, but base/_global.scss sets
 //                                      border-box globally and would override it.
-//   -webkit-appearance: button         a Safari correction; this file's policy is
-//                                      to keep those, see the note above.
+//   -webkit-appearance: button         on the [type] selectors only - a Safari
+//                                      correction, and this file's policy is to
+//                                      keep those. `button` itself was dropped.
 
 /* Document
    ========================================================================== */
@@ -186,9 +187,12 @@ textarea {
 /**
  * Correct the inability to style clickable types in iOS and Safari.
  * Kept prefixed: this is a WebKit correction, and Safari is what needs it.
+ *
+ * `button` is no longer in this list. The clickable *types* are what Safari
+ * renders unstyleable; a <button> element already renders as a button there,
+ * and normalize carried it out of caution.
  */
 
-button,
 [type="button"],
 [type="reset"],
 [type="submit"] {

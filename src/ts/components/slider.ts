@@ -80,7 +80,12 @@ export class Slider extends Component<SliderOptions> {
     this.el.addEventListener('pointerup', this._handleRangePointerUp);
     this.el.addEventListener('pointercancel', this._handleRangePointerUp);
     this.el.addEventListener('blur', this._handleRangeRelease);
-    this.el.addEventListener('pointerout', this._handleRangeRelease);
+    // `mouseout`, not `pointerout`: this used to be a `mouseout`/`touchleave`
+    // pair, and `touchleave` was never implemented by any browser, so the
+    // handler has only ever run for a mouse. `pointerout` also fires when a
+    // touch lifts, which would clear the thumb's active state at a moment
+    // nothing cleared it before.
+    this.el.addEventListener('mouseout', this._handleRangeRelease);
   }
 
   _removeEventHandlers() {
@@ -91,7 +96,7 @@ export class Slider extends Component<SliderOptions> {
     this.el.removeEventListener('pointerup', this._handleRangePointerUp);
     this.el.removeEventListener('pointercancel', this._handleRangePointerUp);
     this.el.removeEventListener('blur', this._handleRangeRelease);
-    this.el.removeEventListener('pointerout', this._handleRangeRelease);
+    this.el.removeEventListener('mouseout', this._handleRangeRelease);
   }
 
   _handleRangeChange = () => {

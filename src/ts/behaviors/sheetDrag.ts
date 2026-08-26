@@ -114,6 +114,10 @@ export function installSheetDrag(config: SheetDragConfig): void {
     const held = drag;
     if (!held || held.pointerId !== event.pointerId) return;
     drag = null;
+    // Not `reset()`, though it looks like it: the two halves belong on either
+    // side of close(). The transition has to be back before the sheet closes,
+    // so the dismissal animates; the shift has to clear after, or a snap-back
+    // would jump to zero before the transition could carry it there.
     held.dialog.style.transition = '';
     const dt = Math.max(1, Date.now() - held.lastT);
     const velocity = (coord(event) - held.last) / dt;

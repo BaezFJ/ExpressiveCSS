@@ -241,6 +241,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // the detect covered nothing the browser does not report itself.
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown);
     this.container.addEventListener('pointerup', this._handleContainerPointerUp);
+    this.container.addEventListener('pointercancel', this._handleContainerPointerUp);
   }
 
   _removeEventHandlers() {
@@ -251,6 +252,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.el.removeEventListener('click', this._handleInputClick);
     this.container.removeEventListener('pointerdown', this._handleContainerPointerDown);
     this.container.removeEventListener('pointerup', this._handleContainerPointerUp);
+    this.container.removeEventListener('pointercancel', this._handleContainerPointerUp);
   }
 
   _setupMenu() {
@@ -405,7 +407,13 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.open();
   };
 
-  _handleContainerPointerDown = () => {
+  // The flag says "a press is in flight inside the option list", so that a blur
+  // caused by that press does not close the list out from under it. Without the
+  // cancel half, a cancelled gesture left the flag set and the next blur could
+  // not close the list at all.
+  _handleContainerPointerDown = (e: PointerEvent) => {
+    if (!e.isPrimary) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     this._pointerDown = true;
   };
 
