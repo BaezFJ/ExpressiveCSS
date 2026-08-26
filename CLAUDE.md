@@ -333,14 +333,14 @@ markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
 generated from the templates, so checking it would check the same thing twice.
 Notes that matter when working on it:
 
-- **The sweep is complete: 50 of 50 rows enforced, 47 of them components.** Chips,
+- **The sweep is complete: 51 of 51 rows enforced, 48 of them components.** Chips,
   then forms, then navigation, then the rest (`input-fields`,
   `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
   `file-input`, `range`, `autocomplete`, `character-counter`; then `landmarks`,
   `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
   `pagination`, `tabs`, `menu`, `scrollspy`, `page-footer`; then icons,
   badges, buttons, cards, toolbar, list, tooltip, preloader, dialog, panes,
-  carousel, lightbox, icon-buttons, and eight rows that state no markup of their
+  carousel, lightbox, icon-buttons, and nine rows that state no markup of their
   own and say so in their note). **The exempt list is empty — keep it that way.** A
   new component ships enforced or the roster test fails.
 - **A row is a component unless it says otherwise.** `kind` names the exception

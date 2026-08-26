@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**50 of 50 rows enforced; 0 remaining.**
+**51 of 51 rows enforced; 0 remaining.**
 
-47 of those rows are components - a part of the framework an author writes markup for.
+48 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**5 of 47 components declare conformance debt.**
+**5 of 48 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -272,6 +272,14 @@ A FAB that expands into a list of labelled actions. It looks like a menu and is 
 
 - **fab-menu-not-a-composite-widget** - The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
 - **fab-menu-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
+
+### floating-sheet
+
+A <dialog>, so the dialog rules carry it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
 
 ### forms/checkboxes
 
