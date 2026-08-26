@@ -78,6 +78,11 @@ $_bar: ".snackbar";
   --md-comp-snackbar-icon-color: var(--md-sys-color-inverse-on-surface);
 
   box-sizing: border-box;
+  // Swipe-to-dismiss is horizontal, so claim that axis and leave vertical
+  // panning to the page. Without this the browser takes a horizontal swipe for
+  // itself and cancels the drag mid-gesture: `preventDefault()` on a
+  // `pointermove` cannot stop it the way it stopped a `touchmove`.
+  touch-action: pan-y;
   display: flex;
   align-items: center;
   gap: 8px;

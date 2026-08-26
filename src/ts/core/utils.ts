@@ -45,9 +45,18 @@ export class Utils {
   /**
    * Generates a unique string identifier. Every caller prefixes the result and
    * uses it as an element id, and a UUID is valid in that position.
+   *
+   * `randomUUID` is exposed only in secure contexts, and a dev server on a
+   * plain-HTTP LAN address - the usual way a page is opened on a phone - is
+   * not one. Without the fallback every component that stamps an id would
+   * throw there. The ids only have to be unique within one document, so the
+   * fallback does not need to be cryptographic.
    */
   static guid(): string {
-    return crypto.randomUUID();
+    return (
+      globalThis.crypto?.randomUUID?.() ??
+      `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+    );
   }
 
   /**

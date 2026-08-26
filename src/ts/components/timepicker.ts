@@ -267,7 +267,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     // component is destroyed mid-drag they would otherwise outlive it.
     document.removeEventListener('pointermove', this._handleDocumentClickMove);
     document.removeEventListener('pointerup', this._handleDocumentClickEnd);
-    document.removeEventListener('pointercancel', this._handleDocumentClickEnd);
+    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
   }
 
   _handleInputClick = () => {
@@ -319,7 +319,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     // `touchend` pair this replaced had no `touchcancel` companion.
     document.addEventListener('pointermove', this._handleDocumentClickMove);
     document.addEventListener('pointerup', this._handleDocumentClickEnd);
-    document.addEventListener('pointercancel', this._handleDocumentClickEnd);
+    document.addEventListener('pointercancel', this._handleDocumentClickCancel);
   };
 
   _handleDocumentClickMove = (e: PointerEvent) => {
@@ -336,7 +336,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._dragPointerId = null;
     e.preventDefault();
     document.removeEventListener('pointerup', this._handleDocumentClickEnd);
-    document.removeEventListener('pointercancel', this._handleDocumentClickEnd);
+    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
     const x = e.clientX - this.x0;
     const y = e.clientY - this.y0;
     if (this.moved && x === this.dx && y === this.dy) {
@@ -357,6 +357,21 @@ export class Timepicker extends Component<TimepickerOptions> {
       this.options.onSelect.call(this, this.hours, this.minutes);
     }
     document.removeEventListener('pointermove', this._handleDocumentClickMove);
+  };
+
+  /**
+   * A cancelled pointer is not a completed selection. The browser or the OS
+   * took the gesture over, so this only lets go of the drag - it must not run
+   * the pointer-up path, which advances hours to minutes, fires `onSelect`,
+   * and under `autoSubmit` closes the picker on a time the user never chose.
+   */
+  _handleDocumentClickCancel = (e: PointerEvent) => {
+    if (e.pointerId !== this._dragPointerId) return;
+    this._dragPointerId = null;
+    this.moved = false;
+    document.removeEventListener('pointermove', this._handleDocumentClickMove);
+    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
+    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
   };
 
   _insertHTMLIntoDOM() {

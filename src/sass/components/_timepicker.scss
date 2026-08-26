@@ -140,6 +140,10 @@ input[type=text]:is(.timepicker-input-minutes, .time-picker-input-minutes) {
   position: relative;
   margin: 0 1.6rem 1.6rem 1.6rem;
   user-select: none;
+  // Dragging the clock hand is a two-dimensional gesture, so no axis is left
+  // to the page. See the note on the snackbar: under Pointer Events this is
+  // what reserves the gesture, not `preventDefault()`.
+  touch-action: none;
 }
 
 :is(.timepicker-canvas, .time-picker-canvas),

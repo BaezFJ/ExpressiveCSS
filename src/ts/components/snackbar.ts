@@ -175,7 +175,7 @@ export class Snackbar {
     container.addEventListener('pointerdown', Snackbar._onDragStart);
     document.addEventListener('pointermove', Snackbar._onDragMove);
     document.addEventListener('pointerup', Snackbar._onDragEnd);
-    document.addEventListener('pointercancel', Snackbar._onDragEnd);
+    document.addEventListener('pointercancel', Snackbar._onDragCancel);
     root.appendChild(container);
     Snackbar._container = container;
   }
@@ -183,7 +183,7 @@ export class Snackbar {
   static _removeContainer() {
     document.removeEventListener('pointermove', Snackbar._onDragMove);
     document.removeEventListener('pointerup', Snackbar._onDragEnd);
-    document.removeEventListener('pointercancel', Snackbar._onDragEnd);
+    document.removeEventListener('pointercancel', Snackbar._onDragCancel);
     Snackbar._container.remove();
     Snackbar._container = null;
   }
@@ -251,6 +251,25 @@ export class Snackbar {
       }
       Snackbar._draggedSnackbar = null;
     }
+  }
+
+  /**
+   * A cancelled pointer is not a short swipe. Snap back and resume the timer
+   * without consulting the distance travelled - the browser took the gesture
+   * over, so the movement so far says nothing about what the user wanted.
+   */
+  static _onDragCancel(e: PointerEvent) {
+    if (Snackbar._dragPointerId !== e.pointerId) return;
+    Snackbar._dragPointerId = null;
+    const snackbar = Snackbar._draggedSnackbar;
+    if (!snackbar) return;
+    snackbar.panning = false;
+    snackbar.el.classList.remove('panning');
+    snackbar.el.style.transition = 'transform .2s, opacity .2s';
+    snackbar.el.style.transform = '';
+    snackbar.el.style.opacity = '';
+    snackbar._resumeTimer();
+    Snackbar._draggedSnackbar = null;
   }
 
   /**
