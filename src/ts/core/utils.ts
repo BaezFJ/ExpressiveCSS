@@ -130,6 +130,20 @@ export class Utils {
   }
 
   /**
+   * `getElementById` against the tree `el` lives in. The mirror of
+   * `portalRoot`: an id in a shadow root is invisible to
+   * `document.getElementById`, so a trigger and its target inside the same
+   * root could not find each other at all.
+   *
+   * Falls back to the document for a detached `el`, whose root is a plain
+   * element with no lookup of its own.
+   */
+  static getElementById(el: Node, id: string): HTMLElement {
+    const root = el.getRootNode() as Document | ShadowRoot;
+    return (root.getElementById ? root.getElementById(id) : document.getElementById(id)) as HTMLElement;
+  }
+
+  /**
    * Checks for exceeded edges
    * @param container Container element.
    * @param bounding Bounding rect.

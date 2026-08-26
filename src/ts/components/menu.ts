@@ -125,7 +125,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
     Menu._menus.push(this);
     this.id = Utils.getIdFromTrigger(el);
-    this.menuEl = document.getElementById(this.id);
+    this.menuEl = Utils.getElementById(el, this.id);
 
     this.options = {
       ...Menu.defaults,
@@ -770,12 +770,15 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   private _getClosestAncestor(el: HTMLElement, condition: (Function) => boolean): HTMLElement {
-    let ancestor = el.parentNode;
-    while (ancestor !== null && ancestor !== document) {
-      if (condition(ancestor)) {
+    let ancestor: Node = el.parentNode;
+    while (ancestor !== null && ancestor !== undefined && ancestor !== document) {
+      // A shadow root is not an element and getComputedStyle() rejects it, so
+      // step over it to the host - the elements that actually clip the menu
+      // are above that.
+      if (ancestor.nodeType === Node.ELEMENT_NODE && condition(ancestor)) {
         return <HTMLElement>ancestor;
       }
-      ancestor = ancestor.parentElement;
+      ancestor = ancestor.parentNode ?? (<ShadowRoot>ancestor).host;
     }
     return null;
   }
@@ -793,9 +796,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
     );
     // Fallback
     if (!closestOverflowParent) {
-      closestOverflowParent = <HTMLElement>(
-        (!!this.menuEl.offsetParent ? this.menuEl.offsetParent : this.menuEl.parentNode)
-      );
+      const parent = !!this.menuEl.offsetParent ? this.menuEl.offsetParent : this.menuEl.parentNode;
+      // Same hazard as the walk: the parent is a shadow root when the menu was
+      // moved into one, and the next line reads its computed style.
+      closestOverflowParent = <HTMLElement>((<ShadowRoot>parent).host ?? parent);
     }
 
     if (getComputedStyle(closestOverflowParent).position === 'static')

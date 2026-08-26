@@ -262,7 +262,7 @@ export class Snackbar {
 
   _createSnackbar() {
     let snackbar: HTMLElement = this.options.snackbarId
-      ? document.getElementById(this.options.snackbarId)
+      ? Utils.getElementById(this.options.root ?? document.body, this.options.snackbarId)
       : document.createElement('div');
     if (snackbar instanceof HTMLTemplateElement) {
       const node = (snackbar as HTMLTemplateElement).content.cloneNode(true);

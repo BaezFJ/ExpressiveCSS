@@ -56,7 +56,8 @@ export class Lightbox extends Component<LightboxOptions> {
   originalHeight: number;
   private originInlineStyles: string;
   private placeholder: HTMLElement;
-  private _changedAncestorList: HTMLElement[];
+  /** Ancestors forced to `overflow: visible`, with the inline value to put back. */
+  private _changedAncestorList: [HTMLElement, string][];
   private newHeight: number;
   private newWidth: number;
   private windowWidth: number;
@@ -176,8 +177,10 @@ export class Lightbox extends Component<LightboxOptions> {
       const curr = <HTMLElement>ancestor;
       // A shadow root has no style; the clipping ancestors are above its host.
       if (curr.style && curr.style.overflow !== 'visible') {
+        // Read before the write: an author's inline `overflow` has to come
+        // back on close, and restoring '' would silently discard it.
+        this._changedAncestorList.push([curr, curr.style.overflow]);
         curr.style.overflow = 'visible';
-        this._changedAncestorList.push(curr);
       }
       ancestor = ancestor.parentNode ?? (<ShadowRoot>ancestor).host;
     }
@@ -291,7 +294,7 @@ export class Lightbox extends Component<LightboxOptions> {
       this.el.classList.remove('active');
       this.doneAnimating = true;
       // Remove overflow overrides on ancestors
-      this._changedAncestorList.forEach((anchestor) => (anchestor.style.overflow = ''));
+      this._changedAncestorList.forEach(([ancestor, overflow]) => (ancestor.style.overflow = overflow));
       // onCloseEnd callback
       if (typeof this.options.onCloseEnd === 'function')
         this.options.onCloseEnd.call(this, this.el);

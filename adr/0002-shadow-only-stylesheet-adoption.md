@@ -123,6 +123,15 @@ root from. It takes a `root` option (any element in the target tree) and, becaus
 only one snackbar shows at a time, the one container **moves** between roots
 rather than becoming one container per root.
 
+**The lookup side is the same defect mirrored, and had to move with it.** Four
+places resolved an id with `document.getElementById` — the menu's target, the
+tooltip's rich-content element, the snackbar's template and the drawer's trigger
+— and an id inside a shadow root is invisible to the document, so a trigger and
+its target in the same root could not find each other. `Utils.getElementById(el,
+id)` resolves against `el.getRootNode()`. Menu also walked ancestors with
+`getComputedStyle`, which rejects a `ShadowRoot`; that walk now steps over the
+root to its host, as does the lightbox's.
+
 Native `<dialog>` is unaffected and always was. A top-layer element is painted
 outside the document's paint order but stays in its own tree, so style scoping
 still reaches it.

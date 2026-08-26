@@ -125,6 +125,43 @@ describe('Portals inside a shadow root stay in that root', () => {
     }
   });
 
+  // Reported on the first pass: Menu walks up from the surface looking for a
+  // clipping ancestor, and once a menu follows its root that walk starts on a
+  // ShadowRoot. getComputedStyle() rejects a non-Element, so the menu threw
+  // instead of opening - which is how the datepicker's relocated month/year
+  // controls would have failed.
+  test('a menu whose container is the shadow root opens instead of throwing', () => {
+    const { root, el } = shadowHost(
+      '<div><a class="button menu-trigger" data-target="m1">Drop</a>' +
+        '<menu id="m1"><li><a href="#!">one</a></li></menu></div>'
+    );
+    const instance = Expressive.Menu.init(el.querySelector('.menu-trigger'), {
+      container: root
+    });
+    try {
+      instance.open();
+      assert.equal(instance.menuEl.getRootNode(), root);
+      assert.equal(instance.isOpen, true, 'the walk completed and the menu opened');
+    } finally {
+      instance.close();
+      instance.destroy();
+    }
+  });
+
+  test('the datepicker hands its month/year menus the root, not document.body', () => {
+    const { root, el } = shadowHost('<div><input type="text" class="datepicker"></div>');
+    const instance = Expressive.Datepicker.init(el.querySelector('input'));
+    try {
+      // The calendar and both FormSelects are built at init.
+      const yearSelect = Expressive.FormSelect.getInstance(
+        instance.calendarEl.querySelector('.orig-select-year')
+      );
+      assert.equal(yearSelect.options.menuOptions.container, root);
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('a snackbar for a different root moves the container rather than orphaning it', () => {
     const { root, el } = shadowHost('<div></div>');
     const first = new Expressive.Snackbar({ text: 'One', root: el });
@@ -136,6 +173,29 @@ describe('Portals inside a shadow root stay in that root', () => {
     } finally {
       second.dismiss();
       Expressive.Snackbar._removeContainer?.();
+    }
+  });
+});
+
+// Widened by the shadow-boundary hop above, but wrong before it: the walk
+// restored every ancestor to '' rather than to the value it found, so an
+// author's inline overflow was discarded the first time a lightbox opened
+// under it.
+describe('Lightbox puts back the overflow it found', () => {
+  test('an inline overflow on an ancestor survives open/close', async () => {
+    const wrapper = document.createElement('div');
+    wrapper.style.overflow = 'hidden';
+    wrapper.innerHTML = '<img class="lightboxed" src="a.png">';
+    document.body.appendChild(wrapper);
+    const instance = Expressive.Lightbox.init(wrapper.querySelector('img'));
+    try {
+      instance.open();
+      assert.equal(wrapper.style.overflow, 'visible', 'cleared while open');
+      instance.close();
+      await new Promise((r) => setTimeout(r, instance.options.outDuration + 20));
+      assert.equal(wrapper.style.overflow, 'hidden', 'and put back on close');
+    } finally {
+      instance.destroy();
     }
   });
 });

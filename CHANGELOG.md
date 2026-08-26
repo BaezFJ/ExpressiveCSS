@@ -756,6 +756,22 @@ below is the whole story for that component.
   `document.body`, exactly as before. Because only one snackbar shows at a time,
   the one shared container moves between roots rather than being duplicated.
 
+- **A trigger and its target in the same shadow root can find each other.** The
+  mirror of the portal fix: four places resolved an id with
+  `document.getElementById` — the menu's target, the tooltip's rich content, the
+  snackbar's template and the drawer's trigger — and an id inside a shadow root
+  is invisible to the document, so every one of those lookups returned null.
+  `Utils.getElementById(el, id)` resolves against `el.getRootNode()`.
+
+- **Two ancestor walks stepped onto a shadow root and threw.** `Menu` looks for
+  the nearest clipping ancestor with `getComputedStyle`, which rejects a
+  non-Element, so a menu whose container was a shadow root could not open;
+  `Lightbox` read `.style` on the same node. Both now step over the root to its
+  host, so the clipping ancestors above it are still found. `Lightbox` also put
+  every ancestor back to `''` rather than to the value it found, discarding an
+  author's inline `overflow` the first time a lightbox opened under it — it now
+  records and restores the original.
+
 - **A menu opened from a trigger narrower than 112dp is sized to its own
   content.** `constrainWidth` wrote the trigger's width onto the surface and the
   surface's own `min-width: 112px` then overrode it, so any trigger under that
