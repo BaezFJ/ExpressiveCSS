@@ -369,6 +369,40 @@ below is the whole story for that component.
 
 ### Changed
 
+- **Toolbars are the four M3 Expressive variants, from two independent axes.**
+  A *shape* — floating or docked — and a *colour style* — standard or vibrant —
+  now compose freely, and their values come from the 34.0.21 sets
+  `md.comp.toolbar.{standard, vibrant, docked, floating, floating.fab}` rather
+  than from the prose the component was first written against. Nothing in the
+  markup contract moves: the bar is still not a `<nav>`, and it still withholds
+  `role="toolbar"` (rule 2), which `semantics.json` still enforces.
+
+  Both defaults are written as the *absence* of the other side rather than as
+  a selector of their own, which is what makes `.floating` and `.standard`
+  writable without four rules or two inert ones — a bar naming either still
+  matches the default arm. `.filled` and `.max` keep their old meanings.
+
+  The corrected values: a floating bar lifts to elevation **3** (was 2) and
+  takes **8dp** end insets (was 12dp), 16dp from the viewport edge and 24dp
+  when vertical. A docked bar takes **16dp** end insets and spaces its actions
+  between 4dp and 32dp apart as it widens, instead of `space-around`, which
+  honoured neither bound. Action icons and labels are **`on-surface-variant`**
+  (was `on-surface`), and a vibrant bar's selected action is
+  **`surface-container`** (was `surface`).
+
+  `.vibrant` stays M3's own toolbar-vibrant set and deliberately does *not*
+  also answer to the `vibrant` attribute. That attribute is the emphasis
+  foundation, whose one ramp is tertiary; a bar inside it is repainted by the
+  foundation alone, with no toolbar-specific code, because every colour the
+  component draws is now a `--md-comp-toolbar-*` token pointed at a
+  `--md-sys-color-*` role. Matching the attribute here as well would render
+  one variant two ways and would contradict `tokens/_vibrant.scss`.
+
+  The companion FAB in `.toolbar-group` takes `md.comp.toolbar.floating.fab`:
+  `secondary-container` beside a standard bar, `tertiary-container` beside a
+  vibrant one, at elevation 1 where the bar is at 3. Mark only the bar. Docs
+  that hand-applied colour utilities to that FAB no longer need to.
+
 - **The FAB no longer claims to be a menu.** `FloatingActionButton` used to set
   `role="menu"` on the action list and `aria-haspopup="menu"` on the trigger.
   A menu is a composite widget whose items are reached with the arrow keys, and

@@ -2,29 +2,52 @@
 
 // Toolbars (M3 Expressive).
 //
-// Anatomy is the HTML. A <nav class="toolbar"> is the bar. Direct
+// Anatomy is the HTML. A <div class="toolbar"> is the bar. Direct
 // <button> / <a> children are the actions. An <i> is the icon; wrap a
 // label in <span>. .active marks the selected action. A .filled action
 // is the emphasized control (the in-bar FAB). Helpers are only for
-// variants markup cannot express: .docked, .vibrant / .filled (on the
-// nav), .vertical, .fixed, .top, .bottom.
+// variants markup cannot express: .docked, .vibrant, .vertical, .fixed,
+// .top, .bottom.
 //
-// Two variants:
-//   floating   default. Hugs its actions, 64dp, 32dp stadium,
-//              surface-container, elevation 2. Horizontal or .vertical.
-//   docked     .docked (or .max). Full width, 64dp, square, no
-//              elevation. Replaces the bottom app bar.
+// Four variants, from two independent axes - shape and color:
 //
-// Color: standard (surface-container) or .vibrant (primary-container).
-// Pair a floating bar with a FAB via .toolbar-group. Do not show a
-// toolbar at the same time as nav.navigation-bar.
+//            standard                    vibrant
+//   floating surface-container, 32dp,    primary-container, 32dp,
+//            elevation 3, hugs its       elevation 3
+//            actions
+//   docked   surface-container, square,  primary-container, square,
+//            full width, no lift         full width, no lift
 //
-// Tokens follow https://m3.material.io/components/toolbars/specs
-//   action     48dp target, 24dp icon, transparent at rest
-//   selected   secondary-container (standard) / surface (vibrant)
-//   emphasized 48dp, 16dp corners, primary / on-primary
+// Neither default needs a class. Each default arm is the *absence* of the
+// other side, so a bar that names nothing still lands on it - and each also
+// names its own class, so `.floating` and `.standard` are spellings a grep of
+// the compiled sheet finds rather than prose the docs assert about nothing.
+// All four variants can therefore be written out in full, and the two
+// non-default arms are declared after their defaults so that markup naming
+// both sides of an axis resolves to the more specific one on source order
+// rather than on a specificity accident.
 //
-// #{$_toolbar} only — do not style every <nav>. div.fixed-action-btn.toolbar
+// Tokens follow the 34.0.21 sets md.comp.toolbar.{standard, vibrant, docked,
+// floating, floating.fab}; https://m3.material.io/components/toolbars/specs
+// is the prose behind them. M3 splits them into a shape/size pair (docked,
+// floating) and a color pair (standard, vibrant), which is the same two axes
+// as above; floating.fab is the companion FAB, not the in-bar .filled action.
+//
+// Color: `.vibrant` is M3's own toolbar-vibrant set - primary-container - and
+// it is deliberately *not* also spelled `[vibrant]`. That attribute is the
+// emphasis foundation, whose one ramp is tertiary; a bar carrying it is
+// repainted by the foundation alone, with no toolbar-specific code, because
+// every colour below is a --md-comp-toolbar-* token pointed at a
+// --md-sys-color-* role. Matching the attribute here as well would give one
+// variant two renderings - the class's primary chip against the foundation's
+// tertiary one - and would contradict tokens/_vibrant.scss, which states that
+// a component carrying its own .vibrant class keeps the colours its own M3
+// token set gives it. Nothing collides either way: selection is
+// secondary-container, which the foundation does not remap.
+//
+// Do not show a toolbar at the same time as nav.navigation-bar.
+//
+// #{$_toolbar} only - do not style every <nav>. div.fixed-action-btn.toolbar
 // is the FAB-to-toolbar transition, not this component.
 
 // The host. A toolbar holds commands, not destinations, so it is not a <nav>
@@ -37,36 +60,42 @@
 // already, in $_bar.
 $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
 
+// The two axes. `.max` is BeerCSS's name for docked; `.filled` is the older
+// name for vibrant. Both stay in the :is() lists.
+$_floating: "#{$_toolbar}:is(.floating, :not(.docked, .max))";
+$_docked: "#{$_toolbar}:is(.docked, .max)";
+$_standard: "#{$_toolbar}:is(.standard, :not(.vibrant, .filled))";
+$_vibrant: "#{$_toolbar}:is(.vibrant, .filled)";
+
 #{$_toolbar} {
-  --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
-  --md-comp-toolbar-container-shape: 32px;
+  // Shared across all four variants. --md-comp-toolbar-color stands for
+  // md.comp.toolbar.*.icon.color and .label-text.color, which M3 gives the
+  // same value in both color sets.
   --md-comp-toolbar-container-height: 64px;
-  --md-comp-toolbar-leading-space: 12px;
+  --md-comp-toolbar-between-space: 4px;
   --md-comp-toolbar-action-size: 48px;
   --md-comp-toolbar-icon-size: 24px;
-  --md-comp-toolbar-selected-container-color: var(--md-sys-color-secondary-container);
-  --md-comp-toolbar-selected-color: var(--md-sys-color-on-secondary-container);
 
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: var(--md-comp-toolbar-between-space);
   min-height: var(--md-comp-toolbar-container-height);
   min-width: var(--md-comp-toolbar-container-height);
   margin: 0;
-  padding: 8px var(--md-comp-toolbar-leading-space);
+  padding-block: 8px;
+  padding-inline: var(--md-comp-toolbar-leading-space) var(--md-comp-toolbar-trailing-space);
   border: none;
   border-radius: var(--md-comp-toolbar-container-shape);
   background-color: var(--md-comp-toolbar-container-color);
-  color: var(--md-sys-color-on-surface);
-  @include z-depth("2");
+  color: var(--md-comp-toolbar-color);
 
   & + & {
     margin-block-start: 16px;
   }
 
-  // Actions — transparent at rest so they sit on the container, not filled.
+  // Actions - transparent at rest so they sit on the container, not filled.
   // .extra is the 56dp companion FAB; leave it alone.
   > :is(a, button):not(.extra, .icon-button) {
     box-sizing: border-box;
@@ -99,12 +128,14 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
       line-height: var(--md-comp-toolbar-icon-size);
     }
 
+    // The state layer is the content color in both color sets, which is
+    // what currentColor already is on an action that has not been filled.
     &:hover:not(.active, .filled) {
-      background-color: color-mix(in oklab, currentColor 8%, transparent);
+      background-color: color-mix(in oklab, currentColor state-opacity("hover"), transparent);
     }
 
     &:active:not(.active, .filled) {
-      background-color: color-mix(in oklab, currentColor 10%, transparent);
+      background-color: color-mix(in oklab, currentColor state-opacity("pressed"), transparent);
     }
 
     &.active {
@@ -113,6 +144,8 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
     }
 
     &:disabled {
+      // 0.38, md.comp.toolbar.*.disabled.{icon,label-text}.opacity. Left as a
+      // literal because it is the global disabled figure, not a toolbar knob.
       color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
       background-color: transparent;
       box-shadow: none;
@@ -167,7 +200,8 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
     margin: 0;
   }
 
-  // Spacer between leading and trailing actions.
+  // Spacer between leading and trailing actions. `.max` on a *child* is the
+  // spacer; on the bar itself it is the docked alias.
   > .max {
     flex: 1 1 auto;
     align-self: stretch;
@@ -176,21 +210,69 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
   }
 }
 
-// Vibrant color style. Pair .active with surface so it still contrasts.
-#{$_toolbar}.vibrant,
-#{$_toolbar}.filled {
-  --md-comp-toolbar-container-color: var(--md-sys-color-primary-container);
-  --md-comp-toolbar-selected-container-color: var(--md-sys-color-surface);
-  --md-comp-toolbar-selected-color: var(--md-sys-color-on-surface);
-  color: var(--md-sys-color-on-primary-container);
+// Floating shape. Hugs its actions, stadium, lifted. 32px rather than a
+// corner-full keyword because it has to be half the *short* side: on a
+// vertical bar the container is 64dp wide and arbitrarily tall, where 9999px
+// would round the long edge into an oval.
+#{$_floating} {
+  --md-comp-toolbar-container-shape: 32px;
+  --md-comp-toolbar-leading-space: 8px;
+  --md-comp-toolbar-trailing-space: 8px;
+  --md-comp-toolbar-external-space: 16px;
+
+  @include z-depth("3");
 }
 
-// Vertical floating bar.
-#{$_toolbar}.vertical {
+// Docked shape. Full width, square, no lift. M3's replacement for the bottom
+// app bar, and shorter than it (64dp, not 80).
+//
+// min-spacing and max-spacing bound how far apart the actions sit as the bar
+// widens, which is a clamped gap on a centered row - space-around would add
+// its own distribution on top of both bounds and honour neither. A child
+// .max spacer still takes the slack.
+#{$_docked} {
+  --md-comp-toolbar-container-shape: 0;
+  --md-comp-toolbar-leading-space: 16px;
+  --md-comp-toolbar-trailing-space: 16px;
+  --md-comp-toolbar-min-spacing: 4px;
+  --md-comp-toolbar-max-spacing: 32px;
+
+  display: flex;
+  width: 100%;
+  // 4vw is the growth rate between the two bounds, and has no token behind it
+  // because M3 states the bounds and not the ramp. The viewport unit is honest
+  // here and only here: a docked bar is full width by definition.
+  gap: clamp(var(--md-comp-toolbar-min-spacing), 4vw, var(--md-comp-toolbar-max-spacing));
+  @include z-depth("0");
+}
+
+// Standard color style, the same in both shapes.
+#{$_standard} {
+  --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
+  --md-comp-toolbar-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-toolbar-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-toolbar-selected-color: var(--md-sys-color-on-secondary-container);
+}
+
+// Vibrant color style, the same in both shapes. Selection moves to a neutral
+// chip so it still reads against the accent container.
+#{$_vibrant} {
+  --md-comp-toolbar-container-color: var(--md-sys-color-primary-container);
+  --md-comp-toolbar-color: var(--md-sys-color-on-primary-container);
+  --md-comp-toolbar-selected-container-color: var(--md-sys-color-surface-container);
+  --md-comp-toolbar-selected-color: var(--md-sys-color-on-surface);
+}
+
+// Vertical floating bar. Only floating goes vertical - a docked bar is a
+// full-width strip by definition.
+#{$_floating}.vertical {
+  --md-comp-toolbar-external-space: 24px;
+
   flex-direction: column;
   min-width: var(--md-comp-toolbar-container-height);
   min-height: var(--md-comp-toolbar-container-height);
-  padding: var(--md-comp-toolbar-leading-space) 8px;
+  padding-block: var(--md-comp-toolbar-leading-space) var(--md-comp-toolbar-trailing-space);
+  padding-inline: 8px;
 
   > .max {
     min-width: 0;
@@ -199,24 +281,19 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
   }
 }
 
-// Docked — full width, square, no lift. M3's replacement for the bottom
-// app bar. Shorter than that bar (64dp, not 80). .max is the BeerCSS
-// name; .docked is the M3 name.
-#{$_toolbar}.max,
-#{$_toolbar}.docked {
-  display: flex;
-  width: 100%;
-  --md-comp-toolbar-container-shape: 0;
-  justify-content: space-around;
-  @include z-depth("0");
-}
-
-// Pair a floating toolbar with a companion FAB. The FAB is a sibling,
-// not a child — typically .extra.circle.
+// The companion FAB. It is a sibling of the bar, not a child, and it stays a
+// FAB: md.comp.toolbar.floating.fab restates md.comp.fab's 56dp container,
+// 24dp icon and 16dp corner, which .extra.circle already draws. Only three
+// values are its own - the 8dp gap, the level-1 lift (the bar beside it is
+// level 3), and a color pair that follows the bar's color style.
 .toolbar-group {
+  --md-comp-toolbar-floating-fab-between-space: 8px;
+  --md-comp-toolbar-floating-fab-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-toolbar-floating-fab-icon-color: var(--md-sys-color-on-secondary-container);
+
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--md-comp-toolbar-floating-fab-between-space);
 
   &.vertical {
     flex-direction: column;
@@ -225,42 +302,82 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
   > #{$_toolbar} {
     margin: 0;
   }
+
+  > .extra {
+    background-color: var(--md-comp-toolbar-floating-fab-container-color);
+    color: var(--md-comp-toolbar-floating-fab-icon-color);
+    @include z-depth("1");
+
+    // One opacity per state. All three arms are needed, bare `:focus`
+    // included: .extra.circle draws its own `:active, :focus` tint over
+    // primary-container, and leaving either uncovered would flash the FAB's
+    // default colour through a click on this one.
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("hover"),
+        var(--md-comp-toolbar-floating-fab-container-color)
+      );
+      @include z-depth("2");
+    }
+
+    &:focus {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("focus"),
+        var(--md-comp-toolbar-floating-fab-container-color)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("pressed"),
+        var(--md-comp-toolbar-floating-fab-container-color)
+      );
+    }
+  }
 }
 
-// Pin to the viewport. Floating defaults to bottom-center; docked
-// defaults to the bottom edge.
+// A vibrant bar takes a vibrant FAB. The author marks the bar, not the group,
+// so the group reads it - the same one class drives both.
+.toolbar-group:has(> #{$_vibrant}) > .extra {
+  --md-comp-toolbar-floating-fab-container-color: var(--md-sys-color-tertiary-container);
+  --md-comp-toolbar-floating-fab-icon-color: var(--md-sys-color-on-tertiary-container);
+}
+
+// Pin to the viewport. The inset is the variant's own external space:
+// 16dp for a horizontal floating bar, 24dp for a vertical one, 0 for a
+// docked bar, which states its own and so declares no external space at all.
+// Bottom is the default, so `.bottom`
+// has no rule - a bar naming it falls through to the one above.
 #{$_toolbar}.fixed {
   position: fixed;
   z-index: 996;
-  inset: auto auto 16px 50%;
+  inset: auto auto var(--md-comp-toolbar-external-space) 50%;
   transform: translateX(-50%);
 }
 
 #{$_toolbar}.fixed.top {
-  inset: 16px auto auto 50%;
+  inset: var(--md-comp-toolbar-external-space) auto auto 50%;
 }
 
-#{$_toolbar}.fixed.bottom {
-  inset: auto auto 16px 50%;
-}
-
-#{$_toolbar}.vertical.fixed {
-  inset: 50% auto auto 16px;
+#{$_floating}.vertical.fixed {
+  inset: 50% auto auto var(--md-comp-toolbar-external-space);
   transform: translateY(-50%);
 }
 
-#{$_toolbar}.vertical.fixed.right {
-  inset: 50% 16px auto auto;
+#{$_floating}.vertical.fixed.right {
+  inset: 50% var(--md-comp-toolbar-external-space) auto auto;
 }
 
-#{$_toolbar}:is(.max, .docked).fixed,
-#{$_toolbar}:is(.max, .docked).fixed.bottom {
+#{$_docked}.fixed {
   inset: auto 0 0 0;
   transform: none;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
 }
 
-#{$_toolbar}:is(.max, .docked).fixed.top {
+#{$_docked}.fixed.top {
   inset: 0 0 auto 0;
   transform: none;
   padding-bottom: 8px;

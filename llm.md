@@ -4971,7 +4971,7 @@ Material Design 3 toolbars, from the HTML.
 
 A `<div class="toolbar">` is the bar — not a `<nav>`, because a toolbar holds commands rather than destinations. Direct `<button>` or `<a>` children are the actions. A `<span class="material-symbols">` is the icon; wrap a label in its own `<span>`. An action with an icon and no label needs an `aria-label`. `.active` marks the selected action. They are CSS only. There is no JavaScript component and nothing to AutoInit.
 
-Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/specs). The default is the floating bar: it hugs its actions, 64dp tall, 32dp stadium corners, `surface-variant`, elevation 2. Actions are 48dp targets with a 24dp icon, transparent at rest. Selected is `secondary-container` / `on-secondary-container`.
+Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/specs). Actions are 48dp targets with a 24dp icon, transparent at rest, `on-surface-variant`, 4dp apart.
 
 This is not the FAB-to-toolbar transition (`div.fab.toolbar`). That stays on Floating Action Button. Do not put `toolbar` on every `<nav>` — app bars, card actions, and radio rows stay as they are.
 
@@ -5005,16 +5005,30 @@ A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, 
 
 ### Variants
 
-`filled` is the vibrant bar — `primary-container` / `on-primary-container`. Selected then uses `surface-variant` so it still contrasts. `vertical` stacks the actions.
+Four, from two independent axes — a **shape** (floating or docked) and a **color style** (standard or vibrant).
+
+| | standard | vibrant |
+| --- | --- | --- |
+| **floating** | `class="toolbar"` | `class="toolbar vibrant"` |
+| **docked** | `class="toolbar docked"` | `class="toolbar docked vibrant"` |
+
+Floating is the default shape and standard the default color, so neither needs a class — but `floating` and `standard` are both accepted, so a bar can name all of what it is. `filled` is the older name for `vibrant`, and `max` the BeerCSS name for `docked`; both still work.
+
+**Floating** hugs its actions: 64dp tall, 32dp stadium corners, elevation 3, 8dp end insets, 16dp from the viewport edge (24dp when `vertical`). **Docked** is full width, square, unlifted, 16dp end insets, its actions between 4dp and 32dp apart. `vertical` stacks a floating bar; a docked bar stays a horizontal strip.
+
+**Standard** is `surface-container` with `on-surface-variant` content and a `secondary-container` selection. **Vibrant** is `primary-container` with `on-primary-container` content, and selection moves to `surface-container` / `on-surface` so it still reads against the accent.
+
+The `vibrant` *attribute* is a different thing, and the bar deliberately does not read it as a class. That attribute is the [emphasis foundation](#vibrant-emphasis), whose one ramp is tertiary; a bar inside it — or carrying it — is repainted by the foundation alone, with no toolbar-specific code, because every colour above is a token pointed at a `--md-sys-color-*` role. Nothing collides: selection is `secondary-container`, which the foundation leaves alone.
 
 ```html
-<div class="toolbar filled">…</div>
-<div class="toolbar vertical">…</div>
+<div class="toolbar vibrant">…</div>
+<div class="toolbar docked vibrant">…</div>
+<div class="toolbar floating standard vertical">…</div>
 ```
 
 ### Docked
 
-`max` (BeerCSS) or `docked` (the M3 name) stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
+`docked` (the M3 name; `max` is the BeerCSS alias) stretches the bar to the full width, drops the stadium and the elevation, and spaces the actions. Use it for page actions at the bottom of the screen; destinations belong on a navigation bar. A child `.max` is a spacer, not the bar.
 
 ```html
 <div class="toolbar docked">
@@ -5025,15 +5039,28 @@ A label next to the icon needs a `<span>` — `:only-child` ignores text nodes, 
     <span class="material-symbols" aria-hidden="true">add</span>
   </button>
   <span class="max"></span>
-  <button type="button" class="circle extra" aria-label="Create">
+  <button type="button" class="filled" aria-label="Create">
     <span class="material-symbols" aria-hidden="true">edit</span>
+  </button>
+</div>
+```
+
+### Pairing with a FAB
+
+A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; the FAB is a sibling of the bar, not a child, and stays a FAB — 56dp, 16dp corners — 8dp away and lifted one level where the bar is lifted three. Its colors follow the bar's color style: `secondary-container` beside a standard bar, `tertiary-container` beside a vibrant one. Mark only the bar. That is the companion FAB, not the in-bar `.filled` action.
+
+```html
+<div class="toolbar-group">
+  <div class="toolbar vibrant">…</div>
+  <button type="button" class="extra circle" aria-label="Reply">
+    <span class="material-symbols" aria-hidden="true">reply</span>
   </button>
 </div>
 ```
 
 ### Fixed
 
-`fixed` pins the bar to the viewport. A floating bar sits 16dp from the bottom-center; add `top` to move it to the top. A vertical bar sits on the start edge; `right` flips it. A docked bar sticks to the bottom edge; `top` sticks it to the top.
+`fixed` pins the bar to the viewport, inset by its own external space. A floating bar sits 16dp from the bottom-center; add `top` to move it to the top. A vertical bar sits 24dp from the start edge; `right` flips it. A docked bar sticks to the bottom edge and states its own inset; `top` sticks it to the top.
 
 ```html
 <div class="toolbar fixed">…</div>
