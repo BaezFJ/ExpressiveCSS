@@ -97,13 +97,32 @@
     },
     "buttons": {
       "status": "enforced",
-      "note": "Swept 0.8.0.",
+      "note": "Swept 0.8.0. The FAB and its speed dial live in this partial, so its withheld role is recorded here: FloatingActionButton used to set role=\"menu\" on the action list and aria-haspopup=\"menu\" on the trigger, and there is no arrow-key model behind either. The FAB menu withholds the same role from its own host, one row over.",
+      "conformance": {
+        "withheld_role": "menu",
+        "blocked_on": "keyboard model",
+        "rule": "fab-not-a-composite-widget"
+      },
       "rules": [
         {
           "id": "icon-only-control-is-named",
           "kind": "require-accessible-name",
           "selector": ":is(a, button):has([aria-hidden=\"true\"])",
           "message": "Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label."
+        },
+        {
+          "id": "fab-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ":is(.fab,.fixed-action-btn)",
+          "fragmentSafe": true,
+          "message": "The FAB's actions are reached with Tab, not arrow keys, so the list takes no composite role."
+        },
+        {
+          "id": "fab-expanded-is-not-authored",
+          "kind": "forbid",
+          "selector": ":is(.fab, .fixed-action-btn) [aria-expanded]",
+          "fragmentSafe": true,
+          "message": "Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten."
         }
       ]
     },
@@ -269,6 +288,31 @@
           "kind": "forbid",
           "selector": "dialog.expanding-card-dialog .expanding-card-close:not(button)",
           "message": "The back affordance closes the expanded surface, so use a button for native keyboard behavior."
+        }
+      ]
+    },
+    "fab-menu": {
+      "status": "enforced",
+      "note": "A FAB that expands into a list of labelled actions. It looks like a menu and is not one: its items are reached with Tab, so the role is withheld rather than declared. The `.fab` speed dial is the same script and withholds it under `buttons`, which owns the partial it is styled in.",
+      "conformance": {
+        "withheld_role": "menu",
+        "blocked_on": "keyboard model",
+        "rule": "fab-menu-not-a-composite-widget"
+      },
+      "rules": [
+        {
+          "id": "fab-menu-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".fab-menu",
+          "fragmentSafe": true,
+          "message": "The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys."
+        },
+        {
+          "id": "fab-menu-expanded-is-not-authored",
+          "kind": "forbid",
+          "selector": ".fab-menu [aria-expanded]",
+          "fragmentSafe": true,
+          "message": "Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten."
         }
       ]
     },

@@ -1,0 +1,232 @@
+@use "../abstracts" as *;
+
+// FAB menu. A FAB that expands into a list of labelled actions and morphs
+// into a close button while it is open. `.fab-menu` is the host; `.active`
+// and `aria-expanded` are the framework's, never the author's.
+//
+// It shares the FloatingActionButton class with the `.fab` speed dial next
+// door and nothing else. The two never collide: `$_fab` is
+// `:is(.fab, .fixed-action-btn)`, and a class selector matches whole class
+// names, so `.fab` does not reach `.fab-menu`. The one name that looks shared
+// is `--md-comp-fab-menu-gap`, which is the speed dial's own gap token and is
+// deliberately not one of the names below.
+//
+// Tokens (M3 md.comp.fab-menu.*, DSP 34.0.21):
+//
+//   close-button   56x56, icon 20dp, corner.full, elevation 3, 8dp above list
+//   menu-item      56dp tall, icon 24dp, 24dp insets, 8dp icon-label space,
+//                  4dp between items, corner.full, elevation 0, title-medium
+//
+// The colour axis is M3's three roles, and each one moves two pairs at once:
+// the list item takes `<role>-container` / `on-<role>-container`, the close
+// button the solid `<role>` / `on-<role>`. That pairing is M3's - the close
+// button is deliberately the louder of the two.
+$_fab-menu-roles: ("primary", "secondary", "tertiary");
+
+.fab-menu {
+  --md-comp-fab-menu-close-button-container-height: 56px;
+  --md-comp-fab-menu-close-button-container-width: 56px;
+  --md-comp-fab-menu-close-button-icon-size: 20px;
+  --md-comp-fab-menu-close-button-between-space: 8px;
+  --md-comp-fab-menu-close-button-container-color: var(--md-sys-color-primary);
+  --md-comp-fab-menu-close-button-icon-color: var(--md-sys-color-on-primary);
+  --md-comp-fab-menu-menu-item-container-height: 56px;
+  --md-comp-fab-menu-menu-item-between-space: 4px;
+  --md-comp-fab-menu-menu-item-icon-size: 24px;
+  --md-comp-fab-menu-menu-item-icon-label-space: 8px;
+  --md-comp-fab-menu-menu-item-leading-space: 24px;
+  --md-comp-fab-menu-menu-item-trailing-space: 24px;
+  --md-comp-fab-menu-menu-item-container-color: var(
+    --md-sys-color-primary-container
+  );
+  --md-comp-fab-menu-menu-item-label-text-color: var(
+    --md-sys-color-on-primary-container
+  );
+  --md-comp-fab-menu-offset: 16px;
+  --md-comp-fab-menu-z: 997;
+  --md-comp-fab-menu-duration: 200ms;
+  --md-comp-fab-menu-stagger: 40ms;
+  --md-comp-fab-menu-easing: cubic-bezier(0.65, 0, 0.35, 1);
+
+  position: fixed;
+  inset-inline-end: var(--md-comp-fab-menu-offset);
+  bottom: var(--md-comp-fab-menu-offset);
+  z-index: var(--md-comp-fab-menu-z);
+  margin: 0;
+
+  // The trigger is the host's only in-flow child, so the host is exactly its
+  // size and the list can hang off `bottom: 100%`. Taking the list out of
+  // flow is what keeps a closed menu from reserving its own height.
+  > :is(a, button) {
+    position: relative;
+    z-index: 1;
+
+    // A second glyph in the trigger is the close button's, and only one of
+    // the two is ever in the box. With one glyph the morph is the whole
+    // affordance. `inline-block` is restated rather than reverted: the icon's
+    // own rule is in this layer too, so `revert-layer` would skip past it to
+    // the base default.
+    > #{$icon}:nth-child(2) {
+      display: none;
+    }
+  }
+
+  :is(ul, menu) {
+    position: absolute;
+    inset-inline-end: 0;
+    bottom: calc(100% + var(--md-comp-fab-menu-close-button-between-space));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--md-comp-fab-menu-menu-item-between-space);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    visibility: hidden;
+    transition: visibility 0s var(--md-comp-fab-menu-duration);
+
+    // Opening runs bottom-up, so the item nearest the FAB moves first. Past
+    // six the ladder runs out and the rest move together, which is where M3
+    // stops recommending actions anyway.
+    li:nth-last-child(1) { --i: 0; }
+    li:nth-last-child(2) { --i: 1; }
+    li:nth-last-child(3) { --i: 2; }
+    li:nth-last-child(4) { --i: 3; }
+    li:nth-last-child(5) { --i: 4; }
+    li:nth-last-child(6) { --i: 5; }
+
+    > li > :is(a, button) {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--md-comp-fab-menu-menu-item-icon-label-space);
+      height: var(--md-comp-fab-menu-menu-item-container-height);
+      padding-inline: var(--md-comp-fab-menu-menu-item-leading-space)
+        var(--md-comp-fab-menu-menu-item-trailing-space);
+      border: none;
+      border-radius: 9999px;
+      color: var(--md-comp-fab-menu-menu-item-label-text-color);
+      background-color: var(--md-comp-fab-menu-menu-item-container-color);
+      white-space: nowrap;
+      text-decoration: none;
+      cursor: pointer;
+      appearance: none;
+      opacity: 0;
+      transform: scale(.8) translateY(1rem);
+      transition:
+        opacity var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
+        transform var(--md-comp-fab-menu-duration) var(--md-comp-fab-menu-easing),
+        background-color .2s ease-out,
+        box-shadow .2s ease-out;
+      @include typescale("title-medium");
+      @include focus-visible;
+
+      > #{$icon} {
+        font-size: var(--md-comp-fab-menu-menu-item-icon-size);
+        width: var(--md-comp-fab-menu-menu-item-icon-size);
+        height: var(--md-comp-fab-menu-menu-item-icon-size);
+        line-height: var(--md-comp-fab-menu-menu-item-icon-size);
+        color: inherit;
+      }
+
+      // Enabled is elevation 0; only the states lift.
+      &:hover {
+        @include z-depth("4");
+        background-color: color-mix(
+          in oklab,
+          var(--md-comp-fab-menu-menu-item-label-text-color) state-opacity("hover"),
+          var(--md-comp-fab-menu-menu-item-container-color)
+        );
+      }
+
+      &:active,
+      &:focus {
+        @include z-depth("3");
+        background-color: color-mix(
+          in oklab,
+          var(--md-comp-fab-menu-menu-item-label-text-color) state-opacity("focus"),
+          var(--md-comp-fab-menu-menu-item-container-color)
+        );
+      }
+    }
+  }
+
+  &.active :is(ul, menu) {
+    visibility: visible;
+    transition-delay: 0s;
+
+    > li > :is(a, button) {
+      opacity: 1;
+      transform: none;
+      transition-delay: calc(var(--md-comp-fab-menu-stagger) * var(--i, 0));
+    }
+  }
+
+  // Open, the FAB is the close button: the same disc on corner.full, the
+  // solid role colour, and a 20dp glyph. Four of those are the FAB's own
+  // tokens, so retuning them is the whole morph - `.fab-menu.active` outweighs
+  // `:where(.button).extra.circle`, which contributes only `.extra.circle`.
+  &.active > :is(a, button) {
+    --md-comp-fab-container-height: var(
+      --md-comp-fab-menu-close-button-container-height
+    );
+    --md-comp-fab-container-width: var(
+      --md-comp-fab-menu-close-button-container-width
+    );
+    --md-comp-fab-container-shape: 9999px;
+    --md-comp-fab-icon-size: var(--md-comp-fab-menu-close-button-icon-size);
+
+    color: var(--md-comp-fab-menu-close-button-icon-color);
+    background-color: var(--md-comp-fab-menu-close-button-container-color);
+
+    > #{$icon}:first-child:not(:only-child) {
+      display: none;
+    }
+
+    > #{$icon}:nth-child(2) {
+      display: inline-block;
+    }
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-fab-menu-close-button-icon-color) state-opacity("hover"),
+        var(--md-comp-fab-menu-close-button-container-color)
+      );
+    }
+
+    &:active,
+    &:focus {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-fab-menu-close-button-icon-color) state-opacity("focus"),
+        var(--md-comp-fab-menu-close-button-container-color)
+      );
+    }
+  }
+
+  // `.primary-container` is the default and is named anyway, so all three
+  // roles are a class a page can be written with.
+  @each $role in $_fab-menu-roles {
+    &.#{$role}-container {
+      --md-comp-fab-menu-menu-item-container-color: var(
+        --md-sys-color-#{$role}-container
+      );
+      --md-comp-fab-menu-menu-item-label-text-color: var(
+        --md-sys-color-on-#{$role}-container
+      );
+      --md-comp-fab-menu-close-button-container-color: var(
+        --md-sys-color-#{$role}
+      );
+      --md-comp-fab-menu-close-button-icon-color: var(
+        --md-sys-color-on-#{$role}
+      );
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab-menu {
+    --md-comp-fab-menu-duration: 0s;
+    --md-comp-fab-menu-stagger: 0s;
+  }
+}

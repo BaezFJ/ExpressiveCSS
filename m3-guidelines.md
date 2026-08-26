@@ -597,7 +597,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.3 Floating action button
 
-**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), `extend` (extended), and its sizes `extend small` / `extend medium` / `extend large`. Colour roles: `secondary-container`, `tertiary-container`. Speed-dial: wrap in `.fab`. `AutoInit()`.
+**M3:** FAB, small FAB, large FAB, extended FAB, FAB menu. **ExpressiveCSS:** `circle extra` (56 dp FAB), `extra circle small` (40 dp small FAB), `extra circle medium` (80 dp medium FAB), `extra circle large` (96 dp large FAB), `extend` (extended), and its sizes `extend small` / `extend medium` / `extend large`. FAB menu: `fab-menu`. Colour roles: `secondary-container`, `tertiary-container`. Speed-dial: wrap in `.fab`. `AutoInit()`.
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
@@ -615,15 +615,16 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | Small extended FAB | `extend small` | 56 dp on a symmetric 16 dp inset — the tighter of the two when the label is short |
 | Medium extended FAB | `extend medium` | 80 dp, `title-large` label: the extended FAB on a large window |
 | Large extended FAB | `extend large` | 96 dp, `headline-small` label: the action *is* the screen's purpose, and needs its name |
-| Speed-dial | `.fab` + `<ul>` of smaller FABs | Related shortcuts from the same primary action. This is **not** the M3 Expressive FAB *menu* (a labelled menu anchored to the FAB); it is the older speed-dial. |
+| FAB menu | `fab-menu` + `<ul>` of labelled pills | Three to six related actions that each need a name. The FAB morphs into the close button while it is open |
+| Speed-dial | `.fab` + `<ul>` of smaller FABs | Related shortcuts whose icons speak for themselves. The older, unlabelled form; prefer the FAB menu when the actions need names |
 
-**Anatomy.** Container + icon (required). Extended: icon + label. Speed-dial: primary FAB + list of related FABs.
+**Anatomy.** Container + icon (required). Extended: icon + label. Speed-dial: primary FAB + list of related FABs. FAB menu: primary FAB (the close button once open) + list of pills, each an icon and a label in its own `<span>`.
 
 **Placement.** Trailing lower corner, 16 dp from the edge on compact, 24 dp on larger windows. Above a navigation bar, never on it. May sit beside a floating toolbar. Offset a snackbar so they do not overlap.
 
 **Adaptive.** Compact: icon FAB. Expanded+: prefer **extended FAB**. Only one FAB per screen. A rail may host the FAB at the top of the rail instead of over the content.
 
-**Behavior.** `.fab` opens on hover when the pointer can hover; add `click-to-toggle` otherwise. Motion is CSS.
+**Behavior.** `.fab` opens on hover when the pointer can hover; add `click-to-toggle` otherwise. `fab-menu` is always click, and closes on Escape, on an outside click, or on picking an action. Both are the same `FloatingActionButton` instance, which owns the expanded state — `active` and `aria-expanded` are never authored. Neither takes `role="menu"`: the actions are reached with Tab, not the arrow keys. Motion is CSS.
 
 **Don't**
 

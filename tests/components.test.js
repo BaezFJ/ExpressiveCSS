@@ -44,6 +44,53 @@ describe("FloatingActionButton", () => {
     assert.equal(instance.options.hoverEnabled, false);
     instance.destroy();
   });
+
+  const FAB_MENU = `
+    <div class="fab-menu">
+      <button type="button" class="button extra circle" aria-label="Create">+</button>
+      <ul><li><button type="button">Compose</button></li></ul>
+    </div>`;
+
+  test(".fab-menu expands and collapses on the same instance", () => {
+    document.body.innerHTML = FAB_MENU;
+    const el = document.querySelector(".fab-menu");
+    Expressive.AutoInit();
+    const instance = Expressive.FloatingActionButton.getInstance(el);
+    const trigger = el.querySelector(":scope > button");
+
+    try {
+      assert.ok(instance, ".fab-menu did not reach FloatingActionButton");
+      assert.equal(trigger.getAttribute("aria-expanded"), "false");
+      fire(trigger, "click");
+      assert.equal(el.classList.contains("active"), true);
+      assert.equal(trigger.getAttribute("aria-expanded"), "true");
+      fire(trigger, "click");
+      assert.equal(el.classList.contains("active"), false);
+      assert.equal(trigger.getAttribute("aria-expanded"), "false");
+    } finally {
+      instance?.destroy();
+    }
+  });
+
+  test("no composite role is promised without the keyboard model", () => {
+    // SEMANTICS rule 2. The list used to be given role="menu" and the trigger
+    // aria-haspopup="menu", neither of which this component earns: there is no
+    // arrow-key navigation over the actions. semantics.json withholds `menu`
+    // for both hosts, and this is the half of that a selector cannot see.
+    document.body.innerHTML = FAB_MENU;
+    const el = document.querySelector(".fab-menu");
+    const instance = Expressive.FloatingActionButton.init(el);
+
+    try {
+      assert.equal(el.querySelector("ul").getAttribute("role"), null);
+      assert.equal(
+        el.querySelector(":scope > button").getAttribute("aria-haspopup"),
+        null,
+      );
+    } finally {
+      instance.destroy();
+    }
+  });
 });
 
 describe("Tabs", () => {

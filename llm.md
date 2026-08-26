@@ -2411,6 +2411,54 @@ Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) 
 </div>
 ```
 
+### FAB menu
+
+`fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
+
+Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup.
+
+```html
+<div class="fab-menu">
+  <button type="button" class="button extra circle" aria-label="Create">
+    <span class="material-symbols" aria-hidden="true">add</span>
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+  <ul>
+    <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+    <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+  </ul>
+</div>
+```
+
+Expanded, the FAB is the close button: the same disc on a full corner, the solid role colour rather than its container, and a 20dp glyph. Give the trigger a second icon and it becomes the close glyph — the first shows while collapsed, the second while expanded, and only ever one of them is in the box. With one icon the morph is the whole affordance.
+
+The colour axis is the same three roles as the extended FAB, and one class moves both halves. The actions take `primary-container` (the default), `secondary-container` or `tertiary-container`; the close button takes the matching solid `primary`, `secondary` or `tertiary`.
+
+```html
+<div class="fab-menu secondary-container">…</div>
+```
+
+It is the same `FloatingActionButton` instance as the `fab` speed dial, so `AutoInit()` starts it and `open()`, `close()` and `isOpen` all work. The two never style each other, and neither reaches the `.fab.toolbar` transition. `direction` and `hoverEnabled` are inert on a FAB menu: it opens upward, on click, both decided in CSS. Beyond six actions the stagger runs out and the rest arrive together.
+
+Neither host declares `role="menu"`, and the trigger carries no `aria-haspopup`. The actions are reached with Tab, not the arrow keys, so the role is withheld rather than promised — see `SEMANTICS.md`.
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-fab-menu-close-button-container-height` | 56px |
+| `--md-comp-fab-menu-close-button-container-width` | 56px |
+| `--md-comp-fab-menu-close-button-icon-size` | 20px |
+| `--md-comp-fab-menu-close-button-between-space` | 8px |
+| `--md-comp-fab-menu-close-button-container-color` | `--md-sys-color-primary` |
+| `--md-comp-fab-menu-close-button-icon-color` | `--md-sys-color-on-primary` |
+| `--md-comp-fab-menu-menu-item-container-height` | 56px |
+| `--md-comp-fab-menu-menu-item-between-space` | 4px |
+| `--md-comp-fab-menu-menu-item-icon-size` | 24px |
+| `--md-comp-fab-menu-menu-item-icon-label-space` | 8px |
+| `--md-comp-fab-menu-menu-item-leading-space` | 24px |
+| `--md-comp-fab-menu-menu-item-trailing-space` | 24px |
+| `--md-comp-fab-menu-menu-item-container-color` | `--md-sys-color-primary-container` |
+| `--md-comp-fab-menu-menu-item-label-text-color` | `--md-sys-color-on-primary-container` |
+
 ### Initialization
 
 The IIFE bundle exposes `Expressive.FloatingActionButton`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.fab` with the defaults below.

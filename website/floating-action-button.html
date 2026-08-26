@@ -507,6 +507,133 @@
       </div>
 
 
+  <div id="fab-menu" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">FAB menu</h3>
+
+        <p>
+          <code>fab-menu</code> is the FAB that expands into a list of
+          labelled actions. The trigger is an ordinary FAB; the actions are a
+          <code>&lt;ul&gt;</code> (or <code>&lt;menu&gt;</code>) of pills, each
+          an icon and a label at 56dp on a full corner. Click the FAB to
+          expand; click it again, click outside, or press
+          <kbd>Esc</kbd> to collapse.
+        </p>
+        <p>
+          Expanded is the framework's, not yours: the constructor stamps
+          <code>aria-expanded</code> on the trigger and
+          <code>open()</code> / <code>close()</code> move it along with the
+          <code>active</code> class. Do not write either into the markup.
+        </p>
+        <div class="fab-menu-demo">
+          <div class="fab-menu" id="fab-menu-primary">
+            <button type="button" class="button extra circle" aria-label="Create">
+              <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <ul>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mic</span><span>Record</span></button></li>
+            </ul>
+          </div>
+          <div class="fab-menu secondary-container" id="fab-menu-secondary">
+            <button type="button" class="button extra circle" aria-label="Create, secondary">
+              <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <ul>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+            </ul>
+          </div>
+          <div class="fab-menu tertiary-container" id="fab-menu-tertiary">
+            <button type="button" class="button extra circle" aria-label="Create, tertiary">
+              <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <ul>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+            </ul>
+          </div>
+        </div>
+<pre><code>&lt;div class="fab-menu"&gt;
+  &lt;button type="button" class="button extra circle" aria-label="Create"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;button type="button"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;mode_edit&lt;/span&gt;&lt;span&gt;Compose&lt;/span&gt;&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button type="button"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;image&lt;/span&gt;&lt;span&gt;Add photo&lt;/span&gt;&lt;/button&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          Expanded, the FAB is the close button: the same disc on a full
+          corner, the solid role colour rather than its container, and a 20dp
+          glyph. Give the trigger a second icon and it becomes the close
+          glyph — the first shows while collapsed, the second while expanded,
+          and only ever one of them is in the box. With one icon the morph is
+          the whole affordance.
+        </p>
+        <p>
+          The colour axis is the same three roles as the extended FAB, and one
+          class moves both halves: the actions take
+          <code>primary-container</code> (the default),
+          <code>secondary-container</code> or
+          <code>tertiary-container</code>, and the close button takes the
+          matching solid <code>primary</code>, <code>secondary</code> or
+          <code>tertiary</code>. Material 3 pairs them that way deliberately —
+          the close button is the louder of the two.
+        </p>
+<pre><code>&lt;div class="fab-menu secondary-container"&gt;…&lt;/div&gt;</code></pre>
+        <p>
+          It is the same <code>FloatingActionButton</code> instance as the
+          <code>fab</code> speed dial, so <code>AutoInit()</code> starts it and
+          <code>open()</code>, <code>close()</code> and <code>isOpen</code>
+          all work. The two never style each other, and neither reaches the
+          <a href="#toolbar">FAB to Toolbar</a> transition, which is
+          <code>.fab.toolbar</code> and stays there. <code>direction</code> and
+          <code>hoverEnabled</code> are inert on a FAB menu: it opens upward,
+          on click, both decided in CSS.
+        </p>
+        <p>
+          Beyond six actions the stagger runs out and the rest arrive
+          together, which is past where Material 3 stops recommending them.
+        </p>
+        <div class="docs-table-scroll">
+        
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            <tr><td><code>--md-comp-fab-menu-close-button-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-container-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-icon-size</code></td><td>20px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-between-space</code></td><td>8px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-container-color</code></td><td><code>--md-sys-color-primary</code></td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-icon-color</code></td><td><code>--md-sys-color-on-primary</code></td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-between-space</code></td><td>4px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-icon-label-space</code></td><td>8px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-leading-space</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-trailing-space</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-container-color</code></td><td><code>--md-sys-color-primary-container</code></td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-label-text-color</code></td><td><code>--md-sys-color-on-primary-container</code></td></tr>
+        
+            </tbody>
+        </table>
+
+        </div>
+  
+      </div>
+
+
   <div id="initialization" class="section scrollspy docs-section">
         <h3 class="docs-section-title headline-medium">Initialization</h3>
 
@@ -725,6 +852,7 @@
           <li><a href="#introduction">Introduction</a></li>
           <li><a href="#sizes">Sizes</a></li>
           <li><a href="#extended">Extended</a></li>
+          <li><a href="#fab-menu">FAB menu</a></li>
           <li><a href="#initialization">Initialization</a></li>
           <li><a href="#options">Options</a></li>
           <li><a href="#methods">Methods</a></li>
