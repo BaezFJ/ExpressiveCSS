@@ -125,3 +125,4 @@ ds-bundle/
 # Claude Code machine-local settings (permissions live in .claude/settings.json)
 .claude/settings.local.json
 .claude/.headroom_wrap_marker.json
+.claude/launch.json
