@@ -45,6 +45,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Buttons
 - Cards
 - Carousel
+- Drag handle
 - Lists
 - Floating Action Button
 - Footer
@@ -2435,6 +2436,37 @@ instead of laying them over the media; markup can do the same by carrying
 | `el` | Element | The DOM element the plugin was initialized with. |
 | `options` | Object | The options the instance was initialized with. |
 | `center` | Number | The index of the center item. |
+
+---
+
+## Drag handle
+
+The bar that makes something legible as draggable: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
+
+Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
+
+**Nothing here drags.** There is no script behind this component and ExpressiveCSS ships no reordering behaviour. Dragging is a pointer gesture, so an outcome reachable only by dragging is unreachable without a pointer: reordering built on a handle needs a keyboard path of its own — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position directly. The handle makes the gesture discoverable; it does not make the outcome reachable.
+
+```html
+<div class="split">
+  <section aria-label="Editor">…</section>
+  <span class="drag-handle" aria-hidden="true"></span>
+  <section aria-label="Preview">…</section>
+</div>
+```
+
+Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
+
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. Decorative is right there: dragging the sheet down dismisses it and <kbd>Esc</kbd> already does the same from the keyboard, so the handle sits on top of a path that exists without it. `.handle` is the pre-1.0 spelling and still works.
+
+```html
+<dialog class="bottom-sheet" aria-labelledby="sheet-title">
+  <span class="drag-handle" aria-hidden="true"></span>
+  <h2 id="sheet-title">Share</h2>
+</dialog>
+```
+
+Tokens are `--md-comp-drag-handle-{container-width,width,height,shape,color}` and the `pressed-*` and `state-layer-color` set. Inside a bottom sheet none of them apply; `--md-comp-bottom-sheet-drag-handle-color` does.
 
 ---
 

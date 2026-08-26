@@ -308,6 +308,32 @@
       "note": "Swept 0.8.0. A behavior, not a component: the picker plugins generate this positioning wrapper, so there is no element an author writes to get one.",
       "rules": []
     },
+    "drag-handle": {
+      "status": "enforced",
+      "note": "The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden=\"true\"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the framework ships no reordering behaviour to hang off this handle, and a page that builds one owes it a keyboard path of its own. The docs say so plainly rather than implying the handle supplies it.",
+      "rules": [
+        {
+          "id": "drag-handle-is-hidden-or-a-control",
+          "kind": "forbid",
+          "selector": ".drag-handle:not(button):not([aria-hidden=\"true\"])",
+          "fragmentSafe": true,
+          "message": "A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden=\"true\". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated."
+        },
+        {
+          "id": "drag-handle-button-is-not-hidden",
+          "kind": "forbid",
+          "selector": "button.drag-handle[aria-hidden=\"true\"]",
+          "fragmentSafe": true,
+          "message": "aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed."
+        },
+        {
+          "id": "drag-handle-button-is-named",
+          "kind": "require-accessible-name",
+          "selector": "button.drag-handle",
+          "message": "The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves."
+        }
+      ]
+    },
     "expanding-card": {
       "status": "enforced",
       "note": "Added 0.8.0. The compact article opens a named native dialog; its media and back actions are buttons.",

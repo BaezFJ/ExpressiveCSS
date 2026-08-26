@@ -742,6 +742,22 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ---
 
+## 6.4 Drag handle
+
+**M3:** Drag handle (newly tokenised in Expressive; Compose's `VerticalDragHandle`). **ExpressiveCSS:** `.drag-handle`. CSS only — nothing to initialize and nothing that drags.
+
+**Use when** something is draggable and nothing else says so: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
+
+**Don't use** it as the only route to an outcome. Dragging is a pointer gesture, so a reorder reachable only by dragging is unreachable without a pointer. Pair it with a keyboard path — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position. ExpressiveCSS ships no reordering behaviour, so that path is the page's to build.
+
+**Anatomy.** A bar and nothing else. `<span aria-hidden="true">` when decorative, which is the usual case; `<button>` with an `aria-label` when activating it does something. Never both — `aria-hidden` on a button leaves it in the tab order while hiding it from assistive technology.
+
+**Sizing.** Vertical: 4 × 48 dp bar in a 24 dp hit target, `outline`, swelling to 12 × 52 dp on a 12 dp corner in `on-surface` while held. On a bottom sheet the same class takes that component's own grabber instead — horizontal, 32 × 4 dp at 40 % `on-surface-variant`.
+
+**Behavior.** Hover, focus and pressed states belong to the button spelling only; a decorative handle stays inert under a passing pointer.
+
+---
+
 # 7. Communication and overlays
 
 ## 7.1 Dialogs

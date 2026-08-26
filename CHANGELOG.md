@@ -16,6 +16,48 @@ below is the whole story for that component.
 
 ### Added
 
+- **Drag handle** (`.drag-handle`), the affordance that makes something legible
+  as draggable. CSS only, no plugin, no registry entry.
+
+  **Which element you write is the whole semantic.** A
+  `<span class="drag-handle" aria-hidden="true">` is decoration, which is the
+  usual case — the handle draws a bar and holds no text, so exposed it arrives
+  in the reading order as an unlabelled blank. A `<button>` with an `aria-label`
+  is a control, and is written only when activating it does something.
+  `semantics.json` enforces both directions, including the trap in the middle:
+  `aria-hidden` on a button hides it from assistive technology without taking it
+  out of the tab order. The hover, focus and pressed states key off
+  `button.drag-handle` for that reason, so a decorative handle stays inert under
+  a pointer merely crossing it — and that scoping is only correct *because* the
+  rule holds every other element to `aria-hidden`.
+
+  **Nothing here drags, and the docs say so rather than implying otherwise.**
+  Dragging is a pointer gesture, so an outcome reachable only by dragging is
+  unreachable without a pointer. No reordering behaviour ships to hang off this
+  handle; a page that builds one owes it a keyboard path of its own, and
+  `llm.md`, `m3-guidelines.md` §6.4 and the docs page each state that plainly.
+
+  **`md.comp.drag-handle` is the *vertical* handle**, which is easy to mistake
+  for the bottom sheet's grabber and is not it. Material tokenised the bar that
+  sits in the gutter between two panes — Compose's `VerticalDragHandle` — 4×48dp
+  in a 24dp hit target, swelling to 12×52dp on a 12dp corner while held. The
+  sheet's grabber is a different component with its own token set,
+  `md.comp.sheet-bottom.docked.drag-handle`, horizontal and 32×4dp at 40%
+  `on-surface-variant`. So one class serves both hosts and neither one's values
+  are invented: inside a sheet, `_bottom-sheet.scss` supplies the geometry and
+  suppresses the vertical bar this partial draws in `::before`, which would
+  otherwise print across the sheet's own.
+
+  The bar is a pseudo-element rather than the box because the box is the hit
+  target — 4dp of anything is not something a pointer can be asked to find — and
+  because the state layer needs a surface the bar's own shape does not clip. The
+  container is sized to the *pressed* bar, so holding the handle moves nothing
+  beside it.
+
+  **`.handle` is the pre-1.0 name for the bottom sheet's slot and still works.**
+  The rename is additive in the usual way and `tests/m3-naming.test.js` asserts
+  it: every rule reaching `.handle` reaches `.drag-handle` too.
+
 - **Banners** (`.banner`, `.banner.rich`), Material 3 Expressive's persistent
   in-flow message. A `<div class="banner">` holding a `<p>`, an optional leading
   icon, an optional `.actions` row of text buttons and an optional close icon
