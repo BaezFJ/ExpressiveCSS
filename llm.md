@@ -491,19 +491,19 @@ Expressive maps Material Design 3 color tokens onto live `--md-sys-color-*` cust
 
 Three rules decide which pair is live, in this order:
 
-1. Default: :root and :host use the -light pair.
-2. If the user prefers dark and you have not set a theme attribute, @media (prefers-color-scheme: dark) uses the -dark pair.
-3. :root[theme='light'] and :root[theme='dark'] override both of the above.
+1. Default: `:root` and `:host` set `color-scheme: light dark`, so `light-dark()` follows the OS.
+2. `:root[theme='auto']` is the same follow-OS value, written explicitly.
+3. `:root[theme='light']` and `:root[theme='dark']` lock the scheme and override the OS.
 
-The attribute also sets `color-scheme` so native controls follow the same scheme. `:host` is there for shadow-DOM consumers; the docs site and a normal page use `:root`.
+Each live token is `light-dark(var(--md-sys-color-<role>-light), var(--md-sys-color-<role>-dark))`, written once and resolved against the element's used `color-scheme` — there is no `prefers-color-scheme` media query behind the colors. Because it resolves at the point of use, setting `color-scheme` on any element re-themes that subtree, and native controls follow the same scheme. `:host` is there for shadow-DOM consumers; the docs site and a normal page use `:root`.
 
-This site always starts as `<html lang="en" theme="light">`. The moon icon in the navbar flips that attribute between `light` and `dark`. It does not read `prefers-color-scheme` and it does not persist to `localStorage`.
+This site starts as `<html lang="en" theme="auto">`. The theme control in the app bar is a menu: Light, Dark, and Auto. The choice is written to `localStorage` and restored before first paint so a reload does not flash the wrong scheme.
 
 ### Reading the theme
 
 Put a short inline script in `<head>`, before the stylesheet paints, if you want to restore a saved choice and avoid a flash of the wrong scheme. The framework itself does not run this — you own persistence.
 
-Without a `theme` attribute the CSS already follows `prefers-color-scheme`. Once you set the attribute, that media query no longer wins. The snippet below reads a stored value first, then falls back to the OS preference, then writes the attribute so the override is explicit.
+Without a `theme` attribute the CSS already follows the OS through `color-scheme: light dark`. Setting the attribute to `light` or `dark` locks the scheme; `auto` goes back to following the OS. The snippet below reads a stored value first, then falls back to the OS preference, then writes the attribute so the override is explicit.
 
 ```html
 <script>
@@ -524,7 +524,7 @@ Without a `theme` attribute the CSS already follows `prefers-color-scheme`. Once
 </script>
 ```
 
-Keep this inline rather than in an external file so it runs before the first paint. Setting `theme="light"` in the HTML and never changing it — as this docs site does — locks the page to light until JavaScript flips the attribute.
+Keep this inline rather than in an external file so it runs before the first paint. Setting `theme="light"` in the HTML and never changing it locks the page to light until JavaScript flips the attribute.
 
 ### Changing the theme
 
@@ -535,7 +535,7 @@ document.documentElement.setAttribute('theme', 'dark');
 document.documentElement.setAttribute('theme', 'light');
 ```
 
-Bind that to a control. The navbar moon on this site does exactly that and swaps its icon; it does not write `localStorage`. A consumer app that wants the choice to stick can reuse `setTheme` from the snippet above:
+Bind that to a control. The theme menu on this site does exactly that and writes the choice to `localStorage`. A consumer app that wants the choice to stick can reuse `setTheme` from the snippet above:
 
 ```js
 document.getElementById('theme-toggle').addEventListener('click', (event) => {
@@ -549,7 +549,7 @@ document.getElementById('theme-toggle').addEventListener('click', (event) => {
 
 Toggle theme
 
-The same control lives in the top-right of every docs page. After a reload this site is light again.
+The same control lives in the top-right of every docs page, and the choice survives a reload.
 
 ### Creating a theme
 
