@@ -441,13 +441,34 @@ below is the whole story for that component.
   Expressive.Carousel.init(el, { height: 400, indicators: true, interval: 6000, fullWidth: true });
   ```
 
-  Three options do not carry over. `duration` exists on both but means the
-  transition, not the crossfade. `pauseOnHover` and `pauseOnFocus` have no
-  equivalent and are not needed: an auto-advancing carousel always pauses under
-  the pointer, while focus is inside it, and while the tab is hidden — WCAG
-  2.2.2 territory, so it is not switchable. `indicatorLabelFunc` is replaced by
-  the `i18n` option, which names the carousel and its items. And a `fullscreen`
-  slideshow becomes `.carousel.full-screen`.
+  Four options do not carry over cleanly.
+
+  - `duration` exists on both but means the transition, not the crossfade —
+    and Carousel's rest **follows** each transition, so a cycle takes
+    `duration + interval`. `interval: 6000` above therefore paces at 6.2s
+    rather than 6s; subtract `duration` to keep the old cadence exactly.
+  - `pauseOnHover` and `pauseOnFocus` have no equivalent and are not needed: an
+    auto-advancing carousel always pauses under the pointer, while focus is
+    inside it, and while the tab is hidden — WCAG 2.2.2 territory, so it is not
+    switchable.
+  - `indicatorLabelFunc` is replaced by two new `i18n` keys, `indicators` and
+    `slide`, which name the indicator row and prefix each dot. They are new in
+    this release: those were the last two strings Carousel generated in
+    hardcoded English, and SEMANTICS rule 5 wants every generated string on an
+    `i18n` option. The replacement is a pair of strings rather than a callback,
+    so a label that varied per index — "Go to slide 3 (Current)" — has no
+    equivalent; the current dot already carries `aria-current="true"`, which is
+    what that suffix was standing in for.
+
+  **`fullscreen` has no exact equivalent, and `.carousel.full-screen` is not
+  it.** A `fullscreen` slideshow filled its positioned ancestor and stayed
+  horizontal at every size. `.carousel.full-screen` is M3's immersive feed:
+  `100dvh`, square corners, and **vertical**, turning horizontal on its own in
+  landscape or at an expanded width (the component adds
+  `.full-screen-horizontal` from the rendered geometry, so setting that class
+  by hand does not stick). It also sizes itself, ignoring the `height` option.
+  Take it for an edge-to-edge feed; for a fixed horizontal band, keep the
+  `height` above and leave `full-screen` off.
 
 - **Parallax and Pulse are gone**, with no successor. This is charter work for
   1.0.0 rather than part of the semantics sweep above. Both were decorative
