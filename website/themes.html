@@ -325,8 +325,12 @@
         </ol>
         <p>
           The attribute also sets <code>color-scheme</code> so native controls
-          follow the same scheme. <code>:host</code> is there for shadow-DOM
-          consumers; the docs site and a normal page use <code>:root</code>.
+          follow the same scheme. Each of those three rules is paired with a
+          <code>:host([theme='&hellip;'])</code> twin, so a shadow host can be
+          pinned to a theme the same way <code>&lt;html&gt;</code> can. That
+          pairing is the rule for every token the sheet declares &mdash; the
+          sheet is supported as a shadow root's <em>only</em> stylesheet, and
+          <code>:root</code> matches the document element and nothing else.
         </p>
         <p>
           This site starts as
