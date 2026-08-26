@@ -51,7 +51,9 @@ export interface CarouselOptions extends BaseOptions {
    */
   noWrap: boolean;
   /**
-   * Milliseconds between automatic advances. 0 leaves auto-advance off.
+   * Milliseconds to rest between automatic advances, on top of `duration` -
+   * the gap follows each transition rather than containing it, so a full cycle
+   * takes `duration + interval`. 0 leaves auto-advance off.
    * Whenever it is set the track pauses on hover and on keyboard focus, and
    * `prefers-reduced-motion: reduce` suppresses it entirely - auto-advancing
    * content is WCAG 2.2.2 territory, so neither is an option an author can
@@ -142,6 +144,7 @@ export class Carousel extends Component<CarouselOptions> {
   private _generatedContainerDescription: boolean = false;
   private _generatedWideLayout: boolean = false;
   private _generatedFixedHeight: boolean = false;
+  private _authoredInlineHeight: string | null = null;
   private _autoAdvanceTimer: ReturnType<typeof setInterval> = null;
   private _autoAdvances: boolean = false;
   private _autoPaused: boolean = false;
@@ -225,6 +228,7 @@ export class Carousel extends Component<CarouselOptions> {
     this.images.forEach((item) => item.classList.add('carousel-item'));
     if (this.options.height !== null) {
       this._generatedFixedHeight = !this.el.classList.contains('fixed-height');
+      this._authoredInlineHeight = this.el.style.getPropertyValue('--carousel-height') || null;
       this.el.classList.add('fixed-height');
       this.el.style.setProperty('--carousel-height', `${this.options.height}px`);
     }
@@ -479,7 +483,10 @@ export class Carousel extends Component<CarouselOptions> {
     if (this._generatedContainerLabel) this.el.removeAttribute('aria-label');
     if (this._generatedContainerDescription) this.el.removeAttribute('aria-roledescription');
     if (this._generatedFixedHeight) this.el.classList.remove('fixed-height');
-    if (this.options.height !== null) this.el.style.removeProperty('--carousel-height');
+    if (this.options.height !== null) {
+      if (this._authoredInlineHeight === null) this.el.style.removeProperty('--carousel-height');
+      else this.el.style.setProperty('--carousel-height', this._authoredInlineHeight);
+    }
     if (this._generatedWideLayout) {
       this.el.classList.remove(
         'multi-wide',
@@ -509,7 +516,14 @@ export class Carousel extends Component<CarouselOptions> {
       !this._focused &&
       !document.hidden;
     if (run && this._autoAdvanceTimer === null) {
-      this._autoAdvanceTimer = setInterval(this._advance, this.options.interval);
+      // The gap follows the transition rather than containing it. Otherwise an
+      // interval shorter than `duration` ticks while the previous move is still
+      // animating, and coverflow - whose `center` advances continuously through
+      // the tween - retargets from a half-way index instead of moving one item.
+      this._autoAdvanceTimer = setInterval(
+        this._advance,
+        this.options.duration + this.options.interval
+      );
     } else if (!run && this._autoAdvanceTimer !== null) {
       clearInterval(this._autoAdvanceTimer);
       this._autoAdvanceTimer = null;

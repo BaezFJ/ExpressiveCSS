@@ -396,6 +396,9 @@ describe('Carousel auto-advance', () => {
     return Expressive.Carousel.init(document.querySelector('.carousel'), options);
   };
 
+  // The gap follows the transition, so one cycle is duration + interval.
+  const cycle = (interval) => Expressive.Carousel.defaults.duration + interval;
+
   test('is off unless an interval is set', (t) => {
     t.mock.timers.enable({ apis: ['setInterval'] });
     const instance = init({});
@@ -412,11 +415,11 @@ describe('Carousel auto-advance', () => {
     t.mock.timers.enable({ apis: ['setInterval'] });
     const instance = init({ interval: 1000 });
     try {
-      t.mock.timers.tick(1000);
+      t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 1);
-      t.mock.timers.tick(2000);
+      t.mock.timers.tick(cycle(1000) * 2);
       assert.equal(instance.center, 3);
-      t.mock.timers.tick(1000);
+      t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 0, 'did not wrap past the last item');
     } finally {
       instance.destroy();
@@ -431,17 +434,17 @@ describe('Carousel auto-advance', () => {
     const el = instance.el;
     try {
       el.dispatchEvent(new window.MouseEvent('mouseenter'));
-      t.mock.timers.tick(3000);
+      t.mock.timers.tick(cycle(1000) * 3);
       assert.equal(instance.center, 0, 'kept advancing under the pointer');
       el.dispatchEvent(new window.MouseEvent('mouseleave'));
-      t.mock.timers.tick(1000);
+      t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 1, 'did not resume when the pointer left');
 
       el.dispatchEvent(new window.FocusEvent('focusin', { bubbles: true }));
-      t.mock.timers.tick(3000);
+      t.mock.timers.tick(cycle(1000) * 3);
       assert.equal(instance.center, 1, 'kept advancing under keyboard focus');
       el.dispatchEvent(new window.FocusEvent('focusout', { bubbles: true }));
-      t.mock.timers.tick(1000);
+      t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 2, 'did not resume when focus left');
     } finally {
       instance.destroy();
@@ -454,10 +457,24 @@ describe('Carousel auto-advance', () => {
     // Every native track forces `noWrap`; only the author's own request counts.
     const instance = init({ interval: 1000, noWrap: true });
     try {
-      t.mock.timers.tick(3000);
+      t.mock.timers.tick(cycle(1000) * 3);
       assert.equal(instance.center, 3, 'did not reach the last item');
       t.mock.timers.tick(60000);
       assert.equal(instance.center, 3, 'wrapped past the end anyway');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('rests for the interval after the transition, never during it', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    const instance = init({ interval: 1000, duration: 400 });
+    try {
+      t.mock.timers.tick(1399);
+      assert.equal(instance.center, 0, 'advanced before the transition had finished resting');
+      t.mock.timers.tick(1);
+      assert.equal(instance.center, 1, 'did not advance at duration + interval');
     } finally {
       instance.destroy();
       t.mock.timers.reset();
@@ -469,10 +486,10 @@ describe('Carousel auto-advance', () => {
     const instance = init({ interval: 1000 });
     try {
       instance.pause();
-      t.mock.timers.tick(3000);
+      t.mock.timers.tick(cycle(1000) * 3);
       assert.equal(instance.center, 0);
       instance.start();
-      t.mock.timers.tick(1000);
+      t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 1);
     } finally {
       instance.destroy();
@@ -535,6 +552,21 @@ describe('Carousel fixed height', () => {
     }
     assert.equal(el.classList.contains('fixed-height'), false);
     assert.equal(el.style.getPropertyValue('--carousel-height'), '');
+  });
+
+  test('destroy() gives back an inline height the author already had', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    el.style.setProperty('--carousel-height', '260px');
+    el.classList.add('fixed-height');
+    const instance = Expressive.Carousel.init(el, { height: 400 });
+    try {
+      assert.equal(el.style.getPropertyValue('--carousel-height'), '400px');
+    } finally {
+      instance.destroy();
+    }
+    assert.equal(el.style.getPropertyValue('--carousel-height'), '260px', 'ate the authored height');
+    assert.equal(el.classList.contains('fixed-height'), true, 'removed a class it did not add');
   });
 
   test('is left alone when no height is given', () => {

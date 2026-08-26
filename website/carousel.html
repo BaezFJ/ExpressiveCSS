@@ -637,8 +637,11 @@
   <td>Number</td>
   <td><code>0</code></td>
   <td>
-    Milliseconds between automatic advances. <code>0</code> leaves auto-advance
-    off. Setting it also turns on the pause contract below.
+    Milliseconds to rest between automatic advances, on top of
+    <code>duration</code> — the gap follows each transition rather than
+    containing it, so a full cycle takes <code>duration + interval</code>.
+    <code>0</code> leaves auto-advance off, and setting it turns on the pause
+    contract below.
   </td>
 </tr>
 <tr>
