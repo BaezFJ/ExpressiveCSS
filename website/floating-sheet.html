@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dialogs - ExpressiveCSS</title>
+    <title>Floating sheet - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Dialogs</h2>
+            <h2>Floating sheet</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -176,8 +176,8 @@
                       <li class="">
                           <a href="/lists.html">Lists</a>
                       </li>
-                      <li class="active">
-                          <a href="/dialogs.html" aria-current="page">Dialogs</a>
+                      <li class="">
+                          <a href="/dialogs.html">Dialogs</a>
                       </li>
                       <li class="">
                           <a href="/bottom-sheet.html">Bottom sheet</a>
@@ -185,8 +185,8 @@
                       <li class="">
                           <a href="/side-sheet.html">Side sheet</a>
                       </li>
-                      <li class="">
-                          <a href="/floating-sheet.html">Floating sheet</a>
+                      <li class="active">
+                          <a href="/floating-sheet.html" aria-current="page">Floating sheet</a>
                       </li>
                       <li class="">
                           <a href="/drag-handle.html">Drag handle</a>
@@ -277,8 +277,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Dialogs</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Important prompts in a user flow. Dedicated to a single task.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Floating sheet</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">Secondary content on a surface that floats free of every window edge.</p>
             </div>
         </div>
     </section>
@@ -293,250 +293,117 @@
   <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Use a dialog so people act on information — confirm a high-risk
-          action, finish one task, or read the copy that belongs to that
-          task. Two variants, same element: a basic dialog and a
-          full-screen dialog. There is no
-          <code>modal-header</code>, <code>modal-content</code>, or
-          <code>modal-footer</code> class.
+          A <code>dialog.floating-sheet</code> is the third member of the
+          sheet family. Where a
+          <a href="/bottom-sheet.html">bottom sheet</a> docks to
+          the bottom and a
+          <a href="/side-sheet.html">side sheet</a> to one side,
+          a floating sheet is detached from every edge and floats above the
+          content.
         </p>
         <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/dialogs/specs">M3 dialog spec</a>.
-          The basic container is <code>surface-container-high</code>, 28dp
-          corners, 280–560dp, elevation 3. The headline is
-          <code>headline-small</code> / <code>on-surface</code>; supporting
-          text is <code>body-medium</code> /
-          <code>on-surface-variant</code>. Actions are text buttons, end
-          aligned, with an 8dp gap. Padding is 24dp (16dp between the
-          headline and the body). The scrim is 32% <code>scrim</code> with
-          a 12px blur. Opening with <code>showModal()</code> also stops
-          the page behind it from scrolling.
+          Tokens follow <code>md.comp.sheet.floating</code>: the container
+          is <code>surface-container-low</code> with 28dp corners on all
+          four sides and elevation&nbsp;1. It is a <code>&lt;dialog&gt;</code>,
+          so the ordinary dialog slots apply — a heading, body copy or a
+          wrapping <code>&lt;div&gt;</code>, an optional <code>&lt;hr&gt;</code>
+          with extra content, and a last-child
+          <code>&lt;form method="dialog"&gt;</code> as the action row.
         </p>
         <p>
-          Open it with <code>showModal()</code> and close it with
-          <code>close()</code> — the Dialog API, not a plugin.
+          Two variants, same sheet:
         </p>
-  
-      </div>
-
-
-  <div id="basic" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Basic</h3>
-
+        <ul class="browser-default">
+          <li>
+            <strong>Standard</strong> — <code>show()</code>. No scrim; the
+            page stays interactive while the sheet floats over it.
+          </li>
+          <li>
+            <strong>Modal</strong> — <code>showModal()</code>. The scrim
+            marks the page unavailable. Tap the scrim, press Escape, or use
+            the action row to dismiss.
+          </li>
+        </ul>
         <p>
-          A <code>&lt;dialog&gt;</code> is the surface. A heading is the
-          headline, a <code>&lt;p&gt;</code> (or a wrapping
-          <code>&lt;div&gt;</code>) is supporting text, and the last child
-          <code>&lt;form method="dialog"&gt;</code> or <code>&lt;nav&gt;</code>
-          is the action row. An optional leading icon centers the headline. An
-          <code>&lt;hr&gt;</code> is the divider when extra content follows the
-          copy.
-        </p>
-        <p>
-          <button type="button" onclick="document.getElementById('dialog-basic').showModal()">Show</button>
-          <button type="button" class="tonal" onclick="document.getElementById('dialog-icon').showModal()">Show with icon</button>
-          <button type="button" class="outlined" onclick="document.getElementById('dialog-extra').showModal()">Show with extra content</button>
+          <button type="button" onclick="(function(d){ d.open ? d.close() : d.show(); })(document.getElementById('floating-standard'))">Show standard</button>
+          <button type="button" class="tonal" onclick="document.getElementById('floating-modal').showModal()">Show modal</button>
         </p>
 
-        <dialog id="dialog-basic" aria-labelledby="basic-dialog-title-title">
-          <h2 id="basic-dialog-title-title">Basic dialog title</h2>
-          <p>A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision.</p>
+        <dialog id="floating-standard" class="floating-sheet" aria-labelledby="floating-standard-title">
+          <h2 id="floating-standard-title">Now playing</h2>
+          <p>A standard floating sheet keeps the page interactive. Use it for content that should stay put while the main view is used.</p>
           <form method="dialog">
-            <button type="submit" value="action-2">Text button</button>
-            <button type="submit" value="action-1">Text button</button>
+            <button type="submit" value="done">Done</button>
           </form>
         </dialog>
 
-        <dialog id="dialog-icon" aria-labelledby="use-location-services-title">
-          <span class="material-symbols" aria-hidden="true">place</span>
-          <h2 id="use-location-services-title">Use location services?</h2>
-          <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
+        <dialog id="floating-modal" class="floating-sheet" aria-labelledby="floating-modal-title">
+          <h2 id="floating-modal-title">Filters</h2>
+          <p>A modal floating sheet interrupts. The scrim marks the main view as unavailable until the sheet closes.</p>
           <form method="dialog">
-            <button type="submit" value="disagree">Disagree</button>
-            <button type="submit" value="agree">Agree</button>
+            <button type="submit" value="apply">Apply</button>
+            <button type="submit" class="outlined" value="cancel">Cancel</button>
           </form>
         </dialog>
-
-        <dialog id="dialog-extra" aria-labelledby="reset-settings-title">
-          <span class="material-symbols" aria-hidden="true">restart_alt</span>
-          <h2 id="reset-settings-title">Reset settings?</h2>
-          <p>This will reset your app preferences back to their default settings. The following accounts will also be signed out:</p>
-          <hr>
-          <ul class="list">
-            <li>
-              <img src="https://picsum.photos/id/64/80/80" alt="" class="circle">
-              leevillanuevanotes@google.com
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/91/80/80" alt="" class="circle">
-              alloalejandro@google.com
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/177/80/80" alt="" class="circle">
-              oliortega@google.com
-            </li>
-          </ul>
-          <hr>
-          <form method="dialog">
-            <button type="submit" value="cancel">Cancel</button>
-            <button type="submit" value="accept">Accept</button>
-          </form>
-        </dialog>
-<pre><code>&lt;button type="button" onclick="document.getElementById('dialog1').showModal()"&gt;
-  Show
-&lt;/button&gt;
-
-&lt;dialog id="dialog1" aria-labelledby="basic-dialog-title-title"&gt;
-  &lt;h2 id="basic-dialog-title-title"&gt;Basic dialog title&lt;/h2&gt;
-  &lt;p&gt;A dialog is a modal window that appears in front of app content.&lt;/p&gt;
+<pre><code>&lt;dialog class="floating-sheet" aria-labelledby="floating-sheet-title"&gt;
+  &lt;h2 id="floating-sheet-title"&gt;Now playing&lt;/h2&gt;
+  &lt;p&gt;Secondary content, floating above the page.&lt;/p&gt;
   &lt;form method="dialog"&gt;
-    &lt;button type="submit" value="cancel"&gt;Cancel&lt;/button&gt;
-    &lt;button type="submit" value="accept"&gt;Accept&lt;/button&gt;
+    &lt;button type="submit" value="done"&gt;Done&lt;/button&gt;
   &lt;/form&gt;
 &lt;/dialog&gt;</code></pre>
         <p>
-          A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
-          submit button is pressed and sets <code>dialog.returnValue</code>
-          from the button’s <code>value</code>. Action buttons are text
-          buttons by default — add <code>filled</code>, <code>tonal</code>,
-          or <code>outlined</code> if you need more emphasis. Tapping the
-          scrim closes it too, but only if the press and the release both
-          miss the dialog. Docked panes are
-          <a href="/side-sheet.html">Side sheet</a>
-          and
-          <a href="/bottom-sheet.html">Bottom sheet</a>.
+          There is no extra class for the modal variant —
+          <code>showModal()</code> vs <code>show()</code> is the split, the
+          same as the other two sheets.
         </p>
   
       </div>
 
 
-  <div id="fullscreen" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Full-screen</h3>
+  <div id="placement" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Placement</h3>
 
         <p>
-          Add <code>max</code> when the task needs the whole viewport —
-          typically on compact windows, or any time the dialog holds a
-          form. There is no scrim and no corner radius. A
-          <code>&lt;header&gt;</code> is the 64dp top bar: a close icon,
-          a <code>title-large</code> headline, and the confirming text
-          button. Body content is inset 24dp.
+          The sheet sits 24dp in from every edge and centres in what is
+          left, capped at 400dp wide. There are deliberately no edge
+          modifiers: <code>.bottom</code> already selects a bottom sheet and
+          <code>.left</code> / <code>.right</code> a side sheet, so a
+          floating sheet borrowing those names would pick up two sheets'
+          rules at once. Anchor it yourself when a corner is wanted.
         </p>
-        <p>
-          <button type="button" class="outlined" onclick="document.getElementById('dialog-max').showModal()">Show full-screen</button>
-        </p>
-        <dialog id="dialog-max" class="max" aria-labelledby="full-screen-dialog-title-title">
-          <header>
-            <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
-              <span class="material-symbols" aria-hidden="true">close</span>
-            </button>
-            <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
-            <form method="dialog">
-              <button type="submit" value="save">Save</button>
-            </form>
-          </header>
-          <div>
-            <div class="field outlined">
-              <input id="fs-event" type="text" placeholder=" " value="Input">
-              <label for="fs-event">Event name</label>
-            </div>
-            <div class="row">
-              <div class="s12 m6 field outlined">
-                <input id="fs-from" type="text" placeholder=" " value="Input">
-                <label for="fs-from">From</label>
-              </div>
-              <div class="s12 m6 field outlined">
-                <input id="fs-to" type="text" placeholder=" " value="Input">
-                <label for="fs-to">To</label>
-              </div>
-            </div>
-            <p>
-              <label>
-                <input type="checkbox" id="fs-all-day">
-                All day
-              </label>
-            </p>
-          </div>
-        </dialog>
-<pre><code>&lt;dialog class="max" aria-labelledby="full-screen-dialog-title-title"&gt;
-  &lt;header&gt;
-    &lt;button type="button" aria-label="Close"&gt;
-      &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
-    &lt;/button&gt;
-    &lt;h2 id="full-screen-dialog-title-title"&gt;Full-screen dialog title&lt;/h2&gt;
-    &lt;form method="dialog"&gt;
-      &lt;button type="submit" value="save"&gt;Save&lt;/button&gt;
-    &lt;/form&gt;
-  &lt;/header&gt;
-  &lt;div&gt;…&lt;/div&gt;
+<pre><code>&lt;dialog class="floating-sheet" style="inset: auto 24px 24px auto; margin: 0" aria-label="Player"&gt;
+  …
 &lt;/dialog&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="methods" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
-
         <p>
-          Call these on the <code>&lt;dialog&gt;</code> element. See
-          <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement" target="_blank" rel="noopener">HTMLDialogElement</a>
-          for the full API.
-        </p>
-        <h5 class="light">.showModal()</h5>
-        <p>Open as a modal, with the scrim (basic) or as the page (full-screen).</p>
-<pre><code>dialog.showModal();</code></pre>
-        <h5 class="light">.close()</h5>
-        <p>Close the dialog.</p>
-<pre><code>dialog.close();</code></pre>
-        <p>
-          A tap or click on the scrim also closes a basic dialog. Both ends
-          of the gesture have to land outside the dialog’s box, so a drag
-          that starts on the dialog — selecting text, missing a button —
-          cannot dismiss it. Set <code>closedby="none"</code> or
-          <code>closedby="closerequest"</code> to opt out.
+          Placement is the only thing <code>md.comp.sheet.floating</code>
+          says nothing about — it publishes three values, all of them
+          container colour, shape and elevation. Override
+          <code>--md-comp-floating-sheet-inset</code> or
+          <code>--md-comp-floating-sheet-container-max-width</code> rather
+          than restyling the surface.
         </p>
   
       </div>
 
 
-  <div id="tokens" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Tokens</h3>
+  <div id="behavior" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Behavior</h3>
 
-        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.</p>
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Token</th>
-                    <th>Default</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-color</code></td>
-              <td><code>--md-sys-color-surface-container-high</code></td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-shape</code></td>
-              <td>28px</td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-min-width</code></td>
-              <td>280px</td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-container-max-width</code></td>
-              <td>560px</td>
-            </tr>
-            <tr>
-              <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
-              <td>12px</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
+        <p>
+          Dismissal is the sheet family's: Escape, the action row's
+          <code>form[method="dialog"]</code>, and — for the modal variant —
+          a tap on the scrim. That last one is
+          <code>Dialogs.Init()</code>, the same light-dismiss behavior every
+          <code>&lt;dialog&gt;</code> gets; there is no floating-sheet
+          module. A floating sheet is not draggable, so it takes no drag
+          handle.
+        </p>
+        <p>
+          Name the sheet. A <code>&lt;dialog&gt;</code> takes no name from
+          its heading, so point <code>aria-labelledby</code> at that heading
+          or give it an <code>aria-label</code>.
+        </p>
   
       </div>
 
@@ -550,10 +417,8 @@
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#basic">Basic</a></li>
-          <li><a href="#fullscreen">Full-screen</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#tokens">Tokens</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#behavior">Behavior</a></li>
           </ul>
         </nav>
 
