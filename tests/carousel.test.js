@@ -400,7 +400,7 @@ describe('Carousel auto-advance', () => {
   const cycle = (interval) => Expressive.Carousel.defaults.duration + interval;
 
   test('is off unless an interval is set', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const instance = init({});
     try {
       t.mock.timers.tick(60000);
@@ -412,14 +412,16 @@ describe('Carousel auto-advance', () => {
   });
 
   test('advances on the interval and wraps at the end', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const instance = init({ interval: 1000 });
     try {
-      t.mock.timers.tick(cycle(1000));
+      const rest = () => t.mock.timers.tick(cycle(1000));
+      rest();
       assert.equal(instance.center, 1);
-      t.mock.timers.tick(cycle(1000) * 2);
+      rest();
+      rest();
       assert.equal(instance.center, 3);
-      t.mock.timers.tick(cycle(1000));
+      rest();
       assert.equal(instance.center, 0, 'did not wrap past the last item');
     } finally {
       instance.destroy();
@@ -428,7 +430,7 @@ describe('Carousel auto-advance', () => {
   });
 
   test('pauses on hover and on focus, with no option to disable either', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     // The booleans Slideshow offered are gone: passing them changes nothing.
     const instance = init({ interval: 1000, pauseOnHover: false, pauseOnFocus: false });
     const el = instance.el;
@@ -453,13 +455,13 @@ describe('Carousel auto-advance', () => {
   });
 
   test('an explicit noWrap stops it after one pass', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     // Every native track forces `noWrap`; only the author's own request counts.
     const instance = init({ interval: 1000, noWrap: true });
     try {
-      t.mock.timers.tick(cycle(1000) * 3);
+      for (let i = 0; i < 3; i += 1) t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 3, 'did not reach the last item');
-      t.mock.timers.tick(60000);
+      for (let i = 0; i < 10; i += 1) t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 3, 'wrapped past the end anyway');
     } finally {
       instance.destroy();
@@ -468,7 +470,7 @@ describe('Carousel auto-advance', () => {
   });
 
   test('rests for the interval after the transition, never during it', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const instance = init({ interval: 1000, duration: 400 });
     try {
       t.mock.timers.tick(1399);
@@ -482,7 +484,7 @@ describe('Carousel auto-advance', () => {
   });
 
   test('skips a tick that lands on a coverflow tween still running', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     document.body.innerHTML = markup('coverflow');
     const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
       interval: 1000
@@ -507,8 +509,32 @@ describe('Carousel auto-advance', () => {
     }
   });
 
+  test('a rest cut short by a tween buys a whole new one, not its remainder', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    document.body.innerHTML = markup('coverflow');
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
+      interval: 1000,
+      duration: 200
+    });
+    try {
+      instance.offset = 0;
+      instance.target = 100;
+      t.mock.timers.tick(1200);
+      assert.equal(instance.target, 100, 'advanced off a tween still running');
+
+      instance.offset = 100; // the tween lands
+      t.mock.timers.tick(1199);
+      assert.equal(instance.target, 100, 'rested for the remainder instead of a whole interval');
+      t.mock.timers.tick(1);
+      assert.notEqual(instance.target, 100, 'never advanced after the fresh rest');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
   test('pause() and start() stop and resume it', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const instance = init({ interval: 1000 });
     try {
       instance.pause();
@@ -524,7 +550,7 @@ describe('Carousel auto-advance', () => {
   });
 
   test('prefers-reduced-motion suppresses it entirely', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const original = window.matchMedia;
     window.matchMedia = (query) => ({ ...original(query), matches: /reduced-motion/.test(query) });
     const instance = init({ interval: 1000 });
@@ -539,7 +565,7 @@ describe('Carousel auto-advance', () => {
   });
 
   test('destroy() clears the timer', (t) => {
-    t.mock.timers.enable({ apis: ['setInterval'] });
+    t.mock.timers.enable({ apis: ['setTimeout'] });
     const instance = init({ interval: 1000 });
     try {
       instance.destroy();

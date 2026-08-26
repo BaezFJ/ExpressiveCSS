@@ -20,7 +20,9 @@ below is the whole story for that component.
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each
   transition rather than containing it, so a full cycle takes
-  `duration + interval` and a tick can never land on a move still animating. Auto-advancing content
+  `duration + interval`; each rest is armed by the move before it rather than
+  running on a fixed phase, so a rest can never end on a move still animating
+  nor be cut to the remainder of one that did. Auto-advancing content
   is WCAG 2.2.2 territory, so unlike the Slideshow it replaces, Carousel offers
   no `pauseOnHover` / `pauseOnFocus` booleans to turn off — an interval always
   pauses while the pointer is over the carousel, while focus is inside it, and

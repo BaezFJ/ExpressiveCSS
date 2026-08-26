@@ -145,7 +145,7 @@ export class Carousel extends Component<CarouselOptions> {
   private _generatedWideLayout: boolean = false;
   private _generatedFixedHeight: boolean = false;
   private _authoredInlineHeight: string | null = null;
-  private _autoAdvanceTimer: ReturnType<typeof setInterval> = null;
+  private _autoAdvanceTimer: ReturnType<typeof setTimeout> = null;
   private _autoAdvances: boolean = false;
   private _autoPaused: boolean = false;
   private _hovered: boolean = false;
@@ -516,32 +516,37 @@ export class Carousel extends Component<CarouselOptions> {
       !this._focused &&
       !document.hidden;
     if (run && this._autoAdvanceTimer === null) {
-      // The gap follows the transition rather than containing it. Otherwise an
-      // interval shorter than `duration` ticks while the previous move is still
-      // animating, and coverflow - whose `center` advances continuously through
-      // the tween - retargets from a half-way index instead of moving one item.
-      this._autoAdvanceTimer = setInterval(
-        this._advance,
+      // Each rest is armed after the move before it, never on a fixed phase.
+      // A repeating timer assumes the work it triggers is instant; coverflow's
+      // is not, so a fixed period either lands mid-tween or, once a tick is
+      // dropped, leaves whatever is left of the period as the next rest.
+      this._autoAdvanceTimer = setTimeout(
+        this._tick,
         this.options.duration + this.options.interval
       );
     } else if (!run && this._autoAdvanceTimer !== null) {
-      clearInterval(this._autoAdvanceTimer);
+      clearTimeout(this._autoAdvanceTimer);
       this._autoAdvanceTimer = null;
     }
   }
 
-  private _advance = () => {
+  private _tick = () => {
+    this._autoAdvanceTimer = null;
     // Coverflow eases by `amplitude * exp(-elapsed / duration)` until the step
     // falls under 2px, so it settles after `duration * ln(|amplitude| / 2)` --
-    // several multiples of `duration`, not one, and `center` climbs through the
-    // whole tween. Advancing off that intermediate index would retarget the
-    // running animation instead of moving one item, so a tick that finds the
-    // track still moving is dropped and the next one takes it. Every path that
-    // leaves `offset` short of `target` starts the loop that closes the gap, so
-    // this waits on an animation that is always running. Native tracks commit
-    // `center` synchronously in `_cycleTo` and never read an in-between value.
-    if (!this._flat && this.offset !== this.target) return;
+    // several multiples of `duration`, not one -- and `center` climbs through
+    // the whole tween. Advancing off that intermediate index would retarget the
+    // running animation instead of moving one item, so a rest that ends while
+    // the track is still moving buys another whole rest rather than advancing.
+    // Every path that leaves `offset` short of `target` starts the loop that
+    // closes the gap, so this never waits on an animation that is not running.
+    // Native tracks commit `center` synchronously in `_cycleTo` and never read
+    // an in-between value.
+    if (this._flat || this.offset === this.target) this._advance();
+    this._syncAutoAdvance();
+  };
 
+  private _advance = () => {
     const next = this.center + 1;
     if (next < this.count) {
       this.set(next);
