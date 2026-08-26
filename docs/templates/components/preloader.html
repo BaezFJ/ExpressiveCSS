@@ -60,6 +60,12 @@
 
   {% call section("circular", "Circular") %}
         <p>
+          For an indeterminate wait under about five seconds, prefer the
+          <a href="{{ url_for('loading_indicator') }}">loading indicator</a> —
+          it supersedes the indeterminate circular spinner. What follows keeps
+          every determinate case.
+        </p>
+        <p>
           One element. Default size is 48px.
           <code>small</code> is 36px, <code>big</code> is 64px.
           It uses the primary token. <code>prefers-reduced-motion</code>

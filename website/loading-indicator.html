@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tabs - ExpressiveCSS</title>
+    <title>Loading indicator - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Tabs</h2>
+            <h2>Loading indicator</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -109,7 +109,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
@@ -133,8 +133,8 @@
                       <li class="">
                           <a href="/footer.html">Footer</a>
                       </li>
-                      <li class="active">
-                          <a href="/tabs.html" aria-current="page">Tabs</a>
+                      <li class="">
+                          <a href="/tabs.html">Tabs</a>
                       </li>
                       <li class="">
                           <a href="/breadcrumbs.html">Breadcrumbs</a>
@@ -152,7 +152,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -194,8 +194,8 @@
                       <li class="">
                           <a href="/preloader.html">Preloader</a>
                       </li>
-                      <li class="">
-                          <a href="/loading-indicator.html">Loading indicator</a>
+                      <li class="active">
+                          <a href="/loading-indicator.html" aria-current="page">Loading indicator</a>
                       </li>
                       <li class="">
                           <a href="/carousel.html">Carousel</a>
@@ -262,8 +262,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Tabs</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Material Design 3 tabs, from the HTML.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Loading indicator</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A shape that morphs while it spins, for waits under five seconds.</p>
             </div>
         </div>
     </section>
@@ -275,364 +275,109 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="anatomy" class="section scrollspy docs-section">
+  <div id="basic" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          A <code>&lt;nav class="tabs"&gt;</code> of
-          <code>&lt;a href="#panel"&gt;</code> is the bar. A
-          <code>&lt;span&gt;</code> (or the link text) is the label; a
-          leading <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon.
-          <code>.active</code> is the selected tab. There is no
-          <code>li.tab</code> required —
-          <code>ul.tabs &gt; li.tab &gt; a</code> stays as an alias.
-          <code>AutoInit()</code> starts every <code>.tabs</code> except
-          those marked <code>no-autoinit</code>.
+          M3 Expressive's indicator for a short wait. One element, CSS-only,
+          no JavaScript plugin. The shape morphs through a circle and four
+          cookie shapes while the whole thing rotates.
         </p>
+        <p class="py-5 center-align">
+          <span class="loading-indicator" role="status" aria-label="Loading"></span>
+        </p>
+<pre><code>&lt;span class="loading-indicator" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
         <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/tabs/specs">M3 tabs spec</a>.
-          Primary tabs sit on <code>surface</code>, 48dp (64dp with a
-          stacked icon). The label is <code>title-small</code> /
-          <code>on-surface-variant</code>; selected is
-          <code>primary</code>. The indicator is 3dp
-          <code>primary</code> with 3dp top corners. The icon is 24dp.
-          A 1dp <code>outline-variant</code> divider runs under the bar.
-          Hover is 8%; focus is 10%. Disabled is 38%.
+          The element is empty, so it reports nothing on its own.
+          <code>role="status"</code> announces the wait and
+          <code>aria-label</code> gives it something to announce — not
+          <code>role="progressbar"</code>, which promises an
+          <code>aria-valuenow</code> an indeterminate indicator does not have.
         </p>
-
-        <nav class="tabs" aria-label="Travel">
-          <a href="#tabs-intro-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-intro-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
-          <a href="#tabs-intro-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
-        </nav>
-        <div id="tabs-intro-flight" class="py-3">Flight</div>
-        <div id="tabs-intro-luggage" class="py-3">Luggage</div>
-        <div id="tabs-intro-explore" class="py-3">Explore</div>
-<pre><code>&lt;nav class="tabs" aria-label="Travel"&gt;
-  &lt;a href="#flight"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;flight&lt;/span&gt;
-    &lt;span&gt;Flight&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a class="active" aria-current="page" href="#luggage"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;luggage&lt;/span&gt;
-    &lt;span&gt;Luggage&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a href="#explore"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;explore&lt;/span&gt;
-    &lt;span&gt;Explore&lt;/span&gt;
-  &lt;/a&gt;
-&lt;/nav&gt;
-&lt;div id="flight"&gt;Flight&lt;/div&gt;
-&lt;div id="luggage"&gt;Luggage&lt;/div&gt;
-&lt;div id="explore"&gt;Explore&lt;/div&gt;</code></pre>
-        <p>
-          Add <code>disabled</code> on the <code>&lt;a&gt;</code> (or on
-          a wrapping <code>li.tab</code>) to make it inaccessible. Tabs
-          become scrollable when there are too many to fit.
-        </p>
-        <nav class="tabs" aria-label="Many destinations">
-          <a href="#tabs-scroll-1">Test 1</a>
-          <a href="#tabs-scroll-2">Test 2</a>
-          <a href="#tabs-scroll-3">Test 3</a>
-          <a href="#tabs-scroll-4">Test 4</a>
-          <a href="#tabs-scroll-5">Test 5</a>
-          <a class="disabled" href="#tabs-scroll-6">Disabled</a>
-          <a href="#tabs-scroll-7">Test 7</a>
-          <a href="#tabs-scroll-8">Test 8</a>
-          <a href="#tabs-scroll-9">Test 9</a>
-          <a class="disabled" href="#tabs-scroll-10">Disabled</a>
-          <a href="#tabs-scroll-11">Test 11</a>
-        </nav>
-        <div id="tabs-scroll-1" class="py-3">Test 1</div>
-        <div id="tabs-scroll-2" class="py-3">Test 2</div>
-        <div id="tabs-scroll-3" class="py-3">Test 3</div>
-        <div id="tabs-scroll-4" class="py-3">Test 4</div>
-        <div id="tabs-scroll-5" class="py-3">Test 5</div>
-        <div id="tabs-scroll-6" class="py-3">Test 6</div>
-        <div id="tabs-scroll-7" class="py-3">Test 7</div>
-        <div id="tabs-scroll-8" class="py-3">Test 8</div>
-        <div id="tabs-scroll-9" class="py-3">Test 9</div>
-        <div id="tabs-scroll-10" class="py-3">Test 10</div>
-        <div id="tabs-scroll-11" class="py-3">Test 11</div>
   
       </div>
 
 
-  <div id="secondary" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Secondary</h3>
+  <div id="contained" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Contained</h3>
 
         <p>
-          <code>tabs-secondary</code> is the in-content variant: always 48dp,
-          icons inline, a 2dp indicator. Use it to further split a pane.
+          <code>contained</code> puts the indicator on a
+          <code>secondary-container</code> circle and switches it to
+          <code>on-secondary-container</code>. Use it over an image, a
+          coloured surface, or anything else the plain indicator would get
+          lost against.
         </p>
-        <nav class="tabs tabs-secondary" aria-label="Trip">
-          <a href="#tabs-sec-birds"><span class="material-symbols" aria-hidden="true">flight</span><span>Travel</span></a>
-          <a class="active" aria-current="page" href="#tabs-sec-cats"><span class="material-symbols" aria-hidden="true">hotel</span><span>Hotel</span></a>
-          <a href="#tabs-sec-dogs"><span class="material-symbols" aria-hidden="true">directions_walk</span><span>Walks</span></a>
-        </nav>
-        <div id="tabs-sec-birds" class="py-3">Travel</div>
-        <div id="tabs-sec-cats" class="py-3">Hotel</div>
-        <div id="tabs-sec-dogs" class="py-3">Walks</div>
-<pre><code>&lt;nav class="tabs tabs-secondary" aria-label="Trip"&gt;
-  &lt;a href="#travel"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;flight&lt;/span&gt;
-    &lt;span&gt;Travel&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a class="active" aria-current="page" href="#hotel"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;hotel&lt;/span&gt;
-    &lt;span&gt;Hotel&lt;/span&gt;
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
+        <p class="py-5 center-align">
+          <span class="loading-indicator contained" role="status" aria-label="Loading"></span>
+        </p>
+<pre><code>&lt;span class="loading-indicator contained" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
   
       </div>
 
 
-  <div id="initialization" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Initialization</h3>
+  <div id="vs-progress" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Or a progress indicator?</h3>
 
         <p>
-          The IIFE bundle exposes <code>Expressive.Tabs</code>.
-          Call <code>init</code> yourself when you need options other
-          than the defaults, or let
-          <code>Expressive.AutoInit()</code> start every
-          <code>.tabs</code>.
+          This <strong>supersedes the indeterminate circular
+          <a href="/preloader.html">progress indicator</a></strong>.
+          Reach for the loading indicator whenever you would have written
+          <code>&lt;span class="progress circular"&gt;</code> with no value.
+          <code>.progress</code> keeps everything else — both linear bars, and
+          every case where you know the percentage.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.tabs');
-  const instances = Expressive.Tabs.init(elems, {
-    duration: 300
-  });
-});</code></pre>
-  
-      </div>
-
-
-  <div id="options" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Options</h3>
-
-        
         <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Default</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            <tr>
-              <td><code>duration</code></td>
-              <td>Number</td>
-              <td><code>300</code></td>
-              <td>Indicator transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>onShow</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Called when a new tab panel is shown. Receives the panel element.</td>
-            </tr>
-            <tr>
-              <td><code>swipeable</code></td>
-              <td>Boolean</td>
-              <td><code>false</code></td>
-              <td>Enable swipeable tabs. Uses <code>responsiveThreshold</code>. Wraps the panels in a carousel.</td>
-            </tr>
-            <tr>
-              <td><code>responsiveThreshold</code></td>
-              <td>Number</td>
-              <td><code>Infinity</code></td>
-              <td>Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable.</td>
-            </tr>
-  
-            </tbody>
+          <thead>
+            <tr><th>Situation</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Under 200&nbsp;ms</td><td>Nothing — show the result</td></tr>
+            <tr><td>Up to about 5&nbsp;s, percentage unknown</td><td><code>.loading-indicator</code></td></tr>
+            <tr><td>Longer, percentage known</td><td><code>.progress</code>, determinate</td></tr>
+            <tr><td>Longer, percentage unknown</td><td><code>.progress</code>, indeterminate linear</td></tr>
+          </tbody>
         </table>
-
   
       </div>
 
 
-  <div id="method" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
 
-        
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Tabs.getInstance(elem);</code></pre>
-
-
-        <h5 class="light">.select();</h5>
-        <p>Show the panel that belongs to the tab with this id.</p>
-        <p><strong>String:</strong> The id of the tab panel (without <code>#</code>).</p>
-<pre><code>instance.select('tab_id');</code></pre>
-
-        <h5 class="light">.updateTabIndicator();</h5>
-        <p>Recalculate the indicator position. Useful if the bar was hidden or resized.</p>
-<pre><code>instance.updateTabIndicator();</code></pre>
-
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
-  
-      </div>
-
-
-  <div id="properties" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Properties</h3>
-
-        
+        <p>
+          Override any of these to retheme one indicator. The colours are role
+          tokens, never raw hex.
+        </p>
         <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>el</code></td>
-                    <td>Element</td>
-                    <td>The DOM element the plugin was initialized with (the <code>.tabs</code> bar).</td>
-                </tr>
-                <tr>
-                    <td><code>options</code></td>
-                    <td>Object</td>
-                    <td>The options the instance was initialized with.</td>
-                </tr>
-
-            <tr>
-              <td><code>index</code></td>
-              <td>Number</td>
-              <td>Index of the tab that is currently shown.</td>
-            </tr>
-  
-            </tbody>
+          <thead>
+            <tr><th>Token</th><th>Default</th><th>What it sets</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--md-comp-loading-indicator-active-indicator-size</code></td><td><code>38px</code></td><td>The morphing shape.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-size</code></td><td><code>48px</code></td><td>The box it sits in — the visible circle when <code>contained</code>.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-active-indicator-color</code></td><td><code>primary</code></td><td>The shape's fill.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-color</code></td><td><code>transparent</code></td><td>The container fill.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-duration</code></td><td><code>3000ms</code></td><td>One full morph-and-spin cycle.</td></tr>
+          </tbody>
         </table>
-
-  
-      </div>
-
-
-  <div id="preselecting" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Preselecting a tab</h3>
-
-        <p>
-          The first tab is selected by default. To pick another, add
-          <code>active</code> to its <code>&lt;a&gt;</code>, or load the
-          page with a matching hash such as <code>#test2</code>.
-        </p>
-<pre><code>&lt;a class="active" href="#test3"&gt;Test 3&lt;/a&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="external" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Linking to an External Page</h3>
-
-        <p>
-          Tabs ignore default anchor behaviour. To keep a tab as a
-          normal hyperlink, set <code>target</code> on the link.
-        </p>
-<pre><code>&lt;nav class="tabs" aria-label="Sections"&gt;
-  &lt;a target="_blank" href="https://github.com"&gt;External link in new window&lt;/a&gt;
-  &lt;a target="_self" href="https://github.com"&gt;External link in same window&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="swipeable" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Swipeable Tabs</h3>
-
-        <p>
-          Set <code>swipeable: true</code> to swipe between panels on
-          touch devices. Keep the tab panels in the same wrapping
-          container. The implementation wraps those panels in a
-          carousel. <code>responsiveThreshold</code> is the viewport
-          width below which swipeable mode turns on.
-        </p>
-        <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
-        <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">
-          <a href="#tabs-swipe-1">Test 1</a>
-          <a class="active" aria-current="page" href="#tabs-swipe-2">Test 2</a>
-          <a href="#tabs-swipe-3">Test 3</a>
-        </nav>
-        <div class="tabs-swipe-demo">
-          <div id="tabs-swipe-1" class="primary-container on-primary-container-text center-align">Test 1</div>
-          <div id="tabs-swipe-2" class="secondary-container on-secondary-container-text center-align">Test 2</div>
-          <div id="tabs-swipe-3" class="tertiary-container on-tertiary-container-text center-align">Test 3</div>
+        <div class="row py-5">
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-tertiary)" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-size: 76px; --md-comp-loading-indicator-container-size: 96px" role="status" aria-label="Loading"></span>
+          </div>
         </div>
-<pre><code>&lt;nav id="tabs-swipe-demo" class="tabs" aria-label="Sections"&gt;
-  &lt;a href="#test-swipe-1"&gt;Test 1&lt;/a&gt;
-  &lt;a class="active" aria-current="page" href="#test-swipe-2"&gt;Test 2&lt;/a&gt;
-  &lt;a href="#test-swipe-3"&gt;Test 3&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
-<pre><code>Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
-  swipeable: true
-});</code></pre>
-  
-      </div>
-
-
-  <div id="fixed-width" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Fixed width</h3>
-
+<pre><code>&lt;span class="loading-indicator"
+      style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)"
+      role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
         <p>
-          Add <code>max</code> so
-          every tab grows equally. On compact viewports every tab bar
-          already uses this layout.
+          <code>prefers-reduced-motion: reduce</code> stops both animations
+          and leaves the circle.
         </p>
-        <nav class="tabs max" aria-label="Fixed width">
-          <a href="#tabs-fixed-1">Test 1</a>
-          <a class="active" aria-current="page" href="#tabs-fixed-2">Test 2</a>
-          <a class="disabled" href="#tabs-fixed-3">Disabled</a>
-          <a href="#tabs-fixed-4">Test 4</a>
-          <a href="#tabs-fixed-5">Test 5</a>
-        </nav>
-        <div id="tabs-fixed-1" class="py-3">Test 1</div>
-        <div id="tabs-fixed-2" class="py-3">Test 2</div>
-        <div id="tabs-fixed-3" class="py-3">Test 3</div>
-        <div id="tabs-fixed-4" class="py-3">Test 4</div>
-        <div id="tabs-fixed-5" class="py-3">Test 5</div>
-<pre><code>&lt;nav class="tabs max" aria-label="Sections"&gt;
-  &lt;a href="#test1"&gt;Test 1&lt;/a&gt;
-  &lt;a class="active" aria-current="page" href="#test2"&gt;Test 2&lt;/a&gt;
-  &lt;a class="disabled" href="#test3"&gt;Disabled&lt;/a&gt;
-&lt;/nav&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="icons" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Inline icons</h3>
-
-        <p>
-          Primary tabs stack the icon above the label (64dp). Add
-          <code>horizontal</code> (or <code>tabs-horizontal</code>) to
-          put them on one line, like secondary tabs.
-        </p>
-        <nav class="tabs max horizontal" aria-label="Inline icons">
-          <a href="#tabs-horiz-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
-          <a href="#tabs-horiz-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
-        </nav>
-        <div id="tabs-horiz-flight" class="py-3">Flight</div>
-        <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
-        <div id="tabs-horiz-explore" class="py-3">Explore</div>
-<pre><code>&lt;nav class="tabs max horizontal" aria-label="Sections"&gt;
-  &lt;a href="#flight"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;flight&lt;/span&gt;
-    &lt;span&gt;Flight&lt;/span&gt;
-  &lt;/a&gt;
-  &lt;a class="active" aria-current="page" href="#luggage"&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;luggage&lt;/span&gt;
-    &lt;span&gt;Luggage&lt;/span&gt;
-  &lt;/a&gt;
-&lt;/nav&gt;</code></pre>
   
       </div>
 
@@ -645,17 +390,10 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#anatomy">Introduction</a></li>
-          <li><a href="#secondary">Secondary</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#method">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
-          <li><a href="#preselecting">Preselecting</a></li>
-          <li><a href="#external">External Links</a></li>
-          <li><a href="#swipeable">Swipeable Tabs</a></li>
-          <li><a href="#fixed-width">Fixed width</a></li>
-          <li><a href="#icons">Inline icons</a></li>
+          <li><a href="#basic">Basic</a></li>
+          <li><a href="#contained">Contained</a></li>
+          <li><a href="#vs-progress">Or a progress indicator?</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 

@@ -1,0 +1,99 @@
+@use "sass:list";
+@use "sass:math";
+@use "../abstracts" as *;
+
+// Loading indicator. M3 Expressive's indicator for short waits (under ~5s):
+// a shape that morphs while it rotates. One element, CSS-only.
+//
+//   <span class="loading-indicator" role="status" aria-label="Loading">
+//   <span class="loading-indicator contained" role="status" aria-label="Loading">
+//
+// It supersedes the indeterminate *circular* case of `.progress` — see the
+// docs page. `.progress` keeps every determinate case and both linear bars.
+//
+// Tokens (M3 md.comp.loading-indicator.*):
+//   --md-comp-loading-indicator-active-indicator-size   38px
+//   --md-comp-loading-indicator-container-size          48px
+//   --md-comp-loading-indicator-active-indicator-color  primary
+//   --md-comp-loading-indicator-container-color         transparent
+//   --md-comp-loading-indicator-duration                one full morph cycle
+
+// The morph shapes. M3 draws each one as a rounded polygon and interpolates
+// vertex by vertex; `clip-path` interpolates the same way, but only between
+// polygons with the same vertex count. So every shape here is 24 points on a
+// polar curve `r = 50% * (1 - depth * (1 - cos(petals * a)) / 2)`: depth 0 is
+// a circle, and 24 divides 4, 6, 8 and 12 so every cusp lands on a vertex.
+// Corners are unrounded — a 24-gon reads as the shape, not as a polygon.
+$_points: 24;
+
+// Two decimals is 0.005% of a 38px box - a fiftieth of a pixel. Full float
+// precision costs ~2KB across the five shapes and buys nothing visible.
+@function _pct($v) {
+  @return math.div(math.round($v * 100), 100);
+}
+
+@function _petal-shape($petals, $depth) {
+  $pts: ();
+  @for $i from 0 through $_points - 1 {
+    $a: math.div($i * 2 * math.$pi, $_points);
+    $r: 50% * (1 - math.div($depth * (1 - math.cos($petals * $a)), 2));
+    $pts: list.append($pts, _pct(50% + $r * math.cos($a)) _pct(50% + $r * math.sin($a)), comma);
+  }
+  @return polygon($pts);
+}
+
+.loading-indicator {
+  --md-comp-loading-indicator-active-indicator-size: 38px;
+  --md-comp-loading-indicator-container-size: 48px;
+  --md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-primary);
+  --md-comp-loading-indicator-container-color: transparent;
+  --md-comp-loading-indicator-duration: 3000ms;
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--md-comp-loading-indicator-container-size);
+  height: var(--md-comp-loading-indicator-container-size);
+  border-radius: 50%;
+  background-color: var(--md-comp-loading-indicator-container-color);
+  vertical-align: middle;
+
+  &::before {
+    content: "";
+    display: block;
+    width: var(--md-comp-loading-indicator-active-indicator-size);
+    height: var(--md-comp-loading-indicator-active-indicator-size);
+    background-color: var(--md-comp-loading-indicator-active-indicator-color);
+    clip-path: _petal-shape(0, 0);
+    animation:
+      loading-indicator-morph var(--md-comp-loading-indicator-duration) ease-in-out infinite,
+      loading-indicator-spin var(--md-comp-loading-indicator-duration) linear infinite;
+  }
+
+  // Contained. M3 pairs the container with `on-secondary-container` for the
+  // indicator, not `primary` — the container is the louder surface.
+  &.contained {
+    --md-comp-loading-indicator-container-color: var(--md-sys-color-secondary-container);
+    --md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-on-secondary-container);
+  }
+}
+
+@keyframes loading-indicator-morph {
+  0%,
+  100% { clip-path: _petal-shape(0, 0); }
+  20%  { clip-path: _petal-shape(4, 0.32); }
+  40%  { clip-path: _petal-shape(6, 0.26); }
+  60%  { clip-path: _petal-shape(8, 0.2); }
+  80%  { clip-path: _petal-shape(12, 0.14); }
+}
+
+@keyframes loading-indicator-spin {
+  to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-indicator::before {
+    animation: none;
+  }
+}
