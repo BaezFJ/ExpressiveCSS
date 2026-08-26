@@ -111,15 +111,6 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'Carousel left the resize listener attached');
   });
 
-  test('Parallax does not attach window listeners', () => {
-    document.body.innerHTML = `<div class="parallax"><img src="http://localhost/1.jpg"></div>`;
-    const instance = Expressive.Parallax.init(document.querySelector('.parallax'));
-
-    assert.deepEqual(watch.live(), [], 'Parallax attached window listeners; motion is CSS');
-    instance.destroy();
-    assert.deepEqual(watch.live(), []);
-  });
-
   test('Menu detaches the handlers open() adds', async () => {
     document.body.innerHTML = `
       <a class="button menu-trigger" data-target="menu1">Drop</a>

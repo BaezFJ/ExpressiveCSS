@@ -36,7 +36,6 @@ export const AUTO_INIT_COMPONENTS = {
   },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
-  Parallax: { component: Components.Parallax, selector: ".parallax" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   FormSelect: { component: Components.FormSelect, selector: "select" },
   NavigationDrawer: {

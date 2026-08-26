@@ -14,7 +14,6 @@ export { Chips } from "./chips";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Lightbox } from "./lightbox";
-export { Parallax } from "./parallax";
 export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";
 export { FormSelect } from "./select";

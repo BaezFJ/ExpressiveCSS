@@ -61,7 +61,6 @@ NAV = [
         ('media_css', 'Media styles'),
         ('table', 'Table'),
         ('css_transitions', 'Transitions'),
-        ('pulse', 'Pulse'),
         ('state_layers', 'State layers'),
         ('waves', 'Waves'),
     ]),
@@ -93,7 +92,6 @@ NAV = [
         ('preloader', 'Preloader'),
         ('carousel', 'Carousel'),
         ('media', 'Lightbox'),
-        ('parallax', 'Parallax'),
         ('toolbars', 'Toolbars'),
     ]),
     _group('Forms', 'edit', [
@@ -227,12 +225,6 @@ def table():
 @app.route('/css-transitions.html')
 def css_transitions():
     return render_template('foundations/css-transitions.html')
-
-
-@app.route('/pulse')
-@app.route('/pulse.html')
-def pulse():
-    return render_template('foundations/pulse.html')
 
 
 @app.route('/state-layers')
@@ -429,12 +421,6 @@ def carousel():
 @app.route('/media.html')
 def media():
     return render_template('components/media.html')
-
-
-@app.route('/parallax')
-@app.route('/parallax.html')
-def parallax():
-    return render_template('components/parallax.html')
 
 
 @app.route('/toolbars')

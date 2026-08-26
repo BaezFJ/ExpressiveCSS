@@ -82,9 +82,6 @@ read-it-off-the-element access that key provides.
   (28dp inner corners, scrim). A `<header>` holds optional back,
   headline, and close. `SideSheets.Init()` drag-dismisses from the
   header or the inner 24dp edge.
-- **Parallax motion is CSS.** `animation-timeline: view()` on the clip; the
-  component class is AutoInit/getInstance/destroy only and attaches no
-  scroll listener.
 - **Carousel defaults to Material 3 multi-browse.** `.uncontained`, `.hero`,
   `.hero.center-aligned`, and `.full-screen` select the other M3 layouts.
   Native tracks use container-aware sizing, fine-pointer dragging, and

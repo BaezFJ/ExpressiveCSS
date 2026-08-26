@@ -25,7 +25,7 @@ const HOOKS = new Set([
   'tooltipped', 'no-autoinit', 'validate', 'activator', 'autocomplete',
   'date-picker', 'time-picker', 'datepicker', 'timepicker',
   'navigation-drawer-trigger', 'navigation-drawer-close', 'sidenav-trigger', 'sidenav-close',
-  'menu-trigger', 'lightboxed', 'scrollspy', 'parallax', 'carousel-item',
+  'menu-trigger', 'lightboxed', 'scrollspy', 'carousel-item',
   'waves-effect', 'waves-light', 'waves-circle',
   'chips-initial', 'chips-placeholder', 'chips-autocomplete', 'custom-class',
   'slideshow', 'navigation-drawer', 'fab'

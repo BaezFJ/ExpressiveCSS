@@ -44,20 +44,6 @@ describe('layout reads per scroll tick', () => {
 
     spies.forEach((spy) => spy.destroy());
   });
-
-  test('Parallax does not read layout on scroll', () => {
-    document.body.innerHTML = `<div class="parallax"><img src="http://localhost/1.jpg"></div>`;
-    const el = document.querySelector('.parallax');
-    const counter = { reads: 0 };
-    stubRect(el, counter);
-    const instance = Expressive.Parallax.init(el);
-    counter.reads = 0;
-
-    window.dispatchEvent(new window.Event('scroll'));
-
-    assert.equal(counter.reads, 0, 'Parallax read layout on scroll; motion is CSS');
-    instance.destroy();
-  });
 });
 
 describe('Sidenav drag', () => {

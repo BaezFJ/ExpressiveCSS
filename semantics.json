@@ -672,19 +672,6 @@
         }
       ]
     },
-    "parallax": {
-      "status": "enforced",
-      "note": "Swept 0.8.0.",
-      "rules": [
-        {
-          "id": "parallax-image-declares-itself",
-          "kind": "forbid",
-          "selector": ".parallax img:not([alt])",
-          "fragmentSafe": true,
-          "message": "A parallax image is decoration nine times out of ten, and decoration says so with alt=\"\". Without any alt the file name is read out."
-        }
-      ]
-    },
     "progress": {
       "status": "enforced",
       "note": "Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.",
@@ -702,11 +689,6 @@
           "message": "role=\"progressbar\" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100."
         }
       ]
-    },
-    "pulse": {
-      "status": "enforced",
-      "note": "Swept 0.8.0. A decorative animation on an existing element - it states no markup of its own.",
-      "rules": []
     },
     "scrollspy": {
       "status": "enforced",

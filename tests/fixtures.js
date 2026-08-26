@@ -46,11 +46,6 @@ export const AUTO_INIT_FIXTURES = [
     html: `<img class="lightboxed" tabindex="0" role="button" width="100" src="http://localhost/1.jpg" alt="Sample">`,
   },
   {
-    name: "Parallax",
-    selector: ".parallax",
-    html: `<div class="parallax"><img src="http://localhost/1.jpg" alt=""></div>`,
-  },
-  {
     name: "ScrollSpy",
     selector: ".scrollspy",
     html: `<div id="section1" class="scrollspy section">one</div>`,

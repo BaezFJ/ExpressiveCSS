@@ -25,7 +25,7 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**47 of 47 components enforced; 0 remaining.**
+**45 of 45 components enforced; 0 remaining.**
 
 **Conformance debt** is a separate axis from enforced/exempt: a fully enforced
 component may still withhold a composite role because the keyboard contract rule 2
@@ -38,7 +38,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 47 components declare conformance debt.**
+**2 of 45 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -446,16 +446,6 @@ Swept 0.8.0.
 
 - **pane-is-not-main** - A document has one <main>, and a pane is a region inside it, not another one. Use <section>.
 
-### parallax
-
-Swept 0.8.0.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `parallax-image-declares-itself` | forbid | `.parallax img:not([alt])` | must not match |
-
-- **parallax-image-declares-itself** - A parallax image is decoration nine times out of ten, and decoration says so with alt="". Without any alt the file name is read out.
-
 ### progress
 
 Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
@@ -467,14 +457,6 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
-
-### pulse
-
-Swept 0.8.0. A decorative animation on an existing element - it states no markup of its own.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-
 
 ### scrollspy
 

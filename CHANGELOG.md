@@ -57,6 +57,29 @@ below is the whole story for that component.
   `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` →
   `_progress`.
 
+### Removed
+
+- **Parallax and Pulse are gone**, with no successor. This is charter work for
+  1.0.0 rather than part of the semantics sweep above. Both were decorative
+  motion opinions of our own, and M3 Expressive ships a `MotionScheme` of
+  spring specs that says something different — the same reasoning that removed
+  the legacy palette. Deleted outright: the `.parallax` and `.pulse` styles,
+  the `Parallax` component and its registry entry (so `AutoInit()` no longer
+  claims `.parallax`, and `Expressive.Parallax` no longer resolves), and both
+  docs pages.
+
+  **Migration.** For a `.pulse` halo, write the animation yourself or use a
+  component that already reports what it means — a badge for a count, a
+  progress indicator for work in progress. For a `.parallax` hero, the markup
+  it wrapped is an image in a container: keep the `<img>` with
+  `object-fit: cover` and a fixed container height. Restoring the motion takes
+  more than one property — the container needs `view-timeline-name`, the image
+  needs to be taller than its clip (`height: calc(100% + 2 * travel)`) and to
+  run a `translateY` keyframe pair through `animation-timeline` with
+  `animation-range: cover`. Copy the deleted `_parallax.scss` out of the
+  history if you want it. A carousel is the M3 component for a scrolling band
+  of media.
+
 ### Fixed
 
 - **The renames reached the styling and stopped short of the behaviour.** The

@@ -31,7 +31,6 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Grid
 - Helpers
 - Media Styles
-- Pulse
 - Shadow
 - Table
 - Transitions
@@ -55,7 +54,6 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Navigation rail
 - Pagination
 - Panes
-- Parallax
 - Preloader
 
 ### JavaScript components
@@ -241,7 +239,6 @@ Opt an element out when it needs manual options:
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
-| `Parallax` | `.parallax` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `NavigationDrawer` | `.navigation-drawer` |
@@ -273,7 +270,7 @@ The main bundle exports:
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
-- `Parallax`, `Slider`, and `ScrollSpy`
+- `Slider` and `ScrollSpy`
 - `FormSelect`, `NavigationDrawer`, `NavigationRail`, `Slider`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
@@ -1224,22 +1221,6 @@ To make your HTML5 videos responsive just add the class `responsive-video` to th
 <video class="responsive-video" controls>
   <source src="movie.mp4" type="video/mp4">
 </video>
-```
-
----
-
-## Pulse
-
-Draw attention to floating buttons with a subtle, repeating pulse.
-
-Draw attention to your buttons with this subtle but captivating effect. Just add the class `pulse` to your button. Note: This is meant for floating buttons, so it may not work perfectly with every component.
-
-#### Pulse HTML Structure
-
-```html
-<a class="button circle pulse" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></a>
-<a class="button circle extra pulse" aria-label="Cloud"><span class="material-symbols" aria-hidden="true">cloud</span></a>
-<a class="button circle extra secondary on-secondary-text pulse" aria-label="Edit"><span class="material-symbols" aria-hidden="true">edit</span></a>
 ```
 
 ---
@@ -3124,72 +3105,6 @@ Set these on the container to resize a layout.
 
 ---
 
-## Parallax
-
-A background image that moves slower than the page.
-
-### Initialization
-
-The IIFE bundle exposes `Expressive.Parallax`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.parallax`.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.parallax');
-  const instances = Expressive.Parallax.init(elems, {
-    // specify options here
-  });
-});
-```
-
-Per-instance options can also be passed through AutoInit:
-
-```js
-Expressive.AutoInit(document.body, {
-  Parallax: { responsiveThreshold: 992 }
-});
-```
-
-### Options
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `responsiveThreshold` | Number | `0` | Minimum viewport width, in pixels, at which the image starts moving. Below this width the transform is cleared. |
-
-### Methods
-
-> All methods are called on the plugin instance. You can get the instance like this:
-
-```js
-const instance = Expressive.Parallax.getInstance(elem);
-```
-
-#### .destroy();
-
-Destroy the plugin instance, clear the image transform, and tear down its event handlers. The last remaining instance also removes the shared scroll and resize listeners.
-
-```text
-instance.destroy();
-```
-
-### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `el` | Element | The DOM element the plugin was initialized with. |
-| `options` | Object | The options the instance was initialized with. |
-
-### Customization
-
-The container height is how much of the image you see. The framework default is 500px. Override it on the container.
-
-```css
-.parallax-container {
-  height: 300px;
-}
-```
-
----
-
 ## Progress indicators
 
 Activity and progress indicators for content that takes time to load.
@@ -3338,7 +3253,6 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Menu` | `.menu-trigger` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
-| `Parallax` | `.parallax` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
 | `NavigationDrawer` | `.navigation-drawer` |
