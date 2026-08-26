@@ -143,16 +143,14 @@ describe('Button group shape morph', () => {
     const sized = ':not(.xsmall, .small, .medium, .large, .xlarge)';
     assert.ok(ruleFor(`.button-group.medium > ${item}${sized}`),
       'the group sets the type role on every item, sized or not');
+    // The glyph size travels the other way - by inheritance, off the group -
+    // and that is the whole mechanism now for an icon-only `.circle` item.
+    // `_buttons.scss` used to pin a `.circle` glyph to 24px and this component
+    // overrode it back; #72 removed the pin, so nothing stands between the
+    // group's token and the item any more.
+    assert.match(ruleFor('.button-group.medium'),
+      /--md-comp-filled-button-icon-size:\s*24px/);
     assert.equal(rules.filter((r) => r.selector === `.button-group.medium > ${item}`).length, 0);
-  });
-
-  test('an icon-only item takes the glyph size of the group it is in', () => {
-    // `_buttons.scss` pins a `.circle` glyph to 24px - the 40dp icon button it
-    // was before the size axis existed - so a sized group has to hand it the
-    // token, or every rung but `medium` gets the wrong glyph in the right box.
-    const glyph = rules.find((r) => r.selector.startsWith(`.button-group > ${item}.circle > :is(`))?.body;
-    assert.ok(glyph, 'no glyph rule for an icon-only item');
-    assert.match(glyph, /font-size:\s*var\(--md-comp-filled-button-icon-size\)/);
   });
 
   test('the motion is dropped when the user asked for no motion', () => {

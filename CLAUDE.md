@@ -472,6 +472,18 @@ breaks, recorded in the CHANGELOG's migration notes. This is a 1.0 change, and
 the only reason it is not a `.slider`-style content test is that a size has no
 content to tell it apart by.
 
+**`.button.circle` follows the *button* ladder, not the icon-button one** (#72).
+It is a common button wearing a round shape — `.icon-button` is the real M3
+icon button, with its own token families, its own ladder and its own colours —
+so its glyph is `--md-comp-filled-button-icon-size` like every other button's.
+The two ladders genuinely disagree at 40dp, which is the size almost every
+`.circle` on a page is: M3 gives a 40dp *icon button* a 24dp glyph and a 40dp
+*common button* a 20dp one, and `.circle` used to pin the former at every rung
+— so it took the size class's box and left the glyph behind, a 24px glyph
+adrift in a 136dp `xlarge` disc. Anyone who wanted the icon-button number wants
+`.icon-button`. `.circle.extra` / `.circle.large` are the FAB and read
+`--md-comp-fab-icon-size`, which is a third ladder and stays one.
+
 ## Sass architecture
 
 **Read `src/sass/README.md` before touching styles** — it is the working guide (layer map, the two rules, where new code goes). Summary:

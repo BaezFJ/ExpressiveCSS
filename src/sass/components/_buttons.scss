@@ -79,17 +79,17 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   }
 
   // Icon button — opt in with .circle. Do not infer from :only-child.
+  //
+  // Shape only. The glyph is the size rule's, like every other button's: a
+  // `.circle` is a common button wearing a round shape, and `.icon-button` is
+  // the component that carries the icon *button* ladder. It used to pin 24px
+  // here - `md.comp.icon-button.small.icon-size`, right for the 40dp default
+  // and wrong for every other rung, most visibly a 24px glyph adrift in an
+  // `xlarge` 136dp disc. The FAB overrides both, further down.
   &.circle {
     width: var(--md-comp-filled-button-container-height);
     padding: 0;
     border-radius: 50%;
-
-    > #{$icon} {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-    }
   }
 }
 
