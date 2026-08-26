@@ -1,0 +1,213 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "tokens", label: "Theme tokens", heading: false },
+  { id: "roles", label: "Every role" },
+  { id: "sass", label: "Sass" },
+]);
+
+/** A fill class and the `on-*` class its label is drawn in. */
+type RolePair = [fill: string, on: string];
+
+/** One column of the swatch grid: a heading and the roles under it. */
+type RoleGroup = [heading: string, pairs: RolePair[]];
+
+const ROLE_GROUPS: RoleGroup[] = [
+  ["Primary", [
+    ["primary", "on-primary"], ["primary-container", "on-primary-container"],
+    ["primary-fixed", "on-primary-fixed"], ["primary-fixed-dim", "on-primary-fixed-variant"],
+  ]],
+  ["Secondary", [
+    ["secondary", "on-secondary"], ["secondary-container", "on-secondary-container"],
+    ["secondary-fixed", "on-secondary-fixed"], ["secondary-fixed-dim", "on-secondary-fixed-variant"],
+  ]],
+  ["Tertiary", [
+    ["tertiary", "on-tertiary"], ["tertiary-container", "on-tertiary-container"],
+    ["tertiary-fixed", "on-tertiary-fixed"], ["tertiary-fixed-dim", "on-tertiary-fixed-variant"],
+  ]],
+  ["Error", [
+    ["error", "on-error"], ["error-container", "on-error-container"],
+  ]],
+  ["Surface", [
+    ["surface-dim", "on-surface"], ["surface", "on-surface"], ["surface-bright", "on-surface"],
+    ["surface-container-lowest", "on-surface"], ["surface-container-low", "on-surface"],
+    ["surface-container", "on-surface"], ["surface-container-high", "on-surface"],
+    ["surface-container-highest", "on-surface"],
+  ]],
+  ["Outline", [
+    ["outline", "on-surface"], ["outline-variant", "on-surface"],
+  ]],
+];
+---
+<DocsLayout page="color">
+<PageBody sections={S}>
+  <Section {...S.tokens}>
+        <p class="flow-text">
+          Color in Expressive is the Material Design 3 Expressive roles —
+          CSS custom properties on <code>:root</code> named
+          <code>--md-sys-color-*</code>, exposed as utility classes like
+          <code>.primary</code> and <code>.on-surface-text</code>.
+          There are 26 standard roles in six groups
+          (primary, secondary, tertiary, error, surface, outline),
+          plus optional add-ons for fixed accents and the surface
+          container scale.
+        </p>
+        <p>
+          The 2014 Material palette that shipped with earlier versions
+          (<code>.red</code>, <code>.blue.lighten-2</code>, <code>colorFunc()</code>)
+          has been removed. It generated 532 utility classes — 18% of the stylesheet —
+          expressing a design opinion this framework does not hold, and it did not
+          follow the page theme. Replace a palette class with the role it was standing
+          in for: <code>.red</code> → <code>.error</code>, <code>.blue</code> →
+          <code>.primary</code>, <code>.green</code> → <code>.tertiary</code>, and pair
+          each fill with its <code>on-*</code> text class.
+        </p>
+        <p>
+          Token values follow the page theme. The docs site sets
+          <code>&lt;html theme="light"&gt;</code>,
+          <code>theme="dark"</code>, or <code>theme="auto"</code>.
+          Auto (and omitting the attribute) follows the OS.
+        </p>
+        <p>
+          A background class sets <code>background-color</code>. Append
+          <code>-text</code> for <code>color</code>. Pair roles as the
+          spec intends so contrast stays at least 3:1 when the theme flips:
+        </p>
+        <ul>
+          <li><strong>Primary</strong> — most prominent components: FAB, filled buttons, active states.</li>
+          <li><strong>Secondary</strong> — less prominent components: filter chips, selected nav pills.</li>
+          <li><strong>Tertiary</strong> — contrasting accents that balance primary and secondary.</li>
+          <li><strong>Error</strong> — error states, not decoration.</li>
+          <li><strong>Surface</strong> — page backgrounds. <strong>Surface container</strong> — cards, sheets, dialogs, menus.</li>
+          <li><strong>On-*</strong> — text and icons on that fill. Never use a container role for text.</li>
+          <li><strong>Variant</strong> — a lower-emphasis alternative to its pair (<code>outline-variant</code>, <code>on-surface-variant</code>).</li>
+        </ul>
+        <p>
+          Example: a filled button is <code>primary</code> +
+          <code>on-primary</code>; a tonal button is
+          <code>secondary-container</code> +
+          <code>on-secondary-container</code>.
+        </p>
+        <div class="row mb-3">
+          <div class="s12 m6">
+            <div class="color-swatch primary on-primary-text">.primary</div>
+            <div class="color-swatch on-primary primary-text">.on-primary</div>
+            <div class="color-swatch primary-container on-primary-container-text">.primary-container</div>
+            <div class="color-swatch on-primary-container primary-container-text">.on-primary-container</div>
+          </div>
+          <div class="s12 m6">
+            <div class="color-swatch secondary-container on-secondary-container-text">.secondary-container</div>
+            <div class="color-swatch tertiary on-tertiary-text">.tertiary</div>
+            <div class="color-swatch error on-error-text">.error</div>
+            <div class="color-swatch surface-container on-surface-text">.surface-container</div>
+          </div>
+        </div>
+<Code code={`
+<div class="primary on-primary-text">.primary</div>
+<span class="on-surface-text">.on-surface-text</span>
+`} />
+        <p>
+          Every role name is a background class. The same name plus
+          <code>-text</code> is the foreground class
+          (<code>.on-surface-text</code>). Prefer the
+          <code>on-*</code> text class on its paired fill.
+        </p>
+        <p>
+          In Sass, consume the token directly. Do not write
+          <code>rgba(var(--md-sys-color-primary), 0.06)</code> — the tokens hold hex
+          colors, so that form is invalid. Mix with transparency instead:
+        </p>
+<Code code={`
+.my-tint {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.my-overlay {
+  background-color: color-mix(in oklab, var(--md-sys-color-primary) 6%, transparent);
+}
+`} />
+        <p>
+          Mix <code>in oklab</code>, not <code>in srgb</code>. sRGB interpolation dips in
+          lightness through the midtones, so the same percentage reads muddier on some
+          hues than others; OKLab is perceptually uniform, so a 16% state layer looks
+          like 16% everywhere.
+        </p>
+  </Section>
+  <Section {...S.roles}>
+        <p>
+          A role is a job, not a color: <code>error</code> means "this went
+          wrong", and what that looks like is the theme's business.
+          Each swatch uses its paired <code>on-*</code> color for the label.
+        </p>
+
+        <div class="row">
+          {ROLE_GROUPS.map(([group, pairs]) => (
+          <div class="s12 m6 mb-5">
+            <h6>{group}</h6>
+            {pairs.map(([fill, on]) => (
+            <div class={`color-swatch ${fill} ${on}-text`}>.{fill}</div>
+            ))}
+          </div>
+          ))}
+          <div class="s12 m6 mb-5">
+            <h6>On and inverse</h6>
+            <div class="color-swatch on-surface surface-text">.on-surface</div>
+            <div class="color-swatch on-surface-variant surface-text">.on-surface-variant</div>
+            <div class="color-swatch inverse-surface inverse-on-surface-text">.inverse-surface</div>
+            <div class="color-swatch inverse-on-surface inverse-surface-text">.inverse-on-surface</div>
+            <div class="color-swatch inverse-primary on-primary-text">.inverse-primary</div>
+          </div>
+          <div class="s12 m6 mb-5">
+            <h6>Overlay</h6>
+            <div class="color-swatch scrim on-primary-text">.scrim</div>
+            <div class="color-swatch shadow on-primary-text">.shadow</div>
+            <div class="color-swatch surface-tint on-primary-text">.surface-tint</div>
+          </div>
+        </div>
+        <p>
+          <code>scrim</code> is the opaque neutral the wash behind a modal surface
+          is mixed from, not the wash itself. That is
+          <code>--md-comp-scrim-color</code> — the role at 32%, defined once at the
+          root and consumed by dialogs, both sheets, the navigation drawer and
+          the modal navigation rail. Override it at the root to move every
+          scrim, or set it on one surface to dim just that one —
+          <code>::backdrop</code> inherits from the element it belongs to. The
+          mix resolves at the root, so overriding
+          <code>--md-sys-color-scrim</code> on a subtree does not reach a scrim
+          below it; override <code>--md-comp-scrim-color</code> instead.
+        </p>
+        <p>
+          <code>background</code>, <code>on-background</code>, and
+          <code>surface-variant</code> stay as aliases of
+          <code>surface</code> / <code>on-surface</code> /
+          the old neutral-variant well so existing pages do not break.
+          New work should use the surface container scale.
+        </p>
+  </Section>
+  <Section {...S.sass}>
+        <p>
+          Do not <code>@extend</code> these classes across files — that is how the old
+          stylesheet lost control of cascade order. In a component partial, read the
+          token directly.
+        </p>
+<Code code={`
+.my-panel {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+`} />
+        <p>
+          There is no Sass color function any more. <code>colorFunc()</code> and the
+          <code>$colors</code> map were removed with the palette — a Sass function
+          resolves at build time, which cannot follow a theme the user switches at
+          runtime. The custom property can.
+        </p>
+  </Section>
+</PageBody>
+</DocsLayout>

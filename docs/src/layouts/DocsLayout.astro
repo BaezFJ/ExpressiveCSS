@@ -20,6 +20,9 @@ const entry = page(id);
 const pageName = entry.title ?? entry.label;
 ---
 <BaseLayout pageName={pageName} bodyClass="docs">
+    {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
+    <slot name="head" slot="head" />
+
     <header class="fixed">
         <div class="bar">
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
