@@ -27,54 +27,13 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { parseRules, sheet } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-
-// Comments are stripped before parsing: one sitting between two rules lands in
-// the next rule's prelude and hides its selector from the check entirely, which
-// is what let :root[theme='light'] - and only that one of the three - pass.
-const source = css.replace(/\/\*[\s\S]*?\*\//g, '');
-
-/**
- * Every declaration block in the sheet, as { selectors, body }.
- *
- * Innermost brace pairs are the declaration blocks: dart-sass flattens all
- * nesting, and no value in the sheet contains a brace. The selector is what
- * follows the previous block's close, so at-rule preludes are skipped by name.
- */
-function rules() {
-  const out = [];
-  for (const [, prelude, body] of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-    const selector = prelude.slice(prelude.lastIndexOf('}') + 1).trim();
-    if (!selector || selector.startsWith('@')) continue;
-    out.push({ selectors: splitSelectorList(selector), body });
-  }
-  return out;
-}
-
-/**
- * Split on top-level commas only. A comma inside `:is(…)` or an attribute value
- * is part of one selector, not a separator - splitting on it naively turns
- * `.icon-button:is(:disabled, [disabled])` into a bare `[disabled]` that then
- * looks root-anchored.
- */
-function splitSelectorList(selector) {
-  const out = [];
-  let depth = 0;
-  let start = 0;
-  for (let i = 0; i < selector.length; i++) {
-    const c = selector[i];
-    if (c === '(' || c === '[') depth++;
-    else if (c === ')' || c === ']') depth--;
-    else if (c === ',' && depth === 0) {
-      out.push(selector.slice(start, i));
-      start = i + 1;
-    }
-  }
-  out.push(selector.slice(start));
-  return out.map((s) => s.trim().replace(/\s+/g, ' '));
-}
+// The parser lives in tests/css.js; its header records why comments are
+// stripped and why the selector list is split on top-level commas only. Both
+// mattered here: a comment between two rules is what let :root[theme='light']
+// - and only that one of the three - pass an earlier draft of this check.
+const rules = parseRules(sheet());
 
 /**
  * The part of `selector` that pins it to a document, if any.
@@ -124,7 +83,7 @@ const DECLARES_TOKEN = /(^|[\s;{])(--[A-Za-z0-9_-]+|color-scheme)\s*:/;
 describe('Shadow-only loading', () => {
   test('every root-anchored rule that declares a token carries its :host twin', () => {
     const missing = [];
-    for (const { selectors, body } of rules()) {
+    for (const { selectors, body } of rules) {
       if (!DECLARES_TOKEN.test(body)) continue;
       for (const selector of selectors) {
         const anchor = rootAnchor(selector);
@@ -144,15 +103,15 @@ describe('Shadow-only loading', () => {
 
   test('the reference layer is one of them', () => {
     // The 338-declaration block that made the split fatal rather than partial.
-    const ref = rules().find((r) => r.body.includes('--md-source:'));
+    const ref = rules.find((r) => r.body.includes('--md-source:'));
     assert.ok(ref.selectors.includes(':host'), ref.selectors.join(', '));
   });
 
   test('a shadow-only load resolves --md-sys-color-* to real values', () => {
     // The pairs light-dark() names have to be declared wherever the roles are,
     // or the roles resolve to an invalid light-dark() and every colour is lost.
-    const roles = rules().find((r) => r.body.includes('--md-sys-color-primary:'));
-    const pairs = rules().find((r) => r.body.includes('--md-sys-color-primary-light:'));
+    const roles = rules.find((r) => r.body.includes('--md-sys-color-primary:'));
+    const pairs = rules.find((r) => r.body.includes('--md-sys-color-primary-light:'));
     assert.ok(roles.selectors.includes(':host'), 'the roles reach a shadow host');
     assert.ok(pairs.selectors.includes(':host'), 'so do the pairs they resolve through');
   });
