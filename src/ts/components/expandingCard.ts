@@ -114,7 +114,7 @@ export class ExpandingCard
   };
 
   private _handleTriggerKeypress = (event: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(event.key) || event.key === " ") {
+    if (event.key === Utils.keys.ENTER || event.key === " ") {
       event.preventDefault();
       this.open();
     }

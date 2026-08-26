@@ -125,7 +125,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
   };
 
   _handleKeypressEvent: (e: KeyboardEvent) => void = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key) || e.key === ' ') {
+    if (e.key === Utils.keys.ENTER || e.key === ' ') {
       e.preventDefault();
       this._handleRevealEvent();
     }
@@ -147,7 +147,7 @@ export class Cards extends Component<CardsOptions> implements Openable {
   };
 
   _handleKeypressCloseEvent: (e: KeyboardEvent) => void = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       this.close();
     }
   };

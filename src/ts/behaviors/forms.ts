@@ -87,7 +87,7 @@ export class Forms {
         // Radio and Checkbox focus class
         if (target instanceof HTMLInputElement && ['radio', 'checkbox'].includes(target.type)) {
           // TAB, check if tabbing to radio or checkbox.
-          if (Utils.keys.TAB.includes(e.key)) {
+          if (e.key === Utils.keys.TAB) {
             target.classList.add('tabbed');
             target.addEventListener('blur', () => target.classList.remove('tabbed'), {
               once: true

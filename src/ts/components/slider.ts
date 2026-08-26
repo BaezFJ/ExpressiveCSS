@@ -8,7 +8,7 @@ const _defaults: SliderOptions = {};
 
 export class Slider extends Component<SliderOptions> {
   declare el: HTMLInputElement;
-  private _mousedown: boolean;
+  private _pointerDown: boolean;
   value: HTMLElement;
   thumb: HTMLElement;
 
@@ -21,7 +21,7 @@ export class Slider extends Component<SliderOptions> {
       ...options
     };
 
-    this._mousedown = false;
+    this._pointerDown = false;
     this._setupThumb();
     this._sync();
     this._setupEventHandlers();
@@ -68,35 +68,35 @@ export class Slider extends Component<SliderOptions> {
     this.el['Expressive_Slider'] = undefined;
   }
 
+  // Eleven listeners used to cover four stages, because each one was written
+  // twice - once for mouse, once for touch. One of the touch spellings,
+  // `touchleave`, was never implemented by any browser at all.
   _setupEventHandlers() {
     this.el.addEventListener('change', this._handleRangeChange);
-    this.el.addEventListener('mousedown', this._handleRangeMousedownTouchstart);
-    this.el.addEventListener('touchstart', this._handleRangeMousedownTouchstart);
-    this.el.addEventListener('input', this._handleRangeInputMousemoveTouchmove);
-    this.el.addEventListener('mousemove', this._handleRangeInputMousemoveTouchmove);
+    this.el.addEventListener('pointerdown', this._handleRangePointerDown);
+    this.el.addEventListener('input', this._handleRangeInputOrMove);
     // Never calls preventDefault, so it does not need to block scrolling.
-    this.el.addEventListener('touchmove', this._handleRangeInputMousemoveTouchmove, {
-      passive: true
-    });
-    this.el.addEventListener('mouseup', this._handleRangeMouseupTouchend);
-    this.el.addEventListener('touchend', this._handleRangeMouseupTouchend);
-    this.el.addEventListener('blur', this._handleRangeBlurMouseoutTouchleave);
-    this.el.addEventListener('mouseout', this._handleRangeBlurMouseoutTouchleave);
-    this.el.addEventListener('touchleave', this._handleRangeBlurMouseoutTouchleave);
+    this.el.addEventListener('pointermove', this._handleRangeInputOrMove, { passive: true });
+    this.el.addEventListener('pointerup', this._handleRangePointerUp);
+    this.el.addEventListener('pointercancel', this._handleRangePointerUp);
+    this.el.addEventListener('blur', this._handleRangeRelease);
+    // `mouseout`, not `pointerout`: this used to be a `mouseout`/`touchleave`
+    // pair, and `touchleave` was never implemented by any browser, so the
+    // handler has only ever run for a mouse. `pointerout` also fires when a
+    // touch lifts, which would clear the thumb's active state at a moment
+    // nothing cleared it before.
+    this.el.addEventListener('mouseout', this._handleRangeRelease);
   }
 
   _removeEventHandlers() {
     this.el.removeEventListener('change', this._handleRangeChange);
-    this.el.removeEventListener('mousedown', this._handleRangeMousedownTouchstart);
-    this.el.removeEventListener('touchstart', this._handleRangeMousedownTouchstart);
-    this.el.removeEventListener('input', this._handleRangeInputMousemoveTouchmove);
-    this.el.removeEventListener('mousemove', this._handleRangeInputMousemoveTouchmove);
-    this.el.removeEventListener('touchmove', this._handleRangeInputMousemoveTouchmove);
-    this.el.removeEventListener('mouseup', this._handleRangeMouseupTouchend);
-    this.el.removeEventListener('touchend', this._handleRangeMouseupTouchend);
-    this.el.removeEventListener('blur', this._handleRangeBlurMouseoutTouchleave);
-    this.el.removeEventListener('mouseout', this._handleRangeBlurMouseoutTouchleave);
-    this.el.removeEventListener('touchleave', this._handleRangeBlurMouseoutTouchleave);
+    this.el.removeEventListener('pointerdown', this._handleRangePointerDown);
+    this.el.removeEventListener('input', this._handleRangeInputOrMove);
+    this.el.removeEventListener('pointermove', this._handleRangeInputOrMove);
+    this.el.removeEventListener('pointerup', this._handleRangePointerUp);
+    this.el.removeEventListener('pointercancel', this._handleRangePointerUp);
+    this.el.removeEventListener('blur', this._handleRangeRelease);
+    this.el.removeEventListener('mouseout', this._handleRangeRelease);
   }
 
   _handleRangeChange = () => {
@@ -105,31 +105,34 @@ export class Slider extends Component<SliderOptions> {
     this.thumb.classList.add('active');
   };
 
-  _handleRangeMousedownTouchstart = (e: MouseEvent | TouchEvent) => {
-    this._mousedown = true;
+  _handleRangePointerDown = (e: PointerEvent) => {
+    if (!e.isPrimary) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    this._pointerDown = true;
     this.el.classList.add('active');
     this._clampDual();
     this._sync();
-    if (e.type !== 'input') {
-      this.thumb.classList.add('active');
-    }
+    // An `e.type !== 'input'` guard used to sit here. This handler is only ever
+    // bound to a press, so it was never anything but true.
+    this.thumb.classList.add('active');
   };
 
-  _handleRangeInputMousemoveTouchmove = () => {
-    if (this._mousedown) {
+  _handleRangeInputOrMove = () => {
+    if (this._pointerDown) {
       this._clampDual();
       this._sync();
       this.thumb.classList.add('active');
     }
   };
 
-  _handleRangeMouseupTouchend = () => {
-    this._mousedown = false;
+  _handleRangePointerUp = (e: PointerEvent) => {
+    if (!e.isPrimary) return;
+    this._pointerDown = false;
     this.el.classList.remove('active');
   };
 
-  _handleRangeBlurMouseoutTouchleave = () => {
-    if (!this._mousedown) {
+  _handleRangeRelease = () => {
+    if (!this._pointerDown) {
       this.thumb.classList.remove('active');
     }
   };

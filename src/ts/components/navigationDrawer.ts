@@ -306,6 +306,12 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
     if (NavigationDrawer._sidenavs.length === 0) {
       document.body.addEventListener('click', NavigationDrawer._handleTriggerClick);
     }
+    // Touch events, deliberately, while four other components moved to Pointer
+    // Events. There is no mouse pair here to collapse - the edge drag has only
+    // ever been a touch gesture - so a conversion would not remove a listener;
+    // it would add `pointerdown` + `setPointerCapture` to replace the implicit
+    // capture `touchmove` already has, and would make the drawer mouse-
+    // draggable, which is a new behaviour rather than a smaller one.
     const passive = { passive: true } as const;
     this.dragTarget?.addEventListener('touchmove', this._handleDragTargetDrag, passive);
     this.dragTarget?.addEventListener('touchend', this._handleDragTargetRelease);

@@ -101,7 +101,7 @@ const _defaults: MenuOptions = {
   onItemClick: null
 };
 
-const SPACE_KEYS = [' ', 'Spacebar'];
+const SPACE = ' ';
 
 export class Menu extends Component<MenuOptions> implements Openable {
   static _menus: Menu[] = [];
@@ -304,10 +304,10 @@ export class Menu extends Component<MenuOptions> implements Openable {
   _handleTriggerKeydown = (e: KeyboardEvent) => {
     // M3: Space, Enter, Arrow Down, and Arrow Up open a closed menu.
     const opensMenu =
-      SPACE_KEYS.includes(e.key) ||
-      Utils.keys.ENTER.includes(e.key) ||
-      Utils.keys.ARROW_DOWN.includes(e.key) ||
-      Utils.keys.ARROW_UP.includes(e.key);
+      e.key === SPACE ||
+      e.key === Utils.keys.ENTER ||
+      e.key === Utils.keys.ARROW_DOWN ||
+      e.key === Utils.keys.ARROW_UP;
     if (opensMenu && !this.isOpen) {
       e.preventDefault();
       this.open();
@@ -450,11 +450,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
   _handleMenuKeydown = (e: KeyboardEvent) => {
     const arrowUpOrDown =
-      Utils.keys.ARROW_DOWN.includes(e.key) || Utils.keys.ARROW_UP.includes(e.key);
-    if (Utils.keys.TAB.includes(e.key)) {
+      e.key === Utils.keys.ARROW_DOWN || e.key === Utils.keys.ARROW_UP;
+    if (e.key === Utils.keys.TAB) {
       e.preventDefault();
       this.close();
-    } else if (Utils.keys.ARROW_RIGHT.includes(e.key) && this.isOpen) {
+    } else if (e.key === Utils.keys.ARROW_RIGHT && this.isOpen) {
       const li = this._focusedRow(e);
       if (li?.querySelector(':scope > menu')) {
         e.preventDefault();
@@ -464,7 +464,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
         const first = li.querySelector(':scope > menu > li') as HTMLElement | null;
         first?.focus();
       }
-    } else if (Utils.keys.ARROW_LEFT.includes(e.key) && this.isOpen) {
+    } else if (e.key === Utils.keys.ARROW_LEFT && this.isOpen) {
       const submenu = this._containingSubmenu(e);
       if (submenu) {
         e.preventDefault();
@@ -477,7 +477,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // Navigate down menu list
     else if (arrowUpOrDown && this.isOpen) {
       e.preventDefault();
-      const direction = Utils.keys.ARROW_DOWN.includes(e.key) ? 1 : -1;
+      const direction = e.key === Utils.keys.ARROW_DOWN ? 1 : -1;
       const list = this._containingSubmenu(e) ?? this.menuEl;
       let newFocusedIndex = this.focusedIndex;
       let hasFoundNewIndex = false;
@@ -501,7 +501,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
     }
     // SPACE OR ENTER selects the focused item.
-    else if ((Utils.keys.ENTER.includes(e.key) || SPACE_KEYS.includes(e.key)) && this.isOpen) {
+    else if ((e.key === Utils.keys.ENTER || e.key === SPACE) && this.isOpen) {
       const li = this._focusedRow(e);
       e.preventDefault();
       if (li?.matches('.disabled, [aria-disabled="true"]')) return;
@@ -518,7 +518,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
       }
     }
     // Close menu on ESC
-    else if (Utils.keys.ESC.includes(e.key) && this.isOpen) {
+    else if (e.key === Utils.keys.ESC && this.isOpen) {
       e.preventDefault();
       const openSub = this.menuEl.querySelector('li.open');
       if (openSub) {
@@ -534,12 +534,12 @@ export class Menu extends Component<MenuOptions> implements Openable {
     const keyText = e.key.toLowerCase();
     const isLetter = /[a-zA-Z0-9-_]/.test(keyText);
     const specialKeys = [
-      ...Utils.keys.ARROW_DOWN,
-      ...Utils.keys.ARROW_UP,
-      ...Utils.keys.ENTER,
-      ...Utils.keys.ESC,
-      ...Utils.keys.TAB,
-      ...SPACE_KEYS
+      Utils.keys.ARROW_DOWN,
+      Utils.keys.ARROW_UP,
+      Utils.keys.ENTER,
+      Utils.keys.ESC,
+      Utils.keys.TAB,
+      SPACE
     ];
     if (isLetter && !specialKeys.includes(e.key)) {
       this.filterQuery.push(keyText);
@@ -649,7 +649,6 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   _getMenuPosition(closestOverflowParent: HTMLElement) {
-    // const offsetParentBRect = this.el.offsetParent.getBoundingClientRect();
     const triggerBRect = this.el.getBoundingClientRect();
     const menuBRect = this.menuEl.getBoundingClientRect();
 

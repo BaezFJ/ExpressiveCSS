@@ -131,7 +131,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       this.el.removeAttribute('aria-activedescendant');
     }
   }
-  private _mousedown: boolean;
+  private _pointerDown: boolean;
   container: HTMLElement;
   /** Instance of the menu plugin for this autocomplete. */
   menu: Menu;
@@ -155,7 +155,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.selectedValues = this.selectedValues || this.options.selected.map((value) => <AutocompleteData>{ id: value }) || [];
     this.menuItems = this.options.data || [];
     this.$active = null;
-    this._mousedown = false;
+    this._pointerDown = false;
     this._setupMenu();
     this._setupEventHandlers();
   }
@@ -236,12 +236,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.el.addEventListener('focus', this._handleInputFocus);
     this.el.addEventListener('keydown', this._handleInputKeydown);
     this.el.addEventListener('click', this._handleInputClick);
-    this.container.addEventListener('mousedown', this._handleContainerMousedownAndTouchstart);
-    this.container.addEventListener('mouseup', this._handleContainerMouseupAndTouchend);
-    if (typeof window.ontouchstart !== 'undefined') {
-      this.container.addEventListener('touchstart', this._handleContainerMousedownAndTouchstart);
-      this.container.addEventListener('touchend', this._handleContainerMouseupAndTouchend);
-    }
+    // One pair, not two. These used to be a mouse pair plus a touch pair behind
+    // a `window.ontouchstart` feature detect; a pointer event covers both, and
+    // the detect covered nothing the browser does not report itself.
+    this.container.addEventListener('pointerdown', this._handleContainerPointerDown);
+    this.container.addEventListener('pointerup', this._handleContainerPointerUp);
+    this.container.addEventListener('pointercancel', this._handleContainerPointerUp);
   }
 
   _removeEventHandlers() {
@@ -250,13 +250,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.el.removeEventListener('focus', this._handleInputFocus);
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     this.el.removeEventListener('click', this._handleInputClick);
-    this.container.removeEventListener('mousedown', this._handleContainerMousedownAndTouchstart);
-    this.container.removeEventListener('mouseup', this._handleContainerMouseupAndTouchend);
-
-    if (typeof window.ontouchstart !== 'undefined') {
-      this.container.removeEventListener('touchstart', this._handleContainerMousedownAndTouchstart);
-      this.container.removeEventListener('touchend', this._handleContainerMouseupAndTouchend);
-    }
+    this.container.removeEventListener('pointerdown', this._handleContainerPointerDown);
+    this.container.removeEventListener('pointerup', this._handleContainerPointerUp);
+    this.container.removeEventListener('pointercancel', this._handleContainerPointerUp);
   }
 
   _setupMenu() {
@@ -329,7 +325,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _handleInputBlur = () => {
-    if (!this._mousedown) {
+    if (!this._pointerDown) {
       this.close();
       this._resetAutocomplete();
     }
@@ -341,14 +337,15 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const actualValue = this.el.value.toLocaleLowerCase();
     // Don't capture enter or arrow key usage.
     if (
-      Utils.keys.ENTER.includes(e.key) ||
-      Utils.keys.ARROW_UP.includes(e.key) ||
-      Utils.keys.ARROW_DOWN.includes(e.key)
+      e.key === Utils.keys.ENTER ||
+      e.key === Utils.keys.ARROW_UP ||
+      e.key === Utils.keys.ARROW_DOWN
     )
       return;
-    // Check if the input isn't empty
-    // Check if focus triggered by tab
-    if (this.oldVal !== actualValue && Utils.tabPressed) {
+    // Check if the input isn't empty, and that focus arrived by keyboard -
+    // which is what `:focus-visible` means, and used to be a global flag this
+    // bundle maintained from four capture-phase document listeners.
+    if (this.oldVal !== actualValue && this.el.matches(':focus-visible')) {
       this.open();
     }
     this._inputChangeDetection(actualValue);
@@ -379,7 +376,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Arrow keys and enter key usage
     const numItems = this.container.querySelectorAll('li').length;
     // select element on Enter
-    if (Utils.keys.ENTER.includes(e.key) && this.activeIndex >= 0) {
+    if (e.key === Utils.keys.ENTER && this.activeIndex >= 0) {
       const liElement = this.container.querySelectorAll('li')[this.activeIndex];
       if (liElement) {
         this.selectOption(liElement.getAttribute('data-id'));
@@ -388,10 +385,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       return;
     }
     // Capture up and down key
-    if (Utils.keys.ARROW_UP.includes(e.key) || Utils.keys.ARROW_DOWN.includes(e.key)) {
+    if (e.key === Utils.keys.ARROW_UP || e.key === Utils.keys.ARROW_DOWN) {
       e.preventDefault();
-      if (Utils.keys.ARROW_UP.includes(e.key) && this.activeIndex > 0) this.activeIndex--;
-      if (Utils.keys.ARROW_DOWN.includes(e.key) && this.activeIndex < numItems - 1)
+      if (e.key === Utils.keys.ARROW_UP && this.activeIndex > 0) this.activeIndex--;
+      if (e.key === Utils.keys.ARROW_DOWN && this.activeIndex < numItems - 1)
         this.activeIndex++;
       this._setActive(null);
       if (this.activeIndex >= 0) {
@@ -410,12 +407,18 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.open();
   };
 
-  _handleContainerMousedownAndTouchstart = () => {
-    this._mousedown = true;
+  // The flag says "a press is in flight inside the option list", so that a blur
+  // caused by that press does not close the list out from under it. Without the
+  // cancel half, a cancelled gesture left the flag set and the next blur could
+  // not close the list at all.
+  _handleContainerPointerDown = (e: PointerEvent) => {
+    if (!e.isPrimary) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    this._pointerDown = true;
   };
 
-  _handleContainerMouseupAndTouchend = () => {
-    this._mousedown = false;
+  _handleContainerPointerUp = () => {
+    this._pointerDown = false;
   };
 
   _resetCurrentElementPosition() {
@@ -428,7 +431,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._resetCurrentElementPosition();
     this.oldVal = null;
     this.isOpen = false;
-    this._mousedown = false;
+    this._pointerDown = false;
   }
 
   _highlightPartialText(input: string, label: string) {
