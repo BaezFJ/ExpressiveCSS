@@ -1258,7 +1258,7 @@ Three **selection controls**. They are not interchangeable.
 
 ## 9.2 Carousel
 
-**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `.flat` / `fullWidth` is retained only for full-width compatibility such as swipeable tabs; `.coverflow` is the explicit legacy 3D layout. `AutoInit()`. This is **not** the Media “slider” (crossfading captions).
+**M3:** Carousel (multi-browse, uncontained, hero, full-screen). **ExpressiveCSS:** `.carousel`. Default = multi-browse. Add `.uncontained`, `.hero`, `.hero.center-aligned`, or `.full-screen` for the other M3 layouts. `.flat` / `fullWidth` is retained only for full-width compatibility such as swipeable tabs. `AutoInit()`. This is **not** the Media “slider” (crossfading captions).
 
 **Use when** items are **visual** and the user is browsing, not searching for a specific row (that is a list).
 

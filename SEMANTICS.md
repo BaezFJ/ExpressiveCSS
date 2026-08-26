@@ -173,7 +173,7 @@ Swept 0.8.0. The action row is buttons, not destinations.
 
 ### carousel
 
-Swept 0.8.0. Material 3 items remain exposed because several can be visible; legacy coverflow removes hidden items from the tab order. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule keeps out every composite role but not every role: role="group" with aria-roledescription="carousel" is the pattern carousel.ts writes and stays legal.
+Swept 0.8.0. Material 3 items remain exposed because several can be visible at once. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule keeps out every composite role but not every role: role="group" with aria-roledescription="carousel" is the pattern carousel.ts writes and stays legal.
 
 **Rejected role:** `tablist` is not withheld but declined - it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls. `carousel-not-a-composite-widget` enforces that, keeping every composite role out.
 

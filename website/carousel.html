@@ -628,7 +628,8 @@
   <td>Number</td>
   <td><code>200</code></td>
   <td>
-    Programmatic scroll timing and legacy coverflow tween, in milliseconds.
+    Milliseconds allowed for a programmatic scroll to land, and the part of
+    each auto-advance rest that is not <code>interval</code>.
   </td>
 </tr>
 <tr>
@@ -654,8 +655,9 @@
   <td>Boolean</td>
   <td><code>false</code></td>
   <td>
-    Stop at the ends in legacy coverflow. Material 3 tracks always stop at their
-    ends.
+    Stop auto-advance at the last item instead of looping back to the first.
+    Arrow keys and <code>set()</code> stop at the ends either way &mdash; a
+    scroll track has ends.
   </td>
 </tr>
 <tr>
@@ -667,9 +669,9 @@
     <code>duration</code> — the gap follows each transition rather than
     containing it, so a full cycle takes <code>duration + interval</code>.
     <code>0</code> leaves auto-advance off, and setting it turns on the pause
-    contract below. Each rest is armed by the move before it, so a rest that
-    ends while legacy <code>coverflow</code> is still easing to a stop buys
-    another whole rest rather than advancing off a half-finished move.
+    contract below. Each rest is armed by the move before it rather than on a
+    fixed phase, so a dropped tick costs a whole rest rather than leaving
+    whatever is left of one.
   </td>
 </tr>
 <tr>
@@ -698,17 +700,6 @@
   <td>Generated accessible label strings. <code>indicators</code> names the
     indicator row and <code>slide</code> prefixes each dot, giving
     &ldquo;Slide 1&rdquo;. Partial objects merge with the defaults.</td>
-</tr>
-<tr>
-  <td>
-    <code>dist</code>, <code>shift</code>, <code>padding</code>,
-    <code>numVisible</code>
-  </td>
-  <td>Number</td>
-  <td>Legacy</td>
-  <td>
-    Used only by the explicit <code>coverflow</code> compatibility layout.
-  </td>
 </tr>
 
             </tbody>

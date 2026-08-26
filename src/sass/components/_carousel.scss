@@ -11,8 +11,7 @@
 //   .full-screen             vertical, edge-to-edge, mandatory snap
 //
 // `.flat` remains a full-width compatibility layout for swipeable tabs and
-// older integrations. `.coverflow` retains the former 3D presentation as an
-// explicit legacy opt-in; it is not a Material 3 layout.
+// older integrations.
 //
 // Material measurements:
 //   inline padding      16dp (0 for full-screen)
@@ -263,7 +262,7 @@
 
   // Fixed height: the declared height sizes the track itself and the paging
   // dots take a row underneath it, rather than covering the media.
-  &.fixed-height:not(.coverflow):has(> .indicators) {
+  &.fixed-height:has(> .indicators) {
     height: calc(
       var(--carousel-height, var(--md-comp-carousel-height)) + var(
           --md-comp-carousel-indicator-allowance
@@ -282,8 +281,8 @@
 
 // Contained layouts keep every visible item complete. These surface guards
 // reserve the 16dp edge padding so the following item cannot peek through it.
-.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::before,
-.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::after,
+.carousel:not(.uncontained, .full-screen, .flat)::before,
+.carousel:not(.uncontained, .full-screen, .flat)::after,
 .carousel.full-screen-horizontal::before,
 .carousel.full-screen-horizontal::after {
   content: "";
@@ -295,12 +294,12 @@
   pointer-events: none;
 }
 
-.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::before,
+.carousel:not(.uncontained, .full-screen, .flat)::before,
 .carousel.full-screen-horizontal::before {
   inset-inline-start: 0;
 }
 
-.carousel:not(.uncontained, .full-screen, .flat, .coverflow)::after,
+.carousel:not(.uncontained, .full-screen, .flat)::after,
 .carousel.full-screen-horizontal::after {
   inset-inline-end: 0;
 }
@@ -562,7 +561,7 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .carousel:not(.coverflow) > .carousel-track {
+  .carousel > .carousel-track {
     cursor: grab;
   }
 
@@ -604,29 +603,6 @@
   }
 }
 
-// Legacy 3D coverflow. Kept only so existing markup has a migration path.
-// JS writes transform / opacity / visibility on each item.
-.carousel.coverflow {
-  --md-comp-carousel-shape: 12px;
-
-  border-radius: var(--md-comp-carousel-shape);
-  perspective: 500px;
-  transform-style: preserve-3d;
-  transform-origin: 0% 50%;
-  touch-action: pan-y;
-
-  > .carousel-item {
-    visibility: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: calc(var(--carousel-height, var(--md-comp-carousel-height)) * 0.5);
-    height: calc(var(--carousel-height, var(--md-comp-carousel-height)) * 0.5);
-    overflow: hidden;
-    border-radius: var(--md-comp-carousel-shape);
-  }
-}
-
 @include bp-up("medium") {
   .carousel {
     --md-comp-carousel-height: 320px;
@@ -640,7 +616,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .carousel:not(.coverflow) {
+  .carousel {
     --md-comp-carousel-inline-padding: 0px;
 
     > .carousel-track {

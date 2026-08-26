@@ -725,6 +725,51 @@ below is the whole story for that component.
   Take it for an edge-to-edge feed; for a fixed horizontal band, keep the
   `height` above and leave `full-screen` off.
 
+- **The coverflow carousel layout is gone.** `.coverflow` was the 3D
+  perspective tween inherited from the vendored MaterializeCSS source, and
+  Material 3 defines it at no layout and no size. It hand-wrote a momentum
+  simulation the browser already performs — velocity smoothing over a
+  `Date.now()` delta, exponential-decay easing toward a target, modular index
+  wrapping, per-item opacity and z-translation recomputed every frame — and ran
+  a second set of pointer handlers on the same element as the snap track's, so
+  a reader of the component had to establish which of two drag models was live
+  before tracing a gesture. Deleted with it: the `.carousel.coverflow` Sass
+  block, and the `dist`, `shift`, `padding` and `numVisible` options.
+
+  Every `:not(.coverflow)` guard elsewhere in the partial is now unconditional
+  — the reduced-motion block, the fixed-height indicator row, the contained
+  edge fades and the grab cursor state their intent directly rather than by
+  exclusion. `.carousel` is the Material 3 carousel and nothing else.
+
+  **Migration.** Delete the class. The nearest Material 3 equivalent to
+  coverflow's centred, overlapping look is the **hero** layout, which shows one
+  large item flanked by small previews:
+
+  ```html
+  <!-- before -->
+  <div class="carousel coverflow">
+    <a class="carousel-item" href="#one"><img src="1.jpg" alt="One"></a>
+    <a class="carousel-item" href="#two"><img src="2.jpg" alt="Two"></a>
+  </div>
+
+  <!-- after -->
+  <div class="carousel hero center-aligned">
+    <a class="carousel-item" href="#one"><img src="1.jpg" alt="One"></a>
+    <a class="carousel-item" href="#two"><img src="2.jpg" alt="Two"></a>
+  </div>
+  ```
+
+  The four removed options are deleted rather than accepted and ignored, so
+  passing one is a type error instead of silence. There is no runtime warning
+  and no shim: a shim keeps both concepts alive while pretending one has died.
+
+  **`duration` and `noWrap` survive and mean what they always did for a snap
+  track.** `duration` bounds how long the component waits for `scrollend`
+  before assuming a programmatic scroll landed, and is added to `interval` to
+  time each auto-advance rest; `noWrap` stops auto-advance after one pass
+  instead of looping. Auto-advance — `interval`, `duration`, `noWrap` — behaves
+  exactly as it did.
+
 - **Parallax and Pulse are gone**, with no successor. This is charter work for
   1.0.0 rather than part of the semantics sweep above. Both were decorative
   motion opinions of our own, and M3 Expressive ships a `MotionScheme` of
