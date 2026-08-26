@@ -384,3 +384,252 @@ describe('Material 3 Carousel behavior', () => {
     }
   });
 });
+
+// Auto-advance is the carousel's only live timer. Every case here tears down in
+// a `finally`: a surviving interval keeps node:test's event loop alive and
+// wedges the whole file with no output at all.
+describe('Carousel auto-advance', () => {
+  beforeEach(() => resetBody());
+
+  const init = (options) => {
+    document.body.innerHTML = markup();
+    return Expressive.Carousel.init(document.querySelector('.carousel'), options);
+  };
+
+  // The gap follows the transition, so one cycle is duration + interval.
+  const cycle = (interval) => Expressive.Carousel.defaults.duration + interval;
+
+  test('is off unless an interval is set', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const instance = init({});
+    try {
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 0, 'advanced without an interval');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('advances on the interval and wraps at the end', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const instance = init({ interval: 1000 });
+    try {
+      const rest = () => t.mock.timers.tick(cycle(1000));
+      rest();
+      assert.equal(instance.center, 1);
+      rest();
+      rest();
+      assert.equal(instance.center, 3);
+      rest();
+      assert.equal(instance.center, 0, 'did not wrap past the last item');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('pauses on hover and on focus, with no option to disable either', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    // The booleans Slideshow offered are gone: passing them changes nothing.
+    const instance = init({ interval: 1000, pauseOnHover: false, pauseOnFocus: false });
+    const el = instance.el;
+    try {
+      el.dispatchEvent(new window.MouseEvent('mouseenter'));
+      t.mock.timers.tick(cycle(1000) * 3);
+      assert.equal(instance.center, 0, 'kept advancing under the pointer');
+      el.dispatchEvent(new window.MouseEvent('mouseleave'));
+      t.mock.timers.tick(cycle(1000));
+      assert.equal(instance.center, 1, 'did not resume when the pointer left');
+
+      el.dispatchEvent(new window.FocusEvent('focusin', { bubbles: true }));
+      t.mock.timers.tick(cycle(1000) * 3);
+      assert.equal(instance.center, 1, 'kept advancing under keyboard focus');
+      el.dispatchEvent(new window.FocusEvent('focusout', { bubbles: true }));
+      t.mock.timers.tick(cycle(1000));
+      assert.equal(instance.center, 2, 'did not resume when focus left');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('an explicit noWrap stops it after one pass', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    // Every native track forces `noWrap`; only the author's own request counts.
+    const instance = init({ interval: 1000, noWrap: true });
+    try {
+      for (let i = 0; i < 3; i += 1) t.mock.timers.tick(cycle(1000));
+      assert.equal(instance.center, 3, 'did not reach the last item');
+      for (let i = 0; i < 10; i += 1) t.mock.timers.tick(cycle(1000));
+      assert.equal(instance.center, 3, 'wrapped past the end anyway');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('rests for the interval after the transition, never during it', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const instance = init({ interval: 1000, duration: 400 });
+    try {
+      t.mock.timers.tick(1399);
+      assert.equal(instance.center, 0, 'advanced before the transition had finished resting');
+      t.mock.timers.tick(1);
+      assert.equal(instance.center, 1, 'did not advance at duration + interval');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('skips a tick that lands on a coverflow tween still running', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    document.body.innerHTML = markup('coverflow');
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
+      interval: 1000
+    });
+    try {
+      // Coverflow settles after duration * ln(|amplitude| / 2), so a short
+      // interval can fire while `center` is still climbing through the tween.
+      // Coverflow moves `center` through the tween rather than committing it
+      // up front, so the tell is whether the tick retargeted: `_cycleTo` is
+      // what rewrites `target`.
+      instance.offset = 0;
+      instance.target = 100;
+      t.mock.timers.tick(cycle(1000) * 3);
+      assert.equal(instance.target, 100, 'retargeted an animation still running');
+
+      instance.offset = 100;
+      t.mock.timers.tick(cycle(1000));
+      assert.notEqual(instance.target, 100, 'never advanced once the track came to rest');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('a rest cut short by a tween buys a whole new one, not its remainder', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    document.body.innerHTML = markup('coverflow');
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
+      interval: 1000,
+      duration: 200
+    });
+    try {
+      instance.offset = 0;
+      instance.target = 100;
+      t.mock.timers.tick(1200);
+      assert.equal(instance.target, 100, 'advanced off a tween still running');
+
+      instance.offset = 100; // the tween lands
+      t.mock.timers.tick(1199);
+      assert.equal(instance.target, 100, 'rested for the remainder instead of a whole interval');
+      t.mock.timers.tick(1);
+      assert.notEqual(instance.target, 100, 'never advanced after the fresh rest');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('pause() and start() stop and resume it', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const instance = init({ interval: 1000 });
+    try {
+      instance.pause();
+      t.mock.timers.tick(cycle(1000) * 3);
+      assert.equal(instance.center, 0);
+      instance.start();
+      t.mock.timers.tick(cycle(1000));
+      assert.equal(instance.center, 1);
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('prefers-reduced-motion suppresses it entirely', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const original = window.matchMedia;
+    window.matchMedia = (query) => ({ ...original(query), matches: /reduced-motion/.test(query) });
+    const instance = init({ interval: 1000 });
+    try {
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 0, 'auto-advanced in reduced motion');
+    } finally {
+      instance.destroy();
+      window.matchMedia = original;
+      t.mock.timers.reset();
+    }
+  });
+
+  test('destroy() clears the timer', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const instance = init({ interval: 1000 });
+    try {
+      instance.destroy();
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 0, 'the interval outlived destroy()');
+    } finally {
+      t.mock.timers.reset();
+    }
+  });
+});
+
+describe('Carousel fixed height', () => {
+  beforeEach(() => resetBody());
+
+  test('reproduces the slideshow layout, indicator row included', () => {
+    assert.match(css, /--md-comp-carousel-indicator-allowance:\s*40px/);
+    assert.match(
+      css,
+      /\.carousel\.fixed-height:not\(\.coverflow\):has\(> \.indicators\)\s*\{[^}]*height:\s*calc\(\s*var\(--carousel-height,\s*var\(--md-comp-carousel-height\)\)\s*\+\s*var\(--md-comp-carousel-indicator-allowance\)/s
+    );
+    assert.match(
+      css,
+      /\.carousel\.fixed-height:not\(\.coverflow\):has\(> \.indicators\) > \.carousel-track\s*\{[^}]*height:\s*calc\(100% - var\(--md-comp-carousel-indicator-allowance\)\)/s
+    );
+  });
+
+  test('the height option sets the author hook and destroy() gives it back', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el, { height: 400 });
+    try {
+      assert.equal(el.classList.contains('fixed-height'), true);
+      assert.equal(el.style.getPropertyValue('--carousel-height'), '400px');
+    } finally {
+      instance.destroy();
+    }
+    assert.equal(el.classList.contains('fixed-height'), false);
+    assert.equal(el.style.getPropertyValue('--carousel-height'), '');
+  });
+
+  test('destroy() gives back an inline height the author already had', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    el.style.setProperty('--carousel-height', '260px');
+    el.classList.add('fixed-height');
+    const instance = Expressive.Carousel.init(el, { height: 400 });
+    try {
+      assert.equal(el.style.getPropertyValue('--carousel-height'), '400px');
+    } finally {
+      instance.destroy();
+    }
+    assert.equal(el.style.getPropertyValue('--carousel-height'), '260px', 'ate the authored height');
+    assert.equal(el.classList.contains('fixed-height'), true, 'removed a class it did not add');
+  });
+
+  test('is left alone when no height is given', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el);
+    try {
+      assert.equal(el.classList.contains('fixed-height'), false);
+      assert.equal(el.style.getPropertyValue('--carousel-height'), '');
+    } finally {
+      instance.destroy();
+    }
+  });
+});

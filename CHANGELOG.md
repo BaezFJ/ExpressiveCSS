@@ -14,6 +14,27 @@ The sweep is breaking, and lands over several changes before 0.8.0. Legacy
 markup keeps rendering — nothing warns at runtime — so each **Migration** entry
 below is the whole story for that component.
 
+### Added
+
+- **Carousel can advance on its own, with a pause contract that cannot be
+  switched off.** An `interval` (milliseconds, `0` and off by default) cycles
+  the track; `pause()` and `start()` stop and resume it. The gap follows each
+  transition rather than containing it, so a full cycle takes
+  `duration + interval`; each rest is armed by the move before it rather than
+  running on a fixed phase, so a rest can never end on a move still animating
+  nor be cut to the remainder of one that did. Auto-advancing content
+  is WCAG 2.2.2 territory, so unlike the Slideshow it replaces, Carousel offers
+  no `pauseOnHover` / `pauseOnFocus` booleans to turn off — an interval always
+  pauses while the pointer is over the carousel, while focus is inside it, and
+  while the tab is hidden, and `prefers-reduced-motion: reduce` suppresses
+  auto-advance entirely.
+- Carousel takes a fixed `height` in pixels, reproducing the Slideshow layout:
+  the height sizes the track and the indicators take their own row below it
+  (`--md-comp-carousel-indicator-allowance`, 40px) instead of covering the
+  media. Markup can ask for the same layout on its own, by carrying
+  `.fixed-height` and setting `--carousel-height`. An explicit `noWrap: true`
+  stops auto-advance after one pass rather than looping.
+
 ### Changed
 
 - Pane layouts now use M3 spacing: 16dp inline margins on Compact, then

@@ -2228,6 +2228,8 @@ Expressive.AutoInit(document.body, {
 | `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
 | `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
 | `noWrap` | Boolean | `false` | End behavior for legacy coverflow. M3 tracks always stop at their ends. |
+| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it, so a rest ending mid-tween on legacy coverflow buys another whole rest. |
+| `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
 | `onCycleTo` | Function | `null` | Called when the active item changes. |
 | `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of' }` | Generated accessible label strings. |
 | `dist`, `shift`, `padding`, `numVisible` | Number | Legacy | Used only by the explicit `.coverflow` compatibility layout. |
@@ -2240,14 +2242,26 @@ Expressive.AutoInit(document.body, {
 const instance = Expressive.Carousel.getInstance(elem);
 ```
 
-`next()` and `prev()` move one item or an optional item count. `set(index, callback)` moves to a zero-based item index. `destroy()` removes generated labels, size roles, indicators, listeners, and the scroll-track wrapper.
+`next()` and `prev()` move one item or an optional item count. `set(index, callback)` moves to a zero-based item index. `pause()` and `start()` stop and resume auto-advance, and do nothing without an `interval`. `destroy()` removes generated labels, size roles, indicators, listeners, the scroll-track wrapper, and the auto-advance timer.
 
 ```js
 instance.next();
 instance.prev(3);
 instance.set(3);
+instance.pause();
+instance.start();
 instance.destroy();
 ```
+
+An `interval` makes the carousel advance on its own, so the pause contract is
+mandatory: it always pauses on hover, on focus within, and while the tab is
+hidden, and `prefers-reduced-motion: reduce` suppresses auto-advance entirely.
+No option disables any of that. An explicit `noWrap: true` stops auto-advance
+after one pass instead of looping; every native track forces `noWrap` for the
+arrow keys, and the timer reads the author's own value rather than that one. A
+`height` gives the indicators their own row below the track (`.fixed-height`)
+instead of laying them over the media; markup can do the same by carrying
+`.fixed-height` and setting `--carousel-height`.
 
 ### Properties
 

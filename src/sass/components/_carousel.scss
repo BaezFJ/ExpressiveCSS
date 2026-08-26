@@ -44,6 +44,7 @@
   --md-comp-carousel-small-item-min-width: 40px;
   --md-comp-carousel-small-item-max-width: 56px;
   --md-comp-carousel-uncontained-item-width: min(78%, 320px);
+  --md-comp-carousel-indicator-allowance: 40px;
   --md-comp-carousel-state-layer-color: var(--md-sys-color-on-surface);
   --md-comp-carousel-hover-state-layer-opacity: var(--md-sys-state-hover-state-layer-opacity);
   --md-comp-carousel-focus-state-layer-opacity: var(--md-sys-state-focus-state-layer-opacity);
@@ -257,6 +258,24 @@
       }
 
       @include focus-visible;
+    }
+  }
+
+  // Fixed height: the declared height sizes the track itself and the paging
+  // dots take a row underneath it, rather than covering the media.
+  &.fixed-height:not(.coverflow):has(> .indicators) {
+    height: calc(
+      var(--carousel-height, var(--md-comp-carousel-height)) + var(
+          --md-comp-carousel-indicator-allowance
+        )
+    );
+
+    > .carousel-track {
+      height: calc(100% - var(--md-comp-carousel-indicator-allowance));
+    }
+
+    > .indicators {
+      height: var(--md-comp-carousel-indicator-allowance);
     }
   }
 }
