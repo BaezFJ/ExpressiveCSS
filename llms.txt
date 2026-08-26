@@ -75,6 +75,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Carousel](https://www.expressivecss.com/carousel.html): Material 3 adaptive carousels for visual collections.
 - [Lightbox](https://www.expressivecss.com/media.html): Lightbox and Slider for large images and slideshows.
 - [Toolbars](https://www.expressivecss.com/toolbars.html): Frequently used actions for the current page.
+- [Search](https://www.expressivecss.com/search.html): A search bar, and the view it expands into.
 
 ## Forms
 

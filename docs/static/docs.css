@@ -663,3 +663,10 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   z-index: 1;
   pointer-events: auto;
 }
+
+/* Search page: a docked view hangs off the bar and is out of flow, so the demo
+   reserves the room it drops into instead of letting it cover the prose. */
+.search-demo {
+  min-height: 18rem;
+  margin-block: 1.5rem;
+}

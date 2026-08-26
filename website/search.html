@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tooltips - ExpressiveCSS</title>
+    <title>Search - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Tooltips</h2>
+            <h2>Search</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -188,8 +188,8 @@
                       <li class="">
                           <a href="/badges.html">Badges</a>
                       </li>
-                      <li class="active">
-                          <a href="/tooltips.html" aria-current="page">Tooltips</a>
+                      <li class="">
+                          <a href="/tooltips.html">Tooltips</a>
                       </li>
                       <li class="">
                           <a href="/snackbar.html">Snackbar</a>
@@ -209,8 +209,8 @@
                       <li class="">
                           <a href="/toolbars.html">Toolbars</a>
                       </li>
-                      <li class="">
-                          <a href="/search.html">Search</a>
+                      <li class="active">
+                          <a href="/search.html" aria-current="page">Search</a>
                       </li>
                   </ul>
               </details>
@@ -268,8 +268,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Tooltips</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Material Design 3 tooltips, from the HTML.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Search</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A search bar, and the view it expands into.</p>
             </div>
         </div>
     </section>
@@ -283,348 +283,311 @@
 
   <div id="anatomy" class="section scrollspy docs-section">
 
-        <p class="flow-text">
-          A child <code>.tooltip</code> is the bubble. No
-          <code>tooltipped</code> class is required. They are CSS only on
-          hover and keyboard focus. Helpers are only for placement and
-          the rich variant: <code>top</code> (the default),
-          <code>bottom</code>, <code>left</code>, <code>right</code>,
-          <code>rich</code> / <code>max</code>.
-        </p>
-        <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/tooltips/specs">M3 tooltip spec</a>.
-          A plain tooltip is <code>inverse-surface</code> /
-          <code>inverse-on-surface</code>, 4dp corners,
-          <code>body-small</code>, 24dp minimum, 4/8dp padding, 200dp
-          max, no elevation and no caret. It sits 4dp from the activator.
-          M3 prefers above.
-        </p>
-        <p>
-          Inside a <code>&lt;button&gt;</code> the bubble has to be a
-          <code>&lt;span&gt;</code> — a <code>&lt;div&gt;</code> is not
-          phrasing content and the parser will hoist it. Icon-only
-          buttons still need <code>.circle</code> so the span is not
-          treated as a label.
-        </p>
-        <p>
-          <button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
-            <span class="material-symbols" aria-hidden="true">add</span>
-            <span class="tooltip" id="tip-add-to-album">Add to album</span>
-          </button>
-          <button type="button" class="circle" aria-label="Above" aria-describedby="tip-above">
-            <span class="material-symbols" aria-hidden="true">arrow_upward</span>
-            <span class="tooltip" id="tip-above">Above</span>
-          </button>
-          <button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
-            <span class="material-symbols" aria-hidden="true">arrow_downward</span>
-            <span class="tooltip bottom" id="tip-below">Below</span>
-          </button>
-          <button type="button" class="circle" aria-label="Start" aria-describedby="tip-start">
-            <span class="material-symbols" aria-hidden="true">arrow_back</span>
-            <span class="tooltip left" id="tip-start">Start</span>
-          </button>
-          <button type="button" class="circle" aria-label="End" aria-describedby="tip-end">
-            <span class="material-symbols" aria-hidden="true">arrow_forward</span>
-            <span class="tooltip right" id="tip-end">End</span>
-          </button>
-        </p>
-<pre><code>&lt;button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-  &lt;span class="tooltip" id="tip-add-to-album"&gt;Add to album&lt;/span&gt;
+                    <p class="flow-text">
+                        A <code>&lt;search&gt;</code> with <code>search-bar</code> on it
+                        is the bar: a leading icon or icon button, an
+                        <code>&lt;input type="search"&gt;</code>, and whatever trailing
+                        actions the query needs. The element is the landmark — there is
+                        no <code>role="search"</code> to add.
+                    </p>
+                    <search class="search-bar" aria-label="Search — Anatomy">
+                        <span class="material-symbols" aria-hidden="true">search</span>
+                        <input type="search" aria-label="Search recipes" placeholder="Search recipes">
+                        <button type="button" class="icon-button" aria-label="Filters">
+                            <span class="material-symbols" aria-hidden="true">tune</span>
+                        </button>
+                    </search>
+                    <pre><code>&lt;search class="search-bar" aria-label="Search"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;search&lt;/span&gt;
+  &lt;input type="search" aria-label="Search recipes" placeholder="Search recipes"&gt;
+  &lt;button type="button" class="icon-button" aria-label="Filters"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;tune&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/search&gt;</code></pre>
+                    <p>
+                        The input carries none of the text-field chrome — no underline,
+                        no floating label, no container of its own. The bar is the
+                        container, so the input goes in bare rather than inside a
+                        <code>.field</code>.
+                    </p>
+                    <p>
+                        Spacing follows what is at each end: a bare glyph sits 16dp from
+                        the edge, an icon button 4dp, because the button already insets
+                        its own glyph by 12dp. Nothing to set — the bar reads its own
+                        children.
+                    </p>
+                    <p>
+                        <code>.searchbar</code>, the pre-1.0 name, still reaches the
+                        same rules.
+                    </p>
+  
+      </div>
+
+
+  <div id="leading-action" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">A leading action</h3>
+
+                    <p>
+                        When the bar opens a drawer or goes back, the leading glyph
+                        becomes an icon button. The bar closes up around it on its own.
+                    </p>
+                    <search class="search-bar" aria-label="Search — A leading action">
+                        <button type="button" class="icon-button" aria-label="Open navigation">
+                            <span class="material-symbols" aria-hidden="true">menu</span>
+                        </button>
+                        <input type="search" aria-label="Search mail" placeholder="Search mail">
+                        <button type="button" class="icon-button" aria-label="Account">
+                            <span class="material-symbols" aria-hidden="true">account_circle</span>
+                        </button>
+                    </search>
+                    <pre><code>&lt;search class="search-bar" aria-label="Search"&gt;
+  &lt;button type="button" class="icon-button" aria-label="Open navigation"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;menu&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;input type="search" aria-label="Search mail" placeholder="Search mail"&gt;
+  &lt;button type="button" class="icon-button" aria-label="Account"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;account_circle&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/search&gt;</code></pre>
+                    <p>
+                        An <code>&lt;img&gt;</code> in the bar is the account avatar M3
+                        puts in that slot — 30dp and circular. Put it inside the button
+                        when it is tappable, so the 48dp target comes from the button.
+                    </p>
+  
+      </div>
+
+
+  <div id="docked" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Docked view</h3>
+
+                    <p>
+                        The docked view is a <code>.search-view</code> inside the bar. It
+                        hangs off the bar, so the bar keeps its
+                        <code>position: relative</code> and the view needs no coordinates
+                        of its own. Show and hide it with the
+                        <code>hidden</code> attribute.
+                    </p>
+                    <p>
+                        It is a plain element rather than a <code>&lt;dialog&gt;</code> on
+                        purpose: <code>dialog.show()</code> moves focus into the dialog,
+                        which would take the caret out of the input the user is typing in.
+                    </p>
+                    <p>
+                        The demo below starts open so the surface is on the page; the
+                        sample under it has the <code>hidden</code> a real page would
+                        write. Focus the input to reopen it.
+                    </p>
+                    <div class="search-demo">
+                        <search class="search-bar" aria-label="Search — Docked view">
+                            <span class="material-symbols" aria-hidden="true">search</span>
+                            <input type="search" aria-label="Search fruit" placeholder="Search fruit"
+                                   onfocus="document.getElementById('docked-view').hidden = false">
+                            <button type="button" class="icon-button" aria-label="Close search"
+                                    onclick="document.getElementById('docked-view').hidden = true">
+                                <span class="material-symbols" aria-hidden="true">close</span>
+                            </button>
+                            <div class="search-view" id="docked-view">
+                                <ul class="list">
+                                    <li><a href="#!"><span class="material-symbols" aria-hidden="true">history</span><span>Apricot</span></a></li>
+                                    <li><a href="#!"><span class="material-symbols" aria-hidden="true">history</span><span>Blackcurrant</span></a></li>
+                                    <li><a href="#!"><span class="material-symbols" aria-hidden="true">trending_up</span><span>Clementine</span></a></li>
+                                </ul>
+                            </div>
+                        </search>
+                    </div>
+                    <pre><code>&lt;search class="search-bar" aria-label="Search"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;search&lt;/span&gt;
+  &lt;input type="search" aria-label="Search fruit" placeholder="Search fruit"
+         onfocus="document.getElementById('results').hidden = false"&gt;
+  &lt;button type="button" class="icon-button" aria-label="Close search"
+          onclick="document.getElementById('results').hidden = true"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
+
+  &lt;div class="search-view" id="results" hidden&gt;
+    &lt;ul class="list"&gt;
+      &lt;li&gt;&lt;a href="/apricot"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;history&lt;/span&gt;&lt;span&gt;Apricot&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/search&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="full-screen" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Full-screen view</h3>
+
+                    <p>
+                        Full screen, the view is a <code>&lt;dialog&gt;</code> opened with
+                        <code>showModal()</code>. Escape and a tap outside come from the
+                        platform, so there is nothing to wire up beyond opening it. Its
+                        header is another <code>.search-bar</code> — same markup, with the
+                        pill and the shadow taken off.
+                    </p>
+                    <button type="button" class="outlined"
+                            onclick="document.getElementById('search-full').showModal()">
+                        Open full-screen search
+                    </button>
+                    <dialog class="search-view full-screen" id="search-full" aria-label="Search">
+                        <search class="search-bar" aria-label="Search — Full-screen view">
+                            <form method="dialog">
+                                <button type="submit" class="icon-button" aria-label="Back">
+                                    <span class="material-symbols" aria-hidden="true">arrow_back</span>
+                                </button>
+                            </form>
+                            <input type="search" autofocus aria-label="Search fruit" placeholder="Search fruit">
+                        </search>
+                        <hr>
+                        <ul class="list">
+                            <li><a href="#!"><span class="material-symbols" aria-hidden="true">history</span><span>Apricot</span></a></li>
+                            <li><a href="#!"><span class="material-symbols" aria-hidden="true">history</span><span>Blackcurrant</span></a></li>
+                            <li><a href="#!"><span class="material-symbols" aria-hidden="true">trending_up</span><span>Clementine</span></a></li>
+                        </ul>
+                    </dialog>
+                    <pre><code>&lt;button type="button" onclick="document.getElementById('search-full').showModal()"&gt;
+  Search
 &lt;/button&gt;
 
-&lt;button type="button" class="circle" aria-label="Below" aria-describedby="tip-below"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_downward&lt;/span&gt;
-  &lt;span class="tooltip bottom" id="tip-below"&gt;Below&lt;/span&gt;
-&lt;/button&gt;</code></pre>
+&lt;dialog class="search-view full-screen" id="search-full" aria-label="Search"&gt;
+  &lt;search class="search-bar" aria-label="Search"&gt;
+    &lt;form method="dialog"&gt;
+      &lt;button type="submit" class="icon-button" aria-label="Back"&gt;
+        &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_back&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/form&gt;
+    &lt;input type="search" autofocus aria-label="Search fruit" placeholder="Search fruit"&gt;
+  &lt;/search&gt;
+  &lt;hr&gt;
+  &lt;ul class="list"&gt;
+    &lt;li&gt;&lt;a href="/apricot"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;history&lt;/span&gt;&lt;span&gt;Apricot&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/dialog&gt;</code></pre>
+                    <p>
+                        <code>autofocus</code> on the input matters here.
+                        <code>showModal()</code> focuses the first focusable descendant,
+                        which is the back button — so without it a keyboard user lands on
+                        Back and cannot type.
+                    </p>
+                    <p>
+                        Full screen at Compact and docked from Medium up is the M3 rule of
+                        thumb, and <strong>the app picks</strong>: there is no breakpoint
+                        in the sheet that swaps one for the other. The two are not
+                        interchangeable markup — the docked view is a plain element
+                        nested inside the bar, the full-screen one a top-level
+                        <code>&lt;dialog&gt;</code> — so render the one the window calls
+                        for.
+                    </p>
+                    <pre><code>if (window.matchMedia('(width &lt; 600px)').matches) {
+  document.getElementById('search-full').showModal();
+} else {
+  document.getElementById('results').hidden = false;
+}</code></pre>
   
       </div>
 
 
-  <div id="rich" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Rich</h3>
+  <div id="suggestions" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Suggestions are Autocomplete</h3>
 
-        <p>
-          <code>rich</code> (or BeerCSS’s <code>max</code>) is the rich
-          tooltip: <code>surface</code>, elevation 2, 12dp corners,
-          320dp max. A heading is the title
-          (<code>title-small</code>), a <code>&lt;p&gt;</code> is
-          supporting text (<code>body-medium</code>), and a trailing
-          <code>&lt;nav&gt;</code> is the action. Rich bubbles can
-          receive pointer events so the action is usable.
-        </p>
-        <div>
-          <button type="button" class="tonal">Why this is saved</button>
-          <div class="tooltip rich bottom">
-            <h3>Saved offline</h3>
-            <p>This stop is stored on the device so it still opens without a signal.</p>
-            <nav>
-              <button type="button" class="text">Got it</button>
-            </nav>
-          </div>
-        </div>
-<pre><code>&lt;div&gt;
-  &lt;button type="button" class="tonal"&gt;Why this is saved&lt;/button&gt;
-  &lt;div class="tooltip rich bottom"&gt;
-    &lt;h3&gt;Saved offline&lt;/h3&gt;
-    &lt;p&gt;This stop is stored on the device so it still opens without a signal.&lt;/p&gt;
-    &lt;nav&gt;
-      &lt;button type="button" class="text"&gt;Got it&lt;/button&gt;
-    &lt;/nav&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-        <p>
-          A rich tooltip with an action cannot live inside a
-          <code>&lt;button&gt;</code> — that would nest buttons. Put the
-          bubble next to the control, wrapped in a parent.
-        </p>
-  
-      </div>
-
-
-  <div id="javascript" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">JavaScript</h3>
-
-        <p>
-          The CSS path does not need AutoInit. The JS plugin is still
-          there for <code>data-tooltip</code>, delayed show/hide, and
-          keeping the bubble inside the viewport. Add
-          <code>tooltipped</code> to the activator.
-          <code>data-tooltip</code> is the text;
-          <code>data-position</code> is <code>top</code>,
-          <code>right</code>, <code>bottom</code>, or
-          <code>left</code>. <code>AutoInit()</code> starts every
-          <code>.tooltipped</code> except those marked
-          <code>no-autoinit</code>. The generated element gets both
-          <code>.tooltip</code> and <code>.material-tooltip</code>.
-        </p>
-        <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip="I am a tooltip">Bottom</a>
-          <a class="tooltipped" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
-          <a class="tooltipped" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
-          <a class="tooltipped" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
-        </p>
-<pre><code>&lt;a class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!"&gt;
-  Hover me
-&lt;/a&gt;</code></pre>
-        <p>
-          For HTML, point <code>data-tooltip-id</code> at an element.
-          That element is moved into the tooltip and the bubble is
-          marked <code>rich</code>. Leave <code>data-tooltip</code> off
-          so the HTML is kept. There is no <code>data-html</code>
-          attribute and no <code>unsafeHTML</code> option.
-        </p>
-        <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">With HTML</a>
-        </p>
-        <div id="tooltip-content" style="display: none;">
-          <h3>Chart</h3>
-          <p>This is a tooltip with a <a href="https://github.com">link</a>
-          and a <span class="material-symbols" aria-hidden="true">insert_chart</span>.</p>
-        </div>
-<pre><code>&lt;a class="tooltipped" href="#!"
-   data-position="bottom" data-tooltip-id="tooltip-content"&gt;
-  With HTML
-&lt;/a&gt;
-&lt;div id="tooltip-content" hidden&gt;
-  &lt;h3&gt;Chart&lt;/h3&gt;
-  &lt;p&gt;This is a tooltip with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="initialization" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Initialization</h3>
-
-        <p>
-          The IIFE bundle exposes <code>Expressive.Tooltip</code>.
-          Call <code>init</code> yourself when you need options other
-          than the defaults, or let
-          <code>Expressive.AutoInit()</code> start every
-          <code>.tooltipped</code>.
-        </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.tooltipped');
-  const instances = Expressive.Tooltip.init(elems, {
-    enterDelay: 200
-  });
+                    <p>
+                        Search does not ship a suggestion list of its own. Put
+                        <code>autocomplete</code> on the bar's input and you get the
+                        combobox, its listbox, and the arrow-key and
+                        <code>aria-activedescendant</code> handling that
+                        <a href="/autocomplete.html">Autocomplete</a> already
+                        implements and is tested for.
+                    </p>
+                    <pre><code>&lt;search class="search-bar" aria-label="Search"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;search&lt;/span&gt;
+  &lt;input type="search" class="autocomplete" aria-label="Search fruit" placeholder="Search fruit"&gt;
+&lt;/search&gt;</code></pre>
+                    <pre><code>Expressive.Autocomplete.init(document.querySelector('.search-bar input'), {
+  minLength: 0,
+  data: [{ id: 'Apricot' }, { id: 'Blackcurrant' }, { id: 'Clementine' }]
 });</code></pre>
-        <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
-  Tooltip: { enterDelay: 200 }
-});</code></pre>
+                    <p>
+                        That is the whole relationship, and it is deliberate. A
+                        <code>.search-view</code> takes no composite role: its contents
+                        are links and buttons reached with Tab, and a second listbox here
+                        would be the same promise as Autocomplete's with no keyboard model
+                        behind it. Use the view for recent searches, filters, and results;
+                        use Autocomplete for a list the user arrows through.
+                    </p>
   
       </div>
 
 
-  <div id="options" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Options</h3>
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
 
-        <p>
-          Constructor and <code>init</code> options.
-          <code>data-tooltip</code>, <code>data-position</code>, and
-          <code>data-tooltip-id</code> are read from the element and
-          override these defaults. Attributes are read again each time
-          the tooltip opens, so changing them later takes effect on the
-          next show.
-        </p>
-        
+                    <p>Override these on the bar or on the view.</p>
+                    
         <table class="striped">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
+                    <th>Token</th>
                     <th>Default</th>
-                    <th>Description</th>
                 </tr>
             </thead>
             <tbody>
 
-            <tr>
-              <td><code>exitDelay</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Delay before the tooltip disappears, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>enterDelay</code></td>
-              <td>Number</td>
-              <td><code>0</code></td>
-              <td>Delay before the tooltip appears, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>tooltipId</code></td>
-              <td>String</td>
-              <td>—</td>
-              <td>Id of an element used as the tooltip body. Set by <code>data-tooltip-id</code>. Marks the bubble <code>rich</code>.</td>
-            </tr>
-            <tr>
-              <td><code>text</code></td>
-              <td>String</td>
-              <td><code>''</code></td>
-              <td>Plain-text content. Set by <code>data-tooltip</code>. Ignored when <code>tooltipId</code> is set.</td>
-            </tr>
-            <tr>
-              <td><code>margin</code></td>
-              <td>Number</td>
-              <td><code>4</code></td>
-              <td>Distance from the activator, in pixels, not counting <code>transitionMovement</code>. M3 is 4dp.</td>
-            </tr>
-            <tr>
-              <td><code>inDuration</code></td>
-              <td>Number</td>
-              <td><code>250</code></td>
-              <td>Enter transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>opacity</code></td>
-              <td>Number</td>
-              <td><code>1</code></td>
-              <td>Opacity of the tooltip when shown.</td>
-            </tr>
-            <tr>
-              <td><code>outDuration</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Exit transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>position</code></td>
-              <td>String</td>
-              <td><code>'bottom'</code></td>
-              <td>Direction: <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Set by <code>data-position</code>. The CSS-only default is above.</td>
-            </tr>
-            <tr>
-              <td><code>transitionMovement</code></td>
-              <td>Number</td>
-              <td><code>10</code></td>
-              <td>How far the tooltip moves during its transition, in pixels.</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-  
-      </div>
-
-
-  <div id="methods" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
-
-        
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Tooltip.getInstance(elem);</code></pre>
-
-
-        <p>
-          <a class="tooltipped" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</a>
-          <button type="button" class="tonal" id="tooltip-open">Open</button>
-          <button type="button" class="tonal" id="tooltip-close">Close</button>
-        </p>
-
-        <h5 class="light">.open();</h5>
-        <p>Show the tooltip.</p>
-<pre><code>instance.open();</code></pre>
-
-        <h5 class="light">.close();</h5>
-        <p>Hide the tooltip.</p>
-<pre><code>instance.close();</code></pre>
-
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
-  
-      </div>
-
-
-  <div id="properties" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Properties</h3>
-
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>el</code></td>
-                    <td>Element</td>
-                    <td>The DOM element the plugin was initialized with.</td>
-                </tr>
-                <tr>
-                    <td><code>options</code></td>
-                    <td>Object</td>
-                    <td>The options the instance was initialized with.</td>
-                </tr>
-
-            <tr>
-              <td><code>isOpen</code></td>
-              <td>Boolean</td>
-              <td>Whether the tooltip is open.</td>
-            </tr>
-            <tr>
-              <td><code>isHovered</code></td>
-              <td>Boolean</td>
-              <td>Whether the activator is hovered.</td>
-            </tr>
-            <tr>
-              <td><code>isFocused</code></td>
-              <td>Boolean</td>
-              <td>Whether the activator is focused via the keyboard.</td>
-            </tr>
-            <tr>
-              <td><code>tooltipEl</code></td>
-              <td>Element</td>
-              <td>The generated tooltip element.</td>
-            </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-container-color</code></td>
+                            <td><code>--md-sys-color-surface-container-high</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-container-height</code></td>
+                            <td>56px</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-container-shape</code></td>
+                            <td>9999px (full)</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-leading-space</code></td>
+                            <td>16px, or 4px beside an icon button</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-trailing-space</code></td>
+                            <td>16px, or 4px beside an icon button</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-icon-label-space</code></td>
+                            <td>16px</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-icon-size</code></td>
+                            <td>24px</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-bar-avatar-size</code></td>
+                            <td>30px</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-view-container-color</code></td>
+                            <td><code>--md-sys-color-surface-container-high</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-view-container-shape</code></td>
+                            <td>12px, 0 full-screen</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-view-header-height</code></td>
+                            <td>56px, 72px full-screen</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-view-divider-color</code></td>
+                            <td><code>--md-sys-color-outline</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-view-bar-results-gap</code></td>
+                            <td>2px</td>
+                        </tr>
+                        <tr>
+                            <td><code>--md-comp-search-view-max-height</code></td>
+                            <td>60vh, none full-screen</td>
+                        </tr>
   
             </tbody>
         </table>
@@ -641,13 +604,12 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#anatomy">Introduction</a></li>
-          <li><a href="#rich">Rich</a></li>
-          <li><a href="#javascript">JavaScript</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#leading-action">A leading action</a></li>
+          <li><a href="#docked">Docked view</a></li>
+          <li><a href="#full-screen">Full-screen view</a></li>
+          <li><a href="#suggestions">Suggestions are Autocomplete</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 
