@@ -2112,7 +2112,7 @@ The items are buttons, so their height, insets and colours come from the button 
 
 One action the user will take most of the time, next to a menu of the ones they might take instead — Save and "save as", Reply and "reply all", Export and every other format. The root is a `<div class="split-button">` holding two buttons: a leading one that does the work, and a trailing `.menu-trigger` that opens a `<menu>`. The pair sits 2dp apart, the outside is round, and the seam between them is square-ish.
 
-The trailing half is an ordinary Menu trigger, so everything Menu does it does here — `Expressive.AutoInit()` starts it, `data-target` names the surface, and the menu's keyboard model, alignment and options are unchanged. This component adds no script of its own. The one thing Menu does differently is width: a split button's trigger is a chevron in a 48dp box, so the surface is sized to its own content rather than to the trigger, whatever `constrainWidth` says.
+The trailing half is an ordinary Menu trigger, so everything Menu does it does here — `Expressive.AutoInit()` starts it, `data-target` names the surface, and the menu's keyboard model, alignment and options are unchanged. This component adds no script of its own. The one thing Menu does differently is width: a trigger narrower than the surface's own 112dp minimum is not a constraint it can honour, and this trigger is a chevron in a 48dp box, so the menu is sized to its own content instead.
 
 ```html
 <div class="split-button">

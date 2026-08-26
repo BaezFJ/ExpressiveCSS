@@ -66,6 +66,14 @@ $_sizes: (
   "xlarge": (lead-end: 64px, trail-space: 43px, trail-icon: 50px, inner: 12px, swollen: 20px),
 );
 
+// The two ladders are keyed alike and read together, so a size added to one
+// and not the other would emit `--token: ;` - a dropped declaration with no
+// error and no visible cause. Fail the build instead.
+@if map.keys($_sizes) != map.keys($button-sizes) {
+  @error "$_sizes and $button-sizes must name the same five sizes; got " +
+    map.keys($_sizes) + " against " + map.keys($button-sizes) + ".";
+}
+
 @mixin _split-size($name) {
   $s: map.get($_sizes, $name);
 
@@ -110,7 +118,12 @@ $_sizes: (
   > #{$_half} {
     --_inner: var(--md-comp-split-button-inner-corner-corner-size);
 
-    transition: border-radius .2s ease-out, background-color .2s ease-out;
+    // `btn` transitions background-color and box-shadow; restating the
+    // property list replaces it wholesale, so both have to be named again or
+    // an `.elevated` split button snaps its shadow where every other elevated
+    // button eases it.
+    transition: border-radius .2s ease-out, background-color .2s ease-out,
+      box-shadow .2s ease-out;
 
     // M3 gives hovered and pressed the same swollen corner.
     &:hover,
@@ -148,9 +161,12 @@ $_sizes: (
     border-end-start-radius: var(--_inner);
 
     // Activation. md.comp.split-button.<size>.trailing.inner-selected-corner
-    // is 50%, which on a pill is the container shape - so the pair reads as
-    // two separated round buttons for as long as the menu is open. Menu writes
-    // the attribute; nothing here is scripted.
+    // is 50%, and Compose resolves a percentage corner against the shape's
+    // *smaller* dimension - 20dp on the 48x40 half at `small`, which is what
+    // `9999px` clamps to. The two agree at every size, and the outer corners
+    // are the same 50% written the same way. So the pair reads as two
+    // separated round buttons for as long as the menu is open. Menu writes the
+    // attribute; nothing here is scripted.
     &[aria-expanded="true"] {
       --_inner: var(--md-comp-split-button-container-shape);
     }

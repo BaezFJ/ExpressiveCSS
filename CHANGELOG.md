@@ -712,12 +712,13 @@ below is the whole story for that component.
 
 ### Fixed
 
-- **A menu opened from a split button is sized to its own content.**
-  `constrainWidth` matches the surface to its trigger, which assumes the trigger
-  is the control - and a split button's is a chevron in a 48dp box beside the
-  action it belongs to. Every such menu was pinned at the surface's own 112dp
-  floor with every item wrapped. Material sizes a split button's menu to its
-  content, so the option steps aside inside one.
+- **A menu opened from a trigger narrower than 112dp is sized to its own
+  content.** `constrainWidth` wrote the trigger's width onto the surface and the
+  surface's own `min-width: 112px` then overrode it, so any trigger under that
+  floor left the menu at exactly 112dp with every item inside it wrapped. An
+  icon button is 40dp and a split button's chevron is 48dp, so both were always
+  in that state. The constraint now applies only to a trigger wide enough to
+  mean something; a wider trigger still constrains as before.
 
 - **The renames reached the styling and stopped short of the behaviour.** The
   Sass alias made `.navigation-drawer-fixed` *look* docked while the component

@@ -345,10 +345,10 @@
           adds no script of its own.
         </p>
         <p>
-          The one thing Menu does differently here is width. A menu normally
-          matches its trigger, and this trigger is a chevron in a 48dp box — so
-          the surface is sized to its own content instead, whatever
-          <code>constrainWidth</code> says. Items still wrap at the menu's own
+          The menu sizes itself to its own content here. Menu normally matches
+          the surface to its trigger, but a trigger narrower than the surface's
+          own 112dp minimum is not a constraint it can honour — and this
+          trigger is a chevron in a 48dp box. Items still wrap at the menu's
           280dp maximum.
         </p>
         <p>
@@ -434,6 +434,35 @@
               <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
             </button>
             <menu id="split-medium">
+              <li><a href="#!">One</a></li>
+              <li><a href="#!">Two</a></li>
+            </menu>
+          </div>
+        </div>
+        <p>
+          The seam widens with the size — 4dp through <code>medium</code>, 8dp
+          at <code>large</code>, 12dp at <code>xlarge</code>. The two largest
+          rungs are for a split button that is the only thing on a screen.
+        </p>
+        <div>
+          <div class="split-button large">
+            <button class="button tonal">Large</button>
+            <button class="button tonal menu-trigger" data-target="split-large" aria-label="More options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-large">
+              <li><a href="#!">One</a></li>
+              <li><a href="#!">Two</a></li>
+            </menu>
+          </div>
+        </div>
+        <div>
+          <div class="split-button xlarge">
+            <button class="button tonal">Extra large</button>
+            <button class="button tonal menu-trigger" data-target="split-xlarge" aria-label="More options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-xlarge">
               <li><a href="#!">One</a></li>
               <li><a href="#!">Two</a></li>
             </menu>

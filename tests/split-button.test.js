@@ -13,6 +13,9 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { Expressive, window } from './setup.js';
+
+const { document } = window;
 
 const root = new URL('../', import.meta.url);
 const css = readFileSync(new URL('dist/css/expressive.css', root), 'utf8');
@@ -165,6 +168,17 @@ describe('Split button activation', () => {
     assert.match(spun.body, /transform:\s*rotate\(180deg\)/);
   });
 
+  test('a half still transitions its shadow, as every other button does', () => {
+    // `btn` transitions background-color and box-shadow. Restating the
+    // property list on the half replaces it wholesale, so an `.elevated`
+    // split button snapped its shadow while every other elevated button eased.
+    const half = rules.find(
+      (r) => r.selector === '.split-button > :where(button, a.button)'
+    );
+    assert.ok(half, 'no half rule');
+    assert.match(half.body, /transition:[^;]*box-shadow/);
+  });
+
   test('the morph and the spin are both transitioned, and both stop under reduce', () => {
     const moving = rules.filter(
       (r) => r.selector.startsWith('.split-button >') && /transition:/.test(r.body)
@@ -175,5 +189,47 @@ describe('Split button activation', () => {
     const block = reduce.match(/@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*?\.split-button[\s\S]*?)\n\}/);
     assert.ok(block, 'no reduced-motion block naming .split-button');
     assert.match(block[1], /transition:\s*none/);
+  });
+});
+
+// The one behaviour this component has, and it is not its own: the trailing
+// half is a Menu trigger, so Menu stamps `aria-expanded` on it and rewrites it
+// on every open and close. That attribute is what the expanded shape above is
+// drawn from, so it is worth a test that it actually lands.
+describe('Split button expanded state', () => {
+  const markup = `
+    <div class="split-button">
+      <button class="button">Save</button>
+      <button class="button menu-trigger" data-target="sb-menu" aria-label="More save options">
+        <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+      </button>
+    </div>
+    <menu id="sb-menu"><li><a href="#!">Save a copy</a></li></menu>`;
+
+  test('Menu writes aria-expanded on the trailing half, and clears it', () => {
+    document.body.innerHTML = markup;
+    const trigger = document.querySelector('.menu-trigger');
+    const instance = Expressive.Menu.init(trigger);
+    try {
+      assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+      assert.equal(trigger.getAttribute('aria-haspopup'), 'menu');
+
+      instance.open();
+      assert.equal(trigger.getAttribute('aria-expanded'), 'true');
+
+      instance.close();
+      assert.equal(trigger.getAttribute('aria-expanded'), 'false');
+    } finally {
+      // A live timer wedges the whole run with no output, and close() schedules
+      // one - so teardown goes in a finally, always.
+      instance.destroy();
+    }
+  });
+
+  test('the author never has to write it', () => {
+    // The markup above carries no aria-expanded at all; the constructor
+    // supplies it. `split-button-expanded-is-not-authored` forbids the other
+    // way round, and this is the half of that contract a selector cannot check.
+    assert.doesNotMatch(markup, /aria-expanded/);
   });
 });
