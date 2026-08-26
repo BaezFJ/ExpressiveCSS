@@ -126,7 +126,7 @@ Use live `--md-sys-color-*` roles. The `-light` / `-dark` pairs are public API f
 | Hairlines | `outline` / `outline-variant` |
 | Error, badges, destructive | `error` / `on-error` |
 | Snackbar | `inverse-surface` / `inverse-on-surface` / `inverse-primary` |
-| Modal scrim | `scrim` |
+| Modal scrim | `scrim`, via `--md-comp-scrim-color` (the role at 32%) |
 
 Do not color every button `primary`. Do not recolor badges; the default error mapping is the contrast-safe one.
 

@@ -863,6 +863,12 @@
         }
       ]
     },
+    "scrim": {
+      "status": "enforced",
+      "kind": "foundation",
+      "note": "The wash a modal surface paints behind itself, added in 1.x (#37). A foundation, not a component: nothing is marked up to get one, so there is no element for a rule to name. `--md-comp-scrim-color` is the whole of it; the dialogs, sheets, navigation-drawer and navigation-rail rows own the markup that ends up wearing it.",
+      "rules": []
+    },
     "search": {
       "status": "enforced",
       "note": "The bar is a `<search>` landmark holding an `<input type=\"search\">`; the view is the surface it expands into. Suggestions are Autocomplete's - `class=\"autocomplete\"` on the bar's input gives the combobox, its listbox and the keyboard contract that are already implemented and tested there, so this component neither duplicates them nor ships a second, weaker copy. Full-screen the view is a `<dialog>`, so the dialog rules carry it.",

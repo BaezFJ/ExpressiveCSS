@@ -490,6 +490,18 @@
           </div>
         </div>
         <p>
+          <code>scrim</code> is the opaque neutral the wash behind a modal surface
+          is mixed from, not the wash itself. That is
+          <code>--md-comp-scrim-color</code> — the role at 32%, defined once on
+          <code>:root</code> and consumed by dialogs, both sheets, the navigation
+          drawer and the modal navigation rail. Override it on
+          <code>:root</code> to move every scrim, or set it on one surface to
+          dim just that one — <code>::backdrop</code> inherits from the element
+          it belongs to. The mix resolves at <code>:root</code>, so overriding
+          <code>--md-sys-color-scrim</code> on a subtree does not reach a scrim
+          below it; override <code>--md-comp-scrim-color</code> instead.
+        </p>
+        <p>
           <code>background</code>, <code>on-background</code>, and
           <code>surface-variant</code> stay as aliases of
           <code>surface</code> / <code>on-surface</code> /

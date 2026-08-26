@@ -1,0 +1,30 @@
+@use "../abstracts" as *;
+
+// Scrim (M3 Expressive). A foundation, not a component: there is no markup an
+// author writes to get one. It is the wash a modal surface puts behind itself
+// to dim what it covers, and this is the one place its value is decided -
+// dialogs, both sheets, the navigation drawer and the modal navigation rail
+// all consume the same custom property - the sheets through the
+// `dialog::backdrop` rule they already share, so they declare nothing.
+//
+// https://m3.material.io/styles/color/roles - the `scrim` role, at 32%.
+//
+// Blur is deliberately not part of it. Only the basic dialog frosts what is
+// behind it (`--md-comp-basic-dialog-scrim-blur`); the drawer and the rail
+// slide over the page and would smear it.
+//
+// Declared on :root rather than per surface because four of the five consumers
+// paint into `::backdrop`, which has no box of its own to hang a token on -
+// only the rail uses a `::before`. `::backdrop` inherits from the element it
+// belongs to, so setting this on one `<dialog>` still dims only that one.
+//
+// Resolving the mix here narrows one thing, deliberately: `--md-sys-color-scrim`
+// is substituted at :root, so overriding *that* on a subtree no longer reaches a
+// scrim below it. Override it at the root to move every scrim, or set
+// `--md-comp-scrim-color` on a surface to move one. A scrim is painted by a
+// top-layer or fixed box covering the viewport, so it has no meaningful subtree
+// to be rethemed by in the first place.
+
+:root {
+  --md-comp-scrim-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+}

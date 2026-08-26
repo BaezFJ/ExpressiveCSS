@@ -16,6 +16,38 @@ below is the whole story for that component.
 
 ### Added
 
+- **Scrim** (`--md-comp-scrim-color`), the wash a modal surface paints behind
+  itself, defined once. The dialog, the navigation drawer and the navigation
+  rail were each mixing `scrim` at 32% themselves — four rules across three
+  partials, none of which knew about the others. All four now read the token.
+
+  Both sheets are consumers but needed no edit: they never had a value of their
+  own, taking the modal wash from the `dialog::backdrop` rule they already
+  share and only suppressing it for the standard variant.
+
+  A **foundation**, not a component: there is no markup an author writes to get
+  one, so `semantics.json` carries it with `kind: "foundation"` and no rules,
+  the way `transitions` is carried. Its consumers already own the rows for the
+  markup that ends up wearing it.
+
+  It is declared on `:root` rather than per surface because three of the five
+  consumers paint into `::backdrop`, which has no box of its own to hang a token
+  on. `::backdrop` inherits from the element it belongs to, so setting
+  `--md-comp-scrim-color` on one `<dialog>` dims just that one, and setting it
+  on `:root` rethemes every scrim on the page.
+
+  **One thing narrows, deliberately.** The mix resolves at `:root`, so
+  `--md-sys-color-scrim` is substituted there and overriding *that* token on a
+  subtree no longer reaches a scrim below it. Override it at the root to move
+  every scrim, or set `--md-comp-scrim-color` on a surface to move one. A scrim
+  is painted by a top-layer or fixed box covering the viewport, so there is no
+  meaningful subtree for it to have followed.
+
+  Blur is deliberately not folded in. Only the basic dialog frosts what is
+  behind it (`--md-comp-basic-dialog-scrim-blur`, unchanged); the drawer and the
+  rail slide over the page and would smear it. Nothing changes visually — all
+  four sites computed `oklab(0 0 0 / 0.32)` before and after.
+
 - **Bottom app bar** (`.bottom-app-bar`), an 80dp row of the current screen's
   commands at the bottom edge, with an optional FAB. CSS only.
 
