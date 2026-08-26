@@ -160,10 +160,15 @@ default one.
 element's used `color-scheme`, so an unpaired `:root[theme='dark']` means a
 shadow tree cannot be pinned to a theme the way a page can.
 
-`:host` matches nothing in a document and weighs the same as `:root`, so
-pairing an anchor changes neither a normal load nor which rule wins.
-`tests/shadow-dom.test.js` fails any rule that skips it; the commitment behind
-it is `adr/0002-shadow-only-stylesheet-adoption.md`.
+`:host` matches nothing in a document, so pairing an anchor cannot change a
+normal load. It is not weightless, though: bare `:host` matches `:root` at
+(0,1,0), but `:host(<compound>)` adds its argument's weight on top, so
+`:host([vibrant])` is (0,2,0) against `[vibrant]`'s (0,1,0). The two arms match
+disjoint elements and never compete, so nothing in the sheet turns on it — but
+do not reach for the pairing as a way to keep specificity flat.
+
+`tests/shadow-dom.test.js` fails any rule that skips the pairing; the commitment
+behind it is `adr/0002-shadow-only-stylesheet-adoption.md`.
 
 ## Translucent colors
 

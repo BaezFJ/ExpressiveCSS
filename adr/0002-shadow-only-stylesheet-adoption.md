@@ -37,6 +37,25 @@ The half that was defined was defined in terms of the half that was not:
 invalid at computed-value time, so a shadow-only load did not lose 338 tokens
 and keep the rest — it lost every colour in the sheet.
 
+## The failure, measured
+
+A page that adopts the sheet into a shadow root and nowhere else, reading
+computed values off a `.button`, a `.row` and a `<span class="material-symbols">`
+inside it. Left, the sheet at `fb76d2f`; right, after the pairing:
+
+| | before | after |
+| --- | --- | --- |
+| button `background-color` | `rgba(0, 0, 0, 0)` | `oklch(0.8263 0.123 212.611)` |
+| `.row` `gap` | `normal` | `24px` |
+| icon `font-family` | `system-ui` | `"Material Symbols Outlined"` |
+| `--md-sys-color-primary` | *empty* | `light-dark(oklch(…), oklch(…))` |
+
+The last row is the one to read twice. That token was *declared* — its block
+already carried `:host` — and it still computes to nothing, because substituting
+an undefined `var()` into a custom property makes its computed value the
+guaranteed-invalid value. Half the sheet defined in terms of the other half is
+not half-broken.
+
 ## Considered options
 
 **Drop the three `:host` rules instead.** Cheaper in one sense: it is fewer
@@ -56,15 +75,21 @@ anyway. A convention nothing checks decays at the rate components are added.
 
 ## Consequences
 
-Eleven rules carry a `:host` twin, `[icon-style]`, the three `[theme]`
-selectors and the grid's two `body` rules included, so a shadow tree can be
-pinned to a theme or an icon style the way a page can, and a grid in one has a
-gutter. `:host` matches nothing in a document, so none of this
+Nineteen rules in the compiled sheet carry a `:host` arm, `[icon-style]`, the
+three `[theme]` selectors and the grid's two `body` rules included, so a shadow
+tree can be pinned to a theme or an icon style the way a page can, and a grid in
+one has a gutter. `:host` matches nothing in a document, so none of this
 changes what a normally-loaded sheet does.
 
 The commitment is bounded to what CSS alone can honour. Adopting the sheet does
 not carry the JavaScript with it: components still need `Expressive.AutoInit()`
 against the right root, and nothing here claims a shadow tree is auto-initialized.
 
-`:host` has no effect on specificity — it is one pseudo-class, the same weight
-as `:root` — so pairing an anchor cannot shift which rule wins.
+Pairing does move specificity, which is worth stating because the obvious
+assumption is that it does not. Bare `:host` weighs (0,1,0), the same as
+`:root`; but `:host(<compound>)` takes `:host`'s weight **plus** its argument's,
+so `[vibrant]` at (0,1,0) pairs with `:host([vibrant])` at (0,2,0). Nothing in
+the sheet is affected, because the two arms of a pair match disjoint elements —
+one only in a document, the other only a shadow host — so they never compete.
+The trap is a rule that would need to *lose* to a `:host`-paired one inside a
+shadow tree.

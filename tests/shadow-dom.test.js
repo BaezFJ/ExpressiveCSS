@@ -77,31 +77,42 @@ function splitSelectorList(selector) {
 }
 
 /**
- * The leading compound of `selector`, if it can only ever match a document root
- * or a descendant of one: `:root`, `:root[theme=dark]`, `body`, `[vibrant]`.
+ * The part of `selector` that pins it to a document, if any.
  *
- * `html` and `body` count for the same reason `:root` does, and are not a
- * theoretical case - `body` carried `--gap-size`, which `.row` reads without a
- * fallback, so a `.row` in a shadow-only load had an invalid `gap`. A shadow
- * root has no document element and no `<body>` inside it.
+ * Two shapes qualify, for two different reasons. `:root`, `html` and `body`
+ * are *unreachable* from inside a shadow root - there is no document element
+ * and no <body> in there - and stay unreachable however the compound
+ * continues, so `:root.dark` and `:root:not([theme])` count too. A bare
+ * attribute compound like `[vibrant]` is reachable as a descendant but never
+ * as the host, which is the case the vibrant remap was written for.
  *
- * Returns null when the compound continues with a class, id, or pseudo-class -
- * `menu[id][vibrant]` and `.icon-button:is([disabled])` name a real element and
- * are reachable inside a shadow tree already.
+ * Returns null for anything naming a real element - `menu[id][vibrant]` and
+ * `.icon-button:is([disabled])` already work inside a shadow tree.
+ *
+ * `--gap-size` on `body` is why the element anchors are here: `.row` reads it
+ * with no fallback, so a grid in a shadow-only load had an invalid `gap`.
  */
 function rootAnchor(selector) {
-  const [match, root, attrs] = /^(:root|html|body)?((?:\[[^\]]+\])*)/.exec(selector);
-  if (!root && !attrs) return null;
-  const rest = selector.slice(match.length);
+  const [head, root] = /^(:root|html|body)?/.exec(selector);
+  if (root) {
+    const after = selector.slice(head.length);
+    const end = after.search(/[\s>+~]/);
+    const compound = end === -1 ? after : after.slice(0, end);
+    // An element anchor carries nothing into :host() - `body[dir=rtl]` is an
+    // attribute of the document body, not of the shadow host. `:root` is the
+    // host's own counterpart, so its compound comes along.
+    return { arg: root === ':root' ? compound : '', rest: end === -1 ? '' : after.slice(end) };
+  }
+  const [attrs] = /^(?:\[[^\]]+\])*/.exec(selector);
+  if (!attrs) return null;
+  const rest = selector.slice(attrs.length);
   if (rest && !/^[\s>+~]/.test(rest)) return null;
-  // An element anchor carries no attributes into :host() - `body[dir=rtl]` is
-  // an attribute of the document body, not of the shadow host.
-  return { attrs: root === ':root' || !root ? attrs : '', rest };
+  return { arg: attrs, rest };
 }
 
 /** The `:host` selector that reaches the same elements from inside a shadow root. */
-function hostTwin({ attrs, rest }) {
-  return (attrs ? `:host(${attrs})` : ':host') + rest;
+function hostTwin({ arg, rest }) {
+  return (arg ? `:host(${arg})` : ':host') + rest;
 }
 
 // color-scheme rides along with the custom properties because it is a token in
@@ -133,7 +144,8 @@ describe('Shadow-only loading', () => {
 
   test('the reference layer is one of them', () => {
     // The 338-declaration block that made the split fatal rather than partial.
-    assert.match(css, /:root, :host \{\s*--md-source:/);
+    const ref = rules().find((r) => r.body.includes('--md-source:'));
+    assert.ok(ref.selectors.includes(':host'), ref.selectors.join(', '));
   });
 
   test('a shadow-only load resolves --md-sys-color-* to real values', () => {
