@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" theme="auto">
 <head>
@@ -897,9 +898,73 @@
 
     </main>
 
+    <menu id="theme-menu">
+        <li data-theme="light" role="menuitemradio" aria-checked="false">
+            <button type="button">
+                <span class="material-symbols" aria-hidden="true">light_mode</span>
+                Light
+            </button>
+        </li>
+        <li data-theme="dark" role="menuitemradio" aria-checked="false">
+            <button type="button">
+                <span class="material-symbols" aria-hidden="true">dark_mode</span>
+                Dark
+            </button>
+        </li>
+        <li data-theme="auto" class="selected" role="menuitemradio" aria-checked="true">
+            <button type="button">
+                <span class="material-symbols" aria-hidden="true">contrast</span>
+                Auto
+            </button>
+        </li>
+    </menu>
+
+    <dialog id="source-color-dialog" aria-labelledby="source-color-title">
+        <span class="material-symbols" aria-hidden="true">palette</span>
+        <h2 id="source-color-title">Source color</h2>
+        <div>
+            <p>
+                The seed every generated ramp derives from. Pick one and browse
+                the docs &mdash; the whole theme follows. Error does not: it is
+                a fixed hue.
+            </p>
+            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
+                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
+            </div>
+            <div class="source-color-custom">
+                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
+                <div class="field outlined">
+                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
+                    <label for="source-color-hex">Hex</label>
+                </div>
+            </div>
+            <div class="source-color-preview" aria-hidden="true">
+                <span class="source-color-chip primary on-primary-text">primary</span>
+                <span class="source-color-chip secondary on-secondary-text">secondary</span>
+                <span class="source-color-chip tertiary on-tertiary-text">tertiary</span>
+                <span class="source-color-chip error on-error-text">error</span>
+            </div>
+        </div>
+        <form method="dialog">
+            <button type="button" class="text" id="source-color-reset">Reset</button>
+            <button type="submit" value="done">Done</button>
+        </form>
+    </dialog>
+
+
+
     <footer>
         <div class="container">
-
+            
             <nav aria-labelledby="footer-1">
                 <h2 id="footer-1">Start</h2>
                 <p>If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.</p>
@@ -974,68 +1039,6 @@
             </small>
         </div>
     </footer>
-
-    <menu id="theme-menu">
-        <li data-theme="light" role="menuitemradio" aria-checked="false">
-            <button type="button">
-                <span class="material-symbols" aria-hidden="true">light_mode</span>
-                Light
-            </button>
-        </li>
-        <li data-theme="dark" role="menuitemradio" aria-checked="false">
-            <button type="button">
-                <span class="material-symbols" aria-hidden="true">dark_mode</span>
-                Dark
-            </button>
-        </li>
-        <li data-theme="auto" class="selected" role="menuitemradio" aria-checked="true">
-            <button type="button">
-                <span class="material-symbols" aria-hidden="true">contrast</span>
-                Auto
-            </button>
-        </li>
-    </menu>
-
-    <dialog id="source-color-dialog" aria-labelledby="source-color-title">
-        <span class="material-symbols" aria-hidden="true">palette</span>
-        <h2 id="source-color-title">Source color</h2>
-        <div>
-            <p>
-                The seed every generated ramp derives from. Pick one and browse
-                the docs &mdash; the whole theme follows. Error does not: it is
-                a fixed hue.
-            </p>
-            <div class="source-color-swatches" role="radiogroup" aria-label="Preset source colors">
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006A79" title="Teal (default)" aria-label="Teal, default" style="background:#006A79"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006495" title="Blue" aria-label="Blue" style="background:#006495"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#0B57D0" title="Azure" aria-label="Azure" style="background:#0B57D0"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#6750A4" title="Purple" aria-label="Purple" style="background:#6750A4"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B4585" title="Orchid" aria-label="Orchid" style="background:#8B4585"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#9C4048" title="Rose" aria-label="Rose" style="background:#9C4048"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#8B5000" title="Amber" aria-label="Amber" style="background:#8B5000"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#3B6D11" title="Green" aria-label="Green" style="background:#3B6D11"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#006D3B" title="Forest" aria-label="Forest" style="background:#006D3B"></button>
-                <button type="button" class="source-color-swatch" role="radio" aria-checked="false" data-source="#4A4458" title="Slate" aria-label="Slate" style="background:#4A4458"></button>
-            </div>
-            <div class="source-color-custom">
-                <input id="source-color-input" type="color" value="#006A79" aria-label="Custom source color">
-                <div class="field outlined">
-                    <input id="source-color-hex" type="text" spellcheck="false" maxlength="7" value="#006A79" placeholder=" " autocomplete="off">
-                    <label for="source-color-hex">Hex</label>
-                </div>
-            </div>
-            <div class="source-color-preview" aria-hidden="true">
-                <span class="source-color-chip primary on-primary-text">primary</span>
-                <span class="source-color-chip secondary on-secondary-text">secondary</span>
-                <span class="source-color-chip tertiary on-tertiary-text">tertiary</span>
-                <span class="source-color-chip error on-error-text">error</span>
-            </div>
-        </div>
-        <form method="dialog">
-            <button type="button" class="text" id="source-color-reset">Reset</button>
-            <button type="submit" value="done">Done</button>
-        </form>
-    </dialog>
 
 
 <script src="/dist/js/expressive.min.js"></script>
