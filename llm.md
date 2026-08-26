@@ -5151,7 +5151,9 @@ Floating is the default shape and standard the default color, so neither needs a
 
 **Floating** hugs its actions: 64dp tall, 32dp stadium corners, elevation 3, 8dp end insets, 16dp from the viewport edge (24dp when `vertical`). **Docked** is full width, square, unlifted, 16dp end insets, its actions between 4dp and 32dp apart. `vertical` stacks a floating bar; a docked bar stays a horizontal strip.
 
-**Standard** is `surface-container` with `on-surface-variant` content and a `secondary-container` selection. **Vibrant** is `primary-container` with `on-primary-container` content, and selection moves to `surface-container` / `on-surface` so it still reads against the accent. Vibrant also answers to the `vibrant` attribute — the [emphasis foundation](#vibrant-emphasis)'s own spelling — written on the bar itself.
+**Standard** is `surface-container` with `on-surface-variant` content and a `secondary-container` selection. **Vibrant** is `primary-container` with `on-primary-container` content, and selection moves to `surface-container` / `on-surface` so it still reads against the accent.
+
+The `vibrant` *attribute* is a different thing, and the bar deliberately does not read it as a class. That attribute is the [emphasis foundation](#vibrant-emphasis), whose one ramp is tertiary; a bar inside it — or carrying it — is repainted by the foundation alone, with no toolbar-specific code, because every colour above is a token pointed at a `--md-sys-color-*` role. Nothing collides: selection is `secondary-container`, which the foundation leaves alone.
 
 ```html
 <div class="toolbar vibrant">…</div>
@@ -5193,7 +5195,7 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 ### Fixed
 
-`fixed` pins the bar to the viewport, inset by its own external space. A floating bar sits 16dp from the bottom-center; add `top` to move it to the top. A vertical bar sits 24dp from the start edge; `right` flips it. A docked bar sticks to the bottom edge; `top` sticks it to the top.
+`fixed` pins the bar to the viewport, inset by its own external space. A floating bar sits 16dp from the bottom-center; add `top` to move it to the top. A vertical bar sits 24dp from the start edge; `right` flips it. A docked bar sticks to the bottom edge and states its own inset; `top` sticks it to the top.
 
 ```html
 <div class="toolbar fixed">…</div>

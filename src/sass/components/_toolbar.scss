@@ -18,11 +18,14 @@
 //   docked   surface-container, square,  primary-container, square,
 //            full width, no lift         full width, no lift
 //
-// Neither default needs a class, and both defaults are written as the
-// *absence* of the other side rather than as their own selector. That is
-// what makes `.floating` and `.standard` real spellings for free: a bar
-// naming either still matches the default arm, so all four variants can be
-// written out in full without four rules or two inert ones.
+// Neither default needs a class. Each default arm is the *absence* of the
+// other side, so a bar that names nothing still lands on it - and each also
+// names its own class, so `.floating` and `.standard` are spellings a grep of
+// the compiled sheet finds rather than prose the docs assert about nothing.
+// All four variants can therefore be written out in full, and the two
+// non-default arms are declared after their defaults so that markup naming
+// both sides of an axis resolves to the more specific one on source order
+// rather than on a specificity accident.
 //
 // Tokens follow the 34.0.21 sets md.comp.toolbar.{standard, vibrant, docked,
 // floating, floating.fab}; https://m3.material.io/components/toolbars/specs
@@ -30,13 +33,17 @@
 // floating) and a color pair (standard, vibrant), which is the same two axes
 // as above; floating.fab is the companion FAB, not the in-bar .filled action.
 //
-// Color: vibrant is M3's own toolbar-vibrant set, primary-container, and it
-// answers to [vibrant] - the emphasis foundation's attribute - as well as to
-// the class. The foundation remaps the surface family onto tertiary within
-// its subtree, so under the attribute spelling the neutral selected chip
-// resolves to the accent container instead. That is the same answer
-// menus-vibrant gives selection for the same reason, so both spellings stay
-// legible; see tokens/_vibrant.scss.
+// Color: `.vibrant` is M3's own toolbar-vibrant set - primary-container - and
+// it is deliberately *not* also spelled `[vibrant]`. That attribute is the
+// emphasis foundation, whose one ramp is tertiary; a bar carrying it is
+// repainted by the foundation alone, with no toolbar-specific code, because
+// every colour below is a --md-comp-toolbar-* token pointed at a
+// --md-sys-color-* role. Matching the attribute here as well would give one
+// variant two renderings - the class's primary chip against the foundation's
+// tertiary one - and would contradict tokens/_vibrant.scss, which states that
+// a component carrying its own .vibrant class keeps the colours its own M3
+// token set gives it. Nothing collides either way: selection is
+// secondary-container, which the foundation does not remap.
 //
 // Do not show a toolbar at the same time as nav.navigation-bar.
 //
@@ -55,9 +62,10 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
 
 // The two axes. `.max` is BeerCSS's name for docked; `.filled` is the older
 // name for vibrant. Both stay in the :is() lists.
-$_floating: "#{$_toolbar}:not(.docked, .max)";
+$_floating: "#{$_toolbar}:is(.floating, :not(.docked, .max))";
 $_docked: "#{$_toolbar}:is(.docked, .max)";
-$_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
+$_standard: "#{$_toolbar}:is(.standard, :not(.vibrant, .filled))";
+$_vibrant: "#{$_toolbar}:is(.vibrant, .filled)";
 
 #{$_toolbar} {
   // Shared across all four variants. --md-comp-toolbar-color stands for
@@ -67,10 +75,6 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
   --md-comp-toolbar-between-space: 4px;
   --md-comp-toolbar-action-size: 48px;
   --md-comp-toolbar-icon-size: 24px;
-  --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
-  --md-comp-toolbar-color: var(--md-sys-color-on-surface-variant);
-  --md-comp-toolbar-selected-container-color: var(--md-sys-color-secondary-container);
-  --md-comp-toolbar-selected-color: var(--md-sys-color-on-secondary-container);
 
   box-sizing: border-box;
   display: inline-flex;
@@ -230,14 +234,24 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
   --md-comp-toolbar-container-shape: 0;
   --md-comp-toolbar-leading-space: 16px;
   --md-comp-toolbar-trailing-space: 16px;
-  --md-comp-toolbar-external-space: 0px;
   --md-comp-toolbar-min-spacing: 4px;
   --md-comp-toolbar-max-spacing: 32px;
 
   display: flex;
   width: 100%;
+  // 4vw is the growth rate between the two bounds, and has no token behind it
+  // because M3 states the bounds and not the ramp. The viewport unit is honest
+  // here and only here: a docked bar is full width by definition.
   gap: clamp(var(--md-comp-toolbar-min-spacing), 4vw, var(--md-comp-toolbar-max-spacing));
   @include z-depth("0");
+}
+
+// Standard color style, the same in both shapes.
+#{$_standard} {
+  --md-comp-toolbar-container-color: var(--md-sys-color-surface-container);
+  --md-comp-toolbar-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-toolbar-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-toolbar-selected-color: var(--md-sys-color-on-secondary-container);
 }
 
 // Vibrant color style, the same in both shapes. Selection moves to a neutral
@@ -294,18 +308,33 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
     color: var(--md-comp-toolbar-floating-fab-icon-color);
     @include z-depth("1");
 
-    &:hover,
-    &:active,
-    &:focus {
+    // One opacity per state. All three arms are needed, bare `:focus`
+    // included: .extra.circle draws its own `:active, :focus` tint over
+    // primary-container, and leaving either uncovered would flash the FAB's
+    // default colour through a click on this one.
+    &:hover {
       background-color: color-mix(
         in oklab,
         var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("hover"),
         var(--md-comp-toolbar-floating-fab-container-color)
       );
+      @include z-depth("2");
     }
 
-    &:hover {
-      @include z-depth("2");
+    &:focus {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("focus"),
+        var(--md-comp-toolbar-floating-fab-container-color)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("pressed"),
+        var(--md-comp-toolbar-floating-fab-container-color)
+      );
     }
   }
 }
@@ -319,7 +348,9 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
 
 // Pin to the viewport. The inset is the variant's own external space:
 // 16dp for a horizontal floating bar, 24dp for a vertical one, 0 for a
-// docked bar, which sits on the edge.
+// docked bar, which states its own and so declares no external space at all.
+// Bottom is the default, so `.bottom`
+// has no rule - a bar naming it falls through to the one above.
 #{$_toolbar}.fixed {
   position: fixed;
   z-index: 996;
@@ -331,10 +362,6 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
   inset: var(--md-comp-toolbar-external-space) auto auto 50%;
 }
 
-#{$_toolbar}.fixed.bottom {
-  inset: auto auto var(--md-comp-toolbar-external-space) 50%;
-}
-
 #{$_floating}.vertical.fixed {
   inset: 50% auto auto var(--md-comp-toolbar-external-space);
   transform: translateY(-50%);
@@ -344,8 +371,7 @@ $_vibrant: "#{$_toolbar}:is(.vibrant, .filled, [vibrant])";
   inset: 50% var(--md-comp-toolbar-external-space) auto auto;
 }
 
-#{$_docked}.fixed,
-#{$_docked}.fixed.bottom {
+#{$_docked}.fixed {
   inset: auto 0 0 0;
   transform: none;
   padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));

@@ -36,13 +36,13 @@ describe('Toolbar CSS', () => {
     );
   });
 
-  // Floating and docked are a negation and its complement, which is what makes
-  // `.floating` and `.standard` writable without a rule of their own: a bar
-  // that names either still matches the default arm.
-  test('floating is the default shape, so .floating is addressable', () => {
+  // Each default arm is its own class OR the absence of the other side, so a
+  // bar that names nothing still lands on it and a bar that spells it out is a
+  // class a grep of the sheet finds - the rule docs/ is held to.
+  test('floating is the default shape, and .floating is in the sheet', () => {
     const rule = ruleWith('.toolbar', ':not(.docked');
     assert.ok(rule, 'no floating-scoped rule');
-    assert.doesNotMatch(rule[1], /\.floating/, '.floating must not be required');
+    assert.match(rule[1], /\.floating/, '.floating must be a spelling of it');
     assert.match(rule[2], /--md-comp-toolbar-container-shape:\s*32px/);
     assert.match(rule[2], /--md-comp-toolbar-leading-space:\s*8px/);
     // md.comp.toolbar.floating.container.elevation is level3, not level2.
@@ -58,8 +58,14 @@ describe('Toolbar CSS', () => {
     assert.match(rule[1], /\.max/, '.max stays the alias');
   });
 
-  test('vibrant is primary-container, and the attribute spells it too', () => {
-    const rule = ruleWith('.toolbar', '.vibrant');
+  test('.standard is in the sheet too', () => {
+    const rule = ruleWith('.toolbar', ':not(.vibrant');
+    assert.ok(rule, 'no standard-scoped rule');
+    assert.match(rule[1], /\.standard/, '.standard must be a spelling of it');
+  });
+
+  test('vibrant is primary-container, and leaves [vibrant] to the foundation', () => {
+    const rule = ruleWith('.toolbar', ':is(.vibrant');
     assert.ok(rule, 'no .toolbar.vibrant rule');
     assert.match(rule[2], /--md-comp-toolbar-container-color:\s*var\(--md-sys-color-primary-container\)/);
     assert.match(rule[2], /--md-comp-toolbar-color:\s*var\(--md-sys-color-on-primary-container\)/);
@@ -69,7 +75,9 @@ describe('Toolbar CSS', () => {
       rule[2],
       /--md-comp-toolbar-selected-container-color:\s*var\(--md-sys-color-surface-container\)/
     );
-    assert.match(rule[1], /\[vibrant\]/, 'the foundation attribute must reach it');
+    // Not [vibrant]: that attribute is the emphasis foundation, whose ramp is
+    // tertiary. Matching it here would render one variant two ways.
+    assert.doesNotMatch(rule[1], /\[vibrant\]/, 'the attribute belongs to the foundation');
     assert.doesNotMatch(rule[1], /\.fixed-action-btn(?!\))/, 'must miss the FAB transition');
   });
 

@@ -327,11 +327,13 @@ below is the whole story for that component.
   (was `on-surface`), and a vibrant bar's selected action is
   **`surface-container`** (was `surface`).
 
-  `vibrant` now also reads as an attribute on the bar, the spelling the
-  emphasis foundation uses, so `<div class="toolbar" vibrant>` is a vibrant
-  toolbar. Under that spelling the foundation remaps the neutral selected chip
-  onto the accent container — the same answer `menus-vibrant` gives selection,
-  for the same reason.
+  `.vibrant` stays M3's own toolbar-vibrant set and deliberately does *not*
+  also answer to the `vibrant` attribute. That attribute is the emphasis
+  foundation, whose one ramp is tertiary; a bar inside it is repainted by the
+  foundation alone, with no toolbar-specific code, because every colour the
+  component draws is now a `--md-comp-toolbar-*` token pointed at a
+  `--md-sys-color-*` role. Matching the attribute here as well would render
+  one variant two ways and would contradict `tokens/_vibrant.scss`.
 
   The companion FAB in `.toolbar-group` takes `md.comp.toolbar.floating.fab`:
   `secondary-container` beside a standard bar, `tertiary-container` beside a

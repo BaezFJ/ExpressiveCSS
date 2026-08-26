@@ -685,7 +685,9 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 | Colour | Container | Content | Selected |
 | --- | --- | --- | --- |
 | Standard (default) | `surface-container` | `on-surface-variant` | `secondary-container` / `on-secondary-container` |
-| Vibrant (`.vibrant`, or the `vibrant` attribute on the bar) | `primary-container` | `on-primary-container` | `surface-container` / `on-surface` |
+| Vibrant (`.vibrant`) | `primary-container` | `on-primary-container` | `surface-container` / `on-surface` |
+
+The `vibrant` *attribute* is the emphasis foundation, not this class: its ramp is tertiary, and it repaints a bar with no toolbar-specific code because every colour above is a token pointed at a `--md-sys-color-*` role.
 
 **Anatomy.** Container (`div.toolbar`, not `<nav>`) + action children (`button` / `a`). Icon in `<span class="material-symbols" aria-hidden="true">`, label in its own `<span>`; an icon-only action needs an `aria-label`. `.active` selected. `.filled` emphasized (the in-bar FAB). A floating bar may pair with a **companion FAB** — a sibling inside `div.toolbar-group`, 8 dp away, one elevation level below the bar, `secondary-container` beside a standard bar and `tertiary-container` beside a vibrant one.
 

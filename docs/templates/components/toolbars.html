@@ -158,13 +158,15 @@
           still reads against the accent. Either shape takes either color.
         </p>
         <p>
-          The bar also answers to the <code>vibrant</code> attribute, the
-          <a href="{{ url_for('themes') }}#vibrant">emphasis foundation</a>'s
-          own spelling, written on the bar itself. That foundation remaps the
-          surface family onto the tertiary container inside its subtree, so
-          under the attribute the neutral selected chip resolves to the accent
-          container instead — the same answer Material's
-          <code>menus-vibrant</code> gives selection, for the same reason.
+          The <code>vibrant</code> <em>attribute</em> is a different thing, and
+          the bar deliberately does not answer to it as a class. That attribute
+          is the
+          <a href="{{ url_for('themes') }}#vibrant">emphasis foundation</a>,
+          whose one ramp is tertiary; a bar inside it — or carrying it — is
+          repainted by the foundation alone, with no toolbar-specific code,
+          because every colour above is a token pointed at a
+          <code>--md-sys-color-*</code> role. Nothing collides: selection is
+          <code>secondary-container</code>, which the foundation leaves alone.
         </p>
         <p>
           <div class="toolbar vibrant">
@@ -360,7 +362,7 @@
             <tr><td><code>--md-comp-toolbar-leading-space</code></td><td>8px (16px when docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-trailing-space</code></td><td>8px (16px when docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-between-space</code></td><td>4px</td></tr>
-            <tr><td><code>--md-comp-toolbar-external-space</code></td><td>16px (24px when vertical, 0 when docked)</td></tr>
+            <tr><td><code>--md-comp-toolbar-external-space</code></td><td>16px, 24px when vertical (floating only — a docked bar sits on the edge)</td></tr>
             <tr><td><code>--md-comp-toolbar-min-spacing</code></td><td>4px (docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-max-spacing</code></td><td>32px (docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-action-size</code></td><td>48px</td></tr>
