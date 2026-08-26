@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**45 of 45 rows enforced; 0 remaining.**
+**46 of 46 rows enforced; 0 remaining.**
 
-42 of those rows are components - a part of the framework an author writes markup for.
+43 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 42 components declare conformance debt.**
+**4 of 43 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -384,6 +384,18 @@ Swept 0.8.0.
 | `list-item-not-selected` | forbid | `li[aria-selected]:not([role])` | must not match |
 
 - **list-item-not-selected** - aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.
+
+### loading-indicator
+
+The M3 Expressive indicator for short waits. One empty <span> that reports nothing on its own, so the role and the name are both the author's - it is a live region, not a progressbar: it has no value to report. It supersedes the indeterminate circular case of `progress`, which keeps every determinate case and both linear bars.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `loading-indicator-reports-itself` | require-attr | `.loading-indicator` | must have `role` = `status` |
+| `loading-indicator-is-named` | require-accessible-name | `.loading-indicator` | must end up with an accessible name |
+
+- **loading-indicator-reports-itself** - An empty <span class="loading-indicator"> is a shape drawn with CSS and reports nothing. It needs role="status" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it.
+- **loading-indicator-is-named** - The indicator has no text of its own, so role="status" would announce an empty string. Name it - aria-label="Loading", or aria-labelledby pointing at the copy beside it.
 
 ### menu
 
