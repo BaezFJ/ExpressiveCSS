@@ -1,0 +1,218 @@
+{% extends "docs.html" %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
+{% from "macros/api.html" import token_table %}
+
+{% set page_name = "Bottom app bar" %}
+{% set page_blurb = "This screen's commands at the bottom edge, with an optional FAB — not its destinations." %}
+
+{% block page %}
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
+        <p class="flow-text">
+          A <code>.bottom-app-bar</code> is an 80dp row of actions pinned to
+          the bottom of the screen: the commands that belong to the screen the
+          reader is already on, plus, optionally, that screen's
+          <a href="{{ url_for('floating_action_button') }}">FAB</a>.
+        </p>
+        <p>
+          Anatomy is the HTML. Direct <code>&lt;a&gt;</code> or
+          <code>&lt;button&gt;</code> children holding a single icon are the
+          actions; a <code>.button.extra.circle</code> child is the FAB and is
+          pushed to the end. Every action is icon-only, so every one of them
+          carries an <code>aria-label</code> — that is the only name it has.
+        </p>
+        <div class="bottom-app-bar">
+          <button type="button" aria-label="Check">
+            <span class="material-symbols" aria-hidden="true">check_box</span>
+          </button>
+          <button type="button" aria-label="Edit">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" aria-label="Share">
+            <span class="material-symbols" aria-hidden="true">share</span>
+          </button>
+          <button type="button" aria-label="More options">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
+{% call code() %}
+<div class="bottom-app-bar">
+  <button type="button" aria-label="Check">
+    <span class="material-symbols" aria-hidden="true">check_box</span>
+  </button>
+  <button type="button" aria-label="Edit">
+    <span class="material-symbols" aria-hidden="true">edit</span>
+  </button>
+  <button type="button" aria-label="Share">
+    <span class="material-symbols" aria-hidden="true">share</span>
+  </button>
+  <button type="button" aria-label="More options">
+    <span class="material-symbols" aria-hidden="true">more_vert</span>
+  </button>
+</div>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("not-navigation", "Not the navigation bar") %}
+        <p>
+          These are two different components that live in the same place, and
+          picking the wrong one is the mistake this page exists to prevent.
+        </p>
+        <div class="docs-table-scroll">
+        <table class="striped">
+          <thead>
+            <tr><th></th><th>Bottom app bar</th><th>Navigation bar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Holds</td>
+              <td>Commands for this screen</td>
+              <td>3–5 destinations, the same on every screen</td>
+            </tr>
+            <tr>
+              <td>Markup</td>
+              <td><code>&lt;div class="bottom-app-bar"&gt;</code></td>
+              <td><code>&lt;nav class="navigation-bar" aria-label="…"&gt;</code></td>
+            </tr>
+            <tr>
+              <td>Landmark</td>
+              <td>None</td>
+              <td><code>navigation</code></td>
+            </tr>
+            <tr>
+              <td>Selected state</td>
+              <td>None — an action fires and is done</td>
+              <td><code>aria-current="page"</code> on the destination</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p>
+          Because a bottom app bar holds commands, it is not a
+          <code>&lt;nav&gt;</code> and takes no landmark of any kind — not
+          <code>&lt;footer&gt;</code> either, which is
+          <code>contentinfo</code>. That is the same reasoning that keeps a
+          <a href="{{ url_for('toolbars') }}">toolbar</a> out of the landmark
+          list. It takes no <code>role="toolbar"</code> either:
+          that role promises arrow-key navigation between the actions, and
+          nothing here implements one. They are reached with <kbd>Tab</kbd>.
+        </p>
+        <p>
+          Material says never show both bars at once — pick the one that
+          matches what the bottom of your screen is for. Nothing in the two
+          components' styling overlaps, so a page that shows both anyway gets
+          two correct bars stacked on top of each other rather than one broken
+          one. See the
+          <a href="{{ url_for('navigation_bar') }}">navigation bar</a> for the
+          other half of the choice.
+        </p>
+  {% endcall %}
+
+  {% call section("fab", "With a FAB") %}
+        <p>
+          Add the screen's FAB as the last child and it goes to the end of the
+          bar on its own — there is no spacer element to write. Inside the bar
+          it is flat and <code>secondary-container</code> rather than lifted and
+          <code>primary-container</code>: the bar already carries the elevation,
+          and a second shadow inside it reads as a sticker.
+        </p>
+        <div class="bottom-app-bar">
+          <button type="button" aria-label="Check">
+            <span class="material-symbols" aria-hidden="true">check_box</span>
+          </button>
+          <button type="button" aria-label="Edit">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" aria-label="More options">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+          <button type="button" class="button extra circle" aria-label="New message">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </div>
+{% call code() %}
+<div class="bottom-app-bar">
+  <button type="button" aria-label="Check">
+    <span class="material-symbols" aria-hidden="true">check_box</span>
+  </button>
+  <button type="button" aria-label="More options">
+    <span class="material-symbols" aria-hidden="true">more_vert</span>
+  </button>
+  <button type="button" class="button extra circle" aria-label="New message">
+    <span class="material-symbols" aria-hidden="true">add</span>
+  </button>
+</div>
+{% endcall %}
+        <p>
+          The bar is one height whether or not a FAB is in it. Material's
+          72dp <code>with-fab</code> height is deprecated: 80dp, content
+          vertically centred, both ways.
+        </p>
+  {% endcall %}
+
+  {% call section("fixed", "Pinning it") %}
+        <p>
+          The bar is an ordinary block by default, so it sits wherever you put
+          it — which is what the demos above are doing. Add
+          <code>.fixed</code> to pin it to the bottom edge of the viewport,
+          clear of the device's own safe area.
+        </p>
+{% call code() %}
+<div class="bottom-app-bar fixed">…</div>
+{% endcall %}
+        <p>
+          A fixed bar covers the last 80dp of the page, so leave that much
+          padding at the bottom of the content behind it.
+        </p>
+  {% endcall %}
+
+  {% call section("toolbar", "Or a docked toolbar") %}
+        <p>
+          M3 Expressive's answer to the same problem is the docked
+          <a href="{{ url_for('toolbars') }}">toolbar</a> — a shorter 64dp bar
+          holding the same kind of commands, with the emphasized action inside
+          it rather than a FAB beside them. Both ship. This component is the
+          app-bar-shaped version, and it stays because Material still publishes
+          its tokens.
+        </p>
+{% call code() %}
+<div class="toolbar docked">…</div>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("tokens", "Tokens") %}
+        <p>
+          Set these on the bar itself, or in a rule of your own. They are
+          declared on the component, so a value set on an ancestor
+          <em>element</em> is shadowed by the bar's own default rather than
+          inherited.
+        </p>
+        {% call token_table() %}
+                <tr><td><code>--md-comp-bottom-app-bar-container-color</code></td><td><code>var(--md-sys-color-surface-container)</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-container-height</code></td><td><code>80px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-container-shape</code></td><td><code>0</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-icon-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-action-size</code></td><td><code>48px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-leading-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-trailing-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-fab-container-color</code></td><td><code>var(--md-sys-color-secondary-container)</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-fab-trailing-space</code></td><td><code>16px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-z</code></td><td><code>997</code></td></tr>
+        {% endcall %}
+        <p>
+          The leading and trailing space is 4dp, not 16: an action is a 48dp
+          target around a 24dp glyph, so it brings 12dp of its own and the
+          glyph lands 16dp from the container edge.
+        </p>
+        <p>
+          The first six names are Material's own
+          (<code>md.comp.bottom-app-bar.*</code> — the container is the whole
+          family it publishes). <code>action-size</code>,
+          <code>fab-trailing-space</code> and <code>-z</code> are this
+          framework's: the actions are icon buttons and the FAB is a FAB, so
+          Material states their values under those components instead.
+        </p>
+  {% endcall %}
+{% endcall %}
+{% endblock %}

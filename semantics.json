@@ -105,6 +105,45 @@
         }
       ]
     },
+    "bottom-app-bar": {
+      "status": "enforced",
+      "note": "A row of commands at the bottom edge, with an optional FAB, added in 1.x (#35). It is the counterpart of the top app bar, not of the navigation bar: a navigation bar holds 3-5 destinations that do not change per screen, and this holds the actions of the screen the reader is already on. So it is not a <nav> and takes no landmark (rule 4), and no composite role either - `toolbar` would promise arrow-key navigation nothing here implements (rule 2), the same account the toolbar row gives. The element rule names every landmark element, not just <nav>, and that is not pedantry: the retired version of this component was keyed on `footer:has(> nav:only-child)`, which claimed the landmark from the markup alone and left the two bars one slip apart. Nothing is scripted and nothing is generated, so every rule below is about the markup an author writes.",
+      "conformance": {
+        "withheld_role": "toolbar",
+        "blocked_on": "keyboard model",
+        "rule": "bottom-app-bar-not-a-composite-widget"
+      },
+      "rules": [
+        {
+          "id": "bottom-app-bar-is-not-a-landmark",
+          "kind": "forbid",
+          "selector": ":is(nav, header, footer, main, aside).bottom-app-bar",
+          "fragmentSafe": true,
+          "message": "A bottom app bar holds this screen's commands - share, edit, delete - not destinations, so it is not a <nav> landmark (rule 4), and it is not any other landmark either: <footer> is contentinfo, <header> is banner, and a row of buttons is neither. The retired version of this component was keyed on `footer:has(> nav:only-child)`, which is why both of those spellings are named here rather than just the <nav> one. Write it on a <div>. Destinations at the bottom of the screen are nav.navigation-bar, a different component."
+        },
+        {
+          "id": "bottom-app-bar-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".bottom-app-bar",
+          "fragmentSafe": true,
+          "message": "A bottom app bar takes no composite role; its actions are reached with Tab, not arrow keys."
+        },
+        {
+          "id": "bottom-app-bar-action-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".bottom-app-bar > :is(a, button)",
+          "message": "Every action in the bar is icon-only, and the icon is aria-hidden, so the control needs an aria-label. Without one it arrives as an unnamed button."
+        },
+        {
+          "id": "bottom-app-bar-icon-hidden",
+          "kind": "require-attr",
+          "selector": ".bottom-app-bar :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "The ligature is real text and is read out verbatim. Every icon here sits inside a control that carries its own name, so all of them are decoration."
+        }
+      ]
+    },
     "bottom-sheet": {
       "status": "enforced",
       "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",

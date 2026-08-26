@@ -66,6 +66,7 @@ NAV = [
     ]),
     _group('Structure', 'view_quilt', [
         ('navbar', 'App bar'),
+        ('bottom_app_bar', 'Bottom app bar'),
         ('navigation_bar', 'Navigation bar'),
         ('navigation_rail', 'Navigation rail'),
         ('sidenav', 'Sidenav'),
@@ -414,6 +415,12 @@ def snackbar():
 @app.route('/banners.html')
 def banners():
     return render_template('components/banners.html')
+
+
+@app.route('/bottom-app-bar')
+@app.route('/bottom-app-bar.html')
+def bottom_app_bar():
+    return render_template('structure/bottom-app-bar.html')
 
 
 @app.route('/drag-handle')

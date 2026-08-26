@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**50 of 50 rows enforced; 0 remaining.**
+**51 of 51 rows enforced; 0 remaining.**
 
-47 of those rows are components - a part of the framework an author writes markup for.
+48 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 47 components declare conformance debt.**
+**5 of 48 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -88,6 +88,24 @@ A persistent in-flow message with actions, added with the banner component (#33)
 - **banner-actions-are-not-nav** - A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4).
 - **banner-icon-hidden** - The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration.
 - **banner-image-has-alt** - A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt="" is the correct answer for a decorative image, and an empty value does not satisfy require-attr.
+
+### bottom-app-bar
+
+A row of commands at the bottom edge, with an optional FAB, added in 1.x (#35). It is the counterpart of the top app bar, not of the navigation bar: a navigation bar holds 3-5 destinations that do not change per screen, and this holds the actions of the screen the reader is already on. So it is not a <nav> and takes no landmark (rule 4), and no composite role either - `toolbar` would promise arrow-key navigation nothing here implements (rule 2), the same account the toolbar row gives. The element rule names every landmark element, not just <nav>, and that is not pedantry: the retired version of this component was keyed on `footer:has(> nav:only-child)`, which claimed the landmark from the markup alone and left the two bars one slip apart. Nothing is scripted and nothing is generated, so every rule below is about the markup an author writes.
+
+**Conformance debt:** `toolbar` is withheld pending keyboard model, and `bottom-app-bar-not-a-composite-widget` enforces that, keeping every composite role out.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `bottom-app-bar-is-not-a-landmark` | forbid | `:is(nav, header, footer, main, aside).bottom-app-bar` | must not match |
+| `bottom-app-bar-not-a-composite-widget` | forbid-composite-roles | `.bottom-app-bar` | must not match with any composite role |
+| `bottom-app-bar-action-is-named` | require-accessible-name | `.bottom-app-bar > :is(a, button)` | must end up with an accessible name |
+| `bottom-app-bar-icon-hidden` | require-attr | `.bottom-app-bar :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+
+- **bottom-app-bar-is-not-a-landmark** - A bottom app bar holds this screen's commands - share, edit, delete - not destinations, so it is not a <nav> landmark (rule 4), and it is not any other landmark either: <footer> is contentinfo, <header> is banner, and a row of buttons is neither. The retired version of this component was keyed on `footer:has(> nav:only-child)`, which is why both of those spellings are named here rather than just the <nav> one. Write it on a <div>. Destinations at the bottom of the screen are nav.navigation-bar, a different component.
+- **bottom-app-bar-not-a-composite-widget** - A bottom app bar takes no composite role; its actions are reached with Tab, not arrow keys.
+- **bottom-app-bar-action-is-named** - Every action in the bar is icon-only, and the icon is aria-hidden, so the control needs an aria-label. Without one it arrives as an unnamed button.
+- **bottom-app-bar-icon-hidden** - The ligature is real text and is read out verbatim. Every icon here sits inside a control that carries its own name, so all of them are decoration.
 
 ### bottom-sheet
 

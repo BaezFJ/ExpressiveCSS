@@ -45,6 +45,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 ## Structure
 
 - [App bar](https://www.expressivecss.com/navbar.html): Material Design 3 top app bars, from the HTML.
+- [Bottom app bar](https://www.expressivecss.com/bottom-app-bar.html): This screen's commands at the bottom edge, with an optional FAB — not its destinations.
 - [Navigation bar](https://www.expressivecss.com/navigation-bar.html): Switch between UI views on compact and medium screens.
 - [Navigation rail](https://www.expressivecss.com/navigation-rail.html): Switch between UI views on mid-sized devices.
 - [Sidenav](https://www.expressivecss.com/sidenav.html): A slide-out menu, or a fixed sidebar on Expanded and wider screens.

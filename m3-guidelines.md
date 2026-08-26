@@ -224,7 +224,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 | Action inside a dialog, card, or snackbar | **Text button** |
 | Minor action, no room for a label | **Icon button** (`circle`) + tooltip |
 | Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
-| Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked) |
+| Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked), or a **bottom app bar** on compact |
 | Smart / automated action, or a filter / input token | **Chip** (see chip types) |
 | Confirm or cancel in a blocking prompt | Dialog **text buttons**, not a FAB |
 
@@ -310,7 +310,39 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.2 Navigation bar
+## 4.2 Bottom app bar
+
+**M3:** Bottom app bar. **ExpressiveCSS:** `div.bottom-app-bar`. CSS-only, and not a `<nav>` — it holds commands, not destinations.
+
+**Use when** a compact window needs 3–4 frequent actions **for the screen the user is on**, and the screen's FAB should sit with them.
+
+**Don't use when** the items are destinations (that is a navigation bar), when the window is expanded or wider (move the actions into the top app bar or a rail), or when a docked toolbar already carries them. Never show a bottom app bar and a navigation bar at once.
+
+**Anatomy**
+
+0. Container (`div.bottom-app-bar`) — 80 dp, full width, required
+1. Actions — 3–4 icon-only `<button>`/`<a>` children, each with `aria-label`
+2. FAB — optional, `button.button.extra.circle` as the last child; it goes to the end on its own
+3. `.fixed` — optional, pins the bar to the bottom edge inside the safe area
+
+The bar is one height with or without a FAB. M3's 72 dp `with-fab` height is deprecated.
+
+**Placement.** Bottom of the window, in place of a navigation bar, never beside one. A fixed bar covers the last 80 dp of the page — pad the content behind it.
+
+**Adaptive.** Compact only. Medium+: fold the actions into the top app bar, a rail, or a docked toolbar.
+
+**Behavior.** CSS-only. Nothing here is selectable: an action fires and is done, so there is no `aria-current` and no `.active`. The in-bar FAB is flat and `secondary-container` — the bar already carries the elevation.
+
+**Don't**
+
+- Don't write it as a `<nav>` or a `<footer>` — it is not a landmark of any kind — and don't give it `role="toolbar"` — the actions are reached with Tab, not arrow keys.
+- Don't put destinations in it.
+- Don't ship an icon-only action without `aria-label`.
+- Don't show it with a navigation bar or a docked toolbar.
+
+---
+
+## 4.3 Navigation bar
 
 **M3:** Navigation bar. **ExpressiveCSS:** `nav.navigation-bar`. CSS-only.
 
@@ -333,7 +365,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 3. Active indicator — required, driven by `aria-current="page"`
 4. Badge (small or large) — optional, nested in the icon
 
-**Placement.** Bottom of the window, above nothing except a snackbar (snackbars sit in front and may shift up). A FAB sits **above** the bar, trailing, and must not cover it. Do not combine with a docked toolbar.
+**Placement.** Bottom of the window, above nothing except a snackbar (snackbars sit in front and may shift up). A FAB sits **above** the bar, trailing, and must not cover it. Do not combine with a docked toolbar or a bottom app bar — that bar is this bar's alternative, holding commands where this one holds destinations.
 
 **Adaptive.** Compact: stacked. Medium: horizontal. Expanded+: **replace** the bar with a rail; do not show both.
 
@@ -348,7 +380,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.3 Navigation rail
+## 4.4 Navigation rail
 
 **M3:** Navigation rail (collapsed / expanded; expanded replaces the drawer in M3 Expressive). **ExpressiveCSS:** `nav.navigation-rail`. `AutoInit()` toggles `.expanded` from the menu button.
 
@@ -388,7 +420,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.4 Navigation drawer
+## 4.5 Navigation drawer
 
 **M3:** Navigation drawer. M3 Expressive prefers an **expanded rail** for peer destinations. **ExpressiveCSS:** `ul.navigation-drawer` (`.sidenav` is the old name and still works). `AutoInit()`.
 
@@ -425,7 +457,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.5 Tabs
+## 4.6 Tabs
 
 **M3:** Tabs (primary / secondary). **ExpressiveCSS:** `nav.tabs` of `a[href="#panel"]`. `AutoInit()`.
 
@@ -463,7 +495,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.6 Breadcrumbs
+## 4.7 Breadcrumbs
 
 **M3:** Not a core mobile component; a web wayfinding pattern. **ExpressiveCSS:** `<nav aria-label="Breadcrumb"><ol>`.
 
@@ -479,7 +511,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.7 Pagination
+## 4.8 Pagination
 
 **M3:** Not a mobile component; use for large web collections. **ExpressiveCSS:** `nav.pagination > ol`. CSS-only.
 
@@ -493,7 +525,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.8 Menu
+## 4.9 Menu
 
 **M3:** Menus (standard / vibrant). **ExpressiveCSS:** `<menu id>` + `.menu-trigger[data-target]`. `AutoInit()`.
 
@@ -526,13 +558,13 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 ---
 
-## 4.9 Panes
+## 4.10 Panes
 
 Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, `.detail-pane`, `.primary-pane`, `.supporting-pane`. Mark the compact visible pane `active`.
 
 ---
 
-## 4.10 Footer
+## 4.11 Footer
 
 **M3:** Not a mobile app-bar equivalent. **ExpressiveCSS:** `<footer>` for site chrome.
 
@@ -637,7 +669,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.4 Toolbars
 
-**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fab.toolbar` either (that is the FAB-to-toolbar transition).
+**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar (which also ships, as `div.bottom-app-bar`). **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fab.toolbar` either (that is the FAB-to-toolbar transition).
 
 **Use when** the page has a **cluster of frequent actions** that apply to the current content (formatting, selection actions, playback).
 
@@ -1191,7 +1223,6 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 | Button groups (standard / connected) | Separate buttons, or filter chips, or radios styled in a `<nav>`. No shape-morphing group. |
 | FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
 | Loading indicator (wavy morphing) | Circular `.progress` spinner. |
-| Bottom app bar | `div.toolbar` (docked) or a FAB above a navigation bar. |
 
 ---
 
@@ -1259,6 +1290,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
 | FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
 | Toolbar | `div.toolbar` | Action buttons | `.active` |
+| Bottom app bar | `div.bottom-app-bar` | 3–4 icon buttons + `aria-label`; optional trailing FAB | — |
 | Card | `article` | Anything; heading + body typical; optional direct `.primary-action` link | `.dragged`; `aria-disabled` on primary action |
 | List | `ul.list` | `li` rows | `aria-selected` / `.active` |
 | Dialog | `dialog` | Headline, body, `form method="dialog"` | `showModal()` |
@@ -1303,7 +1335,7 @@ If training data or the user says the left column, emit the right.
 | `.lever`, `.filled-in`, `.with-gap` | (omit) |
 | `Collapsible` | `<details>` / `<summary>` in the navigation drawer or page |
 | `.slider` on a range | `.range` + `input[type=range]` |
-| Bottom app bar | `div.toolbar` or FAB + navigation bar |
+| Bottom app bar | `div.bottom-app-bar`, or `div.toolbar` (docked) |
 
 ---
 

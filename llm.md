@@ -41,6 +41,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 
 - Badges
 - Banners
+- Bottom app bar
 - Breadcrumbs
 - Buttons
 - Cards
@@ -3076,6 +3077,55 @@ document.addEventListener('DOMContentLoaded', function() {
   Expressive.NavigationDrawer.init(document.querySelectorAll('.navigation-drawer'));
 });
 ```
+
+---
+
+## Bottom app bar
+
+This screen's commands at the bottom edge, with an optional FAB. A `div.bottom-app-bar` holds 3–4 icon-only actions that belong to the screen the reader is on. CSS only.
+
+This is not the navigation bar. A navigation bar holds destinations that stay the same from screen to screen and is a `<nav>` landmark; a bottom app bar holds commands, so it is not a `<nav>` — nor a `<footer>`, nor any other landmark element — and takes no `role="toolbar"` either — that role promises arrow-key navigation, and the actions here are reached with Tab. Material says never show both bars at once.
+
+Every action is icon-only, so every action carries an `aria-label`; the icon inside it is `aria-hidden="true"`.
+
+```html
+<div class="bottom-app-bar">
+  <button type="button" aria-label="Check">
+    <span class="material-symbols" aria-hidden="true">check_box</span>
+  </button>
+  <button type="button" aria-label="Edit">
+    <span class="material-symbols" aria-hidden="true">edit</span>
+  </button>
+  <button type="button" aria-label="More options">
+    <span class="material-symbols" aria-hidden="true">more_vert</span>
+  </button>
+</div>
+```
+
+### With a FAB
+
+Add the screen's FAB as the last child; it is pushed to the end of the bar, so there is no spacer to write. Inside the bar it is flat and `secondary-container` rather than lifted and `primary-container`. The bar is 80dp either way — Material's 72dp with-FAB height is deprecated.
+
+```html
+<div class="bottom-app-bar">
+  <button type="button" aria-label="Check">
+    <span class="material-symbols" aria-hidden="true">check_box</span>
+  </button>
+  <button type="button" class="button extra circle" aria-label="New message">
+    <span class="material-symbols" aria-hidden="true">add</span>
+  </button>
+</div>
+```
+
+### Fixed
+
+Add `fixed` to pin the bar to the bottom of the viewport, inside `safe-area-inset-bottom`. It covers the last 80dp of the page, so pad the content behind it.
+
+```html
+<div class="bottom-app-bar fixed">…</div>
+```
+
+M3 Expressive's docked toolbar (`div.toolbar.docked`) is the shorter 64dp answer to the same problem. Both ship.
 
 ---
 
