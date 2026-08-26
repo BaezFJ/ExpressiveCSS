@@ -675,16 +675,21 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 **Don't use** at the same time as a navigation bar. Don't use as top-level app navigation.
 
-**Variants**
+**Variants.** Four, from two independent axes — a shape and a colour style. Floating and standard are the defaults, so neither needs a class, but `floating` and `standard` are accepted spellings.
 
-| Variant | Shape | When |
+| Shape | Geometry | When |
 | --- | --- | --- |
-| Floating (default) | Hugs content, 64 dp, stadium, elevation 2 | Contextual to the body |
-| Docked | Full width, square, no elevation, bottom only | Global actions that stay the same across pages — and only if there is no navigation bar |
+| Floating (default, `div.toolbar`) | Hugs content, 64 dp, 32 dp stadium, elevation 3, 8 dp end insets | Contextual to the body |
+| Docked (`div.toolbar.docked`) | Full width, square, no elevation, 16 dp end insets, actions 4–32 dp apart, bottom only | Global actions that stay the same across pages — and only if there is no navigation bar |
 
-**Anatomy.** Container (`div.toolbar`, not `<nav>`) + action children (`button` / `a`). Icon in `<span class="material-symbols" aria-hidden="true">`, label in its own `<span>`; an icon-only action needs an `aria-label`. `.active` selected. `.filled` emphasized. Optional vibrant color style.
+| Colour | Container | Content | Selected |
+| --- | --- | --- | --- |
+| Standard (default) | `surface-container` | `on-surface-variant` | `secondary-container` / `on-secondary-container` |
+| Vibrant (`.vibrant`, or the `vibrant` attribute on the bar) | `primary-container` | `on-primary-container` | `surface-container` / `on-surface` |
 
-**Placement.** Floating: over the content, often bottom-center or next to a FAB. Docked: bottom of the window only. 16 dp horizontal padding minimum; 48 dp targets; don't pack too many controls.
+**Anatomy.** Container (`div.toolbar`, not `<nav>`) + action children (`button` / `a`). Icon in `<span class="material-symbols" aria-hidden="true">`, label in its own `<span>`; an icon-only action needs an `aria-label`. `.active` selected. `.filled` emphasized (the in-bar FAB). A floating bar may pair with a **companion FAB** — a sibling inside `div.toolbar-group`, 8 dp away, one elevation level below the bar, `secondary-container` beside a standard bar and `tertiary-container` beside a vibrant one.
+
+**Placement.** Floating: over the content, often bottom-center or next to a FAB; 16 dp from the viewport edge, 24 dp when vertical. Docked: bottom of the window only. 48 dp targets; don't pack too many controls.
 
 **Adaptive.** Compact: keep to a handful of icon buttons. Expanded+: labels may appear. If a navigation bar is present, use a floating toolbar or no toolbar, never a docked one.
 

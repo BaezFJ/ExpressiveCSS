@@ -10,11 +10,11 @@
   {% call section("anatomy", "Anatomy", heading=false) %}
         <p class="flow-text">
           Toolbars display frequently used actions relevant to the current
-          page. Two variants: a <strong>floating</strong> toolbar and a
-          <strong>docked</strong> toolbar. Use the vibrant color style for
-          greater emphasis. They can hold buttons, icon buttons, and text
-          fields, and a floating bar can sit next to a FAB. Do not show a
-          toolbar at the same time as a
+          page. There are four, from two independent axes — a
+          <strong>shape</strong> (floating or docked) and a
+          <strong>color style</strong> (standard or vibrant). They can hold
+          buttons, icon buttons, and text fields, and a floating bar can sit
+          next to a FAB. Do not show a toolbar at the same time as a
           <a href="{{ url_for('navigation_bar') }}">navigation bar</a>.
         </p>
         <p>
@@ -29,14 +29,37 @@
           emphasized control. They are CSS only — nothing to AutoInit.
         </p>
         <p>
-          Tokens follow the
+          Floating is the default shape and standard the default color, so
+          neither needs a class — but <code>floating</code> and
+          <code>standard</code> are both accepted, so a bar can name all of
+          what it is. <code>filled</code> is the older name for
+          <code>vibrant</code>, and <code>max</code> the BeerCSS name for
+          <code>docked</code>; both still work.
+        </p>
+        <table class="striped">
+            <thead>
+              <tr><th></th><th>Standard</th><th>Vibrant</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Floating</th>
+                <td><code>class="toolbar"</code></td>
+                <td><code>class="toolbar vibrant"</code></td>
+              </tr>
+              <tr>
+                <th scope="row">Docked</th>
+                <td><code>class="toolbar docked"</code></td>
+                <td><code>class="toolbar docked vibrant"</code></td>
+              </tr>
+            </tbody>
+        </table>
+        <p>
+          Tokens follow the 34.0.21 sets
+          <code>md.comp.toolbar.{standard, vibrant, docked, floating,
+          floating.fab}</code>, behind the
           <a href="https://m3.material.io/components/toolbars/specs">M3 toolbar spec</a>.
-          The default is floating: it hugs its actions, 64dp tall, 32dp
-          stadium corners, <code>surface-container</code>, elevation 2.
-          Docked is full width, the same 64dp (shorter than the old bottom
-          app bar), square, no elevation. Actions are 48dp targets with a
-          24dp icon, transparent at rest. Selected is
-          <code>secondary-container</code>.
+          Actions are 48dp targets with a 24dp icon, transparent at rest,
+          <code>on-surface-variant</code>, 4dp apart.
         </p>
         <p>
           This is not the FAB-to-toolbar transition
@@ -47,9 +70,10 @@
 
   {% call section("floating", "Floating") %}
         <p>
-          The default. Horizontal or <code>vertical</code>. Standard or
-          <code>vibrant</code>. It can hold many controls, and it can sit
-          next to a FAB.
+          The default shape. It hugs its actions — 64dp tall, 32dp stadium
+          corners, elevation 3, 8dp end insets — and sits 16dp from the
+          viewport edge when fixed. Horizontal or <code>vertical</code>. It
+          can hold many controls, and it can sit next to a FAB.
         </p>
         <p>
           <div class="toolbar">
@@ -124,12 +148,23 @@
 
   {% call section("color", "Color") %}
         <p>
-          Standard is <code>surface-container</code>.
-          <code>vibrant</code> (or <code>filled</code> on the nav) is
-          <code>primary-container</code> /
+          Standard is <code>surface-container</code> with
+          <code>on-surface-variant</code> content and a
+          <code>secondary-container</code> selection.
+          <code>vibrant</code> is <code>primary-container</code> /
           <code>on-primary-container</code> — use it when the bar needs
-          more emphasis. Selected then uses <code>surface</code> so it
-          still contrasts.
+          more emphasis — and selection moves to
+          <code>surface-container</code> / <code>on-surface</code> so it
+          still reads against the accent. Either shape takes either color.
+        </p>
+        <p>
+          The bar also answers to the <code>vibrant</code> attribute, the
+          <a href="{{ url_for('themes') }}#vibrant">emphasis foundation</a>'s
+          own spelling, written on the bar itself. That foundation remaps the
+          surface family onto the tertiary container inside its subtree, so
+          under the attribute the neutral selected chip resolves to the accent
+          container instead — the same answer Material's
+          <code>menus-vibrant</code> gives selection, for the same reason.
         </p>
         <p>
           <div class="toolbar vibrant">
@@ -188,7 +223,8 @@
         <p>
           <code>docked</code> (the M3 name; <code>max</code> is the
           BeerCSS alias) stretches the bar to the full width, drops the
-          stadium and the elevation, and spaces the actions. It replaces
+          stadium and the elevation, takes 16dp end insets, and spaces the
+          actions between 4dp and 32dp apart as the bar widens. It replaces
           the bottom app bar: same job, shorter (64dp, not 80). Use it
           for page actions; destinations belong on a
           <a href="{{ url_for('navigation_bar') }}">navigation bar</a>,
@@ -260,8 +296,12 @@
           Wrap the toolbar and a sibling
           <code>.extra.circle</code> FAB in
           <code>.toolbar-group</code>. The FAB stays a FAB — 56dp, 16dp
-          corners, its own color — and sits 8dp from the bar. That is
-          the companion FAB, not the in-bar <code>.filled</code> action.
+          corners — and sits 8dp from the bar, lifted one level where the
+          bar is lifted three. Its color follows the bar's color style:
+          <code>secondary-container</code> beside a standard bar,
+          <code>tertiary-container</code> beside a vibrant one, so you mark
+          only the bar. That is the companion FAB, not the in-bar
+          <code>.filled</code> action.
         </p>
         <div class="toolbar-group mb-3">
           <div class="toolbar vibrant">
@@ -281,14 +321,14 @@
               <span class="material-symbols" aria-hidden="true">more_vert</span>
             </button>
           </div>
-          <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
+          <button type="button" class="extra circle" aria-label="Reply">
             <span class="material-symbols" aria-hidden="true">reply</span>
           </button>
         </div>
 {% call code() %}
 <div class="toolbar-group">
   <div class="toolbar vibrant">…</div>
-  <button type="button" class="extra circle tertiary-container on-tertiary-container-text" aria-label="Reply">
+  <button type="button" class="extra circle" aria-label="Reply">
     <span class="material-symbols" aria-hidden="true">reply</span>
   </button>
 </div>
@@ -297,11 +337,12 @@
 
   {% call section("fixed", "Fixed") %}
         <p>
-          <code>fixed</code> pins the bar to the viewport. A floating bar
-          sits 16dp from the bottom-center; add <code>top</code> to move
-          it to the top. A vertical bar sits on the start edge;
-          <code>right</code> flips it. A docked bar sticks to the bottom
-          edge; <code>top</code> sticks it to the top.
+          <code>fixed</code> pins the bar to the viewport, inset by its own
+          external space. A floating bar sits 16dp from the bottom-center;
+          add <code>top</code> to move it to the top. A vertical bar sits
+          24dp from the start edge; <code>right</code> flips it. A docked
+          bar sticks to the bottom edge; <code>top</code> sticks it to the
+          top.
         </p>
 {% call code() %}
 <div class="toolbar fixed">…</div>
@@ -312,11 +353,23 @@
 
   {% call section("tokens", "Tokens") %}
         {% call token_table() %}
-            <tr><td><code>--md-comp-toolbar-container-color</code></td><td><code>--md-sys-color-surface-container</code></td></tr>
+            <tr><td><code>--md-comp-toolbar-container-color</code></td><td><code>--md-sys-color-surface-container</code> (<code>primary-container</code> when vibrant)</td></tr>
+            <tr><td><code>--md-comp-toolbar-color</code></td><td><code>--md-sys-color-on-surface-variant</code> (<code>on-primary-container</code> when vibrant)</td></tr>
             <tr><td><code>--md-comp-toolbar-container-shape</code></td><td>32px (0 when docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-container-height</code></td><td>64px</td></tr>
+            <tr><td><code>--md-comp-toolbar-leading-space</code></td><td>8px (16px when docked)</td></tr>
+            <tr><td><code>--md-comp-toolbar-trailing-space</code></td><td>8px (16px when docked)</td></tr>
+            <tr><td><code>--md-comp-toolbar-between-space</code></td><td>4px</td></tr>
+            <tr><td><code>--md-comp-toolbar-external-space</code></td><td>16px (24px when vertical, 0 when docked)</td></tr>
+            <tr><td><code>--md-comp-toolbar-min-spacing</code></td><td>4px (docked)</td></tr>
+            <tr><td><code>--md-comp-toolbar-max-spacing</code></td><td>32px (docked)</td></tr>
             <tr><td><code>--md-comp-toolbar-action-size</code></td><td>48px</td></tr>
             <tr><td><code>--md-comp-toolbar-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-toolbar-selected-container-color</code></td><td><code>--md-sys-color-secondary-container</code> (<code>surface-container</code> when vibrant)</td></tr>
+            <tr><td><code>--md-comp-toolbar-selected-color</code></td><td><code>--md-sys-color-on-secondary-container</code> (<code>on-surface</code> when vibrant)</td></tr>
+            <tr><td><code>--md-comp-toolbar-floating-fab-between-space</code></td><td>8px</td></tr>
+            <tr><td><code>--md-comp-toolbar-floating-fab-container-color</code></td><td><code>--md-sys-color-secondary-container</code> (<code>tertiary-container</code> beside a vibrant bar)</td></tr>
+            <tr><td><code>--md-comp-toolbar-floating-fab-icon-color</code></td><td><code>--md-sys-color-on-secondary-container</code> (<code>on-tertiary-container</code> beside a vibrant bar)</td></tr>
   {% endcall %}
   {% endcall %}
 
