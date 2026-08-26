@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/nav.html" import navigation_drawer, footer_nav %}
+{% from "macros/nav.html" import navigation_drawer %}
 {% from "macros/banner.html" import banner as Banner %}
 
 {% block body_class %}docs{% endblock %}
@@ -30,16 +30,6 @@
         {% if page_name %}{{ Banner(page_name, page_blurb) }}{% endif %}
         {% block page %}{% endblock %}
     </main>
-
-    <footer>
-        <div class="container">
-{{ footer_nav(nav) }}
-            <small>
-                <span>&copy; 2026 ExpressiveCSS</span>
-                <span>v{{ version }}{% if prerelease %} (prerelease){% endif %}</span>
-            </small>
-        </div>
-    </footer>
 
     <menu id="theme-menu">
         <li data-theme="light" role="menuitemradio" aria-checked="false">

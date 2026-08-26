@@ -1,3 +1,4 @@
+{% from "macros/nav.html" import footer %}
 <!DOCTYPE html>
 <html lang="en" theme="auto">
 <head>
@@ -35,6 +36,8 @@
 {% endif %}
 
 {% block content %}{% endblock %}
+
+{{ footer(nav, version, prerelease) }}
 
 <script src="{{ js_url }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
