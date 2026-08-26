@@ -272,6 +272,31 @@
         }
       ]
     },
+    "fab-menu": {
+      "status": "enforced",
+      "note": "A FAB that expands into a list of labelled actions. It looks like a menu and is not one: its items are reached with Tab, so the role is withheld rather than declared. The `.fab` speed dial is the same script and the same withholding - both lists are lists of controls.",
+      "conformance": {
+        "withheld_role": "menu",
+        "blocked_on": "keyboard model",
+        "rule": "fab-menu-not-a-composite-widget"
+      },
+      "rules": [
+        {
+          "id": "fab-menu-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".fab-menu",
+          "fragmentSafe": true,
+          "message": "The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys."
+        },
+        {
+          "id": "fab-menu-expanded-is-not-authored",
+          "kind": "forbid",
+          "selector": ".fab-menu [aria-expanded]",
+          "fragmentSafe": true,
+          "message": "Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten."
+        }
+      ]
+    },
     "forms/checkboxes": {
       "status": "enforced",
       "note": "Swept 0.8.0.",

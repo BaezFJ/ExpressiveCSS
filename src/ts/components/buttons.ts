@@ -31,6 +31,11 @@ const _defaults: FloatingActionButtonOptions = {
  * Speed dial around a FAB. Open/close is the `.active` class; motion is
  * CSS. Hover is CSS (`:hover` when the pointer can hover). This class
  * toggles the class, wires keyboard / click-outside, and stamps direction.
+ *
+ * `.fab-menu` runs on the same instance: expanded state is one class and one
+ * `aria-expanded`, whichever host it is written on, and the two differ only
+ * in their Sass. The direction and hover options are inert there - the FAB
+ * menu opens upward and on click, both decided in CSS.
  */
 export class FloatingActionButton
   extends Component<FloatingActionButtonOptions>
@@ -67,7 +72,12 @@ export class FloatingActionButton
     if (toolbar) this.el.classList.add('toolbar');
 
     if (this._anchor) {
-      this._anchor.setAttribute('aria-haspopup', 'menu');
+      // `aria-expanded` and nothing more. `aria-haspopup="menu"` and
+      // `role="menu"` on the list used to go with it, and both were a promise
+      // this component does not keep: a menu is a composite widget whose items
+      // are reached with the arrow keys, and there is no such keyboard model
+      // here (SEMANTICS rule 2). The list is a list of controls reached with
+      // Tab, and the trigger is a disclosure.
       this._anchor.setAttribute('aria-expanded', 'false');
       if (
         this._anchor instanceof HTMLAnchorElement &&
@@ -77,8 +87,6 @@ export class FloatingActionButton
         this._anchor.tabIndex = 0;
       }
     }
-    if (this._menu) this._menu.setAttribute('role', 'menu');
-
     this._setupEventHandlers();
   }
 

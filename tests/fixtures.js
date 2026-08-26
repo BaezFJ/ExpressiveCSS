@@ -81,6 +81,13 @@ export const AUTO_INIT_FIXTURES = [
     html: `<a class="button tooltipped" data-position="bottom" data-tooltip="Hi">Hover</a>`,
   },
   {
+    // Same component, second host: `.fab-menu` is the labelled FAB menu and
+    // has to reach FloatingActionButton through the registry like `.fab` does.
+    name: "FloatingActionButton",
+    selector: ".fab-menu",
+    html: `<div class="fab-menu"><button type="button" class="button extra circle" aria-label="Create"><span class="material-symbols" aria-hidden="true">add</span></button><ul><li><button type="button"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button></li></ul></div>`,
+  },
+  {
     name: "FloatingActionButton",
     selector: ".fab",
     html: `<div class="fab"><a class="button extra circle" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a><ul><li><a class="button extra circle small red" aria-label="Chart"><span class="material-symbols" aria-hidden="true">chart</span></a></li></ul></div>`,

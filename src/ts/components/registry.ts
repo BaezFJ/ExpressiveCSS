@@ -54,7 +54,7 @@ export const AUTO_INIT_COMPONENTS = {
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
-    selector: ".fab, .fixed-action-btn",
+    selector: ".fab, .fixed-action-btn, .fab-menu",
   },
 };
 

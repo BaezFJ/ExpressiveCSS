@@ -59,6 +59,22 @@ below is the whole story for that component.
   **Migration.** `extend small` carries the `title-medium` label Material
   gives it, where it used to keep `label-large` from the sizeless `extend`.
   A sizeless `extend` is unchanged.
+- **FAB menu.** `fab-menu` is Material 3 Expressive's FAB menu: a FAB that
+  expands into a list of labelled pills — 56dp tall, full corner, 24dp insets,
+  a `title-medium` label — and morphs into the close button while it is open.
+  The colour axis is the same three roles as the extended FAB, and one class
+  moves both halves: the actions take `<role>-container` and the close button
+  the solid `<role>`, which is the pairing Material specifies. Expanded state
+  is the framework's — the constructor stamps `aria-expanded` and `open()` /
+  `close()` move it with the `active` class, and `semantics.json` forbids
+  authoring either.
+
+  It runs on the existing `FloatingActionButton` rather than a second class,
+  so `AutoInit()`, `open()`, `close()`, `isOpen` and `destroy()` all work
+  unchanged; `direction` and `hoverEnabled` are inert on it, because a FAB
+  menu opens upward and on click and both are decided in CSS. It does not
+  touch the `.fab` speed dial or the `.fab.toolbar` transition: `.fab` is a
+  whole class name and never matches `.fab-menu`.
 - **Carousel can advance on its own, with a pause contract that cannot be
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each
@@ -80,6 +96,16 @@ below is the whole story for that component.
 
 ### Changed
 
+- **The FAB no longer claims to be a menu.** `FloatingActionButton` used to set
+  `role="menu"` on the action list and `aria-haspopup="menu"` on the trigger.
+  A menu is a composite widget whose items are reached with the arrow keys, and
+  this component has no such keyboard model, so both were a promise it does not
+  keep (SEMANTICS rule 2). They are gone; `aria-expanded` stays, which is what a
+  disclosure actually is. `semantics.json` records `menu` as withheld pending
+  the keyboard model rather than leaving the gap unaccounted for.
+
+  **Migration.** A script or stylesheet selecting `.fab [role="menu"]` needs a
+  different selector. Nothing about the markup an author writes changes.
 - **Buttons took Material 3 Expressive's two modifier axes.** Five styles
   (`filled`, `tonal`, `outlined`, `elevated`, `text`) and five sizes
   (`xsmall`, `small`, `medium`, `large`, `xlarge`) are now independent classes

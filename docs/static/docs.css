@@ -584,6 +584,25 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   text-align: center;
 }
 
+/* FAB page: the FAB menu examples, in flow with room above for the expanded
+   list. The host keeps `position: relative` - it is the containing block the
+   list hangs off, so unpinning it to `static` would drop the list on the
+   viewport instead. */
+.fab-menu-demo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 1.5rem;
+  min-height: 18rem;
+  margin-block: 1.5rem;
+}
+
+.fab-menu-demo .fab-menu {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+}
+
 /* Tabs page: swipeable panels become a carousel (default 400px). */
 .tabs-swipe-demo {
   --carousel-height: 8rem;
