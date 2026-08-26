@@ -40,7 +40,7 @@
     </nav>
 {% endmacro %}
 
-{% macro footer_nav(nav) %}
+{% macro footer_links(nav) %}
     {%- for group in nav %}
             <nav aria-labelledby="footer-{{ loop.index }}">
                 <h2 id="footer-{{ loop.index }}">{{ group.label }}</h2>
@@ -52,4 +52,16 @@
                 {%- endfor %}
             </nav>
     {%- endfor %}
+{% endmacro %}
+
+{% macro footer(nav, version, prerelease=false) %}
+    <footer>
+        <div class="container">
+            {{ footer_links(nav) }}
+            <small>
+                <span>&copy; 2026 ExpressiveCSS</span>
+                <span>v{{ version }}{% if prerelease %} (prerelease){% endif %}</span>
+            </small>
+        </div>
+    </footer>
 {% endmacro %}
