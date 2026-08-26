@@ -94,6 +94,7 @@ NAV = [
         ('carousel', 'Carousel'),
         ('media', 'Lightbox'),
         ('toolbars', 'Toolbars'),
+        ('search', 'Search'),
     ]),
     _group('Forms', 'edit', [
         ('fieldsets', 'Fieldsets'),
@@ -434,6 +435,12 @@ def media():
 @app.route('/toolbars.html')
 def toolbars():
     return render_template('components/toolbars.html')
+
+
+@app.route('/search')
+@app.route('/search.html')
+def search():
+    return render_template('components/search.html')
 
 
 # --- Forms -----------------------------------------------------------------

@@ -56,6 +56,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Panes
 - Preloader
 - Loading indicator
+- Search
 
 ### JavaScript components
 
@@ -3282,6 +3283,97 @@ of the page. Override it for a one-off color — a role token, never a raw hex.
       style="--md-comp-progress-indicator: var(--md-sys-color-error)"
       role="status" aria-label="Loading"></span>
 ```
+
+
+## Search
+
+A search bar, and the view it expands into.
+
+A `<search>` with `search-bar` on it is the bar: a leading icon or icon button, an `<input type="search">`, and whatever trailing actions the query needs. The element is the landmark, so there is no `role="search"` to add. The input goes in bare — the bar is the container, so none of the text-field chrome (`.field`, the underline, the floating label) applies.
+
+Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button. `.searchbar`, the pre-1.0 name, reaches the same rules.
+
+```html
+<search class="search-bar" aria-label="Search">
+  <span class="material-symbols" aria-hidden="true">search</span>
+  <input type="search" aria-label="Search recipes" placeholder="Search recipes">
+  <button type="button" class="icon-button" aria-label="Filters">
+    <span class="material-symbols" aria-hidden="true">tune</span>
+  </button>
+</search>
+```
+
+### Docked view
+
+`.search-view` is the surface the bar expands into. Docked, it goes inside the bar — it hangs off it, so it needs no coordinates of its own — and is shown and hidden with the `hidden` attribute. It is a plain element rather than a `<dialog>` on purpose: `dialog.show()` moves focus into the dialog, which would take the caret out of the input the user is typing in.
+
+```html
+<search class="search-bar" aria-label="Search">
+  <span class="material-symbols" aria-hidden="true">search</span>
+  <input type="search" aria-label="Search fruit" placeholder="Search fruit"
+         onfocus="document.getElementById('results').hidden = false">
+  <div class="search-view" id="results" hidden>
+    <ul class="list">
+      <li><a href="/apricot"><span class="material-symbols" aria-hidden="true">history</span><span>Apricot</span></a></li>
+    </ul>
+  </div>
+</search>
+```
+
+### Full-screen view
+
+Full screen, the view is a `<dialog class="search-view full-screen">` opened with `showModal()`; Escape and a tap outside come from the platform. Its header is another `.search-bar`, with the pill and the shadow taken off. `autofocus` on the input is required, not decorative: `showModal()` focuses the first focusable descendant — the back button — so without it a keyboard user cannot type.
+
+Full screen at Compact and docked from Medium up is the M3 rule of thumb, and the app picks: no breakpoint in the sheet swaps one for the other, and the two are not interchangeable markup (the docked view nests inside the bar, the full-screen one is a top-level `<dialog>`). Render the one the window calls for.
+
+```html
+<dialog class="search-view full-screen" id="search-full" aria-label="Search">
+  <search class="search-bar" aria-label="Search">
+    <form method="dialog">
+      <button type="submit" class="icon-button" aria-label="Back">
+        <span class="material-symbols" aria-hidden="true">arrow_back</span>
+      </button>
+    </form>
+    <input type="search" autofocus aria-label="Search fruit" placeholder="Search fruit">
+  </search>
+  <hr>
+  <ul class="list">
+    <li><a href="/apricot"><span class="material-symbols" aria-hidden="true">history</span><span>Apricot</span></a></li>
+  </ul>
+</dialog>
+```
+
+### Suggestions
+
+Search ships no suggestion list of its own. Put `autocomplete` on the bar's input and you get the combobox, its listbox, and the arrow-key and `aria-activedescendant` handling that Autocomplete already implements and is tested for.
+
+```html
+<search class="search-bar" aria-label="Search">
+  <span class="material-symbols" aria-hidden="true">search</span>
+  <input type="search" class="autocomplete" aria-label="Search fruit" placeholder="Search fruit">
+</search>
+```
+
+That is the whole relationship between the two, and it is deliberate. A `.search-view` takes no composite role: its contents are links and buttons reached with Tab, and a second listbox here would be the same promise as Autocomplete's with no keyboard model behind it. Use the view for recent searches, filters and results; use Autocomplete for a list the user arrows through.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-search-bar-container-color` | `--md-sys-color-surface-container-high` |
+| `--md-comp-search-bar-container-height` | 56px |
+| `--md-comp-search-bar-container-shape` | 9999px (full) |
+| `--md-comp-search-bar-leading-space` | 16px, or 4px beside an icon button |
+| `--md-comp-search-bar-trailing-space` | 16px, or 4px beside an icon button |
+| `--md-comp-search-bar-icon-label-space` | 16px |
+| `--md-comp-search-bar-icon-size` | 24px |
+| `--md-comp-search-bar-avatar-size` | 30px |
+| `--md-comp-search-view-container-color` | `--md-sys-color-surface-container-high` |
+| `--md-comp-search-view-container-shape` | 12px, 0 full-screen |
+| `--md-comp-search-view-header-height` | 56px, 72px full-screen |
+| `--md-comp-search-view-divider-color` | `--md-sys-color-outline` |
+| `--md-comp-search-view-bar-results-gap` | 2px |
+| `--md-comp-search-view-max-height` | 60vh, none full-screen |
 
 
 ---
