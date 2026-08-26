@@ -4809,6 +4809,7 @@ You can customize each snackbar with these options.
 | `classes` | String | `''` | Space-separated classes added to the snackbar. `rounded` is a stadium. `top` moves the bar off the bottom. |
 | `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
 | `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
+| `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
 
 ### Methods
 

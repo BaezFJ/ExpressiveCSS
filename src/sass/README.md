@@ -169,10 +169,12 @@ do not reach for the pairing as a way to keep specificity flat.
 
 `tests/shadow-dom.test.js` fails any rule that skips the pairing; the commitment
 behind it is `adr/0002-shadow-only-stylesheet-adoption.md`. That commitment
-covers everything *inside* the shadow root — four components (Tooltip, Snackbar,
-Lightbox, the drawer's drag target) append an element to `document.body`, which
-the document styles rather than the shadow root, so a page using one of those
-still needs a document-level copy. The ADR names them.
+covers everything *inside* the shadow root, portals included: the six places that
+create an element at runtime (Tooltip, Snackbar, Lightbox's caption, the drawer's
+drag target, and the Datepicker's two menus) route through `Utils.portalRoot()`
+and append into the originating shadow root, so no document-level copy is needed.
+The cost is that they no longer escape an ancestor's `overflow` or stacking
+context — the ADR states what that re-anchors.
 
 ## Translucent colors
 

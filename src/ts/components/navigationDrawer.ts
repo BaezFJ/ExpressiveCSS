@@ -285,7 +285,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
     dragTarget.classList.add('drag-target');
     dragTarget.style.width = this.options.dragTargetWidth;
     if (this.isFixed) dragTarget.dataset.fixed = '';
-    document.body.appendChild(dragTarget);
+    Utils.portalRoot(this.el).appendChild(dragTarget);
     this.dragTarget = dragTarget;
   }
 

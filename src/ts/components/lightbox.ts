@@ -171,14 +171,15 @@ export class Lightbox extends Component<LightboxOptions> {
 
   private _makeAncestorsOverflowVisible() {
     this._changedAncestorList = [];
-    let ancestor = this.placeholder.parentNode;
-    while (ancestor !== null && ancestor !== document) {
+    let ancestor: Node = this.placeholder.parentNode;
+    while (ancestor !== null && ancestor !== undefined && ancestor !== document) {
       const curr = <HTMLElement>ancestor;
-      if (curr.style.overflow !== 'visible') {
+      // A shadow root has no style; the clipping ancestors are above its host.
+      if (curr.style && curr.style.overflow !== 'visible') {
         curr.style.overflow = 'visible';
         this._changedAncestorList.push(curr);
       }
-      ancestor = ancestor.parentNode;
+      ancestor = ancestor.parentNode ?? (<ShadowRoot>ancestor).host;
     }
   }
 
@@ -302,7 +303,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._photoCaption = document.createElement('div');
     this._photoCaption.classList.add('lightbox-caption');
     this._photoCaption.innerText = this.caption;
-    document.body.append(this._photoCaption);
+    Utils.portalRoot(this.el).append(this._photoCaption);
     this._photoCaption.style.display = 'inline';
     // Animate
     this._photoCaption.style.transition = 'none';

@@ -1206,11 +1206,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     // @todo fix accessibility @see https://github.com/materializecss/materialize/issues/522
     FormSelect.init(yearSelect, {
       classes: 'select-year',
-      menuOptions: { container: document.body, constrainWidth: false }
+      menuOptions: { container: Utils.portalRoot(this.el), constrainWidth: false }
     });
     FormSelect.init(monthSelect, {
       classes: 'select-month',
-      menuOptions: { container: document.body, constrainWidth: false }
+      menuOptions: { container: Utils.portalRoot(this.el), constrainWidth: false }
     });
 
     // Add change handlers for select

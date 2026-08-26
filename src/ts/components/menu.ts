@@ -25,7 +25,7 @@ export interface MenuOptions extends BaseOptions {
    * Provide an element that will be the bounding container of the menu.
    * @default null
    */
-  container: Element;
+  container: Element | ShadowRoot;
   /**
    * If false, the menu will show below the trigger.
    * That is the M3 placement. Pass `true` to cover the trigger.

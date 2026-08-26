@@ -512,6 +512,16 @@ new Expressive.Snackbar({
               <td><code>0.8</code></td>
               <td>Fraction of the snackbar’s width a drag must travel to dismiss it.</td>
             </tr>
+            <tr>
+              <td><code>root</code></td>
+              <td>Element</td>
+              <td><code>null</code></td>
+              <td>
+                Any element in the tree the snackbar should render into. Pass one
+                when the page lives in a shadow root, so the container is appended
+                there rather than to <code>document.body</code>.
+              </td>
+            </tr>
   
             </tbody>
         </table>

@@ -1,4 +1,5 @@
 import { BaseOptions } from '../core/component';
+import { Utils } from '../core/utils';
 
 export interface SnackbarOptions extends BaseOptions {
   /**
@@ -59,6 +60,14 @@ export interface SnackbarOptions extends BaseOptions {
    * @default 0.8
    */
   activationPercent: number;
+  /**
+   * Any element in the tree the snackbar should render into. A Snackbar has no
+   * originating element to infer this from, so pass one when the page lives in
+   * a shadow root — the container is appended to that root instead of to
+   * `document.body`, where a root-scoped stylesheet could not reach it.
+   * @default null
+   */
+  root: HTMLElement;
 }
 
 const _defaults: SnackbarOptions = {
@@ -71,7 +80,8 @@ const _defaults: SnackbarOptions = {
   outDuration: 375,
   classes: '',
   completeCallback: null,
-  activationPercent: 0.8
+  activationPercent: 0.8,
+  root: null
 };
 
 export class Snackbar {
@@ -125,8 +135,16 @@ export class Snackbar {
       }
       Snackbar._snackbars.length = 0;
     }
-    if (!Snackbar._container || !Snackbar._container.isConnected) {
-      Snackbar._createContainer();
+    // One container serves every snackbar, and only one snackbar shows at a
+    // time — so it is moved rather than duplicated when the root changes.
+    const root = Utils.portalRoot(this.options.root ?? document.body);
+    if (
+      !Snackbar._container ||
+      !Snackbar._container.isConnected ||
+      Snackbar._container.parentNode !== root
+    ) {
+      if (Snackbar._container) Snackbar._removeContainer();
+      Snackbar._createContainer(root);
     }
     Snackbar._snackbars.push(this);
     const snackbarElement = this._createSnackbar();
@@ -144,7 +162,7 @@ export class Snackbar {
     return el['Expressive_Snackbar'];
   }
 
-  static _createContainer() {
+  static _createContainer(root: HTMLElement | ShadowRoot = document.body) {
     const container = document.createElement('div');
     container.setAttribute('id', 'snackbar-container');
     // Add event handler
@@ -154,7 +172,7 @@ export class Snackbar {
     container.addEventListener('mousedown', Snackbar._onDragStart);
     document.addEventListener('mousemove', Snackbar._onDragMove);
     document.addEventListener('mouseup', Snackbar._onDragEnd);
-    document.body.appendChild(container);
+    root.appendChild(container);
     Snackbar._container = container;
   }
 

@@ -729,6 +729,33 @@ below is the whole story for that component.
   document, also adopted into components — was never affected, because custom
   properties inherit through shadow boundaries.
 
+- **Runtime-created elements now stay in the tree that created them.** Six
+  places built an element and appended it to `document.body` — the tooltip
+  surface, the snackbar container, the lightbox caption, the drawer's edge drag
+  target, and the datepicker's two month/year menus. A sheet adopted into a
+  shadow root cannot match a node outside that root, so every one of them
+  arrived unstyled in the shadow-only setup the previous entry made possible.
+  `Utils.portalRoot(el)` returns `el.getRootNode()` when that is a shadow root
+  and `document.body` otherwise, and each site goes through it. The lightbox's
+  ancestor-overflow walk hops the shadow boundary through the host instead of
+  throwing on the root.
+
+  **This gives up an escape hatch on purpose.** A portal on `document.body`
+  escapes an ancestor's `overflow: hidden` and stacking context; inside a shadow
+  root it escapes neither, because the host's ancestors are still in the
+  flattened tree. Nothing recomputes coordinates, so a positioned ancestor above
+  the host re-anchors the `absolute`-positioned tooltip and a transformed one
+  re-anchors the three `fixed` portals. `adr/0002` states the bound; behaviour in
+  a plain document is unchanged.
+
+  Native `<dialog>` was never affected — a top-layer element is painted outside
+  the document's paint order but stays in its own tree.
+
+  **Migration:** `Snackbar` has no originating element, so it takes a new `root`
+  option — any element in the target tree. Without it the container still goes to
+  `document.body`, exactly as before. Because only one snackbar shows at a time,
+  the one shared container moves between roots rather than being duplicated.
+
 - **A menu opened from a trigger narrower than 112dp is sized to its own
   content.** `constrainWidth` wrote the trigger's width onto the surface and the
   surface's own `min-width: 112px` then overrode it, so any trigger under that
