@@ -46,7 +46,8 @@ describe('Loading indicator', () => {
   });
 
   test('reduced motion stops both animations', () => {
-    const rm = css.slice(css.lastIndexOf('.loading-indicator::before'));
+    const q = css.indexOf('@media (prefers-reduced-motion: reduce)', css.indexOf('.loading-indicator'));
+    const rm = css.slice(css.indexOf('.loading-indicator::before', q));
     assert.match(rm, /^[^}]*animation:\s*none/);
   });
 });

@@ -391,7 +391,7 @@ The M3 Expressive indicator for short waits. One empty <span> that reports nothi
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `loading-indicator-reports-itself` | require-attr | `.loading-indicator` | must have `role` |
+| `loading-indicator-reports-itself` | require-attr | `.loading-indicator` | must have `role` = `status` |
 | `loading-indicator-is-named` | require-accessible-name | `.loading-indicator` | must end up with an accessible name |
 
 - **loading-indicator-reports-itself** - An empty <span class="loading-indicator"> is a shape drawn with CSS and reports nothing. It needs role="status" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it.

@@ -16,14 +16,21 @@
 //   --md-comp-loading-indicator-container-size          48px
 //   --md-comp-loading-indicator-active-indicator-color  primary
 //   --md-comp-loading-indicator-container-color         transparent
-//   --md-comp-loading-indicator-duration                one full morph cycle
+//
+// `--md-comp-loading-indicator-duration` is ours, not M3's - the spec states
+// the motion, not a duration token.
 
-// The morph shapes. M3 draws each one as a rounded polygon and interpolates
-// vertex by vertex; `clip-path` interpolates the same way, but only between
-// polygons with the same vertex count. So every shape here is 24 points on a
-// polar curve `r = 50% * (1 - depth * (1 - cos(petals * a)) / 2)`: depth 0 is
-// a circle, and 24 divides 4, 6, 8 and 12 so every cusp lands on a vertex.
-// Corners are unrounded — a 24-gon reads as the shape, not as a polygon.
+// The morph shapes. M3 cycles seven named shapes (soft burst, four cookies, a
+// pentagon, a pill); these are four cookies plus a circle, which is the part
+// of the vocabulary one formula can generate. M3 draws each shape as a rounded
+// polygon and interpolates vertex by vertex; `clip-path` interpolates the same
+// way, but only between polygons with the same vertex count. So every shape
+// here is 24 points on a polar curve
+// `r = 50% * (1 - depth * (1 - cos(petals * a)) / 2)`: depth 0 is a circle,
+// and 24 divides 4, 6, 8 and 12 so every cusp lands on a vertex.
+// Corners are unrounded — a 24-gon reads as the shape, not as a polygon. The
+// docs call these cookies, which is M3's word for them; `depth: 0` is the
+// circle the cycle opens on, so the function is named for the curve instead.
 $_points: 24;
 
 // Two decimals is 0.005% of a 38px box - a fiftieth of a pixel. Full float
