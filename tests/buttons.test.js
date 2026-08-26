@@ -122,6 +122,29 @@ describe('The axes compose without per-combination rules', () => {
     assert.deepEqual(offenders, [], `25 combinations were enumerated:\n  ${offenders.join('\n  ')}`);
   });
 
+  test('an icon-only .circle takes the glyph size of its rung', () => {
+    // `.circle` is a common button wearing a round shape, so its glyph is the
+    // ladder's: 20px at small, 40px at xlarge. It used to be pinned to 24px,
+    // which is the 40dp *icon button's* number - right for the default rung
+    // and wrong for every other one, most visibly a 24px glyph adrift in an
+    // `xlarge` 136dp disc. `.icon-button` is the component that carries the
+    // icon-button ladder now, so `.circle` has no reason to borrow one number
+    // from it. The FAB is the exception and states `.extra` / `.large`.
+    const offender = rules.find((r) => r.selector.startsWith(`${BASE}.circle > `));
+    assert.equal(
+      offender?.selector,
+      undefined,
+      `.circle overrides the ladder's glyph size: ${offender?.body}`
+    );
+    // The other half of it: an absence only sizes the glyph right because the
+    // rule it falls through to reads the token the size rule just set. Assert
+    // both, or a `.circle` pinned from somewhere else would pass this.
+    assert.match(
+      ruleFor((sel) => sel.startsWith(`${BASE} > `)),
+      /font-size:\s*var\(--md-comp-filled-button-icon-size\)/
+    );
+  });
+
   test('every button token a rule reads is one the sheet declares', () => {
     // A var() naming a property nothing declares invalidates the whole
     // declaration, silently - the failure mode that made .display-large a

@@ -615,7 +615,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.2 Icon buttons
 
-**M3:** Icon buttons (filled / tonal / outlined / standard; default and toggle). **ExpressiveCSS:** `button.circle` (filled default). `text` is standard (transparent). `tonal` and `outlined` match.
+**M3:** Icon buttons (filled / tonal / outlined / standard; default and toggle). **ExpressiveCSS:** `button.icon-button` — its own component, carrying M3's own icon-button ladder and colours, standard (transparent) by default with `filled` / `tonal` / `outlined`. `button.circle` is the older spelling and is a round *common* button: filled by default, `text` for standard, `tonal` and `outlined` matching the common-button colours.
 
 **Use when** the action is minor and the icon is unambiguous (search, more, close, favorite). Always provide `aria-label`. Pair with a **plain tooltip**.
 
@@ -625,7 +625,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 **Placement.** App bar trailing, list trailing, sheet headers, toolbars. 48 dp target.
 
-**Sizes.** Default 40 dp. FAB sizes are a different component (`circle extra`).
+**Sizes.** Default 40 dp. The two spellings size their glyph from their own ladder, which is why they disagree at that box: `.icon-button` is 40 dp with a 24 dp glyph, `button.circle` 40 dp with the common button's 20 dp. FAB sizes are a different component (`circle extra`).
 
 ---
 

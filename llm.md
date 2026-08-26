@@ -1831,7 +1831,7 @@ Create Create
 
 ### Icon buttons
 
-`.icon-button` is its own component, documented below. `circle` on a common button is the older 40dp icon button and still works: default is filled, `text` is the standard (transparent) one, `tonal` and `outlined` match the common-button colors.
+`.icon-button` is its own component, documented below. `circle` on a common button is the older 40dp icon button and still works: default is filled, `text` is the standard (transparent) one, `tonal` and `outlined` match the common-button colors. Its glyph is the button ladder's 20dp, not the icon button's 24dp — `.icon-button` is the control that carries those.
 
 ```html
 <button class="circle" aria-label="Add">
@@ -1877,7 +1877,7 @@ Create
 
 ### Sizes
 
-Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. `extra` is the pre-1.0 name for the 56dp button and still gives you that geometry, though not `medium`'s bigger label — it never carried one. The ladder is the common button's: `circle` is the older 40dp icon-button shape with its own 24dp icon, and `circle extra` / `circle large` are FAB sizes, which have their own.
+Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. `extra` is the pre-1.0 name for the 56dp button and still gives you that geometry, though not `medium`'s bigger label — it never carried one. The ladder is the common button's, and `circle` is on it: a `circle` is a round common button, so it takes its rung's box *and* its rung's glyph — 40dp with a 20dp icon by default, 136dp with a 40dp icon at `xlarge`. Only `circle extra` / `circle large` step off it, because those are FAB sizes with a ladder of their own. If you want the icon *button*'s numbers — 40dp with a 24dp icon — that component is `.icon-button`.
 
 Extra small Small Medium Large Extra large
 

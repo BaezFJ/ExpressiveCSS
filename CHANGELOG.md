@@ -454,6 +454,42 @@ below is the whole story for that component.
 
 ### Changed
 
+- **`.button.circle` sizes its glyph from the button ladder.** It used to pin
+  24px whatever size class it wore, so it got the size's *box* and a fixed
+  glyph in it: 24px in a 32dp `xsmall` disc, and — the visible one — 24px
+  adrift in a 136dp `xlarge` disc. The glyph is now
+  `--md-comp-filled-button-icon-size` like every other button's, which is
+  20 / 20 / 24 / 32 / 40dp across the five rungs. `.circle.extra` and
+  `.circle.large` are the FAB and are unaffected: they read
+  `--md-comp-fab-icon-size` and always did.
+
+  **Migration.** The default `<button class="button circle">` carries no size
+  class, so it is the `small` rung and its glyph moves **24px → 20px**. That is
+  a visible change on every page using one. 24px in a 40dp disc is the *icon
+  button's* number (`md.comp.icon-button.small.icon-size`), not the common
+  button's, so the control that keeps it is `.icon-button` — which is the real
+  M3 icon button, with the whole ladder and its own colours:
+
+  ```html
+  <!-- 40dp box, 20dp glyph (the button ladder) -->
+  <button class="button circle" aria-label="Add">…</button>
+  <!-- 40dp box, 24dp glyph (the icon-button ladder) -->
+  <button class="icon-button" aria-label="Add">…</button>
+  ```
+
+  Or state the rung you meant: `.circle.medium` is 56dp with a 24dp glyph.
+
+  One host is worth checking by eye: the **top app bar** sizes its own
+  icon-only actions at 24dp but steps aside for anything that styles itself,
+  `.circle` included — so a `.button.circle` in a bar now shows a 20dp glyph
+  beside the bar's 24dp ones. The bar's own spelling is a bare
+  `<button class="navigation-drawer-trigger">` with no `.button`, which the bar
+  sizes itself; `.icon-button` is the other 24dp answer.
+
+  This subsumes the button-group-local override shipped with button groups,
+  which handed a group's `.circle` items the token so a sized group would not
+  get the wrong glyph. That rule and its test are gone; the fix is general now.
+
 - **Toolbars are the four M3 Expressive variants, from two independent axes.**
   A *shape* — floating or docked — and a *colour style* — standard or vibrant —
   now compose freely, and their values come from the 34.0.21 sets

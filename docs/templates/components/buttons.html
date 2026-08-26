@@ -241,9 +241,14 @@
           <code>extra</code> is the pre-1.0 name for the 56dp button and
           still gives you that geometry, though not <code>medium</code>'s
           bigger label — it never carried one. The ladder is the common
-          button's: <code>circle</code> is the older 40dp icon-button shape
-          with its own 24dp icon, and <code>circle extra</code> /
-          <code>circle large</code> are FAB sizes, which have their own.
+          button's, and <code>circle</code> is on it: a round common button
+          takes its rung's box <em>and</em> its rung's glyph — 40dp with a
+          20dp icon by default, 136dp with a 40dp icon at
+          <code>xlarge</code>. Only <code>circle extra</code> /
+          <code>circle large</code> step off it, because those are FAB sizes
+          with a ladder of their own. For the icon <em>button</em>'s numbers
+          — 40dp with a 24dp icon — the component is
+          <a href="{{ url_for('icon_buttons') }}"><code>.icon-button</code></a>.
         </p>
         <p>
           <button type="button" class="xsmall">Extra small</button>
