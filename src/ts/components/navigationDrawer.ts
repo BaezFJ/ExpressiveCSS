@@ -285,7 +285,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
     dragTarget.classList.add('drag-target');
     dragTarget.style.width = this.options.dragTargetWidth;
     if (this.isFixed) dragTarget.dataset.fixed = '';
-    document.body.appendChild(dragTarget);
+    Utils.portalRoot(this.el).appendChild(dragTarget);
     this.dragTarget = dragTarget;
   }
 
@@ -335,7 +335,8 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
     const trigger = target.closest('.sidenav-trigger, .navigation-drawer-trigger');
     if (!trigger || !(trigger instanceof HTMLElement)) return;
     const sidenavId = Utils.getIdFromTrigger(trigger);
-    const sidenavInstance = document.getElementById(sidenavId)?.['Expressive_NavigationDrawer'];
+    const sidenavInstance =
+      Utils.getElementById(trigger, sidenavId)?.['Expressive_NavigationDrawer'];
     if (sidenavInstance) {
       sidenavInstance.open();
       e.preventDefault();

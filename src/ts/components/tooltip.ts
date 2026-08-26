@@ -155,7 +155,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.el.setAttribute('aria-describedby', this.tooltipEl.id);
 
     const tooltipContentEl = this.options.tooltipId
-      ? document.getElementById(this.options.tooltipId)
+      ? Utils.getElementById(this.el, this.options.tooltipId)
       : document.createElement('div');
     if (this.options.tooltipId) {
       this.tooltipEl.classList.add('rich');
@@ -164,7 +164,7 @@ export class Tooltip extends Component<TooltipOptions> {
     tooltipContentEl.classList.add('tooltip-content');
     this._setTooltipContent(tooltipContentEl);
     this.tooltipEl.appendChild(tooltipContentEl);
-    document.body.appendChild(this.tooltipEl);
+    Utils.portalRoot(this.el).appendChild(this.tooltipEl);
   }
 
   _setTooltipContent(tooltipContentEl: HTMLElement) {

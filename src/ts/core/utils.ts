@@ -112,6 +112,38 @@ export class Utils {
   }
 
   /**
+   * Where an element created at runtime has to be appended to stay in the same
+   * tree as `el`. A stylesheet adopted into a shadow root cannot match a node
+   * in the document, so a portal that lands on `document.body` is unstyled
+   * whenever its origin lives in a shadow root (adr/0002).
+   *
+   * Light-DOM elements still get `document.body`, which is what escapes an
+   * ancestor's `overflow: hidden` and stacking context. Inside a shadow root
+   * both hazards come back: the host's own ancestors still form the containing
+   * block, so a transformed ancestor re-anchors `position: fixed` and a
+   * positioned one re-anchors `position: absolute`.
+   */
+  static portalRoot(el: Node): HTMLElement | ShadowRoot {
+    const root = el.getRootNode() as ShadowRoot;
+    // Only a ShadowRoot has a host; a Document or a detached subtree does not.
+    return root.host ? root : document.body;
+  }
+
+  /**
+   * `getElementById` against the tree `el` lives in. The mirror of
+   * `portalRoot`: an id in a shadow root is invisible to
+   * `document.getElementById`, so a trigger and its target inside the same
+   * root could not find each other at all.
+   *
+   * Falls back to the document for a detached `el`, whose root is a plain
+   * element with no lookup of its own.
+   */
+  static getElementById(el: Node, id: string): HTMLElement {
+    const root = el.getRootNode() as Document | ShadowRoot;
+    return (root.getElementById ? root.getElementById(id) : document.getElementById(id)) as HTMLElement;
+  }
+
+  /**
    * Checks for exceeded edges
    * @param container Container element.
    * @param bounding Bounding rect.

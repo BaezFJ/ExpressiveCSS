@@ -90,30 +90,55 @@ Adopting the sheet does not carry the JavaScript with it: components still need
 `Expressive.AutoInit()` against the right root, and nothing here claims a shadow
 tree is auto-initialized.
 
-More importantly, **four components build an element and append it to
-`document.body`**, so the node lands outside the shadow root and its adopted
-sheet cannot match it — and initializing against the right root does not change
-the hardcoded destination:
+The second bound used to be sharper: **six places built an element and appended
+it to `document.body`**, so the node landed outside the shadow root and its
+adopted sheet could not match it. That is fixed. `Utils.portalRoot(el)` returns
+`el.getRootNode()` when that is a shadow root and `document.body` otherwise, and
+every portal goes through it:
 
-| Component | Portal | Selector left unmatched |
+| Site | Portal | Selector that was left unmatched |
 | --- | --- | --- |
-| `tooltip.ts:167` | the tooltip surface | `.tooltip` |
-| `snackbar.ts:157` | the snackbar container | `#snackbar-container` |
-| `lightbox.ts:305` | the caption | `.lightbox-caption` |
-| `navigationDrawer.ts:288` | the edge drag target | `.drag-target` |
+| `tooltip.ts` | the tooltip surface | `.tooltip` |
+| `snackbar.ts` | the snackbar container | `#snackbar-container` |
+| `lightbox.ts` | the caption | `.lightbox-caption` |
+| `navigationDrawer.ts` | the edge drag target | `.drag-target` |
+| `datepicker.ts` (x2) | the month and year menus, moved to a container | `.menu` |
 
-**A page using any of those four needs a document-level copy of the sheet**, and
-that is not a bug in the pairing — the pairing is what makes the shadow tree
-itself correct. It is a property of a portal: an element appended to
-`document.body` is styled by the document, whichever tree created it. Nothing in
-the codebase is root-aware today; there is no `getRootNode()` call anywhere in
-`src/ts/`.
+**Escaping to `document.body` was deliberate, and following the root gives that
+up.** A portal on the body escapes an ancestor's `overflow: hidden` and any
+ancestor stacking context; inside a shadow root neither is escaped, because the
+host's own ancestors are still in the flattened tree. The concrete consequences,
+since nothing here recomputes coordinates: `.tooltip` is `position: absolute` and
+is written document coordinates, so a **positioned** ancestor above the host
+re-anchors it; `#snackbar-container`, `.lightbox-caption` and `.drag-target` are
+`position: fixed`, so a **transformed** (or `filter`/`perspective`/`contain`)
+ancestor above the host re-anchors those. Both are properties of where the host
+was placed, and a component cannot see past its own root to fix them. A page that
+puts its shadow host inside such an ancestor wants the portals in the document —
+which is what it gets by not using a shadow root for that subtree.
 
-Making the portals follow their originating root is a real change with real
-trade-offs — putting a tooltip on `document.body` is deliberate, since it escapes
-an ancestor's `overflow` and stacking context — so it is tracked separately
-rather than smuggled into a token fix. Until it lands, this ADR's promise reads:
-the sheet adopted into a shadow root styles everything **inside** that root.
+The snackbar needed more than a lookup: `Snackbar._container` is a single static
+shared by every snackbar, and a snackbar has no originating element to read a
+root from. It takes a `root` option (any element in the target tree) and, because
+only one snackbar shows at a time, the one container **moves** between roots
+rather than becoming one container per root.
+
+**The lookup side is the same defect mirrored, and had to move with it.** Four
+places resolved an id with `document.getElementById` — the menu's target, the
+tooltip's rich-content element, the snackbar's template and the drawer's trigger
+— and an id inside a shadow root is invisible to the document, so a trigger and
+its target in the same root could not find each other. `Utils.getElementById(el,
+id)` resolves against `el.getRootNode()`. Menu also walked ancestors with
+`getComputedStyle`, which rejects a `ShadowRoot`; that walk now steps over the
+root to its host, as does the lightbox's.
+
+Native `<dialog>` is unaffected and always was. A top-layer element is painted
+outside the document's paint order but stays in its own tree, so style scoping
+still reaches it.
+
+`tests/portals.test.js` covers both halves — light-DOM portals still land on
+`document.body`, shadow-DOM portals stay in their root and leak nothing to the
+document.
 
 Pairing does move specificity, which is worth stating because the obvious
 assumption is that it does not. Bare `:host` weighs (0,1,0), the same as
