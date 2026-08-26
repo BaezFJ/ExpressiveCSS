@@ -14,56 +14,22 @@
 // rule names both. `tests/buttons.test.js` fails if one starts to.
 //
 // Tokens follow M3 Expressive, md.comp.button.* (DSP 34.0.21):
-//   the size ladder below, corner.full at every size
+//   the size ladder in abstracts, corner.full at every size
 //   state layer 8% hover / 10% focus+press
 //   FAB 56dp (extra/large icon-only), primary-container, 16dp corners
 //   FAB sizes 40dp small / 56dp default / 80dp medium / 96dp large,
 //     24 / 24 / 26 / 36dp icon, 12 / 16 / 20 / 28dp corners
 
-// The size axis, md.comp.button.{xsmall…xlarge}.
-//
-//   size     height  icon  space  gap  label            outline
-//   xsmall     32     20     12     8   label-large        1
-//   small      40     20     16     8   label-large        1   <- default
-//   medium     56     24     24     8   title-medium       1
-//   large      96     32     48    12   headline-small     2
-//   xlarge    136     40     64    16   headline-large     3
-//
-// `space` is both the leading and the trailing inset. Expressive dropped the
-// old "24dp, but 16dp next to an icon" asymmetry, and the two `:has()` rules
-// that carried it went with it - a button is symmetric at every size now,
-// whatever is inside it.
-//
-// The round shape is corner.full at every size, so it is declared once rather
-// than five times. `outline` is here because it is the one number the style
-// axis reads back: M3 thickens an outlined button's border with its size.
-$_sizes: (
-  "xsmall": (height: 32px, icon: 20px, space: 12px, gap: 8px, outline: 1px, label: "label-large"),
-  "small": (height: 40px, icon: 20px, space: 16px, gap: 8px, outline: 1px, label: "label-large"),
-  "medium": (height: 56px, icon: 24px, space: 24px, gap: 8px, outline: 1px, label: "title-medium"),
-  "large": (height: 96px, icon: 32px, space: 48px, gap: 12px, outline: 2px, label: "headline-small"),
-  "xlarge": (height: 136px, icon: 40px, space: 64px, gap: 16px, outline: 3px, label: "headline-large"),
-);
-
-// Tokens only. The type role is emitted beside the call, never from here:
-// `:root` takes this mixin for the default size, and a typescale on :root
-// would set the page's font.
-@mixin _size($name) {
-  $s: map.get($_sizes, $name);
-
-  --md-comp-filled-button-container-height: #{map.get($s, height)};
-  --md-comp-filled-button-icon-size: #{map.get($s, icon)};
-  --md-comp-filled-button-leading-space: #{map.get($s, space)};
-  --md-comp-filled-button-trailing-space: #{map.get($s, space)};
-  --md-comp-filled-button-icon-label-space: #{map.get($s, gap)};
-  --md-comp-filled-button-outline-width: #{map.get($s, outline)};
-}
+// The size axis is `$button-sizes` in abstracts, and `button-size()` sets its
+// tokens. Both moved there when button groups grew a size ladder of their own:
+// a group sizes its items from the group, so it needs the same table, and a
+// partial may not @use another partial.
 
 :root {
   --md-comp-filled-button-container-color: var(--md-sys-color-primary);
   --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
   --md-comp-filled-button-container-shape: 9999px;
-  @include _size("small");
+  @include button-size("small");
 }
 
 // Widget chrome that happens to be a <button> — not a common button.
@@ -160,9 +126,9 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 // else - the geometry is already written once, in `btn`, against those tokens.
 // A size that declared `height` itself would have to be restated by anything
 // that overrides it, which is how the per-combination rules start.
-@each $name, $s in $_sizes {
+@each $name, $s in $button-sizes {
   :where(#{$_btn}).#{$name} {
-    @include _size($name);
+    @include button-size($name);
     @include typescale(map.get($s, label));
   }
 }
@@ -175,7 +141,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 // It is also the FAB's marker class - `circle extra` is a FAB, and the rules
 // below reset this geometry entirely.
 :where(#{$_btn}).extra {
-  @include _size("medium");
+  @include button-size("medium");
 }
 
 // Every size is corner.full already, so this only bites when a consumer has

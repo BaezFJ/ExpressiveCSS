@@ -200,6 +200,38 @@
         }
       ]
     },
+    "button-groups": {
+      "status": "enforced",
+      "note": "Added with the button group component (#41). A group of related buttons that read as one control without becoming one: each item is its own Tab stop and does its own thing, so the container declares no role at all. `toolbar` is rejected rather than withheld - Toolbar's case is a keyboard model that has not been written yet, this one is a component that is not a composite widget and does not want to be. A group that needs a name takes `role=\"group\"` with an `aria-label`, which promises no keyboard contract to break. Selection is absent for the same reason: a <button> holds no checked state, and the M3 connected group's selected shape belongs to `.segmented-button`, which is a <fieldset> of real controls.",
+      "rejects": {
+        "rejected_role": "toolbar",
+        "because": "its buttons are independent commands reached with Tab - the group is a visual grouping, not a composite widget, so there is no arrow-key model to implement and none to promise",
+        "rule": "button-group-is-not-an-authored-composite-widget"
+      },
+      "rules": [
+        {
+          "id": "button-group-is-not-an-authored-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".button-group",
+          "fragmentSafe": true,
+          "message": "A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role=\"group\"` with an aria-label is the role that fits, and it promises no keyboard model."
+        },
+        {
+          "id": "button-group-items-are-controls",
+          "kind": "forbid",
+          "selector": ".button-group > :not(button):not(a[href])",
+          "fragmentSafe": true,
+          "message": "Every item in a group is a control the user can reach: <button>, or <a href> when it navigates. A wrapper element is also refused - the gap and the connected corners are written against direct children, so a nested <div> loses both."
+        },
+        {
+          "id": "button-group-selection-is-not-authored",
+          "kind": "forbid",
+          "selector": ".button-group :is([aria-checked], [aria-selected], [aria-pressed])",
+          "fragmentSafe": true,
+          "message": "A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself."
+        }
+      ]
+    },
     "cards": {
       "status": "enforced",
       "note": "Swept 0.8.0. The action row is buttons, not destinations.",

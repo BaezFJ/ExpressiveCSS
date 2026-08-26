@@ -61,6 +61,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Buttons](https://www.expressivecss.com/buttons.html): Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
 - [Icon buttons](https://www.expressivecss.com/icon-buttons.html): A single icon as the whole control, in four styles and five sizes.
 - [Segmented buttons](https://www.expressivecss.com/segmented-buttons.html): Two to five connected options, one choice or several, with no script behind them.
+- [Button groups](https://www.expressivecss.com/button-groups.html): Related buttons that bump and reshape against each other, in two variants and five sizes.
 - [FAB](https://www.expressivecss.com/floating-action-button.html): A circular action that can open a menu of related shortcuts.
 - [Cards](https://www.expressivecss.com/cards.html): Material Design 3 cards, from the HTML.
 - [Lists](https://www.expressivecss.com/lists.html): Continuous vertical indexes of text and images.

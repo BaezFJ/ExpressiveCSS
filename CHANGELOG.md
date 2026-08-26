@@ -16,6 +16,45 @@ below is the whole story for that component.
 
 ### Added
 
+- **Button groups** (`div.button-group`, `.connected`, the five button sizes),
+  one of M3 Expressive's headline components. A row of
+  related buttons that reads as one control without becoming one: standard
+  keeps each item's round shape and closes the gap as the buttons grow
+  (18/12/8/8/8dp), connected sits every item 2dp apart with round ends and
+  squared joins that square one step further while pressed.
+
+  M3 states this as **ten token families** (`md.comp.button-group.{standard,
+  connected}.{xsmall…xlarge}`, DSP 34.0.21). They collapse to one family here
+  the way the button's own ladder does — the size class rewrites the tokens, and
+  only the numbers that actually differ (the standard gap, the connected corners
+  at `large` and `xlarge`) are named twice.
+
+  **The size goes on the group, not on every button.** A group sets the button
+  tokens its items inherit, so `<div class="button-group medium">` sizes the row;
+  an item carrying its own size class still wins for itself. That is what moved
+  the size ladder out of `components/_buttons.scss` and into
+  `abstracts/_variables.scss` as `$button-sizes`, with `button-size()` beside the
+  other mixins: two partials read the table now, and a partial may not `@use`
+  another partial. No class, token or value changed.
+
+  **No selection, deliberately.** M3's connected group draws a selected state,
+  and holding one takes a control that remembers the answer — which is
+  `.segmented-button`, a `<fieldset>` of radios or checkboxes. A row of
+  `<button>`s has nothing to read it off, so the selected shape is the segmented
+  button's and the group stays a set of commands.
+
+  **No composite role, and it is rejected rather than withheld.** Toolbar's
+  `toolbar` waits on a keyboard model somebody still has to write; a button
+  group is not a composite widget at all — its items are independent commands
+  reached with Tab. A group that needs a name takes `role="group"` with an
+  `aria-label`, which promises no keyboard contract.
+
+  The press-time growth of a standard group's item is M3's 15%, taken from the
+  item's height rather than its width and with the items beside it sliding
+  rather than compressing: compression needs each item's measured width, which
+  is script. The token holds the figure as a ratio because CSS cannot multiply
+  a length by a percentage.
+
 - **Scrim** (`--md-comp-scrim-color`), the wash a modal surface paints behind
   itself, defined once. The dialog, the navigation drawer and the navigation
   rail were each mixing `scrim` at 32% themselves — four rules across three

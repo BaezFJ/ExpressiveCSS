@@ -76,3 +76,31 @@ $flow-text-min: 1.2rem !default;
 $flow-text-max: 1.68rem !default;   // the old loop's ceiling: 1.2rem * (1 + .02 * 20)
 $flow-text-from: 360px !default;
 $flow-text-to: 960px !default;      // the old loop's last step: 360px + 20 * 30px
+
+// The common-button size axis, md.comp.button.{xsmall…xlarge} (DSP 34.0.21).
+//
+//   size     height  icon  space  gap  label            outline
+//   xsmall     32     20     12     8   label-large        1
+//   small      40     20     16     8   label-large        1   <- default
+//   medium     56     24     24     8   title-medium       1
+//   large      96     32     48    12   headline-small     2
+//   xlarge    136     40     64    16   headline-large     3
+//
+// `space` is both the leading and the trailing inset. Expressive dropped the
+// old "24dp, but 16dp next to an icon" asymmetry, so a button is symmetric at
+// every size, whatever is inside it. The round shape is corner.full at every
+// size, so it is declared once by the component rather than five times here.
+// `outline` is the one number the style axis reads back: M3 thickens an
+// outlined button's border with its size.
+//
+// It lives in abstracts because two components read it - `_buttons.scss` for
+// the size classes, `_button-groups.scss` to size the items of a group from
+// the group itself. A partial may not @use another partial, so a table two of
+// them share has to be here.
+$button-sizes: (
+  "xsmall": (height: 32px, icon: 20px, space: 12px, gap: 8px, outline: 1px, label: "label-large"),
+  "small": (height: 40px, icon: 20px, space: 16px, gap: 8px, outline: 1px, label: "label-large"),
+  "medium": (height: 56px, icon: 24px, space: 24px, gap: 8px, outline: 1px, label: "title-medium"),
+  "large": (height: 96px, icon: 32px, space: 48px, gap: 12px, outline: 2px, label: "headline-small"),
+  "xlarge": (height: 136px, icon: 40px, space: 64px, gap: 16px, outline: 3px, label: "headline-large"),
+) !default;

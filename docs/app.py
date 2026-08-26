@@ -81,6 +81,7 @@ NAV = [
         ('buttons', 'Buttons'),
         ('icon_buttons', 'Icon buttons'),
         ('segmented_buttons', 'Segmented buttons'),
+        ('button_groups', 'Button groups'),
         ('floating_action_button', 'FAB'),
         ('cards', 'Cards'),
         ('lists', 'Lists'),
@@ -325,6 +326,12 @@ def buttons():
 @app.route('/icon-buttons.html')
 def icon_buttons():
     return render_template('components/icon-buttons.html')
+
+
+@app.route('/button-groups')
+@app.route('/button-groups.html')
+def button_groups():
+    return render_template('components/button-groups.html')
 
 
 @app.route('/segmented-buttons')

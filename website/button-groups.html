@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tooltips - ExpressiveCSS</title>
+    <title>Button groups - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Tooltips</h2>
+            <h2>Button groups</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -167,8 +167,8 @@
                       <li class="">
                           <a href="/segmented-buttons.html">Segmented buttons</a>
                       </li>
-                      <li class="">
-                          <a href="/button-groups.html">Button groups</a>
+                      <li class="active">
+                          <a href="/button-groups.html" aria-current="page">Button groups</a>
                       </li>
                       <li class="">
                           <a href="/floating-action-button.html">FAB</a>
@@ -197,8 +197,8 @@
                       <li class="">
                           <a href="/badges.html">Badges</a>
                       </li>
-                      <li class="active">
-                          <a href="/tooltips.html" aria-current="page">Tooltips</a>
+                      <li class="">
+                          <a href="/tooltips.html">Tooltips</a>
                       </li>
                       <li class="">
                           <a href="/snackbar.html">Snackbar</a>
@@ -280,8 +280,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Tooltips</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Material Design 3 tooltips, from the HTML.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Button groups</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">Related buttons that bump and reshape against each other, in two variants and five sizes.</p>
             </div>
         </div>
     </section>
@@ -296,354 +296,254 @@
   <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          A child <code>.tooltip</code> is the bubble. No
-          <code>tooltipped</code> class is required. They are CSS only on
-          hover and keyboard focus. Helpers are only for placement and
-          the rich variant: <code>top</code> (the default),
-          <code>bottom</code>, <code>left</code>, <code>right</code>,
-          <code>rich</code> / <code>max</code>.
+          A button group is a row of related actions that reads as one control
+          without becoming one — a formatting row, a set of view actions, a
+          player's transport. Each button stays its own button.
         </p>
         <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/tooltips/specs">M3 tooltip spec</a>.
-          A plain tooltip is <code>inverse-surface</code> /
-          <code>inverse-on-surface</code>, 4dp corners,
-          <code>body-small</code>, 24dp minimum, 4/8dp padding, 200dp
-          max, no elevation and no caret. It sits 4dp from the activator.
-          M3 prefers above.
-        </p>
-        <p>
-          Inside a <code>&lt;button&gt;</code> the bubble has to be a
-          <code>&lt;span&gt;</code> — a <code>&lt;div&gt;</code> is not
-          phrasing content and the parser will hoist it. Icon-only
-          buttons still need <code>.circle</code> so the span is not
-          treated as a label.
-        </p>
-        <p>
-          <button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
-            <span class="material-symbols" aria-hidden="true">add</span>
-            <span class="tooltip" id="tip-add-to-album">Add to album</span>
-          </button>
-          <button type="button" class="circle" aria-label="Above" aria-describedby="tip-above">
-            <span class="material-symbols" aria-hidden="true">arrow_upward</span>
-            <span class="tooltip" id="tip-above">Above</span>
-          </button>
-          <button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
-            <span class="material-symbols" aria-hidden="true">arrow_downward</span>
-            <span class="tooltip bottom" id="tip-below">Below</span>
-          </button>
-          <button type="button" class="circle" aria-label="Start" aria-describedby="tip-start">
-            <span class="material-symbols" aria-hidden="true">arrow_back</span>
-            <span class="tooltip left" id="tip-start">Start</span>
-          </button>
-          <button type="button" class="circle" aria-label="End" aria-describedby="tip-end">
-            <span class="material-symbols" aria-hidden="true">arrow_forward</span>
-            <span class="tooltip right" id="tip-end">End</span>
-          </button>
-        </p>
-<pre><code>&lt;button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-  &lt;span class="tooltip" id="tip-add-to-album"&gt;Add to album&lt;/span&gt;
-&lt;/button&gt;
-
-&lt;button type="button" class="circle" aria-label="Below" aria-describedby="tip-below"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_downward&lt;/span&gt;
-  &lt;span class="tooltip bottom" id="tip-below"&gt;Below&lt;/span&gt;
-&lt;/button&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="rich" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Rich</h3>
-
-        <p>
-          <code>rich</code> (or BeerCSS’s <code>max</code>) is the rich
-          tooltip: <code>surface</code>, elevation 2, 12dp corners,
-          320dp max. A heading is the title
-          (<code>title-small</code>), a <code>&lt;p&gt;</code> is
-          supporting text (<code>body-medium</code>), and a trailing
-          <code>&lt;nav&gt;</code> is the action. Rich bubbles can
-          receive pointer events so the action is usable.
+          The root is a <code>&lt;div class="button-group"&gt;</code> and the
+          items are ordinary
+          <a href="/buttons.html">buttons</a> or
+          <a href="/icon-buttons.html">icon buttons</a>, written
+          directly inside it. There is no plugin and nothing to initialize.
         </p>
         <div>
-          <button type="button" class="tonal">Why this is saved</button>
-          <div class="tooltip rich bottom">
-            <h3>Saved offline</h3>
-            <p>This stop is stored on the device so it still opens without a signal.</p>
-            <nav>
-              <button type="button" class="text">Got it</button>
-            </nav>
+          <div class="button-group">
+            <button class="button tonal">
+              <span class="material-symbols" aria-hidden="true">format_bold</span>
+              Bold
+            </button>
+            <button class="button tonal">
+              <span class="material-symbols" aria-hidden="true">format_italic</span>
+              Italic
+            </button>
+            <button class="button tonal">
+              <span class="material-symbols" aria-hidden="true">format_underlined</span>
+              Underline
+            </button>
           </div>
         </div>
-<pre><code>&lt;div&gt;
-  &lt;button type="button" class="tonal"&gt;Why this is saved&lt;/button&gt;
-  &lt;div class="tooltip rich bottom"&gt;
-    &lt;h3&gt;Saved offline&lt;/h3&gt;
-    &lt;p&gt;This stop is stored on the device so it still opens without a signal.&lt;/p&gt;
-    &lt;nav&gt;
-      &lt;button type="button" class="text"&gt;Got it&lt;/button&gt;
-    &lt;/nav&gt;
-  &lt;/div&gt;
+<pre><code>&lt;div class="button-group"&gt;
+  &lt;button class="button tonal"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_bold&lt;/span&gt;
+    Bold
+  &lt;/button&gt;
+  &lt;button class="button tonal"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_italic&lt;/span&gt;
+    Italic
+  &lt;/button&gt;
+  &lt;button class="button tonal"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_underlined&lt;/span&gt;
+    Underline
+  &lt;/button&gt;
 &lt;/div&gt;</code></pre>
         <p>
-          A rich tooltip with an action cannot live inside a
-          <code>&lt;button&gt;</code> — that would nest buttons. Put the
-          bubble next to the control, wrapped in a parent.
+          The group is a container of independent buttons: each one is its own
+          Tab stop and does its own thing. It is not a choice — nothing in a
+          group is selected. When two to five options answer one question, that
+          is a
+          <a href="/segmented-buttons.html">segmented button</a>,
+          whose <code>&lt;input&gt;</code> holds the answer.
         </p>
   
       </div>
 
 
-  <div id="javascript" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">JavaScript</h3>
+  <div id="standard" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Standard</h3>
 
         <p>
-          The CSS path does not need AutoInit. The JS plugin is still
-          there for <code>data-tooltip</code>, delayed show/hide, and
-          keeping the bubble inside the viewport. Add
-          <code>tooltipped</code> to the activator.
-          <code>data-tooltip</code> is the text;
-          <code>data-position</code> is <code>top</code>,
-          <code>right</code>, <code>bottom</code>, or
-          <code>left</code>. <code>AutoInit()</code> starts every
-          <code>.tooltipped</code> except those marked
-          <code>no-autoinit</code>. The generated element gets both
-          <code>.tooltip</code> and <code>.material-tooltip</code>.
+          The default. Every button keeps its own round shape and the gap
+          between them closes as they grow — 18dp at the smallest size down to
+          8dp at the three largest, which is Material's own ladder. Press one
+          and it widens; the buttons beside it move over.
         </p>
-        <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip="I am a tooltip">Bottom</a>
-          <a class="tooltipped" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
-          <a class="tooltipped" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
-          <a class="tooltipped" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
-        </p>
-<pre><code>&lt;a class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!"&gt;
-  Hover me
-&lt;/a&gt;</code></pre>
-        <p>
-          For HTML, point <code>data-tooltip-id</code> at an element.
-          That element is moved into the tooltip and the bubble is
-          marked <code>rich</code>. Leave <code>data-tooltip</code> off
-          so the HTML is kept. There is no <code>data-html</code>
-          attribute and no <code>unsafeHTML</code> option.
-        </p>
-        <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">With HTML</a>
-        </p>
-        <div id="tooltip-content" style="display: none;">
-          <h3>Chart</h3>
-          <p>This is a tooltip with a <a href="https://github.com">link</a>
-          and a <span class="material-symbols" aria-hidden="true">insert_chart</span>.</p>
+        <div>
+          <div class="button-group">
+            <button class="button" aria-label="Previous track">
+              <span class="material-symbols" aria-hidden="true">skip_previous</span>
+            </button>
+            <button class="button" aria-label="Play">
+              <span class="material-symbols" aria-hidden="true">play_arrow</span>
+            </button>
+            <button class="button" aria-label="Next track">
+              <span class="material-symbols" aria-hidden="true">skip_next</span>
+            </button>
+          </div>
         </div>
-<pre><code>&lt;a class="tooltipped" href="#!"
-   data-position="bottom" data-tooltip-id="tooltip-content"&gt;
-  With HTML
-&lt;/a&gt;
-&lt;div id="tooltip-content" hidden&gt;
-  &lt;h3&gt;Chart&lt;/h3&gt;
-  &lt;p&gt;This is a tooltip with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;.&lt;/p&gt;
+<pre><code>&lt;div class="button-group"&gt;
+  &lt;button class="button" aria-label="Previous track"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;skip_previous&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="button" aria-label="Play"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;play_arrow&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="button" aria-label="Next track"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;skip_next&lt;/span&gt;
+  &lt;/button&gt;
 &lt;/div&gt;</code></pre>
   
       </div>
 
 
-  <div id="initialization" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Initialization</h3>
+  <div id="connected" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Connected</h3>
 
         <p>
-          The IIFE bundle exposes <code>Expressive.Tooltip</code>.
-          Call <code>init</code> yourself when you need options other
-          than the defaults, or let
-          <code>Expressive.AutoInit()</code> start every
-          <code>.tooltipped</code>.
+          Add <code>connected</code>. The items sit 2dp apart at every size,
+          the two ends of the row stay fully round and the joins in the middle
+          are squared off. Pressing an item squares its inner corners further
+          — 8dp to 4dp at the three smaller sizes, and more at the two large
+          ones, where the corners are larger to begin with.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.tooltipped');
-  const instances = Expressive.Tooltip.init(elems, {
-    enterDelay: 200
-  });
-});</code></pre>
-        <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
-  Tooltip: { enterDelay: 200 }
-});</code></pre>
+        <div>
+          <div class="button-group connected">
+            <button class="button tonal" aria-label="Align left">
+              <span class="material-symbols" aria-hidden="true">format_align_left</span>
+            </button>
+            <button class="button tonal" aria-label="Align center">
+              <span class="material-symbols" aria-hidden="true">format_align_center</span>
+            </button>
+            <button class="button tonal" aria-label="Align right">
+              <span class="material-symbols" aria-hidden="true">format_align_right</span>
+            </button>
+          </div>
+        </div>
+<pre><code>&lt;div class="button-group connected"&gt;
+  &lt;button class="button tonal" aria-label="Align left"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_align_left&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="button tonal" aria-label="Align center"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_align_center&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="button tonal" aria-label="Align right"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_align_right&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          A connected group has no selected state. Material's connected group
+          draws one, and holding it takes a control that remembers the answer
+          — which is the
+          <a href="/segmented-buttons.html">segmented button</a>,
+          a fieldset of radios or checkboxes. A row of
+          <code>&lt;button&gt;</code>s has nothing to read it off.
+        </p>
   
       </div>
 
 
-  <div id="options" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Options</h3>
+  <div id="sizes" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Sizes</h3>
 
         <p>
-          Constructor and <code>init</code> options.
-          <code>data-tooltip</code>, <code>data-position</code>, and
-          <code>data-tooltip-id</code> are read from the element and
-          override these defaults. Attributes are read again each time
-          the tooltip opens, so changing them later takes effect on the
-          next show.
+          The same five sizes as a button — <code>xsmall</code>,
+          <code>small</code> (the default), <code>medium</code>,
+          <code>large</code>, <code>xlarge</code> — but written once, on the
+          group. The group sets the button tokens its items inherit, so the
+          buttons inside need no size class of their own; one that carries one
+          anyway still wins for itself.
+        </p>
+        <div>
+          <div class="button-group connected xsmall">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+            <button class="button tonal">Three</button>
+          </div>
+          <div class="button-group connected medium">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+            <button class="button tonal">Three</button>
+          </div>
+          <div class="button-group connected large">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+          </div>
+        </div>
+<pre><code>&lt;div class="button-group connected medium"&gt;
+  &lt;button class="button tonal"&gt;One&lt;/button&gt;
+  &lt;button class="button tonal"&gt;Two&lt;/button&gt;
+  &lt;button class="button tonal"&gt;Three&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="semantics" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Semantics</h3>
+
+        <p>
+          The group declares no role. A
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
+          such as <code>toolbar</code> promises arrow-key navigation, and this
+          component <em>rejects</em> it rather than withholding it: its buttons
+          are independent commands reached with Tab, so there is no keyboard
+          model to implement and none to promise.
+        </p>
+        <p>
+          When the group needs a name — several groups on one screen, or a row
+          whose purpose is not obvious from its buttons — give it
+          <code>role="group"</code> and an <code>aria-label</code>. That role
+          is a grouping and nothing more, so it promises no keyboard contract
+          to break.
+        </p>
+<pre><code>&lt;div class="button-group" role="group" aria-label="Text style"&gt;
+  &lt;button class="button" aria-label="Bold"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_bold&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="button" aria-label="Italic"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;format_italic&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          Items are controls, written as direct children: a
+          <code>&lt;button&gt;</code>, or an <code>&lt;a href&gt;</code> when
+          it navigates. A wrapper element around them is refused too — the gap
+          and the connected corners are written against direct children, so a
+          nested <code>&lt;div&gt;</code> loses both. Every icon-only item
+          needs its own <code>aria-label</code>, since the icon inside it is
+          <code>aria-hidden</code>.
+        </p>
+  
+      </div>
+
+
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
+
+        <p>
+          Set these on the group, or in a rule of your own that picks out the
+          groups you want to change. The values below are the defaults — a
+          small standard group; the size and variant classes rewrite them.
         </p>
         
         <table class="striped">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
+                    <th>Token</th>
                     <th>Default</th>
-                    <th>Description</th>
                 </tr>
             </thead>
             <tbody>
 
-            <tr>
-              <td><code>exitDelay</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Delay before the tooltip disappears, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>enterDelay</code></td>
-              <td>Number</td>
-              <td><code>0</code></td>
-              <td>Delay before the tooltip appears, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>tooltipId</code></td>
-              <td>String</td>
-              <td>—</td>
-              <td>Id of an element used as the tooltip body. Set by <code>data-tooltip-id</code>. Marks the bubble <code>rich</code>.</td>
-            </tr>
-            <tr>
-              <td><code>text</code></td>
-              <td>String</td>
-              <td><code>''</code></td>
-              <td>Plain-text content. Set by <code>data-tooltip</code>. Ignored when <code>tooltipId</code> is set.</td>
-            </tr>
-            <tr>
-              <td><code>margin</code></td>
-              <td>Number</td>
-              <td><code>4</code></td>
-              <td>Distance from the activator, in pixels, not counting <code>transitionMovement</code>. M3 is 4dp.</td>
-            </tr>
-            <tr>
-              <td><code>inDuration</code></td>
-              <td>Number</td>
-              <td><code>250</code></td>
-              <td>Enter transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>opacity</code></td>
-              <td>Number</td>
-              <td><code>1</code></td>
-              <td>Opacity of the tooltip when shown.</td>
-            </tr>
-            <tr>
-              <td><code>outDuration</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Exit transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>position</code></td>
-              <td>String</td>
-              <td><code>'bottom'</code></td>
-              <td>Direction: <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Set by <code>data-position</code>. The CSS-only default is above.</td>
-            </tr>
-            <tr>
-              <td><code>transitionMovement</code></td>
-              <td>Number</td>
-              <td><code>10</code></td>
-              <td>How far the tooltip moves during its transition, in pixels.</td>
-            </tr>
-  
+                <tr><td><code>--md-comp-button-group-between-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-button-group-pressed-item-width-multiplier</code></td><td><code>.15</code></td></tr>
+                <tr><td><code>--md-comp-button-group-container-shape</code></td><td><code>9999px</code> (connected)</td></tr>
+                <tr><td><code>--md-comp-button-group-inner-corner-corner-size</code></td><td><code>8px</code> (connected)</td></tr>
+                <tr><td><code>--md-comp-button-group-pressed-inner-corner-corner-size</code></td><td><code>4px</code> (connected)</td></tr>
+        
             </tbody>
         </table>
-
-  
-      </div>
-
-
-  <div id="methods" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
-
-        
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Tooltip.getInstance(elem);</code></pre>
-
 
         <p>
-          <a class="tooltipped" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</a>
-          <button type="button" class="tonal" id="tooltip-open">Open</button>
-          <button type="button" class="tonal" id="tooltip-close">Close</button>
+          The items are buttons, so their height, insets and colours come from
+          the <a href="/buttons.html">button</a> tokens, which the
+          group's size class sets for them. Material states the press-time
+          growth as 15% of the item's width; CSS cannot multiply a length by a
+          percentage, so the token holds the same figure as a ratio and the
+          growth is taken from the item's height.
         </p>
-
-        <h5 class="light">.open();</h5>
-        <p>Show the tooltip.</p>
-<pre><code>instance.open();</code></pre>
-
-        <h5 class="light">.close();</h5>
-        <p>Hide the tooltip.</p>
-<pre><code>instance.close();</code></pre>
-
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
   
       </div>
-
-
-  <div id="properties" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Properties</h3>
-
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>el</code></td>
-                    <td>Element</td>
-                    <td>The DOM element the plugin was initialized with.</td>
-                </tr>
-                <tr>
-                    <td><code>options</code></td>
-                    <td>Object</td>
-                    <td>The options the instance was initialized with.</td>
-                </tr>
-
-            <tr>
-              <td><code>isOpen</code></td>
-              <td>Boolean</td>
-              <td>Whether the tooltip is open.</td>
-            </tr>
-            <tr>
-              <td><code>isHovered</code></td>
-              <td>Boolean</td>
-              <td>Whether the activator is hovered.</td>
-            </tr>
-            <tr>
-              <td><code>isFocused</code></td>
-              <td>Boolean</td>
-              <td>Whether the activator is focused via the keyboard.</td>
-            </tr>
-            <tr>
-              <td><code>tooltipEl</code></td>
-              <td>Element</td>
-              <td>The generated tooltip element.</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-  
-      </div>
-
 
 
     </div>
@@ -653,13 +553,12 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#anatomy">Introduction</a></li>
-          <li><a href="#rich">Rich</a></li>
-          <li><a href="#javascript">JavaScript</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#standard">Standard</a></li>
+          <li><a href="#connected">Connected</a></li>
+          <li><a href="#sizes">Sizes</a></li>
+          <li><a href="#semantics">Semantics</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 

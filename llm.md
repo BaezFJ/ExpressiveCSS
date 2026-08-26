@@ -61,6 +61,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Loading indicator
 - Search
 - Segmented buttons
+- Button groups
 
 ### JavaScript components
 
@@ -2044,6 +2045,63 @@ The group is a grid of equal columns filling the width it is given, as Material 
 | `--md-comp-outlined-segmented-button-label-text-color` | `--md-sys-color-on-surface` |
 | `--md-comp-outlined-segmented-button-selected-container-color` | `--md-sys-color-secondary-container` |
 | `--md-comp-outlined-segmented-button-selected-label-text-color` | `--md-sys-color-on-secondary-container` |
+
+---
+
+## Button groups
+
+A row of related actions that reads as one control without becoming one — a formatting row, a set of view actions, a player's transport. The root is a `<div class="button-group">` and the items are ordinary buttons or icon buttons written directly inside it. Nothing is scripted and nothing is selected: each item is its own Tab stop and does its own thing. When two to five options answer one question, that is a segmented button, whose `<input>` holds the answer.
+
+Items are controls and direct children — a `<button>`, or an `<a href>` when it navigates. A wrapper element around them loses both the gap and the connected corners, which are written against direct children. An icon-only item carries its own `aria-label`, since the icon is `aria-hidden`.
+
+```html
+<div class="button-group">
+  <button class="button tonal">
+    <span class="material-symbols" aria-hidden="true">format_bold</span>
+    Bold
+  </button>
+  <button class="button tonal">
+    <span class="material-symbols" aria-hidden="true">format_italic</span>
+    Italic
+  </button>
+</div>
+```
+
+Standard is the default: every item keeps its own round shape, the gap closes as the buttons grow (18dp at `xsmall` down to 8dp at the three largest), and pressing an item widens it.
+
+Add `connected` for the second variant. Items sit 2dp apart at every size, the ends of the row stay fully round and the joins are squared off; pressing an item squares its inner corners further — 8dp to 4dp at the three smaller sizes, 16dp to 12dp at `large`, 20dp to 16dp at `xlarge`. A connected group has no selected state: M3 draws one, and holding it takes a control that remembers the answer, which is the segmented button.
+
+```html
+<div class="button-group connected">
+  <button class="button tonal" aria-label="Align left">
+    <span class="material-symbols" aria-hidden="true">format_align_left</span>
+  </button>
+  <button class="button tonal" aria-label="Align center">
+    <span class="material-symbols" aria-hidden="true">format_align_center</span>
+  </button>
+</div>
+```
+
+The five button sizes — `xsmall`, `small` (the default), `medium`, `large`, `xlarge` — are written once, on the group. It sets the button tokens its items inherit, so an item needs no size class of its own; one that carries one anyway still wins for itself.
+
+The group declares no role. A composite role such as `toolbar` promises arrow-key navigation, and this component *rejects* it rather than withholding it: its buttons are independent commands reached with Tab. When the group needs a name, give it `role="group"` and an `aria-label` — a grouping and nothing more, so it promises no keyboard contract.
+
+```html
+<div class="button-group medium" role="group" aria-label="Text style">
+  <button class="button">One</button>
+  <button class="button">Two</button>
+</div>
+```
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-button-group-between-space` | 12px |
+| `--md-comp-button-group-pressed-item-width-multiplier` | .15 |
+| `--md-comp-button-group-container-shape` | 9999px (connected) |
+| `--md-comp-button-group-inner-corner-corner-size` | 8px (connected) |
+| `--md-comp-button-group-pressed-inner-corner-corner-size` | 4px (connected) |
+
+The items are buttons, so their height, insets and colours come from the button tokens, which the group's size class sets for them. M3 states the press-time growth as 15% of the item's width; CSS cannot multiply a length by a percentage, so the token holds the same figure as a ratio and the growth is taken from the item's height, and the items beside the pressed one slide rather than compress.
 
 ---
 

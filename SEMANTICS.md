@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**52 of 52 rows enforced; 0 remaining.**
+**53 of 53 rows enforced; 0 remaining.**
 
-48 of those rows are components - a part of the framework an author writes markup for.
+49 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**5 of 48 components declare conformance debt.**
+**5 of 49 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -126,6 +126,22 @@ Swept 0.8.0. A trail is an ordered list, because the order is the meaning.
 
 - **breadcrumb-is-ordered-list** - Crumbs are an ordered list - nav > ol > li > a. Loose anchors give no count and no position, so "3 of 4" is never announced.
 - **breadcrumb-marks-current** - The last crumb is the page you are on; it needs aria-current="page" to say so.
+
+### button-groups
+
+Added with the button group component (#41). A group of related buttons that read as one control without becoming one: each item is its own Tab stop and does its own thing, so the container declares no role at all. `toolbar` is rejected rather than withheld - Toolbar's case is a keyboard model that has not been written yet, this one is a component that is not a composite widget and does not want to be. A group that needs a name takes `role="group"` with an `aria-label`, which promises no keyboard contract to break. Selection is absent for the same reason: a <button> holds no checked state, and the M3 connected group's selected shape belongs to `.segmented-button`, which is a <fieldset> of real controls.
+
+**Rejected role:** `toolbar` is not withheld but declined - its buttons are independent commands reached with Tab - the group is a visual grouping, not a composite widget, so there is no arrow-key model to implement and none to promise. `button-group-is-not-an-authored-composite-widget` enforces that, keeping every composite role out.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `button-group-is-not-an-authored-composite-widget` | forbid-composite-roles | `.button-group` | must not match with any composite role |
+| `button-group-items-are-controls` | forbid | `.button-group > :not(button):not(a[href])` | must not match |
+| `button-group-selection-is-not-authored` | forbid | `.button-group :is([aria-checked], [aria-selected], [aria-pressed])` | must not match |
+
+- **button-group-is-not-an-authored-composite-widget** - A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
+- **button-group-items-are-controls** - Every item in a group is a control the user can reach: <button>, or <a href> when it navigates. A wrapper element is also refused - the gap and the connected corners are written against direct children, so a nested <div> loses both.
+- **button-group-selection-is-not-authored** - A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself.
 
 ### buttons
 
