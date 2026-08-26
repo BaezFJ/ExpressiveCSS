@@ -757,6 +757,55 @@
         }
       ]
     },
+    "segmented-buttons": {
+      "status": "enforced",
+      "note": "A single- or multi-select group of connected buttons. The root is a <fieldset>, and each segment is an <input> plus the <label class=\"segment\"> beside it, tied by id: radios for single-select, checkboxes for multi-select. The control is the label's sibling rather than its child, the way a filter chip is written - a <label> wrapping one of those inputs is a radio or a checkbox to the rest of the sheet, and gets painted as one. No composite role appears here in either direction: none is declared, so none is withheld. Rule 2 asks for an implemented keyboard contract before a component claims to be a composite widget, and a native radio group has one the platform implements. The rules below are what keeps it native - swap the <fieldset> for a <div> or the <input> for a <button> and the arrow keys, the group name and the checked state all leave with it.",
+      "rules": [
+        {
+          "id": "segmented-button-is-a-fieldset",
+          "kind": "forbid",
+          "selector": ".segmented-button:not(fieldset)",
+          "fragmentSafe": true,
+          "message": "A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model."
+        },
+        {
+          "id": "segment-is-a-label",
+          "kind": "forbid",
+          "selector": ".segmented-button .segment:not(label)",
+          "fragmentSafe": true,
+          "message": "A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value."
+        },
+        {
+          "id": "segment-names-its-input",
+          "kind": "require-attr",
+          "selector": ".segmented-button label.segment",
+          "attr": "for",
+          "message": "The control is the label's sibling, not its child, so only `for` ties the two together: <input id=\"x\"> then <label class=\"segment\" for=\"x\">."
+        },
+        {
+          "id": "segment-does-not-wrap-its-input",
+          "kind": "forbid",
+          "selector": ".segmented-button .segment :is([type=\"radio\"], [type=\"checkbox\"])",
+          "fragmentSafe": true,
+          "message": "A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it."
+        },
+        {
+          "id": "segment-selection-is-not-authored",
+          "kind": "forbid",
+          "selector": ".segmented-button :is([aria-checked], [aria-selected], [aria-pressed])",
+          "fragmentSafe": true,
+          "message": "Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates."
+        },
+        {
+          "id": "segment-icon-hidden",
+          "kind": "require-attr",
+          "selector": ".segmented-button .segment :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration."
+        }
+      ]
+    },
     "side-sheet": {
       "status": "enforced",
       "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",

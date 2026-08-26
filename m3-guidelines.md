@@ -243,7 +243,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 
 | Situation | Use |
 | --- | --- |
-| One of a short exclusive set | **Radio** |
+| One of a short exclusive set | **Radio**, or a **segmented button** when the options are 2-5 and switch a view |
 | Many of a short set, saved later | **Checkbox** |
 | Immediate on/off setting | **Switch** |
 | One of a long set | **Select** (or autocomplete) |
@@ -1048,6 +1048,33 @@ Three **selection controls**. They are not interchangeable.
 
 ---
 
+## 8.10 Segmented buttons
+
+**M3:** Outlined segmented button (single-select, multi-select). **ExpressiveCSS:** `fieldset.segmented-button` + `label.segment` (CSS only).
+
+**Use when** 2–5 related options sit side by side and the choice reshapes what is already on screen — a view switcher (Day / Week / Month), a date range, a filter over a chart.
+
+| Variant | Markup | Job |
+| --- | --- | --- |
+| Single select | `<input type="radio" id="x" name="g">` + `<label class="segment" for="x">` | Exactly one option; the arrow keys move between them |
+| Multi select | `<input type="checkbox" id="x">` + `<label class="segment" for="x">` | Any number on at once, each its own Tab stop |
+
+**Don't**
+
+- Don't go past 5 segments, and don't use one for a set of 1 — that is a button or a toggle.
+- Don't use it for navigation between top-level views (that is tabs or a navigation bar), and don't use it as a screen's primary action.
+- Don't put a `<button>` or a `<div>` in a segment, or wrap the group in a `<div>`: the native fieldset and inputs are what carry the group name, the keyboard model and the checked state.
+- Don't wrap the input in its label. A `<label>` around a radio or a checkbox is one, and gets painted as one — a 20 dp ring on the control and a 48 dp row around it. Input first, then `<label for>`, as with a filter chip.
+- Don't write `aria-checked`, `aria-selected`, `aria-pressed` or a `selected` class on a segment. `checked` on the input is the initial value and the browser owns it from there.
+
+**Anatomy.** One outlined container, 40 dp tall on a full corner, with 1 dp dividers between segments. Each segment: an `<input>` and its `<label class="segment">` — label text (`label-large`) + optional 18 dp leading icon, 12 dp insets. Selected is `secondary-container` / `on-secondary-container`. The `<legend>` names the group and is not shown.
+
+**Placement.** Above the content it changes, aligned with it. One group per decision.
+
+**Behavior.** No script. No composite role is declared and none is withheld — a fieldset of radios already carries the native group, keyboard model included.
+
+---
+
 # 9. Display and feedback
 
 ## 9.1 Progress and loading
@@ -1115,7 +1142,6 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 | FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
 | Loading indicator (wavy morphing) | Circular `.progress` spinner. |
 | Bottom app bar | `div.toolbar` (docked) or a FAB above a navigation bar. |
-| Segmented button (legacy name) | Radios, tabs, or chips — not a dedicated segmented control. |
 
 ---
 

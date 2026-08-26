@@ -75,6 +75,31 @@ below is the whole story for that component.
   menu opens upward and on click and both are decided in CSS. It does not
   touch the `.fab` speed dial or the `.fab.toolbar` transition: `.fab` is a
   whole class name and never matches `.fab-menu`.
+- **Segmented buttons.** A `fieldset.segmented-button` of `<input>` and
+  `label.segment` pairs is Material 3's outlined segmented button — 40dp on
+  a full corner, 1dp outline with dividers between segments, 12dp insets, an
+  optional 18dp icon, and `secondary-container` / `on-secondary-container` for
+  the chosen one. Radios make the group single-select and checkboxes make it
+  multi-select; the input type is the entire difference between the two
+  variants.
+
+  There is no plugin. The control is the label's sibling and not its child,
+  the way a filter chip is written: a `<label>` wrapping a radio or a checkbox
+  *is* one to `forms/_radio-buttons` and `forms/_checkboxes`, which would paint
+  a 20dp ring on the control and stretch the label to a 48dp row. Selection is
+  read off the control with `input:checked + .segment`, so `checked` states
+  the initial value and the browser owns it from there — there is no class to
+  keep in sync and no ARIA copy to go stale, and `semantics.json` refuses
+  `aria-checked`,
+  `aria-selected` and `aria-pressed` on a segment. Nor is a composite role
+  declared or withheld: SEMANTICS rule 2 asks for an implemented keyboard
+  contract before a component claims to be a composite widget, and a
+  `<fieldset>` of radios already carries the native group with the browser's
+  own arrow-key model. That is why the rules enforce the markup staying native
+  — a `<div>` root or a `<button>` segment takes the group name, the keyboard
+  model and the checked state with it. The `<legend>` names the group and is
+  hidden, since Material's anatomy has no visible group label; `position:
+  static` brings it back.
 - **Carousel can advance on its own, with a pause contract that cannot be
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each

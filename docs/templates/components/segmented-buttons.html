@@ -1,0 +1,223 @@
+{% extends "docs.html" %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
+{% from "macros/api.html" import token_table %}
+
+{% set page_name = "Segmented buttons" %}
+{% set page_blurb = "Two to five connected options, one choice or several, with no script behind them." %}
+
+{% block page %}
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
+        <p class="flow-text">
+          A segmented button is a small set of related options shown side by
+          side inside one outlined pill — a view switcher, a date range, a
+          filter over a chart. Two to five segments; beyond that use a
+          <a href="{{ url_for('select') }}">select</a> or
+          <a href="{{ url_for('chips') }}">chips</a>.
+        </p>
+        <p>
+          The root is a <code>&lt;fieldset class="segmented-button"&gt;</code>
+          with a <code>&lt;legend&gt;</code>. Each segment is an
+          <code>&lt;input&gt;</code> and the
+          <code>&lt;label class="segment"&gt;</code> beside it, tied together
+          by <code>id</code> and <code>for</code>. That is the whole component:
+          there is no plugin, nothing to initialize, and no selected class to
+          keep in sync. The input holds the state and the form value, and the
+          browser moves it.
+        </p>
+        <p>
+          The control is the label's sibling rather than its child, the same
+          way a <a href="{{ url_for('chips') }}">filter chip</a> is written.
+          A <code>&lt;label&gt;</code> wrapping a radio or a checkbox
+          <em>is</em> one as far as the rest of the framework is concerned, and
+          would be painted as one — a 20dp ring on the control and a 48dp row
+          around it.
+        </p>
+        <p>
+          The legend names the group for assistive technology and is not
+          shown — Material 3's anatomy has no visible group label, but a set of
+          radios is only a set because a fieldset says so, and a fieldset is
+          only named by its legend. Set <code>position: static</code> on it
+          when you do want it visible.
+        </p>
+        <p>
+          <fieldset class="segmented-button">
+            <legend>View</legend>
+            <input type="radio" id="docs-view-day" name="docs-view" value="day" checked>
+            <label class="segment" for="docs-view-day">Day</label>
+            <input type="radio" id="docs-view-week" name="docs-view" value="week">
+            <label class="segment" for="docs-view-week">Week</label>
+            <input type="radio" id="docs-view-month" name="docs-view" value="month">
+            <label class="segment" for="docs-view-month">Month</label>
+          </fieldset>
+        </p>
+  {% endcall %}
+
+  {% call section("single-select", "Single select") %}
+        <p>
+          Radios sharing a <code>name</code>. Exactly one segment is chosen,
+          the arrow keys move between them and Tab enters and leaves the group
+          as one stop — all of it the browser's, because the control is a real
+          radio group. Mark the initial choice with <code>checked</code>.
+        </p>
+{% call code() %}
+<fieldset class="segmented-button">
+  <legend>View</legend>
+  <input type="radio" id="view-day" name="view" value="day" checked>
+  <label class="segment" for="view-day">Day</label>
+  <input type="radio" id="view-week" name="view" value="week">
+  <label class="segment" for="view-week">Week</label>
+  <input type="radio" id="view-month" name="view" value="month">
+  <label class="segment" for="view-month">Month</label>
+</fieldset>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("multi-select", "Multi select") %}
+        <p>
+          Checkboxes instead. Any number of segments can be on at once, each
+          one its own Tab stop and its own form value. Nothing else changes —
+          the input type is the entire difference between the two variants.
+        </p>
+        <p>
+          <fieldset class="segmented-button">
+            <legend>Filter transport</legend>
+            <input type="checkbox" id="docs-transport-walk" name="docs-transport" value="walk" checked>
+            <label class="segment" for="docs-transport-walk">Walk</label>
+            <input type="checkbox" id="docs-transport-transit" name="docs-transport" value="transit" checked>
+            <label class="segment" for="docs-transport-transit">Transit</label>
+            <input type="checkbox" id="docs-transport-bike" name="docs-transport" value="bike">
+            <label class="segment" for="docs-transport-bike">Bike</label>
+          </fieldset>
+        </p>
+{% call code() %}
+<fieldset class="segmented-button">
+  <legend>Filter transport</legend>
+  <input type="checkbox" id="transport-walk" name="transport" value="walk" checked>
+  <label class="segment" for="transport-walk">Walk</label>
+  <input type="checkbox" id="transport-transit" name="transport" value="transit" checked>
+  <label class="segment" for="transport-transit">Transit</label>
+  <input type="checkbox" id="transport-bike" name="transport" value="bike">
+  <label class="segment" for="transport-bike">Bike</label>
+</fieldset>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("icons", "With icons") %}
+        <p>
+          Put a <code>&lt;span class="material-symbols"&gt;</code> in the
+          label, before or after the text, at 18dp. The segment's text is its
+          accessible name, so the icon is decoration and is
+          <code>aria-hidden</code>. Material 3 shows a check on the chosen
+          segment; write that icon yourself if you want it — nothing swaps it
+          in, and the filled container already says which one is on.
+        </p>
+        <p>
+          <fieldset class="segmented-button">
+            <legend>Map layer</legend>
+            <input type="radio" id="docs-layer-map" name="docs-layer" value="map" checked>
+            <label class="segment" for="docs-layer-map">
+              <span class="material-symbols" aria-hidden="true">map</span>
+              Map
+            </label>
+            <input type="radio" id="docs-layer-satellite" name="docs-layer" value="satellite">
+            <label class="segment" for="docs-layer-satellite">
+              <span class="material-symbols" aria-hidden="true">satellite_alt</span>
+              Satellite
+            </label>
+          </fieldset>
+        </p>
+{% call code() %}
+<fieldset class="segmented-button">
+  <legend>Map layer</legend>
+  <input type="radio" id="layer-map" name="layer" value="map" checked>
+  <label class="segment" for="layer-map">
+    <span class="material-symbols" aria-hidden="true">map</span>
+    Map
+  </label>
+  <input type="radio" id="layer-satellite" name="layer" value="satellite">
+  <label class="segment" for="layer-satellite">
+    <span class="material-symbols" aria-hidden="true">satellite_alt</span>
+    Satellite
+  </label>
+</fieldset>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("disabled", "Disabled") %}
+        <p>
+          <code>disabled</code> on one input greys that segment; on the
+          fieldset it greys the whole group, outline included, the way any
+          fieldset disables what it contains.
+        </p>
+        <p>
+          <fieldset class="segmented-button">
+            <legend>Density</legend>
+            <input type="radio" id="docs-density-comfortable" name="docs-density" value="comfortable" checked>
+            <label class="segment" for="docs-density-comfortable">Comfortable</label>
+            <input type="radio" id="docs-density-compact" name="docs-density" value="compact" disabled>
+            <label class="segment" for="docs-density-compact">Compact</label>
+          </fieldset>
+          <fieldset class="segmented-button" disabled>
+            <legend>Sort</legend>
+            <input type="radio" id="docs-sort-newest" name="docs-sort" value="newest" checked>
+            <label class="segment" for="docs-sort-newest">Newest</label>
+            <input type="radio" id="docs-sort-oldest" name="docs-sort" value="oldest">
+            <label class="segment" for="docs-sort-oldest">Oldest</label>
+          </fieldset>
+        </p>
+{% call code() %}
+<fieldset class="segmented-button" disabled>
+  <legend>Sort</legend>
+  <input type="radio" id="sort-newest" name="sort" value="newest" checked>
+  <label class="segment" for="sort-newest">Newest</label>
+  <input type="radio" id="sort-oldest" name="sort" value="oldest">
+  <label class="segment" for="sort-oldest">Oldest</label>
+</fieldset>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("semantics", "Semantics") %}
+        <p>
+          No ARIA role appears here in either direction. A
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
+          such as <code>radiogroup</code> promises arrow-key navigation, and
+          this component neither declares one nor withholds one: a fieldset of
+          radios already carries the native group, with the keyboard model
+          implemented by the browser.
+        </p>
+        <p>
+          What that costs is that the markup has to stay native, so the docs
+          suite enforces it — the root must be a <code>&lt;fieldset&gt;</code>,
+          every segment a <code>&lt;label for&gt;</code> against a real
+          <code>&lt;input&gt;</code>, and <code>aria-checked</code> and its
+          neighbours are refused: the input's <code>checked</code> state is the
+          answer, and a hand-written copy is a second one that nothing updates.
+        </p>
+  {% endcall %}
+
+  {% call section("tokens", "Tokens") %}
+        <p>
+          Set these on the group, or on an ancestor to reach several of them.
+        </p>
+        {% call token_table() %}
+                <tr><td><code>--md-comp-outlined-segmented-button-container-height</code></td><td><code>40px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-container-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-outline-width</code></td><td><code>1px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-outline-color</code></td><td><code>var(--md-sys-color-outline)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-leading-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-trailing-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-icon-size</code></td><td><code>18px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-icon-label-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-label-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-selected-container-color</code></td><td><code>var(--md-sys-color-secondary-container)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-selected-label-text-color</code></td><td><code>var(--md-sys-color-on-secondary-container)</code></td></tr>
+        {% endcall %}
+        <p>
+          The state layer is the label colour mixed into the container at the
+          <a href="{{ url_for('state_layers') }}">state layer</a> opacity, so
+          those two colour tokens carry hover and press with them.
+        </p>
+  {% endcall %}
+{% endcall %}
+{% endblock %}

@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**45 of 45 rows enforced; 0 remaining.**
+**46 of 46 rows enforced; 0 remaining.**
 
-42 of those rows are components - a part of the framework an author writes markup for.
+43 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 42 components declare conformance debt.**
+**4 of 43 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -498,6 +498,26 @@ Swept 0.8.0. The sections it watches are the author's own; the table of contents
 | `toc-in-nav` | forbid | `.table-of-contents:not(nav):not(nav *)` | must not match |
 
 - **toc-in-nav** - A table of contents is a set of destinations within the page. It belongs in a labelled <nav>.
+
+### segmented-buttons
+
+A single- or multi-select group of connected buttons. The root is a <fieldset>, and each segment is an <input> plus the <label class="segment"> beside it, tied by id: radios for single-select, checkboxes for multi-select. The control is the label's sibling rather than its child, the way a filter chip is written - a <label> wrapping one of those inputs is a radio or a checkbox to the rest of the sheet, and gets painted as one. No composite role appears here in either direction: none is declared, so none is withheld. Rule 2 asks for an implemented keyboard contract before a component claims to be a composite widget, and a native radio group has one the platform implements. The rules below are what keeps it native - swap the <fieldset> for a <div> or the <input> for a <button> and the arrow keys, the group name and the checked state all leave with it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `segmented-button-is-a-fieldset` | forbid | `.segmented-button:not(fieldset)` | must not match |
+| `segment-is-a-label` | forbid | `.segmented-button .segment:not(label)` | must not match |
+| `segment-names-its-input` | require-attr | `.segmented-button label.segment` | must have `for` |
+| `segment-does-not-wrap-its-input` | forbid | `.segmented-button .segment :is([type="radio"], [type="checkbox"])` | must not match |
+| `segment-selection-is-not-authored` | forbid | `.segmented-button :is([aria-checked], [aria-selected], [aria-pressed])` | must not match |
+| `segment-icon-hidden` | require-attr | `.segmented-button .segment :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+
+- **segmented-button-is-a-fieldset** - A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model.
+- **segment-is-a-label** - A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value.
+- **segment-names-its-input** - The control is the label's sibling, not its child, so only `for` ties the two together: <input id="x"> then <label class="segment" for="x">.
+- **segment-does-not-wrap-its-input** - A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it.
+- **segment-selection-is-not-authored** - Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates.
+- **segment-icon-hidden** - A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration.
 
 ### side-sheet
 
