@@ -180,13 +180,56 @@ job is `visual.yml`, pull requests only.
   every edge and placeholder diagonal across three items and lands at 210
   pixels, just past the 100 the tolerance allows.
 
-  **That fix alone does not make the carousel deterministic**, so do not read it
-  as closing that. The deeper fragility is in the component: at compact width
-  the hero's small items resolve `flex-basis: clamp(40px, 12%, 56px)` to about
-  40.09px, a tenth of a pixel above their own floor, so any sub-pixel layout
-  difference flips them between 40.09 and a clamped 40. A value sitting on a
-  clamp boundary is bistable by construction and no amount of settling fixes it.
-  See #46.
+  **That fix alone did not make the carousel deterministic, and the cause
+  recorded here was wrong.** This file used to say the residual flake was the
+  hero's small items sitting on a `clamp()` boundary, flipping between 40px and
+  40.09px. Measured, that is not what happens: across six runs on an unchanged
+  tree under contention, every item's box, its `flex-basis` and every track's
+  `scrollLeft` are identical to four decimal places. The only value that moves
+  is the parallax translate on three hero images -- 8.34111px, 8.34167px,
+  8.34278px, then 8.58722px -- and a quarter of a pixel there resamples every
+  diagonal in the placeholder image behind it, which is the 184 to 1,432 pixels
+  the page failed by. Measuring the items is exactly why this was missed for so
+  long: the items are fine.
+
+- **`reducedMotion: 'reduce'` in the Playwright config never reached the page**,
+  and that was the carousel's fourth race. As of Playwright 1.62.1 the `use`
+  option does not survive to `matchMedia`, while `newContext({ reducedMotion })`
+  and `page.emulateMedia()` both do -- verified with a config carrying nothing
+  else. `Carousel._updateParallax` zeroes every item's offset when that query
+  matches and otherwise writes one derived from the scroll position, recomputed
+  at most once per animation frame by a `requestAnimationFrame`-coalesced scroll
+  handler and never again once scrolling stops. The photographed value was
+  therefore whatever the last frame to render after the last scroll event had
+  computed, and how many frames the machine managed decided which. The spec now
+  calls `emulateMedia` and **asserts it landed** -- the assertion is the point,
+  since this failed silently for as long as the config line has existed. Every
+  page is now photographed in the reduced-motion state the config always
+  claimed.
+
+  **Do not settle this by driving the component from the spec.** Dispatching
+  `scroll` on each track does force the recompute and does make the parallax
+  deterministic -- and it also re-enters `_handleFlatScroll`'s index sync, which
+  scrolls the track, which schedules another recompute: `carousel @ expanded`
+  then fails "never settled" on every run instead of flaking on some.
+
+  **A component-side fix cannot stabilise this suite on the change that
+  introduces it**, which is the general rule the above is one instance of. The
+  spec is always the head's, but the base pass runs the *base* revision's
+  `dist/`, so a fix written in a component leaves the base pass exactly as
+  nondeterministic as it was and the comparison keeps failing. Only something
+  in `visual/` reaches both revisions.
+
+  **What reduce costs, stated plainly.** Thirteen partials carry a
+  `prefers-reduced-motion` block, and every page is now photographed on the
+  `reduce` side of them: spinners stop animating, sheets and menus stop
+  transitioning, and the two `no-preference` rules -- the parallax page's
+  scroll-driven cover and scrollspy's smooth scrolling -- are not exercised at
+  all. That is a state most real users do not see. It is the right trade for a
+  screenshot suite: every one of those rules exists to remove motion, and
+  motion is the thing a shutter cannot photograph twice the same way. Sizing,
+  spacing, colour and token regressions -- what this suite is for -- are
+  unaffected by any of them.
 
   **Reproduce contention with `taskset -c 0,1 env CI=1 npm run test:visual`.**
   The config runs 4 workers under CI against a 2-core runner, and that

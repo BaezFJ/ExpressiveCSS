@@ -127,6 +127,33 @@ for (const file of pages) {
       await page.route('**://www.youtube.com/**', (r) => r.abort());
       await page.route('**://interactive-examples.mdn.mozilla.net/**', (r) => r.abort());
 
+      // `reducedMotion: 'reduce'` is set in the config and never reaches the
+      // page: as of Playwright 1.62.1 the `use` option does not survive to
+      // `matchMedia`, though `newContext({ reducedMotion })` and this call
+      // both do. Verified with a config carrying nothing else.
+      //
+      // The suite believed it was photographing the reduced-motion state for
+      // as long as that line has been there, and the carousel is what it cost.
+      // `Carousel._updateParallax` zeroes every item's parallax offset when
+      // the query matches, and otherwise writes a translate derived from the
+      // scroll position, recomputed at most once per animation frame and never
+      // again once scrolling stops. Live, the value each hero image is left
+      // holding is whatever the last frame computed -- 8.34111px on one run
+      // and 8.58722px on the next, across six runs of an unchanged tree. A
+      // quarter of a pixel resamples every diagonal in the image behind it,
+      // which is the 184 to 1,432 pixels this page has been failing by.
+      //
+      // So the fix is to honour what the config always meant: the component
+      // has a deterministic path for exactly this, and the suite was walking
+      // past it. Asserted rather than assumed, because it failed silently once.
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      expect(
+        await page.evaluate(
+          () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        ),
+        'reduced motion must reach the page',
+      ).toBe(true);
+
       // The time and date pickers open on *now*, so the minute digit ticked
       // over between the two passes and four timepicker shots failed on a tree
       // with no source change at all.
