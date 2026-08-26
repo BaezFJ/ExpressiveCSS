@@ -7,15 +7,10 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { parseRules, sheet } from './css.js';
 
-const root = new URL('../', import.meta.url);
-const css = readFileSync(new URL('dist/css/expressive.css', root), 'utf8');
-
-const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
-  selector: m[1].trim(),
-  body: m[2]
-}));
+const css = sheet();
+const rules = parseRules(css);
 
 /** The declarations of the first rule whose selector matches `pred`. */
 const ruleFor = (pred) => rules.find((r) => pred(r.selector, r.body))?.body;
