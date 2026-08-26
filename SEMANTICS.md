@@ -25,10 +25,10 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**51 of 51 rows enforced; 0 remaining.**
+**52 of 52 rows enforced; 0 remaining.**
 
 48 of those rows are components - a part of the framework an author writes markup for.
-The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
+The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
 
@@ -556,6 +556,16 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+
+### scrim
+
+**Kind:** foundation.
+
+The wash a modal surface paints behind itself, added in 1.x (#37). A foundation, not a component: nothing is marked up to get one, so there is no element for a rule to name. `--md-comp-scrim-color` is the whole of it; the dialogs, sheets, navigation-drawer and navigation-rail rows own the markup that ends up wearing it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
 
 ### scrollspy
 
