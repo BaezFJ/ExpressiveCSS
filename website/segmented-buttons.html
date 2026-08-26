@@ -504,7 +504,14 @@
         <h3 class="docs-section-title headline-medium">Tokens</h3>
 
         <p>
-          Set these on the group, or on an ancestor to reach several of them.
+          Set these on the group itself, or in a rule of your own that picks
+          out the groups you want to change —
+          <code>.chart-controls .segmented-button { … }</code>. They are
+          declared on the component, so a value set on an ancestor
+          <em>element</em> is shadowed by the group's own default rather than
+          inherited.
+        </p>
+        <p>
           The group is a grid of equal columns filling the width it is given,
           which is what Material specifies — constrain it with a width or a
           wrapper when it should be narrower than its container.
