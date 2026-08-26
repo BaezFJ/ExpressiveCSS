@@ -888,7 +888,32 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.4 Snackbar
+## 7.4 Floating sheets
+
+**M3:** Floating sheets. **ExpressiveCSS:** `dialog.floating-sheet`. No plugin — light dismiss is `Dialogs.Init()`, the same as any `<dialog>`.
+
+**Use when** secondary content should float **above** the page rather than dock to an edge: a mini player, a filter panel, a detail card over a map or canvas.
+
+**Don't use** where an edge is the point (that is a bottom or a side sheet), or for a two-button confirm (dialog). Don't give it a drag handle — it does not drag.
+
+**Variants**
+
+| Variant | API | Scrim | Page |
+| --- | --- | --- | --- |
+| Modal | `showModal()` | Yes | Inert |
+| Standard | `show()` | No | Interactive |
+
+**Anatomy.** Container (required), then the ordinary dialog slots: heading, body, optional `<hr>` + extra content, last-child `<form method="dialog">` as the action row. `surface-container-low`, 28 dp corners on all four sides, elevation 1.
+
+**Placement.** Detached from every edge — 24 dp in, centred in what is left, 400 dp max width. `md.comp.sheet.floating` publishes container colour, shape and elevation and nothing about placement, so those numbers are this framework's; move them with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`, or anchor the sheet to a corner with `inset` / `margin`. There are no edge modifier classes: `.bottom` selects a bottom sheet, `.left` / `.right` a side sheet.
+
+**Adaptive.** Medium and up. On compact the sheet has nowhere to float — use a bottom sheet or a full-screen dialog.
+
+**Behavior.** Close via the action row, scrim tap (modal), or Escape. No drag gesture.
+
+---
+
+## 7.5 Snackbar
 
 **M3:** Snackbar. **ExpressiveCSS:** `.snackbar`. **Not** in `AutoInit()`. Construct when needed, or pin with `.active`.
 
@@ -906,7 +931,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.5 Banners
+## 7.6 Banners
 
 **M3:** Banners (basic / rich). **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
 
@@ -926,7 +951,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.6 Tooltips
+## 7.7 Tooltips
 
 **M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` / `max` for rich. Legacy `.tooltipped` still AutoInits.
 
@@ -945,7 +970,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.7 Badges
+## 7.8 Badges
 
 **M3:** Badges (small / large). **ExpressiveCSS:** `span.badge` nested **in the icon**.
 
@@ -1296,6 +1321,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Dialog | `dialog` | Headline, body, `form method="dialog"` | `showModal()` |
 | Bottom sheet | `dialog.bottom-sheet` | Content; optional handle | `showModal()` / `show()` |
 | Side sheet | `dialog.side-sheet` | `header` + content | `show()` / `showModal()` |
+| Floating sheet | `dialog.floating-sheet` | Heading + content + `form method="dialog"` | `show()` / `showModal()` |
 | Snackbar | `.snackbar` | `<p>` | `.active` / JS |
 | Tooltip | child `.tooltip` | Text | hover / focus |
 | Badge | `span.badge` inside icon | Empty or ≤4 chars | — |

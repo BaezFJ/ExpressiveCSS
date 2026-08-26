@@ -51,6 +51,33 @@ below is the whole story for that component.
   behind it (`--md-comp-basic-dialog-scrim-blur`, unchanged); the drawer and the
   rail slide over the page and would smear it. Nothing changes visually — all
   four sites computed `oklab(0 0 0 / 0.32)` before and after.
+- **Floating sheet** (`dialog.floating-sheet`), the third member of M3's sheet
+  family: secondary content on a surface detached from every window edge, where
+  a bottom sheet docks to the bottom and a side sheet to one side. `show()` is
+  standard (no scrim, the page stays interactive), `showModal()` is modal.
+
+  **No behavior module.** It does not drag, so the only dismissal it needs
+  beyond Escape and its action row is a scrim tap — which `Dialogs.Init()`
+  already gives every `<dialog>`. `BottomSheets` and `SideSheets` exist for the
+  drag gesture; a floating sheet has none, so adding a third module would have
+  been a parallel copy of light dismiss.
+
+  It is a `<dialog>` and reuses the dialog slots rather than restating them: the
+  partial re-points `--md-comp-basic-dialog-container-*` at its own tokens and
+  overrides placement, elevation and the standard variant's scrim. Its action
+  row keeps sheet buttons instead of the dialog's text buttons, like the other
+  two sheets.
+
+  Tokens are `md.comp.sheet.floating` (DSP 34.0.21), which publishes exactly
+  three values: `surface-container-low`, 28dp corners, elevation 1. **Placement
+  is not in the spec**, so the 24dp inset and 400dp cap are this framework's and
+  are custom properties (`--md-comp-floating-sheet-inset`,
+  `--md-comp-floating-sheet-container-max-width`) rather than fixed numbers.
+
+  **There are deliberately no edge modifier classes.** `.bottom` already selects
+  a bottom sheet and `.left` / `.right` a side sheet, so a floating sheet
+  borrowing those names would match two sheets' rules at once. Anchor it to a
+  corner with `inset` / `margin` instead.
 
 - **Bottom app bar** (`.bottom-app-bar`), an 80dp row of the current screen's
   commands at the bottom edge, with an optional FAB. CSS only.

@@ -415,6 +415,11 @@
         }
       ]
     },
+    "floating-sheet": {
+      "status": "enforced",
+      "note": "A <dialog>, so the dialog rules carry it.",
+      "rules": []
+    },
     "forms/checkboxes": {
       "status": "enforced",
       "note": "Swept 0.8.0.",
