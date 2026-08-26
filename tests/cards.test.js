@@ -204,10 +204,15 @@ describe('Cards CSS', () => {
       /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*height:\s*auto[^}]*opacity:\s*1/s
     );
     assert.match(css, /article\s*>\s*figure\s*>\s*\.card-reveal-trigger\s*\{[^}]*position:\s*absolute[^}]*inset:\s*0/s);
-    assert.match(
-      css,
-      /\.card-reveal-trigger:is\(:hover, :focus, :active\)\s*\{[^}]*background:\s*none[^}]*box-shadow:\s*none/s
-    );
+    // The trigger carries its own state layer: the card's ::after keys on
+    // `> .primary-action`, which this is not. It reads the card's own
+    // opacities, so a per-card override still reaches it.
+    for (const [state, token] of [["hover", "hover"], ["active", "pressed"], ["focus-visible", "focus"]]) {
+      assert.match(
+        css,
+        new RegExp(`\\.card-reveal-trigger:${state}\\s*\\{[^}]*--md-comp-card-state-layer-color\\) calc\\(var\\(--md-comp-card-${token}-state-layer-opacity\\)`, "s")
+      );
+    }
     assert.doesNotMatch(css, /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*overflow-y:\s*auto/s);
   });
 });

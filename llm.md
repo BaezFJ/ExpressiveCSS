@@ -35,7 +35,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Table
 - Transitions
 - Typography
-- Waves
+- State layers
 
 ### CSS components
 
@@ -71,6 +71,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Dialogs
 - Bottom sheet
 - Side sheet
+- Floating sheet
 - Scrollspy
 - NavigationDrawer
 - Tabs
@@ -255,7 +256,7 @@ Opt an element out when it needs manual options:
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Waves, Range, and Cards behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, and ExpandingCard behaviors.
 
 ## Component lifecycle
 
@@ -274,12 +275,12 @@ current?.destroy();
 
 The main bundle exports:
 
-- `AutoInit`, `Forms`, `Waves`, and `version`
+- `AutoInit`, `Forms`, and `version`
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
 - `Slider` and `ScrollSpy`
-- `FormSelect`, `NavigationDrawer`, `NavigationRail`, `Slider`, and `Tabs`
+- `FormSelect`, `NavigationDrawer`, `NavigationRail`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
 ---
@@ -390,7 +391,7 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 
 #### Initialize JavaScript
 
-The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation drawers, tooltips, and tabs start themselves.
+The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, chips, cards, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation drawers, tooltips, and tabs start themselves.
 
 `AutoInit()` scans `document.body` by default. Pass a container to limit the scan, or add the `no-autoinit` class to an element that should be initialized manually.
 
@@ -677,6 +678,8 @@ A background class sets `background-color`. Append `-text` for `color`. Pair rol
 Every role name is a background class. The same name plus `-text` is the foreground class (`.on-surface-text`). Prefer the `on-*` text class on its paired fill.
 
 Standard pairs: `primary` / `on-primary`, `primary-container` / `on-primary-container`, and the same for secondary, tertiary, and error. Surface: `surface`, `surface-dim`, `surface-bright`, `surface-container-lowest` … `surface-container-highest`, `on-surface`, `on-surface-variant`. Outline: `outline`, `outline-variant`. Inverse: `inverse-surface` / `inverse-on-surface`, `inverse-primary`. Overlay: `scrim`, `shadow`. Optional fixed accents (`primary-fixed`, `primary-fixed-dim`, `on-primary-fixed`, `on-primary-fixed-variant`, and the secondary/tertiary copies) stay the same in light and dark. `background`, `on-background`, `surface-variant`, and `surface-tint` remain as aliases.
+
+`scrim` is the opaque neutral the wash behind a modal surface is mixed from, not the wash itself. That is `--md-comp-scrim-color` — the role at 32%, defined once on `:root, :host` (so a sheet adopted into a shadow root gets one too) and consumed by dialogs, both sheets, the navigation drawer and the modal navigation rail. Override it at the root to retheme all of them, or set it on one element to dim just that surface (`::backdrop` inherits from the element it belongs to). The mix resolves at the root, so overriding `--md-sys-color-scrim` on a subtree does not reach a scrim below it — override `--md-comp-scrim-color` there instead.
 
 In Sass, consume the token directly. Do not write `rgba(var(--md-sys-color-primary), 0.06)` — the tokens hold hex colors, so that form is invalid. Mix with transparency instead:
 
@@ -1555,56 +1558,36 @@ The default order is Roboto, Noto Sans, then the generic sans-serif family. Expr
 
 ---
 
-## Waves
+## State layers
 
-The Material Design ink ripple, included in the Expressive JavaScript bundle.
+The translucent overlay a component paints over itself for hover, focus, pressed and dragged.
 
-#### Introduction
+Material 3 has no ink ripple. A state layer is the translucent wash a component paints over itself
+to show that you are hovering it, that it has focus, or that you are pressing it. It is a
+*foundation*: you never write markup for one. Components paint it themselves, and these tokens
+decide how strong it is.
 
-Waves creates the ink effect outlined in Material Design. It is included in the Expressive JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
+| Token | Value | Applies when |
+| --- | --- | --- |
+| `--md-sys-state-hover-state-layer-opacity` | 0.08 | The pointer is over the control. |
+| `--md-sys-state-focus-state-layer-opacity` | 0.1 | The control has visible focus. |
+| `--md-sys-state-pressed-state-layer-opacity` | 0.1 | The control is being pressed. |
+| `--md-sys-state-dragged-state-layer-opacity` | 0.16 | The control is being dragged. |
 
-#### Applying Waves
+#### Overriding
 
-The waves effect can be applied to any element. To put the waves effect on buttons, you just have to put the class `waves-effect` on to the buttons. If you want the waves effect to be white instead, add both `waves-effect waves-light` as classes.
+Set the token on `:root` to change every component, or on a subtree to change only what is inside
+it. Components that expose their own state layer token read from these, so one component can be
+reached without touching the rest.
 
-```html
-<a class="button waves-effect waves-light" href="#">Wave</a>
+```css
+:root { --md-sys-state-hover-state-layer-opacity: 0.12; }
+.my-panel { --md-comp-card-hover-state-layer-opacity: 0.04; }
 ```
 
-#### Customization
-
-There are several ways to customize waves. You can use the pre-created classes, or define your own color by calling the API.
-
-#### Available Classes
-
-To use these, just add the corresponding class to your button. Play around with changing the background color of buttons and the waves effect to create something cool!
-
-```html
-<a href="#!" class="btn waves-effect">Send</a>
-```
-
-#### Call programmatically
-
-You can create a wave on a specific element programmatically. Here you can set a custom color and position. Click the button to try it.
-
-```js
-// Trigger a red wave from the center
-Expressive.Waves.renderWaveEffect(
-  document.querySelector('.wave-demo'), // Target element
-  null,                                 // Position {x, y}, or null for center
-  { r: 255, g: 0, b: 0 }                // RGB color
-);
-```
-
-#### Circle
-
-If you want waves to form to a non-rectangular shape, there is an option for circular waves. Just add `waves-circle` in addition to `waves-effect`.
-
-#### HTML Markup
-
-```html
-<a href="#!" class="button circle waves-effect waves-circle waves-light" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
-```
+Most components draw the layer as an overlay filling the control. Checkboxes and radio buttons have
+no room for one, so they draw it as a ring growing out from the control's edge. Both read the same
+opacity, so they stay in step.
 
 ---
 
@@ -2215,7 +2198,7 @@ The same card can use two orientations without changing its content order. Add `
 
 ### Reveal
 
-An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger.activator` button over the media; the same button opens and closes the details. Add `waves-effect` to reproduce the M3 tap ripple. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires up `aria-expanded`, Enter, and Space. The reveal grows the card instead of covering or internally scrolling it. A first heading inside the aside remains an optional close target.
+An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger.activator` button over the media; the same button opens and closes the details. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires up `aria-expanded`, Enter, and Space. The reveal grows the card instead of covering or internally scrolling it. A first heading inside the aside remains an optional close target.
 
 ### Card titlemore_vert
 
@@ -2229,7 +2212,7 @@ Here is some more information about this product that is only revealed once clic
 <article class="filled">
   <figure>
     <img src="images/ana-russo.jpg" alt="Portrait of Ana Russo">
-    <button type="button" class="card-reveal-trigger activator waves-effect waves-light" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
+    <button type="button" class="card-reveal-trigger activator" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
   </figure>
   <header class="card-reveal-summary">
     <h3>Ana Russo</h3>
@@ -2258,7 +2241,7 @@ An expanding card performs a shared-container transition from a compact feed ite
 <article class="outlined expanding-card">
   <figure>
     <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
-    <button type="button" class="expanding-card-trigger waves-effect" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
+    <button type="button" class="expanding-card-trigger" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
   </figure>
   <header class="expanding-card-summary">
     <h3>Listen to Glass Souls</h3>
@@ -2398,7 +2381,7 @@ Expressive.AutoInit(document.body, {
 | `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it, so a rest ending mid-tween on legacy coverflow buys another whole rest. |
 | `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
 | `onCycleTo` | Function | `null` | Called when the active item changes. |
-| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of' }` | Generated accessible label strings. |
+| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }` | Generated accessible label strings. `indicators` names the indicator row and `slide` prefixes each dot, giving "Slide 1". Partial objects are merged with the defaults. |
 | `dist`, `shift`, `padding`, `numVisible` | Number | Legacy | Used only by the explicit `.coverflow` compatibility layout. |
 
 ### Methods
@@ -2730,10 +2713,10 @@ Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu 
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
   <ul>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+    <li><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
   </ul>
 </div>
 ```
@@ -3238,7 +3221,7 @@ Add pagination links to split long content into shorter blocks. The component is
 
 The list lives in a `<nav aria-label="Pagination">` — a page's links are navigation, and the label distinguishes it from every other `<nav>` on the page.
 
-Mark the current page with `active` on the `li` **and `aria-current="page"` on its link**; the class only fills it. Use `disabled` for unavailable prev/next, and make those a `<span>` rather than an `<a href>` — a disabled link is still focusable and still navigates. Icon-only prev/next links need an `aria-label`. `waves-effect` is optional and adds the ink ripple on the item.
+Mark the current page with `active` on the `li` **and `aria-current="page"` on its link**; the class only fills it. Use `disabled` for unavailable prev/next, and make those a `<span>` rather than an `<a href>` — a disabled link is still focusable and still navigates. Icon-only prev/next links need an `aria-label`.
 
 ```html
 <nav class="pagination" aria-label="Pagination">
@@ -3247,11 +3230,11 @@ Mark the current page with `active` on the `li` **and `aria-current="page"` on i
       <span aria-hidden="true"><span class="material-symbols" aria-hidden="true">chevron_left</span></span>
     </li>
     <li class="active"><a href="?page=1" aria-current="page">1</a></li>
-    <li class="waves-effect"><a href="?page=2">2</a></li>
-    <li class="waves-effect"><a href="?page=3">3</a></li>
-    <li class="waves-effect"><a href="?page=4">4</a></li>
-    <li class="waves-effect"><a href="?page=5">5</a></li>
-    <li class="waves-effect">
+    <li><a href="?page=2">2</a></li>
+    <li><a href="?page=3">3</a></li>
+    <li><a href="?page=4">4</a></li>
+    <li><a href="?page=5">5</a></li>
+    <li>
       <a href="?page=2" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></a>
     </li>
   </ol>
@@ -3273,11 +3256,11 @@ Add `nowrap` to keep a long run on one row and scroll it sideways instead of wra
     <li class="pages">
       <ol>
         <li class="active"><a href="?page=1" aria-current="page">1</a></li>
-        <li class="waves-effect"><a href="?page=2">2</a></li>
-        <li class="waves-effect"><a href="?page=3">3</a></li>
+        <li><a href="?page=2">2</a></li>
+        <li><a href="?page=3">3</a></li>
       </ol>
     </li>
-    <li class="waves-effect next">
+    <li class="next">
       <a href="?page=2" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></a>
     </li>
   </ol>
@@ -3646,7 +3629,7 @@ Initialize every registered component with one function call.
 
 Auto Init starts all of the registered Expressive components with a single call. The IIFE bundle exposes it as `Expressive.AutoInit`.
 
-Importing the JavaScript installs a few document-level behaviors (Forms, Waves, Range, Chips, and Cards), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
+Importing the JavaScript installs a few document-level behaviors (Forms, Chips, Slider, Cards, and ExpandingCard), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
 
 ### Initialization
 
@@ -3713,7 +3696,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab` |
 
-Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Waves, Chips, and Cards also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
+Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
 ### Ignoring Elements
 
@@ -3883,7 +3866,7 @@ instance.destroy();
 
 ## Media
 
-Lightbox and Slider for large images and slideshows.
+Lightbox for enlarge-on-click images.
 
 Media components handle large objects such as images. For responsive images and videos without JavaScript, see Media Styles.
 
@@ -3973,145 +3956,6 @@ Add a short caption with the `data-caption` attribute.
      src="images/sample-2.jpg">
 ```
 
-### Slideshow
-
-A slideshow is a full-width image sequence. Captions transition on their own according to `center-align`, `left-align`, or `right-align`. Indicators appear along the bottom.
-
-Slideshow is **not** in `AutoInit()`. Call `Expressive.Slideshow.init` yourself after the page loads. For an adaptive Material 3 visual collection, see Carousel.
-
-```html
-<div class="slideshow">
-  <ul class="slides">
-    <li>
-      <img src="images/sample-1.jpg" alt="First slide">
-      <div class="caption center-align">
-        <h3>This is our big Tagline!</h3>
-        <h5 class="light">Here's our small slogan.</h5>
-      </div>
-    </li>
-    <li>
-      <img src="images/sample-2.jpg" alt="Second slide">
-      <div class="caption left-align">
-        <h3>Left Aligned Caption</h3>
-        <h5 class="light">Here's our small slogan.</h5>
-      </div>
-    </li>
-    <li>
-      <img src="images/sample-3.jpg" alt="Third slide">
-      <div class="caption right-align">
-        <h3>Right Aligned Caption</h3>
-        <h5 class="light">Here's our small slogan.</h5>
-      </div>
-    </li>
-  </ul>
-</div>
-```
-
-#### Initialization
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.slideshow');
-  const instances = Expressive.Slideshow.init(elems, {
-    // specify options here
-    indicatorLabelFunc: (idx, current) => {
-      let label = 'Go to slide ' + idx;
-      if (current) {
-        label = label + ' (Current)';
-      }
-      return label;
-    }
-  });
-});
-```
-
-#### Options
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `indicators` | Boolean | `true` | Set to `false` to hide slide indicators. |
-| `height` | Number | `400` | Height of the slider, in pixels. |
-| `duration` | Number | `500` | Transition animation duration, in milliseconds. |
-| `interval` | Number | `6000` | Time between transitions, in milliseconds. |
-| `pauseOnFocus` | Boolean | `true` | Pause autoslide when the slider receives keyboard focus. |
-| `pauseOnHover` | Boolean | `true` | Pause autoslide when a pointer hovers the slider. |
-| `indicatorLabelFunc` | Function | `null` | Builds the ARIA label for each indicator. Receives the 1-based index and a boolean that is true for the current slide. If omitted, the label is the index. |
-
-#### Methods
-
-> All methods are called on the plugin instance. You can get the instance like this:
-
-```js
-const instance = Expressive.Slideshow.getInstance(elem);
-```
-
-#### .pause();
-
-Pause slider autoslide.
-
-```text
-instance.pause();
-```
-
-#### .start();
-
-Start slider autoslide.
-
-```text
-instance.start();
-```
-
-#### .next();
-
-Move to the next slide.
-
-```text
-instance.next();
-```
-
-#### .prev();
-
-Move to the previous slide.
-
-```text
-instance.prev();
-```
-
-#### .set();
-
-Move to a specific slide by 0-based index. Values wrap around the ends.
-
-```text
-instance.set(2);
-```
-
-#### .destroy();
-
-Destroy the plugin instance and tear down its event handlers.
-
-```text
-instance.destroy();
-```
-
-#### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `el` | Element | The DOM element the plugin was initialized with. |
-| `options` | Object | The options the instance was initialized with. |
-| `activeIndex` | Number | Index of the current slide. |
-| `eventPause` | Boolean | Whether the slider is paused by a focus or hover event. |
-
-#### Fullscreen Slider
-
-Add `fullscreen` to the slider so it fills its positioned ancestor (typically the viewport if that ancestor is the page). There is no separate demo page — the class is `fullscreen` on `.slider`.
-
-```html
-<div class="slideshow fullscreen">
-  <ul class="slides">...</ul>
-</div>
-```
-
 ---
 
 ## Dialogs
@@ -4120,7 +3964,7 @@ Material Design 3 dialogs, from the HTML.
 
 A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. `dialog.max` is the full-screen variant. There are no `.modal`, `modal-header`, `modal-content`, or `modal-footer` classes — the element is the component.
 
-Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is 32% `scrim`. Actions sit at the end with an 8dp gap.
+Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap.
 
 Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. There is no `Modal` export and nothing for `AutoInit()` to start; `Dialogs.Init()` runs at import time and only adds light-dismiss.
 
@@ -4232,6 +4076,27 @@ A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to th
 ```js
 document.getElementById('sheet').show();      // standard
 document.getElementById('sheet').showModal(); // modal
+```
+
+### Floating sheet
+
+A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - the third member of M3's sheet family. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
+
+There are no edge modifiers: `.bottom` selects a bottom sheet and `.left` / `.right` a side sheet. Anchor it with `inset` / `margin`, or move it with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`.
+
+```html
+<dialog class="floating-sheet" aria-labelledby="now-playing-title">
+  <h2 id="now-playing-title">Now playing</h2>
+  <p>Secondary content, floating above the page.</p>
+  <form method="dialog">
+    <button type="submit" value="done">Done</button>
+  </form>
+</dialog>
+```
+
+```js
+document.getElementById('sheet').show();      // standard, no scrim
+document.getElementById('sheet').showModal(); // modal, with scrim
 ```
 
 ### Full-screen
@@ -4386,7 +4251,7 @@ Toggle NavigationDrawer
     <li><a href="#!">Second Link</a></li>
     <li><div class="divider"></div></li>
     <li><span class="subheader">Subheader</span></li>
-    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+    <li><a href="#!">Third Link</a></li>
   </ul>
 </nav>
 <button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
@@ -6006,7 +5871,7 @@ Material Design 3 sliders, from the HTML.
 
 An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
 
-The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Until 0.8.0 `.slider` and `Slider` meant the image slideshow, which is now `.slideshow` / `Expressive.Slideshow` — a `.slider` that holds no range input is still treated as one, so neither kind of existing markup breaks.
+The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Until 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is gone as of 1.0.0 and Carousel covers the case, so `.slider` is the range control and nothing else.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
 

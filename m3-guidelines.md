@@ -126,7 +126,7 @@ Use live `--md-sys-color-*` roles. The `-light` / `-dark` pairs are public API f
 | Hairlines | `outline` / `outline-variant` |
 | Error, badges, destructive | `error` / `on-error` |
 | Snackbar | `inverse-surface` / `inverse-on-surface` / `inverse-primary` |
-| Modal scrim | `scrim` |
+| Modal scrim | `scrim`, via `--md-comp-scrim-color` (the role at 32%) |
 
 Do not color every button `primary`. Do not recolor badges; the default error mapping is the contrast-safe one.
 
@@ -159,7 +159,7 @@ Selected items (nav destinations, menu rows, list rows, toggle buttons) **change
 
 ## 2.4 Motion
 
-- Use the framework’s state layers and waves. Do not add custom bounce to FABs or snackbars.
+- Use the framework’s state layers. Do not add custom bounce to FABs or snackbars.
 - Opening a modal (`showModal()`) must leave the page inert and unscrolled.
 - Drag-dismiss belongs on bottom sheets (handle) and side sheets (header / inner edge), not on dialogs.
 - Prefer `prefers-reduced-motion` defaults already in the CSS; do not add a second animation system.
@@ -895,7 +895,32 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.4 Snackbar
+## 7.4 Floating sheets
+
+**M3:** Floating sheets. **ExpressiveCSS:** `dialog.floating-sheet`. No plugin — light dismiss is `Dialogs.Init()`, the same as any `<dialog>`.
+
+**Use when** secondary content should float **above** the page rather than dock to an edge: a mini player, a filter panel, a detail card over a map or canvas.
+
+**Don't use** where an edge is the point (that is a bottom or a side sheet), or for a two-button confirm (dialog). Don't give it a drag handle — it does not drag.
+
+**Variants**
+
+| Variant | API | Scrim | Page |
+| --- | --- | --- | --- |
+| Modal | `showModal()` | Yes | Inert |
+| Standard | `show()` | No | Interactive |
+
+**Anatomy.** Container (required), then the ordinary dialog slots: heading, body, optional `<hr>` + extra content, last-child `<form method="dialog">` as the action row. `surface-container-low`, 28 dp corners on all four sides, elevation 1.
+
+**Placement.** Detached from every edge — 24 dp in, centred in what is left, 400 dp max width. `md.comp.sheet.floating` publishes container colour, shape and elevation and nothing about placement, so those numbers are this framework's; move them with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`, or anchor the sheet to a corner with `inset` / `margin`. There are no edge modifier classes: `.bottom` selects a bottom sheet, `.left` / `.right` a side sheet.
+
+**Adaptive.** Medium and up. On compact the sheet has nowhere to float — use a bottom sheet or a full-screen dialog.
+
+**Behavior.** Close via the action row, scrim tap (modal), or Escape. No drag gesture.
+
+---
+
+## 7.5 Snackbar
 
 **M3:** Snackbar. **ExpressiveCSS:** `.snackbar`. **Not** in `AutoInit()`. Construct when needed, or pin with `.active`.
 
@@ -913,7 +938,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.5 Banners
+## 7.6 Banners
 
 **M3:** Banners (basic / rich). **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
 
@@ -933,7 +958,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.6 Tooltips
+## 7.7 Tooltips
 
 **M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` / `max` for rich. Legacy `.tooltipped` still AutoInits.
 
@@ -952,7 +977,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.7 Badges
+## 7.8 Badges
 
 **M3:** Badges (small / large). **ExpressiveCSS:** `span.badge` nested **in the icon**.
 
@@ -1213,7 +1238,6 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 
 | Extra | What it is | Don't use it as |
 | --- | --- | --- |
-| Waves | Press ripple. Import-time `Waves.Init()`. | A button style |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
 | FAB-to-toolbar | `.fab.toolbar` morph | An M3 toolbar (`div.toolbar`) |
@@ -1303,6 +1327,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Dialog | `dialog` | Headline, body, `form method="dialog"` | `showModal()` |
 | Bottom sheet | `dialog.bottom-sheet` | Content; optional handle | `showModal()` / `show()` |
 | Side sheet | `dialog.side-sheet` | `header` + content | `show()` / `showModal()` |
+| Floating sheet | `dialog.floating-sheet` | Heading + content + `form method="dialog"` | `show()` / `showModal()` |
 | Snackbar | `.snackbar` | `<p>` | `.active` / JS |
 | Tooltip | child `.tooltip` | Text | hover / focus |
 | Badge | `span.badge` inside icon | Empty or ≤4 chars | — |

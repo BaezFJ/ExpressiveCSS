@@ -40,7 +40,6 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Table](https://www.expressivecss.com/table.html): Organize data with a few utility classes on a standard HTML table.
 - [Transitions](https://www.expressivecss.com/css-transitions.html): Animate content in and out with a few CSS classes.
 - [State layers](https://www.expressivecss.com/state-layers.html): The translucent overlay a component paints over itself for hover, focus, pressed and dragged.
-- [Waves](https://www.expressivecss.com/waves.html): The Material Design ink ripple, included in the Expressive JavaScript bundle.
 
 ## Structure
 
@@ -68,6 +67,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Dialogs](https://www.expressivecss.com/dialogs.html): Important prompts in a user flow. Dedicated to a single task.
 - [Bottom sheet](https://www.expressivecss.com/bottom-sheet.html): Secondary content anchored to the bottom of the screen.
 - [Side sheet](https://www.expressivecss.com/side-sheet.html): Optional content and actions, without interrupting the main view.
+- [Floating sheet](https://www.expressivecss.com/floating-sheet.html): Secondary content on a surface that floats free of every window edge.
 - [Drag handle](https://www.expressivecss.com/drag-handle.html): The bar that says a thing can be dragged — and nothing that does the dragging.
 - [Badges](https://www.expressivecss.com/badges.html): Notifications, counts, or status on navigation items and icons.
 - [Tooltips](https://www.expressivecss.com/tooltips.html): Material Design 3 tooltips, from the HTML.
@@ -76,7 +76,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Preloader](https://www.expressivecss.com/preloader.html): Activity and progress. The HTML is the indicator.
 - [Loading indicator](https://www.expressivecss.com/loading-indicator.html): A shape that morphs while it spins, for waits under five seconds.
 - [Carousel](https://www.expressivecss.com/carousel.html): Material 3 adaptive carousels for visual collections.
-- [Lightbox](https://www.expressivecss.com/media.html): Lightbox and Slider for large images and slideshows.
+- [Lightbox](https://www.expressivecss.com/media.html): Lightbox for enlarge-on-click images.
 - [Toolbars](https://www.expressivecss.com/toolbars.html): Frequently used actions for the current page.
 - [Search](https://www.expressivecss.com/search.html): A search bar, and the view it expands into.
 

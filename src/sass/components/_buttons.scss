@@ -85,7 +85,7 @@ $_sizes: (
 // specificity; `.chip .close` would make it two and shift every button rule.
 // The delete button needs no entry: `.chip .close` is already two classes, so
 // it ties the state rules and wins on order.
-$_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip, .icon-button";
+$_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month-next, .chip, .icon-button";
 
 // `label.button` is here for the file input: the control has to be a <label>
 // so that clicking it reaches the <input type="file"> it wraps, but it is a
@@ -612,6 +612,18 @@ $_fab: ":is(.fab, .fixed-action-btn)";
         background: transparent;
         box-shadow: none;
         color: var(--md-sys-color-on-primary-container);
+
+        &:hover {
+          background-color: color-mix(in oklab, var(--md-sys-color-on-primary-container) state-opacity("hover"), transparent);
+        }
+
+        &:focus-visible {
+          background-color: color-mix(in oklab, var(--md-sys-color-on-primary-container) state-opacity("focus"), transparent);
+        }
+
+        &:active {
+          background-color: color-mix(in oklab, var(--md-sys-color-on-primary-container) state-opacity("pressed"), transparent);
+        }
       }
     }
   }

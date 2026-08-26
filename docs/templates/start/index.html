@@ -124,7 +124,7 @@ MyWebsite/
                     <p>
                         The browser bundle exposes the framework as the global <code>Expressive</code> object. Importing
                         the JavaScript installs
-                        shared document behaviors (forms, waves, and a few others), but it does not call <code>AutoInit()</code>
+                        shared document behaviors (forms, chips, cards, and a few others), but it does not call <code>AutoInit()</code>
                         automatically.
                         Call it after the page has loaded so components such as sidenavs, tooltips, and tabs
                         start themselves.
@@ -182,7 +182,7 @@ document.documentElement.setAttribute('theme', 'dark');
                                     The 12-column CSS Grid, containers, offsets, and responsive layouts. The first thing
                                     to learn after you link the stylesheet.
                                 </p>
-                                <a class="button filled waves-effect" href="{{ url_for('grid') }}">Open Grid</a>
+                                <a class="button filled" href="{{ url_for('grid') }}">Open Grid</a>
                             </article>
                         </div>
                         <div class="s12 m6">
@@ -193,7 +193,7 @@ document.documentElement.setAttribute('theme', 'dark');
                                     Alignment, visibility, spacing, truncation, and other single-purpose classes you
                                     will use on every page.
                                 </p>
-                                <a class="button outlined waves-effect" href="{{ url_for('helpers') }}">Open Helpers</a>
+                                <a class="button outlined" href="{{ url_for('helpers') }}">Open Helpers</a>
                             </article>
                         </div>
                     </div>

@@ -62,7 +62,6 @@ NAV = [
         ('table', 'Table'),
         ('css_transitions', 'Transitions'),
         ('state_layers', 'State layers'),
-        ('waves', 'Waves'),
     ]),
     _group('Structure', 'view_quilt', [
         ('navbar', 'App bar'),
@@ -88,6 +87,7 @@ NAV = [
         ('dialogs', 'Dialogs'),
         ('bottom_sheet', 'Bottom sheet'),
         ('side_sheet', 'Side sheet'),
+        ('floating_sheet', 'Floating sheet'),
         ('drag_handle', 'Drag handle'),
         ('badges', 'Badges'),
         ('tooltips', 'Tooltips'),
@@ -239,12 +239,6 @@ def state_layers():
     return render_template('foundations/state-layers.html')
 
 
-@app.route('/waves')
-@app.route('/waves.html')
-def waves():
-    return render_template('foundations/waves.html')
-
-
 # --- Structure -------------------------------------------------------------
 
 @app.route('/navbar')
@@ -391,6 +385,12 @@ def bottom_sheet():
 @app.route('/side-sheet.html')
 def side_sheet():
     return render_template('components/side-sheet.html')
+
+
+@app.route('/floating-sheet')
+@app.route('/floating-sheet.html')
+def floating_sheet():
+    return render_template('components/floating-sheet.html')
 
 
 @app.route('/badges')

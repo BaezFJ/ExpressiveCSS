@@ -296,22 +296,6 @@ describe('optional markup does not crash a component', () => {
     instance.destroy();
   });
 
-  test('a slide with no caption', () => {
-    document.body.innerHTML = `
-      <div class="slider"><ul class="slides">
-        <li class="active"><img src="http://localhost/1.jpg"></li>
-        <li><img src="http://localhost/2.jpg"></li>
-      </ul></div>`;
-    const instance = Expressive.Slideshow.init(document.querySelector('.slider'));
-
-    try {
-      instance.set(1);
-      assert.equal(instance.activeIndex, 1);
-    } finally {
-      instance.destroy();
-    }
-  });
-
   test('a hover menu when the pointer leaves the window', () => {
     document.body.innerHTML = `
       <a class="button menu-trigger" data-target="dd">Drop</a>
@@ -1278,5 +1262,56 @@ describe('Icon selectors keyed on <i>, second sweep', () => {
       /\.slider\b|\.range\b/,
       /font-size:\s*var\(--md-comp-slider-icon-size\)/
     );
+  });
+});
+
+// Waves supplied the press feedback for every element the docs marked
+// `.waves-effect`. Deleting it left five of those surfaces with a hover layer
+// and nothing at all under a finger: hover never fires on touch, and both the
+// pagination item and the drawer row suppress the tap highlight.
+describe('Surfaces that lost the ripple keep a pressed state layer', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+  const PRESSED = [
+    ['card reveal trigger', /\.card-reveal-trigger:active\s*\{[^}]*state-layer-opacity/],
+    ['expanding card trigger', /\.expanding-card-trigger:active\s*\{[^}]*state-layer-opacity/],
+    ['FAB toolbar action', /\.toolbar\b[^{]*:is\(a, button\):active\s*\{[^}]*state-layer-opacity/],
+    ['navigation drawer row', /\.navigation-drawer\)[^{]*:active\s*\{[^}]*state-layer-opacity/],
+    ['pagination item', /\.pagination :is\(a, button\):active\s*\{[^}]*state-layer-opacity/]
+  ];
+
+  for (const [name, pattern] of PRESSED) {
+    test(`${name} paints a pressed layer`, () => {
+      assert.match(css, pattern, `${name} has no :active state layer`);
+    });
+  }
+});
+
+// Two ordering/specificity traps in the state layers that replaced Waves.
+describe('State layers that replaced the ripple', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+  test('the selected drawer row keeps its pill while hovered and pressed', () => {
+    // The row's own layer mixes into `transparent`; letting it reach a
+    // selected row erases the secondary-container fill instead of tinting it.
+    for (const state of ['hover', 'active']) {
+      const rule = css.match(
+        new RegExp(`li\\.active > :is\\(a, button\\)[^{]*:${state}\\s*\\{[^}]*\\}`, 's')
+      );
+      assert.ok(rule, `no selected-drawer-row rule for :${state}`);
+      assert.match(rule[0], /var\(--md-sys-color-secondary-container\)\s*\)/);
+      assert.doesNotMatch(rule[0], /,\s*transparent\s*\)/);
+    }
+  });
+
+  test('a pressed media trigger outranks its own focus layer', () => {
+    // Keyboard activation is :focus-visible *and* :active at equal
+    // specificity, so the pressed rule has to come last to be the one read.
+    for (const trigger of ['card-reveal-trigger', 'expanding-card-trigger']) {
+      const focus = css.indexOf(`.${trigger}:focus-visible`);
+      const active = css.indexOf(`.${trigger}:active`);
+      assert.ok(focus > -1 && active > -1, `${trigger} is missing a focus or active rule`);
+      assert.ok(active > focus, `${trigger}: :active must follow :focus-visible`);
+    }
   });
 });

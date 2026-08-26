@@ -39,15 +39,17 @@ describe("Expanding card CSS", () => {
     );
   });
 
-  test("keeps the media trigger unpainted in every pointer state", () => {
+  test("gives the media trigger a state layer in the pointer states", () => {
     assert.match(
       css,
       /article\.expanding-card\s*>\s*figure\s*>\s*\.expanding-card-trigger\s*\{[^}]*background:\s*none/s,
     );
-    assert.match(
-      css,
-      /\.expanding-card-trigger:is\(:hover, :focus, :active\)\s*\{[^}]*background:\s*none[^}]*box-shadow:\s*none/s,
-    );
+    for (const [state, token] of [["hover", "hover"], ["active", "pressed"], ["focus-visible", "focus"]]) {
+      assert.match(
+        css,
+        new RegExp(`\\.expanding-card-trigger:${state}\\s*\\{[^}]*--md-comp-card-state-layer-color\\) calc\\(var\\(--md-comp-card-${token}-state-layer-opacity\\)`, "s"),
+      );
+    }
   });
 
   test("removes every transition when reduced motion is requested", () => {

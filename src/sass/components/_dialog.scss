@@ -39,7 +39,7 @@ dialog {
   @include z-depth("3");
 
   &::backdrop {
-    background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+    background-color: var(--md-comp-scrim-color);
     backdrop-filter: blur(var(--md-comp-basic-dialog-scrim-blur));
   }
 }
@@ -150,6 +150,7 @@ dialog:not(
     .right-sheet,
     .left,
     .left-sheet,
+    .floating-sheet,
     :is(.sidenav, .navigation-drawer),
     :is(.sidenav-overlay, .navigation-drawer-overlay)
   )

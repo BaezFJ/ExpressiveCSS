@@ -4,7 +4,7 @@
 index.ts        public entry: re-exports, version, import-time side effects
 core/           Component base class, Utils, Bounding/Edges types
 components/     per-element widgets, + index.ts (barrel) and registry.ts
-behaviors/      document-level enhancers (Forms, Waves) - no per-element instances
+behaviors/      document-level enhancers (Forms, Dialogs) - no per-element instances
 plugins/        helpers that are not Components (DockedDisplayPlugin)
 ```
 
@@ -60,10 +60,9 @@ read-it-off-the-element access that key provides.
 ## Gotchas
 
 - **Importing the bundle has side effects.** `index.ts` attaches document-level
-  key/focus listeners and calls `Forms.Init()`, `Chips.Init()`, `Waves.Init()`,
-  `Range.Init()`, `Cards.Init()`, `Dialogs.Init()`, `BottomSheets.Init()`,
-  `SideSheets.Init()`.
-  Order matters; the delegated
+  key/focus listeners and calls `Forms.Init()`, `Chips.Init()`,
+  `Slider.Init()`, `Cards.Init()`, `ExpandingCard.Init()`, `Dialogs.Init()`,
+  `BottomSheets.Init()`, `SideSheets.Init()`. Order matters; the delegated
   listeners those install are what several components rely on. `Dialogs.Init()`
   light-dismisses an open `<dialog>` only when both ends of a pointer gesture
   land outside its box — a drag that starts on the dialog cannot close it.

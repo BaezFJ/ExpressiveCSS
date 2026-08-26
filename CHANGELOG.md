@@ -16,6 +16,69 @@ below is the whole story for that component.
 
 ### Added
 
+- **Scrim** (`--md-comp-scrim-color`), the wash a modal surface paints behind
+  itself, defined once. The dialog, the navigation drawer and the navigation
+  rail were each mixing `scrim` at 32% themselves — four rules across three
+  partials, none of which knew about the others. All four now read the token.
+
+  Both sheets are consumers but needed no edit: they never had a value of their
+  own, taking the modal wash from the `dialog::backdrop` rule they already
+  share and only suppressing it for the standard variant.
+
+  A **foundation**, not a component: there is no markup an author writes to get
+  one, so `semantics.json` carries it with `kind: "foundation"` and no rules,
+  the way `transitions` is carried. Its consumers already own the rows for the
+  markup that ends up wearing it.
+
+  It is declared on `:root, :host` rather than per surface because four of the
+  five consumers paint into `::backdrop`, which has no box of its own to hang a
+  token on — only the rail uses a `::before`. `::backdrop` inherits from the
+  element it belongs to, so setting `--md-comp-scrim-color` on one `<dialog>`
+  dims just that one, and setting it on the root rethemes every scrim on the
+  page. `:host` is there for the reason `tokens/_theme.scss` and
+  `tokens/_state.scss` carry it: a sheet loaded inside a shadow root cannot
+  reach its own host with `:root`, and an undefined token would take
+  `background-color` down with it and leave the surface with no scrim at all.
+
+  **One thing narrows, deliberately.** The mix resolves at `:root`, so
+  `--md-sys-color-scrim` is substituted there and overriding *that* token on a
+  subtree no longer reaches a scrim below it. Override it at the root to move
+  every scrim, or set `--md-comp-scrim-color` on a surface to move one. A scrim
+  is painted by a top-layer or fixed box covering the viewport, so there is no
+  meaningful subtree for it to have followed.
+
+  Blur is deliberately not folded in. Only the basic dialog frosts what is
+  behind it (`--md-comp-basic-dialog-scrim-blur`, unchanged); the drawer and the
+  rail slide over the page and would smear it. Nothing changes visually — all
+  four sites computed `oklab(0 0 0 / 0.32)` before and after.
+- **Floating sheet** (`dialog.floating-sheet`), the third member of M3's sheet
+  family: secondary content on a surface detached from every window edge, where
+  a bottom sheet docks to the bottom and a side sheet to one side. `show()` is
+  standard (no scrim, the page stays interactive), `showModal()` is modal.
+
+  **No behavior module.** It does not drag, so the only dismissal it needs
+  beyond Escape and its action row is a scrim tap — which `Dialogs.Init()`
+  already gives every `<dialog>`. `BottomSheets` and `SideSheets` exist for the
+  drag gesture; a floating sheet has none, so adding a third module would have
+  been a parallel copy of light dismiss.
+
+  It is a `<dialog>` and reuses the dialog slots rather than restating them: the
+  partial re-points `--md-comp-basic-dialog-container-*` at its own tokens and
+  overrides placement, elevation and the standard variant's scrim. Its action
+  row keeps sheet buttons instead of the dialog's text buttons, like the other
+  two sheets.
+
+  Tokens are `md.comp.sheet.floating` (DSP 34.0.21), which publishes exactly
+  three values: `surface-container-low`, 28dp corners, elevation 1. **Placement
+  is not in the spec**, so the 24dp inset and 400dp cap are this framework's and
+  are custom properties (`--md-comp-floating-sheet-inset`,
+  `--md-comp-floating-sheet-container-max-width`) rather than fixed numbers.
+
+  **There are deliberately no edge modifier classes.** `.bottom` already selects
+  a bottom sheet and `.left` / `.right` a side sheet, so a floating sheet
+  borrowing those names would match two sheets' rules at once. Anchor it to a
+  corner with `inset` / `margin` instead.
+
 - **Bottom app bar** (`.bottom-app-bar`), an 80dp row of the current screen's
   commands at the bottom edge, with an optional FAB. CSS only.
 
@@ -431,6 +494,115 @@ below is the whole story for that component.
   components.
 
 ### Removed
+
+- **Waves is gone, replaced by state layers.** Material 3 has no ink ripple; it
+  has a state layer, and the framework's is complete — a `md.sys.state` opacity
+  per state, documented on the State layers page, painted by the components
+  themselves. Keeping a second, script-driven feedback system beside it meant
+  two answers to one question, so the ripple is deleted rather than deprecated:
+  `behaviors/waves.ts`, the import-time `Waves.Init()`, the `Expressive.Waves`
+  export, and the Waves docs page. The bundle no longer attaches a delegated
+  `click` listener to `document.body`.
+
+  **Migration.** `.waves-effect`, `.waves-light` and `.waves-circle` never
+  matched a style rule — they were hooks the script read — so markup carrying
+  them still renders exactly as it does today, minus the ripple. **Delete
+  them**; nothing reads them any more. There is no replacement class to add,
+  because a state layer is not authored: an interactive component paints its
+  own. `Expressive.Waves.renderWaveEffect()` has no successor.
+
+  Five surfaces relied on Waves for their only press feedback and now carry a
+  pressed state layer of their own: the media-covering `.card-reveal-trigger`
+  and `.expanding-card-trigger` buttons, the actions inside a `.fab.toolbar`,
+  navigation drawer rows, and pagination items. The last two matter most on
+  touch, where hover never fires and both already suppressed the tap
+  highlight. The two card triggers read the card's own
+  `--md-comp-card-*-state-layer-*` tokens, so overriding a card still reaches
+  them; the other three have no component token and read `--md-sys-state-*`.
+
+- **Slideshow is gone, and Carousel takes the case.** Charter work for 1.0.0,
+  like Parallax and Pulse below. M3 has no slideshow — its Carousel is the
+  component for a band of media — and once Carousel could advance on its own
+  the two expressed one concept in 590 lines of duplicate. Deleted outright:
+  `components/_slideshow.scss`, `components/slideshow.ts`, the `slideshow`
+  `semantics.json` row, and the docs coverage on the Media page.
+  `Expressive.Slideshow` no longer resolves. **There is no alias**, because an
+  alias keeps both concepts alive while pretending one of them died.
+
+  **`.slider` is unambiguous again**, which is the bonus worth stating. 0.8.0
+  gave `.slider` to M3's range control while the slideshow still held it, so
+  the two were told apart by what they contained —
+  `.slider:has([type='range'])` against `.slider:not(:has([type='range']))`.
+  Both halves are gone with the component: `.slider` is the range control and
+  nothing else, and nothing in the sheet asks what a `.slider` holds. The range
+  control itself is otherwise untouched.
+
+  **Migration.** Carousel with a fixed `height` reproduces the layout — the
+  height sizes the track and the indicators take their own row beneath it:
+
+  ```html
+  <!-- before -->
+  <div class="slideshow">
+    <ul class="slides">
+      <li><img src="1.jpg" alt="First"><div class="caption"><h3>One</h3></div></li>
+      <li><img src="2.jpg" alt="Second"><div class="caption"><h3>Two</h3></div></li>
+    </ul>
+  </div>
+
+  <!-- after -->
+  <div class="carousel">
+    <div class="carousel-item">
+      <img src="1.jpg" alt="First">
+      <div class="carousel-item-content"><h3>One</h3></div>
+    </div>
+    <div class="carousel-item">
+      <img src="2.jpg" alt="Second">
+      <div class="carousel-item-content"><h3>Two</h3></div>
+    </div>
+  </div>
+  ```
+
+  `.carousel-item-content` is the caption slot and is not optional: the item
+  clips its overflow and the media fills its height, so a heading left as a
+  bare sibling is pushed out of the box rather than laid over the image the way
+  `.caption` was. It is also what the small and medium size roles hide and trim
+  against.
+
+  ```js
+  // before
+  Expressive.Slideshow.init(el, { height: 400, indicators: true, interval: 6000 });
+  // after
+  Expressive.Carousel.init(el, { height: 400, indicators: true, interval: 6000, fullWidth: true });
+  ```
+
+  Four options do not carry over cleanly.
+
+  - `duration` exists on both but means the transition, not the crossfade —
+    and Carousel's rest **follows** each transition, so a cycle takes
+    `duration + interval`. `interval: 6000` above therefore paces at 6.2s
+    rather than 6s; subtract `duration` to keep the old cadence exactly.
+  - `pauseOnHover` and `pauseOnFocus` have no equivalent and are not needed: an
+    auto-advancing carousel always pauses under the pointer, while focus is
+    inside it, and while the tab is hidden — WCAG 2.2.2 territory, so it is not
+    switchable.
+  - `indicatorLabelFunc` is replaced by two new `i18n` keys, `indicators` and
+    `slide`, which name the indicator row and prefix each dot. They are new in
+    this release: those were the last two strings Carousel generated in
+    hardcoded English, and SEMANTICS rule 5 wants every generated string on an
+    `i18n` option. The replacement is a pair of strings rather than a callback,
+    so a label that varied per index — "Go to slide 3 (Current)" — has no
+    equivalent; the current dot already carries `aria-current="true"`, which is
+    what that suffix was standing in for.
+
+  **`fullscreen` has no exact equivalent, and `.carousel.full-screen` is not
+  it.** A `fullscreen` slideshow filled its positioned ancestor and stayed
+  horizontal at every size. `.carousel.full-screen` is M3's immersive feed:
+  `100dvh`, square corners, and **vertical**, turning horizontal on its own in
+  landscape or at an expanded width (the component adds
+  `.full-screen-horizontal` from the rendered geometry, so setting that class
+  by hand does not stick). It also sizes itself, ignoring the `height` option.
+  Take it for an edge-to-edge feed; for a fixed horizontal band, keep the
+  `height` above and leave `full-screen` off.
 
 - **Parallax and Pulse are gone**, with no successor. This is charter work for
   1.0.0 rather than part of the semantics sweep above. Both were decorative

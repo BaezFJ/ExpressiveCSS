@@ -25,10 +25,10 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**51 of 51 rows enforced; 0 remaining.**
+**52 of 52 rows enforced; 0 remaining.**
 
 48 of those rows are components - a part of the framework an author writes markup for.
-The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
+The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
 
@@ -272,6 +272,14 @@ A FAB that expands into a list of labelled actions. It looks like a menu and is 
 
 - **fab-menu-not-a-composite-widget** - The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
 - **fab-menu-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
+
+### floating-sheet
+
+A <dialog>, so the dialog rules carry it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
 
 ### forms/checkboxes
 
@@ -549,6 +557,16 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
 
+### scrim
+
+**Kind:** foundation.
+
+The wash a modal surface paints behind itself, added in 1.x (#37). A foundation, not a component: nothing is marked up to get one, so there is no element for a rule to name. `--md-comp-scrim-color` is the whole of it; the dialogs, sheets, navigation-drawer and navigation-rail rows own the markup that ends up wearing it.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+
+
 ### scrollspy
 
 Swept 0.8.0. The sections it watches are the author's own; the table of contents beside them is markup the author writes, which is what keeps this a component and not a behavior. `_table_of_contents.scss` styles that list and states no component of its own, so the rule for it lives here.
@@ -602,14 +620,6 @@ A single- or multi-select group of connected buttons. The root is a <fieldset>, 
 ### side-sheet
 
 Swept 0.8.0. A <dialog>, so the dialog rules carry it.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-
-
-### slideshow
-
-Swept 0.8.0. Renamed from slider, which M3 uses for the range control; a `.slider` holding no range input is still a slideshow.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

@@ -197,7 +197,7 @@ for (const file of pages) {
       // regardless of how fast the machine is.
       await page.clock.runFor(3000);
 
-      // Components schedule timers (`slideshow` an interval, eight others
+      // Components schedule timers (`carousel` a repeating one, eight others
       // `setTimeout`s) and Playwright's
       // `animations: 'disabled'` only reaches CSS. Freezing transitions stops
       // a component that is mid-transition when the shutter opens from

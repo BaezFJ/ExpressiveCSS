@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Waves - ExpressiveCSS</title>
+    <title>Floating sheet - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Waves</h2>
+            <h2>Floating sheet</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -63,7 +63,7 @@
               </a>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
@@ -101,9 +101,6 @@
                       </li>
                       <li class="">
                           <a href="/state-layers.html">State layers</a>
-                      </li>
-                      <li class="active">
-                          <a href="/waves.html" aria-current="page">Waves</a>
                       </li>
                   </ul>
               </details>
@@ -155,7 +152,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -187,6 +184,9 @@
                       </li>
                       <li class="">
                           <a href="/side-sheet.html">Side sheet</a>
+                      </li>
+                      <li class="active">
+                          <a href="/floating-sheet.html" aria-current="page">Floating sheet</a>
                       </li>
                       <li class="">
                           <a href="/drag-handle.html">Drag handle</a>
@@ -277,8 +277,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Waves</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">The Material Design ink ripple, included in the Expressive JavaScript bundle.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Floating sheet</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">Secondary content on a surface that floats free of every window edge.</p>
             </div>
         </div>
     </section>
@@ -290,92 +290,120 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="introduction" class="section scrollspy docs-section">
-        <h4 class="docs-section-title title-large">Introduction</h4>
+  <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Waves creates the ink effect outlined in Material Design. It is included in the Expressive JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
+          A <code>dialog.floating-sheet</code> is the third member of the
+          sheet family. Where a
+          <a href="/bottom-sheet.html">bottom sheet</a> docks to
+          the bottom and a
+          <a href="/side-sheet.html">side sheet</a> to one side,
+          a floating sheet is detached from every edge and floats above the
+          content.
         </p>
-        <a class="button waves-effect waves-light filled" href="#!">Wave</a>
-  
-      </div>
-
-
-  <div id="applying-waves" class="section scrollspy docs-section">
-        <h4 class="docs-section-title title-large">Applying Waves</h4>
-
         <p>
-          The waves effect can be applied to any element. To put the waves effect on buttons, you just have to put the class
-          <code>waves-effect</code> on to the buttons. If you want the waves effect to be white instead, add both
-          <code>waves-effect waves-light</code> as classes.
+          Tokens follow <code>md.comp.sheet.floating</code>: the container
+          is <code>surface-container-low</code> with 28dp corners on all
+          four sides and elevation&nbsp;1. It is a <code>&lt;dialog&gt;</code>,
+          so the ordinary dialog slots apply — a heading, body copy or a
+          wrapping <code>&lt;div&gt;</code>, an optional <code>&lt;hr&gt;</code>
+          with extra content, and a last-child
+          <code>&lt;form method="dialog"&gt;</code> as the action row.
         </p>
-<pre><code>&lt;a class="button waves-effect waves-light" href="#"&gt;Wave&lt;/a&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="customization" class="section scrollspy docs-section">
-        <h4 class="docs-section-title title-large">Customization</h4>
-
-        <p>There are several ways to customize waves. You can use the pre-created classes, or define your own color by calling the API.</p>
-        <h5 class="light">Available Classes</h5>
         <p>
-          To use these, just add the corresponding class to your button. Play around with changing the background color of buttons and the waves effect to create
-          something cool!
+          Two variants, same sheet:
         </p>
-<pre><code>&lt;a href="#!" class="btn waves-effect"&gt;Send&lt;/a&gt;</code></pre>
-        <ul class="list">
+        <ul class="browser-default">
           <li>
-            Default
-            <a href="#!" class="button waves-effect tonal">Send</a>
+            <strong>Standard</strong> — <code>show()</code>. No scrim; the
+            page stays interactive while the sheet floats over it.
           </li>
           <li>
-            <code>waves-light</code>
-            <a href="#!" class="button waves-effect waves-light filled">Send</a>
+            <strong>Modal</strong> — <code>showModal()</code>. The scrim
+            marks the page unavailable. Tap the scrim, press Escape, or use
+            the action row to dismiss.
           </li>
         </ul>
-
-        <h4>Call programmatically</h4>
         <p>
-          You can create a wave on a specific element programmatically. Here you can set a custom color and position. Click the button to try it.
+          <button type="button" onclick="(function(d){ d.open ? d.close() : d.show(); })(document.getElementById('floating-standard'))">Show standard</button>
+          <button type="button" class="tonal" onclick="document.getElementById('floating-modal').showModal()">Show modal</button>
         </p>
-        <div class="row">
-          <div class="s12 m6">
-            <button type="button" class="filled" id="wave-trigger">Trigger Wave!</button>
-          </div>
-          <div class="s12 m6">
-            <div class="wave-demo article center-align">.wave-demo</div>
-          </div>
-        </div>
-<pre><code>// Trigger a red wave from the center
-Expressive.Waves.renderWaveEffect(
-  document.querySelector('.wave-demo'), // Target element
-  null,                                 // Position {x, y}, or null for center
-  { r: 255, g: 0, b: 0 }                // RGB color
-);</code></pre>
+
+        <dialog id="floating-standard" class="floating-sheet" aria-labelledby="floating-standard-title">
+          <h2 id="floating-standard-title">Now playing</h2>
+          <p>A standard floating sheet keeps the page interactive. Use it for content that should stay put while the main view is used.</p>
+          <form method="dialog">
+            <button type="submit" value="done">Done</button>
+          </form>
+        </dialog>
+
+        <dialog id="floating-modal" class="floating-sheet" aria-labelledby="floating-modal-title">
+          <h2 id="floating-modal-title">Filters</h2>
+          <p>A modal floating sheet interrupts. The scrim marks the main view as unavailable until the sheet closes.</p>
+          <form method="dialog">
+            <button type="submit" value="apply">Apply</button>
+            <button type="submit" class="outlined" value="cancel">Cancel</button>
+          </form>
+        </dialog>
+<pre><code>&lt;dialog class="floating-sheet" aria-labelledby="floating-sheet-title"&gt;
+  &lt;h2 id="floating-sheet-title"&gt;Now playing&lt;/h2&gt;
+  &lt;p&gt;Secondary content, floating above the page.&lt;/p&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button type="submit" value="done"&gt;Done&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+        <p>
+          There is no extra class for the modal variant —
+          <code>showModal()</code> vs <code>show()</code> is the split, the
+          same as the other two sheets.
+        </p>
   
       </div>
 
 
-  <div id="circle" class="section scrollspy docs-section">
-        <h4 class="docs-section-title title-large">Circle</h4>
+  <div id="placement" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Placement</h3>
 
         <p>
-          If you want waves to form to a non-rectangular shape, there is an option for circular waves. Just add
-          <code>waves-circle</code> in addition to <code>waves-effect</code>.
+          The sheet sits 24dp in from every edge and centres in what is
+          left, capped at 400dp wide. There are deliberately no edge
+          modifiers: <code>.bottom</code> already selects a bottom sheet and
+          <code>.left</code> / <code>.right</code> a side sheet, so a
+          floating sheet borrowing those names would pick up two sheets'
+          rules at once. Anchor it yourself when a corner is wanted.
         </p>
-        <h5 class="light">HTML Markup</h5>
-<pre><code>&lt;a href="#!" class="waves-effect waves-circle waves-light extra circle small" aria-label="Add"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;/a&gt;</code></pre>
-        <ul class="list">
-          <li>
-            Default
-            <a href="#!" class="button waves-effect waves-circle extra circle small" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
-          </li>
-          <li>
-            <code>waves-light</code>
-            <a href="#!" class="button waves-effect waves-circle waves-light extra circle small secondary" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
-          </li>
-        </ul>
+<pre><code>&lt;dialog class="floating-sheet" style="inset: auto 24px 24px auto; margin: 0" aria-label="Player"&gt;
+  …
+&lt;/dialog&gt;</code></pre>
+        <p>
+          Placement is the only thing <code>md.comp.sheet.floating</code>
+          says nothing about — it publishes three values, all of them
+          container colour, shape and elevation. Override
+          <code>--md-comp-floating-sheet-inset</code> or
+          <code>--md-comp-floating-sheet-container-max-width</code> rather
+          than restyling the surface.
+        </p>
+  
+      </div>
+
+
+  <div id="behavior" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Behavior</h3>
+
+        <p>
+          Dismissal is the sheet family's: Escape, the action row's
+          <code>form[method="dialog"]</code>, and — for the modal variant —
+          a tap on the scrim. That last one is
+          <code>Dialogs.Init()</code>, the same light-dismiss behavior every
+          <code>&lt;dialog&gt;</code> gets; there is no floating-sheet
+          module. A floating sheet is not draggable, so it takes no drag
+          handle.
+        </p>
+        <p>
+          Name the sheet. A <code>&lt;dialog&gt;</code> takes no name from
+          its heading, so point <code>aria-labelledby</code> at that heading
+          or give it an <code>aria-label</code>.
+        </p>
   
       </div>
 
@@ -388,10 +416,9 @@ Expressive.Waves.renderWaveEffect(
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#applying-waves">Applying Waves</a></li>
-          <li><a href="#customization">Customization</a></li>
-          <li><a href="#circle">Circle Waves</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#behavior">Behavior</a></li>
           </ul>
         </nav>
 
@@ -489,7 +516,6 @@ Expressive.Waves.renderWaveEffect(
                 <a href="/table.html">Table</a>
                 <a href="/css-transitions.html">Transitions</a>
                 <a href="/state-layers.html">State layers</a>
-                <a href="/waves.html">Waves</a>
             </nav>
             <nav aria-labelledby="footer-3">
                 <h2 id="footer-3">Structure</h2>
@@ -517,6 +543,7 @@ Expressive.Waves.renderWaveEffect(
                 <a href="/dialogs.html">Dialogs</a>
                 <a href="/bottom-sheet.html">Bottom sheet</a>
                 <a href="/side-sheet.html">Side sheet</a>
+                <a href="/floating-sheet.html">Floating sheet</a>
                 <a href="/drag-handle.html">Drag handle</a>
                 <a href="/badges.html">Badges</a>
                 <a href="/tooltips.html">Tooltips</a>
