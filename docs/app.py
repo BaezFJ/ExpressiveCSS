@@ -62,7 +62,6 @@ NAV = [
         ('table', 'Table'),
         ('css_transitions', 'Transitions'),
         ('state_layers', 'State layers'),
-        ('waves', 'Waves'),
     ]),
     _group('Structure', 'view_quilt', [
         ('navbar', 'App bar'),
@@ -237,12 +236,6 @@ def css_transitions():
 @app.route('/state-layers.html')
 def state_layers():
     return render_template('foundations/state-layers.html')
-
-
-@app.route('/waves')
-@app.route('/waves.html')
-def waves():
-    return render_template('foundations/waves.html')
 
 
 # --- Structure -------------------------------------------------------------

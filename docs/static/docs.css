@@ -540,11 +540,6 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   text-align: center;
 }
 
-/* Waves page: a tall enough target for the programmatic ripple. */
-.wave-demo {
-  height: 100px;
-}
-
 /* FAB page: inline demos must not all pin to the viewport corner. */
 .fab-demo {
   position: relative;

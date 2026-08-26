@@ -34,12 +34,21 @@ article.expanding-card > figure > .expanding-card-trigger {
   cursor: pointer;
 }
 
-article.expanding-card > figure > .expanding-card-trigger:is(:hover, :focus, :active) {
-  background: none;
+// The trigger covers the media, so it carries the state layer itself, off the
+// same `--md-comp-card-*` opacities the card's own layer reads.
+article.expanding-card > figure > .expanding-card-trigger:hover {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-hover-state-layer-opacity) * 100%), transparent);
+  box-shadow: none;
+}
+
+article.expanding-card > figure > .expanding-card-trigger:active {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-pressed-state-layer-opacity) * 100%), transparent);
   box-shadow: none;
 }
 
 article.expanding-card > figure > .expanding-card-trigger:focus-visible {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-focus-state-layer-opacity) * 100%), transparent);
+  box-shadow: none;
   outline: var(--md-comp-card-focus-indicator-thickness) solid var(--md-comp-card-focus-indicator-color);
   outline-offset: calc(-1 * var(--md-comp-card-focus-indicator-thickness));
 }

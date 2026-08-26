@@ -232,6 +232,10 @@ dialog:is(.sidenav, .navigation-drawer) {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
+    &:active {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("pressed"), transparent);
+    }
+
     @include focus-visible;
   }
 
@@ -321,7 +325,7 @@ dialog:is(.sidenav, .navigation-drawer) {
       height: auto;
       padding: 0;
 
-      &:hover {
+      &:is(:hover, :active) {
         background-color: transparent;
       }
     }

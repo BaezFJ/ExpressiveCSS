@@ -35,7 +35,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Table
 - Transitions
 - Typography
-- Waves
+- State layers
 
 ### CSS components
 
@@ -255,7 +255,7 @@ Opt an element out when it needs manual options:
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Waves, Range, and Cards behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, and ExpandingCard behaviors.
 
 ## Component lifecycle
 
@@ -274,7 +274,7 @@ current?.destroy();
 
 The main bundle exports:
 
-- `AutoInit`, `Forms`, `Waves`, and `version`
+- `AutoInit`, `Forms`, and `version`
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
@@ -390,7 +390,7 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 
 #### Initialize JavaScript
 
-The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, waves, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation drawers, tooltips, and tabs start themselves.
+The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, chips, cards, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation drawers, tooltips, and tabs start themselves.
 
 `AutoInit()` scans `document.body` by default. Pass a container to limit the scan, or add the `no-autoinit` class to an element that should be initialized manually.
 
@@ -1555,56 +1555,36 @@ The default order is Roboto, Noto Sans, then the generic sans-serif family. Expr
 
 ---
 
-## Waves
+## State layers
 
-The Material Design ink ripple, included in the Expressive JavaScript bundle.
+The translucent overlay a component paints over itself for hover, focus, pressed and dragged.
 
-#### Introduction
+Material 3 has no ink ripple. A state layer is the translucent wash a component paints over itself
+to show that you are hovering it, that it has focus, or that you are pressing it. It is a
+*foundation*: you never write markup for one. Components paint it themselves, and these tokens
+decide how strong it is.
 
-Waves creates the ink effect outlined in Material Design. It is included in the Expressive JavaScript bundle and starts itself when the bundle loads. Click the button to try it.
+| Token | Value | Applies when |
+| --- | --- | --- |
+| `--md-sys-state-hover-state-layer-opacity` | 0.08 | The pointer is over the control. |
+| `--md-sys-state-focus-state-layer-opacity` | 0.1 | The control has visible focus. |
+| `--md-sys-state-pressed-state-layer-opacity` | 0.1 | The control is being pressed. |
+| `--md-sys-state-dragged-state-layer-opacity` | 0.16 | The control is being dragged. |
 
-#### Applying Waves
+#### Overriding
 
-The waves effect can be applied to any element. To put the waves effect on buttons, you just have to put the class `waves-effect` on to the buttons. If you want the waves effect to be white instead, add both `waves-effect waves-light` as classes.
+Set the token on `:root` to change every component, or on a subtree to change only what is inside
+it. Components that expose their own state layer token read from these, so one component can be
+reached without touching the rest.
 
-```html
-<a class="button waves-effect waves-light" href="#">Wave</a>
+```css
+:root { --md-sys-state-hover-state-layer-opacity: 0.12; }
+.my-panel { --md-comp-card-hover-state-layer-opacity: 0.04; }
 ```
 
-#### Customization
-
-There are several ways to customize waves. You can use the pre-created classes, or define your own color by calling the API.
-
-#### Available Classes
-
-To use these, just add the corresponding class to your button. Play around with changing the background color of buttons and the waves effect to create something cool!
-
-```html
-<a href="#!" class="btn waves-effect">Send</a>
-```
-
-#### Call programmatically
-
-You can create a wave on a specific element programmatically. Here you can set a custom color and position. Click the button to try it.
-
-```js
-// Trigger a red wave from the center
-Expressive.Waves.renderWaveEffect(
-  document.querySelector('.wave-demo'), // Target element
-  null,                                 // Position {x, y}, or null for center
-  { r: 255, g: 0, b: 0 }                // RGB color
-);
-```
-
-#### Circle
-
-If you want waves to form to a non-rectangular shape, there is an option for circular waves. Just add `waves-circle` in addition to `waves-effect`.
-
-#### HTML Markup
-
-```html
-<a href="#!" class="button circle waves-effect waves-circle waves-light" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
-```
+Most components draw the layer as an overlay filling the control. Checkboxes and radio buttons have
+no room for one, so they draw it as a ring growing out from the control's edge. Both read the same
+opacity, so they stay in step.
 
 ---
 
@@ -2215,7 +2195,7 @@ The same card can use two orientations without changing its content order. Add `
 
 ### Reveal
 
-An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger.activator` button over the media; the same button opens and closes the details. Add `waves-effect` to reproduce the M3 tap ripple. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires up `aria-expanded`, Enter, and Space. The reveal grows the card instead of covering or internally scrolling it. A first heading inside the aside remains an optional close target.
+An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger.activator` button over the media; the same button opens and closes the details. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires up `aria-expanded`, Enter, and Space. The reveal grows the card instead of covering or internally scrolling it. A first heading inside the aside remains an optional close target.
 
 ### Card titlemore_vert
 
@@ -2229,7 +2209,7 @@ Here is some more information about this product that is only revealed once clic
 <article class="filled">
   <figure>
     <img src="images/ana-russo.jpg" alt="Portrait of Ana Russo">
-    <button type="button" class="card-reveal-trigger activator waves-effect waves-light" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
+    <button type="button" class="card-reveal-trigger activator" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
   </figure>
   <header class="card-reveal-summary">
     <h3>Ana Russo</h3>
@@ -2258,7 +2238,7 @@ An expanding card performs a shared-container transition from a compact feed ite
 <article class="outlined expanding-card">
   <figure>
     <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
-    <button type="button" class="expanding-card-trigger waves-effect" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
+    <button type="button" class="expanding-card-trigger" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
   </figure>
   <header class="expanding-card-summary">
     <h3>Listen to Glass Souls</h3>
@@ -2730,10 +2710,10 @@ Materialize deprecated this pattern in 2.1.0. Prefer a hover or click-only menu 
     <span class="material-symbols" aria-hidden="true">mode_edit</span>
   </button>
   <ul>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
-    <li class="waves-effect waves-light"><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+    <li><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
   </ul>
 </div>
 ```
@@ -3238,7 +3218,7 @@ Add pagination links to split long content into shorter blocks. The component is
 
 The list lives in a `<nav aria-label="Pagination">` — a page's links are navigation, and the label distinguishes it from every other `<nav>` on the page.
 
-Mark the current page with `active` on the `li` **and `aria-current="page"` on its link**; the class only fills it. Use `disabled` for unavailable prev/next, and make those a `<span>` rather than an `<a href>` — a disabled link is still focusable and still navigates. Icon-only prev/next links need an `aria-label`. `waves-effect` is optional and adds the ink ripple on the item.
+Mark the current page with `active` on the `li` **and `aria-current="page"` on its link**; the class only fills it. Use `disabled` for unavailable prev/next, and make those a `<span>` rather than an `<a href>` — a disabled link is still focusable and still navigates. Icon-only prev/next links need an `aria-label`.
 
 ```html
 <nav class="pagination" aria-label="Pagination">
@@ -3247,11 +3227,11 @@ Mark the current page with `active` on the `li` **and `aria-current="page"` on i
       <span aria-hidden="true"><span class="material-symbols" aria-hidden="true">chevron_left</span></span>
     </li>
     <li class="active"><a href="?page=1" aria-current="page">1</a></li>
-    <li class="waves-effect"><a href="?page=2">2</a></li>
-    <li class="waves-effect"><a href="?page=3">3</a></li>
-    <li class="waves-effect"><a href="?page=4">4</a></li>
-    <li class="waves-effect"><a href="?page=5">5</a></li>
-    <li class="waves-effect">
+    <li><a href="?page=2">2</a></li>
+    <li><a href="?page=3">3</a></li>
+    <li><a href="?page=4">4</a></li>
+    <li><a href="?page=5">5</a></li>
+    <li>
       <a href="?page=2" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></a>
     </li>
   </ol>
@@ -3273,11 +3253,11 @@ Add `nowrap` to keep a long run on one row and scroll it sideways instead of wra
     <li class="pages">
       <ol>
         <li class="active"><a href="?page=1" aria-current="page">1</a></li>
-        <li class="waves-effect"><a href="?page=2">2</a></li>
-        <li class="waves-effect"><a href="?page=3">3</a></li>
+        <li><a href="?page=2">2</a></li>
+        <li><a href="?page=3">3</a></li>
       </ol>
     </li>
-    <li class="waves-effect next">
+    <li class="next">
       <a href="?page=2" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></a>
     </li>
   </ol>
@@ -3646,7 +3626,7 @@ Initialize every registered component with one function call.
 
 Auto Init starts all of the registered Expressive components with a single call. The IIFE bundle exposes it as `Expressive.AutoInit`.
 
-Importing the JavaScript installs a few document-level behaviors (Forms, Waves, Range, Chips, and Cards), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
+Importing the JavaScript installs a few document-level behaviors (Forms, Chips, Slider, Cards, and ExpandingCard), but it does **not** call `AutoInit()` for you. Call it after the DOM is ready. This documentation site does that in `docs.js` on `DOMContentLoaded`.
 
 ### Initialization
 
@@ -3713,7 +3693,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tooltip` | `.tooltipped` |
 | `FloatingActionButton` | `.fab` |
 
-Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Waves, Chips, and Cards also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
+Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time `Init()`; Chips and Cards appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
 ### Ignoring Elements
 
@@ -4386,7 +4366,7 @@ Toggle NavigationDrawer
     <li><a href="#!">Second Link</a></li>
     <li><div class="divider"></div></li>
     <li><span class="subheader">Subheader</span></li>
-    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+    <li><a href="#!">Third Link</a></li>
   </ul>
 </nav>
 <button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>

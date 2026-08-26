@@ -579,8 +579,8 @@ article > aside[aria-expanded="true"] {
   }
 }
 
-// A media-sized button supplies the repeated open/close target and lets the
-// existing Waves behavior render the tap ripple shown by the M3 example.
+// A media-sized button supplies the repeated open/close target and carries the
+// state layer for the tap feedback shown by the M3 example.
 article > figure > .card-reveal-trigger {
   position: absolute;
   inset: 0;
@@ -600,12 +600,22 @@ article > figure > .card-reveal-trigger {
   cursor: pointer;
 }
 
-article > figure > .card-reveal-trigger:is(:hover, :focus, :active) {
-  background: none;
+// The trigger paints its own state layer: the card's `::after` keys on
+// `> .primary-action`, which this is not. It reads the same `--md-comp-card-*`
+// opacities, so tuning one card still reaches it.
+article > figure > .card-reveal-trigger:hover {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-hover-state-layer-opacity) * 100%), transparent);
+  box-shadow: none;
+}
+
+article > figure > .card-reveal-trigger:active {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-pressed-state-layer-opacity) * 100%), transparent);
   box-shadow: none;
 }
 
 article > figure > .card-reveal-trigger:focus-visible {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-focus-state-layer-opacity) * 100%), transparent);
+  box-shadow: none;
   outline: var(--md-comp-card-focus-indicator-thickness) solid var(--md-comp-card-focus-indicator-color);
   outline-offset: calc(-1 * var(--md-comp-card-focus-indicator-thickness));
 }

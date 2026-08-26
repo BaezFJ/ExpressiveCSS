@@ -408,16 +408,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.amOrPm = 'PM';
   }
 
-  /*private _createButton(text: string, visibility: string): HTMLButtonElement {
-    const button = document.createElement('button');
-    button.classList.add('waves-effect', 'text');
-    button.style.visibility = visibility;
-    button.type = 'button';
-    button.tabIndex = -1;
-    button.innerText = text;
-    return button;
-  }*/
-
   _pickerSetup() {
     // clearButton.classList.add('timepicker-clear');
     // clearButton.addEventListener('click', this.clear);

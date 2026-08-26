@@ -347,8 +347,7 @@
           An <code>&lt;aside&gt;</code> expands in normal flow below the persistent
           media, headline, and subhead. Place a
           <code>.card-reveal-trigger.activator</code> button over the media;
-          the same button opens and closes the details. Add
-          <code>waves-effect</code> to reproduce the M3 tap ripple.
+          the same button opens and closes the details.
           <code>Cards.Init()</code> (and <code>AutoInit()</code> on an
           <code>&lt;article&gt;</code> containing an <code>&lt;aside&gt;</code>)
           wires up <code>aria-expanded</code>, Enter, and Space. The reveal
@@ -360,7 +359,7 @@
             <article class="filled">
               <figure>
                 <img src="https://picsum.photos/id/64/800/420" alt="Portrait of Ana Russo">
-                <button type="button" class="card-reveal-trigger activator waves-effect waves-light" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
+                <button type="button" class="card-reveal-trigger activator" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
               </figure>
               <header class="card-reveal-summary">
                 <h3>Ana Russo</h3>
@@ -380,7 +379,7 @@
   <figure>
     <img src="images/ana-russo.jpg" alt="Portrait of Ana Russo">
     <button type="button"
-            class="card-reveal-trigger activator waves-effect waves-light"
+            class="card-reveal-trigger activator"
             aria-label="Toggle contact details"
             aria-controls="ana-contact"
             aria-expanded="false"></button>
@@ -421,7 +420,7 @@
             <article class="outlined expanding-card">
               <figure>
                 <img src="https://picsum.photos/id/1068/800/420" alt="Plants in patterned vases against a blue wall">
-                <button type="button" class="expanding-card-trigger waves-effect" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
+                <button type="button" class="expanding-card-trigger" aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
               </figure>
               <header class="expanding-card-summary">
                 <h3>Listen to Glass Souls</h3>
@@ -456,7 +455,7 @@
 <article class="outlined expanding-card">
   <figure>
     <img src="images/glass-souls.jpg" alt="Pastel balloons floating above flowers">
-    <button type="button" class="expanding-card-trigger waves-effect"
+    <button type="button" class="expanding-card-trigger"
             aria-label="Open Glass Souls album" aria-haspopup="dialog"></button>
   </figure>
   <header class="expanding-card-summary">

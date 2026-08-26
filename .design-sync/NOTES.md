@@ -56,8 +56,8 @@ the M3 token layer, and the guidelines** — not importable components.
   tokens and are never used in a `font-family`; the Sass says so explicitly.
 - `[FONT_REMOTE]` naming `"Oxygen-Sans"` — also expected: one entry in the
   `$font-stack` system stack.
-- 19 components ship the **floor card** by design (the niche plugin surface:
-  AutoInit, Waves, Forms, ScrollSpy, CharacterCounter, Lightbox,
+- 18 components ship the **floor card** by design (the niche plugin surface:
+  AutoInit, Forms, ScrollSpy, CharacterCounter, Lightbox,
   Autocomplete, FormSelect, Datepicker, Timepicker, Carousel, Menu, Snackbar,
   Tooltip, FloatingActionButton, Range). They are authorable on any re-sync.
 
@@ -131,8 +131,6 @@ static card would have been misleading rather than merely sparse:
   DOM by the plugin. Reproducing that markup by hand would be a lookalike, which
   the skill explicitly rules out.
 - **Tooltip** — the tooltip element is created on hover.
-- **Waves** — a ripple that exists only during interaction; a static card would
-  be indistinguishable from a plain button.
 - **AutoInit** — a function, not a visual component.
 
 Everything else is authored. If any of these gains a static resting state in the

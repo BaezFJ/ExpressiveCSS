@@ -1280,3 +1280,25 @@ describe('Icon selectors keyed on <i>, second sweep', () => {
     );
   });
 });
+
+// Waves supplied the press feedback for every element the docs marked
+// `.waves-effect`. Deleting it left five of those surfaces with a hover layer
+// and nothing at all under a finger: hover never fires on touch, and both the
+// pagination item and the drawer row suppress the tap highlight.
+describe('Surfaces that lost the ripple keep a pressed state layer', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+  const PRESSED = [
+    ['card reveal trigger', /\.card-reveal-trigger:active\s*\{[^}]*state-layer-opacity/],
+    ['expanding card trigger', /\.expanding-card-trigger:active\s*\{[^}]*state-layer-opacity/],
+    ['FAB toolbar action', /\.toolbar\b[^{]*:is\(a, button\):active\s*\{[^}]*state-layer-opacity/],
+    ['navigation drawer row', /\.navigation-drawer\)[^{]*:active\s*\{[^}]*state-layer-opacity/],
+    ['pagination item', /\.pagination :is\(a, button\):active\s*\{[^}]*state-layer-opacity/]
+  ];
+
+  for (const [name, pattern] of PRESSED) {
+    test(`${name} paints a pressed layer`, () => {
+      assert.match(css, pattern, `${name} has no :active state layer`);
+    });
+  }
+});

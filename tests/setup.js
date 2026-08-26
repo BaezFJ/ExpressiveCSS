@@ -1,7 +1,7 @@
 // Shared jsdom environment.
 //
 // The bundle reads `document` at import time (it attaches document-level
-// listeners and runs Forms/Chips/Waves/Range/Cards Init), so the globals have to
+// listeners and runs Forms/Chips/Slider/Cards/ExpandingCard Init), so the globals have to
 // exist *before* it loads - hence the dynamic import at the bottom. Everything
 // here runs once per test process; tests call resetBody() between cases.
 
