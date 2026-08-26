@@ -1,0 +1,16 @@
+---
+import Code from "../Code.astro";
+
+/** How to reach the instance every documented method is called on. */
+interface Props {
+  plugin: string;
+  lead?: string;
+}
+
+const {
+  plugin,
+  lead = "All methods are called on the plugin instance. You can get the instance like this:",
+} = Astro.props;
+---
+<blockquote>{lead}</blockquote>
+<Code code={`const instance = Expressive.${plugin}.getInstance(elem);`} />

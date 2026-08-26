@@ -1,0 +1,45 @@
+---
+import type { Sections } from "../lib/sections";
+
+/**
+ * The two-column page scaffold and its table of contents.
+ *
+ * The TOC is generated from the same objects the sections are rendered from,
+ * so a section and its entry cannot disagree. The `toc-extra` slot takes extra
+ * entries (an off-site link, say); the class arguments let pages with wide,
+ * interactive demos keep this scaffold instead of recreating it.
+ */
+interface Props {
+  sections: Sections;
+  containerClass?: string;
+  contentClass?: string;
+  tocClass?: string;
+}
+
+const {
+  sections,
+  containerClass = "",
+  contentClass = "s12 m8 offset-m1 xl7 offset-xl1",
+  tocClass = "m3 xl3",
+} = Astro.props;
+---
+<div class:list={["container", containerClass]}>
+  <div class="row">
+    <div class:list={[contentClass, "docs-page-content"]}>
+      <slot />
+    </div>
+
+    <div class:list={["hide-on-small-only", tocClass]}>
+      <div class="toc-wrapper mt-5">
+        <nav aria-label="On this page">
+          <ul class="section table-of-contents">
+            {Object.values(sections).map((s) => (
+              <li><a href={`#${s.id}`}>{s.label}</a></li>
+            ))}
+            <slot name="toc-extra" />
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

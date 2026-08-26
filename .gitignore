@@ -4,6 +4,10 @@ node_modules/
 # Build output and generated assets
 dist/
 build/
+# The Astro documentation site: its output and its generated type environment.
+# Nothing generated is committed (ADR 0003).
+_site/
+docs/.astro/
 *.tsbuildinfo
 *.map
 .sass-cache/

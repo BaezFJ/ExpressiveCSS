@@ -1,0 +1,34 @@
+---
+/**
+ * A code sample. Write the markup for real -- the component escapes it -- and
+ * keep the body flush left: <pre> preserves the indentation it is given.
+ *
+ * The sample is an explicit template literal so its whitespace stays the
+ * author's rather than the formatter's.
+ *
+ * tests/semantics.test.js checks every one of these against SEMANTICS.md. A
+ * sample that deliberately shows non-conforming markup -- a migration
+ * before/after, say -- opts out with a reason:
+ *
+ *     <Code check={false} reason="0.7.0 markup, shown for migration" code={`…`} />
+ *
+ * The reason is required; the test fails on a bare opt-out, so an exemption
+ * always says why it is still earned. Neither argument renders.
+ */
+interface Props {
+  code: string;
+  check?: boolean;
+  reason?: string;
+}
+
+const { code } = Astro.props;
+
+// Angle brackets and ampersands only -- quotes are left alone, which is how
+// every sample in these docs was written by hand.
+const escaped = code
+  .trim()
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;");
+---
+<pre><code set:html={escaped} /></pre>

@@ -1,0 +1,20 @@
+---
+import type { SectionMeta } from "../lib/sections";
+
+type Props = SectionMeta;
+
+const { id, label, heading, tag = "h3" } = Astro.props;
+
+// A page spreads `{...S.whatever}`, and a mistyped key spreads nothing at all
+// rather than failing -- which would publish an anchorless section under a
+// table-of-contents entry pointing nowhere.
+if (!id) throw new Error("Section: no id -- check the key against defineSections()");
+
+const Heading = tag;
+const role = { h2: "headline-large", h3: "headline-medium", h4: "title-large" }[tag];
+const text = heading === undefined ? label : heading;
+---
+<div id={id} class="section scrollspy docs-section">
+  {text !== false && <Heading class={`docs-section-title ${role}`}>{text}</Heading>}
+  <slot />
+</div>

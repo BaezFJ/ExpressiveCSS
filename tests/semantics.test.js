@@ -1,9 +1,10 @@
 // Enforces semantics.json against every surface that states component markup.
 //
-// Three surfaces state markup and can drift from each other: llm.md (the
-// contract LLMs consume), docs/templates/** (what humans copy), and
-// tests/fixtures.js. website/ is generated from the templates by freeze.py, so
-// checking it would check the same thing twice.
+// Four surfaces state markup and can drift from each other: llm.md (the
+// contract LLMs consume), docs/templates/** and docs/src/**/*.astro (what
+// humans copy, under the two generators that coexist until the Astro cutover),
+// and tests/fixtures.js. website/ is generated from the templates by freeze.py,
+// so checking it would check the same thing twice.
 //
 // A rule runs only while its component is `enforced`. The exempt list is the
 // countable backlog of the semantics sweep and only ever shrinks; the roster
@@ -257,6 +258,86 @@ export function templateExamples(src, file) {
   return out;
 }
 
+/**
+ * The Astro pages, which state the same two kinds of example the Jinja
+ * templates do (ADR 0003). Both generators are present until the cutover and a
+ * conversion is exactly the moment markup goes quietly wrong, so the migrated
+ * pages are a surface of their own rather than something the templates vouch
+ * for.
+ *
+ * Only leaf expressions become the `x` placeholder. An Astro expression can
+ * *contain* the markup -- `{NAV.map((group) => (<li>…</li>))}` is the whole
+ * drawer -- so replacing every `{...}` wholesale would delete the components
+ * that render from the catalogue and quietly drop them from this suite. What
+ * is left of the scaffolding parses as text between elements, which no rule
+ * reads.
+ */
+export function astroExamples(src, file) {
+  const out = [];
+  let m;
+  ASTRO_CODE.lastIndex = 0;
+  while ((m = ASTRO_CODE.exec(src))) {
+    const attrs = m[1];
+    out.push({
+      surface: 'docs/src',
+      location: `${file}:${src.slice(0, m.index).split('\n').length} (sample)`,
+      html: unescapeLiteral(m[2]),
+      ignore: /check\s*=\s*\{\s*false\s*\}/.test(attrs),
+      reason: (attrs.match(/reason\s*=\s*["']([^"']*)["']/) ?? [])[1] ?? ''
+    });
+  }
+
+  out.push({
+    surface: 'docs/src',
+    location: `${file} (rendered)`,
+    html: stripAstro(src.replace(ASTRO_CODE, '')),
+    ignore: false,
+    reason: ''
+  });
+  return out;
+}
+
+/**
+ * `<Code … code={`…`} />`. The attribute list is everything before `code={`,
+ * which is where `check` and `reason` live; matching it as `[^>]*` would stop
+ * at the first `>` in the sample itself.
+ */
+const ASTRO_CODE = /<Code\b([\s\S]*?)code=\{`([\s\S]*?)`\}\s*\/>/g;
+
+/** A template literal's three escapes, undone. */
+const unescapeLiteral = (s) =>
+  s.replace(/\\(`|\$\{|\\)/g, '$1').trim();
+
+/** Frontmatter, Astro comments, and leaf expressions. */
+function stripAstro(src) {
+  let out = src.replace(/^---\n[\s\S]*?\n---\n/, '').replace(/\{\/\*[\s\S]*?\*\/\}/g, '');
+  // Innermost-first: a group holding markup keeps its braces and is descended
+  // into, so only the ones that are pure JavaScript collapse.
+  let previous;
+  do {
+    previous = out;
+    out = out.replace(/\{([^{}<]*)\}/g, 'x');
+  } while (out !== previous);
+  return out;
+}
+
+function examplesFromAstro() {
+  const out = [];
+  const walk = (dir) => {
+    for (const e of readdirSync(new URL(`docs/src/${dir}`, root), { withFileTypes: true })) {
+      if (e.isDirectory()) {
+        walk(`${dir}${e.name}/`);
+        continue;
+      }
+      if (!e.name.endsWith('.astro')) continue;
+      const file = `docs/src/${dir}${e.name}`;
+      out.push(...astroExamples(read(file), file));
+    }
+  };
+  walk('');
+  return out;
+}
+
 function examplesFromTemplates() {
   const out = [];
   const walk = (dir) => {
@@ -320,6 +401,7 @@ function examplesFromFixtures() {
 const examples = [
   ...examplesFromMarkdown('llm.md'),
   ...examplesFromTemplates(),
+  ...examplesFromAstro(),
   ...examplesFromFixtures(),
   ...examplesFromGuidelines()
 ];
@@ -703,11 +785,66 @@ describe('template extractor', () => {
   });
 });
 
+describe('astro extractor', () => {
+  const wrap = (attrs, body) =>
+    `---\nconst x = 1;\n---\n<DocsLayout page="f">\n<Code ${attrs}code={\`\n${body}\n\`} />\n</DocsLayout>\n`;
+
+  test('a sample is extracted and the rendered pass does not double-count it', () => {
+    const got = astroExamples(wrap('', '<span class="chip">x</span>'), 'f.astro');
+    assert.equal(got.length, 2, 'one sample plus the rendered page');
+    assert.match(got[0].html, /<span class="chip">x<\/span>/);
+    assert.doesNotMatch(got[1].html, /chip/, 'the sample must be cut from the rendered pass');
+  });
+
+  test('an opt-out is read off the attributes and still cut from the rendered pass', () => {
+    const got = astroExamples(
+      wrap('check={false} reason="0.7.0 markup (pre-sweep), kept for migration" ', '<div class="chip">old</div>'),
+      'f.astro'
+    );
+    assert.equal(got.length, 2);
+    assert.equal(got[0].ignore, true);
+    assert.equal(got[0].reason, '0.7.0 markup (pre-sweep), kept for migration');
+    assert.doesNotMatch(got[1].html, /chip/);
+  });
+
+  test('a checked sample stays checked', () => {
+    const got = astroExamples(wrap('', '<div class="chip">old</div>'), 'f.astro');
+    assert.equal(got[0].ignore, false);
+  });
+
+  test("the sample's own > does not truncate the attribute list", () => {
+    // `[^>]*` before `code={` stopped at the first `>` in the sample, which
+    // meant an opt-out further along the tag was never seen.
+    const got = astroExamples(
+      `<Code reason="why" check={false} code={\`\n<b>x</b>\n\`} />`,
+      'f.astro'
+    );
+    assert.equal(got[0].ignore, true);
+    assert.equal(got[0].reason, 'why');
+  });
+
+  test('an expression holding markup keeps it', () => {
+    // The drawer and the footer render from the catalogue inside a `.map()`.
+    // Collapsing every `{...}` would delete their markup and drop both
+    // components out of this suite without failing anything.
+    const got = astroExamples(
+      `---\n---\n<ul>{NAV.map((g) => (<li><a href={route(g.id)}>{g.label}</a></li>))}</ul>\n`,
+      'f.astro'
+    );
+    assert.match(got[0].html, /<li><a href=x>x<\/a><\/li>/);
+  });
+
+  test('frontmatter is not markup', () => {
+    const got = astroExamples(`---\nimport X from "./x.astro";\n---\n<p>hi</p>\n`, 'f.astro');
+    assert.doesNotMatch(got[0].html, /import/);
+  });
+});
+
 describe('documented markup', () => {
   test('surfaces yield examples to check', () => {
     // Guards the extractors: a regex that silently stops matching would turn
     // this whole suite into a no-op that passes.
-    for (const surface of ['llm.md', 'docs/templates', 'tests/fixtures.js', 'm3-guidelines.md']) {
+    for (const surface of ['llm.md', 'docs/templates', 'docs/src', 'tests/fixtures.js', 'm3-guidelines.md']) {
       const n = examples.filter((e) => e.surface === surface).length;
       assert.ok(n > 0, `no examples extracted from ${surface}`);
     }
