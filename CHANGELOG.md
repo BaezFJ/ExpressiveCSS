@@ -16,6 +16,27 @@ below is the whole story for that component.
 
 ### Added
 
+- **A bottom sheet's handle dismisses it when the handle is a `<button>`.** The
+  slot was pointer-only: `BottomSheets` bound `pointerdown`/`move`/`up`, so a
+  handle written as `<button aria-label="Dismiss">` — which the docs taught —
+  did nothing on Enter. The label promised an action no code performed, and
+  dragging is a pointer gesture, so the only keyboard route to the same outcome
+  was Escape, which the button did not advertise. Activation now closes the
+  sheet. A handle written as any other element stays decoration and stays inert.
+
+  **The click that ends a drag is told apart from a tap**, because a drag
+  finishes with a `click` on the element it started on and would otherwise
+  dismiss the sheet the drag had just declined to dismiss. Movement past 4px
+  marks the sequence as a drag, and the flag is cleared on `pointerdown` so an
+  abandoned sequence cannot leave it set. Keyboard activation does not consult
+  that flag at all — a `click` carrying `detail: 0` came from Enter or Space, so
+  a stale drag can never swallow a key press.
+
+  `tests/bottom-sheet.test.js` covers both directions: activation dismisses
+  through either spelling of the class, a snapped-back drag's trailing click
+  does not, a keyboard activation still lands after one, and a decorative handle
+  is not a control.
+
 - **Drag handle** (`.drag-handle`), the affordance that makes something legible
   as draggable. CSS only, no plugin, no registry entry.
 

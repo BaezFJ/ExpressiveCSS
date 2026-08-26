@@ -110,13 +110,29 @@
 </dialog>
 {% endcall %}
         <p>
-          The handle is decoration, not a control: dragging is a pointer
-          gesture and <kbd>Esc</kbd> already dismisses the sheet from the
-          keyboard, so the bar sits on top of a path that exists without it.
-          Making it a <code>&lt;button&gt;</code> would promise a keyboard
-          action nothing here performs — <code>Enter</code> on it does nothing,
-          because the drag is bound to pointer events. <code>.handle</code> is
-          the pre-1.0 spelling of the same slot and still works.
+          A <code>&lt;span&gt;</code> there is decoration and does nothing on
+          its own — dragging is a pointer gesture, and <kbd>Esc</kbd> already
+          dismisses the sheet from the keyboard, so the bar sits on top of a
+          path that exists without it.
+        </p>
+        <p>
+          Make it a <code>&lt;button&gt;</code> when you want a visible dismiss
+          control, and give it a name. Activating it closes the sheet, by
+          pointer or by <kbd>Enter</kbd> — dragging is not the only way in.
+          A drag that snaps back does not also dismiss: the click that ends a
+          drag is told apart from a tap, so the sheet the drag declined to close
+          stays open.
+        </p>
+{% call code() %}
+<dialog class="bottom-sheet" aria-labelledby="title-title">
+  <button type="button" class="drag-handle" aria-label="Dismiss"></button>
+  <h2 id="title-title">Title</h2>
+  …
+</dialog>
+{% endcall %}
+        <p>
+          <code>.handle</code> is the pre-1.0 spelling of the same slot and
+          still works, decorative or wired.
         </p>
   {% endcall %}
 

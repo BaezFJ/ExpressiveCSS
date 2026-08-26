@@ -35,9 +35,12 @@
 
   {% call section("dragging", "Dragging is not included") %}
         <p>
-          This component is a bar. It has no script behind it: nothing here
-          starts a drag, moves anything, or reorders anything. That is
-          deliberate, and it is worth being blunt about why.
+          This component is a bar. Nothing in it starts a drag, moves anything,
+          or reorders anything. The one exception is not the handle's doing: a
+          handle written as a <code>&lt;button&gt;</code> inside a
+          <a href="{{ url_for('bottom_sheet') }}">bottom sheet</a> dismisses
+          that sheet, because the sheet's own behaviour claims it. Everywhere
+          else the bar is inert, and that is worth being blunt about.
         </p>
         <p>
           Dragging is a pointer gesture. An outcome you can only reach by
@@ -123,11 +126,28 @@
 </dialog>
 {% endcall %}
         <p>
-          Decorative is right here. Dragging the sheet down dismisses it, and
-          <kbd>Esc</kbd> already does the same thing from the keyboard, so the
-          handle is a pointer nicety on top of a path that exists without it —
-          not a control of its own. <code>.handle</code> is the pre-1.0 spelling
-          and still works.
+          Decoration is the default, and it is enough: dragging the sheet down
+          dismisses it, and <kbd>Esc</kbd> already does the same from the
+          keyboard, so the bar sits on top of a path that exists without it.
+        </p>
+        <p>
+          Write a <code>&lt;button&gt;</code> there instead when you want a
+          visible dismiss control. It is the one place a drag handle is wired to
+          anything: the sheet closes when the button is activated, by pointer or
+          by <kbd>Enter</kbd>, so the name on it is a promise the code keeps. A
+          drag that snaps back does not also dismiss — the click ending it is
+          told apart from a tap.
+        </p>
+{% call code() %}
+<dialog class="bottom-sheet" aria-labelledby="share-title">
+  <button type="button" class="drag-handle" aria-label="Dismiss"></button>
+  <h2 id="share-title">Share</h2>
+  …
+</dialog>
+{% endcall %}
+        <p>
+          <code>.handle</code> is the pre-1.0 spelling of the same slot and
+          still works, decorative or wired.
         </p>
   {% endcall %}
 

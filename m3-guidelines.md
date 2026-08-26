@@ -750,7 +750,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 **Don't use** it as the only route to an outcome. Dragging is a pointer gesture, so a reorder reachable only by dragging is unreachable without a pointer. Pair it with a keyboard path — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position. ExpressiveCSS ships no reordering behaviour, so that path is the page's to build.
 
-**Anatomy.** A bar and nothing else. `<span aria-hidden="true">` when decorative, which is the usual case; `<button>` with an `aria-label` when activating it does something. Never both — `aria-hidden` on a button leaves it in the tab order while hiding it from assistive technology.
+**Anatomy.** A bar and nothing else. `<span aria-hidden="true">` when decorative, which is the usual case; `<button>` with an `aria-label` when activating it does something. Never both — `aria-hidden` on a button leaves it in the tab order while hiding it from assistive technology. Inside a bottom sheet the button spelling is wired: it dismisses the sheet. Nowhere else is.
 
 **Sizing.** Vertical: 4 × 48 dp bar in a 24 dp hit target, `outline`, swelling to 12 × 52 dp on a 12 dp corner in `on-surface` while held. On a bottom sheet the same class takes that component's own grabber instead — horizontal, 32 × 4 dp at 40 % `on-surface-variant`.
 
@@ -803,7 +803,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ## 7.2 Bottom sheets
 
-**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet` (alias `.bottom`). `BottomSheets.Init()` drag-dismisses from the top 48 dp handle.
+**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet` (alias `.bottom`). `BottomSheets.Init()` drag-dismisses from the top 48 dp handle, and dismisses on activation when that handle is a `<button>` — so the keyboard reaches it. `Esc` closes the sheet natively either way.
 
 **Use when** compact/medium windows need **secondary content** anchored to the bottom: extra actions, a short list, a player, filters.
 
