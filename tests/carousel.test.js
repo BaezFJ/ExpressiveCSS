@@ -97,7 +97,7 @@ describe('Material 3 Carousel CSS', () => {
     assert.match(css, /--md-comp-carousel-focus-indicator-thickness:\s*3px/);
     assert.match(
       css,
-      /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.carousel:not\(\.coverflow\)[\s\S]*transition:\s*none[\s\S]*transform:\s*none/
+      /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.carousel\s*\{[\s\S]*transition:\s*none[\s\S]*transform:\s*none/
     );
   });
 });
@@ -522,56 +522,6 @@ describe('Carousel auto-advance', () => {
     }
   });
 
-  test('skips a tick that lands on a coverflow tween still running', (t) => {
-    t.mock.timers.enable({ apis: ['setTimeout'] });
-    document.body.innerHTML = markup('coverflow');
-    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
-      interval: 1000
-    });
-    try {
-      // Coverflow settles after duration * ln(|amplitude| / 2), so a short
-      // interval can fire while `center` is still climbing through the tween.
-      // Coverflow moves `center` through the tween rather than committing it
-      // up front, so the tell is whether the tick retargeted: `_cycleTo` is
-      // what rewrites `target`.
-      instance.offset = 0;
-      instance.target = 100;
-      t.mock.timers.tick(cycle(1000) * 3);
-      assert.equal(instance.target, 100, 'retargeted an animation still running');
-
-      instance.offset = 100;
-      t.mock.timers.tick(cycle(1000));
-      assert.notEqual(instance.target, 100, 'never advanced once the track came to rest');
-    } finally {
-      instance.destroy();
-      t.mock.timers.reset();
-    }
-  });
-
-  test('a rest cut short by a tween buys a whole new one, not its remainder', (t) => {
-    t.mock.timers.enable({ apis: ['setTimeout'] });
-    document.body.innerHTML = markup('coverflow');
-    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
-      interval: 1000,
-      duration: 200
-    });
-    try {
-      instance.offset = 0;
-      instance.target = 100;
-      t.mock.timers.tick(1200);
-      assert.equal(instance.target, 100, 'advanced off a tween still running');
-
-      instance.offset = 100; // the tween lands
-      t.mock.timers.tick(1199);
-      assert.equal(instance.target, 100, 'rested for the remainder instead of a whole interval');
-      t.mock.timers.tick(1);
-      assert.notEqual(instance.target, 100, 'never advanced after the fresh rest');
-    } finally {
-      instance.destroy();
-      t.mock.timers.reset();
-    }
-  });
-
   test('pause() and start() stop and resume it', (t) => {
     t.mock.timers.enable({ apis: ['setTimeout'] });
     const instance = init({ interval: 1000 });
@@ -623,11 +573,11 @@ describe('Carousel fixed height', () => {
     assert.match(css, /--md-comp-carousel-indicator-allowance:\s*40px/);
     assert.match(
       css,
-      /\.carousel\.fixed-height:not\(\.coverflow\):has\(> \.indicators\)\s*\{[^}]*height:\s*calc\(\s*var\(--carousel-height,\s*var\(--md-comp-carousel-height\)\)\s*\+\s*var\(--md-comp-carousel-indicator-allowance\)/s
+      /\.carousel\.fixed-height:has\(> \.indicators\)\s*\{[^}]*height:\s*calc\(\s*var\(--carousel-height,\s*var\(--md-comp-carousel-height\)\)\s*\+\s*var\(--md-comp-carousel-indicator-allowance\)/s
     );
     assert.match(
       css,
-      /\.carousel\.fixed-height:not\(\.coverflow\):has\(> \.indicators\) > \.carousel-track\s*\{[^}]*height:\s*calc\(100% - var\(--md-comp-carousel-indicator-allowance\)\)/s
+      /\.carousel\.fixed-height:has\(> \.indicators\) > \.carousel-track\s*\{[^}]*height:\s*calc\(100% - var\(--md-comp-carousel-indicator-allowance\)\)/s
     );
   });
 

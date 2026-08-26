@@ -143,25 +143,6 @@ describe('Carousel', () => {
     instance.destroy();
   });
 
-  test('item transforms are written to the standard transform property', () => {
-    document.body.innerHTML = `
-      <div class="carousel coverflow">
-        <a class="carousel-item active" href="#one">one</a>
-        <a class="carousel-item" href="#two">two</a>
-      </div>`;
-
-    const instance = Expressive.Carousel.init(document.querySelector('.carousel'));
-
-    // Guards the removal of the webkit/Moz/O/ms probe that used to pick the
-    // property name. (jsdom exposes no prefixed aliases, so this cannot catch
-    // the old code - it is here to catch a regression of the rename.)
-    assert.ok(
-      document.querySelector('.carousel-item.active').style.transform,
-      'no transform was applied to the active item'
-    );
-    instance.destroy();
-  });
-
   test('an empty carousel does not throw', () => {
     document.body.innerHTML = `<div class="carousel"></div>`;
 

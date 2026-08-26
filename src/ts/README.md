@@ -87,7 +87,7 @@ read-it-off-the-element access that key provides.
   keyboard navigation. Full-screen automatically becomes a horizontal hero
   in landscape or at Expanded widths.
   `.flat` / `fullWidth` remains the full-width compatibility track used by
-  swipeable tabs. The former 3D behavior is available only as `.coverflow`.
+  swipeable tabs.
   `destroy()` removes generated labels, size roles, indicators, and wrappers.
 - **Sidenav nested sections are HTML.** `<details>` / `<summary>` inside
   a `.sidenav`; same `name` is an accordion. There is no Collapsible

@@ -5,8 +5,7 @@
 // applies.
 //
 // Runtime carousel semantics. Material 3 carousels expose every item because
-// several items can be visible at once. The legacy coverflow still hides its
-// off-screen items and therefore has to remove them from the tab order.
+// several items can be visible at once.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -72,21 +71,6 @@ describe('Carousel slides', () => {
       );
       assert.equal(instance.center, 1);
       assert.equal(document.activeElement, items[1]);
-    } finally {
-      instance.destroy();
-    }
-  });
-
-  test('legacy coverflow hides off-screen links without leaving tab stops', () => {
-    document.body.innerHTML = MARKUP;
-    const el = document.querySelector('.carousel');
-    el.classList.add('coverflow');
-    const instance = Expressive.Carousel.init(el);
-    try {
-      const hidden = [...el.querySelectorAll('[aria-hidden="true"]')];
-      assert.ok(hidden.length > 0);
-      hidden.forEach((slide) => assert.equal(slide.getAttribute('tabindex'), '-1'));
-      assert.equal(el.querySelectorAll(RULE.selector).length, 0, RULE.message);
     } finally {
       instance.destroy();
     }

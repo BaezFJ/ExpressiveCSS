@@ -2482,15 +2482,14 @@ Expressive.AutoInit(document.body, {
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `duration` | Number | `200` | Programmatic scroll timing and legacy coverflow tween, in milliseconds. |
+| `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
 | `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
 | `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
-| `noWrap` | Boolean | `false` | End behavior for legacy coverflow. M3 tracks always stop at their ends. |
-| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it, so a rest ending mid-tween on legacy coverflow buys another whole rest. |
+| `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
+| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
 | `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
 | `onCycleTo` | Function | `null` | Called when the active item changes. |
 | `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }` | Generated accessible label strings. `indicators` names the indicator row and `slide` prefixes each dot, giving "Slide 1". Partial objects are merged with the defaults. |
-| `dist`, `shift`, `padding`, `numVisible` | Number | Legacy | Used only by the explicit `.coverflow` compatibility layout. |
 
 ### Methods
 
@@ -2515,9 +2514,9 @@ An `interval` makes the carousel advance on its own, so the pause contract is
 mandatory: it always pauses on hover, on focus within, and while the tab is
 hidden, and `prefers-reduced-motion: reduce` suppresses auto-advance entirely.
 No option disables any of that. An explicit `noWrap: true` stops auto-advance
-after one pass instead of looping; every native track forces `noWrap` for the
-arrow keys, and the timer reads the author's own value rather than that one. A
-`height` gives the indicators their own row below the track (`.fixed-height`)
+after one pass instead of looping. Arrow keys and `set()` stop at the ends
+either way — a scroll track has ends, and auto-advance is the one caller that
+can loop back past them. A `height` gives the indicators their own row below the track (`.fixed-height`)
 instead of laying them over the media; markup can do the same by carrying
 `.fixed-height` and setting `--carousel-height`.
 
