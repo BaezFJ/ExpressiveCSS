@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**53 of 53 rows enforced; 0 remaining.**
+**54 of 54 rows enforced; 0 remaining.**
 
-49 of those rows are components - a part of the framework an author writes markup for.
+50 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**5 of 49 components declare conformance debt.**
+**5 of 50 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -650,6 +650,28 @@ Swept 0.8.0. Generated markup: role="status" and the labelled dismiss button are
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### split-button
+
+Added with the split button component (#42). A lead action and a trailing half that opens a menu, drawn as one shape with a 2dp seam. Two halves, two Tab stops, two different jobs - so the container declares no role at all. `toolbar` is rejected rather than withheld: there is no arrow-key model to write, because the only composite widget here is the <menu> the trailing half opens, and Menu implements and owns that contract. The trailing half *is* the menu trigger - `.menu-trigger` with a target is the JS contract Menu claims, and a split button whose trailing half opened nothing would be a lone button with a decoration glued to it. That is also what lets the expanded shape be drawn from a selector with no script of this component's own: Menu stamps `aria-expanded` on the trigger and rewrites it on every open and close, which is rule 1 working exactly as written.
+
+**Rejected role:** `toolbar` is not withheld but declined - the two halves are independent commands reached with Tab - the pair is one shape, not one widget, so there is no arrow-key model to implement and none to promise. The menu the trailing half opens has its own, and Menu owns it. `split-button-is-not-an-authored-composite-widget` enforces that, keeping every composite role out.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `split-button-is-not-an-authored-composite-widget` | forbid-composite-roles | `.split-button` | must not match with any composite role |
+| `split-button-halves-are-controls` | forbid | `.split-button > :not(button):not(a.button[href]):not(menu)` | must not match |
+| `split-button-has-a-trailing-menu-trigger` | forbid | `.split-button:not(:has(> .menu-trigger))` | must not match |
+| `split-button-trigger-names-its-menu` | forbid | `.split-button > .menu-trigger:not([data-target]):not([href])` | must not match |
+| `split-button-trailing-icon-hidden` | require-attr | `.split-button > .menu-trigger :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+| `split-button-expanded-is-not-authored` | forbid | `.split-button [aria-expanded]` | must not match |
+
+- **split-button-is-not-an-authored-composite-widget** - A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role.
+- **split-button-halves-are-controls** - A split button is exactly two controls and the menu one of them opens: a <button>, or an <a class="button" href> when it navigates. A wrapper element is refused too - the seam, the insets and the larger trailing icon are all written against direct children, so a nested <div> loses every one of them.
+- **split-button-has-a-trailing-menu-trigger** - The trailing half is the whole point: it opens a menu of actions related to the leading one. Without `.menu-trigger` on it there is no menu, and the pair is a lone button with a chevron glued to it - write two buttons, or one. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature.
+- **split-button-trigger-names-its-menu** - Menu finds its surface through `data-target` on the trigger, falling back to an `href` fragment. A `.menu-trigger` with neither initializes against no element: it gets aria-haspopup and aria-expanded it will never change, which is a promise of a menu that does not exist.
+- **split-button-trailing-icon-hidden** - The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
+- **split-button-expanded-is-not-authored** - Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
 
 ### tabs
 

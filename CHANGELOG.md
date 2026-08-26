@@ -16,6 +16,38 @@ below is the whole story for that component.
 
 ### Added
 
+- **Split button** (`div.split-button`, the five button sizes), one of M3
+  Expressive's headline components. One action the user will take most of the
+  time, next to a menu of the ones they might take instead: a leading button
+  and a trailing `.menu-trigger`, 2dp apart, round on the outside, square-ish
+  on the seam between them.
+
+  M3 states this as **five token families**
+  (`md.comp.split-button.{xsmall…xlarge}`, DSP 34.0.21). They collapse to one
+  family here the way the button's own ladder does - the size class rewrites
+  the tokens and the two halves map them onto the button tokens once. The
+  height, the leading half's outer inset and the outline width are the button
+  ladder's own, so they are not restated; `between-space` is 2dp in all five
+  families, so it is written once.
+
+  **There is no new script.** The trailing half *is* a Menu trigger, so
+  `AutoInit()` starts it, `data-target` names the surface, and Menu's keyboard
+  model is unchanged. `aria-expanded` is Menu's to write (SEMANTICS rule 1),
+  which is what lets the expanded shape - the chevron turned over, the seam
+  swollen to fully round - be drawn from a selector alone. Never author it: the
+  shape is drawn from the attribute, so an authored `"true"` draws an open split
+  button over a closed menu.
+
+  **The halves are matched with `:where()`, not `:is()`.** `:is()` takes the
+  specificity of its heaviest argument, and `a.button` put the hover morph one
+  class above the expanded rule - so hovering an open split button collapsed the
+  seam Material says stays round for as long as the menu is up.
+
+  The container declares no role. `toolbar` is *rejected* rather than withheld:
+  the two halves are independent commands reached with Tab, so there is no
+  arrow-key model to write. The one composite widget here is the `<menu>`, and
+  Menu owns its contract.
+
 - **Button groups** (`div.button-group`, `.connected`, the five button sizes),
   one of M3 Expressive's headline components. A row of
   related buttons that reads as one control without becoming one: standard
@@ -679,6 +711,13 @@ below is the whole story for that component.
   of media.
 
 ### Fixed
+
+- **A menu opened from a split button is sized to its own content.**
+  `constrainWidth` matches the surface to its trigger, which assumes the trigger
+  is the control - and a split button's is a chevron in a 48dp box beside the
+  action it belongs to. Every such menu was pinned at the surface's own 112dp
+  floor with every item wrapped. Material sizes a split button's menu to its
+  content, so the option steps aside inside one.
 
 - **The renames reached the styling and stopped short of the behaviour.** The
   Sass alias made `.navigation-drawer-fixed` *look* docked while the component

@@ -794,9 +794,16 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
     //this._moveMenu(closestOverflowParent);
 
-    // Set width before calculating positionInfo
+    // Set width before calculating positionInfo. Both callers reset the
+    // positioning styles first, so this reads the surface's natural width.
     const natural = this.menuEl.getBoundingClientRect().width;
-    const idealWidth = this.options.constrainWidth
+    // Matching the trigger's width assumes the trigger is the control - which
+    // a split button's is not. Its trigger is a chevron in a 48dp box beside
+    // the action it belongs to, so the constraint pinned every such menu at
+    // the surface's own 112dp floor and wrapped every item in it. Material
+    // sizes a split button's menu to its content, so the option steps aside.
+    const constrain = this.options.constrainWidth && !this.el.closest('.split-button');
+    const idealWidth = constrain
       ? this.el.getBoundingClientRect().width
       : Math.min(280, Math.max(112, natural));
     this.menuEl.style.width = idealWidth + 'px';

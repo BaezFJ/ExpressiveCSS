@@ -223,6 +223,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 | Secondary action next to a filled button | **Tonal** or **outlined** button |
 | Action inside a dialog, card, or snackbar | **Text button** |
 | Minor action, no room for a label | **Icon button** (`circle`) + tooltip |
+| One usual action plus a few related ones | **Split button** (`.split-button`), not a button beside a separate icon button |
 | Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
 | Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked), or a **bottom app bar** on compact |
 | Smart / automated action, or a filter / input token | **Chip** (see chip types) |
@@ -694,6 +695,24 @@ The `vibrant` *attribute* is the emphasis foundation, not this class: its ramp i
 **Placement.** Floating: over the content, often bottom-center or next to a FAB; 16 dp from the viewport edge, 24 dp when vertical. Docked: bottom of the window only. 48 dp targets; don't pack too many controls.
 
 **Adaptive.** Compact: keep to a handful of icon buttons. Expanded+: labels may appear. If a navigation bar is present, use a floating toolbar or no toolbar, never a docked one.
+
+---
+
+## 5.5 Split button
+
+**M3:** Split button (five sizes; Compose ships it as `SplitButtonLayout`). **ExpressiveCSS:** `div.split-button` holding two buttons — a leading action and a trailing `.menu-trigger` that opens a `<menu>`. Sizes `xsmall` / `small` (default) / `medium` / `large` / `xlarge` on the container. `AutoInit()` starts the menu; the component itself has no script.
+
+**Use when** one action is right most of the time and a few related ones are worth reaching in one place: Save / save as / export, Reply / reply all / forward, Share / copy link.
+
+**Don't use when** the actions are peers — that is a **button group**, or a **toolbar**. Don't use it when the trailing menu would hold one item, and never build it out of a button placed beside a separate icon button: the two halves are one shape with one seam, and a gap of anything but 2 dp reads as two controls.
+
+**Anatomy.** Leading button (label, optional leading icon) + 2 dp seam + trailing button (a chevron, `aria-hidden`, with an `aria-label` on the button naming what the menu holds). The outside of the pair is fully round; the seam is 4 dp at the three smaller sizes, 8 dp at `large`, 12 dp at `xlarge`.
+
+**States.** Hovering or pressing a half swells that half's inner corner. Opening the menu turns the chevron over and swells the seam to fully round, so the pair reads as two separated buttons while the menu is up. Both are drawn from `aria-expanded`, which Menu writes — **never author it**.
+
+**Style.** Both halves take the same style class (`tonal`, `outlined`, `elevated`, `text`); mixing them breaks the single shape.
+
+**Semantics.** No composite role: the two halves are two Tab stops. The `<menu>` carries the only keyboard model here, and Menu owns it.
 
 ---
 
@@ -1279,7 +1298,6 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 
 | M3 component | Substitute in ExpressiveCSS |
 | --- | --- |
-| Split button | Filled button + a separate `menu-trigger` icon button. Do not glue them into a fake split control. |
 | FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
 | Loading indicator (wavy morphing) | Circular `.progress` spinner. |
 
@@ -1348,6 +1366,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Icon button | `button.circle` | Icon + `aria-label` | — |
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
 | FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
+| Split button | `div.split-button` | Leading button + `.menu-trigger[data-target]` + `menu#id` | `aria-expanded` (framework) |
 | Toolbar | `div.toolbar` | Action buttons | `.active` |
 | Bottom app bar | `div.bottom-app-bar` | 3–4 icon buttons + `aria-label`; optional trailing FAB | — |
 | Card | `article` | Anything; heading + body typical; optional direct `.primary-action` link | `.dragged`; `aria-disabled` on primary action |

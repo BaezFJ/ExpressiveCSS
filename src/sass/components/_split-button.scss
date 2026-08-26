@@ -1,0 +1,174 @@
+@use "sass:map";
+@use "../abstracts" as *;
+
+// Split buttons.
+//
+// Anatomy is the HTML. A <div class="split-button"> holding two buttons: a
+// leading one that performs the action, and a trailing `.menu-trigger` that
+// opens a <menu> of related ones. They sit 2dp apart, the outside of the pair
+// is round, and the seam between them is square-ish until something happens
+// to it.
+//
+// Both halves are ordinary buttons, so every style class works on them and
+// nothing here restates a colour. What this partial owns is the pair: the
+// seam, the two insets that differ from a lone button's, and the larger
+// trailing icon.
+//
+// No composite role is declared. The two halves are two Tab stops doing two
+// different things - `toolbar` and its nine siblings promise an arrow-key
+// model this is not (SEMANTICS rule 2). The menu the trailing half opens has
+// its own keyboard contract, which Menu implements and owns.
+//
+// `aria-expanded` on the trailing half is Menu's to write, not the author's
+// (SEMANTICS rule 1) - which is exactly why the expanded shape can be drawn
+// from a selector with no script of this component's own.
+//
+// Tokens are md.comp.split-button.{xsmall … xlarge} (DSP 34.0.21). Five
+// families collapse to one here the way the button's own ladder does: the
+// size class rewrites the tokens and the two halves map them onto the button
+// tokens once, below.
+//
+//   size     height  lead-start  lead-end  trail-space  trail-icon  inner  swollen
+//   xsmall     32        12         10          13          22        4       8
+//   small      40        16         12          13          22        4      12
+//   medium     56        24         24          15          26        4      12
+//   large      96        48         48          29          38        8      20
+//   xlarge    136        64         64          43          50       12      20
+//
+// `lead-start` is the button ladder's own `space` at every size, so it is not
+// restated - `button-size()` sets it and the leading half keeps it. Only the
+// inset facing the seam is the split button's, and only at the two smallest
+// sizes does it actually differ. `between-space` is 2dp in all five families,
+// so it is written once for the same reason.
+
+// The two halves. The trailing one *is* the menu trigger: `.menu-trigger`
+// with a target is the JS contract Menu claims, and a split button whose
+// trailing half opened nothing would be a lone button with a decoration
+// glued to it. semantics.json enforces that.
+//
+// `:where()`, not `:is()`: `:is()` takes the specificity of its heaviest
+// argument, so `a.button` would make `> $_half:hover` a class heavier than
+// `> $_trail[aria-expanded]` - and hovering an open split button would
+// collapse the seam Material says stays round for as long as the menu is up.
+$_lead: ":where(button, a.button):not(.menu-trigger)";
+$_trail: ".menu-trigger";
+$_half: ":where(button, a.button)";
+
+// md.comp.split-button.<size>.{leading-button.trailing-space,
+// trailing-button.leading-space, trailing.icon-size, inner-corner,
+// inner-pressed-corner}. The hovered and pressed inner corners are the same
+// value in all five families, so one token carries both states.
+$_sizes: (
+  "xsmall": (lead-end: 10px, trail-space: 13px, trail-icon: 22px, inner: 4px, swollen: 8px),
+  "small": (lead-end: 12px, trail-space: 13px, trail-icon: 22px, inner: 4px, swollen: 12px),
+  "medium": (lead-end: 24px, trail-space: 15px, trail-icon: 26px, inner: 4px, swollen: 12px),
+  "large": (lead-end: 48px, trail-space: 29px, trail-icon: 38px, inner: 8px, swollen: 20px),
+  "xlarge": (lead-end: 64px, trail-space: 43px, trail-icon: 50px, inner: 12px, swollen: 20px),
+);
+
+@mixin _split-size($name) {
+  $s: map.get($_sizes, $name);
+
+  --md-comp-split-button-leading-button-trailing-space: #{map.get($s, lead-end)};
+  --md-comp-split-button-trailing-button-space: #{map.get($s, trail-space)};
+  --md-comp-split-button-trailing-icon-size: #{map.get($s, trail-icon)};
+  --md-comp-split-button-inner-corner-corner-size: #{map.get($s, inner)};
+  --md-comp-split-button-inner-pressed-corner-corner-size: #{map.get($s, swollen)};
+}
+
+.split-button {
+  --md-comp-split-button-between-space: 2px;
+  --md-comp-split-button-container-shape: 9999px;
+
+  @include button-size("small");
+  @include _split-size("small");
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--md-comp-split-button-between-space);
+
+  // The size axis. Height, icon size, the leading inset and the outline width
+  // are the button ladder's, so `button-size()` sets them on the container and
+  // both halves inherit; the five values that are the split button's own are
+  // beside it. The type role cannot travel that way - `btn` states a font-size
+  // of its own - so it is set on the halves.
+  @each $name, $s in $button-sizes {
+    &.#{$name} {
+      @include button-size($name);
+      @include _split-size($name);
+
+      > #{$_half} {
+        @include typescale(map.get($s, label));
+      }
+    }
+  }
+
+  // The seam goes through a variable so that hovering, pressing or opening
+  // changes one value rather than restating `border-radius`. A shorthand under
+  // `:hover` would take the round outer corners with it, which is the bug
+  // `_button-groups.scss` records.
+  > #{$_half} {
+    --_inner: var(--md-comp-split-button-inner-corner-corner-size);
+
+    transition: border-radius .2s ease-out, background-color .2s ease-out;
+
+    // M3 gives hovered and pressed the same swollen corner.
+    &:hover,
+    &:active {
+      --_inner: var(--md-comp-split-button-inner-pressed-corner-corner-size);
+    }
+  }
+
+  // Logical, so the outside of the pair is the outside of the pair in RTL too:
+  // the flex row reverses and start follows it.
+  > #{$_lead} {
+    --md-comp-filled-button-trailing-space: var(--md-comp-split-button-leading-button-trailing-space);
+
+    border-start-start-radius: var(--md-comp-split-button-container-shape);
+    border-end-start-radius: var(--md-comp-split-button-container-shape);
+    border-start-end-radius: var(--_inner);
+    border-end-end-radius: var(--_inner);
+  }
+
+  > #{$_trail} {
+    // Symmetric, and narrower than a lone button's - the trailing half is a
+    // glyph in a box, not a label. The width falls out of the two insets and
+    // the icon: 48dp at the two smallest sizes, square at the three largest.
+    --md-comp-filled-button-leading-space: var(--md-comp-split-button-trailing-button-space);
+    --md-comp-filled-button-trailing-space: var(--md-comp-split-button-trailing-button-space);
+    // `_buttons.scss` sizes a button's icon from this token, so rewriting it
+    // here is the whole of the override. M3 draws the trailing glyph larger
+    // than the button ladder's icon at every size (22 against 20, up to 50
+    // against 40).
+    --md-comp-filled-button-icon-size: var(--md-comp-split-button-trailing-icon-size);
+
+    border-start-end-radius: var(--md-comp-split-button-container-shape);
+    border-end-end-radius: var(--md-comp-split-button-container-shape);
+    border-start-start-radius: var(--_inner);
+    border-end-start-radius: var(--_inner);
+
+    // Activation. md.comp.split-button.<size>.trailing.inner-selected-corner
+    // is 50%, which on a pill is the container shape - so the pair reads as
+    // two separated round buttons for as long as the menu is open. Menu writes
+    // the attribute; nothing here is scripted.
+    &[aria-expanded="true"] {
+      --_inner: var(--md-comp-split-button-container-shape);
+    }
+
+    > #{$icon} {
+      transition: transform .2s ease-out;
+    }
+
+    &[aria-expanded="true"] > #{$icon} {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// The corner morph and the spin are the only motion this component has.
+@media (prefers-reduced-motion: reduce) {
+  .split-button > #{$_half},
+  .split-button > #{$_trail} > #{$icon} {
+    transition: none;
+  }
+}
