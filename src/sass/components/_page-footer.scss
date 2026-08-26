@@ -35,7 +35,7 @@ footer:not(:has(> .navigation-bar:only-child)) {
     @include typescale("body-medium");
   }
 
-  a:not(.button, .circle, .extra) {
+  a:not(.button, .icon-button, .circle, .extra) {
     color: var(--md-sys-color-primary);
     text-decoration: none;
     @include focus-visible;
@@ -100,8 +100,8 @@ footer:not(:has(> nav:only-child)) :is(nav, section) {
   min-width: 0;
 }
 
-footer:not(:has(> nav:only-child)) nav > a:not(.button, .circle, .extra),
-footer:not(:has(> nav:only-child)) ul a:not(.button, .circle, .extra) {
+footer:not(:has(> nav:only-child)) nav > a:not(.button, .icon-button, .circle, .extra),
+footer:not(:has(> nav:only-child)) ul a:not(.button, .icon-button, .circle, .extra) {
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
@@ -135,7 +135,7 @@ footer:not(:has(> nav:only-child)) > .container > small:last-child {
   color: var(--md-sys-color-on-surface-variant);
   @include typescale("body-small");
 
-  a:not(.button) {
+  a:not(.button, .icon-button) {
     color: var(--md-sys-color-primary);
   }
 }

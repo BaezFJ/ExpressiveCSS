@@ -59,7 +59,7 @@
     padding var(--md-comp-nav-rail-duration) ease;
 
   // Menu toggle.
-  > button:not(.button):first-child {
+  > button:not(.button, .icon-button):first-child {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -115,8 +115,8 @@
   }
 
   // Destinations.
-  > a:not(.button),
-  > button:not(.button):not(:first-child) {
+  > a:not(.button, .icon-button),
+  > button:not(.button, .icon-button):not(:first-child) {
     position: relative;
     display: flex;
     flex: 0 0 auto;
@@ -197,7 +197,7 @@
     min-width: 220px;
     padding-inline: 16px;
 
-    > button:not(.button):first-child {
+    > button:not(.button, .icon-button):first-child {
       justify-content: flex-start;
       width: auto;
       padding-inline: 16px;
@@ -220,8 +220,8 @@
       }
     }
 
-    > a:not(.button),
-    > button:not(.button):not(:first-child) {
+    > a:not(.button, .icon-button),
+    > button:not(.button, .icon-button):not(:first-child) {
       flex-direction: row;
       justify-content: flex-start;
       gap: 12px;

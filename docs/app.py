@@ -80,6 +80,7 @@ NAV = [
     ]),
     _group('Components', 'widgets', [
         ('buttons', 'Buttons'),
+        ('icon_buttons', 'Icon buttons'),
         ('floating_action_button', 'FAB'),
         ('cards', 'Cards'),
         ('lists', 'Lists'),
@@ -326,6 +327,12 @@ def scrollspy():
 @app.route('/buttons.html')
 def buttons():
     return render_template('components/buttons.html')
+
+
+@app.route('/icon-buttons')
+@app.route('/icon-buttons.html')
+def icon_buttons():
+    return render_template('components/icon-buttons.html')
 
 
 @app.route('/floating-action-button')

@@ -48,6 +48,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Lists
 - Floating Action Button
 - Footer
+- Icon buttons
 - Icons
 - Navbar
 - Navigation bar
@@ -1787,7 +1788,7 @@ Create Create
 
 ### Icon buttons
 
-Add `circle` for a 40dp icon button. The variant helpers still apply: default is filled, `text` is the standard (transparent) icon button, `tonal` and `outlined` match the common-button colors.
+`.icon-button` is its own component, documented below. `circle` on a common button is the older 40dp icon button and still works: default is filled, `text` is the standard (transparent) one, `tonal` and `outlined` match the common-button colors.
 
 ```html
 <button class="circle" aria-label="Add">
@@ -1857,6 +1858,60 @@ Filled Tonal Outlined Text
 <button disabled>Filled</button>
 <button class="tonal" disabled>Tonal</button>
 <a class="button disabled" href="#!">Link</a>
+```
+
+---
+
+## Icon buttons
+
+One action as one icon. Add `icon-button` to a `<button>`, or to an `<a>` when it navigates, and put a single `<span class="material-symbols" aria-hidden="true">` inside. The icon is hidden, so `aria-label` is the only name the control has — an icon button without one fails the semantics suite.
+
+It is a component, not a modifier on the common button: M3 gives it its own token families (`md.comp.icon-button.{xsmall…xlarge}` and `md.comp.icon-button-{standard,filled,tonal,outlined}`), so `.icon-button` takes none of the common-button geometry. Do not write `class="button icon-button"`.
+
+```html
+<button type="button" class="icon-button" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+
+<a class="icon-button" href="/inbox" aria-label="Inbox">
+  <span class="material-symbols" aria-hidden="true">inbox</span>
+</a>
+```
+
+### Styles
+
+Four, and the modifier names are the common button's. Standard is the default — no container, `on-surface-variant` icon. `filled` is `primary` / `on-primary`, `tonal` is `secondary-container` / `on-secondary-container`, `outlined` is an `outline-variant` border with no fill. M3 gives icon buttons no elevated style, and `text` is what standard already is, so neither class exists here.
+
+```html
+<button type="button" class="icon-button filled" aria-label="Add">…</button>
+<button type="button" class="icon-button tonal" aria-label="Add">…</button>
+<button type="button" class="icon-button outlined" aria-label="Add">…</button>
+```
+
+### Sizes, width and shape
+
+Five sizes: `xsmall` (32dp container, 20dp icon), the default 40dp/24dp needing no class, `medium` (56/24), `large` (96/32) and `xlarge` (136/40). They compose with the styles.
+
+Width is the inset plus the icon rather than a size of its own, which is why every size's default width equals its height. `narrow` tightens the inset, `wide` opens it up, and both follow whichever size they are on.
+
+`square` swaps the round container for the squared one — a 12dp corner on the two small sizes, 16dp on medium, 28dp on the two large ones. Either shape tightens its corner while pressed; that morph is Material 3 Expressive's, and it is CSS, with no script behind it.
+
+```html
+<button type="button" class="icon-button tonal large" aria-label="Add">…</button>
+<button type="button" class="icon-button medium narrow" aria-label="Add">…</button>
+<button type="button" class="icon-button filled square" aria-label="Add">…</button>
+```
+
+### Disabled and tokens
+
+`disabled` on the `<button>`: the icon drops to `on-surface` at 38%, and a style with a container drops that to 10%. An `<a href>` cannot be disabled and no class makes it so — `pointer-events: none` stops the pointer only, leaving the link in the tab order and still navigable by Enter. Drop the `href`, or the link. `aria-disabled="true"` gets the same painting for an element that must stay put and announce itself as unavailable.
+
+Every value is a `--md-comp-icon-button-*` custom property — `container-height`, `icon-size`, `leading-space`, `trailing-space`, `narrow-space`, `wide-space`, `container-shape`, `container-shape-square`, `pressed-container-shape`, `outline-width`, `color`, `container-color`. The size classes are nothing but a block of those values, so overriding them is how you write a size of your own. The state layer is the icon colour mixed into the container at the `md.sys.state` opacity, so a new style is two tokens.
+
+```html
+<button type="button" class="icon-button filled" style="--md-comp-icon-button-container-height: 48px" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
 ```
 
 ---

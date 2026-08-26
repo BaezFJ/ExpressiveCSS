@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Media - ExpressiveCSS</title>
+    <title>Icon buttons - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -35,7 +35,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Media</h2>
+            <h2>Icon buttons</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -163,8 +163,8 @@
                       <li class="">
                           <a href="/buttons.html">Buttons</a>
                       </li>
-                      <li class="">
-                          <a href="/icon-buttons.html">Icon buttons</a>
+                      <li class="active">
+                          <a href="/icon-buttons.html" aria-current="page">Icon buttons</a>
                       </li>
                       <li class="">
                           <a href="/floating-action-button.html">FAB</a>
@@ -199,8 +199,8 @@
                       <li class="">
                           <a href="/carousel.html">Carousel</a>
                       </li>
-                      <li class="active">
-                          <a href="/media.html" aria-current="page">Lightbox</a>
+                      <li class="">
+                          <a href="/media.html">Lightbox</a>
                       </li>
                       <li class="">
                           <a href="/parallax.html">Parallax</a>
@@ -264,8 +264,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Media</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Lightbox and Slider for large images and slideshows.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Icon buttons</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A single icon as the whole control, in four styles and five sizes.</p>
             </div>
         </div>
     </section>
@@ -277,390 +277,283 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="lightbox" class="section scrollspy docs-section">
+  <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Media components handle large objects such as images. For responsive images and videos without JavaScript, see
-          <a href="/media-css.html">Media Styles</a>.
+          An icon button is one action expressed as one icon — the toolbar
+          overflow, the close on a dialog, the star on a row. Add
+          <code>icon-button</code> to a <code>&lt;button&gt;</code>, or to an
+          <code>&lt;a&gt;</code> when it navigates, and put a single
+          <code>&lt;span class="material-symbols"&gt;</code> inside it.
         </p>
-
-        <h3>Lightbox</h3>
         <p>
-          Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with
-          <code>lightboxed</code> and it centers and grows. Click it again, scroll, or press Escape to dismiss.
-          The image keeps the same 12px corners as <code>responsive-img</code>.
-          <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
-          <code>no-autoinit</code>.
+          The icon is decoration, so it is <code>aria-hidden</code> — which
+          leaves the control with nothing to be named by. Every icon button
+          needs an <code>aria-label</code>. That is not a suggestion here:
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">SEMANTICS.md</a>
+          enforces both halves against the docs, and a bare icon button fails
+          the suite.
         </p>
-        <img class="lightboxed responsive-img" tabindex="0" role="button" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
-<pre><code>&lt;img class="lightboxed" tabindex="0" role="button" width="650" alt="A mountain lake" src="images/sample-1.jpg"&gt;</code></pre>
-
-        <h5 class="light">Initialization</h5>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.lightboxed');
-  const instances = Expressive.Lightbox.init(elems, {
-    // specify options here
-  });
-});</code></pre>
-
-        <h5 class="light">Options</h5>
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Default</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            <tr>
-              <td><code>inDuration</code></td>
-              <td>Number</td>
-              <td><code>275</code></td>
-              <td>Open transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>outDuration</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Close transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>onOpenStart</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Called before the lightbox opens.</td>
-            </tr>
-            <tr>
-              <td><code>onOpenEnd</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Called after the lightbox opens.</td>
-            </tr>
-            <tr>
-              <td><code>onCloseStart</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Called before the lightbox closes.</td>
-            </tr>
-            <tr>
-              <td><code>onCloseEnd</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Called after the lightbox closes.</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-
-        <h5 class="light">Methods</h5>
-        
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Lightbox.getInstance(elem);</code></pre>
-
-        <h5 class="light">.open();</h5>
-        <p>Open the lightbox.</p>
-<pre><code>instance.open();</code></pre>
-        <h5 class="light">.close();</h5>
-        <p>Close the lightbox.</p>
-<pre><code>instance.close();</code></pre>
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
-
-        <h5 class="light">Properties</h5>
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>el</code></td>
-                    <td>Element</td>
-                    <td>The DOM element the plugin was initialized with.</td>
-                </tr>
-                <tr>
-                    <td><code>options</code></td>
-                    <td>Object</td>
-                    <td>The options the instance was initialized with.</td>
-                </tr>
-
-            <tr>
-              <td><code>overlayActive</code></td>
-              <td>Boolean</td>
-              <td>Whether the lightbox overlay is showing.</td>
-            </tr>
-            <tr>
-              <td><code>doneAnimating</code></td>
-              <td>Boolean</td>
-              <td>Whether the open or close animation has finished.</td>
-            </tr>
-            <tr>
-              <td><code>caption</code></td>
-              <td>String</td>
-              <td>Caption text, if specified.</td>
-            </tr>
-            <tr>
-              <td><code>originalWidth</code></td>
-              <td>Number</td>
-              <td>Original width of the image.</td>
-            </tr>
-            <tr>
-              <td><code>originalHeight</code></td>
-              <td>Number</td>
-              <td>Original height of the image.</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-
-        <h5 class="light">Captions</h5>
-        <p>Add a short caption with the <code>data-caption</code> attribute.</p>
-        <img class="lightboxed" tabindex="0" role="button" data-caption="A path through trees in a park" width="250" alt="A path through trees" src="https://picsum.photos/id/1016/800/400">
-<pre><code>&lt;img class="lightboxed" tabindex="0" role="button"
-     data-caption="A path through trees in a park"
-     width="250"
-     alt="A path through trees"
-     src="images/sample-2.jpg"&gt;</code></pre>
+        <p>
+          It keeps its own look inside the components that host actions — a
+          toolbar, an app bar, a list row, a dialog header, a snackbar, a
+          navigation rail, a pane header, a footer. Those hosts style the plain
+          controls they are given and step aside for a control that styles
+          itself, the same way they already do for <code>button</code>. A
+          navigation drawer row is the exception: every row there is one 48dp
+          shape, <code>.button</code> included.
+        </p>
+        <p>
+          This is a component in its own right, not a modifier on the common
+          button. Material 3 gives it its own token families, its own size
+          ladder and its own colours, and none of them line up with a common
+          button's. The older <code>&lt;button class="circle"&gt;</code> still
+          works and is still the 40dp common button in a round shape — see
+          <a href="/buttons.html">Buttons</a>.
+        </p>
+        <p>
+          <button type="button" class="icon-button" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button tonal" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button outlined" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </p>
+<pre><code>&lt;button type="button" class="icon-button" aria-label="Add"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+&lt;/button&gt;</code></pre>
   
       </div>
 
 
-  <div id="slider" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Slider</h3>
+  <div id="styles" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Styles</h3>
 
         <p>
-          The slider is an image slideshow. Captions transition on their own according to
-          <code>center-align</code>, <code>left-align</code>, or <code>right-align</code>.
-          Indicators appear along the bottom. Slides use the same 12px corners
-          as <code>responsive-img</code>; a <code>fullscreen</code> slider stays square.
+          Four styles, and the modifier names are the button axis's:
+          <strong>standard</strong> is the default and has no container,
+          <code>filled</code> is <code>primary</code>,
+          <code>tonal</code> is <code>secondary-container</code>, and
+          <code>outlined</code> is an <code>outline-variant</code> border with
+          no fill. Material 3 gives icon buttons no elevated style, so there is
+          no <code>elevated</code> here; <code>text</code> is what standard
+          already is.
         </p>
-        <p>
-          Slider is <strong>not</strong> in <code>AutoInit()</code>. Call
-          <code>Expressive.Slideshow.init</code> yourself after the page loads.
-          For an adaptive Material 3 visual collection, see
-          <a href="/carousel.html">Carousel</a>.
-        </p>
-        <div class="slideshow">
-          <ul class="slides">
-            <li>
-              <img src="https://picsum.photos/id/1015/800/400" alt="First slide">
-              <div class="caption center-align">
-                <h3>This is our big Tagline!</h3>
-                <h5 class="light">Here's our small slogan.</h5>
-              </div>
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/1016/800/400" alt="Second slide">
-              <div class="caption left-align">
-                <h3>Left Aligned Caption</h3>
-                <h5 class="light">Here's our small slogan.</h5>
-              </div>
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/1018/800/400" alt="Third slide">
-              <div class="caption right-align">
-                <h3>Right Aligned Caption</h3>
-                <h5 class="light">Here's our small slogan.</h5>
-              </div>
-            </li>
-            <li>
-              <img src="https://picsum.photos/id/1019/800/400" alt="Fourth slide">
-              <div class="caption center-align">
-                <h3>This is our big Tagline!</h3>
-                <h5 class="light">Here's our small slogan.</h5>
-              </div>
-            </li>
-          </ul>
-        </div>
-<pre><code>&lt;div class="slideshow"&gt;
-  &lt;ul class="slides"&gt;
-    &lt;li&gt;
-      &lt;img src="images/sample-1.jpg" alt="First slide"&gt;
-      &lt;div class="caption center-align"&gt;
-        &lt;h3&gt;This is our big Tagline!&lt;/h3&gt;
-        &lt;h5 class="light"&gt;Here's our small slogan.&lt;/h5&gt;
-      &lt;/div&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;img src="images/sample-2.jpg" alt="Second slide"&gt;
-      &lt;div class="caption left-align"&gt;
-        &lt;h3&gt;Left Aligned Caption&lt;/h3&gt;
-        &lt;h5 class="light"&gt;Here's our small slogan.&lt;/h5&gt;
-      &lt;/div&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;img src="images/sample-3.jpg" alt="Third slide"&gt;
-      &lt;div class="caption right-align"&gt;
-        &lt;h3&gt;Right Aligned Caption&lt;/h3&gt;
-        &lt;h5 class="light"&gt;Here's our small slogan.&lt;/h5&gt;
-      &lt;/div&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/div&gt;</code></pre>
-
-        <h5 class="light">Initialization</h5>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.slideshow');
-  const instances = Expressive.Slideshow.init(elems, {
-    // specify options here
-    indicatorLabelFunc: (idx, current) =&gt; {
-      let label = 'Go to slide ' + idx;
-      if (current) {
-        label = label + ' (Current)';
-      }
-      return label;
-    }
-  });
-});</code></pre>
-
-        <h5 class="light">Options</h5>
-        
         <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Default</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            <tr>
-              <td><code>indicators</code></td>
-              <td>Boolean</td>
-              <td><code>true</code></td>
-              <td>Set to <code>false</code> to hide slide indicators.</td>
-            </tr>
-            <tr>
-              <td><code>height</code></td>
-              <td>Number</td>
-              <td><code>400</code></td>
-              <td>Height of the slider, in pixels.</td>
-            </tr>
-            <tr>
-              <td><code>duration</code></td>
-              <td>Number</td>
-              <td><code>500</code></td>
-              <td>Transition animation duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>interval</code></td>
-              <td>Number</td>
-              <td><code>6000</code></td>
-              <td>Time between transitions, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>pauseOnFocus</code></td>
-              <td>Boolean</td>
-              <td><code>true</code></td>
-              <td>Pause autoslide when the slider receives keyboard focus.</td>
-            </tr>
-            <tr>
-              <td><code>pauseOnHover</code></td>
-              <td>Boolean</td>
-              <td><code>true</code></td>
-              <td>Pause autoslide when a pointer hovers the slider.</td>
-            </tr>
-            <tr>
-              <td><code>indicatorLabelFunc</code></td>
-              <td>Function</td>
-              <td><code>null</code></td>
-              <td>Builds the ARIA label for each indicator. Receives the 1-based index and a boolean that is true for the current slide. If omitted, the label is the index.</td>
-            </tr>
-  
-            </tbody>
+          <thead><tr><th>Style</th><th>Container</th><th>Icon</th><th>Use it for</th></tr></thead>
+          <tbody>
+            <tr><td>standard (default)</td><td>none</td><td><code>on-surface-variant</code></td><td>The usual case — toolbars, list rows, app bars.</td></tr>
+            <tr><td><code>filled</code></td><td><code>primary</code></td><td><code>on-primary</code></td><td>The one high-emphasis action on the screen.</td></tr>
+            <tr><td><code>tonal</code></td><td><code>secondary-container</code></td><td><code>on-secondary-container</code></td><td>Medium emphasis, without the weight of a filled one.</td></tr>
+            <tr><td><code>outlined</code></td><td>none, <code>outline-variant</code> border</td><td><code>on-surface-variant</code></td><td>Medium emphasis on a busy or image background.</td></tr>
+          </tbody>
         </table>
-
-
-        <h5 class="light">Methods</h5>
-        
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Slider.getInstance(elem);</code></pre>
-
-        <h5 class="light">.pause();</h5>
-        <p>Pause slider autoslide.</p>
-<pre><code>instance.pause();</code></pre>
-        <h5 class="light">.start();</h5>
-        <p>Start slider autoslide.</p>
-<pre><code>instance.start();</code></pre>
-        <h5 class="light">.next();</h5>
-        <p>Move to the next slide.</p>
-<pre><code>instance.next();</code></pre>
-        <h5 class="light">.prev();</h5>
-        <p>Move to the previous slide.</p>
-<pre><code>instance.prev();</code></pre>
-        <h5 class="light">.set();</h5>
-        <p>Move to a specific slide by 0-based index. Values wrap around the ends.</p>
-<pre><code>instance.set(2);</code></pre>
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
-
-        <h5 class="light">Properties</h5>
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>el</code></td>
-                    <td>Element</td>
-                    <td>The DOM element the plugin was initialized with.</td>
-                </tr>
-                <tr>
-                    <td><code>options</code></td>
-                    <td>Object</td>
-                    <td>The options the instance was initialized with.</td>
-                </tr>
-
-            <tr>
-              <td><code>activeIndex</code></td>
-              <td>Number</td>
-              <td>Index of the current slide.</td>
-            </tr>
-            <tr>
-              <td><code>eventPause</code></td>
-              <td>Boolean</td>
-              <td>Whether the slider is paused by a focus or hover event.</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-
-        <h5 class="light">Fullscreen Slider</h5>
-        <p>
-          Add <code>fullscreen</code> to the slider so it fills its positioned ancestor
-          (typically the viewport if that ancestor is the page). There is no separate demo page —
-          the class is <code>fullscreen</code> on <code>.slideshow</code>.
-        </p>
-<pre><code>&lt;div class="slideshow fullscreen"&gt;
-  &lt;ul class="slides"&gt;...&lt;/ul&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;button type="button" class="icon-button" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button filled" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button tonal" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button outlined" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
   
       </div>
 
+
+  <div id="sizes" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Sizes</h3>
+
+        <p>
+          Five sizes. <code>small</code> is the default at 40dp with a 24dp
+          icon, so it needs no class. The rest are
+          <code>xsmall</code> (32dp, 20dp icon),
+          <code>medium</code> (56dp, 24dp),
+          <code>large</code> (96dp, 32dp) and
+          <code>xlarge</code> (136dp, 40dp). They compose with the styles:
+          <code>class="icon-button tonal large"</code>.
+        </p>
+        <p>
+          <button type="button" class="icon-button filled xsmall" aria-label="Add, extra small">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled" aria-label="Add, small">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled medium" aria-label="Add, medium">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled large" aria-label="Add, large">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled xlarge" aria-label="Add, extra large">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </p>
+<pre><code>&lt;button type="button" class="icon-button filled xsmall" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button filled" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button filled medium" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button filled large" aria-label="Add"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button filled xlarge" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="width" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Width</h3>
+
+        <p>
+          Width is the inset plus the icon, not a size of its own — which is
+          why the default width of every size equals its height, and why a
+          round icon button is a circle without being told to be one. Add
+          <code>narrow</code> to tighten the inset or <code>wide</code> to open
+          it up; both follow whichever size they are on.
+        </p>
+        <p>
+          <button type="button" class="icon-button tonal medium narrow" aria-label="Star, narrow">
+            <span class="material-symbols" aria-hidden="true">star</span>
+          </button>
+          <button type="button" class="icon-button tonal medium" aria-label="Star, default width">
+            <span class="material-symbols" aria-hidden="true">star</span>
+          </button>
+          <button type="button" class="icon-button tonal medium wide" aria-label="Star, wide">
+            <span class="material-symbols" aria-hidden="true">star</span>
+          </button>
+        </p>
+<pre><code>&lt;button type="button" class="icon-button tonal medium narrow" aria-label="Star"&gt;…&lt;/button&gt;
+&lt;button type="button" class="icon-button tonal medium wide" aria-label="Star"&gt;…&lt;/button&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="shape" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Shape</h3>
+
+        <p>
+          Round by default. Add <code>square</code> for the squared container,
+          whose corner grows with the size — 12dp on the two small sizes, 16dp
+          on medium, 28dp on the two large ones. Either way the corner tightens
+          while the button is pressed, which is the Material 3 Expressive shape
+          morph.
+        </p>
+        <p>
+          <button type="button" class="icon-button filled square" aria-label="Edit, square">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" class="icon-button filled medium square" aria-label="Edit, medium square">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" class="icon-button filled large square" aria-label="Edit, large square">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+        </p>
+<pre><code>&lt;button type="button" class="icon-button filled square" aria-label="Edit"&gt;…&lt;/button&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="disabled" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Disabled</h3>
+
+        <p>
+          <code>disabled</code> on the <code>&lt;button&gt;</code>. The icon
+          drops to <code>on-surface</code> at 38%, and a style that has a
+          container drops it to 10%.
+        </p>
+        <p>
+          <strong>An <code>&lt;a href&gt;</code> cannot be disabled, and no
+          class makes it so.</strong> <code>pointer-events: none</code> stops
+          the pointer and nothing else: the link stays in the tab order and
+          still navigates on Enter, so a <code>.disabled</code> anchor is a
+          control that looks inert and is not. Drop the <code>href</code> — an
+          anchor without one is neither focusable nor actionable — or drop the
+          link entirely. <code>aria-disabled="true"</code> is styled the same
+          way for the case where the element must stay in the document and
+          announce itself as unavailable.
+        </p>
+        <p>
+          <button type="button" class="icon-button" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button tonal" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button outlined" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </p>
+<pre><code>&lt;button type="button" class="icon-button filled" aria-label="Add" disabled&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="links" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">As a link</h3>
+
+        <p>
+          An icon button that navigates is an <code>&lt;a&gt;</code>. Note it
+          takes <code>icon-button</code> alone — not <code>button</code> as
+          well, which is the common button's class.
+        </p>
+        <p>
+          <a class="icon-button outlined" href="/buttons.html" aria-label="Open the Buttons page">
+            <span class="material-symbols" aria-hidden="true">open_in_new</span>
+          </a>
+        </p>
+<pre><code>&lt;a class="icon-button outlined" href="/buttons" aria-label="Open the Buttons page"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;open_in_new&lt;/span&gt;
+&lt;/a&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
+
+        <p>
+          Set these on the control, or on an ancestor to reach a group of them.
+          The size classes are nothing but a block of these values, so an
+          override is a size of your own.
+        </p>
+        
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr><td><code>--md-comp-icon-button-container-height</code></td><td><code>40px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-leading-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-trailing-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-narrow-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-wide-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-container-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-container-shape-square</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-pressed-container-shape</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-outline-width</code></td><td><code>1px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-container-color</code></td><td><code>transparent</code></td></tr>
+        
+            </tbody>
+        </table>
+
+        <p>
+          The state layer is always the icon colour mixed into the container at
+          the <a href="/state-layers.html">state layer</a> opacity,
+          so those two colour tokens are all a new style needs.
+        </p>
+  
+      </div>
 
 
     </div>
@@ -670,8 +563,14 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#lightbox">Lightbox</a></li>
-          <li><a href="#slider">Slider</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#styles">Styles</a></li>
+          <li><a href="#sizes">Sizes</a></li>
+          <li><a href="#width">Width</a></li>
+          <li><a href="#shape">Shape</a></li>
+          <li><a href="#disabled">Disabled</a></li>
+          <li><a href="#links">As a link</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 

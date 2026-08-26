@@ -437,7 +437,7 @@ Utilities are emitted **after** components now, and win by layer order rather th
 
 Two hard invariants, both learned from bugs:
 
-- **Partials import `abstracts` and nothing else** (`@use "../abstracts" as *;`, one line, every file). `abstracts/` must never emit a selector.
+- **Partials import `abstracts` and nothing else** (`@use "../abstracts" as *;`, one line, every file). That means no second *project-local* `@use`, which is what `src/sass/README.md` states and what keeps `expressive.scss` the only place cascade order is decided; a Sass built-in (`sass:map`, `sass:math`) is not a partial and carries no CSS, so it does not count — `utilities/_z-depth.scss` and `components/_icon-buttons.scss` both take one. `abstracts/` must never emit a selector.
 - **No `@extend` across files.** `@extend` only resolves if the extending file loads the defining module, which is why components used to `@use` CSS-emitting files and let the dependency graph — not the entry point — decide output position. Use `@include z-depth("1")` or write the declaration directly. Same-file `@extend` and placeholders are fine.
 
 Two color systems coexist:

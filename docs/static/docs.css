@@ -160,7 +160,7 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
 .docs-page-content
   .docs-section
   > :is(p, ul, ol, blockquote)
-  a:not(.button, menu a) {
+  a:not(.button, .icon-button, menu a) {
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.18em;

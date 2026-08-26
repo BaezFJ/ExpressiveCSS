@@ -68,7 +68,7 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
 
   // Actions — transparent at rest so they sit on the container, not filled.
   // .extra is the 56dp companion FAB; leave it alone.
-  > :is(a, button):not(.extra) {
+  > :is(a, button):not(.extra, .icon-button) {
     box-sizing: border-box;
     display: inline-flex;
     flex: 0 0 auto;
@@ -121,14 +121,14 @@ $_toolbar: ":is(nav.toolbar, .toolbar:not(.fixed-action-btn):not(.fab))";
   }
 
   // Icon-only - .circle, or an icon with no label beside it.
-  > :is(a, button):not(.extra):is(.circle, :has(> #{$icon}):not(:has(> #{$icon-label}))) {
+  > :is(a, button):not(.extra, .icon-button):is(.circle, :has(> #{$icon}):not(:has(> #{$icon-label}))) {
     width: var(--md-comp-toolbar-action-size);
     padding: 0;
     border-radius: 50%;
   }
 
   // Emphasized action (the in-bar FAB). 48dp, 16dp corners, primary.
-  > :is(a, button).filled:not(.extra) {
+  > :is(a, button).filled:not(.extra, .icon-button) {
     background-color: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
     border-radius: 16px;

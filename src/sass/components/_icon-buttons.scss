@@ -1,0 +1,194 @@
+@use "sass:map";
+@use "../abstracts" as *;
+
+// Icon buttons.
+//
+// Its own component, not a modifier on the common button: M3 gives it nine
+// token families of its own — md.comp.icon-button.{xsmall…xlarge} for the size
+// ladder and md.comp.icon-button-{standard,filled,tonal,outlined} for the
+// colours — and neither the sizes nor the colours line up with a common
+// button's. `.icon-button` is listed in `$_not-btn` in `_buttons.scss` for
+// exactly that reason, so none of the common-button geometry reaches it.
+//
+// The 40dp `.button.circle` icon button is untouched. It stays what it always
+// was: a common button wearing a round shape.
+//
+// Hosts step aside for it. A component that styles its own child controls
+// already lets a control that styles itself opt out - that is what `.button` is
+// doing in those `:not()` lists - and `.icon-button` is now in every one of
+// them (toolbar, app bar, list row, dialog, snackbar, rail, panes, footer,
+// side sheet). `tests/icon-buttons.test.js` keeps the lists in step; the member
+// goes inside the existing `:not()` argument list, never chained after it, so
+// the host rule stays exactly as specific as it was.
+//
+// The navigation drawer is the deliberate exception. Its `$_row` geometry has
+// no opt-out for `.button` either: every row in a drawer is one shape, and
+// carving an icon button out of that is the drawer's decision to make, not
+// this component's.
+//
+// Anatomy is the HTML — one control, one icon, and the name on the control.
+// The icon is decoration (`aria-hidden`), so `aria-label` is the only name the
+// control has; `semantics.json` enforces both halves of that.
+//
+// Tokens (M3 md.comp.icon-button.*, DSP 34.0.21):
+//
+//   size     height  icon  space  narrow  wide  square  pressed  outline
+//   xsmall     32     20     6      4      10     12       8        1
+//   small      40     24     8      4      14     12       8        1  <- default
+//   medium     56     24    16     12      24     16      12        1
+//   large      96     32    32     16      48     28      16        2
+//   xlarge    136     40    48     32      72     28      16        3
+//
+// Width is not a token: it is leading + icon + trailing. That is why every
+// size's default width equals its height, and why `.narrow` / `.wide` need
+// nothing but a different inset.
+$_sizes: (
+  "xsmall": (height: 32px, icon: 20px, space: 6px, narrow: 4px, wide: 10px, square: 12px, pressed: 8px, outline: 1px),
+  "small": (height: 40px, icon: 24px, space: 8px, narrow: 4px, wide: 14px, square: 12px, pressed: 8px, outline: 1px),
+  "medium": (height: 56px, icon: 24px, space: 16px, narrow: 12px, wide: 24px, square: 16px, pressed: 12px, outline: 1px),
+  "large": (height: 96px, icon: 32px, space: 32px, narrow: 16px, wide: 48px, square: 28px, pressed: 16px, outline: 2px),
+  "xlarge": (height: 136px, icon: 40px, space: 48px, narrow: 32px, wide: 72px, square: 28px, pressed: 16px, outline: 3px),
+);
+
+@mixin _size($name) {
+  $s: map.get($_sizes, $name);
+
+  --md-comp-icon-button-container-height: #{map.get($s, height)};
+  --md-comp-icon-button-icon-size: #{map.get($s, icon)};
+  --md-comp-icon-button-leading-space: #{map.get($s, space)};
+  --md-comp-icon-button-trailing-space: #{map.get($s, space)};
+  --md-comp-icon-button-narrow-space: #{map.get($s, narrow)};
+  --md-comp-icon-button-wide-space: #{map.get($s, wide)};
+  --md-comp-icon-button-container-shape-square: #{map.get($s, square)};
+  --md-comp-icon-button-pressed-container-shape: #{map.get($s, pressed)};
+  --md-comp-icon-button-outline-width: #{map.get($s, outline)};
+}
+
+// Standard is the default style: no container, `on-surface-variant` icon. Every
+// other style is two tokens.
+.icon-button {
+  @include _size("small");
+
+  --md-comp-icon-button-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-icon-button-container-color: transparent;
+  --md-comp-icon-button-container-shape: 9999px;
+
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  height: var(--md-comp-icon-button-container-height);
+  padding-block: 0;
+  padding-inline: var(--md-comp-icon-button-leading-space)
+    var(--md-comp-icon-button-trailing-space);
+  border: none;
+  border-radius: var(--md-comp-icon-button-container-shape);
+  color: var(--md-comp-icon-button-color);
+  background-color: var(--md-comp-icon-button-container-color);
+  text-decoration: none;
+  cursor: pointer;
+  outline: 0;
+  user-select: none;
+  appearance: none;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s ease-out, border-radius .2s ease-out;
+
+  > #{$icon} {
+    flex: 0 0 auto;
+    font-size: var(--md-comp-icon-button-icon-size);
+    width: var(--md-comp-icon-button-icon-size);
+    height: var(--md-comp-icon-button-icon-size);
+    line-height: var(--md-comp-icon-button-icon-size);
+    color: inherit;
+    overflow: hidden;
+  }
+
+  // The state layer is the icon colour mixed into the container, whatever the
+  // style set those two to - `transparent` included, which is how a standard
+  // icon button gets a translucent tint instead of an opaque one.
+  @each $state, $selector in ("hover": "&:hover", "focus": "&:focus", "pressed": "&:active") {
+    #{$selector} {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-icon-button-color) state-opacity($state),
+        var(--md-comp-icon-button-container-color)
+      );
+    }
+  }
+
+  @include focus-visible;
+}
+
+// Styles. Each is the icon colour and the container it sits on; the state
+// layers above follow from those two.
+.icon-button.filled {
+  --md-comp-icon-button-color: var(--md-sys-color-on-primary);
+  --md-comp-icon-button-container-color: var(--md-sys-color-primary);
+}
+
+.icon-button.tonal {
+  --md-comp-icon-button-color: var(--md-sys-color-on-secondary-container);
+  --md-comp-icon-button-container-color: var(--md-sys-color-secondary-container);
+}
+
+// The outline is a border rather than an inset box-shadow so it survives
+// forced-colors mode, and the inset gives the width back — otherwise a 3dp
+// xlarge outline makes a round button 6px wider than it is tall.
+.icon-button.outlined {
+  border: var(--md-comp-icon-button-outline-width) solid var(--md-sys-color-outline-variant);
+  padding-inline: calc(var(--md-comp-icon-button-leading-space) - var(--md-comp-icon-button-outline-width))
+    calc(var(--md-comp-icon-button-trailing-space) - var(--md-comp-icon-button-outline-width));
+}
+
+// Sizes. Default is small (40dp), which is M3's default icon button.
+@each $name in ("xsmall", "medium", "large", "xlarge") {
+  .icon-button.#{$name} {
+    @include _size($name);
+  }
+}
+
+// Width axis. Narrow and wide only move the inset, so they compose with every
+// size and with the outlined padding above.
+.icon-button.narrow {
+  --md-comp-icon-button-leading-space: var(--md-comp-icon-button-narrow-space);
+  --md-comp-icon-button-trailing-space: var(--md-comp-icon-button-narrow-space);
+}
+
+.icon-button.wide {
+  --md-comp-icon-button-leading-space: var(--md-comp-icon-button-wide-space);
+  --md-comp-icon-button-trailing-space: var(--md-comp-icon-button-wide-space);
+}
+
+// Shape. Round by default, `.square` for the squared container. The pressed
+// shape is the M3 Expressive corner morph, and it has to be written after
+// `.square`: both are one class plus the root, so a tie is decided by order,
+// and a squared button pressed would otherwise keep its resting corner.
+.icon-button.square {
+  --md-comp-icon-button-container-shape: var(--md-comp-icon-button-container-shape-square);
+}
+
+.icon-button:active {
+  border-radius: var(--md-comp-icon-button-pressed-container-shape);
+}
+
+// Disabled. The icon fades to 38% on-surface; a container that exists fades to
+// 10%. Standard and outlined have none, so theirs stays transparent.
+//
+// `aria-disabled="true"` is in the list because an <a> cannot take `disabled`,
+// and it is the attribute that actually tells a screen reader. Note what CSS
+// cannot do for a link: `pointer-events: none` stops the pointer and nothing
+// else, so a disabled-looking <a href> is still reachable by Tab and still
+// navigates on Enter. Drop the `href` (or the link) rather than painting a
+// control that lies about being inert - the docs page says so too.
+.icon-button:is(:disabled, [disabled], [aria-disabled="true"], .disabled) {
+  --md-comp-icon-button-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+
+  pointer-events: none;
+  cursor: default;
+}
+
+.icon-button:is(.filled, .tonal):is(:disabled, [disabled], [aria-disabled="true"], .disabled) {
+  --md-comp-icon-button-container-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+}

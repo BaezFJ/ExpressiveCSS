@@ -429,6 +429,40 @@
         }
       ]
     },
+    "icon-buttons": {
+      "status": "enforced",
+      "note": "Added with the icon button component (#22). An icon button is the case rule 3 exists for: its only content is a decorative icon, so the name has to live on the control. `.button.circle` is the older icon button and is covered by the buttons row.",
+      "rules": [
+        {
+          "id": "icon-button-is-a-control",
+          "kind": "forbid",
+          "selector": ".icon-button:not(button):not(a[href])",
+          "fragmentSafe": true,
+          "message": "An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced."
+        },
+        {
+          "id": "icon-button-link-is-not-fake-disabled",
+          "kind": "forbid",
+          "selector": "a[href].icon-button:is(.disabled, [aria-disabled=\"true\"])",
+          "fragmentSafe": true,
+          "message": "A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link."
+        },
+        {
+          "id": "icon-button-icon-hidden",
+          "kind": "require-attr",
+          "selector": ".icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden=\"true\"."
+        },
+        {
+          "id": "icon-button-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".icon-button",
+          "message": "The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label."
+        }
+      ]
+    },
     "icons-material-design": {
       "status": "enforced",
       "note": "Swept 0.8.0. The canonical icon is <span class=\"material-symbols\">, and an icon is either decoration or an image - never unannounced text.",

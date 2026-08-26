@@ -154,7 +154,7 @@ dialog:not(
     :is(.sidenav-overlay, .navigation-drawer-overlay)
   )
   > :is(form, nav):last-child
-  > :is(button, a.button):not(.tonal, .outlined, .elevated, .filled) {
+  > :is(button, a.button):not(.tonal, .outlined, .elevated, .filled, .icon-button) {
   @include btn-flat;
 }
 
@@ -220,7 +220,7 @@ dialog.max {
   // circle. CSS cannot see the text node; `.button` is the author's opt-out,
   // and sends such an action to the general button rules instead. Same
   // escape hatch the app bar already has.
-  > header > :is(button, a):not(.button):has(> #{$icon}:only-child) {
+  > header > :is(button, a):not(.button, .icon-button):has(> #{$icon}:only-child) {
     display: inline-flex;
     flex: 0 0 48px;
     align-items: center;
