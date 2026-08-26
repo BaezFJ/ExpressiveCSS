@@ -149,7 +149,7 @@ uv sync
 uv run python docs/app.py
 ```
 
-Then open `http://127.0.0.1:5000`. The Flask app serves assets directly from
+Then open `http://127.0.0.1:5055`. The Flask app serves assets directly from
 `dist/`, so changes made by `npm run watch` appear after a browser refresh.
 
 It is the same site published at

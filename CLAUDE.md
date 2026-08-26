@@ -47,7 +47,7 @@ Docs site (uv + Flask, Python ≥ 3.14):
 
 ```bash
 uv sync
-uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
+uv run flask --app docs/app.py run --debug --port 5055   # http://127.0.0.1:5055
 ```
 
 `.claude/launch.json` is gitignored, so a fresh clone has none and the
