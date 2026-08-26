@@ -38,17 +38,45 @@ describe('Floating sheet CSS', () => {
     assert.match(css, /dialog\.floating-sheet:not\(:modal\)::backdrop/);
   });
 
+  // A percentage max-height resolves against the containing block - the whole
+  // viewport - so 100% let a tall sheet grow past the inset and bleed to the
+  // window edges.
+  test('the inset survives a sheet tall enough to need it', () => {
+    const rule = css.match(/dialog\.floating-sheet\s*\{[^}]*\}/);
+    assert.match(
+      rule[0],
+      /max-height:\s*calc\(100% - 2 \* var\(--md-comp-floating-sheet-inset\)\)/
+    );
+  });
+
   test('action-row buttons stay sheet buttons, not dialog text buttons', () => {
-    const flat = css.match(/dialog:not\(([^)]|\([^)]*\))*\)\s*>\s*:is\(form,\s*nav\):last-child/);
-    assert.ok(flat, 'the dialog flat-action rule should still exist');
-    assert.match(flat[0], /\.floating-sheet/);
+    // The rule the dialog uses to make action buttons text buttons excludes
+    // every sheet; the floating sheet has to be on that list too.
+    const sheetsExcluded = css.match(
+      /dialog:not\(([^)]|\([^)]*\))*\)\s*>\s*:is\(form,\s*nav\):last-child/
+    );
+    assert.ok(sheetsExcluded, 'the dialog flat-action rule should still exist');
+    assert.match(sheetsExcluded[0], /\.floating-sheet/);
   });
 });
 
 describe('Floating sheet behavior', () => {
   beforeEach(resetBody);
 
-  test('light dismiss comes from Dialogs, with no sheet-specific module', () => {
+  test('the sheet family gained no third behavior module', async () => {
+    const Expressive = await import('../dist/js/expressive.mjs');
+    assert.ok(Expressive.Dialogs, 'Dialogs is what light-dismisses the sheet');
+    assert.equal(
+      Object.keys(Expressive).find((k) => /^FloatingSheets?$/.test(k)),
+      undefined,
+      'a floating sheet does not drag, so it needs nothing BottomSheets/SideSheets exist for'
+    );
+  });
+
+  // Dialogs owns light dismiss and tests/dialogs.test.js owns its edge cases -
+  // both ends outside, child hits, the closedby opt-outs. This asserts only
+  // that a floating sheet is inside that net.
+  test('light dismiss reaches it like any other dialog', () => {
     document.body.innerHTML = `
       <dialog class="floating-sheet" aria-label="Sheet">
         <h2>Headline</h2>

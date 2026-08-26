@@ -47,7 +47,12 @@ dialog.floating-sheet {
   // whatever it holds. `fit-content` makes all three non-auto, which is the
   // case where auto margins centre instead.
   height: fit-content;
-  max-height: 100%;
+  // A percentage max-height resolves against the containing block, which is
+  // the whole viewport - not the box `inset` leaves. At 100% a tall sheet
+  // grew to viewport height, went over-constrained, and auto margins split
+  // the overflow as -24px top and bottom: the inset disappeared exactly when
+  // the sheet was large enough to need it.
+  max-height: calc(100% - 2 * var(--md-comp-floating-sheet-inset));
   margin: auto;
   @include z-depth("1");
   opacity: 1;
