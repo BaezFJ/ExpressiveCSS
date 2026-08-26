@@ -528,6 +528,7 @@
           <div class="fab-menu" id="fab-menu-primary">
             <button type="button" class="button extra circle" aria-label="Create">
               <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
             </button>
             <ul>
               <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
@@ -538,6 +539,7 @@
           <div class="fab-menu secondary-container" id="fab-menu-secondary">
             <button type="button" class="button extra circle" aria-label="Create, secondary">
               <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
             </button>
             <ul>
               <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
@@ -547,6 +549,7 @@
           <div class="fab-menu tertiary-container" id="fab-menu-tertiary">
             <button type="button" class="button extra circle" aria-label="Create, tertiary">
               <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
             </button>
             <ul>
               <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
@@ -557,6 +560,7 @@
 <pre><code>&lt;div class="fab-menu"&gt;
   &lt;button type="button" class="button extra circle" aria-label="Create"&gt;
     &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
   &lt;/button&gt;
   &lt;ul&gt;
     &lt;li&gt;&lt;button type="button"&gt;&lt;span class="material-symbols" aria-hidden="true"&gt;mode_edit&lt;/span&gt;&lt;span&gt;Compose&lt;/span&gt;&lt;/button&gt;&lt;/li&gt;
@@ -566,9 +570,10 @@
         <p>
           Expanded, the FAB is the close button: the same disc on a full
           corner, the solid role colour rather than its container, and a 20dp
-          glyph. The morph is the close affordance — nothing swaps the icon
-          for you, so pick one that reads both ways or change it yourself in
-          the <code>open</code> handler.
+          glyph. Give the trigger a second icon and it becomes the close
+          glyph — the first shows while collapsed, the second while expanded,
+          and only ever one of them is in the box. With one icon the morph is
+          the whole affordance.
         </p>
         <p>
           The colour axis is the same three roles as the extended FAB, and one

@@ -6,16 +6,20 @@
 // token layer. Pair a fill with its `on-*` text class — container
 // roles are fills, not text; `on-*` roles are text/icons, not fills.
 
-// Three fills step aside for the extended FAB, the way `.circle` steps aside
-// for the FAB's corner in `_helpers`. Utilities win by layer, not by weight,
-// so one of the roles the extended FAB names itself would repaint the
-// container and leave the label colour and both state layers - which are
-// mixed from the same role - behind. Only those three: a role the component
-// does not name has nothing to lose and keeps its fill.
-$_extend-roles: "primary-container", "secondary-container", "tertiary-container";
+// Three fills step aside for the components that name those same roles as
+// their own colour axis, the way `.circle` steps aside for the FAB's corner
+// in `_helpers`. Utilities win by layer, not by weight, so a role class on
+// one of these would repaint the container and leave the label colour and
+// both state layers - which are mixed from the same role - behind. On the FAB
+// menu it is worse than a miss: the class sits on the host, which is a bare
+// 56px box behind a round FAB, so the fill lands as a square. Only those
+// three roles: a role no component names has nothing to lose and keeps its
+// fill everywhere.
+$_role-named: "primary-container", "secondary-container", "tertiary-container";
+$_role-named-hosts: ":not(.extend):not(.fab-menu)";
 
 @each $role in $sys-color-roles {
-  #{if(list.index($_extend-roles, $role), ".#{$role}:not(.extend)", ".#{$role}")} {
+  #{if(list.index($_role-named, $role), ".#{$role}#{$_role-named-hosts}", ".#{$role}")} {
     background-color: var(--md-sys-color-#{$role});
   }
 

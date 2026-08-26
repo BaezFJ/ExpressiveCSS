@@ -2421,6 +2421,7 @@ Expanded is the framework's state, not the author's: the constructor stamps `ari
 <div class="fab-menu">
   <button type="button" class="button extra circle" aria-label="Create">
     <span class="material-symbols" aria-hidden="true">add</span>
+    <span class="material-symbols" aria-hidden="true">close</span>
   </button>
   <ul>
     <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
@@ -2429,7 +2430,7 @@ Expanded is the framework's state, not the author's: the constructor stamps `ari
 </div>
 ```
 
-Expanded, the FAB is the close button: the same disc on a full corner, the solid role colour rather than its container, and a 20dp glyph. The morph is the close affordance — nothing swaps the icon for you.
+Expanded, the FAB is the close button: the same disc on a full corner, the solid role colour rather than its container, and a 20dp glyph. Give the trigger a second icon and it becomes the close glyph — the first shows while collapsed, the second while expanded, and only ever one of them is in the box. With one icon the morph is the whole affordance.
 
 The colour axis is the same three roles as the extended FAB, and one class moves both halves. The actions take `primary-container` (the default), `secondary-container` or `tertiary-container`; the close button takes the matching solid `primary`, `secondary` or `tertiary`.
 

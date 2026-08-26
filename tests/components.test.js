@@ -45,12 +45,14 @@ describe("FloatingActionButton", () => {
     instance.destroy();
   });
 
+  const FAB_MENU = `
+    <div class="fab-menu">
+      <button type="button" class="button extra circle" aria-label="Create">+</button>
+      <ul><li><button type="button">Compose</button></li></ul>
+    </div>`;
+
   test(".fab-menu expands and collapses on the same instance", () => {
-    document.body.innerHTML = `
-      <div class="fab-menu">
-        <button type="button" class="button extra circle" aria-label="Create">+</button>
-        <ul><li><button type="button">Compose</button></li></ul>
-      </div>`;
+    document.body.innerHTML = FAB_MENU;
     const el = document.querySelector(".fab-menu");
     Expressive.AutoInit();
     const instance = Expressive.FloatingActionButton.getInstance(el);
@@ -75,11 +77,7 @@ describe("FloatingActionButton", () => {
     // aria-haspopup="menu", neither of which this component earns: there is no
     // arrow-key navigation over the actions. semantics.json withholds `menu`
     // for both hosts, and this is the half of that a selector cannot see.
-    document.body.innerHTML = `
-      <div class="fab-menu">
-        <button type="button" class="button extra circle" aria-label="Create">+</button>
-        <ul><li><button type="button">Compose</button></li></ul>
-      </div>`;
+    document.body.innerHTML = FAB_MENU;
     const el = document.querySelector(".fab-menu");
     const instance = Expressive.FloatingActionButton.init(el);
 

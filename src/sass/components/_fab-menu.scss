@@ -60,6 +60,15 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
   > :is(a, button) {
     position: relative;
     z-index: 1;
+
+    // A second glyph in the trigger is the close button's, and only one of
+    // the two is ever in the box. With one glyph the morph is the whole
+    // affordance. `inline-block` is restated rather than reverted: the icon's
+    // own rule is in this layer too, so `revert-layer` would skip past it to
+    // the base default.
+    > #{$icon}:nth-child(2) {
+      display: none;
+    }
   }
 
   :is(ul, menu) {
@@ -168,6 +177,14 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
 
     color: var(--md-comp-fab-menu-close-button-icon-color);
     background-color: var(--md-comp-fab-menu-close-button-container-color);
+
+    > #{$icon}:first-child:not(:only-child) {
+      display: none;
+    }
+
+    > #{$icon}:nth-child(2) {
+      display: inline-block;
+    }
 
     &:hover {
       background-color: color-mix(

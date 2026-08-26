@@ -44,7 +44,6 @@ export class FloatingActionButton
   isOpen: boolean;
 
   private _anchor: HTMLElement | null;
-  private _menu: HTMLElement | null;
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
     super(el, options, FloatingActionButton);
@@ -65,7 +64,6 @@ export class FloatingActionButton
 
     this.isOpen = false;
     this._anchor = this.el.querySelector(':scope > a, :scope > button');
-    this._menu = this.el.querySelector('ul, menu');
 
     this.el.classList.add(`direction-${this.options.direction}`);
     if (clickToToggle) this.el.classList.add('click-to-toggle');

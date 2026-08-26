@@ -500,13 +500,19 @@ describe('FAB container shape', () => {
     }
   });
 
-  test('a colour utility does not repaint the extended FAB', () => {
+  test('a colour utility does not repaint a component that names the same role', () => {
     // Utilities are emitted after components and win by layer order, not by
     // weight: a bare `.secondary-container` would replace the container
-    // colour and leave the label colour and both state layers behind.
+    // colour and leave the label colour and both state layers behind. On the
+    // FAB menu the class sits on the host, a bare box behind a round FAB, so
+    // the fill lands as a square - every host that names these three roles as
+    // its own colour axis has to be carved out, not just the first one.
     for (const role of ['primary-container', 'secondary-container', 'tertiary-container']) {
       assert.doesNotMatch(css, new RegExp(`\\.${role}\\s*\\{\\s*background-color:`));
-      assert.match(css, new RegExp(`\\.${role}:not\\(\\.extend\\)\\s*\\{\\s*background-color:`));
+      assert.match(
+        css,
+        new RegExp(`\\.${role}:not\\(\\.extend\\):not\\(\\.fab-menu\\)\\s*\\{\\s*background-color:`)
+      );
     }
   });
 
