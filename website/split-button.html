@@ -520,7 +520,25 @@
           <code>&lt;button&gt;</code>, or an
           <code>&lt;a class="button" href&gt;</code> when it navigates. A
           wrapper element is refused — the seam, the insets and the larger
-          chevron are all written against direct children.
+          chevron are all written against direct children. So is an
+          <a href="/icon-buttons.html"><code>icon-button</code></a>:
+          that is its own component, setting its height, insets, colours and
+          icon sizing on the element itself, so it reaches none of this
+          geometry and fights the seam it is handed. The trailing half is a
+          <code>&lt;button class="button menu-trigger"&gt;</code>.
+        </p>
+        <p>
+          <strong>Order matters, and only the markup states it.</strong> The
+          halves are told apart by role rather than by position — which is what
+          lets you write the <code>&lt;menu&gt;</code> inside the container if
+          you like — so nothing in the sheet notices a trigger written first.
+          It would take the trailing side's round outer corners while flex put
+          it on the leading side: a split button with its seam and its round
+          ends swapped. Lead action first, trigger second, menu last if it is
+          in there at all. Exactly two controls; a third gets the leading
+          half's rules too. Several peer actions are a
+          <a href="/button-groups.html">button group</a>, and
+          several related ones belong in the menu.
         </p>
   
       </div>

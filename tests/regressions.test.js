@@ -862,8 +862,16 @@ describe('Chips', () => {
     // `.chip`'s one - so hovering, focusing or pressing a chip repainted it
     // with the filled-button background while it kept the chip's own text
     // colour. Excluding `.chip` in $_not-btn is what stops that.
+    //
+    // Only the *generic* rule is at stake, so only a compound that begins its
+    // selector is checked. A component that scopes the same shape to itself
+    // (`.split-button > :where(button:not(.icon-button), a.button)`) is behind
+    // an ancestor class, so it can never tie with a bare `.chip` and has no
+    // business restating this list.
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-    const buttonSelectors = css.match(/:where\(button:not\([^)]*\)/g) ?? [];
+    const buttonSelectors = (css.match(/(?:^|[,{}\n])\s*:where\(button:not\([^)]*\)/gm) ?? []).map(
+      (m) => m.slice(m.indexOf(':where('))
+    );
     assert.ok(buttonSelectors.length > 0, 'the generic button selector should exist');
     for (const sel of new Set(buttonSelectors)) {
       assert.match(sel, /\.chip\b/, `\`${sel}\` must exclude .chip`);

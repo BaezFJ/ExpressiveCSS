@@ -2135,6 +2135,8 @@ The five button sizes — `xsmall`, `small` (the default), `medium`, `large`, `x
 
 The container declares no role. A composite role such as `toolbar` promises arrow-key navigation, and this component *rejects* it rather than withholding it: the two halves are independent commands reached with Tab. The one composite widget here is the `<menu>`, which carries its own role and its own keyboard model. The trailing half's chevron is `aria-hidden`, so the button needs an `aria-label` naming what the menu contains — "More save options", not "More".
 
+Exactly two controls, lead action first and trigger second, both direct children. An `.icon-button` is *not* a half: it is its own component, setting its height, insets, colours and icon sizing on the element, so it reaches none of the split button's geometry — write `<button class="button menu-trigger">`. Order is stated only by the markup, since the halves are told apart by role rather than by position (which is what lets the `<menu>` sit inside the container): a trigger written first still takes the trailing side's round outer corners while flex puts it on the leading side, and the seam ends up on the wrong edge. A third control gets the leading half's rules too — peer actions are a button group, related ones belong in the menu.
+
 ```html
 <div class="split-button medium">
   <button class="button tonal">Reply</button>

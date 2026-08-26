@@ -50,9 +50,15 @@
 // argument, so `a.button` would make `> $_half:hover` a class heavier than
 // `> $_trail[aria-expanded]` - and hovering an open split button would
 // collapse the seam Material says stays round for as long as the menu is up.
-$_lead: ":where(button, a.button):not(.menu-trigger)";
-$_trail: ".menu-trigger";
-$_half: ":where(button, a.button)";
+//
+// `.icon-button` is deliberately not a half. It is its own component with its
+// own size ladder, insets, colours and icon sizing, all set on the element by
+// its own rule - so the container could not size it by handing it tokens, and
+// the seam here would fight the shape it already draws. Button groups refuse
+// it for the same reason. The trailing half is a `.button.menu-trigger`.
+$_lead: ":where(button:not(.icon-button), a.button):not(.menu-trigger)";
+$_trail: ".menu-trigger:not(.icon-button)";
+$_half: ":where(button:not(.icon-button), a.button)";
 
 // md.comp.split-button.<size>.{leading-button.trailing-space,
 // trailing-button.leading-space, trailing.icon-size, inner-corner,

@@ -27,6 +27,12 @@ const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
 
 const ruleFor = (selector) => rules.find((r) => r.selector === selector)?.body;
 
+// The halves are matched by role, and the compound that names them carries
+// exclusions (`.icon-button`) that may grow. Find them by shape rather than by
+// retyping the selector in five places.
+const HALF = '.split-button > :where(button:not(.icon-button), a.button)';
+const TRAIL = '.split-button > .menu-trigger:not(.icon-button)';
+
 // SplitButton<Size>Tokens, verbatim. `height` is the button ladder's own and
 // is asserted here because the split families restate it - if the two ever
 // disagree, this catches it.
@@ -82,7 +88,7 @@ describe('Split button tokens', () => {
 
 describe('Split button halves', () => {
   const lead = rules.find((r) => /^\.split-button > .*:not\(\.menu-trigger\)$/.test(r.selector));
-  const trail = rules.find((r) => r.selector === '.split-button > .menu-trigger');
+  const trail = rules.find((r) => r.selector === TRAIL);
 
   test('the leading half is round on the outside and morphs on the inside', () => {
     assert.ok(lead, 'no leading-half rule');
@@ -152,18 +158,32 @@ describe('Split button activation', () => {
     );
   });
 
+  test('an icon button is not a half, in the sheet as well as the rules', () => {
+    // It sets its own height, insets, colours and icon sizing on the element,
+    // so it reaches none of this geometry and fights the seam it is handed.
+    // `split-button-half-is-not-an-icon-button` forbids the markup; this keeps
+    // the sheet from styling it halfway if one appears anyway.
+    const styled = rules.filter((r) => r.selector.startsWith('.split-button >'));
+    assert.ok(styled.length >= 1);
+    for (const r of styled) {
+      assert.match(
+        r.selector,
+        /:not\(\.icon-button\)/,
+        `${r.selector} would reach an .icon-button half`
+      );
+    }
+  });
+
   test('an expanded trailing half goes fully round on the seam', () => {
     // md.comp.split-button.<size>.trailing.inner-selected-corner is 50%, which
     // on a pill is the container shape.
-    const expanded = rules.find(
-      (r) => r.selector === '.split-button > .menu-trigger[aria-expanded=true]'
-    );
+    const expanded = rules.find((r) => r.selector === `${TRAIL}[aria-expanded=true]`);
     assert.ok(expanded, 'no expanded trailing-half rule');
     assert.match(expanded.body, /--_inner:\s*var\(--md-comp-split-button-container-shape\)/);
   });
 
   test('the expanded trailing icon is turned over', () => {
-    const spun = rules.find((r) => /\.menu-trigger\[aria-expanded=true\] >/.test(r.selector));
+    const spun = rules.find((r) => r.selector.startsWith(`${TRAIL}[aria-expanded=true] >`));
     assert.ok(spun, 'no icon rotation rule');
     assert.match(spun.body, /transform:\s*rotate\(180deg\)/);
   });
@@ -172,9 +192,7 @@ describe('Split button activation', () => {
     // `btn` transitions background-color and box-shadow. Restating the
     // property list on the half replaces it wholesale, so an `.elevated`
     // split button snapped its shadow while every other elevated button eased.
-    const half = rules.find(
-      (r) => r.selector === '.split-button > :where(button, a.button)'
-    );
+    const half = rules.find((r) => r.selector === HALF);
     assert.ok(half, 'no half rule');
     assert.match(half.body, /transition:[^;]*box-shadow/);
   });
