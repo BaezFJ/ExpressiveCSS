@@ -306,8 +306,15 @@
           The legend names the group for assistive technology and is not
           shown — Material 3's anatomy has no visible group label, but a set of
           radios is only a set because a fieldset says so, and a fieldset is
-          only named by its legend. Set <code>position: static</code> on it
-          when you do want it visible.
+          only named by its legend.
+        </p>
+        <p>
+          There is no modifier that shows it, and unhiding it by hand is not
+          one override but six. The root is both the fieldset and the grid of
+          segments, so a legend back in flow becomes another column beside
+          them. When the group needs a visible label, write one before the
+          fieldset — a heading or a <code>&lt;p&gt;</code> — and leave the
+          legend saying the same thing as the group's name.
         </p>
         <div>
           <fieldset class="segmented-button">

@@ -101,8 +101,10 @@ below is the whole story for that component.
   of the markup. What the rules enforce instead is that the markup stays
   native: a `<div>` root, a `<button>` segment or a radio without the shared
   `name` takes the group name, the arrow keys and the checked state with it. The `<legend>` names the group and is
-  hidden, since Material's anatomy has no visible group label; `position:
-  static` brings it back.
+  hidden, since Material's anatomy has no visible group label. Nothing shows
+  it: the root is both the fieldset and the grid of segments, so a legend back
+  in flow is another column beside them, and a group that needs a visible label
+  writes one before the fieldset.
 - **Carousel can advance on its own, with a pause contract that cannot be
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each

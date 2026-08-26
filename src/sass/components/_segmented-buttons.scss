@@ -70,7 +70,12 @@
   // M3's anatomy has no visible group label. A set of radios is only a set
   // because a <fieldset> says so, and a <fieldset> is only named because of
   // its <legend> — so the legend is the accessible name and nothing else.
-  // Unhide it (`position: static`) when the group wants a visible heading.
+  //
+  // There is deliberately no modifier that shows it. The root is both the
+  // fieldset and the grid of segments, so a legend back in flow is another
+  // column beside them; putting it above the pill would take an inner
+  // wrapper the markup does not have. A group that needs a visible label
+  // writes one before the fieldset and leaves the legend as the name.
   > legend {
     @include visually-hidden();
   }

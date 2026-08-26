@@ -1941,7 +1941,7 @@ The root is a `<fieldset class="segmented-button">` with a `<legend>`. Each segm
 
 The control is the label's sibling rather than its child, the same way a filter chip is written. A `<label>` wrapping a radio or a checkbox *is* one to the rest of the framework, and gets painted as one — a 20dp ring on the control and a 48dp row around it.
 
-The legend is the group's accessible name and is not shown; Material 3's anatomy has no visible group label. Set `position: static` on it when you want one.
+The legend is the group's accessible name and is not shown; Material 3's anatomy has no visible group label. There is no modifier that shows it — the root is both the fieldset and the grid of segments, so a legend back in flow becomes another column beside them. When the group needs a visible label, write one before the fieldset and leave the legend saying the same thing.
 
 ```html
 <fieldset class="segmented-button">
