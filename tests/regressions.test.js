@@ -1386,3 +1386,91 @@ describe('State layers that replaced the ripple', () => {
     }
   });
 });
+
+// Converting a drag from touch events to Pointer Events moved the cancellation
+// path. `touchend` fired only when the user let go, so wiring `pointercancel`
+// to the same handler looked equivalent and is not: the browser fires it when
+// it takes the gesture over, and running the completion path then commits
+// something the user never finished. Both were live in PR #81.
+describe('A cancelled pointer drag is not a completed one', () => {
+  beforeEach(resetBody);
+
+  function drag(el, endWith, { from, to, axis = 'x' }) {
+    const at = (v) => (axis === 'x' ? { clientX: v, clientY: 0 } : { clientX: 0, clientY: v });
+    for (const [type, v] of [
+      ['pointerdown', from],
+      ['pointermove', to],
+      [endWith, to]
+    ]) {
+      el.dispatchEvent(
+        new window.PointerEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          ...at(v),
+          button: 0,
+          buttons: type === 'pointerdown' ? 1 : 0,
+          pointerId: 1,
+          pointerType: 'touch',
+          isPrimary: true
+        })
+      );
+    }
+  }
+
+  // jsdom has no layout, so offsetWidth - and the activation distance derived
+  // from it - is 0. Any movement at all is therefore past the threshold, which
+  // is what makes the control case dismiss, and what made the cancelled case
+  // dismiss too.
+  function swipeSnackbar(endWith) {
+    const snackbar = new Expressive.Snackbar({
+      text: 'Saved',
+      displayLength: Infinity,
+      outDuration: 0
+    });
+    try {
+      drag(snackbar.el, endWith, { from: 0, to: 120 });
+      return { wasSwiped: snackbar.wasSwiped === true, opacity: snackbar.el.style.opacity };
+    } finally {
+      snackbar.dismiss();
+    }
+  }
+
+  test('a snackbar swipe that ends in pointerup dismisses', () => {
+    const { wasSwiped, opacity } = swipeSnackbar('pointerup');
+    assert.equal(wasSwiped, true, 'the control swipe did not dismiss');
+    assert.equal(opacity, '0', 'a dismissed snackbar is faded out');
+  });
+
+  test('the same distance ending in pointercancel snaps back instead', () => {
+    const { wasSwiped, opacity } = swipeSnackbar('pointercancel');
+    assert.equal(wasSwiped, false, 'a cancelled swipe dismissed the snackbar');
+    assert.equal(opacity, '', 'a cancelled swipe left the snackbar faded');
+  });
+
+  function dragClock(endWith) {
+    document.body.innerHTML = '<input type="text" class="timepicker">';
+    const picker = Expressive.Timepicker.init(document.querySelector('input'));
+    const selected = [];
+    picker.options.onSelect = (h, m) => selected.push([h, m]);
+    try {
+      fixRect(picker.plate, 260, 260);
+      drag(picker.plate, endWith, { from: 130, to: 200 });
+      return { view: picker.currentView, selected: selected.length };
+    } finally {
+      picker.destroy();
+    }
+  }
+
+  test('a clock drag that ends in pointerup advances to minutes', () => {
+    const { view, selected } = dragClock('pointerup');
+    assert.equal(view, 'minutes', 'the control drag did not advance the view');
+    assert.equal(selected, 1, 'the control drag did not report a selection');
+  });
+
+  test('the same drag ending in pointercancel commits nothing', () => {
+    const { view, selected } = dragClock('pointercancel');
+    assert.equal(view, 'hours', 'a cancelled drag advanced hours to minutes');
+    assert.equal(selected, 0, 'a cancelled drag reported a selection');
+  });
+});
