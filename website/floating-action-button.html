@@ -424,7 +424,15 @@
           </div>
           <div>
             <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
-            <span class="body-small"><code>extend small</code><br>16dp / 16dp</span>
+            <span class="body-small"><code>extend small</code><br>56dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend medium</code><br>80dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend large"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend large</code><br>96dp</span>
           </div>
           <div>
             <button type="button" class="extend"><span>Create</span><span class="material-symbols" aria-hidden="true">add</span></button>
@@ -434,14 +442,43 @@
 <pre><code>&lt;button type="button" class="extend"&gt;
   &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;
-&lt;button type="button" class="extend small"&gt;
+&lt;button type="button" class="extend medium"&gt;
   &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;&lt;span&gt;Create&lt;/span&gt;
 &lt;/button&gt;</code></pre>
         <p>
-          <code>extend small</code> is the small extended FAB: the same 56dp
-          on a symmetric 16dp inset. Both keep the label at
-          <code>label-large</code> — the size class does not shrink the type.
+          The size axis is <code>small</code>, <code>medium</code> and
+          <code>large</code>, and the label role grows with the container:
+          <code>title-medium</code>, <code>title-large</code>,
+          <code>headline-small</code>. <code>extend small</code> is 56dp on a
+          symmetric 16dp inset. A sizeless <code>extend</code> is Material 3's
+          base extended FAB — 56dp on a 16dp / 20dp inset, label
+          <code>label-large</code>.
         </p>
+        <p>
+          The container colour is a role rather than a value.
+          <code>primary-container</code> is the default;
+          <code>secondary-container</code> and <code>tertiary-container</code>
+          are the other two. Each sets the container and the label colour
+          together, so the hover and focus state layers follow the role with
+          it.
+        </p>
+        <div class="fab-size-demo">
+          <div>
+            <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <span class="body-small">default<br><code>primary-container</code></span>
+          </div>
+          <div>
+            <button type="button" class="extend secondary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <span class="body-small"><code>secondary-container</code></span>
+          </div>
+          <div>
+            <button type="button" class="extend tertiary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <span class="body-small"><code>tertiary-container</code></span>
+          </div>
+        </div>
+<pre><code>&lt;button type="button" class="extend secondary-container"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;edit&lt;/span&gt;&lt;span&gt;Compose&lt;/span&gt;
+&lt;/button&gt;</code></pre>
         <div class="docs-table-scroll">
         
         <table class="striped">
@@ -453,12 +490,14 @@
             </thead>
             <tbody>
 
-            <tr><td><code>--md-comp-extended-fab-container-height</code></td><td>56px</td></tr>
-            <tr><td><code>--md-comp-extended-fab-container-shape</code></td><td>16px</td></tr>
-            <tr><td><code>--md-comp-extended-fab-icon-size</code></td><td>24px</td></tr>
-            <tr><td><code>--md-comp-extended-fab-leading-space</code></td><td>16px</td></tr>
-            <tr><td><code>--md-comp-extended-fab-icon-label-space</code></td><td>8px</td></tr>
-            <tr><td><code>--md-comp-extended-fab-trailing-space</code></td><td>20px (16px on <code>small</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-container-height</code></td><td>56px (80px <code>medium</code>, 96px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-container-shape</code></td><td>16px (20px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-icon-size</code></td><td>24px (28px <code>medium</code>, 36px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-leading-space</code></td><td>16px (26px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-icon-label-space</code></td><td>8px (12px <code>medium</code>, 16px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-trailing-space</code></td><td>20px (16px <code>small</code>, 26px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-container-color</code></td><td><code>--md-sys-color-primary-container</code></td></tr>
+            <tr><td><code>--md-comp-extended-fab-label-text-color</code></td><td><code>--md-sys-color-on-primary-container</code></td></tr>
         
             </tbody>
         </table>
