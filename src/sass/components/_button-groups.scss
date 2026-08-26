@@ -140,7 +140,8 @@ $_connected-corners: (
   // group's to state, so the glyph reads the token the size rule just set -
   // 20px at xsmall through 40px at xlarge. Scoped here rather than fixed
   // there: a bare `.button.circle` is pre-1.0 markup with its own default,
-  // and moving it is a break this component has no business making.
+  // and moving it is a break this component has no business making. #72 owns
+  // that decision - drop this rule if the general fix lands.
   > #{$_item}.circle > #{$icon} {
     font-size: var(--md-comp-filled-button-icon-size);
     width: var(--md-comp-filled-button-icon-size);
