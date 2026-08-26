@@ -1,0 +1,292 @@
+@use "../abstracts" as *;
+
+// Banners.
+//
+// Anatomy is the HTML. A .banner is the container. A <p> is the message. An
+// optional leading #{$icon} leads it, an optional .actions holds the buttons,
+// and an optional trailing .icon-button dismisses it. .rich adds a heading
+// above the message and takes an <img> instead of an icon.
+//
+// A banner is persistent and in flow: it stays until the user acts on it, and
+// it pushes the page down rather than covering it. That is the whole
+// difference from a snackbar, which is transient, floats over the page and
+// dismisses itself. Nothing here is scripted - dismissing a banner is removing
+// it, which is the page's business, not the framework's.
+//
+// The action row is .actions and never a <nav> (SEMANTICS rule 4): these are
+// commands, not destinations. No composite role is declared, so none is
+// withheld. And a .banner is not `role="banner"` - that landmark is the page
+// header, and semantics.json blocks the confusion in both spellings.
+//
+// Tokens follow M3 Expressive, md.comp.banners.* (DSP 34.0.21), which is three
+// families: `banners` for the colours both variants share, `banners.basic` and
+// `banners.rich` for their geometry.
+//
+//   standard     surface-container container, on-surface text and icon
+//   vibrant      primary-container container, on-primary-container text
+//   close        primary, whichever variant it sits in
+//   basic        56dp tall, 4dp insets, 28dp corners (0 when .square)
+//                48dp icon container around a 24dp icon
+//                body-medium text, 14dp above and below
+//                actions 8dp apart with 8dp on either side of the row
+//   basic mobile 112dp tall, 8dp top inset, actions on their own line
+//   rich         28dp corners, 12dp insets, 24dp icon or an 80dp square image
+//                title body-medium at weight 500, 14dp above and below
+//                actions 12dp under the message
+//
+// Several token values go unspent, and every one of them is unspendable rather
+// than forgotten.
+//
+// Three describe something this does not draw. `basic.two-lines.*` (a 64dp
+// container with 8dp text insets) needs a line count, which CSS cannot see, so
+// the container grows past 56dp on its own instead. `basic.centered.body-text
+// .trailing-space` belongs to a centered basic variant that is not shipped. And
+// both `body-text.trailing-space: 48px` values reserve room for the close
+// button; here the button occupies that room itself, in flow in the basic row
+// and in its own grid column in the rich one, so the reserve tracks the button
+// rather than a constant.
+//
+// The rest are one gap M3 names twice, from either side, where spending both
+// would double it. `rich.leading-element.trailing-space` restates
+// `rich.icon-text-space` / `rich.image-text-space`; the *-text-space one is
+// written. `basic.actions-close-button-space` (8dp, 4dp on mobile) restates
+// `basic.actions.trailing-space` - the same two numbers - and the padding is
+// written. `rich.body-text.text-actions-space: 8px` and
+// `rich.actions.top-space: 12px` both name the gap under the message; the
+// larger is written, since actions 8dp under body text read as part of it.
+// `rich.actions.{leading,trailing,bottom}-space` and
+// `rich.leading-element.bottom-space` are all 12dp, which is the container's
+// own inset, already spent by its padding.
+//
+// One token is renamed on the way in. M3's `basic.body-text.leading-space` is
+// 0dp - the icon container carries the inset - and the 16dp / 12dp pair lives
+// under `basic.{round,square}.no-icon.body-text.leading-space`. The custom
+// property is named for the case it serves, not for the 0dp token it is not.
+.banner {
+  --md-comp-banners-color: var(--md-sys-color-surface-container);
+  --md-comp-banners-body-text-color: var(--md-sys-color-on-surface);
+  --md-comp-banners-title-text-color: var(--md-sys-color-on-surface);
+  --md-comp-banners-icon-color: var(--md-sys-color-on-surface);
+  --md-comp-banners-close-button-color: var(--md-sys-color-primary);
+
+  box-sizing: border-box;
+  color: var(--md-comp-banners-body-text-color);
+  background-color: var(--md-comp-banners-color);
+  @include typescale("body-medium");
+
+  // The close button is the one control M3 colours from the banner family
+  // rather than from its own. The action buttons are ordinary text buttons and
+  // are left alone - `primary` clears 5:1 on both container colours.
+  > .icon-button {
+    --md-comp-icon-button-color: var(--md-comp-banners-close-button-color);
+  }
+}
+
+// The two colour variants. Standard is the default, so only vibrant is a class.
+.banner.vibrant {
+  --md-comp-banners-color: var(--md-sys-color-primary-container);
+  --md-comp-banners-body-text-color: var(--md-sys-color-on-primary-container);
+  --md-comp-banners-title-text-color: var(--md-sys-color-on-primary-container);
+  --md-comp-banners-icon-color: var(--md-sys-color-on-primary-container);
+}
+
+// Basic: one row of icon, message, actions and close. Every layout rule is
+// scoped away from .rich rather than left to the cascade, so the two variants
+// tie on specificity and neither can quietly reach into the other.
+.banner:not(.rich) {
+  --md-comp-banners-basic-height: 56px;
+  --md-comp-banners-basic-shape: 28px;
+  --md-comp-banners-basic-leading-space: 4px;
+  --md-comp-banners-basic-trailing-space: 4px;
+  --md-comp-banners-basic-top-space: 4px;
+  --md-comp-banners-basic-bottom-space: 4px;
+  --md-comp-banners-basic-icon-container-size: 48px;
+  --md-comp-banners-basic-icon-size: 24px;
+  --md-comp-banners-basic-body-text-top-space: 14px;
+  --md-comp-banners-basic-body-text-bottom-space: 14px;
+  --md-comp-banners-basic-no-icon-body-text-leading-space: 16px;
+  --md-comp-banners-basic-actions-between-space: 8px;
+  --md-comp-banners-basic-actions-leading-space: 8px;
+  --md-comp-banners-basic-actions-trailing-space: 8px;
+
+  display: flex;
+  align-items: center;
+  min-block-size: var(--md-comp-banners-basic-height);
+  padding-block: var(--md-comp-banners-basic-top-space)
+    var(--md-comp-banners-basic-bottom-space);
+  padding-inline: var(--md-comp-banners-basic-leading-space)
+    var(--md-comp-banners-basic-trailing-space);
+  border-radius: var(--md-comp-banners-basic-shape);
+
+  > #{$icon} {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--md-comp-banners-basic-icon-container-size);
+    block-size: var(--md-comp-banners-basic-icon-container-size);
+    font-size: var(--md-comp-banners-basic-icon-size);
+    line-height: var(--md-comp-banners-basic-icon-size);
+    color: var(--md-comp-banners-icon-color);
+  }
+
+  // `flex-basis: 0`, not `auto`. A wrapped flex container breaks lines on an
+  // item's *hypothetical* size - what it would be before shrinking - so a
+  // message long enough to fill the row takes a line of its own and leaves the
+  // icon stranded on the one above it. From zero it contributes nothing to that
+  // decision and grows into whatever the row has left, which is also what puts
+  // the actions hard against the trailing edge.
+  > p {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    margin: 0;
+    padding-block: var(--md-comp-banners-basic-body-text-top-space)
+      var(--md-comp-banners-basic-body-text-bottom-space);
+    color: inherit;
+  }
+
+  // The message pays for its own leading inset only when nothing leads it: the
+  // icon's 48dp container already carries one.
+  > p:first-child {
+    padding-inline-start: var(--md-comp-banners-basic-no-icon-body-text-leading-space);
+  }
+
+  > .icon-button {
+    flex: 0 0 auto;
+  }
+
+  > .actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--md-comp-banners-basic-actions-between-space);
+    padding-inline: var(--md-comp-banners-basic-actions-leading-space)
+      var(--md-comp-banners-basic-actions-trailing-space);
+  }
+
+  // Compact: the row is too narrow to hold the actions beside the message, so
+  // they take a line of their own under it. Wrapping is switched on here and
+  // nowhere else, and `order` puts the actions after the close button, which is
+  // what makes them the only thing that can wrap.
+  @include bp-down("medium") {
+    --md-comp-banners-basic-height: 112px;
+    --md-comp-banners-basic-top-space: 8px;
+    --md-comp-banners-basic-actions-trailing-space: 4px;
+
+    flex-wrap: wrap;
+
+    > .actions {
+      order: 1;
+      flex-basis: 100%;
+      justify-content: flex-end;
+    }
+
+    // The 112dp mobile height is the two-row arrangement's, so it is owed only
+    // to a banner that has a second row. Without actions the row stays 56dp and
+    // a one-line message does not float in the middle of an empty half.
+    &:not(:has(> .actions)) {
+      --md-comp-banners-basic-height: 56px;
+    }
+  }
+}
+
+// Square corners, which M3 uses for a banner sitting flush under an app bar.
+// The message's leading inset shrinks with the corner it is clearing.
+.banner:not(.rich).square {
+  --md-comp-banners-basic-shape: 0;
+  --md-comp-banners-basic-no-icon-body-text-leading-space: 12px;
+}
+
+// Rich: a leading element beside a heading, a message and an action row. Named
+// areas rather than auto-placement, so the markup can omit any of the four and
+// order the rest however it reads best - a missing area collapses its track.
+.banner.rich {
+  --md-comp-banners-rich-shape: 28px;
+  --md-comp-banners-rich-leading-space: 12px;
+  --md-comp-banners-rich-trailing-space: 12px;
+  --md-comp-banners-rich-top-space: 12px;
+  --md-comp-banners-rich-bottom-space: 12px;
+  --md-comp-banners-rich-icon-size: 24px;
+  --md-comp-banners-rich-icon-text-space: 4px;
+  --md-comp-banners-rich-image-size: 80px;
+  --md-comp-banners-rich-image-text-space: 8px;
+  --md-comp-banners-rich-leading-element-leading-space: 4px;
+  --md-comp-banners-rich-with-image-leading-space: 20px;
+  --md-comp-banners-rich-title-text-top-space: 14px;
+  --md-comp-banners-rich-title-text-bottom-space: 14px;
+  --md-comp-banners-rich-actions-between-space: 8px;
+  --md-comp-banners-rich-actions-top-space: 12px;
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "lead title   close"
+    "lead body    close"
+    "lead actions actions";
+  padding-block: var(--md-comp-banners-rich-top-space)
+    var(--md-comp-banners-rich-bottom-space);
+  padding-inline: var(--md-comp-banners-rich-leading-space)
+    var(--md-comp-banners-rich-trailing-space);
+  border-radius: var(--md-comp-banners-rich-shape);
+
+  > #{$icon} {
+    grid-area: lead;
+    align-self: start;
+    margin-inline: var(--md-comp-banners-rich-leading-element-leading-space)
+      var(--md-comp-banners-rich-icon-text-space);
+    font-size: var(--md-comp-banners-rich-icon-size);
+    inline-size: var(--md-comp-banners-rich-icon-size);
+    block-size: var(--md-comp-banners-rich-icon-size);
+    line-height: var(--md-comp-banners-rich-icon-size);
+    color: var(--md-comp-banners-icon-color);
+  }
+
+  // md.comp.banners.rich.image.shape is corner.none, so the square is square.
+  > img {
+    grid-area: lead;
+    align-self: start;
+    // The token is measured from the container edge, and the container has
+    // already spent its own leading space, so the margin is the difference.
+    margin-inline: calc(
+        var(--md-comp-banners-rich-with-image-leading-space) -
+          var(--md-comp-banners-rich-leading-space)
+      )
+      var(--md-comp-banners-rich-image-text-space);
+    inline-size: var(--md-comp-banners-rich-image-size);
+    block-size: var(--md-comp-banners-rich-image-size);
+    border-radius: 0;
+    object-fit: cover;
+  }
+
+  > :is(h1, h2, h3, h4, h5, h6) {
+    grid-area: title;
+    margin: 0;
+    padding-block: var(--md-comp-banners-rich-title-text-top-space)
+      var(--md-comp-banners-rich-title-text-bottom-space);
+    color: var(--md-comp-banners-title-text-color);
+    // md.sys.typescale.emphasized.body-medium: body-medium at weight 500. The
+    // emphasized set is not in the token layer, so the weight is written here.
+    @include typescale("body-medium");
+    font-weight: 500;
+  }
+
+  > p {
+    grid-area: body;
+    margin: 0;
+    color: inherit;
+  }
+
+  > .actions {
+    grid-area: actions;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--md-comp-banners-rich-actions-between-space);
+    margin-block-start: var(--md-comp-banners-rich-actions-top-space);
+  }
+
+  > .icon-button {
+    grid-area: close;
+    align-self: start;
+  }
+}

@@ -1,0 +1,354 @@
+{% extends "docs.html" %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
+{% from "macros/api.html" import token_table %}
+
+{% set page_name = "Banners" %}
+{% set page_blurb = "A prominent message that stays put until the user deals with it." %}
+
+{% block page %}
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
+        <p class="flow-text">
+          A banner carries an important message at the top of a view, in the
+          flow of the page, with one or two actions on it. It stays until the
+          user acts — nothing dismisses it on a timer, and nothing about it is
+          scripted.
+        </p>
+        <p>
+          A <code>&lt;div class="banner"&gt;</code> is the container. A
+          <code>&lt;p&gt;</code> is the message. Everything else is optional
+          and in this order: a leading
+          <code>&lt;span class="material-symbols"&gt;</code>, a
+          <code>&lt;div class="actions"&gt;</code> of buttons, and a trailing
+          <code>.icon-button</code> that closes it. Removing the banner from
+          the page is what "closing" means, and that is the page's job — there
+          is no plugin to call.
+        </p>
+        <div>
+          <div class="banner">
+            <span class="material-symbols" aria-hidden="true">cloud_off</span>
+            <p>You're offline. Edits are saved locally and will sync later.</p>
+            <div class="actions">
+              <button class="button text" type="button">Retry</button>
+            </div>
+            <button class="icon-button" type="button" aria-label="Dismiss">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </div>
+        </div>
+{% call code() %}
+<div class="banner">
+  <span class="material-symbols" aria-hidden="true">cloud_off</span>
+  <p>You're offline. Edits are saved locally and will sync later.</p>
+  <div class="actions">
+    <button class="button text" type="button">Retry</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("when", "Banner, snackbar or dialog") %}
+        <p>
+          Three components tell the user something, and the difference between
+          them is how much of the user's attention they are entitled to take.
+          Reach for the least of the three that does the job.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Lifetime</th>
+              <th>Blocks the page</th>
+              <th>Use it when</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="{{ url_for('snackbar') }}">Snackbar</a></td>
+              <td>4–10 seconds, then gone</td>
+              <td>No — it floats over the page</td>
+              <td>Confirming something that already happened. Missing it costs nothing: "Photo saved", "Message sent".</td>
+            </tr>
+            <tr>
+              <td>Banner</td>
+              <td>Until the user acts on it</td>
+              <td>No — it sits in the flow and pushes content down</td>
+              <td>A condition that persists and that the user can keep working around. Offline, a failed sync, an expiring trial, a cookie choice.</td>
+            </tr>
+            <tr>
+              <td><a href="{{ url_for('dialogs') }}">Dialog</a></td>
+              <td>Until the user answers</td>
+              <td>Yes — nothing else is reachable</td>
+              <td>The user cannot continue without deciding, or the decision destroys something.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Two rules of thumb follow from that. If missing the message is
+          harmless, it is a snackbar — a banner that reports a completed action
+          is a banner that never earns its dismissal. And if the user can
+          usefully carry on with the message on screen, it is not a dialog:
+          blocking the page for something the user is allowed to ignore is how
+          a product teaches people to dismiss its dialogs unread.
+        </p>
+        <p>
+          One banner at a time, at the top of the content it is about. Two
+          stacked banners are two messages competing, and the second one loses.
+        </p>
+  {% endcall %}
+
+  {% call section("basic", "Basic") %}
+        <p>
+          The basic banner is a single row 56dp tall: icon, message, actions,
+          close. The message grows the row when it wraps. Anything you leave
+          out simply is not there — a message on its own is a valid banner.
+        </p>
+        <div>
+          <div class="banner">
+            <p>Your trial ends in three days.</p>
+            <div class="actions">
+              <button class="button text" type="button">See plans</button>
+            </div>
+          </div>
+        </div>
+{% call code() %}
+<div class="banner">
+  <p>Your trial ends in three days.</p>
+  <div class="actions">
+    <button class="button text" type="button">See plans</button>
+  </div>
+</div>
+{% endcall %}
+        <p>
+          Below 600dp the actions take a line of their own under the message
+          and the row grows to 112dp, because a phone-width row cannot hold a
+          message and two buttons side by side without shrinking the message
+          to nothing.
+        </p>
+  {% endcall %}
+
+  {% call section("vibrant", "Standard and vibrant") %}
+        <p>
+          Two colour variants. A standard banner sits on
+          <code>surface-container</code> and is the default — quiet enough to
+          live above content without competing with it. Add
+          <code>vibrant</code> for <code>primary-container</code>, when the
+          message is the most important thing on the screen. Both keep their
+          close button in <code>primary</code>.
+        </p>
+        <div>
+          <div class="banner vibrant">
+            <span class="material-symbols" aria-hidden="true">system_update</span>
+            <p>A new version is ready to install.</p>
+            <div class="actions">
+              <button class="button text" type="button">Later</button>
+              <button class="button text" type="button">Restart</button>
+            </div>
+            <button class="icon-button" type="button" aria-label="Dismiss update notice">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </div>
+        </div>
+{% call code() %}
+<div class="banner vibrant">
+  <span class="material-symbols" aria-hidden="true">system_update</span>
+  <p>A new version is ready to install.</p>
+  <div class="actions">
+    <button class="button text" type="button">Later</button>
+    <button class="button text" type="button">Restart</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss update notice">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+{% endcall %}
+        <p>
+          <code>square</code> flattens the 28dp corners to nothing, for a
+          banner that runs flush under an
+          <a href="{{ url_for('navbar') }}">app bar</a> or against the edges of
+          the window. It applies to the basic banner only: Material gives the
+          rich layout one shape and no square counterpart, so
+          <code>class="banner rich square"</code> is a rich banner with rounded
+          corners.
+        </p>
+        <div>
+          <div class="banner square">
+            <span class="material-symbols" aria-hidden="true">wifi_off</span>
+            <p>Connection lost. Reconnecting…</p>
+          </div>
+        </div>
+{% call code() %}
+<div class="banner square">
+  <span class="material-symbols" aria-hidden="true">wifi_off</span>
+  <p>Connection lost. Reconnecting…</p>
+</div>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("rich", "Rich") %}
+        <p>
+          <code>rich</code> gives the banner a heading, room for a longer
+          message, and either a 24dp icon or an 80dp image beside it. The
+          actions move to their own row underneath. Use it when the message
+          needs a sentence rather than a clause — otherwise the basic row says
+          the same thing in a third of the height.
+        </p>
+        <div>
+          <div class="banner rich vibrant">
+            <span class="material-symbols" aria-hidden="true">shield_person</span>
+            <h3>We updated our privacy policy</h3>
+            <p>
+              Analytics cookies are now off by default, and you can change
+              what we collect at any time from your account settings.
+            </p>
+            <div class="actions">
+              <button class="button text" type="button">Read the policy</button>
+              <button class="button text" type="button">Got it</button>
+            </div>
+            <button class="icon-button" type="button" aria-label="Dismiss privacy notice">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </div>
+        </div>
+{% call code() %}
+<div class="banner rich vibrant">
+  <span class="material-symbols" aria-hidden="true">shield_person</span>
+  <h3>We updated our privacy policy</h3>
+  <p>
+    Analytics cookies are now off by default, and you can change
+    what we collect at any time from your account settings.
+  </p>
+  <div class="actions">
+    <button class="button text" type="button">Read the policy</button>
+    <button class="button text" type="button">Got it</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss privacy notice">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+{% endcall %}
+        <p>
+          An <code>&lt;img&gt;</code> takes the icon's place. It is drawn as an
+          80dp square with square corners, cropped to fit, and it needs an
+          <code>alt</code> — descriptive when it says something the heading and
+          the message do not, empty when it is decoration, as it is here.
+        </p>
+        <div>
+          <div class="banner rich">
+            <img src="https://picsum.photos/id/1015/160/160" alt="">
+            <h3>Your photo book is ready</h3>
+            <p>
+              Twenty-four pages, printed and bound. It ships within two
+              business days once you approve the proof.
+            </p>
+            <div class="actions">
+              <button class="button text" type="button">View proof</button>
+            </div>
+          </div>
+        </div>
+{% call code() %}
+<div class="banner rich">
+  <img src="/photo-book.jpg" alt="">
+  <h3>Your photo book is ready</h3>
+  <p>
+    Twenty-four pages, printed and bound. It ships within two
+    business days once you approve the proof.
+  </p>
+  <div class="actions">
+    <button class="button text" type="button">View proof</button>
+  </div>
+</div>
+{% endcall %}
+        <p>
+          The rich layout is a named grid, so the five parts — leading element,
+          heading, message, actions, close — can be written in whatever order
+          reads best and each one collapses its track when it is absent. Pick
+          the heading level that fits the page's outline; the banner styles
+          whichever of <code>h1</code>–<code>h6</code> it finds.
+        </p>
+  {% endcall %}
+
+  {% call section("semantics", "Semantics") %}
+        <p>
+          A banner is not <code>role="banner"</code>. That role is the page
+          header landmark: a page has one of those, and it may have several
+          banners, so announcing each one as the site header buries the real
+          header among them. The
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">semantics suite</a>
+          blocks both spellings of that confusion —
+          <code>&lt;header class="banner"&gt;</code> and
+          <code>role="banner"</code> on the container.
+        </p>
+        <p>
+          The action row is <code>.actions</code> and never a
+          <code>&lt;nav&gt;</code>. Retry, restart and dismiss are commands,
+          not destinations, and a landmark for them would be one more identical
+          entry in the landmark menu.
+        </p>
+        <p>
+          Icons are decoration: the message says what the leading icon says,
+          and the close button carries its own <code>aria-label</code>, so both
+          are <code>aria-hidden="true"</code>. A banner that appears while the
+          user is on the page — a connection dropping, a sync failing — should
+          announce itself: put <code>role="status"</code> on it, which is
+          polite and does not move focus. A banner that is there when the page
+          loads has already been read in document order and needs nothing.
+        </p>
+  {% endcall %}
+
+  {% call section("tokens", "Tokens") %}
+        <p>
+          Set these on the banner, or on an ancestor to reach several of them.
+          The colours are shared by both variants; the geometry belongs to one
+          layout or the other.
+        </p>
+        {% call token_table() %}
+                <tr><td><code>--md-comp-banners-color</code></td><td><code>var(--md-sys-color-surface-container)</code></td></tr>
+                <tr><td><code>--md-comp-banners-body-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-banners-title-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-banners-icon-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-banners-close-button-color</code></td><td><code>var(--md-sys-color-primary)</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-height</code></td><td><code>56px</code> (<code>112px</code> below 600dp)</td></tr>
+                <tr><td><code>--md-comp-banners-basic-shape</code></td><td><code>28px</code> (<code>0</code> when <code>square</code>)</td></tr>
+                <tr><td><code>--md-comp-banners-basic-leading-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-trailing-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-top-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-bottom-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-icon-container-size</code></td><td><code>48px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-body-text-top-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-body-text-bottom-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-no-icon-body-text-leading-space</code></td><td><code>16px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-actions-between-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-actions-leading-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-actions-trailing-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-shape</code></td><td><code>28px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-leading-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-trailing-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-top-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-bottom-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-icon-text-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-image-size</code></td><td><code>80px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-image-text-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-leading-element-leading-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-with-image-leading-space</code></td><td><code>20px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-title-text-top-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-title-text-bottom-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-actions-between-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-actions-top-space</code></td><td><code>12px</code></td></tr>
+        {% endcall %}
+        <p>
+          The message and the rich heading both carry the
+          <a href="{{ url_for('typography') }}">body-medium</a> type role — the
+          heading at weight 500, which is Material's emphasized body-medium.
+          Action buttons are ordinary
+          <a href="{{ url_for('buttons') }}">text buttons</a> and take their
+          colour from the theme, not from the banner.
+        </p>
+  {% endcall %}
+{% endcall %}
+{% endblock %}
