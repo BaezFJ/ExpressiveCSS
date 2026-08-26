@@ -591,9 +591,13 @@
         <h3 class="docs-section-title headline-medium">Tokens</h3>
 
         <p>
-          Set these on the banner, or on an ancestor to reach several of them.
-          The colours are shared by both variants; the geometry belongs to one
-          layout or the other.
+          Set these on the banner itself, or in a rule of your own that picks
+          out the banners you want to change —
+          <code>.notice-area .banner { … }</code>. They are declared on the
+          component, so a value set on an ancestor <em>element</em> is shadowed
+          by the banner's own default rather than inherited. The colours are
+          shared by both variants; the geometry belongs to one layout or the
+          other.
         </p>
         
         <table class="striped">

@@ -77,7 +77,13 @@
   // The close button is the one control M3 colours from the banner family
   // rather than from its own. The action buttons are ordinary text buttons and
   // are left alone - `primary` clears 5:1 on both container colours.
-  > .icon-button {
+  //
+  // The `:not()` is load-bearing, not defensive. `_icon-buttons.scss` sets this
+  // very token for the disabled state at the same (0,2,0) specificity, and
+  // banners is forwarded after it, so an unscoped override wins the tie and
+  // repaints a disabled close button at full-strength primary. Scoped, the rule
+  // simply stops matching and the disabled colour stands.
+  > .icon-button:not(:disabled, [disabled], [aria-disabled="true"], .disabled) {
     --md-comp-icon-button-color: var(--md-comp-banners-close-button-color);
   }
 }

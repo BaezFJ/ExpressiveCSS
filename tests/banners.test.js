@@ -145,12 +145,34 @@ describe('Banner variants', () => {
     }
   });
 
+  // Both halves of this matter. `_icon-buttons.scss` sets the same token for
+  // the disabled state at the same specificity and is forwarded first, so an
+  // unscoped override here would win the tie and paint a disabled close button
+  // at full-strength primary.
   test('the close button takes its colour from the banner, not the icon button', () => {
-    const body = ruleFor('.banner > .icon-button');
+    const enabled = '.banner > .icon-button:not(:disabled, [disabled], [aria-disabled=true], .disabled)';
+    const body = ruleFor(enabled);
     assert.ok(body, 'no close button rule in the sheet');
     assert.match(
       body,
       /--md-comp-icon-button-color: var\(--md-comp-banners-close-button-color\)/
     );
+  });
+
+  test('and yields the colour back when the close button is disabled', () => {
+    const overrides = rules.filter(
+      (r) =>
+        /\.banner\b/.test(r.selector) &&
+        /--md-comp-icon-button-color:/.test(r.body)
+    );
+
+    assert.ok(overrides.length, 'nothing colours the close button');
+    for (const rule of overrides) {
+      assert.match(
+        rule.selector,
+        /:not\([^)]*disabled/,
+        `${rule.selector} outranks the icon button's own disabled colour`
+      );
+    }
   });
 });
