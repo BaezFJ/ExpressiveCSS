@@ -7,12 +7,13 @@ styling preference, which is why it is recorded here rather than only in
 `src/sass/README.md`.
 
 It follows that every rule declaring a token has to be reachable from inside a
-shadow root. `:root` matches the document element and nothing else, so a
-root-anchored rule never fires there and the tokens it declares are simply
-absent. The rule this obliges is one line long and lives in
-`src/sass/README.md`: **pair the anchor with its `:host` twin** — `:root` with
-`:host`, `:root[theme='dark']` with `:host([theme='dark'])`, `[vibrant]` with
-`:host([vibrant])`. `tests/shadow-dom.test.js` fails any rule that does not.
+shadow root. `:root` matches the document element and nothing else, and a
+shadow root contains no `html` or `body` either, so a rule anchored on one of
+those never fires there and the tokens it declares are simply absent. The rule
+this obliges is one line long and lives in `src/sass/README.md`: **pair the
+anchor with its `:host` twin** — `:root` with `:host`, `:root[theme='dark']`
+with `:host([theme='dark'])`, `[vibrant]` with `:host([vibrant])`, `body` with
+`:host`. `tests/shadow-dom.test.js` fails any rule that does not.
 
 ## Why this needed deciding at all
 
@@ -23,6 +24,11 @@ entire reference layer at 338 declarations. So the sheet simultaneously
 asserted that shadow-only loading was supported and that it was not, and a
 reviewer had to catch the gap by hand on a new token in #37 rather than a test
 catching it.
+
+It was not only the token layer. `base/_grid.scss` declared `--gap-size` on
+`body`, and `.row` reads it with no fallback, so every grid in a shadow-only
+load had an invalid `gap` rather than a default one — found by the review of
+this change, after the first pass had narrowed the rule to `:root`.
 
 The half that was defined was defined in terms of the half that was not:
 `tokens/_theme.scss` resolves every role as
@@ -50,9 +56,10 @@ anyway. A convention nothing checks decays at the rate components are added.
 
 ## Consequences
 
-Nine rules carry a `:host` twin, `[icon-style]` and the three `[theme]`
-selectors included, so a shadow tree can be pinned to a theme or an icon style
-the way a page can. `:host` matches nothing in a document, so none of this
+Eleven rules carry a `:host` twin, `[icon-style]`, the three `[theme]`
+selectors and the grid's two `body` rules included, so a shadow tree can be
+pinned to a theme or an icon style the way a page can, and a grid in one has a
+gutter. `:host` matches nothing in a document, so none of this
 changes what a normally-loaded sheet does.
 
 The commitment is bounded to what CSS alone can honour. Adopting the sheet does

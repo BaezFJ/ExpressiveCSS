@@ -4,8 +4,9 @@
 // to and what this enforces.
 //
 // The failure it guards is silent and total, not cosmetic. `:root` matches the
-// document element and nothing else, so a rule anchored on it never fires
-// inside a shadow root: the tokens it declares are simply absent. And an
+// document element and nothing else - and `html` and `body` are no more
+// reachable - so a rule anchored on one never fires inside a shadow root: the
+// tokens it declares are simply absent. And an
 // undefined custom property makes its whole declaration INVALID AT
 // COMPUTED-VALUE TIME - the property falls to its inherited or initial value
 // rather than to the rule underneath - so the damage spreads past the token
@@ -76,19 +77,26 @@ function splitSelectorList(selector) {
 }
 
 /**
- * The leading compound of `selector`, if it can only ever match a document
- * root or a descendant of one: `:root`, `:root[theme=dark]`, `[vibrant]`.
+ * The leading compound of `selector`, if it can only ever match a document root
+ * or a descendant of one: `:root`, `:root[theme=dark]`, `body`, `[vibrant]`.
  *
- * Returns null when the compound continues with an element, class, or
- * pseudo-class - `menu[id][vibrant]` and `.icon-button:is([disabled])` name a
- * real element and are reachable inside a shadow tree already.
+ * `html` and `body` count for the same reason `:root` does, and are not a
+ * theoretical case - `body` carried `--gap-size`, which `.row` reads without a
+ * fallback, so a `.row` in a shadow-only load had an invalid `gap`. A shadow
+ * root has no document element and no `<body>` inside it.
+ *
+ * Returns null when the compound continues with a class, id, or pseudo-class -
+ * `menu[id][vibrant]` and `.icon-button:is([disabled])` name a real element and
+ * are reachable inside a shadow tree already.
  */
 function rootAnchor(selector) {
-  const [match, root, attrs] = /^(:root)?((?:\[[^\]]+\])*)/.exec(selector);
+  const [match, root, attrs] = /^(:root|html|body)?((?:\[[^\]]+\])*)/.exec(selector);
   if (!root && !attrs) return null;
   const rest = selector.slice(match.length);
   if (rest && !/^[\s>+~]/.test(rest)) return null;
-  return { attrs, rest };
+  // An element anchor carries no attributes into :host() - `body[dir=rtl]` is
+  // an attribute of the document body, not of the shadow host.
+  return { attrs: root === ':root' || !root ? attrs : '', rest };
 }
 
 /** The `:host` selector that reaches the same elements from inside a shadow root. */

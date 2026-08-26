@@ -150,6 +150,12 @@ elements from inside a shadow tree:
 [vibrant], :host([vibrant]) { … }
 ```
 
+An anchor is anything that can only match a document root or a descendant of
+one, which is `html` and `body` as well: a shadow root has neither inside it.
+`base/_grid.scss` put `--gap-size` on `body` and `.row` reads it without a
+fallback, so a `.row` in a shadow-only load had an invalid `gap` rather than a
+default one.
+
 `color-scheme` counts as a token here: `light-dark()` resolves against the
 element's used `color-scheme`, so an unpaired `:root[theme='dark']` means a
 shadow tree cannot be pinned to a theme the way a page can.
