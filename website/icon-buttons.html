@@ -295,6 +295,15 @@
           the suite.
         </p>
         <p>
+          It keeps its own look inside the components that host actions — a
+          toolbar, an app bar, a list row, a dialog header, a snackbar, a
+          navigation rail, a pane header, a footer. Those hosts style the plain
+          controls they are given and step aside for a control that styles
+          itself, the same way they already do for <code>button</code>. A
+          navigation drawer row is the exception: every row there is one 48dp
+          shape, <code>.button</code> included.
+        </p>
+        <p>
           This is a component in its own right, not a modifier on the common
           button. Material 3 gives it its own token families, its own size
           ladder and its own colours, and none of them line up with a common

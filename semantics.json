@@ -436,9 +436,9 @@
         {
           "id": "icon-button-is-a-control",
           "kind": "forbid",
-          "selector": ".icon-button:not(button):not(a)",
+          "selector": ".icon-button:not(button):not(a[href])",
           "fragmentSafe": true,
-          "message": "An icon button is a control: <button>, or <a class=\"icon-button\"> when it navigates. A <div> is neither focusable nor announced."
+          "message": "An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced."
         },
         {
           "id": "icon-button-icon-hidden",

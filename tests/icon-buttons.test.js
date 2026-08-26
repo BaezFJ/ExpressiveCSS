@@ -2,9 +2,23 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const root = new URL('../', import.meta.url);
+const css = readFileSync(new URL('dist/css/expressive.css', root), 'utf8');
+
+/** Every Sass partial, as a path relative to the repo root. */
+function sassFiles() {
+  const out = [];
+  const walk = (dir) => {
+    for (const e of readdirSync(new URL(dir, root), { withFileTypes: true })) {
+      if (e.isDirectory()) walk(`${dir}${e.name}/`);
+      else if (e.name.endsWith('.scss')) out.push(`${dir}${e.name}`);
+    }
+  };
+  walk('src/sass/');
+  return out;
+}
 
 /** The declarations of the first rule whose selector matches `pred`. */
 const ruleFor = (pred) =>
@@ -67,5 +81,36 @@ describe('Icon button CSS', () => {
   // filled primary container.
   test('the common button does not claim it', () => {
     assert.match(css, /button:not\([^)]*\.icon-button/);
+  });
+
+  // Nor does any other host. A host that styles its own child controls always
+  // lets a control that styles itself opt out - that is what `.button` is
+  // doing in these lists - and an icon button is such a control. There is no
+  // shared variable behind them, so this walks the partials instead: the
+  // `$_not-label` lists in forms/ were five hand-copied lists that had already
+  // drifted, and these are twelve.
+  //
+  // The member goes INSIDE the existing `:not()` argument list, never chained
+  // after it. `:not(a, b)` takes the specificity of its heaviest argument, so
+  // joining the list leaves the host rule exactly as specific as it was, while
+  // `:not(.button):not(.icon-button)` would add a class and could flip a tie
+  // on markup that has nothing to do with icon buttons.
+  test('every host that lets .button opt out lets .icon-button opt out', () => {
+    const drifted = [];
+    for (const file of sassFiles()) {
+      readFileSync(new URL(file, root), 'utf8').split('\n').forEach((line, i) => {
+        if (line.trimStart().startsWith('//')) return;
+        for (const [, args] of line.matchAll(/:not\(([^()]*)\)/g)) {
+          const members = args.split(',').map((a) => a.trim());
+          if (!members.includes('.button') || members.includes('.icon-button')) continue;
+          drifted.push(`${file}:${i + 1} ${line.trim()}`);
+        }
+      });
+    }
+    assert.deepEqual(
+      drifted,
+      [],
+      `these lists let .button style itself but not .icon-button:\n${drifted.join('\n')}`
+    );
   });
 });

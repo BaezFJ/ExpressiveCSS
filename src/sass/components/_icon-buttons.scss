@@ -13,6 +13,19 @@
 // The 40dp `.button.circle` icon button is untouched. It stays what it always
 // was: a common button wearing a round shape.
 //
+// Hosts step aside for it. A component that styles its own child controls
+// already lets a control that styles itself opt out - that is what `.button` is
+// doing in those `:not()` lists - and `.icon-button` is now in every one of
+// them (toolbar, app bar, list row, dialog, snackbar, rail, panes, footer,
+// side sheet). `tests/icon-buttons.test.js` keeps the lists in step; the member
+// goes inside the existing `:not()` argument list, never chained after it, so
+// the host rule stays exactly as specific as it was.
+//
+// The navigation drawer is the deliberate exception. Its `$_row` geometry has
+// no opt-out for `.button` either: every row in a drawer is one shape, and
+// carving an icon button out of that is the drawer's decision to make, not
+// this component's.
+//
 // Anatomy is the HTML — one control, one icon, and the name on the control.
 // The icon is decoration (`aria-hidden`), so `aria-label` is the only name the
 // control has; `semantics.json` enforces both halves of that.

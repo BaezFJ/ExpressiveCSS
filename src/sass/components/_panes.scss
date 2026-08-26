@@ -272,7 +272,7 @@
 
     // See _dialog: `:only-child` cannot see a text-node label, so `.button`
     // is the opt-out for an icon action that also carries one.
-    > :is(button:not(.button), a.button):has(> #{$icon}:only-child) {
+    > :is(button:not(.button, .icon-button), a.button):has(> #{$icon}:only-child) {
       flex: 0 0 48px;
       box-sizing: border-box;
       width: 48px;

@@ -46,7 +46,7 @@
 // focus treatment, a label does not. Both are wrapped in :is() - a bare
 // comma list breaks out of its context (see $_bar in _navbar).
 $_row: ":is(li > :is(a, button, .subheader), summary)";
-$_row-control: ":is(li > :is(a, button):not(.button, .circle, .extra), summary)";
+$_row-control: ":is(li > :is(a, button):not(.button, .icon-button, .circle, .extra), summary)";
 
 
 dialog:is(.sidenav-overlay, .navigation-drawer-overlay),
@@ -196,7 +196,7 @@ dialog:is(.sidenav, .navigation-drawer) {
     align-content: center;
   }
 
-  li.active > :is(a, button):not(.button, .circle, .extra) {
+  li.active > :is(a, button):not(.button, .icon-button, .circle, .extra) {
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
   }
@@ -242,7 +242,7 @@ dialog:is(.sidenav, .navigation-drawer) {
   // Every <button> is a styled button ($_btn in _buttons is `button:not(...)`),
   // so a command row has to be stripped back to a row the same way <summary>
   // is. The chevron below stays summary-only.
-  :is(summary, li > button:not(.button, .circle, .extra)) {
+  :is(summary, li > button:not(.button, .icon-button, .circle, .extra)) {
     box-sizing: border-box;
     // A <button> centres its own content, so a command row's label sat in the
     // middle of the row while every anchor row started at the inset.

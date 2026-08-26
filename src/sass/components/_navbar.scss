@@ -107,7 +107,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   // keying on the element meant every bar written the documented way lost this
   // rule — the leading action fell through to the generic button pill and the
   // trailing ones were picked up by the text-destination rule below.
-  > #{$_bar} > :is(a, button):not(.button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
+  > #{$_bar} > :is(a, button):not(.button, .icon-button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -150,12 +150,12 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   // anatomy, here as everywhere else in this file. Without this the trailing
   // token was declared and consumed by nothing, so the documented way to opt
   // into the spec's muted trailing icons did nothing at all.
-  > #{$_bar} > :is(h1, h2, h3, h4, h5, h6) ~ :is(a, button):not(.button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
+  > #{$_bar} > :is(h1, h2, h3, h4, h5, h6) ~ :is(a, button):not(.button, .icon-button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
     color: var(--md-comp-top-app-bar-trailing-icon-color);
   }
 
   // Text destinations, either loose or grouped in a menu/list.
-  > #{$_bar} > a:not(:has(> #{$icon}:only-child)):not(.button):not(.circle):not(.breadcrumb) {
+  > #{$_bar} > a:not(:has(> #{$icon}:only-child)):not(.button, .icon-button):not(.circle):not(.breadcrumb) {
     @extend %app-bar-destination;
   }
 

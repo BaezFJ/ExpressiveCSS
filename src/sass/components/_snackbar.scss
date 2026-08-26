@@ -126,7 +126,7 @@ $_bar: ".snackbar";
   }
 
   // Inline links in the supporting text use the action color.
-  a:not(.button) {
+  a:not(.button, .icon-button) {
     color: var(--md-comp-snackbar-action-label-text-color);
   }
 
@@ -145,8 +145,8 @@ $_bar: ".snackbar";
   }
 
   // Text action — inverse-primary, not the filled common-button default.
-  > :is(button, a.button):not(.circle),
-  > nav > :is(button, a.button):not(.circle) {
+  > :is(button, a.button):not(.circle, .icon-button),
+  > nav > :is(button, a.button):not(.circle, .icon-button) {
     flex: 0 0 auto;
     height: 40px;
     min-width: 48px;

@@ -133,9 +133,9 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
     user-select: none;
   }
 
-  // :not(.button) - the file input's trigger is a <label> and is a button, not
-  // this field's floating label.
-  > label:not(.button),
+  // :not(.button, .icon-button) - the file input's trigger is a <label> and is
+  // a button, not this field's floating label.
+  > label:not(.button, .icon-button),
   > span:not(#{$_not-label}) {
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
