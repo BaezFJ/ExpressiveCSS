@@ -461,6 +461,31 @@ below is the whole story for that component.
 
 ### Removed
 
+- **Waves is gone, replaced by state layers.** Material 3 has no ink ripple; it
+  has a state layer, and the framework's is complete — a `md.sys.state` opacity
+  per state, documented on the State layers page, painted by the components
+  themselves. Keeping a second, script-driven feedback system beside it meant
+  two answers to one question, so the ripple is deleted rather than deprecated:
+  `behaviors/waves.ts`, the import-time `Waves.Init()`, the `Expressive.Waves`
+  export, and the Waves docs page. The bundle no longer attaches a delegated
+  `click` listener to `document.body`.
+
+  **Migration.** `.waves-effect`, `.waves-light` and `.waves-circle` never
+  matched a style rule — they were hooks the script read — so markup carrying
+  them still renders exactly as it does today, minus the ripple. **Delete
+  them**; nothing reads them any more. There is no replacement class to add,
+  because a state layer is not authored: an interactive component paints its
+  own. `Expressive.Waves.renderWaveEffect()` has no successor.
+
+  Five surfaces relied on Waves for their only press feedback and now carry a
+  pressed state layer of their own: the media-covering `.card-reveal-trigger`
+  and `.expanding-card-trigger` buttons, the actions inside a `.fab.toolbar`,
+  navigation drawer rows, and pagination items. The last two matter most on
+  touch, where hover never fires and both already suppressed the tap
+  highlight. The two card triggers read the card's own
+  `--md-comp-card-*-state-layer-*` tokens, so overriding a card still reaches
+  them; the other three have no component token and read `--md-sys-state-*`.
+
 - **Slideshow is gone, and Carousel takes the case.** Charter work for 1.0.0,
   like Parallax and Pulse below. M3 has no slideshow — its Carousel is the
   component for a band of media — and once Carousel could advance on its own

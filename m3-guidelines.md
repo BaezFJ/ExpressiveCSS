@@ -159,7 +159,7 @@ Selected items (nav destinations, menu rows, list rows, toggle buttons) **change
 
 ## 2.4 Motion
 
-- Use the framework’s state layers and waves. Do not add custom bounce to FABs or snackbars.
+- Use the framework’s state layers. Do not add custom bounce to FABs or snackbars.
 - Opening a modal (`showModal()`) must leave the page inert and unscrolled.
 - Drag-dismiss belongs on bottom sheets (handle) and side sheets (header / inner edge), not on dialogs.
 - Prefer `prefers-reduced-motion` defaults already in the CSS; do not add a second animation system.
@@ -1231,7 +1231,6 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 
 | Extra | What it is | Don't use it as |
 | --- | --- | --- |
-| Waves | Press ripple. Import-time `Waves.Init()`. | A button style |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
 | FAB-to-toolbar | `.fab.toolbar` morph | An M3 toolbar (`div.toolbar`) |

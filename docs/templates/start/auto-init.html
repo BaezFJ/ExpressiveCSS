@@ -14,7 +14,7 @@
         </p>
         <p>
           Importing the JavaScript installs a few document-level behaviors
-          (Forms, Waves, Range, Chips, and Cards), but it does
+          (Forms, Chips, Slider, Cards, and ExpandingCard), but it does
           <strong>not</strong> call <code>AutoInit()</code> for you. Call it after the DOM is ready.
           This documentation site does that in <code>docs.js</code> on <code>DOMContentLoaded</code>.
         </p>
@@ -102,7 +102,7 @@ Tooltip.init(element, { position: 'top' });
         </table>
         <p>
           Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the
-          bundle loads. Forms, Waves, Chips, and Cards also run an import-time <code>Init()</code>;
+          bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time <code>Init()</code>;
           Chips and Cards appear in the table as well so a later <code>AutoInit()</code> can pick up
           elements added after load.
         </p>

@@ -612,6 +612,18 @@ $_fab: ":is(.fab, .fixed-action-btn)";
         background: transparent;
         box-shadow: none;
         color: var(--md-sys-color-on-primary-container);
+
+        &:hover {
+          background-color: color-mix(in oklab, var(--md-sys-color-on-primary-container) state-opacity("hover"), transparent);
+        }
+
+        &:focus-visible {
+          background-color: color-mix(in oklab, var(--md-sys-color-on-primary-container) state-opacity("focus"), transparent);
+        }
+
+        &:active {
+          background-color: color-mix(in oklab, var(--md-sys-color-on-primary-container) state-opacity("pressed"), transparent);
+        }
       }
     }
   }

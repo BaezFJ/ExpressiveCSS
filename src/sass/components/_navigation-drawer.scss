@@ -196,9 +196,29 @@ dialog:is(.sidenav, .navigation-drawer) {
     align-content: center;
   }
 
+  // The selected destination keeps its pill under the pointer: the row's own
+  // state layer mixes into `transparent`, so letting it reach a selected row
+  // would erase the fill rather than tint it. Higher specificity than the row
+  // rule, so order does not matter.
   li.active > :is(a, button):not(.button, .icon-button, .circle, .extra) {
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
+
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-secondary-container) state-opacity("hover"),
+        var(--md-sys-color-secondary-container)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-secondary-container) state-opacity("pressed"),
+        var(--md-sys-color-secondary-container)
+      );
+    }
   }
 
   #{$_row} {
@@ -230,6 +250,10 @@ dialog:is(.sidenav, .navigation-drawer) {
 
     &:hover {
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    }
+
+    &:active {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("pressed"), transparent);
     }
 
     @include focus-visible;
@@ -321,7 +345,7 @@ dialog:is(.sidenav, .navigation-drawer) {
       height: auto;
       padding: 0;
 
-      &:hover {
+      &:is(:hover, :active) {
         background-color: transparent;
       }
     }

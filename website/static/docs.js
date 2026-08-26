@@ -1,5 +1,5 @@
-// Docs-site glue. The framework bundle only self-initializes Forms/Chips/Waves/
-// Range/Cards; everything else needs an explicit AutoInit pass.
+// Docs-site glue. The framework bundle only self-initializes Forms/Chips/
+// Slider/Cards/ExpandingCard; everything else needs an explicit AutoInit pass.
 document.addEventListener("DOMContentLoaded", () => {
   Expressive.AutoInit();
 
@@ -193,14 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("flow-toggle")?.addEventListener("click", (event) => {
     event.preventDefault();
     flowDemo?.classList.toggle("flow-text");
-  });
-
-  document.getElementById("wave-trigger")?.addEventListener("click", () => {
-    Expressive.Waves.renderWaveEffect(
-      document.querySelector(".wave-demo"),
-      null,
-      { r: 255, g: 0, b: 0 },
-    );
   });
 
   const menuLeft = document.getElementById("menu-left-trigger");

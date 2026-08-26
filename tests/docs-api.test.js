@@ -26,7 +26,6 @@ const HOOKS = new Set([
   'date-picker', 'time-picker', 'datepicker', 'timepicker',
   'navigation-drawer-trigger', 'navigation-drawer-close', 'sidenav-trigger', 'sidenav-close',
   'menu-trigger', 'lightboxed', 'scrollspy', 'carousel-item',
-  'waves-effect', 'waves-light', 'waves-circle',
   'chips-initial', 'chips-placeholder', 'chips-autocomplete', 'custom-class',
   'navigation-drawer', 'fab'
 ]);
@@ -51,7 +50,7 @@ const PLACEHOLDERS = new Set(['ComponentName']);
 // pattern-matched so that adding one is a deliberate act: the whole point of
 // this check is that a selector nothing defines is usually a rename that was
 // only half applied.
-const READERS_OWN = new Set(['custom-tooltip', 'wave-demo', 'component']);
+const READERS_OWN = new Set(['custom-tooltip', 'component']);
 
 describe('documented script', () => {
   test('every Expressive.X names something the bundle exports', () => {
@@ -72,7 +71,7 @@ describe('documented script', () => {
         for (const cls of m[1].matchAll(/\.([\w-]+)/g)) {
           if (HOOKS.has(cls[1]) || READERS_OWN.has(cls[1]) || css.includes(`.${cls[1]}`)) continue;
           // A class the example itself introduces is the reader's, not the
-          // framework's - `.wave-demo`, `.custom-tooltip`. Nothing defining it
+          // framework's, such as `.custom-tooltip`. Nothing defining it
           // anywhere is the failure worth reporting.
           if (new RegExp(`class="[^"]*\\b${cls[1]}\\b`).test(text)) continue;
           failures.push(`${file}:${text.slice(0, m.index).split('\n').length}  .${cls[1]} is styled by nothing and is not a known hook`);

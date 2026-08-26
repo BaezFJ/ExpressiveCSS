@@ -91,6 +91,12 @@
       background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
     }
 
+    // The pressed layer is the only feedback a touch tap gets: hover never
+    // fires there and the tap highlight is suppressed above.
+    &:active {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("pressed"), transparent);
+    }
+
     // "Does this control carry a text label?" - the icon is a <span>, so a
     // bare `span` here answers yes for every icon-only prev/next button.
     &:has(> #{$icon-label}) {
@@ -114,7 +120,15 @@
     &:hover {
       background-color: color-mix(
         in oklab,
-        var(--md-comp-pagination-selected-on-color) 8%,
+        var(--md-comp-pagination-selected-on-color) state-opacity("hover"),
+        var(--md-comp-pagination-selected-color)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-comp-pagination-selected-on-color) state-opacity("pressed"),
         var(--md-comp-pagination-selected-color)
       );
     }

@@ -17,14 +17,12 @@ import { Dialogs } from "./behaviors/dialogs";
 import { BottomSheets } from "./behaviors/bottomSheets";
 import { SideSheets } from "./behaviors/sideSheets";
 import { Forms } from "./behaviors/forms";
-import { Waves } from "./behaviors/waves";
 
 export * from "./components";
 export { Dialogs } from "./behaviors/dialogs";
 export { BottomSheets } from "./behaviors/bottomSheets";
 export { SideSheets } from "./behaviors/sideSheets";
 export { Forms } from "./behaviors/forms";
-export { Waves } from "./behaviors/waves";
 export { AutoInit } from "./components/registry";
 export type { AutoInitOptions } from "./components/registry";
 
@@ -42,7 +40,6 @@ if (typeof document !== "undefined") {
 }
 Forms.Init();
 Chips.Init();
-Waves.Init();
 Slider.Init();
 Cards.Init();
 ExpandingCard.Init();
