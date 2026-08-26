@@ -1,0 +1,57 @@
+@use "../abstracts" as *;
+
+// Vibrant emphasis (M3 Expressive).
+//
+// Vibrant is not a component variant. It is a surface *emphasis*: the same
+// component, drawn on an accent container instead of a neutral surface. M3
+// ships it as a parallel token set per component - md.comp.menus-vibrant,
+// md.comp.toolbar-vibrant, VibrantTimePickerDialog in Compose - which means
+// every component that gains the axis copies the same eight mappings and every
+// one of them can drift. Here it is one subtree remap of the surface family,
+// so a component needs no vibrant code at all to sit in a vibrant surface.
+//
+// The mechanism is the one tokens/_theme.scss already relies on: a custom
+// property redeclared on an element is inherited by everything under it, and a
+// light-dark() token substituted into it stays unresolved until it is *used*.
+// So [vibrant] follows a runtime theme switch for free - it points at the live
+// --md-sys-color-* roles, not at the -light / -dark pair behind them.
+//
+// The accent ramp is a parameter. Bare [vibrant] is tertiary, which is what M3
+// uses for the axis; [vibrant='primary'] and [vibrant='secondary'] pick
+// another. Nothing is restyled until an author writes the attribute.
+//
+// The elevation ladder deliberately collapses: every surface-container rung
+// resolves to the one container color, because that is what a vibrant surface
+// is in M3 and inventing intermediate tints would put five numbers in the
+// framework that the spec does not have. The consequence is that nesting
+// surfaces inside a vibrant subtree stops distinguishing them - put [vibrant]
+// on the component you want emphasized, not on the page.
+
+// Every surface role that resolves to the accent container, flat.
+$_vibrant-surfaces:
+  "surface", "surface-dim", "surface-bright", "surface-variant", "background",
+  "surface-container-lowest", "surface-container-low", "surface-container",
+  "surface-container-high", "surface-container-highest";
+
+@mixin _vibrant($ramp) {
+  @each $role in $_vibrant-surfaces {
+    --md-sys-color-#{$role}: var(--md-sys-color-#{$ramp}-container);
+  }
+
+  --md-sys-color-on-surface: var(--md-sys-color-on-#{$ramp}-container);
+  --md-sys-color-on-surface-variant: var(--md-sys-color-on-#{$ramp}-container);
+  --md-sys-color-on-background: var(--md-sys-color-on-#{$ramp}-container);
+
+  // Outlines are the text color at the opacity M3 gives them on a neutral
+  // surface, so a divider tints with the container instead of staying grey.
+  --md-sys-color-outline: color-mix(in oklab, var(--md-sys-color-on-#{$ramp}-container) 60%, transparent);
+  --md-sys-color-outline-variant: color-mix(in oklab, var(--md-sys-color-on-#{$ramp}-container) 20%, transparent);
+}
+
+[vibrant] { @include _vibrant("tertiary"); }
+
+// tertiary is not in the loop: [vibrant] already matches [vibrant='tertiary']
+// and emits the same declarations, so generating it again is dead CSS.
+@each $ramp in ("primary", "secondary") {
+  [vibrant="#{$ramp}"] { @include _vibrant($ramp); }
+}

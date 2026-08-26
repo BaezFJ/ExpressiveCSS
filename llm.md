@@ -192,6 +192,8 @@ Switch at runtime by changing the attribute:
 document.documentElement.setAttribute('theme', 'dark');
 ```
 
+Add the `vibrant` attribute to any element to draw its subtree on an accent container instead of a neutral surface (`vibrant`, `vibrant="primary"`, `vibrant="secondary"`).
+
 The live Material tokens use the `--md-sys-color-<role>` naming scheme. Override `--md-source` to generate the primary, secondary, tertiary, neutral, and neutral-variant ramps at runtime. Use the live role token in component CSS rather than a `-light` or `-dark` source token.
 
 ```css
@@ -632,6 +634,20 @@ Where the shipped seed `#006A79` lands, for the roles you will most often replac
 `error` is the one row that does not move when you change the seed — it is the ramp that is not generated.
 
 The full list of role utilities lives on the Color page. Pair a fill with its `on-*` text class so contrast stays correct when the scheme flips.
+
+### Vibrant emphasis
+
+`vibrant` is Material 3 Expressive's emphasis axis, and it is a foundation rather than a component variant: the attribute remaps the surface family of `--md-sys-color-*` roles inside its subtree onto an accent container, and every component already reads those roles. Nothing is restyled until you write the attribute.
+
+```html
+<article vibrant>…</article>
+<article vibrant="primary">…</article>
+<article vibrant="secondary">…</article>
+```
+
+A bare `vibrant` is tertiary. The remap covers `surface`, `background`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, `surface-variant`, their `on-*` roles, and the two outline roles; accent roles such as `primary` are untouched, so a filled button still stands out. It points at the live role names, so a runtime theme switch reaches it.
+
+The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis.
 
 ---
 

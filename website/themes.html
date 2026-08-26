@@ -560,6 +560,68 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
       </div>
 
 
+  <div id="vibrant" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Vibrant emphasis</h3>
+
+        <p>
+          <em>Vibrant</em> is Material 3 Expressive's emphasis axis. It is not a
+          component variant: it is the same component drawn on an accent
+          container instead of a neutral surface. Material ships it as a
+          parallel token set per component — <code>menus-vibrant</code>,
+          <code>toolbar-vibrant</code> — so every component that gains the axis
+          restates the same mappings.
+        </p>
+        <p>
+          Expressive makes it a foundation instead. The
+          <code>vibrant</code> attribute remaps the surface family of
+          <code>--md-sys-color-*</code> roles inside its subtree, and every
+          component already reads those roles, so nothing per-component is
+          needed and nothing changes until you write the attribute.
+        </p>
+<pre><code>&lt;article vibrant&gt;
+  &lt;p class="title-medium"&gt;Vibrant&lt;/p&gt;
+  &lt;a class="button filled"&gt;Filled&lt;/a&gt;
+&lt;/article&gt;</code></pre>
+        <article vibrant>
+          <p class="title-medium mt-0">Vibrant surface</p>
+          <p>
+            This panel sets <code>vibrant</code> on itself. Its background,
+            text, and outline come from the tertiary container; the filled and
+            tonal buttons still read <code>primary</code>, so they keep
+            standing out against it. Flip the theme and it follows.
+          </p>
+          <a class="button filled mr-2 mb-2">Filled</a>
+          <a class="button tonal mr-2 mb-2">Tonal</a>
+          <a class="button outlined mr-2 mb-2">Outlined</a>
+        </article>
+        <p>
+          The accent ramp is a parameter. A bare <code>vibrant</code> is
+          tertiary, which is what Material uses for the axis;
+          <code>vibrant="primary"</code> and <code>vibrant="secondary"</code>
+          pick another.
+        </p>
+<pre><code>&lt;article vibrant="primary"&gt;…&lt;/article&gt;
+&lt;article vibrant="secondary"&gt;…&lt;/article&gt;</code></pre>
+        <p>
+          Two things to know. The elevation ladder collapses — every
+          <code>surface-container</code> rung resolves to the one container
+          color, because that is what a vibrant surface is in Material, so
+          nesting surfaces inside a vibrant subtree stops telling them apart.
+          Put the attribute on the component you want emphasized, not on the
+          page. And the remap points at the live role names rather than a
+          <code>-light</code>/<code>-dark</code> pair, which is why a runtime
+          theme switch still reaches it.
+        </p>
+        <p>
+          Menus and toolbars also carry a <code>.vibrant</code> class. Those are
+          Material's own per-component token sets, with the colors that spec
+          gives each one; the attribute is the general axis and works on
+          anything.
+        </p>
+  
+      </div>
+
+
 
     </div>
 
@@ -572,6 +634,7 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           <li><a href="#reading-theme">Reading theme</a></li>
           <li><a href="#changing-theme">Changing theme</a></li>
           <li><a href="#creating-theme">Creating a theme</a></li>
+          <li><a href="#vibrant">Vibrant emphasis</a></li>
           </ul>
         </nav>
 

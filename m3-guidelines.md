@@ -143,6 +143,12 @@ Material uses **containment** (fill, outline, shadow, or none) to group related 
 
 Elevation is a last resort. Prefer tonal fill or an outline before a shadow. Dialogs, menus, snackbars, and FABs do use elevation because they sit above the page. Cards default to elevation 1; filled and outlined cards use 0.
 
+**Vibrant** is the M3 Expressive emphasis axis above containment: the same component drawn on an accent container instead of a neutral surface. In Material it is a parallel token set per component (`menus-vibrant`, `toolbar-vibrant`, `VibrantTimePickerDialog`); in ExpressiveCSS it is the `vibrant` attribute, which remaps the surface roles for its whole subtree — bare `vibrant` is tertiary, `vibrant="primary"` and `vibrant="secondary"` pick another ramp.
+
+- Use vibrant for one region that has to carry the eye — an overflow menu, a floating toolbar, a hero panel. It is a rare, high-emphasis move.
+- Don't make the page vibrant. The surface-container ladder collapses to one color, so nested surfaces stop reading as separate.
+- Don't stack it with an already-emphasized container. A vibrant panel of filled buttons has nowhere left to go.
+
 ## 2.3 Shape and size (M3 Expressive)
 
 Buttons, icon buttons, and FABs share a size scale: **32 / 40 / 56 / 96 / 136 dp**, named `xsmall` / `small` / `medium` / `large` / `xlarge`. Common buttons and icon buttons both default to **40 dp** (Material small) and both carry the full ladder as classes. FABs are **56 dp** with 16 dp corners (`circle extra`), or 40 dp / 80 dp / 96 dp with `small` / `medium` / `large`.

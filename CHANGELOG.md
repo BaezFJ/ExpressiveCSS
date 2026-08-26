@@ -16,6 +16,19 @@ below is the whole story for that component.
 
 ### Added
 
+- **The vibrant emphasis axis is a foundation, not a component variant.** The
+  `vibrant` attribute remaps the surface family of `--md-sys-color-*` roles for
+  its whole subtree onto an accent container, so a component needs no vibrant
+  code of its own to sit on one — the same inheritance trick `tokens/_theme.scss`
+  uses for `light-dark()`. A bare `vibrant` is tertiary, which is what Material
+  uses for the axis; `vibrant="primary"` and `vibrant="secondary"` pick another
+  ramp. It points at the live role names rather than the `-light` / `-dark`
+  pair, so a runtime theme switch reaches it. Nothing is restyled by default,
+  and the `.vibrant` classes on Menu and Toolbar are unchanged: those are
+  Material's own per-component token sets, with the colours that spec gives
+  each one. The elevation ladder collapses inside a vibrant subtree — every
+  `surface-container` rung resolves to the one container colour, which is what
+  a vibrant surface is in Material — so it belongs on a component, not a page.
 - **Carousel can advance on its own, with a pause contract that cannot be
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each
