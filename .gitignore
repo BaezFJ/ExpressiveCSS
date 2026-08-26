@@ -33,9 +33,15 @@ pip-wheel-metadata/
 # base revision photographed at the start of each run (100+ MB of PNG),
 # .visual-base/ is the git worktree it was served from, and report/ and
 # results/ are that run's output. See visual/run.mjs.
+#
+# test-results/ is Playwright's default outputDir. visual/playwright.config.js
+# points outputDir at visual/results/ instead, so nothing writes it during a
+# normal run -- but any invocation that does not pass that config falls back to
+# the default and drops a .last-run.json at the repo root.
 visual/__shots__/
 visual/report/
 visual/results/
+test-results/
 .visual-base/
 
 # Test, coverage, and tool caches
