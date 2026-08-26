@@ -1,0 +1,200 @@
+@use "sass:map";
+@use "../abstracts" as *;
+
+// Button groups.
+//
+// Anatomy is the HTML. A <div class="button-group"> holding two or more
+// buttons - related actions that read as one control without becoming one.
+// The group is a container of independent buttons: each is its own Tab stop,
+// each does its own thing, and nothing here is scripted.
+//
+// No composite role is declared. `role="toolbar"` and its nine siblings
+// promise arrow-key navigation this component does not implement and does not
+// want to - SEMANTICS rule 2. A group that needs a name takes `role="group"`
+// with an `aria-label`, which promises no keyboard model at all.
+//
+// Two variants and five sizes, which M3 states as ten token families
+// (md.comp.button-group.{standard,connected}.{xsmall…xlarge}, DSP 34.0.21).
+// They collapse to one family here the way the button's own ladder does: the
+// size class rewrites the tokens, and only the numbers that actually differ
+// are named twice.
+//
+//   standard   items keep their own round shape; the gap closes as the
+//              buttons grow (18 / 12 / 8 / 8 / 8dp), and pressing one widens
+//              it by 15% of its width
+//   connected  items sit 2dp apart at every size, the ends of the row are
+//              round and the joins are square-ish, and pressing an item
+//              squares its inner corners further
+//
+// Selection is deliberately absent. M3's connected group has a selected state
+// with fully round corners, and holding it takes either script or a checked
+// control - which is `.segmented-button`, a <fieldset> of radios that already
+// does exactly that. A group of <button>s has no state to read.
+
+// The items: common buttons, and `.circle` for an icon-only one - which is
+// the shape M3 draws a group with most often, and which the group sizes like
+// any other item.
+//
+// `.icon-button` is deliberately *not* an item. It is its own component with
+// its own size ladder, its own insets and its own pressed shape, all set on
+// the element by its own rule - so a group could not size it by handing its
+// items tokens, and the corner morph here would fight the one it already
+// draws. Write `<button class="button circle">` for an icon-only group.
+//
+// This is also not `_buttons.scss`'s `$_btn`, which excludes the widget chrome
+// that happens to be a <button> (a datepicker day, a chip). Chrome cannot
+// reach a group anyway: `button-group-items-are-controls` in semantics.json
+// admits only a <button> or an <a href> as a direct child, so the buttons
+// here are the ones an author put here.
+$_item: ":is(button:not(.icon-button), a.button)";
+
+// The size classes, as one `:not()` argument list - which takes the weight of
+// a single class, not five. An item carrying its own size class sets the
+// geometry tokens on itself and beats the group by inheritance; the type role
+// has no such mechanism, so the group's rule has to step aside by selector or
+// an `xlarge` item inside a `medium` group gets xlarge geometry and medium
+// type.
+$_sized: ".xsmall, .small, .medium, .large, .xlarge";
+
+// md.comp.button-group.standard.<size>.between-space
+$_standard-space: (
+  "xsmall": 18px,
+  "small": 12px,
+  "medium": 8px,
+  "large": 8px,
+  "xlarge": 8px,
+);
+
+// md.comp.button-group.connected.<size>.{inner-corner, pressed.inner-corner}.
+// The three small sizes share corner.value.small / corner.value.extra-small,
+// which is the group's default, so only the two that differ are listed.
+$_connected-corners: (
+  "large": (inner: 16px, pressed: 12px),
+  "xlarge": (inner: 20px, pressed: 16px),
+);
+
+.button-group {
+  --md-comp-button-group-between-space: 12px;
+  // M3 states this as a percentage of the item's own width. CSS cannot
+  // multiply a length by one, so it is the same figure as a ratio.
+  --md-comp-button-group-pressed-item-width-multiplier: .15;
+
+  display: flex;
+  align-items: center;
+  gap: var(--md-comp-button-group-between-space);
+
+  // The size axis. A group sizes its own items by rewriting the button
+  // tokens, which the items inherit - so a size is written once, on the
+  // group, and a button that wants to differ still overrides it with its own
+  // size class. The type role cannot travel that way: `btn` states a
+  // font-size of its own, so it is set on the items.
+  @each $name, $s in $button-sizes {
+    &.#{$name} {
+      @include button-size($name);
+
+      --md-comp-button-group-between-space: #{map.get($_standard-space, $name)};
+
+      > #{$_item}:not(#{$_sized}) {
+        @include typescale(map.get($s, label));
+      }
+    }
+  }
+
+  > #{$_item} {
+    transition: padding .2s ease-out, width .2s ease-out,
+      border-radius .2s ease-out, background-color .2s ease-out;
+  }
+
+  // Pressing an item in a standard group widens it. M3 compresses the two
+  // neighbours by the same amount so the group's own width never changes;
+  // that needs each item's measured width, which is script.
+  //
+  // ponytail: the grow is 15% of the item's *height* - exact for a `.circle`,
+  // whose width is its height, and close for a label - and the items after it
+  // slide rather than compress. Measure and compress in JS if a group ever
+  // sits in a fixed-width row where the slide is visible.
+  &:not(.connected) > #{$_item}:active {
+    --_grow: calc(
+      var(--md-comp-filled-button-container-height) *
+        var(--md-comp-button-group-pressed-item-width-multiplier) / 2
+    );
+  }
+
+  // A label button is as wide as its insets make it, so it grows by them.
+  &:not(.connected) > #{$_item}:not(.circle):active {
+    padding-inline:
+      calc(var(--md-comp-filled-button-leading-space) + var(--_grow))
+      calc(var(--md-comp-filled-button-trailing-space) + var(--_grow));
+  }
+
+  // A `.circle` states its own width and has no insets to grow - padding would
+  // squeeze the icon inside the same box rather than widen it.
+  &:not(.connected) > #{$_item}.circle:active {
+    width: calc(
+      var(--md-comp-filled-button-container-height) + 2 * var(--_grow)
+    );
+  }
+
+  // `_buttons.scss` pins a `.circle` glyph to 24px, which is the 40dp icon
+  // button it was before the size axis existed. In a group the size is the
+  // group's to state, so the glyph reads the token the size rule just set -
+  // 20px at xsmall through 40px at xlarge. Scoped here rather than fixed
+  // there: a bare `.button.circle` is pre-1.0 markup with its own default,
+  // and moving it is a break this component has no business making. #72 owns
+  // that decision - drop this rule if the general fix lands.
+  > #{$_item}.circle > #{$icon} {
+    font-size: var(--md-comp-filled-button-icon-size);
+    width: var(--md-comp-filled-button-icon-size);
+    height: var(--md-comp-filled-button-icon-size);
+    line-height: var(--md-comp-filled-button-icon-size);
+  }
+
+  // Connected. Emitted after the size rules on purpose: `.button-group.medium`
+  // and `.button-group.connected` are both two classes, so source order is the
+  // only thing that keeps a connected group at 2dp.
+  &.connected {
+    --md-comp-button-group-between-space: 2px;
+    --md-comp-button-group-container-shape: 9999px;
+    --md-comp-button-group-inner-corner-corner-size: 8px;
+    --md-comp-button-group-pressed-inner-corner-corner-size: 4px;
+
+    @each $name, $c in $_connected-corners {
+      &.#{$name} {
+        --md-comp-button-group-inner-corner-corner-size: #{map.get($c, inner)};
+        --md-comp-button-group-pressed-inner-corner-corner-size: #{map.get($c, pressed)};
+      }
+    }
+
+    // The corner goes through a variable so that pressing an item changes one
+    // value rather than restating `border-radius`. A shorthand under `:active`
+    // would take the end items' round outer corners with it.
+    > #{$_item} {
+      --_corner: var(--md-comp-button-group-inner-corner-corner-size);
+
+      border-radius: var(--_corner);
+
+      &:active {
+        --_corner: var(--md-comp-button-group-pressed-inner-corner-corner-size);
+      }
+
+      // Logical, so the ends of the row are the ends of the row in RTL too.
+      &:first-child {
+        border-start-start-radius: var(--md-comp-button-group-container-shape);
+        border-end-start-radius: var(--md-comp-button-group-container-shape);
+      }
+
+      &:last-child {
+        border-start-end-radius: var(--md-comp-button-group-container-shape);
+        border-end-end-radius: var(--md-comp-button-group-container-shape);
+      }
+    }
+  }
+}
+
+// The press grow and the corner morph are both motion, and the only motion
+// this component has.
+@media (prefers-reduced-motion: reduce) {
+  .button-group > #{$_item} {
+    transition: none;
+  }
+}

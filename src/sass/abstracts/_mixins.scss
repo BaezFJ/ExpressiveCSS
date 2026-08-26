@@ -1,4 +1,5 @@
 @use "sass:list";
+@use "sass:map";
 @use "./elevation" as *;
 @use "./variables" as *;
 
@@ -233,4 +234,20 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
       #{$color} state-opacity($state),
       transparent
     );
+}
+
+/// The button size tokens for one rung of `$button-sizes`.
+///
+/// Tokens only. The type role is emitted beside the call, never from here:
+/// `:root` takes this mixin for the default size, and a typescale on :root
+/// would set the page's font.
+@mixin button-size($name) {
+  $s: map.get($button-sizes, $name);
+
+  --md-comp-filled-button-container-height: #{map.get($s, height)};
+  --md-comp-filled-button-icon-size: #{map.get($s, icon)};
+  --md-comp-filled-button-leading-space: #{map.get($s, space)};
+  --md-comp-filled-button-trailing-space: #{map.get($s, space)};
+  --md-comp-filled-button-icon-label-space: #{map.get($s, gap)};
+  --md-comp-filled-button-outline-width: #{map.get($s, outline)};
 }

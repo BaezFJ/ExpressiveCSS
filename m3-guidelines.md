@@ -1101,7 +1101,7 @@ Three **selection controls**. They are not interchangeable.
 
 **Use when** the user picks a value along a continuum (volume, brightness, price) and the result can update live.
 
-**Don't use** for picking among 2–4 discrete named options (radios or a connected button group — the latter is not shipped). Don't put `.slider` on a range input.
+**Don't use** for picking among 2–4 discrete named options (radios, or a segmented button). Don't put `.slider` on a range input.
 
 **Anatomy.** Inactive track, active track, handle, optional stops, optional value indicator, optional inset icon (not on XS).
 
@@ -1190,6 +1190,35 @@ Three **selection controls**. They are not interchangeable.
 
 ---
 
+## 8.12 Button groups
+
+**M3:** Button group (standard, connected), five sizes each. **ExpressiveCSS:** `div.button-group` holding ordinary buttons (CSS only).
+
+**Use when** two or more related actions belong together as one visual unit — a formatting row, a set of view actions, a player's transport. A group is a set of *commands*, not a choice.
+
+| Variant | Markup | Job |
+| --- | --- | --- |
+| Standard | `<div class="button-group">` | Each item keeps its own round shape; the gap closes as the buttons grow, and a pressed item widens |
+| Connected | `<div class="button-group connected">` | Items 2 dp apart, round at the ends of the row, squared at the joins; a pressed item squares its inner corners further |
+
+**Don't**
+
+- Don't use a group for a choice. Two to five options answering one question is a segmented button, whose `<input>` holds the answer; a group of `<button>`s holds no state and nothing marks one selected.
+- Don't put a composite role on the group. Its buttons are independent commands reached with Tab, so `toolbar` and its siblings are rejected. `role="group"` with an `aria-label` is the role that fits when the group needs a name.
+- Don't wrap the items in anything. The gap and the connected corners are written against direct children, so a nested `<div>` loses both.
+- Don't leave an icon-only item unnamed. The icon is `aria-hidden`, so the button needs its own `aria-label`.
+- Don't repeat the size on every button. The size class goes on the group, which sets the button tokens its items inherit.
+- Don't write a bare `<a href>` as an item. It renders as a link and reaches none of the group's shape or sizing; the item is `<a class="button" href>`.
+- Don't put an `.icon-button` in a group. It is its own component, with its own sizes and pressed shape set on the element, so the group can neither size nor reshape it. An icon-only item is `<button class="button circle">`.
+
+**Anatomy.** A row of buttons. Heights are the button ladder — 32 / 40 / 56 / 96 / 136 dp for `xsmall` / `small` / `medium` / `large` / `xlarge` — and the gap is 18 / 12 / 8 / 8 / 8 dp standard, 2 dp connected at every size. Connected joins are 8 dp at the three smaller sizes, 16 dp at `large`, 20 dp at `xlarge`, each squaring one step further while pressed.
+
+**Placement.** Beside the content the actions apply to. One group per cluster of related actions; two groups side by side read as one and should be merged or separated by other content.
+
+**Behavior.** No script. Press feedback is the whole interaction model: a standard group grows the pressed item, a connected group reshapes it.
+
+---
+
 # 9. Display and feedback
 
 ## 9.1 Progress and loading
@@ -1251,7 +1280,6 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 | M3 component | Substitute in ExpressiveCSS |
 | --- | --- |
 | Split button | Filled button + a separate `menu-trigger` icon button. Do not glue them into a fake split control. |
-| Button groups (standard / connected) | Separate buttons, or filter chips, or radios styled in a `<nav>`. No shape-morphing group. |
 | FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
 | Loading indicator (wavy morphing) | Circular `.progress` spinner. |
 

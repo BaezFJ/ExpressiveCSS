@@ -1,0 +1,271 @@
+{% extends "docs.html" %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
+{% from "macros/api.html" import token_table %}
+
+{% set page_name = "Button groups" %}
+{% set page_blurb = "Related buttons that bump and reshape against each other, in two variants and five sizes." %}
+
+{% block page %}
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
+        <p class="flow-text">
+          A button group is a row of related actions that reads as one control
+          without becoming one — a formatting row, a set of view actions, a
+          player's transport. Each button stays its own button.
+        </p>
+        <p>
+          The root is a <code>&lt;div class="button-group"&gt;</code> and the
+          items are ordinary
+          <a href="{{ url_for('buttons') }}">buttons</a>, written directly
+          inside it — add <code>circle</code> to an item for the icon-only
+          shape Material draws a group with most often. There is no plugin and
+          nothing to initialize.
+        </p>
+        <div>
+          <div class="button-group">
+            <button class="button tonal">
+              <span class="material-symbols" aria-hidden="true">format_bold</span>
+              Bold
+            </button>
+            <button class="button tonal">
+              <span class="material-symbols" aria-hidden="true">format_italic</span>
+              Italic
+            </button>
+            <button class="button tonal">
+              <span class="material-symbols" aria-hidden="true">format_underlined</span>
+              Underline
+            </button>
+          </div>
+        </div>
+{% call code() %}
+<div class="button-group">
+  <button class="button tonal">
+    <span class="material-symbols" aria-hidden="true">format_bold</span>
+    Bold
+  </button>
+  <button class="button tonal">
+    <span class="material-symbols" aria-hidden="true">format_italic</span>
+    Italic
+  </button>
+  <button class="button tonal">
+    <span class="material-symbols" aria-hidden="true">format_underlined</span>
+    Underline
+  </button>
+</div>
+{% endcall %}
+        <p>
+          The group is a container of independent buttons: each one is its own
+          Tab stop and does its own thing. It is not a choice — nothing in a
+          group is selected. When two to five options answer one question, that
+          is a
+          <a href="{{ url_for('segmented_buttons') }}">segmented button</a>,
+          whose <code>&lt;input&gt;</code> holds the answer.
+        </p>
+  {% endcall %}
+
+  {% call section("standard", "Standard") %}
+        <p>
+          The default. Every button keeps its own round shape and the gap
+          between them closes as they grow — 18dp at the smallest size down to
+          8dp at the three largest, which is Material's own ladder. Press one
+          and it widens; the buttons beside it move over.
+        </p>
+        <div>
+          <div class="button-group">
+            <button class="button circle" aria-label="Previous track">
+              <span class="material-symbols" aria-hidden="true">skip_previous</span>
+            </button>
+            <button class="button circle" aria-label="Play">
+              <span class="material-symbols" aria-hidden="true">play_arrow</span>
+            </button>
+            <button class="button circle" aria-label="Next track">
+              <span class="material-symbols" aria-hidden="true">skip_next</span>
+            </button>
+          </div>
+        </div>
+{% call code() %}
+<div class="button-group">
+  <button class="button circle" aria-label="Previous track">
+    <span class="material-symbols" aria-hidden="true">skip_previous</span>
+  </button>
+  <button class="button circle" aria-label="Play">
+    <span class="material-symbols" aria-hidden="true">play_arrow</span>
+  </button>
+  <button class="button circle" aria-label="Next track">
+    <span class="material-symbols" aria-hidden="true">skip_next</span>
+  </button>
+</div>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("connected", "Connected") %}
+        <p>
+          Add <code>connected</code>. The items sit 2dp apart at every size,
+          the two ends of the row stay fully round and the joins in the middle
+          are squared off. Pressing an item squares its inner corners further
+          — 8dp to 4dp at the three smaller sizes, and more at the two large
+          ones, where the corners are larger to begin with.
+        </p>
+        <div>
+          <div class="button-group connected">
+            <button class="button tonal circle" aria-label="Align left">
+              <span class="material-symbols" aria-hidden="true">format_align_left</span>
+            </button>
+            <button class="button tonal circle" aria-label="Align center">
+              <span class="material-symbols" aria-hidden="true">format_align_center</span>
+            </button>
+            <button class="button tonal circle" aria-label="Align right">
+              <span class="material-symbols" aria-hidden="true">format_align_right</span>
+            </button>
+          </div>
+        </div>
+{% call code() %}
+<div class="button-group connected">
+  <button class="button tonal circle" aria-label="Align left">
+    <span class="material-symbols" aria-hidden="true">format_align_left</span>
+  </button>
+  <button class="button tonal circle" aria-label="Align center">
+    <span class="material-symbols" aria-hidden="true">format_align_center</span>
+  </button>
+  <button class="button tonal circle" aria-label="Align right">
+    <span class="material-symbols" aria-hidden="true">format_align_right</span>
+  </button>
+</div>
+{% endcall %}
+        <p>
+          An <a href="{{ url_for('icon_buttons') }}">icon button</a> is not an
+          item. It is its own component — its own size ladder, its own insets
+          and its own pressed shape, all set on the element itself — so a group
+          can neither size it nor reshape it without fighting rules it already
+          has. <code>&lt;button class="button circle"&gt;</code> is the
+          icon-only item, and the group sizes it like any other.
+        </p>
+        <p>
+          A connected group has no selected state. Material's connected group
+          draws one, and holding it takes a control that remembers the answer
+          — which is the
+          <a href="{{ url_for('segmented_buttons') }}">segmented button</a>,
+          a fieldset of radios or checkboxes. A row of
+          <code>&lt;button&gt;</code>s has nothing to read it off.
+        </p>
+  {% endcall %}
+
+  {% call section("sizes", "Sizes") %}
+        <p>
+          The same five sizes as a button — <code>xsmall</code>,
+          <code>small</code> (the default), <code>medium</code>,
+          <code>large</code>, <code>xlarge</code> — but written once, on the
+          group. The group sets the button tokens its items inherit, so the
+          buttons inside need no size class of their own; one that carries one
+          anyway still wins for itself.
+        </p>
+        <div>
+          <div class="button-group connected xsmall">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+            <button class="button tonal">Three</button>
+          </div>
+          <div class="button-group connected small">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+            <button class="button tonal">Three</button>
+          </div>
+          <div class="button-group connected medium">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+            <button class="button tonal">Three</button>
+          </div>
+          <div class="button-group connected large">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+          </div>
+        </div>
+        <p>
+          The same class on a standard group moves its gap too — 18dp at
+          <code>xsmall</code>, 12dp at <code>small</code>, 8dp from
+          <code>medium</code> up. <code>xlarge</code> is the last rung, 136dp
+          tall, for a group that is the only thing on a screen.
+        </p>
+        <div>
+          <div class="button-group xsmall">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+          </div>
+          <div class="button-group medium">
+            <button class="button tonal">One</button>
+            <button class="button tonal">Two</button>
+          </div>
+        </div>
+{% call code() %}
+<div class="button-group connected medium">
+  <button class="button tonal">One</button>
+  <button class="button tonal">Two</button>
+  <button class="button tonal">Three</button>
+</div>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("semantics", "Semantics") %}
+        <p>
+          The group declares no role. A
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
+          such as <code>toolbar</code> promises arrow-key navigation, and this
+          component <em>rejects</em> it rather than withholding it: its buttons
+          are independent commands reached with Tab, so there is no keyboard
+          model to implement and none to promise.
+        </p>
+        <p>
+          When the group needs a name — several groups on one screen, or a row
+          whose purpose is not obvious from its buttons — give it
+          <code>role="group"</code> and an <code>aria-label</code>. That role
+          is a grouping and nothing more, so it promises no keyboard contract
+          to break.
+        </p>
+{% call code() %}
+<div class="button-group" role="group" aria-label="Text style">
+  <button class="button circle" aria-label="Bold">
+    <span class="material-symbols" aria-hidden="true">format_bold</span>
+  </button>
+  <button class="button circle" aria-label="Italic">
+    <span class="material-symbols" aria-hidden="true">format_italic</span>
+  </button>
+</div>
+{% endcall %}
+        <p>
+          Items are controls, written as direct children: a
+          <code>&lt;button&gt;</code>, or an
+          <code>&lt;a class="button" href&gt;</code> when it navigates. A bare
+          <code>&lt;a href&gt;</code> is refused — it passes for a control and
+          renders as a link, reaching none of the group's corners, press
+          behaviour or inherited size. A wrapper element is refused too — the gap
+          and the connected corners are written against direct children, so a
+          nested <code>&lt;div&gt;</code> loses both. Every icon-only item
+          needs its own <code>aria-label</code>, since the icon inside it is
+          <code>aria-hidden</code>.
+        </p>
+  {% endcall %}
+
+  {% call section("tokens", "Tokens") %}
+        <p>
+          Set these on the group, or in a rule of your own that picks out the
+          groups you want to change. The values below are the defaults — a
+          small standard group; the size and variant classes rewrite them.
+        </p>
+        {% call token_table() %}
+                <tr><td><code>--md-comp-button-group-between-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-button-group-pressed-item-width-multiplier</code></td><td><code>.15</code></td></tr>
+                <tr><td><code>--md-comp-button-group-container-shape</code></td><td><code>9999px</code> (connected)</td></tr>
+                <tr><td><code>--md-comp-button-group-inner-corner-corner-size</code></td><td><code>8px</code> (connected)</td></tr>
+                <tr><td><code>--md-comp-button-group-pressed-inner-corner-corner-size</code></td><td><code>4px</code> (connected)</td></tr>
+        {% endcall %}
+        <p>
+          The items are buttons, so their height, insets and colours come from
+          the <a href="{{ url_for('buttons') }}">button</a> tokens, which the
+          group's size class sets for them. Material states the press-time
+          growth as 15% of the item's width; CSS cannot multiply a length by a
+          percentage, so the token holds the same figure as a ratio and the
+          growth is taken from the item's height.
+        </p>
+  {% endcall %}
+{% endcall %}
+{% endblock %}
