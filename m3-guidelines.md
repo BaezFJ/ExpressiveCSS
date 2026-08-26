@@ -621,7 +621,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 - Don't put two FABs on one screen.
 - Don't use a FAB labelled “OK” or “Submit” in a form — that is a filled button.
-- Don't bounce or pulse a FAB as decoration (`pulse` is a separate, rare attention helper).
+- Don't animate a FAB as decoration.
 
 ---
 
@@ -1053,7 +1053,7 @@ Three **selection controls**. They are not interchangeable.
 
 **Placement.** Linear: along the edge of the container that is loading (often the top of the page or a pane). Circular: centered in the region that is waiting. One indicator per process.
 
-**Don't** show a spinner for instant responses. Don't mix linear and circular for the same process. Don't use `pulse` as a progress indicator.
+**Don't** show a spinner for instant responses. Don't mix linear and circular for the same process.
 
 ---
 
@@ -1088,8 +1088,6 @@ These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks
 | Extra | What it is | Don't use it as |
 | --- | --- | --- |
 | Waves | Press ripple. Import-time `Waves.Init()`. | A button style |
-| Pulse | Attention halo | A badge or a progress indicator |
-| Parallax | CSS `animation-timeline: view()` clip | A hero carousel |
 | Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
 | Media slider | Crossfading captions | An M3 carousel |
 | FAB-to-toolbar | `.fab.toolbar` morph | An M3 toolbar (`div.toolbar`) |

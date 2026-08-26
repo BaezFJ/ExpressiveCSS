@@ -312,15 +312,6 @@ describe('optional markup does not crash a component', () => {
     }
   });
 
-  test('a parallax container with no image', () => {
-    document.body.innerHTML = `<div class="parallax"></div>`;
-
-    const instance = Expressive.Parallax.init(document.querySelector('.parallax'));
-
-    assert.ok(instance);
-    instance.destroy();
-  });
-
   test('a hover menu when the pointer leaves the window', () => {
     document.body.innerHTML = `
       <a class="button menu-trigger" data-target="dd">Drop</a>

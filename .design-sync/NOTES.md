@@ -56,8 +56,8 @@ the M3 token layer, and the guidelines** — not importable components.
   tokens and are never used in a `font-family`; the Sass says so explicitly.
 - `[FONT_REMOTE]` naming `"Oxygen-Sans"` — also expected: one entry in the
   `$font-stack` system stack.
-- 20 components ship the **floor card** by design (the niche plugin surface:
-  AutoInit, Waves, Forms, ScrollSpy, CharacterCounter, Parallax, Lightbox,
+- 19 components ship the **floor card** by design (the niche plugin surface:
+  AutoInit, Waves, Forms, ScrollSpy, CharacterCounter, Lightbox,
   Autocomplete, FormSelect, Datepicker, Timepicker, Carousel, Menu, Snackbar,
   Tooltip, FloatingActionButton, Range). They are authorable on any re-sync.
 
@@ -86,8 +86,8 @@ the M3 token layer, and the guidelines** — not importable components.
   `llm.md` was not. Authoring the FAB preview from `llm.md` produced unstyled
   square swatches. Because `llm.md` ships as a guideline document, an agent
   following it emits FABs that render unstyled. Same applies to the
-  `btn-floating halfway-fab` example in llm.md's Cards section and the Pulse and
-  Transitions sections.
+  `btn-floating halfway-fab` example in llm.md's Cards section and the
+  Transitions section.
 
 ## Why ~26 components have no card
 

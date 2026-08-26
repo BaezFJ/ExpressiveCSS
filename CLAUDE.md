@@ -220,13 +220,12 @@ job is `visual.yml`, pull requests only.
   nondeterministic as it was and the comparison keeps failing. Only something
   in `visual/` reaches both revisions.
 
-  **What reduce costs, stated plainly.** Thirteen partials carry a
+  **What reduce costs, stated plainly.** Twelve partials carry a
   `prefers-reduced-motion` block, and every page is now photographed on the
   `reduce` side of them: spinners stop animating, sheets and menus stop
-  transitioning, and the two `no-preference` rules -- the parallax page's
-  scroll-driven cover and scrollspy's smooth scrolling -- are not exercised at
-  all. That is a state most real users do not see. It is the right trade for a
-  screenshot suite: every one of those rules exists to remove motion, and
+  transitioning, and the one `no-preference` rule -- scrollspy's smooth
+  scrolling -- is not exercised at all. That is a state most real users do not
+  see. It is the right trade for a screenshot suite: every one of those rules exists to remove motion, and
   motion is the thing a shutter cannot photograph twice the same way. Sizing,
   spacing, colour and token regressions -- what this suite is for -- are
   unaffected by any of them.
@@ -341,8 +340,8 @@ Notes that matter when working on it:
   `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
   `pagination`, `tabs`, `menu`, `table_of_contents`, `page-footer`; then icons,
   badges, buttons, cards, toolbar, list, tooltip, preloader, dialog, panes,
-  carousel, parallax, lightbox, and ten rows that state no markup of their own
-  and say so in their note). **The exempt list is empty — keep it that way.** A
+  carousel, lightbox, icon-buttons, and ten rows that state no markup of their
+  own and say so in their note). **The exempt list is empty — keep it that way.** A
   new component ships enforced or the roster test fails.
 - **Four rule kinds, and the last two exist for opposite reasons.** `forbid` and
   `require-attr` are selector-level. `require-accessible-name` is not, because
@@ -462,7 +461,7 @@ Other things worth knowing:
 - `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`) — mostly `!default`, several now aliasing CSS custom properties. Typography leaves the browser root size untouched and converts M3's sp values to rem on the standard 16px basis. The type-scale roles choose `--md-ref-typeface-brand` or `--md-ref-typeface-plain`; both default to Roboto and append the Noto Sans fallback.
 - Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`.
 - `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
-- `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_parallax`, `_page-footer`, `_docked-display`, `_transitions`).
+- `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_page-footer`, `_docked-display`, `_transitions`).
 - `utilities/_typescale.scss` generates the 15 `.display-large` … `.title-small` classes from a `$typescale-roles` list. Every property it sets must map to a token `tokens/_reference.scss` actually defines — a `var()` pointing at an undefined custom property invalidates the whole declaration silently, which is how these classes previously did nothing. `font-style` is deliberately not set: the `-font-family-style` token holds "Regular"/"Medium", which are weights, not CSS font-style keywords.
 
 ## TypeScript architecture
