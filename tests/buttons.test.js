@@ -18,7 +18,7 @@ const rules = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].map((m) => ({
 }));
 
 /** The declarations of the first rule whose selector matches `pred`. */
-const ruleFor = (pred) => rules.find((r) => pred(r.selector))?.body;
+const ruleFor = (pred) => rules.find((r) => pred(r.selector, r.body))?.body;
 
 // The common-button selector list, read out of the sheet rather than spelled
 // out here - it carries the whole `:not()` opt-out list and would rot.
@@ -62,7 +62,12 @@ describe('Button size axis', () => {
   test('a button with no size class is the small one', () => {
     // The default has to be a size on the ladder, or the axis is a lie: the
     // sheet would have five named sizes and a sixth unnamed one.
-    const root = ruleFor((s) => s === ':root');
+    // ':root, :host' is now shared by the theme mapping, the reference layer and
+    // this block, so pick it by what it declares rather than by its selector.
+    const root = ruleFor(
+      (s, body) => /^:root,\s*:host$/.test(s) && body.includes('--md-comp-filled-button-')
+    );
+    assert.ok(root, 'the filled-button defaults sit on their own :root, :host block');
     for (const [prop, value] of [
       ['container-height', '40px'],
       ['icon-size', '20px'],

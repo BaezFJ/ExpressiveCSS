@@ -36,7 +36,11 @@ describe('M3 Expressive color roles', () => {
   });
 
   test('theme=auto follows the OS color-scheme', () => {
-    assert.match(css, /:root\[theme=(['"]?)auto\1\]\s*\{\s*color-scheme:\s*light dark/);
+    // Paired with :host per adr/0002 - see tests/shadow-dom.test.js.
+    assert.match(
+      css,
+      /:root\[theme=(['"]?)auto\1\],\s*:host\(\[theme=(['"]?)auto\2\]\)\s*\{\s*color-scheme:\s*light dark/
+    );
   });
 });
 

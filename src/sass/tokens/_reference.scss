@@ -129,7 +129,7 @@ $sys-dark: (
   "surface-variant": "neutral-variant30", "surface-tint": "primary80"
 ) !default;
 
-:root {
+:root, :host {
   --md-source: #{$md-source};
 
   /* primary, secondary, tertiary, neutral, neutral-variant - all generated */

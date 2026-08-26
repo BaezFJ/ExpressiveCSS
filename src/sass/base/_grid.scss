@@ -71,7 +71,9 @@ $grid-prefixes: (
   padding: 1rem 0;
 }
 
-body {
+// `:host` because a shadow tree has no `body` to hang this on, and `.row` reads
+// it without a fallback - see adr/0002-shadow-only-stylesheet-adoption.md.
+body, :host {
   --gap-size: #{$gutter-width};
 
   @include bp-up("extra-large") {

@@ -495,7 +495,7 @@ Three rules decide which pair is live, in this order:
 2. `:root[theme='auto']` is the same follow-OS value, written explicitly.
 3. `:root[theme='light']` and `:root[theme='dark']` lock the scheme and override the OS.
 
-Each live token is `light-dark(var(--md-sys-color-<role>-light), var(--md-sys-color-<role>-dark))`, written once and resolved against the element's used `color-scheme` — there is no `prefers-color-scheme` media query behind the colors. Because it resolves at the point of use, setting `color-scheme` on any element re-themes that subtree, and native controls follow the same scheme. `:host` is there for shadow-DOM consumers; the docs site and a normal page use `:root`.
+Each live token is `light-dark(var(--md-sys-color-<role>-light), var(--md-sys-color-<role>-dark))`, written once and resolved against the element's used `color-scheme` — there is no `prefers-color-scheme` media query behind the colors. Because it resolves at the point of use, setting `color-scheme` on any element re-themes that subtree, and native controls follow the same scheme. Each of the three rules above is paired with a `:host([theme='…'])` twin, so a shadow host can be pinned to a theme the same way `<html>` can. Every token-declaring rule in the sheet carries that pairing: the sheet is supported as a shadow root's *only* stylesheet, and `:root` matches the document element and nothing else.
 
 This site starts as `<html lang="en" theme="auto">`. The theme control in the app bar is a menu: Light, Dark, and Auto. The choice is written to `localStorage` and restored before first paint so a reload does not flash the wrong scheme.
 

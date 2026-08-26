@@ -12,7 +12,7 @@
 // or by setting --md-icon-font. Fill, weight, grade, and optical size
 // are axes and inherit as custom properties.
 
-:root {
+:root, :host {
   --md-icon-font-outlined: "Material Symbols Outlined";
   --md-icon-font-rounded: "Material Symbols Rounded";
   --md-icon-font-sharp: "Material Symbols Sharp";
@@ -23,9 +23,12 @@
   --md-icon-optical-size: 24;
 }
 
-[icon-style="outlined"] { --md-icon-font: var(--md-icon-font-outlined); }
-[icon-style="rounded"] { --md-icon-font: var(--md-icon-font-rounded); }
-[icon-style="sharp"] { --md-icon-font: var(--md-icon-font-sharp); }
+[icon-style="outlined"],
+:host([icon-style="outlined"]) { --md-icon-font: var(--md-icon-font-outlined); }
+[icon-style="rounded"],
+:host([icon-style="rounded"]) { --md-icon-font: var(--md-icon-font-rounded); }
+[icon-style="sharp"],
+:host([icon-style="sharp"]) { --md-icon-font: var(--md-icon-font-sharp); }
 
 $_icon: ".material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons";
 

@@ -24,7 +24,7 @@
 //
 // Nest descendants inside this block.
 
-:root {
+:root, :host {
   --md-comp-nav-rail-collapsed-width: 96px;
   --md-comp-nav-rail-expanded-width: 280px;
 }
