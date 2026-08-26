@@ -50,8 +50,8 @@ uv sync
 uv run flask --app docs/app.py run --debug --port 5055   # http://127.0.0.1:5055
 ```
 
-The Astro documentation build runs beside it (ADR 0003) and today renders two
-pages, the site root and Buttons:
+The Astro documentation build runs beside it (ADR 0003) and renders whatever
+sits in `docs/src/pages/` -- the converted pages, growing one issue at a time:
 
 ```bash
 npm run docs:dev       # build the framework, then its watchers beside astro dev
@@ -617,12 +617,19 @@ a shared view silently freezes only one of its URLs.
 ### The Astro build
 
 `docs/astro.config.mjs` is a second generator running beside Flask (ADR 0003).
-It renders two pages so far — `docs/src/pages/index.astro` and `buttons.astro`
-— into a gitignored `_site/`. Flask is still production and still the thing to
-compare against: a converted page is right when it is *structurally identical*
-to the frozen one, and the only difference either page has today is the landing
-page's own link.
+Every page under `docs/src/pages/` is one that has been converted; the rest of
+the site is still Jinja. Output goes to a gitignored `_site/`. Flask is still
+production and still the thing to compare against: a converted page is right
+when it is *structurally identical* to the frozen one.
 
+- **Compare `<main>`, not the whole document.** The chrome legitimately differs
+  on every converted page — the landing link is `/` rather than
+  `/getting-started.html`, and Astro drops the empty `class=""` Jinja leaves on
+  an inactive drawer item — so a whole-page diff reports ~238 lines on a page
+  that is in fact byte-equivalent where it matters. Parse both to a
+  whitespace-insensitive tag/attribute dump, slice out `<main>`, and diff that;
+  it is 0 lines on every converted page, and a chrome-only residue confirms the
+  rest.
 - **The docs toolchain needs Node >= 22.12, the package still needs >= 20.**
   That is astro 7's own `engines`, and it is a *contributor* requirement:
   `package.json`'s `engines` describes what a consumer needs to run the built
@@ -682,6 +689,10 @@ page's own link.
   `reason` is the same opt-out, and `tests/semantics.test.js` reads it — the
   Astro pages are a surface of their own there (`docs/src`), because a
   conversion is exactly the moment markup goes quietly wrong.
+- **A page needing its own `<head>` content puts `slot="head"` on the element.**
+  That is the Jinja `extra_head` block; `DocsLayout` forwards the named slot to
+  `BaseLayout`, which renders it last in the head, where the block was. The
+  Typography page's extra Roboto weights are the only use today.
 - **`scripts/jinja-to-astro.mjs` is temporary and is deleted with Flask.** It
   moves the predictable syntax and reports what it could not, with a line
   number; macro-heavy pages are finished by hand. One thing it has to do that

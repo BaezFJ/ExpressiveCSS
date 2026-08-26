@@ -1,0 +1,221 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "typescale", label: "Type scale", heading: "The fifteen roles" },
+  { id: "emphasis", label: "Emphasis" },
+  { id: "blockquote", label: "Blockquotes" },
+  { id: "flow", label: "Flow Text" },
+  { id: "fontstack", label: "Typeface tokens" },
+]);
+---
+<DocsLayout page="typography">
+<link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500&display=swap">
+
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          The type scale is the HTML. <code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code>
+          are display and headline roles, <code>&lt;p&gt;</code> is body-large,
+          <code>&lt;small&gt;</code> is body-small. You do not need a class
+          unless the element cannot carry the role — a
+          <code>&lt;span class="label-large"&gt;</code>, or a
+          <code>&lt;p class="display-large"&gt;</code> used as a hero numeral.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/styles/typography/overview">M3 type system</a>.
+          Each role sets family, size, weight, line-height, and letter-spacing
+          from <code>--md-sys-typescale-*</code>. They do not set
+          <code>font-style</code> — the token named
+          <code>-font-family-style</code> holds “Regular” / “Medium”, which
+          are weights, not CSS <code>font-style</code> keywords.
+        </p>
+        <p>
+          M3's <code>--md-ref-typeface-brand</code> and
+          <code>--md-ref-typeface-plain</code> tokens both default to Roboto.
+          Large display, headline, and title-large roles use brand; smaller
+          title, body, and label roles use plain. Noto Sans is the fallback
+          for characters Roboto cannot cover. The framework does not ship
+          either font file, so applications should load them or override the
+          reference tokens.
+        </p>
+
+        <h3>Semantic map</h3>
+        <h1>Heading 1</h1>
+        <h2>Heading 2</h2>
+        <h3>Heading 3</h3>
+        <h4>Heading 4</h4>
+        <h5>Heading 5</h5>
+        <h6>Heading 6</h6>
+        <p>A paragraph uses body-large. It is for longer reading, not chrome.</p>
+        <p><small>Small print and figcaptions use body-small.</small></p>
+<Code code={`
+<h1>Heading 1</h1>
+<h2>Heading 2</h2>
+<p>A paragraph uses body-large.</p>
+<small>Small print.</small>
+`} />
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Element</th>
+              <th>Role</th>
+              <th>Size</th>
+              <th>Weight</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>h1</code></td><td>display-small</td><td>2.25rem</td><td>400</td></tr>
+            <tr><td><code>h2</code></td><td>headline-large</td><td>2rem</td><td>400</td></tr>
+            <tr><td><code>h3</code></td><td>headline-medium</td><td>1.75rem</td><td>400</td></tr>
+            <tr><td><code>h4</code></td><td>headline-small</td><td>1.5rem</td><td>400</td></tr>
+            <tr><td><code>h5</code></td><td>title-large</td><td>1.375rem</td><td>400</td></tr>
+            <tr><td><code>h6</code></td><td>title-medium</td><td>1rem</td><td>500</td></tr>
+            <tr><td><code>p</code></td><td>body-large</td><td>1rem</td><td>400</td></tr>
+            <tr><td><code>small</code>, <code>figcaption</code></td><td>body-small</td><td>0.75rem</td><td>400</td></tr>
+            <tr><td><code>body</code></td><td>body-medium</td><td>0.875rem</td><td>400</td></tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.typescale}>
+        <p>
+          When the tag cannot say the role, use the class. Display-large and
+          display-medium have no heading — they are for short, important
+          numerals and hero lines.
+        </p>
+        <p class="display-large">Display Large</p>
+        <p class="display-medium">Display Medium</p>
+        <p class="display-small">Display Small</p>
+        <p class="headline-large">Headline Large</p>
+        <p class="headline-medium">Headline Medium</p>
+        <p class="headline-small">Headline Small</p>
+        <p class="title-large">Title Large</p>
+        <p class="title-medium">Title Medium</p>
+        <p class="title-small">Title Small</p>
+        <p class="body-large">Body Large</p>
+        <p class="body-medium">Body Medium</p>
+        <p class="body-small">Body Small</p>
+        <p class="label-large">Label Large</p>
+        <p class="label-medium">Label Medium</p>
+        <p class="label-small">Label Small</p>
+<Code code={`
+<p class="display-large">Display Large</p>
+<span class="label-large">Label</span>
+`} />
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Size</th>
+              <th>Weight</th>
+              <th>Line height</th>
+              <th>Tracking</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>display-large</code></td><td>3.5625rem</td><td>400</td><td>4rem</td><td>−0.015625rem</td></tr>
+            <tr><td><code>display-medium</code></td><td>2.8125rem</td><td>400</td><td>3.25rem</td><td>0</td></tr>
+            <tr><td><code>display-small</code></td><td>2.25rem</td><td>400</td><td>2.75rem</td><td>0</td></tr>
+            <tr><td><code>headline-large</code></td><td>2rem</td><td>400</td><td>2.5rem</td><td>0</td></tr>
+            <tr><td><code>headline-medium</code></td><td>1.75rem</td><td>400</td><td>2.25rem</td><td>0</td></tr>
+            <tr><td><code>headline-small</code></td><td>1.5rem</td><td>400</td><td>2rem</td><td>0</td></tr>
+            <tr><td><code>title-large</code></td><td>1.375rem</td><td>400</td><td>1.75rem</td><td>0</td></tr>
+            <tr><td><code>title-medium</code></td><td>1rem</td><td>500</td><td>1.5rem</td><td>0.009375rem</td></tr>
+            <tr><td><code>title-small</code></td><td>0.875rem</td><td>500</td><td>1.25rem</td><td>0.00625rem</td></tr>
+            <tr><td><code>body-large</code></td><td>1rem</td><td>400</td><td>1.5rem</td><td>0.03125rem</td></tr>
+            <tr><td><code>body-medium</code></td><td>0.875rem</td><td>400</td><td>1.25rem</td><td>0.015625rem</td></tr>
+            <tr><td><code>body-small</code></td><td>0.75rem</td><td>400</td><td>1rem</td><td>0.025rem</td></tr>
+            <tr><td><code>label-large</code></td><td>0.875rem</td><td>500</td><td>1.25rem</td><td>0.00625rem</td></tr>
+            <tr><td><code>label-medium</code></td><td>0.75rem</td><td>500</td><td>1rem</td><td>0.03125rem</td></tr>
+            <tr><td><code>label-small</code></td><td>0.6875rem</td><td>500</td><td>1rem</td><td>0.03125rem</td></tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.emphasis}>
+        <p>
+          <code>&lt;em&gt;</code> is italic. <code>&lt;strong&gt;</code> and
+          <code>&lt;b&gt;</code> are weight 500 (M3 Medium). Helpers cover
+          the rest when the tag is already taken.
+        </p>
+        <p>
+          <em>Emphasized</em>,
+          <strong>strong</strong>,
+          <span class="italic">italic</span>,
+          <span class="bold">bold</span>,
+          <span class="light">light</span>,
+          <span class="thin">thin</span>,
+          <span class="underline">underline</span>,
+          <span class="upper">upper</span>,
+          <span class="capitalize">capitalize this</span>.
+        </p>
+<Code code={`
+<em>Emphasized</em>
+<strong>strong</strong>
+<span class="bold">bold</span>
+<span class="upper">upper</span>
+`} />
+        <p>
+          <code>large-text</code>, <code>medium-text</code>, and
+          <code>small-text</code> apply the three body roles to an element
+          that is not a <code>&lt;p&gt;</code> or <code>&lt;small&gt;</code>.
+        </p>
+  </Section>
+  <Section {...S.blockquote}>
+        <p>
+          Blockquotes emphasize a quote or citation. The left bar uses
+          <code>--md-sys-color-primary</code>.
+        </p>
+        <blockquote>
+          This is an example quotation that uses the blockquote tag. Here is another line to make it look bigger.
+        </blockquote>
+<Code code={`
+<blockquote>
+  This is an example quotation that uses the blockquote tag.
+</blockquote>
+`} />
+  </Section>
+  <Section {...S.flow}>
+        <p>
+          <a class="button tonal" href="#!" id="flow-toggle">Toggle flow-text</a>
+        </p>
+        <p>
+          <code>flow-text</code> scales font size with the viewport so line
+          length stays readable. Resize the window and watch the sample
+          change, or use the button to compare with unscaled body text.
+        </p>
+        <p class="flow-text" id="flow-text-demo">
+          To see Flow Text in action, slowly resize your browser and watch the size
+          of this text body change. Use the button above to toggle flow-text off
+          and on to see the difference.
+        </p>
+<Code code={`
+<p class="flow-text">I am Flow Text</p>
+`} />
+  </Section>
+  <Section {...S.fontstack}>
+        <p>
+          Override the brand and plain reference tokens to customize the scale
+          while preserving each role's M3 size, weight, line height, and
+          tracking:
+        </p>
+<Code code={`
+:root {
+  --md-ref-typeface-brand: "Roboto Flex";
+  --md-ref-typeface-plain: "Roboto";
+}
+`} />
+        <p>
+          The default order is Roboto, Noto Sans, then the generic sans-serif
+          family. ExpressiveCSS leaves the root font size to the browser and
+          expresses the M3 scale in rem using the standard 16px conversion, so
+          browser text-size preferences continue to work.
+        </p>
+  </Section>
+</PageBody>
+</DocsLayout>

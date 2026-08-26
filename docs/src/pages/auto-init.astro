@@ -1,0 +1,132 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "components", label: "Components" },
+  { id: "ignoring", label: "Ignoring Elements" },
+]);
+---
+<DocsLayout page="auto_init">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          Auto Init starts all of the registered Expressive components with a single call.
+          The IIFE bundle exposes it as <code>Expressive.AutoInit</code>.
+        </p>
+        <p>
+          Importing the JavaScript installs a few document-level behaviors
+          (Forms, Chips, Slider, Cards, and ExpandingCard), but it does
+          <strong>not</strong> call <code>AutoInit()</code> for you. Call it after the DOM is ready.
+          This documentation site does that in <code>docs.js</code> on <code>DOMContentLoaded</code>.
+        </p>
+  </Section>
+  <Section {...S.initialization}>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  Expressive.AutoInit();
+});
+`} />
+        <p>Or pass a root element and per-component options. The option keys are the component names from the table below.</p>
+<Code code={`
+Expressive.AutoInit(document.body, {
+  Menu: {
+    // pass options for Menu here
+  },
+  FloatingActionButton: {
+    // pass options for FloatingActionButton here
+  }
+});
+`} />
+        <p>From the module build:</p>
+<Code code={`
+import { AutoInit, Tooltip } from './js/expressive.mjs';
+
+AutoInit();
+
+const element = document.querySelector('.custom-tooltip');
+Tooltip.init(element, { position: 'top' });
+`} />
+  </Section>
+  <Section {...S.options}>
+        <p><code>AutoInit(context, options)</code> takes two arguments:</p>
+        <OptionsTable>
+            <tr>
+              <td><code>context</code></td>
+              <td>Element</td>
+              <td><code>document.body</code></td>
+              <td>DOM element to search within for components.</td>
+            </tr>
+            <tr>
+              <td><code>options</code></td>
+              <td>Object</td>
+              <td><code>{"{}"}</code></td>
+              <td>Options for each component, keyed by name. See that component’s page for its own options.</td>
+            </tr>
+        </OptionsTable>
+        <p>
+          Calling <code>AutoInit()</code> again on the same elements is safe: each component’s constructor
+          destroys any existing instance on that element before creating a new one.
+        </p>
+  </Section>
+  <Section {...S.components}>
+        <p>
+          These are the components <code>AutoInit()</code> starts, and the selector each one claims.
+          Elements that also have <code>no-autoinit</code> are skipped.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Selector</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Autocomplete</code></td><td><code>.autocomplete</code></td></tr>
+            <tr><td><code>Cards</code></td><td><code>.cards</code></td></tr>
+            <tr><td><code>Carousel</code></td><td><code>.carousel</code></td></tr>
+            <tr><td><code>Chips</code></td><td><code>.chips</code></td></tr>
+            <tr><td><code>Datepicker</code></td><td><code>.datepicker</code></td></tr>
+            <tr><td><code>Menu</code></td><td><code>.menu-trigger</code></td></tr>
+            <tr><td><code>Lightbox</code></td><td><code>.lightboxed</code></td></tr>
+            <tr><td><code>NavigationRail</code></td><td><code>.navigation-rail</code></td></tr>
+            <tr><td><code>ScrollSpy</code></td><td><code>.scrollspy</code></td></tr>
+            <tr><td><code>FormSelect</code></td><td><code>select</code></td></tr>
+            <tr><td><code>NavigationDrawer</code></td><td><code>.navigation-drawer</code></td></tr>
+            <tr><td><code>Tabs</code></td><td><code>.tabs</code></td></tr>
+            <tr><td><code>Timepicker</code></td><td><code>.timepicker</code></td></tr>
+            <tr><td><code>Tooltip</code></td><td><code>.tooltipped</code></td></tr>
+            <tr><td><code>FloatingActionButton</code></td><td><code>.fab</code></td></tr>
+          </tbody>
+        </table>
+        <p>
+          Snackbar, CharacterCounter, and Range stay out of this table. Range still starts itself when the
+          bundle loads. Forms, Chips, Cards, and ExpandingCard also run an import-time <code>Init()</code>;
+          Chips and Cards appear in the table as well so a later <code>AutoInit()</code> can pick up
+          elements added after load.
+        </p>
+  </Section>
+  <Section {...S.ignoring}>
+        <p>
+          If you want <code>AutoInit()</code> to skip an element, add the class
+          <code>no-autoinit</code>. Initialize that element yourself with the component’s
+          <code>init</code> method when you need options other than the defaults.
+        </p>
+<Code code={`
+<a class="button tooltipped no-autoinit" data-tooltip="Hi">Hover</a>
+
+Expressive.Tooltip.init(
+  document.querySelector('.tooltipped.no-autoinit'),
+  { position: 'top' }
+);
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
