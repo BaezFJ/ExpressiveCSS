@@ -8,7 +8,6 @@
 //
 // See src/ts/README.md before adding anything.
 
-import { Utils } from "./core/utils";
 import { Cards } from "./components/cards";
 import { ExpandingCard } from "./components/expandingCard";
 import { Chips } from "./components/chips";
@@ -28,16 +27,15 @@ export type { AutoInitOptions } from "./components/registry";
 
 export const version = "0.7.0";
 
-// Side effects: importing the bundle wires up the document-level behaviors and
-// the delegated listeners the components below rely on. Order is preserved from
-// the original bundle - do not reorder without checking the event handlers.
+// Side effects: importing the bundle wires up the document-level behaviors.
+// Order is preserved from the original bundle - do not reorder without checking
+// the event handlers.
+//
+// Four capture-phase document listeners used to be registered here as well, to
+// track whether focus arrived by keyboard and stamp a class on <body> for the
+// Sass to read. `:focus-visible` answers the same question natively, so they
+// are gone and every reader asks the browser instead.
 
-if (typeof document !== "undefined") {
-  document.addEventListener("keydown", Utils.docHandleKeydown, true);
-  document.addEventListener("keyup", Utils.docHandleKeyup, true);
-  document.addEventListener("focus", Utils.docHandleFocus, true);
-  document.addEventListener("blur", Utils.docHandleBlur, true);
-}
 Forms.Init();
 Chips.Init();
 Slider.Init();

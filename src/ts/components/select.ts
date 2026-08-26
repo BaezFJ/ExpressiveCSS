@@ -325,10 +325,8 @@ export class FormSelect extends Component<FormSelectOptions> {
     menuOptions.onOpenEnd = () => {
       const selectedOption = this.menuEl.querySelector('.selected');
       if (selectedOption) {
-        Utils.keyDown = true;
         this.menu.focusedIndex = [...selectedOption.parentNode.children].indexOf(selectedOption);
         this.menu._focusFocusedItem();
-        Utils.keyDown = false;
         if (this.menu.isScrollable) {
           let scrollOffset =
             selectedOption.getBoundingClientRect().top -

@@ -147,7 +147,7 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _handleLightboxKeypress = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       this._handleLightboxToggle();
     }
   };
@@ -167,7 +167,7 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _handleWindowEscape = (e: KeyboardEvent) => {
-    if (Utils.keys.ESC.includes(e.key) && this.doneAnimating && this.overlayActive) this.close();
+    if (e.key === Utils.keys.ESC && this.doneAnimating && this.overlayActive) this.close();
   };
 
   private _makeAncestorsOverflowVisible() {
@@ -442,9 +442,6 @@ export class Lightbox extends Component<LightboxOptions> {
     // onCloseStart callback
     if (typeof this.options.onCloseStart === 'function')
       this.options.onCloseStart.call(this, this.el);
-    //anim.remove(this.el);
-    //anim.remove(this._overlay);
-    //if (this.caption !== '') anim.remove(this._photoCaption);
     // disable exit handlers
     window.removeEventListener('scroll', this._handleWindowScroll);
     window.removeEventListener('resize', this._handleWindowResize);

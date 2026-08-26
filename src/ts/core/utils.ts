@@ -1,86 +1,29 @@
-import { Edges } from './edges';
-import { Bounding } from './bounding';
+/** The part of a `DOMRect` the positioning helpers below actually read. */
+type Bounding = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>;
+
+/** Which edges of a container a box has crossed. */
+type Edges = { top: boolean; right: boolean; bottom: boolean; left: boolean };
 
 /**
  * Class with utilitary functions for global usage.
  */
 export class Utils {
-  /** Specifies wether tab is pressed or not. */
-  static tabPressed: boolean = false;
-  /** Specifies wether there is a key pressed. */
-  static keyDown: boolean = false;
-
   /**
-   * Key maps.
+   * Key maps. One `KeyboardEvent.key` value each: the second entries these used
+   * to carry (`Esc`, `Up`, `Del`, ...) were IE and Edge Legacy spellings, and
+   * the support baseline excludes both.
    */
   static keys = {
-    TAB: ['Tab'],
-    ENTER: ['Enter'],
-    ESC: ['Escape', 'Esc'],
-    BACKSPACE: ['Backspace'],
-    ARROW_UP: ['ArrowUp', 'Up'],
-    ARROW_DOWN: ['ArrowDown', 'Down'],
-    ARROW_LEFT: ['ArrowLeft', 'Left'],
-    ARROW_RIGHT: ['ArrowRight', 'Right'],
-    DELETE: ['Delete', 'Del']
+    TAB: 'Tab',
+    ENTER: 'Enter',
+    ESC: 'Escape',
+    BACKSPACE: 'Backspace',
+    ARROW_UP: 'ArrowUp',
+    ARROW_DOWN: 'ArrowDown',
+    ARROW_LEFT: 'ArrowLeft',
+    ARROW_RIGHT: 'ArrowRight',
+    DELETE: 'Delete'
   };
-
-  /**
-   * Keys that count as keyboard navigation, precomputed.
-   *
-   * These handlers run at capture phase on the document for every keystroke on
-   * the page, and used to rebuild three arrays and spread them into a fourth
-   * on each one.
-   */
-  private static _navigationKeys = new Set([
-    ...Utils.keys.TAB,
-    ...Utils.keys.ARROW_DOWN,
-    ...Utils.keys.ARROW_UP
-  ]);
-
-  /**
-   * Detects when a key is pressed.
-   * @param e Event instance.
-   */
-  static docHandleKeydown(e: KeyboardEvent) {
-    Utils.keyDown = true;
-    if (Utils._navigationKeys.has(e.key)) {
-      Utils.tabPressed = true;
-    }
-  }
-
-  /**
-   * Detects when a key is released.
-   * @param e Event instance.
-   */
-  static docHandleKeyup(e: KeyboardEvent) {
-    Utils.keyDown = false;
-    if (Utils._navigationKeys.has(e.key)) {
-      Utils.tabPressed = false;
-    }
-  }
-
-  /**
-   * Detects when document is focused.
-   * @param e Event instance.
-   */
-  /* eslint-disabled as of required event type condition check */
-  /* eslint-disable-next-line */
-  static docHandleFocus(e: FocusEvent) {
-    if (Utils.keyDown) {
-      document.body.classList.add('keyboard-focused');
-    }
-  }
-
-  /**
-   * Detects when document is not focused.
-   * @param e Event instance.
-   */
-  /* eslint-disabled as of required event type condition check */
-  /* eslint-disable-next-line */
-  static docHandleBlur(e: FocusEvent) {
-    document.body.classList.remove('keyboard-focused');
-  }
 
   /**
    * Run `callback` once the document is parsed.
@@ -100,15 +43,11 @@ export class Utils {
   }
 
   /**
-   * Generates a unique string identifier.
+   * Generates a unique string identifier. Every caller prefixes the result and
+   * uses it as an element id, and a UUID is valid in that position.
    */
   static guid(): string {
-    const s4 = (): string => {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    };
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    return crypto.randomUUID();
   }
 
   /**
@@ -209,20 +148,19 @@ export class Utils {
     bounding: Bounding,
     offset: number
   ) {
+    // `left` and `right` companions to these two used to be computed and
+    // returned as well; the only caller reads the vertical pair and all four
+    // measurements, never the horizontal pair.
     const canAlign: {
       top: boolean;
-      right: boolean;
       bottom: boolean;
-      left: boolean;
       spaceOnTop: number;
       spaceOnRight: number;
       spaceOnBottom: number;
       spaceOnLeft: number;
     } = {
       top: true,
-      right: true,
       bottom: true,
-      left: true,
       spaceOnTop: null,
       spaceOnRight: null,
       spaceOnBottom: null,
@@ -246,17 +184,11 @@ export class Utils {
     canAlign.spaceOnRight = !containerAllowsOverflow
       ? containerWidth - (scrolledX + bounding.width)
       : window.innerWidth - (elOffsetRect.left + bounding.width);
-    if (canAlign.spaceOnRight < 0) {
-      canAlign.left = false;
-    }
 
     // Check for container and viewport for Right
     canAlign.spaceOnLeft = !containerAllowsOverflow
       ? scrolledX - bounding.width + elOffsetRect.width
       : elOffsetRect.right - bounding.width;
-    if (canAlign.spaceOnLeft < 0) {
-      canAlign.right = false;
-    }
 
     // Check for container and viewport for Top
     canAlign.spaceOnBottom = !containerAllowsOverflow
@@ -294,57 +226,55 @@ export class Utils {
    * Retrieves document scroll postion from top.
    */
   static getDocumentScrollTop(): number {
-    return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    return window.scrollY;
   }
 
   /**
    * Retrieves document scroll postion from left.
    */
   static getDocumentScrollLeft(): number {
-    return window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
+    return window.scrollX;
   }
 
   /**
-   * Fires the given function after a certain ammount of time.
-   * @param func Function to be fired.
-   * @param wait Wait time.
-   * @param options Additional options.
+   * Trailing-edge throttle: run `func` now, then at most once per `wait` ms
+   * with the most recent arguments.
+   *
+   * This used to carry its underscore ancestor's whole configuration - leading
+   * and trailing switches, a result passthrough - and both call sites are
+   * resize handlers passing nothing but a function and a delay.
+   *
+   * Assign the return value once. `x = Utils.throttle(fn, 200)` is right;
+   * wrapping it in an arrow builds a fresh closure per event and never calls
+   * it, which is how resize handling was dead in three components.
    */
-  static throttle(
-    func: (...args: unknown[]) => void,
-    wait: number,
-    options: Partial<{ leading: boolean; trailing: boolean }> = {}
-  ) {
-    // `options` is nullable because callers pass an explicit null.
-    let lastArgs: unknown[] = null,
-      result,
-      timeout = null,
-      previous = 0;
-
-    const later = () => {
-      previous = options?.leading === false ? 0 : Date.now();
-      timeout = null;
-      // The trailing call replays the most recent arguments; without this it
-      // used to fire with none at all.
-      result = func(...(lastArgs ?? []));
-      lastArgs = null;
-    };
+  static throttle(func: (...args: unknown[]) => void, wait: number) {
+    let timeout: ReturnType<typeof setTimeout> = null;
+    let lastArgs: unknown[] = null;
+    let previous = 0;
 
     return (...args: unknown[]) => {
       const now = Date.now();
-      if (!previous && options?.leading === false) previous = now;
       const remaining = wait - (now - previous);
-      lastArgs = args;
       if (remaining <= 0) {
         clearTimeout(timeout);
         timeout = null;
         previous = now;
         lastArgs = null;
-        result = func(...args);
-      } else if (!timeout && options?.trailing !== false) {
-        timeout = setTimeout(later, remaining);
+        func(...args);
+      } else if (!timeout) {
+        // The trailing call replays the most recent arguments; without this it
+        // used to fire with none at all.
+        lastArgs = args;
+        timeout = setTimeout(() => {
+          previous = Date.now();
+          timeout = null;
+          func(...(lastArgs ?? []));
+          lastArgs = null;
+        }, remaining);
+      } else {
+        lastArgs = args;
       }
-      return result;
     };
   }
 
@@ -388,7 +318,7 @@ export class Utils {
     if (typeof callback === 'function') {
       button.addEventListener('click', callback);
       button.addEventListener('keypress', (e) => {
-        if (Utils.keys.ENTER.includes(e.key)) callback(e);
+        if (e.key === Utils.keys.ENTER) callback(e);
       });
     }
     container.append(button);

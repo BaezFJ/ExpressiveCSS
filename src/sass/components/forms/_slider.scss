@@ -429,7 +429,6 @@ input[type="range"]:hover:not(:disabled)::-webkit-slider-thumb {
   box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 8%, transparent);
 }
 
-.keyboard-focused input[type="range"]:focus:not(:disabled)::-webkit-slider-thumb,
 input[type="range"]:focus-visible:not(:disabled)::-webkit-slider-thumb {
   box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 10%, transparent);
 }
@@ -471,7 +470,6 @@ input[type="range"]:hover:not(:disabled)::-moz-range-thumb {
   box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 8%, transparent);
 }
 
-.keyboard-focused input[type="range"]:focus:not(:disabled)::-moz-range-thumb,
 input[type="range"]:focus-visible:not(:disabled)::-moz-range-thumb {
   box-shadow: 0 0 0 18px color-mix(in oklab, var(--md-comp-slider-handle-color) 10%, transparent);
 }

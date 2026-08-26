@@ -1,5 +1,4 @@
 import { Utils } from '../core/utils';
-import { Bounding } from '../core/bounding';
 import { Component, BaseOptions, InitElements, InitElement } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -280,7 +279,7 @@ export class Tooltip extends Component<TooltipOptions> {
     let newX = x - scrollLeft;
     let newY = y - scrollTop;
 
-    const bounding: Bounding = {
+    const bounding = {
       left: newX,
       top: newY,
       width: width,
@@ -354,8 +353,10 @@ export class Tooltip extends Component<TooltipOptions> {
     this.close();
   };
 
+  // Focus opens the tooltip only when it arrived by keyboard: a pointer press
+  // on the trigger also focuses it, and _handleMouseEnter already covers that.
   _handleFocus = () => {
-    if (Utils.tabPressed) {
+    if (this.el.matches(':focus-visible')) {
       this.isFocused = true;
       this.open(false);
     }

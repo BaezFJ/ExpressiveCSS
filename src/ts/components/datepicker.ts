@@ -1335,7 +1335,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   };
 
   _handleInputKeydown = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
       this._batchDraws(() => {
         this.setDateFromInput(e.target as HTMLInputElement);

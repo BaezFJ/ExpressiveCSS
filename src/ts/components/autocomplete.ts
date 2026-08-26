@@ -341,14 +341,15 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const actualValue = this.el.value.toLocaleLowerCase();
     // Don't capture enter or arrow key usage.
     if (
-      Utils.keys.ENTER.includes(e.key) ||
-      Utils.keys.ARROW_UP.includes(e.key) ||
-      Utils.keys.ARROW_DOWN.includes(e.key)
+      e.key === Utils.keys.ENTER ||
+      e.key === Utils.keys.ARROW_UP ||
+      e.key === Utils.keys.ARROW_DOWN
     )
       return;
-    // Check if the input isn't empty
-    // Check if focus triggered by tab
-    if (this.oldVal !== actualValue && Utils.tabPressed) {
+    // Check if the input isn't empty, and that focus arrived by keyboard -
+    // which is what `:focus-visible` means, and used to be a global flag this
+    // bundle maintained from four capture-phase document listeners.
+    if (this.oldVal !== actualValue && this.el.matches(':focus-visible')) {
       this.open();
     }
     this._inputChangeDetection(actualValue);
@@ -379,7 +380,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Arrow keys and enter key usage
     const numItems = this.container.querySelectorAll('li').length;
     // select element on Enter
-    if (Utils.keys.ENTER.includes(e.key) && this.activeIndex >= 0) {
+    if (e.key === Utils.keys.ENTER && this.activeIndex >= 0) {
       const liElement = this.container.querySelectorAll('li')[this.activeIndex];
       if (liElement) {
         this.selectOption(liElement.getAttribute('data-id'));
@@ -388,10 +389,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       return;
     }
     // Capture up and down key
-    if (Utils.keys.ARROW_UP.includes(e.key) || Utils.keys.ARROW_DOWN.includes(e.key)) {
+    if (e.key === Utils.keys.ARROW_UP || e.key === Utils.keys.ARROW_DOWN) {
       e.preventDefault();
-      if (Utils.keys.ARROW_UP.includes(e.key) && this.activeIndex > 0) this.activeIndex--;
-      if (Utils.keys.ARROW_DOWN.includes(e.key) && this.activeIndex < numItems - 1)
+      if (e.key === Utils.keys.ARROW_UP && this.activeIndex > 0) this.activeIndex--;
+      if (e.key === Utils.keys.ARROW_DOWN && this.activeIndex < numItems - 1)
         this.activeIndex++;
       this._setActive(null);
       if (this.activeIndex >= 0) {

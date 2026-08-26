@@ -26,7 +26,35 @@
 //
 // Also simplified: `font-family: monospace, monospace` was a workaround for the
 // generic-family font-size quirk, which the adjacent `font-size: 1em` already
-// handles; and abbr's doubled text-decoration dropped its non-dotted fallback.
+// handles.
+//
+// A second pass removed four more whose declarations both baseline engines now
+// supply themselves, verbatim:
+//   abbr[title] { text-decoration: underline dotted }  - already the UA value
+//   button, select { text-transform: none }            - already `none` in both
+//   fieldset { padding: .35em .75em .625em }           - restates the UA padding
+//   summary { display: list-item }                     - already list-item
+//
+// The rest of this file was measured against a bare page in both engines rather
+// than assumed, and these are the results that keep a rule here. Do not remove
+// them again without re-measuring - each one *looks* redundant and is not:
+//   b, strong { font-weight: bolder }  UA is `bold` (700). `bolder` is relative,
+//                                      so it reaches 900 inside an already-bold
+//                                      parent where the UA value would stay 700.
+//   small { font-size: 80% }           UA is `smaller`, which computes to
+//                                      13.333px against a 16px parent, not 12.8.
+//   progress { vertical-align: baseline }  UA is -3.2px, not baseline.
+//   legend { padding: 0 }              UA has padding-left: 2px.
+//   [type="search"] { ... }            UA is appearance:auto / outline-offset:0.
+//   sub, sup { ... }                   UA uses vertical-align: sub/super and no
+//                                      line-height reset; normalize's version is
+//                                      deliberately a different mechanism.
+//   code, kbd, samp, pre { font-size: 1em }  UA applies the monospace font-size
+//                                      quirk (13px Chromium, 12px Firefox).
+//   hr { box-sizing: content-box }     matches the UA, but base/_global.scss sets
+//                                      border-box globally and would override it.
+//   -webkit-appearance: button         a Safari correction; this file's policy is
+//                                      to keep those, see the note above.
 
 /* Document
    ========================================================================== */
@@ -86,14 +114,6 @@ pre {
 
 /* Text-level semantics
    ========================================================================== */
-
-/**
- * Add the correct text decoration in Chrome, Edge, Opera, and Safari.
- */
-
-abbr[title] {
-  text-decoration: underline dotted;
-}
 
 /**
  * Add the correct font weight in Chrome, Edge, and Safari.
@@ -164,15 +184,6 @@ textarea {
 }
 
 /**
- * Remove the inheritance of text transform in Firefox.
- */
-
-button,
-select {
-  text-transform: none;
-}
-
-/**
  * Correct the inability to style clickable types in iOS and Safari.
  * Kept prefixed: this is a WebKit correction, and Safari is what needs it.
  */
@@ -191,14 +202,6 @@ button,
 
 legend {
   padding: 0;
-}
-
-/**
- * Correct the padding in Firefox.
- */
-
-fieldset {
-  padding: 0.35em 0.75em 0.625em;
 }
 
 /**
@@ -247,15 +250,4 @@ progress {
 ::file-selector-button {
   -webkit-appearance: button; /* 1 */
   font: inherit; /* 2 */
-}
-
-/* Interactive
-   ========================================================================== */
-
-/*
- * Add the correct display in all browsers.
- */
-
-summary {
-  display: list-item;
 }

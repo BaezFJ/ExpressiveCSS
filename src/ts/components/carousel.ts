@@ -750,8 +750,8 @@ export class Carousel extends Component<CarouselOptions> {
   _handleKeydown = (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
     if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
-    const forward = this._vertical ? e.key === 'ArrowDown' : Utils.keys.ARROW_RIGHT.includes(e.key);
-    const backward = this._vertical ? e.key === 'ArrowUp' : Utils.keys.ARROW_LEFT.includes(e.key);
+    const forward = this._vertical ? e.key === 'ArrowDown' : e.key === Utils.keys.ARROW_RIGHT;
+    const backward = this._vertical ? e.key === 'ArrowUp' : e.key === Utils.keys.ARROW_LEFT;
     if (e.key === 'Home') {
       e.preventDefault();
       this.set(0);

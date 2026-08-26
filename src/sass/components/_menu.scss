@@ -553,35 +553,39 @@ menu[id] li.submenu-start:is(:hover, :focus-within, .open) > menu {
   transform: none;
 }
 
-body.keyboard-focused {
-  menu[id] > li:focus {
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-menu-item-label-text-color) 10%,
-      transparent
-    );
-  }
+// Keyboard focus only. This used to be nested under `body.keyboard-focused`, a
+// class the bundle stamped from four capture-phase document listeners; the
+// browser answers the same question. A programmatic focus - which is how a menu
+// item gets focus here - inherits :focus-visible from the element that had it,
+// so opening the menu by keyboard still lights the item and opening it by
+// pointer still does not.
+menu[id] > li:focus-visible {
+  background-color: color-mix(
+    in oklab,
+    var(--md-comp-menu-item-label-text-color) 10%,
+    transparent
+  );
+}
 
-  menu[id]
-    > li:focus:not(.selected, [aria-selected="true"], [aria-checked="true"]) {
-    outline: 3px solid var(--md-sys-color-secondary);
-    outline-offset: -3px;
-  }
+menu[id]
+  > li:focus-visible:not(.selected, [aria-selected="true"], [aria-checked="true"]) {
+  outline: 3px solid var(--md-sys-color-secondary);
+  outline-offset: -3px;
+}
 
-  menu[id].grouped > li:focus {
-    background-color: var(--md-comp-menu-container-color);
-  }
+menu[id].grouped > li:focus-visible {
+  background-color: var(--md-comp-menu-container-color);
+}
 
-  menu[id].grouped
-    > li:focus:not(.selected, [aria-selected="true"], [aria-checked="true"])
-    > :is(a, button, span:not(.material-symbols, .badge, .supporting-text)) {
-    border-radius: var(--md-comp-menu-item-container-shape);
-    background-color: color-mix(
-      in oklab,
-      var(--md-comp-menu-item-label-text-color) 10%,
-      transparent
-    );
-  }
+menu[id].grouped
+  > li:focus-visible:not(.selected, [aria-selected="true"], [aria-checked="true"])
+  > :is(a, button, span:not(.material-symbols, .badge, .supporting-text)) {
+  border-radius: var(--md-comp-menu-item-container-shape);
+  background-color: color-mix(
+    in oklab,
+    var(--md-comp-menu-item-label-text-color) 10%,
+    transparent
+  );
 }
 
 @media (prefers-reduced-motion: reduce) {

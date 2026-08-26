@@ -296,7 +296,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   };
 
   _handleInputKeydown = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
       this._ensureClockBuilt();
       this.inputHours.focus();
@@ -306,7 +306,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   };
 
   _handleTimeInputEnterKey = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       e.preventDefault();
       this._inputFromTextField();
     }
@@ -409,9 +409,6 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _pickerSetup() {
-    // clearButton.classList.add('timepicker-clear');
-    // clearButton.addEventListener('click', this.clear);
-    // this.footer.appendChild(clearButton);
     Utils.createButton(
       this.footer,
       this.options.i18n.clear,
@@ -421,19 +418,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     );
 
     if (!this.options.autoSubmit) {
-    /*const confirmationBtnsContainer = document.createElement('div');
-    confirmationBtnsContainer.classList.add('confirmation-btns');
-    this.footer.append(confirmationBtnsContainer);
-
-    const cancelButton = this._createButton(this.options.i18n.cancel, '');
-    cancelButton.classList.add('timepicker-close');
-    cancelButton.addEventListener('click', this.close);
-    confirmationBtnsContainer.appendChild(cancelButton);
-
-    const doneButton = this._createButton(this.options.i18n.done, '');
-    doneButton.classList.add('timepicker-close');
-    //doneButton.addEventListener('click', this._finishSelection);
-    confirmationBtnsContainer.appendChild(doneButton);*/
       Utils.createConfirmationContainer(
         this.footer,
         this.options.i18n.done,
@@ -523,8 +507,6 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _buildHoursView() {
-    // const $tick = document.createElement('div');
-    // $tick.classList.add('timepicker-tick');
     // Hours view
     if (this.options.twelveHour) {
       for (let i = 1; i < 13; i += 1) {
@@ -582,7 +564,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   };
 
   _handleAmPmKeypress = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       this._handleAmPmInteraction(<HTMLElement>e.target);
     }
   };
@@ -640,9 +622,6 @@ export class Timepicker extends Component<TimepickerOptions> {
    */
   showView = (view: Views, delay: number = null) => {
     this._ensureClockBuilt();
-    if (view === 'minutes' && getComputedStyle(this.hoursView).visibility === 'visible') {
-      // raiseCallback(this.options.beforeHourSelect);
-    }
     const isHours = view === 'hours',
       nextView = isHours ? this.hoursView : this.minutesView,
       hideView = isHours ? this.minutesView : this.hoursView;

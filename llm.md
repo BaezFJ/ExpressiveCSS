@@ -1038,15 +1038,6 @@ These classes are for horizontally aligning content: `.left-align`, `.right-alig
 
 To center text on mobile only, add `center-on-small-only`.
 
-#### Quick Floats
-
-Quickly float things by adding the class `left` or `right` to the element. `!important` is used to avoid specificity issues.
-
-```html
-<div class="left">...</div>
-<div class="right">...</div>
-```
-
 ### Hiding/Showing Content
 
 We provide easy to use classes to hide/show content on specific screen sizes.

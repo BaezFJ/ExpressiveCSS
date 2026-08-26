@@ -265,7 +265,7 @@ export class Chips extends Component<ChipsOptions> {
     const currChips: Chips = chips['Expressive_Chips'];
     if (!currChips) return; // .chips markup without an instance behind it
 
-    if (Utils.keys.BACKSPACE.includes(e.key) || Utils.keys.DELETE.includes(e.key)) {
+    if (e.key === Utils.keys.BACKSPACE || e.key === Utils.keys.DELETE) {
       e.preventDefault();
       let selectIndex = currChips.chipsData.length;
       if (currChips._selectedChip) {
@@ -277,13 +277,13 @@ export class Chips extends Component<ChipsOptions> {
       }
       if (currChips.chipsData.length) currChips.selectChip(selectIndex);
       else currChips._input.focus();
-    } else if (Utils.keys.ARROW_LEFT.includes(e.key)) {
+    } else if (e.key === Utils.keys.ARROW_LEFT) {
       if (currChips._selectedChip) {
         const selectIndex = currChips._chips.indexOf(currChips._selectedChip) - 1;
         if (selectIndex < 0) return;
         currChips.selectChip(selectIndex);
       }
-    } else if (Utils.keys.ARROW_RIGHT.includes(e.key)) {
+    } else if (e.key === Utils.keys.ARROW_RIGHT) {
       if (currChips._selectedChip) {
         const selectIndex = currChips._chips.indexOf(currChips._selectedChip) + 1;
         if (selectIndex >= currChips.chipsData.length) {
@@ -319,7 +319,7 @@ export class Chips extends Component<ChipsOptions> {
 
   _handleInputKeydown = (e: KeyboardEvent) => {
     Chips._keydown = true;
-    if (Utils.keys.ENTER.includes(e.key)) {
+    if (e.key === Utils.keys.ENTER) {
       // Override enter if autocompleting.
       if (this.hasAutocomplete && this.autocomplete && this.autocomplete.isOpen) {
         return;
@@ -330,7 +330,7 @@ export class Chips extends Component<ChipsOptions> {
       }
       this._input.value = '';
     } else if (
-      (Utils.keys.BACKSPACE.includes(e.key) || Utils.keys.ARROW_LEFT.includes(e.key)) &&
+      (e.key === Utils.keys.BACKSPACE || e.key === Utils.keys.ARROW_LEFT) &&
       this._input.value === '' &&
       this.chipsData.length
     ) {

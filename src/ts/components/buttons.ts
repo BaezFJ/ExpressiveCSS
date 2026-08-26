@@ -169,14 +169,14 @@ export class FloatingActionButton
   };
 
   private _handleAnchorKeydown = (e: KeyboardEvent) => {
-    if (Utils.keys.ENTER.includes(e.key) || e.key === ' ') {
+    if (e.key === Utils.keys.ENTER || e.key === ' ') {
       e.preventDefault();
       this._toggle();
     }
   };
 
   private _handleDocumentKeydown = (e: KeyboardEvent) => {
-    if (Utils.keys.ESC.includes(e.key)) this.close();
+    if (e.key === Utils.keys.ESC) this.close();
   };
 
   private _handleDocumentClick = (e: MouseEvent) => {
