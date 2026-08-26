@@ -112,6 +112,8 @@ export class Snackbar {
   static _snackbars: Snackbar[];
   static _container: HTMLElement;
   static _draggedSnackbar: Snackbar;
+  /** Which pointer owns the drag in flight; a second finger is ignored. */
+  static _dragPointerId: number | null = null;
 
   constructor(options: Partial<SnackbarOptions> = {}) {
     this.options = {
@@ -165,25 +167,30 @@ export class Snackbar {
   static _createContainer(root: HTMLElement | ShadowRoot = document.body) {
     const container = document.createElement('div');
     container.setAttribute('id', 'snackbar-container');
-    // Add event handler
-    container.addEventListener('touchstart', Snackbar._onDragStart);
-    container.addEventListener('touchmove', Snackbar._onDragMove);
-    container.addEventListener('touchend', Snackbar._onDragEnd);
-    container.addEventListener('mousedown', Snackbar._onDragStart);
-    document.addEventListener('mousemove', Snackbar._onDragMove);
-    document.addEventListener('mouseup', Snackbar._onDragEnd);
+    // One listener per stage. These used to be a touch trio on the container
+    // plus a mouse trio split across the container and the document, with a
+    // helper picking `targetTouches[0].clientX` or `clientX` apart afterwards.
+    // Move and up stay on the document so a drag that leaves the container
+    // still completes.
+    container.addEventListener('pointerdown', Snackbar._onDragStart);
+    document.addEventListener('pointermove', Snackbar._onDragMove);
+    document.addEventListener('pointerup', Snackbar._onDragEnd);
+    document.addEventListener('pointercancel', Snackbar._onDragEnd);
     root.appendChild(container);
     Snackbar._container = container;
   }
 
   static _removeContainer() {
-    document.removeEventListener('mousemove', Snackbar._onDragMove);
-    document.removeEventListener('mouseup', Snackbar._onDragEnd);
+    document.removeEventListener('pointermove', Snackbar._onDragMove);
+    document.removeEventListener('pointerup', Snackbar._onDragEnd);
+    document.removeEventListener('pointercancel', Snackbar._onDragEnd);
     Snackbar._container.remove();
     Snackbar._container = null;
   }
 
-  static _onDragStart(e: TouchEvent | MouseEvent) {
+  static _onDragStart(e: PointerEvent) {
+    if (!e.isPrimary) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     const target = e.target as HTMLElement | null;
     // Don't start a swipe from the action or close — those are buttons.
     if (target && !target.closest('button, a') && target.closest('.snackbar')) {
@@ -195,18 +202,20 @@ export class Snackbar {
       Snackbar._draggedSnackbar = snackbar;
       snackbar.el.classList.add('panning');
       snackbar.el.style.transition = '';
-      snackbar.startingXPos = Snackbar._xPos(e);
+      Snackbar._dragPointerId = e.pointerId;
+      snackbar.startingXPos = e.clientX;
       snackbar.time = Date.now();
-      snackbar.xPos = Snackbar._xPos(e);
+      snackbar.xPos = e.clientX;
     }
   }
 
-  static _onDragMove(e: TouchEvent | MouseEvent) {
+  static _onDragMove(e: PointerEvent) {
+    if (Snackbar._dragPointerId !== e.pointerId) return;
     if (!!Snackbar._draggedSnackbar) {
       e.preventDefault();
       const snackbar = Snackbar._draggedSnackbar;
-      snackbar.deltaX = Math.abs(snackbar.xPos - Snackbar._xPos(e));
-      snackbar.xPos = Snackbar._xPos(e);
+      snackbar.deltaX = Math.abs(snackbar.xPos - e.clientX);
+      snackbar.xPos = e.clientX;
       snackbar.velocityX = snackbar.deltaX / (Date.now() - snackbar.time);
       snackbar.time = Date.now();
 
@@ -217,7 +226,9 @@ export class Snackbar {
     }
   }
 
-  static _onDragEnd() {
+  static _onDragEnd(e: PointerEvent) {
+    if (Snackbar._dragPointerId !== e.pointerId) return;
+    Snackbar._dragPointerId = null;
     if (!!Snackbar._draggedSnackbar) {
       const snackbar = Snackbar._draggedSnackbar;
       snackbar.panning = false;
@@ -240,14 +251,6 @@ export class Snackbar {
       }
       Snackbar._draggedSnackbar = null;
     }
-  }
-
-  static _xPos(e: TouchEvent | MouseEvent) {
-    if (e.type.startsWith('touch') && (e as TouchEvent).targetTouches.length >= 1) {
-      return (e as TouchEvent).targetTouches[0].clientX;
-    }
-    // mouse event
-    return (e as MouseEvent).clientX;
   }
 
   /**

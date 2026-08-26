@@ -131,7 +131,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       this.el.removeAttribute('aria-activedescendant');
     }
   }
-  private _mousedown: boolean;
+  private _pointerDown: boolean;
   container: HTMLElement;
   /** Instance of the menu plugin for this autocomplete. */
   menu: Menu;
@@ -155,7 +155,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.selectedValues = this.selectedValues || this.options.selected.map((value) => <AutocompleteData>{ id: value }) || [];
     this.menuItems = this.options.data || [];
     this.$active = null;
-    this._mousedown = false;
+    this._pointerDown = false;
     this._setupMenu();
     this._setupEventHandlers();
   }
@@ -236,12 +236,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.el.addEventListener('focus', this._handleInputFocus);
     this.el.addEventListener('keydown', this._handleInputKeydown);
     this.el.addEventListener('click', this._handleInputClick);
-    this.container.addEventListener('mousedown', this._handleContainerMousedownAndTouchstart);
-    this.container.addEventListener('mouseup', this._handleContainerMouseupAndTouchend);
-    if (typeof window.ontouchstart !== 'undefined') {
-      this.container.addEventListener('touchstart', this._handleContainerMousedownAndTouchstart);
-      this.container.addEventListener('touchend', this._handleContainerMouseupAndTouchend);
-    }
+    // One pair, not two. These used to be a mouse pair plus a touch pair behind
+    // a `window.ontouchstart` feature detect; a pointer event covers both, and
+    // the detect covered nothing the browser does not report itself.
+    this.container.addEventListener('pointerdown', this._handleContainerPointerDown);
+    this.container.addEventListener('pointerup', this._handleContainerPointerUp);
   }
 
   _removeEventHandlers() {
@@ -250,13 +249,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.el.removeEventListener('focus', this._handleInputFocus);
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     this.el.removeEventListener('click', this._handleInputClick);
-    this.container.removeEventListener('mousedown', this._handleContainerMousedownAndTouchstart);
-    this.container.removeEventListener('mouseup', this._handleContainerMouseupAndTouchend);
-
-    if (typeof window.ontouchstart !== 'undefined') {
-      this.container.removeEventListener('touchstart', this._handleContainerMousedownAndTouchstart);
-      this.container.removeEventListener('touchend', this._handleContainerMouseupAndTouchend);
-    }
+    this.container.removeEventListener('pointerdown', this._handleContainerPointerDown);
+    this.container.removeEventListener('pointerup', this._handleContainerPointerUp);
   }
 
   _setupMenu() {
@@ -329,7 +323,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _handleInputBlur = () => {
-    if (!this._mousedown) {
+    if (!this._pointerDown) {
       this.close();
       this._resetAutocomplete();
     }
@@ -411,12 +405,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.open();
   };
 
-  _handleContainerMousedownAndTouchstart = () => {
-    this._mousedown = true;
+  _handleContainerPointerDown = () => {
+    this._pointerDown = true;
   };
 
-  _handleContainerMouseupAndTouchend = () => {
-    this._mousedown = false;
+  _handleContainerPointerUp = () => {
+    this._pointerDown = false;
   };
 
   _resetCurrentElementPosition() {
@@ -429,7 +423,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._resetCurrentElementPosition();
     this.oldVal = null;
     this.isOpen = false;
-    this._mousedown = false;
+    this._pointerDown = false;
   }
 
   _highlightPartialText(input: string, label: string) {

@@ -128,11 +128,6 @@ const _defaults: TimepickerOptions = {
   displayPluginOptions: null,
 };
 
-type Point = {
-  x: number;
-  y: number;
-};
-
 export class Timepicker extends Component<TimepickerOptions> {
   declare el: HTMLInputElement;
   id: string;
@@ -144,6 +139,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   x0: number;
   y0: number;
   moved: boolean;
+  /** Which pointer is dragging the clock hand; a second finger is ignored. */
+  private _dragPointerId: number | null = null;
   dx: number;
   dy: number;
   /**
@@ -241,17 +238,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     return document.createElementNS(svgNS, name);
   }
 
-  static _Pos(e: TouchEvent | MouseEvent): Point {
-    if (e.type.startsWith('touch') && (e as TouchEvent).targetTouches.length >= 1) {
-      return {
-        x: (e as TouchEvent).targetTouches[0].clientX,
-        y: (e as TouchEvent).targetTouches[0].clientY
-      };
-    }
-    // mouse event
-    return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY };
-  }
-
   static getInstance(el: HTMLElement): Timepicker {
     return el['Expressive_Timepicker'];
   }
@@ -266,8 +252,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   _setupEventHandlers() {
     this.el.addEventListener('click', this._handleInputClick);
     this.el.addEventListener('keydown', this._handleInputKeydown);
-    this.plate.addEventListener('mousedown', this._handleClockClickStart);
-    this.plate.addEventListener('touchstart', this._handleClockClickStart);
+    this.plate.addEventListener('pointerdown', this._handleClockClickStart);
     this.digitalClock.addEventListener('keyup', this._inputFromTextField);
     this.inputHours.addEventListener('focus', () => this.showView('hours'));
     this.inputHours.addEventListener('focusout', () => this.formatHours());
@@ -280,10 +265,9 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.el.removeEventListener('keydown', this._handleInputKeydown);
     // Drag handlers live on the document while the clock hand is held; if the
     // component is destroyed mid-drag they would otherwise outlive it.
-    document.removeEventListener('mousemove', this._handleDocumentClickMove);
-    document.removeEventListener('touchmove', this._handleDocumentClickMove);
-    document.removeEventListener('mouseup', this._handleDocumentClickEnd);
-    document.removeEventListener('touchend', this._handleDocumentClickEnd);
+    document.removeEventListener('pointermove', this._handleDocumentClickMove);
+    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
+    document.removeEventListener('pointercancel', this._handleDocumentClickEnd);
   }
 
   _handleInputClick = () => {
@@ -312,7 +296,9 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
   };
 
-  _handleClockClickStart = (e) => {
+  _handleClockClickStart = (e: PointerEvent) => {
+    if (!e.isPrimary) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     e.preventDefault();
     this._ensureClockBuilt();
     const clockPlateBR = this.plate.getBoundingClientRect();
@@ -321,36 +307,38 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.x0 = offset.x + this.options.dialRadius;
     this.y0 = offset.y + this.options.dialRadius;
     this.moved = false;
-    const clickPos = Timepicker._Pos(e);
-    this.dx = clickPos.x - this.x0;
-    this.dy = clickPos.y - this.y0;
+    this._dragPointerId = e.pointerId;
+    this.dx = e.clientX - this.x0;
+    this.dy = e.clientY - this.y0;
 
     // Set clock hands
     this.setHand(this.dx, this.dy, false);
-    // Mousemove on document
-    document.addEventListener('mousemove', this._handleDocumentClickMove);
-    document.addEventListener('touchmove', this._handleDocumentClickMove);
-    // Mouseup on document
-    document.addEventListener('mouseup', this._handleDocumentClickEnd);
-    document.addEventListener('touchend', this._handleDocumentClickEnd);
+    // The hand follows the pointer anywhere on the page while it is held.
+    // `pointercancel` ends the drag the same way `pointerup` does: without it
+    // these document listeners outlived a cancelled touch, because the
+    // `touchend` pair this replaced had no `touchcancel` companion.
+    document.addEventListener('pointermove', this._handleDocumentClickMove);
+    document.addEventListener('pointerup', this._handleDocumentClickEnd);
+    document.addEventListener('pointercancel', this._handleDocumentClickEnd);
   };
 
-  _handleDocumentClickMove = (e) => {
+  _handleDocumentClickMove = (e: PointerEvent) => {
+    if (e.pointerId !== this._dragPointerId) return;
     e.preventDefault();
-    const clickPos = Timepicker._Pos(e);
-    const x = clickPos.x - this.x0;
-    const y = clickPos.y - this.y0;
+    const x = e.clientX - this.x0;
+    const y = e.clientY - this.y0;
     this.moved = true;
     this.setHand(x, y, false);
   };
 
-  _handleDocumentClickEnd = (e) => {
+  _handleDocumentClickEnd = (e: PointerEvent) => {
+    if (e.pointerId !== this._dragPointerId) return;
+    this._dragPointerId = null;
     e.preventDefault();
-    document.removeEventListener('mouseup', this._handleDocumentClickEnd);
-    document.removeEventListener('touchend', this._handleDocumentClickEnd);
-    const clickPos = Timepicker._Pos(e);
-    const x = clickPos.x - this.x0;
-    const y = clickPos.y - this.y0;
+    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
+    document.removeEventListener('pointercancel', this._handleDocumentClickEnd);
+    const x = e.clientX - this.x0;
+    const y = e.clientY - this.y0;
     if (this.moved && x === this.dx && y === this.dy) {
       this.setHand(x, y);
     }
@@ -368,9 +356,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (typeof this.options.onSelect === 'function') {
       this.options.onSelect.call(this, this.hours, this.minutes);
     }
-    // Unbind mousemove event
-    document.removeEventListener('mousemove', this._handleDocumentClickMove);
-    document.removeEventListener('touchmove', this._handleDocumentClickMove);
+    document.removeEventListener('pointermove', this._handleDocumentClickMove);
   };
 
   _insertHTMLIntoDOM() {
