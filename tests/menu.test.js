@@ -67,9 +67,12 @@ describe("Menu", () => {
   });
 
   test("vibrant uses tertiary-container", () => {
+    // `.vibrant` opens a selector list - the class, the attribute on the menu
+    // itself, and a menu inside a [vibrant] subtree - so match past the rest
+    // of it rather than requiring the brace to follow the class.
     assert.match(
       css,
-      /\.vibrant\s*\{[^}]*--md-comp-menu-container-color:\s*var\(--md-sys-color-tertiary-container\)/s,
+      /\.vibrant[^{]*\{[^}]*--md-comp-menu-container-color:\s*var\(--md-sys-color-tertiary-container\)/s,
     );
   });
 

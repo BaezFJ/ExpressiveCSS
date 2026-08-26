@@ -295,5 +295,78 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
         </p>
   {% endcall %}
 
+  {% call section("vibrant", "Vibrant emphasis") %}
+        <p>
+          <em>Vibrant</em> is Material 3 Expressive's emphasis axis. It is not a
+          component variant: it is the same component drawn on an accent
+          container instead of a neutral surface. Material ships it as a
+          parallel token set per component — <code>menus-vibrant</code>,
+          <code>toolbar-vibrant</code> — so every component that gains the axis
+          restates the same mappings.
+        </p>
+        <p>
+          Expressive makes it a foundation instead. The
+          <code>vibrant</code> attribute remaps the surface family of
+          <code>--md-sys-color-*</code> roles inside its subtree, and every
+          component already reads those roles, so nothing per-component is
+          needed and nothing changes until you write the attribute.
+        </p>
+{% call code() %}
+<article vibrant>
+  <p class="title-medium">Vibrant</p>
+  <a class="button filled">Filled</a>
+</article>
+{% endcall %}
+        <article vibrant>
+          <p class="title-medium mt-0">Vibrant surface</p>
+          <p>
+            This panel is an ordinary Card — an <code>&lt;article&gt;</code>,
+            with no vibrant styling of its own anywhere in the sheet. It
+            carries the attribute, so the surface and text roles it already
+            read resolve to the tertiary container instead. The buttons still
+            read <code>primary</code> and keep standing out against it, and
+            outlines stay neutral. Flip the theme and it follows.
+          </p>
+          <a class="button filled mr-2 mb-2">Filled</a>
+          <a class="button tonal mr-2 mb-2">Tonal</a>
+          <a class="button outlined mr-2 mb-2">Outlined</a>
+        </article>
+        <p>
+          There is one ramp, and it is tertiary — what Material uses for the
+          axis. Pointing the surfaces at primary or secondary instead would
+          erase every component whose own fill is that container: a tonal
+          button, a FAB, <code>.toolbar.vibrant</code> itself. If you want a
+          different one, set the surface tokens on your own wrapper the way
+          <a href="#creating-theme">Creating a theme</a> shows for any token.
+        </p>
+        <p>
+          Two things to know. The elevation ladder collapses — every
+          <code>surface-container</code> rung resolves to the one container
+          color, because that is what a vibrant surface is in Material, so
+          nesting surfaces inside a vibrant subtree stops telling them apart.
+          Put the attribute on the component you want emphasized, not on the
+          page. And the remap points at the live role names rather than a
+          <code>-light</code>/<code>-dark</code> pair, which is why a runtime
+          theme switch still reaches it.
+        </p>
+        <p>
+          Menus and toolbars also carry a <code>.vibrant</code> class. Those are
+          Material's own per-component token sets, with the colors that spec
+          gives each one; the attribute is the general axis and works on
+          anything. A menu inside a vibrant subtree adopts its own vibrant
+          mapping automatically, because it has to: a selected menu item is
+          filled with <code>tertiary-container</code>, which is the very color
+          the attribute paints the menu with, so selection would vanish into
+          its own surface. Material answers that by moving selection to solid
+          <code>tertiary</code>, which is what the class already did.
+        </p>
+        <p>
+          The attribute works in a shadow root too. A sheet loaded there cannot
+          reach its own host with a descendant selector, so
+          <code>:host([vibrant])</code> is matched alongside it — the same
+          reason the token mapping carries <code>:host</code>.
+        </p>
+  {% endcall %}
+
 {% endcall %}
 {% endblock %}

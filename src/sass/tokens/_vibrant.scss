@@ -1,0 +1,76 @@
+@use "sass:list";
+@use "sass:string";
+@use "../abstracts" as *;
+
+// Vibrant emphasis (M3 Expressive).
+//
+// Vibrant is not a component variant. It is a surface *emphasis*: the same
+// component, drawn on an accent container instead of a neutral surface. M3
+// ships it as a parallel token set per component - md.comp.menus-vibrant,
+// md.comp.toolbar-vibrant, VibrantTimePickerDialog in Compose - which means
+// every component that gains the axis restates the same mappings and every one
+// of them can drift. Here it is one subtree remap of the surface family, so a
+// component needs no vibrant code at all to sit on a vibrant surface.
+//
+// The mechanism is the one tokens/_theme.scss already relies on: a custom
+// property redeclared on an element is inherited by everything under it, and a
+// light-dark() token substituted into it stays unresolved until it is *used*.
+// So [vibrant] follows a runtime theme switch for free - it points at the live
+// --md-sys-color-* roles, not at the -light / -dark pair behind them.
+//
+// What is deliberately NOT remapped, because a vibrant surface is a surface
+// change and nothing else:
+//
+//   accent roles     primary, secondary, tertiary and their containers keep
+//                    their values, which is what lets a filled button still
+//                    stand out on a vibrant panel. It is also the constraint
+//                    that keeps this to one ramp: tertiary is what M3 uses for
+//                    the axis, and pointing the surfaces at primary or
+//                    secondary instead would erase every component whose own
+//                    fill is that container - a tonal button, a FAB, and
+//                    .toolbar.vibrant itself. An author who wants a different
+//                    ramp sets --md-sys-color-surface* on their own wrapper,
+//                    the way the Themes page already shows for any token.
+//   outline roles    neutral-variant in M3, not an opacity of the text color.
+//                    Deriving them from on-*-container turns every checkbox,
+//                    radio and switch border inside the subtree translucent.
+//   surface-tint     an accent despite the name - it is the elevation tint.
+//   inverse-*, scrim they exist to contrast with the page, not to follow it.
+//
+// The elevation ladder does collapse: every surface-container rung resolves to
+// the one container color, because that is what a vibrant surface is in M3 and
+// inventing intermediate tints would put five numbers in the framework that the
+// spec does not have. on-surface-variant collapses onto on-surface for the same
+// reason - the container has one text color. The consequence of both is that
+// nesting surfaces inside a vibrant subtree stops distinguishing them, so put
+// [vibrant] on the component you want emphasized, not on the page.
+//
+// A component that carries its own .vibrant class - Menu, Toolbar - is
+// unaffected inside a vibrant subtree: those rules are in the components layer
+// and beat this one, so each keeps the colors its own M3 token set gives it.
+
+// Every surface role, derived rather than restated: a rung added to
+// $sys-color-roles and forgotten here would keep its neutral value and sit as a
+// grey patch on an accent one. `on-` and `inverse-surface` are excluded by the
+// prefix test; surface-tint by name, per the note above.
+$_vibrant-surfaces: ();
+@each $role in $sys-color-roles {
+  @if $role == "background" or
+      (string.index($role, "surface") == 1 and $role != "surface-tint") {
+    $_vibrant-surfaces: list.append($_vibrant-surfaces, $role);
+  }
+}
+
+// :host([vibrant]) for the same reason tokens/_theme.scss carries :host - a
+// sheet loaded inside a shadow root cannot reach its own host with a descendant
+// selector, so <my-panel vibrant> would leave the whole shadow tree neutral.
+[vibrant],
+:host([vibrant]) {
+  @each $role in $_vibrant-surfaces {
+    --md-sys-color-#{$role}: var(--md-sys-color-tertiary-container);
+  }
+
+  --md-sys-color-on-surface: var(--md-sys-color-on-tertiary-container);
+  --md-sys-color-on-surface-variant: var(--md-sys-color-on-tertiary-container);
+  --md-sys-color-on-background: var(--md-sys-color-on-tertiary-container);
+}

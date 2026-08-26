@@ -16,6 +16,31 @@ below is the whole story for that component.
 
 ### Added
 
+- **The vibrant emphasis axis is a foundation, not a component variant.** The
+  `vibrant` attribute remaps the surface family of `--md-sys-color-*` roles for
+  its whole subtree onto an accent container, so a component needs no vibrant
+  code of its own to sit on one — the same inheritance trick `tokens/_theme.scss`
+  uses for `light-dark()`. It points at the live role names rather than the
+  `-light` / `-dark` pair, so a runtime theme switch reaches it. There is one
+  ramp, tertiary, which is what Material uses for the axis: accent and outline
+  roles are deliberately left alone, since pointing the surfaces at primary or
+  secondary would erase every component whose own fill is that container, and
+  deriving outline from the text colour would turn every checkbox, radio and
+  switch border in the subtree translucent. Nothing is restyled by default.
+  `:host([vibrant])` is matched alongside `[vibrant]`, so a shadow-DOM host can
+  carry it — a sheet loaded in a shadow root cannot reach its own host with a
+  descendant selector. The elevation ladder collapses inside a vibrant subtree
+  — every `surface-container` rung resolves to the one container colour, which
+  is what a vibrant surface is in Material, and `on-surface-variant` collapses
+  onto `on-surface` with it — so it belongs on a component, not a page.
+
+  The `.vibrant` classes on Menu and Toolbar keep the colours Material's own
+  per-component token sets give each one, and Toolbar's is untouched. Menu's
+  now also answers to `[vibrant]`: a selected menu item is filled with
+  `tertiary-container`, the very colour the attribute paints the menu with, so
+  selection would otherwise disappear into its own surface. Material's
+  `menus-vibrant` moves selection to solid `tertiary`, which the class already
+  did, and FormSelect's option fill reads the same token so it follows.
 - **Carousel can advance on its own, with a pause contract that cannot be
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each

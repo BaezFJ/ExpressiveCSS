@@ -1,5 +1,7 @@
-// Material Design 3 design tokens. Emits :root custom properties only.
+// Material Design 3 design tokens. Emits custom properties only - on :root,
+// and on [vibrant] for the emphasis axis.
 
 @forward "reference";  // raw ramps + resolved light/dark pairs
 @forward "theme";      // maps the pairs onto the live --md-sys-color-* names
+@forward "vibrant";    // [vibrant] remaps the surface family onto an accent
 @forward "state";      // md.sys.state.* state layer opacities
