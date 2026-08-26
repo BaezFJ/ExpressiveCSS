@@ -145,7 +145,7 @@ Elevation is a last resort. Prefer tonal fill or an outline before a shadow. Dia
 
 ## 2.3 Shape and size (M3 Expressive)
 
-Buttons, icon buttons, and FABs share a size scale. Default common buttons in this framework are **40 dp** (Material small) with stadium corners. FABs are **56 dp** with 16 dp corners (`circle extra`), or 40 dp / 80 dp / 96 dp with `small` / `medium` / `large`. Icon buttons are **40 dp** (`circle`).
+Buttons, icon buttons, and FABs share a size scale: **32 / 40 / 56 / 96 / 136 dp**, named `xsmall` / `small` / `medium` / `large` / `xlarge`. Common buttons and icon buttons both default to **40 dp** (Material small) and both carry the full ladder as classes. FABs are **56 dp** with 16 dp corners (`circle extra`), or 40 dp / 80 dp / 96 dp with `small` / `medium` / `large`.
 
 Scale a control up only to create hierarchy or to match a large window. Extra-large buttons are hero moments, not form chrome.
 
@@ -551,7 +551,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 | Style | Class | Roles | Use |
 | --- | --- | --- | --- |
-| Filled | default | `primary` / `on-primary` | The one primary action in the region |
+| Filled | `filled`, or nothing | `primary` / `on-primary` | The one primary action in the region |
 | Elevated | `elevated` | `surface` / `primary`, elevation 1 | When the filled button would clash with a busy background |
 | Tonal | `tonal` | `secondary-container` / `on-secondary-container` | Secondary, still visible |
 | Outlined | `outlined` | transparent + `outline` | Secondary, low fill |
@@ -561,7 +561,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 **Placement.** In the action region of the parent (dialog end-aligned row, card `<nav>`, form end). Don't scatter filled buttons down a scrolling page.
 
-**Adaptive.** Default 40 dp. `small` / `large` / `extra` change size. On large windows, a larger filled button may pair with an extended FAB elsewhere — still only one high-emphasis action per region.
+**Adaptive.** Five sizes — `xsmall` (32 dp), `small` (40 dp, the default), `medium` (56 dp), `large` (96 dp), `xlarge` (136 dp) — and each composes with any style, so `class="tonal medium"` needs no rule of its own. The label's type role grows with the size: `label-large` up to small, then `title-medium`, `headline-small`, `headline-large`. On large windows, a larger filled button may pair with an extended FAB elsewhere — still only one high-emphasis action per region.
 
 **Behavior.** Sentence case. No wrap, no truncate. Hover 8% state layer, focus/press 10%. Disabled: `on-surface` at 38% on a 12% container.
 

@@ -1546,7 +1546,7 @@ Waves creates the ink effect outlined in Material Design. It is included in the 
 The waves effect can be applied to any element. To put the waves effect on buttons, you just have to put the class `waves-effect` on to the buttons. If you want the waves effect to be white instead, add both `waves-effect waves-light` as classes.
 
 ```html
-<a class="button large waves-effect waves-light" href="#">Wave</a>
+<a class="button waves-effect waves-light" href="#">Wave</a>
 ```
 
 #### Customization
@@ -1689,9 +1689,11 @@ Breadcrumbs are a good way to display your current location. This is usually use
 
 Material Design 3 common buttons, icon buttons, and FABs — from the HTML.
 
-A `<button>` is a filled common button. An `<a class="button">` (or the older `.btn`) is the same thing for a link. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a 40dp icon button, and give it an `aria-label`: the icon is hidden, so it is the only name the button would have.
+A `<button>` is a filled common button. An `<a class="button">` is the same thing for a link — on an anchor the class is `button`; the older `.btn` spelling only ever worked on a `<button>`, which is styled as one anyway. Put a `<span class="material-symbols" aria-hidden="true">` icon before or after the label and wrap the label in its own `<span>` — there is no `icon-left` / `icon-right` class, the order of the two spans is the placement. Add `circle` for a 40dp icon button, and give it an `aria-label`: the icon is hidden, so it is the only name the button would have.
 
-Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/specs). Default height is 40dp, label is `label-large`, corners are 20dp (a stadium), icons are 18dp with an 8dp gap, and the horizontal inset is 24dp (16dp next to an icon). State layers are 8% hover and 10% focus or press. Disabled is `on-surface` at 38% on a 12% container.
+Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated`, `text`) and a size (`xsmall` through `xlarge`). Any style combines with any size — nine classes, not twenty-five, because the size sets the geometry and the style sets the color.
+
+Tokens follow the [M3 button spec](https://m3.material.io/components/buttons/specs). The default is the small size: 40dp tall, label `label-large`, fully round corners, a 20dp icon on an 8dp gap, and a symmetric 16dp inset. State layers are 8% hover and 10% focus or press. Disabled is `on-surface` at 38% on a 12% container.
 
 Create Create Send
 
@@ -1712,12 +1714,13 @@ Create Create Send
 
 ### Filled
 
-High emphasis. This is the default — the main action on a page. Container `primary`, label `on-primary`, no elevation. `filled` on a `.btn` is still accepted and does nothing extra.
+High emphasis. This is the default — the main action on a page. Container `primary`, label `on-primary`, no elevation. It has a class of its own, `filled`, so the style axis reads as five names rather than four and a silence; writing it changes nothing.
 
 Create Create Link
 
 ```html
 <button>Create</button>
+<button class="filled">Create</button>
 <button>
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
@@ -1809,14 +1812,24 @@ Create
 
 ### Sizes
 
-`small` is 32dp. Default is 40dp. `large` and `extra` are 56dp.
+Five sizes. `small` is the default at 40dp with a 20dp icon, so it needs no class. The rest are `xsmall` (32dp, 20dp icon), `medium` (56dp, 24dp, `title-medium` label), `large` (96dp, 32dp, `headline-small`) and `xlarge` (136dp, 40dp, `headline-large`). The inset and the icon gap grow with the size, and an `outlined` button's border thickens with it — 1dp up to medium, 2dp large, 3dp extra large. `extra` is the pre-1.0 name for the 56dp button and still gives you that geometry, though not `medium`'s bigger label — it never carried one. The ladder is the common button's: `circle` is the older 40dp icon-button shape with its own 24dp icon, and `circle extra` / `circle large` are FAB sizes, which have their own.
 
-Small Default Large
+Extra small Small Medium Large Extra large
 
 ```html
-<button class="small">Small</button>
-<button>Default</button>
+<button class="xsmall">Extra small</button>
+<button>Small</button>
+<button class="medium">Medium</button>
 <button class="large">Large</button>
+<button class="xlarge">Extra large</button>
+```
+
+The two axes are written side by side — there is no per-combination class, so anything on one list goes with anything on the other.
+
+```html
+<button class="tonal medium">Tonal medium</button>
+<button class="outlined xsmall">Outlined extra small</button>
+<button class="text medium">Text medium</button>
 ```
 
 For a form submit, use a real `<button type="submit">` rather than an input.

@@ -22,13 +22,14 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 }
 
 
-// Common-button geometry. M3 default is 40dp, label-large, 20dp corners
-// (a stadium), 24dp inset, 8dp icon gap. Variants only change color/elevation.
+// Common-button geometry. M3 Expressive's default size is small: 40dp,
+// label-large, corner.full, 16dp inset, 8dp icon gap. The size axis moves
+// those tokens; the style mixins only change color and elevation.
 @mixin btn(
   $height: var(--md-comp-filled-button-container-height, 40px),
-  $border-radius: var(--md-comp-filled-button-container-shape, 20px),
-  $padding-left: var(--md-comp-filled-button-leading-space, 24px),
-  $padding-right: var(--md-comp-filled-button-trailing-space, 24px),
+  $border-radius: var(--md-comp-filled-button-container-shape, 9999px),
+  $padding-left: var(--md-comp-filled-button-leading-space, 16px),
+  $padding-right: var(--md-comp-filled-button-trailing-space, 16px),
   $font-size: var(--md-sys-typescale-label-large-font-size),
 ) {
   box-sizing: border-box;
@@ -129,7 +130,11 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 @mixin btn-outlined {
   background-color: transparent;
   color: var(--md-sys-color-primary);
-  border: 1px solid var(--md-sys-color-outline);
+  // The width is not subtracted from the inset the way `.icon-button.outlined`
+  // subtracts it: there it keeps a round control as wide as it is tall, and a
+  // common button's width is its content's. `border-box` already keeps the
+  // height right.
+  border: var(--md-comp-filled-button-outline-width, 1px) solid var(--md-sys-color-outline);
 
   &:hover {
     background-color: color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);

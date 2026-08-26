@@ -37,6 +37,30 @@ below is the whole story for that component.
 
 ### Changed
 
+- **Buttons took Material 3 Expressive's two modifier axes.** Five styles
+  (`filled`, `tonal`, `outlined`, `elevated`, `text`) and five sizes
+  (`xsmall`, `small`, `medium`, `large`, `xlarge`) are now independent classes
+  on `.button`, and any style combines with any size — nine classes, not
+  twenty-five, because the size rules set tokens and the style rules set
+  colour. `filled` is new, and is what the styleless default already was.
+
+  **Migration.** Three things behave differently:
+
+  - `small` is 40dp now, not 32dp — M3's small *is* the default size, so
+    writing it changes nothing. The old 32dp button is `xsmall`.
+  - `large` is 96dp, not 56dp. The old 56dp button is `medium`, and `extra`
+    still resolves to it, so `class="button extra"` is unchanged. `circle
+    extra`, `circle large`, `extend` and every FAB size are untouched.
+  - Spacing is symmetric at every size. Expressive dropped the old "24dp
+    inset, but 16dp next to an icon" asymmetry, so a button with an icon is
+    no longer inset differently on the icon's side, and the default inset is
+    16dp rather than 24dp. The default icon is 20dp (was 18dp) and corners
+    are fully round at every size.
+
+  An `outlined` button's border also thickens with the size — 1dp up to
+  medium, 2dp large, 3dp extra large — from the new
+  `--md-comp-filled-button-outline-width` token.
+
 - Pane layouts now use M3 spacing: 16dp inline margins on Compact, then
   24dp margins and 24dp spacers on Medium through Extra-large.
 - **Responsive breakpoints now match Material 3 exactly.** Compact is below
