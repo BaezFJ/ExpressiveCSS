@@ -70,6 +70,41 @@
         }
       ]
     },
+    "banners": {
+      "status": "enforced",
+      "note": "A persistent in-flow message with actions, added with the banner component (#33). Two variants off one root: `.banner` is the basic row and `.banner.rich` adds a heading and an image. Nothing is scripted and nothing is generated, so every rule here is about the markup an author writes. The two that earn their place are the landmark and the action row. `role=\"banner\"` is the page header landmark and has nothing to do with this component - a page has one, and a page can have several banners, so the two spellings of that confusion are both blocked. The action row is buttons, which rule 4 says is not navigation. No composite role appears here in either direction: a banner is a message with controls in it, so none is declared and none is withheld.",
+      "rules": [
+        {
+          "id": "banner-is-not-the-banner-landmark",
+          "kind": "forbid",
+          "selector": ".banner:is(header, [role=\"banner\"])",
+          "fragmentSafe": true,
+          "message": "`role=\"banner\"` is the page header landmark, not this component. A page has one of those and may have several banners; announcing each one as the site header buries the real header among them. A .banner is a <div>, or a <section> when it is worth naming."
+        },
+        {
+          "id": "banner-actions-are-not-nav",
+          "kind": "forbid",
+          "selector": ".banner nav",
+          "fragmentSafe": true,
+          "message": "A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4)."
+        },
+        {
+          "id": "banner-icon-hidden",
+          "kind": "require-attr",
+          "selector": ".banner :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration."
+        },
+        {
+          "id": "banner-image-has-alt",
+          "kind": "forbid",
+          "selector": ".banner img:not([alt])",
+          "fragmentSafe": true,
+          "message": "A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt=\"\" is the correct answer for a decorative image, and an empty value does not satisfy require-attr."
+        }
+      ]
+    },
     "bottom-sheet": {
       "status": "enforced",
       "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",

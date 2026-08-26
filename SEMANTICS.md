@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**48 of 48 rows enforced; 0 remaining.**
+**49 of 49 rows enforced; 0 remaining.**
 
-45 of those rows are components - a part of the framework an author writes markup for.
+46 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 45 components declare conformance debt.**
+**4 of 46 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -72,6 +72,22 @@ Swept 0.8.0. A badge nested in an icon is positioned against the glyph, so hidin
 | `badge-count-survives-a-hidden-icon` | forbid | `:is(a, button):not([aria-label]):not([aria-labelledby]) [aria-hidden="true"] .badge:not(:empty)` | must not match |
 
 - **badge-count-survives-a-hidden-icon** - A badge inside a hidden icon is hidden with it - aria-hidden="false" on a descendant does not undo that. Put the count in the control name (aria-label="Inbox, 3 unread"), or move the badge out of the icon into the flow.
+
+### banners
+
+A persistent in-flow message with actions, added with the banner component (#33). Two variants off one root: `.banner` is the basic row and `.banner.rich` adds a heading and an image. Nothing is scripted and nothing is generated, so every rule here is about the markup an author writes. The two that earn their place are the landmark and the action row. `role="banner"` is the page header landmark and has nothing to do with this component - a page has one, and a page can have several banners, so the two spellings of that confusion are both blocked. The action row is buttons, which rule 4 says is not navigation. No composite role appears here in either direction: a banner is a message with controls in it, so none is declared and none is withheld.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `banner-is-not-the-banner-landmark` | forbid | `.banner:is(header, [role="banner"])` | must not match |
+| `banner-actions-are-not-nav` | forbid | `.banner nav` | must not match |
+| `banner-icon-hidden` | require-attr | `.banner :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+| `banner-image-has-alt` | forbid | `.banner img:not([alt])` | must not match |
+
+- **banner-is-not-the-banner-landmark** - `role="banner"` is the page header landmark, not this component. A page has one of those and may have several banners; announcing each one as the site header buries the real header among them. A .banner is a <div>, or a <section> when it is worth naming.
+- **banner-actions-are-not-nav** - A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4).
+- **banner-icon-hidden** - The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration.
+- **banner-image-has-alt** - A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt="" is the correct answer for a decorative image, and an empty value does not satisfy require-attr.
 
 ### bottom-sheet
 

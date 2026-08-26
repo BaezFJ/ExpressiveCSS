@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Slider - ExpressiveCSS</title>
+    <title>Banners - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Slider</h2>
+            <h2>Banners</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -152,7 +152,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -194,8 +194,8 @@
                       <li class="">
                           <a href="/snackbar.html">Snackbar</a>
                       </li>
-                      <li class="">
-                          <a href="/banners.html">Banners</a>
+                      <li class="active">
+                          <a href="/banners.html" aria-current="page">Banners</a>
                       </li>
                       <li class="">
                           <a href="/preloader.html">Preloader</a>
@@ -219,7 +219,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">edit</span>
                       Forms
@@ -243,8 +243,8 @@
                       <li class="">
                           <a href="/switches.html">Switches</a>
                       </li>
-                      <li class="active">
-                          <a href="/slider.html" aria-current="page">Slider</a>
+                      <li class="">
+                          <a href="/slider.html">Slider</a>
                       </li>
                       <li class="">
                           <a href="/chips.html">Chips</a>
@@ -271,8 +271,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Slider</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Selections from a range of values.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Banners</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A prominent message that stays put until the user deals with it.</p>
             </div>
         </div>
     </section>
@@ -287,209 +287,376 @@
   <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Sliders let people pick from a range of values. An
-          <code>&lt;input type="range"&gt;</code> is the control. A wrapping
-          <code>.range</code> (or a <code>&lt;label&gt;</code>) is the host.
-          <code>.slideshow</code> is the image slideshow, a different component; it held this name until 0.8.0.
-          The plugin is <code>Expressive.Range</code> because
-          <code>Slider</code> is already the carousel.
+          A banner carries an important message at the top of a view, in the
+          flow of the page, with one or two actions on it. It stays until the
+          user acts — nothing dismisses it on a timer, and nothing about it is
+          scripted.
         </p>
         <p>
-          Three variants: <strong>standard</strong> (active from the start),
-          <strong>centered</strong> (active grows from the midpoint), and
-          <strong>range</strong> (two handles, active between them). Horizontal
-          or vertical. Five sizes: XS (the default), S, M, L, XL. Optional
-          inset icon, discrete stops, and a value indicator.
+          A <code>&lt;div class="banner"&gt;</code> is the container. A
+          <code>&lt;p&gt;</code> is the message. Everything else is optional
+          and in this order: a leading
+          <code>&lt;span class="material-symbols"&gt;</code>, a
+          <code>&lt;div class="actions"&gt;</code> of buttons, and a trailing
+          <code>.icon-button</code> that closes it. Removing the banner from
+          the page is what "closing" means, and that is the page's job — there
+          is no plugin to call.
         </p>
-        <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/sliders/specs">M3 slider spec</a>
-          (Expressive). The handle is a 4dp stop with a 6dp gap to each
-          track. Active is <code>primary</code>; inactive is
-          <code>secondary-container</code>. The end of an inactive track
-          has a 4dp stop. The value label is a 40dp
-          <code>inverse-surface</code> bubble.
-        </p>
-        <p>
-          Range is not in <code>AutoInit()</code>. Importing the IIFE
-          bundle calls <code>Expressive.Range.Init()</code>, which
-          starts every <code>input[type=range]</code> already in the
-          document and keeps the active track in sync.
-        </p>
-        <form>
-          <label>
-            Volume
-            <input type="range" min="0" max="100" value="40">
-          </label>
-        </form>
-<pre><code>&lt;label&gt;
-  Volume
-  &lt;input type="range" min="0" max="100" value="40"&gt;
-&lt;/label&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="variants" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Variants</h3>
-
-        <p>
-          Standard is the default. <code>centered</code> grows the active
-          track from 50%. A range slider is two inputs in one
-          <code>.range</code> host.
-        </p>
-        <form>
-          <div class="slider">
-            <input type="range" min="0" max="100" value="40" aria-label="Standard">
+        <div>
+          <div class="banner">
+            <span class="material-symbols" aria-hidden="true">cloud_off</span>
+            <p>You're offline. Edits are saved locally and will sync later.</p>
+            <div class="actions">
+              <button class="button text" type="button">Retry</button>
+            </div>
+            <button class="icon-button" type="button" aria-label="Dismiss">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
           </div>
-          <div class="slider centered">
-            <input type="range" min="0" max="100" value="30" aria-label="Centered">
-          </div>
-          <div class="slider">
-            <input type="range" min="0" max="100" value="25" aria-label="Range start">
-            <input type="range" min="0" max="100" value="75" aria-label="Range end">
-          </div>
-        </form>
-<pre><code>&lt;div class="slider"&gt;
-  &lt;input type="range" min="0" max="100" value="40" aria-label="Standard"&gt;
-&lt;/div&gt;
-
-&lt;div class="slider centered"&gt;
-  &lt;input type="range" min="0" max="100" value="30" aria-label="Centered"&gt;
-&lt;/div&gt;
-
-&lt;div class="slider"&gt;
-  &lt;input type="range" min="0" max="100" value="25" aria-label="Range start"&gt;
-  &lt;input type="range" min="0" max="100" value="75" aria-label="Range end"&gt;
+        </div>
+<pre><code>&lt;div class="banner"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;cloud_off&lt;/span&gt;
+  &lt;p&gt;You're offline. Edits are saved locally and will sync later.&lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button class="button text" type="button"&gt;Retry&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;button class="icon-button" type="button" aria-label="Dismiss"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
 &lt;/div&gt;</code></pre>
   
       </div>
 
 
-  <div id="sizes" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Sizes</h3>
+  <div id="when" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Banner, snackbar or dialog</h3>
 
         <p>
-          Default is XS (16dp track, 44dp handle).
-          <code>s</code> / <code>small</code> is S,
-          <code>m</code> / <code>medium</code> is M,
-          <code>l</code> / <code>large</code> is L,
-          <code>xl</code> is XL. Scope them on the host.
+          Three components tell the user something, and the difference between
+          them is how much of the user's attention they are entitled to take.
+          Reach for the least of the three that does the job.
         </p>
-        <form>
-          <div class="slider">
-            <input type="range" min="0" max="100" value="40" aria-label="XS">
-          </div>
-          <div class="slider s">
-            <input type="range" min="0" max="100" value="40" aria-label="S">
-          </div>
-          <div class="slider m">
-            <input type="range" min="0" max="100" value="40" aria-label="M">
-          </div>
-          <div class="slider l">
-            <input type="range" min="0" max="100" value="40" aria-label="L">
-          </div>
-          <div class="slider xl">
-            <input type="range" min="0" max="100" value="40" aria-label="XL">
-          </div>
-        </form>
-<pre><code>&lt;div class="slider s"&gt;…&lt;/div&gt;
-&lt;div class="slider m"&gt;…&lt;/div&gt;
-&lt;div class="slider l"&gt;…&lt;/div&gt;
-&lt;div class="slider xl"&gt;…&lt;/div&gt;</code></pre>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Lifetime</th>
+              <th>Blocks the page</th>
+              <th>Use it when</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="/snackbar.html">Snackbar</a></td>
+              <td>4–10 seconds, then gone</td>
+              <td>No — it floats over the page</td>
+              <td>Confirming something that already happened. Missing it costs nothing: "Photo saved", "Message sent".</td>
+            </tr>
+            <tr>
+              <td>Banner</td>
+              <td>Until the user acts on it</td>
+              <td>No — it sits in the flow and pushes content down</td>
+              <td>A condition that persists and that the user can keep working around. Offline, a failed sync, an expiring trial, a cookie choice.</td>
+            </tr>
+            <tr>
+              <td><a href="/dialogs.html">Dialog</a></td>
+              <td>Until the user answers</td>
+              <td>Yes — nothing else is reachable</td>
+              <td>The user cannot continue without deciding, or the decision destroys something.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Two rules of thumb follow from that. If missing the message is
+          harmless, it is a snackbar — a banner that reports a completed action
+          is a banner that never earns its dismissal. And if the user can
+          usefully carry on with the message on screen, it is not a dialog:
+          blocking the page for something the user is allowed to ignore is how
+          a product teaches people to dismiss its dialogs unread.
+        </p>
+        <p>
+          One banner at a time, at the top of the content it is about. Two
+          stacked banners are two messages competing, and the second one loses.
+        </p>
   
       </div>
 
 
-  <div id="icon" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Inset icon, stops, value</h3>
+  <div id="basic" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Basic</h3>
 
         <p>
-          A leading icon sits in the active track —
-          M, L, and XL are tall enough. <code>stops</code> plus
-          <code>step</code> paints ticks on the active track. Dragging
-          shows the value in a 40dp bubble.
+          The basic banner is a single row 56dp tall: icon, message, actions,
+          close. The message grows the row when it wraps. Anything you leave
+          out simply is not there — a message on its own is a valid banner.
         </p>
-        <form>
-          <div class="slider m">
-            <span class="material-symbols" aria-hidden="true">volume_up</span>
-            <input type="range" min="0" max="100" value="55" aria-label="Volume">
+        <div>
+          <div class="banner">
+            <p>Your trial ends in three days.</p>
+            <div class="actions">
+              <button class="button text" type="button">See plans</button>
+            </div>
           </div>
-          <div class="slider stops">
-            <input type="range" min="0" max="100" step="20" value="40" aria-label="Stops">
-          </div>
-        </form>
-<pre><code>&lt;div class="slider m"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;volume_up&lt;/span&gt;
-  &lt;input type="range" min="0" max="100" value="55" aria-label="Volume"&gt;
-&lt;/div&gt;
+        </div>
+<pre><code>&lt;div class="banner"&gt;
+  &lt;p&gt;Your trial ends in three days.&lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button class="button text" type="button"&gt;See plans&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          Below 600dp the actions take a line of their own under the message
+          and the row grows to 112dp, because a phone-width row cannot hold a
+          message and two buttons side by side without shrinking the message
+          to nothing.
+        </p>
+  
+      </div>
 
-&lt;div class="slider stops"&gt;
-  &lt;input type="range" min="0" max="100" step="20" value="40" aria-label="Stops"&gt;
+
+  <div id="vibrant" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Standard and vibrant</h3>
+
+        <p>
+          Two colour variants. A standard banner sits on
+          <code>surface-container</code> and is the default — quiet enough to
+          live above content without competing with it. Add
+          <code>vibrant</code> for <code>primary-container</code>, when the
+          message is the most important thing on the screen. Both keep their
+          close button in <code>primary</code>.
+        </p>
+        <div>
+          <div class="banner vibrant">
+            <span class="material-symbols" aria-hidden="true">system_update</span>
+            <p>A new version is ready to install.</p>
+            <div class="actions">
+              <button class="button text" type="button">Later</button>
+              <button class="button text" type="button">Restart</button>
+            </div>
+            <button class="icon-button" type="button" aria-label="Dismiss update notice">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </div>
+        </div>
+<pre><code>&lt;div class="banner vibrant"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;system_update&lt;/span&gt;
+  &lt;p&gt;A new version is ready to install.&lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button class="button text" type="button"&gt;Later&lt;/button&gt;
+    &lt;button class="button text" type="button"&gt;Restart&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;button class="icon-button" type="button" aria-label="Dismiss update notice"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          <code>square</code> flattens the 28dp corners to nothing, for a
+          banner that runs flush under an
+          <a href="/navbar.html">app bar</a> or against the edges of
+          the window. It applies to the basic banner only: Material gives the
+          rich layout one shape and no square counterpart, so
+          <code>class="banner rich square"</code> is a rich banner with rounded
+          corners.
+        </p>
+        <div>
+          <div class="banner square">
+            <span class="material-symbols" aria-hidden="true">wifi_off</span>
+            <p>Connection lost. Reconnecting…</p>
+          </div>
+        </div>
+<pre><code>&lt;div class="banner square"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;wifi_off&lt;/span&gt;
+  &lt;p&gt;Connection lost. Reconnecting…&lt;/p&gt;
 &lt;/div&gt;</code></pre>
   
       </div>
 
 
-  <div id="vertical" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Vertical</h3>
+  <div id="rich" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Rich</h3>
 
         <p>
-          <code>vertical</code> stands the track up. Minimum is at the
-          bottom.
+          <code>rich</code> gives the banner a heading, room for a longer
+          message, and either a 24dp icon or an 80dp image beside it. The
+          actions move to their own row underneath. Use it when the message
+          needs a sentence rather than a clause — otherwise the basic row says
+          the same thing in a third of the height.
         </p>
-        <form>
-          <div class="slider vertical m">
-            <input type="range" min="0" max="100" value="60" aria-label="Level">
+        <div>
+          <div class="banner rich vibrant">
+            <span class="material-symbols" aria-hidden="true">shield_person</span>
+            <h3>We updated our privacy policy</h3>
+            <p>
+              Analytics cookies are now off by default, and you can change
+              what we collect at any time from your account settings.
+            </p>
+            <div class="actions">
+              <button class="button text" type="button">Read the policy</button>
+              <button class="button text" type="button">Got it</button>
+            </div>
+            <button class="icon-button" type="button" aria-label="Dismiss privacy notice">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
           </div>
-        </form>
-<pre><code>&lt;div class="slider vertical m"&gt;
-  &lt;input type="range" min="0" max="100" value="60" aria-label="Level"&gt;
+        </div>
+<pre><code>&lt;div class="banner rich vibrant"&gt;
+  &lt;span class="material-symbols" aria-hidden="true"&gt;shield_person&lt;/span&gt;
+  &lt;h3&gt;We updated our privacy policy&lt;/h3&gt;
+  &lt;p&gt;
+    Analytics cookies are now off by default, and you can change
+    what we collect at any time from your account settings.
+  &lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button class="button text" type="button"&gt;Read the policy&lt;/button&gt;
+    &lt;button class="button text" type="button"&gt;Got it&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;button class="icon-button" type="button" aria-label="Dismiss privacy notice"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;close&lt;/span&gt;
+  &lt;/button&gt;
 &lt;/div&gt;</code></pre>
+        <p>
+          An <code>&lt;img&gt;</code> takes the icon's place. It is drawn as an
+          80dp square with square corners, cropped to fit, and it needs an
+          <code>alt</code> — descriptive when it says something the heading and
+          the message do not, empty when it is decoration, as it is here.
+        </p>
+        <div>
+          <div class="banner rich">
+            <img src="https://picsum.photos/id/1015/160/160" alt="">
+            <h3>Your photo book is ready</h3>
+            <p>
+              Twenty-four pages, printed and bound. It ships within two
+              business days once you approve the proof.
+            </p>
+            <div class="actions">
+              <button class="button text" type="button">View proof</button>
+            </div>
+          </div>
+        </div>
+<pre><code>&lt;div class="banner rich"&gt;
+  &lt;img src="/photo-book.jpg" alt=""&gt;
+  &lt;h3&gt;Your photo book is ready&lt;/h3&gt;
+  &lt;p&gt;
+    Twenty-four pages, printed and bound. It ships within two
+    business days once you approve the proof.
+  &lt;/p&gt;
+  &lt;div class="actions"&gt;
+    &lt;button class="button text" type="button"&gt;View proof&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          The rich layout is a named grid, so the five parts — leading element,
+          heading, message, actions, close — can be written in whatever order
+          reads best and each one collapses its track when it is absent. Pick
+          the heading level that fits the page's outline; the banner styles
+          whichever of <code>h1</code>–<code>h6</code> it finds.
+        </p>
   
       </div>
 
 
-  <div id="disabled" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Disabled</h3>
-
-        <p>The native <code>disabled</code> attribute drops the control to 38%.</p>
-        <form>
-          <label>
-            Locked
-            <input type="range" min="0" max="100" value="30" disabled>
-          </label>
-        </form>
-  
-      </div>
-
-
-  <div id="initialization" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Initialization</h3>
+  <div id="semantics" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Semantics</h3>
 
         <p>
-          Put the script after the inputs, or call <code>init</code>
-          yourself. There are no options. For a slider added after load:
+          A banner is not <code>role="banner"</code>. That role is the page
+          header landmark: a page has one of those, and it may have several
+          banners, so announcing each one as the site header buries the real
+          header among them. The
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">semantics suite</a>
+          blocks both spellings of that confusion —
+          <code>&lt;header class="banner"&gt;</code> and
+          <code>role="banner"</code> on the container.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('input[type=range]');
-  Expressive.Range.init(elems);
-});
-
-Expressive.Range.init(document.querySelector('#volume'));</code></pre>
+        <p>
+          The action row is <code>.actions</code> and never a
+          <code>&lt;nav&gt;</code>. Retry, restart and dismiss are commands,
+          not destinations, and a landmark for them would be one more identical
+          entry in the landmark menu.
+        </p>
+        <p>
+          Icons are decoration: the message says what the leading icon says,
+          and the close button carries its own <code>aria-label</code>, so both
+          are <code>aria-hidden="true"</code>. A banner that appears while the
+          user is on the page — a connection dropping, a sync failing — should
+          announce itself: put <code>role="status"</code> on it, which is
+          polite and does not move focus. A banner that is there when the page
+          loads has already been read in document order and needs nothing.
+        </p>
   
       </div>
 
 
-  <div id="methods" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
 
-<pre><code>const instance = Expressive.Range.getInstance(elem);
-instance.destroy();</code></pre>
-        <p>Destroy the plugin instance, remove the value label, and tear down its event handlers.</p>
+        <p>
+          Set these on the banner itself, or in a rule of your own that picks
+          out the banners you want to change —
+          <code>.notice-area .banner { … }</code>. They are declared on the
+          component, so a value set on an ancestor <em>element</em> is shadowed
+          by the banner's own default rather than inherited. The colours are
+          shared by both variants; the geometry belongs to one layout or the
+          other.
+        </p>
+        
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr><td><code>--md-comp-banners-color</code></td><td><code>var(--md-sys-color-surface-container)</code></td></tr>
+                <tr><td><code>--md-comp-banners-body-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-banners-title-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-banners-icon-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-banners-close-button-color</code></td><td><code>var(--md-sys-color-primary)</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-height</code></td><td><code>56px</code> (<code>112px</code> below 600dp)</td></tr>
+                <tr><td><code>--md-comp-banners-basic-shape</code></td><td><code>28px</code> (<code>0</code> when <code>square</code>)</td></tr>
+                <tr><td><code>--md-comp-banners-basic-leading-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-trailing-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-top-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-bottom-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-icon-container-size</code></td><td><code>48px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-body-text-top-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-body-text-bottom-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-no-icon-body-text-leading-space</code></td><td><code>16px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-actions-between-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-actions-leading-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-basic-actions-trailing-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-shape</code></td><td><code>28px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-leading-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-trailing-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-top-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-bottom-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-icon-text-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-image-size</code></td><td><code>80px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-image-text-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-leading-element-leading-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-with-image-leading-space</code></td><td><code>20px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-title-text-top-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-title-text-bottom-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-actions-between-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-banners-rich-actions-top-space</code></td><td><code>12px</code></td></tr>
+        
+            </tbody>
+        </table>
+
+        <p>
+          The message and the rich heading both carry the
+          <a href="/typography.html">body-medium</a> type role — the
+          heading at weight 500, which is Material's emphasized body-medium.
+          Action buttons are ordinary
+          <a href="/buttons.html">text buttons</a> and take their
+          colour from the theme, not from the banner.
+        </p>
   
       </div>
-
 
 
     </div>
@@ -500,13 +667,12 @@ instance.destroy();</code></pre>
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#variants">Variants</a></li>
-          <li><a href="#sizes">Sizes</a></li>
-          <li><a href="#icon">Icon, stops, value</a></li>
-          <li><a href="#vertical">Vertical</a></li>
-          <li><a href="#disabled">Disabled</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#methods">Methods</a></li>
+          <li><a href="#when">Banner, snackbar or dialog</a></li>
+          <li><a href="#basic">Basic</a></li>
+          <li><a href="#vibrant">Standard and vibrant</a></li>
+          <li><a href="#rich">Rich</a></li>
+          <li><a href="#semantics">Semantics</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 

@@ -233,6 +233,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 | Priority | User must act? | Use |
 | --- | --- | --- |
 | Low | No | **Snackbar** (optional action, auto-dismiss) |
+| Low, but persists | No, not immediately | **Banner** (in flow, stays until dismissed) |
 | Medium | Optional extra content | **Standard bottom sheet** (compact) or **standard side sheet** (expanded+) |
 | High | Yes | **Basic dialog** |
 | High + lots of content on compact | Yes | **Full-screen dialog** (`.max`) |
@@ -857,7 +858,27 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.5 Tooltips
+## 7.5 Banners
+
+**M3:** Banners (basic / rich). **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
+
+**Use when** a condition **persists** and the user can keep working around it: offline, a failed sync, an expiring trial, a cookie or privacy choice. The message stays until the user acts on it.
+
+**Don't use** to confirm something that already happened — that is a snackbar, and a banner nobody needs to dismiss is a banner that never earned its place. Don't use it for a decision the user cannot postpone: that is a dialog. Don't stack two banners; the second one loses.
+
+**Snackbar, banner, dialog.** Transient and floating, persistent and in flow, or blocking. Reach for the least of the three that does the job: if missing the message is harmless it is a snackbar, and if the user can usefully carry on with it on screen it is not a dialog.
+
+**Anatomy.** Container (required), message `<p>` (required), optional leading icon, optional `.actions` row of text buttons, optional trailing close icon button. Rich adds a heading (`h1`–`h6`) and takes an 80 dp `<img>` in place of the icon.
+
+**Placement.** In the flow, at the top of the content it is about, pushing content down rather than covering it. `square` for a banner flush under an app bar.
+
+**Adaptive.** Basic: 56 dp tall. Below 600 dp the actions take their own line and the row grows to 112 dp.
+
+**Behavior.** Nothing is scripted — closing a banner is removing it. A banner is **not** `role="banner"` (the page header landmark); one inserted while the user is on the page takes `role="status"`.
+
+---
+
+## 7.6 Tooltips
 
 **M3:** Tooltips (plain / rich). **ExpressiveCSS:** child `.tooltip` (CSS on hover and keyboard focus). Placement: `top` (M3 default), `bottom`, `left`, `right`. `rich` / `max` for rich. Legacy `.tooltipped` still AutoInits.
 
@@ -876,7 +897,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.6 Badges
+## 7.7 Badges
 
 **M3:** Badges (small / large). **ExpressiveCSS:** `span.badge` nested **in the icon**.
 

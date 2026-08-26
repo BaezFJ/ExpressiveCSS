@@ -16,6 +16,37 @@ below is the whole story for that component.
 
 ### Added
 
+- **Banners** (`.banner`, `.banner.rich`), Material 3 Expressive's persistent
+  in-flow message. A `<div class="banner">` holding a `<p>`, an optional leading
+  icon, an optional `.actions` row of text buttons and an optional close icon
+  button; `rich` adds a heading and takes an 80dp `<img>` in place of the icon.
+  Two colour variants (`vibrant` for `primary-container`) and one shape
+  modifier (`square`). CSS only — closing a banner is removing it from the page,
+  so there is nothing to initialize and nothing to tear down.
+
+  **It is the third way of talking back, and the docs say which of the three to
+  reach for.** Snackbar is transient and floats; banner is persistent and sits
+  in the flow; dialog blocks. A message nobody needs to dismiss is a snackbar,
+  and a message the user is allowed to ignore is not a dialog — `llm.md`,
+  `m3-guidelines.md` §3.3 and §7.5, and the docs page all state the trade the
+  same way, because shipping the third one without that guidance is how
+  component sprawl starts.
+
+  A banner is **not** `role="banner"`, which is the page header landmark; a page
+  has one of those and may have several banners. `semantics.json` blocks both
+  spellings of the confusion — `<header class="banner">` and the role on the
+  container. Its action row is `.actions` and never a `<nav>` (rule 4).
+
+  The basic and rich layouts are scoped `:not(.rich)` and `.rich` rather than
+  left to source order, so they tie on specificity and neither reaches into the
+  other. The rich layout is a named grid, so the five parts can be written in
+  any order and a missing one collapses its track. Values are
+  `md.comp.banners.*`, `md.comp.banners.basic.*` and `md.comp.banners.rich.*` at
+  DSP 34.0.21; the four the sheet does not spend — the `two-lines` height, both
+  `body-text.trailing-space` close-button reserves, and
+  `rich.leading-element.trailing-space` — are named in the partial with the
+  reason each is unspendable in CSS.
+
 - **Loading indicator** (`.loading-indicator`), M3 Expressive's indicator for a
   wait under about five seconds: a shape that morphs through a circle and four
   cookie shapes while it rotates. One empty `<span>`, CSS-only, no plugin.

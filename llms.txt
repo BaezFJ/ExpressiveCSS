@@ -70,6 +70,7 @@ one. Icons are Material Symbols in a `<span class="material-symbols">`.
 - [Badges](https://www.expressivecss.com/badges.html): Notifications, counts, or status on navigation items and icons.
 - [Tooltips](https://www.expressivecss.com/tooltips.html): Material Design 3 tooltips, from the HTML.
 - [Snackbar](https://www.expressivecss.com/snackbar.html): Material Design 3 snackbars, from the HTML.
+- [Banners](https://www.expressivecss.com/banners.html): A prominent message that stays put until the user deals with it.
 - [Preloader](https://www.expressivecss.com/preloader.html): Activity and progress. The HTML is the indicator.
 - [Loading indicator](https://www.expressivecss.com/loading-indicator.html): A shape that morphs while it spins, for waits under five seconds.
 - [Carousel](https://www.expressivecss.com/carousel.html): Material 3 adaptive carousels for visual collections.

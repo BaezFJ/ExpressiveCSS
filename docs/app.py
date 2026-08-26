@@ -90,6 +90,7 @@ NAV = [
         ('badges', 'Badges'),
         ('tooltips', 'Tooltips'),
         ('snackbar', 'Snackbar'),
+        ('banners', 'Banners'),
         ('preloader', 'Preloader'),
         ('loading_indicator', 'Loading indicator'),
         ('carousel', 'Carousel'),
@@ -406,6 +407,12 @@ def tooltips():
 @app.route('/snackbar.html')
 def snackbar():
     return render_template('components/snackbar.html')
+
+
+@app.route('/banners')
+@app.route('/banners.html')
+def banners():
+    return render_template('components/banners.html')
 
 
 @app.route('/toasts')

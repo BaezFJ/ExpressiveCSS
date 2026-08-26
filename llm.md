@@ -40,6 +40,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 ### CSS components
 
 - Badges
+- Banners
 - Breadcrumbs
 - Buttons
 - Cards
@@ -1667,6 +1668,58 @@ Default is `error` / `on-error`. Override with a fill + `on-*` pair when the bad
 <span class="badge">3</span>
 <span class="badge primary on-primary-text">1</span>
 ```
+
+---
+
+## Banners
+
+A prominent message that stays in the flow of the page until the user acts on it. Offline, a failed sync, an expiring trial, a cookie choice.
+
+Choose between the three ways of talking back by how much attention the message is entitled to. A **snackbar** is transient, floats over the page and dismisses itself after 4–10 seconds — use it to confirm something that already happened, where missing it costs nothing. A **banner** is persistent and in flow: it pushes content down and stays until the user deals with it, and the user can keep working around it meanwhile. A **dialog** blocks the page and is only right when the user cannot continue without deciding. A banner reporting a completed action should be a snackbar; a banner the user is allowed to ignore should not be a dialog. One banner at a time, at the top of the content it is about.
+
+A `<div class="banner">` is the container and a `<p>` is the message. Everything else is optional, in this order: a leading `<span class="material-symbols">`, a `<div class="actions">` of text buttons, and a trailing `.icon-button` that closes it. Nothing is scripted — closing a banner is removing it from the page, which is the page's job.
+
+A banner is **not** `role="banner"`. That role is the page header landmark: a page has one and may have several banners. Never write `<header class="banner">` or `role="banner"` on the container. The action row is `.actions` and never a `<nav>` — these are commands, not destinations. Icons are decoration and are `aria-hidden="true"`; the close button carries its own `aria-label`. A banner inserted while the user is on the page should carry `role="status"` so it announces itself politely; one present at load needs nothing.
+
+```html
+<div class="banner">
+  <span class="material-symbols" aria-hidden="true">cloud_off</span>
+  <p>You're offline. Edits are saved locally and will sync later.</p>
+  <div class="actions">
+    <button class="button text" type="button">Retry</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+Two colour variants and one shape modifier. Standard is the default — `surface-container` with `on-surface` text. `vibrant` is `primary-container` with `on-primary-container`, for the most important message on the screen. `square` flattens the 28dp corners for a banner running flush under an app bar — basic banners only, since Material gives the rich layout one shape and no square counterpart.
+
+```html
+<div class="banner vibrant square">
+  <span class="material-symbols" aria-hidden="true">wifi_off</span>
+  <p>Connection lost. Reconnecting…</p>
+</div>
+```
+
+`rich` adds a heading, room for a longer message, and either a 24dp icon or an 80dp square image beside it; the actions move to a row underneath. The layout is a named grid, so the five parts can be written in any order and a missing one collapses its track. The heading may be any of `h1`–`h6`. An `<img>` needs an `alt` — descriptive when it says something the heading and message do not, empty when it is decoration.
+
+```html
+<div class="banner rich vibrant">
+  <img src="/photo-book.jpg" alt="">
+  <h3>Your photo book is ready</h3>
+  <p>Twenty-four pages, printed and bound. It ships within two business days once you approve the proof.</p>
+  <div class="actions">
+    <button class="button text" type="button">View proof</button>
+  </div>
+  <button class="icon-button" type="button" aria-label="Dismiss">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</div>
+```
+
+Tokens follow M3 Expressive `md.comp.banners.*`. The basic row is 56dp tall with 4dp insets, a 48dp icon container around a 24dp icon, `body-medium` text with 14dp above and below, and actions 8dp apart. Below 600dp the actions take their own line and the row grows to 112dp. The rich layout has 12dp insets, a title at `body-medium` weight 500, and its actions 12dp under the message. Set `--md-comp-banners-color`, `--md-comp-banners-body-text-color`, `--md-comp-banners-title-text-color`, `--md-comp-banners-icon-color` and `--md-comp-banners-close-button-color` for colour; the geometry tokens are `--md-comp-banners-basic-*` and `--md-comp-banners-rich-*`.
 
 ---
 
