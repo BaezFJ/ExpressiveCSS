@@ -485,6 +485,7 @@ below is the whole story for that component.
   highlight. The two card triggers read the card's own
   `--md-comp-card-*-state-layer-*` tokens, so overriding a card still reaches
   them; the other three have no component token and read `--md-sys-state-*`.
+
 - **Slideshow is gone, and Carousel takes the case.** Charter work for 1.0.0,
   like Parallax and Pulse below. M3 has no slideshow — its Carousel is the
   component for a band of media — and once Carousel could advance on its own
