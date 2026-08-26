@@ -1,0 +1,81 @@
+@use "../abstracts" as *;
+
+// Floating sheets.
+//
+// The third member of M3's sheet family (`md.comp.sheet.floating`). A
+// dialog.floating-sheet is the surface, detached from every window edge
+// instead of docked to one. showModal() is the modal variant (scrim,
+// page inert); show() is the standard variant (no scrim, the page stays
+// interactive and the sheet floats above it).
+//
+// It is a <dialog>, so every dialog slot already applies - heading, body,
+// optional <hr> and extra content, and a last-child form[method=dialog]
+// as the action row. Only the container differs, and the sheet states it
+// by re-pointing the basic-dialog container tokens at its own.
+//
+// The token set is small on purpose: md.comp.sheet.floating publishes
+// exactly three values (DSP 34.0.21) and nothing about placement.
+//   container    surface-container-low, 28dp corners, elevation 1
+//   inset        24dp from every edge; the sheet centres in what is left
+//
+// There are deliberately no edge modifiers. `.bottom` and `.left` /
+// `.right` already select a bottom or side sheet, so a floating sheet
+// that borrowed those names would pick up two sheets' rules at once.
+// Author placement with `inset` / `margin` when a corner is wanted.
+
+dialog.floating-sheet {
+  --md-comp-floating-sheet-container-color: var(--md-sys-color-surface-container-low);
+  --md-comp-floating-sheet-container-shape: 28px;
+  --md-comp-floating-sheet-container-max-width: 400px;
+  --md-comp-floating-sheet-inset: 24px;
+
+  // The surface is the dialog's; the sheet only swaps what it owns.
+  --md-comp-basic-dialog-container-color: var(--md-comp-floating-sheet-container-color);
+  --md-comp-basic-dialog-container-shape: var(--md-comp-floating-sheet-container-shape);
+
+  box-sizing: border-box;
+  position: fixed;
+  inset: var(--md-comp-floating-sheet-inset);
+  width: min(
+    var(--md-comp-floating-sheet-container-max-width),
+    calc(100% - 2 * var(--md-comp-floating-sheet-inset))
+  );
+  min-width: 0;
+  max-width: var(--md-comp-floating-sheet-container-max-width);
+  // `inset` sets both block edges, and an `auto` height between two fixed
+  // edges is *solved*, not shrink-wrapped - the sheet would fill the window
+  // whatever it holds. `fit-content` makes all three non-auto, which is the
+  // case where auto margins centre instead.
+  height: fit-content;
+  max-height: 100%;
+  margin: auto;
+  @include z-depth("1");
+  opacity: 1;
+  scale: 1;
+  transition: opacity 200ms ease, scale 200ms ease;
+
+  // Non-modal `show()` is not in the top layer - sit above page content
+  // and below snackbars (z-index 10000).
+  &:not(:modal) {
+    z-index: 1100;
+  }
+
+  // Standard: no scrim. Modal keeps the basic-dialog backdrop.
+  &:not(:modal)::backdrop {
+    background: none;
+    backdrop-filter: none;
+  }
+}
+
+@starting-style {
+  dialog.floating-sheet[open] {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.floating-sheet {
+    transition: none;
+  }
+}

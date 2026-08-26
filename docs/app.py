@@ -88,6 +88,7 @@ NAV = [
         ('dialogs', 'Dialogs'),
         ('bottom_sheet', 'Bottom sheet'),
         ('side_sheet', 'Side sheet'),
+        ('floating_sheet', 'Floating sheet'),
         ('drag_handle', 'Drag handle'),
         ('badges', 'Badges'),
         ('tooltips', 'Tooltips'),
@@ -391,6 +392,12 @@ def bottom_sheet():
 @app.route('/side-sheet.html')
 def side_sheet():
     return render_template('components/side-sheet.html')
+
+
+@app.route('/floating-sheet')
+@app.route('/floating-sheet.html')
+def floating_sheet():
+    return render_template('components/floating-sheet.html')
 
 
 @app.route('/badges')
