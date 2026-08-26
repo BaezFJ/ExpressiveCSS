@@ -384,3 +384,168 @@ describe('Material 3 Carousel behavior', () => {
     }
   });
 });
+
+// Auto-advance is the carousel's only live timer. Every case here tears down in
+// a `finally`: a surviving interval keeps node:test's event loop alive and
+// wedges the whole file with no output at all.
+describe('Carousel auto-advance', () => {
+  beforeEach(() => resetBody());
+
+  const init = (options) => {
+    document.body.innerHTML = markup();
+    return Expressive.Carousel.init(document.querySelector('.carousel'), options);
+  };
+
+  test('is off unless an interval is set', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    const instance = init({});
+    try {
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 0, 'advanced without an interval');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('advances on the interval and wraps at the end', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    const instance = init({ interval: 1000 });
+    try {
+      t.mock.timers.tick(1000);
+      assert.equal(instance.center, 1);
+      t.mock.timers.tick(2000);
+      assert.equal(instance.center, 3);
+      t.mock.timers.tick(1000);
+      assert.equal(instance.center, 0, 'did not wrap past the last item');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('pauses on hover and on focus, with no option to disable either', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    // The booleans Slideshow offered are gone: passing them changes nothing.
+    const instance = init({ interval: 1000, pauseOnHover: false, pauseOnFocus: false });
+    const el = instance.el;
+    try {
+      el.dispatchEvent(new window.MouseEvent('mouseenter'));
+      t.mock.timers.tick(3000);
+      assert.equal(instance.center, 0, 'kept advancing under the pointer');
+      el.dispatchEvent(new window.MouseEvent('mouseleave'));
+      t.mock.timers.tick(1000);
+      assert.equal(instance.center, 1, 'did not resume when the pointer left');
+
+      el.dispatchEvent(new window.FocusEvent('focusin', { bubbles: true }));
+      t.mock.timers.tick(3000);
+      assert.equal(instance.center, 1, 'kept advancing under keyboard focus');
+      el.dispatchEvent(new window.FocusEvent('focusout', { bubbles: true }));
+      t.mock.timers.tick(1000);
+      assert.equal(instance.center, 2, 'did not resume when focus left');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('an explicit noWrap stops it after one pass', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    // Every native track forces `noWrap`; only the author's own request counts.
+    const instance = init({ interval: 1000, noWrap: true });
+    try {
+      t.mock.timers.tick(3000);
+      assert.equal(instance.center, 3, 'did not reach the last item');
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 3, 'wrapped past the end anyway');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('pause() and start() stop and resume it', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    const instance = init({ interval: 1000 });
+    try {
+      instance.pause();
+      t.mock.timers.tick(3000);
+      assert.equal(instance.center, 0);
+      instance.start();
+      t.mock.timers.tick(1000);
+      assert.equal(instance.center, 1);
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
+  test('prefers-reduced-motion suppresses it entirely', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    const original = window.matchMedia;
+    window.matchMedia = (query) => ({ ...original(query), matches: /reduced-motion/.test(query) });
+    const instance = init({ interval: 1000 });
+    try {
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 0, 'auto-advanced in reduced motion');
+    } finally {
+      instance.destroy();
+      window.matchMedia = original;
+      t.mock.timers.reset();
+    }
+  });
+
+  test('destroy() clears the timer', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    const instance = init({ interval: 1000 });
+    try {
+      instance.destroy();
+      t.mock.timers.tick(60000);
+      assert.equal(instance.center, 0, 'the interval outlived destroy()');
+    } finally {
+      t.mock.timers.reset();
+    }
+  });
+});
+
+describe('Carousel fixed height', () => {
+  beforeEach(() => resetBody());
+
+  test('reproduces the slideshow layout, indicator row included', () => {
+    assert.match(css, /--md-comp-carousel-indicator-allowance:\s*40px/);
+    assert.match(
+      css,
+      /\.carousel\.fixed-height:not\(\.coverflow\):has\(> \.indicators\)\s*\{[^}]*height:\s*calc\(\s*var\(--carousel-height,\s*var\(--md-comp-carousel-height\)\)\s*\+\s*var\(--md-comp-carousel-indicator-allowance\)/s
+    );
+    assert.match(
+      css,
+      /\.carousel\.fixed-height:not\(\.coverflow\):has\(> \.indicators\) > \.carousel-track\s*\{[^}]*height:\s*calc\(100% - var\(--md-comp-carousel-indicator-allowance\)\)/s
+    );
+  });
+
+  test('the height option sets the author hook and destroy() gives it back', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el, { height: 400 });
+    try {
+      assert.equal(el.classList.contains('fixed-height'), true);
+      assert.equal(el.style.getPropertyValue('--carousel-height'), '400px');
+    } finally {
+      instance.destroy();
+    }
+    assert.equal(el.classList.contains('fixed-height'), false);
+    assert.equal(el.style.getPropertyValue('--carousel-height'), '');
+  });
+
+  test('is left alone when no height is given', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el);
+    try {
+      assert.equal(el.classList.contains('fixed-height'), false);
+      assert.equal(el.style.getPropertyValue('--carousel-height'), '');
+    } finally {
+      instance.destroy();
+    }
+  });
+});

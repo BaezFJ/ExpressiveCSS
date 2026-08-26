@@ -111,6 +111,25 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'Carousel left the resize listener attached');
   });
 
+  test('Carousel with an interval detaches the visibility listener', () => {
+    document.body.innerHTML = `
+      <div class="carousel">
+        <a class="carousel-item" href="#one">one</a>
+        <a class="carousel-item" href="#two">two</a>
+      </div>`;
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
+      interval: 5000
+    });
+    // A live interval keeps node:test's event loop alive, so a failing
+    // assertion here would hang the file rather than fail it.
+    try {
+      assert.notDeepEqual(watch.live(), [], 'auto-advance attached nothing to begin with');
+    } finally {
+      instance.destroy();
+    }
+    assert.deepEqual(watch.live(), [], 'Carousel left the visibilitychange listener attached');
+  });
+
   test('Menu detaches the handlers open() adds', async () => {
     document.body.innerHTML = `
       <a class="button menu-trigger" data-target="menu1">Drop</a>

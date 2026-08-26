@@ -473,6 +473,17 @@
   removes parallax and size morphing, uses equal item widths, and disables
   smooth scrolling.
 </p>
+<p>
+  An <code>interval</code> makes the carousel advance on its own, and content
+  that moves by itself has to be stoppable. So the pause contract is not
+  optional and there is no option that turns it off: an interval always pauses
+  while the pointer is over the carousel, while focus is inside it, and while
+  the tab is in the background, and
+  <code>prefers-reduced-motion: reduce</code> suppresses auto-advance
+  altogether. An explicit <code>noWrap</code> stops it after one pass instead
+  of looping; every native track forces <code>noWrap</code> for the arrow keys,
+  so the timer reads the author's own value rather than that one.
+</p>
   
       </div>
 
@@ -537,6 +548,10 @@
 <tr>
   <td><code>--md-comp-carousel-item-aspect-ratio</code></td>
   <td>Per-item, multi-aspect only</td>
+</tr>
+<tr>
+  <td><code>--md-comp-carousel-indicator-allowance</code></td>
+  <td>40px, fixed height only</td>
 </tr>
 
             </tbody>
@@ -618,6 +633,25 @@
   </td>
 </tr>
 <tr>
+  <td><code>interval</code></td>
+  <td>Number</td>
+  <td><code>0</code></td>
+  <td>
+    Milliseconds between automatic advances. <code>0</code> leaves auto-advance
+    off. Setting it also turns on the pause contract below.
+  </td>
+</tr>
+<tr>
+  <td><code>height</code></td>
+  <td>Number</td>
+  <td><code>null</code></td>
+  <td>
+    Fixed track height in pixels. <code>null</code> sizes the carousel from its
+    content. A fixed height gives the indicators their own row below the track
+    instead of laying them over the media.
+  </td>
+</tr>
+<tr>
   <td><code>onCycleTo</code></td>
   <td>Function</td>
   <td><code>null</code></td>
@@ -659,12 +693,16 @@
 instance.next();
 instance.prev();
 instance.set(3); // zero-based item index
+instance.pause(); // stop auto-advance
+instance.start(); // resume it
 instance.destroy();</code></pre>
 <p>
   <code>next</code> and <code>prev</code> accept an optional item count.
   <code>set</code> accepts an optional one-shot callback.
-  <code>destroy</code> removes generated labels, size roles, indicators,
-  listeners, and the scroll-track wrapper.
+  <code>pause</code> and <code>start</code> stop and resume auto-advance, and
+  do nothing without an <code>interval</code>. <code>destroy</code> removes
+  generated labels, size roles, indicators, listeners, the scroll-track
+  wrapper, and the auto-advance timer.
 </p>
   
       </div>

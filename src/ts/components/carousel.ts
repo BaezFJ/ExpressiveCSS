@@ -51,6 +51,22 @@ export interface CarouselOptions extends BaseOptions {
    */
   noWrap: boolean;
   /**
+   * Milliseconds between automatic advances. 0 leaves auto-advance off.
+   * Whenever it is set the track pauses on hover and on keyboard focus, and
+   * `prefers-reduced-motion: reduce` suppresses it entirely - auto-advancing
+   * content is WCAG 2.2.2 territory, so neither is an option an author can
+   * turn off. `noWrap` stops it after one pass instead of looping.
+   * @default 0
+   */
+  interval: number;
+  /**
+   * Fixed track height in pixels. `null` sizes the carousel from its content.
+   * A fixed height gives the indicators their own row below the track instead
+   * of laying them over the media.
+   * @default null
+   */
+  height: number | null;
+  /**
    * Called when a new item becomes the center.
    * @default null
    */
@@ -70,6 +86,8 @@ const _defaults: CarouselOptions = {
   fullWidth: false,
   indicators: false,
   noWrap: false,
+  interval: 0,
+  height: null,
   onCycleTo: null,
   i18n: {
     carousel: 'Carousel',
@@ -123,6 +141,12 @@ export class Carousel extends Component<CarouselOptions> {
   private _generatedContainerLabel: boolean = false;
   private _generatedContainerDescription: boolean = false;
   private _generatedWideLayout: boolean = false;
+  private _generatedFixedHeight: boolean = false;
+  private _autoAdvanceTimer: ReturnType<typeof setInterval> = null;
+  private _autoAdvances: boolean = false;
+  private _autoPaused: boolean = false;
+  private _hovered: boolean = false;
+  private _focused: boolean = false;
   private _generatedItemTabIndexes = new Set<HTMLElement>();
   private _generatedItemLabels = new Set<HTMLElement>();
   private _generatedItemDescriptions = new Set<HTMLElement>();
@@ -168,7 +192,8 @@ export class Carousel extends Component<CarouselOptions> {
     }
     this._vertical = this.el.classList.contains('full-screen');
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
       this.options.duration = 1;
       if (!this._flat) this.options.dist = 0;
     }
@@ -195,7 +220,14 @@ export class Carousel extends Component<CarouselOptions> {
     this.count = this.images.length;
     this.options.numVisible = Math.min(this.count, this.options.numVisible);
 
+    this._autoAdvances = this.options.interval > 0 && this.hasMultipleSlides && !reducedMotion;
+
     this.images.forEach((item) => item.classList.add('carousel-item'));
+    if (this.options.height !== null) {
+      this._generatedFixedHeight = !this.el.classList.contains('fixed-height');
+      this.el.classList.add('fixed-height');
+      this.el.style.setProperty('--carousel-height', `${this.options.height}px`);
+    }
     if (this._flat) this._wrapTrack();
     this._syncAdaptiveMode();
 
@@ -223,6 +255,8 @@ export class Carousel extends Component<CarouselOptions> {
     } else {
       this._scroll(this.offset);
     }
+
+    this._syncAutoAdvance();
   }
 
   static get defaults(): CarouselOptions {
@@ -331,6 +365,15 @@ export class Carousel extends Component<CarouselOptions> {
 
   _setupEventHandlers() {
     this.el.addEventListener('keydown', this._handleKeydown);
+    if (this._autoAdvances) {
+      this.el.addEventListener('mouseenter', this._handleAutoAdvanceState);
+      this.el.addEventListener('mouseleave', this._handleAutoAdvanceState);
+      this.el.addEventListener('focusin', this._handleAutoAdvanceState);
+      this.el.addEventListener('focusout', this._handleAutoAdvanceState);
+      // Browsers clamp a background tab's timers rather than stopping them, so
+      // without this the track keeps cycling out of sight.
+      document.addEventListener('visibilitychange', this._handleAutoAdvanceState);
+    }
     if (this.showIndicators && this._indicators) {
       this._indicators.addEventListener('click', this._handleIndicatorClick);
     }
@@ -376,6 +419,11 @@ export class Carousel extends Component<CarouselOptions> {
 
   _removeEventHandlers() {
     this.el.removeEventListener('keydown', this._handleKeydown);
+    this.el.removeEventListener('mouseenter', this._handleAutoAdvanceState);
+    this.el.removeEventListener('mouseleave', this._handleAutoAdvanceState);
+    this.el.removeEventListener('focusin', this._handleAutoAdvanceState);
+    this.el.removeEventListener('focusout', this._handleAutoAdvanceState);
+    document.removeEventListener('visibilitychange', this._handleAutoAdvanceState);
     if (this._indicators) {
       this._indicators.removeEventListener('click', this._handleIndicatorClick);
     }
@@ -405,6 +453,8 @@ export class Carousel extends Component<CarouselOptions> {
 
   private _teardown() {
     this._removeEventHandlers();
+    this._autoAdvances = false;
+    this._syncAutoAdvance();
     if (this._trackRaf !== null) cancelAnimationFrame(this._trackRaf);
     window.clearTimeout(this.scrollingTimeout);
     window.clearTimeout(this._suppressClickTimeout);
@@ -428,6 +478,8 @@ export class Carousel extends Component<CarouselOptions> {
     if (this._generatedContainerRole) this.el.removeAttribute('role');
     if (this._generatedContainerLabel) this.el.removeAttribute('aria-label');
     if (this._generatedContainerDescription) this.el.removeAttribute('aria-roledescription');
+    if (this._generatedFixedHeight) this.el.classList.remove('fixed-height');
+    if (this.options.height !== null) this.el.style.removeProperty('--carousel-height');
     if (this._generatedWideLayout) {
       this.el.classList.remove(
         'multi-wide',
@@ -439,6 +491,48 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   _handleThrottledResize = Utils.throttle(() => this._handleResize(), 200);
+
+  _handleAutoAdvanceState = (e: Event) => {
+    if (e.type === 'mouseenter') this._hovered = true;
+    else if (e.type === 'mouseleave') this._hovered = false;
+    else if (e.type === 'focusin') this._focused = true;
+    else if (e.type === 'focusout') this._focused = false;
+    this._syncAutoAdvance();
+  };
+
+  /** Start or stop the timer to match the current pause state. */
+  private _syncAutoAdvance() {
+    const run =
+      this._autoAdvances &&
+      !this._autoPaused &&
+      !this._hovered &&
+      !this._focused &&
+      !document.hidden;
+    if (run && this._autoAdvanceTimer === null) {
+      this._autoAdvanceTimer = setInterval(this._advance, this.options.interval);
+    } else if (!run && this._autoAdvanceTimer !== null) {
+      clearInterval(this._autoAdvanceTimer);
+      this._autoAdvanceTimer = null;
+    }
+  }
+
+  private _advance = () => {
+    const next = this.center + 1;
+    if (next < this.count) {
+      this.set(next);
+      return;
+    }
+    // `this.noWrap` is forced true for every native track, because arrow keys
+    // do not wrap a scroll container - so the timer reads the author's own
+    // request instead. Looping back to the first item is just a scroll; an
+    // author who asked for no wrapping gets one pass and then silence.
+    if (this.options.noWrap) {
+      this._autoAdvances = false;
+      this._syncAutoAdvance();
+      return;
+    }
+    this.set(0);
+  };
 
   _handleTrackPointerDown = (e: PointerEvent) => {
     if (e.pointerType !== 'mouse' || e.button !== 0) return;
@@ -1065,6 +1159,21 @@ export class Carousel extends Component<CarouselOptions> {
       this.timestamp = Date.now();
       requestAnimationFrame(this._autoScroll);
     }
+  }
+
+  /**
+   * Stop auto-advance until start() is called. Without an `interval` there is
+   * nothing to stop and this does nothing.
+   */
+  pause() {
+    this._autoPaused = true;
+    this._syncAutoAdvance();
+  }
+
+  /** Resume auto-advance after pause(). */
+  start() {
+    this._autoPaused = false;
+    this._syncAutoAdvance();
   }
 
   next(n: number = 1) {
