@@ -25,6 +25,13 @@
 // top-layer or fixed box covering the viewport, so it has no meaningful subtree
 // to be rethemed by in the first place.
 
-:root {
+// `:host` alongside `:root` for the reason tokens/_theme.scss and
+// tokens/_state.scss carry it: a sheet loaded inside a shadow root cannot reach
+// its own host with `:root`, and the token would be undefined there - taking
+// `background-color` down with it, so the surface would show no scrim at all.
+// The rules this replaced read `--md-sys-color-scrim`, which is declared on
+// both, so :root alone would have narrowed what already worked.
+:root,
+:host {
   --md-comp-scrim-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
 }

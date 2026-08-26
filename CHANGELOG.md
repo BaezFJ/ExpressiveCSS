@@ -30,11 +30,15 @@ below is the whole story for that component.
   the way `transitions` is carried. Its consumers already own the rows for the
   markup that ends up wearing it.
 
-  It is declared on `:root` rather than per surface because three of the five
-  consumers paint into `::backdrop`, which has no box of its own to hang a token
-  on. `::backdrop` inherits from the element it belongs to, so setting
-  `--md-comp-scrim-color` on one `<dialog>` dims just that one, and setting it
-  on `:root` rethemes every scrim on the page.
+  It is declared on `:root, :host` rather than per surface because four of the
+  five consumers paint into `::backdrop`, which has no box of its own to hang a
+  token on — only the rail uses a `::before`. `::backdrop` inherits from the
+  element it belongs to, so setting `--md-comp-scrim-color` on one `<dialog>`
+  dims just that one, and setting it on the root rethemes every scrim on the
+  page. `:host` is there for the reason `tokens/_theme.scss` and
+  `tokens/_state.scss` carry it: a sheet loaded inside a shadow root cannot
+  reach its own host with `:root`, and an undefined token would take
+  `background-color` down with it and leave the surface with no scrim at all.
 
   **One thing narrows, deliberately.** The mix resolves at `:root`, so
   `--md-sys-color-scrim` is substituted there and overriding *that* token on a

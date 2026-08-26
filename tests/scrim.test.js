@@ -9,12 +9,14 @@ import { readFileSync } from 'node:fs';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
 describe('Scrim', () => {
-  test('is a :root token, so ::backdrop inherits it', () => {
-    // Three of the five consumers paint into ::backdrop, which has no box of
-    // its own for a token to sit on.
+  test('sits on :root and :host, so a shadow tree gets one too', () => {
+    // Four of the five consumers paint into ::backdrop, which has no box of its
+    // own for a token to sit on. :host because a sheet loaded inside a shadow
+    // root cannot reach its own host with :root - the same pairing
+    // tokens/_theme.scss and tokens/_state.scss use.
     assert.match(
       css,
-      /:root \{\s*--md-comp-scrim-color: color-mix\(in oklab, var\(--md-sys-color-scrim\) 32%, transparent\);/
+      /:root,\s*:host \{\s*--md-comp-scrim-color: color-mix\(in oklab, var\(--md-sys-color-scrim\) 32%, transparent\);/
     );
   });
 
