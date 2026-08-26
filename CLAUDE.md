@@ -623,6 +623,21 @@ compare against: a converted page is right when it is *structurally identical*
 to the frozen one, and the only difference either page has today is the landing
 page's own link.
 
+- **The docs toolchain needs Node >= 22.12, the package still needs >= 20.**
+  That is astro 7's own `engines`, and it is a *contributor* requirement:
+  `package.json`'s `engines` describes what a consumer needs to run the built
+  bundle, which is unchanged. There is no `.npmrc`, so `engine-strict` is off
+  and `npm ci` on Node 20 warns rather than failing — every `docs:*` script
+  then dies on a version error instead. CI's matrix comment carries the same
+  note, because a docs step added to the Node 20 leg is how this gets
+  rediscovered.
+- **`npm run docs:build` builds the framework first, and has to.** The two
+  `dist` symlinks dangle on a clean checkout, and Vite's public-dir copy
+  `stat`s every entry, so the build dies with `ENOENT` *before* emitting a
+  page — the `buildMissing` banner cannot help, because there is nothing to put
+  it on. (It still fires under `astro dev`, which serves `public/` lazily and
+  just 404s the asset.) `docs:dev` builds first for the same reason, which is
+  also what ADR 0003 asks for.
 - **`build.format: 'file'` is what keeps the flat `.html` URLs.** Astro's
   default would publish `/buttons.html` as `/buttons/`, and those URLs are in
   search results.

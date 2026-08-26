@@ -20,7 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         # package.json "engines" declares >=20, so 20 has to keep building.
-        # It cannot run the tests, though -- see the test step below.
+        # It cannot run the tests, though -- see the test step below -- and it
+        # cannot run any `docs:*` script either: astro 7 declares
+        # ">=22.12.0". Both are tooling requirements, not the package's, so
+        # neither is a reason to raise "engines"; but a docs step added to this
+        # job has to skip 20 the way the test step does.
         node: [20, 22, 24]
 
     steps:
