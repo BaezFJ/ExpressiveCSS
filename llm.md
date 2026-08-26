@@ -1904,7 +1904,7 @@ Width is the inset plus the icon rather than a size of its own, which is why eve
 
 ### Disabled and tokens
 
-`disabled` on the `<button>` (or the `disabled` class on an `<a>`): the icon drops to `on-surface` at 38%, and a style with a container drops that to 10%.
+`disabled` on the `<button>`: the icon drops to `on-surface` at 38%, and a style with a container drops that to 10%. An `<a href>` cannot be disabled and no class makes it so — `pointer-events: none` stops the pointer only, leaving the link in the tab order and still navigable by Enter. Drop the `href`, or the link. `aria-disabled="true"` gets the same painting for an element that must stay put and announce itself as unavailable.
 
 Every value is a `--md-comp-icon-button-*` custom property — `container-height`, `icon-size`, `leading-space`, `trailing-space`, `narrow-space`, `wide-space`, `container-shape`, `container-shape-square`, `pressed-container-shape`, `outline-width`, `color`, `container-color`. The size classes are nothing but a block of those values, so overriding them is how you write a size of your own. The state layer is the icon colour mixed into the container at the `md.sys.state` opacity, so a new style is two tokens.
 

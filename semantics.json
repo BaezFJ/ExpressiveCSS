@@ -441,6 +441,13 @@
           "message": "An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced."
         },
         {
+          "id": "icon-button-link-is-not-fake-disabled",
+          "kind": "forbid",
+          "selector": "a[href].icon-button:is(.disabled, [aria-disabled=\"true\"])",
+          "fragmentSafe": true,
+          "message": "A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link."
+        },
+        {
           "id": "icon-button-icon-hidden",
           "kind": "require-attr",
           "selector": ".icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",

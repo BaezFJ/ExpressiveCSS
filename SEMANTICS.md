@@ -301,10 +301,12 @@ Added with the icon button component (#22). An icon button is the case rule 3 ex
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `icon-button-is-a-control` | forbid | `.icon-button:not(button):not(a[href])` | must not match |
+| `icon-button-link-is-not-fake-disabled` | forbid | `a[href].icon-button:is(.disabled, [aria-disabled="true"])` | must not match |
 | `icon-button-icon-hidden` | require-attr | `.icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
 | `icon-button-is-named` | require-accessible-name | `.icon-button` | must end up with an accessible name |
 
 - **icon-button-is-a-control** - An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced.
+- **icon-button-link-is-not-fake-disabled** - A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link.
 - **icon-button-icon-hidden** - The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden="true".
 - **icon-button-is-named** - The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label.
 

@@ -175,13 +175,20 @@ $_sizes: (
 
 // Disabled. The icon fades to 38% on-surface; a container that exists fades to
 // 10%. Standard and outlined have none, so theirs stays transparent.
-.icon-button:is(:disabled, [disabled], .disabled) {
+//
+// `aria-disabled="true"` is in the list because an <a> cannot take `disabled`,
+// and it is the attribute that actually tells a screen reader. Note what CSS
+// cannot do for a link: `pointer-events: none` stops the pointer and nothing
+// else, so a disabled-looking <a href> is still reachable by Tab and still
+// navigates on Enter. Drop the `href` (or the link) rather than painting a
+// control that lies about being inert - the docs page says so too.
+.icon-button:is(:disabled, [disabled], [aria-disabled="true"], .disabled) {
   --md-comp-icon-button-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
 
   pointer-events: none;
   cursor: default;
 }
 
-.icon-button:is(.filled, .tonal):is(:disabled, [disabled], .disabled) {
+.icon-button:is(.filled, .tonal):is(:disabled, [disabled], [aria-disabled="true"], .disabled) {
   --md-comp-icon-button-container-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
 }

@@ -459,9 +459,18 @@
         <p>
           <code>disabled</code> on the <code>&lt;button&gt;</code>. The icon
           drops to <code>on-surface</code> at 38%, and a style that has a
-          container drops it to 10%. On an <code>&lt;a&gt;</code>, which cannot
-          be disabled, use the <code>disabled</code> class — but prefer
-          removing the link.
+          container drops it to 10%.
+        </p>
+        <p>
+          <strong>An <code>&lt;a href&gt;</code> cannot be disabled, and no
+          class makes it so.</strong> <code>pointer-events: none</code> stops
+          the pointer and nothing else: the link stays in the tab order and
+          still navigates on Enter, so a <code>.disabled</code> anchor is a
+          control that looks inert and is not. Drop the <code>href</code> — an
+          anchor without one is neither focusable nor actionable — or drop the
+          link entirely. <code>aria-disabled="true"</code> is styled the same
+          way for the case where the element must stay in the document and
+          announce itself as unavailable.
         </p>
         <p>
           <button type="button" class="icon-button" aria-label="Add" disabled>
