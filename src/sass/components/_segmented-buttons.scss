@@ -1,0 +1,188 @@
+@use "../abstracts" as *;
+
+// Segmented buttons.
+//
+// Anatomy is the HTML. A <fieldset class="segmented-button"> is the group and
+// its <legend> names it. Each segment is an <input> and the
+// <label class="segment"> beside it, tied by id: radios make the group
+// single-select, checkboxes make it multi-select, and the input type is the
+// whole difference.
+//
+// The control is the label's *sibling*, not its child, which is the same
+// arrangement filter chips use and for the same reason: to
+// forms/_radio-buttons and forms/_checkboxes, a <label> wrapping one of those
+// inputs *is* a radio or a checkbox. They would paint a 20dp ring on the
+// input, stretch the label to a 48dp row and, for a checkbox, mask a
+// checkmark onto its ::before - none of which a segment wants, and all of
+// which outweigh a segment rule that only names two classes.
+//
+// Nothing here is scripted, and that is the point. The browser owns the
+// checked state and, for radios, the arrow-key model a single-select group
+// promises: SEMANTICS rule 2 asks that a composite keyboard contract be
+// implemented before the role is claimed, and the native one is implemented
+// by the platform. No ARIA role is declared, so none is withheld.
+//
+// Tokens follow M3, md.comp.outlined-segmented-button.* (DSP 34.0.21):
+//   container    40dp, corner.full, 1dp outline, dividers between segments
+//   segment      12dp insets, 18dp icon, 8dp icon-label space, label-large
+//   unselected   on-surface on a transparent container
+//   selected     on-secondary-container on secondary-container
+//   state layer  8% hover, 10% press (focus is the ring, not a layer)
+//   disabled     label and icon at 38%, outline at 12%
+.segmented-button {
+  --md-comp-outlined-segmented-button-container-height: 40px;
+  --md-comp-outlined-segmented-button-container-shape: 9999px;
+  --md-comp-outlined-segmented-button-outline-width: 1px;
+  --md-comp-outlined-segmented-button-outline-color: var(--md-sys-color-outline);
+  --md-comp-outlined-segmented-button-leading-space: 12px;
+  --md-comp-outlined-segmented-button-trailing-space: 12px;
+  --md-comp-outlined-segmented-button-icon-size: 18px;
+  --md-comp-outlined-segmented-button-icon-label-space: 8px;
+  --md-comp-outlined-segmented-button-label-text-color: var(--md-sys-color-on-surface);
+  --md-comp-outlined-segmented-button-selected-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-outlined-segmented-button-selected-label-text-color: var(--md-sys-color-on-secondary-container);
+
+  // A <fieldset> arrives with a border, 16dp of padding and a min-width; the
+  // group's own outline replaces all three.
+  box-sizing: border-box;
+  // Equal columns across whatever inline size the group is given, which is
+  // what M3 specifies - material-web's own set is `grid-auto-columns: 1fr` on
+  // a full-width grid, not a shrink-wrapped row. Constrain the group with a
+  // width or a wrapper when it should be narrower than its container.
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: var(--md-comp-outlined-segmented-button-outline-width) solid
+    var(--md-comp-outlined-segmented-button-outline-color);
+  border-radius: var(--md-comp-outlined-segmented-button-container-shape);
+  // Squares the segments off against the pill, so the end segments' fill and
+  // their focus ring both stop at the outline.
+  overflow: hidden;
+
+  & + & {
+    margin-block-start: 24px;
+  }
+
+  // M3's anatomy has no visible group label. A set of radios is only a set
+  // because a <fieldset> says so, and a <fieldset> is only named because of
+  // its <legend> — so the legend is the accessible name and nothing else.
+  //
+  // There is deliberately no modifier that shows it. The root is both the
+  // fieldset and the grid of segments, so a legend back in flow is another
+  // column beside them; putting it above the pill would take an inner
+  // wrapper the markup does not have. A group that needs a visible label
+  // writes one before the fieldset and leaves the legend as the name.
+  > legend {
+    @include visually-hidden();
+  }
+
+  // The control carries the state and the form value; the label is the
+  // segment. Clipped rather than `display: none` so it stays focusable — and
+  // so the arrow keys still move between the radios.
+  > input {
+    @include visually-hidden();
+    border: 0;
+    appearance: none;
+  }
+
+  > .segment {
+    // Read back by the state layer below, so hover and press are one rule
+    // each rather than one per selected/unselected pair.
+    --_label-color: var(--md-comp-outlined-segmented-button-label-text-color);
+    --_container-color: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-comp-outlined-segmented-button-icon-label-space);
+    margin: 0;
+    min-block-size: calc(
+      var(--md-comp-outlined-segmented-button-container-height) - 2 *
+        var(--md-comp-outlined-segmented-button-outline-width)
+    );
+    padding-inline: var(--md-comp-outlined-segmented-button-leading-space)
+      var(--md-comp-outlined-segmented-button-trailing-space);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    color: var(--_label-color);
+    background-color: var(--_container-color);
+    transition: background-color .2s ease, color .2s ease;
+    @include typescale("label-large");
+  }
+
+  // Divider, not a border on every segment: the group's own outline is the
+  // outer edge, so only the joins are drawn. `:first-of-type` counts labels,
+  // and every segment is one — the legend and the inputs are other types.
+  > .segment:not(:first-of-type) {
+    border-inline-start: var(--md-comp-outlined-segmented-button-outline-width) solid
+      var(--md-comp-outlined-segmented-button-outline-color);
+  }
+
+  // Selected is the input's business. The adjacency is what lets the label
+  // read a state only the control has, with no class for the page to sync.
+  > input:checked + .segment {
+    --_label-color: var(--md-comp-outlined-segmented-button-selected-label-text-color);
+    --_container-color: var(--md-comp-outlined-segmented-button-selected-container-color);
+  }
+
+  > .segment > #{$icon} {
+    font-size: var(--md-comp-outlined-segmented-button-icon-size);
+    width: var(--md-comp-outlined-segmented-button-icon-size);
+    height: var(--md-comp-outlined-segmented-button-icon-size);
+    line-height: var(--md-comp-outlined-segmented-button-icon-size);
+    color: inherit;
+  }
+
+  > input:not(:disabled) + .segment {
+    &:hover {
+      background-color: color-mix(
+        in oklab,
+        var(--_label-color) state-opacity("hover"),
+        var(--_container-color)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--_label-color) state-opacity("pressed"),
+        var(--_container-color)
+      );
+    }
+  }
+
+  // The ring is drawn inside the segment: `overflow: hidden` above would clip
+  // an outline sitting outside it, and the end segments would lose half of it
+  // to the pill's own corner.
+  > input:focus-visible + .segment {
+    @include focus-ring();
+    outline-offset: -3px;
+  }
+
+  > input:disabled + .segment {
+    --_label-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    cursor: default;
+  }
+}
+
+.segmented-button:disabled {
+  --md-comp-outlined-segmented-button-outline-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) 12%,
+    transparent
+  );
+  --md-comp-outlined-segmented-button-label-text-color: color-mix(
+    in oklab,
+    var(--md-sys-color-on-surface) 38%,
+    transparent
+  );
+
+  > .segment {
+    cursor: default;
+  }
+}

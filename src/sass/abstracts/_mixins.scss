@@ -176,6 +176,25 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   cursor: default;
 }
 
+// Off the screen but not out of the document: still focusable, still read, and
+// still a form control. `display: none` and `visibility: hidden` both take the
+// element out of the tab order, which is the wrong trade for a control whose
+// label is drawn elsewhere - a hidden radio that cannot be focused has no
+// arrow-key model left.
+//
+// _chips.scss and _navigation-rail.scss each carry their own copy of this and
+// predate the mixin; fold them in when either is next touched.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 // Focus with Keyboard
 // The ring itself, for the rare selector that cannot be written as
 // `&:focus-visible` on the focused element - a filter chip draws its ring on

@@ -57,6 +57,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Preloader
 - Loading indicator
 - Search
+- Segmented buttons
 
 ### JavaScript components
 
@@ -1931,6 +1932,80 @@ Every value is a `--md-comp-icon-button-*` custom property — `container-height
   <span class="material-symbols" aria-hidden="true">add</span>
 </button>
 ```
+
+---
+
+## Segmented buttons
+
+Two to five connected options in one outlined pill — a view switcher, a date range, a filter over a chart. Beyond five use a select or chips.
+
+The root is a `<fieldset class="segmented-button">` with a `<legend>`. Each segment is an `<input>` and the `<label class="segment">` beside it, tied by `id` and `for`. Radios make the group single-select, checkboxes make it multi-select; the input type is the entire difference. There is no plugin, nothing to initialize, and no selected class to keep in sync — the input holds the state and the form value, `checked` states the initial one, and the browser moves it from there. Never write `aria-checked`, `aria-selected` or `aria-pressed` on a segment: that is a second answer nothing updates.
+
+The control is the label's sibling rather than its child, the same way a filter chip is written. A `<label>` wrapping a radio or a checkbox *is* one to the rest of the framework, and gets painted as one — a 20dp ring on the control and a 48dp row around it.
+
+The legend is the group's accessible name and is not shown; Material 3's anatomy has no visible group label. There is no modifier that shows it — the root is both the fieldset and the grid of segments, so a legend back in flow becomes another column beside them. When the group needs a visible label, write one before the fieldset and leave the legend saying the same thing.
+
+```html
+<fieldset class="segmented-button">
+  <legend>View</legend>
+  <input type="radio" id="view-day" name="view" value="day" checked>
+  <label class="segment" for="view-day">Day</label>
+  <input type="radio" id="view-week" name="view" value="week">
+  <label class="segment" for="view-week">Week</label>
+  <input type="radio" id="view-month" name="view" value="month">
+  <label class="segment" for="view-month">Month</label>
+</fieldset>
+```
+
+Multi-select is the same markup with checkboxes. Any number of segments can be on at once, and each is its own Tab stop.
+
+```html
+<fieldset class="segmented-button">
+  <legend>Filter transport</legend>
+  <input type="checkbox" id="transport-walk" name="transport" value="walk" checked>
+  <label class="segment" for="transport-walk">Walk</label>
+  <input type="checkbox" id="transport-bike" name="transport" value="bike">
+  <label class="segment" for="transport-bike">Bike</label>
+</fieldset>
+```
+
+An optional 18dp icon goes in the label, before or after the text. The segment's text is its name, so the icon is `aria-hidden`. M3 shows a check on the chosen segment — write that icon yourself if you want it; nothing swaps it in.
+
+```html
+<fieldset class="segmented-button">
+  <legend>Map layer</legend>
+  <input type="radio" id="layer-map" name="layer" value="map" checked>
+  <label class="segment" for="layer-map">
+    <span class="material-symbols" aria-hidden="true">map</span>
+    Map
+  </label>
+  <input type="radio" id="layer-satellite" name="layer" value="satellite">
+  <label class="segment" for="layer-satellite">
+    <span class="material-symbols" aria-hidden="true">satellite_alt</span>
+    Satellite
+  </label>
+</fieldset>
+```
+
+`disabled` on one input greys that segment; on the `<fieldset>` it greys the group, outline included.
+
+The role is *rejected*, not withheld. A composite role such as `radiogroup` promises arrow-key navigation, and a fieldset of radios already is one — the browser implements the keyboard model — so writing the role by hand restates the element and costs you the fieldset's group role. No composite role is accepted on the group. That is why the markup has to stay native, and why `SEMANTICS.md` enforces the fieldset, the label, the input, and the shared `name` the arrow keys come from.
+
+The group is a grid of equal columns filling the width it is given, as Material specifies. Constrain it with a width or a wrapper when it should be narrower than its container.
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-outlined-segmented-button-container-height` | 40px |
+| `--md-comp-outlined-segmented-button-container-shape` | 9999px |
+| `--md-comp-outlined-segmented-button-outline-width` | 1px |
+| `--md-comp-outlined-segmented-button-outline-color` | `--md-sys-color-outline` |
+| `--md-comp-outlined-segmented-button-leading-space` | 12px |
+| `--md-comp-outlined-segmented-button-trailing-space` | 12px |
+| `--md-comp-outlined-segmented-button-icon-size` | 18px |
+| `--md-comp-outlined-segmented-button-icon-label-space` | 8px |
+| `--md-comp-outlined-segmented-button-label-text-color` | `--md-sys-color-on-surface` |
+| `--md-comp-outlined-segmented-button-selected-container-color` | `--md-sys-color-secondary-container` |
+| `--md-comp-outlined-segmented-button-selected-label-text-color` | `--md-sys-color-on-secondary-container` |
 
 ---
 

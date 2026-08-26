@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tooltips - ExpressiveCSS</title>
+    <title>Segmented buttons - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Tooltips</h2>
+            <h2>Segmented buttons</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -164,8 +164,8 @@
                       <li class="">
                           <a href="/icon-buttons.html">Icon buttons</a>
                       </li>
-                      <li class="">
-                          <a href="/segmented-buttons.html">Segmented buttons</a>
+                      <li class="active">
+                          <a href="/segmented-buttons.html" aria-current="page">Segmented buttons</a>
                       </li>
                       <li class="">
                           <a href="/floating-action-button.html">FAB</a>
@@ -188,8 +188,8 @@
                       <li class="">
                           <a href="/badges.html">Badges</a>
                       </li>
-                      <li class="active">
-                          <a href="/tooltips.html" aria-current="page">Tooltips</a>
+                      <li class="">
+                          <a href="/tooltips.html">Tooltips</a>
                       </li>
                       <li class="">
                           <a href="/snackbar.html">Snackbar</a>
@@ -268,8 +268,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Tooltips</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Material Design 3 tooltips, from the HTML.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Segmented buttons</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">Two to five connected options, one choice or several, with no script behind them.</p>
             </div>
         </div>
     </section>
@@ -284,354 +284,260 @@
   <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          A child <code>.tooltip</code> is the bubble. No
-          <code>tooltipped</code> class is required. They are CSS only on
-          hover and keyboard focus. Helpers are only for placement and
-          the rich variant: <code>top</code> (the default),
-          <code>bottom</code>, <code>left</code>, <code>right</code>,
-          <code>rich</code> / <code>max</code>.
+          A segmented button is a small set of related options shown side by
+          side inside one outlined pill — a view switcher, a date range, a
+          filter over a chart. Two to five segments; beyond that use a
+          <a href="/select.html">select</a> or
+          <a href="/chips.html">chips</a>.
         </p>
         <p>
-          Tokens follow the
-          <a href="https://m3.material.io/components/tooltips/specs">M3 tooltip spec</a>.
-          A plain tooltip is <code>inverse-surface</code> /
-          <code>inverse-on-surface</code>, 4dp corners,
-          <code>body-small</code>, 24dp minimum, 4/8dp padding, 200dp
-          max, no elevation and no caret. It sits 4dp from the activator.
-          M3 prefers above.
+          The root is a <code>&lt;fieldset class="segmented-button"&gt;</code>
+          with a <code>&lt;legend&gt;</code>. Each segment is an
+          <code>&lt;input&gt;</code> and the
+          <code>&lt;label class="segment"&gt;</code> beside it, tied together
+          by <code>id</code> and <code>for</code>. That is the whole component:
+          there is no plugin, nothing to initialize, and no selected class to
+          keep in sync. The input holds the state and the form value, and the
+          browser moves it.
         </p>
         <p>
-          Inside a <code>&lt;button&gt;</code> the bubble has to be a
-          <code>&lt;span&gt;</code> — a <code>&lt;div&gt;</code> is not
-          phrasing content and the parser will hoist it. Icon-only
-          buttons still need <code>.circle</code> so the span is not
-          treated as a label.
+          The control is the label's sibling rather than its child, the same
+          way a <a href="/chips.html">filter chip</a> is written.
+          A <code>&lt;label&gt;</code> wrapping a radio or a checkbox
+          <em>is</em> one as far as the rest of the framework is concerned, and
+          would be painted as one — a 20dp ring on the control and a 48dp row
+          around it.
         </p>
         <p>
-          <button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album">
-            <span class="material-symbols" aria-hidden="true">add</span>
-            <span class="tooltip" id="tip-add-to-album">Add to album</span>
-          </button>
-          <button type="button" class="circle" aria-label="Above" aria-describedby="tip-above">
-            <span class="material-symbols" aria-hidden="true">arrow_upward</span>
-            <span class="tooltip" id="tip-above">Above</span>
-          </button>
-          <button type="button" class="circle" aria-label="Below" aria-describedby="tip-below">
-            <span class="material-symbols" aria-hidden="true">arrow_downward</span>
-            <span class="tooltip bottom" id="tip-below">Below</span>
-          </button>
-          <button type="button" class="circle" aria-label="Start" aria-describedby="tip-start">
-            <span class="material-symbols" aria-hidden="true">arrow_back</span>
-            <span class="tooltip left" id="tip-start">Start</span>
-          </button>
-          <button type="button" class="circle" aria-label="End" aria-describedby="tip-end">
-            <span class="material-symbols" aria-hidden="true">arrow_forward</span>
-            <span class="tooltip right" id="tip-end">End</span>
-          </button>
+          The legend names the group for assistive technology and is not
+          shown — Material 3's anatomy has no visible group label, but a set of
+          radios is only a set because a fieldset says so, and a fieldset is
+          only named by its legend.
         </p>
-<pre><code>&lt;button type="button" class="circle" aria-label="Add" aria-describedby="tip-add-to-album"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-  &lt;span class="tooltip" id="tip-add-to-album"&gt;Add to album&lt;/span&gt;
-&lt;/button&gt;
-
-&lt;button type="button" class="circle" aria-label="Below" aria-describedby="tip-below"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_downward&lt;/span&gt;
-  &lt;span class="tooltip bottom" id="tip-below"&gt;Below&lt;/span&gt;
-&lt;/button&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="rich" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Rich</h3>
-
         <p>
-          <code>rich</code> (or BeerCSS’s <code>max</code>) is the rich
-          tooltip: <code>surface</code>, elevation 2, 12dp corners,
-          320dp max. A heading is the title
-          (<code>title-small</code>), a <code>&lt;p&gt;</code> is
-          supporting text (<code>body-medium</code>), and a trailing
-          <code>&lt;nav&gt;</code> is the action. Rich bubbles can
-          receive pointer events so the action is usable.
+          There is no modifier that shows it, and unhiding it by hand is not
+          one override but six. The root is both the fieldset and the grid of
+          segments, so a legend back in flow becomes another column beside
+          them. When the group needs a visible label, write one before the
+          fieldset — a heading or a <code>&lt;p&gt;</code> — and leave the
+          legend saying the same thing as the group's name.
         </p>
         <div>
-          <button type="button" class="tonal">Why this is saved</button>
-          <div class="tooltip rich bottom">
-            <h3>Saved offline</h3>
-            <p>This stop is stored on the device so it still opens without a signal.</p>
-            <nav>
-              <button type="button" class="text">Got it</button>
-            </nav>
-          </div>
+          <fieldset class="segmented-button">
+            <legend>View</legend>
+            <input type="radio" id="docs-view-day" name="docs-view" value="day" checked>
+            <label class="segment" for="docs-view-day">Day</label>
+            <input type="radio" id="docs-view-week" name="docs-view" value="week">
+            <label class="segment" for="docs-view-week">Week</label>
+            <input type="radio" id="docs-view-month" name="docs-view" value="month">
+            <label class="segment" for="docs-view-month">Month</label>
+          </fieldset>
         </div>
-<pre><code>&lt;div&gt;
-  &lt;button type="button" class="tonal"&gt;Why this is saved&lt;/button&gt;
-  &lt;div class="tooltip rich bottom"&gt;
-    &lt;h3&gt;Saved offline&lt;/h3&gt;
-    &lt;p&gt;This stop is stored on the device so it still opens without a signal.&lt;/p&gt;
-    &lt;nav&gt;
-      &lt;button type="button" class="text"&gt;Got it&lt;/button&gt;
-    &lt;/nav&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-        <p>
-          A rich tooltip with an action cannot live inside a
-          <code>&lt;button&gt;</code> — that would nest buttons. Put the
-          bubble next to the control, wrapped in a parent.
-        </p>
   
       </div>
 
 
-  <div id="javascript" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">JavaScript</h3>
+  <div id="single-select" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Single select</h3>
 
         <p>
-          The CSS path does not need AutoInit. The JS plugin is still
-          there for <code>data-tooltip</code>, delayed show/hide, and
-          keeping the bubble inside the viewport. Add
-          <code>tooltipped</code> to the activator.
-          <code>data-tooltip</code> is the text;
-          <code>data-position</code> is <code>top</code>,
-          <code>right</code>, <code>bottom</code>, or
-          <code>left</code>. <code>AutoInit()</code> starts every
-          <code>.tooltipped</code> except those marked
-          <code>no-autoinit</code>. The generated element gets both
-          <code>.tooltip</code> and <code>.material-tooltip</code>.
+          Radios sharing a <code>name</code>. Exactly one segment is chosen,
+          the arrow keys move between them and Tab enters and leaves the group
+          as one stop — all of it the browser's, because the control is a real
+          radio group. Mark the initial choice with <code>checked</code>.
         </p>
+<pre><code>&lt;fieldset class="segmented-button"&gt;
+  &lt;legend&gt;View&lt;/legend&gt;
+  &lt;input type="radio" id="view-day" name="view" value="day" checked&gt;
+  &lt;label class="segment" for="view-day"&gt;Day&lt;/label&gt;
+  &lt;input type="radio" id="view-week" name="view" value="week"&gt;
+  &lt;label class="segment" for="view-week"&gt;Week&lt;/label&gt;
+  &lt;input type="radio" id="view-month" name="view" value="month"&gt;
+  &lt;label class="segment" for="view-month"&gt;Month&lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="multi-select" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Multi select</h3>
+
         <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip="I am a tooltip">Bottom</a>
-          <a class="tooltipped" href="#!" data-position="top" data-tooltip="I am a tooltip">Top</a>
-          <a class="tooltipped" href="#!" data-position="left" data-tooltip="I am a tooltip">Left</a>
-          <a class="tooltipped" href="#!" data-position="right" data-tooltip="I am a tooltip">Right</a>
+          Checkboxes instead. Any number of segments can be on at once, each
+          one its own Tab stop and its own form value. Nothing else changes —
+          the input type is the entire difference between the two variants.
         </p>
-<pre><code>&lt;a class="tooltipped" data-position="bottom" data-tooltip="I am a tooltip" href="#!"&gt;
-  Hover me
-&lt;/a&gt;</code></pre>
-        <p>
-          For HTML, point <code>data-tooltip-id</code> at an element.
-          That element is moved into the tooltip and the bubble is
-          marked <code>rich</code>. Leave <code>data-tooltip</code> off
-          so the HTML is kept. There is no <code>data-html</code>
-          attribute and no <code>unsafeHTML</code> option.
-        </p>
-        <p>
-          <a class="tooltipped" href="#!" data-position="bottom" data-tooltip-id="tooltip-content">With HTML</a>
-        </p>
-        <div id="tooltip-content" style="display: none;">
-          <h3>Chart</h3>
-          <p>This is a tooltip with a <a href="https://github.com">link</a>
-          and a <span class="material-symbols" aria-hidden="true">insert_chart</span>.</p>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>Filter transport</legend>
+            <input type="checkbox" id="docs-transport-walk" name="docs-transport" value="walk" checked>
+            <label class="segment" for="docs-transport-walk">Walk</label>
+            <input type="checkbox" id="docs-transport-transit" name="docs-transport" value="transit" checked>
+            <label class="segment" for="docs-transport-transit">Transit</label>
+            <input type="checkbox" id="docs-transport-bike" name="docs-transport" value="bike">
+            <label class="segment" for="docs-transport-bike">Bike</label>
+          </fieldset>
         </div>
-<pre><code>&lt;a class="tooltipped" href="#!"
-   data-position="bottom" data-tooltip-id="tooltip-content"&gt;
-  With HTML
-&lt;/a&gt;
-&lt;div id="tooltip-content" hidden&gt;
-  &lt;h3&gt;Chart&lt;/h3&gt;
-  &lt;p&gt;This is a tooltip with a &lt;a href="https://github.com"&gt;link&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;fieldset class="segmented-button"&gt;
+  &lt;legend&gt;Filter transport&lt;/legend&gt;
+  &lt;input type="checkbox" id="transport-walk" name="transport" value="walk" checked&gt;
+  &lt;label class="segment" for="transport-walk"&gt;Walk&lt;/label&gt;
+  &lt;input type="checkbox" id="transport-transit" name="transport" value="transit" checked&gt;
+  &lt;label class="segment" for="transport-transit"&gt;Transit&lt;/label&gt;
+  &lt;input type="checkbox" id="transport-bike" name="transport" value="bike"&gt;
+  &lt;label class="segment" for="transport-bike"&gt;Bike&lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
   
       </div>
 
 
-  <div id="initialization" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Initialization</h3>
+  <div id="icons" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">With icons</h3>
 
         <p>
-          The IIFE bundle exposes <code>Expressive.Tooltip</code>.
-          Call <code>init</code> yourself when you need options other
-          than the defaults, or let
-          <code>Expressive.AutoInit()</code> start every
-          <code>.tooltipped</code>.
+          Put a <code>&lt;span class="material-symbols"&gt;</code> in the
+          label, before or after the text, at 18dp. The segment's text is its
+          accessible name, so the icon is decoration and is
+          <code>aria-hidden</code>. Material 3 shows a check on the chosen
+          segment; write that icon yourself if you want it — nothing swaps it
+          in, and the filled container already says which one is on.
         </p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.tooltipped');
-  const instances = Expressive.Tooltip.init(elems, {
-    enterDelay: 200
-  });
-});</code></pre>
-        <p>Per-instance options can also be passed through AutoInit:</p>
-<pre><code>Expressive.AutoInit(document.body, {
-  Tooltip: { enterDelay: 200 }
-});</code></pre>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>Map layer</legend>
+            <input type="radio" id="docs-layer-map" name="docs-layer" value="map" checked>
+            <label class="segment" for="docs-layer-map">
+              <span class="material-symbols" aria-hidden="true">map</span>
+              Map
+            </label>
+            <input type="radio" id="docs-layer-satellite" name="docs-layer" value="satellite">
+            <label class="segment" for="docs-layer-satellite">
+              <span class="material-symbols" aria-hidden="true">satellite_alt</span>
+              Satellite
+            </label>
+          </fieldset>
+        </div>
+<pre><code>&lt;fieldset class="segmented-button"&gt;
+  &lt;legend&gt;Map layer&lt;/legend&gt;
+  &lt;input type="radio" id="layer-map" name="layer" value="map" checked&gt;
+  &lt;label class="segment" for="layer-map"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;map&lt;/span&gt;
+    Map
+  &lt;/label&gt;
+  &lt;input type="radio" id="layer-satellite" name="layer" value="satellite"&gt;
+  &lt;label class="segment" for="layer-satellite"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;satellite_alt&lt;/span&gt;
+    Satellite
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
   
       </div>
 
 
-  <div id="options" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Options</h3>
+  <div id="disabled" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Disabled</h3>
 
         <p>
-          Constructor and <code>init</code> options.
-          <code>data-tooltip</code>, <code>data-position</code>, and
-          <code>data-tooltip-id</code> are read from the element and
-          override these defaults. Attributes are read again each time
-          the tooltip opens, so changing them later takes effect on the
-          next show.
+          <code>disabled</code> on one input greys that segment; on the
+          fieldset it greys the whole group, outline included, the way any
+          fieldset disables what it contains.
+        </p>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>Density</legend>
+            <input type="radio" id="docs-density-comfortable" name="docs-density" value="comfortable" checked>
+            <label class="segment" for="docs-density-comfortable">Comfortable</label>
+            <input type="radio" id="docs-density-compact" name="docs-density" value="compact" disabled>
+            <label class="segment" for="docs-density-compact">Compact</label>
+          </fieldset>
+          <fieldset class="segmented-button" disabled>
+            <legend>Sort</legend>
+            <input type="radio" id="docs-sort-newest" name="docs-sort" value="newest" checked>
+            <label class="segment" for="docs-sort-newest">Newest</label>
+            <input type="radio" id="docs-sort-oldest" name="docs-sort" value="oldest">
+            <label class="segment" for="docs-sort-oldest">Oldest</label>
+          </fieldset>
+        </div>
+<pre><code>&lt;fieldset class="segmented-button" disabled&gt;
+  &lt;legend&gt;Sort&lt;/legend&gt;
+  &lt;input type="radio" id="sort-newest" name="sort" value="newest" checked&gt;
+  &lt;label class="segment" for="sort-newest"&gt;Newest&lt;/label&gt;
+  &lt;input type="radio" id="sort-oldest" name="sort" value="oldest"&gt;
+  &lt;label class="segment" for="sort-oldest"&gt;Oldest&lt;/label&gt;
+&lt;/fieldset&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="semantics" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Semantics</h3>
+
+        <p>
+          A
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
+          such as <code>radiogroup</code> promises arrow-key navigation, and
+          this component <em>rejects</em> it rather than withholding it: a
+          fieldset of radios already is one, with the keyboard model
+          implemented by the browser. Writing the role by hand would restate
+          what the element already says and take away the group role the
+          fieldset gives you. No composite role is accepted on the group at
+          all.
+        </p>
+        <p>
+          What that costs is that the markup has to stay native, so the docs
+          suite enforces it — the root must be a <code>&lt;fieldset&gt;</code>,
+          every segment a <code>&lt;label for&gt;</code> against a real
+          <code>&lt;input&gt;</code>, and every radio must carry the shared
+          <code>name</code> that makes it a group, since that is where the
+          arrow keys come from. <code>aria-checked</code> and its neighbours
+          are refused: the input's <code>checked</code> state is the answer,
+          and a hand-written copy is a second one that nothing updates.
+        </p>
+  
+      </div>
+
+
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
+
+        <p>
+          Set these on the group, or on an ancestor to reach several of them.
+          The group is a grid of equal columns filling the width it is given,
+          which is what Material specifies — constrain it with a width or a
+          wrapper when it should be narrower than its container.
         </p>
         
         <table class="striped">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
+                    <th>Token</th>
                     <th>Default</th>
-                    <th>Description</th>
                 </tr>
             </thead>
             <tbody>
 
-            <tr>
-              <td><code>exitDelay</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Delay before the tooltip disappears, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>enterDelay</code></td>
-              <td>Number</td>
-              <td><code>0</code></td>
-              <td>Delay before the tooltip appears, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>tooltipId</code></td>
-              <td>String</td>
-              <td>—</td>
-              <td>Id of an element used as the tooltip body. Set by <code>data-tooltip-id</code>. Marks the bubble <code>rich</code>.</td>
-            </tr>
-            <tr>
-              <td><code>text</code></td>
-              <td>String</td>
-              <td><code>''</code></td>
-              <td>Plain-text content. Set by <code>data-tooltip</code>. Ignored when <code>tooltipId</code> is set.</td>
-            </tr>
-            <tr>
-              <td><code>margin</code></td>
-              <td>Number</td>
-              <td><code>4</code></td>
-              <td>Distance from the activator, in pixels, not counting <code>transitionMovement</code>. M3 is 4dp.</td>
-            </tr>
-            <tr>
-              <td><code>inDuration</code></td>
-              <td>Number</td>
-              <td><code>250</code></td>
-              <td>Enter transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>opacity</code></td>
-              <td>Number</td>
-              <td><code>1</code></td>
-              <td>Opacity of the tooltip when shown.</td>
-            </tr>
-            <tr>
-              <td><code>outDuration</code></td>
-              <td>Number</td>
-              <td><code>200</code></td>
-              <td>Exit transition duration, in milliseconds.</td>
-            </tr>
-            <tr>
-              <td><code>position</code></td>
-              <td>String</td>
-              <td><code>'bottom'</code></td>
-              <td>Direction: <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Set by <code>data-position</code>. The CSS-only default is above.</td>
-            </tr>
-            <tr>
-              <td><code>transitionMovement</code></td>
-              <td>Number</td>
-              <td><code>10</code></td>
-              <td>How far the tooltip moves during its transition, in pixels.</td>
-            </tr>
-  
+                <tr><td><code>--md-comp-outlined-segmented-button-container-height</code></td><td><code>40px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-container-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-outline-width</code></td><td><code>1px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-outline-color</code></td><td><code>var(--md-sys-color-outline)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-leading-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-trailing-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-icon-size</code></td><td><code>18px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-icon-label-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-label-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-selected-container-color</code></td><td><code>var(--md-sys-color-secondary-container)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-selected-label-text-color</code></td><td><code>var(--md-sys-color-on-secondary-container)</code></td></tr>
+        
             </tbody>
         </table>
-
-  
-      </div>
-
-
-  <div id="methods" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Methods</h3>
-
-        
-        <blockquote>
-          All methods are called on the plugin instance. You can get the instance like this:
-        </blockquote>
-<pre><code>const instance = Expressive.Tooltip.getInstance(elem);</code></pre>
-
 
         <p>
-          <a class="tooltipped" href="#!" id="tooltip-method-demo" data-position="bottom" data-tooltip="I am a tooltip">Hover me</a>
-          <button type="button" class="tonal" id="tooltip-open">Open</button>
-          <button type="button" class="tonal" id="tooltip-close">Close</button>
+          The state layer is the label colour mixed into the container at the
+          <a href="/state-layers.html">state layer</a> opacity, so
+          those two colour tokens carry hover and press with them.
         </p>
-
-        <h5 class="light">.open();</h5>
-        <p>Show the tooltip.</p>
-<pre><code>instance.open();</code></pre>
-
-        <h5 class="light">.close();</h5>
-        <p>Hide the tooltip.</p>
-<pre><code>instance.close();</code></pre>
-
-        <h5 class="light">.destroy();</h5>
-        <p>Destroy the plugin instance, remove the tooltip element, and tear down its event handlers.</p>
-<pre><code>instance.destroy();</code></pre>
   
       </div>
-
-
-  <div id="properties" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Properties</h3>
-
-        
-        <table class="striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>el</code></td>
-                    <td>Element</td>
-                    <td>The DOM element the plugin was initialized with.</td>
-                </tr>
-                <tr>
-                    <td><code>options</code></td>
-                    <td>Object</td>
-                    <td>The options the instance was initialized with.</td>
-                </tr>
-
-            <tr>
-              <td><code>isOpen</code></td>
-              <td>Boolean</td>
-              <td>Whether the tooltip is open.</td>
-            </tr>
-            <tr>
-              <td><code>isHovered</code></td>
-              <td>Boolean</td>
-              <td>Whether the activator is hovered.</td>
-            </tr>
-            <tr>
-              <td><code>isFocused</code></td>
-              <td>Boolean</td>
-              <td>Whether the activator is focused via the keyboard.</td>
-            </tr>
-            <tr>
-              <td><code>tooltipEl</code></td>
-              <td>Element</td>
-              <td>The generated tooltip element.</td>
-            </tr>
-  
-            </tbody>
-        </table>
-
-  
-      </div>
-
 
 
     </div>
@@ -641,13 +547,13 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#anatomy">Introduction</a></li>
-          <li><a href="#rich">Rich</a></li>
-          <li><a href="#javascript">JavaScript</a></li>
-          <li><a href="#initialization">Initialization</a></li>
-          <li><a href="#options">Options</a></li>
-          <li><a href="#methods">Methods</a></li>
-          <li><a href="#properties">Properties</a></li>
+          <li><a href="#anatomy">Anatomy</a></li>
+          <li><a href="#single-select">Single select</a></li>
+          <li><a href="#multi-select">Multi select</a></li>
+          <li><a href="#icons">With icons</a></li>
+          <li><a href="#disabled">Disabled</a></li>
+          <li><a href="#semantics">Semantics</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 
