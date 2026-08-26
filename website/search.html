@@ -343,6 +343,11 @@
     &lt;span class="material-symbols" aria-hidden="true"&gt;account_circle&lt;/span&gt;
   &lt;/button&gt;
 &lt;/search&gt;</code></pre>
+                    <p>
+                        An <code>&lt;img&gt;</code> in the bar is the account avatar M3
+                        puts in that slot — 30dp and circular. Put it inside the button
+                        when it is tappable, so the 48dp target comes from the button.
+                    </p>
   
       </div>
 
@@ -361,6 +366,11 @@
                         It is a plain element rather than a <code>&lt;dialog&gt;</code> on
                         purpose: <code>dialog.show()</code> moves focus into the dialog,
                         which would take the caret out of the input the user is typing in.
+                    </p>
+                    <p>
+                        The demo below starts open so the surface is on the page; the
+                        sample under it has the <code>hidden</code> a real page would
+                        write. Focus the input to reopen it.
                     </p>
                     <div class="search-demo">
                         <search class="search-bar" aria-label="Search — Docked view">
@@ -511,7 +521,7 @@
                         </tr>
                         <tr>
                             <td><code>--md-comp-search-bar-container-shape</code></td>
-                            <td>28px</td>
+                            <td>9999px (full)</td>
                         </tr>
                         <tr>
                             <td><code>--md-comp-search-bar-leading-space</code></td>
@@ -530,12 +540,16 @@
                             <td>24px</td>
                         </tr>
                         <tr>
+                            <td><code>--md-comp-search-bar-avatar-size</code></td>
+                            <td>30px</td>
+                        </tr>
+                        <tr>
                             <td><code>--md-comp-search-view-container-color</code></td>
                             <td><code>--md-sys-color-surface-container-high</code></td>
                         </tr>
                         <tr>
                             <td><code>--md-comp-search-view-container-shape</code></td>
-                            <td>28px, 0 full-screen</td>
+                            <td>12px, 0 full-screen</td>
                         </tr>
                         <tr>
                             <td><code>--md-comp-search-view-header-height</code></td>

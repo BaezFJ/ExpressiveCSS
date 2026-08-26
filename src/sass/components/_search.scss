@@ -25,13 +25,22 @@
 //
 // Tokens follow md.comp.search-bar.* / md.comp.search-view.* at DSP 34.0.21
 //   bar          56dp, corner-full, surface-container-high, elevation 3
-//   input        body-large / on-surface, placeholder on-surface-variant
+//   input        body-large / on-surface; the placeholder is M3's supporting
+//                text, hence on-surface-variant
 //   icons        24dp; leading on-surface, trailing on-surface-variant
-//   spacing      16dp at each end, 4dp beside an icon button, which carries
-//                its own 12dp inset
-//   view         surface-container-high, 28dp corners, elevation 3, 2dp gap
+//   avatar       30dp, corner-full
+//   spacing      16dp at an end with no action, 4dp at one with an icon
+//                button, which carries its own 12dp inset
+//   view         surface-container-high, corner-medium, elevation 3, 2dp
+//                below the bar
 //   full-screen  fills the viewport, no corners, 72dp header
 //   divider      outline
+//
+// The bar and the docked view are both the *contained* (Expressive) variant,
+// which is what the 4dp/16dp spacing pair and the 2dp gap belong to; taking
+// the shape from the divided/baseline set instead would mix two anatomies.
+// `--md-comp-search-view-max-height` is a framework knob, not a DSP token -
+// M3 sizes the docked view by its content and leaves the cap to the platform.
 //
 // Nest descendants inside these blocks, and keep `$_bar` wrapped in `:is()` -
 // a bare list interpolated into `.search-view > #{$_bar}` breaks out of its
@@ -42,11 +51,12 @@ $_bar: ":is(.search-bar, .searchbar)";
 #{$_bar} {
   --md-comp-search-bar-container-color: var(--md-sys-color-surface-container-high);
   --md-comp-search-bar-container-height: 56px;
-  --md-comp-search-bar-container-shape: 28px;
+  --md-comp-search-bar-container-shape: 9999px;
   --md-comp-search-bar-leading-space: 16px;
   --md-comp-search-bar-trailing-space: 16px;
   --md-comp-search-bar-icon-label-space: 16px;
   --md-comp-search-bar-icon-size: 24px;
+  --md-comp-search-bar-avatar-size: 30px;
 
   position: relative;
   box-sizing: border-box;
@@ -88,10 +98,6 @@ $_bar: ":is(.search-bar, .searchbar)";
     flex: 0 0 auto;
     align-items: center;
     margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    box-shadow: none;
   }
 
   > #{$icon} {
@@ -107,9 +113,19 @@ $_bar: ":is(.search-bar, .searchbar)";
     color: var(--md-sys-color-on-surface-variant);
   }
 
+  // An account avatar, the one non-icon element M3 puts in the bar. A tappable
+  // one goes inside a button, which brings its own 48dp target.
+  > img {
+    flex: 0 0 auto;
+    width: var(--md-comp-search-bar-avatar-size);
+    height: var(--md-comp-search-bar-avatar-size);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
   // The input carries none of the text-field chrome: no underline, no floating
   // label, no 56dp block of its own. It is the bar that is the container.
-  input {
+  > input {
     flex: 1 1 auto;
     min-width: 0;
     height: auto;
@@ -148,7 +164,7 @@ $_bar: ":is(.search-bar, .searchbar)";
 
 .search-view {
   --md-comp-search-view-container-color: var(--md-sys-color-surface-container-high);
-  --md-comp-search-view-container-shape: 28px;
+  --md-comp-search-view-container-shape: 12px;
   --md-comp-search-view-header-height: 56px;
   --md-comp-search-view-divider-color: var(--md-sys-color-outline);
   --md-comp-search-view-bar-results-gap: 2px;
@@ -162,6 +178,10 @@ $_bar: ":is(.search-bar, .searchbar)";
   display: flex;
   flex-direction: column;
   max-height: var(--md-comp-search-view-max-height);
+  // The surface scrolls when its content is loose (a <div> of results); when
+  // the content is a `.list` the list scrolls instead, so a header and its
+  // divider stay put. Which of the two moves depends on the composition, so
+  // both declare it.
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: var(--md-comp-search-view-container-shape);
@@ -169,9 +189,14 @@ $_bar: ":is(.search-bar, .searchbar)";
   color: var(--md-sys-color-on-surface);
   @include z-depth("3");
 
-  // `hidden` is how the docked view is closed, and `display: flex` above would
-  // beat it.
-  &[hidden] {
+  // Two ways this surface is closed, and an author `display` beats both of the
+  // UA rules that do the hiding - `[hidden] { display: none }` for the docked
+  // element and `dialog:not([open]) { display: none }` for the full-screen
+  // one. The second is the one that bites: without it a closed <dialog> paints
+  // an opaque panel over the whole viewport, and no visual baseline exists to
+  // catch it on the change that introduces the page.
+  &[hidden],
+  &:not([open]):is(dialog) {
     display: none;
   }
 

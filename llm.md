@@ -3288,7 +3288,7 @@ A search bar, and the view it expands into.
 
 A `<search>` with `search-bar` on it is the bar: a leading icon or icon button, an `<input type="search">`, and whatever trailing actions the query needs. The element is the landmark, so there is no `role="search"` to add. The input goes in bare — the bar is the container, so none of the text-field chrome (`.field`, the underline, the floating label) applies.
 
-Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. `.searchbar`, the pre-1.0 name, reaches the same rules.
+Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an icon button 4dp, because the button already insets its own glyph by 12dp. An `<img>` in the bar is the account avatar — 30dp and circular; put it inside the button when it is tappable, so the 48dp target comes from the button. `.searchbar`, the pre-1.0 name, reaches the same rules.
 
 ```html
 <search class="search-bar" aria-label="Search">
@@ -3357,13 +3357,14 @@ That is the whole relationship between the two, and it is deliberate. A `.search
 | --- | --- |
 | `--md-comp-search-bar-container-color` | `--md-sys-color-surface-container-high` |
 | `--md-comp-search-bar-container-height` | 56px |
-| `--md-comp-search-bar-container-shape` | 28px |
+| `--md-comp-search-bar-container-shape` | 9999px (full) |
 | `--md-comp-search-bar-leading-space` | 16px, or 4px beside an icon button |
 | `--md-comp-search-bar-trailing-space` | 16px, or 4px beside an icon button |
 | `--md-comp-search-bar-icon-label-space` | 16px |
 | `--md-comp-search-bar-icon-size` | 24px |
+| `--md-comp-search-bar-avatar-size` | 30px |
 | `--md-comp-search-view-container-color` | `--md-sys-color-surface-container-high` |
-| `--md-comp-search-view-container-shape` | 28px, 0 full-screen |
+| `--md-comp-search-view-container-shape` | 12px, 0 full-screen |
 | `--md-comp-search-view-header-height` | 56px, 72px full-screen |
 | `--md-comp-search-view-divider-color` | `--md-sys-color-outline` |
 | `--md-comp-search-view-bar-results-gap` | 2px |

@@ -765,7 +765,7 @@
           "kind": "forbid",
           "selector": ".search-bar input:not([type=\"search\"])",
           "fragmentSafe": true,
-          "message": "The bar's control is a search input. `type=\"search\"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it."
+          "message": "The bar's control is a search input. `type=\"search\"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken."
         }
       ]
     },
