@@ -18,13 +18,22 @@
           icon button.
         </p>
         <p>
+          Two independent axes dress it: a <a href="#filled">style</a>
+          (<code>filled</code>, <code>tonal</code>, <code>outlined</code>,
+          <code>elevated</code>, <code>text</code>) and a
+          <a href="#sizes">size</a> (<code>xsmall</code> through
+          <code>xlarge</code>). Any style combines with any size — that is
+          nine classes, not twenty-five, because the size sets the geometry
+          and the style sets the color.
+        </p>
+        <p>
           Tokens follow the
           <a href="https://m3.material.io/components/buttons/specs">M3 button spec</a>.
-          Default height is 40dp, label is <code>label-large</code>, corners
-          are 20dp (a stadium), icons are 18dp with an 8dp gap, and the
-          horizontal inset is 24dp (16dp next to an icon). State layers are
-          8% hover and 10% focus or press. Disabled is
-          <code>on-surface</code> at 38% on a 12% container.
+          The default is the small size: 40dp tall, label
+          <code>label-large</code>, fully round corners, a 20dp icon on an
+          8dp gap, and a symmetric 16dp inset. State layers are 8% hover and
+          10% focus or press. Disabled is <code>on-surface</code> at 38% on a
+          12% container.
         </p>
         <p>
           <button type="button">Create</button>
@@ -52,16 +61,19 @@
         <p>
           High emphasis. This is the default — the main action on a page.
           Container <code>primary</code>, label <code>on-primary</code>, no
-          elevation. <code>filled</code> on a <code>.btn</code> is still
-          accepted and does nothing extra.
+          elevation. It has a class of its own, <code>filled</code>, so the
+          style axis reads as five names rather than four and a silence;
+          writing it changes nothing.
         </p>
         <p>
           <button type="button">Create</button>
+          <button type="button" class="filled">Create</button>
           <button type="button"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <a class="button" href="#!">Link</a>
         </p>
 {% call code() %}
 <button>Create</button>
+<button class="filled">Create</button>
 <button>
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
@@ -202,19 +214,54 @@
 
   {% call section("sizes", "Sizes") %}
         <p>
-          <code>small</code> is 32dp. Default is 40dp.
-          <code>large</code> / <code>extra</code>
-          are 56dp.
+          Five sizes. <code>small</code> is the default at 40dp with a 20dp
+          icon, so it needs no class. The rest are
+          <code>xsmall</code> (32dp, 20dp icon),
+          <code>medium</code> (56dp, 24dp, <code>title-medium</code> label),
+          <code>large</code> (96dp, 32dp, <code>headline-small</code>) and
+          <code>xlarge</code> (136dp, 40dp, <code>headline-large</code>).
+          The inset and the icon gap grow with the size, and an
+          <code>outlined</code> button's border thickens with it —
+          1dp up to medium, 2dp large, 3dp extra large.
+          <code>extra</code> is the pre-1.0 name for the 56dp button and
+          still gives you that geometry, though not <code>medium</code>'s
+          bigger label — it never carried one. The ladder is the common
+          button's: <code>circle</code> is the older 40dp icon-button shape
+          with its own 24dp icon, and <code>circle extra</code> /
+          <code>circle large</code> are FAB sizes, which have their own.
         </p>
         <p>
-          <button type="button" class="small">Small</button>
-          <button type="button">Default</button>
+          <button type="button" class="xsmall">Extra small</button>
+          <button type="button">Small</button>
+          <button type="button" class="medium">Medium</button>
+        </p>
+        <p>
           <button type="button" class="large">Large</button>
         </p>
+        <p>
+          <button type="button" class="xlarge">Extra large</button>
+        </p>
 {% call code() %}
-<button class="small">Small</button>
-<button>Default</button>
+<button class="xsmall">Extra small</button>
+<button>Small</button>
+<button class="medium">Medium</button>
 <button class="large">Large</button>
+<button class="xlarge">Extra large</button>
+{% endcall %}
+        <p>
+          The two axes are written side by side — there is no
+          per-combination class, so anything on one list goes with anything
+          on the other.
+        </p>
+        <p>
+          <button type="button" class="tonal medium">Tonal medium</button>
+          <button type="button" class="outlined xsmall">Outlined extra small</button>
+          <button type="button" class="text medium">Text medium</button>
+        </p>
+{% call code() %}
+<button class="tonal medium">Tonal medium</button>
+<button class="outlined xsmall">Outlined extra small</button>
+<button class="text medium">Text medium</button>
 {% endcall %}
         <p>
           For a form submit, use a real <code>&lt;button type="submit"&gt;</code>

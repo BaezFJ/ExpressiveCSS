@@ -409,15 +409,17 @@ describe('FAB container shape', () => {
       /padding-inline:\s*var\(--md-comp-extended-fab-leading-space\) var\(--md-comp-extended-fab-trailing-space\)/
     );
     assert.match(rule, /border-radius:\s*var\(--md-comp-extended-fab-container-shape\)/);
-    // `.small` is label-medium and the same one class this rule is, so an
+    // The size classes are the same one class this rule is, so an
     // `extend small` loses label-large unless the extended FAB restates it.
     assert.match(rule, /font-size:\s*var\(--md-sys-typescale-label-large-font-size\)/);
-    // `:has(> icon + label)` is two classes and wins the leading edge, so
-    // the extended FAB has to feed that rule its own space - otherwise
-    // `.small` pulls the inset to a 32dp common button's 12dp.
-    assert.match(
-      rule,
-      /--md-comp-filled-button-with-icon-leading-space:\s*var\(--md-comp-extended-fab-leading-space\)/
+    // The original bug: `:has(> icon + label)` was two classes, so it won the
+    // leading edge and pulled `extend small` to a 32dp common button's 12dp
+    // inset. M3 Expressive's spacing is symmetric at every size, so that rule
+    // is gone - and nothing may bring back a padding rule that outranks the
+    // extended FAB's own one-class `padding-inline`.
+    assert.doesNotMatch(
+      css,
+      /:has\([^)]*\)[^{}]*\{[^}]*padding-inline-(?:start|end):\s*var\(--md-comp-filled-button/
     );
 
     const small = /\.extend\.small[^{]*\{([^}]*)\}/.exec(css)?.[1] ?? '';

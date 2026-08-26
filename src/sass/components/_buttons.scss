@@ -1,30 +1,69 @@
+@use "sass:map";
 @use "../abstracts" as *;
 
 // Common buttons and FABs.
 //
 // Anatomy is the HTML. A <button> (or <a class="button">) is a filled
 // common button. Put an <i> first or last for a leading/trailing icon.
-// Icon-only is a 40dp icon button. Helpers switch the M3 variant
-// (tonal, outlined, elevated, text) or the size.
+// Icon-only is a 40dp icon button. Two independent modifier axes dress it:
+// a style (filled, tonal, outlined, elevated, text) and a size (xsmall …
+// xlarge).
 //
-// Tokens follow https://m3.material.io/components/buttons/specs
-//   height 40 / 32 small / 56 large, label-large, 20dp stadium
-//   icon 18dp, 8dp gap, 24dp inset (16dp next to an icon)
+// Nine classes, not twenty-five. The size rules set tokens and the style
+// rules set colours, so every combination falls out of the cascade and no
+// rule names both. `tests/buttons.test.js` fails if one starts to.
+//
+// Tokens follow M3 Expressive, md.comp.button.* (DSP 34.0.21):
+//   the size ladder below, corner.full at every size
 //   state layer 8% hover / 10% focus+press
 //   FAB 56dp (extra/large icon-only), primary-container, 16dp corners
 //   FAB sizes 40dp small / 56dp default / 80dp medium / 96dp large,
 //     24 / 24 / 26 / 36dp icon, 12 / 16 / 20 / 28dp corners
 
+// The size axis, md.comp.button.{xsmall…xlarge}.
+//
+//   size     height  icon  space  gap  label            outline
+//   xsmall     32     20     12     8   label-large        1
+//   small      40     20     16     8   label-large        1   <- default
+//   medium     56     24     24     8   title-medium       1
+//   large      96     32     48    12   headline-small     2
+//   xlarge    136     40     64    16   headline-large     3
+//
+// `space` is both the leading and the trailing inset. Expressive dropped the
+// old "24dp, but 16dp next to an icon" asymmetry, and the two `:has()` rules
+// that carried it went with it - a button is symmetric at every size now,
+// whatever is inside it.
+//
+// The round shape is corner.full at every size, so it is declared once rather
+// than five times. `outline` is here because it is the one number the style
+// axis reads back: M3 thickens an outlined button's border with its size.
+$_sizes: (
+  "xsmall": (height: 32px, icon: 20px, space: 12px, gap: 8px, outline: 1px, label: "label-large"),
+  "small": (height: 40px, icon: 20px, space: 16px, gap: 8px, outline: 1px, label: "label-large"),
+  "medium": (height: 56px, icon: 24px, space: 24px, gap: 8px, outline: 1px, label: "title-medium"),
+  "large": (height: 96px, icon: 32px, space: 48px, gap: 12px, outline: 2px, label: "headline-small"),
+  "xlarge": (height: 136px, icon: 40px, space: 64px, gap: 16px, outline: 3px, label: "headline-large"),
+);
+
+// Tokens only. The type role is emitted beside the call, never from here:
+// `:root` takes this mixin for the default size, and a typescale on :root
+// would set the page's font.
+@mixin _size($name) {
+  $s: map.get($_sizes, $name);
+
+  --md-comp-filled-button-container-height: #{map.get($s, height)};
+  --md-comp-filled-button-icon-size: #{map.get($s, icon)};
+  --md-comp-filled-button-leading-space: #{map.get($s, space)};
+  --md-comp-filled-button-trailing-space: #{map.get($s, space)};
+  --md-comp-filled-button-icon-label-space: #{map.get($s, gap)};
+  --md-comp-filled-button-outline-width: #{map.get($s, outline)};
+}
+
 :root {
   --md-comp-filled-button-container-color: var(--md-sys-color-primary);
   --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
-  --md-comp-filled-button-container-height: 40px;
-  --md-comp-filled-button-container-shape: 20px;
-  --md-comp-filled-button-leading-space: 24px;
-  --md-comp-filled-button-trailing-space: 24px;
-  --md-comp-filled-button-with-icon-leading-space: 16px;
-  --md-comp-filled-button-icon-size: 18px;
-  --md-comp-filled-button-icon-label-space: 8px;
+  --md-comp-filled-button-container-shape: 9999px;
+  @include _size("small");
 }
 
 // Widget chrome that happens to be a <button> — not a common button.
@@ -53,6 +92,12 @@ $_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month
 // button to look at and to use. Without it the label fell through to the
 // floating-label rule in forms/_input-fields and rendered as invisible,
 // unclickable field furniture.
+// `.btn` is the pre-1.0 name and is deliberately NOT in this list. A
+// <button class="btn"> is styled because it is a <button>; an <a class="btn">
+// is not, and making it so means adding `.btn` to the twenty-odd `:not()`
+// lists that let hosts (footer, drawer, app bar, rail, list, snackbar) step
+// aside for a button - an invariant with no test behind it, for markup that
+// has a working spelling. `a.button` is that spelling, and the docs say so.
 $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 
 :where(#{$_btn}) {
@@ -65,20 +110,6 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     height: var(--md-comp-filled-button-icon-size);
     line-height: var(--md-comp-filled-button-icon-size);
     overflow: hidden;
-  }
-
-  // :only-child ignores text nodes, so "<span icon>add</span>Create" would look
-  // like an icon button. Wrap the label in a <span> (BeerCSS) for the 16dp
-  // leading inset; otherwise the icon still sits on the flex gap.
-  //
-  // $icon / $icon-label rather than i / span: the icon is a <span> now, so
-  // "i followed by span" stopped matching anything.
-  &:has(> #{$icon} + #{$icon-label}) {
-    padding-inline-start: var(--md-comp-filled-button-with-icon-leading-space);
-  }
-
-  &:has(> #{$icon-label} + #{$icon}) {
-    padding-inline-end: var(--md-comp-filled-button-with-icon-leading-space);
   }
 
   // Icon button — opt in with .circle. Do not infer from :only-child.
@@ -96,8 +127,16 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   }
 }
 
-// Default variant is filled. :where() keeps specificity at zero so .tonal etc. win.
-:where(#{$_btn}):not(.tonal, .outlined, .elevated, .text) {
+// The style axis. Filled is the default, so it is both the styleless case and
+// a class of its own - the two are one rule, because a second `@include
+// btn-filled` would duplicate every state layer in it.
+//
+// They are separate selectors rather than `:is(.filled, :not(…))` on purpose:
+// `:is()` takes the specificity of its heaviest argument, which would lift the
+// default case to one class and let it outrank rules that legitimately beat it
+// today. A selector list keeps each half its own weight.
+:where(#{$_btn}):not(.tonal, .outlined, .elevated, .text),
+:where(#{$_btn}).filled {
   @include btn-filled;
 }
 
@@ -117,29 +156,30 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   @include btn-flat;
 }
 
-// Sizes. small = 32dp, large/extra = 56dp (M3 extra-large / FAB height).
-:where(#{$_btn}).small {
-  --md-comp-filled-button-container-height: 32px;
-  --md-comp-filled-button-container-shape: 16px;
-  --md-comp-filled-button-leading-space: 16px;
-  --md-comp-filled-button-trailing-space: 16px;
-  --md-comp-filled-button-with-icon-leading-space: 12px;
-  --md-comp-filled-button-icon-size: 16px;
-  height: 32px;
-  font-size: var(--md-sys-typescale-label-medium-font-size);
+// The size classes. Every one of them sets tokens and a type role and nothing
+// else - the geometry is already written once, in `btn`, against those tokens.
+// A size that declared `height` itself would have to be restated by anything
+// that overrides it, which is how the per-combination rules start.
+@each $name, $s in $_sizes {
+  :where(#{$_btn}).#{$name} {
+    @include _size($name);
+    @include typescale(map.get($s, label));
+  }
 }
 
-:where(#{$_btn}).large,
+// `.extra` is the pre-1.0 name for the 56dp button, which is now `.medium`.
+// It aliases the geometry and not the type role, because it never carried
+// one: a rail's FAB is `a.button.extra`, its label is label-large, and
+// `.medium`'s title-medium would grow it. Size, not size-and-label.
+//
+// It is also the FAB's marker class - `circle extra` is a FAB, and the rules
+// below reset this geometry entirely.
 :where(#{$_btn}).extra {
-  --md-comp-filled-button-container-height: 56px;
-  --md-comp-filled-button-container-shape: 28px;
-  --md-comp-filled-button-leading-space: 24px;
-  --md-comp-filled-button-trailing-space: 24px;
-  --md-comp-filled-button-with-icon-leading-space: 16px;
-  --md-comp-filled-button-icon-size: 24px;
-  height: 56px;
+  @include _size("medium");
 }
 
+// Every size is corner.full already, so this only bites when a consumer has
+// themed the shape token to something squarer and wants one button back.
 :where(#{$_btn}).rounded {
   border-radius: 9999px;
 }
@@ -165,13 +205,6 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   --md-comp-extended-fab-leading-space: 16px;
   --md-comp-extended-fab-icon-label-space: 8px;
   --md-comp-extended-fab-trailing-space: 20px;
-
-  // The base with-icon rule is `:has(> icon + label)` - two classes, so it
-  // outranks this one-class rule on the leading edge and its token wins
-  // there. Point that token at the extended FAB's own space instead of
-  // fighting it: `.small` sets it to the 12dp of a 32dp common button, which
-  // is how `extend small` came out at a 12dp leading inset.
-  --md-comp-filled-button-with-icon-leading-space: var(--md-comp-extended-fab-leading-space);
 
   gap: var(--md-comp-extended-fab-icon-label-space);
   height: var(--md-comp-extended-fab-container-height);
