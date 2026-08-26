@@ -1,0 +1,180 @@
+@use "../abstracts" as *;
+
+// Bottom app bar. A row of *commands* at the bottom edge, with an optional
+// FAB — the counterpart of the top app bar, not of the navigation bar.
+//
+// It is not `nav.navigation-bar`, and the difference is the whole reason this
+// component exists twice over. A navigation bar holds 3–5 destinations that do
+// not change per screen; a bottom app bar holds the actions of the screen you
+// are already on. So this is not a <nav> and takes no landmark (rule 4), and
+// M3 says never show the two at once. The retired version of this component
+// keyed on `footer:has(> nav:only-child)` — an element, which both claimed the
+// landmark and put the two one markup slip apart. The host is a class now, and
+// `semantics.json` forbids writing it on a <nav>.
+//
+// Anatomy is the HTML. Direct <a> / <button> children with a single icon are
+// the actions; a `.button.extra.circle` child is the FAB and is pushed to the
+// end. `.icon-button` styles itself and opts out, as it does in every host.
+//
+// M3 Expressive's toolbar (`.toolbar.docked`) is the newer answer to the same
+// problem and holds the same commands in a 64dp bar. Both ship; this one is
+// the app-bar-shaped 80dp version the spec still publishes tokens for.
+//
+// Tokens (md.comp.bottom-app-bar.*, DSP 34.0.21 — the container is all of it;
+// the actions are icon buttons and the FAB is a FAB):
+//   --md-comp-bottom-app-bar-container-color   surface-container
+//   --md-comp-bottom-app-bar-container-height  80dp, one height with or
+//                                              without a FAB (with-fab's 72dp
+//                                              is deprecated), content centred
+//   --md-comp-bottom-app-bar-container-shape   0
+//   --md-comp-bottom-app-bar-icon-color        on-surface-variant
+//   --md-comp-bottom-app-bar-icon-size         24dp
+//   --md-comp-bottom-app-bar-action-size       48dp target
+//   --md-comp-bottom-app-bar-leading-space     4dp — 16dp to the glyph, less
+//   --md-comp-bottom-app-bar-trailing-space    the 12dp the target insets
+//   --md-comp-bottom-app-bar-fab-container-color  secondary-container, per
+//                                              BottomAppBarDefaults, not the
+//                                              free-standing FAB's primary
+//   --md-comp-bottom-app-bar-fab-trailing-space   16dp from the container edge,
+//                                              measured from the edge and not
+//                                              added to the container's own
+//                                              trailing space
+//   --md-comp-bottom-app-bar-z                 997, the navigation bar's rung
+.bottom-app-bar {
+  --md-comp-bottom-app-bar-container-color: var(--md-sys-color-surface-container);
+  --md-comp-bottom-app-bar-container-height: 80px;
+  --md-comp-bottom-app-bar-container-shape: 0;
+  --md-comp-bottom-app-bar-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-bottom-app-bar-icon-size: 24px;
+  --md-comp-bottom-app-bar-action-size: 48px;
+  --md-comp-bottom-app-bar-leading-space: 4px;
+  --md-comp-bottom-app-bar-trailing-space: 4px;
+  --md-comp-bottom-app-bar-fab-container-color: var(--md-sys-color-secondary-container);
+  --md-comp-bottom-app-bar-fab-trailing-space: 16px;
+  --md-comp-bottom-app-bar-z: 997;
+
+  box-sizing: border-box;
+  display: flex;
+  // No gap: the actions are 48dp targets and abut, which is Compose's
+  // `Arrangement.Start` and puts their glyph centres 48dp apart. The top app
+  // bar spaces its actions the same way.
+  align-items: center;
+  width: 100%;
+  min-height: var(--md-comp-bottom-app-bar-container-height);
+  margin: 0;
+  padding-inline: var(--md-comp-bottom-app-bar-leading-space)
+    var(--md-comp-bottom-app-bar-trailing-space);
+  border-radius: var(--md-comp-bottom-app-bar-container-shape);
+  background-color: var(--md-comp-bottom-app-bar-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("2");
+
+  // Icon-only actions. Same shape as the top app bar's: a bare control with a
+  // single icon becomes a 48dp target. Anything that styles itself — the
+  // common button, the icon button, the FAB — is left alone.
+  > :is(a, button):not(.button, .icon-button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: var(--md-comp-bottom-app-bar-action-size);
+    height: var(--md-comp-bottom-app-bar-action-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--md-comp-bottom-app-bar-icon-color);
+    cursor: pointer;
+    appearance: none;
+    font: inherit;
+    text-decoration: none;
+    @include focus-visible;
+
+    > #{$icon} {
+      display: block;
+      width: var(--md-comp-bottom-app-bar-icon-size);
+      height: var(--md-comp-bottom-app-bar-icon-size);
+      font-size: var(--md-comp-bottom-app-bar-icon-size);
+      line-height: var(--md-comp-bottom-app-bar-icon-size);
+    }
+
+    &:hover {
+      background-color: color-mix(in oklab, currentColor state-opacity("hover"), transparent);
+    }
+
+    &:active {
+      background-color: color-mix(in oklab, currentColor state-opacity("pressed"), transparent);
+    }
+
+    &:disabled,
+    &.disabled {
+      pointer-events: none;
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      background: transparent;
+    }
+  }
+
+  // The FAB. `margin-inline-start: auto` is the spacer, so the bar needs no
+  // filler element between the actions and it. Flat and secondary-container:
+  // the bar is already at level 2, and a second shadow inside it reads as a
+  // sticker. Specificity beats the FAB's own `:where()`-scoped block.
+  > :is(a, button).extra.circle,
+  > :is(a, button).large.circle {
+    margin-inline-start: auto;
+    // 16dp from the container edge. The bar's own trailing space is already
+    // spent, so this is the remainder - Compose's `16.dp - HorizontalPadding`.
+    margin-inline-end: calc(
+      var(--md-comp-bottom-app-bar-fab-trailing-space) -
+        var(--md-comp-bottom-app-bar-trailing-space)
+    );
+    background-color: var(--md-comp-bottom-app-bar-fab-container-color);
+    color: var(--md-sys-color-on-secondary-container);
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-secondary-container) state-opacity("hover"),
+        var(--md-comp-bottom-app-bar-fab-container-color)
+      );
+    }
+
+    // Focus and pressed are separate states with separate opacities, the way
+    // `abstracts/_mixins` keeps them. `:focus`, not `:focus-visible`: the FAB's
+    // own block in `_buttons.scss` paints a `primary-container` tint on plain
+    // `:focus`, and leaving that uncovered would flash the wrong colour family
+    // at a mouse click. The ring is `focus-visible`'s job and the base rule
+    // already carries it.
+    &:focus {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-secondary-container) state-opacity("focus"),
+        var(--md-comp-bottom-app-bar-fab-container-color)
+      );
+    }
+
+    &:active {
+      background-color: color-mix(
+        in oklab,
+        var(--md-sys-color-on-secondary-container) state-opacity("pressed"),
+        var(--md-comp-bottom-app-bar-fab-container-color)
+      );
+    }
+  }
+}
+
+// Pinned to the bottom edge. Same z rung as nav.navigation-bar.fixed: the two
+// are alternatives, never neighbours, so neither needs to sit above the other.
+.bottom-app-bar.fixed {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: var(--md-comp-bottom-app-bar-z);
+  // The bar grows by the inset rather than spending its own height on it.
+  // Under `border-box` the padding would otherwise come out of the 80dp the
+  // token block and the docs both promise, and the actions would sit in
+  // whatever was left.
+  min-height: calc(var(--md-comp-bottom-app-bar-container-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

@@ -16,6 +16,41 @@ below is the whole story for that component.
 
 ### Added
 
+- **Bottom app bar** (`.bottom-app-bar`), an 80dp row of the current screen's
+  commands at the bottom edge, with an optional FAB. CSS only.
+
+  **It is not the navigation bar, and the markup is where that is settled.** A
+  navigation bar holds destinations that do not change per screen and is a
+  `<nav>` landmark; this holds the actions of the screen the reader is already
+  on, so it is not a `<nav>` and takes no landmark (rule 4). It takes no
+  `role="toolbar"` either — that is a composite role promising arrow-key
+  navigation nothing here implements (rule 2), so it is *withheld*, the same
+  account the toolbar gives. `semantics.json` enforces both, plus a name on
+  every icon-only action.
+
+  This component existed once before, keyed on `footer:has(> nav:only-child)`,
+  and was removed with the navigation bar's arrival because an element-driven
+  host claimed the landmark from the markup alone and left the two bars one slip
+  apart. The host is a class now, and the rule forbids every landmark element,
+  `<footer>` included — not just `<nav>`.
+
+  **Nothing in it collides with `nav.navigation-bar`.** Material says never show
+  both; a page that does anyway gets two intact bars rather than one broken one,
+  and `tests/bottom-app-bar.test.js` asserts no selector on either side reaches
+  the other.
+
+  Tokens are `md.comp.bottom-app-bar.*` (DSP 34.0.21): 80dp,
+  `surface-container`, elevation 2, square. One height with or without a FAB —
+  the 72dp `with-fab` height is deprecated. The 4dp inline padding is Compose's
+  `16.dp - 12.dp`: a 48dp action already insets its 24dp glyph by 12, so the
+  glyph lands 16dp from the container edge. The in-bar FAB is flat and
+  `secondary-container` per `BottomAppBarDefaults`, not the free-standing FAB's
+  lifted `primary-container`, and `margin-inline-start: auto` puts it at the end
+  with no spacer element.
+
+  M3 Expressive's docked toolbar (`.toolbar.docked`) is the newer 64dp answer to
+  the same problem and is unchanged. Both ship.
+
 - **A bottom sheet's handle dismisses it when the handle is a `<button>`.** The
   slot was pointer-only: `BottomSheets` bound `pointerdown`/`move`/`up`, so a
   handle written as `<button aria-label="Dismiss">` — which the docs taught —

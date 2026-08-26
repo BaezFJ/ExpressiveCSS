@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Badges - ExpressiveCSS</title>
+    <title>Bottom app bar - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Badges</h2>
+            <h2>Bottom app bar</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -109,7 +109,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">view_quilt</span>
                       Structure
@@ -118,8 +118,8 @@
                       <li class="">
                           <a href="/navbar.html">App bar</a>
                       </li>
-                      <li class="">
-                          <a href="/bottom-app-bar.html">Bottom app bar</a>
+                      <li class="active">
+                          <a href="/bottom-app-bar.html" aria-current="page">Bottom app bar</a>
                       </li>
                       <li class="">
                           <a href="/navigation-bar.html">Navigation bar</a>
@@ -155,7 +155,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -191,8 +191,8 @@
                       <li class="">
                           <a href="/drag-handle.html">Drag handle</a>
                       </li>
-                      <li class="active">
-                          <a href="/badges.html" aria-current="page">Badges</a>
+                      <li class="">
+                          <a href="/badges.html">Badges</a>
                       </li>
                       <li class="">
                           <a href="/tooltips.html">Tooltips</a>
@@ -277,8 +277,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Badges</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Notifications, counts, or status on navigation items and icons.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Bottom app bar</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">This screen&#39;s commands at the bottom edge, with an optional FAB — not its destinations.</p>
             </div>
         </div>
     </section>
@@ -293,192 +293,236 @@
   <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Badges show notifications, counts, or status information on
-          navigation items and icons. They can hold a label or a number.
-          Two variants: <strong>small</strong> (an empty
-          <code>&lt;span class="badge"&gt;</code>, a 6dp dot) and
-          <strong>large</strong> (text inside, a 16dp stadium). Nest the
-          badge in the icon so it anchors at the upper trailing edge of
-          the 24dp glyph. Limit content to four characters, including
-          <code>+</code>.
+          A <code>.bottom-app-bar</code> is an 80dp row of actions pinned to
+          the bottom of the screen: the commands that belong to the screen the
+          reader is already on, plus, optionally, that screen's
+          <a href="/floating-action-button.html">FAB</a>.
         </p>
         <p>
-          The default mapping is <code>error</code> /
-          <code>on-error</code>. Pair a fill utility with its
-          <code>on-*</code> text class only if you override it.
+          Anatomy is the HTML. Direct <code>&lt;a&gt;</code> or
+          <code>&lt;button&gt;</code> children holding a single icon are the
+          actions; a <code>.button.extra.circle</code> child is the FAB and is
+          pushed to the end. Every action is icon-only, so every one of them
+          carries an <code>aria-label</code> — that is the only name it has.
         </p>
-
-        <nav class="navigation-bar mb-3" aria-label="Badge demo">
-          <a href="#!" aria-label="Mail, unread">
-            <span class="material-symbols" aria-hidden="true">mail<span class="badge"></span></span>
-            Label
-          </a>
-          <a href="#!" aria-label="Mail, 1 unread">
-            <span class="material-symbols" aria-hidden="true">mail<span class="badge">1</span></span>
-            Label
-          </a>
-          <a href="#!" aria-label="Mail, 999+ unread">
-            <span class="material-symbols" aria-hidden="true">mail<span class="badge">999+</span></span>
-            Label
-          </a>
-        </nav>
-<pre><code>&lt;span class="material-symbols" role="img" aria-label="Mail, unread"&gt;mail&lt;span class="badge"&gt;&lt;/span&gt;&lt;/span&gt;
-&lt;span class="material-symbols" role="img" aria-label="Mail, 1 unread"&gt;mail&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/span&gt;
-&lt;span class="material-symbols" role="img" aria-label="Mail, 999+ unread"&gt;mail&lt;span class="badge"&gt;999+&lt;/span&gt;&lt;/span&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="small" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Small</h3>
-
-        <p>
-          Leave the badge empty. It is a 6dp circle with no label —
-          an unread mark, not a count.
-        </p>
-        <p>
-          <button type="button" class="button extra circle" aria-label="Notifications, unread">
-            <span class="material-symbols" role="img" aria-label="Notifications, unread">notifications<span class="badge"></span></span>
+        <div class="bottom-app-bar">
+          <button type="button" aria-label="Check">
+            <span class="material-symbols" aria-hidden="true">check_box</span>
           </button>
-        </p>
-<pre><code>&lt;span class="material-symbols" role="img" aria-label="Notifications, unread"&gt;notifications&lt;span class="badge"&gt;&lt;/span&gt;&lt;/span&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="large" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Large</h3>
-
-        <p>
-          Put a number or short label in the badge. Height is 16dp,
-          corners are a stadium, inset is 4dp. Cap the string at four
-          characters; use <code>999+</code> when the count is larger.
-        </p>
-        <p>
-          <button type="button" class="button extra circle" aria-label="Mail, 1 unread">
-            <span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+          <button type="button" aria-label="Edit">
+            <span class="material-symbols" aria-hidden="true">edit</span>
           </button>
-          <button type="button" class="button extra circle" aria-label="Mail, more than 999 unread">
-            <span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
+          <button type="button" aria-label="Share">
+            <span class="material-symbols" aria-hidden="true">share</span>
           </button>
-        </p>
-<pre><code>&lt;span class="material-symbols" role="img" aria-label="Mail, 1 unread"&gt;mail&lt;span class="badge"&gt;1&lt;/span&gt;&lt;/span&gt;
-&lt;span class="material-symbols" role="img" aria-label="Mail, 999+ unread"&gt;mail&lt;span class="badge"&gt;999+&lt;/span&gt;&lt;/span&gt;</code></pre>
+          <button type="button" aria-label="More options">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+        </div>
+<pre><code>&lt;div class="bottom-app-bar"&gt;
+  &lt;button type="button" aria-label="Check"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;check_box&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button type="button" aria-label="Edit"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;edit&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button type="button" aria-label="Share"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;share&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button type="button" aria-label="More options"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;more_vert&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
   
       </div>
 
 
-  <div id="navigation" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">On navigation</h3>
+  <div id="not-navigation" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Not the navigation bar</h3>
 
         <p>
-          A destination can nest the badge in the icon, or keep it as a
-          sibling after the label — the bar and rail position that
-          sibling on the icon’s upper trailing corner.
+          These are two different components that live in the same place, and
+          picking the wrong one is the mistake this page exists to prevent.
         </p>
-        <nav class="navigation-bar mb-3" aria-label="Mail">
-          <a href="#!" aria-current="page">
-            <span class="material-symbols" role="img" aria-label="Inbox, 3 unread">inbox<span class="badge">3</span></span>
-            Inbox
-          </a>
-          <a href="#!" aria-label="Chat, unread">
-            <span class="material-symbols" aria-hidden="true">chat<span class="badge"></span></span>
-            Chat
-          </a>
-          <a href="#!">
-            <span class="material-symbols" aria-hidden="true">group</span>
-            Groups
-          </a>
-        </nav>
-<pre><code>&lt;a href="#!" aria-label="Inbox, 3 unread"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;inbox&lt;span class="badge"&gt;3&lt;/span&gt;&lt;/span&gt;
-  Inbox
-&lt;/a&gt;</code></pre>
+        <div class="docs-table-scroll">
+        <table class="striped">
+          <thead>
+            <tr><th></th><th>Bottom app bar</th><th>Navigation bar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Holds</td>
+              <td>Commands for this screen</td>
+              <td>3–5 destinations, the same on every screen</td>
+            </tr>
+            <tr>
+              <td>Markup</td>
+              <td><code>&lt;div class="bottom-app-bar"&gt;</code></td>
+              <td><code>&lt;nav class="navigation-bar" aria-label="…"&gt;</code></td>
+            </tr>
+            <tr>
+              <td>Landmark</td>
+              <td>None</td>
+              <td><code>navigation</code></td>
+            </tr>
+            <tr>
+              <td>Selected state</td>
+              <td>None — an action fires and is done</td>
+              <td><code>aria-current="page"</code> on the destination</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p>
+          Because a bottom app bar holds commands, it is not a
+          <code>&lt;nav&gt;</code> and takes no landmark of any kind — not
+          <code>&lt;footer&gt;</code> either, which is
+          <code>contentinfo</code>. That is the same reasoning that keeps a
+          <a href="/toolbars.html">toolbar</a> out of the landmark
+          list. It takes no <code>role="toolbar"</code> either:
+          that role promises arrow-key navigation between the actions, and
+          nothing here implements one. They are reached with <kbd>Tab</kbd>.
+        </p>
+        <p>
+          Material says never show both bars at once — pick the one that
+          matches what the bottom of your screen is for. Nothing in the two
+          components' styling overlaps, so a page that shows both anyway gets
+          two correct bars stacked on top of each other rather than one broken
+          one. See the
+          <a href="/navigation-bar.html">navigation bar</a> for the
+          other half of the choice.
+        </p>
   
       </div>
 
 
-  <div id="lists" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">In a list</h3>
+  <div id="fab" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">With a FAB</h3>
 
         <p>
-          A trailing <code>.badge</code> in a list or drawer row stays
-          in flow on the end, as a count, not overlapped on the leading
-          icon.
+          Add the screen's FAB as the last child and it goes to the end of the
+          bar on its own — there is no spacer element to write. Inside the bar
+          it is flat and <code>secondary-container</code> rather than lifted and
+          <code>primary-container</code>: the bar already carries the elevation,
+          and a second shadow inside it reads as a sticker.
         </p>
-        <ul class="list">
-          <li>
-            <span class="material-symbols" aria-hidden="true">inbox</span>
-            Inbox
-            <span class="badge">3</span>
-          </li>
-          <li>
-            <span class="material-symbols" aria-hidden="true">send</span>
-            Sent
-          </li>
-        </ul>
-<pre><code>&lt;ul class="list"&gt;
-  &lt;li&gt;
-    &lt;span class="material-symbols" aria-hidden="true"&gt;inbox&lt;/span&gt;
-    Inbox
-    &lt;span class="badge"&gt;3&lt;/span&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+        <div class="bottom-app-bar">
+          <button type="button" aria-label="Check">
+            <span class="material-symbols" aria-hidden="true">check_box</span>
+          </button>
+          <button type="button" aria-label="Edit">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" aria-label="More options">
+            <span class="material-symbols" aria-hidden="true">more_vert</span>
+          </button>
+          <button type="button" class="button extra circle" aria-label="New message">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </div>
+<pre><code>&lt;div class="bottom-app-bar"&gt;
+  &lt;button type="button" aria-label="Check"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;check_box&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button type="button" aria-label="More options"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;more_vert&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button type="button" class="button extra circle" aria-label="New message"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          The bar is one height whether or not a FAB is in it. Material's
+          72dp <code>with-fab</code> height is deprecated: 80dp, content
+          vertically centred, both ways.
+        </p>
   
       </div>
 
 
-  <div id="sidenav" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">In a navigation drawer</h3>
+  <div id="fixed" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Pinning it</h3>
 
         <p>
-          Put a badge on a <code>summary</code> or a destination. Nested
-          sections are native <code>&lt;details&gt;</code>.
+          The bar is an ordinary block by default, so it sits wherever you put
+          it — which is what the demos above are doing. Add
+          <code>.fixed</code> to pin it to the bottom edge of the viewport,
+          clear of the device's own safe area.
         </p>
-        <nav aria-label="Main — In a navigation drawer">
-          <ul class="sidenav navigation-drawer-demo">
-            <li>
-              <details open>
-                <summary>
-                  <span class="material-symbols" aria-hidden="true">inbox</span>
-                  Inbox
-                  <span class="badge">4</span>
-                </summary>
-                <ul>
-                  <li><a href="#!">Primary<span class="badge">1</span></a></li>
-                  <li><a href="#!">Social</a></li>
-                </ul>
-              </details>
-            </li>
-            <li><a href="#!">Sent</a></li>
-          </ul>
-        </nav>
-<pre><code>&lt;summary&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;inbox&lt;/span&gt;
-  Inbox
-  &lt;span class="badge"&gt;4&lt;/span&gt;
-&lt;/summary&gt;</code></pre>
+<pre><code>&lt;div class="bottom-app-bar fixed"&gt;…&lt;/div&gt;</code></pre>
+        <p>
+          A fixed bar covers the last 80dp of the page, so leave that much
+          padding at the bottom of the content behind it.
+        </p>
   
       </div>
 
 
-  <div id="color" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Color</h3>
+  <div id="toolbar" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Or a docked toolbar</h3>
 
         <p>
-          Default is <code>error</code> / <code>on-error</code>. Override
-          with a fill + <code>on-*</code> pair when the badge is not an
-          error/notification.
+          M3 Expressive's answer to the same problem is the docked
+          <a href="/toolbars.html">toolbar</a> — a shorter 64dp bar
+          holding the same kind of commands, with the emphasized action inside
+          it rather than a FAB beside them. Both ship. This component is the
+          app-bar-shaped version, and it stays because Material still publishes
+          its tokens.
         </p>
-        <p>
-          <span class="material-symbols" role="img" aria-label="Mail, 3 unread">mail<span class="badge">3</span></span>
-          <span class="material-symbols" aria-hidden="true">star<span class="badge primary on-primary-text">1</span></span>
-        </p>
-<pre><code>&lt;span class="badge"&gt;3&lt;/span&gt;
-&lt;span class="badge primary on-primary-text"&gt;1&lt;/span&gt;</code></pre>
+<pre><code>&lt;div class="toolbar docked"&gt;…&lt;/div&gt;</code></pre>
   
       </div>
 
+
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
+
+        <p>
+          Set these on the bar itself, or in a rule of your own. They are
+          declared on the component, so a value set on an ancestor
+          <em>element</em> is shadowed by the bar's own default rather than
+          inherited.
+        </p>
+        
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr><td><code>--md-comp-bottom-app-bar-container-color</code></td><td><code>var(--md-sys-color-surface-container)</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-container-height</code></td><td><code>80px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-container-shape</code></td><td><code>0</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-icon-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-action-size</code></td><td><code>48px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-leading-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-trailing-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-fab-container-color</code></td><td><code>var(--md-sys-color-secondary-container)</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-fab-trailing-space</code></td><td><code>16px</code></td></tr>
+                <tr><td><code>--md-comp-bottom-app-bar-z</code></td><td><code>997</code></td></tr>
+        
+            </tbody>
+        </table>
+
+        <p>
+          The leading and trailing space is 4dp, not 16: an action is a 48dp
+          target around a 24dp glyph, so it brings 12dp of its own and the
+          glyph lands 16dp from the container edge.
+        </p>
+        <p>
+          The first six names are Material's own
+          (<code>md.comp.bottom-app-bar.*</code> — the container is the whole
+          family it publishes). <code>action-size</code>,
+          <code>fab-trailing-space</code> and <code>-z</code> are this
+          framework's: the actions are icon buttons and the FAB is a FAB, so
+          Material states their values under those components instead.
+        </p>
+  
+      </div>
 
 
     </div>
@@ -489,12 +533,11 @@
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#small">Small</a></li>
-          <li><a href="#large">Large</a></li>
-          <li><a href="#navigation">On navigation</a></li>
-          <li><a href="#lists">In a list</a></li>
-          <li><a href="#sidenav">In a navigation drawer</a></li>
-          <li><a href="#color">Color</a></li>
+          <li><a href="#not-navigation">Not the navigation bar</a></li>
+          <li><a href="#fab">With a FAB</a></li>
+          <li><a href="#fixed">Pinning it</a></li>
+          <li><a href="#toolbar">Or a docked toolbar</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 
