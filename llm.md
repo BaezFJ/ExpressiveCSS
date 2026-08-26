@@ -1987,7 +1987,9 @@ An optional 18dp icon goes in the label, before or after the text. The segment's
 
 `disabled` on one input greys that segment; on the `<fieldset>` it greys the group, outline included.
 
-No ARIA role appears here in either direction — none declared, none withheld. A composite role such as `radiogroup` promises arrow-key navigation, and a fieldset of radios already carries the native group with the browser's own keyboard model. That is why the markup has to stay native, and why `SEMANTICS.md` enforces the fieldset, the label and the input.
+The role is *rejected*, not withheld. A composite role such as `radiogroup` promises arrow-key navigation, and a fieldset of radios already is one — the browser implements the keyboard model — so writing the role by hand restates the element and costs you the fieldset's group role. No composite role is accepted on the group. That is why the markup has to stay native, and why `SEMANTICS.md` enforces the fieldset, the label, the input, and the shared `name` the arrow keys come from.
+
+The group is a grid of equal columns filling the width it is given, as Material specifies. Constrain it with a width or a wrapper when it should be narrower than its container.
 
 | Token | Default |
 | --- | --- |

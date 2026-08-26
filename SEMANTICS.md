@@ -501,20 +501,26 @@ Swept 0.8.0. The sections it watches are the author's own; the table of contents
 
 ### segmented-buttons
 
-A single- or multi-select group of connected buttons. The root is a <fieldset>, and each segment is an <input> plus the <label class="segment"> beside it, tied by id: radios for single-select, checkboxes for multi-select. The control is the label's sibling rather than its child, the way a filter chip is written - a <label> wrapping one of those inputs is a radio or a checkbox to the rest of the sheet, and gets painted as one. No composite role appears here in either direction: none is declared, so none is withheld. Rule 2 asks for an implemented keyboard contract before a component claims to be a composite widget, and a native radio group has one the platform implements. The rules below are what keeps it native - swap the <fieldset> for a <div> or the <input> for a <button> and the arrow keys, the group name and the checked state all leave with it.
+A single- or multi-select group of connected buttons. The root is a <fieldset>, and each segment is an <input> plus the <label class="segment"> beside it, tied by id: radios for single-select, checkboxes for multi-select. The control is the label's sibling rather than its child, the way a filter chip is written - a <label> wrapping one of those inputs is a radio or a checkbox to the rest of the sheet, and gets painted as one. The role is rejected rather than withheld, which is Carousel's case and not Tabs': rule 2 asks for an implemented keyboard contract before a component claims a composite role, and a native radio group has one the platform implements - so `radiogroup` is declined because the element already carries it, not deferred until some later commit. The rules are what keeps that true. Swap the <fieldset> for a <div>, the <input> for a <button>, or drop the shared `name`, and the arrow keys, the group name and the checked state leave with it - which is why `name` is required here even though the sheet never reads it.
+
+**Rejected role:** `radiogroup` is not withheld but declined - a <fieldset> of radios already is one, with the arrow-key model implemented by the browser - an authored role would restate natively-supplied semantics and replace the group role the fieldset provides. `segmented-button-is-not-an-authored-composite-widget` enforces that, keeping every composite role out.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `segmented-button-is-a-fieldset` | forbid | `.segmented-button:not(fieldset)` | must not match |
+| `segmented-button-is-not-an-authored-composite-widget` | forbid-composite-roles | `.segmented-button` | must not match with any composite role |
 | `segment-is-a-label` | forbid | `.segmented-button .segment:not(label)` | must not match |
 | `segment-names-its-input` | require-attr | `.segmented-button label.segment` | must have `for` |
+| `segment-radios-share-a-name` | require-attr | `.segmented-button input[type="radio"]` | must have `name` |
 | `segment-does-not-wrap-its-input` | forbid | `.segmented-button .segment :is([type="radio"], [type="checkbox"])` | must not match |
 | `segment-selection-is-not-authored` | forbid | `.segmented-button :is([aria-checked], [aria-selected], [aria-pressed])` | must not match |
 | `segment-icon-hidden` | require-attr | `.segmented-button .segment :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
 
 - **segmented-button-is-a-fieldset** - A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model.
+- **segmented-button-is-not-an-authored-composite-widget** - The group takes no authored composite role. `radiogroup` is what the fieldset and its radios already are, and every other composite role is a promise this component does not make.
 - **segment-is-a-label** - A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value.
 - **segment-names-its-input** - The control is the label's sibling, not its child, so only `for` ties the two together: <input id="x"> then <label class="segment" for="x">.
+- **segment-radios-share-a-name** - Radios are a group only because they share a `name`, and that group is where the arrow keys come from. Without it each segment is its own one-option group and the keyboard contract this component leans on does not exist.
 - **segment-does-not-wrap-its-input** - A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it.
 - **segment-selection-is-not-authored** - Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates.
 - **segment-icon-hidden** - A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration.

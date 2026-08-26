@@ -40,7 +40,7 @@
           only named by its legend. Set <code>position: static</code> on it
           when you do want it visible.
         </p>
-        <p>
+        <div>
           <fieldset class="segmented-button">
             <legend>View</legend>
             <input type="radio" id="docs-view-day" name="docs-view" value="day" checked>
@@ -50,7 +50,7 @@
             <input type="radio" id="docs-view-month" name="docs-view" value="month">
             <label class="segment" for="docs-view-month">Month</label>
           </fieldset>
-        </p>
+        </div>
   {% endcall %}
 
   {% call section("single-select", "Single select") %}
@@ -79,7 +79,7 @@
           one its own Tab stop and its own form value. Nothing else changes —
           the input type is the entire difference between the two variants.
         </p>
-        <p>
+        <div>
           <fieldset class="segmented-button">
             <legend>Filter transport</legend>
             <input type="checkbox" id="docs-transport-walk" name="docs-transport" value="walk" checked>
@@ -89,7 +89,7 @@
             <input type="checkbox" id="docs-transport-bike" name="docs-transport" value="bike">
             <label class="segment" for="docs-transport-bike">Bike</label>
           </fieldset>
-        </p>
+        </div>
 {% call code() %}
 <fieldset class="segmented-button">
   <legend>Filter transport</legend>
@@ -112,7 +112,7 @@
           segment; write that icon yourself if you want it — nothing swaps it
           in, and the filled container already says which one is on.
         </p>
-        <p>
+        <div>
           <fieldset class="segmented-button">
             <legend>Map layer</legend>
             <input type="radio" id="docs-layer-map" name="docs-layer" value="map" checked>
@@ -126,7 +126,7 @@
               Satellite
             </label>
           </fieldset>
-        </p>
+        </div>
 {% call code() %}
 <fieldset class="segmented-button">
   <legend>Map layer</legend>
@@ -150,7 +150,7 @@
           fieldset it greys the whole group, outline included, the way any
           fieldset disables what it contains.
         </p>
-        <p>
+        <div>
           <fieldset class="segmented-button">
             <legend>Density</legend>
             <input type="radio" id="docs-density-comfortable" name="docs-density" value="comfortable" checked>
@@ -165,7 +165,7 @@
             <input type="radio" id="docs-sort-oldest" name="docs-sort" value="oldest">
             <label class="segment" for="docs-sort-oldest">Oldest</label>
           </fieldset>
-        </p>
+        </div>
 {% call code() %}
 <fieldset class="segmented-button" disabled>
   <legend>Sort</legend>
@@ -179,26 +179,34 @@
 
   {% call section("semantics", "Semantics") %}
         <p>
-          No ARIA role appears here in either direction. A
+          A
           <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
           such as <code>radiogroup</code> promises arrow-key navigation, and
-          this component neither declares one nor withholds one: a fieldset of
-          radios already carries the native group, with the keyboard model
-          implemented by the browser.
+          this component <em>rejects</em> it rather than withholding it: a
+          fieldset of radios already is one, with the keyboard model
+          implemented by the browser. Writing the role by hand would restate
+          what the element already says and take away the group role the
+          fieldset gives you. No composite role is accepted on the group at
+          all.
         </p>
         <p>
           What that costs is that the markup has to stay native, so the docs
           suite enforces it — the root must be a <code>&lt;fieldset&gt;</code>,
           every segment a <code>&lt;label for&gt;</code> against a real
-          <code>&lt;input&gt;</code>, and <code>aria-checked</code> and its
-          neighbours are refused: the input's <code>checked</code> state is the
-          answer, and a hand-written copy is a second one that nothing updates.
+          <code>&lt;input&gt;</code>, and every radio must carry the shared
+          <code>name</code> that makes it a group, since that is where the
+          arrow keys come from. <code>aria-checked</code> and its neighbours
+          are refused: the input's <code>checked</code> state is the answer,
+          and a hand-written copy is a second one that nothing updates.
         </p>
   {% endcall %}
 
   {% call section("tokens", "Tokens") %}
         <p>
           Set these on the group, or on an ancestor to reach several of them.
+          The group is a grid of equal columns filling the width it is given,
+          which is what Material specifies — constrain it with a width or a
+          wrapper when it should be narrower than its container.
         </p>
         {% call token_table() %}
                 <tr><td><code>--md-comp-outlined-segmented-button-container-height</code></td><td><code>40px</code></td></tr>

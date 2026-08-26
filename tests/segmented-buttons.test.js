@@ -96,6 +96,16 @@ describe('Segmented button markup contract', () => {
     assert.match(focus, /outline-offset:\s*-3px/);
   });
 
+  test('the group is equal columns across the width it is given', () => {
+    // material-web's own set is `grid-auto-columns: 1fr` on a full-width grid.
+    // A shrink-wrapped `inline-flex` row sizes each segment to its label, which
+    // is not what M3 specifies.
+    const group = ruleFor('.segmented-button');
+    assert.match(group, /display:\s*grid/);
+    assert.match(group, /grid-auto-flow:\s*column/);
+    assert.match(group, /grid-auto-columns:\s*1fr/);
+  });
+
   test('a segment is 40dp, not the 48dp row of a selection control', () => {
     const seg = ruleFor('.segmented-button > .segment');
     assert.match(seg, /min-block-size:\s*calc\(\s*var\(--md-comp-outlined-segmented-button-container-height\)/);

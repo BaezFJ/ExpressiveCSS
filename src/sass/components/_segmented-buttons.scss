@@ -27,7 +27,7 @@
 //   segment      12dp insets, 18dp icon, 8dp icon-label space, label-large
 //   unselected   on-surface on a transparent container
 //   selected     on-secondary-container on secondary-container
-//   state layer  8% hover, 10% focus and press
+//   state layer  8% hover, 10% press (focus is the ring, not a layer)
 //   disabled     label and icon at 38%, outline at 12%
 .segmented-button {
   --md-comp-outlined-segmented-button-container-height: 40px;
@@ -45,8 +45,13 @@
   // A <fieldset> arrives with a border, 16dp of padding and a min-width; the
   // group's own outline replaces all three.
   box-sizing: border-box;
-  display: inline-flex;
-  align-items: stretch;
+  // Equal columns across whatever inline size the group is given, which is
+  // what M3 specifies - material-web's own set is `grid-auto-columns: 1fr` on
+  // a full-width grid, not a shrink-wrapped row. Constrain the group with a
+  // width or a wrapper when it should be narrower than its container.
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -58,35 +63,25 @@
   // their focus ring both stop at the outline.
   overflow: hidden;
 
+  & + & {
+    margin-block-start: 24px;
+  }
+
   // M3's anatomy has no visible group label. A set of radios is only a set
   // because a <fieldset> says so, and a <fieldset> is only named because of
   // its <legend> — so the legend is the accessible name and nothing else.
   // Unhide it (`position: static`) when the group wants a visible heading.
   > legend {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    @include visually-hidden();
   }
 
   // The control carries the state and the form value; the label is the
   // segment. Clipped rather than `display: none` so it stays focusable — and
   // so the arrow keys still move between the radios.
   > input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
+    @include visually-hidden();
     border: 0;
     appearance: none;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
   }
 
   > .segment {
@@ -98,7 +93,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 1 0 auto;
     gap: var(--md-comp-outlined-segmented-button-icon-label-space);
     margin: 0;
     min-block-size: calc(
@@ -171,8 +165,7 @@
   }
 }
 
-.segmented-button:disabled,
-.segmented-button[disabled] {
+.segmented-button:disabled {
   --md-comp-outlined-segmented-button-outline-color: color-mix(
     in oklab,
     var(--md-sys-color-on-surface) 12%,

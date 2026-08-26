@@ -1067,11 +1067,11 @@ Three **selection controls**. They are not interchangeable.
 - Don't wrap the input in its label. A `<label>` around a radio or a checkbox is one, and gets painted as one — a 20 dp ring on the control and a 48 dp row around it. Input first, then `<label for>`, as with a filter chip.
 - Don't write `aria-checked`, `aria-selected`, `aria-pressed` or a `selected` class on a segment. `checked` on the input is the initial value and the browser owns it from there.
 
-**Anatomy.** One outlined container, 40 dp tall on a full corner, with 1 dp dividers between segments. Each segment: an `<input>` and its `<label class="segment">` — label text (`label-large`) + optional 18 dp leading icon, 12 dp insets. Selected is `secondary-container` / `on-secondary-container`. The `<legend>` names the group and is not shown.
+**Anatomy.** One outlined container, 40 dp tall on a full corner, filling the width it is given as equal columns, with 1 dp dividers between segments. Each segment: an `<input>` and its `<label class="segment">` — label text (`label-large`) + optional 18 dp leading icon, 12 dp insets. Selected is `secondary-container` / `on-secondary-container`. The `<legend>` names the group and is not shown.
 
 **Placement.** Above the content it changes, aligned with it. One group per decision.
 
-**Behavior.** No script. No composite role is declared and none is withheld — a fieldset of radios already carries the native group, keyboard model included.
+**Behavior.** No script. The composite role is rejected, not withheld — a fieldset of radios already is one, keyboard model included, so authoring `radiogroup` restates the element. Radios must share a `name`: that group is where the arrow keys come from.
 
 ---
 

@@ -77,7 +77,8 @@ below is the whole story for that component.
   whole class name and never matches `.fab-menu`.
 - **Segmented buttons.** A `fieldset.segmented-button` of `<input>` and
   `label.segment` pairs is Material 3's outlined segmented button — 40dp on
-  a full corner, 1dp outline with dividers between segments, 12dp insets, an
+  a full corner, equal columns filling the width it is given, a 1dp outline
+  with dividers between segments, 12dp insets, an
   optional 18dp icon, and `secondary-container` / `on-secondary-container` for
   the chosen one. Radios make the group single-select and checkboxes make it
   multi-select; the input type is the entire difference between the two
@@ -91,13 +92,15 @@ below is the whole story for that component.
   the initial value and the browser owns it from there — there is no class to
   keep in sync and no ARIA copy to go stale, and `semantics.json` refuses
   `aria-checked`,
-  `aria-selected` and `aria-pressed` on a segment. Nor is a composite role
-  declared or withheld: SEMANTICS rule 2 asks for an implemented keyboard
-  contract before a component claims to be a composite widget, and a
-  `<fieldset>` of radios already carries the native group with the browser's
-  own arrow-key model. That is why the rules enforce the markup staying native
-  — a `<div>` root or a `<button>` segment takes the group name, the keyboard
-  model and the checked state with it. The `<legend>` names the group and is
+  `aria-selected` and `aria-pressed` on a segment. The composite role is
+  *rejected* rather than withheld, which is Carousel's case and not Tabs':
+  rule 2 asks for an implemented keyboard contract before a component claims a
+  composite role, and a `<fieldset>` of radios already has one the browser
+  implements — so `radiogroup` is declined because the element already carries
+  it, not deferred. `forbid-composite-roles` keeps that and the other nine out
+  of the markup. What the rules enforce instead is that the markup stays
+  native: a `<div>` root, a `<button>` segment or a radio without the shared
+  `name` takes the group name, the arrow keys and the checked state with it. The `<legend>` names the group and is
   hidden, since Material's anatomy has no visible group label; `position:
   static` brings it back.
 - **Carousel can advance on its own, with a pause contract that cannot be
