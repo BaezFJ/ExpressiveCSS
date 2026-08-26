@@ -108,7 +108,7 @@ reports every page that moved. `npm run test:visual:report` opens the diffs.
 `visual/run.mjs` is the orchestrator and its header states the usage; the CI
 job is `visual.yml`, pull requests only.
 
-- **No baselines are committed, on purpose.** 57 pages x 4 variants of
+- **No baselines are committed, on purpose.** 65 pages x 4 variants of
   full-page PNG is 100+ MB per revision. Each run instead builds the base
   revision in a throwaway git worktree (`.visual-base/`, node_modules
   symlinked so both passes use the same sass and esbuild), photographs it into
@@ -164,7 +164,7 @@ job is `visual.yml`, pull requests only.
   until two captures match.
 - **The docs chrome is taken out of the picture, and how differs per element.**
   `macros/nav.html` renders the sidenav *and* the footer from `NAV`, so
-  documenting one component relinked all 57 pages and failed the whole suite.
+  documenting one component relinked every page and failed the whole suite.
   The footer is **hidden**, not masked: the failure was a *dimension* mismatch
   (388x7118 against 388x7166, one link row taller), and a mask paints pixels
   without changing the image size, so the page stays 48px taller and still
@@ -393,7 +393,7 @@ Notes that matter when working on it:
   nesting, whether a dialog is named, and whether two landmarks on the same
   page share a name — that last has no rule behind it, because there is no
   fragment to write one against. It found 31 landmarks called "Main" on the
-  navbar page. 57 pages, under a second.
+  navbar page. 65 pages, under a second.
 - **Docs pages are demos, and a demo is a specimen.** A page stacking ten app
   bar examples needs ten distinguishable names, so the live demos are labelled
   by their section (`Main — Center-aligned`) while the `code()` samples keep the
@@ -604,6 +604,32 @@ not one view with two rules** — Frozen-Flask writes one file per *endpoint*, s
 a shared view silently freezes only one of its URLs.
 
 `website/` is generated, which makes it the regression test for any template change: `uv run python freeze.py`, then diff. Modulo whitespace the output must be identical — that is how all five macro refactors were verified.
+
+**There are two page inventories right now, and that is temporary.**
+`docs/src/data/nav.ts` is the shared catalogue the Astro site will be generated
+from (`adr/0003`): every canonical page's id, group, label, title, description,
+published route and legacy aliases, in one file. `docs/app.py` is still the
+running site, so both exist, and `tests/docs-nav-catalogue.test.js` holds them
+together — it re-derives the whole contract from the Flask sources and fails on
+any disagreement in either direction. **Adding or moving a page means changing
+both**, until the cutover deletes the Flask side. That test's comments carry the
+derivation rules; the one worth knowing before you read them is that a page's
+published route is the **last** `@app.route` above the view, not the first,
+which is why `sliders` publishes as `/slider.html`.
+
+**The six legacy routes are not redirect stubs in `website/`.** Frozen-Flask
+followed each 301 and wrote a full copy of the target page at the alias URL, so
+`dropdown.html` is today a byte-for-byte second Menu page — which is why the
+published count is 65 rather than 59, and why the Astro plan replaces them with
+canonical-tagged redirects.
+
+The catalogue is typechecked — `tsconfig.json` includes `docs/src`, while
+`tsconfig.build.json` keeps its own `include` so nothing from the site reaches
+`dist/types`. The test imports the `.ts` file directly and relies on Node's type
+stripping, so keep it to erasable syntax: no enums, no namespaces, no parameter
+properties. Node 20 cannot strip types, which costs nothing only because
+`ci.yml` already skips `test:run` there for jsdom's sake — if that skip is ever
+lifted, this import needs a build step.
 
 ## Agent skills
 
