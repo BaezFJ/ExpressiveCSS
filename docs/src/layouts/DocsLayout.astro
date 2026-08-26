@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import Banner from "../components/Banner.astro";
 import NavigationDrawer from "../components/NavigationDrawer.astro";
-import { PAGES } from "../data/nav";
+import { page } from "../lib/catalogue";
 
 /**
  * Every documentation page. The title and the banner come from the shared
@@ -14,11 +14,9 @@ interface Props {
   page: string;
 }
 
-const { page } = Astro.props;
+const { page: id } = Astro.props;
 
-const entry = PAGES.find((p) => p.id === page);
-if (!entry) throw new Error(`DocsLayout: no documented page "${page}"`);
-
+const entry = page(id);
 const pageName = entry.title ?? entry.label;
 ---
 <BaseLayout pageName={pageName} bodyClass="docs">
@@ -41,7 +39,7 @@ const pageName = entry.title ?? entry.label;
    "The trigger may live in the bar; the drawer must not." Inside <header> the
    wrapper was also a direct child of an app bar host, so the navbar rules
    styled it as a second 64dp bar. */}
-<NavigationDrawer current={page} />
+<NavigationDrawer current={id} />
 
     <main>
         <Banner title={pageName} description={entry.description} />

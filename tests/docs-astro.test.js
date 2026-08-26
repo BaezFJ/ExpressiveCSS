@@ -9,6 +9,15 @@
 // Source-level on purpose: `astro build` is the wrong seam for these, and a
 // build inside `node --test` would cost more than everything else here
 // together.
+//
+// What that costs, stated rather than left to be discovered: the composed-page
+// checks in semantics.test.js -- <main> nesting, and two landmarks on one page
+// sharing a name -- read `website/`, which only the freeze writes. An Astro
+// page is never in it and `_site/` is not committed, so those two questions go
+// unasked for docs/src. They are the ones a fragment cannot answer, and the
+// build-level verification issue #83 plans is the seam that answers them; until
+// then the guard is that a converted page stays structurally identical to the
+// frozen one, which is checked by hand.
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
@@ -78,6 +87,7 @@ describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
   const banner = read('docs/src/components/Banner.astro');
   const base = read('docs/src/layouts/BaseLayout.astro');
   const pageMacro = read('docs/templates/macros/page.html');
+  const navMacro = read('docs/templates/macros/nav.html');
 
   test('gives a section the same hooks and heading roles as the macro', () => {
     assert.match(section, /class="section scrollspy docs-section"/);
@@ -97,5 +107,38 @@ describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
 
   test('versions the docs stylesheet so typography updates are not served stale', () => {
     assert.match(base, /\/static\/docs\.css\?v=\$\{version\}/);
+  });
+
+  test('the drawer and the footer keep the hooks and names the macro states', () => {
+    // Both copies render from the same catalogue, which makes them the two most
+    // able to drift and the least likely to look wrong while doing it: a
+    // dropped `aria-current` or a renamed `#nav-mobile` changes nothing a
+    // reader sees. The tokens below are the ones written verbatim on both
+    // sides -- the drawer's own identity, the app bar trigger's target, the
+    // exclusive-group name, the current-page state, and the footer's labelling
+    // and version line.
+    const shared = {
+      'docs/src/components/NavigationDrawer.astro': [
+        'aria-label="Main"',
+        'navigation-drawer navigation-drawer-fixed',
+        'id="nav-mobile"',
+        'name="docs-nav"',
+        'material-symbols',
+        'aria-current',
+        'active',
+      ],
+      'docs/src/components/Footer.astro': [
+        'footer-',
+        '&copy; 2026 ExpressiveCSS',
+        '(prerelease)',
+      ],
+    };
+    for (const [file, tokens] of Object.entries(shared)) {
+      const astro = read(file);
+      for (const token of tokens) {
+        assert.ok(astro.includes(token), `${file} no longer states ${token}`);
+        assert.ok(navMacro.includes(token), `macros/nav.html no longer states ${token}`);
+      }
+    }
   });
 });

@@ -91,7 +91,7 @@ Notes:
 
 ## Releasing
 
-`package.json` holds the version, but eight files state it and only one derives it. The docs **footer** is the derived one: it reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0. Astro's `BaseLayout.astro` reads the same file directly, so its footer is derived too rather than being a ninth place. Because it reads the raw version it also sees prereleases, so it appends "(prerelease)" when `IS_PRERELEASE` is set (`'-' in VERSION`) — otherwise the site advertises a version `npm install` does not hand out. The other seven drift silently — nothing fails if you miss one.
+`package.json` holds the version, but nine files state it and only two derive it. The docs **footers** are the derived ones, one per generator: Flask's reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0, and Astro's `BaseLayout.astro` reads the same file directly. Because they read the raw version they also see prereleases, so each appends "(prerelease)" when the version carries one (`'-' in VERSION`) — otherwise the site advertises a version `npm install` does not hand out. The other seven drift silently — nothing fails if you miss one.
 
 **Which files you bump depends on whether `latest` moves.** They fall into two groups:
 
@@ -631,21 +631,30 @@ page's own link.
   the `<code>` after it — which is a rendered space, not formatting.
   ``The\n<code>min</code> means`` came out as `Themin means` on the Getting
   Started page.
-- **`docs/public/static` and `docs/public/dist` are symlinks**, to `docs/static`
-  and the framework's `dist/`. Vite's public-dir copy `stat`s each entry, so a
-  symlinked directory is followed and lands in `_site/` as real files; the dev
-  server serves through it too, which is why `npm run watch` shows up on a
-  browser reload exactly as it does under Flask. Both paths are the site's
-  established public URLs and the symlinks are the whole of what keeps them.
+- **`docs/public/` holds three symlinks**, and they are the whole of what keeps
+  the site's established asset URLs: `static` to `docs/static`, and
+  `dist/css` / `dist/js` to the framework build. Vite's public-dir copy `stat`s
+  each entry, so a symlinked directory is followed and lands in `_site/` as real
+  files; the dev server serves through them too, which is why `npm run watch`
+  shows up on a browser reload exactly as it does under Flask.
+
+  **`dist` is two symlinks rather than one, deliberately.** Linking the whole of
+  `dist/` published `dist/types/**` as well — 180 KB of `.d.ts` on a website —
+  because a symlinked tree is followed entire. `pages.yml` copies exactly
+  `dist/css` and `dist/js`, and these mirror it. The cost is that `.gitignore`'s
+  `dist/` now swallows the real `docs/public/dist/` directory before git looks
+  inside it, so that one path is re-included by name.
 - **`import.meta.url` inside a component points at the emitted chunk**, not at
   the source file, so it cannot address the repository. The repo root is
   stamped in as `__REPO_ROOT__` by `astro.config.mjs`, which is not bundled.
   `BaseLayout.astro` reads `package.json` and checks for `dist/` through it.
 - **The landing page is the one page whose route the generator changes.** The
   catalogue records `/getting-started.html`, because that is what the freeze
-  publishes; Astro makes the site root canonical instead. `docs/src/lib/routes.ts`
-  owns that single divergence, and it throws on an unknown id the way `url_for`
-  does, so a mistyped link fails the build instead of publishing a 404.
+  publishes; Astro makes the site root canonical instead.
+  `docs/src/lib/catalogue.ts` owns that single divergence, and it is also the
+  only place the site looks a page up by id: both accessors throw on an unknown
+  one the way `url_for` does, so a mistyped link fails the build instead of
+  publishing a 404.
 - **A page declares its sections once.** `defineSections()` returns them keyed
   by id and in order: `<PageBody>` builds the table of contents from it and each
   `<Section {...S.download}>` is spread from the same object, so a heading and
@@ -667,8 +676,17 @@ page's own link.
 
 `tests/docs-astro.test.js` holds the pages to the catalogue — that each
 publishes at the route the catalogue gives it, and that its declared and
-rendered sections agree — and holds the duplicated chrome to the Jinja macros
-it was copied from, for as long as both exist.
+rendered sections agree — and pins the hooks the duplicated chrome shares with
+the Jinja macros, for as long as both exist.
+
+**One check does not follow the migration, and it is the one a fragment cannot
+answer.** The composed-page pass in `semantics.test.js` — `<main>` nesting, and
+two landmarks on a page sharing a name, the check that found 31 landmarks called
+"Main" — reads `website/`, which only the freeze writes. Astro pages are never
+in it and `_site/` is not committed, so `docs/src` gets the fragment-level rules
+only. The seam that closes this is the build-level verification #83 plans;
+until then the guard is that a converted page stays structurally identical to
+its frozen counterpart, and that is checked by hand.
 
 **There are two page inventories right now, and that is temporary.**
 `docs/src/data/nav.ts` is the shared catalogue the Astro site will be generated

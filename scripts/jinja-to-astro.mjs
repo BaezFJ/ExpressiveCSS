@@ -196,7 +196,7 @@ const frontmatter = [
   'import Section from "../components/Section.astro";',
   'import Code from "../components/Code.astro";',
   'import { defineSections } from "../lib/sections";',
-  usesRoute ? 'import { route } from "../lib/routes";' : null,
+  usesRoute ? 'import { route } from "../lib/catalogue";' : null,
   '',
   `const S = defineSections([\n${sections.map((s) => `  ${meta(s)},`).join('\n')}\n]);`,
 ].filter((l) => l !== null);
