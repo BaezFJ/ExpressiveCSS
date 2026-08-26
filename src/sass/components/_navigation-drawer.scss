@@ -111,7 +111,7 @@ dialog:is(.sidenav, .navigation-drawer) {
   }
 
   &::backdrop {
-    background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+    background-color: var(--md-comp-scrim-color);
     opacity: var(--md-comp-nav-drawer-open, 1);
     backdrop-filter: none;
     transition:

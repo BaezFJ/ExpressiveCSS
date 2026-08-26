@@ -190,26 +190,27 @@ describe('Datepicker escapes what it splices into markup', () => {
   });
 });
 
-describe('Slider indicator labels', () => {
+describe('Carousel generated names', () => {
   beforeEach(resetBody);
 
-  test('a label from indicatorLabelFunc cannot break out of aria-label', () => {
+  test('an i18n string cannot break out of aria-label', () => {
     document.body.innerHTML = `
-      <div class="slider"><ul class="slides">
-        <li class="active"><img src="http://localhost/1.jpg"><div class="caption">one</div></li>
-        <li><img src="http://localhost/2.jpg"><div class="caption">two</div></li>
-      </ul></div>`;
+      <div class="carousel">
+        <div class="carousel-item"><img src="http://localhost/1.jpg"></div>
+        <div class="carousel-item"><img src="http://localhost/2.jpg"></div>
+      </div>`;
 
-    const instance = Expressive.Slideshow.init(document.querySelector('.slider'), {
-      indicatorLabelFunc: () => PAYLOAD
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
+      i18n: { carousel: PAYLOAD, item: PAYLOAD, of: PAYLOAD }
     });
 
-    // finally, not a trailing call: Slider holds an autoplay interval, and a
-    // failed assertion that skipped the teardown would keep node alive.
+    // finally, not a trailing call: an interval or a pending transition would
+    // keep node alive if a failed assertion skipped the teardown.
     try {
-      const indicators = document.querySelector('ul.indicators');
-      assert.equal(indicators.querySelector('img'), null, 'the label was parsed as markup');
-      assert.equal(indicators.querySelector('button').getAttribute('aria-label'), PAYLOAD);
+      const el = document.querySelector('.carousel');
+      assert.equal(el.querySelectorAll('img').length, 2, 'a label was parsed as markup');
+      assert.equal(el.getAttribute('aria-label'), PAYLOAD);
+      assert.match(el.querySelector('.carousel-item').getAttribute('aria-label'), /"><img/);
     } finally {
       instance.destroy();
     }

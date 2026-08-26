@@ -309,8 +309,8 @@
           text is <code>body-medium</code> /
           <code>on-surface-variant</code>. Actions are text buttons, end
           aligned, with an 8dp gap. Padding is 24dp (16dp between the
-          headline and the body). The scrim is 32% <code>scrim</code> with
-          a 12px blur. Opening with <code>showModal()</code> also stops
+          headline and the body). The scrim is
+          <code>--md-comp-scrim-color</code> with a 12px blur. Opening with <code>showModal()</code> also stops
           the page behind it from scrolling.
         </p>
         <p>
@@ -532,6 +532,10 @@
             <tr>
               <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
               <td>12px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-scrim-color</code></td>
+              <td><code>--md-sys-color-scrim</code> at 32%</td>
             </tr>
   
             </tbody>

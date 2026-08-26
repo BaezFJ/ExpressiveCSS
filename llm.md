@@ -280,7 +280,7 @@ The main bundle exports:
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
 - `Slider` and `ScrollSpy`
-- `FormSelect`, `NavigationDrawer`, `NavigationRail`, `Slider`, and `Tabs`
+- `FormSelect`, `NavigationDrawer`, `NavigationRail`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
 ---
@@ -678,6 +678,8 @@ A background class sets `background-color`. Append `-text` for `color`. Pair rol
 Every role name is a background class. The same name plus `-text` is the foreground class (`.on-surface-text`). Prefer the `on-*` text class on its paired fill.
 
 Standard pairs: `primary` / `on-primary`, `primary-container` / `on-primary-container`, and the same for secondary, tertiary, and error. Surface: `surface`, `surface-dim`, `surface-bright`, `surface-container-lowest` … `surface-container-highest`, `on-surface`, `on-surface-variant`. Outline: `outline`, `outline-variant`. Inverse: `inverse-surface` / `inverse-on-surface`, `inverse-primary`. Overlay: `scrim`, `shadow`. Optional fixed accents (`primary-fixed`, `primary-fixed-dim`, `on-primary-fixed`, `on-primary-fixed-variant`, and the secondary/tertiary copies) stay the same in light and dark. `background`, `on-background`, `surface-variant`, and `surface-tint` remain as aliases.
+
+`scrim` is the opaque neutral the wash behind a modal surface is mixed from, not the wash itself. That is `--md-comp-scrim-color` — the role at 32%, defined once on `:root, :host` (so a sheet adopted into a shadow root gets one too) and consumed by dialogs, both sheets, the navigation drawer and the modal navigation rail. Override it at the root to retheme all of them, or set it on one element to dim just that surface (`::backdrop` inherits from the element it belongs to). The mix resolves at the root, so overriding `--md-sys-color-scrim` on a subtree does not reach a scrim below it — override `--md-comp-scrim-color` there instead.
 
 In Sass, consume the token directly. Do not write `rgba(var(--md-sys-color-primary), 0.06)` — the tokens hold hex colors, so that form is invalid. Mix with transparency instead:
 
@@ -2379,7 +2381,7 @@ Expressive.AutoInit(document.body, {
 | `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it, so a rest ending mid-tween on legacy coverflow buys another whole rest. |
 | `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
 | `onCycleTo` | Function | `null` | Called when the active item changes. |
-| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of' }` | Generated accessible label strings. |
+| `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }` | Generated accessible label strings. `indicators` names the indicator row and `slide` prefixes each dot, giving "Slide 1". Partial objects are merged with the defaults. |
 | `dist`, `shift`, `padding`, `numVisible` | Number | Legacy | Used only by the explicit `.coverflow` compatibility layout. |
 
 ### Methods
@@ -3864,7 +3866,7 @@ instance.destroy();
 
 ## Media
 
-Lightbox and Slider for large images and slideshows.
+Lightbox for enlarge-on-click images.
 
 Media components handle large objects such as images. For responsive images and videos without JavaScript, see Media Styles.
 
@@ -3954,145 +3956,6 @@ Add a short caption with the `data-caption` attribute.
      src="images/sample-2.jpg">
 ```
 
-### Slideshow
-
-A slideshow is a full-width image sequence. Captions transition on their own according to `center-align`, `left-align`, or `right-align`. Indicators appear along the bottom.
-
-Slideshow is **not** in `AutoInit()`. Call `Expressive.Slideshow.init` yourself after the page loads. For an adaptive Material 3 visual collection, see Carousel.
-
-```html
-<div class="slideshow">
-  <ul class="slides">
-    <li>
-      <img src="images/sample-1.jpg" alt="First slide">
-      <div class="caption center-align">
-        <h3>This is our big Tagline!</h3>
-        <h5 class="light">Here's our small slogan.</h5>
-      </div>
-    </li>
-    <li>
-      <img src="images/sample-2.jpg" alt="Second slide">
-      <div class="caption left-align">
-        <h3>Left Aligned Caption</h3>
-        <h5 class="light">Here's our small slogan.</h5>
-      </div>
-    </li>
-    <li>
-      <img src="images/sample-3.jpg" alt="Third slide">
-      <div class="caption right-align">
-        <h3>Right Aligned Caption</h3>
-        <h5 class="light">Here's our small slogan.</h5>
-      </div>
-    </li>
-  </ul>
-</div>
-```
-
-#### Initialization
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.slideshow');
-  const instances = Expressive.Slideshow.init(elems, {
-    // specify options here
-    indicatorLabelFunc: (idx, current) => {
-      let label = 'Go to slide ' + idx;
-      if (current) {
-        label = label + ' (Current)';
-      }
-      return label;
-    }
-  });
-});
-```
-
-#### Options
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `indicators` | Boolean | `true` | Set to `false` to hide slide indicators. |
-| `height` | Number | `400` | Height of the slider, in pixels. |
-| `duration` | Number | `500` | Transition animation duration, in milliseconds. |
-| `interval` | Number | `6000` | Time between transitions, in milliseconds. |
-| `pauseOnFocus` | Boolean | `true` | Pause autoslide when the slider receives keyboard focus. |
-| `pauseOnHover` | Boolean | `true` | Pause autoslide when a pointer hovers the slider. |
-| `indicatorLabelFunc` | Function | `null` | Builds the ARIA label for each indicator. Receives the 1-based index and a boolean that is true for the current slide. If omitted, the label is the index. |
-
-#### Methods
-
-> All methods are called on the plugin instance. You can get the instance like this:
-
-```js
-const instance = Expressive.Slideshow.getInstance(elem);
-```
-
-#### .pause();
-
-Pause slider autoslide.
-
-```text
-instance.pause();
-```
-
-#### .start();
-
-Start slider autoslide.
-
-```text
-instance.start();
-```
-
-#### .next();
-
-Move to the next slide.
-
-```text
-instance.next();
-```
-
-#### .prev();
-
-Move to the previous slide.
-
-```text
-instance.prev();
-```
-
-#### .set();
-
-Move to a specific slide by 0-based index. Values wrap around the ends.
-
-```text
-instance.set(2);
-```
-
-#### .destroy();
-
-Destroy the plugin instance and tear down its event handlers.
-
-```text
-instance.destroy();
-```
-
-#### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `el` | Element | The DOM element the plugin was initialized with. |
-| `options` | Object | The options the instance was initialized with. |
-| `activeIndex` | Number | Index of the current slide. |
-| `eventPause` | Boolean | Whether the slider is paused by a focus or hover event. |
-
-#### Fullscreen Slider
-
-Add `fullscreen` to the slider so it fills its positioned ancestor (typically the viewport if that ancestor is the page). There is no separate demo page — the class is `fullscreen` on `.slider`.
-
-```html
-<div class="slideshow fullscreen">
-  <ul class="slides">...</ul>
-</div>
-```
-
 ---
 
 ## Dialogs
@@ -4101,7 +3964,7 @@ Material Design 3 dialogs, from the HTML.
 
 A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. `dialog.max` is the full-screen variant. There are no `.modal`, `modal-header`, `modal-content`, or `modal-footer` classes — the element is the component.
 
-Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is 32% `scrim`. Actions sit at the end with an 8dp gap.
+Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap.
 
 Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. There is no `Modal` export and nothing for `AutoInit()` to start; `Dialogs.Init()` runs at import time and only adds light-dismiss.
 
@@ -5981,7 +5844,7 @@ Material Design 3 sliders, from the HTML.
 
 An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
 
-The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Until 0.8.0 `.slider` and `Slider` meant the image slideshow, which is now `.slideshow` / `Expressive.Slideshow` — a `.slider` that holds no range input is still treated as one, so neither kind of existing markup breaks.
+The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Until 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is gone as of 1.0.0 and Carousel covers the case, so `.slider` is the range control and nothing else.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
 

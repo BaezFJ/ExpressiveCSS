@@ -5,6 +5,8 @@ export interface CarouselI18nOptions {
   carousel: string;
   item: string;
   of: string;
+  indicators: string;
+  slide: string;
 }
 
 export interface CarouselOptions extends BaseOptions {
@@ -74,7 +76,8 @@ export interface CarouselOptions extends BaseOptions {
    */
   onCycleTo: (current: Element, dragged: boolean) => void;
   /**
-   * Accessible names generated for an unlabeled carousel and its items.
+   * Accessible names generated for an unlabeled carousel, its items and its
+   * indicators.
    */
   i18n: Partial<CarouselI18nOptions>;
 }
@@ -94,7 +97,9 @@ const _defaults: CarouselOptions = {
   i18n: {
     carousel: 'Carousel',
     item: 'Item',
-    of: 'of'
+    of: 'of',
+    indicators: 'Slides',
+    slide: 'Slide'
   }
 };
 
@@ -346,7 +351,7 @@ export class Carousel extends Component<CarouselOptions> {
     this._indicators = existing ?? document.createElement('nav');
     this._ownIndicators = !existing;
     this._indicators.classList.add('indicators');
-    this._indicators.setAttribute('aria-label', 'Slides');
+    this._indicators.setAttribute('aria-label', this.options.i18n.indicators);
     this._indicators.replaceChildren();
 
     this.images.forEach((_, i) => {
@@ -357,7 +362,7 @@ export class Carousel extends Component<CarouselOptions> {
         button.classList.add('active');
         button.setAttribute('aria-current', 'true');
       }
-      button.setAttribute('aria-label', `Slide ${i + 1}`);
+      button.setAttribute('aria-label', `${this.options.i18n.slide} ${i + 1}`);
       this._indicators.appendChild(button);
     });
 
