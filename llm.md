@@ -2228,7 +2228,7 @@ Expressive.AutoInit(document.body, {
 | `fullWidth` | Boolean | `false` | Full-width compatibility layout used by swipeable tabs. Prefer an M3 layout class for new carousels. |
 | `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
 | `noWrap` | Boolean | `false` | End behavior for legacy coverflow. M3 tracks always stop at their ends. |
-| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. |
+| `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Legacy coverflow drops a tick that arrives mid-tween. |
 | `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
 | `onCycleTo` | Function | `null` | Called when the active item changes. |
 | `i18n` | Object | `{ carousel: 'Carousel', item: 'Item', of: 'of' }` | Generated accessible label strings. |

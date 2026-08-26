@@ -531,6 +531,17 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   private _advance = () => {
+    // Coverflow eases by `amplitude * exp(-elapsed / duration)` until the step
+    // falls under 2px, so it settles after `duration * ln(|amplitude| / 2)` --
+    // several multiples of `duration`, not one, and `center` climbs through the
+    // whole tween. Advancing off that intermediate index would retarget the
+    // running animation instead of moving one item, so a tick that finds the
+    // track still moving is dropped and the next one takes it. Every path that
+    // leaves `offset` short of `target` starts the loop that closes the gap, so
+    // this waits on an animation that is always running. Native tracks commit
+    // `center` synchronously in `_cycleTo` and never read an in-between value.
+    if (!this._flat && this.offset !== this.target) return;
+
     const next = this.center + 1;
     if (next < this.count) {
       this.set(next);

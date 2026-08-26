@@ -345,7 +345,9 @@ Expressive.AutoInit(document.body, {
     <code>duration</code> — the gap follows each transition rather than
     containing it, so a full cycle takes <code>duration + interval</code>.
     <code>0</code> leaves auto-advance off, and setting it turns on the pause
-    contract below.
+    contract below. Legacy <code>coverflow</code> eases to a stop over several
+    multiples of <code>duration</code>, so a tick arriving while it is still
+    moving is dropped and the next one takes it.
   </td>
 </tr>
 <tr>

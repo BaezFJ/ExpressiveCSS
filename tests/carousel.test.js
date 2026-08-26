@@ -481,6 +481,32 @@ describe('Carousel auto-advance', () => {
     }
   });
 
+  test('skips a tick that lands on a coverflow tween still running', (t) => {
+    t.mock.timers.enable({ apis: ['setInterval'] });
+    document.body.innerHTML = markup('coverflow');
+    const instance = Expressive.Carousel.init(document.querySelector('.carousel'), {
+      interval: 1000
+    });
+    try {
+      // Coverflow settles after duration * ln(|amplitude| / 2), so a short
+      // interval can fire while `center` is still climbing through the tween.
+      // Coverflow moves `center` through the tween rather than committing it
+      // up front, so the tell is whether the tick retargeted: `_cycleTo` is
+      // what rewrites `target`.
+      instance.offset = 0;
+      instance.target = 100;
+      t.mock.timers.tick(cycle(1000) * 3);
+      assert.equal(instance.target, 100, 'retargeted an animation still running');
+
+      instance.offset = 100;
+      t.mock.timers.tick(cycle(1000));
+      assert.notEqual(instance.target, 100, 'never advanced once the track came to rest');
+    } finally {
+      instance.destroy();
+      t.mock.timers.reset();
+    }
+  });
+
   test('pause() and start() stop and resume it', (t) => {
     t.mock.timers.enable({ apis: ['setInterval'] });
     const instance = init({ interval: 1000 });
