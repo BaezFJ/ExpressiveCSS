@@ -91,7 +91,7 @@ describe('Button group tokens', () => {
 });
 
 describe('Button group shape morph', () => {
-  const item = ':is(button:not(.icon-button), a.button, label.button, .icon-button)';
+  const item = ':is(button:not(.icon-button), a.button)';
 
   test('an item reads its corner off one variable', () => {
     const rule = ruleFor(`.button-group.connected > ${item}`);
@@ -118,9 +118,24 @@ describe('Button group shape morph', () => {
   });
 
   test('a standard group grows the pressed item instead of reshaping it', () => {
-    const active = ruleFor('.button-group:not(.connected) > :is(button:not(.icon-button), a.button, label.button):active');
+    const active = ruleFor(`.button-group:not(.connected) > ${item}:active`);
     assert.ok(active, 'no press rule on a standard group item');
     assert.match(active, /--md-comp-button-group-pressed-item-width-multiplier/);
     assert.doesNotMatch(active, /border-radius/);
+  });
+
+  test('a label item grows by its insets and a .circle by its width', () => {
+    // A `.circle` states a width of its own, so padding would squeeze the icon
+    // inside the same box instead of widening the button.
+    const label = ruleFor(`.button-group:not(.connected) > ${item}:not(.circle):active`);
+    assert.match(label, /padding-inline:\s*calc\(var\(--md-comp-filled-button-leading-space\) \+ var\(--_grow\)\)/);
+    const circle = ruleFor(`.button-group:not(.connected) > ${item}.circle:active`);
+    assert.ok(circle, 'no press rule for an icon-only item');
+    assert.match(circle, /width:\s*calc\(var\(--md-comp-filled-button-container-height\) \+ 2 \* var\(--_grow\)\)/);
+    assert.doesNotMatch(circle, /padding/);
+  });
+
+  test('the motion is dropped when the user asked for no motion', () => {
+    assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.button-group > [^{]*\{\s*transition:\s*none/);
   });
 });

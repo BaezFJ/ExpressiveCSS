@@ -31,12 +31,22 @@
 // control - which is `.segmented-button`, a <fieldset> of radios that already
 // does exactly that. A group of <button>s has no state to read.
 
-// The items. `.icon-button` is in the list because an icon-only connected
-// group is the shape M3 draws most often, but it is excluded from the type
-// role: an icon button sizes its glyph off its own font-size, so handing it a
-// headline role would grow the icon with it.
-$_label-item: ":is(button:not(.icon-button), a.button, label.button)";
-$_item: ":is(button:not(.icon-button), a.button, label.button, .icon-button)";
+// The items: common buttons, and `.circle` for an icon-only one - which is
+// the shape M3 draws a group with most often, and which the group sizes like
+// any other item.
+//
+// `.icon-button` is deliberately *not* an item. It is its own component with
+// its own size ladder, its own insets and its own pressed shape, all set on
+// the element by its own rule - so a group could not size it by handing its
+// items tokens, and the corner morph here would fight the one it already
+// draws. Write `<button class="button circle">` for an icon-only group.
+//
+// This is also not `_buttons.scss`'s `$_btn`, which excludes the widget chrome
+// that happens to be a <button> (a datepicker day, a chip). Chrome cannot
+// reach a group anyway: `button-group-items-are-controls` in semantics.json
+// admits only a <button> or an <a href> as a direct child, so the buttons
+// here are the ones an author put here.
+$_item: ":is(button:not(.icon-button), a.button)";
 
 // md.comp.button-group.standard.<size>.between-space
 $_standard-space: (
@@ -76,33 +86,44 @@ $_connected-corners: (
 
       --md-comp-button-group-between-space: #{map.get($_standard-space, $name)};
 
-      > #{$_label-item} {
+      > #{$_item} {
         @include typescale(map.get($s, label));
       }
     }
   }
 
   > #{$_item} {
-    transition: padding .2s ease-out, border-radius .2s ease-out,
-      background-color .2s ease-out;
+    transition: padding .2s ease-out, width .2s ease-out,
+      border-radius .2s ease-out, background-color .2s ease-out;
   }
 
   // Pressing an item in a standard group widens it. M3 compresses the two
   // neighbours by the same amount so the group's own width never changes;
   // that needs each item's measured width, which is script.
   //
-  // ponytail: the grow is 15% of the item's *height* - exact for the
-  // icon-only case M3 draws, close for a label - and the items after it
+  // ponytail: the grow is 15% of the item's *height* - exact for a `.circle`,
+  // whose width is its height, and close for a label - and the items after it
   // slide rather than compress. Measure and compress in JS if a group ever
   // sits in a fixed-width row where the slide is visible.
-  &:not(.connected) > #{$_label-item}:active {
-    padding-inline:
-      calc(var(--md-comp-filled-button-leading-space) + var(--_grow))
-      calc(var(--md-comp-filled-button-trailing-space) + var(--_grow));
-
+  &:not(.connected) > #{$_item}:active {
     --_grow: calc(
       var(--md-comp-filled-button-container-height) *
         var(--md-comp-button-group-pressed-item-width-multiplier) / 2
+    );
+  }
+
+  // A label button is as wide as its insets make it, so it grows by them.
+  &:not(.connected) > #{$_item}:not(.circle):active {
+    padding-inline:
+      calc(var(--md-comp-filled-button-leading-space) + var(--_grow))
+      calc(var(--md-comp-filled-button-trailing-space) + var(--_grow));
+  }
+
+  // A `.circle` states its own width and has no insets to grow - padding would
+  // squeeze the icon inside the same box rather than widen it.
+  &:not(.connected) > #{$_item}.circle:active {
+    width: calc(
+      var(--md-comp-filled-button-container-height) + 2 * var(--_grow)
     );
   }
 
@@ -145,5 +166,13 @@ $_connected-corners: (
         border-end-end-radius: var(--md-comp-button-group-container-shape);
       }
     }
+  }
+}
+
+// The press grow and the corner morph are both motion, and the only motion
+// this component has.
+@media (prefers-reduced-motion: reduce) {
+  .button-group > #{$_item} {
+    transition: none;
   }
 }

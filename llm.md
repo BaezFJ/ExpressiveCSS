@@ -2050,7 +2050,9 @@ The group is a grid of equal columns filling the width it is given, as Material 
 
 ## Button groups
 
-A row of related actions that reads as one control without becoming one — a formatting row, a set of view actions, a player's transport. The root is a `<div class="button-group">` and the items are ordinary buttons or icon buttons written directly inside it. Nothing is scripted and nothing is selected: each item is its own Tab stop and does its own thing. When two to five options answer one question, that is a segmented button, whose `<input>` holds the answer.
+A row of related actions that reads as one control without becoming one — a formatting row, a set of view actions, a player's transport. The root is a `<div class="button-group">` and the items are ordinary buttons written directly inside it; add `circle` to an item for the icon-only shape M3 draws a group with most often. Nothing is scripted and nothing is selected: each item is its own Tab stop and does its own thing. When two to five options answer one question, that is a segmented button, whose `<input>` holds the answer.
+
+An `.icon-button` is *not* an item: it is its own component, with its own size ladder, insets and pressed shape set on the element itself, so a group can neither size nor reshape it without fighting rules it already has. Write `<button class="button circle">` instead.
 
 Items are controls and direct children — a `<button>`, or an `<a href>` when it navigates. A wrapper element around them loses both the gap and the connected corners, which are written against direct children. An icon-only item carries its own `aria-label`, since the icon is `aria-hidden`.
 
@@ -2073,10 +2075,10 @@ Add `connected` for the second variant. Items sit 2dp apart at every size, the e
 
 ```html
 <div class="button-group connected">
-  <button class="button tonal" aria-label="Align left">
+  <button class="button tonal circle" aria-label="Align left">
     <span class="material-symbols" aria-hidden="true">format_align_left</span>
   </button>
-  <button class="button tonal" aria-label="Align center">
+  <button class="button tonal circle" aria-label="Align center">
     <span class="material-symbols" aria-hidden="true">format_align_center</span>
   </button>
 </div>

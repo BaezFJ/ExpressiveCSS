@@ -1208,6 +1208,7 @@ Three **selection controls**. They are not interchangeable.
 - Don't wrap the items in anything. The gap and the connected corners are written against direct children, so a nested `<div>` loses both.
 - Don't leave an icon-only item unnamed. The icon is `aria-hidden`, so the button needs its own `aria-label`.
 - Don't repeat the size on every button. The size class goes on the group, which sets the button tokens its items inherit.
+- Don't put an `.icon-button` in a group. It is its own component, with its own sizes and pressed shape set on the element, so the group can neither size nor reshape it. An icon-only item is `<button class="button circle">`.
 
 **Anatomy.** A row of buttons. Heights are the button ladder — 32 / 40 / 56 / 96 / 136 dp for `xsmall` / `small` / `medium` / `large` / `xlarge` — and the gap is 18 / 12 / 8 / 8 / 8 dp standard, 2 dp connected at every size. Connected joins are 8 dp at the three smaller sizes, 16 dp at `large`, 20 dp at `xlarge`, each squaring one step further while pressed.
 

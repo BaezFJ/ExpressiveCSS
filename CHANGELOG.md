@@ -37,6 +37,14 @@ below is the whole story for that component.
   other mixins: two partials read the table now, and a partial may not `@use`
   another partial. No class, token or value changed.
 
+  **An icon-only item is `<button class="button circle">`, not an
+  `.icon-button`.** That component sets its own size ladder, insets and pressed
+  shape on the element itself, so a group can neither size it by handing its
+  items tokens nor reshape it without fighting the morph it already draws. A
+  `.circle` grows by its width on press, where a label item grows by its
+  insets - padding inside a stated width would squeeze the icon rather than
+  widen the button.
+
   **No selection, deliberately.** M3's connected group draws a selected state,
   and holding one takes a control that remembers the answer — which is
   `.segmented-button`, a `<fieldset>` of radios or checkboxes. A row of
