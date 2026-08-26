@@ -1,0 +1,228 @@
+@use "../abstracts" as *;
+
+// Search: the M3 search bar and the view it expands into.
+//
+// Anatomy is the HTML. A `<search class="search-bar">` is the bar - an
+// optional leading icon or icon button, an `<input type="search">`, and
+// optional trailing actions. `.searchbar` is the pre-1.0 alias.
+//
+// `.search-view` is the surface the bar expands into, and it is two different
+// native elements because the two variants want two different behaviours:
+//
+//   docked       a plain element inside the bar, shown by dropping `hidden`.
+//                The bar keeps focus, which is the whole point - a modeless
+//                `<dialog>.show()` moves focus into the dialog and would take
+//                the caret out of the input the user is typing in.
+//   full-screen  a `<dialog class="search-view full-screen">` opened with
+//                `showModal()`, so Escape and light dismiss come from the
+//                platform and `behaviors/dialogs.ts` rather than from here.
+//
+// Suggestions are Autocomplete's, not this component's. Put `autocomplete` on
+// the bar's input and the combobox, its listbox and the keyboard contract
+// behind them are the ones already implemented and tested. The search view
+// holds content - recent searches, results, filters - and takes no composite
+// role of its own; see SEMANTICS.md.
+//
+// Tokens follow md.comp.search-bar.* / md.comp.search-view.* at DSP 34.0.21
+//   bar          56dp, corner-full, surface-container-high, elevation 3
+//   input        body-large / on-surface, placeholder on-surface-variant
+//   icons        24dp; leading on-surface, trailing on-surface-variant
+//   spacing      16dp at each end, 4dp beside an icon button, which carries
+//                its own 12dp inset
+//   view         surface-container-high, 28dp corners, elevation 3, 2dp gap
+//   full-screen  fills the viewport, no corners, 72dp header
+//   divider      outline
+//
+// Nest descendants inside these blocks, and keep `$_bar` wrapped in `:is()` -
+// a bare list interpolated into `.search-view > #{$_bar}` breaks out of its
+// context and emits a top-level rule.
+
+$_bar: ":is(.search-bar, .searchbar)";
+
+#{$_bar} {
+  --md-comp-search-bar-container-color: var(--md-sys-color-surface-container-high);
+  --md-comp-search-bar-container-height: 56px;
+  --md-comp-search-bar-container-shape: 28px;
+  --md-comp-search-bar-leading-space: 16px;
+  --md-comp-search-bar-trailing-space: 16px;
+  --md-comp-search-bar-icon-label-space: 16px;
+  --md-comp-search-bar-icon-size: 24px;
+
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--md-comp-search-bar-icon-label-space);
+  width: 100%;
+  min-height: var(--md-comp-search-bar-container-height);
+  padding-inline: var(--md-comp-search-bar-leading-space)
+    var(--md-comp-search-bar-trailing-space);
+  border-radius: var(--md-comp-search-bar-container-shape);
+  background-color: var(--md-comp-search-bar-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("3");
+
+  // An icon *button* already insets its glyph by 12dp, so M3 pulls the end
+  // space in to 4dp beside one. A bare glyph keeps the full 16dp.
+  // A `form[method="dialog"]` wrapper is spelled out rather than folded into
+  // the compound: `:has()` may not be nested inside `:has()`, and because the
+  // argument list is forgiving, `form:has(> .icon-button)` in there would be
+  // dropped silently rather than reported.
+  &:has(> .icon-button:first-child),
+  &:has(> form:first-child > .icon-button) {
+    --md-comp-search-bar-leading-space: 4px;
+  }
+
+  // The docked view is a child of the bar but out of flow, so the last
+  // *control* is the last child that is not it - `:last-child` alone reads the
+  // view as the trailing element and leaves the icon button on 16dp.
+  &:has(> .icon-button:nth-last-child(1 of :not(.search-view))),
+  &:has(> form:nth-last-child(1 of :not(.search-view)) > .icon-button) {
+    --md-comp-search-bar-trailing-space: 4px;
+  }
+
+  // A leading or trailing action wrapped in `form[method="dialog"]` - how the
+  // full-screen view closes itself without script.
+  > form {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  > #{$icon} {
+    flex: 0 0 auto;
+    font-size: var(--md-comp-search-bar-icon-size);
+    width: var(--md-comp-search-bar-icon-size);
+    height: var(--md-comp-search-bar-icon-size);
+    line-height: var(--md-comp-search-bar-icon-size);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  > #{$icon}:nth-last-child(1 of :not(.search-view)) {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  // The input carries none of the text-field chrome: no underline, no floating
+  // label, no 56dp block of its own. It is the bar that is the container.
+  input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    color: var(--md-sys-color-on-surface);
+    @include typescale("body-large");
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    // The UA's own clear affordance duplicates the trailing icon button M3
+    // asks for, and cannot be styled to match it.
+    &::-webkit-search-cancel-button {
+      appearance: none;
+    }
+  }
+
+  // Pre-1.0 `.searchbar` sat in a navbar beside a fixed drawer.
+  &.has-sidebar {
+    margin-inline-start: 0;
+
+    @include bp-up("expanded") {
+      margin-inline-start: 300px;
+    }
+  }
+}
+
+.search-view {
+  --md-comp-search-view-container-color: var(--md-sys-color-surface-container-high);
+  --md-comp-search-view-container-shape: 28px;
+  --md-comp-search-view-header-height: 56px;
+  --md-comp-search-view-divider-color: var(--md-sys-color-outline);
+  --md-comp-search-view-bar-results-gap: 2px;
+  --md-comp-search-view-max-height: 60vh;
+
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  top: calc(100% + var(--md-comp-search-view-bar-results-gap));
+  display: flex;
+  flex-direction: column;
+  max-height: var(--md-comp-search-view-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--md-comp-search-view-container-shape);
+  background-color: var(--md-comp-search-view-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("3");
+
+  // `hidden` is how the docked view is closed, and `display: flex` above would
+  // beat it.
+  &[hidden] {
+    display: none;
+  }
+
+  // The view's own header is a search bar with the pill taken off - the same
+  // markup, so nothing new to learn for the full-screen variant.
+  > #{$_bar} {
+    flex: 0 0 auto;
+    min-height: var(--md-comp-search-view-header-height);
+    border-radius: 0;
+    background-color: transparent;
+    @include z-depth("0");
+  }
+
+  > hr {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: var(--md-comp-search-view-divider-color);
+  }
+
+  > .list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    margin: 0;
+    padding-block: 8px;
+  }
+}
+
+// Full-screen. The UA caps a modal dialog at `calc(100% - 2em - 6px)`, so
+// width: 100% alone leaves a strip of scrim down the side - the same clearing
+// dialog.max and the bottom sheet already do.
+.search-view.full-screen {
+  --md-comp-search-view-container-shape: 0;
+  --md-comp-search-view-header-height: 72px;
+  --md-comp-search-view-max-height: none;
+
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+
+  &::backdrop {
+    background: none;
+    backdrop-filter: none;
+  }
+}

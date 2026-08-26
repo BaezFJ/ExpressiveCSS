@@ -279,30 +279,6 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
   display: inline-block;
 }
 
-.searchbar {
-  > i:first-child {
-    position: absolute;
-    padding-left: 1rem;
-    top: 0;
-    user-select: none;
-    display: flex;
-    align-self: center;
-  }
-
-  > input {
-    border-width: 0;
-    background-color: transparent;
-    padding-left: 3rem;
-  }
-}
-
-.searchbar.has-sidebar {
-  margin-left: 0;
-  @include bp-up("expanded") {
-    margin-left: 300px;
-  }
-}
-
 textarea {
   width: 100%;
   height: 3rem;

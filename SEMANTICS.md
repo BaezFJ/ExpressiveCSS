@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**45 of 45 rows enforced; 0 remaining.**
+**46 of 46 rows enforced; 0 remaining.**
 
-42 of those rows are components - a part of the framework an author writes markup for.
+43 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 42 components declare conformance debt.**
+**4 of 43 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -498,6 +498,20 @@ Swept 0.8.0. The sections it watches are the author's own; the table of contents
 | `toc-in-nav` | forbid | `.table-of-contents:not(nav):not(nav *)` | must not match |
 
 - **toc-in-nav** - A table of contents is a set of destinations within the page. It belongs in a labelled <nav>.
+
+### search
+
+The bar is a `<search>` landmark holding an `<input type="search">`; the view is the surface it expands into. Suggestions are Autocomplete's - `class="autocomplete"` on the bar's input gives the combobox, its listbox and the keyboard contract that are already implemented and tested there, so this component neither duplicates them nor ships a second, weaker copy. Full-screen the view is a `<dialog>`, so the dialog rules carry it.
+
+**Rejected role:** `listbox` is not withheld but declined - the view is a surface holding content - recent searches, results, filters - reached with Tab, not a set of options over which one keyboard focus moves. Where a page does want a suggestion listbox, that pattern is Autocomplete's and Autocomplete implements it; a second listbox here would be the same promise with no keyboard model behind it.. `search-view-not-a-composite-widget` enforces that, keeping every composite role out.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `search-view-not-a-composite-widget` | forbid-composite-roles | `.search-view` | must not match with any composite role |
+| `search-bar-holds-a-search-input` | forbid | `.search-bar input:not([type="search"])` | must not match |
+
+- **search-view-not-a-composite-widget** - The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
+- **search-bar-holds-a-search-input** - The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it.
 
 ### side-sheet
 

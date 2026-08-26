@@ -744,6 +744,31 @@
         }
       ]
     },
+    "search": {
+      "status": "enforced",
+      "note": "The bar is a `<search>` landmark holding an `<input type=\"search\">`; the view is the surface it expands into. Suggestions are Autocomplete's - `class=\"autocomplete\"` on the bar's input gives the combobox, its listbox and the keyboard contract that are already implemented and tested there, so this component neither duplicates them nor ships a second, weaker copy. Full-screen the view is a `<dialog>`, so the dialog rules carry it.",
+      "rejects": {
+        "rejected_role": "listbox",
+        "because": "the view is a surface holding content - recent searches, results, filters - reached with Tab, not a set of options over which one keyboard focus moves. Where a page does want a suggestion listbox, that pattern is Autocomplete's and Autocomplete implements it; a second listbox here would be the same promise with no keyboard model behind it.",
+        "rule": "search-view-not-a-composite-widget"
+      },
+      "rules": [
+        {
+          "id": "search-view-not-a-composite-widget",
+          "kind": "forbid-composite-roles",
+          "selector": ".search-view",
+          "fragmentSafe": true,
+          "message": "The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input."
+        },
+        {
+          "id": "search-bar-holds-a-search-input",
+          "kind": "forbid",
+          "selector": ".search-bar input:not([type=\"search\"])",
+          "fragmentSafe": true,
+          "message": "The bar's control is a search input. `type=\"search\"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it."
+        }
+      ]
+    },
     "scrollspy": {
       "status": "enforced",
       "note": "Swept 0.8.0. The sections it watches are the author's own; the table of contents beside them is markup the author writes, which is what keeps this a component and not a behavior. `_table_of_contents.scss` styles that list and states no component of its own, so the rule for it lives here.",

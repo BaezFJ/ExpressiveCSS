@@ -59,6 +59,36 @@ below is the whole story for that component.
   **Migration.** `extend small` carries the `title-medium` label Material
   gives it, where it used to keep `label-large` from the sizeless `extend`.
   A sizeless `extend` is unchanged.
+- **Search bar and search view.** `search.search-bar` is Material 3's search
+  bar — 56dp on a full corner, `surface-container-high` at elevation 3, holding
+  a bare `<input type="search">` with none of the text-field chrome. Values are
+  `md.comp.search-bar.*` / `md.comp.search-view.*` at DSP 34.0.21. End spacing
+  reads the bar's own children: 16dp beside a bare glyph, 4dp beside an icon
+  button, which already insets its glyph by 12dp. The `<search>` element is the
+  landmark, so there is no `role="search"` to author.
+
+  `.search-view` is the surface the bar expands into, and it is two different
+  native elements because the variants want two different behaviours. Docked,
+  it is a plain element inside the bar, toggled with `hidden`: a modeless
+  `<dialog>.show()` moves focus into the dialog and would take the caret out of
+  the input being typed in. Full-screen, it is a
+  `dialog.search-view.full-screen` opened with `showModal()`, so Escape and
+  light dismiss come from the platform and `behaviors/dialogs.ts`. Its header
+  is another `.search-bar` with the pill and shadow taken off — the same markup
+  either way. No JavaScript component ships with it.
+
+  **Suggestions stay Autocomplete's.** `class="autocomplete"` on the bar's
+  input gives the combobox, its listbox and the keyboard contract already
+  implemented and tested there, so nothing here duplicates them. The search
+  view itself *rejects* `listbox` rather than owing it: its contents are links
+  and buttons reached with Tab, and a second suggestion listbox here would be
+  the same promise with no keyboard model behind it. `semantics.json` records
+  the rejection.
+
+  **Migration.** `.searchbar`, the pre-1.0 Materialize navbar search field,
+  is now an alias of `.search-bar` and moves out of `forms/_input-fields.scss`
+  into `components/_search.scss`. Old markup keeps working and picks up the M3
+  container; `tests/m3-naming.test.js` holds the alias to every rule.
 - **FAB menu.** `fab-menu` is Material 3 Expressive's FAB menu: a FAB that
   expands into a list of labelled pills — 56dp tall, full corner, 24dp insets,
   a `title-medium` label — and morphs into the close button while it is open.

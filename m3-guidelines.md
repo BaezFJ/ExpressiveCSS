@@ -1048,6 +1048,20 @@ Three **selection controls**. They are not interchangeable.
 
 ---
 
+## 8.10 Search
+
+**M3:** Search bar + search view. **ExpressiveCSS:** `search.search-bar` for the bar, `.search-view` for the surface it expands into. CSS only.
+
+**Use when** the user types a query the product answers with results, and the result set is too big or too fresh to be a list of destinations.
+
+**Don't use** for filtering a form field — that is Autocomplete, which the bar composes with rather than duplicating: put `autocomplete` on the bar's input and the combobox and its listbox come from there.
+
+**Placement.** Top of the screen, above the content it searches. In an app bar, it replaces the headline rather than sitting beside it.
+
+**Behaviors.** Docked view (a `.search-view` inside the bar, toggled with `hidden`) at Medium and up; full-screen view (a `dialog.search-view.full-screen` opened with `showModal()`) at Compact. The view takes no composite role — its contents are links and buttons reached with Tab.
+
+---
+
 # 9. Display and feedback
 
 ## 9.1 Progress and loading
@@ -1109,7 +1123,6 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 
 | M3 component | Substitute in ExpressiveCSS |
 | --- | --- |
-| Search bar + search view | Text field with a leading `search` icon, or a destination in the nav. There is no docked search view. |
 | Split button | Filled button + a separate `menu-trigger` icon button. Do not glue them into a fake split control. |
 | Button groups (standard / connected) | Separate buttons, or filter chips, or radios styled in a `<nav>`. No shape-morphing group. |
 | FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
@@ -1200,6 +1213,8 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Date / time | `input.datepicker` / `.timepicker` | Label in `.field` | AutoInit |
 | Progress | `progress.progress` or circular markup | `value` if determinate | — |
 | Carousel | `.carousel` | Item children | AutoInit |
+| Search bar | `search.search-bar` | `input[type=search]` + `aria-label` | — |
+| Search view | `.search-view` (or `dialog.search-view.full-screen`) | Content; header is a `.search-bar` | `hidden` / `showModal()` |
 
 ---
 
