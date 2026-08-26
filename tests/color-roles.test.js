@@ -66,9 +66,25 @@ describe('Vibrant emphasis', () => {
     }
   });
 
-  test('the accent ramp is a parameter', () => {
-    assert.match(block('vibrant=primary'), /var\(--md-sys-color-primary-container\)/);
-    assert.match(block('vibrant=secondary'), /var\(--md-sys-color-secondary-container\)/);
+  test('it leaves every accent and outline role alone', () => {
+    // The remap is a surface change and nothing else. Pointing an accent role
+    // at the container erases every component whose own fill is that container
+    // - a tonal button, a FAB, .toolbar.vibrant - and deriving outline from
+    // the text color turns 40 borders, checkboxes and switches among them,
+    // translucent.
+    const rule = block('vibrant');
+    for (const role of [
+      'primary', 'secondary', 'tertiary', 'error',
+      'primary-container', 'secondary-container', 'tertiary-container',
+      'outline', 'outline-variant', 'surface-tint',
+      'inverse-surface', 'inverse-on-surface', 'scrim',
+    ]) {
+      assert.doesNotMatch(
+        rule,
+        new RegExp(`--md-sys-color-${role}:`),
+        `[vibrant] remaps --md-sys-color-${role}, which is not a surface role`
+      );
+    }
   });
 
   test('it points at live roles, so a runtime theme switch follows', () => {

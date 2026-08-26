@@ -585,23 +585,25 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
         <article vibrant>
           <p class="title-medium mt-0">Vibrant surface</p>
           <p>
-            This panel sets <code>vibrant</code> on itself. Its background,
-            text, and outline come from the tertiary container; the filled and
-            tonal buttons still read <code>primary</code>, so they keep
-            standing out against it. Flip the theme and it follows.
+            This panel is an ordinary Card — an <code>&lt;article&gt;</code>,
+            with no vibrant styling of its own anywhere in the sheet. It
+            carries the attribute, so the surface and text roles it already
+            read resolve to the tertiary container instead. The buttons still
+            read <code>primary</code> and keep standing out against it, and
+            outlines stay neutral. Flip the theme and it follows.
           </p>
           <a class="button filled mr-2 mb-2">Filled</a>
           <a class="button tonal mr-2 mb-2">Tonal</a>
           <a class="button outlined mr-2 mb-2">Outlined</a>
         </article>
         <p>
-          The accent ramp is a parameter. A bare <code>vibrant</code> is
-          tertiary, which is what Material uses for the axis;
-          <code>vibrant="primary"</code> and <code>vibrant="secondary"</code>
-          pick another.
+          There is one ramp, and it is tertiary — what Material uses for the
+          axis. Pointing the surfaces at primary or secondary instead would
+          erase every component whose own fill is that container: a tonal
+          button, a FAB, <code>.toolbar.vibrant</code> itself. If you want a
+          different one, set the surface tokens on your own wrapper the way
+          <a href="#creating-theme">Creating a theme</a> shows for any token.
         </p>
-<pre><code>&lt;article vibrant="primary"&gt;…&lt;/article&gt;
-&lt;article vibrant="secondary"&gt;…&lt;/article&gt;</code></pre>
         <p>
           Two things to know. The elevation ladder collapses — every
           <code>surface-container</code> rung resolves to the one container

@@ -1,3 +1,5 @@
+@use "sass:list";
+@use "sass:string";
 @use "../abstracts" as *;
 
 // Vibrant emphasis (M3 Expressive).
@@ -6,9 +8,9 @@
 // component, drawn on an accent container instead of a neutral surface. M3
 // ships it as a parallel token set per component - md.comp.menus-vibrant,
 // md.comp.toolbar-vibrant, VibrantTimePickerDialog in Compose - which means
-// every component that gains the axis copies the same eight mappings and every
-// one of them can drift. Here it is one subtree remap of the surface family,
-// so a component needs no vibrant code at all to sit in a vibrant surface.
+// every component that gains the axis restates the same mappings and every one
+// of them can drift. Here it is one subtree remap of the surface family, so a
+// component needs no vibrant code at all to sit on a vibrant surface.
 //
 // The mechanism is the one tokens/_theme.scss already relies on: a custom
 // property redeclared on an element is inherited by everything under it, and a
@@ -16,42 +18,55 @@
 // So [vibrant] follows a runtime theme switch for free - it points at the live
 // --md-sys-color-* roles, not at the -light / -dark pair behind them.
 //
-// The accent ramp is a parameter. Bare [vibrant] is tertiary, which is what M3
-// uses for the axis; [vibrant='primary'] and [vibrant='secondary'] pick
-// another. Nothing is restyled until an author writes the attribute.
+// What is deliberately NOT remapped, because a vibrant surface is a surface
+// change and nothing else:
 //
-// The elevation ladder deliberately collapses: every surface-container rung
-// resolves to the one container color, because that is what a vibrant surface
-// is in M3 and inventing intermediate tints would put five numbers in the
-// framework that the spec does not have. The consequence is that nesting
-// surfaces inside a vibrant subtree stops distinguishing them - put [vibrant]
-// on the component you want emphasized, not on the page.
+//   accent roles     primary, secondary, tertiary and their containers keep
+//                    their values, which is what lets a filled button still
+//                    stand out on a vibrant panel. It is also the constraint
+//                    that keeps this to one ramp: tertiary is what M3 uses for
+//                    the axis, and pointing the surfaces at primary or
+//                    secondary instead would erase every component whose own
+//                    fill is that container - a tonal button, a FAB, and
+//                    .toolbar.vibrant itself. An author who wants a different
+//                    ramp sets --md-sys-color-surface* on their own wrapper,
+//                    the way the Themes page already shows for any token.
+//   outline roles    neutral-variant in M3, not an opacity of the text color.
+//                    Deriving them from on-*-container turns every checkbox,
+//                    radio and switch border inside the subtree translucent.
+//   surface-tint     an accent despite the name - it is the elevation tint.
+//   inverse-*, scrim they exist to contrast with the page, not to follow it.
+//
+// The elevation ladder does collapse: every surface-container rung resolves to
+// the one container color, because that is what a vibrant surface is in M3 and
+// inventing intermediate tints would put five numbers in the framework that the
+// spec does not have. on-surface-variant collapses onto on-surface for the same
+// reason - the container has one text color. The consequence of both is that
+// nesting surfaces inside a vibrant subtree stops distinguishing them, so put
+// [vibrant] on the component you want emphasized, not on the page.
+//
+// A component that carries its own .vibrant class - Menu, Toolbar - is
+// unaffected inside a vibrant subtree: those rules are in the components layer
+// and beat this one, so each keeps the colors its own M3 token set gives it.
 
-// Every surface role that resolves to the accent container, flat.
-$_vibrant-surfaces:
-  "surface", "surface-dim", "surface-bright", "surface-variant", "background",
-  "surface-container-lowest", "surface-container-low", "surface-container",
-  "surface-container-high", "surface-container-highest";
-
-@mixin _vibrant($ramp) {
-  @each $role in $_vibrant-surfaces {
-    --md-sys-color-#{$role}: var(--md-sys-color-#{$ramp}-container);
+// Every surface role, derived rather than restated: a rung added to
+// $sys-color-roles and forgotten here would keep its neutral value and sit as a
+// grey patch on an accent one. `on-` and `inverse-surface` are excluded by the
+// prefix test; surface-tint by name, per the note above.
+$_vibrant-surfaces: ();
+@each $role in $sys-color-roles {
+  @if $role == "background" or
+      (string.index($role, "surface") == 1 and $role != "surface-tint") {
+    $_vibrant-surfaces: list.append($_vibrant-surfaces, $role);
   }
-
-  --md-sys-color-on-surface: var(--md-sys-color-on-#{$ramp}-container);
-  --md-sys-color-on-surface-variant: var(--md-sys-color-on-#{$ramp}-container);
-  --md-sys-color-on-background: var(--md-sys-color-on-#{$ramp}-container);
-
-  // Outlines are the text color at the opacity M3 gives them on a neutral
-  // surface, so a divider tints with the container instead of staying grey.
-  --md-sys-color-outline: color-mix(in oklab, var(--md-sys-color-on-#{$ramp}-container) 60%, transparent);
-  --md-sys-color-outline-variant: color-mix(in oklab, var(--md-sys-color-on-#{$ramp}-container) 20%, transparent);
 }
 
-[vibrant] { @include _vibrant("tertiary"); }
+[vibrant] {
+  @each $role in $_vibrant-surfaces {
+    --md-sys-color-#{$role}: var(--md-sys-color-tertiary-container);
+  }
 
-// tertiary is not in the loop: [vibrant] already matches [vibrant='tertiary']
-// and emits the same declarations, so generating it again is dead CSS.
-@each $ramp in ("primary", "secondary") {
-  [vibrant="#{$ramp}"] { @include _vibrant($ramp); }
+  --md-sys-color-on-surface: var(--md-sys-color-on-tertiary-container);
+  --md-sys-color-on-surface-variant: var(--md-sys-color-on-tertiary-container);
+  --md-sys-color-on-background: var(--md-sys-color-on-tertiary-container);
 }

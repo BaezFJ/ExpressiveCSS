@@ -20,10 +20,13 @@ below is the whole story for that component.
   `vibrant` attribute remaps the surface family of `--md-sys-color-*` roles for
   its whole subtree onto an accent container, so a component needs no vibrant
   code of its own to sit on one — the same inheritance trick `tokens/_theme.scss`
-  uses for `light-dark()`. A bare `vibrant` is tertiary, which is what Material
-  uses for the axis; `vibrant="primary"` and `vibrant="secondary"` pick another
-  ramp. It points at the live role names rather than the `-light` / `-dark`
-  pair, so a runtime theme switch reaches it. Nothing is restyled by default,
+  uses for `light-dark()`. It points at the live role names rather than the
+  `-light` / `-dark` pair, so a runtime theme switch reaches it. There is one
+  ramp, tertiary, which is what Material uses for the axis: accent and outline
+  roles are deliberately left alone, since pointing the surfaces at primary or
+  secondary would erase every component whose own fill is that container, and
+  deriving outline from the text colour would turn every checkbox, radio and
+  switch border in the subtree translucent. Nothing is restyled by default,
   and the `.vibrant` classes on Menu and Toolbar are unchanged: those are
   Material's own per-component token sets, with the colours that spec gives
   each one. The elevation ladder collapses inside a vibrant subtree — every

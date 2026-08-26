@@ -192,7 +192,7 @@ Switch at runtime by changing the attribute:
 document.documentElement.setAttribute('theme', 'dark');
 ```
 
-Add the `vibrant` attribute to any element to draw its subtree on an accent container instead of a neutral surface (`vibrant`, `vibrant="primary"`, `vibrant="secondary"`).
+Add the `vibrant` attribute to an element to resolve the surface roles in its subtree to the tertiary container instead of a neutral surface. It repaints nothing itself — it redeclares tokens, and the components under it that already read those roles follow.
 
 The live Material tokens use the `--md-sys-color-<role>` naming scheme. Override `--md-source` to generate the primary, secondary, tertiary, neutral, and neutral-variant ramps at runtime. Use the live role token in component CSS rather than a `-light` or `-dark` source token.
 
@@ -637,17 +637,17 @@ The full list of role utilities lives on the Color page. Pair a fill with its `o
 
 ### Vibrant emphasis
 
-`vibrant` is Material 3 Expressive's emphasis axis, and it is a foundation rather than a component variant: the attribute remaps the surface family of `--md-sys-color-*` roles inside its subtree onto an accent container, and every component already reads those roles. Nothing is restyled until you write the attribute.
+`vibrant` is Material 3 Expressive's emphasis axis, and it is a foundation rather than a component variant: the attribute remaps the surface family of `--md-sys-color-*` roles inside its subtree onto the tertiary container, and every component already reads those roles. Nothing is restyled until you write the attribute.
 
 ```html
 <article vibrant>…</article>
-<article vibrant="primary">…</article>
-<article vibrant="secondary">…</article>
 ```
 
-A bare `vibrant` is tertiary. The remap covers `surface`, `background`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, `surface-variant`, their `on-*` roles, and the two outline roles; accent roles such as `primary` are untouched, so a filled button still stands out. It points at the live role names, so a runtime theme switch reaches it.
+The remap covers `surface`, `background`, all five `surface-container` rungs, `surface-dim`, `surface-bright`, `surface-variant`, and their `on-*` roles. Accent roles are untouched, so a filled button still stands out; outline roles are untouched too, because M3's outline is neutral-variant rather than an opacity of the text color, and deriving it would turn every checkbox, radio and switch border in the subtree translucent. It points at the live role names, so a runtime theme switch reaches it.
 
-The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis.
+There is one ramp, tertiary — M3's for this axis. Pointing the surfaces at primary or secondary would erase every component whose own fill is that container: a tonal button, a FAB, `.toolbar.vibrant`. Set the surface tokens on your own wrapper if you want a different one.
+
+The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material, and `on-surface-variant` collapses onto `on-surface` for the same reason — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis.
 
 ---
 
