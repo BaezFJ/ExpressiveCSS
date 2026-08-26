@@ -184,20 +184,34 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   border-radius: 9999px;
 }
 
-// Extended FAB: 56dp, large corners, primary-container, icon + label.
+// Extended FAB: an icon plus a label, on its own size and colour axes.
 //
-// Tokens (M3 md.comp.extended-fab.*):
-//   --md-comp-extended-fab-container-height   56dp
-//   --md-comp-extended-fab-container-shape    16dp, corner.large
-//   --md-comp-extended-fab-icon-size          24dp
-//   --md-comp-extended-fab-leading-space      16dp
-//   --md-comp-extended-fab-icon-label-space   8dp
-//   --md-comp-extended-fab-trailing-space     20dp
-// .small resets those six; nothing else varies by size.
+// Tokens (M3 md.comp.extended-fab.*, DSP 34.0.21). The sizeless case is the
+// base family; the three named sizes are `md.comp.extended-fab.{size}.*`:
+//
+//   size      height  shape  icon  lead  gap  trail  label
+//   (none)      56      16    24    16     8    20   label-large
+//   small       56      16    24    16     8    16   title-medium
+//   medium      80      20    28    26    12    26   title-large
+//   large       96      28    36    28    16    28   headline-small
+//
+// Leading and trailing space are equal at every named size, so the map states
+// one `space`; only the base family keeps M3's older 16/20 asymmetry.
+//
+// The colour axis is M3's three container roles, and it runs through two
+// tokens rather than a background per variant: the state layers mix the label
+// colour into the container colour, so a role that only sets the two tokens
+// gets its own hover and focus for free.
 //
 // `font-size` is restated because the size classes are the same one class
-// this rule is: `.small` sets label-medium and would otherwise shrink the
-// label of a `extend small`, which is label-large at every extended size.
+// this rule is: `.small` sets label-large from the common-button ladder and
+// would otherwise decide the label of an `extend small`.
+$_extend-sizes: (
+  "small": (height: 56px, shape: 16px, icon: 24px, space: 16px, gap: 8px, label: "title-medium"),
+  "medium": (height: 80px, shape: 20px, icon: 28px, space: 26px, gap: 12px, label: "title-large"),
+  "large": (height: 96px, shape: 28px, icon: 36px, space: 28px, gap: 16px, label: "headline-small"),
+);
+
 :where(#{$_btn}).extend {
   --md-comp-extended-fab-container-height: 56px;
   --md-comp-extended-fab-container-shape: 16px;
@@ -205,6 +219,10 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   --md-comp-extended-fab-leading-space: 16px;
   --md-comp-extended-fab-icon-label-space: 8px;
   --md-comp-extended-fab-trailing-space: 20px;
+  --md-comp-extended-fab-container-color: var(--md-sys-color-primary-container);
+  --md-comp-extended-fab-label-text-color: var(
+    --md-sys-color-on-primary-container
+  );
 
   gap: var(--md-comp-extended-fab-icon-label-space);
   height: var(--md-comp-extended-fab-container-height);
@@ -212,16 +230,16 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     var(--md-comp-extended-fab-trailing-space);
   border-radius: var(--md-comp-extended-fab-container-shape);
   font-size: var(--md-sys-typescale-label-large-font-size);
-  color: var(--md-sys-color-on-primary-container);
-  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-comp-extended-fab-label-text-color);
+  background-color: var(--md-comp-extended-fab-container-color);
   @include z-depth("3");
 
   &:hover {
     @include z-depth("4");
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary-container) state-opacity("hover"),
-      var(--md-sys-color-primary-container)
+      var(--md-comp-extended-fab-label-text-color) state-opacity("hover"),
+      var(--md-comp-extended-fab-container-color)
     );
   }
 
@@ -229,8 +247,8 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
   &:focus {
     background-color: color-mix(
       in oklab,
-      var(--md-sys-color-on-primary-container) state-opacity("focus"),
-      var(--md-sys-color-primary-container)
+      var(--md-comp-extended-fab-label-text-color) state-opacity("focus"),
+      var(--md-comp-extended-fab-container-color)
     );
   }
 
@@ -243,14 +261,31 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
     line-height: var(--md-comp-extended-fab-icon-size);
   }
 
-  // Small extended FAB: 56dp on a symmetric 16dp inset.
-  &.small {
-    --md-comp-extended-fab-container-height: 56px;
-    --md-comp-extended-fab-container-shape: 16px;
-    --md-comp-extended-fab-icon-size: 24px;
-    --md-comp-extended-fab-leading-space: 16px;
-    --md-comp-extended-fab-icon-label-space: 8px;
-    --md-comp-extended-fab-trailing-space: 16px;
+  // The size axis. Every size sets the same six tokens and its type role -
+  // the geometry is written once, above, against those tokens.
+  @each $name, $s in $_extend-sizes {
+    &.#{$name} {
+      --md-comp-extended-fab-container-height: #{map.get($s, height)};
+      --md-comp-extended-fab-container-shape: #{map.get($s, shape)};
+      --md-comp-extended-fab-icon-size: #{map.get($s, icon)};
+      --md-comp-extended-fab-leading-space: #{map.get($s, space)};
+      --md-comp-extended-fab-icon-label-space: #{map.get($s, gap)};
+      --md-comp-extended-fab-trailing-space: #{map.get($s, space)};
+      @include typescale(map.get($s, label));
+    }
+  }
+
+  // The colour axis. `.primary-container` is the default and is named anyway,
+  // so all three roles are a class a page can be written with.
+  @each $role in ("primary", "secondary", "tertiary") {
+    &.#{$role}-container {
+      --md-comp-extended-fab-container-color: var(
+        --md-sys-color-#{$role}-container
+      );
+      --md-comp-extended-fab-label-text-color: var(
+        --md-sys-color-on-#{$role}-container
+      );
+    }
   }
 }
 

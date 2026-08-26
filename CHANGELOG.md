@@ -41,6 +41,24 @@ below is the whole story for that component.
   selection would otherwise disappear into its own surface. Material's
   `menus-vibrant` moves selection to solid `tertiary`, which the class already
   did, and FormSelect's option fill reads the same token so it follows.
+- **The extended FAB took Material 3's size and colour axes.** `extend medium`
+  is 80dp with a 28dp icon, 20dp corners and a `title-large` label; `extend
+  large` is 96dp with a 36dp icon, 28dp corners and a `headline-small` label.
+  The container colour is a role rather than a value — `primary-container` is
+  the default, `secondary-container` and `tertiary-container` are the other
+  two — and each sets `--md-comp-extended-fab-container-color` and
+  `--md-comp-extended-fab-label-text-color` together, so the hover and focus
+  state layers, which mix one into the other, follow the role with it. The
+  three colour utilities that name those roles step aside for `.extend`
+  (`.primary-container:not(.extend)`, and the same for the other two):
+  utilities win by layer rather than weight, so a bare role class on an
+  extended FAB would have repainted the container and left the label colour
+  and both state layers behind. The other 46 roles are untouched — a role the
+  component does not name has nothing to lose.
+
+  **Migration.** `extend small` carries the `title-medium` label Material
+  gives it, where it used to keep `label-large` from the sizeless `extend`.
+  A sizeless `extend` is unchanged.
 - **Carousel can advance on its own, with a pause contract that cannot be
   switched off.** An `interval` (milliseconds, `0` and off by default) cycles
   the track; `pause()` and `start()` stop and resume it. The gap follows each

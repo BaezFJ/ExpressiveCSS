@@ -431,6 +431,98 @@ describe('FAB container shape', () => {
     assert.match(small, /--md-comp-extended-fab-trailing-space:\s*16px/);
   });
 
+  // md.comp.extended-fab.{small,medium,large}.*, DSP 34.0.21. Leading and
+  // trailing space are equal at every named size; only the sizeless base
+  // family keeps M3's older 16/20 asymmetry.
+  const EXTENDED_SIZES = {
+    small: { height: 56, shape: 16, icon: 24, space: 16, gap: 8, label: 'title-medium' },
+    medium: { height: 80, shape: 20, icon: 28, space: 26, gap: 12, label: 'title-large' },
+    large: { height: 96, shape: 28, icon: 36, space: 28, gap: 16, label: 'headline-small' }
+  };
+
+  for (const [size, spec] of Object.entries(EXTENDED_SIZES)) {
+    test(`the ${size} extended FAB is ${spec.height}dp with a ${spec.icon}dp icon`, () => {
+      const rule = new RegExp(`\\.extend\\.${size}[^{]*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+      assert.ok(rule, `no .extend.${size} rule in the sheet`);
+      for (const [token, value] of [
+        ['container-height', spec.height],
+        ['container-shape', spec.shape],
+        ['icon-size', spec.icon],
+        ['leading-space', spec.space],
+        ['icon-label-space', spec.gap],
+        ['trailing-space', spec.space]
+      ]) {
+        assert.match(rule, new RegExp(`--md-comp-extended-fab-${token}:\\s*${value}px`));
+      }
+      // The label grows with the size, and the size class is the same one
+      // class the extended FAB's own rule is - so it has to restate the role
+      // or the base rule's label-large decides it.
+      assert.match(
+        rule,
+        new RegExp(`font-size:\\s*var\\(--md-sys-typescale-${spec.label}-font-size\\)`)
+      );
+    });
+  }
+
+  test('the colour roles set tokens, so the state layers follow the role', () => {
+    // The hover and focus layers mix the label colour into the container
+    // colour. A role that painted `background-color` directly would keep the
+    // primary-container state layers underneath it.
+    for (const role of ['primary', 'secondary', 'tertiary']) {
+      const rule =
+        new RegExp(`\\.extend\\.${role}-container[^{]*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+      assert.ok(rule, `no .extend.${role}-container rule in the sheet`);
+      assert.match(
+        rule,
+        new RegExp(
+          `--md-comp-extended-fab-container-color:\\s*var\\(\\s*--md-sys-color-${role}-container`
+        )
+      );
+      assert.match(
+        rule,
+        new RegExp(
+          `--md-comp-extended-fab-label-text-color:\\s*var\\(\\s*--md-sys-color-on-${role}-container`
+        )
+      );
+    }
+
+    for (const state of ['hover', 'focus']) {
+      const rule = new RegExp(`\\.extend:${state}[^{]*\\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+      assert.ok(rule, `no .extend:${state} rule in the sheet`);
+      assert.match(
+        rule,
+        new RegExp(
+          `color-mix\\(in oklab, var\\(--md-comp-extended-fab-label-text-color\\) .*` +
+            `var\\(--md-comp-extended-fab-container-color\\)\\)`
+        ),
+        `the ${state} layer does not mix the extended FAB's own colour tokens`
+      );
+    }
+  });
+
+  test('a colour utility does not repaint the extended FAB', () => {
+    // Utilities are emitted after components and win by layer order, not by
+    // weight: a bare `.secondary-container` would replace the container
+    // colour and leave the label colour and both state layers behind.
+    for (const role of ['primary-container', 'secondary-container', 'tertiary-container']) {
+      assert.doesNotMatch(css, new RegExp(`\\.${role}\\s*\\{\\s*background-color:`));
+      assert.match(css, new RegExp(`\\.${role}:not\\(\\.extend\\)\\s*\\{\\s*background-color:`));
+    }
+  });
+
+  test('every extended FAB token a rule reads is one the sheet declares', () => {
+    // The whole component was a comment block and a token family that no
+    // rule ever read; a var() naming an undeclared property is the same
+    // failure with the rule present.
+    const declared = new Set(
+      [...css.matchAll(/(--md-comp-extended-fab-[\w-]+)\s*:/g)].map((m) => m[1])
+    );
+    const read = new Set(
+      [...css.matchAll(/var\(\s*(--md-comp-extended-fab-[\w-]+)/g)].map((m) => m[1])
+    );
+    assert.deepEqual([...read].filter((p) => !declared.has(p)), []);
+    assert.deepEqual([...declared].filter((p) => !read.has(p)), []);
+  });
   test('the FAB states its container and icon size as tokens', () => {
     assert.match(css, /--md-comp-fab-container-height:\s*56px/);
     assert.match(css, /--md-comp-fab-container-width:\s*56px/);
