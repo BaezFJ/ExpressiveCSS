@@ -426,6 +426,16 @@ content: `.slider:has([type='range'])` is the slider,
 kind keeps working and neither can be mistaken for the other. `Expressive.Slider`
 in *script* did change meaning — that one is a documented break.
 
+**The button size classes changed meaning too, and could not be aliased
+either.** `.small` was 32dp and `.large` 56dp; M3 names those `xsmall` and
+`medium`, and its `small` — 40dp — is the default size. Holding `.small` at
+32dp would put two names on one rung and leave M3's small with none, so the
+whole ladder would be off by one. `.extra` still resolves to the 56dp
+geometry, so `class="button extra"` is unchanged; `.small` and `.large` are
+breaks, recorded in the CHANGELOG's migration notes. This is a 1.0 change, and
+the only reason it is not a `.slider`-style content test is that a size has no
+content to tell it apart by.
+
 ## Sass architecture
 
 **Read `src/sass/README.md` before touching styles** — it is the working guide (layer map, the two rules, where new code goes). Summary:
