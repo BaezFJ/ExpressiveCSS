@@ -429,10 +429,22 @@ below is the whole story for that component.
 
   <!-- after -->
   <div class="carousel">
-    <div class="carousel-item"><img src="1.jpg" alt="First"><h3>One</h3></div>
-    <div class="carousel-item"><img src="2.jpg" alt="Second"><h3>Two</h3></div>
+    <div class="carousel-item">
+      <img src="1.jpg" alt="First">
+      <div class="carousel-item-content"><h3>One</h3></div>
+    </div>
+    <div class="carousel-item">
+      <img src="2.jpg" alt="Second">
+      <div class="carousel-item-content"><h3>Two</h3></div>
+    </div>
   </div>
   ```
+
+  `.carousel-item-content` is the caption slot and is not optional: the item
+  clips its overflow and the media fills its height, so a heading left as a
+  bare sibling is pushed out of the box rather than laid over the image the way
+  `.caption` was. It is also what the small and medium size roles hide and trim
+  against.
 
   ```js
   // before
