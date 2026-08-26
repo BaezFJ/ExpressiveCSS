@@ -33,7 +33,7 @@
 //   --md-comp-nav-drawer-user-view-ink-color
 //                                       text colour over that scrim
 
-:root {
+:root, :host {
   --md-comp-nav-drawer-width: 300px;
 }
 

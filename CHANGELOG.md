@@ -712,6 +712,22 @@ below is the whole story for that component.
 
 ### Fixed
 
+- **The sheet is now usable as a shadow root's only stylesheet.** Token
+  declarations were split between `:root, :host` and `:root` alone — three
+  blocks paired, five not, among them the whole reference layer at 338
+  declarations. A sheet adopted only into a shadow root
+  (`shadowRoot.adoptedStyleSheets`, no document-level copy) therefore lost every
+  one of those tokens, and because `tokens/_theme.scss` resolves each role as
+  `light-dark(var(--md-sys-color-<role>-light), …)` out of the `:root`-only
+  pairs, it lost every colour in the sheet rather than only the missing tokens.
+  Every token-declaring rule now carries its `:host` twin, `[icon-style]` and
+  the three `[theme]` selectors included, so a shadow tree can be pinned to a
+  theme or an icon style the way a page can.
+  `adr/0002-shadow-only-stylesheet-adoption.md` records the commitment and
+  `tests/shadow-dom.test.js` enforces it. The ordinary setup — framework in the
+  document, also adopted into components — was never affected, because custom
+  properties inherit through shadow boundaries.
+
 - **A menu opened from a trigger narrower than 112dp is sized to its own
   content.** `constrainWidth` wrote the trigger's width onto the surface and the
   surface's own `min-width: 112px` then overrode it, so any trigger under that

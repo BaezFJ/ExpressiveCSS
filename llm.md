@@ -495,7 +495,7 @@ Three rules decide which pair is live, in this order:
 2. If the user prefers dark and you have not set a theme attribute, @media (prefers-color-scheme: dark) uses the -dark pair.
 3. :root[theme='light'] and :root[theme='dark'] override both of the above.
 
-The attribute also sets `color-scheme` so native controls follow the same scheme. `:host` is there for shadow-DOM consumers; the docs site and a normal page use `:root`.
+The attribute also sets `color-scheme` so native controls follow the same scheme. Each of those rules is paired with a `:host([theme='…'])` twin, so a shadow host can be pinned to a theme the same way `<html>` can. Every token-declaring rule in the sheet carries that pairing: the sheet is supported as a shadow root's *only* stylesheet, and `:root` matches the document element and nothing else.
 
 This site always starts as `<html lang="en" theme="light">`. The moon icon in the navbar flips that attribute between `light` and `dark`. It does not read `prefers-color-scheme` and it does not persist to `localStorage`.
 

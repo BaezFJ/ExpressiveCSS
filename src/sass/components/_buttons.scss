@@ -25,7 +25,7 @@
 // a group sizes its items from the group, so it needs the same table, and a
 // partial may not @use another partial.
 
-:root {
+:root, :host {
   --md-comp-filled-button-container-color: var(--md-sys-color-primary);
   --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
   --md-comp-filled-button-container-shape: 9999px;

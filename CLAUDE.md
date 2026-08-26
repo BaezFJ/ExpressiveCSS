@@ -480,10 +480,12 @@ content to tell it apart by.
 
 Utilities are emitted **after** components now, and win by layer order rather than specificity. Their `!important` flags are deliberately retained: a normal declaration inside a layer loses to any *unlayered* consumer declaration, so dropping the flag would silently stop `.hide` beating a consumer's own `display`.
 
-Two hard invariants, both learned from bugs:
+Three hard invariants, all learned from bugs:
 
 - **Partials import `abstracts` and nothing else** (`@use "../abstracts" as *;`, one line, every file). That means no second *project-local* `@use`, which is what `src/sass/README.md` states and what keeps `expressive.scss` the only place cascade order is decided; a Sass built-in (`sass:map`, `sass:math`) is not a partial and carries no CSS, so it does not count — `utilities/_z-depth.scss` and `components/_icon-buttons.scss` both take one. `abstracts/` must never emit a selector.
 - **No `@extend` across files.** `@extend` only resolves if the extending file loads the defining module, which is why components used to `@use` CSS-emitting files and let the dependency graph — not the entry point — decide output position. Use `@include z-depth("1")` or write the declaration directly. Same-file `@extend` and placeholders are fine.
+
+- **A rule that declares a token pairs its anchor with a `:host` twin** — `:root` with `:host`, `:root[theme='dark']` with `:host([theme='dark'])`, `[vibrant]` with `:host([vibrant])`. The sheet is supported as a shadow root's *only* stylesheet (`adr/0002-shadow-only-stylesheet-adoption.md`), and `:root` matches the document element and nothing else, so an unpaired anchor leaves its tokens undefined there — which takes every declaration reading one down with it, invalid at computed-value time. `color-scheme` counts as a token: `light-dark()` resolves against the element's used value. This was half-applied for a long time and nothing caught it; `tests/shadow-dom.test.js` does now.
 
 Two color systems coexist:
 

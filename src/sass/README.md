@@ -131,6 +131,34 @@ only has to set `color-scheme: dark` and all 30 tokens re-resolve — and settin
 `color-scheme` on any subtree re-themes just that subtree. `color-scheme` is
 load-bearing now; changing it is not cosmetic.
 
+## Shadow roots
+
+The sheet is supported as a shadow root's **only** stylesheet — adopted into
+`shadowRoot.adoptedStyleSheets` with no copy in the document. So a rule that
+declares a token pairs its anchor with the `:host` twin that reaches the same
+elements from inside a shadow tree:
+
+```scss
+// no - :root matches the document element and nothing else, so this token
+// is simply absent in a shadow-only load, and every declaration reading it
+// is then invalid at computed-value time
+:root { --md-comp-nav-drawer-width: 300px; }
+
+// yes
+:root, :host { --md-comp-nav-drawer-width: 300px; }
+:root[theme='dark'], :host([theme='dark']) { color-scheme: dark; }
+[vibrant], :host([vibrant]) { … }
+```
+
+`color-scheme` counts as a token here: `light-dark()` resolves against the
+element's used `color-scheme`, so an unpaired `:root[theme='dark']` means a
+shadow tree cannot be pinned to a theme the way a page can.
+
+`:host` matches nothing in a document and weighs the same as `:root`, so
+pairing an anchor changes neither a normal load nor which rule wins.
+`tests/shadow-dom.test.js` fails any rule that skips it; the commitment behind
+it is `adr/0002-shadow-only-stylesheet-adoption.md`.
+
 ## Translucent colors
 
 ```scss

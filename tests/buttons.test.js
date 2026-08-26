@@ -62,7 +62,11 @@ describe('Button size axis', () => {
   test('a button with no size class is the small one', () => {
     // The default has to be a size on the ladder, or the axis is a lie: the
     // sheet would have five named sizes and a sixth unnamed one.
-    const root = ruleFor((s) => s === ':root');
+    // ':root, :host' is now shared by the theme mapping, the reference layer and
+    // this block, so pick it by what it declares rather than by its selector.
+    const root = rules.find(
+      (r) => r.selector === ':root, :host' && r.body.includes('--md-comp-filled-button-')
+    ).body;
     for (const [prop, value] of [
       ['container-height', '40px'],
       ['icon-size', '20px'],
