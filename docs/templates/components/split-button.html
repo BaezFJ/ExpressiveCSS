@@ -237,8 +237,12 @@
           It would take the trailing side's round outer corners while flex put
           it on the leading side: a split button with its seam and its round
           ends swapped. Lead action first, trigger second, menu last if it is
-          in there at all. Exactly two controls; a third gets the leading
-          half's rules too. Several peer actions are a
+          in there at all. Exactly two controls, and the count is held from
+          both ends: a third gets the leading half's rules too, and a container
+          holding only the trigger leaves it squared off along a seam with
+          nothing to join to. One control that opens a menu is just a
+          <a href="{{ url_for('menu') }}">menu trigger</a> — drop the
+          container. Several peer actions are a
           <a href="{{ url_for('button_groups') }}">button group</a>, and
           several related ones belong in the menu.
         </p>
