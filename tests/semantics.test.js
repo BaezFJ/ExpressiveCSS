@@ -326,7 +326,7 @@ const examples = [
 
 // --- rule engine ------------------------------------------------------------
 
-const enforcedRules = Object.entries(data.components)
+const enforcedRules = Object.entries(data.rows)
   .filter(([, c]) => c.status === 'enforced')
   .flatMap(([name, c]) => c.rules.map((r) => ({ ...r, component: name })));
 
@@ -387,8 +387,8 @@ function violations(html, rules, { fragmentSafe = false } = {}) {
 
 describe('semantics.json', () => {
   test('every component has a row, and no row is stale', () => {
-    const roster = [...sassComponents(), ...data.additional].sort();
-    const rows = Object.keys(data.components).sort();
+    const roster = [...sassComponents().filter((n) => !(n in data.notComponents)), ...data.additional].sort();
+    const rows = Object.keys(data.rows).sort();
     assert.deepEqual(
       rows,
       roster,
@@ -397,8 +397,30 @@ describe('semantics.json', () => {
     );
   });
 
+  test('nothing leaves the roster without a live reason', () => {
+    // `notComponents` is how a partial that styles no component of its own stays
+    // out of the roster while its Sass stays in the sheet. Unchecked it is also
+    // how a real component could dodge needing a row, so each entry has to name
+    // a partial that still exists and say why it is not one.
+    const partials = sassComponents();
+    for (const [name, why] of Object.entries(data.notComponents)) {
+      assert.ok(partials.includes(name), `${name}: excluded but has no partial - drop the exclusion`);
+      assert.ok(String(why).trim().length > 0, `${name}: an exclusion must state why`);
+    }
+  });
+
+  test('every row states a kind the vocabulary knows', () => {
+    // A row is a component unless it says otherwise. The other two kinds are
+    // CONTEXT.md's: a foundation states no markup, a behavior attaches to markup
+    // the author already wrote. Their rules still run - the classification says
+    // what the row is, not whether it is checked.
+    for (const [name, c] of Object.entries(data.rows)) {
+      assert.ok((c.kind ?? 'component') in data.rowKinds, `${name}: unknown kind ${c.kind}`);
+    }
+  });
+
   test('every rule is well formed', () => {
-    for (const [name, c] of Object.entries(data.components)) {
+    for (const [name, c] of Object.entries(data.rows)) {
       assert.ok(['enforced', 'exempt'].includes(c.status), `${name}: bad status ${c.status}`);
       for (const r of c.rules) {
         assert.ok(r.id && r.message, `${name}: rule needs an id and a message`);
@@ -426,12 +448,12 @@ describe('semantics.json', () => {
   });
 
   test('rule ids are unique across components', () => {
-    const ids = Object.values(data.components).flatMap((c) => c.rules.map((r) => r.id));
+    const ids = Object.values(data.rows).flatMap((c) => c.rules.map((r) => r.id));
     assert.equal(new Set(ids).size, ids.length, 'duplicate rule id');
   });
 
   test('every declaration is well formed, and no blocked role is unaccounted for', () => {
-    const problems = Object.entries(data.components).flatMap(([n, c]) =>
+    const problems = Object.entries(data.rows).flatMap(([n, c]) =>
       declarationProblems(n, c, data.compositeRoles)
     );
     assert.deepEqual(problems, [], problems.join('\n'));
@@ -500,7 +522,7 @@ describe('semantics.json', () => {
     // the component a way to record the role it takes before adding such a case;
     // do not weaken this into a warning.
     const slipping = [];
-    for (const [name, c] of Object.entries(data.components)) {
+    for (const [name, c] of Object.entries(data.rows)) {
       if (!DECLARATIONS.some((d) => c[d.field])) continue;
       const blocked = new Set(c.rules.flatMap((r) => rolesBlockedBy(r, data.compositeRoles)));
       const missed = data.compositeRoles.filter((r) => !blocked.has(r));
@@ -566,7 +588,7 @@ describe('prose that names markup', () => {
   // whose selector is a plain `tag.class` is a shape the prose must not name
   // either. A deliberate negation ("not `nav.toolbar`") is allowed, because
   // saying what something is not is how the docs record a rename.
-  const forbiddenShapes = Object.values(data.components)
+  const forbiddenShapes = Object.values(data.rows)
     .filter((c) => c.status === 'enforced')
     .flatMap((c) => c.rules)
     .filter((r) => FORBID_KINDS.includes(r.kind) && r.fragmentSafe)

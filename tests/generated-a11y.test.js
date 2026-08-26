@@ -16,7 +16,7 @@ import { Expressive, resetBody } from './setup.js';
 
 const RULE = JSON.parse(
   readFileSync(new URL('../semantics.json', import.meta.url), 'utf8')
-).components.carousel.rules.find((r) => r.id === 'hidden-subtree-holds-nothing-focusable');
+).rows.carousel.rules.find((r) => r.id === 'hidden-subtree-holds-nothing-focusable');
 
 const MARKUP = `<div class="carousel">
   <a class="carousel-item" href="#one"><img src="http://localhost/1.jpg" alt="One"></a>
