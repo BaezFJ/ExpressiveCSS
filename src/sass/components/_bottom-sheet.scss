@@ -90,12 +90,12 @@ dialog.bottom-sheet {
     pointer-events: none;
   }
 
-  &:has(> .handle)::before {
+  &:has(> :is(.handle, .drag-handle))::before {
     content: none;
     display: none;
   }
 
-  > .handle {
+  > :is(.handle, .drag-handle) {
     box-sizing: border-box;
     flex: 0 0 48px;
     align-self: center;
@@ -109,6 +109,14 @@ dialog.bottom-sheet {
     mask: $_handle center / 32px 4px no-repeat;
     cursor: grab;
     appearance: none;
+  }
+
+  // The sheet paints its own bar with a mask on the element, so the vertical
+  // bar _drag-handle.scss draws in ::before would print across it. This is the
+  // whole cost of one class serving both hosts, and it is cheaper than a
+  // `horizontal` modifier whose values M3 does not publish.
+  > .drag-handle::before {
+    content: none;
   }
 
   > :is(h1, h2, h3, h4, h5, h6) {

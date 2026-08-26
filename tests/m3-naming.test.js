@@ -27,7 +27,8 @@ describe('M3 names reach the same rules as the old ones', () => {
     ['fixed-action-btn', 'fab'],
     ['datepicker', 'date-picker'],
     ['timepicker', 'time-picker'],
-    ['searchbar', 'search-bar']
+    ['searchbar', 'search-bar'],
+    ['handle', 'drag-handle']
   ];
 
   for (const [old, m3] of PAIRS) {

@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**49 of 49 rows enforced; 0 remaining.**
+**50 of 50 rows enforced; 0 remaining.**
 
-46 of those rows are components - a part of the framework an author writes markup for.
+47 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**4 of 46 components declare conformance debt.**
+**4 of 47 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -214,6 +214,20 @@ Swept 0.8.0. A behavior, not a component: the picker plugins generate this posit
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### drag-handle
+
+The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden="true"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the framework ships no reordering behaviour to hang off this handle, and a page that builds one owes it a keyboard path of its own. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `drag-handle-is-hidden-or-a-control` | forbid | `:is(.handle, .drag-handle):not(button):not([aria-hidden="true"])` | must not match |
+| `drag-handle-button-is-not-hidden` | forbid | `button:is(.handle, .drag-handle)[aria-hidden="true"]` | must not match |
+| `drag-handle-button-is-named` | require-accessible-name | `button:is(.handle, .drag-handle)` | must end up with an accessible name |
+
+- **drag-handle-is-hidden-or-a-control** - A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
+- **drag-handle-button-is-not-hidden** - aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
+- **drag-handle-button-is-named** - The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
 
 ### expanding-card
 

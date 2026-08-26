@@ -1,0 +1,130 @@
+@use "../abstracts" as *;
+
+// Drag handles.
+//
+// Anatomy is the HTML. A .drag-handle is the handle, and which element it is
+// says what it is: a <span aria-hidden="true"> when it is only an affordance -
+// the usual case - and a <button> with a name when something is genuinely wired
+// to it. semantics.json enforces exactly that split, which is what lets the
+// interactive states below key off `button` and be right every time.
+//
+// **Nothing here drags.** The handle is CSS; the dragging is the page's, and so
+// is the keyboard path to whatever the drag achieves. A handle that answers
+// only a pointer puts its outcome out of reach of everyone not using one, so
+// the framework ships no reordering behaviour to hang off this and the docs say
+// plainly that a drag-only reorder is unreachable. The decorative spelling is
+// the default; the button spelling has to earn its name.
+//
+// M3 Expressive tokenised the *vertical* handle - the one sitting in the gutter
+// between two panes, Compose's VerticalDragHandle: a 4x48dp bar in a 24dp
+// container that swells to 12x52dp on a medium corner while it is held. That is
+// md.comp.drag-handle and it is what this partial draws.
+//
+// The bottom sheet's grabber is a different component with a different token
+// set - md.comp.sheet-bottom.docked.drag-handle, a horizontal 32x4dp bar at 40%
+// on-surface-variant - so a .drag-handle inside a sheet takes the sheet's
+// geometry from _bottom-sheet.scss rather than carrying a `horizontal` modifier
+// here. One class, two hosts, and neither one's values invented.
+//
+// Tokens follow md.comp.drag-handle.* (DSP 34.0.21):
+//   container    24dp wide - the hit target, not the bar
+//   bar          4 x 48dp, corner.full, outline
+//   pressed      12 x 52dp, corner.medium, on-surface
+//   state layer  inverse-on-surface, 8% hover / 10% focus
+//   elevation    level0 at rest and pressed alike, so there is nothing to draw
+//
+// Two departures, both deliberate. M3 publishes a container *width* and no
+// container height, leaving the container to take whatever height it is given;
+// this pins it to the pressed bar so that holding the handle cannot reflow what
+// is beside it, which a stretched container would also achieve but only where
+// the host happens to stretch it. And Compose distinguishes a *dragged* state
+// from a pressed one - draggedSize, draggedShape, draggedColor, checked before
+// isPressed - which the web token set does not publish and CSS could not select
+// anyway: there is no "is being dragged" pseudo-class, and nothing here drags.
+// `:active` covers both, at the pressed values.
+.drag-handle {
+  --md-comp-drag-handle-container-width: 24px;
+  --md-comp-drag-handle-width: 4px;
+  --md-comp-drag-handle-height: 48px;
+  --md-comp-drag-handle-shape: 9999px;
+  --md-comp-drag-handle-color: var(--md-sys-color-outline);
+  --md-comp-drag-handle-pressed-width: 12px;
+  --md-comp-drag-handle-pressed-height: 52px;
+  --md-comp-drag-handle-pressed-shape: 12px;
+  --md-comp-drag-handle-pressed-color: var(--md-sys-color-on-surface);
+  --md-comp-drag-handle-state-layer-color: var(--md-sys-color-inverse-on-surface);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  // The container is the hit target, and it is sized to the *pressed* bar
+  // rather than the resting one so that swelling the bar moves nothing beside
+  // it. M3 gives the container a width and no height for the same reason.
+  inline-size: var(--md-comp-drag-handle-container-width);
+  block-size: var(--md-comp-drag-handle-pressed-height);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--md-comp-drag-handle-shape);
+  background-color: transparent;
+  cursor: grab;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+
+  // The bar. It is a pseudo-element and not the box itself because the box is
+  // the hit target: 4dp of anything is not something a pointer can be asked to
+  // find, and the state layer needs a surface the bar's own shape does not clip.
+  &::before {
+    content: "";
+    display: block;
+    inline-size: var(--md-comp-drag-handle-width);
+    block-size: var(--md-comp-drag-handle-height);
+    border-radius: var(--md-comp-drag-handle-shape);
+    background-color: var(--md-comp-drag-handle-color);
+    transition: inline-size .15s ease, block-size .15s ease, border-radius .15s ease,
+      background-color .15s ease;
+  }
+}
+
+// Interactive states belong to the button spelling alone. A decorative handle
+// is not a control and must not light up under a pointer that merely crosses
+// it - and because the rule keying this is `button`, the semantics rule holding
+// every other element to aria-hidden is what keeps the two in step.
+button.drag-handle {
+  &:hover {
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-drag-handle-state-layer-color) state-opacity("hover"),
+      transparent
+    );
+  }
+
+  &:focus-visible {
+    background-color: color-mix(
+      in oklab,
+      var(--md-comp-drag-handle-state-layer-color) state-opacity("focus"),
+      transparent
+    );
+  }
+
+  @include focus-visible;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:active::before {
+    inline-size: var(--md-comp-drag-handle-pressed-width);
+    block-size: var(--md-comp-drag-handle-pressed-height);
+    border-radius: var(--md-comp-drag-handle-pressed-shape);
+    background-color: var(--md-comp-drag-handle-pressed-color);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drag-handle::before {
+    transition: none;
+  }
+}

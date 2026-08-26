@@ -670,3 +670,19 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   min-height: 18rem;
   margin-block: 1.5rem;
 }
+
+/* Drag handle page: the handle only reads as a splitter with panes either side. */
+.drag-handle-demo {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.drag-handle-demo > div {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 24px 16px;
+  background-color: var(--md-sys-color-surface-container-low);
+}

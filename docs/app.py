@@ -87,6 +87,7 @@ NAV = [
         ('dialogs', 'Dialogs'),
         ('bottom_sheet', 'Bottom sheet'),
         ('side_sheet', 'Side sheet'),
+        ('drag_handle', 'Drag handle'),
         ('badges', 'Badges'),
         ('tooltips', 'Tooltips'),
         ('snackbar', 'Snackbar'),
@@ -413,6 +414,12 @@ def snackbar():
 @app.route('/banners.html')
 def banners():
     return render_template('components/banners.html')
+
+
+@app.route('/drag-handle')
+@app.route('/drag-handle.html')
+def drag_handle():
+    return render_template('components/drag-handle.html')
 
 
 @app.route('/toasts')
