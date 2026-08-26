@@ -50,6 +50,15 @@ uv sync
 uv run flask --app docs/app.py run --debug --port 5055   # http://127.0.0.1:5055
 ```
 
+The Astro documentation build runs beside it (ADR 0003) and today renders two
+pages, the site root and Buttons:
+
+```bash
+npm run docs:dev       # build the framework, then its watchers beside astro dev
+npm run docs:build     # -> _site/ (gitignored)
+npm run docs:preview   # serve what docs:build wrote
+```
+
 `.claude/launch.json` is gitignored, so a fresh clone has none and the
 editor's preview pane has no server to start. Recreate it with the same
 command — the `port` field must match the `--port` argument, or the pane
@@ -82,12 +91,12 @@ Notes:
 
 ## Releasing
 
-`package.json` holds the version, but seven files state it and only one derives it. The docs **footer** is the derived one: it reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0. Because it reads the raw version it also sees prereleases, so it appends "(prerelease)" when `IS_PRERELEASE` is set (`'-' in VERSION`) — otherwise the site advertises a version `npm install` does not hand out. The other six drift silently — nothing fails if you miss one.
+`package.json` holds the version, but nine files state it and only two derive it. The docs **footers** are the derived ones, one per generator: Flask's reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0, and Astro's `BaseLayout.astro` reads the same file directly. Because they read the raw version they also see prereleases, so each appends "(prerelease)" when the version carries one (`'-' in VERSION`) — otherwise the site advertises a version `npm install` does not hand out. The other seven drift silently — nothing fails if you miss one.
 
 **Which files you bump depends on whether `latest` moves.** They fall into two groups:
 
 - *Must match the tag*, always: `package.json` and `src/ts/index.ts` (`export const version`) — `release.yml` compares the tag against `package.json` and aborts on a mismatch, and the version export is what the built bundle reports. Plus the line in **this file** naming what `index.ts` exports, so it stays true.
-- *Tells a reader which version to install*: `README.md`, `llm.md` (two places — the header and the "Getting started" prose), and `docs/templates/start/index.html`.
+- *Tells a reader which version to install*: `README.md`, `llm.md` (two places — the header and the "Getting started" prose), and the Getting Started page, which states it in prose under **both** generators — `docs/templates/start/index.html` and `docs/src/pages/index.astro` — until the cutover deletes the first.
 
 For a **full release** both groups move. For a **prerelease** only the first moves: `latest` stays on the last stable version, so prose announcing the prerelease as "the project is at version x" would send readers to something `npm install` does not give them. That leaves `package.json` deliberately ahead of the prose for the life of the prerelease — e.g. `0.7.0-rc.0` in `package.json` against `0.6.0` in the prose. **That gap is intended; do not "fix" it.** It closes when the matching full release goes out and both groups move together.
 
@@ -604,6 +613,95 @@ not one view with two rules** — Frozen-Flask writes one file per *endpoint*, s
 a shared view silently freezes only one of its URLs.
 
 `website/` is generated, which makes it the regression test for any template change: `uv run python freeze.py`, then diff. Modulo whitespace the output must be identical — that is how all five macro refactors were verified.
+
+### The Astro build
+
+`docs/astro.config.mjs` is a second generator running beside Flask (ADR 0003).
+It renders two pages so far — `docs/src/pages/index.astro` and `buttons.astro`
+— into a gitignored `_site/`. Flask is still production and still the thing to
+compare against: a converted page is right when it is *structurally identical*
+to the frozen one, and the only difference either page has today is the landing
+page's own link.
+
+- **The docs toolchain needs Node >= 22.12, the package still needs >= 20.**
+  That is astro 7's own `engines`, and it is a *contributor* requirement:
+  `package.json`'s `engines` describes what a consumer needs to run the built
+  bundle, which is unchanged. There is no `.npmrc`, so `engine-strict` is off
+  and `npm ci` on Node 20 warns rather than failing — every `docs:*` script
+  then dies on a version error instead. CI's matrix comment carries the same
+  note, because a docs step added to the Node 20 leg is how this gets
+  rediscovered.
+- **`npm run docs:build` builds the framework first, and has to.** The two
+  `dist` symlinks dangle on a clean checkout, and Vite's public-dir copy
+  `stat`s every entry, so the build dies with `ENOENT` *before* emitting a
+  page — the `buildMissing` banner cannot help, because there is nothing to put
+  it on. (It still fires under `astro dev`, which serves `public/` lazily and
+  just 404s the asset.) `docs:dev` builds first for the same reason, which is
+  also what ADR 0003 asks for.
+- **`build.format: 'file'` is what keeps the flat `.html` URLs.** Astro's
+  default would publish `/buttons.html` as `/buttons/`, and those URLs are in
+  search results.
+- **`compressHTML: false`, and it is load-bearing.** The pages are
+  hand-authored HTML, and the compressor deletes the newline between a word and
+  the `<code>` after it — which is a rendered space, not formatting.
+  ``The\n<code>min</code> means`` came out as `Themin means` on the Getting
+  Started page.
+- **`docs/public/` holds three symlinks**, and they are the whole of what keeps
+  the site's established asset URLs: `static` to `docs/static`, and
+  `dist/css` / `dist/js` to the framework build. Vite's public-dir copy `stat`s
+  each entry, so a symlinked directory is followed and lands in `_site/` as real
+  files; the dev server serves through them too, which is why `npm run watch`
+  shows up on a browser reload exactly as it does under Flask.
+
+  **`dist` is two symlinks rather than one, deliberately.** Linking the whole of
+  `dist/` published `dist/types/**` as well — 180 KB of `.d.ts` on a website —
+  because a symlinked tree is followed entire. `pages.yml` copies exactly
+  `dist/css` and `dist/js`, and these mirror it. The cost is that `.gitignore`'s
+  `dist/` now swallows the real `docs/public/dist/` directory before git looks
+  inside it, so that one path is re-included by name.
+- **`import.meta.url` inside a component points at the emitted chunk**, not at
+  the source file, so it cannot address the repository. The repo root is
+  stamped in as `__REPO_ROOT__` by `astro.config.mjs`, which is not bundled.
+  `BaseLayout.astro` reads `package.json` and checks for `dist/` through it.
+- **The landing page is the one page whose route the generator changes.** The
+  catalogue records `/getting-started.html`, because that is what the freeze
+  publishes; Astro makes the site root canonical instead.
+  `docs/src/lib/catalogue.ts` owns that single divergence, and it is also the
+  only place the site looks a page up by id: both accessors throw on an unknown
+  one the way `url_for` does, so a mistyped link fails the build instead of
+  publishing a 404.
+- **A page declares its sections once.** `defineSections()` returns them keyed
+  by id and in order: `<PageBody>` builds the table of contents from it and each
+  `<Section {...S.download}>` is spread from the same object, so a heading and
+  its entry cannot drift. Astro has no render-order side channel, which is what
+  the Jinja `section()` macro used. `Section` throws on a missing id, because a
+  mistyped key spreads *nothing* rather than failing.
+- **`<Code code={`…`} />` takes the sample as an explicit template literal**, so
+  its whitespace is the author's. It escapes angle brackets and ampersands and
+  leaves quotes alone, matching the Jinja filter. `check={false}` plus a
+  `reason` is the same opt-out, and `tests/semantics.test.js` reads it — the
+  Astro pages are a surface of their own there (`docs/src`), because a
+  conversion is exactly the moment markup goes quietly wrong.
+- **`scripts/jinja-to-astro.mjs` is temporary and is deleted with Flask.** It
+  moves the predictable syntax and reports what it could not, with a line
+  number; macro-heavy pages are finished by hand. One thing it has to do that
+  is not obvious: an expression in a quoted attribute is a *literal string* in
+  Astro, so `href="{route('grid')}"` publishes those eleven characters and the
+  whole attribute has to become an expression.
+
+`tests/docs-astro.test.js` holds the pages to the catalogue — that each
+publishes at the route the catalogue gives it, and that its declared and
+rendered sections agree — and pins the hooks the duplicated chrome shares with
+the Jinja macros, for as long as both exist.
+
+**One check does not follow the migration, and it is the one a fragment cannot
+answer.** The composed-page pass in `semantics.test.js` — `<main>` nesting, and
+two landmarks on a page sharing a name, the check that found 31 landmarks called
+"Main" — reads `website/`, which only the freeze writes. Astro pages are never
+in it and `_site/` is not committed, so `docs/src` gets the fragment-level rules
+only. The seam that closes this is the build-level verification #83 plans;
+until then the guard is that a converted page stays structurally identical to
+its frozen counterpart, and that is checked by hand.
 
 **There are two page inventories right now, and that is temporary.**
 `docs/src/data/nav.ts` is the shared catalogue the Astro site will be generated

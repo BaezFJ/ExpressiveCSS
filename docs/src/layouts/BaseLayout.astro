@@ -1,0 +1,81 @@
+---
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import Footer from "../components/Footer.astro";
+
+/**
+ * The document shell: head, the pre-paint theme restore, the footer, and the
+ * three scripts every page loads.
+ */
+interface Props {
+  /** The page's own name. The `<title>` and the app bar heading are built from it. */
+  pageName?: string;
+  bodyClass?: string;
+}
+
+const { pageName, bodyClass } = Astro.props;
+
+// Stamped in by astro.config.mjs -- see the note there.
+declare const __REPO_ROOT__: string;
+
+// package.json is the only statement of the version the site makes, so the
+// footer cannot drift from what `npm install` hands out. Semver puts a
+// prerelease after a hyphen.
+const version: string = JSON.parse(
+  readFileSync(join(__REPO_ROOT__, "package.json"), "utf8"),
+).version;
+const prerelease = version.includes("-");
+
+// Unminified while developing so the source maps stay usable.
+const suffix = import.meta.env.DEV ? "" : ".min";
+const cssUrl = `/dist/css/expressive${suffix}.css`;
+const jsUrl = `/dist/js/expressive${suffix}.js`;
+const buildMissing = !existsSync(join(__REPO_ROOT__, "dist/css"));
+---
+<!DOCTYPE html>
+<html lang="en" theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{pageName ? `${pageName} - ExpressiveCSS` : "ExpressiveCSS"}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href={cssUrl}>
+    <link rel="stylesheet" href={`/static/docs.css?v=${version}`}>
+    {/* Apply a stored --md-source before first paint so the page does not flash the default seed. */}
+    <script is:inline>
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t === 'light' || t === 'dark' || t === 'auto') {
+                    document.documentElement.setAttribute('theme', t);
+                }
+                var c = localStorage.getItem('md-source');
+                if (c && /^#[0-9A-Fa-f]{6}$/.test(c)) {
+                    document.documentElement.style.setProperty('--md-source', c);
+                }
+            } catch (e) {
+            }
+        })();
+    </script>
+    <slot name="head" />
+</head>
+<body class={bodyClass}>
+{buildMissing && (
+    <div class="build-warning error-container on-error-container-text">
+        No build found in <code>dist/</code> &mdash; run <code>npm run build</code> (or <code>npm run watch</code>) and
+        reload.
+    </div>
+)}
+
+<slot />
+
+<Footer version={version} prerelease={prerelease} />
+
+<script is:inline src={jsUrl}></script>
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
+<script is:inline src={`/static/docs.js?v=${version}`}></script>
+<script is:inline src="/static/code-blocks.js"></script>
+</body>
+</html>

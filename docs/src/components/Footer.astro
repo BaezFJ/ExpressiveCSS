@@ -1,0 +1,31 @@
+---
+import { NAV } from "../data/nav";
+import { route } from "../lib/catalogue";
+
+/**
+ * The footer, rendered from the same catalogue as the drawer -- documenting a
+ * page relinks both.
+ */
+interface Props {
+  version: string;
+  /** A prerelease publishes to the `next` dist-tag, so say so rather than advertising a version `npm install` does not hand out. */
+  prerelease?: boolean;
+}
+
+const { version, prerelease = false } = Astro.props;
+---
+<footer>
+  <div class="container">
+    {NAV.map((group, i) => (
+      <nav aria-labelledby={`footer-${i + 1}`}>
+        <h2 id={`footer-${i + 1}`}>{group.label}</h2>
+        {group.blurb && <p>{group.blurb}</p>}
+        {group.pages.map((page) => <a href={route(page.id)}>{page.label}</a>)}
+      </nav>
+    ))}
+    <small>
+      <span>&copy; 2026 ExpressiveCSS</span>
+      <span>v{version}{prerelease ? " (prerelease)" : ""}</span>
+    </small>
+  </div>
+</footer>

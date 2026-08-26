@@ -1,0 +1,30 @@
+---
+/** Instance properties. The two universal rows come for free; `el` describes what the instance was built on. */
+interface Props {
+  el: string;
+}
+
+const { el } = Astro.props;
+---
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>el</code></td>
+      <td>Element</td>
+      <td set:html={el} />
+    </tr>
+    <tr>
+      <td><code>options</code></td>
+      <td>Object</td>
+      <td>The options the instance was initialized with.</td>
+    </tr>
+    <slot />
+  </tbody>
+</table>

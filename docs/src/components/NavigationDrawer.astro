@@ -1,0 +1,47 @@
+---
+import { NAV } from "../data/nav";
+import { route } from "../lib/catalogue";
+
+/**
+ * The drawer, rendered from the shared catalogue. A group with no icon renders
+ * flat -- its pages are the top-level entries, each with an icon of its own.
+ */
+interface Props {
+  /** The id of the page being rendered, so it can mark itself current. */
+  current: string;
+}
+
+const { current } = Astro.props;
+---
+<nav aria-label="Main">
+  <ul class="navigation-drawer navigation-drawer-fixed" id="nav-mobile">
+    {NAV.map((group) =>
+      !group.icon ? (
+        group.pages.map((page) => (
+          <li class={current === page.id ? "active" : undefined}>
+            <a href={route(page.id)} aria-current={current === page.id ? "page" : undefined}>
+              <span class="material-symbols" aria-hidden="true">{page.icon}</span>
+              {page.label}
+            </a>
+          </li>
+        ))
+      ) : (
+        <li>
+          <details name="docs-nav" open={group.pages.some((p) => p.id === current)}>
+            <summary>
+              <span class="material-symbols" aria-hidden="true">{group.icon}</span>
+              {group.label}
+            </summary>
+            <ul>
+              {group.pages.map((page) => (
+                <li class={current === page.id ? "active" : undefined}>
+                  <a href={route(page.id)} aria-current={current === page.id ? "page" : undefined}>{page.label}</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </li>
+      )
+    )}
+  </ul>
+</nav>
