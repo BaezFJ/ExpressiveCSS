@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Table - ExpressiveCSS</title>
+    <title>Loading indicator - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Table</h2>
+            <h2>Loading indicator</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -63,7 +63,7 @@
               </a>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
@@ -93,8 +93,8 @@
                       <li class="">
                           <a href="/media-css.html">Media styles</a>
                       </li>
-                      <li class="active">
-                          <a href="/table.html" aria-current="page">Table</a>
+                      <li class="">
+                          <a href="/table.html">Table</a>
                       </li>
                       <li class="">
                           <a href="/css-transitions.html">Transitions</a>
@@ -152,7 +152,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -194,8 +194,8 @@
                       <li class="">
                           <a href="/preloader.html">Preloader</a>
                       </li>
-                      <li class="">
-                          <a href="/loading-indicator.html">Loading indicator</a>
+                      <li class="active">
+                          <a href="/loading-indicator.html" aria-current="page">Loading indicator</a>
                       </li>
                       <li class="">
                           <a href="/carousel.html">Carousel</a>
@@ -265,8 +265,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Table</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Organize data with a few utility classes on a standard HTML table.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Loading indicator</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A shape that morphs while it spins, for waits under five seconds.</p>
             </div>
         </div>
     </section>
@@ -278,226 +278,109 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="introduction" class="section scrollspy docs-section">
+  <div id="basic" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Tables are a nice way to organize a lot of data. We provide a few utility classes to help you style your table as easily as possible.
+          M3 Expressive's indicator for a short wait. One element, CSS-only,
+          no JavaScript plugin. The shape morphs through a circle and four
+          cookie shapes while the whole thing rotates.
         </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Item Name</th>
-              <th>Item Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>Eclair</td>
-              <td>$0.87</td>
-            </tr>
-            <tr>
-              <td>Alan</td>
-              <td>Jellybean</td>
-              <td>$3.76</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Shannon</td>
-              <td>KitKat</td>
-              <td>$9.99</td>
-            </tr>
-          </tbody>
-        </table>
-<pre><code>&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Name&lt;/th&gt;
-      &lt;th&gt;Item Name&lt;/th&gt;
-      &lt;th&gt;Item Price&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Alvin&lt;/td&gt;
-      &lt;td&gt;Eclair&lt;/td&gt;
-      &lt;td&gt;$0.87&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Alan&lt;/td&gt;
-      &lt;td&gt;Jellybean&lt;/td&gt;
-      &lt;td&gt;$3.76&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Jonathan&lt;/td&gt;
-      &lt;td&gt;Lollipop&lt;/td&gt;
-      &lt;td&gt;$7.00&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;</code></pre>
+        <p class="py-5 center-align">
+          <span class="loading-indicator" role="status" aria-label="Loading"></span>
+        </p>
+<pre><code>&lt;span class="loading-indicator" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+        <p>
+          The element is empty, so it reports nothing on its own.
+          <code>role="status"</code> announces the wait and
+          <code>aria-label</code> gives it something to announce — not
+          <code>role="progressbar"</code>, which promises an
+          <code>aria-valuenow</code> an indeterminate indicator does not have.
+        </p>
   
       </div>
 
 
-  <div id="striped" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Striped Table</h3>
-
-        <p>Add <code>class="striped"</code> to the table tag for a striped table.</p>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Item Name</th>
-              <th>Item Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>Eclair</td>
-              <td>$0.87</td>
-            </tr>
-            <tr>
-              <td>Alan</td>
-              <td>Jellybean</td>
-              <td>$3.76</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Shannon</td>
-              <td>KitKat</td>
-              <td>$9.99</td>
-            </tr>
-          </tbody>
-        </table>
-  
-      </div>
-
-
-  <div id="highlight" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Highlight Table</h3>
-
-        <p>Add <code>class="highlight"</code> to the table tag for a highlight table.</p>
-        <table class="highlight">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Item Name</th>
-              <th>Item Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>Eclair</td>
-              <td>$0.87</td>
-            </tr>
-            <tr>
-              <td>Alan</td>
-              <td>Jellybean</td>
-              <td>$3.76</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Shannon</td>
-              <td>KitKat</td>
-              <td>$9.99</td>
-            </tr>
-          </tbody>
-        </table>
-  
-      </div>
-
-
-  <div id="centered" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Centered Table</h3>
-
-        <p>Add <code>class="centered"</code> to the table tag to center align all the text in the table.</p>
-        <table class="centered">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Item Name</th>
-              <th>Item Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>Eclair</td>
-              <td>$0.87</td>
-            </tr>
-            <tr>
-              <td>Alan</td>
-              <td>Jellybean</td>
-              <td>$3.76</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Shannon</td>
-              <td>KitKat</td>
-              <td>$9.99</td>
-            </tr>
-          </tbody>
-        </table>
-  
-      </div>
-
-
-  <div id="responsive" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Responsive Table</h3>
+  <div id="contained" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Contained</h3>
 
         <p>
-          Add <code>class="responsive-table"</code> to the table tag to make the table horizontally scrollable on smaller screen widths.
+          <code>contained</code> puts the indicator on a
+          <code>secondary-container</code> circle and switches it to
+          <code>on-secondary-container</code>. Use it over an image, a
+          coloured surface, or anything else the plain indicator would get
+          lost against.
         </p>
-        <table class="responsive-table">
+        <p class="py-5 center-align">
+          <span class="loading-indicator contained" role="status" aria-label="Loading"></span>
+        </p>
+<pre><code>&lt;span class="loading-indicator contained" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+  
+      </div>
+
+
+  <div id="vs-progress" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Or a progress indicator?</h3>
+
+        <p>
+          This <strong>supersedes the indeterminate circular
+          <a href="/preloader.html">progress indicator</a></strong>.
+          Reach for the loading indicator whenever you would have written
+          <code>&lt;span class="progress circular"&gt;</code> with no value.
+          <code>.progress</code> keeps everything else — both linear bars, and
+          every case where you know the percentage.
+        </p>
+        <table class="striped">
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Item Name</th>
-              <th>Item Price</th>
-            </tr>
+            <tr><th>Situation</th><th>Use</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>Eclair</td>
-              <td>$0.87</td>
-            </tr>
-            <tr>
-              <td>Alan</td>
-              <td>Jellybean</td>
-              <td>$3.76</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Shannon</td>
-              <td>KitKat</td>
-              <td>$9.99</td>
-            </tr>
+            <tr><td>Under 200&nbsp;ms</td><td>Nothing — show the result</td></tr>
+            <tr><td>Up to about 5&nbsp;s, percentage unknown</td><td><code>.loading-indicator</code></td></tr>
+            <tr><td>Longer, percentage known</td><td><code>.progress</code>, determinate</td></tr>
+            <tr><td>Longer, percentage unknown</td><td><code>.progress</code>, indeterminate linear</td></tr>
           </tbody>
         </table>
+  
+      </div>
+
+
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
+
+        <p>
+          Override any of these to retheme one indicator. The colours are role
+          tokens, never raw hex.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr><th>Token</th><th>Default</th><th>What it sets</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--md-comp-loading-indicator-active-indicator-size</code></td><td><code>38px</code></td><td>The morphing shape.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-size</code></td><td><code>48px</code></td><td>The box it sits in — the visible circle when <code>contained</code>.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-active-indicator-color</code></td><td><code>primary</code></td><td>The shape's fill.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-color</code></td><td><code>transparent</code></td><td>The container fill.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-duration</code></td><td><code>3000ms</code></td><td>One full morph-and-spin cycle.</td></tr>
+          </tbody>
+        </table>
+        <div class="row py-5">
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-tertiary)" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-size: 76px; --md-comp-loading-indicator-container-size: 96px" role="status" aria-label="Loading"></span>
+          </div>
+        </div>
+<pre><code>&lt;span class="loading-indicator"
+      style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)"
+      role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+        <p>
+          <code>prefers-reduced-motion: reduce</code> stops both animations
+          and leaves the circle.
+        </p>
   
       </div>
 
@@ -510,11 +393,10 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#striped">Striped</a></li>
-          <li><a href="#highlight">Highlight</a></li>
-          <li><a href="#centered">Centered</a></li>
-          <li><a href="#responsive">Responsive</a></li>
+          <li><a href="#basic">Basic</a></li>
+          <li><a href="#contained">Contained</a></li>
+          <li><a href="#vs-progress">Or a progress indicator?</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 
