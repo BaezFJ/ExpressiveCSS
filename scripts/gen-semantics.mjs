@@ -62,14 +62,17 @@ export function render(data) {
   l.push('');
   l.push(`${components.length} of those rows are components - a part of the framework an author writes markup for.`);
   l.push('The rest are not, and say which they are: ' + others.map((n) => `${code(n)} (${kindOf(n)})`).join(', ') + '.');
-  l.push('CONTEXT.md defines all three. Their rules run the same either way: a kind says what a row is,');
+  l.push('CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,');
   l.push('not whether it is checked.');
   l.push('');
   for (const [name, why] of Object.entries(data.notComponents)) {
     l.push(`${code(name)} has no row at all: ${esc(why)}`);
     l.push('');
   }
-  const indebted = names.filter((n) => data.rows[n].conformance);
+  // Filtered over components, not rows, because the sentence below counts them
+  // against the component total: a behavior declaring debt would otherwise be
+  // printed as one of a population it is not in.
+  const indebted = components.filter((n) => data.rows[n].conformance);
   l.push('**Conformance debt** is a separate axis from enforced/exempt: a fully enforced');
   l.push('component may still withhold a composite role because the keyboard contract rule 2');
   l.push('demands does not exist yet. Each one below names the role it withholds, what that');

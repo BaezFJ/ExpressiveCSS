@@ -24,8 +24,10 @@ typography, elevation, shape, motion, state layers. A foundation is consumed by
 components rather than placed on a page, and its surface is custom properties
 and utility classes rather than elements.
 
-**Behavior.** Document-level script that attaches to markup the author has
-already written, rather than defining markup of its own. The defining property
+**Behavior.** Script that attaches to markup the author has already written,
+rather than defining markup of its own — whether it runs once for the document
+or once per element, and whether or not it generates elements of its own to do
+the job. The defining property
 is that removing a behavior leaves the markup valid and meaningful; removing a
 component removes the element.
 

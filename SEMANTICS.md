@@ -29,7 +29,7 @@ a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 
 41 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `transitions` (foundation).
-CONTEXT.md defines all three. Their rules run the same either way: a kind says what a row is,
+CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
 
 `table_of_contents` has no row at all: the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's own page macro. The partial stays in the sheet; `scrollspy` owns its rule.
