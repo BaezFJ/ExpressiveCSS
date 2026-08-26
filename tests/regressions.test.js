@@ -296,22 +296,6 @@ describe('optional markup does not crash a component', () => {
     instance.destroy();
   });
 
-  test('a slide with no caption', () => {
-    document.body.innerHTML = `
-      <div class="slider"><ul class="slides">
-        <li class="active"><img src="http://localhost/1.jpg"></li>
-        <li><img src="http://localhost/2.jpg"></li>
-      </ul></div>`;
-    const instance = Expressive.Slideshow.init(document.querySelector('.slider'));
-
-    try {
-      instance.set(1);
-      assert.equal(instance.activeIndex, 1);
-    } finally {
-      instance.destroy();
-    }
-  });
-
   test('a hover menu when the pointer leaves the window', () => {
     document.body.innerHTML = `
       <a class="button menu-trigger" data-target="dd">Drop</a>

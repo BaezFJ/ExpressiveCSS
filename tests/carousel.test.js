@@ -256,6 +256,44 @@ describe('Material 3 Carousel behavior', () => {
     }
   });
 
+  test('localizes the generated indicator labels', () => {
+    // The last strings Carousel generated in hardcoded English. Slideshow
+    // offered `indicatorLabelFunc` for them and Slideshow is gone, so rule 5
+    // lands them on the i18n option with everything else.
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el, {
+      indicators: true,
+      i18n: { indicators: 'Diapositivas', slide: 'Diapositiva' }
+    });
+    try {
+      const nav = el.querySelector('.indicators');
+      assert.equal(nav.getAttribute('aria-label'), 'Diapositivas');
+      assert.equal(
+        nav.querySelector('.indicator-item').getAttribute('aria-label'),
+        'Diapositiva 1'
+      );
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('indicator labels fall back to English when i18n is not given', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    const instance = Expressive.Carousel.init(el, { indicators: true });
+    try {
+      const nav = el.querySelector('.indicators');
+      assert.equal(nav.getAttribute('aria-label'), 'Slides');
+      assert.equal(
+        nav.querySelector('.indicator-item').getAttribute('aria-label'),
+        'Slide 1'
+      );
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('full-screen uses vertical arrow navigation', () => {
     document.body.innerHTML = markup('full-screen');
     const el = document.querySelector('.carousel');
@@ -431,7 +469,8 @@ describe('Carousel auto-advance', () => {
 
   test('pauses on hover and on focus, with no option to disable either', (t) => {
     t.mock.timers.enable({ apis: ['setTimeout'] });
-    // The booleans Slideshow offered are gone: passing them changes nothing.
+    // The booleans the old Slideshow offered do not exist here: passing
+    // them changes nothing.
     const instance = init({ interval: 1000, pauseOnHover: false, pauseOnFocus: false });
     const el = instance.el;
     try {
@@ -580,7 +619,7 @@ describe('Carousel auto-advance', () => {
 describe('Carousel fixed height', () => {
   beforeEach(() => resetBody());
 
-  test('reproduces the slideshow layout, indicator row included', () => {
+  test('reproduces the retired slideshow layout, indicator row included', () => {
     assert.match(css, /--md-comp-carousel-indicator-allowance:\s*40px/);
     assert.match(
       css,

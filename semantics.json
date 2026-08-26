@@ -985,11 +985,6 @@
       "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
       "rules": []
     },
-    "slideshow": {
-      "status": "enforced",
-      "note": "Swept 0.8.0. Renamed from slider, which M3 uses for the range control; a `.slider` holding no range input is still a slideshow.",
-      "rules": []
-    },
     "snackbar": {
       "status": "enforced",
       "note": "Swept 0.8.0. Generated markup: role=\"status\" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.",

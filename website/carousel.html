@@ -487,7 +487,8 @@
 </p>
 <p>
   The component supplies a <code>region</code>, carousel and slide role
-  descriptions, and item position labels when authors do not provide them.
+  descriptions, item position labels, and indicator labels when authors do not
+  provide them.
   Localize generated strings with the <code>i18n</code> option. Layout changes
   follow the carousel's rendered width, including when a pane or side navigation
   resizes without a window resize. A full-screen carousel automatically becomes
@@ -690,8 +691,10 @@
 <tr>
   <td><code>i18n</code></td>
   <td>Object</td>
-  <td><code>{ carousel: 'Carousel', item: 'Item', of: 'of' }</code></td>
-  <td>Generated accessible label strings.</td>
+  <td><code>{ carousel: 'Carousel', item: 'Item', of: 'of', indicators: 'Slides', slide: 'Slide' }</code></td>
+  <td>Generated accessible label strings. <code>indicators</code> names the
+    indicator row and <code>slide</code> prefixes each dot, giving
+    &ldquo;Slide 1&rdquo;. Partial objects merge with the defaults.</td>
 </tr>
 <tr>
   <td>

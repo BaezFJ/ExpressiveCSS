@@ -23,10 +23,10 @@ describe('Slider CSS', () => {
     // The host list gained `.slider` - M3's name for this component - so this
     // asserts which hosts it must reach rather than how the list is spelled.
     // A literal-selector regex has now broken on four separate renames.
-    // Not a `:is\(([^)]*)\)` capture: the list now holds `.slider:has(...)`,
-    // whose own parenthesis ends the character class. Take the selector text.
+    // Not a `:is\(([^)]*)\)` capture: the list holds `label:has(...)`, whose
+    // own parenthesis ends the character class. Take the selector text.
     const hosts = css.match(/([^{}]*\.range-field[^{}]*)\{/)[1];
-    for (const h of ['.range', '.range-field', '.slider:has([type=range])']) {
+    for (const h of ['.range', '.range-field', '.slider']) {
       assert.ok(hosts.includes(h), `host list is missing ${h}: ${hosts}`);
     }
     assert.match(css, /--md-comp-slider-track-height:\s*24px/);

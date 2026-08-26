@@ -461,6 +461,90 @@ below is the whole story for that component.
 
 ### Removed
 
+- **Slideshow is gone, and Carousel takes the case.** Charter work for 1.0.0,
+  like Parallax and Pulse below. M3 has no slideshow — its Carousel is the
+  component for a band of media — and once Carousel could advance on its own
+  the two expressed one concept in 590 lines of duplicate. Deleted outright:
+  `components/_slideshow.scss`, `components/slideshow.ts`, the `slideshow`
+  `semantics.json` row, and the docs coverage on the Media page.
+  `Expressive.Slideshow` no longer resolves. **There is no alias**, because an
+  alias keeps both concepts alive while pretending one of them died.
+
+  **`.slider` is unambiguous again**, which is the bonus worth stating. 0.8.0
+  gave `.slider` to M3's range control while the slideshow still held it, so
+  the two were told apart by what they contained —
+  `.slider:has([type='range'])` against `.slider:not(:has([type='range']))`.
+  Both halves are gone with the component: `.slider` is the range control and
+  nothing else, and nothing in the sheet asks what a `.slider` holds. The range
+  control itself is otherwise untouched.
+
+  **Migration.** Carousel with a fixed `height` reproduces the layout — the
+  height sizes the track and the indicators take their own row beneath it:
+
+  ```html
+  <!-- before -->
+  <div class="slideshow">
+    <ul class="slides">
+      <li><img src="1.jpg" alt="First"><div class="caption"><h3>One</h3></div></li>
+      <li><img src="2.jpg" alt="Second"><div class="caption"><h3>Two</h3></div></li>
+    </ul>
+  </div>
+
+  <!-- after -->
+  <div class="carousel">
+    <div class="carousel-item">
+      <img src="1.jpg" alt="First">
+      <div class="carousel-item-content"><h3>One</h3></div>
+    </div>
+    <div class="carousel-item">
+      <img src="2.jpg" alt="Second">
+      <div class="carousel-item-content"><h3>Two</h3></div>
+    </div>
+  </div>
+  ```
+
+  `.carousel-item-content` is the caption slot and is not optional: the item
+  clips its overflow and the media fills its height, so a heading left as a
+  bare sibling is pushed out of the box rather than laid over the image the way
+  `.caption` was. It is also what the small and medium size roles hide and trim
+  against.
+
+  ```js
+  // before
+  Expressive.Slideshow.init(el, { height: 400, indicators: true, interval: 6000 });
+  // after
+  Expressive.Carousel.init(el, { height: 400, indicators: true, interval: 6000, fullWidth: true });
+  ```
+
+  Four options do not carry over cleanly.
+
+  - `duration` exists on both but means the transition, not the crossfade —
+    and Carousel's rest **follows** each transition, so a cycle takes
+    `duration + interval`. `interval: 6000` above therefore paces at 6.2s
+    rather than 6s; subtract `duration` to keep the old cadence exactly.
+  - `pauseOnHover` and `pauseOnFocus` have no equivalent and are not needed: an
+    auto-advancing carousel always pauses under the pointer, while focus is
+    inside it, and while the tab is hidden — WCAG 2.2.2 territory, so it is not
+    switchable.
+  - `indicatorLabelFunc` is replaced by two new `i18n` keys, `indicators` and
+    `slide`, which name the indicator row and prefix each dot. They are new in
+    this release: those were the last two strings Carousel generated in
+    hardcoded English, and SEMANTICS rule 5 wants every generated string on an
+    `i18n` option. The replacement is a pair of strings rather than a callback,
+    so a label that varied per index — "Go to slide 3 (Current)" — has no
+    equivalent; the current dot already carries `aria-current="true"`, which is
+    what that suffix was standing in for.
+
+  **`fullscreen` has no exact equivalent, and `.carousel.full-screen` is not
+  it.** A `fullscreen` slideshow filled its positioned ancestor and stayed
+  horizontal at every size. `.carousel.full-screen` is M3's immersive feed:
+  `100dvh`, square corners, and **vertical**, turning horizontal on its own in
+  landscape or at an expanded width (the component adds
+  `.full-screen-horizontal` from the rendered geometry, so setting that class
+  by hand does not stick). It also sizes itself, ignoring the `height` option.
+  Take it for an edge-to-edge feed; for a fixed horizontal band, keep the
+  `height` above and leave `full-screen` off.
+
 - **Parallax and Pulse are gone**, with no successor. This is charter work for
   1.0.0 rather than part of the semantics sweep above. Both were decorative
   motion opinions of our own, and M3 Expressive ships a `MotionScheme` of
