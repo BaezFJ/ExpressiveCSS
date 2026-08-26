@@ -50,6 +50,25 @@ uv sync
 uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
 ```
 
+`.claude/launch.json` is gitignored, so a fresh clone has none and the
+editor's preview pane has no server to start. Recreate it with the same
+command — the `port` field must match the `--port` argument, or the pane
+opens on a port nothing is listening to:
+
+```json
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "flask", "--app", "docs/app.py", "run", "--debug", "--port", "5055"],
+      "port": 5055
+    }
+  ]
+}
+```
+
 Notes:
 
 - Tests are `node:test` + jsdom in `tests/`, run against the **built** bundles — so a stale bundle tests stale code; `npm test` rebuilds first. Two artifacts are needed, not one: `tests/setup.js` imports `dist/js/expressive.mjs`, and `bundle.test.js` reads the IIFE `dist/js/expressive.js`. That is why `test` runs `build:js` (all four formats) rather than `build:js:esm` — building only the ESM bundle passes locally off a warm `dist/` and fails on a clean checkout. `test` also runs `build:css`, because `regressions.test.js` asserts against the compiled `dist/css/expressive.css`; the same warm-`dist/` trap sank the v0.4.0 publish, which CI missed because `ci.yml` runs a full `npm run build` before `test:run` while `release.yml` runs `npm test`. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
