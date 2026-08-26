@@ -81,9 +81,39 @@ tree can be pinned to a theme or an icon style the way a page can, and a grid in
 one has a gutter. `:host` matches nothing in a document, so none of this
 changes what a normally-loaded sheet does.
 
-The commitment is bounded to what CSS alone can honour. Adopting the sheet does
-not carry the JavaScript with it: components still need `Expressive.AutoInit()`
-against the right root, and nothing here claims a shadow tree is auto-initialized.
+## What the commitment does not cover
+
+It is a commitment about the **stylesheet**, and it stops where the stylesheet
+does. Two bounds, and the second is sharper than it first looks.
+
+Adopting the sheet does not carry the JavaScript with it: components still need
+`Expressive.AutoInit()` against the right root, and nothing here claims a shadow
+tree is auto-initialized.
+
+More importantly, **four components build an element and append it to
+`document.body`**, so the node lands outside the shadow root and its adopted
+sheet cannot match it — and initializing against the right root does not change
+the hardcoded destination:
+
+| Component | Portal | Selector left unmatched |
+| --- | --- | --- |
+| `tooltip.ts:167` | the tooltip surface | `.tooltip` |
+| `snackbar.ts:157` | the snackbar container | `#snackbar-container` |
+| `lightbox.ts:305` | the caption | `.lightbox-caption` |
+| `navigationDrawer.ts:288` | the edge drag target | `.drag-target` |
+
+**A page using any of those four needs a document-level copy of the sheet**, and
+that is not a bug in the pairing — the pairing is what makes the shadow tree
+itself correct. It is a property of a portal: an element appended to
+`document.body` is styled by the document, whichever tree created it. Nothing in
+the codebase is root-aware today; there is no `getRootNode()` call anywhere in
+`src/ts/`.
+
+Making the portals follow their originating root is a real change with real
+trade-offs — putting a tooltip on `document.body` is deliberate, since it escapes
+an ancestor's `overflow` and stacking context — so it is tracked separately
+rather than smuggled into a token fix. Until it lands, this ADR's promise reads:
+the sheet adopted into a shadow root styles everything **inside** that root.
 
 Pairing does move specificity, which is worth stating because the obvious
 assumption is that it does not. Bare `:host` weighs (0,1,0), the same as

@@ -168,7 +168,11 @@ disjoint elements and never compete, so nothing in the sheet turns on it — but
 do not reach for the pairing as a way to keep specificity flat.
 
 `tests/shadow-dom.test.js` fails any rule that skips the pairing; the commitment
-behind it is `adr/0002-shadow-only-stylesheet-adoption.md`.
+behind it is `adr/0002-shadow-only-stylesheet-adoption.md`. That commitment
+covers everything *inside* the shadow root — four components (Tooltip, Snackbar,
+Lightbox, the drawer's drag target) append an element to `document.body`, which
+the document styles rather than the shadow root, so a page using one of those
+still needs a document-level copy. The ADR names them.
 
 ## Translucent colors
 
