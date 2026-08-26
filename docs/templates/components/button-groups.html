@@ -233,8 +233,11 @@
 {% endcall %}
         <p>
           Items are controls, written as direct children: a
-          <code>&lt;button&gt;</code>, or an <code>&lt;a href&gt;</code> when
-          it navigates. A wrapper element around them is refused too — the gap
+          <code>&lt;button&gt;</code>, or an
+          <code>&lt;a class="button" href&gt;</code> when it navigates. A bare
+          <code>&lt;a href&gt;</code> is refused — it passes for a control and
+          renders as a link, reaching none of the group's corners, press
+          behaviour or inherited size. A wrapper element is refused too — the gap
           and the connected corners are written against direct children, so a
           nested <code>&lt;div&gt;</code> loses both. Every icon-only item
           needs its own <code>aria-label</code>, since the icon inside it is

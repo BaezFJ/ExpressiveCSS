@@ -135,6 +135,26 @@ describe('Button group shape morph', () => {
     assert.doesNotMatch(circle, /padding/);
   });
 
+  test('an item with its own size class keeps its own type role', () => {
+    // The item's geometry tokens beat the group's by inheritance, but a type
+    // role has no such mechanism - so the group's rule has to step aside by
+    // selector, or an `xlarge` item in a `medium` group ends up xlarge-tall
+    // with medium type.
+    const sized = ':not(.xsmall, .small, .medium, .large, .xlarge)';
+    assert.ok(ruleFor(`.button-group.medium > ${item}${sized}`),
+      'the group sets the type role on every item, sized or not');
+    assert.equal(rules.filter((r) => r.selector === `.button-group.medium > ${item}`).length, 0);
+  });
+
+  test('an icon-only item takes the glyph size of the group it is in', () => {
+    // `_buttons.scss` pins a `.circle` glyph to 24px - the 40dp icon button it
+    // was before the size axis existed - so a sized group has to hand it the
+    // token, or every rung but `medium` gets the wrong glyph in the right box.
+    const glyph = rules.find((r) => r.selector.startsWith(`.button-group > ${item}.circle > :is(`))?.body;
+    assert.ok(glyph, 'no glyph rule for an icon-only item');
+    assert.match(glyph, /font-size:\s*var\(--md-comp-filled-button-icon-size\)/);
+  });
+
   test('the motion is dropped when the user asked for no motion', () => {
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.button-group > [^{]*\{\s*transition:\s*none/);
   });

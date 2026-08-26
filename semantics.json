@@ -219,9 +219,16 @@
         {
           "id": "button-group-items-are-controls",
           "kind": "forbid",
-          "selector": ".button-group > :not(button):not(a[href])",
+          "selector": ".button-group > :not(button):not(a.button[href])",
           "fragmentSafe": true,
-          "message": "Every item in a group is a control the user can reach: <button>, or <a href> when it navigates. A wrapper element is also refused - the gap and the connected corners are written against direct children, so a nested <div> loses both."
+          "message": "Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class=\"button\" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both."
+        },
+        {
+          "id": "button-group-item-is-not-an-icon-button",
+          "kind": "forbid",
+          "selector": ".button-group > .icon-button",
+          "fragmentSafe": true,
+          "message": "An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class=\"button circle\">, which the group sizes like any other."
         },
         {
           "id": "button-group-selection-is-not-authored",

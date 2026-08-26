@@ -48,6 +48,14 @@
 // here are the ones an author put here.
 $_item: ":is(button:not(.icon-button), a.button)";
 
+// The size classes, as one `:not()` argument list - which takes the weight of
+// a single class, not five. An item carrying its own size class sets the
+// geometry tokens on itself and beats the group by inheritance; the type role
+// has no such mechanism, so the group's rule has to step aside by selector or
+// an `xlarge` item inside a `medium` group gets xlarge geometry and medium
+// type.
+$_sized: ".xsmall, .small, .medium, .large, .xlarge";
+
 // md.comp.button-group.standard.<size>.between-space
 $_standard-space: (
   "xsmall": 18px,
@@ -86,7 +94,7 @@ $_connected-corners: (
 
       --md-comp-button-group-between-space: #{map.get($_standard-space, $name)};
 
-      > #{$_item} {
+      > #{$_item}:not(#{$_sized}) {
         @include typescale(map.get($s, label));
       }
     }
@@ -125,6 +133,19 @@ $_connected-corners: (
     width: calc(
       var(--md-comp-filled-button-container-height) + 2 * var(--_grow)
     );
+  }
+
+  // `_buttons.scss` pins a `.circle` glyph to 24px, which is the 40dp icon
+  // button it was before the size axis existed. In a group the size is the
+  // group's to state, so the glyph reads the token the size rule just set -
+  // 20px at xsmall through 40px at xlarge. Scoped here rather than fixed
+  // there: a bare `.button.circle` is pre-1.0 markup with its own default,
+  // and moving it is a break this component has no business making.
+  > #{$_item}.circle > #{$icon} {
+    font-size: var(--md-comp-filled-button-icon-size);
+    width: var(--md-comp-filled-button-icon-size);
+    height: var(--md-comp-filled-button-icon-size);
+    line-height: var(--md-comp-filled-button-icon-size);
   }
 
   // Connected. Emitted after the size rules on purpose: `.button-group.medium`

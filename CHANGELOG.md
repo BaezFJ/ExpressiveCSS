@@ -45,6 +45,12 @@ below is the whole story for that component.
   insets - padding inside a stated width would squeeze the icon rather than
   widen the button.
 
+  **The item contract is enforced, not just documented.** A group item is a
+  `<button>` or an `<a class="button" href>` - a bare `<a href>` passes for a
+  control and renders as a link, reaching none of the group's shape or sizing -
+  and an `.icon-button` is refused outright. Both are `semantics.json` rules, so
+  markup that would render wrong fails the suite rather than the eye.
+
   **No selection, deliberately.** M3's connected group draws a selected state,
   and holding one takes a control that remembers the answer — which is
   `.segmented-button`, a `<fieldset>` of radios or checkboxes. A row of

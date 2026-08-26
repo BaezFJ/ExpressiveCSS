@@ -2054,7 +2054,7 @@ A row of related actions that reads as one control without becoming one — a fo
 
 An `.icon-button` is *not* an item: it is its own component, with its own size ladder, insets and pressed shape set on the element itself, so a group can neither size nor reshape it without fighting rules it already has. Write `<button class="button circle">` instead.
 
-Items are controls and direct children — a `<button>`, or an `<a href>` when it navigates. A wrapper element around them loses both the gap and the connected corners, which are written against direct children. An icon-only item carries its own `aria-label`, since the icon is `aria-hidden`.
+Items are controls and direct children — a `<button>`, or an `<a class="button" href>` when it navigates. A bare `<a href>` is refused: it passes for a control and renders as a link, reaching none of the group's corners, press behaviour or inherited size. A wrapper element around them loses both the gap and the connected corners, which are written against direct children. An icon-only item carries its own `aria-label`, since the icon is `aria-hidden`.
 
 ```html
 <div class="button-group">

@@ -136,11 +136,13 @@ Added with the button group component (#41). A group of related buttons that rea
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `button-group-is-not-an-authored-composite-widget` | forbid-composite-roles | `.button-group` | must not match with any composite role |
-| `button-group-items-are-controls` | forbid | `.button-group > :not(button):not(a[href])` | must not match |
+| `button-group-items-are-controls` | forbid | `.button-group > :not(button):not(a.button[href])` | must not match |
+| `button-group-item-is-not-an-icon-button` | forbid | `.button-group > .icon-button` | must not match |
 | `button-group-selection-is-not-authored` | forbid | `.button-group :is([aria-checked], [aria-selected], [aria-pressed])` | must not match |
 
 - **button-group-is-not-an-authored-composite-widget** - A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
-- **button-group-items-are-controls** - Every item in a group is a control the user can reach: <button>, or <a href> when it navigates. A wrapper element is also refused - the gap and the connected corners are written against direct children, so a nested <div> loses both.
+- **button-group-items-are-controls** - Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class="button" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both.
+- **button-group-item-is-not-an-icon-button** - An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class="button circle">, which the group sizes like any other.
 - **button-group-selection-is-not-authored** - A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself.
 
 ### buttons
