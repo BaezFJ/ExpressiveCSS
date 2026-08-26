@@ -71,6 +71,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Dialogs
 - Bottom sheet
 - Side sheet
+- Floating sheet
 - Scrollspy
 - NavigationDrawer
 - Tabs
@@ -4232,6 +4233,27 @@ A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to th
 ```js
 document.getElementById('sheet').show();      // standard
 document.getElementById('sheet').showModal(); // modal
+```
+
+### Floating sheet
+
+A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - the third member of M3's sheet family. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
+
+There are no edge modifiers: `.bottom` selects a bottom sheet and `.left` / `.right` a side sheet. Anchor it with `inset` / `margin`, or move it with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`.
+
+```html
+<dialog class="floating-sheet" aria-labelledby="now-playing-title">
+  <h2 id="now-playing-title">Now playing</h2>
+  <p>Secondary content, floating above the page.</p>
+  <form method="dialog">
+    <button type="submit" value="done">Done</button>
+  </form>
+</dialog>
+```
+
+```js
+document.getElementById('sheet').show();      // standard, no scrim
+document.getElementById('sheet').showModal(); // modal, with scrim
 ```
 
 ### Full-screen
