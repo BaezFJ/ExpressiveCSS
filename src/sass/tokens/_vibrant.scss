@@ -61,7 +61,11 @@ $_vibrant-surfaces: ();
   }
 }
 
-[vibrant] {
+// :host([vibrant]) for the same reason tokens/_theme.scss carries :host - a
+// sheet loaded inside a shadow root cannot reach its own host with a descendant
+// selector, so <my-panel vibrant> would leave the whole shadow tree neutral.
+[vibrant],
+:host([vibrant]) {
   @each $role in $_vibrant-surfaces {
     --md-sys-color-#{$role}: var(--md-sys-color-tertiary-container);
   }

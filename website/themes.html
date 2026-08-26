@@ -618,7 +618,18 @@ document.documentElement.setAttribute('theme', 'auto');</code></pre>
           Menus and toolbars also carry a <code>.vibrant</code> class. Those are
           Material's own per-component token sets, with the colors that spec
           gives each one; the attribute is the general axis and works on
-          anything.
+          anything. A menu inside a vibrant subtree adopts its own vibrant
+          mapping automatically, because it has to: a selected menu item is
+          filled with <code>tertiary-container</code>, which is the very color
+          the attribute paints the menu with, so selection would vanish into
+          its own surface. Material answers that by moving selection to solid
+          <code>tertiary</code>, which is what the class already did.
+        </p>
+        <p>
+          The attribute works in a shadow root too. A sheet loaded there cannot
+          reach its own host with a descendant selector, so
+          <code>:host([vibrant])</code> is matched alongside it — the same
+          reason the token mapping carries <code>:host</code>.
         </p>
   
       </div>

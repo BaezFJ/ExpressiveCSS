@@ -647,7 +647,7 @@ The remap covers `surface`, `background`, all five `surface-container` rungs, `s
 
 There is one ramp, tertiary — M3's for this axis. Pointing the surfaces at primary or secondary would erase every component whose own fill is that container: a tonal button, a FAB, `.toolbar.vibrant`. Set the surface tokens on your own wrapper if you want a different one.
 
-The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material, and `on-surface-variant` collapses onto `on-surface` for the same reason — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis.
+The elevation ladder collapses — every `surface-container` rung resolves to the one container color, which is what a vibrant surface is in Material, and `on-surface-variant` collapses onto `on-surface` for the same reason — so put the attribute on the component you want emphasized, not on the page. Menus and toolbars also carry a `.vibrant` class; those are Material's own per-component token sets, and the attribute is the general axis. A menu inside a vibrant subtree adopts its vibrant mapping automatically — a selected item is filled with `tertiary-container`, the colour the attribute paints the menu with, so M3 moves selection to solid `tertiary`. `:host([vibrant])` is matched alongside `[vibrant]`, so a shadow-DOM host can carry it.
 
 ---
 

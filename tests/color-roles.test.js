@@ -45,8 +45,11 @@ describe('M3 Expressive color roles', () => {
 // through var(). The three things that can break it are all textual, so the
 // compiled sheet is where they are visible.
 describe('Vibrant emphasis', () => {
+  // The rule opens a selector LIST - [vibrant] and :host([vibrant]) - so match
+  // past the rest of it. Anchored to the line start so `menu[id][vibrant]`
+  // further down the sheet cannot stand in for the token rule.
   const block = (sel) =>
-    css.match(new RegExp(`\\[${sel}\\]\\s*\\{([^}]*)\\}`))?.[1];
+    css.match(new RegExp(`^\\s*\\[${sel}\\][^{]*\\{([^}]*)\\}`, 'm'))?.[1];
 
   test('[vibrant] remaps the whole surface family onto the accent container', () => {
     const rule = block('vibrant');
@@ -91,6 +94,34 @@ describe('Vibrant emphasis', () => {
     // Naming a -light / -dark pair would resolve the scheme at this point
     // instead of at the point of use, freezing the subtree to one theme.
     assert.doesNotMatch(block('vibrant'), /-(light|dark)\)/);
+  });
+
+  test('a shadow-DOM host can carry it', () => {
+    // A sheet loaded inside a shadow root cannot reach its own host with a
+    // descendant selector, so <my-panel vibrant> would leave the shadow tree
+    // neutral. Same reason tokens/_theme.scss carries :host.
+    assert.match(css, /:host\(\[vibrant\]\)\s*\{/);
+  });
+
+  test('a menu on a vibrant surface keeps a visible selected item', () => {
+    // The collision this exists to catch: menu-surface fills a selected item
+    // with tertiary-container, which is the very colour [vibrant] paints the
+    // menu itself, so selection vanished into its own menu. M3's menus-vibrant
+    // moves selection to solid tertiary.
+    const rule = css.match(
+      /menu\[id\]\.vibrant[^{]*\{([^}]*)\}/
+    )?.[1];
+    assert.ok(rule, 'no vibrant menu rule in the sheet');
+    assert.match(
+      rule,
+      /--md-comp-menu-item-selected-container-color:\s*var\(--md-sys-color-tertiary\)/,
+      'a vibrant menu still fills its selected item with the container colour'
+    );
+    assert.match(
+      css,
+      /menu\[id\]\.vibrant,\s*menu\[id\]\[vibrant\],\s*\[vibrant\] menu\[id\]/,
+      'the vibrant menu mapping does not reach a menu inside a [vibrant] subtree'
+    );
   });
 
   test('it is declared after the :root mapping it overrides', () => {
