@@ -170,6 +170,31 @@ job is `visual.yml`, pull requests only.
   draws outside the element box, escapes the mask, and fails 175 shots that are
   perfectly fine.
 
+- **`transition-duration: 0s` does not stop a transition that is already
+  running.** Per spec a running transition keeps the timing it started with, so
+  changing its duration afterwards has no effect on it; only removing
+  `transition-property` cancels it and snaps the value to its target. The
+  stabilisation style tag sets both. The carousel showed why: its hero item's
+  `flex-basis` was caught mid-interpolation at the shutter, one pass at weight
+  1.2e-09 and the other at 1.07e-03 -- 40px against 40.09px, which resamples
+  every edge and placeholder diagonal across three items and lands at 210
+  pixels, just past the 100 the tolerance allows.
+
+  **That fix alone does not make the carousel deterministic**, so do not read it
+  as closing that. The deeper fragility is in the component: at compact width
+  the hero's small items resolve `flex-basis: clamp(40px, 12%, 56px)` to about
+  40.09px, a tenth of a pixel above their own floor, so any sub-pixel layout
+  difference flips them between 40.09 and a clamped 40. A value sitting on a
+  clamp boundary is bistable by construction and no amount of settling fixes it.
+  See #46.
+
+  **Reproduce contention with `taskset -c 0,1 env CI=1 npm run test:visual`.**
+  The config runs 4 workers under CI against a 2-core runner, and that
+  starvation is the whole difference -- none of this reproduces on a 32-core
+  machine at default worker counts. Instrument with care: adding a
+  `page.evaluate()` before the layout freeze inserts enough delay to hide the
+  failure, so a probe can make a flake look fixed.
+
 - **`visual/serve.py`, not `flask --app`.** Werkzeug logs ~1,400 access lines a
   pass, which buries the results; the wrapper quiets that logger so stderr
   stays free for real failures. Silencing stderr wholesale was the first

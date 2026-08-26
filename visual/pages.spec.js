@@ -175,8 +175,24 @@ for (const file of pages) {
       // `animations: 'disabled'` only reaches CSS. Freezing transitions stops
       // a component that is mid-transition when the shutter opens from
       // photographing a half-applied state.
+      //
+      // `transition-property: none` is the line that does the work, and the
+      // three below it are not enough on their own: per spec a *running*
+      // transition keeps the timing it started with, so changing its duration
+      // afterwards does not finish it. Only removing the property cancels the
+      // transition, which snaps the value to its target.
+      //
+      // The carousel proved it, after failing five times across two PRs that
+      // touched nothing near it. Its hero items were still interpolating at the
+      // shutter - `flex-basis` at weight 1.2e-09 in one pass and 1.07e-03 in
+      // the other, which resolves to 40px against 40.09px. A tenth of a pixel,
+      // and it resamples every edge and placeholder diagonal on three items:
+      // 210 pixels, just over the 100 the tolerance allows. How far the ease
+      // had got depended on how many frames the machine managed, which is why
+      // it failed in CI far more often than locally.
       await page.addStyleTag({
         content: `*, *::before, *::after {
+          transition-property: none !important;
           transition-duration: 0s !important;
           animation-duration: 0s !important;
           animation-delay: 0s !important;
