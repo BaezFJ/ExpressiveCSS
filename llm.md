@@ -1801,7 +1801,7 @@ Create Create
 
 ### Floating
 
-A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. The sizes are `circle extra small` (40dp, 12dp corners), `circle extra medium` (80dp, 20dp corners, 26dp icon) and `circle extra large` (96dp, 28dp corners, 36dp icon) — the large size needs the `extra`, because `circle large` on its own is the alias for the default 56dp FAB. `extend` is the extended FAB — icon plus label at 56dp, 16dp corners, 8dp between icon and label. Add `small` (`extend small`) for the small extended FAB: the same 56dp on a symmetric 16dp inset. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
+A FAB is `circle extra` or `circle large`: 56dp, 16dp corners, `primary-container`, elevation 3. The sizes are `circle extra small` (40dp, 12dp corners), `circle extra medium` (80dp, 20dp corners, 26dp icon) and `circle extra large` (96dp, 28dp corners, 36dp icon) — the large size needs the `extra`, because `circle large` on its own is the alias for the default 56dp FAB. `extend` is the extended FAB — icon plus label at 56dp, 16dp corners, 8dp between icon and label. Its sizes are `extend small` (56dp on a symmetric 16dp inset, `title-medium` label), `extend medium` (80dp, 20dp corners, 28dp icon, `title-large`) and `extend large` (96dp, 28dp corners, 36dp icon, `headline-small`); a sizeless `extend` keeps M3's base 16dp / 20dp inset and a `label-large` label. Its container colour is a role: `primary-container` is the default, and `secondary-container` and `tertiary-container` recolour the label and the state layers with it. On an `<a>`, add `button` — the size classes only match `button` or `a.button`.
 
 Create
 
@@ -1822,6 +1822,12 @@ Create
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <button class="extend small">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button class="extend medium">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button class="extend large secondary-container">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 ```
