@@ -178,9 +178,16 @@
           <code>extra</code>: <code>circle large</code> on its own is the
           alias for the default 56dp FAB.
           <code>extend</code> is the extended FAB — icon plus
-          label at 56dp, 16dp corners, 8dp between the two.
-          <code>extend small</code> is the small extended FAB: the same
-          56dp on a symmetric 16dp inset.
+          label at 56dp, 16dp corners, 8dp between the two. It takes the
+          same three sizes: <code>extend small</code> is 56dp on a
+          symmetric 16dp inset, <code>extend medium</code> 80dp (20dp
+          corners, 28dp icon) and <code>extend large</code> 96dp (28dp
+          corners, 36dp icon), each with the label role Material gives it.
+          Its container colour is a role too —
+          <code>secondary-container</code> and
+          <code>tertiary-container</code> recolour the label and the state
+          layers with it. See <a href="{{ url_for('floating_action_button') }}#extended">the FAB page</a>
+          for the whole axis.
         </p>
         <p>
           <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
@@ -189,6 +196,8 @@
           <button type="button" class="circle extra large" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
           <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
           <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+          <button type="button" class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+          <button type="button" class="extend large secondary-container"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
         </p>
 {% call code() %}
 <button class="circle extra" aria-label="Add">
@@ -207,6 +216,12 @@
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 <button class="extend small">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button class="extend medium">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button class="extend large secondary-container">
   <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
 </button>
 {% endcall %}
