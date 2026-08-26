@@ -278,7 +278,7 @@
       content: "";
       position: fixed;
       inset: 0;
-      background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+      background-color: var(--md-comp-scrim-color);
       z-index: -1;
     }
   }
@@ -294,7 +294,7 @@
         content: "";
         position: fixed;
         inset: 0;
-        background-color: color-mix(in oklab, var(--md-sys-color-scrim) 32%, transparent);
+        background-color: var(--md-comp-scrim-color);
         z-index: -1;
       }
     }

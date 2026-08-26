@@ -679,6 +679,8 @@ Every role name is a background class. The same name plus `-text` is the foregro
 
 Standard pairs: `primary` / `on-primary`, `primary-container` / `on-primary-container`, and the same for secondary, tertiary, and error. Surface: `surface`, `surface-dim`, `surface-bright`, `surface-container-lowest` … `surface-container-highest`, `on-surface`, `on-surface-variant`. Outline: `outline`, `outline-variant`. Inverse: `inverse-surface` / `inverse-on-surface`, `inverse-primary`. Overlay: `scrim`, `shadow`. Optional fixed accents (`primary-fixed`, `primary-fixed-dim`, `on-primary-fixed`, `on-primary-fixed-variant`, and the secondary/tertiary copies) stay the same in light and dark. `background`, `on-background`, `surface-variant`, and `surface-tint` remain as aliases.
 
+`scrim` is the opaque neutral the wash behind a modal surface is mixed from, not the wash itself. That is `--md-comp-scrim-color` — the role at 32%, defined once on `:root, :host` (so a sheet adopted into a shadow root gets one too) and consumed by dialogs, both sheets, the navigation drawer and the modal navigation rail. Override it at the root to retheme all of them, or set it on one element to dim just that surface (`::backdrop` inherits from the element it belongs to). The mix resolves at the root, so overriding `--md-sys-color-scrim` on a subtree does not reach a scrim below it — override `--md-comp-scrim-color` there instead.
+
 In Sass, consume the token directly. Do not write `rgba(var(--md-sys-color-primary), 0.06)` — the tokens hold hex colors, so that form is invalid. Mix with transparency instead:
 
 ```css
@@ -4121,7 +4123,7 @@ Material Design 3 dialogs, from the HTML.
 
 A `<dialog>` is a basic dialog. A heading is the headline, a `<p>` (or a wrapping `<div>`) is supporting text, and the last child `<form method="dialog">` or `<nav>` is the action row. `dialog.max` is the full-screen variant. There are no `.modal`, `modal-header`, `modal-content`, or `modal-footer` classes — the element is the component.
 
-Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is 32% `scrim`. Actions sit at the end with an 8dp gap.
+Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/specs). The container is `surface`, 28dp corners, 280–560dp wide, elevation 3. The headline is `headline-small` / `on-surface`; supporting text is `body-medium`. The scrim is `--md-comp-scrim-color`. Actions sit at the end with an 8dp gap.
 
 Open it with `showModal()` and close it with `close()` — the Dialog API, not a plugin. There is no `Modal` export and nothing for `AutoInit()` to start; `Dialogs.Init()` runs at import time and only adds light-dismiss.
 
