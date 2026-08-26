@@ -608,16 +608,16 @@ article > figure > .card-reveal-trigger:hover {
   box-shadow: none;
 }
 
-article > figure > .card-reveal-trigger:active {
-  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-pressed-state-layer-opacity) * 100%), transparent);
-  box-shadow: none;
-}
-
 article > figure > .card-reveal-trigger:focus-visible {
   background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-focus-state-layer-opacity) * 100%), transparent);
   box-shadow: none;
   outline: var(--md-comp-card-focus-indicator-thickness) solid var(--md-comp-card-focus-indicator-color);
   outline-offset: calc(-1 * var(--md-comp-card-focus-indicator-thickness));
+}
+
+article > figure > .card-reveal-trigger:active {
+  background-color: color-mix(in oklab, var(--md-comp-card-state-layer-color) calc(var(--md-comp-card-pressed-state-layer-opacity) * 100%), transparent);
+  box-shadow: none;
 }
 
 article > header.card-reveal-summary {

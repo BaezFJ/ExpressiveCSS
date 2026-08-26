@@ -1302,3 +1302,32 @@ describe('Surfaces that lost the ripple keep a pressed state layer', () => {
     });
   }
 });
+
+// Two ordering/specificity traps in the state layers that replaced Waves.
+describe('State layers that replaced the ripple', () => {
+  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+
+  test('the selected drawer row keeps its pill while hovered and pressed', () => {
+    // The row's own layer mixes into `transparent`; letting it reach a
+    // selected row erases the secondary-container fill instead of tinting it.
+    for (const state of ['hover', 'active']) {
+      const rule = css.match(
+        new RegExp(`li\\.active > :is\\(a, button\\)[^{]*:${state}\\s*\\{[^}]*\\}`, 's')
+      );
+      assert.ok(rule, `no selected-drawer-row rule for :${state}`);
+      assert.match(rule[0], /var\(--md-sys-color-secondary-container\)\s*\)/);
+      assert.doesNotMatch(rule[0], /,\s*transparent\s*\)/);
+    }
+  });
+
+  test('a pressed media trigger outranks its own focus layer', () => {
+    // Keyboard activation is :focus-visible *and* :active at equal
+    // specificity, so the pressed rule has to come last to be the one read.
+    for (const trigger of ['card-reveal-trigger', 'expanding-card-trigger']) {
+      const focus = css.indexOf(`.${trigger}:focus-visible`);
+      const active = css.indexOf(`.${trigger}:active`);
+      assert.ok(focus > -1 && active > -1, `${trigger} is missing a focus or active rule`);
+      assert.ok(active > focus, `${trigger}: :active must follow :focus-visible`);
+    }
+  });
+});
