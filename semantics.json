@@ -582,6 +582,26 @@
         }
       ]
     },
+    "loading-indicator": {
+      "status": "enforced",
+      "note": "The M3 Expressive indicator for short waits. One empty <span> that reports nothing on its own, so the role and the name are both the author's - it is a live region, not a progressbar: it has no value to report. It supersedes the indeterminate circular case of `progress`, which keeps every determinate case and both linear bars.",
+      "rules": [
+        {
+          "id": "loading-indicator-reports-itself",
+          "kind": "require-attr",
+          "attr": "role",
+          "equals": "status",
+          "selector": ".loading-indicator",
+          "message": "An empty <span class=\"loading-indicator\"> is a shape drawn with CSS and reports nothing. It needs role=\"status\" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it."
+        },
+        {
+          "id": "loading-indicator-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".loading-indicator",
+          "message": "The indicator has no text of its own, so role=\"status\" would announce an empty string. Name it - aria-label=\"Loading\", or aria-labelledby pointing at the copy beside it."
+        }
+      ]
+    },
     "menu": {
       "status": "enforced",
       "note": "Swept 0.8.0.",

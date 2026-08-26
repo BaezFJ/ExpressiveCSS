@@ -1079,17 +1079,17 @@ Three **selection controls**. They are not interchangeable.
 
 ## 9.1 Progress and loading
 
-**M3:** Progress indicators (linear / circular; determinate / indeterminate) and a separate **loading indicator** for short waits. **ExpressiveCSS:** `.progress` — native `<progress>` (linear) or the circular spinner markup. CSS-only. The distinct M3 loading-indicator component is **not** shipped; use a circular spinner for short waits.
+**M3:** Progress indicators (linear / circular; determinate / indeterminate) and a separate **loading indicator** for short waits. **ExpressiveCSS:** `.progress` — native `<progress>` (linear) or the circular spinner markup — and `.loading-indicator` for the short wait. Both CSS-only. `.loading-indicator` **supersedes the indeterminate circular** case: write it wherever you would have written `<span class="progress circular">` with no value. `.progress` keeps both linear bars and everything determinate.
 
 | Expected wait | What to show |
 | --- | --- |
 | `< 200 ms` | Nothing — show the result |
-| 200 ms–5 s | Circular spinner (indeterminate) |
+| 200 ms–5 s | `.loading-indicator`, contained where the surface would swallow it |
 | `> 5 s` | Progress indicator; determinate if you know the percent |
 
-**Placement.** Linear: along the edge of the container that is loading (often the top of the page or a pane). Circular: centered in the region that is waiting. One indicator per process.
+**Placement.** Linear: along the edge of the container that is loading (often the top of the page or a pane). Circular: centered in the region that is waiting. One indicator per process. The loading indicator is centered the same way; `.contained` gives it a `secondary-container` circle for busy backgrounds.
 
-**Don't** show a spinner for instant responses. Don't mix linear and circular for the same process.
+**Don't** show an indicator for instant responses. Don't mix linear and circular for the same process. Don't give a loading indicator `role="progressbar"` — it has no value to report.
 
 ---
 
@@ -1225,6 +1225,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Slider | `.range > input[type=range]` | Label | — |
 | Date / time | `input.datepicker` / `.timepicker` | Label in `.field` | AutoInit |
 | Progress | `progress.progress` or circular markup | `value` if determinate | — |
+| Loading indicator | `span.loading-indicator` | `role="status"` + name | `contained` |
 | Carousel | `.carousel` | Item children | AutoInit |
 
 ---

@@ -91,6 +91,7 @@ NAV = [
         ('tooltips', 'Tooltips'),
         ('snackbar', 'Snackbar'),
         ('preloader', 'Preloader'),
+        ('loading_indicator', 'Loading indicator'),
         ('carousel', 'Carousel'),
         ('media', 'Lightbox'),
         ('toolbars', 'Toolbars'),
@@ -416,6 +417,12 @@ def toasts():
 @app.route('/preloader.html')
 def preloader():
     return render_template('components/preloader.html')
+
+
+@app.route('/loading-indicator')
+@app.route('/loading-indicator.html')
+def loading_indicator():
+    return render_template('components/loading-indicator.html')
 
 
 @app.route('/carousel')

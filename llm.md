@@ -55,6 +55,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Pagination
 - Panes
 - Preloader
+- Loading indicator
 - Segmented buttons
 
 ### JavaScript components
@@ -3283,6 +3284,8 @@ Activity and progress indicators for content that takes time to load.
 
 If content will take a while to load, give the user feedback. Expressive ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
 
+For an indeterminate wait under about five seconds, prefer the [Loading indicator](#loading-indicator) — it supersedes the indeterminate circular case below. Progress indicators keep both linear bars and everything determinate.
+
 Prefer `<progress>`: it reports itself, and its value with it. A `<div class="progress">` is a bar drawn with CSS and reports nothing, so it needs `role="progressbar"` — and if it is determinate, `aria-valuenow` as well. A progressbar with no value is an *indeterminate* one by definition, which is a lie if the bar visibly shows 70%.
 
 ### Linear
@@ -3354,6 +3357,56 @@ of the page. Override it for a one-off color — a role token, never a raw hex.
       style="--md-comp-progress-indicator: var(--md-sys-color-error)"
       role="status" aria-label="Loading"></span>
 ```
+
+
+---
+
+## Loading indicator
+
+M3 Expressive's indicator for a short wait — a shape that morphs while it spins.
+
+Reach for it whenever the wait is under about five seconds and you cannot report
+a percentage. It **supersedes the indeterminate circular progress indicator**:
+anywhere you would have written `<span class="progress circular">` with no
+value, write this instead. `.progress` keeps both linear bars and every
+determinate case.
+
+One element, CSS-only, no JavaScript plugin. The element is empty, so it reports
+nothing on its own: `role="status"` announces the wait and `aria-label` gives it
+something to announce. Not `role="progressbar"` — that promises an
+`aria-valuenow` an indeterminate indicator does not have.
+
+```html
+<span class="loading-indicator" role="status" aria-label="Loading"></span>
+```
+
+### Contained
+
+`contained` puts the indicator on a `secondary-container` circle and switches it
+to `on-secondary-container`. Use it over an image or a coloured surface, where
+the plain indicator would be lost.
+
+```html
+<span class="loading-indicator contained" role="status" aria-label="Loading"></span>
+```
+
+### Tokens
+
+| Token | Default | What it sets |
+| --- | --- | --- |
+| `--md-comp-loading-indicator-active-indicator-size` | `38px` | The morphing shape. |
+| `--md-comp-loading-indicator-container-size` | `48px` | The box it sits in — the visible circle when `contained`. |
+| `--md-comp-loading-indicator-active-indicator-color` | `primary` | The shape's fill. |
+| `--md-comp-loading-indicator-container-color` | `transparent` | The container fill. |
+| `--md-comp-loading-indicator-duration` | `3000ms` | One full morph-and-spin cycle. |
+
+```html
+<span class="loading-indicator"
+      style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)"
+      role="status" aria-label="Loading"></span>
+```
+
+`prefers-reduced-motion: reduce` stops both animations and leaves the circle.
 
 
 ---

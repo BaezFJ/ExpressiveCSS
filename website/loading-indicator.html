@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Icons - ExpressiveCSS</title>
+    <title>Loading indicator - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Icons</h2>
+            <h2>Loading indicator</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -63,7 +63,7 @@
               </a>
           </li>
           <li>
-              <details name="docs-nav" open>
+              <details name="docs-nav">
                   <summary>
                       <span class="material-symbols" aria-hidden="true">palette</span>
                       Foundations
@@ -78,8 +78,8 @@
                       <li class="">
                           <a href="/typography.html">Typography</a>
                       </li>
-                      <li class="active">
-                          <a href="/icons.html" aria-current="page">Icons</a>
+                      <li class="">
+                          <a href="/icons.html">Icons</a>
                       </li>
                       <li class="">
                           <a href="/shadow.html">Elevation</a>
@@ -152,7 +152,7 @@
               </details>
           </li>
           <li>
-              <details name="docs-nav">
+              <details name="docs-nav" open>
                   <summary>
                       <span class="material-symbols" aria-hidden="true">widgets</span>
                       Components
@@ -197,8 +197,8 @@
                       <li class="">
                           <a href="/preloader.html">Preloader</a>
                       </li>
-                      <li class="">
-                          <a href="/loading-indicator.html">Loading indicator</a>
+                      <li class="active">
+                          <a href="/loading-indicator.html" aria-current="page">Loading indicator</a>
                       </li>
                       <li class="">
                           <a href="/carousel.html">Carousel</a>
@@ -265,8 +265,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Icons</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">Material Symbols, outlined by default. Axes and style are CSS variables.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Loading indicator</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A shape that morphs while it spins, for waits under five seconds.</p>
             </div>
         </div>
     </section>
@@ -278,195 +278,109 @@
   <div class="row">
     <div class="s12 m8 offset-m1 xl7 offset-xl1 docs-page-content">
 
-  <div id="usage" class="section scrollspy docs-section">
+  <div id="basic" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          Icons are Material Symbols. The default class is
-          <code>material-symbols</code>; it uses the outlined family.
-          Ligature names come from the
-          <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Material Symbols catalog</a>.
+          M3 Expressive's indicator for a short wait. One element, CSS-only,
+          no JavaScript plugin. The shape morphs through a circle and four
+          cookie shapes while the whole thing rotates.
         </p>
-        <p>
-          The framework does not ship the font files. Outlined, rounded, and
-          sharp are three separate variable fonts — bundling them would
-          dwarf the rest of the CSS. Load the families you actually use,
-          with the axis ranges so fill / weight / grade / optical size work.
-          Outlined alone is enough for the default.
+        <p class="py-5 center-align">
+          <span class="loading-indicator" role="status" aria-label="Loading"></span>
         </p>
-<pre><code>&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
-
-&lt;!-- Only if you switch style to rounded or sharp --&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;
-&lt;link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block" rel="stylesheet"&gt;</code></pre>
+<pre><code>&lt;span class="loading-indicator" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
         <p>
-          Put <code>material-symbols</code> on an element and use the ligature
-          as the text. <code>.material-icons</code> is kept as an alias so
-          older markup still renders with Symbols.
-        </p>
-        <div class="row py-5">
-          <div class="s3 center-align">
-            <span class="material-symbols medium" aria-hidden="true">add</span>
-            <p>Default</p>
-          </div>
-          <div class="s3 center-align">
-            <span class="material-symbols-outlined medium" aria-hidden="true">add</span>
-            <p>Outlined</p>
-          </div>
-          <div class="s3 center-align">
-            <span class="material-symbols-rounded medium" aria-hidden="true">add</span>
-            <p>Rounded</p>
-          </div>
-          <div class="s3 center-align">
-            <span class="material-symbols-sharp medium" aria-hidden="true">add</span>
-            <p>Sharp</p>
-          </div>
-        </div>
-<pre><code>&lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-&lt;span class="material-symbols-rounded" aria-hidden="true"&gt;add&lt;/span&gt;
-&lt;span class="material-symbols-sharp" aria-hidden="true"&gt;add&lt;/span&gt;</code></pre>
-        <p>
-          Icons inherit the current text color, so token utilities such as
-          <code>primary-text</code> work. For icons inside buttons, see
-          <a href="/buttons.html">Buttons</a>.
+          The element is empty, so it reports nothing on its own.
+          <code>role="status"</code> announces the wait and
+          <code>aria-label</code> gives it something to announce — not
+          <code>role="progressbar"</code>, which promises an
+          <code>aria-valuenow</code> an indeterminate indicator does not have.
         </p>
   
       </div>
 
 
-  <div id="style" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Style</h3>
+  <div id="contained" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Contained</h3>
 
         <p>
-          Outlined, rounded, and sharp are font families, not variation
-          axes. Set the <code>icon-style</code> attribute — the same idea as
-          <code>theme</code> — or set <code>--md-icon-font</code> directly.
-          Either one inherits, so a subtree can use a different style.
+          <code>contained</code> puts the indicator on a
+          <code>secondary-container</code> circle and switches it to
+          <code>on-secondary-container</code>. Use it over an image, a
+          coloured surface, or anything else the plain indicator would get
+          lost against.
         </p>
-<pre><code>&lt;html icon-style="rounded"&gt;
-&lt;div icon-style="sharp"&gt;…&lt;/div&gt;
-&lt;div style="--md-icon-font: var(--md-icon-font-sharp)"&gt;…&lt;/div&gt;</code></pre>
-        <p>
-          Values are <code>outlined</code> (default), <code>rounded</code>,
-          and <code>sharp</code>. A single icon can still opt out with
-          <code>material-symbols-rounded</code> or
-          <code>material-symbols-sharp</code>.
+        <p class="py-5 center-align">
+          <span class="loading-indicator contained" role="status" aria-label="Loading"></span>
         </p>
-        <div class="row py-3">
-          <div class="s4 center-align" icon-style="outlined">
-            <span class="material-symbols medium" aria-hidden="true">settings</span>
-            <p><code>outlined</code></p>
-          </div>
-          <div class="s4 center-align" icon-style="rounded">
-            <span class="material-symbols medium" aria-hidden="true">settings</span>
-            <p><code>rounded</code></p>
-          </div>
-          <div class="s4 center-align" icon-style="sharp">
-            <span class="material-symbols medium" aria-hidden="true">settings</span>
-            <p><code>sharp</code></p>
-          </div>
-        </div>
+<pre><code>&lt;span class="loading-indicator contained" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
   
       </div>
 
 
-  <div id="axes" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Fill, weight, grade, optical size</h3>
+  <div id="vs-progress" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Or a progress indicator?</h3>
 
         <p>
-          These four are variable-font axes. They inherit, so set them on
-          <code>:root</code> or on a wrapper. A missing range in the Google
-          Fonts URL (a link without <code>opsz,wght,FILL,GRAD@…</code>)
-          serves a static instance and the axes will not move.
+          This <strong>supersedes the indeterminate circular
+          <a href="/preloader.html">progress indicator</a></strong>.
+          Reach for the loading indicator whenever you would have written
+          <code>&lt;span class="progress circular"&gt;</code> with no value.
+          <code>.progress</code> keeps everything else — both linear bars, and
+          every case where you know the percentage.
         </p>
         <table class="striped">
           <thead>
-            <tr>
-              <th>Token</th>
-              <th>Default</th>
-              <th>Range</th>
-            </tr>
+            <tr><th>Situation</th><th>Use</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td><code>--md-icon-fill</code></td>
-              <td>0</td>
-              <td>0 or 1</td>
-            </tr>
-            <tr>
-              <td><code>--md-icon-weight</code></td>
-              <td>400</td>
-              <td>100–700</td>
-            </tr>
-            <tr>
-              <td><code>--md-icon-grade</code></td>
-              <td>0</td>
-              <td>−50–200</td>
-            </tr>
-            <tr>
-              <td><code>--md-icon-optical-size</code></td>
-              <td>24</td>
-              <td>20–48 (unitless)</td>
-            </tr>
+            <tr><td>Under 200&nbsp;ms</td><td>Nothing — show the result</td></tr>
+            <tr><td>Up to about 5&nbsp;s, percentage unknown</td><td><code>.loading-indicator</code></td></tr>
+            <tr><td>Longer, percentage known</td><td><code>.progress</code>, determinate</td></tr>
+            <tr><td>Longer, percentage unknown</td><td><code>.progress</code>, indeterminate linear</td></tr>
           </tbody>
         </table>
-<pre><code>:root {
-  --md-icon-fill: 0;
-  --md-icon-weight: 400;
-  --md-icon-grade: 0;
-  --md-icon-optical-size: 24;
-}
-
-&lt;span class="material-symbols" style="--md-icon-fill: 1; --md-icon-weight: 600" aria-hidden="true"&gt;favorite&lt;/span&gt;</code></pre>
-        <p>
-          <code>icon-filled</code> is a shortcut for
-          <code>--md-icon-fill: 1</code>.
-        </p>
-        <div class="row py-3">
-          <div class="s3 center-align">
-            <span class="material-symbols medium" aria-hidden="true">favorite</span>
-            <p>Empty</p>
-          </div>
-          <div class="s3 center-align">
-            <span class="material-symbols medium icon-filled" aria-hidden="true">favorite</span>
-            <p>Filled</p>
-          </div>
-          <div class="s3 center-align">
-            <span class="material-symbols medium" style="--md-icon-weight: 200" aria-hidden="true">settings</span>
-            <p>Weight 200</p>
-          </div>
-          <div class="s3 center-align">
-            <span class="material-symbols medium" style="--md-icon-weight: 700" aria-hidden="true">settings</span>
-            <p>Weight 700</p>
-          </div>
-        </div>
   
       </div>
 
 
-  <div id="sizes" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Sizes</h3>
+  <div id="tokens" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Tokens</h3>
 
         <p>
-          Size an icon with <code>font-size</code>, or use the preset classes
-          on the icon: <code>tiny</code> (1rem),
-          <code>small</code> (2rem), <code>medium</code> (4rem), and
-          <code>large</code> (6rem). Those classes also nudge
-          <code>--md-icon-optical-size</code> so the glyph is cut for that
-          size.
+          Override any of these to retheme one indicator. The colours are role
+          tokens, never raw hex.
         </p>
-        <div class="row pt-5">
-          <div class="s3 center-align"><span class="material-symbols tiny" aria-hidden="true">insert_chart</span></div>
-          <div class="s3 center-align"><span class="material-symbols small" aria-hidden="true">insert_chart</span></div>
-          <div class="s3 center-align"><span class="material-symbols medium" aria-hidden="true">insert_chart</span></div>
-          <div class="s3 center-align"><span class="material-symbols large" aria-hidden="true">insert_chart</span></div>
+        <table class="striped">
+          <thead>
+            <tr><th>Token</th><th>Default</th><th>What it sets</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--md-comp-loading-indicator-active-indicator-size</code></td><td><code>38px</code></td><td>The morphing shape.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-size</code></td><td><code>48px</code></td><td>The box it sits in — the visible circle when <code>contained</code>.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-active-indicator-color</code></td><td><code>primary</code></td><td>The shape's fill.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-container-color</code></td><td><code>transparent</code></td><td>The container fill.</td></tr>
+            <tr><td><code>--md-comp-loading-indicator-duration</code></td><td><code>3000ms</code></td><td>One full morph-and-spin cycle.</td></tr>
+          </tbody>
+        </table>
+        <div class="row py-5">
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-tertiary)" role="status" aria-label="Loading"></span>
+          </div>
+          <div class="s4 center-align">
+            <span class="loading-indicator" style="--md-comp-loading-indicator-active-indicator-size: 76px; --md-comp-loading-indicator-container-size: 96px" role="status" aria-label="Loading"></span>
+          </div>
         </div>
-        <div class="row pb-5">
-          <div class="s3 center-align">Tiny</div>
-          <div class="s3 center-align">Small</div>
-          <div class="s3 center-align">Medium</div>
-          <div class="s3 center-align">Large</div>
-        </div>
-<pre><code>&lt;span class="material-symbols large" aria-hidden="true"&gt;insert_chart&lt;/span&gt;</code></pre>
+<pre><code>&lt;span class="loading-indicator"
+      style="--md-comp-loading-indicator-active-indicator-color: var(--md-sys-color-error)"
+      role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+        <p>
+          <code>prefers-reduced-motion: reduce</code> stops both animations
+          and leaves the circle.
+        </p>
   
       </div>
 
@@ -479,11 +393,10 @@
 
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
-          <li><a href="#usage">Usage</a></li>
-          <li><a href="#style">Style</a></li>
-          <li><a href="#axes">Axes</a></li>
-          <li><a href="#sizes">Sizes</a></li>
-          <li><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Catalog</a></li>
+          <li><a href="#basic">Basic</a></li>
+          <li><a href="#contained">Contained</a></li>
+          <li><a href="#vs-progress">Or a progress indicator?</a></li>
+          <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>
 
