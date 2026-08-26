@@ -24,8 +24,10 @@ typography, elevation, shape, motion, state layers. A foundation is consumed by
 components rather than placed on a page, and its surface is custom properties
 and utility classes rather than elements.
 
-**Behavior.** Document-level script that attaches to markup the author has
-already written, rather than defining markup of its own. The defining property
+**Behavior.** Script that attaches to markup the author has already written,
+rather than defining markup of its own — whether it runs once for the document
+or once per element, and whether or not it generates elements of its own to do
+the job. The defining property
 is that removing a behavior leaves the markup valid and meaningful; removing a
 component removes the element.
 
@@ -55,6 +57,14 @@ no click target, no toggle, no removal. It is not a control, takes no place in
 the tab order, and is a chip only in appearance. Distinct from the assist,
 filter, input, and suggestion chips of Material 3, all of which are
 interactive.
+
+**Roster.** The set of names the semantics data file holds a row for: every Sass
+component partial, plus the entries recorded as additional for a component that
+has no partial of its own, minus the partials recorded as stating no component.
+The defining property is that it is derived rather than authored — a new partial
+joins it by existing, so a missing row is a failure rather than an oversight. A
+row states which of the three kinds above it is, and is a component unless it
+says otherwise.
 
 **Enforced / exempt.** The two states a component holds in the semantics data
 file. *Enforced*: its rules run and a violation fails the suite. *Exempt*: its

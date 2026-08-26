@@ -333,16 +333,24 @@ markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
 generated from the templates, so checking it would check the same thing twice.
 Notes that matter when working on it:
 
-- **The sweep is complete: 45 of 45 enforced.** Chips, then forms, then
-  navigation, then the rest (`input-fields`,
+- **The sweep is complete: 44 of 44 rows enforced, 41 of them components.** Chips,
+  then forms, then navigation, then the rest (`input-fields`,
   `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
   `file-input`, `range`, `autocomplete`, `character-counter`; then `landmarks`,
   `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
-  `pagination`, `tabs`, `menu`, `table_of_contents`, `page-footer`; then icons,
+  `pagination`, `tabs`, `menu`, `scrollspy`, `page-footer`; then icons,
   badges, buttons, cards, toolbar, list, tooltip, preloader, dialog, panes,
-  carousel, lightbox, icon-buttons, and ten rows that state no markup of their
+  carousel, lightbox, icon-buttons, and nine rows that state no markup of their
   own and say so in their note). **The exempt list is empty — keep it that way.** A
   new component ships enforced or the roster test fails.
+- **A row is a component unless it says otherwise.** `kind` names the exception
+  and the vocabulary is `rowKinds`, which restates CONTEXT.md: a `foundation`
+  has no markup of its own (`transitions`), a `behavior` attaches to markup the
+  author already wrote and generates whatever element it needs
+  (`docked-display`, `character-counter`). The rules of a non-component row run
+  exactly as a component's do — a kind says what the row *is*, not whether it is
+  checked — so reclassifying costs no coverage, which is the whole reason the
+  roster can be honest without deleting anything.
 - **Four rule kinds, and the last two exist for opposite reasons.** `forbid` and
   `require-attr` are selector-level. `require-accessible-name` is not, because
   whether a control ends up named depends on text *nodes* and CSS cannot see
@@ -385,8 +393,13 @@ Notes that matter when working on it:
   matches every closing one.
 - A component is `enforced` or `exempt`. **Exempt is the backlog and only ever
   shrinks.** The roster test asserts `semantics.json` rows match the sass partials
-  plus `additional` exactly, so a new component cannot ship without a row — which
-  is what makes it enforced from its first commit.
+  plus `additional`, minus `notComponents`, exactly — so a new component cannot
+  ship without a row, which is what makes it enforced from its first commit.
+  **`notComponents` is the only way a partial gets out of the roster, and it is
+  guarded**: every entry must name a partial that still exists and state why it
+  is not a component, so it cannot become a quiet exemption list. One entry sits
+  there — `table_of_contents`, whose list is Scrollspy's markup; the partial
+  stays in the sheet and `scrollspy` owns the rule for it.
 - The check **must never initialize a component**. It parses with jsdom and reads
   the DOM. Components schedule timers (`slideshow` an interval, eight others
   `setTimeout`s), and a live timer wedges the whole `node --test` run with no

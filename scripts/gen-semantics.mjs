@@ -23,9 +23,16 @@ const esc = (s) => String(s).replace(/\|/g, '\\|');
 const code = (s) => '`' + esc(String(s).replace(/`/g, '\\`')) + '`';
 
 export function render(data) {
-  const names = Object.keys(data.components).sort();
-  const enforced = names.filter((n) => data.components[n].status === 'enforced');
-  const exempt = names.filter((n) => data.components[n].status !== 'enforced');
+  const names = Object.keys(data.rows).sort();
+  const enforced = names.filter((n) => data.rows[n].status === 'enforced');
+  const exempt = names.filter((n) => data.rows[n].status !== 'enforced');
+  // A row is a component unless it says otherwise; the other kinds are
+  // CONTEXT.md's. The count of components is therefore smaller than the count
+  // of rows, and both are worth stating - one is the size of the framework's
+  // markup surface, the other the size of this standard.
+  const kindOf = (n) => data.rows[n].kind ?? 'component';
+  const components = names.filter((n) => kindOf(n) === 'component');
+  const others = names.filter((n) => kindOf(n) !== 'component');
 
   const l = [];
   l.push('# HTML semantics');
@@ -51,9 +58,21 @@ export function render(data) {
   l.push('a reason - ```` ```html ignore-semantics: why ```` in Markdown, or');
   l.push(code('code(check=false, reason="why")') + ' in a docs template.');
   l.push('');
-  l.push(`**${enforced.length} of ${names.length} components enforced; ${exempt.length} remaining.**`);
+  l.push(`**${enforced.length} of ${names.length} rows enforced; ${exempt.length} remaining.**`);
   l.push('');
-  const indebted = names.filter((n) => data.components[n].conformance);
+  l.push(`${components.length} of those rows are components - a part of the framework an author writes markup for.`);
+  l.push('The rest are not, and say which they are: ' + others.map((n) => `${code(n)} (${kindOf(n)})`).join(', ') + '.');
+  l.push('CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,');
+  l.push('not whether it is checked.');
+  l.push('');
+  for (const [name, why] of Object.entries(data.notComponents)) {
+    l.push(`${code(name)} has no row at all: ${esc(why)}`);
+    l.push('');
+  }
+  // Filtered over components, not rows, because the sentence below counts them
+  // against the component total: a behavior declaring debt would otherwise be
+  // printed as one of a population it is not in.
+  const indebted = components.filter((n) => data.rows[n].conformance);
   l.push('**Conformance debt** is a separate axis from enforced/exempt: a fully enforced');
   l.push('component may still withhold a composite role because the keyboard contract rule 2');
   l.push('demands does not exist yet. Each one below names the role it withholds, what that');
@@ -66,7 +85,7 @@ export function render(data) {
   l.push('The composite roles that can be withheld or rejected: ' + data.compositeRoles.map(code).join(', ') + '.');
   l.push('');
   const declares = indebted.length === 1 ? 'declares' : 'declare';
-  l.push(`**${indebted.length} of ${names.length} components ${declares} conformance debt.**`);
+  l.push(`**${indebted.length} of ${components.length} components ${declares} conformance debt.**`);
   l.push('');
   l.push('That is a count of *declarations*, not of debt. The suite pairs a declaration with a');
   l.push('rule and a role-blocking rule with a declaration, so neither can exist alone - but a');
@@ -75,7 +94,7 @@ export function render(data) {
 
   l.push('## Enforced');
   l.push('');
-  for (const name of enforced) l.push(...renderComponent(name, data.components[name]));
+  for (const name of enforced) l.push(...renderComponent(name, data.rows[name]));
 
   l.push('## Exempt');
   l.push('');
@@ -84,7 +103,7 @@ export function render(data) {
   l.push('| Component | Rules written | Note |');
   l.push('| --- | --- | --- |');
   for (const name of exempt) {
-    const c = data.components[name];
+    const c = data.rows[name];
     l.push(`| ${code(name)} | ${c.rules.length} | ${esc(c.note ?? '')} |`);
   }
   l.push('');
@@ -98,6 +117,7 @@ function blocksEveryRole(c, rule) {
 
 function renderComponent(name, c) {
   const l = [`### ${name}`, ''];
+  if (c.kind) l.push(`**Kind:** ${c.kind}.`, '');
   if (c.note) l.push(c.note, '');
   if (c.conformance) {
     const { withheld_role: role, blocked_on: blocked, rule } = c.conformance;

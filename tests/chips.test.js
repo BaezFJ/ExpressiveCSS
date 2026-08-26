@@ -16,7 +16,7 @@ import { Expressive, resetBody, fire } from './setup.js';
 
 const CHIP_RULES = JSON.parse(
   readFileSync(new URL('../semantics.json', import.meta.url), 'utf8')
-).components.chips.rules;
+).rows.chips.rules;
 
 /** Applies the enforced chips rules to whatever the plugin just rendered. */
 function assertConforms(root) {

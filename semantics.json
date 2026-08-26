@@ -1,5 +1,5 @@
 {
-  "about": "Normative HTML semantics for ExpressiveCSS components. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. CONTEXT.md defines the vocabulary.",
+  "about": "Normative HTML semantics for ExpressiveCSS. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. One row per roster entry, each stating its kind - component, foundation or behavior, as CONTEXT.md defines them. CONTEXT.md defines the rest of the vocabulary.",
   "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
   "rules": [
     "Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.",
@@ -13,6 +13,11 @@
     "forbid-composite-roles": "selector must match nothing in a checked example once expanded over `compositeRoles` - the component may not *be* a composite widget of any kind",
     "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)",
     "require-accessible-name": "every element matching selector must end up with a non-empty accessible name (aria-label, aria-labelledby, or text that is not inside an aria-hidden subtree)"
+  },
+  "rowKinds": {
+    "component": "A part of the framework an author writes markup for. The default, and the only kind whose rules describe markup a page states directly. CONTEXT.md defines all three.",
+    "foundation": "A token or style system with no markup of its own. It has a partial, and therefore a row, but there is nothing an author writes to get it.",
+    "behavior": "Script that attaches to markup the author has already written. Any element it names is generated, not authored."
   },
   "compositeRoles": [
     "combobox",
@@ -37,7 +42,10 @@
     "character-counter",
     "landmarks"
   ],
-  "components": {
+  "notComponents": {
+    "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's own page macro. The partial stays in the sheet; `scrollspy` owns its rule."
+  },
+  "rows": {
     "autocomplete": {
       "status": "enforced",
       "note": "Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.test.js.",
@@ -146,7 +154,8 @@
     },
     "character-counter": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Checked at runtime in tests/character-counter.test.js.",
+      "kind": "behavior",
+      "note": "Swept 0.8.0. A behavior, not a component: the author writes `data-length` on a field they already had, and the counter element is generated. Checked at runtime in tests/character-counter.test.js.",
       "rules": [
         {
           "id": "counter-is-announced",
@@ -241,7 +250,8 @@
     },
     "docked-display": {
       "status": "enforced",
-      "note": "Swept 0.8.0. A positioning wrapper the picker plugins generate; it introduces no author-facing markup.",
+      "kind": "behavior",
+      "note": "Swept 0.8.0. A behavior, not a component: the picker plugins generate this positioning wrapper, so there is no element an author writes to get one.",
       "rules": []
     },
     "expanding-card": {
@@ -692,8 +702,16 @@
     },
     "scrollspy": {
       "status": "enforced",
-      "note": "Swept 0.8.0. A behaviour on existing sections. Its table of contents is covered by table_of_contents.",
-      "rules": []
+      "note": "Swept 0.8.0. The sections it watches are the author's own; the table of contents beside them is markup the author writes, which is what keeps this a component and not a behavior. `_table_of_contents.scss` styles that list and states no component of its own, so the rule for it lives here.",
+      "rules": [
+        {
+          "id": "toc-in-nav",
+          "kind": "forbid",
+          "selector": ".table-of-contents:not(nav):not(nav *)",
+          "fragmentSafe": true,
+          "message": "A table of contents is a set of destinations within the page. It belongs in a labelled <nav>."
+        }
+      ]
     },
     "side-sheet": {
       "status": "enforced",
@@ -709,19 +727,6 @@
       "status": "enforced",
       "note": "Swept 0.8.0. Generated markup: role=\"status\" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.",
       "rules": []
-    },
-    "table_of_contents": {
-      "status": "enforced",
-      "note": "Swept 0.8.0.",
-      "rules": [
-        {
-          "id": "toc-in-nav",
-          "kind": "forbid",
-          "selector": ".table-of-contents:not(nav):not(nav *)",
-          "fragmentSafe": true,
-          "message": "A table of contents is a set of destinations within the page. It belongs in a labelled <nav>."
-        }
-      ]
     },
     "tabs": {
       "status": "enforced",
@@ -792,7 +797,8 @@
     },
     "transitions": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Class-driven animation applied to whatever element already exists; no markup contract.",
+      "kind": "foundation",
+      "note": "Swept 0.8.0. A foundation, not a component: motion applied through classes to whatever element already exists, with no markup of its own.",
       "rules": []
     }
   },

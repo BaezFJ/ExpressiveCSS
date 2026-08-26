@@ -30,7 +30,7 @@ const key = (el, k) =>
 const DATA = JSON.parse(readFileSync(new URL('../semantics.json', import.meta.url), 'utf8'));
 
 function assertConforms(root, componentKey) {
-  for (const rule of DATA.components[componentKey].rules) {
+  for (const rule of DATA.rows[componentKey].rules) {
     const hits = [...root.querySelectorAll(rule.selector)];
     if (rule.kind === 'forbid') {
       assert.equal(hits.length, 0, `[${rule.id}] ${rule.message}\n  ${hits[0]?.outerHTML ?? ''}`);

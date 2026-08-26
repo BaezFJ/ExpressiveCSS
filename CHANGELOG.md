@@ -101,6 +101,21 @@ below is the whole story for that component.
 - Sass partials moved with their components: `_sidenav` → `_navigation-drawer`,
   `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` →
   `_progress`.
+- **The semantics roster stopped counting things that are not components.** A
+  component is a part of the framework an author writes markup for, and four of
+  the 45 rows in `semantics.json` were not one. Three now state a `kind`
+  instead: `transitions` is a foundation, `docked-display` and
+  `character-counter` are behaviors. `table_of_contents` left the file — the
+  list it styles is Scrollspy's markup, so `scrollspy` took its rule, and the
+  partial is recorded under the new `notComponents` map, which is the only way
+  a partial leaves the roster and which requires a live partial and a stated
+  reason. The standard now reads **44 of 44 rows enforced, 41 of them
+  components**, and the exempt list is still empty.
+
+  Nothing was deleted to get there: no Sass, no script, no markup, and no rule
+  stopped running — a non-component row is checked exactly as a component's is.
+  The data file's `components` key is now `rows`, since it never held only
+  components.
 
 ### Removed
 
