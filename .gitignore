@@ -121,3 +121,7 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# Claude Code machine-local settings (permissions live in .claude/settings.json)
+.claude/settings.local.json
+.claude/.headroom_wrap_marker.json
