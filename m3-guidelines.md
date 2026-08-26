@@ -1058,7 +1058,7 @@ Three **selection controls**. They are not interchangeable.
 
 **Placement.** Top of the screen, above the content it searches. In an app bar, it replaces the headline rather than sitting beside it.
 
-**Behaviors.** Docked view (a `.search-view` inside the bar, toggled with `hidden`) at Medium and up; full-screen view (a `dialog.search-view.full-screen` opened with `showModal()`) at Compact. The view takes no composite role — its contents are links and buttons reached with Tab.
+**Behaviors.** Docked view (a `.search-view` inside the bar, toggled with `hidden`) at Medium and up; full-screen view (a `dialog.search-view.full-screen` opened with `showModal()`, its input carrying `autofocus`) at Compact. Nothing switches between them for you — emit the variant the window size calls for. The view takes no composite role — its contents are links and buttons reached with Tab.
 
 ---
 

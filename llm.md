@@ -3319,7 +3319,9 @@ Spacing follows what is at each end: a bare glyph sits 16dp from the edge, an ic
 
 ### Full-screen view
 
-Full screen, the view is a `<dialog class="search-view full-screen">` opened with `showModal()`; Escape and a tap outside come from the platform. Its header is another `.search-bar` — the same markup, with the pill and the shadow taken off. Full screen below 600px and docked above it is the M3 rule of thumb.
+Full screen, the view is a `<dialog class="search-view full-screen">` opened with `showModal()`; Escape and a tap outside come from the platform. Its header is another `.search-bar`, with the pill and the shadow taken off. `autofocus` on the input is required, not decorative: `showModal()` focuses the first focusable descendant — the back button — so without it a keyboard user cannot type.
+
+Full screen at Compact and docked from Medium up is the M3 rule of thumb, and the app picks: no breakpoint in the sheet swaps one for the other, and the two are not interchangeable markup (the docked view nests inside the bar, the full-screen one is a top-level `<dialog>`). Render the one the window calls for.
 
 ```html
 <dialog class="search-view full-screen" id="search-full" aria-label="Search">
@@ -3329,7 +3331,7 @@ Full screen, the view is a `<dialog class="search-view full-screen">` opened wit
         <span class="material-symbols" aria-hidden="true">arrow_back</span>
       </button>
     </form>
-    <input type="search" aria-label="Search fruit" placeholder="Search fruit">
+    <input type="search" autofocus aria-label="Search fruit" placeholder="Search fruit">
   </search>
   <hr>
   <ul class="list">

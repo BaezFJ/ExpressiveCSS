@@ -157,6 +157,12 @@ $_bar: ":is(.search-bar, .searchbar)";
     margin-inline-start: 0;
 
     @include bp-up("expanded") {
+      // `width: auto`, because the margin sits *outside* the base bar's
+      // `width: 100%`: the two together make the bar 100% + 300px wide and
+      // push its trailing edge past the viewport, on exactly the fixed-drawer
+      // layout this rule exists to preserve. The legacy bar had no width of
+      // its own, so the margin shrank it.
+      width: auto;
       margin-inline-start: 300px;
     }
   }

@@ -155,7 +155,7 @@
                                     <span class="material-symbols" aria-hidden="true">arrow_back</span>
                                 </button>
                             </form>
-                            <input type="search" aria-label="Search fruit" placeholder="Search fruit">
+                            <input type="search" autofocus aria-label="Search fruit" placeholder="Search fruit">
                         </search>
                         <hr>
                         <ul class="list">
@@ -176,7 +176,7 @@
         <span class="material-symbols" aria-hidden="true">arrow_back</span>
       </button>
     </form>
-    <input type="search" aria-label="Search fruit" placeholder="Search fruit">
+    <input type="search" autofocus aria-label="Search fruit" placeholder="Search fruit">
   </search>
   <hr>
   <ul class="list">
@@ -185,10 +185,27 @@
 </dialog>
 {% endcall %}
                     <p>
-                        Full screen below 600px and docked above it is the M3 rule of
-                        thumb. Both variants are the same markup, so a page can render
-                        one and let the window size pick.
+                        <code>autofocus</code> on the input matters here.
+                        <code>showModal()</code> focuses the first focusable descendant,
+                        which is the back button — so without it a keyboard user lands on
+                        Back and cannot type.
                     </p>
+                    <p>
+                        Full screen at Compact and docked from Medium up is the M3 rule of
+                        thumb, and <strong>the app picks</strong>: there is no breakpoint
+                        in the sheet that swaps one for the other. The two are not
+                        interchangeable markup — the docked view is a plain element
+                        nested inside the bar, the full-screen one a top-level
+                        <code>&lt;dialog&gt;</code> — so render the one the window calls
+                        for.
+                    </p>
+                    {% call code() %}
+if (window.matchMedia('(width < 600px)').matches) {
+  document.getElementById('search-full').showModal();
+} else {
+  document.getElementById('results').hidden = false;
+}
+{% endcall %}
   {% endcall %}
 
   {% call section("suggestions", "Suggestions are Autocomplete") %}
