@@ -686,7 +686,3 @@ header:has(> :is(nav, .bar)) > :is(nav, .bar) #source-color-toggle {
   padding: 24px 16px;
   background-color: var(--md-sys-color-surface-container-low);
 }
-
-.drag-handle-demo > .drag-handle {
-  align-self: center;
-}

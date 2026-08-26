@@ -424,6 +424,7 @@ deliberate:
 | Progress indicators | `.progress`, `.progress.circular` | `.preloader` alias |
 | Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated forms alias |
 | (none) | `.slideshow` | M3 has no slideshow; its Carousel covers the case |
+| Drag handle | `.drag-handle` | `.handle` alias, the bottom sheet's pre-1.0 slot class |
 | Text fields | `.field` | **Deliberately not `.text-field`** — the same container wraps `<select>`, autocomplete and file inputs, so the M3 name would be wrong for most of its uses |
 
 Every rename is **additive**: the old class stays in the selector list, the old

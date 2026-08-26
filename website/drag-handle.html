@@ -373,14 +373,15 @@
 
         <p>
           This is the shape Material tokenised: a vertical bar in the gutter of
-          a two-pane layout, 4&times;48dp inside a 24dp hit target. Put it
-          between the panes and give the gutter the handle's width.
+          a two-column layout, 4&times;48dp inside a 24dp hit target. The layout
+          is yours — a flex or grid row of your own, or a
+          <a href="/panes.html">pane layout</a>. The handle is
+          whatever sits between the columns; it brings its own width and needs
+          no wrapper class.
         </p>
-<pre><code>&lt;div class="split"&gt;
-  &lt;section aria-label="Editor"&gt;…&lt;/section&gt;
-  &lt;span class="drag-handle" aria-hidden="true"&gt;&lt;/span&gt;
-  &lt;section aria-label="Preview"&gt;…&lt;/section&gt;
-&lt;/div&gt;</code></pre>
+<pre><code>&lt;section aria-label="Editor"&gt;…&lt;/section&gt;
+&lt;span class="drag-handle" aria-hidden="true"&gt;&lt;/span&gt;
+&lt;section aria-label="Preview"&gt;…&lt;/section&gt;</code></pre>
         <p>
           The handle is <code>cursor: grab</code> by default. A splitter that
           resizes rather than moves reads better as

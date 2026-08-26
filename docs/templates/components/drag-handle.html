@@ -86,15 +86,16 @@
   {% call section("panes", "Between two panes") %}
         <p>
           This is the shape Material tokenised: a vertical bar in the gutter of
-          a two-pane layout, 4&times;48dp inside a 24dp hit target. Put it
-          between the panes and give the gutter the handle's width.
+          a two-column layout, 4&times;48dp inside a 24dp hit target. The layout
+          is yours — a flex or grid row of your own, or a
+          <a href="{{ url_for('panes') }}">pane layout</a>. The handle is
+          whatever sits between the columns; it brings its own width and needs
+          no wrapper class.
         </p>
 {% call code() %}
-<div class="split">
-  <section aria-label="Editor">…</section>
-  <span class="drag-handle" aria-hidden="true"></span>
-  <section aria-label="Preview">…</section>
-</div>
+<section aria-label="Editor">…</section>
+<span class="drag-handle" aria-hidden="true"></span>
+<section aria-label="Preview">…</section>
 {% endcall %}
         <p>
           The handle is <code>cursor: grab</code> by default. A splitter that

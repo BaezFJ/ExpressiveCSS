@@ -2447,12 +2447,12 @@ Which element you write *is* the semantic. A `<span class="drag-handle" aria-hid
 
 **Nothing here drags.** There is no script behind this component and ExpressiveCSS ships no reordering behaviour. Dragging is a pointer gesture, so an outcome reachable only by dragging is unreachable without a pointer: reordering built on a handle needs a keyboard path of its own — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position directly. The handle makes the gesture discoverable; it does not make the outcome reachable.
 
+The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
+
 ```html
-<div class="split">
-  <section aria-label="Editor">…</section>
-  <span class="drag-handle" aria-hidden="true"></span>
-  <section aria-label="Preview">…</section>
-</div>
+<section aria-label="Editor">…</section>
+<span class="drag-handle" aria-hidden="true"></span>
+<section aria-label="Preview">…</section>
 ```
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.

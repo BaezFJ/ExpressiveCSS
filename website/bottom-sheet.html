@@ -369,8 +369,9 @@
         <p>
           There is no extra class for the modal variant — <code>showModal()</code>
           vs <code>show()</code> is the split. The handle is painted with
-          <code>::before</code>. Put a <code>.handle</code> button first if
-          you want a real control in that slot.
+          <code>::before</code>. Put a
+          <a href="/drag-handle.html">drag handle</a> first if you
+          want a real element in that slot.
         </p>
   
       </div>
@@ -380,15 +381,25 @@
         <h3 class="docs-section-title headline-medium">Handle</h3>
 
         <p>
-          Drag the top 48dp (or the <code>.handle</code> button) down to
+          Drag the top 48dp (or an explicit
+          <a href="/drag-handle.html">drag handle</a>) down to
           dismiss. A flick counts. The rest of the sheet scrolls if the
           body overflows.
         </p>
 <pre><code>&lt;dialog class="bottom-sheet" aria-labelledby="title-title"&gt;
-  &lt;button type="button" class="handle" aria-label="Dismiss"&gt;&lt;/button&gt;
+  &lt;span class="drag-handle" aria-hidden="true"&gt;&lt;/span&gt;
   &lt;h2 id="title-title"&gt;Title&lt;/h2&gt;
   …
 &lt;/dialog&gt;</code></pre>
+        <p>
+          The handle is decoration, not a control: dragging is a pointer
+          gesture and <kbd>Esc</kbd> already dismisses the sheet from the
+          keyboard, so the bar sits on top of a path that exists without it.
+          Making it a <code>&lt;button&gt;</code> would promise a keyboard
+          action nothing here performs — <code>Enter</code> on it does nothing,
+          because the drag is bound to pointer events. <code>.handle</code> is
+          the pre-1.0 spelling of the same slot and still works.
+        </p>
   
       </div>
 

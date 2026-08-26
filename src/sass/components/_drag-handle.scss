@@ -32,6 +32,16 @@
 //   pressed      12 x 52dp, corner.medium, on-surface
 //   state layer  inverse-on-surface, 8% hover / 10% focus
 //   elevation    level0 at rest and pressed alike, so there is nothing to draw
+//
+// Two departures, both deliberate. M3 publishes a container *width* and no
+// container height, leaving the container to take whatever height it is given;
+// this pins it to the pressed bar so that holding the handle cannot reflow what
+// is beside it, which a stretched container would also achieve but only where
+// the host happens to stretch it. And Compose distinguishes a *dragged* state
+// from a pressed one - draggedSize, draggedShape, draggedColor, checked before
+// isPressed - which the web token set does not publish and CSS could not select
+// anyway: there is no "is being dragged" pseudo-class, and nothing here drags.
+// `:active` covers both, at the pressed values.
 .drag-handle {
   --md-comp-drag-handle-container-width: 24px;
   --md-comp-drag-handle-width: 4px;
