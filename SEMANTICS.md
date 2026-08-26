@@ -25,7 +25,7 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `code(check=false, reason="why")` in a docs template.
 
-**46 of 46 components enforced; 0 remaining.**
+**47 of 47 components enforced; 0 remaining.**
 
 **Conformance debt** is a separate axis from enforced/exempt: a fully enforced
 component may still withhold a composite role because the keyboard contract rule 2
@@ -38,7 +38,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 46 components declare conformance debt.**
+**2 of 47 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -92,7 +92,7 @@ Swept 0.8.0.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must have `undefined` |
+| `icon-only-control-is-named` | require-accessible-name | `:is(a, button):has([aria-hidden="true"])` | must end up with an accessible name |
 
 - **icon-only-control-is-named** - Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
 
@@ -294,6 +294,20 @@ Swept 0.8.0.
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
 
+### icon-buttons
+
+Added with the icon button component (#22). An icon button is the case rule 3 exists for: its only content is a decorative icon, so the name has to live on the control. `.button.circle` is the older icon button and is covered by the buttons row.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `icon-button-is-a-control` | forbid | `.icon-button:not(button):not(a)` | must not match |
+| `icon-button-icon-hidden` | require-attr | `.icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
+| `icon-button-is-named` | require-accessible-name | `.icon-button` | must end up with an accessible name |
+
+- **icon-button-is-a-control** - An icon button is a control: <button>, or <a class="icon-button"> when it navigates. A <div> is neither focusable nor announced.
+- **icon-button-icon-hidden** - The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden="true".
+- **icon-button-is-named** - The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label.
+
 ### icons-material-design
 
 Swept 0.8.0. The canonical icon is <span class="material-symbols">, and an icon is either decoration or an image - never unannounced text.
@@ -377,7 +391,7 @@ Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an al
 | `drawer-close-is-button` | forbid | `:is(.navigation-drawer-close, .sidenav-close):not(button)` | must not match |
 | `drawer-subheader-not-a-link` | forbid | `:is(.navigation-drawer, .sidenav) a.subheader` | must not match |
 | `drawer-marks-current` | forbid | `:is(.navigation-drawer, .sidenav) :is(li.active > a, a.active):not([aria-current])` | must not match |
-| `drawer-avatar-link-is-named` | require-accessible-name | `:is(.navigation-drawer, .sidenav) .user-view > a:has(> img)` | must have `undefined` |
+| `drawer-avatar-link-is-named` | require-accessible-name | `:is(.navigation-drawer, .sidenav) .user-view > a:has(> img)` | must end up with an accessible name |
 
 - **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
 - **drawer-trigger-is-button** - The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type="button"> with data-target - an <a href="#!"> announces as a link and adds a history entry for a drawer that never navigates.

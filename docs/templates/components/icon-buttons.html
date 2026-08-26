@@ -1,0 +1,242 @@
+{% extends "docs.html" %}
+{% from "macros/page.html" import code, page_body, section, toc with context %}
+{% from "macros/api.html" import token_table %}
+
+{% set page_name = "Icon buttons" %}
+{% set page_blurb = "A single icon as the whole control, in four styles and five sizes." %}
+
+{% block page %}
+{% call page_body() %}
+  {% call section("anatomy", "Anatomy", heading=false) %}
+        <p class="flow-text">
+          An icon button is one action expressed as one icon — the toolbar
+          overflow, the close on a dialog, the star on a row. Add
+          <code>icon-button</code> to a <code>&lt;button&gt;</code>, or to an
+          <code>&lt;a&gt;</code> when it navigates, and put a single
+          <code>&lt;span class="material-symbols"&gt;</code> inside it.
+        </p>
+        <p>
+          The icon is decoration, so it is <code>aria-hidden</code> — which
+          leaves the control with nothing to be named by. Every icon button
+          needs an <code>aria-label</code>. That is not a suggestion here:
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">SEMANTICS.md</a>
+          enforces both halves against the docs, and a bare icon button fails
+          the suite.
+        </p>
+        <p>
+          This is a component in its own right, not a modifier on the common
+          button. Material 3 gives it its own token families, its own size
+          ladder and its own colours, and none of them line up with a common
+          button's. The older <code>&lt;button class="circle"&gt;</code> still
+          works and is still the 40dp common button in a round shape — see
+          <a href="{{ url_for('buttons') }}">Buttons</a>.
+        </p>
+        <p>
+          <button type="button" class="icon-button" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button tonal" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button outlined" aria-label="Add">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </p>
+{% call code() %}
+<button type="button" class="icon-button" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("styles", "Styles") %}
+        <p>
+          Four styles, and the modifier names are the button axis's:
+          <strong>standard</strong> is the default and has no container,
+          <code>filled</code> is <code>primary</code>,
+          <code>tonal</code> is <code>secondary-container</code>, and
+          <code>outlined</code> is an <code>outline-variant</code> border with
+          no fill. Material 3 gives icon buttons no elevated style, so there is
+          no <code>elevated</code> here; <code>text</code> is what standard
+          already is.
+        </p>
+        <table class="striped">
+          <thead><tr><th>Style</th><th>Container</th><th>Icon</th><th>Use it for</th></tr></thead>
+          <tbody>
+            <tr><td>standard (default)</td><td>none</td><td><code>on-surface-variant</code></td><td>The usual case — toolbars, list rows, app bars.</td></tr>
+            <tr><td><code>filled</code></td><td><code>primary</code></td><td><code>on-primary</code></td><td>The one high-emphasis action on the screen.</td></tr>
+            <tr><td><code>tonal</code></td><td><code>secondary-container</code></td><td><code>on-secondary-container</code></td><td>Medium emphasis, without the weight of a filled one.</td></tr>
+            <tr><td><code>outlined</code></td><td>none, <code>outline-variant</code> border</td><td><code>on-surface-variant</code></td><td>Medium emphasis on a busy or image background.</td></tr>
+          </tbody>
+        </table>
+{% call code() %}
+<button type="button" class="icon-button" aria-label="Add">…</button>
+<button type="button" class="icon-button filled" aria-label="Add">…</button>
+<button type="button" class="icon-button tonal" aria-label="Add">…</button>
+<button type="button" class="icon-button outlined" aria-label="Add">…</button>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("sizes", "Sizes") %}
+        <p>
+          Five sizes. <code>small</code> is the default at 40dp with a 24dp
+          icon, so it needs no class. The rest are
+          <code>xsmall</code> (32dp, 20dp icon),
+          <code>medium</code> (56dp, 24dp),
+          <code>large</code> (96dp, 32dp) and
+          <code>xlarge</code> (136dp, 40dp). They compose with the styles:
+          <code>class="icon-button tonal large"</code>.
+        </p>
+        <p>
+          <button type="button" class="icon-button filled xsmall" aria-label="Add, extra small">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled" aria-label="Add, small">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled medium" aria-label="Add, medium">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled large" aria-label="Add, large">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled xlarge" aria-label="Add, extra large">
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </p>
+{% call code() %}
+<button type="button" class="icon-button filled xsmall" aria-label="Add">…</button>
+<button type="button" class="icon-button filled" aria-label="Add">…</button>
+<button type="button" class="icon-button filled medium" aria-label="Add">…</button>
+<button type="button" class="icon-button filled large" aria-label="Add">…</button>
+<button type="button" class="icon-button filled xlarge" aria-label="Add">…</button>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("width", "Width") %}
+        <p>
+          Width is the inset plus the icon, not a size of its own — which is
+          why the default width of every size equals its height, and why a
+          round icon button is a circle without being told to be one. Add
+          <code>narrow</code> to tighten the inset or <code>wide</code> to open
+          it up; both follow whichever size they are on.
+        </p>
+        <p>
+          <button type="button" class="icon-button tonal medium narrow" aria-label="Star, narrow">
+            <span class="material-symbols" aria-hidden="true">star</span>
+          </button>
+          <button type="button" class="icon-button tonal medium" aria-label="Star, default width">
+            <span class="material-symbols" aria-hidden="true">star</span>
+          </button>
+          <button type="button" class="icon-button tonal medium wide" aria-label="Star, wide">
+            <span class="material-symbols" aria-hidden="true">star</span>
+          </button>
+        </p>
+{% call code() %}
+<button type="button" class="icon-button tonal medium narrow" aria-label="Star">…</button>
+<button type="button" class="icon-button tonal medium wide" aria-label="Star">…</button>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("shape", "Shape") %}
+        <p>
+          Round by default. Add <code>square</code> for the squared container,
+          whose corner grows with the size — 12dp on the two small sizes, 16dp
+          on medium, 28dp on the two large ones. Either way the corner tightens
+          while the button is pressed, which is the Material 3 Expressive shape
+          morph.
+        </p>
+        <p>
+          <button type="button" class="icon-button filled square" aria-label="Edit, square">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" class="icon-button filled medium square" aria-label="Edit, medium square">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+          <button type="button" class="icon-button filled large square" aria-label="Edit, large square">
+            <span class="material-symbols" aria-hidden="true">edit</span>
+          </button>
+        </p>
+{% call code() %}
+<button type="button" class="icon-button filled square" aria-label="Edit">…</button>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("disabled", "Disabled") %}
+        <p>
+          <code>disabled</code> on the <code>&lt;button&gt;</code>. The icon
+          drops to <code>on-surface</code> at 38%, and a style that has a
+          container drops it to 10%. On an <code>&lt;a&gt;</code>, which cannot
+          be disabled, use the <code>disabled</code> class — but prefer
+          removing the link.
+        </p>
+        <p>
+          <button type="button" class="icon-button" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button filled" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button tonal" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+          <button type="button" class="icon-button outlined" aria-label="Add" disabled>
+            <span class="material-symbols" aria-hidden="true">add</span>
+          </button>
+        </p>
+{% call code() %}
+<button type="button" class="icon-button filled" aria-label="Add" disabled>
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("links", "As a link") %}
+        <p>
+          An icon button that navigates is an <code>&lt;a&gt;</code>. Note it
+          takes <code>icon-button</code> alone — not <code>button</code> as
+          well, which is the common button's class.
+        </p>
+        <p>
+          <a class="icon-button outlined" href="{{ url_for('buttons') }}" aria-label="Open the Buttons page">
+            <span class="material-symbols" aria-hidden="true">open_in_new</span>
+          </a>
+        </p>
+{% call code() %}
+<a class="icon-button outlined" href="/buttons" aria-label="Open the Buttons page">
+  <span class="material-symbols" aria-hidden="true">open_in_new</span>
+</a>
+{% endcall %}
+  {% endcall %}
+
+  {% call section("tokens", "Tokens") %}
+        <p>
+          Set these on the control, or on an ancestor to reach a group of them.
+          The size classes are nothing but a block of these values, so an
+          override is a size of your own.
+        </p>
+        {% call token_table() %}
+                <tr><td><code>--md-comp-icon-button-container-height</code></td><td><code>40px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-icon-size</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-leading-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-trailing-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-narrow-space</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-wide-space</code></td><td><code>14px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-container-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-container-shape-square</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-pressed-container-shape</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-outline-width</code></td><td><code>1px</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
+                <tr><td><code>--md-comp-icon-button-container-color</code></td><td><code>transparent</code></td></tr>
+        {% endcall %}
+        <p>
+          The state layer is always the icon colour mixed into the container at
+          the <a href="{{ url_for('state_layers') }}">state layer</a> opacity,
+          so those two colour tokens are all a new style needs.
+        </p>
+  {% endcall %}
+{% endcall %}
+{% endblock %}

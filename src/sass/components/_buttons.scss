@@ -37,11 +37,16 @@
 // repainted it with the filled-button background while it kept the chip's own
 // text colour.
 //
+// `.icon-button` is here because it is its own component (M3 gives it its own
+// token families, size ladder and colours), not a common button in a round
+// shape. Without the exclusion it would inherit 40dp geometry and a filled
+// primary container before its own partial ever ran.
+//
 // Every entry stays a single class so the `:not()` keeps its one-class
 // specificity; `.chip .close` would make it two and shift every button rule.
 // The delete button needs no entry: `.chip .close` is already two classes, so
 // it ties the state rules and wins on order.
-$_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip";
+$_not-btn: ".datepicker-day-button, .date-picker-day-button, .month-prev, .month-next, .indicator-item-btn, .chip, .icon-button";
 
 // `label.button` is here for the file input: the control has to be a <label>
 // so that clicking it reaches the <input type="file"> it wraps, but it is a

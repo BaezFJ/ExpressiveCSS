@@ -51,14 +51,26 @@ describe('Material 3 state layers', () => {
   test('no stylesheet writes a state layer percentage by hand', () => {
     // `.segmented` tints its container at rest rather than in response to
     // interaction, so its 8% is not a state layer and is not this rule's
-    // business. Every other 8%/10% mixed into an --md-sys-color is one.
+    // business. Nor is a disabled container: M3 states those as their own
+    // `disabled-container-opacity`, which is 0.1 on an icon button, and a
+    // disabled control is not in a state layer state at all. Every other
+    // 8%/10% mixed into an --md-sys-color is one.
     const REST_TINT = 'src/sass/components/_list.scss';
     const offenders = [];
     for (const file of sassFiles()) {
+      // A stack, not the last selector seen: a nested `&:disabled { … }` would
+      // otherwise exempt every declaration written after it in the parent
+      // block, and the leak is invisible - it can only ever hide an offence.
+      const open = [];
       readFileSync(new URL(file, root), 'utf8').split('\n').forEach((line, i) => {
-        if (!/var\(--md-sys-color-[a-z-]+\)\s+(?:8|10)%/.test(line)) return;
-        if (file === REST_TINT) return;
-        offenders.push(`${file}:${i + 1} ${line.trim()}`);
+        const text = line.trim();
+        if (text.startsWith('}')) open.pop();
+        if (/var\(--md-sys-color-[a-z-]+\)\s+(?:8|10)%/.test(line)) {
+          if (file !== REST_TINT && !open.some((sel) => /disabled/.test(sel))) {
+            offenders.push(`${file}:${i + 1} ${text}`);
+          }
+        }
+        if (text.endsWith('{')) open.push(text);
       });
     }
     assert.deepEqual(

@@ -125,7 +125,9 @@ function renderComponent(name, c) {
         ? 'must not match'
         : r.kind === 'forbid-composite-roles'
           ? 'must not match with any composite role'
-          : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
+          : r.kind === 'require-accessible-name'
+            ? 'must end up with an accessible name'
+            : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
     l.push(`| ${code(r.id)} | ${r.kind} | ${code(r.selector)} | ${req} |`);
   }
   l.push('');
