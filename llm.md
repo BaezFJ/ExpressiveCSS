@@ -62,6 +62,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Search
 - Segmented buttons
 - Button groups
+- Split button
 
 ### JavaScript components
 
@@ -2104,6 +2105,62 @@ The group declares no role. A composite role such as `toolbar` promises arrow-ke
 | `--md-comp-button-group-pressed-inner-corner-corner-size` | 4px (connected) |
 
 The items are buttons, so their height, insets and colours come from the button tokens, which the group's size class sets for them. M3 states the press-time growth as 15% of the item's width; CSS cannot multiply a length by a percentage, so the token holds the same figure as a ratio and the growth is taken from the item's height, and the items beside the pressed one slide rather than compress.
+
+---
+
+## Split button
+
+One action the user will take most of the time, next to a menu of the ones they might take instead — Save and "save as", Reply and "reply all", Export and every other format. The root is a `<div class="split-button">` holding two buttons: a leading one that does the work, and a trailing `.menu-trigger` that opens a `<menu>`. The pair sits 2dp apart, the outside is round, and the seam between them is square-ish.
+
+The trailing half is an ordinary Menu trigger, so everything Menu does it does here — `Expressive.AutoInit()` starts it, `data-target` names the surface, and the menu's keyboard model, alignment and options are unchanged. This component adds no script of its own. The one thing Menu does differently is width: a trigger narrower than the surface's own 112dp minimum is not a constraint it can honour, and this trigger is a chevron in a 48dp box, so the menu is sized to its own content instead.
+
+```html
+<div class="split-button">
+  <button class="button">Save</button>
+  <button class="button menu-trigger" data-target="save-menu" aria-label="More save options">
+    <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+  </button>
+  <menu id="save-menu">
+    <li><a href="#!">Save a copy</a></li>
+    <li><a href="#!">Save as template</a></li>
+  </menu>
+</div>
+```
+
+Both halves are buttons, so every style class works on them — but use the same one on both, or the pair stops reading as one shape.
+
+Opening the menu does two things to the trailing half: the chevron turns over, and the seam swells to fully round, so the pair reads as two separated buttons for as long as the menu is up. Both are drawn from `aria-expanded`, which Menu writes — never author it, since the shape is drawn from it and an authored `"true"` draws an open split button over a closed menu. Hovering or pressing either half swells that half's own inner corner part of the way: 8dp at `xsmall`, 12dp through `medium`, 20dp at the two largest. All of it stops under `prefers-reduced-motion`.
+
+The five button sizes — `xsmall`, `small` (the default), `medium`, `large`, `xlarge`, 32 through 136dp tall — go on the container, never on a half. The trailing half is narrower than the leading one and its chevron is drawn larger than a button icon of the same size (22dp against 20 at the bottom of the ladder, 50dp against 40 at the top), which keeps it 48dp wide at the two smallest sizes and square at the three largest.
+
+The container declares no role. A composite role such as `toolbar` promises arrow-key navigation, and this component *rejects* it rather than withholding it: the two halves are independent commands reached with Tab. The one composite widget here is the `<menu>`, which carries its own role and its own keyboard model. The trailing half's chevron is `aria-hidden`, so the button needs an `aria-label` naming what the menu contains — "More save options", not "More".
+
+Exactly two controls, lead action first and trigger second, both direct children. An `.icon-button` is *not* a half: it is its own component, setting its height, insets, colours and icon sizing on the element, so it reaches none of the split button's geometry — write `<button class="button menu-trigger">`. Order is stated only by the markup, since the halves are told apart by role rather than by position (which is what lets the `<menu>` sit inside the container): a trigger written first still takes the trailing side's round outer corners while flex puts it on the leading side, and the seam ends up on the wrong edge. The count is held from both ends: a third control gets the leading half's rules too, and a container holding only the trigger leaves it squared off along a seam with nothing to join to — one control that opens a menu is just a menu trigger, so drop the container. Peer actions are a button group, related ones belong in the menu.
+
+```html
+<div class="split-button medium">
+  <button class="button tonal">Reply</button>
+  <button class="button tonal menu-trigger" data-target="reply-menu" aria-label="More reply options">
+    <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+  </button>
+  <menu id="reply-menu">
+    <li><a href="#!">Reply all</a></li>
+    <li><a href="#!">Forward</a></li>
+  </menu>
+</div>
+```
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-split-button-between-space` | 2px |
+| `--md-comp-split-button-container-shape` | 9999px |
+| `--md-comp-split-button-leading-button-trailing-space` | 12px |
+| `--md-comp-split-button-trailing-button-space` | 13px |
+| `--md-comp-split-button-trailing-icon-size` | 22px |
+| `--md-comp-split-button-inner-corner-corner-size` | 4px |
+| `--md-comp-split-button-inner-pressed-corner-corner-size` | 12px |
+
+Height, the leading half's outer inset, the outline width and every colour come from the button tokens, which the size class sets on the container for both halves. M3 states a separate leading and trailing inset for the trailing half and separate hovered and pressed seams; each pair is equal at all five sizes, so one token carries both.
 
 ---
 

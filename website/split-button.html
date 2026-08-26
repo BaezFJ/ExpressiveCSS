@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Icon buttons - ExpressiveCSS</title>
+    <title>Split button - ExpressiveCSS</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="/dist/css/expressive.min.css">
@@ -36,7 +36,7 @@
             <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <h2>Icon buttons</h2>
+            <h2>Split button</h2>
             <button type="button" id="source-color-toggle" title="Choose source color" aria-label="Choose source color" aria-haspopup="dialog" aria-controls="source-color-dialog">
                 <span class="material-symbols" aria-hidden="true">palette</span>
             </button>
@@ -161,8 +161,8 @@
                       <li class="">
                           <a href="/buttons.html">Buttons</a>
                       </li>
-                      <li class="active">
-                          <a href="/icon-buttons.html" aria-current="page">Icon buttons</a>
+                      <li class="">
+                          <a href="/icon-buttons.html">Icon buttons</a>
                       </li>
                       <li class="">
                           <a href="/segmented-buttons.html">Segmented buttons</a>
@@ -170,8 +170,8 @@
                       <li class="">
                           <a href="/button-groups.html">Button groups</a>
                       </li>
-                      <li class="">
-                          <a href="/split-button.html">Split button</a>
+                      <li class="active">
+                          <a href="/split-button.html" aria-current="page">Split button</a>
                       </li>
                       <li class="">
                           <a href="/floating-action-button.html">FAB</a>
@@ -283,8 +283,8 @@
     <section class="section primary-container my-2 mx-6" id="index-banner">
         <div class="container row py-5">
             <div class="s12 m8 offset-m1 xl7 offset-xl1 center-on-small-only">
-                <h1 class="docs-page-title display-large on-primary-container-text">Icon buttons</h1>
-                <p class="docs-page-description headline-small on-primary-container-text">A single icon as the whole control, in four styles and five sizes.</p>
+                <h1 class="docs-page-title display-large on-primary-container-text">Split button</h1>
+                <p class="docs-page-description headline-small on-primary-container-text">A lead action and a trailing half that opens a menu of related ones, in five sizes.</p>
             </div>
         </div>
     </section>
@@ -299,84 +299,108 @@
   <div id="anatomy" class="section scrollspy docs-section">
 
         <p class="flow-text">
-          An icon button is one action expressed as one icon — the toolbar
-          overflow, the close on a dialog, the star on a row. Add
-          <code>icon-button</code> to a <code>&lt;button&gt;</code>, or to an
-          <code>&lt;a&gt;</code> when it navigates, and put a single
-          <code>&lt;span class="material-symbols"&gt;</code> inside it.
+          A split button is one action you will take most of the time, next to
+          a menu of the ones you might take instead — Save and “save as”,
+          Reply and “reply all”, Export and every other format.
         </p>
         <p>
-          The icon is decoration, so it is <code>aria-hidden</code> — which
-          leaves the control with nothing to be named by. Every icon button
-          needs an <code>aria-label</code>. That is not a suggestion here:
-          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">SEMANTICS.md</a>
-          enforces both halves against the docs, and a bare icon button fails
-          the suite.
+          The root is a <code>&lt;div class="split-button"&gt;</code> holding
+          two <a href="/buttons.html">buttons</a>: the leading half
+          does the work, and the trailing half is a
+          <a href="/menu.html"><code>menu-trigger</code></a> that
+          opens a <code>&lt;menu&gt;</code>. The pair sits 2dp apart, the
+          outside is round, and the seam between them is square-ish until
+          something happens to it.
+        </p>
+        <div>
+          <div class="split-button">
+            <button class="button">Save</button>
+            <button class="button menu-trigger" data-target="split-demo" aria-label="More save options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-demo">
+              <li><a href="#!">Save a copy</a></li>
+              <li><a href="#!">Save as template</a></li>
+              <li><a href="#!">Export as PDF</a></li>
+            </menu>
+          </div>
+        </div>
+<pre><code>&lt;div class="split-button"&gt;
+  &lt;button class="button"&gt;Save&lt;/button&gt;
+  &lt;button class="button menu-trigger" data-target="save-menu" aria-label="More save options"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_drop_down&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;menu id="save-menu"&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Save a copy&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Save as template&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Export as PDF&lt;/a&gt;&lt;/li&gt;
+  &lt;/menu&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          The trailing half is an ordinary
+          <a href="/menu.html">Menu</a> trigger, so everything Menu
+          does it does here: <code>Expressive.AutoInit()</code> starts it,
+          <code>data-target</code> names the surface, and the menu's own
+          keyboard model, alignment and options are unchanged. This component
+          adds no script of its own.
         </p>
         <p>
-          It keeps its own look inside the components that host actions — a
-          toolbar, an app bar, a list row, a dialog header, a snackbar, a
-          navigation rail, a pane header, a footer. Those hosts style the plain
-          controls they are given and step aside for a control that styles
-          itself, the same way they already do for <code>button</code>. A
-          navigation drawer row is the exception: every row there is one 48dp
-          shape, <code>.button</code> included.
+          The menu sizes itself to its own content here. Menu normally matches
+          the surface to its trigger, but a trigger narrower than the surface's
+          own 112dp minimum is not a constraint it can honour — and this
+          trigger is a chevron in a 48dp box. Items still wrap at the menu's
+          280dp maximum.
         </p>
         <p>
-          This is a component in its own right, not a modifier on the common
-          button. Material 3 gives it its own token families, its own size
-          ladder and its own colours, and none of them line up with a common
-          button's. The older <code>&lt;button class="circle"&gt;</code> still
-          works and is still the 40dp common button in a round shape — see
-          <a href="/buttons.html">Buttons</a>.
+          Both halves are buttons, so every style class works on them — but use
+          the same one on both, or the pair stops reading as one shape. A
+          <code>tonal</code> split button is the usual choice when the leading
+          action is not the page's primary one.
         </p>
-        <p>
-          <button type="button" class="icon-button" aria-label="Add">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button filled" aria-label="Add">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button tonal" aria-label="Add">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button outlined" aria-label="Add">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-        </p>
-<pre><code>&lt;button type="button" class="icon-button" aria-label="Add"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-&lt;/button&gt;</code></pre>
+        <div>
+          <div class="split-button">
+            <button class="button tonal">Reply</button>
+            <button class="button tonal menu-trigger" data-target="split-tonal" aria-label="More reply options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-tonal">
+              <li><a href="#!">Reply all</a></li>
+              <li><a href="#!">Forward</a></li>
+            </menu>
+          </div>
+          <div class="split-button">
+            <button class="button outlined">Reply</button>
+            <button class="button outlined menu-trigger" data-target="split-outlined" aria-label="More reply options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-outlined">
+              <li><a href="#!">Reply all</a></li>
+              <li><a href="#!">Forward</a></li>
+            </menu>
+          </div>
+        </div>
   
       </div>
 
 
-  <div id="styles" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Styles</h3>
+  <div id="activation" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Activation</h3>
 
         <p>
-          Four styles, and the modifier names are the button axis's:
-          <strong>standard</strong> is the default and has no container,
-          <code>filled</code> is <code>primary</code>,
-          <code>tonal</code> is <code>secondary-container</code>, and
-          <code>outlined</code> is an <code>outline-variant</code> border with
-          no fill. Material 3 gives icon buttons no elevated style, so there is
-          no <code>elevated</code> here; <code>text</code> is what standard
-          already is.
+          Opening the menu does two things to the trailing half: the chevron
+          turns over, and the seam swells to fully round, so the pair reads as
+          two separated buttons for as long as the menu is up. Both are drawn
+          from <code>aria-expanded</code>, which Menu writes — there is nothing
+          to toggle yourself, and nothing to author. Open the demo above and
+          watch the corner.
         </p>
-        <table class="striped">
-          <thead><tr><th>Style</th><th>Container</th><th>Icon</th><th>Use it for</th></tr></thead>
-          <tbody>
-            <tr><td>standard (default)</td><td>none</td><td><code>on-surface-variant</code></td><td>The usual case — toolbars, list rows, app bars.</td></tr>
-            <tr><td><code>filled</code></td><td><code>primary</code></td><td><code>on-primary</code></td><td>The one high-emphasis action on the screen.</td></tr>
-            <tr><td><code>tonal</code></td><td><code>secondary-container</code></td><td><code>on-secondary-container</code></td><td>Medium emphasis, without the weight of a filled one.</td></tr>
-            <tr><td><code>outlined</code></td><td>none, <code>outline-variant</code> border</td><td><code>on-surface-variant</code></td><td>Medium emphasis on a busy or image background.</td></tr>
-          </tbody>
-        </table>
-<pre><code>&lt;button type="button" class="icon-button" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button filled" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button tonal" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button outlined" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
+        <p>
+          Hovering or pressing either half swells that half's inner corner part
+          of the way, which is Material's own ladder: 8dp at
+          <code>xsmall</code>, 12dp through <code>medium</code>, 20dp at the
+          two largest sizes. All of it stops under
+          <code>prefers-reduced-motion</code>.
+        </p>
   
       </div>
 
@@ -385,149 +409,141 @@
         <h3 class="docs-section-title headline-medium">Sizes</h3>
 
         <p>
-          Five sizes. <code>small</code> is the default at 40dp with a 24dp
-          icon, so it needs no class. The rest are
-          <code>xsmall</code> (32dp, 20dp icon),
-          <code>medium</code> (56dp, 24dp),
-          <code>large</code> (96dp, 32dp) and
-          <code>xlarge</code> (136dp, 40dp). They compose with the styles:
-          <code>class="icon-button tonal large"</code>.
+          Five sizes, on the container: <code>xsmall</code>,
+          <code>small</code> (the default), <code>medium</code>,
+          <code>large</code> and <code>xlarge</code> — 32, 40, 56, 96 and 136dp
+          tall, the same ladder as a <a href="/buttons.html">common
+          button</a>. The class goes on the <code>split-button</code>, never on
+          a half: the container sizes both, and the seam, the insets and the
+          chevron all move with it.
         </p>
+        <div>
+          <div class="split-button xsmall">
+            <button class="button tonal">Extra small</button>
+            <button class="button tonal menu-trigger" data-target="split-xsmall" aria-label="More options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-xsmall">
+              <li><a href="#!">One</a></li>
+              <li><a href="#!">Two</a></li>
+            </menu>
+          </div>
+          <div class="split-button medium">
+            <button class="button tonal">Medium</button>
+            <button class="button tonal menu-trigger" data-target="split-medium" aria-label="More options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-medium">
+              <li><a href="#!">One</a></li>
+              <li><a href="#!">Two</a></li>
+            </menu>
+          </div>
+        </div>
         <p>
-          <button type="button" class="icon-button filled xsmall" aria-label="Add, extra small">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button filled" aria-label="Add, small">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button filled medium" aria-label="Add, medium">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button filled large" aria-label="Add, large">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button filled xlarge" aria-label="Add, extra large">
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
+          The seam widens with the size — 4dp through <code>medium</code>, 8dp
+          at <code>large</code>, 12dp at <code>xlarge</code>. The two largest
+          rungs are for a split button that is the only thing on a screen.
         </p>
-<pre><code>&lt;button type="button" class="icon-button filled xsmall" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button filled" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button filled medium" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button filled large" aria-label="Add"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button filled xlarge" aria-label="Add"&gt;…&lt;/button&gt;</code></pre>
+        <div>
+          <div class="split-button large">
+            <button class="button tonal">Large</button>
+            <button class="button tonal menu-trigger" data-target="split-large" aria-label="More options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-large">
+              <li><a href="#!">One</a></li>
+              <li><a href="#!">Two</a></li>
+            </menu>
+          </div>
+        </div>
+        <div>
+          <div class="split-button xlarge">
+            <button class="button tonal">Extra large</button>
+            <button class="button tonal menu-trigger" data-target="split-xlarge" aria-label="More options">
+              <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+            </button>
+            <menu id="split-xlarge">
+              <li><a href="#!">One</a></li>
+              <li><a href="#!">Two</a></li>
+            </menu>
+          </div>
+        </div>
+<pre><code>&lt;div class="split-button medium"&gt;
+  &lt;button class="button tonal"&gt;Medium&lt;/button&gt;
+  &lt;button class="button tonal menu-trigger" data-target="size-menu" aria-label="More options"&gt;
+    &lt;span class="material-symbols" aria-hidden="true"&gt;arrow_drop_down&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;menu id="size-menu"&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;One&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#!"&gt;Two&lt;/a&gt;&lt;/li&gt;
+  &lt;/menu&gt;
+&lt;/div&gt;</code></pre>
+        <p>
+          The trailing half is narrower than the leading one and its chevron is
+          drawn larger than a button icon of the same size — 22dp against 20 at
+          the bottom of the ladder, 50dp against 40 at the top. That keeps it
+          48dp wide at the two smallest sizes, which is a touch target, and
+          square at the three largest.
+        </p>
   
       </div>
 
 
-  <div id="width" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Width</h3>
+  <div id="semantics" class="section scrollspy docs-section">
+        <h3 class="docs-section-title headline-medium">Semantics</h3>
 
         <p>
-          Width is the inset plus the icon, not a size of its own — which is
-          why the default width of every size equals its height, and why a
-          round icon button is a circle without being told to be one. Add
-          <code>narrow</code> to tighten the inset or <code>wide</code> to open
-          it up; both follow whichever size they are on.
+          The container declares no role. A
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
+          such as <code>toolbar</code> promises arrow-key navigation, and this
+          component <em>rejects</em> it rather than withholding it: the two
+          halves are independent commands reached with Tab. The one composite
+          widget here is the <code>&lt;menu&gt;</code>, which carries its own
+          role and its own keyboard model.
         </p>
         <p>
-          <button type="button" class="icon-button tonal medium narrow" aria-label="Star, narrow">
-            <span class="material-symbols" aria-hidden="true">star</span>
-          </button>
-          <button type="button" class="icon-button tonal medium" aria-label="Star, default width">
-            <span class="material-symbols" aria-hidden="true">star</span>
-          </button>
-          <button type="button" class="icon-button tonal medium wide" aria-label="Star, wide">
-            <span class="material-symbols" aria-hidden="true">star</span>
-          </button>
-        </p>
-<pre><code>&lt;button type="button" class="icon-button tonal medium narrow" aria-label="Star"&gt;…&lt;/button&gt;
-&lt;button type="button" class="icon-button tonal medium wide" aria-label="Star"&gt;…&lt;/button&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="shape" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Shape</h3>
-
-        <p>
-          Round by default. Add <code>square</code> for the squared container,
-          whose corner grows with the size — 12dp on the two small sizes, 16dp
-          on medium, 28dp on the two large ones. Either way the corner tightens
-          while the button is pressed, which is the Material 3 Expressive shape
-          morph.
+          The trailing half's chevron is decoration, so it is
+          <code>aria-hidden="true"</code> and the button carries an
+          <code>aria-label</code> of its own — “More save options”, not
+          “More”. Name it for what the menu contains, since a screen reader
+          hears it right after the leading half's label.
         </p>
         <p>
-          <button type="button" class="icon-button filled square" aria-label="Edit, square">
-            <span class="material-symbols" aria-hidden="true">edit</span>
-          </button>
-          <button type="button" class="icon-button filled medium square" aria-label="Edit, medium square">
-            <span class="material-symbols" aria-hidden="true">edit</span>
-          </button>
-          <button type="button" class="icon-button filled large square" aria-label="Edit, large square">
-            <span class="material-symbols" aria-hidden="true">edit</span>
-          </button>
-        </p>
-<pre><code>&lt;button type="button" class="icon-button filled square" aria-label="Edit"&gt;…&lt;/button&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="disabled" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">Disabled</h3>
-
-        <p>
-          <code>disabled</code> on the <code>&lt;button&gt;</code>. The icon
-          drops to <code>on-surface</code> at 38%, and a style that has a
-          container drops it to 10%.
+          <code>aria-expanded</code> is Menu's to write. Do not author it: the
+          constructor stamps it on the trigger and every open and close
+          rewrites it, and the expanded shape above is drawn from it — an
+          authored <code>"true"</code> draws an open split button over a closed
+          menu.
         </p>
         <p>
-          <strong>An <code>&lt;a href&gt;</code> cannot be disabled, and no
-          class makes it so.</strong> <code>pointer-events: none</code> stops
-          the pointer and nothing else: the link stays in the tab order and
-          still navigates on Enter, so a <code>.disabled</code> anchor is a
-          control that looks inert and is not. Drop the <code>href</code> — an
-          anchor without one is neither focusable nor actionable — or drop the
-          link entirely. <code>aria-disabled="true"</code> is styled the same
-          way for the case where the element must stay in the document and
-          announce itself as unavailable.
+          Both halves are controls, written as direct children: a
+          <code>&lt;button&gt;</code>, or an
+          <code>&lt;a class="button" href&gt;</code> when it navigates. A
+          wrapper element is refused — the seam, the insets and the larger
+          chevron are all written against direct children. So is an
+          <a href="/icon-buttons.html"><code>icon-button</code></a>:
+          that is its own component, setting its height, insets, colours and
+          icon sizing on the element itself, so it reaches none of this
+          geometry and fights the seam it is handed. The trailing half is a
+          <code>&lt;button class="button menu-trigger"&gt;</code>.
         </p>
         <p>
-          <button type="button" class="icon-button" aria-label="Add" disabled>
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button filled" aria-label="Add" disabled>
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button tonal" aria-label="Add" disabled>
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
-          <button type="button" class="icon-button outlined" aria-label="Add" disabled>
-            <span class="material-symbols" aria-hidden="true">add</span>
-          </button>
+          <strong>Order matters, and only the markup states it.</strong> The
+          halves are told apart by role rather than by position — which is what
+          lets you write the <code>&lt;menu&gt;</code> inside the container if
+          you like — so nothing in the sheet notices a trigger written first.
+          It would take the trailing side's round outer corners while flex put
+          it on the leading side: a split button with its seam and its round
+          ends swapped. Lead action first, trigger second, menu last if it is
+          in there at all. Exactly two controls, and the count is held from
+          both ends: a third gets the leading half's rules too, and a container
+          holding only the trigger leaves it squared off along a seam with
+          nothing to join to. One control that opens a menu is just a
+          <a href="/menu.html">menu trigger</a> — drop the
+          container. Several peer actions are a
+          <a href="/button-groups.html">button group</a>, and
+          several related ones belong in the menu.
         </p>
-<pre><code>&lt;button type="button" class="icon-button filled" aria-label="Add" disabled&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;add&lt;/span&gt;
-&lt;/button&gt;</code></pre>
-  
-      </div>
-
-
-  <div id="links" class="section scrollspy docs-section">
-        <h3 class="docs-section-title headline-medium">As a link</h3>
-
-        <p>
-          An icon button that navigates is an <code>&lt;a&gt;</code>. Note it
-          takes <code>icon-button</code> alone — not <code>button</code> as
-          well, which is the common button's class.
-        </p>
-        <p>
-          <a class="icon-button outlined" href="/buttons.html" aria-label="Open the Buttons page">
-            <span class="material-symbols" aria-hidden="true">open_in_new</span>
-          </a>
-        </p>
-<pre><code>&lt;a class="icon-button outlined" href="/buttons" aria-label="Open the Buttons page"&gt;
-  &lt;span class="material-symbols" aria-hidden="true"&gt;open_in_new&lt;/span&gt;
-&lt;/a&gt;</code></pre>
   
       </div>
 
@@ -536,9 +552,10 @@
         <h3 class="docs-section-title headline-medium">Tokens</h3>
 
         <p>
-          Set these on the control, or on an ancestor to reach a group of them.
-          The size classes are nothing but a block of these values, so an
-          override is a size of your own.
+          Set these on the container, or in a rule of your own that picks out
+          the split buttons you want to change. The values below are the
+          defaults — a small split button; the size classes rewrite all but the
+          first two.
         </p>
         
         <table class="striped">
@@ -550,26 +567,25 @@
             </thead>
             <tbody>
 
-                <tr><td><code>--md-comp-icon-button-container-height</code></td><td><code>40px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-icon-size</code></td><td><code>24px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-leading-space</code></td><td><code>8px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-trailing-space</code></td><td><code>8px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-narrow-space</code></td><td><code>4px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-wide-space</code></td><td><code>14px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-container-shape</code></td><td><code>9999px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-container-shape-square</code></td><td><code>12px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-pressed-container-shape</code></td><td><code>8px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-outline-width</code></td><td><code>1px</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
-                <tr><td><code>--md-comp-icon-button-container-color</code></td><td><code>transparent</code></td></tr>
+                <tr><td><code>--md-comp-split-button-between-space</code></td><td><code>2px</code></td></tr>
+                <tr><td><code>--md-comp-split-button-container-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-split-button-leading-button-trailing-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-split-button-trailing-button-space</code></td><td><code>13px</code></td></tr>
+                <tr><td><code>--md-comp-split-button-trailing-icon-size</code></td><td><code>22px</code></td></tr>
+                <tr><td><code>--md-comp-split-button-inner-corner-corner-size</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-split-button-inner-pressed-corner-corner-size</code></td><td><code>12px</code></td></tr>
         
             </tbody>
         </table>
 
         <p>
-          The state layer is always the icon colour mixed into the container at
-          the <a href="/state-layers.html">state layer</a> opacity,
-          so those two colour tokens are all a new style needs.
+          Height, the leading half's outer inset, the outline width and every
+          colour come from the <a href="/buttons.html">button</a>
+          tokens, which the size class sets on the container for both halves.
+          Material states a separate leading and trailing inset for the
+          trailing half; they are equal in all five sizes, so one token carries
+          both — as it does for the hovered and pressed seam, which Material
+          also gives the same value.
         </p>
   
       </div>
@@ -583,12 +599,9 @@
         <nav aria-label="On this page">
           <ul class="section table-of-contents">
           <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#styles">Styles</a></li>
+          <li><a href="#activation">Activation</a></li>
           <li><a href="#sizes">Sizes</a></li>
-          <li><a href="#width">Width</a></li>
-          <li><a href="#shape">Shape</a></li>
-          <li><a href="#disabled">Disabled</a></li>
-          <li><a href="#links">As a link</a></li>
+          <li><a href="#semantics">Semantics</a></li>
           <li><a href="#tokens">Tokens</a></li>
           </ul>
         </nav>

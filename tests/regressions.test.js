@@ -314,6 +314,69 @@ describe('optional markup does not crash a component', () => {
   });
 });
 
+describe('Menu width against a narrow trigger', () => {
+  // `constrainWidth` wrote the trigger's width onto the surface, and the
+  // surface's own `min-width: 112px` then overrode it - so any trigger under
+  // 112dp left the menu at the floor with every item wrapped. An icon button
+  // is 40dp and a split button's chevron is 48dp, so both were always in that
+  // state. The constraint now applies only to a trigger wide enough to mean
+  // something.
+  //
+  // The assertion reads style.width at the moment `_getMenuPosition` is
+  // called, which is the constrained width itself: the line after that
+  // overwrites it with a position-adjusted value, and jsdom does no layout to
+  // adjust against.
+  const widthAtPositioning = (instance, menuEl) => {
+    const original = instance._getMenuPosition.bind(instance);
+    let seen;
+    instance._getMenuPosition = (parent) => {
+      seen = menuEl.style.width;
+      return original(parent);
+    };
+    instance.open();
+    return seen;
+  };
+
+  test('a 48dp trigger gets a menu sized to its own content', () => {
+    document.body.innerHTML = `
+      <div class="split-button">
+        <button class="button">Save</button>
+        <button class="button menu-trigger" data-target="narrow" aria-label="More">
+          <span class="material-symbols" aria-hidden="true">arrow_drop_down</span>
+        </button>
+      </div>
+      <menu id="narrow"><li><a href="#!">Save as template</a></li></menu>`;
+    const trigger = document.querySelector('.menu-trigger');
+    const menuEl = document.getElementById('narrow');
+    fixRect(trigger, 48, 40);
+    fixRect(menuEl, 200, 100);
+
+    const instance = Expressive.Menu.init(trigger);
+    try {
+      assert.equal(widthAtPositioning(instance, menuEl), '200px');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a trigger wider than the floor still constrains the menu to it', () => {
+    document.body.innerHTML = `
+      <a class="button menu-trigger" data-target="wide">Actions</a>
+      <menu id="wide"><li><a href="#!">One</a></li></menu>`;
+    const trigger = document.querySelector('.menu-trigger');
+    const menuEl = document.getElementById('wide');
+    fixRect(trigger, 200, 40);
+    fixRect(menuEl, 150, 100);
+
+    const instance = Expressive.Menu.init(trigger);
+    try {
+      assert.equal(widthAtPositioning(instance, menuEl), '200px');
+    } finally {
+      instance.destroy();
+    }
+  });
+});
+
 describe('Tabs disabled-selector interpolation', () => {
   test('disabled styles do not match every nav.tabs > a', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
@@ -799,8 +862,16 @@ describe('Chips', () => {
     // `.chip`'s one - so hovering, focusing or pressing a chip repainted it
     // with the filled-button background while it kept the chip's own text
     // colour. Excluding `.chip` in $_not-btn is what stops that.
+    //
+    // Only the *generic* rule is at stake, so only a compound that begins its
+    // selector is checked. A component that scopes the same shape to itself
+    // (`.split-button > :where(button:not(.icon-button), a.button)`) is behind
+    // an ancestor class, so it can never tie with a bare `.chip` and has no
+    // business restating this list.
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-    const buttonSelectors = css.match(/:where\(button:not\([^)]*\)/g) ?? [];
+    const buttonSelectors = (css.match(/(?:^|[,{}\n])\s*:where\(button:not\([^)]*\)/gm) ?? []).map(
+      (m) => m.slice(m.indexOf(':where('))
+    );
     assert.ok(buttonSelectors.length > 0, 'the generic button selector should exist');
     for (const sel of new Set(buttonSelectors)) {
       assert.match(sel, /\.chip\b/, `\`${sel}\` must exclude .chip`);

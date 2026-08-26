@@ -14,6 +14,10 @@ export interface MenuOptions extends BaseOptions {
   autoFocus: boolean;
   /**
    * If true, constrainWidth to the size of the menu activator.
+   *
+   * A trigger narrower than the surface's own 112dp minimum cannot be
+   * honoured, so such a menu is sized to its content instead - see
+   * MIN_SURFACE_WIDTH.
    * @default true
    */
   constrainWidth: boolean;
@@ -74,6 +78,11 @@ export interface MenuOptions extends BaseOptions {
    */
   onItemClick: (el: HTMLLIElement) => void;
 }
+
+// The menu surface's own width bounds, stated in `components/_menu.scss` and
+// restated here because the constraint below has to reason about them.
+const MIN_SURFACE_WIDTH = 112;
+const MAX_SURFACE_WIDTH = 280;
 
 const _defaults: MenuOptions = {
   alignment: 'left',
@@ -794,11 +803,20 @@ export class Menu extends Component<MenuOptions> implements Openable {
 
     //this._moveMenu(closestOverflowParent);
 
-    // Set width before calculating positionInfo
+    // Set width before calculating positionInfo. Both callers reset the
+    // positioning styles first, so this reads the surface's natural width.
     const natural = this.menuEl.getBoundingClientRect().width;
-    const idealWidth = this.options.constrainWidth
-      ? this.el.getBoundingClientRect().width
-      : Math.min(280, Math.max(112, natural));
+    // A trigger narrower than the surface's own minimum is not a constraint
+    // the menu can honour: the width is written and `min-width` overrides it,
+    // leaving the surface at the floor with every item inside it wrapped. So
+    // constrain only to a trigger wide enough to mean something, and size by
+    // content otherwise. An icon button and a split button's chevron are both
+    // that case - 40dp and 48dp against a 112dp floor.
+    const triggerWidth = this.el.getBoundingClientRect().width;
+    const idealWidth =
+      this.options.constrainWidth && triggerWidth >= MIN_SURFACE_WIDTH
+        ? triggerWidth
+        : Math.min(MAX_SURFACE_WIDTH, Math.max(MIN_SURFACE_WIDTH, natural));
     this.menuEl.style.width = idealWidth + 'px';
 
     const positionInfo = this._getMenuPosition(closestOverflowParent);
