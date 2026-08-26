@@ -28,7 +28,7 @@ const HOOKS = new Set([
   'menu-trigger', 'lightboxed', 'scrollspy', 'carousel-item',
   'waves-effect', 'waves-light', 'waves-circle',
   'chips-initial', 'chips-placeholder', 'chips-autocomplete', 'custom-class',
-  'slideshow', 'navigation-drawer', 'fab'
+  'navigation-drawer', 'fab'
 ]);
 
 function docSources() {

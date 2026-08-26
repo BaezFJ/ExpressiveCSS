@@ -398,6 +398,57 @@ below is the whole story for that component.
 
 ### Removed
 
+- **Slideshow is gone, and Carousel takes the case.** Charter work for 1.0.0,
+  like Parallax and Pulse below. M3 has no slideshow — its Carousel is the
+  component for a band of media — and once Carousel could advance on its own
+  the two expressed one concept in 590 lines of duplicate. Deleted outright:
+  `components/_slideshow.scss`, `components/slideshow.ts`, the `slideshow`
+  `semantics.json` row, and the docs coverage on the Media page.
+  `Expressive.Slideshow` no longer resolves. **There is no alias**, because an
+  alias keeps both concepts alive while pretending one of them died.
+
+  **`.slider` is unambiguous again**, which is the bonus worth stating. 0.8.0
+  gave `.slider` to M3's range control while the slideshow still held it, so
+  the two were told apart by what they contained —
+  `.slider:has([type='range'])` against `.slider:not(:has([type='range']))`.
+  Both halves are gone with the component: `.slider` is the range control and
+  nothing else, and nothing in the sheet asks what a `.slider` holds. The range
+  control itself is otherwise untouched.
+
+  **Migration.** Carousel with a fixed `height` reproduces the layout — the
+  height sizes the track and the indicators take their own row beneath it:
+
+  ```html
+  <!-- before -->
+  <div class="slideshow">
+    <ul class="slides">
+      <li><img src="1.jpg" alt="First"><div class="caption"><h3>One</h3></div></li>
+      <li><img src="2.jpg" alt="Second"><div class="caption"><h3>Two</h3></div></li>
+    </ul>
+  </div>
+
+  <!-- after -->
+  <div class="carousel">
+    <div class="carousel-item"><img src="1.jpg" alt="First"><h3>One</h3></div>
+    <div class="carousel-item"><img src="2.jpg" alt="Second"><h3>Two</h3></div>
+  </div>
+  ```
+
+  ```js
+  // before
+  Expressive.Slideshow.init(el, { height: 400, indicators: true, interval: 6000 });
+  // after
+  Expressive.Carousel.init(el, { height: 400, indicators: true, interval: 6000, fullWidth: true });
+  ```
+
+  Three options do not carry over. `duration` exists on both but means the
+  transition, not the crossfade. `pauseOnHover` and `pauseOnFocus` have no
+  equivalent and are not needed: an auto-advancing carousel always pauses under
+  the pointer, while focus is inside it, and while the tab is hidden — WCAG
+  2.2.2 territory, so it is not switchable. `indicatorLabelFunc` is replaced by
+  the `i18n` option, which names the carousel and its items. And a `fullscreen`
+  slideshow becomes `.carousel.full-screen`.
+
 - **Parallax and Pulse are gone**, with no successor. This is charter work for
   1.0.0 rather than part of the semantics sweep above. Both were decorative
   motion opinions of our own, and M3 Expressive ships a `MotionScheme` of

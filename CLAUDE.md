@@ -53,7 +53,7 @@ uv run flask --app docs/app.py run --debug         # http://127.0.0.1:5000
 Notes:
 
 - Tests are `node:test` + jsdom in `tests/`, run against the **built** bundles — so a stale bundle tests stale code; `npm test` rebuilds first. Two artifacts are needed, not one: `tests/setup.js` imports `dist/js/expressive.mjs`, and `bundle.test.js` reads the IIFE `dist/js/expressive.js`. That is why `test` runs `build:js` (all four formats) rather than `build:js:esm` — building only the ESM bundle passes locally off a warm `dist/` and fails on a clean checkout. `test` also runs `build:css`, because `regressions.test.js` asserts against the compiled `dist/css/expressive.css`; the same warm-`dist/` trap sank the v0.4.0 publish, which CI missed because `ci.yml` runs a full `npm run build` before `test:run` while `release.yml` runs `npm test`. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
-- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and any pending timer keeps it alive, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. `setInterval` lives in exactly one component (`slideshow.ts`), and `carousel.ts` re-arms a `setTimeout` after every auto-advance, which holds the loop open in precisely the same way — a repeating timer is the hazard, not the function that made it; the hazard is much wider than either, because eight more schedule one-shot `setTimeout`s — `menu`, `timepicker`, `carousel`, `tooltip`, `autocomplete`, `lightbox`, `snackbar`, `expandingCard`. Tear down in a `finally`.
+- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and any pending timer keeps it alive, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. No component calls `setInterval` any more — the one that did, `slideshow.ts`, is gone — but `carousel.ts` re-arms a `setTimeout` after every auto-advance, which holds the loop open in precisely the same way: a repeating timer is the hazard, not the function that made it. The hazard is wider than that one, because eight more schedule one-shot `setTimeout`s — `menu`, `timepicker`, `carousel`, `tooltip`, `autocomplete`, `lightbox`, `snackbar`, `expandingCard`. Tear down in a `finally`.
 - jsdom does no layout — `getBoundingClientRect()` and every `offset*`/`client*` read returns 0. Geometry-dependent tests stub the rect on the element (`regressions.test.js`), and counting stubbed rect calls is how the scroll-path tests assert layout work. jsdom also lazily attaches its own `handleFocusEvent`/`handleKeyboardEvent`/`handleMouseEvent` to `window` once a form control is involved; listener-leak tests filter those by name.
 - To confirm a new test actually catches the bug it names: `git stash push -- src/ts`, `npm run build:js`, run the one file, `git stash pop` — **as separate Bash calls**, so a hung run can't strand the stash.
 - There is no linter. Several files carry `@typescript-eslint` disable comments inherited from upstream with no ESLint config behind them.
@@ -333,14 +333,14 @@ markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
 generated from the templates, so checking it would check the same thing twice.
 Notes that matter when working on it:
 
-- **The sweep is complete: 44 of 44 rows enforced, 41 of them components.** Chips,
+- **The sweep is complete: 50 of 50 rows enforced, 47 of them components.** Chips,
   then forms, then navigation, then the rest (`input-fields`,
   `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
   `file-input`, `range`, `autocomplete`, `character-counter`; then `landmarks`,
   `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
   `pagination`, `tabs`, `menu`, `scrollspy`, `page-footer`; then icons,
   badges, buttons, cards, toolbar, list, tooltip, preloader, dialog, panes,
-  carousel, lightbox, icon-buttons, and nine rows that state no markup of their
+  carousel, lightbox, icon-buttons, and eight rows that state no markup of their
   own and say so in their note). **The exempt list is empty — keep it that way.** A
   new component ships enforced or the roster test fails.
 - **A row is a component unless it says otherwise.** `kind` names the exception
@@ -401,7 +401,7 @@ Notes that matter when working on it:
   there — `table_of_contents`, whose list is Scrollspy's markup; the partial
   stays in the sheet and `scrollspy` owns the rule for it.
 - The check **must never initialize a component**. It parses with jsdom and reads
-  the DOM. Components schedule timers (`slideshow` an interval, eight others
+  the DOM. Components schedule timers (`carousel` a repeating one, eight others
   `setTimeout`s), and a live timer wedges the whole `node --test` run with no
   output.
 - One example can opt out with a stated reason: ` ```html ignore-semantics: why `
@@ -418,12 +418,11 @@ deliberate:
 
 | M3 | ExpressiveCSS | Note |
 | --- | --- | --- |
-| Slider | `.slider` / `Slider` | Held the image slideshow until 0.8.0 |
+| Slider | `.slider` / `Slider` | Held the image slideshow until 0.8.0; sole owner of the class since 1.0.0 |
 | Navigation drawer | `.navigation-drawer` / `NavigationDrawer` | `.sidenav` / `Sidenav` alias |
 | FAB | `.fab` | `.fixed-action-btn` alias |
 | Progress indicators | `.progress`, `.progress.circular` | `.preloader` alias |
 | Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated forms alias |
-| (none) | `.slideshow` | M3 has no slideshow; its Carousel covers the case |
 | Drag handle | `.drag-handle` | `.handle` alias, the bottom sheet's pre-1.0 slot class |
 | Text fields | `.field` | **Deliberately not `.text-field`** — the same container wraps `<select>`, autocomplete and file inputs, so the M3 name would be wrong for most of its uses |
 
@@ -432,13 +431,17 @@ export stays as an alias, and `tests/m3-naming.test.js` asserts both — it walk
 every rule mentioning an old class and fails if the new one is not on it, which
 is how it caught `$_toolbar` excluding `.fixed-action-btn` but not `.fab`.
 
-**One rename changes meaning rather than adding a name.** `Slider` was the image
+**One rename changed meaning rather than adding a name.** `Slider` was the image
 slideshow and is now the range control, because that is what M3 calls a slider.
-Aliasing it would defeat the rename, so instead the two are told apart by
-content: `.slider:has([type='range'])` is the slider,
-`.slider:not(:has([type='range']))` is the slideshow. Pre-0.8.0 markup of either
-kind keeps working and neither can be mistaken for the other. `Expressive.Slider`
-in *script* did change meaning — that one is a documented break.
+Aliasing it would have defeated the rename, so for 0.8.0 the two shared `.slider`
+and were told apart by content — `:has([type='range'])` against
+`:not(:has([type='range']))`. **That discrimination is gone as of 1.0.0**, with
+the slideshow it existed for: M3 has no slideshow and Carousel covers the case,
+so `.slider` is the range control and nothing else, and no selector anywhere has
+to ask what a `.slider` contains. `Expressive.Slider` in *script* did change
+meaning — that one is a documented break, as is the removal itself: there is no
+`Slideshow` alias, because an alias would keep both concepts alive while
+pretending one had died.
 
 **The button size classes changed meaning too, and could not be aliased
 either.** `.small` was 32dp and `.large` 56dp; M3 names those `xsmall` and
@@ -483,7 +486,7 @@ Other things worth knowing:
 - `abstracts/_elevation.scss` owns the shadow map; the `.z-depth-*` classes in `base/_global.scss` are generated from it, so the classes and the `z-depth()` mixin cannot drift.
 - `abstracts/_breakpoints.scss` owns the exact M3 window size classes: Compact `< 600px`, Medium `600–839px`, Expanded `840–1199px`, Large `1200–1599px`, and Extra-large `>= 1600px`. The canonical Sass keys are `compact`, `medium`, `expanded`, `large`, and `extra-large`; `bp-up()` / `bp-down()` / `bp-between()` emit media-query range syntax. Grid prefixes remain `.s` / `.m` / `.l` / `.xl` / `.xxl` in that order. At Extra-large the container cap is 1920px; `.container.wide` caps at 2400px and `.container.max` has no cap.
 - `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`) — mostly `!default`, several now aliasing CSS custom properties. Typography leaves the browser root size untouched and converts M3's sp values to rem on the standard 16px basis. The type-scale roles choose `--md-ref-typeface-brand` or `--md-ref-typeface-plain`; both default to Roboto and append the Noto Sans fallback.
-- Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`.
+- Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`. `_slider` became `_slideshow` in the same pass and was deleted in 1.0.0.
 - `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
 - `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_page-footer`, `_docked-display`, `_transitions`).
 - `utilities/_typescale.scss` generates the 15 `.display-large` … `.title-small` classes from a `$typescale-roles` list. Every property it sets must map to a token `tokens/_reference.scss` actually defines — a `var()` pointing at an undefined custom property invalidates the whole declaration silently, which is how these classes previously did nothing. `font-style` is deliberately not set: the `-font-family-style` token holds "Regular"/"Medium", which are weights, not CSS font-style keywords.

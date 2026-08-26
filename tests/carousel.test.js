@@ -431,7 +431,8 @@ describe('Carousel auto-advance', () => {
 
   test('pauses on hover and on focus, with no option to disable either', (t) => {
     t.mock.timers.enable({ apis: ['setTimeout'] });
-    // The booleans Slideshow offered are gone: passing them changes nothing.
+    // The booleans the old Slideshow offered do not exist here: passing
+    // them changes nothing.
     const instance = init({ interval: 1000, pauseOnHover: false, pauseOnFocus: false });
     const el = instance.el;
     try {
@@ -580,7 +581,7 @@ describe('Carousel auto-advance', () => {
 describe('Carousel fixed height', () => {
   beforeEach(() => resetBody());
 
-  test('reproduces the slideshow layout, indicator row included', () => {
+  test('reproduces the retired slideshow layout, indicator row included', () => {
     assert.match(css, /--md-comp-carousel-indicator-allowance:\s*40px/);
     assert.match(
       css,

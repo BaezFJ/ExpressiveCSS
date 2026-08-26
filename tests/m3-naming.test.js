@@ -5,9 +5,11 @@
 // alias, so markup and scripts written before 0.8.0 keep working. This file is
 // what makes that a promise rather than an intention.
 //
-// One rename is NOT additive and is asserted as such below: `Slider` used to be
-// the image slideshow and is now the range control, because that is what M3
-// calls a slider. Aliasing it would defeat the rename.
+// One rename was NOT additive and is asserted as such below: `Slider` used to
+// be the image slideshow and is now the range control, because that is what M3
+// calls a slider. Aliasing it would defeat the rename. The slideshow itself is
+// gone as of 1.0.0 - Carousel covers the case - so `.slider` no longer has to
+// be told apart from anything by its content.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -41,18 +43,21 @@ describe('M3 names reach the same rules as the old ones', () => {
   }
 });
 
-describe('Slider and Slideshow', () => {
-  test('a .slider holding a range input is the slider, not the slideshow', () => {
-    // The one name that changed meaning. Both keep working because they are
-    // told apart by content, so no pre-0.8.0 markup of either kind breaks.
-    assert.match(css, /\.slider:has\(\[type=range\]\)/, 'the range host must claim .slider');
-    assert.match(css, /\.slider:not\(:has\(\[type=range\]\)\)/, 'the slideshow must yield it when a range is present');
+describe('Slider is the range control, and nothing else', () => {
+  test('.slider needs no content test to tell it apart', () => {
+    // The slideshow used to hold `.slider` too, so each yielded it to the
+    // other by what it contained. With the slideshow gone the class is
+    // unambiguous and both halves of that test must be gone with it.
+    // Asserted as booleans rather than with doesNotMatch, which prints the
+    // whole half-megabyte sheet as its "actual" on failure.
+    assert.match(css, /\.slider\b/, 'the range host must claim .slider');
+    assert.equal(/\.slider:has\(/.test(css), false, 'the range host still tests its own content');
+    assert.equal(/\.slider:not\(:has\(/.test(css), false, 'the slideshow half of the discrimination survives');
   });
 
-  test('Slider is the range control and Slideshow is the slideshow', () => {
+  test('Slideshow is gone, with no alias standing in for it', () => {
     assert.equal(typeof Expressive.Slider, 'function');
-    assert.equal(typeof Expressive.Slideshow, 'function');
-    assert.notEqual(Expressive.Slider, Expressive.Slideshow);
+    assert.equal(Expressive.Slideshow, undefined);
   });
 
   test('Range still resolves, to the renamed Slider', () => {

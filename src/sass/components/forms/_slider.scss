@@ -29,12 +29,11 @@
 //   stop       4dp primary dot
 //   label      40dp, inverse-surface / inverse-on-surface, body-small
 
-// M3 calls this component "Slider", so `.slider` is the name - but `.slider`
-// was the image slideshow's host until 0.8.0, so the two are told apart by
-// what they contain rather than by a hard rename. A .slider holding a range
-// input is this component; one holding .slides is the slideshow. Old markup of
-// either kind keeps working, and neither can be mistaken for the other.
-$_host: ".slider:has([type='range']), .range, .range-field, label:has(> [type='range'])";
+// M3 calls this component "Slider", so `.slider` is the name. It was the image
+// slideshow's host until 0.8.0 and the two were told apart by what they
+// contained; the slideshow is gone as of 1.0.0, so the class is this component
+// and nothing else.
+$_host: ".slider, .range, .range-field, label:has(> [type='range'])";
 
 :is(#{$_host}),
 input[type="range"] {
