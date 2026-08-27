@@ -1,0 +1,221 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "striped", label: "Striped", heading: "Striped Table" },
+  { id: "highlight", label: "Highlight", heading: "Highlight Table" },
+  { id: "centered", label: "Centered", heading: "Centered Table" },
+  { id: "responsive", label: "Responsive", heading: "Responsive Table" },
+]);
+---
+<DocsLayout page="table">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          Tables are a nice way to organize a lot of data. We provide a few utility classes to help you style your table as easily as possible.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+<Code code={`
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Item Name</th>
+      <th>Item Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Alvin</td>
+      <td>Eclair</td>
+      <td>$0.87</td>
+    </tr>
+    <tr>
+      <td>Alan</td>
+      <td>Jellybean</td>
+      <td>$3.76</td>
+    </tr>
+    <tr>
+      <td>Jonathan</td>
+      <td>Lollipop</td>
+      <td>$7.00</td>
+    </tr>
+  </tbody>
+</table>
+`} />
+  </Section>
+  <Section {...S.striped}>
+        <p>Add <code>class="striped"</code> to the table tag for a striped table.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.highlight}>
+        <p>Add <code>class="highlight"</code> to the table tag for a highlight table.</p>
+        <table class="highlight">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.centered}>
+        <p>Add <code>class="centered"</code> to the table tag to center align all the text in the table.</p>
+        <table class="centered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+  </Section>
+  <Section {...S.responsive}>
+        <p>
+          Add <code>class="responsive-table"</code> to the table tag to make the table horizontally scrollable on smaller screen widths.
+        </p>
+        <table class="responsive-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Item Name</th>
+              <th>Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alvin</td>
+              <td>Eclair</td>
+              <td>$0.87</td>
+            </tr>
+            <tr>
+              <td>Alan</td>
+              <td>Jellybean</td>
+              <td>$3.76</td>
+            </tr>
+            <tr>
+              <td>Jonathan</td>
+              <td>Lollipop</td>
+              <td>$7.00</td>
+            </tr>
+            <tr>
+              <td>Shannon</td>
+              <td>KitKat</td>
+              <td>$9.99</td>
+            </tr>
+          </tbody>
+        </table>
+  </Section>
+</PageBody>
+</DocsLayout>

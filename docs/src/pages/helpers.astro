@@ -1,0 +1,544 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "valign", label: "Alignment" },
+  { id: "hiding", label: "Hiding/Showing Content" },
+  { id: "spacing", label: "Spacing Content", heading: "Spacing" },
+  { id: "formatting", label: "Formatting" },
+  { id: "browser-default", label: "Browser Defaults" },
+]);
+---
+<DocsLayout page="helpers">
+<PageBody sections={S}>
+  <Section {...S.valign}>
+        <p class="flow-text">Easy-to-use classes to help you align your content.</p>
+
+        <h5>Vertical Align</h5>
+        <p>
+          You can easily vertically center things by adding the class
+          <code>valign-wrapper</code> to the container holding the items you want to vertically align.
+        </p>
+        <div class="valign-demo valign-wrapper primary-container px-4">
+          <p class="on-primary-container-text my-0">This should be vertically aligned</p>
+        </div>
+<Code code={`
+<div class="valign-wrapper">
+  <h5>This should be vertically aligned</h5>
+</div>
+`} />
+
+        <h5>Text Align</h5>
+        <p>
+          These classes are for horizontally aligning content:
+          <code>.left-align</code>, <code>.right-align</code> and <code>.center-align</code>.
+        </p>
+        <article class="surface-variant">
+          <h5 class="left-align">This should be left aligned</h5>
+        </article>
+        <article class="surface-variant">
+          <h5 class="right-align">This should be right aligned</h5>
+        </article>
+        <article class="surface-variant">
+          <h5 class="center-align">This should be center aligned</h5>
+        </article>
+<Code code={`
+<div>
+  <h5 class="left-align">This should be left aligned</h5>
+</div>
+<div>
+  <h5 class="right-align">This should be right aligned</h5>
+</div>
+<div>
+  <h5 class="center-align">This should be center aligned</h5>
+</div>
+`} />
+
+        <p>
+          To center text on mobile only, add <code>center-on-small-only</code>.
+        </p>
+  </Section>
+  <Section {...S.hiding}>
+        <p>We provide easy to use classes to hide/show content on specific screen sizes.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Screen Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code><strong>.hide</strong></code></td>
+              <td>Hidden for all Devices</td>
+            </tr>
+            <tr>
+              <td><code><strong>.hide-on-compact-only</strong></code></td>
+              <td>Hidden on Compact (&lt; 600px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.hide-on-medium-only</strong></code></td>
+              <td>Hidden on Medium (600–839px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.hide-on-expanded-only</strong></code></td>
+              <td>Hidden on Expanded (840–1199px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.hide-on-expanded-and-up</strong></code></td>
+              <td>Hidden on Expanded and wider (≥ 840px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.hide-on-large-only</strong></code></td>
+              <td>Hidden on Large (1200–1599px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.hide-on-extra-large-only</strong></code></td>
+              <td>Hidden on Extra-large (≥ 1600px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-compact</strong></code></td>
+              <td>Shown on Compact (&lt; 600px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-medium</strong></code></td>
+              <td>Shown on Medium (600–839px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-expanded</strong></code></td>
+              <td>Shown on Expanded (840–1199px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-large</strong></code></td>
+              <td>Shown on Large (1200–1599px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-extra-large</strong></code></td>
+              <td>Shown on Extra-large (≥ 1600px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-medium-and-up</strong></code></td>
+              <td>Shown on Medium and wider (≥ 600px)</td>
+            </tr>
+            <tr>
+              <td><code><strong>.show-on-medium-and-down</strong></code></td>
+              <td>Shown on Compact and Medium (&lt; 840px)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Legacy <code>small</code>, <code>med</code>, and <code>xxl</code>
+          utility names remain aliases for compatibility.
+        </p>
+        <h5>Usage</h5>
+<Code code={`
+<div class="hide-on-compact-only"></div>
+`} />
+  </Section>
+  <Section {...S.spacing}>
+        <p>
+          These classes help space elements with margin and padding helpers for all directions. This works by combining a margin/padding prefix, a direction infix and value
+          suffix.
+        </p>
+        <h5>Prefix margin and padding modifiers</h5>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Prefix</th>
+              <th>Modifies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code><strong>m*</strong></code></td>
+              <td>Modifies the margin according to the infix and suffix values. If no infix is provided, it will be applied to all directions.</td>
+            </tr>
+            <tr>
+              <td><code><strong>p*</strong></code></td>
+              <td>Modifies the padding according to the infix and suffix values. If no infix is provided, it will be applied to all directions.</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5>Infix direction modifiers</h5>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Infix</th>
+              <th>Direction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code><strong>*t</strong></code></td>
+              <td>Applies modifier to the top side of the element</td>
+            </tr>
+            <tr>
+              <td><code><strong>*r</strong></code></td>
+              <td>Applies modifier to the right side of the element</td>
+            </tr>
+            <tr>
+              <td><code><strong>*b</strong></code></td>
+              <td>Applies modifier to the bottom side of the element</td>
+            </tr>
+            <tr>
+              <td><code><strong>*l</strong></code></td>
+              <td>Applies modifier to the left side of the element</td>
+            </tr>
+            <tr>
+              <td><code><strong>*x</strong></code></td>
+              <td>Applies modifier to the left and right sides of the element</td>
+            </tr>
+            <tr>
+              <td><code><strong>*y</strong></code></td>
+              <td>Applies modifier to the top and bottom sides of the element</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5>Suffix values</h5>
+        <p>Any margin or padding modifier must be appended with one of these value suffixes.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Suffix</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code><strong>*-0</strong></code></td>
+              <td><code><strong>0</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-1</strong></code></td>
+              <td><code><strong>0.25rem</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-2</strong></code></td>
+              <td><code><strong>0.5rem</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-3</strong></code></td>
+              <td><code><strong>0.75rem</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-4</strong></code></td>
+              <td><code><strong>1rem</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-5</strong></code></td>
+              <td><code><strong>1.5rem</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-6</strong></code></td>
+              <td><code><strong>3rem</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>*-auto</strong></code></td>
+              <td><code><strong>auto</strong></code></td>
+            </tr>
+          </tbody>
+        </table>
+        <h5>Tables of all spacing helpers</h5>
+        <p>All margin helpers</p>
+        <table class="responsive-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Prefix</th>
+              <th colspan="8">Classes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code><strong>margin</strong></code></td>
+              <td><code><strong>m</strong></code></td>
+              <td><code><strong>m-0</strong></code></td>
+              <td><code><strong>m-1</strong></code></td>
+              <td><code><strong>m-2</strong></code></td>
+              <td><code><strong>m-3</strong></code></td>
+              <td><code><strong>m-4</strong></code></td>
+              <td><code><strong>m-5</strong></code></td>
+              <td><code><strong>m-6</strong></code></td>
+              <td><code><strong>m-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>margin-top</strong></code></td>
+              <td><code><strong>mt</strong></code></td>
+              <td><code><strong>mt-0</strong></code></td>
+              <td><code><strong>mt-1</strong></code></td>
+              <td><code><strong>mt-2</strong></code></td>
+              <td><code><strong>mt-3</strong></code></td>
+              <td><code><strong>mt-4</strong></code></td>
+              <td><code><strong>mt-5</strong></code></td>
+              <td><code><strong>mt-6</strong></code></td>
+              <td><code><strong>mt-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>margin-right</strong></code></td>
+              <td><code><strong>mr</strong></code></td>
+              <td><code><strong>mr-0</strong></code></td>
+              <td><code><strong>mr-1</strong></code></td>
+              <td><code><strong>mr-2</strong></code></td>
+              <td><code><strong>mr-3</strong></code></td>
+              <td><code><strong>mr-4</strong></code></td>
+              <td><code><strong>mr-5</strong></code></td>
+              <td><code><strong>mr-6</strong></code></td>
+              <td><code><strong>mr-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>margin-bottom</strong></code></td>
+              <td><code><strong>mb</strong></code></td>
+              <td><code><strong>mb-0</strong></code></td>
+              <td><code><strong>mb-1</strong></code></td>
+              <td><code><strong>mb-2</strong></code></td>
+              <td><code><strong>mb-3</strong></code></td>
+              <td><code><strong>mb-4</strong></code></td>
+              <td><code><strong>mb-5</strong></code></td>
+              <td><code><strong>mb-6</strong></code></td>
+              <td><code><strong>mb-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>margin-left</strong></code></td>
+              <td><code><strong>ml</strong></code></td>
+              <td><code><strong>ml-0</strong></code></td>
+              <td><code><strong>ml-1</strong></code></td>
+              <td><code><strong>ml-2</strong></code></td>
+              <td><code><strong>ml-3</strong></code></td>
+              <td><code><strong>ml-4</strong></code></td>
+              <td><code><strong>ml-5</strong></code></td>
+              <td><code><strong>ml-6</strong></code></td>
+              <td><code><strong>ml-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td>
+                <code><strong>margin-top</strong></code>
+                and
+                <code><strong>margin-bottom</strong></code>
+              </td>
+              <td><code><strong>my</strong></code></td>
+              <td><code><strong>my-0</strong></code></td>
+              <td><code><strong>my-1</strong></code></td>
+              <td><code><strong>my-2</strong></code></td>
+              <td><code><strong>my-3</strong></code></td>
+              <td><code><strong>my-4</strong></code></td>
+              <td><code><strong>my-5</strong></code></td>
+              <td><code><strong>my-6</strong></code></td>
+              <td><code><strong>my-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td>
+                <code><strong>margin-left</strong></code>
+                and
+                <code><strong>margin-right</strong></code>
+              </td>
+              <td><code><strong>mx</strong></code></td>
+              <td><code><strong>mx-0</strong></code></td>
+              <td><code><strong>mx-1</strong></code></td>
+              <td><code><strong>mx-2</strong></code></td>
+              <td><code><strong>mx-3</strong></code></td>
+              <td><code><strong>mx-4</strong></code></td>
+              <td><code><strong>mx-5</strong></code></td>
+              <td><code><strong>mx-6</strong></code></td>
+              <td><code><strong>mx-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td colspan="2">Values</td>
+              <td>0</td>
+              <td>0.25rem</td>
+              <td>0.5rem</td>
+              <td>0.75rem</td>
+              <td>1rem</td>
+              <td>1.5rem</td>
+              <td>3rem</td>
+              <td>auto</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>All padding helpers</p>
+        <table class="responsive-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Prefix</th>
+              <th colspan="8">Classes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code><strong>padding</strong></code></td>
+              <td><code><strong>p</strong></code></td>
+              <td><code><strong>p-0</strong></code></td>
+              <td><code><strong>p-1</strong></code></td>
+              <td><code><strong>p-2</strong></code></td>
+              <td><code><strong>p-3</strong></code></td>
+              <td><code><strong>p-4</strong></code></td>
+              <td><code><strong>p-5</strong></code></td>
+              <td><code><strong>p-6</strong></code></td>
+              <td><code><strong>p-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>padding-top</strong></code></td>
+              <td><code><strong>pt</strong></code></td>
+              <td><code><strong>pt-0</strong></code></td>
+              <td><code><strong>pt-1</strong></code></td>
+              <td><code><strong>pt-2</strong></code></td>
+              <td><code><strong>pt-3</strong></code></td>
+              <td><code><strong>pt-4</strong></code></td>
+              <td><code><strong>pt-5</strong></code></td>
+              <td><code><strong>pt-6</strong></code></td>
+              <td><code><strong>pt-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>padding-right</strong></code></td>
+              <td><code><strong>pr</strong></code></td>
+              <td><code><strong>pr-0</strong></code></td>
+              <td><code><strong>pr-1</strong></code></td>
+              <td><code><strong>pr-2</strong></code></td>
+              <td><code><strong>pr-3</strong></code></td>
+              <td><code><strong>pr-4</strong></code></td>
+              <td><code><strong>pr-5</strong></code></td>
+              <td><code><strong>pr-6</strong></code></td>
+              <td><code><strong>pr-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>padding-bottom</strong></code></td>
+              <td><code><strong>pb</strong></code></td>
+              <td><code><strong>pb-0</strong></code></td>
+              <td><code><strong>pb-1</strong></code></td>
+              <td><code><strong>pb-2</strong></code></td>
+              <td><code><strong>pb-3</strong></code></td>
+              <td><code><strong>pb-4</strong></code></td>
+              <td><code><strong>pb-5</strong></code></td>
+              <td><code><strong>pb-6</strong></code></td>
+              <td><code><strong>pb-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td><code><strong>padding-left</strong></code></td>
+              <td><code><strong>pl</strong></code></td>
+              <td><code><strong>pl-0</strong></code></td>
+              <td><code><strong>pl-1</strong></code></td>
+              <td><code><strong>pl-2</strong></code></td>
+              <td><code><strong>pl-3</strong></code></td>
+              <td><code><strong>pl-4</strong></code></td>
+              <td><code><strong>pl-5</strong></code></td>
+              <td><code><strong>pl-6</strong></code></td>
+              <td><code><strong>pl-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td>
+                <code><strong>padding-top</strong></code>
+                and
+                <code><strong>padding-bottom</strong></code>
+              </td>
+              <td><code><strong>py</strong></code></td>
+              <td><code><strong>py-0</strong></code></td>
+              <td><code><strong>py-1</strong></code></td>
+              <td><code><strong>py-2</strong></code></td>
+              <td><code><strong>py-3</strong></code></td>
+              <td><code><strong>py-4</strong></code></td>
+              <td><code><strong>py-5</strong></code></td>
+              <td><code><strong>py-6</strong></code></td>
+              <td><code><strong>py-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td>
+                <code><strong>padding-left</strong></code>
+                and
+                <code><strong>padding-right</strong></code>
+              </td>
+              <td><code><strong>px</strong></code></td>
+              <td><code><strong>px-0</strong></code></td>
+              <td><code><strong>px-1</strong></code></td>
+              <td><code><strong>px-2</strong></code></td>
+              <td><code><strong>px-3</strong></code></td>
+              <td><code><strong>px-4</strong></code></td>
+              <td><code><strong>px-5</strong></code></td>
+              <td><code><strong>px-6</strong></code></td>
+              <td><code><strong>px-auto</strong></code></td>
+            </tr>
+            <tr>
+              <td colspan="2">Values</td>
+              <td>0</td>
+              <td>0.25rem</td>
+              <td>0.5rem</td>
+              <td>0.75rem</td>
+              <td>1rem</td>
+              <td>1.5rem</td>
+              <td>3rem</td>
+              <td>auto</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5>Usage</h5>
+<Code code={`
+<div class="p-2">
+  <h5 class="mt-1">The div has a padding 0.5rem and the h5 has a margin-top of 0.25rem</h5>
+</div>
+`} />
+  </Section>
+  <Section {...S.formatting}>
+        <p>These classes help format various content on your site.</p>
+
+        <h5>Truncation</h5>
+        <p>
+          To truncate long lines of text in an ellipsis, add the class
+          <code>truncate</code> to the tag which contains the text. See an example below of a header being truncated inside a card.
+        </p>
+        <div class="row">
+          <div class="s6 offset-s3">
+            <article>
+              <h4 class="truncate">This is an extremely long title that will be truncated</h4>
+            </article>
+          </div>
+        </div>
+<Code code={`
+<h4 class="truncate">This is an extremely long title that will be truncated</h4>
+`} />
+
+        <h5>Hover</h5>
+        <p>
+          The <code>hoverable</code> class adds an animation for box shadow as seen below. It can be used on most elements, but is meant
+          for use on cards.
+        </p>
+        <article class="hoverable">Hoverable article</article>
+<Code code={`
+<article class="hoverable">Hoverable article</article>
+`} />
+  </Section>
+  <Section {...S["browser-default"]}>
+        <p>
+          Because we override many of the default browser styles and elements, we provide the
+          <code>.browser-default</code> class to opt those elements out of the framework treatment.
+        </p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Name of Element</th>
+              <th>Reverted Style</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SELECT</td>
+              <td>Browser default select element</td>
+            </tr>
+            <tr>
+              <td>INPUT</td>
+              <td>Browser default input</td>
+            </tr>
+          </tbody>
+        </table>
+<Code code={`
+<select class="browser-default">
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
+</select>
+<input class="browser-default" type="text">
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
