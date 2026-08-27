@@ -126,6 +126,13 @@ job is `visual.yml`, pull requests only.
   "update the snapshots" ritual to forget, and the comparison is always the
   branch against its own merge base rather than against whatever was blessed
   months ago. The cost is one extra build per run.
+
+  **One installation serves both passes, and that is a hole as well as a
+  feature.** It keeps a toolchain skew from showing up as a diff on every page
+  — but it also applies a dependency bump to the baseline *and* the candidate,
+  so a sass or Vite change that moves pixels cancels out and the run reports
+  nothing moved. `visual.yml` watches the lockfile anyway, which buys a smoke
+  test rather than an attribution. Issue #114 holds the trade-off.
 - **The tolerance is `maxDiffPixels`, never a ratio.** These are full-page
   screenshots of long pages, and 0.001 of a 1440x9000 page is 12,960 pixels --
   enough to swallow a 20px -> 4px corner radius on every button on the buttons
