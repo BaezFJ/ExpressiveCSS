@@ -55,9 +55,9 @@ sits in `docs/src/pages/` -- the converted pages, growing one issue at a time:
 
 ```bash
 npm run docs:dev       # build the framework, then its watchers beside astro dev
-npm run docs:build     # -> _site/ (gitignored)
+npm run docs:build     # -> _site/ (gitignored), then verifies it
 npm run docs:preview   # serve what docs:build wrote
-npm run docs:verify    # check the built _site/ against the page catalogue
+npm run docs:verify    # re-check the built _site/ on its own
 ```
 
 `.claude/launch.json` is gitignored, so a fresh clone has none and the
@@ -597,7 +597,12 @@ which needs `uv`). It is the [llms.txt](https://llmstxt.org) link index for the
 site: an H1, a summary, then one `##` section per `NAV` group with one link per
 page, each link's note being that page's own `page_blurb`. Nothing in it is
 authored — the page list is `NAV`, the version and base URL are `package.json`,
-so **adding a page to `NAV` adds it here and nowhere else**. It is committed at
+so adding a page to `NAV` adds it here too. **There are two LLM indexes right
+now, and that is temporary**, the same arrangement as the two page inventories
+below: `docs/src/lib/llms.ts` generates the Astro site's from the shared
+catalogue, and `tests/docs-astro.test.js` holds the two together by asserting
+they agree line for line but for the landing page's route. Adding a page means
+changing both, until the cutover deletes this one. It is committed at
 the repo root, and `pages.yml` regenerates and commits it beside `website/`
 rather than checking it, because it states the version and a release commit
 would otherwise leave it stale. `tests/llms.test.js` asserts the property
@@ -741,13 +746,19 @@ when it is *structurally identical* to the frozen one.
   `/llms-full.txt` is the two documents joined at build time, in the order
   `llms.txt` lists them. There is no third file and no source-of-truth list to
   keep in step -- the endpoint's two imports *are* the list.
-- **`docs/src` is imported unbuilt by Node, so its own imports carry `.ts`.**
-  `tests/*.test.js` and `scripts/verify-site.mjs` load the catalogue through
-  Node's type stripping, which does no extensionless resolution the way a
-  bundler does. `allowImportingTsExtensions` in `tsconfig.json` is what lets
-  TypeScript read that; it is safe only because nothing emits from there.
-- **`npm run docs:verify` is the seam the source-level tests cannot reach.**
-  `scripts/verify-site.mjs` enumerates what the site owes from the catalogue
+- **The three modules Node loads unbuilt carry `.ts` on their own imports**:
+  `data/nav.ts`, `lib/catalogue.ts`, `lib/llms.ts`. `tests/*.test.js` and
+  `scripts/verify-site.mjs` reach them through Node's type stripping, which
+  does no extensionless resolution the way a bundler does, so an extensionless
+  import anywhere in that graph fails at load. Everything else in `docs/src` —
+  every `.astro` page — stays extensionless, because only Vite ever resolves
+  it. `allowImportingTsExtensions` in `tsconfig.json` is what lets TypeScript
+  read the extension; it is safe only because nothing emits from there.
+- **`npm run docs:verify` is the seam the source-level tests cannot reach, and
+  `docs:build` runs it.** Chained rather than left to the deploy: a check
+  nothing invokes is documentation, not a seam, and a page that publishes at
+  the wrong URL or links at a file the build never wrote is invisible from the
+  source. `scripts/verify-site.mjs` enumerates what the site owes from the catalogue
   and checks `_site/` against it: every canonical route and alias published and
   nonempty, every redirect declaring its canonical target, the `/dist` and
   `/static` compatibility assets, `CNAME`, the four LLM documents, every

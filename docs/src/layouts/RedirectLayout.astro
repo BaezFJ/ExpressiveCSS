@@ -2,12 +2,16 @@
 /**
  * One compatibility page: an old URL that now resolves somewhere else.
  *
- * Three mechanisms, in the order they fire. `<link rel="canonical">` tells a
- * crawler which page this is, so the alias never becomes a second indexed copy
- * of its target. The script moves a reader immediately and carries whatever
- * query string and fragment they arrived with -- a deep link keeps its intent.
- * `<meta http-equiv="refresh">` is the fallback when scripting is off; it
- * cannot carry the query or the fragment, which is exactly why it is second.
+ * Three mechanisms, written in the order they fire. `<link rel="canonical">`
+ * tells a crawler which page this is, so the alias never becomes a second
+ * indexed copy of its target. The script moves a reader immediately and carries
+ * whatever query string and fragment they arrived with -- a deep link keeps its
+ * intent. `<meta http-equiv="refresh">` is the fallback when scripting is off.
+ *
+ * Document order is the guarantee, not an accident of formatting: whichever of
+ * the two fires first wins, and only the script carries the query and the
+ * fragment. So the script goes above the meta -- swapping them would leave a
+ * deep link's intent to a race the synchronous script happens to win today.
  *
  * `replace`, not `assign`: the alias must not sit in history, or Back from the
  * canonical page lands on the redirect and bounces forward again.
@@ -27,10 +31,12 @@ const canonical = new URL(to, Astro.site).href;
     <title>Redirecting to {to}</title>
     <link rel="canonical" href={canonical}>
     <meta name="robots" content="noindex, follow">
-    <meta http-equiv="refresh" content={`0; url=${to}`}>
+    {/* Above the meta refresh, not below it: whichever fires first wins, and
+        only this one carries the query string and the fragment. */}
     <script is:inline define:vars={{ to }}>
         location.replace(to + location.search + location.hash);
     </script>
+    <meta http-equiv="refresh" content={`0; url=${to}`}>
 </head>
 <body>
 <p>This page has moved to <a href={to}>{to}</a>.</p>

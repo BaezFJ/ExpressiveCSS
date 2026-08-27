@@ -229,8 +229,16 @@ describe('the compatibility routes Astro publishes', () => {
     assert.match(layout, /<link rel="canonical" href=\{canonical\}>/);
     assert.match(layout, /http-equiv="refresh"/);
     // The query string and the fragment are the reader's, and the meta refresh
-    // cannot carry either -- which is why the script is first and it is second.
+    // cannot carry either -- so the script has to come first in document order,
+    // which is the whole of what decides which one moves the reader.
     assert.match(layout, /location\.search \+ location\.hash/);
+    // The markup, not the frontmatter: the comment above it names both
+    // mechanisms too, and would answer this question with prose.
+    const markup = layout.slice(layout.indexOf('---', 3) + 3);
+    assert.ok(
+      markup.indexOf('location.replace(') < markup.indexOf('http-equiv="refresh"'),
+      'the meta refresh is written above the script, so it may win and drop the query',
+    );
     // An alias in history means Back from the target bounces forward again.
     assert.match(layout, /location\.replace\(/);
   });

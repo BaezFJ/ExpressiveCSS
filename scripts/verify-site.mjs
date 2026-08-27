@@ -12,9 +12,12 @@
 
 import { readFileSync, statSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
-const site = resolve(process.argv[2] ?? join(root.pathname, '_site'));
+// fileURLToPath, not `root.pathname`: a URL keeps the path percent-encoded, so
+// a checkout under a directory with a space in it resolves to a `%20` nobody has.
+const site = resolve(process.argv[2] ?? join(fileURLToPath(root), '_site'));
 
 // Node strips the types; nothing compiles these files for this run.
 const { PAGES } = await import('../docs/src/data/nav.ts');
@@ -69,6 +72,11 @@ for (const { from, to } of aliases()) {
   if (!html.includes('location.search + location.hash')) {
     fail(`alias ${from}: drops the query string and fragment`);
   }
+  // Whichever fires first wins, and only the script carries the query and the
+  // fragment -- so its position relative to the meta refresh is the guarantee.
+  if (html.indexOf('location.replace(') > html.indexOf('http-equiv="refresh"')) {
+    fail(`alias ${from}: the meta refresh precedes the script, so a deep link may lose its query`);
+  }
 }
 
 // --- Compatibility assets --------------------------------------------------
@@ -121,15 +129,24 @@ try {
 const pages = readdirSync(site).filter((f) => f.endsWith('.html'));
 if (pages.length < PAGES.length) fail(`only ${pages.length} pages in ${site}`);
 
+/** Whether a reference points somewhere this site is responsible for. */
+const isLocal = (ref) =>
+  ref !== '' && !ref.startsWith('#') && !/^[a-z][a-z0-9+.-]*:/i.test(ref) && !ref.startsWith('//');
+
 for (const page of pages) {
   const html = readFileSync(join(site, page), 'utf8').replace(/<code\b[\s\S]*?<\/code>/g, '');
-  const refs = new Set(
-    [...html.matchAll(/(?:href|src)="(\/[^":]*)"/g)].map((m) => m[1]),
-  );
+  // Every reference, not only the root-absolute ones. The site is flat, so a
+  // relative ref resolves against the site root either way -- but a scan that
+  // only matched `/…` would pass because nothing live happens to be relative
+  // today, which is a different thing from being correct.
+  const refs = new Set([...html.matchAll(/(?:href|src)="([^"]*)"/g)].map((m) => m[1]));
   for (const ref of refs) {
+    if (!isLocal(ref)) continue;
     // Trimmed at the first ? or #: docs.css and docs.js carry a ?v= cache
     // buster, and matching that literally is a filename no site has ever had.
-    nonempty(ref.split(/[?#]/)[0] || '/', `${page} references`);
+    const path = ref.split(/[?#]/)[0];
+    if (!path) continue;
+    nonempty(path.startsWith('/') ? path : `/${path}`, `${page} references`);
   }
 }
 

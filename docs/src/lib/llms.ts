@@ -43,24 +43,27 @@ components are carried by the HTML element (\`<button>\`, \`<article>\`,
 \`<dialog>\`, \`<footer>\`), and a class modifies a component rather than making
 one. Icons are Material Symbols in a \`<span class="material-symbols">\`.`;
 
-const PRIMARY: [string, string, string][] = [
-  [
-    "m3-guidelines.md",
-    "Material 3 design guidelines",
-    "Which component to use, its anatomy, placement, adaptive behavior, and the " +
+/** The documents a model should fetch, in the order it should read them. */
+const PRIMARY = [
+  {
+    file: "m3-guidelines.md",
+    title: "Material 3 design guidelines",
+    note:
+      "Which component to use, its anatomy, placement, adaptive behavior, and the " +
       "mistakes generated Material UIs make most often. Read this first.",
-  ],
-  [
-    "llm.md",
-    "Markup and JavaScript API reference",
-    "Every component: class names, canonical markup, options, methods, events, " +
+  },
+  {
+    file: "llm.md",
+    title: "Markup and JavaScript API reference",
+    note:
+      "Every component: class names, canonical markup, options, methods, events, " +
       "and CSS custom properties.",
-  ],
-  [
-    "llms-full.txt",
-    "Complete documentation, single file",
-    "Both documents above concatenated, for one-fetch ingestion.",
-  ],
+  },
+  {
+    file: "llms-full.txt",
+    title: "Complete documentation, single file",
+    note: "Both documents above concatenated, for one-fetch ingestion.",
+  },
 ];
 
 export function renderLlmsTxt(pkg: PackageMetadata): string {
@@ -85,7 +88,7 @@ export function renderLlmsTxt(pkg: PackageMetadata): string {
     "",
     "## Primary documentation",
     "",
-    ...PRIMARY.map(([file, title, note]) => `- [${title}](${base}/${file}): ${note}`),
+    ...PRIMARY.map(({ file, title, note }) => `- [${title}](${base}/${file}): ${note}`),
   ];
 
   for (const group of NAV) {

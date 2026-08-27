@@ -74,7 +74,7 @@
     "docs:dev": "run-s build docs:watch",
     "docs:watch": "run-p watch:css watch:js docs:server",
     "docs:server": "astro dev --root docs",
-    "docs:build": "run-s build docs:build:astro",
+    "docs:build": "run-s build docs:build:astro docs:verify",
     "docs:build:astro": "astro build --root docs",
     "docs:preview": "astro preview --root docs",
     "docs:verify": "node scripts/verify-site.mjs",
