@@ -18,11 +18,7 @@
 import { readFileSync, statSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {
-  enforcedRules,
-  violations,
-  duplicateLandmarkNames
-} from './semantics-rules.mjs';
+import { enforcedRules, checkPage } from './semantics-rules.mjs';
 
 const root = new URL('../', import.meta.url);
 // fileURLToPath, not `root.pathname`: a URL keeps the path percent-encoded, so
@@ -186,10 +182,11 @@ const rules = enforcedRules(semantics);
 
 for (const page of pages) {
   const html = readFileSync(join(site, page), 'utf8');
-  for (const v of violations(html, rules, semantics.compositeRoles)) {
+  const { violations, duplicateNames } = checkPage(html, rules, semantics.compositeRoles);
+  for (const v of violations) {
     fail(`${page}: [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
   }
-  for (const name of duplicateLandmarkNames(html)) {
+  for (const name of duplicateNames) {
     fail(`${page}: two landmarks named "${name}"`);
   }
 }

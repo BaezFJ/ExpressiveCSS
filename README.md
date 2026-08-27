@@ -23,10 +23,9 @@ Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 
 - [Node.js](https://nodejs.org/) 20 or newer
 - npm
-- Python 3.14 or newer and [uv](https://docs.astral.sh/uv/) to run the local
-  documentation site
 
-Python is not required to build or use the framework itself.
+Node 22.12 or newer to run the documentation site: that is Astro's own
+requirement, not the framework's, which still builds and tests on 20.
 
 ## Getting started
 
@@ -141,19 +140,23 @@ Available npm commands include:
 | `npm run typecheck` | Check the TypeScript source without emitting files |
 | `npm test` | Build the ESM bundle and run the test suite |
 | `npm run clean` | Remove generated build output |
+| `npm run docs:dev` | Build the framework, then watch it beside the docs server |
+| `npm run docs:build` | Build the documentation site into `_site/` and verify it |
+| `npm run docs:preview` | Serve what `docs:build` wrote |
 
-Run the local documentation and smoke-test site in a second terminal:
+Run the documentation and smoke-test site:
 
 ```sh
-uv sync
-uv run python docs/app.py
+npm run docs:dev
 ```
 
-Then open `http://127.0.0.1:5055`. The Flask app serves assets directly from
-`dist/`, so changes made by `npm run watch` appear after a browser refresh.
+One command from a clean checkout: it builds the framework first, then runs the
+Sass and esbuild watchers alongside the documentation server, so a change to
+either source appears after a browser refresh. Astro prints the URL it binds.
 
 It is the same site published at
-[www.expressivecss.com](https://www.expressivecss.com), built from `docs/`.
+[www.expressivecss.com](https://www.expressivecss.com), authored in
+`docs/src/`.
 
 ## Project structure
 
@@ -161,7 +164,7 @@ It is the same site published at
 src/
 ├── sass/        Design tokens, utilities, base styles, and component styles
 └── ts/          Core APIs, behaviors, plugins, and interactive components
-docs/            Local Flask documentation and build smoke test
+docs/            Documentation site and build smoke test (Astro)
 tests/           Node test runner and jsdom tests
 dist/            Generated distributable files
 ```

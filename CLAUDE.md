@@ -634,13 +634,23 @@ alias "still works" when nothing matches it (`.page-footer`, `.footer-copyright`
 block is swept and the sentence around it is not. Grep the compiled
 `dist/css/expressive.css` for a class before documenting it.
 
-The Flask app serves the npm build **directly out of `dist/`** via the `dist_file` route (`/dist/<path:filename>`) — there is no copy step, so `npm run watch` + browser reload is the dev loop. `docs/static/` holds only docs-site chrome (`docs.css`, `docs.js`), never framework styles.
+The site serves the npm build **directly out of `dist/`** — there is no copy
+step, so `npm run docs:dev` (which runs `npm run watch` beside `astro dev`) plus
+a browser reload is the dev loop. Astro reaches it through the two symlinks in
+`docs/public/`; `BaseLayout.astro` picks unminified assets when `dist/` was
+built for development and renders a "run npm run build" banner when `dist/` is
+absent altogether. `docs/static/` holds only docs-site chrome (`docs.css`,
+`docs.js`), never framework styles.
 
-An `inject_build_assets` context processor exposes `css_url` / `js_url` to templates and picks unminified assets when `app.debug` is set, minified otherwise; it also sets `build_missing`, which renders a "run npm run build" banner in `base.html` when `dist/` is absent. Debug responses are sent with `max-age=0` so rebuilt assets aren't cached.
+The Flask app did the same through its `dist_file` route and an
+`inject_build_assets` context processor. It publishes nothing now and goes with
+the rest of that pipeline; the paragraphs below describe the Jinja templates,
+which are likewise historical — **the authored source is `docs/src/`**, and
+"The Astro build" further down is the section that governs.
 
-The bundle only self-initializes Forms/Chips/Slider/Cards — `docs/static/docs.js` calls `Expressive.AutoInit()` on `DOMContentLoaded` for everything else, and toggles `<html theme="light|dark">` to exercise the token layer.
+The bundle only self-initializes Forms/Chips/Slider/Cards — `docs/static/docs.js` calls `Expressive.AutoInit()` on `DOMContentLoaded` for everything else, and toggles `<html theme="light|dark">` to exercise the token layer. That file is shared by both generators and is live.
 
-Templates are macro-driven; hand-writing the chrome is what caused every docs bug found so far. `NAV` in `app.py` is the single source for the sidenav *and* the footer (the `<details open>` test reads a derived endpoint list), and the footer version comes from `package.json`. A page declares `page_name` / `page_blurb` and `docs.html` builds the `<title>`, the app bar heading and the banner from them. `macros/page.html` holds the rest: `section(id, label)` registers itself in `toc_sections` (a fresh list per render, from the context processor) so `toc()` can generate the table of contents — write a section once and its TOC entry follows; `page_body()` wraps the standard two-column scaffold and emits that TOC; `code()` escapes a sample so you write real markup instead of `&lt;`. `macros/api.html` owns the Options/Properties/Tokens table headers and the methods `instance_note`. `{% do %}` is enabled for the registration, and the page macros must be imported `with context` because they read `toc_sections`.
+The Jinja templates were macro-driven; hand-writing the chrome is what caused every docs bug found so far. `NAV` in `app.py` is the single source for the sidenav *and* the footer (the `<details open>` test reads a derived endpoint list), and the footer version comes from `package.json`. A page declares `page_name` / `page_blurb` and `docs.html` builds the `<title>`, the app bar heading and the banner from them. `macros/page.html` holds the rest: `section(id, label)` registers itself in `toc_sections` (a fresh list per render, from the context processor) so `toc()` can generate the table of contents — write a section once and its TOC entry follows; `page_body()` wraps the standard two-column scaffold and emits that TOC; `code()` escapes a sample so you write real markup instead of `&lt;`. `macros/api.html` owns the Options/Properties/Tokens table headers and the methods `instance_note`. `{% do %}` is enabled for the registration, and the page macros must be imported `with context` because they read `toc_sections`.
 
 `llms.txt` is generated too, by `scripts/gen_llms.py` (`npm run build:llms`,
 which needs `uv`). It is the [llms.txt](https://llmstxt.org) link index for the

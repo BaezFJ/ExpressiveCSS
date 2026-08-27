@@ -5,8 +5,11 @@ blockquote summary, prose, then `##` sections of links. Nothing in it is
 authored here. The page list comes from `NAV` in `docs/app.py` -- the same
 source the sidenav and the footer read -- each link's note is that page's
 `page_blurb`, the version comes from `package.json`, and so does the base URL.
-Adding a page to `NAV` therefore adds it here, and `tests/llms.test.js` fails
-if this file is not regenerated.
+Adding a page to `NAV` therefore adds it here.
+
+This is the Flask pipeline's generator and nothing checks its output any more:
+the site's index is built by `docs/src/lib/llms.ts` out of the shared catalogue
+and verified by `scripts/verify-site.mjs`. This script goes with `docs/app.py`.
 
 The companion `/llms-full.txt` is not generated: it is `m3-guidelines.md` and
 `llm.md` concatenated at request time by the route in `docs/app.py`, so it
@@ -78,7 +81,7 @@ def _page_url(base, endpoint):
     `.html` one, sometimes an alias -- `sliders` has four) and Frozen-Flask
     writes exactly one file per endpoint, named by whichever one `url_for`
     builds. Choosing differently here would link at a page the site does not
-    have. `tests/llms.test.js` checks each link against `website/`.
+    have.
     """
     with app.test_request_context():
         path = url_for(endpoint)

@@ -29,7 +29,7 @@ import {
   FORBID_KINDS,
   expandedSelector,
   enforcedRules as rulesOf,
-  violations as ruleViolations
+  violations
 } from '../scripts/semantics-rules.mjs';
 
 const root = new URL('../', import.meta.url);
@@ -406,9 +406,6 @@ const examples = [
 // rules over the built pages, where the document-level ones become answerable.
 
 const enforcedRules = rulesOf(data);
-
-const violations = (html, rules, opts) =>
-  ruleViolations(html, rules, data.compositeRoles, opts);
 
 // --- tests ------------------------------------------------------------------
 
@@ -789,7 +786,9 @@ describe('documented markup', () => {
     const failures = [];
     for (const e of examples) {
       if (e.ignore) continue;
-      for (const v of violations(e.html, enforcedRules, { fragmentSafe: e.fragmentSafe }))
+      for (const v of violations(e.html, enforcedRules, data.compositeRoles, {
+        fragmentSafe: e.fragmentSafe
+      }))
         failures.push(`${e.location}\n    [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
     }
     assert.deepEqual(failures, [], `\n${failures.join('\n\n')}\n`);

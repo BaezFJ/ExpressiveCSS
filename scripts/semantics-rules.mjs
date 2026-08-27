@@ -37,31 +37,53 @@ export function enforcedRules(data) {
 }
 
 /**
- * Enough of the accessible-name computation to answer "is this control
- * nameless?" - aria-label, then aria-labelledby, then the text that is left
- * once the aria-hidden subtrees are taken out. Not the full algorithm: no
- * title, no <label>, no alt on a descendant image, because a control relying
- * on those is not what this is looking for.
+ * The name an element is given outright, by `aria-label` or `aria-labelledby`.
+ * Empty when it has neither.
+ *
+ * The two callers below diverge on what happens next, which is why this stops
+ * here: a control falls back to its own text, a landmark does not. A <nav>
+ * full of links is not named by the links in it.
  */
-export function accessibleName(el, document) {
+function authoredName(el, document) {
   const label = el.getAttribute('aria-label');
   if (label && label.trim()) return label.trim();
   const ref = el.getAttribute('aria-labelledby');
-  if (ref) {
-    const text = ref
-      .split(/\s+/)
-      .map((id) => document.getElementById(id)?.textContent ?? '')
-      .join(' ')
-      .trim();
-    if (text) return text;
-  }
+  if (!ref) return '';
+  return ref
+    .split(/\s+/)
+    .map((id) => document.getElementById(id)?.textContent ?? '')
+    .join(' ')
+    .trim();
+}
+
+/**
+ * Enough of the accessible-name computation to answer "is this control
+ * nameless?" - the authored name, then the text that is left once the
+ * aria-hidden subtrees are taken out. Not the full algorithm: no title, no
+ * <label>, no alt on a descendant image, because a control relying on those is
+ * not what this is looking for.
+ */
+export function accessibleName(el, document) {
+  const authored = authoredName(el, document);
+  if (authored) return authored;
   const clone = el.cloneNode(true);
   clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
   return clone.textContent.trim();
 }
 
-export function violations(html, rules, compositeRoles, { fragmentSafe = false } = {}) {
+/**
+ * An authored fragment, parsed into a body of its own.
+ *
+ * Never for a whole document: nesting one inside <body> reparses its <head> in
+ * body context, so a rule keyed on anything up there would silently match
+ * nothing. Whole pages go through `checkPage`.
+ */
+export function violations(html, rules, compositeRoles, opts) {
   const { document } = new JSDOM(`<!doctype html><body>${html}</body>`).window;
+  return violationsIn(document, rules, compositeRoles, opts);
+}
+
+export function violationsIn(document, rules, compositeRoles, { fragmentSafe = false } = {}) {
   const found = [];
   for (const rule of rules) {
     if (fragmentSafe && !rule.fragmentSafe) continue;
@@ -97,19 +119,29 @@ export function violations(html, rules, compositeRoles, { fragmentSafe = false }
  * against. Two <nav>s both called "Main" is a landmark menu with two identical
  * rows, which is the problem labelling them was meant to solve. Shipped once.
  */
-export function duplicateLandmarkNames(html) {
-  const { document } = new JSDOM(html).window;
+function duplicateLandmarkNames(document) {
   const seen = new Set();
   const dupes = [];
   for (const nav of document.querySelectorAll('nav')) {
-    const label = nav.getAttribute('aria-label');
-    const ref = nav.getAttribute('aria-labelledby');
-    const name = (
-      label ?? (ref ? (document.getElementById(ref)?.textContent ?? '') : '')
-    ).trim();
+    const name = authoredName(nav, document);
     if (!name) continue;
     if (seen.has(name)) dupes.push(name);
     seen.add(name);
   }
   return dupes;
+}
+
+/**
+ * One built page, checked as the document it is: every enforced rule, plus the
+ * landmark names, which are only ambiguous relative to each other.
+ *
+ * Parsed once, and as a document rather than a fragment - `<!doctype html>` and
+ * `<head>` survive, so a rule may be written against either.
+ */
+export function checkPage(html, rules, compositeRoles) {
+  const { document } = new JSDOM(html).window;
+  return {
+    violations: violationsIn(document, rules, compositeRoles),
+    duplicateNames: duplicateLandmarkNames(document)
+  };
 }
