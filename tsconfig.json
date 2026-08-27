@@ -18,6 +18,13 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
+
+    // docs/src is imported by tests and by scripts/verify-site.mjs through
+    // Node's type stripping, which does no extensionless resolution the way a
+    // bundler does. Those modules therefore write the `.ts` extension, and
+    // this is what lets TypeScript read it. Safe here only because nothing
+    // emits: `noEmit` is set below and docs/src is outside tsconfig.build.json.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "sourceMap": true,
     "noEmit": true

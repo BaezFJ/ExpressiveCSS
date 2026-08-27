@@ -77,6 +77,7 @@
     "docs:build": "run-s build docs:build:astro",
     "docs:build:astro": "astro build --root docs",
     "docs:preview": "astro preview --root docs",
+    "docs:verify": "node scripts/verify-site.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",

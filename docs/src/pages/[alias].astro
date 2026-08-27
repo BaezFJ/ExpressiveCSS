@@ -1,0 +1,21 @@
+---
+import RedirectLayout from "../layouts/RedirectLayout.astro";
+import { aliases } from "../lib/catalogue";
+
+/**
+ * Every legacy route, from one layout rather than a maintained page each.
+ *
+ * `build.format: 'file'` publishes the param `dropdown` at `/dropdown.html`,
+ * which is the shape these URLs already have -- so the catalogue's `.html`
+ * suffix is stripped here and put back by the build.
+ */
+export function getStaticPaths() {
+  return aliases().map(({ from, to }) => ({
+    params: { alias: from.replace(/^\//, "").replace(/\.html$/, "") },
+    props: { to },
+  }));
+}
+
+const { to } = Astro.props;
+---
+<RedirectLayout to={to} />
