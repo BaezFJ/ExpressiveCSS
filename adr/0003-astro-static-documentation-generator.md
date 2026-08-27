@@ -85,8 +85,10 @@ The migration lands as one atomic change on the default branch: two competing
 documentation systems must never both be present there, because the second one
 to be updated is the one that quietly goes stale. It may still be *developed* as
 ordered commits on a branch, and this ADR plus the catalogue is the first of
-them — the catalogue ships alongside the Flask application and is held to it by
-`tests/docs-nav-catalogue.test.js` until the cutover removes the other side.
+them — the catalogue shipped alongside the Flask application and was held to it
+by a parity test for as long as Flask published the site. Once Astro became the
+documentation path the catalogue became the sole inventory, and that test went
+with the agreement it existed to check.
 
 Tests describe published behaviour rather than the generator. The seam is the
 built site: pages, aliases, assets and LLM endpoints enumerated from the

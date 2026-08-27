@@ -3,8 +3,12 @@
 // Four surfaces state markup and can drift from each other: llm.md (the
 // contract LLMs consume), docs/templates/** and docs/src/**/*.astro (what
 // humans copy, under the two generators that coexist until the Astro cutover),
-// and tests/fixtures.js. website/ is generated from the templates by freeze.py,
-// so checking it would check the same thing twice.
+// and tests/fixtures.js.
+//
+// Fragments only. The document-level questions -- <main> nesting, a dialog's
+// name, two landmarks on one page sharing one -- are asked of the built site by
+// scripts/verify-site.mjs, which runs the same rules from
+// scripts/semantics-rules.mjs. A fragment cannot answer them.
 //
 // A rule runs only while its component is `enforced`. The exempt list is the
 // countable backlog of the semantics sweep and only ever shrinks; the roster
@@ -21,28 +25,18 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 import { AUTO_INIT_FIXTURES } from './fixtures.js';
 import { render } from '../scripts/gen-semantics.mjs';
+import {
+  FORBID_KINDS,
+  expandedSelector,
+  enforcedRules as rulesOf,
+  violations as ruleViolations
+} from '../scripts/semantics-rules.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 const data = JSON.parse(read('semantics.json'));
 
 // --- conformance ------------------------------------------------------------
-
-const FORBID_KINDS = ['forbid', 'forbid-composite-roles'];
-
-/**
- * What a rule actually matches.
- *
- * `forbid-composite-roles` states the component's own selector and is expanded
- * over the vocabulary, so the ten roles are named once in semantics.json rather
- * than once per component - and adding one tightens every such rule instead of
- * leaving each a role short. Expansion is root-only on purpose: a slide may
- * legitimately contain a menu, it just may not *be* one.
- */
-function expandedSelector(rule, compositeRoles) {
-  if (rule.kind !== 'forbid-composite-roles') return rule.selector;
-  return compositeRoles.map((r) => `${rule.selector}[role="${r}"]`).join(', ');
-}
 
 /** Top-level comma split: a comma inside `:not(a, b)` belongs to that compound. */
 function splitCompounds(selector) {
@@ -407,63 +401,14 @@ const examples = [
 ];
 
 // --- rule engine ------------------------------------------------------------
+//
+// scripts/semantics-rules.mjs owns it: scripts/verify-site.mjs runs the same
+// rules over the built pages, where the document-level ones become answerable.
 
-const enforcedRules = Object.entries(data.rows)
-  .filter(([, c]) => c.status === 'enforced')
-  .flatMap(([name, c]) => c.rules.map((r) => ({ ...r, component: name })));
+const enforcedRules = rulesOf(data);
 
-/**
- * Enough of the accessible-name computation to answer "is this control
- * nameless?" - aria-label, then aria-labelledby, then the text that is left
- * once the aria-hidden subtrees are taken out. Not the full algorithm: no
- * title, no <label>, no alt on a descendant image, because a control relying
- * on those is not what this is looking for.
- */
-function accessibleName(el, document) {
-  const label = el.getAttribute('aria-label');
-  if (label && label.trim()) return label.trim();
-  const ref = el.getAttribute('aria-labelledby');
-  if (ref) {
-    const text = ref
-      .split(/\s+/)
-      .map((id) => document.getElementById(id)?.textContent ?? '')
-      .join(' ')
-      .trim();
-    if (text) return text;
-  }
-  const clone = el.cloneNode(true);
-  clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
-  return clone.textContent.trim();
-}
-
-function violations(html, rules, { fragmentSafe = false } = {}) {
-  const { document } = new JSDOM(`<!doctype html><body>${html}</body>`).window;
-  const found = [];
-  for (const rule of rules) {
-    if (fragmentSafe && !rule.fragmentSafe) continue;
-    const hits = [...document.querySelectorAll(expandedSelector(rule, data.compositeRoles))];
-    if (FORBID_KINDS.includes(rule.kind)) {
-      for (const el of hits) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-    } else if (rule.kind === 'require-attr') {
-      for (const el of hits) {
-        const v = el.getAttribute(rule.attr);
-        const ok = rule.equals ? v === rule.equals : v !== null && v !== '';
-        if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-      }
-    } else if (rule.kind === 'require-accessible-name') {
-      // The one thing a selector cannot ask. "Has no accessible name" depends
-      // on text *nodes*, and CSS cannot see them: `:has(> .icon:only-child)`
-      // counts elements, so it flags <a><span icon/>Five</a> - a link that is
-      // perfectly well named. This reads the content instead.
-      for (const el of hits) {
-        if (!accessibleName(el, document)) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
-      }
-    } else {
-      throw new Error(`unknown rule kind: ${rule.kind}`);
-    }
-  }
-  return found;
-}
+const violations = (html, rules, opts) =>
+  ruleViolations(html, rules, data.compositeRoles, opts);
 
 // --- tests ------------------------------------------------------------------
 
@@ -692,62 +637,6 @@ describe('prose that names markup', () => {
         if (/\b(not|no|never|instead of|rather than)\s+$/i.test(before)) continue;
         const line = src.slice(0, m.index).split('\n').length;
         failures.push(`${file}:${line} names \`${shape}\`, which a forbidding rule rejects`);
-      }
-    }
-    assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);
-  });
-});
-
-describe('composed pages', () => {
-  // website/ was excluded as a *surface* because it is generated from the
-  // templates - checking its fragments would check them twice. A whole page is
-  // a different question. Rules like main-not-nested and dialog-is-named are
-  // document-level, chrome and content only meet here, and a landmark name is
-  // only ambiguous relative to the other landmarks on the same page. The
-  // duplicate-name check below has no rule behind it for that reason: there is
-  // no fragment it could be written against.
-  //
-  // 57 pages, well under a second.
-  //
-  // These read the *committed* website/, which is only as current as the last
-  // freeze - a template-only change would leave this passing against a
-  // snapshot of the previous state. CI closes that: it re-runs freeze.py and
-  // fails if the diff is non-empty, which is the check CLAUDE.md already
-  // prescribed for template changes and nothing had automated.
-  const pages = readdirSync(new URL('website/', root))
-    .filter((f) => f.endsWith('.html'))
-    .map((f) => ({ file: `website/${f}`, html: read(`website/${f}`) }));
-
-  test('the frozen site exists to check', () => {
-    assert.ok(pages.length > 20, `only ${pages.length} frozen pages - run freeze.py`);
-  });
-
-  test('every page satisfies every enforced rule', () => {
-    const failures = [];
-    for (const { file, html } of pages) {
-      for (const v of violations(html, enforcedRules)) {
-        failures.push(`${file}\n    [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
-      }
-    }
-    assert.deepEqual(failures, [], `\n${failures.slice(0, 12).join('\n\n')}\n`);
-  });
-
-  test('no two landmarks on a page share a name', () => {
-    // Two <nav>s both called "Main" is a landmark menu with two identical rows,
-    // which is the problem labelling them was meant to solve. Shipped once.
-    const failures = [];
-    for (const { file, html } of pages) {
-      const { document } = new JSDOM(html).window;
-      const names = [...document.querySelectorAll('nav')].map((n) => {
-        const l = n.getAttribute('aria-label');
-        if (l) return l.trim();
-        const ref = n.getAttribute('aria-labelledby');
-        return ref ? (document.getElementById(ref)?.textContent ?? '').trim() : '';
-      });
-      const seen = new Set();
-      for (const n of names) {
-        if (n && seen.has(n)) failures.push(`${file}: two landmarks named "${n}"`);
-        seen.add(n);
       }
     }
     assert.deepEqual(failures, [], `\n  ${failures.join('\n  ')}\n`);

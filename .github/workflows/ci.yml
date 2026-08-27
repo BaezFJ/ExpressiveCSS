@@ -23,8 +23,8 @@ jobs:
         # It cannot run the tests, though -- see the test step below -- and it
         # cannot run any `docs:*` script either: astro 7 declares
         # ">=22.12.0". Both are tooling requirements, not the package's, so
-        # neither is a reason to raise "engines"; but a docs step added to this
-        # job has to skip 20 the way the test step does.
+        # neither is a reason to raise "engines". The documentation build is a
+        # job of its own below, on a single version, for that reason.
         node: [20, 22, 24]
 
     steps:
@@ -50,27 +50,6 @@ jobs:
       # to raise the package's own "engines" -- Node 20 still has to build.
       - run: npm run test:run
         if: matrix.node != 20
-
-      # website/ is generated from docs/templates by freeze.py and committed.
-      # tests/semantics.test.js checks those frozen pages as whole documents -
-      # main nesting, dialog naming, duplicate landmark names - which is only
-      # meaningful if they match the templates they came from. Nothing else
-      # enforces that: a template-only change leaves the old HTML in place and
-      # the composed checks pass against a snapshot of the previous state.
-      #
-      # This is also the diff CLAUDE.md already prescribes for verifying any
-      # template change; it was just never automated.
-      - name: Verify the frozen site matches the templates
-        if: matrix.node == 24
-        run: |
-          pipx install uv || pip install uv
-          uv run python freeze.py
-          if ! git diff --quiet -- website/; then
-            echo "::error::website/ is stale - run 'uv run python freeze.py' and commit the result"
-            git diff --stat -- website/
-            exit 1
-          fi
-          echo "  OK       website/ is in step with docs/templates"
 
       # Catches the failure mode where dist/ is gitignored and nothing rebuilds
       # it: proves `prepack` regenerates every exports target from clean.
@@ -100,3 +79,32 @@ jobs:
             fi
           done
           exit $missing
+
+  # The documentation site, built and verified the way a contributor does it -
+  # `npm run docs:build`, no Python anywhere. The built artifact is the seam
+  # the source-level tests cannot reach: a page can be authored correctly and
+  # still publish at the wrong URL, link at a file the build never wrote, ship
+  # without a stylesheet, or violate a document-level semantics rule that no
+  # fragment could have been checked against. scripts/verify-site.mjs asks all
+  # of that of _site/, and docs:build chains it.
+  #
+  # Its own job rather than a step in the matrix above: astro 7 declares
+  # ">=22.12.0", so it cannot run on the Node 20 leg, and building the site
+  # three times to learn the same thing helps nobody.
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Builds the framework first: docs/public/dist is a symlink into dist/,
+      # and Vite's public-dir copy stats every entry, so a dangling one kills
+      # the build before a page is emitted.
+      - run: npm run docs:build

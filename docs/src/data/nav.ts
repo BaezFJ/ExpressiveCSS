@@ -2,10 +2,11 @@
  * The documentation page catalogue: every canonical page, its navigation group,
  * its titles, its published route and its legacy aliases.
  *
- * Today `docs/app.py` is still the running site and this file is checked
- * against it by `tests/docs-nav-catalogue.test.js` -- see ADR 0003. Adding or
- * moving a page means changing both until the Astro cutover, at which point
- * `docs/app.py` goes and this file is the only inventory.
+ * The only page inventory (ADR 0003): the Astro pages, the drawer, the footer,
+ * the compatibility redirects and `llms.txt` all read it, and
+ * `scripts/verify-site.mjs` checks the built site against it. `docs/app.py`
+ * still exists but no longer publishes anything, and goes with the Flask
+ * pipeline.
  */
 
 /** One documented page. */

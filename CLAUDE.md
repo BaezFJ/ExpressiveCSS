@@ -43,15 +43,8 @@ npm run clean          # remove dist/
 
 Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Sidenav.getInstance(el)`).
 
-Docs site (uv + Flask, Python ≥ 3.14):
-
-```bash
-uv sync
-uv run flask --app docs/app.py run --debug --port 5055   # http://127.0.0.1:5055
-```
-
-The Astro documentation build runs beside it (ADR 0003) and renders whatever
-sits in `docs/src/pages/` -- the converted pages, growing one issue at a time:
+The documentation site is Astro, and the whole of it is Node -- one command
+from a clean checkout to a live server, no Python anywhere (ADR 0003):
 
 ```bash
 npm run docs:dev       # build the framework, then its watchers beside astro dev
@@ -60,10 +53,15 @@ npm run docs:preview   # serve what docs:build wrote
 npm run docs:verify    # re-check the built _site/ on its own
 ```
 
+The Flask application in `docs/` no longer publishes anything and is removed
+with the rest of that pipeline; `uv sync` and `uv run flask --app docs/app.py
+run` still work if you need to look at what the old generator did.
+
 `.claude/launch.json` is gitignored, so a fresh clone has none and the
 editor's preview pane has no server to start. Recreate it with the same
-command — the `port` field must match the `--port` argument, or the pane
-opens on a port nothing is listening to:
+command — the `port` field must match the port astro binds, which is 4321
+unless `docs/astro.config.mjs` says otherwise, or the pane opens on one nothing
+is listening to:
 
 ```json
 {
@@ -71,9 +69,9 @@ opens on a port nothing is listening to:
   "configurations": [
     {
       "name": "docs",
-      "runtimeExecutable": "uv",
-      "runtimeArgs": ["run", "flask", "--app", "docs/app.py", "run", "--debug", "--port", "5055"],
-      "port": 5055
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "docs:dev"],
+      "port": 4321
     }
   ]
 }
@@ -405,10 +403,11 @@ on. The five rules:
 5. Every user-facing string the framework generates gets an `i18n` option
    (Datepicker and Timepicker already had one; Chips now does).
 
-`tests/semantics.test.js` enforces the rules against the three surfaces that state
-markup — `llm.md`, `docs/templates/**`, `tests/fixtures.js`. `website/` is
-generated from the templates, so checking it would check the same thing twice.
-Notes that matter when working on it:
+`tests/semantics.test.js` enforces the rules against the surfaces that state
+markup — `llm.md`, `m3-guidelines.md`, `docs/src/**/*.astro`, `docs/templates/**`
+and `tests/fixtures.js`. Those are fragments; the whole-document questions are
+asked of the built site by `scripts/verify-site.mjs`, which runs the same rules
+out of `scripts/semantics-rules.mjs`. Notes that matter when working on it:
 
 - **The sweep is complete: 51 of 51 rows enforced, 48 of them components.** Chips,
   then forms, then navigation, then the rest (`input-fields`,
@@ -445,19 +444,22 @@ Notes that matter when working on it:
   root with no `:not()` or `:has()` — a conditional or descendant base would
   report blocking all ten while enforcing something narrower, and the invariant
   that every declaring component blocks every composite role rests on it.
-- **`website/` is checked as whole pages, not as a fourth surface.** Its
-  fragments come from the templates and checking those twice would be
-  pointless, but a composed page answers questions a fragment cannot: `<main>`
-  nesting, whether a dialog is named, and whether two landmarks on the same
-  page share a name — that last has no rule behind it, because there is no
-  fragment to write one against. It found 31 landmarks called "Main" on the
-  navbar page. 65 pages, under a second.
+- **The built site is checked as whole pages, not as another surface.** Its
+  fragments are the authored ones and checking those twice would be pointless,
+  but a composed page answers questions a fragment cannot: `<main>` nesting,
+  whether a dialog is named, and whether two landmarks on the same page share a
+  name — that last has no rule behind it, because there is no fragment to write
+  one against. It found 31 landmarks called "Main" on the navbar page. That
+  pass lives in `scripts/verify-site.mjs` and reads `_site/`, so it runs on
+  `npm run docs:build` rather than in `npm test`: the site is gitignored, and a
+  check that read a committed snapshot would pass against the previous state.
+  66 pages, under a second.
 - **Docs pages are demos, and a demo is a specimen.** A page stacking ten app
   bar examples needs ten distinguishable names, so the live demos are labelled
   by their section (`Main — Center-aligned`) while the `code()` samples keep the
   plain canonical name a reader should copy. The chrome owns the unqualified
   one.
-- **`m3-guidelines.md` is a fourth surface, checked differently.** It states
+- **`m3-guidelines.md` is a surface checked differently.** It states
   markup as inline code spans in prose, not as fenced examples, so only rules
   marked `fragmentSafe` run against it — the ones that fire on a *wrong thing
   present*. That is **not** the same as `kind: "forbid"`:
@@ -645,17 +647,12 @@ which needs `uv`). It is the [llms.txt](https://llmstxt.org) link index for the
 site: an H1, a summary, then one `##` section per `NAV` group with one link per
 page, each link's note being that page's own `page_blurb`. Nothing in it is
 authored — the page list is `NAV`, the version and base URL are `package.json`,
-so adding a page to `NAV` adds it here too. **There are two LLM indexes right
-now, and that is temporary**, the same arrangement as the two page inventories
-below: `docs/src/lib/llms.ts` generates the Astro site's from the shared
-catalogue, and `tests/docs-astro.test.js` holds the two together by asserting
-they agree line for line but for the landing page's route. Adding a page means
-changing both, until the cutover deletes this one. It is committed at
-the repo root, and `pages.yml` regenerates and commits it beside `website/`
-rather than checking it, because it states the version and a release commit
-would otherwise leave it stale. `tests/llms.test.js` asserts the property
-regenerating restores: every `NAV` page linked once, under its own group, at a
-URL `website/` actually has.
+so adding a page to `NAV` adds it here too. **It is no longer checked and no
+longer publishes anything** — `docs/src/lib/llms.ts` generates the site's index
+from the shared catalogue, and that is the one `astro build` emits and
+`scripts/verify-site.mjs` verifies against the generator. The committed copy at
+the repo root is regenerated by `pages.yml` until #98, then goes with the rest of
+the Flask pipeline.
 
 `/llms-full.txt` is *not* generated — the route concatenates `m3-guidelines.md`
 and `llm.md` per request, in that reading order, so there is no third copy to
@@ -666,24 +663,29 @@ serves; the three large ones are gitignored under `website/` the way
 not one view with two rules** — Frozen-Flask writes one file per *endpoint*, so
 a shared view silently freezes only one of its URLs.
 
-`website/` is generated, which makes it the regression test for any template change: `uv run python freeze.py`, then diff. Modulo whitespace the output must be identical — that is how all five macro refactors were verified.
+`website/` is generated and no longer verified. CI ran `freeze.py` and failed on a
+non-empty diff for as long as the frozen pages were what the composed-page checks
+read; both went when Astro became the documentation path, and those checks now run
+against `_site/`. `pages.yml` still regenerates and commits it on deploy until #98
+replaces that with a direct artifact upload, so it can go stale between deploys and
+nothing will say so. Do not treat it as a source of truth.
 
 ### The Astro build
 
-`docs/astro.config.mjs` is a second generator running beside Flask (ADR 0003).
-Every page under `docs/src/pages/` is one that has been converted; the rest of
-the site is still Jinja. Output goes to a gitignored `_site/`. Flask is still
-production and still the thing to compare against: a converted page is right
-when it is *structurally identical* to the frozen one.
+`docs/astro.config.mjs` is the documentation generator (ADR 0003). Every page
+lives under `docs/src/pages/`; output goes to a gitignored `_site/`, and
+`npm run docs:build` builds and verifies it. The frozen `website/` tree is a
+snapshot of what Flask published and is the thing to compare against while it
+is still in the repository: a converted page is right when it is *structurally
+identical* to the frozen one.
 
 - **Compare `<main>`, not the whole document.** The chrome legitimately differs
-  on every converted page — the landing link is `/` rather than
-  `/getting-started.html`, and Astro drops the empty `class=""` Jinja leaves on
-  an inactive drawer item — so a whole-page diff reports ~238 lines on a page
-  that is in fact byte-equivalent where it matters. Parse both to a
-  whitespace-insensitive tag/attribute dump, slice out `<main>`, and diff that;
-  it is 0 lines on every converted page, and a chrome-only residue confirms the
-  rest.
+  on every page — the landing link is `/` rather than `/getting-started.html`,
+  and Astro drops the empty `class=""` Jinja leaves on an inactive drawer item
+  — so a whole-page diff reports ~238 lines on a page that is in fact
+  byte-equivalent where it matters. Parse both to a whitespace-insensitive
+  tag/attribute dump, slice out `<main>`, and diff that; it is 0 lines on every
+  page, and a chrome-only residue confirms the rest.
 - **The docs toolchain needs Node >= 22.12, the package still needs >= 20.**
   That is astro 7's own `engines`, and it is a *contributor* requirement:
   `package.json`'s `engines` describes what a consumer needs to run the built
@@ -769,8 +771,8 @@ when it is *structurally identical* to the frozen one.
   compatibility paths swap roles.** `src/pages/[alias].astro` spreads
   `aliases()` over `RedirectLayout`, so a canonical target is stated once, not
   once per redirect. `aliases()` is deliberately *not* `ALIASES` from the
-  catalogue: `docs-nav-catalogue.test.js` pins that against `docs/app.py`, and
-  Astro's set differs by exactly the landing page. `/index.html` stops being an
+  catalogue: `ALIASES` is the set of legacy paths as authored, and Astro's
+  published set differs from it by exactly the landing page. `/index.html` stops being an
   alias -- `build.format: 'file'` writes the root document there, so the
   redirect would point the root at itself -- and `/getting-started.html`
   becomes one, because the root took canonical.
@@ -811,8 +813,9 @@ when it is *structurally identical* to the frozen one.
   nonempty, every redirect declaring its canonical target, the `/dist` and
   `/static` compatibility assets, `CNAME`, the four LLM documents, every
   absolute link inside `llms.txt` -- which the page walk never sees, and which
-  is fetched by machines that cannot ask what happened on a 404 -- and every
-  root-absolute `href`/`src` on every page. `<code>` blocks are cut out whole
+  is fetched by machines that cannot ask what happened on a 404 -- every
+  root-absolute `href`/`src` on every page, and every `semantics.json` rule
+  against each page as a whole document. `<code>` blocks are cut out whole
   first, for the reason `pages.yml` states: the docs quote example markup like
   `href="/library"`, which describes a reader's project rather than this site.
 - **Every page declares its own URL canonical, and the landing page is why.**
@@ -837,53 +840,49 @@ when it is *structurally identical* to the frozen one.
   whole attribute has to become an expression.
 
 `tests/docs-astro.test.js` holds the pages to the catalogue — that each
-publishes at the route the catalogue gives it, and that its declared and
-rendered sections agree — and pins the hooks the duplicated chrome shares with
-the Jinja macros, for as long as both exist. It also holds the compatibility
-surfaces: that every route `docs/app.py` redirects still redirects, that a
-redirect keeps all three mechanisms, and that the generated `llms.txt` is the
-Flask one **line for line but for the landing page moving to the site root** —
-which is the check that stops a generator change from quietly becoming an index
-rewrite.
+publishes at the route the catalogue gives it, that its declared and rendered
+sections agree, and that the chrome keeps the class hooks and accessible names
+it is found by. It also holds the compatibility surfaces: that every legacy
+route the catalogue records still redirects, that a redirect keeps all three
+mechanisms, and that `llms.txt` links every catalogue page once, under its own
+group, at its published route. Everything that needs a finished document — that
+a page publishes at all, that its links resolve, that it satisfies the
+document-level semantics rules — is `scripts/verify-site.mjs`'s, and
+`npm run docs:build` chains it.
 
-**One check does not follow the migration, and it is the one a fragment cannot
-answer.** The composed-page pass in `semantics.test.js` — `<main>` nesting, and
-two landmarks on a page sharing a name, the check that found 31 landmarks called
-"Main" — reads `website/`, which only the freeze writes. Astro pages are never
-in it and `_site/` is not committed, so `docs/src` gets the fragment-level rules
-only. The seam that closes this is the build-level verification #83 plans;
-until then the guard is that a converted page stays structurally identical to
-its frozen counterpart — which is no longer checked by hand. `npm run
-test:visual` now photographs the Flask base against the Astro head, so any
-structural divergence that renders shows up as a moved page across 59 pages and
-four variants. A divergence that renders *nothing* — a landmark losing its
-name, two landmarks sharing one — still slips through, and that is precisely
-what the composed-page pass is for and why it has to move to `_site/` before
-`website/` goes.
+**The composed-page checks moved with the migration, and they are the ones a
+fragment cannot answer.** `<main>` nesting, a dialog's name, and two landmarks
+on a page sharing one — the check that found 31 landmarks called "Main" — now
+run in `scripts/verify-site.mjs` over `_site/`, out of the same engine
+`semantics.test.js` uses (`scripts/semantics-rules.mjs`). That engine lives
+under `scripts/` because a test file cannot be imported without running its
+tests. `npm run docs:build` chains the verifier, so the questions are asked on
+every build rather than against a committed snapshot of a previous one.
 
-**There are two page inventories right now, and that is temporary.**
-`docs/src/data/nav.ts` is the shared catalogue the Astro site will be generated
-from (`adr/0003`): every canonical page's id, group, label, title, description,
-published route and legacy aliases, in one file. `docs/app.py` is still the
-running site, so both exist, and `tests/docs-nav-catalogue.test.js` holds them
-together — it re-derives the whole contract from the Flask sources and fails on
-any disagreement in either direction. **Adding or moving a page means changing
-both**, until the cutover deletes the Flask side. That test's comments carry the
-derivation rules; the one worth knowing before you read them is that a page's
-published route is the **last** `@app.route` above the view, not the first,
-which is why `sliders` publishes as `/slider.html`.
+That closes the gap `npm run test:visual` cannot: it photographs the Flask base
+against the Astro head, so a structural divergence that *renders* shows up as a
+moved page — but one that renders nothing, a landmark losing its name or two
+sharing one, moves no pixel. The two are complementary, and neither reads
+`website/` any more.
 
-**The six legacy routes are not redirect stubs in `website/`.** Frozen-Flask
-followed each 301 and wrote a full copy of the target page at the alias URL, so
-`dropdown.html` is today a byte-for-byte second Menu page — which is why the
-published count is 65 rather than 59, and why the Astro plan replaces them with
-canonical-tagged redirects.
+**`docs/src/data/nav.ts` is the only page inventory** (`adr/0003`): every
+canonical page's id, group, label, title, description, published route and
+legacy aliases, in one file. The pages, the drawer, the footer, the redirects,
+`llms.txt` and the verifier all read it, so adding a page is one edit plus one
+`.astro` file. `docs/app.py` still exists but publishes nothing, and the test
+that held the two together went with the agreement it was checking.
+
+**The six legacy routes are redirect stubs under Astro, and were not under
+Flask.** Frozen-Flask followed each 301 and wrote a full copy of the target page
+at the alias URL, so `website/dropdown.html` is a byte-for-byte second Menu page
+— which is why the frozen count is 65 rather than 59. `[alias].astro` publishes
+a canonical-tagged redirect at each of those paths instead.
 
 The catalogue is typechecked — `tsconfig.json` includes `docs/src`, while
 `tsconfig.build.json` keeps its own `include` so nothing from the site reaches
-`dist/types`. The test imports the `.ts` file directly and relies on Node's type
-stripping, so keep it to erasable syntax: no enums, no namespaces, no parameter
-properties. Node 20 cannot strip types, which costs nothing only because
+`dist/types`. The tests and `scripts/verify-site.mjs` import the `.ts` files
+directly and rely on Node's type stripping, so keep them to erasable syntax: no
+enums, no namespaces, no parameter properties. Node 20 cannot strip types, which costs nothing only because
 `ci.yml` already skips `test:run` there for jsdom's sake — if that skip is ever
 lifted, this import needs a build step.
 
