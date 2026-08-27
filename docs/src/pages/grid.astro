@@ -1,0 +1,654 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "grid-container", label: "Container", heading: false },
+  { id: "grid-intro", label: "Introduction" },
+  { id: "grid-offsets", label: "Offsets", tag: "h2" },
+  { id: "grid-gaps", label: "Gaps", tag: "h2" },
+  { id: "grid-push", label: "Push and Pull", tag: "h2" },
+  { id: "grid-layouts", label: "Creating Layouts" },
+  { id: "grid-responsive", label: "Responsive Layouts", heading: "Creating Responsive Layouts" },
+]);
+---
+<DocsLayout page="grid">
+<PageBody sections={S}>
+  <Section {...S["grid-container"]}>
+                    <p class="flow-text">We are using a standard 12 column fluid responsive grid system. The grid helps
+                        you layout your page in an ordered, easy fashion.</p>
+                    <h3>Container</h3>
+                    <p>
+                        The container class is not strictly part of the grid but is important in laying out content. It
+                        centers the page and caps how wide it can grow, so a paragraph does not stretch across a 4K
+                        monitor. Width is a percentage of the viewport (90% on Compact, 85% from Medium, 70% from
+                        Expanded, 75% from Extra-large). A max-width token stops that percentage from swallowing the
+                        screen: <code>1280px</code> by default, <code>1920px</code> from the extra-large breakpoint
+                        (1600px). Override the tokens, or pick a modifier:
+                    </p>
+                    <ul>
+                        <li><code>container</code> — default measure, 1280 then 1920.</li>
+                        <li><code>container wide</code> — 2400px cap, for dashboards and media.</li>
+                        <li><code>container max</code> — the percentage with no cap.</li>
+                    </ul>
+
+                    <h5>Demo</h5>
+                    <p>Try the button below to see what the page looks like without containers.</p>
+                    <a id="container-toggle-button" class="button tonal">Turn off Containers</a>
+
+                    <div class="row">
+                        <div class="s12">
+                            <div class="browser-window">
+                                <div class="surface-variant">
+                                    <div class="browser-circles">
+                                        <div class="circle error"></div>
+                                        <div class="circle secondary"></div>
+                                        <div class="circle tertiary"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="row g-0">
+                                        <div class="site-layout-top s12 primary"></div>
+                                        <div class="site-layout-pane s12 primary-container">
+                                            <div class="container">
+                                                <p class="docs-bar small surface"></p>
+                                                <p class="docs-bar full surface"></p>
+                                                <p class="docs-bar full surface"></p>
+                                                <p class="docs-bar full surface"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+                        To add a container just put your content inside a
+                        <code>&lt;div&gt;</code>
+                        tag with a <code>container</code> class. Here's an example of how your page might be set up.
+                    </p>
+
+                    <Code code={`
+<body>
+  <div class="container">
+    <!-- Page Content goes here -->
+  </div>
+</body>
+
+<!-- dashboard / media that should keep growing -->
+<div class="container wide">…</div>
+
+<!-- percentage only, no cap -->
+<div class="container max">…</div>
+`} />
+  </Section>
+  <Section {...S["grid-intro"]}>
+                    <p>Take a look at this section to quickly understand how the grid works!</p>
+                    <h5>12 Columns</h5>
+                    <p>Our standard grid has 12 columns. No matter the size of the browser, each of these columns will
+                        always have an equal width.</p>
+                    <div class="row">
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">1</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">2</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">3</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">4</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">5</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">6</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">7</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">8</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">9</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">10</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">11</div>
+                        <div class="s1 primary-container on-primary-container-text center-align py-3">12</div>
+                    </div>
+                    <p>To get a feel of how the grid is used in HTML, take a look at the code below which will produce a
+                        similar result to the one above.</p>
+                    <Code code={`
+<div class="row">
+  <div class="s1">1</div>
+  <div class="s1">2</div>
+  <div class="s1">3</div>
+  <div class="s1">4</div>
+  <div class="s1">5</div>
+  <div class="s1">6</div>
+  <div class="s1">7</div>
+  <div class="s1">8</div>
+  <div class="s1">9</div>
+  <div class="s1">10</div>
+  <div class="s1">11</div>
+  <div class="s1">12</div>
+</div>
+`} />
+                    <p>
+                        Note: For now, just know that the
+                        <code>s1</code> is one column at the Compact/default size and up.
+                    </p>
+
+                    <h5>Columns live inside Rows</h5>
+                    <p>
+                        Remember when you are creating your layout that all columns must be contained inside a row. Size
+                        each inner div with a
+                        screen-prefix class such as <code>s12</code> or <code>m6</code>.
+                    </p>
+                    <div class="row">
+                        <div class="s12 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">This div is 12-columns wide on all screen sizes</span>
+                        </div>
+                        <div class="s6 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">6-columns (one-half)</span>
+                        </div>
+                        <div class="s6 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">6-columns (one-half)</span>
+                        </div>
+                    </div>
+                    <Code code={`
+<div class="row">
+  <div class="s12">This div is 12-columns wide on all screen sizes</div>
+  <div class="s6">6-columns (one-half)</div>
+  <div class="s6">6-columns (one-half)</div>
+</div>
+`} />
+  </Section>
+  <Section {...S["grid-offsets"]}>
+                    <p>
+                        To offset, simply add
+                        <code>offset-s2</code> to the class where <code>s</code> signifies the screen class-prefix (s =
+                        small, m = medium, l = large, xl = extra-large, xxl = widescreen) and the number after is the
+                        number of columns you want to offset by.
+                    </p>
+                    <p class="error-text">
+                        Attention! Offsets are calculated absolutely starting from the left. If you need relative
+                        offsets, add empty columns to the row.
+                    </p>
+
+                    <div class="row">
+                        <div class="s12 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">This div is 12-columns wide on all screen sizes</span>
+                        </div>
+                        <div class="s6 offset-s6 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">6-columns (offset-by-6)</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="l6 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">l6 column</span>
+                        </div>
+                        <div class="l4 offset-l8 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">l4 column (offset-l8)</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="l2 offset-l3 primary-container on-primary-container-text center-align py-3">
+                            offset-l3
+                        </div>
+                        <div class="l2 offset-l6 primary-container on-primary-container-text center-align py-3">
+                            offset-l6
+                        </div>
+                        <div class="l2 offset-l9 primary-container on-primary-container-text center-align py-3">
+                            offset-l9
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="l2 primary-container on-primary-container-text center-align py-3">col</div>
+                        <div class="l2"></div>
+                        <div class="l2 primary-container on-primary-container-text center-align py-3">relative offset
+                            2
+                        </div>
+                    </div>
+
+                    <Code code={`
+<div class="row">
+  <div class="s12">This div is 12-columns wide on all screen sizes</div>
+  <div class="s6 offset-s6">6-columns (offset-by-6)</div>
+</div>
+<div class="row">
+  <div class="l6">l6 column</div>
+  <div class="l4 offset-l8">l4 column (offset-l8)</div>
+</div>
+<div class="row">
+  <div class="l2 offset-l3">offset-l3</div>
+  <div class="l2 offset-l6">offset-l6</div>
+  <div class="l2 offset-l9">offset-l9</div>
+</div>
+<div class="row">
+  <div class="l2">col</div>
+  <div class="l2"></div>
+  <div class="l2">relative offset 2</div>
+</div>
+`} />
+  </Section>
+  <Section {...S["grid-gaps"]}>
+                    <p>
+                        There is a default gap between the columns (g-3). You can easily change the gap with the gap
+                        classes. Simply add
+                        <code>g-0</code> to <code>g-5</code> to the element with the <code>row</code> class.
+                    </p>
+
+                    <p>Standard Gaps (g-3)</p>
+                    <div class="row">
+                        <div class="s3 primary-container on-primary-container-text center-align py-3">1</div>
+                        <div class="s3 primary-container on-primary-container-text center-align py-3">2</div>
+                        <div class="s3 primary-container on-primary-container-text center-align py-3">3</div>
+                        <div class="s3 primary-container on-primary-container-text center-align py-3">4</div>
+                    </div>
+
+                    <p>No Gap (g-0)</p>
+                    <div class="row g-0">
+                        <div class="s4 primary-container on-primary-container-text center-align py-3">1</div>
+                        <div class="s4 primary-container on-primary-container-text center-align py-3">2</div>
+                        <div class="s4 primary-container on-primary-container-text center-align py-3">3</div>
+                    </div>
+
+                    <p>Bigger Gap (g-4)</p>
+                    <div class="row g-4">
+                        <div class="s4 primary-container on-primary-container-text center-align py-3">1</div>
+                        <div class="s4 primary-container on-primary-container-text center-align py-3">2</div>
+                        <div class="s4 primary-container on-primary-container-text center-align py-3">3</div>
+                    </div>
+
+                    <Code code={`
+<div class="row g-4">
+  <div class="s3">1</div>
+  <div class="s3">2</div>
+  <div class="s3">3</div>
+  <div class="s3">4</div>
+</div>
+`} />
+  </Section>
+  <Section {...S["grid-push"]}>
+                    <p class="error-text">Deprecated. CSS Grid is used now — use offsets, or empty columns, to change
+                        placement.</p>
+                    <p>
+                        Older versions reordered columns with
+                        <code>push-s2</code> or <code>pull-s2</code>, where <code>s</code> is the screen class-prefix
+                        and the number is how many
+                        columns to push or pull by. Those classes are no longer part of the grid.
+                    </p>
+  </Section>
+  <Section {...S["grid-layouts"]}>
+                    <p>
+                        Here we will show you how to create some commonly used layouts with our grid system. Hopefully
+                        these will get you more comfortable with laying out elements. To
+                        keep these demos simple, the ones here will not be responsive.
+                    </p>
+                    <div class="row">
+                        <div class="s12 m6">
+                            <h5>Section</h5>
+                            <p>
+                                The section class is used for simple top and bottom padding. Just add the
+                                <code>section</code> class to your divs containing large blocks of content.
+                            </p>
+                        </div>
+                        <div class="s12 m6">
+                            <h5>Divider</h5>
+                            <p>
+                                Dividers are 1 pixel lines that help break up your content. Just add the
+                                <code>divider</code> class to a div in between your content.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h5>Example Sections and Dividers</h5>
+                    <div class="divider"></div>
+                    <div class="section">
+                        <h5>Section 1</h5>
+                        <p>Stuff</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="section">
+                        <h5>Section 2</h5>
+                        <p>Stuff</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="section">
+                        <h5>Section 3</h5>
+                        <p>Stuff</p>
+                    </div>
+                    <div class="divider"></div>
+                    <Code code={`
+<div class="divider"></div>
+<div class="section">
+  <h5>Section 1</h5>
+  <p>Stuff</p>
+</div>
+<div class="divider"></div>
+<div class="section">
+  <h5>Section 2</h5>
+  <p>Stuff</p>
+</div>
+<div class="divider"></div>
+<div class="section">
+  <h5>Section 3</h5>
+  <p>Stuff</p>
+</div>
+`} />
+
+                    <h5>Example Promotion Table</h5>
+                    <p>
+                        If we want 3 divs that are equal size, we define the divs with a width of 4-columns, as 4+4+4
+                        nicely adds up to 12. Inside those divs, we can put our content.
+                    </p>
+                    <div class="row">
+                        <div class="s4">
+                            <div class="center-align">
+                                <span class="material-symbols medium primary-text" aria-hidden="true">flash_on</span>
+                                <p class="title-medium">Speeds up development</p>
+                                <p class="light">
+                                    Most of the heavy lifting is done for you to provide default stylings that
+                                    incorporate our custom components. We also refined animations and transitions
+                                    to provide a smoother experience for developers.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="s4">
+                            <div class="center-align">
+                                <span class="material-symbols medium primary-text" aria-hidden="true">group</span>
+                                <p class="title-medium">User Experience Focused</p>
+                                <p class="light">By utilizing elements and principles of Material Design, we were able
+                                    to create a framework that focuses on User Experience.</p>
+                            </div>
+                        </div>
+                        <div class="s4">
+                            <div class="center-align">
+                                <span class="material-symbols medium primary-text" aria-hidden="true">settings</span>
+                                <p class="title-medium">Easy to work with</p>
+                                <p class="light">We have provided detailed documentation as well as specific code
+                                    examples to help new users get started.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Code code={`
+<div class="row">
+  <div class="s4">
+    <!-- Promo Content 1 goes here -->
+  </div>
+  <div class="s4">
+    <!-- Promo Content 2 goes here -->
+  </div>
+  <div class="s4">
+    <!-- Promo Content 3 goes here -->
+  </div>
+</div>
+`} />
+
+                    <h5>Example Side Navigation Layout</h5>
+                    <p>You can see how easy it is to create layouts using the grid system. Just remember to make sure
+                        your column numbers add up to 12 for an even layout.</p>
+
+                    <div class="row">
+                        <div class="s12">
+                            <div class="browser-window">
+                                <div class="surface-variant">
+                                    <div class="browser-circles">
+                                        <div class="circle error"></div>
+                                        <div class="circle secondary"></div>
+                                        <div class="circle tertiary"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="row g-0">
+                                        <div class="site-layout-top s12 primary"></div>
+                                        <div class="site-layout-pane s3 surface-variant">
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                        </div>
+                                        <div class="site-layout-pane s9 primary-container">
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Code code={`
+<!-- Navbar goes here -->
+<!-- Page Layout here -->
+<div class="row">
+  <div class="s3">
+    <!-- Grey navigation panel -->
+  </div>
+  <div class="s9">
+    <!-- Teal page content -->
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S["grid-responsive"]}>
+                    <p>Above we showed you how to layout elements using our grid system. Now we'll show you how to
+                        design your layouts so that they look great on all screen sizes.</p>
+                    <h5>Screen Sizes</h5>
+                    <table class="highlight">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Compact &lt; 600px</th>
+                            <th>Medium 600–839px</th>
+                            <th>Expanded 840–1199px</th>
+                            <th>Large 1200–1599px</th>
+                            <th>Extra-large ≥ 1600px</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>Class Prefix</strong></td>
+                            <td><code>.s</code></td>
+                            <td><code>.m</code></td>
+                            <td><code>.l</code></td>
+                            <td><code>.xl</code></td>
+                            <td><code>.xxl</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Container Width</strong></td>
+                            <td>90%</td>
+                            <td>85%</td>
+                            <td>70%</td>
+                            <td>70%</td>
+                            <td>75%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max Width</strong></td>
+                            <td>1280px</td>
+                            <td>1280px</td>
+                            <td>1280px</td>
+                            <td>1280px</td>
+                            <td>1920px</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Number of Columns</strong></td>
+                            <td>12</td>
+                            <td>12</td>
+                            <td>12</td>
+                            <td>12</td>
+                            <td>12</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        Widescreen is Material’s extra-large window class. The twelve columns stay twelve — a 4K
+                        monitor does not need sixteen tracks, it needs a wider container and a chance to reflow
+                        (three panes, four cards). Use <code>xxl</code> for that. <code>container wide</code> raises
+                        the cap to 2400px; <code>container max</code> drops it.
+                    </p>
+
+                    <h5>Adding Responsiveness</h5>
+                    <p>
+                        In the previous examples, we only defined the Compact/default size using <code>s12</code>.
+                        This is fine if we want a fixed layout
+                        since the rules propagate upwards. By just saying s12, we are essentially saying <code>s12 m12
+                        l12</code>. But by explicitly defining
+                        the size we can make our website more responsive.
+                    </p>
+
+                    <div class="row">
+                        <div class="s12 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">I am always full-width (s12)</span>
+                        </div>
+                        <div class="s12 m6 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">I am full-width on mobile (s12 m6)</span>
+                        </div>
+                    </div>
+                    <Code code={`
+<div class="row">
+  <div class="s12">I am always full-width (s12)</div>
+  <div class="s12 m6">I am full-width on mobile (s12 m6)</div>
+</div>
+`} />
+
+                    <h5>Responsive Side Navigation Layout</h5>
+                    <p>
+                        In this example below, we take the same layout from above, but we make it responsive by defining
+                        how many columns the div should take up on each screen size. Try
+                        resizing your browser and watch the layout change below.
+                    </p>
+
+                    <div class="row">
+                        <div class="s12">
+                            <div class="browser-window">
+                                <div class="surface-variant">
+                                    <div class="browser-circles">
+                                        <div class="circle error"></div>
+                                        <div class="circle secondary"></div>
+                                        <div class="circle tertiary"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="row g-0">
+                                        <div class="site-layout-top s12 primary"></div>
+                                        <div class="site-layout-pane s12 m4 l3 surface-variant">
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                        </div>
+                                        <div class="site-layout-pane s12 m8 l9 primary-container">
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                            <p class="docs-bar surface"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Code code={`
+<!-- Navbar goes here -->
+<!-- Page Layout here -->
+<div class="row">
+  <div class="s12 m4 l3">
+    <!-- Grey navigation panel
+          This content will be:
+      3-columns-wide on Expanded and larger screens,
+      4-columns-wide on Medium screens,
+      12-columns-wide on Compact screens -->
+  </div>
+  <div class="s12 m8 l9">
+    <!-- Teal page content
+          This content will be:
+      9-columns-wide on Expanded and larger screens,
+      8-columns-wide on Medium screens,
+      12-columns-wide on Compact screens -->
+  </div>
+</div>
+`} />
+
+                    <h5>More Responsive Grid Examples</h5>
+                    <div class="row">
+                        <div class="s12 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12</span>
+                        </div>
+                        <div class="s12 m4 l2 secondary-container on-secondary-container-text center-align py-3">
+                            <span class="flow-text">s12 m4 l2</span>
+                        </div>
+                        <div class="s12 m4 l8 secondary-container on-secondary-container-text center-align py-3">
+                            <span class="flow-text">s12 m4 l8</span>
+                        </div>
+                        <div class="s12 m4 l2 secondary-container on-secondary-container-text center-align py-3">
+                            <span class="flow-text">s12 m4 l2</span>
+                        </div>
+                        <div class="s12 m6 l3 tertiary-container on-tertiary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l3</span>
+                        </div>
+                        <div class="s12 m6 l3 tertiary-container on-tertiary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l3</span>
+                        </div>
+                        <div class="s12 m6 l3 tertiary-container on-tertiary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l3</span>
+                        </div>
+                        <div class="s12 m6 l3 tertiary-container on-tertiary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l3</span>
+                        </div>
+                    </div>
+
+                    <Code code={`
+<div class="row">
+  <div class="s12">s12</div>
+  <div class="s12 m4 l2">s12 m4 l2</div>
+  <div class="s12 m4 l8">s12 m4 l8</div>
+  <div class="s12 m4 l2">s12 m4 l2</div>
+</div>
+<div class="row">
+  <div class="s12 m6 l3">s12 m6 l3</div>
+  <div class="s12 m6 l3">s12 m6 l3</div>
+  <div class="s12 m6 l3">s12 m6 l3</div>
+  <div class="s12 m6 l3">s12 m6 l3</div>
+</div>
+`} />
+
+                    <h5>Widescreen / 4K</h5>
+                    <p>
+                        Extra-large windows can hold a third pane that would be cramped on a laptop. The aside stacks
+                        full-width until <code>xxl</code>, then sits as two columns beside an eight-column main. Four
+                        equal cards drop from 6-wide on tablet to 3-wide on a 4K monitor.
+                    </p>
+                    <div class="row">
+                        <div class="s12 l3 xxl2 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">nav s12 l3 xxl2</span>
+                        </div>
+                        <div class="s12 l9 xxl8 secondary-container on-secondary-container-text center-align py-3">
+                            <span class="flow-text">main s12 l9 xxl8</span>
+                        </div>
+                        <div class="s12 xxl2 tertiary-container on-tertiary-container-text center-align py-3">
+                            <span class="flow-text">aside s12 xxl2</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                        <div class="s12 m6 l4 xxl3 primary-container on-primary-container-text center-align py-3">
+                            <span class="flow-text">s12 m6 l4 xxl3</span>
+                        </div>
+                    </div>
+                    <Code code={`
+<div class="row">
+  <div class="s12 l3 xxl2">nav</div>
+  <div class="s12 l9 xxl8">main</div>
+  <div class="s12 xxl2">aside</div>
+</div>
+<div class="row">
+  <div class="s12 m6 l4 xxl3">…</div>
+  <div class="s12 m6 l4 xxl3">…</div>
+  <div class="s12 m6 l4 xxl3">…</div>
+  <div class="s12 m6 l4 xxl3">…</div>
+</div>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>

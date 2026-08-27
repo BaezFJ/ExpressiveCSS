@@ -1,0 +1,97 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "images", label: "Images" },
+  { id: "videos", label: "Videos" },
+]);
+---
+<DocsLayout page="media_css">
+<PageBody sections={S}>
+  <Section {...S.images}>
+        <p class="flow-text">Images can be styled in different ways using Expressive.</p>
+
+        <h5>Responsive Images</h5>
+        <p>
+          To make images resize responsively to page width, you can add the class <code>responsive-img</code> to your image tag. It will now have a
+          <code>max-width: 100%</code>, <code>height: auto</code>, and 12px corners.
+        </p>
+        <img class="responsive-img" src="https://picsum.photos/id/1015/1200/480" alt="A wide landscape that shrinks with the container">
+<Code code={`
+<img class="responsive-img" src="cool_pic.jpg">
+`} />
+
+        <h5>Circular images</h5>
+        <div class="row">
+          <div class="s12">
+            <article>
+              <div class="row valign-wrapper">
+                <div class="s3">
+                  <img src="https://picsum.photos/id/64/200/200" alt="" class="circle responsive-img">
+                </div>
+                <div class="s9">
+                  <span>This is a square image. Add the <code>circle</code> class to it to make it appear circular.</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+        <p>
+          To make images appear circular, simply add
+          <code>class="circle"</code> to them.
+        </p>
+<Code code={`
+<div class="s12 m8 offset-m2 l6 offset-l3">
+  <article>
+    <div class="row valign-wrapper">
+      <div class="s2">
+        <img src="portrait.jpg" alt="" class="circle responsive-img">
+      </div>
+      <div class="s10">
+        <span>
+          This is a square image. Add the "circle" class to it to make it appear circular.
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.videos}>
+        <p class="flow-text">We provide a container for embedded videos that resizes them responsively.</p>
+
+        <h5>Responsive Embeds</h5>
+        <p>
+          To make your embeds responsive, wrap them with a containing div which has the class
+          <code>video-container</code>. The container clips the iframe to the same 12px corners.
+        </p>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" title="Embedded video" allowfullscreen></iframe>
+        </div>
+<Code code={`
+<div class="video-container">
+  <iframe src="https://www.youtube.com/embed/Q8TXgCzxEnw?rel=0" allowfullscreen></iframe>
+</div>
+`} />
+
+        <h5>Responsive Videos</h5>
+        <p>
+          To make your HTML5 videos responsive just add the class
+          <code>responsive-video</code> to the video tag. Same 12px corners as
+          <code>responsive-img</code>.
+        </p>
+        <video class="responsive-video" controls>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+<Code code={`
+<video class="responsive-video" controls>
+  <source src="movie.mp4" type="video/mp4">
+</video>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
