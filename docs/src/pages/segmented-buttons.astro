@@ -1,0 +1,250 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "single-select", label: "Single select" },
+  { id: "multi-select", label: "Multi select" },
+  { id: "icons", label: "With icons" },
+  { id: "disabled", label: "Disabled" },
+  { id: "semantics", label: "Semantics" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="segmented_buttons">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A segmented button is a small set of related options shown side by
+          side inside one outlined pill — a view switcher, a date range, a
+          filter over a chart. Two to five segments; beyond that use a
+          <a href={route('select')}>select</a> or
+          <a href={route('chips')}>chips</a>.
+        </p>
+        <p>
+          The root is a <code>&lt;fieldset class="segmented-button"&gt;</code>
+          with a <code>&lt;legend&gt;</code>. Each segment is an
+          <code>&lt;input&gt;</code> and the
+          <code>&lt;label class="segment"&gt;</code> beside it, tied together
+          by <code>id</code> and <code>for</code>. That is the whole component:
+          there is no plugin, nothing to initialize, and no selected class to
+          keep in sync. The input holds the state and the form value, and the
+          browser moves it.
+        </p>
+        <p>
+          The control is the label's sibling rather than its child, the same
+          way a <a href={route('chips')}>filter chip</a> is written.
+          A <code>&lt;label&gt;</code> wrapping a radio or a checkbox
+          <em>is</em> one as far as the rest of the framework is concerned, and
+          would be painted as one — a 20dp ring on the control and a 48dp row
+          around it.
+        </p>
+        <p>
+          The legend names the group for assistive technology and is not
+          shown — Material 3's anatomy has no visible group label, but a set of
+          radios is only a set because a fieldset says so, and a fieldset is
+          only named by its legend.
+        </p>
+        <p>
+          There is no modifier that shows it, and unhiding it by hand is not
+          one override but six. The root is both the fieldset and the grid of
+          segments, so a legend back in flow becomes another column beside
+          them. When the group needs a visible label, write one before the
+          fieldset — a heading or a <code>&lt;p&gt;</code> — and leave the
+          legend saying the same thing as the group's name.
+        </p>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>View</legend>
+            <input type="radio" id="docs-view-day" name="docs-view" value="day" checked>
+            <label class="segment" for="docs-view-day">Day</label>
+            <input type="radio" id="docs-view-week" name="docs-view" value="week">
+            <label class="segment" for="docs-view-week">Week</label>
+            <input type="radio" id="docs-view-month" name="docs-view" value="month">
+            <label class="segment" for="docs-view-month">Month</label>
+          </fieldset>
+        </div>
+  </Section>
+  <Section {...S["single-select"]}>
+        <p>
+          Radios sharing a <code>name</code>. Exactly one segment is chosen,
+          the arrow keys move between them and Tab enters and leaves the group
+          as one stop — all of it the browser's, because the control is a real
+          radio group. Mark the initial choice with <code>checked</code>.
+        </p>
+<Code code={`
+<fieldset class="segmented-button">
+  <legend>View</legend>
+  <input type="radio" id="view-day" name="view" value="day" checked>
+  <label class="segment" for="view-day">Day</label>
+  <input type="radio" id="view-week" name="view" value="week">
+  <label class="segment" for="view-week">Week</label>
+  <input type="radio" id="view-month" name="view" value="month">
+  <label class="segment" for="view-month">Month</label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S["multi-select"]}>
+        <p>
+          Checkboxes instead. Any number of segments can be on at once, each
+          one its own Tab stop and its own form value. Nothing else changes —
+          the input type is the entire difference between the two variants.
+        </p>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>Filter transport</legend>
+            <input type="checkbox" id="docs-transport-walk" name="docs-transport" value="walk" checked>
+            <label class="segment" for="docs-transport-walk">Walk</label>
+            <input type="checkbox" id="docs-transport-transit" name="docs-transport" value="transit" checked>
+            <label class="segment" for="docs-transport-transit">Transit</label>
+            <input type="checkbox" id="docs-transport-bike" name="docs-transport" value="bike">
+            <label class="segment" for="docs-transport-bike">Bike</label>
+          </fieldset>
+        </div>
+<Code code={`
+<fieldset class="segmented-button">
+  <legend>Filter transport</legend>
+  <input type="checkbox" id="transport-walk" name="transport" value="walk" checked>
+  <label class="segment" for="transport-walk">Walk</label>
+  <input type="checkbox" id="transport-transit" name="transport" value="transit" checked>
+  <label class="segment" for="transport-transit">Transit</label>
+  <input type="checkbox" id="transport-bike" name="transport" value="bike">
+  <label class="segment" for="transport-bike">Bike</label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.icons}>
+        <p>
+          Put a <code>&lt;span class="material-symbols"&gt;</code> in the
+          label, before or after the text, at 18dp. The segment's text is its
+          accessible name, so the icon is decoration and is
+          <code>aria-hidden</code>. Material 3 shows a check on the chosen
+          segment; write that icon yourself if you want it — nothing swaps it
+          in, and the filled container already says which one is on.
+        </p>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>Map layer</legend>
+            <input type="radio" id="docs-layer-map" name="docs-layer" value="map" checked>
+            <label class="segment" for="docs-layer-map">
+              <span class="material-symbols" aria-hidden="true">map</span>
+              Map
+            </label>
+            <input type="radio" id="docs-layer-satellite" name="docs-layer" value="satellite">
+            <label class="segment" for="docs-layer-satellite">
+              <span class="material-symbols" aria-hidden="true">satellite_alt</span>
+              Satellite
+            </label>
+          </fieldset>
+        </div>
+<Code code={`
+<fieldset class="segmented-button">
+  <legend>Map layer</legend>
+  <input type="radio" id="layer-map" name="layer" value="map" checked>
+  <label class="segment" for="layer-map">
+    <span class="material-symbols" aria-hidden="true">map</span>
+    Map
+  </label>
+  <input type="radio" id="layer-satellite" name="layer" value="satellite">
+  <label class="segment" for="layer-satellite">
+    <span class="material-symbols" aria-hidden="true">satellite_alt</span>
+    Satellite
+  </label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.disabled}>
+        <p>
+          <code>disabled</code> on one input greys that segment; on the
+          fieldset it greys the whole group, outline included, the way any
+          fieldset disables what it contains.
+        </p>
+        <div>
+          <fieldset class="segmented-button">
+            <legend>Density</legend>
+            <input type="radio" id="docs-density-comfortable" name="docs-density" value="comfortable" checked>
+            <label class="segment" for="docs-density-comfortable">Comfortable</label>
+            <input type="radio" id="docs-density-compact" name="docs-density" value="compact" disabled>
+            <label class="segment" for="docs-density-compact">Compact</label>
+          </fieldset>
+          <fieldset class="segmented-button" disabled>
+            <legend>Sort</legend>
+            <input type="radio" id="docs-sort-newest" name="docs-sort" value="newest" checked>
+            <label class="segment" for="docs-sort-newest">Newest</label>
+            <input type="radio" id="docs-sort-oldest" name="docs-sort" value="oldest">
+            <label class="segment" for="docs-sort-oldest">Oldest</label>
+          </fieldset>
+        </div>
+<Code code={`
+<fieldset class="segmented-button" disabled>
+  <legend>Sort</legend>
+  <input type="radio" id="sort-newest" name="sort" value="newest" checked>
+  <label class="segment" for="sort-newest">Newest</label>
+  <input type="radio" id="sort-oldest" name="sort" value="oldest">
+  <label class="segment" for="sort-oldest">Oldest</label>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.semantics}>
+        <p>
+          A
+          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
+          such as <code>radiogroup</code> promises arrow-key navigation, and
+          this component <em>rejects</em> it rather than withholding it: a
+          fieldset of radios already is one, with the keyboard model
+          implemented by the browser. Writing the role by hand would restate
+          what the element already says and take away the group role the
+          fieldset gives you. No composite role is accepted on the group at
+          all.
+        </p>
+        <p>
+          What that costs is that the markup has to stay native, so the docs
+          suite enforces it — the root must be a <code>&lt;fieldset&gt;</code>,
+          every segment a <code>&lt;label for&gt;</code> against a real
+          <code>&lt;input&gt;</code>, and every radio must carry the shared
+          <code>name</code> that makes it a group, since that is where the
+          arrow keys come from. <code>aria-checked</code> and its neighbours
+          are refused: the input's <code>checked</code> state is the answer,
+          and a hand-written copy is a second one that nothing updates.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Set these on the group itself, or in a rule of your own that picks
+          out the groups you want to change —
+          <code>.chart-controls .segmented-button {"{ … }"}</code>. They are
+          declared on the component, so a value set on an ancestor
+          <em>element</em> is shadowed by the group's own default rather than
+          inherited.
+        </p>
+        <p>
+          The group is a grid of equal columns filling the width it is given,
+          which is what Material specifies — constrain it with a width or a
+          wrapper when it should be narrower than its container.
+        </p>
+        <TokenTable>
+                <tr><td><code>--md-comp-outlined-segmented-button-container-height</code></td><td><code>40px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-container-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-outline-width</code></td><td><code>1px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-outline-color</code></td><td><code>var(--md-sys-color-outline)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-leading-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-trailing-space</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-icon-size</code></td><td><code>18px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-icon-label-space</code></td><td><code>8px</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-label-text-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-selected-container-color</code></td><td><code>var(--md-sys-color-secondary-container)</code></td></tr>
+                <tr><td><code>--md-comp-outlined-segmented-button-selected-label-text-color</code></td><td><code>var(--md-sys-color-on-secondary-container)</code></td></tr>
+        </TokenTable>
+        <p>
+          The state layer is the label colour mixed into the container at the
+          <a href={route('state_layers')}>state layer</a> opacity, so
+          those two colour tokens carry hover and press with them.
+        </p>
+  </Section></PageBody>
+</DocsLayout>

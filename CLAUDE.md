@@ -689,6 +689,19 @@ when it is *structurally identical* to the frozen one.
   `reason` is the same opt-out, and `tests/semantics.test.js` reads it — the
   Astro pages are a surface of their own there (`docs/src`), because a
   conversion is exactly the moment markup goes quietly wrong.
+- **One page hand-rolls the scaffold instead of `<PageBody>`, and must keep
+  doing so.** `floating-action-button.astro` writes its own container, row and
+  table of contents, because the Jinja page did: its content column is
+  `s12 m8 offset-m1 xl7 offset-xl1` *without* `docs-page-content`, so none of
+  the `.docs-page-content .docs-section` typography in `docs.css` reaches it.
+  `<PageBody>` always appends that class -- correctly, since `panes` passes a
+  custom `contentClass` and `docs.css` styles `.panes-page .docs-page-content`
+  -- so the page cannot go through it without changing how it renders. Add the
+  class in a change that owns the visual diff, not in a migration. Its copy of
+  the table-of-contents markup is pinned against `<PageBody>`'s by
+  `tests/docs-astro.test.js`, the way the drawer and footer copies are pinned
+  against the Jinja macros -- renaming `toc-wrapper` in one and not the other
+  is the failure that copy invites.
 - **A page needing its own `<head>` content puts `slot="head"` on the element.**
   That is the Jinja `extra_head` block; `DocsLayout` forwards the named slot to
   `BaseLayout`, which renders it last in the head, where the block was. The
