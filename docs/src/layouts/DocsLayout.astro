@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import Banner from "../components/Banner.astro";
 import NavigationDrawer from "../components/NavigationDrawer.astro";
-import { page } from "../lib/catalogue";
+import { markdownRoute, page } from "../lib/catalogue";
 
 /**
  * Every documentation page. The title and the banner come from the shared
@@ -19,7 +19,7 @@ const { page: id } = Astro.props;
 const entry = page(id);
 const pageName = entry.title ?? entry.label;
 ---
-<BaseLayout pageName={pageName} bodyClass="docs">
+<BaseLayout pageName={pageName} bodyClass="docs" markdownPath={markdownRoute(id)}>
     {/* A page that needs its own <head> content -- an extra font, say -- fills this. */}
     <slot name="head" slot="head" />
 

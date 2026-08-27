@@ -26,6 +26,12 @@ export function route(id: string): string {
   return entry.id === "index" ? "/" : entry.route;
 }
 
+/** The clean Markdown counterpart published beside a canonical HTML page. */
+export function markdownRoute(id: string): string {
+  const path = route(id);
+  return path === "/" ? "/index.html.md" : `${path}.md`;
+}
+
 /**
  * Every legacy path this site publishes a redirect for, and where it points.
  *

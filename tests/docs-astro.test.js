@@ -20,7 +20,7 @@ const read = (p) => readFileSync(new URL(p, root), 'utf8');
 
 // Node strips the types; nothing compiles these files for the test run.
 const { NAV, PAGES, ALIASES } = await import('../docs/src/data/nav.ts');
-const { route, aliases } = await import('../docs/src/lib/catalogue.ts');
+const { route, aliases, markdownRoute } = await import('../docs/src/lib/catalogue.ts');
 const { renderLlmsTxt } = await import('../docs/src/lib/llms.ts');
 const pkg = JSON.parse(read('package.json'));
 
@@ -90,6 +90,14 @@ describe('the Astro documentation pages', () => {
         assert.match(tag, /\bis:inline\b/, `${file}: ${tag} would be hoisted out of <main>`);
       }
     }
+  });
+
+  test('Astro itself emits the Markdown counterparts before verification', () => {
+    const config = read('docs/astro.config.mjs');
+    assert.match(config, /astro:build:done/);
+    assert.match(config, /generateMarkdownPages/);
+    assert.equal(pkg.scripts['docs:build'], 'run-s build docs:build:astro docs:verify');
+    assert.ok(!pkg.scripts['docs:build:markdown'], 'a second documentation generator is configured');
   });
 });
 
@@ -278,15 +286,28 @@ describe('the LLM documents Astro publishes', () => {
     return out;
   }
 
-  test('has the shape the llms.txt standard defines', () => {
+  test('has the normative shape the llms.txt v2 proposal defines', () => {
     const lines = llms.split('\n');
     assert.equal(lines[0], '# ExpressiveCSS', 'must open with a single H1');
     assert.equal(lines.filter((l) => l.startsWith('# ')).length, 1);
+
+    let inLinks = false;
+    for (const line of lines) {
+      if (line.startsWith('## ')) { inLinks = true; continue; }
+      if (inLinks && line) {
+        assert.match(line, /^- \[[^\]]+\]\([^)]+\)(?::\s*.+)?$/,
+          `an H2 file-list section contains a non-link line: ${line}`);
+      }
+    }
+  });
+
+  test('applies the project policy that makes the index useful to agents', () => {
+    const lines = llms.split('\n');
     assert.ok(lines[2].startsWith('> '), 'the H1 is followed by a blockquote summary');
 
     const sections = lines.filter((l) => l.startsWith('## ')).map((l) => l.slice(3));
-    // Optional means "skippable for a shorter context", which only reads that
-    // way at the end.
+    // v2 gives Optional no mechanical semantics. ExpressiveCSS keeps it last so
+    // readers can treat it as the skippable tail of a shorter context.
     assert.equal(sections.at(-1), 'Optional');
 
     for (const { text, url, note } of links()) {
@@ -295,14 +316,14 @@ describe('the LLM documents Astro publishes', () => {
     }
   });
 
-  test('links every catalogue page, once, under its own group, at its published route', () => {
+  test('links every catalogue page, once, under its own group, at its Markdown route', () => {
     for (const group of NAV) {
       for (const page of group.pages) {
         const hits = links().filter((l) => l.text === page.label);
         assert.equal(hits.length, 1, `${page.label}: expected one link, found ${hits.length}`);
         assert.equal(hits[0].section, group.label,
           `${page.label} is under "${hits[0].section}", not "${group.label}"`);
-        assert.equal(hits[0].url, home + route(page.id), `${page.label}: wrong URL`);
+        assert.equal(hits[0].url, home + markdownRoute(page.id), `${page.label}: wrong URL`);
         assert.equal(hits[0].note, page.description, `${page.label}: wrong note`);
       }
     }
@@ -316,12 +337,26 @@ describe('the LLM documents Astro publishes', () => {
 
   test('publishes each primary document it links, from the repository copy', () => {
     const primary = links().filter((l) => l.section === 'Primary documentation');
+    const markdownEndpoint = read('docs/src/lib/markdown-endpoint.ts');
+
+    assert.match(markdownEndpoint, /"content-type": "text\/markdown; charset=utf-8"/);
     assert.equal(primary[0].url, `${home}/m3-guidelines.md`,
       'the design contract is listed first: it is the one to read first');
-    for (const name of ['m3-guidelines.md', 'llm.md', 'llms-full.txt']) {
+    for (const name of ['m3-guidelines.md', 'llm.md']) {
       assert.ok(primary.some((l) => l.url === `${home}/${name}`), `${name} is not linked`);
-      assert.ok(existsSync(new URL(`docs/src/pages/${name}.ts`, root)),
-        `${name} is linked but Astro publishes no such endpoint`);
+      const endpoint = new URL(`docs/src/pages/${name}.ts`, root);
+      assert.ok(existsSync(endpoint), `${name} is linked but Astro publishes no such endpoint`);
+      assert.match(read(`docs/src/pages/${name}.ts`), /markdownEndpoint\(source\)/);
+    }
+    const fullLink = links().find((l) => l.url === `${home}/llms-full.txt`);
+    assert.equal(fullLink?.section, 'Optional', 'the duplicate whole-corpus document is primary');
+    assert.ok(existsSync(new URL('docs/src/pages/llms-full.txt.ts', root)));
+    for (const name of ['CHANGELOG.md', 'SEMANTICS.md']) {
+      const document = links().find((l) => l.url === `${home}/${name}`);
+      assert.equal(document?.section, 'Optional', `${name} is not optional Markdown`);
+      const endpoint = new URL(`docs/src/pages/${name}.ts`, root);
+      assert.ok(existsSync(endpoint), `${name} is linked but Astro publishes no such endpoint`);
+      assert.match(read(`docs/src/pages/${name}.ts`), /markdownEndpoint\(source\)/);
     }
     // The whole corpus is the two documents joined at build time, not a third
     // maintained copy -- and joined in the order llms.txt lists them, because

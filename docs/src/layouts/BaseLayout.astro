@@ -12,9 +12,11 @@ interface Props {
   /** The page's own name. The `<title>` and the app bar heading are built from it. */
   pageName?: string;
   bodyClass?: string;
+  /** The page-equivalent Markdown route agents can fetch instead of this HTML. */
+  markdownPath?: string;
 }
 
-const { pageName, bodyClass } = Astro.props;
+const { pageName, bodyClass, markdownPath } = Astro.props;
 
 // Stamped in by astro.config.mjs -- see the note there.
 declare const __REPO_ROOT__: string;
@@ -53,6 +55,8 @@ const canonical = new URL(path, Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{pageName ? `${pageName} - ExpressiveCSS` : "ExpressiveCSS"}</title>
     <link rel="canonical" href={canonical}>
+    <link rel="describedby" href="/llms.txt">
+    {markdownPath && <link rel="alternate" type="text/markdown" href={markdownPath}>}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href={cssUrl}>

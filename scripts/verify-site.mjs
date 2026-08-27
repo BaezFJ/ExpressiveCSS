@@ -27,10 +27,14 @@ const site = resolve(process.argv[2] ?? join(fileURLToPath(root), '_site'));
 
 // Node strips the types; nothing compiles these files for this run.
 const { PAGES } = await import('../docs/src/data/nav.ts');
-const { route, aliases } = await import('../docs/src/lib/catalogue.ts');
+const { route, aliases, markdownRoute } = await import('../docs/src/lib/catalogue.ts');
 const { renderLlmsTxt } = await import('../docs/src/lib/llms.ts');
 const pkg = JSON.parse(readFileSync(new URL('package.json', root), 'utf8'));
 const home = pkg.homepage.replace(/\/$/, '');
+const htmlDocumentationRoutes = new Set([
+  ...PAGES.map((page) => route(page.id)),
+  ...aliases().map((alias) => alias.from),
+]);
 
 const problems = [];
 const fail = (message) => problems.push(message);
@@ -54,7 +58,9 @@ const read = (path) => readFileSync(fileFor(path), 'utf8');
 
 for (const page of PAGES) {
   const path = route(page.id);
+  const markdown = markdownRoute(page.id);
   nonempty(path, 'canonical page');
+  nonempty(markdown, 'Markdown counterpart');
   // Every page declares its own URL canonical. A formality for all but one of
   // them -- but a static host serves the root document at `/index.html` as
   // well as `/`, so without this the landing page has a second indexable URL
@@ -64,6 +70,35 @@ for (const page of PAGES) {
     const declared = new URL(path, `${home}/`).href;
     if (!read(path).includes(`<link rel="canonical" href="${declared}">`)) {
       fail(`canonical page ${path}: does not declare ${declared} canonical`);
+    }
+    if (!read(path).includes('<link rel="describedby" href="/llms.txt">')) {
+      fail(`canonical page ${path}: does not identify /llms.txt as its description`);
+    }
+    if (!read(path).includes(
+      `<link rel="alternate" type="text/markdown" href="${markdown}">`,
+    )) {
+      fail(`canonical page ${path}: does not identify ${markdown} as its Markdown form`);
+    }
+
+    const source = read(markdown);
+    if (!/^# .+\n\n> .+\n\n\S/m.test(source)) {
+      fail(`Markdown counterpart ${markdown}: has no title, summary, and body`);
+    }
+    let previousHeading = 1;
+    for (const heading of source.matchAll(/^(#{1,6})\s+.+$/gm)) {
+      const level = heading[1].length;
+      if (level > previousHeading + 1) {
+        fail(`Markdown counterpart ${markdown}: heading jumps from h${previousHeading} to h${level}`);
+      }
+      previousHeading = level;
+    }
+    if (/!\[\]\(/.test(source)) {
+      fail(`Markdown counterpart ${markdown}: contains an image with no description`);
+    }
+    for (const link of source.matchAll(/\]\((\/[^)\s?#]+\.html)(?:[?#][^)]*)?\)/g)) {
+      if (htmlDocumentationRoutes.has(link[1])) {
+        fail(`Markdown counterpart ${markdown}: links back into HTML at ${link[1]}`);
+      }
     }
   } catch {
     // Already reported as missing.
@@ -123,7 +158,14 @@ for (const asset of [
 
 // --- Documents for language models -----------------------------------------
 
-for (const doc of ['/llms.txt', '/llms-full.txt', '/llm.md', '/m3-guidelines.md']) {
+for (const doc of [
+  '/llms.txt',
+  '/llms-full.txt',
+  '/llm.md',
+  '/m3-guidelines.md',
+  '/CHANGELOG.md',
+  '/SEMANTICS.md',
+]) {
   nonempty(doc, 'LLM document');
 }
 
@@ -201,4 +243,7 @@ if (problems.length) {
   console.error(`\n${problems.length} problem(s) in ${site}`);
   process.exit(1);
 }
-console.log(`${pages.length} pages, ${aliases().length} aliases, assets and LLM documents all present`);
+console.log(
+  `${pages.length} pages, ${aliases().length} aliases, ${PAGES.length} Markdown counterparts, ` +
+  'assets and LLM documents all present',
+);

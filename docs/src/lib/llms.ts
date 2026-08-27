@@ -1,5 +1,5 @@
 import { NAV } from "../data/nav.ts";
-import { route } from "./catalogue.ts";
+import { markdownRoute } from "./catalogue.ts";
 
 /**
  * `llms.txt` (https://llmstxt.org): the link index a model fetches to find out
@@ -59,11 +59,6 @@ const PRIMARY = [
       "Every component: class names, canonical markup, options, methods, events, " +
       "and CSS custom properties.",
   },
-  {
-    file: "llms-full.txt",
-    title: "Complete documentation, single file",
-    note: "Both documents above concatenated, for one-fetch ingestion.",
-  },
 ];
 
 export function renderLlmsTxt(pkg: PackageMetadata): string {
@@ -94,7 +89,7 @@ export function renderLlmsTxt(pkg: PackageMetadata): string {
   for (const group of NAV) {
     out.push("", `## ${group.label}`, "");
     for (const page of group.pages) {
-      out.push(`- [${page.label}](${base}${route(page.id)}): ${page.description}`);
+      out.push(`- [${page.label}](${base}${markdownRoute(page.id)}): ${page.description}`);
     }
   }
 
@@ -103,10 +98,12 @@ export function renderLlmsTxt(pkg: PackageMetadata): string {
     "",
     "## Optional",
     "",
+    `- [Complete documentation, single file](${base}/llms-full.txt): Both primary ` +
+      "documents concatenated for one-fetch ingestion.",
     `- [Source repository](${repo}): issues, source, and the build.`,
-    `- [Changelog](${repo}/blob/master/CHANGELOG.md): releases, and the ` +
+    `- [Changelog](${base}/CHANGELOG.md): releases, and the ` +
       "migration notes for every breaking change.",
-    `- [HTML semantics standard](${repo}/blob/master/SEMANTICS.md): the ` +
+    `- [HTML semantics standard](${base}/SEMANTICS.md): the ` +
       "element and ARIA contract each component is written against.",
     `- [npm package](https://www.npmjs.com/package/${pkg.name}): install ` +
       "and version history.",

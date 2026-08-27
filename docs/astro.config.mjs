@@ -3,6 +3,19 @@ import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'astro/config';
 
+import { generateMarkdownPages } from '../scripts/generate-markdown-pages.mjs';
+
+/** @type {import('astro').AstroIntegration} */
+const markdownPages = {
+  name: 'expressive-markdown-pages',
+  hooks: {
+    'astro:build:done': ({ dir }) => {
+      const count = generateMarkdownPages(fileURLToPath(dir));
+      console.log(`${count} Markdown documentation pages generated`);
+    },
+  },
+};
+
 /**
  * The Astro documentation build (ADR 0003).
  *
@@ -26,6 +39,7 @@ export default defineConfig({
   // `Themin means`.
   compressHTML: false,
   devToolbar: { enabled: false },
+  integrations: [markdownPages],
   vite: {
     // Components are bundled before they run, so `import.meta.url` inside one
     // points at the emitted chunk rather than at the source file. The repo root
