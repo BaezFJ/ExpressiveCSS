@@ -114,19 +114,23 @@ job is `visual.yml`, pull requests only.
 
 - **No baselines are committed, on purpose.** 59 pages x 4 variants of
   full-page PNG is 100+ MB per revision. Each run instead builds the base
-  revision in a throwaway git worktree (`.visual-base/`, node_modules
-  symlinked so both passes use the same sass, esbuild and astro), photographs it into
-  `visual/__shots__/`, then compares. Nothing binary enters git, there is no
-  "update the snapshots" ritual to forget, and the comparison is always the
-  branch against its own merge base rather than against whatever was blessed
-  months ago. The cost is one extra build per run.
+  revision in a throwaway git worktree (`.visual-base/`), installs that
+  revision with `npm ci`, photographs it into `visual/__shots__/`, then compares
+  it with this checkout. Nothing binary enters git, there is no "update the
+  snapshots" ritual to forget, and the comparison is always the branch against
+  its own merge base rather than against whatever was blessed months ago. The
+  cost is one extra build and one cache-backed install per run.
 
-  **One installation serves both passes, and that is a hole as well as a
-  feature.** It keeps a toolchain skew from showing up as a diff on every page
-  — but it also applies a dependency bump to the baseline *and* the candidate,
-  so a sass or Vite change that moves pixels cancels out and the run reports
-  nothing moved. `visual.yml` watches the lockfile anyway, which buys a smoke
-  test rather than an attribution. Issue #114 holds the trade-off.
+  **Each revision builds with its own lockfile.** CI's first `npm ci` installs
+  the candidate; `visual/run.mjs` installs the base worktree separately before
+  building it. When the lockfiles agree, both passes resolve the same versions.
+  When a dependency bump changes Sass, esbuild, Astro or Vite output, it reaches
+  only the candidate and the visual diff attributes the moved pages to it rather
+  than cancelling the change out on both sides. The runner prints the base
+  install duration so the added wall clock is recorded locally and in CI. If an
+  old base lockfile cannot install under the current Node or npm, the run aborts
+  before either build with an explicit base-dependency error instead of
+  reporting a visual result from the wrong tools.
 - **The tolerance is `maxDiffPixels`, never a ratio.** These are full-page
   screenshots of long pages, and 0.001 of a 1440x9000 page is 12,960 pixels --
   enough to swallow a 20px -> 4px corner radius on every button on the buttons

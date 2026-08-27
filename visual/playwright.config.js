@@ -16,9 +16,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 const port = Number(process.env.VISUAL_PORT ?? 5111);
 
-// Absolute, always. A pass points its server at a git worktree while
-// node_modules lives in the main checkout, and Playwright spawns webServer with
-// its cwd at this directory.
+// Absolute, always. The base pass points its server at a git worktree while
+// this configuration lives in the main checkout, and Playwright spawns
+// webServer with its cwd at this directory.
 const HERE = dirname(fileURLToPath(import.meta.url));
 const revision = process.env.VISUAL_ROOT ?? join(HERE, '..');
 const command = `node "${join(HERE, 'serve.mjs')}" "${join(revision, '_site')}" ${port}`;
