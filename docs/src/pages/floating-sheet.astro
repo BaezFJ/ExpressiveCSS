@@ -1,0 +1,126 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "placement", label: "Placement" },
+  { id: "behavior", label: "Behavior" },
+]);
+---
+<DocsLayout page="floating_sheet">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>dialog.floating-sheet</code> is the third member of the
+          sheet family. Where a
+          <a href={route('bottom_sheet')}>bottom sheet</a> docks to
+          the bottom and a
+          <a href={route('side_sheet')}>side sheet</a> to one side,
+          a floating sheet is detached from every edge and floats above the
+          content.
+        </p>
+        <p>
+          Tokens follow <code>md.comp.sheet.floating</code>: the container
+          is <code>surface-container-low</code> with 28dp corners on all
+          four sides and elevation&nbsp;1. It is a <code>&lt;dialog&gt;</code>,
+          so the ordinary dialog slots apply — a heading, body copy or a
+          wrapping <code>&lt;div&gt;</code>, an optional <code>&lt;hr&gt;</code>
+          with extra content, and a last-child
+          <code>&lt;form method="dialog"&gt;</code> as the action row.
+        </p>
+        <p>
+          Two variants, same sheet:
+        </p>
+        <ul class="browser-default">
+          <li>
+            <strong>Standard</strong> — <code>show()</code>. No scrim; the
+            page stays interactive while the sheet floats over it.
+          </li>
+          <li>
+            <strong>Modal</strong> — <code>showModal()</code>. The scrim
+            marks the page unavailable. Tap the scrim, press Escape, or use
+            the action row to dismiss.
+          </li>
+        </ul>
+        <p>
+          <button type="button" onclick="(function(d){ d.open ? d.close() : d.show(); })(document.getElementById('floating-standard'))">Show standard</button>
+          <button type="button" class="tonal" onclick="document.getElementById('floating-modal').showModal()">Show modal</button>
+        </p>
+
+        <dialog id="floating-standard" class="floating-sheet" aria-labelledby="floating-standard-title">
+          <h2 id="floating-standard-title">Now playing</h2>
+          <p>A standard floating sheet keeps the page interactive. Use it for content that should stay put while the main view is used.</p>
+          <form method="dialog">
+            <button type="submit" value="done">Done</button>
+          </form>
+        </dialog>
+
+        <dialog id="floating-modal" class="floating-sheet" aria-labelledby="floating-modal-title">
+          <h2 id="floating-modal-title">Filters</h2>
+          <p>A modal floating sheet interrupts. The scrim marks the main view as unavailable until the sheet closes.</p>
+          <form method="dialog">
+            <button type="submit" value="apply">Apply</button>
+            <button type="submit" class="outlined" value="cancel">Cancel</button>
+          </form>
+        </dialog>
+<Code code={`
+<dialog class="floating-sheet" aria-labelledby="floating-sheet-title">
+  <h2 id="floating-sheet-title">Now playing</h2>
+  <p>Secondary content, floating above the page.</p>
+  <form method="dialog">
+    <button type="submit" value="done">Done</button>
+  </form>
+</dialog>
+`} />
+        <p>
+          There is no extra class for the modal variant —
+          <code>showModal()</code> vs <code>show()</code> is the split, the
+          same as the other two sheets.
+        </p>
+  </Section>
+  <Section {...S.placement}>
+        <p>
+          The sheet sits 24dp in from every edge and centres in what is
+          left, capped at 400dp wide. There are deliberately no edge
+          modifiers: <code>.bottom</code> already selects a bottom sheet and
+          <code>.left</code> / <code>.right</code> a side sheet, so a
+          floating sheet borrowing those names would pick up two sheets'
+          rules at once. Anchor it yourself when a corner is wanted.
+        </p>
+<Code code={`
+<dialog class="floating-sheet" style="inset: auto 24px 24px auto; margin: 0" aria-label="Player">
+  …
+</dialog>
+`} />
+        <p>
+          Placement is the only thing <code>md.comp.sheet.floating</code>
+          says nothing about — it publishes three values, all of them
+          container colour, shape and elevation. Override
+          <code>--md-comp-floating-sheet-inset</code> or
+          <code>--md-comp-floating-sheet-container-max-width</code> rather
+          than restyling the surface.
+        </p>
+  </Section>
+  <Section {...S.behavior}>
+        <p>
+          Dismissal is the sheet family's: Escape, the action row's
+          <code>form[method="dialog"]</code>, and — for the modal variant —
+          a tap on the scrim. That last one is
+          <code>Dialogs.Init()</code>, the same light-dismiss behavior every
+          <code>&lt;dialog&gt;</code> gets; there is no floating-sheet
+          module. A floating sheet is not draggable, so it takes no drag
+          handle.
+        </p>
+        <p>
+          Name the sheet. A <code>&lt;dialog&gt;</code> takes no name from
+          its heading, so point <code>aria-labelledby</code> at that heading
+          or give it an <code>aria-label</code>.
+        </p>
+  </Section>
+</PageBody>
+</DocsLayout>

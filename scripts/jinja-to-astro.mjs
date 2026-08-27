@@ -67,9 +67,13 @@ const meta = (s) =>
  * An expression in a quoted attribute is a literal string in Astro, not an
  * interpolation: `href="{route('grid')}"` publishes those eleven characters.
  * Rewrite the whole attribute as an expression instead.
+ *
+ * Only `{route(…)}` -- the one interpolation this script emits. Matching any
+ * braces caught the JS block in `onclick="(function(d){ … })(…)"` and turned a
+ * working handler into a syntax error.
  */
 function attributeExpressions(html) {
-  return html.replace(/(\s[\w:-]+)="([^"]*\{[^"{}]+\}[^"]*)"/g, (whole, name, value) => {
+  return html.replace(/(\s[\w:-]+)="([^"]*\{route\([^"{}]*\)\}[^"]*)"/g, (whole, name, value) => {
     const only = value.match(/^\{([^{}]+)\}$/);
     if (only) return `${name}={${only[1]}}`;
     return `${name}={\`${value.replace(/\{([^{}]+)\}/g, '${$1}')}\`}`;

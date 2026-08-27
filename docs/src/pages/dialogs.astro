@@ -1,0 +1,246 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "basic", label: "Basic" },
+  { id: "fullscreen", label: "Full-screen" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="dialogs">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Use a dialog so people act on information — confirm a high-risk
+          action, finish one task, or read the copy that belongs to that
+          task. Two variants, same element: a basic dialog and a
+          full-screen dialog. There is no
+          <code>modal-header</code>, <code>modal-content</code>, or
+          <code>modal-footer</code> class.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/dialogs/specs">M3 dialog spec</a>.
+          The basic container is <code>surface-container-high</code>, 28dp
+          corners, 280–560dp, elevation 3. The headline is
+          <code>headline-small</code> / <code>on-surface</code>; supporting
+          text is <code>body-medium</code> /
+          <code>on-surface-variant</code>. Actions are text buttons, end
+          aligned, with an 8dp gap. Padding is 24dp (16dp between the
+          headline and the body). The scrim is
+          <code>--md-comp-scrim-color</code> with a 12px blur. Opening with <code>showModal()</code> also stops
+          the page behind it from scrolling.
+        </p>
+        <p>
+          Open it with <code>showModal()</code> and close it with
+          <code>close()</code> — the Dialog API, not a plugin.
+        </p>
+  </Section>
+  <Section {...S.basic}>
+        <p>
+          A <code>&lt;dialog&gt;</code> is the surface. A heading is the
+          headline, a <code>&lt;p&gt;</code> (or a wrapping
+          <code>&lt;div&gt;</code>) is supporting text, and the last child
+          <code>&lt;form method="dialog"&gt;</code> or <code>&lt;nav&gt;</code>
+          is the action row. An optional leading icon centers the headline. An
+          <code>&lt;hr&gt;</code> is the divider when extra content follows the
+          copy.
+        </p>
+        <p>
+          <button type="button" onclick="document.getElementById('dialog-basic').showModal()">Show</button>
+          <button type="button" class="tonal" onclick="document.getElementById('dialog-icon').showModal()">Show with icon</button>
+          <button type="button" class="outlined" onclick="document.getElementById('dialog-extra').showModal()">Show with extra content</button>
+        </p>
+
+        <dialog id="dialog-basic" aria-labelledby="basic-dialog-title-title">
+          <h2 id="basic-dialog-title-title">Basic dialog title</h2>
+          <p>A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision.</p>
+          <form method="dialog">
+            <button type="submit" value="action-2">Text button</button>
+            <button type="submit" value="action-1">Text button</button>
+          </form>
+        </dialog>
+
+        <dialog id="dialog-icon" aria-labelledby="use-location-services-title">
+          <span class="material-symbols" aria-hidden="true">place</span>
+          <h2 id="use-location-services-title">Use location services?</h2>
+          <p>Let the app use your location to suggest nearby stops and live arrival times.</p>
+          <form method="dialog">
+            <button type="submit" value="disagree">Disagree</button>
+            <button type="submit" value="agree">Agree</button>
+          </form>
+        </dialog>
+
+        <dialog id="dialog-extra" aria-labelledby="reset-settings-title">
+          <span class="material-symbols" aria-hidden="true">restart_alt</span>
+          <h2 id="reset-settings-title">Reset settings?</h2>
+          <p>This will reset your app preferences back to their default settings. The following accounts will also be signed out:</p>
+          <hr>
+          <ul class="list">
+            <li>
+              <img src="https://picsum.photos/id/64/80/80" alt="" class="circle">
+              leevillanuevanotes@google.com
+            </li>
+            <li>
+              <img src="https://picsum.photos/id/91/80/80" alt="" class="circle">
+              alloalejandro@google.com
+            </li>
+            <li>
+              <img src="https://picsum.photos/id/177/80/80" alt="" class="circle">
+              oliortega@google.com
+            </li>
+          </ul>
+          <hr>
+          <form method="dialog">
+            <button type="submit" value="cancel">Cancel</button>
+            <button type="submit" value="accept">Accept</button>
+          </form>
+        </dialog>
+<Code code={`
+<button type="button" onclick="document.getElementById('dialog1').showModal()">
+  Show
+</button>
+
+<dialog id="dialog1" aria-labelledby="basic-dialog-title-title">
+  <h2 id="basic-dialog-title-title">Basic dialog title</h2>
+  <p>A dialog is a modal window that appears in front of app content.</p>
+  <form method="dialog">
+    <button type="submit" value="cancel">Cancel</button>
+    <button type="submit" value="accept">Accept</button>
+  </form>
+</dialog>
+`} />
+        <p>
+          A <code>&lt;form method="dialog"&gt;</code> closes the dialog when a
+          submit button is pressed and sets <code>dialog.returnValue</code>
+          from the button’s <code>value</code>. Action buttons are text
+          buttons by default — add <code>filled</code>, <code>tonal</code>,
+          or <code>outlined</code> if you need more emphasis. Tapping the
+          scrim closes it too, but only if the press and the release both
+          miss the dialog. Docked panes are
+          <a href={route('side_sheet')}>Side sheet</a>
+          and
+          <a href={route('bottom_sheet')}>Bottom sheet</a>.
+        </p>
+  </Section>
+  <Section {...S.fullscreen}>
+        <p>
+          Add <code>max</code> when the task needs the whole viewport —
+          typically on compact windows, or any time the dialog holds a
+          form. There is no scrim and no corner radius. A
+          <code>&lt;header&gt;</code> is the 64dp top bar: a close icon,
+          a <code>title-large</code> headline, and the confirming text
+          button. Body content is inset 24dp.
+        </p>
+        <p>
+          <button type="button" class="outlined" onclick="document.getElementById('dialog-max').showModal()">Show full-screen</button>
+        </p>
+        <dialog id="dialog-max" class="max" aria-labelledby="full-screen-dialog-title-title">
+          <header>
+            <button type="button" aria-label="Close" onclick="this.closest('dialog').close()">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
+            <form method="dialog">
+              <button type="submit" value="save">Save</button>
+            </form>
+          </header>
+          <div>
+            <div class="field outlined">
+              <input id="fs-event" type="text" placeholder=" " value="Input">
+              <label for="fs-event">Event name</label>
+            </div>
+            <div class="row">
+              <div class="s12 m6 field outlined">
+                <input id="fs-from" type="text" placeholder=" " value="Input">
+                <label for="fs-from">From</label>
+              </div>
+              <div class="s12 m6 field outlined">
+                <input id="fs-to" type="text" placeholder=" " value="Input">
+                <label for="fs-to">To</label>
+              </div>
+            </div>
+            <p>
+              <label>
+                <input type="checkbox" id="fs-all-day">
+                All day
+              </label>
+            </p>
+          </div>
+        </dialog>
+<Code code={`
+<dialog class="max" aria-labelledby="full-screen-dialog-title-title">
+  <header>
+    <button type="button" aria-label="Close">
+      <span class="material-symbols" aria-hidden="true">close</span>
+    </button>
+    <h2 id="full-screen-dialog-title-title">Full-screen dialog title</h2>
+    <form method="dialog">
+      <button type="submit" value="save">Save</button>
+    </form>
+  </header>
+  <div>…</div>
+</dialog>
+`} />
+  </Section>
+  <Section {...S.methods}>
+        <p>
+          Call these on the <code>&lt;dialog&gt;</code> element. See
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement" target="_blank" rel="noopener">HTMLDialogElement</a>
+          for the full API.
+        </p>
+        <h5 class="light">.showModal()</h5>
+        <p>Open as a modal, with the scrim (basic) or as the page (full-screen).</p>
+<Code code={`
+dialog.showModal();
+`} />
+        <h5 class="light">.close()</h5>
+        <p>Close the dialog.</p>
+<Code code={`
+dialog.close();
+`} />
+        <p>
+          A tap or click on the scrim also closes a basic dialog. Both ends
+          of the gesture have to land outside the dialog’s box, so a drag
+          that starts on the dialog — selecting text, missing a button —
+          cannot dismiss it. Set <code>closedby="none"</code> or
+          <code>closedby="closerequest"</code> to opt out.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>&lt;dialog&gt;</code> if you need a different surface or width.</p>
+        <TokenTable>            <tr>
+              <td><code>--md-comp-basic-dialog-container-color</code></td>
+              <td><code>--md-sys-color-surface-container-high</code></td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-shape</code></td>
+              <td>28px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-min-width</code></td>
+              <td>280px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-container-max-width</code></td>
+              <td>560px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-basic-dialog-scrim-blur</code></td>
+              <td>12px</td>
+            </tr>
+            <tr>
+              <td><code>--md-comp-scrim-color</code></td>
+              <td><code>--md-sys-color-scrim</code> at 32%</td>
+            </tr>
+  </TokenTable>  </Section>
+</PageBody>
+</DocsLayout>
