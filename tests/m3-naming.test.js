@@ -8,7 +8,7 @@
 // One rename was NOT additive and is asserted as such below: `Slider` used to
 // be the image slideshow and is now the range control, because that is what M3
 // calls a slider. Aliasing it would defeat the rename. The slideshow itself is
-// gone as of 1.0.0 - Carousel covers the case - so `.slider` no longer has to
+// gone in 0.8.0 - Carousel covers the case - so `.slider` no longer has to
 // be told apart from anything by its content.
 
 import { test, describe, beforeEach } from 'node:test';

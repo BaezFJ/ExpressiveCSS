@@ -29,7 +29,7 @@ export { Tooltip } from "./tooltip";
 // `Range` simply moved to the name M3 uses for the component: Slider. `Slider`
 // itself held the image slideshow until 0.8.0 - the one rename in the set that
 // changed an existing name's *meaning* rather than adding a second one, so it
-// was called out in the changelog rather than aliased. The slideshow it moved
-// aside for is gone as of 1.0.0; Carousel covers the case.
+// was called out in the changelog rather than aliased. The slideshow is gone in
+// 0.8.0; Carousel covers the case.
 export { Slider as Range } from "./slider";
 export { NavigationDrawer as Sidenav } from "./navigationDrawer";

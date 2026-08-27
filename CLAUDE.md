@@ -8,7 +8,7 @@ ExpressiveCSS is a new front-end framework being grown out of a vendored copy of
 
 LLM-oriented docs: `llm.md` is markup and JavaScript APIs; `m3-guidelines.md` is Material 3 usage, anatomy, placement, adaptive design, and behaviors for those components.
 
-The public surface is rebranded. Instances are stashed on elements as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, `src/ts/index.ts` exports `version = '0.7.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
+The public surface is rebranded. Instances are stashed on elements as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, `src/ts/index.ts` exports `version = '0.8.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
 
 | Upstream | Expressive |
 | --- | --- |
@@ -470,7 +470,7 @@ deliberate:
 
 | M3 | ExpressiveCSS | Note |
 | --- | --- | --- |
-| Slider | `.slider` / `Slider` | Held the image slideshow until 0.8.0; sole owner of the class since 1.0.0 |
+| Slider | `.slider` / `Slider` | Held the image slideshow before 0.8.0; now the range control |
 | Navigation drawer | `.navigation-drawer` / `NavigationDrawer` | `.sidenav` / `Sidenav` alias |
 | FAB | `.fab` | `.fixed-action-btn` alias |
 | Progress indicators | `.progress`, `.progress.circular` | `.preloader` alias |
@@ -485,15 +485,12 @@ is how it caught `$_toolbar` excluding `.fixed-action-btn` but not `.fab`.
 
 **One rename changed meaning rather than adding a name.** `Slider` was the image
 slideshow and is now the range control, because that is what M3 calls a slider.
-Aliasing it would have defeated the rename, so for 0.8.0 the two shared `.slider`
-and were told apart by content — `:has([type='range'])` against
-`:not(:has([type='range']))`. **That discrimination is gone as of 1.0.0**, with
-the slideshow it existed for: M3 has no slideshow and Carousel covers the case,
-so `.slider` is the range control and nothing else, and no selector anywhere has
-to ask what a `.slider` contains. `Expressive.Slider` in *script* did change
-meaning — that one is a documented break, as is the removal itself: there is no
-`Slideshow` alias, because an alias would keep both concepts alive while
-pretending one had died.
+Aliasing it would have defeated the rename. As of 0.8.0 `.slider` belongs only to
+the range control; the slideshow is removed and Carousel covers the case, so no
+selector has to inspect what a `.slider` contains. `Expressive.Slider` in
+*script* changed meaning too — that is a documented break, as is the removal
+itself: there is no `Slideshow` alias, because an alias would keep both concepts
+alive while pretending one had died.
 
 **The button size classes changed meaning too, and could not be aliased
 either.** `.small` was 32dp and `.large` 56dp; M3 names those `xsmall` and
@@ -552,7 +549,7 @@ Other things worth knowing:
 - `abstracts/_elevation.scss` owns the shadow map; the `.z-depth-*` classes in `base/_global.scss` are generated from it, so the classes and the `z-depth()` mixin cannot drift.
 - `abstracts/_breakpoints.scss` owns the exact M3 window size classes: Compact `< 600px`, Medium `600–839px`, Expanded `840–1199px`, Large `1200–1599px`, and Extra-large `>= 1600px`. The canonical Sass keys are `compact`, `medium`, `expanded`, `large`, and `extra-large`; `bp-up()` / `bp-down()` / `bp-between()` emit media-query range syntax. Grid prefixes remain `.s` / `.m` / `.l` / `.xl` / `.xxl` in that order. At Extra-large the container cap is 1920px; `.container.wide` caps at 2400px and `.container.max` has no cap.
 - `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`) — mostly `!default`, several now aliasing CSS custom properties. Typography leaves the browser root size untouched and converts M3's sp values to rem on the standard 16px basis. The type-scale roles choose `--md-ref-typeface-brand` or `--md-ref-typeface-plain`; both default to Roboto and append the Noto Sans fallback.
-- Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`. `_slider` became `_slideshow` in the same pass and was deleted in 1.0.0.
+- Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`. The old slideshow partial, `_slider`, was deleted with that component.
 - `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
 - `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_page-footer`, `_docked-display`, `_transitions`).
 - `utilities/_typescale.scss` generates the 15 `.display-large` … `.title-small` classes from a `$typescale-roles` list. Every property it sets must map to a token `tokens/_reference.scss` actually defines — a `var()` pointing at an undefined custom property invalidates the whole declaration silently, which is how these classes previously did nothing. `font-style` is deliberately not set: the `-font-family-style` token holds "Regular"/"Medium", which are weights, not CSS font-style keywords.

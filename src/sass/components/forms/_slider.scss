@@ -30,9 +30,8 @@
 //   label      40dp, inverse-surface / inverse-on-surface, body-small
 
 // M3 calls this component "Slider", so `.slider` is the name. It was the image
-// slideshow's host until 0.8.0 and the two were told apart by what they
-// contained; the slideshow is gone as of 1.0.0, so the class is this component
-// and nothing else.
+// slideshow's host before 0.8.0. The slideshow is gone in 0.8.0, so the class
+// belongs to this component and nothing else.
 $_host: ".slider, .range, .range-field, label:has(> [type='range'])";
 
 :is(#{$_host}),

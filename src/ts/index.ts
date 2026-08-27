@@ -25,7 +25,7 @@ export { Forms } from "./behaviors/forms";
 export { AutoInit } from "./components/registry";
 export type { AutoInitOptions } from "./components/registry";
 
-export const version = "0.7.0";
+export const version = "0.8.0";
 
 // Side effects: importing the bundle wires up the document-level behaviors.
 // Order is preserved from the original bundle - do not reorder without checking

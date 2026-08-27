@@ -2,7 +2,7 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.7.0`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.8.0`, which is under active development.
 
 - Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
@@ -295,7 +295,7 @@ Learn how to start using Expressive and integrate it into your project.
 
 ### Download
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.7.0` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.8.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
@@ -5979,7 +5979,7 @@ Material Design 3 sliders, from the HTML.
 
 An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
 
-The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Until 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is gone as of 1.0.0 and Carousel covers the case, so `.slider` is the range control and nothing else.
+The plugin is `Expressive.Slider`, and `Expressive.Range` still resolves to it. Before 0.8.0 `.slider` and `Slider` meant the image slideshow; that component is now gone and Carousel covers the case, so `.slider` is the range control and nothing else.
 
 Three variants: **standard** (active from the start to the handle), **centered** (`.centered`, active grows from the midpoint), and **range** (two inputs in one host, active between the handles). Horizontal or `.vertical`. Five sizes, an optional inset icon, discrete stops, and a value indicator.
 

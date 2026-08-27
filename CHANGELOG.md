@@ -5,14 +5,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-Start of the HTML semantics sweep. Component markup is being corrected so that
+## [0.8.0] - 2026-08-27
+
+Completes the HTML semantics sweep. Component markup is corrected so that
 the element states what a component is, with the ARIA that element choice
 implies. Scope is deliberately bounded: keyboard interaction, focus management
 and colour contrast are **not** part of it.
 
-The sweep is breaking, and lands over several changes before 0.8.0. Legacy
-markup keeps rendering — nothing warns at runtime — so each **Migration** entry
-below is the whole story for that component.
+The sweep is breaking, and lands in 0.8.0. Legacy markup covered by the
+semantics sweep keeps rendering — nothing warns at runtime — so each
+**Migration** entry below is the whole story for that component.
 
 ### Added
 
@@ -581,23 +583,21 @@ below is the whole story for that component.
   | FAB | `.fixed-action-btn` | `.fab` |
   | Progress indicators | `.preloader` | `.progress.circular` |
   | Date / Time pickers | `.datepicker` / `.timepicker` | `.date-picker` / `.time-picker` |
-  | (not an M3 component) | `.slider` / `Slider` | `.slideshow` / `Slideshow` |
 
 - **`Slider` changed meaning, and that one is a break.** It was the image
   slideshow; it is now the range control, because that is what M3 calls a
-  slider. Aliasing it would have defeated the rename. In *markup* nothing
-  breaks — a `.slider` holding a range input is the slider, one holding
-  `.slides` is still the slideshow, so both kinds of pre-0.8.0 markup keep
-  working. In *script*, `Expressive.Slider.init()` now starts a range control
-  rather than a slideshow: call `Expressive.Slideshow` instead.
-  `Expressive.Range` still resolves, to the renamed `Slider`.
+  slider. Aliasing it would have defeated the rename. Before 0.8.0, `.slider`
+  markup and `Expressive.Slider.init()` started the slideshow; both now name the
+  range control. Migrate slideshow markup and script to Carousel using the
+  removal guide below. `Expressive.Range` still resolves to the renamed
+  `Slider`.
 - **`.field` deliberately did not become `.text-field`.** M3 names the
   component "Text fields", but the same container wraps `<select>`,
   autocomplete and file inputs, so the M3 name would be wrong for most of what
   it does.
 - Sass partials moved with their components: `_sidenav` → `_navigation-drawer`,
-  `_slider` → `_slideshow`, `forms/_range` → `forms/_slider`, `_preloader` →
-  `_progress`.
+  `forms/_range` → `forms/_slider`, and `_preloader` → `_progress`. The old
+  slideshow partial, `_slider`, was deleted with that component.
 - **The semantics roster stopped counting things that are not components.** A
   component is a part of the framework an author writes markup for, and four of
   the 45 rows in `semantics.json` were not one. Three now state a `kind`
@@ -649,29 +649,26 @@ below is the whole story for that component.
   `--md-comp-card-*-state-layer-*` tokens, so overriding a card still reaches
   them; the other three have no component token and read `--md-sys-state-*`.
 
-- **Slideshow is gone, and Carousel takes the case.** Charter work for 1.0.0,
-  like Parallax and Pulse below. M3 has no slideshow — its Carousel is the
-  component for a band of media — and once Carousel could advance on its own
+- **Slideshow is gone, and Carousel takes the case.** M3 has no slideshow — its
+  Carousel is the component for a band of media — and once Carousel could
+  advance on its own,
   the two expressed one concept in 590 lines of duplicate. Deleted outright:
   `components/_slideshow.scss`, `components/slideshow.ts`, the `slideshow`
   `semantics.json` row, and the docs coverage on the Media page.
   `Expressive.Slideshow` no longer resolves. **There is no alias**, because an
   alias keeps both concepts alive while pretending one of them died.
 
-  **`.slider` is unambiguous again**, which is the bonus worth stating. 0.8.0
-  gave `.slider` to M3's range control while the slideshow still held it, so
-  the two were told apart by what they contained —
-  `.slider:has([type='range'])` against `.slider:not(:has([type='range']))`.
-  Both halves are gone with the component: `.slider` is the range control and
-  nothing else, and nothing in the sheet asks what a `.slider` holds. The range
-  control itself is otherwise untouched.
+  **`.slider` is unambiguous again**, which is the bonus worth stating. The
+  intermediate content-discrimination selectors are gone with the component:
+  `.slider` is the range control and nothing else, and nothing in the sheet asks
+  what a `.slider` holds. The range control itself is otherwise untouched.
 
   **Migration.** Carousel with a fixed `height` reproduces the layout — the
   height sizes the track and the indicators take their own row beneath it:
 
   ```html
   <!-- before -->
-  <div class="slideshow">
+  <div class="slider">
     <ul class="slides">
       <li><img src="1.jpg" alt="First"><div class="caption"><h3>One</h3></div></li>
       <li><img src="2.jpg" alt="Second"><div class="caption"><h3>Two</h3></div></li>
@@ -699,7 +696,7 @@ below is the whole story for that component.
 
   ```js
   // before
-  Expressive.Slideshow.init(el, { height: 400, indicators: true, interval: 6000 });
+  Expressive.Slider.init(el, { height: 400, indicators: true, interval: 6000 });
   // after
   Expressive.Carousel.init(el, { height: 400, indicators: true, interval: 6000, fullWidth: true });
   ```
@@ -778,8 +775,8 @@ below is the whole story for that component.
   instead of looping. Auto-advance — `interval`, `duration`, `noWrap` — behaves
   exactly as it did.
 
-- **Parallax and Pulse are gone**, with no successor. This is charter work for
-  1.0.0 rather than part of the semantics sweep above. Both were decorative
+- **Parallax and Pulse are gone**, with no successor. This removal is separate
+  from the semantics sweep above. Both were decorative
   motion opinions of our own, and M3 Expressive ships a `MotionScheme` of
   spring specs that says something different — the same reasoning that removed
   the legacy palette. Deleted outright: the `.parallax` and `.pulse` styles,
@@ -1450,7 +1447,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0
 [0.7.0-rc.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0-rc.0
 [0.6.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.5.0...v0.6.0
