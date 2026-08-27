@@ -10,17 +10,10 @@ on:
       - 'src/sass/**'
       - 'src/ts/**'
       - 'docs/**'
-      # sass and esbuild decide what the sheet and the bundle look like, and a
-      # dependency bump is exactly when nobody is looking at pixels.
-      #
-      # Be clear about what that buys, though, because it is less than it
-      # sounds: visual/run.mjs symlinks this checkout's node_modules into the
-      # base worktree, so both passes build through one installation and a
-      # bump is applied to the baseline as well as the candidate. A rendering
-      # change it causes cancels out. What these two entries actually get you
-      # is that the new toolchain has to build both revisions and produce
-      # photographable pages -- a smoke test, not an attribution. Issue #114
-      # holds the trade-off that would fix it.
+      # sass, esbuild, Astro and Vite decide what the published site looks like.
+      # This job installs the head lockfile below, and visual/run.mjs installs
+      # the base lockfile in its worktree. A dependency bump therefore reaches
+      # only the candidate and any rendering change it causes remains visible.
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/visual.yml'
@@ -49,6 +42,8 @@ jobs:
           node-version: 24
           cache: npm
 
+      # Installs the candidate. visual/run.mjs performs a second, cache-backed
+      # npm ci in the base worktree so each pass builds with its own lockfile.
       - run: npm ci
 
       - run: npx playwright install --with-deps chromium
