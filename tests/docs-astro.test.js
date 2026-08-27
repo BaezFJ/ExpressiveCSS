@@ -272,6 +272,7 @@ describe('the compatibility routes Astro publishes', () => {
 describe('the LLM documents Astro publishes', () => {
   const llms = renderLlmsTxt(pkg);
   const home = pkg.homepage.replace(/\/$/, '');
+  const guidelines = read('m3-guidelines.md');
 
   /** Every `- [text](url): note` line, tagged with the `##` section it sits in. */
   function links() {
@@ -365,5 +366,32 @@ describe('the LLM documents Astro publishes', () => {
     assert.match(full, /import guidelines from "\.\.\/\.\.\/\.\.\/m3-guidelines\.md\?raw"/);
     assert.match(full, /import llm from "\.\.\/\.\.\/\.\.\/llm\.md\?raw"/);
     assert.match(full, /\[guidelines, llm\]\.join/);
+  });
+
+  test('the chooser and anatomy sheet use the shipped components', () => {
+    const unshipped = guidelines.slice(
+      guidelines.indexOf('# 11. Material 3 components this framework does not ship'),
+      guidelines.indexOf('# 12. Screen recipes'),
+    );
+    assert.doesNotMatch(
+      unshipped,
+      /\| Loading indicator\b/,
+      'loading indicator has a partial, page, semantics row, and test, so it is shipped',
+    );
+
+    assert.match(
+      guidelines,
+      /\| Minor action, no room for a label \| \*\*Icon button\*\* \(`\.icon-button`\) \+ tooltip \|/,
+    );
+    const anatomy = guidelines.slice(
+      guidelines.indexOf('# 13. Quick anatomy cheat sheet'),
+      guidelines.indexOf('# 14. Name map'),
+    );
+    assert.match(anatomy, /\| Icon button \| `button\.icon-button` \|/);
+    assert.doesNotMatch(
+      anatomy,
+      /\| Icon button \| `button\.circle` \|/,
+      'button.circle is a round common button with the common-button size and token ladder',
+    );
   });
 });

@@ -222,7 +222,7 @@ Material Symbols, outlined by default. Load the variable font with `opsz,wght,FI
 | Primary action in a form, dialog, or card | **Filled button** |
 | Secondary action next to a filled button | **Tonal** or **outlined** button |
 | Action inside a dialog, card, or snackbar | **Text button** |
-| Minor action, no room for a label | **Icon button** (`circle`) + tooltip |
+| Minor action, no room for a label | **Icon button** (`.icon-button`) + tooltip |
 | One usual action plus a few related ones | **Split button** (`.split-button`), not a button beside a separate icon button |
 | Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
 | Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked), or a **bottom app bar** on compact |
@@ -1299,7 +1299,6 @@ Do not invent markup for these. If the user needs the pattern, say it is not ava
 | M3 component | Substitute in ExpressiveCSS |
 | --- | --- |
 | FAB menu (M3 Expressive labelled menu) | `.fab` speed-dial, or a FAB that opens a `<menu>`. |
-| Loading indicator (wavy morphing) | Circular `.progress` spinner. |
 
 ---
 
@@ -1363,7 +1362,7 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | Menu | `menu#id` + `.menu-trigger` | `li` items | `.selected` / `aria-selected` |
 | Panes | `.list-detail` / `.panes` | 2–3 `.pane` | `.active` on compact |
 | Button | `button` or `a.button` | Label (or `aria-label` if `circle`) | `disabled` |
-| Icon button | `button.circle` | Icon + `aria-label` | — |
+| Icon button | `button.icon-button` | Icon + `aria-label` | — |
 | FAB | `button.circle.extra` | Icon + `aria-label` | — |
 | FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
 | Split button | `div.split-button` | Leading button + `.menu-trigger[data-target]` + `menu#id` | `aria-expanded` (framework) |
