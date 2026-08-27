@@ -623,8 +623,8 @@ layer.
 `llms.txt` is generated at build time by `docs/src/lib/llms.ts` from the shared
 catalogue and `package.json`. Astro publishes `/llms-full.txt`, `/llm.md`,
 `/m3-guidelines.md`, `/CHANGELOG.md` and `/SEMANTICS.md` from the repository
-sources. The completed HTML pages then generate 59 page-equivalent `.html.md`
-documents. No generated LLM document is tracked; `scripts/verify-site.mjs`
+sources. Each completed canonical catalogue page then generates a page-equivalent
+`.html.md` document. No generated LLM document is tracked; `scripts/verify-site.mjs`
 verifies the index, source-backed documents, every counterpart and the discovery
 links between them.
 
