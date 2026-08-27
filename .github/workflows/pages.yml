@@ -48,7 +48,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # The branch tip, not the triggering commit. Order within a concurrency
+      # group is not guaranteed: two pushes landing close together can be
+      # picked up out of order, and the loser would then publish an older tree
+      # over a newer one with nothing to correct it until the next deploy.
+      # Building whatever master points at makes a late run harmless -- it
+      # republishes the current site rather than a past one. It also means a
+      # manual dispatch always publishes master, which is what a retry wants.
       - uses: actions/checkout@v7
+        with:
+          ref: master
 
       # 24 rather than the package's own floor of 20: astro 7 declares
       # ">=22.12.0", so no `docs:*` script runs on 20.
