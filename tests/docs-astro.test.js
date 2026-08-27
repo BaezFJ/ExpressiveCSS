@@ -188,6 +188,17 @@ describe('the compatibility routes Astro publishes', () => {
   const layout = read('docs/src/layouts/RedirectLayout.astro');
   const index = PAGES.find((p) => p.id === 'index');
 
+  test('the landing page disowns the second URL a static host serves it at', () => {
+    // `/` and `/index.html` are the same file on any static host, and no
+    // redirect can separate them -- only a canonical link can. Astro hands out
+    // the wrong one of the two by default: `Astro.url.pathname` is
+    // `/index.html` for the index route under `build.format: 'file'`, so
+    // BaseLayout normalises it, and that normalisation is the whole guard.
+    const base = read('docs/src/layouts/BaseLayout.astro');
+    assert.match(base, /<link rel="canonical" href=\{canonical\}>/);
+    assert.match(base, /Astro\.url\.pathname\.replace\(\/\\\/index\\\.html\$\/, "\/"\)/);
+  });
+
   test('the site root is canonical and the historic route redirects to it', () => {
     // The one page whose published route the generator changes. `/index.html`
     // stops being an alias in the same move -- `build.format: 'file'` writes

@@ -46,7 +46,23 @@ const read = (path) => readFileSync(fileFor(path), 'utf8');
 
 // --- Canonical pages -------------------------------------------------------
 
-for (const page of PAGES) nonempty(route(page.id), 'canonical page');
+for (const page of PAGES) {
+  const path = route(page.id);
+  nonempty(path, 'canonical page');
+  // Every page declares its own URL canonical. A formality for all but one of
+  // them -- but a static host serves the root document at `/index.html` as
+  // well as `/`, so without this the landing page has a second indexable URL
+  // that no redirect covers, and `Astro.url.pathname` hands that second URL
+  // out by default under `build.format: 'file'`.
+  try {
+    const declared = new URL(path, `${home}/`).href;
+    if (!read(path).includes(`<link rel="canonical" href="${declared}">`)) {
+      fail(`canonical page ${path}: does not declare ${declared} canonical`);
+    }
+  } catch {
+    // Already reported as missing.
+  }
+}
 
 // --- Compatibility routes --------------------------------------------------
 //

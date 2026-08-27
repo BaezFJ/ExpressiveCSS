@@ -767,6 +767,15 @@ when it is *structurally identical* to the frozen one.
   root-absolute `href`/`src` on every page. `<code>` blocks are cut out whole
   first, for the reason `pages.yml` states: the docs quote example markup like
   `href="/library"`, which describes a reader's project rather than this site.
+- **Every page declares its own URL canonical, and the landing page is why.**
+  A static host serves the root document at `/index.html` as well as `/`, and
+  no redirect can separate them -- making the root canonical in the *links*
+  leaves the second URL reachable and independently indexable. Only a canonical
+  link disowns it. `BaseLayout.astro` emits one from `Astro.url.pathname`,
+  **normalised**: that property is `/index.html` for the index route under
+  `build.format: 'file'`, so used as given it would declare the very URL being
+  disowned. Both the test and the verifier pin the normalisation, because the
+  wrong output looks entirely correct.
 - **`docs/public/CNAME` is the custom-domain declaration, and no `base` is
   configured.** The site publishes at the domain root, so every root-absolute
   URL the pages already use resolves as written -- which is what makes the
