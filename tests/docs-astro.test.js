@@ -51,6 +51,9 @@ function declaredSections(src) {
 const renderedSections = (src) =>
   [...src.matchAll(/<Section\s+\{\.\.\.S(?:\.(\w+)|\["([^"]+)"\])\}/g)].map((m) => m[1] ?? m[2]);
 
+/** The page with every `<Code code={`…`} />` sample cut out, so a sample's own markup is not read as the page's. */
+const withoutSamples = (src) => src.replace(/code=\{`[\s\S]*?`\}/g, '');
+
 describe('the Astro documentation pages', () => {
   test('there are pages to check', () => {
     // A directory read that quietly returned nothing would pass every test below.
@@ -78,6 +81,18 @@ describe('the Astro documentation pages', () => {
       const declared = declaredSections(src);
       assert.ok(declared.length, `${file}: declares no sections`);
       assert.deepEqual(renderedSections(src), declared, `${file}: sections and table of contents disagree`);
+    }
+  });
+  test("a page's own script stays where the page put it", () => {
+    // Astro bundles a bare <script> and hoists it to <head> as a module, which
+    // moves it out of <main> -- and <main> is what a converted page is compared
+    // against, so the parity check this migration is verified by would be
+    // comparing a page against one the script had left. Nothing fails at build
+    // time; is:inline is the whole guard, and this is the guard on the guard.
+    for (const { file, src } of pages) {
+      for (const [tag] of withoutSamples(src).matchAll(/<script\b[^>]*>/g)) {
+        assert.match(tag, /\bis:inline\b/, `${file}: ${tag} would be hoisted out of <main>`);
+      }
     }
   });
 });
