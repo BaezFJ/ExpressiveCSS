@@ -1,0 +1,516 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "sizes", label: "Sizes", heading: "FAB sizes" },
+  { id: "extended", label: "Extended", heading: "Extended FAB" },
+  { id: "fab-menu", label: "FAB menu" },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+  { id: "horizontal", label: "Horizontal", heading: "Horizontal FAB" },
+  { id: "click-only", label: "Click Only FAB", heading: "Click-only FAB" },
+  { id: "toolbar", label: "FAB to Toolbar" },
+]);
+---
+<DocsLayout page="floating_action_button">
+<div class="fab">
+  <button type="button" class="button extra circle" aria-label="Edit">
+    <span class="material-symbols" aria-hidden="true">mode_edit</span>
+  </button>
+  <ul>
+    <li><a class="button extra circle small error on-error-text" href="#!" aria-label="Chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li><a class="button extra circle small secondary on-secondary-text" href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li><a class="button extra circle small tertiary on-tertiary-text" href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li><a class="button extra circle small primary on-primary-text" href="#!" aria-label="Attach"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+  </ul>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="s12 m8 offset-m1 xl7 offset-xl1">
+
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          If you want a fixed floating action button, you can add multiple actions that appear on hover.
+          The live demo is in the bottom-right corner of the page.
+        </p>
+        <p>
+          Wrap a large <code>extra circle small</code> (or <code>circle extra</code>)
+          and a list of smaller ones in <code>fab</code>.
+          That class pins the control to the corner. The menu opens on
+          hover when the pointer can hover; add <code>click-to-toggle</code>
+          to toggle on click. <code>AutoInit()</code> starts every matching
+          element except those marked <code>no-autoinit</code>. Motion is CSS.
+        </p>
+<Code code={`
+<div class="fab">
+  <button type="button" class="button extra circle" aria-label="Edit">
+    <span class="material-symbols" aria-hidden="true">mode_edit</span>
+  </button>
+  <ul>
+    <li><a class="button extra circle small" href="#!" aria-label="Attach">…</a></li>
+  </ul>
+</div>
+`} />
+  </Section>
+  <Section {...S.sizes}>
+        <p>
+          A FAB is <code>circle extra</code> (or its alias
+          <code>circle large</code>): 56dp, 16dp corners,
+          <code>primary-container</code>, elevation 3. Three size classes
+          go alongside the <code>extra</code>. The corner grows with the
+          container, so a bigger FAB is not simply a scaled-up one.
+        </p>
+        <div class="fab-size-demo">
+          <div>
+            <button type="button" class="circle extra small" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>small</code><br>40dp</span>
+          </div>
+          <div>
+            <button type="button" class="circle extra" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small">default<br>56dp</span>
+          </div>
+          <div>
+            <button type="button" class="circle extra medium" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>medium</code><br>80dp</span>
+          </div>
+          <div>
+            <button type="button" class="circle extra large" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>large</code><br>96dp</span>
+          </div>
+        </div>
+<Code code={`
+<button type="button" class="circle extra small" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button type="button" class="circle extra" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button type="button" class="circle extra medium" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+<button type="button" class="circle extra large" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</button>
+`} />
+        <div class="docs-table-scroll">
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Size</th>
+                    <th>Class</th>
+                    <th>Container</th>
+                    <th>Corner</th>
+                    <th>Icon</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Small</td><td><code>circle extra small</code></td><td>40dp</td><td>12dp</td><td>24dp</td></tr>
+                <tr><td>Default</td><td><code>circle extra</code></td><td>56dp</td><td>16dp</td><td>24dp</td></tr>
+                <tr><td>Medium</td><td><code>circle extra medium</code></td><td>80dp</td><td>20dp</td><td>26dp</td></tr>
+                <tr><td>Large</td><td><code>circle extra large</code></td><td>96dp</td><td>28dp</td><td>36dp</td></tr>
+            </tbody>
+        </table>
+        </div>
+        <p>
+          The large size needs the <code>extra</code>:
+          <code>circle large</code> on its own is the alias for the default
+          56dp FAB, and keeps that meaning.
+        </p>
+        <p>
+          On an <code>&lt;a&gt;</code>, add <code>button</code> — the size
+          classes only match <code>button</code> or <code>a.button</code>.
+        </p>
+<Code code={`
+<a class="button circle extra medium" href="#!" aria-label="Add">
+  <span class="material-symbols" aria-hidden="true">add</span>
+</a>
+`} />
+        <p>
+          Each size is the same four custom properties, so a one-off size is
+          a matter of resetting them rather than writing new rules.
+        </p>
+        <div class="docs-table-scroll">
+        <TokenTable>
+            <tr><td><code>--md-comp-fab-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-container-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-container-shape</code></td><td>16px</td></tr>
+            <tr><td><code>--md-comp-fab-icon-size</code></td><td>24px</td></tr>
+        </TokenTable>
+        </div>
+  </Section>
+  <Section {...S.extended}>
+        <p>
+          <code>extend</code> is the extended FAB: an icon plus a label at
+          56dp, 16dp corners, 8dp between the two. Wrap the label in its own
+          <code>&lt;span&gt;</code> — the order of the two spans is the
+          placement, and the wrapper is what earns the 16dp leading inset.
+        </p>
+        <div class="fab-size-demo">
+          <div>
+            <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend</code><br>16dp / 20dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend small"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend small</code><br>56dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend medium"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend medium</code><br>80dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend large"><span class="material-symbols" aria-hidden="true">add</span><span>Create</span></button>
+            <span class="body-small"><code>extend large</code><br>96dp</span>
+          </div>
+          <div>
+            <button type="button" class="extend"><span>Create</span><span class="material-symbols" aria-hidden="true">add</span></button>
+            <span class="body-small"><code>extend</code><br>trailing icon</span>
+          </div>
+        </div>
+<Code code={`
+<button type="button" class="extend">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+<button type="button" class="extend medium">
+  <span class="material-symbols" aria-hidden="true">add</span><span>Create</span>
+</button>
+`} />
+        <p>
+          The size axis is <code>small</code>, <code>medium</code> and
+          <code>large</code>, and the label role grows with the container:
+          <code>title-medium</code>, <code>title-large</code>,
+          <code>headline-small</code>. <code>extend small</code> is 56dp on a
+          symmetric 16dp inset. A sizeless <code>extend</code> is Material 3's
+          base extended FAB — 56dp on a 16dp / 20dp inset, label
+          <code>label-large</code>.
+        </p>
+        <p>
+          The container colour is a role rather than a value.
+          <code>primary-container</code> is the default;
+          <code>secondary-container</code> and <code>tertiary-container</code>
+          are the other two. Each sets the container and the label colour
+          together, so the hover and focus state layers follow the role with
+          it.
+        </p>
+        <div class="fab-size-demo">
+          <div>
+            <button type="button" class="extend"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <span class="body-small">default<br><code>primary-container</code></span>
+          </div>
+          <div>
+            <button type="button" class="extend secondary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <span class="body-small"><code>secondary-container</code></span>
+          </div>
+          <div>
+            <button type="button" class="extend tertiary-container"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+            <span class="body-small"><code>tertiary-container</code></span>
+          </div>
+        </div>
+<Code code={`
+<button type="button" class="extend secondary-container">
+  <span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span>
+</button>
+`} />
+        <div class="docs-table-scroll">
+        <TokenTable>
+            <tr><td><code>--md-comp-extended-fab-container-height</code></td><td>56px (80px <code>medium</code>, 96px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-container-shape</code></td><td>16px (20px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-icon-size</code></td><td>24px (28px <code>medium</code>, 36px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-leading-space</code></td><td>16px (26px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-icon-label-space</code></td><td>8px (12px <code>medium</code>, 16px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-trailing-space</code></td><td>20px (16px <code>small</code>, 26px <code>medium</code>, 28px <code>large</code>)</td></tr>
+            <tr><td><code>--md-comp-extended-fab-container-color</code></td><td><code>--md-sys-color-primary-container</code></td></tr>
+            <tr><td><code>--md-comp-extended-fab-label-text-color</code></td><td><code>--md-sys-color-on-primary-container</code></td></tr>
+        </TokenTable>
+        </div>
+  </Section>
+  <Section {...S["fab-menu"]}>
+        <p>
+          <code>fab-menu</code> is the FAB that expands into a list of
+          labelled actions. The trigger is an ordinary FAB; the actions are a
+          <code>&lt;ul&gt;</code> (or <code>&lt;menu&gt;</code>) of pills, each
+          an icon and a label at 56dp on a full corner. Click the FAB to
+          expand; click it again, click outside, or press
+          <kbd>Esc</kbd> to collapse.
+        </p>
+        <p>
+          Expanded is the framework's, not yours: the constructor stamps
+          <code>aria-expanded</code> on the trigger and
+          <code>open()</code> / <code>close()</code> move it along with the
+          <code>active</code> class. Do not write either into the markup.
+        </p>
+        <div class="fab-menu-demo">
+          <div class="fab-menu" id="fab-menu-primary">
+            <button type="button" class="button extra circle" aria-label="Create">
+              <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <ul>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mic</span><span>Record</span></button></li>
+            </ul>
+          </div>
+          <div class="fab-menu secondary-container" id="fab-menu-secondary">
+            <button type="button" class="button extra circle" aria-label="Create, secondary">
+              <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <ul>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+            </ul>
+          </div>
+          <div class="fab-menu tertiary-container" id="fab-menu-tertiary">
+            <button type="button" class="button extra circle" aria-label="Create, tertiary">
+              <span class="material-symbols" aria-hidden="true">add</span>
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+            <ul>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+              <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+            </ul>
+          </div>
+        </div>
+<Code code={`
+<div class="fab-menu">
+  <button type="button" class="button extra circle" aria-label="Create">
+    <span class="material-symbols" aria-hidden="true">add</span>
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+  <ul>
+    <li><button type="button"><span class="material-symbols" aria-hidden="true">mode_edit</span><span>Compose</span></button></li>
+    <li><button type="button"><span class="material-symbols" aria-hidden="true">image</span><span>Add photo</span></button></li>
+  </ul>
+</div>
+`} />
+        <p>
+          Expanded, the FAB is the close button: the same disc on a full
+          corner, the solid role colour rather than its container, and a 20dp
+          glyph. Give the trigger a second icon and it becomes the close
+          glyph — the first shows while collapsed, the second while expanded,
+          and only ever one of them is in the box. With one icon the morph is
+          the whole affordance.
+        </p>
+        <p>
+          The colour axis is the same three roles as the extended FAB, and one
+          class moves both halves: the actions take
+          <code>primary-container</code> (the default),
+          <code>secondary-container</code> or
+          <code>tertiary-container</code>, and the close button takes the
+          matching solid <code>primary</code>, <code>secondary</code> or
+          <code>tertiary</code>. Material 3 pairs them that way deliberately —
+          the close button is the louder of the two.
+        </p>
+<Code code={`
+<div class="fab-menu secondary-container">…</div>
+`} />
+        <p>
+          It is the same <code>FloatingActionButton</code> instance as the
+          <code>fab</code> speed dial, so <code>AutoInit()</code> starts it and
+          <code>open()</code>, <code>close()</code> and <code>isOpen</code>
+          all work. The two never style each other, and neither reaches the
+          <a href="#toolbar">FAB to Toolbar</a> transition, which is
+          <code>.fab.toolbar</code> and stays there. <code>direction</code> and
+          <code>hoverEnabled</code> are inert on a FAB menu: it opens upward,
+          on click, both decided in CSS.
+        </p>
+        <p>
+          Beyond six actions the stagger runs out and the rest arrive
+          together, which is past where Material 3 stops recommending them.
+        </p>
+        <div class="docs-table-scroll">
+        <TokenTable>
+            <tr><td><code>--md-comp-fab-menu-close-button-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-container-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-icon-size</code></td><td>20px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-between-space</code></td><td>8px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-container-color</code></td><td><code>--md-sys-color-primary</code></td></tr>
+            <tr><td><code>--md-comp-fab-menu-close-button-icon-color</code></td><td><code>--md-sys-color-on-primary</code></td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-container-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-between-space</code></td><td>4px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-icon-label-space</code></td><td>8px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-leading-space</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-trailing-space</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-container-color</code></td><td><code>--md-sys-color-primary-container</code></td></tr>
+            <tr><td><code>--md-comp-fab-menu-menu-item-label-text-color</code></td><td><code>--md-sys-color-on-primary-container</code></td></tr>
+        </TokenTable>
+        </div>
+  </Section>
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.FloatingActionButton</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>Expressive.AutoInit()</code> start every
+          <code>.fab</code> with the defaults below.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.fab');
+  const instances = Expressive.FloatingActionButton.init(elems, {
+    // specify options here
+  });
+});
+`} />
+        <p>
+          Per-instance options can also be passed through AutoInit:
+        </p>
+<Code code={`
+Expressive.AutoInit(document.body, {
+  FloatingActionButton: { direction: 'top' }
+});
+`} />
+  </Section>
+  <Section {...S.options}>
+        <div class="docs-table-scroll">
+        <OptionsTable>
+            <tr>
+              <td><code>direction</code></td>
+              <td>String</td>
+              <td><code>'top'</code></td>
+              <td>Direction the menu opens. One of <code>'top'</code>, <code>'right'</code>, <code>'bottom'</code>, or <code>'left'</code>. Write <code>direction-left</code> (etc.) on the element, or pass this option — the constructor stamps the class.</td>
+            </tr>
+            <tr>
+              <td><code>hoverEnabled</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>When <code>true</code>, the menu opens on hover (CSS). When <code>false</code>, it toggles on click. <code>.click-to-toggle</code> is the markup switch.</td>
+            </tr>
+            <tr>
+              <td><code>toolbarEnabled</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Expand the FAB into a toolbar on click. <code>.toolbar</code> is the markup switch. See <a href="#toolbar">FAB to Toolbar</a>.</td>
+            </tr>
+  </OptionsTable>
+        </div>
+  </Section>
+  <Section {...S.methods}>
+        <InstanceNote plugin="FloatingActionButton" />
+
+        <h5 class="light">.open();</h5>
+        <p>Opens the FAB menu.</p>
+<Code code={`
+instance.open();
+`} />
+
+        <h5 class="light">.close();</h5>
+        <p>Closes the FAB menu.</p>
+<Code code={`
+instance.close();
+`} />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+  <Section {...S.properties}>
+        <PropertiesTable el="The DOM element the plugin was initialized with.">
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Describes the open/close state of the FAB.</td>
+            </tr>
+  </PropertiesTable>
+  </Section>
+  <Section {...S.horizontal}>
+        <p>Creating a horizontal FAB is easy. Set the <code>direction</code> option to <code>'left'</code> or <code>'right'</code>.</p>
+        <p>
+          Add <code>direction-left</code> or <code>direction-right</code>
+          on the wrapper. The JS <code>direction</code> option stamps the
+          same class.
+        </p>
+        <div class="fab-demo">
+          <div class="fab direction-left" id="fab-horizontal">
+            <button type="button" class="button extra circle" aria-label="Edit">
+              <span class="material-symbols" aria-hidden="true">mode_edit</span>
+            </button>
+            <ul>
+              <li><a class="button extra circle small error on-error-text" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+              <li><a class="button extra circle small secondary on-secondary-text" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+              <li><a class="button extra circle small tertiary on-tertiary-text" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+              <li><a class="button extra circle small primary on-primary-text" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+            </ul>
+          </div>
+        </div>
+<Code code={`
+<div class="fab direction-left">…</div>
+`} />
+  </Section>
+  <Section {...S["click-only"]}>
+        <p>
+          To disable hover and toggle the menu when the large button is clicked — useful on touch devices —
+          add <code>click-to-toggle</code> (or pass
+          <code>hoverEnabled: false</code>). On a device with no hover,
+          click is used even without the class.
+        </p>
+        <div class="fab-demo">
+          <div class="fab direction-left click-to-toggle" id="fab-click-only">
+            <button type="button" class="button extra circle" aria-label="Menu">
+              <span class="material-symbols" aria-hidden="true">menu</span>
+            </button>
+            <ul>
+              <li><a class="button extra circle small error on-error-text" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+              <li><a class="button extra circle small secondary on-secondary-text" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+              <li><a class="button extra circle small tertiary on-tertiary-text" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+              <li><a class="button extra circle small primary on-primary-text" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+            </ul>
+          </div>
+        </div>
+<Code code={`
+<div class="fab direction-left click-to-toggle">…</div>
+`} />
+  </Section>
+  <Section {...S.toolbar}>
+        <p>
+          Add <code>toolbar</code> (or pass <code>toolbarEnabled: true</code>)
+          to expand the button into a full-width bar on click. Prefer a hover
+          or click-only menu unless you specifically need the bar.
+        </p>
+<Code code={`
+<div class="fab toolbar">
+  <a class="button extra circle" aria-label="Edit"><span class="material-symbols large" aria-hidden="true">mode_edit</span></a>
+  <ul>
+    <li><a href="#!" aria-label="Insert chart"><span class="material-symbols" aria-hidden="true">insert_chart</span></a></li>
+    <li><a href="#!" aria-label="Quote"><span class="material-symbols" aria-hidden="true">format_quote</span></a></li>
+    <li><a href="#!" aria-label="Publish"><span class="material-symbols" aria-hidden="true">publish</span></a></li>
+    <li><a href="#!" aria-label="Attach file"><span class="material-symbols" aria-hidden="true">attach_file</span></a></li>
+  </ul>
+</div>
+`} />
+<Code code={`
+Expressive.FloatingActionButton.init(
+  document.querySelector('.fixed-action-btn.toolbar'),
+  { toolbarEnabled: true }
+);
+`} />
+  </Section>    </div>
+
+    <div class="hide-on-small-only m3 xl3">
+      <div class="toc-wrapper mt-5">
+        <nav aria-label="On this page">
+          <ul class="section table-of-contents">
+            {Object.values(S).map((s) => (
+            <li><a href={`#${s.id}`}>{s.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+</DocsLayout>

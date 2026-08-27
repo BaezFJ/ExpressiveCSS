@@ -1,0 +1,191 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "small", label: "Small" },
+  { id: "large", label: "Large" },
+  { id: "navigation", label: "On navigation" },
+  { id: "lists", label: "In a list" },
+  { id: "sidenav", label: "In a navigation drawer" },
+  { id: "color", label: "Color" },
+]);
+---
+<DocsLayout page="badges">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Badges show notifications, counts, or status information on
+          navigation items and icons. They can hold a label or a number.
+          Two variants: <strong>small</strong> (an empty
+          <code>&lt;span class="badge"&gt;</code>, a 6dp dot) and
+          <strong>large</strong> (text inside, a 16dp stadium). Nest the
+          badge in the icon so it anchors at the upper trailing edge of
+          the 24dp glyph. Limit content to four characters, including
+          <code>+</code>.
+        </p>
+        <p>
+          The default mapping is <code>error</code> /
+          <code>on-error</code>. Pair a fill utility with its
+          <code>on-*</code> text class only if you override it.
+        </p>
+
+        <nav class="navigation-bar mb-3" aria-label="Badge demo">
+          <a href="#!" aria-label="Mail, unread">
+            <span class="material-symbols" aria-hidden="true">mail<span class="badge"></span></span>
+            Label
+          </a>
+          <a href="#!" aria-label="Mail, 1 unread">
+            <span class="material-symbols" aria-hidden="true">mail<span class="badge">1</span></span>
+            Label
+          </a>
+          <a href="#!" aria-label="Mail, 999+ unread">
+            <span class="material-symbols" aria-hidden="true">mail<span class="badge">999+</span></span>
+            Label
+          </a>
+        </nav>
+<Code code={`
+<span class="material-symbols" role="img" aria-label="Mail, unread">mail<span class="badge"></span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
+`} />
+  </Section>
+  <Section {...S.small}>
+        <p>
+          Leave the badge empty. It is a 6dp circle with no label —
+          an unread mark, not a count.
+        </p>
+        <p>
+          <button type="button" class="button extra circle" aria-label="Notifications, unread">
+            <span class="material-symbols" role="img" aria-label="Notifications, unread">notifications<span class="badge"></span></span>
+          </button>
+        </p>
+<Code code={`
+<span class="material-symbols" role="img" aria-label="Notifications, unread">notifications<span class="badge"></span></span>
+`} />
+  </Section>
+  <Section {...S.large}>
+        <p>
+          Put a number or short label in the badge. Height is 16dp,
+          corners are a stadium, inset is 4dp. Cap the string at four
+          characters; use <code>999+</code> when the count is larger.
+        </p>
+        <p>
+          <button type="button" class="button extra circle" aria-label="Mail, 1 unread">
+            <span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+          </button>
+          <button type="button" class="button extra circle" aria-label="Mail, more than 999 unread">
+            <span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
+          </button>
+        </p>
+<Code code={`
+<span class="material-symbols" role="img" aria-label="Mail, 1 unread">mail<span class="badge">1</span></span>
+<span class="material-symbols" role="img" aria-label="Mail, 999+ unread">mail<span class="badge">999+</span></span>
+`} />
+  </Section>
+  <Section {...S.navigation}>
+        <p>
+          A destination can nest the badge in the icon, or keep it as a
+          sibling after the label — the bar and rail position that
+          sibling on the icon’s upper trailing corner.
+        </p>
+        <nav class="navigation-bar mb-3" aria-label="Mail">
+          <a href="#!" aria-current="page">
+            <span class="material-symbols" role="img" aria-label="Inbox, 3 unread">inbox<span class="badge">3</span></span>
+            Inbox
+          </a>
+          <a href="#!" aria-label="Chat, unread">
+            <span class="material-symbols" aria-hidden="true">chat<span class="badge"></span></span>
+            Chat
+          </a>
+          <a href="#!">
+            <span class="material-symbols" aria-hidden="true">group</span>
+            Groups
+          </a>
+        </nav>
+<Code code={`
+<a href="#!" aria-label="Inbox, 3 unread">
+  <span class="material-symbols" aria-hidden="true">inbox<span class="badge">3</span></span>
+  Inbox
+</a>
+`} />
+  </Section>
+  <Section {...S.lists}>
+        <p>
+          A trailing <code>.badge</code> in a list or drawer row stays
+          in flow on the end, as a count, not overlapped on the leading
+          icon.
+        </p>
+        <ul class="list">
+          <li>
+            <span class="material-symbols" aria-hidden="true">inbox</span>
+            Inbox
+            <span class="badge">3</span>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">send</span>
+            Sent
+          </li>
+        </ul>
+<Code code={`
+<ul class="list">
+  <li>
+    <span class="material-symbols" aria-hidden="true">inbox</span>
+    Inbox
+    <span class="badge">3</span>
+  </li>
+</ul>
+`} />
+  </Section>
+  <Section {...S.sidenav}>
+        <p>
+          Put a badge on a <code>summary</code> or a destination. Nested
+          sections are native <code>&lt;details&gt;</code>.
+        </p>
+        <nav aria-label="Main — In a navigation drawer">
+          <ul class="sidenav navigation-drawer-demo">
+            <li>
+              <details open>
+                <summary>
+                  <span class="material-symbols" aria-hidden="true">inbox</span>
+                  Inbox
+                  <span class="badge">4</span>
+                </summary>
+                <ul>
+                  <li><a href="#!">Primary<span class="badge">1</span></a></li>
+                  <li><a href="#!">Social</a></li>
+                </ul>
+              </details>
+            </li>
+            <li><a href="#!">Sent</a></li>
+          </ul>
+        </nav>
+<Code code={`
+<summary>
+  <span class="material-symbols" aria-hidden="true">inbox</span>
+  Inbox
+  <span class="badge">4</span>
+</summary>
+`} />
+  </Section>
+  <Section {...S.color}>
+        <p>
+          Default is <code>error</code> / <code>on-error</code>. Override
+          with a fill + <code>on-*</code> pair when the badge is not an
+          error/notification.
+        </p>
+        <p>
+          <span class="material-symbols" role="img" aria-label="Mail, 3 unread">mail<span class="badge">3</span></span>
+          <span class="material-symbols" aria-hidden="true">star<span class="badge primary on-primary-text">1</span></span>
+        </p>
+<Code code={`
+<span class="badge">3</span>
+<span class="badge primary on-primary-text">1</span>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>

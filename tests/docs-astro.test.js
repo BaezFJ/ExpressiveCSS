@@ -100,6 +100,26 @@ describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
     assert.deepEqual(astro, roles(pageMacro, /'(h[234])':\s*'([\w-]+)'/g));
   });
 
+  test('the one hand-rolled scaffold keeps the table-of-contents hooks PageBody states', () => {
+    // floating-action-button.astro writes its own scaffold rather than going
+    // through <PageBody>, because the Jinja page does and its content column
+    // omits `docs-page-content` (see CLAUDE.md). That leaves a second copy of
+    // the table-of-contents markup with nothing holding the two together:
+    // renaming `toc-wrapper` or dropping the landmark name in PageBody would
+    // leave this page silently the odd one out, and it looks like nothing.
+    const pageBody = read('docs/src/components/PageBody.astro');
+    const fab = read('docs/src/pages/floating-action-button.astro');
+    for (const token of [
+      'hide-on-small-only',
+      'toc-wrapper mt-5',
+      'aria-label="On this page"',
+      'section table-of-contents',
+    ]) {
+      assert.ok(pageBody.includes(token), `PageBody.astro no longer states ${token}`);
+      assert.ok(fab.includes(token), `floating-action-button.astro no longer states ${token}`);
+    }
+  });
+
   test('gives the banner the same display and headline roles as the macro', () => {
     assert.match(banner, /docs-page-title display-large on-primary-container-text/);
     assert.match(banner, /docs-page-description headline-small on-primary-container-text/);

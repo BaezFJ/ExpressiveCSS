@@ -1,0 +1,318 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "standard", label: "Standard" },
+  { id: "segmented", label: "Segmented" },
+  { id: "text", label: "Text" },
+  { id: "icons", label: "Icons" },
+  { id: "media", label: "Avatars and images" },
+  { id: "links", label: "Links and selection" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="lists">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.list</code> is a vertical index. Use it so people can find
+          an item and act on it. There is no JavaScript — the HTML is the
+          component. Order items logically, keep each row short, and put
+          icons, text, and actions in the same place on every row.
+        </p>
+        <p>
+          The leading visual is the first icon,
+          <code>&lt;img&gt;</code>, or <code>&lt;input&gt;</code>. The
+          trailing action is the last icon,
+          <code>&lt;kbd&gt;</code>, <code>&lt;button&gt;</code>,
+          <code>&lt;time&gt;</code>, or <code>.meta</code>. A following
+          <code>&lt;p&gt;</code> is supporting text. Mark the current row
+          with <code>active</code> or <code>selected</code> — <strong>not</strong>
+          <code>aria-selected</code>, which is not valid on a plain
+          <code>listitem</code>. It needs a role (<code>option</code>,
+          <code>tab</code>, <code>row</code>, <code>treeitem</code>), and each of
+          those brings a keyboard contract with it.
+        </p>
+        <p>
+          Two variants: <strong>standard</strong> (the default) and
+          <code>segmented</code>.
+        </p>
+  </Section>
+  <Section {...S.standard}>
+        <p>
+          Transparent rows. The selected item is a pill in
+          <code>secondary-container</code>. The leading icon fills when
+          the row is selected.
+        </p>
+        <ul class="list">
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li class="selected">
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+        </ul>
+<Code code={`
+<ul class="list">
+  <li>
+    <span class="material-symbols" aria-hidden="true">star</span>
+    List item
+    <kbd>⌘C</kbd>
+  </li>
+  <li class="selected">
+    <span class="material-symbols" aria-hidden="true">star</span>
+    List item
+    <kbd>⌘C</kbd>
+  </li>
+</ul>
+`} />
+  </Section>
+  <Section {...S.segmented}>
+        <p>
+          Add <code>segmented</code>. Every row is a rounded tile;
+          the selected tile uses the same <code>secondary-container</code>
+          fill. Use this when the list itself should read as a group.
+        </p>
+        <ul class="list segmented">
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li class="selected">
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">star</span>
+            List item
+            <kbd>⌘C</kbd>
+          </li>
+        </ul>
+<Code code={`
+<ul class="list segmented">
+  <li class="selected">
+    <span class="material-symbols" aria-hidden="true">star</span>
+    List item
+    <kbd>⌘C</kbd>
+  </li>
+</ul>
+`} />
+  </Section>
+  <Section {...S.text}>
+        <p>
+          A row can be a single line of label text, or a label with
+          supporting text underneath. Either can wrap, or take
+          <code>truncate</code> to ellipsis.
+        </p>
+        <ul class="list">
+          <li>Label text only</li>
+          <li><span class="truncate">A long label that will not wrap past the end of the row and is cut off</span></li>
+          <li>
+            Headline
+            <p>Supporting text sits under the label and can wrap onto another line.</p>
+          </li>
+        </ul>
+<Code code={`
+<li>Label text only</li>
+<li><span class="truncate">A long label…</span></li>
+<li>
+  Headline
+  <p>Supporting text sits under the label.</p>
+</li>
+`} />
+  </Section>
+  <Section {...S.icons}>
+        <p>
+          A leading icon is a quick visual cue for the label. A trailing
+          icon is status or an action — more, info, chevron.
+        </p>
+        <ul class="list">
+          <li>
+            <span class="material-symbols" aria-hidden="true">inbox</span>
+            Inbox
+            <span class="material-symbols" aria-hidden="true">chevron_right</span>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">send</span>
+            Sent
+            <span class="material-symbols" aria-hidden="true">info</span>
+          </li>
+          <li>
+            <span class="material-symbols" aria-hidden="true">delete</span>
+            Trash
+            <button type="button" aria-label="More">
+              <span class="material-symbols" aria-hidden="true">more_vert</span>
+            </button>
+          </li>
+        </ul>
+<Code code={`
+<li>
+  <span class="material-symbols" aria-hidden="true">inbox</span>
+  Inbox
+  <span class="material-symbols" aria-hidden="true">chevron_right</span>
+</li>
+`} />
+  </Section>
+  <Section {...S.media}>
+        <p>
+          A leading <code>.circle</code> is a 40dp avatar. A bare
+          <code>&lt;img&gt;</code> is a 56dp thumbnail.
+        </p>
+        <ul class="list">
+          <li>
+            <img src="https://picsum.photos/id/64/80/80" alt="" class="circle">
+            Ada Lovelace
+            <p>Mathematician</p>
+          </li>
+          <li>
+            <span class="material-symbols circle" aria-hidden="true">person</span>
+            Icon avatar
+          </li>
+          <li>
+            <img src="https://picsum.photos/id/1015/112/112" alt="">
+            Thumbnail
+            <p>56dp image, 8dp corners.</p>
+          </li>
+        </ul>
+<Code code={`
+<li>
+  <img src="portrait.jpg" alt="" class="circle">
+  Ada Lovelace
+  <p>Mathematician</p>
+</li>
+`} />
+  </Section>
+  <Section {...S.links}>
+        <p>
+          Wrap the row in an <code>&lt;a&gt;</code> or
+          <code>&lt;label&gt;</code> to make the whole item the target.
+          <code>aria-current</code> on the link, or a checked radio
+          inside the label, paints the selected pill.
+        </p>
+        <ul class="list">
+          <li>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">mail</span>
+              Inbox
+            </a>
+          </li>
+          <li>
+            <a href="#!" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Starred
+            </a>
+          </li>
+          <li>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">snooze</span>
+              Snoozed
+            </a>
+          </li>
+        </ul>
+<Code code={`
+<li>
+  <a href="/inbox" aria-current="page">
+    <span class="material-symbols" aria-hidden="true">inbox</span>
+    Inbox
+  </a>
+</li>
+`} />
+        <fieldset>
+          <legend>Colour</legend>
+          <ul class="list">
+            <li>
+              <label>
+                <input type="radio" name="list-pick" checked>
+                Red
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="list-pick">
+                Green
+              </label>
+            </li>
+            <li>
+              <label>
+                <input type="radio" name="list-pick">
+                Blue
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+<Code code={`
+<fieldset>
+  <legend>Colour</legend>
+  <ul class="list">
+    <li>
+      <label>
+        <input type="radio" name="color">
+        Red
+      </label>
+    </li>
+  </ul>
+</fieldset>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Set these on the list (or on <code>:root</code>):</p>
+        <TokenTable>
+            <tr><td><code>--md-comp-list-item-height</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-list-item-two-line-height</code></td><td>72px</td></tr>
+            <tr><td><code>--md-comp-list-item-padding</code></td><td>16px</td></tr>
+            <tr><td><code>--md-comp-list-item-shape</code></td><td>100px (20px segmented)</td></tr>
+            <tr><td><code>--md-comp-list-item-container-color</code></td><td>transparent</td></tr>
+            <tr><td><code>--md-comp-list-selected-container-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+            <tr><td><code>--md-comp-list-leading-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-list-segmented-gap</code></td><td>2px</td></tr>
+  </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>
