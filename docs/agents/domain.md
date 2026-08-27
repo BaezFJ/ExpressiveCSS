@@ -8,7 +8,7 @@ How the engineering skills should consume this repo's domain documentation when 
 - **`CONTEXT-MAP.md`** at the repo root if it exists: it points at one `CONTEXT.md` per context. Read each one relevant to the topic.
 - **`adr/`** at the repo root: read ADRs that touch the area you're about to work in.
 
-**Note the non-default path.** ADRs are in `adr/`, *not* `docs/adr/`. In this repo `docs/` is the Flask documentation-site application (`app.py`, `templates/`, `static/`), while prose documentation lives at the root alongside `CONTEXT.md`, `SEMANTICS.md`, `CLAUDE.md`, `llm.md`, `m3-guidelines.md` and `CHANGELOG.md`. Filing ADRs under `docs/` would put them inside the app tree.
+**Note the non-default path.** ADRs are in `adr/`, *not* `docs/adr/`. In this repo `docs/` is the Astro documentation site, while the framework's prose contracts live at the root alongside `CONTEXT.md`, `SEMANTICS.md`, `CLAUDE.md`, `llm.md`, `m3-guidelines.md` and `CHANGELOG.md`.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
 
@@ -22,10 +22,10 @@ This repo is **single-context**:
 ├── SEMANTICS.md                ← generated from semantics.json; the markup standard
 ├── adr/
 │   └── 0001-m3-expressive-as-design-language.md
-├── docs/                       ← the Flask docs-site app, NOT documentation
-│   └── agents/                 ← this directory: agent config
-├── src/
-└── website/                    ← generated from docs/templates
+├── docs/                       ← the Astro documentation site
+│   ├── agents/                 ← this directory: agent config
+│   └── src/                    ← authored pages, layouts, and components
+└── src/                        ← framework source
 ```
 
 ## Use the glossary's vocabulary

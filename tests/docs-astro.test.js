@@ -82,10 +82,9 @@ describe('the Astro documentation pages', () => {
   });
   test("a page's own script stays where the page put it", () => {
     // Astro bundles a bare <script> and hoists it to <head> as a module, which
-    // moves it out of <main> -- and <main> is what a converted page is compared
-    // against, so the parity check this migration is verified by would be
-    // comparing a page against one the script had left. Nothing fails at build
-    // time; is:inline is the whole guard, and this is the guard on the guard.
+    // moves it out of <main> and changes the page's authored execution order.
+    // Nothing fails at build time; is:inline is the whole guard, and this is
+    // the guard on the guard.
     for (const { file, src } of pages) {
       for (const [tag] of withoutSamples(src).matchAll(/<script\b[^>]*>/g)) {
         assert.match(tag, /\bis:inline\b/, `${file}: ${tag} would be hoisted out of <main>`);
@@ -115,8 +114,8 @@ describe('the Astro chrome', () => {
 
   test('the one hand-rolled scaffold keeps the table-of-contents hooks PageBody states', () => {
     // floating-action-button.astro writes its own scaffold rather than going
-    // through <PageBody>, because the Jinja page does and its content column
-    // omits `docs-page-content` (see CLAUDE.md). That leaves a second copy of
+    // through <PageBody> because its content column intentionally omits
+    // `docs-page-content` (see CLAUDE.md). That leaves a second copy of
     // the table-of-contents markup with nothing holding the two together:
     // renaming `toc-wrapper` or dropping the landmark name in PageBody would
     // leave this page silently the odd one out, and it looks like nothing.
@@ -191,8 +190,8 @@ describe('the compatibility routes Astro publishes', () => {
   });
 
   test('the site root is canonical and the historic route redirects to it', () => {
-    // The one page whose published route the generator changes. `/index.html`
-    // stops being an alias in the same move -- `build.format: 'file'` writes
+    // `/index.html` is the root document rather than an alias because
+    // `build.format: 'file'` writes
     // the root document there, so a redirect would point the root at itself.
     const found = aliases();
     assert.ok(

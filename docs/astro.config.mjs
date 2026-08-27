@@ -7,8 +7,7 @@ import { defineConfig } from 'astro/config';
  * The Astro documentation build (ADR 0003).
  *
  * The documentation generator: `npm run docs:dev` serves it and
- * `npm run docs:build` writes `_site/` and verifies it. `docs/app.py` still
- * exists but publishes nothing, and goes with the rest of the Flask pipeline.
+ * `npm run docs:build` writes `_site/` and verifies it.
  *
  * `format: 'file'` is what keeps the flat `.html` URLs the site already
  * publishes -- Astro's default would turn `/buttons.html` into `/buttons/`.

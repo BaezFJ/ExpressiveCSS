@@ -51,22 +51,11 @@ jobs:
 
       - run: npm ci
 
-      # Only the Flask pass needs Python, so these two steps retire with
-      # docs/app.py -- at which point both revisions are served by Astro's
-      # build and this job is Node alone.
-      - uses: astral-sh/setup-uv@v10.0.1
-        with:
-          enable-cache: true
-
-      - run: uv sync --frozen
-
       - run: npx playwright install --with-deps chromium
 
-      # Builds both revisions and serves each through the generator that
-      # revision has -- Flask on the base, Astro on the head, while the
-      # migration is in flight; see visual/run.mjs. A failure here means pages
-      # moved, which is often intended -- the report is the thing to read, not
-      # the exit code.
+      # Builds and serves both revisions through Astro. A failure here means
+      # pages moved, which is often intended -- the report is the thing to
+      # read, not the exit code.
       - run: npm run test:visual
 
       - uses: actions/upload-artifact@v5

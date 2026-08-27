@@ -10,13 +10,9 @@
  * merge base rather than against whatever was blessed months ago. The cost is
  * one extra build per run.
  *
- * The head is served by Astro and the base by whichever generator that
- * revision still ships (ADR 0003). While the migration is in flight that is
- * Flask, so the suite is what accepts a converted page: it is migrated when
- * its picture did not move. The base choice is read off the base worktree
- * rather than configured, so the day docs/app.py is deleted the base pass
- * becomes Astro too and this file needs no edit -- which is the point: a flag
- * would be one more thing to remember at the cutover.
+ * Both revisions are built and served through Astro. The suite compares the
+ * published artifacts rather than source representations, so routes, assets,
+ * scripts and framework output all take the same path they do in production.
  *
  *   npm run test:visual                  compare against origin/master
  *   VISUAL_BASE=<ref> npm run test:visual   compare against <ref>
@@ -77,24 +73,6 @@ function addWorktree(sha) {
 }
 
 /**
- * Which generator renders the *base* revision: the one it still ships as
- * production.
- *
- * Flask while docs/app.py is there, Astro once it is not. That is the whole of
- * the migration switch and it retires itself with the file -- no flag to
- * remember at the cutover, and no Flask-specific configuration left behind
- * afterwards.
- *
- * The head is not asked. It is the candidate, so it is always Astro: both
- * revisions carry both generators for the whole life of the migration, and a
- * predicate that reads the working tree would answer "flask" there too and
- * quietly compare Flask against itself -- 236 shots of a no-op, reported as a
- * clean run.
- */
-const baseGeneratorFor = (checkout) =>
-  existsSync(join(checkout, 'docs/app.py')) ? 'flask' : 'astro';
-
-/**
  * Build what the pass will serve, through the revision's own npm scripts.
  *
  * `docs:build` is the framework build, the Astro build and `docs:verify` in
@@ -104,14 +82,13 @@ const baseGeneratorFor = (checkout) =>
  * out here would restate that ordering in a second place and skip the verify
  * step docs:build chains on purpose.
  */
-function build(checkout, generator, what) {
-  const script = generator === 'astro' ? 'docs:build' : 'build';
-  if (run('npm', ['run', script], { cwd: checkout }).status !== 0) {
+function build(checkout, what) {
+  if (run('npm', ['run', 'docs:build'], { cwd: checkout }).status !== 0) {
     die(`${what} does not build.`);
   }
 }
 
-function playwright({ mode, generator, checkout, port, update }) {
+function playwright({ mode, checkout, port, update }) {
   return run('npx', [
     'playwright', 'test',
     '--config', CONFIG,
@@ -121,7 +98,6 @@ function playwright({ mode, generator, checkout, port, update }) {
     env: {
       ...process.env,
       VISUAL_MODE: mode,
-      VISUAL_GEN: generator,
       VISUAL_ROOT: checkout,
       VISUAL_PORT: String(port),
     },
@@ -141,27 +117,26 @@ console.log(`\nBase: ${sha.slice(0, 10)} ${capture('git', ['log', '-1', '--forma
 
 addWorktree(sha);
 
-const baseGenerator = baseGeneratorFor(WORKTREE);
-console.log(`Generators: base ${baseGenerator}, head astro\n`);
+console.log('Generator: Astro (base and head)\n');
 
-build(WORKTREE, baseGenerator, 'The base revision');
+build(WORKTREE, 'The base revision');
 
 // Stale shots would silently become baselines for pages the base pass skips.
 rmSync(join(VISUAL, '__shots__'), { recursive: true, force: true });
 
 console.log('\n--- Photographing the base revision ---\n');
 if (playwright({
-  mode: 'base', generator: baseGenerator, checkout: WORKTREE, port: 5111, update: true,
+  mode: 'base', checkout: WORKTREE, port: 5111, update: true,
 }) !== 0) {
   die('The base revision could not be photographed; there is nothing to compare against.');
 }
 
 // The head pass serves this working tree, so it needs this working tree built.
-build(ROOT, 'astro', 'This revision');
+build(ROOT, 'This revision');
 
 console.log('\n--- Comparing this revision ---\n');
 const status = playwright({
-  mode: 'head', generator: 'astro', checkout: ROOT, port: 5112, update: false,
+  mode: 'head', checkout: ROOT, port: 5112, update: false,
 });
 
 if (!keep) {

@@ -4,14 +4,12 @@
  *
  * The only page inventory (ADR 0003): the Astro pages, the drawer, the footer,
  * the compatibility redirects and `llms.txt` all read it, and
- * `scripts/verify-site.mjs` checks the built site against it. `docs/app.py`
- * still exists but no longer publishes anything, and goes with the Flask
- * pipeline.
+ * `scripts/verify-site.mjs` checks the built site against it.
  */
 
 /** One documented page. */
 export interface DocsPage {
-  /** Stable page identity. The Flask endpoint today, the Astro page basename after the cutover. */
+  /** Stable page identity, normally the Astro page basename. */
   id: string;
   /** Link text in the drawer, the footer and `llms.txt`. */
   label: string;
@@ -25,8 +23,7 @@ export interface DocsPage {
   description: string;
   /**
    * Other published paths that resolve here: the legacy routes kept for
-   * compatibility, and — for the landing page — the site root, which the Pages
-   * assembly step produces rather than the freeze.
+   * compatibility, and — for the landing page — the canonical site root.
    */
   aliases?: string[];
 }

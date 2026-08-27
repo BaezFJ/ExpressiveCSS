@@ -25,13 +25,3 @@ updates:
       build-tooling:
         patterns: ['*']
         update-types: [minor, patch]
-
-  # The docs site (Flask + Frozen-Flask), locked by uv.lock.
-  - package-ecosystem: uv
-    directory: /
-    schedule:
-      interval: weekly
-    groups:
-      docs-site:
-        patterns: ['*']
-        update-types: [minor, patch]
