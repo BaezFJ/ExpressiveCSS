@@ -14,16 +14,16 @@ import { Expressive, resetBody, fire, window } from './setup.js';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Give an element a fixed rect, since jsdom does no layout. */
-function fixRect(el, width, height) {
+function fixRect(el, width, height, left = 0, top = 0) {
   el.getBoundingClientRect = () => ({
-    top: 0,
-    left: 0,
+    top,
+    left,
     width,
     height,
-    right: width,
-    bottom: height,
-    x: 0,
-    y: 0
+    right: left + width,
+    bottom: top + height,
+    x: left,
+    y: top
   });
 }
 
@@ -356,6 +356,43 @@ describe('Menu width against a narrow trigger', () => {
       instance.destroy();
     }
   });
+});
+
+describe('Menu positioning', () => {
+  beforeEach(resetBody);
+
+  for (const [alignment, expectedLeft] of [
+    ['left', '700px'],
+    ['right', '720px']
+  ]) {
+    test(`a ${alignment}-aligned menu opens beneath the trigger`, () => {
+      document.body.innerHTML = `
+        <button class="menu-trigger" data-target="actions">Actions</button>
+        <menu id="actions"><li><a href="#!">One</a></li></menu>`;
+      const trigger = document.querySelector('.menu-trigger');
+      const menuEl = document.getElementById('actions');
+      document.body.style.overflow = 'visible';
+      fixRect(document.body, 1024, 768);
+      fixRect(trigger, 160, 40, 700, 80);
+      fixRect(menuEl, 140, 100);
+
+      const instance = Expressive.Menu.init(trigger, {
+        alignment,
+        constrainWidth: false,
+        coverTrigger: false
+      });
+      try {
+        instance.open();
+        assert.equal(menuEl.style.left, expectedLeft);
+        assert.equal(menuEl.style.top, '120px');
+        assert.equal(menuEl.style.width, '140px');
+      } finally {
+        instance.destroy();
+        document.body.style.removeProperty('overflow');
+        delete document.body.getBoundingClientRect;
+      }
+    });
+  }
 });
 
 describe('Tabs disabled-selector interpolation', () => {

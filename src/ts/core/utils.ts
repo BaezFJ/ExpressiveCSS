@@ -157,19 +157,20 @@ export class Utils {
     bounding: Bounding,
     offset: number
   ) {
-    // `left` and `right` companions to these two used to be computed and
-    // returned as well; the only caller reads the vertical pair and all four
-    // measurements, never the horizontal pair.
     const canAlign: {
       top: boolean;
+      right: boolean;
       bottom: boolean;
+      left: boolean;
       spaceOnTop: number;
       spaceOnRight: number;
       spaceOnBottom: number;
       spaceOnLeft: number;
     } = {
       top: true,
+      right: true,
       bottom: true,
+      left: true,
       spaceOnTop: null,
       spaceOnRight: null,
       spaceOnBottom: null,
@@ -193,11 +194,17 @@ export class Utils {
     canAlign.spaceOnRight = !containerAllowsOverflow
       ? containerWidth - (scrolledX + bounding.width)
       : window.innerWidth - (elOffsetRect.left + bounding.width);
+    if (canAlign.spaceOnRight < 0) {
+      canAlign.left = false;
+    }
 
     // Check for container and viewport for Right
     canAlign.spaceOnLeft = !containerAllowsOverflow
       ? scrolledX - bounding.width + elOffsetRect.width
       : elOffsetRect.right - bounding.width;
+    if (canAlign.spaceOnLeft < 0) {
+      canAlign.right = false;
+    }
 
     // Check for container and viewport for Top
     canAlign.spaceOnBottom = !containerAllowsOverflow

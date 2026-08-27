@@ -49,6 +49,16 @@ describe("Menu", () => {
     assert.match(css, /--md-comp-menu-item-between-space:\s*12px/);
   });
 
+  test("aligns link and button labels to the start edge", () => {
+    const item =
+      css.match(
+        /menu\[id\] > li > a,\s*menu\[id\] > li > button,[^{]*\{([^}]*)\}/s,
+      )?.[1] ?? "";
+
+    assert.match(item, /justify-content:\s*flex-start/);
+    assert.match(item, /text-align:\s*start/);
+  });
+
   test("end items round to 12dp without inheriting the container radius", () => {
     const first = css.match(
       /menu\[id\] > li:not\([^)]*\):first-child\s*\{[^}]*\}/,

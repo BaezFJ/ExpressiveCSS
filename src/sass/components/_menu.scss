@@ -130,6 +130,9 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
     > #{$icon-label} {
       display: flex;
       align-items: center;
+      // A <button> takes the common button's centered flex layout; menu
+      // commands must line up with link items at the leading inset instead.
+      justify-content: flex-start;
       gap: var(--md-comp-menu-item-between-space);
       box-sizing: border-box;
       width: 100%;
@@ -142,6 +145,7 @@ $_menu-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
       background: none;
       color: var(--md-comp-menu-item-label-text-color);
       text-decoration: none;
+      text-align: start;
       cursor: pointer;
 
       &:hover,
