@@ -1,0 +1,144 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "lightbox", label: "Lightbox", heading: false },
+]);
+---
+<DocsLayout page="media">
+<PageBody sections={S}>
+  <Section {...S.lightbox}>
+        <p class="flow-text">
+          Media components handle large objects such as images. For responsive images and videos without JavaScript, see
+          <a href={route('media_css')}>Media Styles</a>.
+        </p>
+
+        <h3>Lightbox</h3>
+        <p>
+          Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with
+          <code>lightboxed</code> and it centers and grows. Click it again, scroll, or press Escape to dismiss.
+          The image keeps the same 12px corners as <code>responsive-img</code>.
+          <code>AutoInit()</code> starts every <code>.lightboxed</code> image except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <img class="lightboxed responsive-img" tabindex="0" role="button" src="https://picsum.photos/id/1015/800/400" alt="A mountain lake that opens in a lightbox">
+<Code code={`
+<img class="lightboxed" tabindex="0" role="button" width="650" alt="A mountain lake" src="images/sample-1.jpg">
+`} />
+
+        <h5 class="light">Initialization</h5>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.lightboxed');
+  const instances = Expressive.Lightbox.init(elems, {
+    // specify options here
+  });
+});
+`} />
+
+        <h5 class="light">Options</h5>
+        <OptionsTable>
+          <tr>
+            <td><code>inDuration</code></td>
+            <td>Number</td>
+            <td><code>275</code></td>
+            <td>Open transition duration, in milliseconds.</td>
+          </tr>
+          <tr>
+            <td><code>outDuration</code></td>
+            <td>Number</td>
+            <td><code>200</code></td>
+            <td>Close transition duration, in milliseconds.</td>
+          </tr>
+          <tr>
+            <td><code>onOpenStart</code></td>
+            <td>Function</td>
+            <td><code>null</code></td>
+            <td>Called before the lightbox opens.</td>
+          </tr>
+          <tr>
+            <td><code>onOpenEnd</code></td>
+            <td>Function</td>
+            <td><code>null</code></td>
+            <td>Called after the lightbox opens.</td>
+          </tr>
+          <tr>
+            <td><code>onCloseStart</code></td>
+            <td>Function</td>
+            <td><code>null</code></td>
+            <td>Called before the lightbox closes.</td>
+          </tr>
+          <tr>
+            <td><code>onCloseEnd</code></td>
+            <td>Function</td>
+            <td><code>null</code></td>
+            <td>Called after the lightbox closes.</td>
+          </tr>
+        </OptionsTable>
+        <h5 class="light">Methods</h5>
+        <InstanceNote plugin="Lightbox" />
+        <h5 class="light">.open();</h5>
+        <p>Open the lightbox.</p>
+<Code code={`
+instance.open();
+`} />
+        <h5 class="light">.close();</h5>
+        <p>Close the lightbox.</p>
+<Code code={`
+instance.close();
+`} />
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<Code code={`
+instance.destroy();
+`} />
+
+        <h5 class="light">Properties</h5>
+        <PropertiesTable el="The DOM element the plugin was initialized with.">
+          <tr>
+            <td><code>overlayActive</code></td>
+            <td>Boolean</td>
+            <td>Whether the lightbox overlay is showing.</td>
+          </tr>
+          <tr>
+            <td><code>doneAnimating</code></td>
+            <td>Boolean</td>
+            <td>Whether the open or close animation has finished.</td>
+          </tr>
+          <tr>
+            <td><code>caption</code></td>
+            <td>String</td>
+            <td>Caption text, if specified.</td>
+          </tr>
+          <tr>
+            <td><code>originalWidth</code></td>
+            <td>Number</td>
+            <td>Original width of the image.</td>
+          </tr>
+          <tr>
+            <td><code>originalHeight</code></td>
+            <td>Number</td>
+            <td>Original height of the image.</td>
+          </tr>
+        </PropertiesTable>
+        <h5 class="light">Captions</h5>
+        <p>Add a short caption with the <code>data-caption</code> attribute.</p>
+        <img class="lightboxed" tabindex="0" role="button" data-caption="A path through trees in a park" width="250" alt="A path through trees" src="https://picsum.photos/id/1016/800/400">
+<Code code={`
+<img class="lightboxed" tabindex="0" role="button"
+     data-caption="A path through trees in a park"
+     width="250"
+     alt="A path through trees"
+     src="images/sample-2.jpg">
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
