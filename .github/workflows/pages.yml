@@ -192,19 +192,28 @@ jobs:
             fi
           done
 
-          # Every local href/src on every page must exist on disk. Lines holding
-          # escaped markup are skipped: the docs quote example HTML like
-          # src="images/sample-1.jpg" and href="css/expressive.min.css", which
-          # describe a reader's project tree, not files in this site. Multi-line
-          # quoted blocks mean a continuation line can carry &gt; without &lt;,
-          # so both entities are filtered.
+          # Every local href/src on every page must exist on disk.
+          #
+          # <code> blocks are cut out first, whole. The docs quote example HTML
+          # like src="images/sample-1.jpg" and href="css/expressive.min.css",
+          # which describe a reader's project tree, not files in this site.
+          # Filtering the lines that carry &lt;/&gt; instead of the element was
+          # close but not equivalent: a sample pretty-printed one attribute per
+          # line leaves href="portrait.html" alone on a line holding neither
+          # entity, which is how the carousel page reported three missing files
+          # that are not references at all. An href inside <code> is escaped
+          # text by construction, so nothing live is lost with them.
+          #
+          # A ref is trimmed at the first ? or # before the disk check: docs.css
+          # and docs.js carry a ?v=<version> cache-buster from both generators,
+          # and matching that literally is a filename no site has ever had.
           for page in _site/*.html; do
             while read -r ref; do
-              [ -e "_site/${ref%%#*}" ] || {
-                echo "::error::$(basename "$page") references missing ${ref%%#*}"
+              [ -e "_site/${ref%%[?#]*}" ] || {
+                echo "::error::$(basename "$page") references missing ${ref%%[?#]*}"
                 missing=1
               }
-            done < <(grep -vE '&lt;|&gt;' "$page" \
+            done < <(perl -0777 -pe 's|<code\b.*?</code>||gs' "$page" \
                      | grep -oE '(href|src)="[a-z0-9][^":]*"' \
                      | sed -E 's/.*="([^"]*)"/\1/' | sort -u)
           done
