@@ -7,12 +7,18 @@
  * the source. This enumerates what the site owes from the shared catalogue and
  * checks the directory against it.
  *
+ * It is also where semantics.json's rules meet a whole document. The authored
+ * fragments are checked by tests/semantics.test.js; chrome and content only
+ * come together here, which is what makes <main> nesting, a dialog's name and
+ * two landmarks sharing one answerable at all.
+ *
  *     node scripts/verify-site.mjs [dir]     default: _site
  */
 
 import { readFileSync, statSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { enforcedRules, checkPage } from './semantics-rules.mjs';
 
 const root = new URL('../', import.meta.url);
 // fileURLToPath, not `root.pathname`: a URL keeps the path percent-encoded, so
@@ -163,6 +169,25 @@ for (const page of pages) {
     const path = ref.split(/[?#]/)[0];
     if (!path) continue;
     nonempty(path.startsWith('/') ? path : `/${path}`, `${page} references`);
+  }
+}
+
+// --- Composed pages --------------------------------------------------------
+//
+// The same rules the authored fragments are held to, run over the finished
+// document. Well under a second for the whole site.
+
+const semantics = JSON.parse(readFileSync(new URL('semantics.json', root), 'utf8'));
+const rules = enforcedRules(semantics);
+
+for (const page of pages) {
+  const html = readFileSync(join(site, page), 'utf8');
+  const { violations, duplicateNames } = checkPage(html, rules, semantics.compositeRoles);
+  for (const v of violations) {
+    fail(`${page}: [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
+  }
+  for (const name of duplicateNames) {
+    fail(`${page}: two landmarks named "${name}"`);
   }
 }
 

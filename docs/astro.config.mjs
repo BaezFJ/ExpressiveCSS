@@ -6,16 +6,16 @@ import { defineConfig } from 'astro/config';
 /**
  * The Astro documentation build (ADR 0003).
  *
- * `docs/app.py` is still the production site; this runs beside it so the
- * migrated pages can be previewed and compared before the cutover.
+ * The documentation generator: `npm run docs:dev` serves it and
+ * `npm run docs:build` writes `_site/` and verifies it. `docs/app.py` still
+ * exists but publishes nothing, and goes with the rest of the Flask pipeline.
  *
  * `format: 'file'` is what keeps the flat `.html` URLs the site already
  * publishes -- Astro's default would turn `/buttons.html` into `/buttons/`.
  *
  * The compiled framework and the docs' own chrome are served from their
  * established `/dist` and `/static` paths by two symlinks in `public/`, which
- * costs no build step and means `npm run watch` shows up on a browser reload
- * exactly as it does under Flask.
+ * costs no build step and means `npm run watch` shows up on a browser reload.
  */
 export default defineConfig({
   site: 'https://www.expressivecss.com',

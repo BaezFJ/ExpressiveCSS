@@ -1,23 +1,15 @@
 // The Astro documentation pages, checked against the catalogue they are built
-// from and against the Jinja chrome they were converted out of.
-//
-// Both generators are present until the cutover (ADR 0003), so the chrome
-// exists twice and the two copies can drift; and a page can disagree with the
-// catalogue about where it publishes without anything failing, because Astro
-// derives a route from a filename and never consults the catalogue for it.
+// from. The catalogue is the only page inventory (ADR 0003), and a page can
+// disagree with it about where it publishes without anything failing, because
+// Astro derives a route from a filename and never consults the catalogue for
+// it.
 //
 // Source-level on purpose: `astro build` is the wrong seam for these, and a
 // build inside `node --test` would cost more than everything else here
-// together.
-//
-// What that costs, stated rather than left to be discovered: the composed-page
-// checks in semantics.test.js -- <main> nesting, and two landmarks on one page
-// sharing a name -- read `website/`, which only the freeze writes. An Astro
-// page is never in it and `_site/` is not committed, so those two questions go
-// unasked for docs/src. They are the ones a fragment cannot answer, and the
-// build-level verification issue #83 plans is the seam that answers them; until
-// then the guard is that a converted page stays structurally identical to the
-// frozen one, which is checked by hand.
+// together. The questions only a finished document can answer -- that a page
+// publishes at all, that its links resolve, that its chrome and content
+// together satisfy the semantics rules -- are asked of `_site/` by
+// scripts/verify-site.mjs, which `npm run docs:build` runs.
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
@@ -102,22 +94,23 @@ describe('the Astro documentation pages', () => {
   });
 });
 
-describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
+describe('the Astro chrome', () => {
   const section = read('docs/src/components/Section.astro');
   const banner = read('docs/src/components/Banner.astro');
   const base = read('docs/src/layouts/BaseLayout.astro');
-  const pageMacro = read('docs/templates/macros/page.html');
-  const navMacro = read('docs/templates/macros/nav.html');
 
-  test('gives a section the same hooks and heading roles as the macro', () => {
+  test('gives a section the hooks and heading roles docs.css styles it by', () => {
+    // Class hooks, not appearance: docs.css and the scrollspy both key on
+    // these, and a rename would leave the page looking plausible and behaving
+    // wrongly. The three heading levels each carry their own type-scale role.
     assert.match(section, /class="section scrollspy docs-section"/);
     assert.match(section, /docs-section-title \$\{role\}/);
     assert.match(read('docs/src/components/PageBody.astro'), /docs-page-content/);
 
-    const roles = (src, re) => Object.fromEntries([...src.matchAll(re)].map((m) => [m[1], m[2]]));
-    const astro = roles(section, /(h[234]):\s*"([\w-]+)"/g);
-    assert.equal(Object.keys(astro).length, 3, 'the heading-role map was not parsed');
-    assert.deepEqual(astro, roles(pageMacro, /'(h[234])':\s*'([\w-]+)'/g));
+    const roles = Object.fromEntries(
+      [...section.matchAll(/(h[234]):\s*"([\w-]+)"/g)].map((m) => [m[1], m[2]]),
+    );
+    assert.deepEqual(roles, { h2: 'headline-large', h3: 'headline-medium', h4: 'title-large' });
   });
 
   test('the one hand-rolled scaffold keeps the table-of-contents hooks PageBody states', () => {
@@ -140,7 +133,7 @@ describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
     }
   });
 
-  test('gives the banner the same display and headline roles as the macro', () => {
+  test('gives the banner its display and headline roles', () => {
     assert.match(banner, /docs-page-title display-large on-primary-container-text/);
     assert.match(banner, /docs-page-description headline-small on-primary-container-text/);
   });
@@ -149,14 +142,13 @@ describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
     assert.match(base, /\/static\/docs\.css\?v=\$\{version\}/);
   });
 
-  test('the drawer and the footer keep the hooks and names the macro states', () => {
-    // Both copies render from the same catalogue, which makes them the two most
-    // able to drift and the least likely to look wrong while doing it: a
-    // dropped `aria-current` or a renamed `#nav-mobile` changes nothing a
-    // reader sees. The tokens below are the ones written verbatim on both
-    // sides -- the drawer's own identity, the app bar trigger's target, the
-    // exclusive-group name, the current-page state, and the footer's labelling
-    // and version line.
+  test('the drawer and the footer keep the hooks and names they are found by', () => {
+    // Both render from the catalogue, and the things most able to break here
+    // are the least likely to look wrong while doing it: a dropped
+    // `aria-current` or a renamed `#nav-mobile` changes nothing a reader sees.
+    // The tokens below are the drawer's own identity, the app bar trigger's
+    // target, the exclusive-group name, the current-page state, and the
+    // footer's labelling and version line.
     const shared = {
       'docs/src/components/NavigationDrawer.astro': [
         'aria-label="Main"',
@@ -177,7 +169,6 @@ describe('the Astro chrome, while the Jinja chrome is still beside it', () => {
       const astro = read(file);
       for (const token of tokens) {
         assert.ok(astro.includes(token), `${file} no longer states ${token}`);
-        assert.ok(navMacro.includes(token), `macros/nav.html no longer states ${token}`);
       }
     }
   });
@@ -214,14 +205,22 @@ describe('the compatibility routes Astro publishes', () => {
     );
   });
 
-  test('every legacy route the Flask site redirects keeps redirecting', () => {
-    // ALIASES is checked against docs/app.py by docs-nav-catalogue.test.js, so
-    // this holds the Astro set to it rather than restating the six names.
+  test('every legacy route the catalogue records keeps redirecting', () => {
+    // `aliases()` diverges from `ALIASES` for exactly one page -- the landing
+    // page's two compatibility paths swap roles -- and every other alias has
+    // to survive that transformation untouched. The six named here are URLs in
+    // search results.
     const published = new Map(aliases().map((a) => [a.from, a.to]));
     for (const { from, to } of ALIASES) {
       if (from === '/index.html') continue;
       assert.equal(published.get(from), to, `${from}: not published, or points elsewhere`);
     }
+    assert.deepEqual(
+      ALIASES.map((a) => a.from).filter((from) => from !== '/index.html').sort(),
+      ['/collapsible.html', '/collections.html', '/dropdown.html',
+       '/modals.html', '/range.html', '/toasts.html'],
+      'the set of legacy routes changed',
+    );
   });
 
   test('an alias is generated, not maintained', () => {
@@ -314,20 +313,6 @@ describe('the LLM documents Astro publishes', () => {
     const expected = pkg.version.includes('-') ? `${pkg.version} (prerelease)` : pkg.version;
     assert.ok(llms.includes(`version ${expected}.`), `does not state version ${expected}`);
     assert.ok(llms.includes(`\`${pkg.name}\``), 'does not name the package');
-  });
-
-  test('is the Flask index but for the landing page moving to the site root', () => {
-    // The migration must not quietly rewrite the index while changing the
-    // generator, and only one line is allowed to differ: the landing page
-    // becomes the site root (ADR 0003).
-    const before = read('llms.txt').split('\n');
-    const after = llms.split('\n');
-    assert.equal(after.length, before.length, 'the index gained or lost a line');
-    const moved = before.flatMap((line, i) => (line === after[i] ? [] : [i]));
-    assert.deepEqual(
-      moved.map((i) => after[i]),
-      [`- [${PAGES[0].label}](${home}/): ${PAGES[0].description}`],
-    );
   });
 
   test('publishes each primary document it links, from the repository copy', () => {
