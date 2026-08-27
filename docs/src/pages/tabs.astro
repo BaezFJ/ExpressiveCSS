@@ -1,0 +1,317 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Introduction", heading: false },
+  { id: "secondary", label: "Secondary" },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "method", label: "Methods" },
+  { id: "properties", label: "Properties" },
+  { id: "preselecting", label: "Preselecting", heading: "Preselecting a tab" },
+  { id: "external", label: "External Links", heading: "Linking to an External Page" },
+  { id: "swipeable", label: "Swipeable Tabs" },
+  { id: "fixed-width", label: "Fixed width" },
+  { id: "icons", label: "Inline icons" },
+]);
+---
+<DocsLayout page="tabs">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;nav class="tabs"&gt;</code> of
+          <code>&lt;a href="#panel"&gt;</code> is the bar. A
+          <code>&lt;span&gt;</code> (or the link text) is the label; a
+          leading <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon.
+          <code>.active</code> is the selected tab. There is no
+          <code>li.tab</code> required —
+          <code>ul.tabs &gt; li.tab &gt; a</code> stays as an alias.
+          <code>AutoInit()</code> starts every <code>.tabs</code> except
+          those marked <code>no-autoinit</code>.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/tabs/specs">M3 tabs spec</a>.
+          Primary tabs sit on <code>surface</code>, 48dp (64dp with a
+          stacked icon). The label is <code>title-small</code> /
+          <code>on-surface-variant</code>; selected is
+          <code>primary</code>. The indicator is 3dp
+          <code>primary</code> with 3dp top corners. The icon is 24dp.
+          A 1dp <code>outline-variant</code> divider runs under the bar.
+          Hover is 8%; focus is 10%. Disabled is 38%.
+        </p>
+
+        <nav class="tabs" aria-label="Travel">
+          <a href="#tabs-intro-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
+          <a class="active" aria-current="page" href="#tabs-intro-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a href="#tabs-intro-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
+        </nav>
+        <div id="tabs-intro-flight" class="py-3">Flight</div>
+        <div id="tabs-intro-luggage" class="py-3">Luggage</div>
+        <div id="tabs-intro-explore" class="py-3">Explore</div>
+<Code code={`
+<nav class="tabs" aria-label="Travel">
+  <a href="#flight">
+    <span class="material-symbols" aria-hidden="true">flight</span>
+    <span>Flight</span>
+  </a>
+  <a class="active" aria-current="page" href="#luggage">
+    <span class="material-symbols" aria-hidden="true">luggage</span>
+    <span>Luggage</span>
+  </a>
+  <a href="#explore">
+    <span class="material-symbols" aria-hidden="true">explore</span>
+    <span>Explore</span>
+  </a>
+</nav>
+<div id="flight">Flight</div>
+<div id="luggage">Luggage</div>
+<div id="explore">Explore</div>
+`} />
+        <p>
+          Add <code>disabled</code> on the <code>&lt;a&gt;</code> (or on
+          a wrapping <code>li.tab</code>) to make it inaccessible. Tabs
+          become scrollable when there are too many to fit.
+        </p>
+        <nav class="tabs" aria-label="Many destinations">
+          <a href="#tabs-scroll-1">Test 1</a>
+          <a href="#tabs-scroll-2">Test 2</a>
+          <a href="#tabs-scroll-3">Test 3</a>
+          <a href="#tabs-scroll-4">Test 4</a>
+          <a href="#tabs-scroll-5">Test 5</a>
+          <a class="disabled" href="#tabs-scroll-6">Disabled</a>
+          <a href="#tabs-scroll-7">Test 7</a>
+          <a href="#tabs-scroll-8">Test 8</a>
+          <a href="#tabs-scroll-9">Test 9</a>
+          <a class="disabled" href="#tabs-scroll-10">Disabled</a>
+          <a href="#tabs-scroll-11">Test 11</a>
+        </nav>
+        <div id="tabs-scroll-1" class="py-3">Test 1</div>
+        <div id="tabs-scroll-2" class="py-3">Test 2</div>
+        <div id="tabs-scroll-3" class="py-3">Test 3</div>
+        <div id="tabs-scroll-4" class="py-3">Test 4</div>
+        <div id="tabs-scroll-5" class="py-3">Test 5</div>
+        <div id="tabs-scroll-6" class="py-3">Test 6</div>
+        <div id="tabs-scroll-7" class="py-3">Test 7</div>
+        <div id="tabs-scroll-8" class="py-3">Test 8</div>
+        <div id="tabs-scroll-9" class="py-3">Test 9</div>
+        <div id="tabs-scroll-10" class="py-3">Test 10</div>
+        <div id="tabs-scroll-11" class="py-3">Test 11</div>
+  </Section>
+  <Section {...S.secondary}>
+        <p>
+          <code>tabs-secondary</code> is the in-content variant: always 48dp,
+          icons inline, a 2dp indicator. Use it to further split a pane.
+        </p>
+        <nav class="tabs tabs-secondary" aria-label="Trip">
+          <a href="#tabs-sec-birds"><span class="material-symbols" aria-hidden="true">flight</span><span>Travel</span></a>
+          <a class="active" aria-current="page" href="#tabs-sec-cats"><span class="material-symbols" aria-hidden="true">hotel</span><span>Hotel</span></a>
+          <a href="#tabs-sec-dogs"><span class="material-symbols" aria-hidden="true">directions_walk</span><span>Walks</span></a>
+        </nav>
+        <div id="tabs-sec-birds" class="py-3">Travel</div>
+        <div id="tabs-sec-cats" class="py-3">Hotel</div>
+        <div id="tabs-sec-dogs" class="py-3">Walks</div>
+<Code code={`
+<nav class="tabs tabs-secondary" aria-label="Trip">
+  <a href="#travel">
+    <span class="material-symbols" aria-hidden="true">flight</span>
+    <span>Travel</span>
+  </a>
+  <a class="active" aria-current="page" href="#hotel">
+    <span class="material-symbols" aria-hidden="true">hotel</span>
+    <span>Hotel</span>
+  </a>
+</nav>
+`} />
+  </Section>
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.Tabs</code>.
+          Call <code>init</code> yourself when you need options other
+          than the defaults, or let
+          <code>Expressive.AutoInit()</code> start every
+          <code>.tabs</code>.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.tabs');
+  const instances = Expressive.Tabs.init(elems, {
+    duration: 300
+  });
+});
+`} />
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+            <tr>
+              <td><code>duration</code></td>
+              <td>Number</td>
+              <td><code>300</code></td>
+              <td>Indicator transition duration, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>onShow</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a new tab panel is shown. Receives the panel element.</td>
+            </tr>
+            <tr>
+              <td><code>swipeable</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Enable swipeable tabs. Uses <code>responsiveThreshold</code>. Wraps the panels in a carousel.</td>
+            </tr>
+            <tr>
+              <td><code>responsiveThreshold</code></td>
+              <td>Number</td>
+              <td><code>Infinity</code></td>
+              <td>Maximum viewport width, in pixels, at which swipeable mode starts. Wider viewports stay non-swipeable.</td>
+            </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.method}>
+        <InstanceNote plugin="Tabs" />
+
+        <h5 class="light">.select();</h5>
+        <p>Show the panel that belongs to the tab with this id.</p>
+        <p><strong>String:</strong> The id of the tab panel (without <code>#</code>).</p>
+<Code code={`
+instance.select('tab_id');
+`} />
+
+        <h5 class="light">.updateTabIndicator();</h5>
+        <p>Recalculate the indicator position. Useful if the bar was hidden or resized.</p>
+<Code code={`
+instance.updateTabIndicator();
+`} />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance and tear down its event handlers.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+  <Section {...S.properties}>
+        <PropertiesTable el="The DOM element the plugin was initialized with (the <code>.tabs</code> bar).">            <tr>
+              <td><code>index</code></td>
+              <td>Number</td>
+              <td>Index of the tab that is currently shown.</td>
+            </tr>
+        </PropertiesTable>
+  </Section>
+  <Section {...S.preselecting}>
+        <p>
+          The first tab is selected by default. To pick another, add
+          <code>active</code> to its <code>&lt;a&gt;</code>, or load the
+          page with a matching hash such as <code>#test2</code>.
+        </p>
+<Code code={`
+<a class="active" href="#test3">Test 3</a>
+`} />
+  </Section>
+  <Section {...S.external}>
+        <p>
+          Tabs ignore default anchor behaviour. To keep a tab as a
+          normal hyperlink, set <code>target</code> on the link.
+        </p>
+<Code code={`
+<nav class="tabs" aria-label="Sections">
+  <a target="_blank" href="https://github.com">External link in new window</a>
+  <a target="_self" href="https://github.com">External link in same window</a>
+</nav>
+`} />
+  </Section>
+  <Section {...S.swipeable}>
+        <p>
+          Set <code>swipeable: true</code> to swipe between panels on
+          touch devices. Keep the tab panels in the same wrapping
+          container. The implementation wraps those panels in a
+          carousel. <code>responsiveThreshold</code> is the viewport
+          width below which swipeable mode turns on.
+        </p>
+        <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
+        <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">
+          <a href="#tabs-swipe-1">Test 1</a>
+          <a class="active" aria-current="page" href="#tabs-swipe-2">Test 2</a>
+          <a href="#tabs-swipe-3">Test 3</a>
+        </nav>
+        <div class="tabs-swipe-demo">
+          <div id="tabs-swipe-1" class="primary-container on-primary-container-text center-align">Test 1</div>
+          <div id="tabs-swipe-2" class="secondary-container on-secondary-container-text center-align">Test 2</div>
+          <div id="tabs-swipe-3" class="tertiary-container on-tertiary-container-text center-align">Test 3</div>
+        </div>
+<Code code={`
+<nav id="tabs-swipe-demo" class="tabs" aria-label="Sections">
+  <a href="#test-swipe-1">Test 1</a>
+  <a class="active" aria-current="page" href="#test-swipe-2">Test 2</a>
+  <a href="#test-swipe-3">Test 3</a>
+</nav>
+`} />
+<Code code={`
+Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
+  swipeable: true
+});
+`} />
+  </Section>
+  <Section {...S["fixed-width"]}>
+        <p>
+          Add <code>max</code> so
+          every tab grows equally. On compact viewports every tab bar
+          already uses this layout.
+        </p>
+        <nav class="tabs max" aria-label="Fixed width">
+          <a href="#tabs-fixed-1">Test 1</a>
+          <a class="active" aria-current="page" href="#tabs-fixed-2">Test 2</a>
+          <a class="disabled" href="#tabs-fixed-3">Disabled</a>
+          <a href="#tabs-fixed-4">Test 4</a>
+          <a href="#tabs-fixed-5">Test 5</a>
+        </nav>
+        <div id="tabs-fixed-1" class="py-3">Test 1</div>
+        <div id="tabs-fixed-2" class="py-3">Test 2</div>
+        <div id="tabs-fixed-3" class="py-3">Test 3</div>
+        <div id="tabs-fixed-4" class="py-3">Test 4</div>
+        <div id="tabs-fixed-5" class="py-3">Test 5</div>
+<Code code={`
+<nav class="tabs max" aria-label="Sections">
+  <a href="#test1">Test 1</a>
+  <a class="active" aria-current="page" href="#test2">Test 2</a>
+  <a class="disabled" href="#test3">Disabled</a>
+</nav>
+`} />
+  </Section>
+  <Section {...S.icons}>
+        <p>
+          Primary tabs stack the icon above the label (64dp). Add
+          <code>horizontal</code> (or <code>tabs-horizontal</code>) to
+          put them on one line, like secondary tabs.
+        </p>
+        <nav class="tabs max horizontal" aria-label="Inline icons">
+          <a href="#tabs-horiz-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
+          <a class="active" aria-current="page" href="#tabs-horiz-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a href="#tabs-horiz-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
+        </nav>
+        <div id="tabs-horiz-flight" class="py-3">Flight</div>
+        <div id="tabs-horiz-luggage" class="py-3">Luggage</div>
+        <div id="tabs-horiz-explore" class="py-3">Explore</div>
+<Code code={`
+<nav class="tabs max horizontal" aria-label="Sections">
+  <a href="#flight">
+    <span class="material-symbols" aria-hidden="true">flight</span>
+    <span>Flight</span>
+  </a>
+  <a class="active" aria-current="page" href="#luggage">
+    <span class="material-symbols" aria-hidden="true">luggage</span>
+    <span>Luggage</span>
+  </a>
+</nav>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
