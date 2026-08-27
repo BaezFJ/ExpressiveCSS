@@ -12,9 +12,9 @@
 // Flask branch retires with docs/app.py, because run.mjs picks the generator
 // from what the revision actually has.
 //
-// Neither server is the frozen website/. It uses root-absolute URLs that only
-// resolve inside the tree pages.yml assembles, and it is generated output --
-// which is also why the page list no longer comes from it.
+// Neither server is the frozen website/. Nothing publishes it any more, its
+// root-absolute /dist/... URLs point at a directory git ignores, and it is
+// generated output -- which is also why the page list no longer comes from it.
 
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';

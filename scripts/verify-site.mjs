@@ -104,7 +104,10 @@ for (const { from, to } of aliases()) {
 // --- Compatibility assets --------------------------------------------------
 //
 // The framework build and the docs' own chrome, at the URLs consumers and
-// cached pages already hold. CNAME is what keeps the site on its own domain.
+// cached pages already hold. CNAME is the versioned declaration of the custom
+// domain -- what actually configures it is the repository's Pages settings, an
+// artifact deploy having no use for the file, so this checks that the site
+// still says out loud where it lives.
 
 for (const asset of [
   '/dist/css/expressive.css',
