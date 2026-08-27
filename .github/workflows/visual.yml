@@ -11,10 +11,16 @@ on:
       - 'src/ts/**'
       - 'docs/**'
       # sass and esbuild decide what the sheet and the bundle look like, and a
-      # dependency bump is exactly when nobody is looking at pixels. The
-      # version in package.json also renders into every page's footer, so a
-      # release bump reports 57 pages moved -- that is the check working, not
-      # failing.
+      # dependency bump is exactly when nobody is looking at pixels.
+      #
+      # Be clear about what that buys, though, because it is less than it
+      # sounds: visual/run.mjs symlinks this checkout's node_modules into the
+      # base worktree, so both passes build through one installation and a
+      # bump is applied to the baseline as well as the candidate. A rendering
+      # change it causes cancels out. What these two entries actually get you
+      # is that the new toolchain has to build both revisions and produce
+      # photographable pages -- a smoke test, not an attribution. Issue #114
+      # holds the trade-off that would fix it.
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/visual.yml'
@@ -45,6 +51,9 @@ jobs:
 
       - run: npm ci
 
+      # Only the Flask pass needs Python, so these two steps retire with
+      # docs/app.py -- at which point both revisions are served by Astro's
+      # build and this job is Node alone.
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
@@ -53,9 +62,11 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
-      # Builds both revisions and serves each through the Flask docs app; see
-      # visual/run.mjs. A failure here means pages moved, which is often
-      # intended -- the report is the thing to read, not the exit code.
+      # Builds both revisions and serves each through the generator that
+      # revision has -- Flask on the base, Astro on the head, while the
+      # migration is in flight; see visual/run.mjs. A failure here means pages
+      # moved, which is often intended -- the report is the thing to read, not
+      # the exit code.
       - run: npm run test:visual
 
       - uses: actions/upload-artifact@v5

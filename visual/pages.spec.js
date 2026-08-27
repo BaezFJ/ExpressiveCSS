@@ -1,7 +1,12 @@
 // One screenshot per page per variant, over the whole documentation site.
 //
-// The page list is website/*.html -- the frozen site, so this covers exactly
-// what ships, and a page added to NAV is covered the moment it is frozen.
+// The page list is the shared catalogue, docs/src/data/nav.ts: the inventory
+// both generators are built from, so a page is covered from the commit that
+// documents it rather than from the commit that freezes it. It used to be
+// website/*.html, which cost a pass of six duplicate pages -- Frozen-Flask
+// follows each legacy 301 and writes a full second copy of the target at the
+// alias URL, so `dropdown.html` was photographed as a second Menu page. Astro
+// publishes a redirect there instead, and a redirect has no picture.
 //
 // The variants are deliberately not a full cross product. Three widths in
 // light catch the adaptive regressions (the navigation rail appears at
@@ -11,10 +16,14 @@
 // perfect until the theme flips. Six combinations would double the wall clock
 // to re-photograph the same layout in a second color.
 
-import { readdirSync, existsSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 
+import { PAGES } from '../docs/src/data/nav.ts';
+import { route } from '../docs/src/lib/catalogue.ts';
+
 const MODE = process.env.VISUAL_MODE ?? 'head';
+const GENERATOR = process.env.VISUAL_GEN ?? 'astro';
 
 /** The M3 window size classes worth photographing, plus one dark pass. */
 const VARIANTS = [
@@ -30,22 +39,36 @@ const FIXED_NOW = new Date('2026-01-15T10:04:00Z');
 
 const root = new URL('../', import.meta.url);
 
-const pages = readdirSync(new URL('website/', root))
-  .filter((f) => f.endsWith('.html'))
-  .sort();
+/**
+ * Where this pass's generator publishes a page.
+ *
+ * One page diverges and only one: Flask publishes the landing page at the
+ * route the catalogue records, `/getting-started.html`, and Astro makes the
+ * site root canonical instead. The shot is named for that catalogue route
+ * either way, so the two passes still compare the same page to itself.
+ */
+const url = (page) => (GENERATOR === 'flask' ? page.route : route(page.id));
 
 /** The docs-site chrome, masked identically in both passes. See the note at the shutter. */
 const CHROME_MASK = (page) => [page.locator('#nav-mobile')];
 
-for (const file of pages) {
-  const slug = file.replace(/\.html$/, '');
+for (const entry of PAGES) {
+  // The page's name on the site, not its catalogue id. Ids are Flask endpoint
+  // names and nineteen of them carry an underscore, which Playwright rewrites
+  // to a hyphen on its way into a snapshot path -- so `side_sheet` wrote
+  // `side-sheet--large.png` and then looked for `side_sheet--large.png`, found
+  // nothing, and skipped itself as a new page. Seventy-six shots went
+  // uncompared and the run still reported success. A route has no character
+  // that needs rewriting.
+  const slug = entry.route.replace(/^\//, '').replace(/\.html$/, '');
 
   for (const variant of VARIANTS) {
     const shot = `${slug}--${variant.name}.png`;
 
     test(`${slug} @ ${variant.name}`, async ({ page }) => {
-      // The theme is read from localStorage by an inline script in base.html
-      // before first paint, so seeding it here avoids photographing a flash of
+      // The theme is read from localStorage by an inline script in the
+      // document shell -- base.html under Flask, BaseLayout.astro under Astro
+      // -- before first paint, so seeding it here avoids photographing a flash of
       // the other scheme. --md-source is cleared for the same reason: a stored
       // seed would re-theme every token.
       await page.addInitScript((theme) => {
@@ -147,12 +170,21 @@ for (const file of pages) {
       // has a deterministic path for exactly this, and the suite was walking
       // past it. Asserted rather than assumed, because it failed silently once.
       await page.emulateMedia({ reducedMotion: 'reduce' });
+
+      // Locale and timezone are set once in the config's `use` and are checked
+      // here for the same reason reduced motion is: `use.reducedMotion` was
+      // silently ignored for as long as that line existed, and these two are
+      // read the same way, by the same options bag, on the picker pages that
+      // render a clock face and a calendar from them. An assertion is cheaper
+      // than another six runs of bisecting a one-minute diff.
       expect(
-        await page.evaluate(
-          () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-        ),
-        'reduced motion must reach the page',
-      ).toBe(true);
+        await page.evaluate(() => ({
+          reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+          zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          locale: navigator.language,
+        })),
+        'the configured environment must reach the page',
+      ).toEqual({ reduced: true, zone: 'UTC', locale: 'en-US' });
 
       // The time and date pickers open on *now*, so the minute digit ticked
       // over between the two passes and four timepicker shots failed on a tree
@@ -171,11 +203,12 @@ for (const file of pages) {
 
       await page.setViewportSize({ width: variant.width, height: variant.height });
 
-      const response = await page.goto(`/${file}`, { waitUntil: 'load' });
+      const path = url(entry);
+      const response = await page.goto(path, { waitUntil: 'load' });
       if (MODE === 'base' && response?.status() === 404) {
         test.skip(true, 'page does not exist on the base revision');
       }
-      expect(response?.status(), `GET /${file}`).toBe(200);
+      expect(response?.status(), `GET ${path}`).toBe(200);
 
       // Icons are a variable font served from Google. Until it is in, every
       // ligature is laid out as text and every icon-adjacent box is the wrong
@@ -228,8 +261,9 @@ for (const file of pages) {
       });
 
       // The docs chrome is not the framework, and it moves for reasons this
-      // suite cannot sanction: macros/nav.html renders the sidenav *and* the
-      // footer from NAV, so documenting one component relinks all 57 pages.
+      // suite cannot sanction: the drawer *and* the footer are both
+      // rendered from the catalogue, so documenting one component relinks
+      // every page.
       //
       // Hiding the footer, not masking it, is the whole fix. A mask paints over
       // pixels and leaves the image the same size; the failure was a *dimension*
@@ -242,15 +276,17 @@ for (const file of pages) {
       // it costs no height, and `display: none` on a fixed drawer risks
       // reflowing the content beside it.
       //
-      // Both selectors must match the *base* revision too, which is why neither
-      // is a hook added to a template. This spec is the head's, but the base
-      // pass serves the base worktree's docs/app.py - a new id would exist on
-      // one side only, and the footer would be hidden in one pass and not the
-      // other. `body > footer` is the chrome's own shape on any revision: it is
-      // a sibling of <main>, while the four demo footers on the Footer page sit
-      // inside it. #nav-mobile likewise already exists. Component coverage is
-      // untouched: the Sidenav page demos ~30 drawers in its body and none of
-      // them is #nav-mobile.
+      // Both selectors must match the *base* revision and the *other*
+      // generator, which is why neither is a hook added to a template. This
+      // spec is the head's, but the base pass serves the base worktree through
+      // whichever generator that revision has - a new id would exist on one
+      // side only, and the footer would be hidden in one pass and not the
+      // other. `body > footer` is the chrome's own shape under both: a sibling
+      // of <main>, while the four demo footers on the Footer page sit inside
+      // it. #nav-mobile is the drawer id in macros/nav.html and in
+      // NavigationDrawer.astro alike. Component coverage is untouched: the
+      // Sidenav page demos ~30 drawers in its body and none of them is
+      // #nav-mobile.
       await page.addStyleTag({ content: 'body > footer { display: none !important; }' });
 
       // A page this branch adds has no baseline, and photographing it against
