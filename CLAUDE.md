@@ -118,10 +118,10 @@ reports every page that moved. `npm run test:visual:report` opens the diffs.
 `visual/run.mjs` is the orchestrator and its header states the usage; the CI
 job is `visual.yml`, pull requests only.
 
-- **No baselines are committed, on purpose.** 65 pages x 4 variants of
+- **No baselines are committed, on purpose.** 59 pages x 4 variants of
   full-page PNG is 100+ MB per revision. Each run instead builds the base
   revision in a throwaway git worktree (`.visual-base/`, node_modules
-  symlinked so both passes use the same sass and esbuild), photographs it into
+  symlinked so both passes use the same sass, esbuild and astro), photographs it into
   `visual/__shots__/`, then compares. Nothing binary enters git, there is no
   "update the snapshots" ritual to forget, and the comparison is always the
   branch against its own merge base rather than against whatever was blessed
@@ -132,11 +132,52 @@ job is `visual.yml`, pull requests only.
   page, which is exactly what it did when this was first written. Real changes
   are small in absolute terms and the pages they sit on are enormous, so a
   ratio scales the tolerance with the wrong thing.
-- **It serves the Flask app, not `website/`.** The frozen pages use
-  root-absolute URLs that only resolve inside the `_site` tree `pages.yml`
-  assembles. The page *list* still comes from `website/*.html`, so it covers
-  exactly what ships. A page this branch adds has no baseline: the base pass
-  skips it on the 404, the head pass skips it on the missing file.
+- **The head is served by Astro; the base by whichever generator that revision
+  still ships.** During the migration that is Flask, so the suite is what
+  accepts a converted page: it is migrated when its picture did not move.
+  `run.mjs` reads the base choice off the base worktree (`docs/app.py` present
+  -> Flask) rather than taking a flag, so the day that file is deleted the base
+  pass becomes Astro too and nothing in `visual/` needs editing.
+
+  **The head is not asked the same question, and that is the whole of it.**
+  Both revisions carry both generators for the entire migration, so a predicate
+  reading the working tree answers "flask" there too -- which is what the first
+  attempt did, and it compared Flask against itself: 236 shots of a no-op,
+  reported as a clean run in 20 seconds. The head is the *candidate*; it is
+  Astro by definition, not by detection.
+
+  Neither server is the frozen `website/`, whose root-absolute URLs only
+  resolve inside the tree `pages.yml` assembles.
+
+  **`astro preview` is deliberately not the Astro server.** It forks a child
+  that on some Node builds exits without printing anything, and it would tie
+  the pass to astro's CLI when what is being compared is a directory of files.
+  `visual/serve.mjs` is that directory server, a page of `node:http`, and its
+  one load-bearing detail is the content-type table: a stylesheet served as
+  `application/octet-stream` is not applied, and every page would then differ
+  from its Flask counterpart by the whole of its styling.
+- **The page list is the shared catalogue** (`docs/src/data/nav.ts`), not
+  `website/*.html`. Reading the freeze cost a pass of six duplicate pages --
+  Frozen-Flask follows each legacy 301 and writes a full second copy of the
+  target at the alias URL, so `dropdown.html` was photographed as a second Menu
+  page -- and it could not cover a generator that does not freeze. A page this
+  branch adds has no baseline: the base pass skips it on the 404, the head pass
+  skips it on the missing file.
+
+  **The shot is named for the page's route, not its id**, and the difference is
+  not cosmetic. Ids are Flask endpoint names and nineteen carry an underscore,
+  which Playwright rewrites to a hyphen on its way into a snapshot path: the
+  base pass wrote `side-sheet--large.png`, the head pass looked for
+  `side_sheet--large.png`, found nothing, and skipped itself as a new page.
+  Seventy-six shots went uncompared and **the run still reported success**,
+  which is the part worth remembering -- the missing-baseline skip is a silent
+  path by design, so anything that perturbs a shot name disables coverage
+  without failing.
+- **One page's URL differs between the generators and only one.** Flask
+  publishes the landing page at `/getting-started.html`; Astro makes the site
+  root canonical and redirects that path to it. `catalogue.ts` owns the
+  divergence and the spec asks it per pass, so both passes still photograph the
+  same page into the same shot.
 - **Every non-font third party is stubbed.** picsum.photos serves 51 demo
   images and is fulfilled with an SVG of exactly the requested size; the live
   YouTube iframe and MDN video on `media-css.html` are aborted; cdnjs is
@@ -805,7 +846,13 @@ two landmarks on a page sharing a name, the check that found 31 landmarks called
 in it and `_site/` is not committed, so `docs/src` gets the fragment-level rules
 only. The seam that closes this is the build-level verification #83 plans;
 until then the guard is that a converted page stays structurally identical to
-its frozen counterpart, and that is checked by hand.
+its frozen counterpart — which is no longer checked by hand. `npm run
+test:visual` now photographs the Flask base against the Astro head, so any
+structural divergence that renders shows up as a moved page across 59 pages and
+four variants. A divergence that renders *nothing* — a landmark losing its
+name, two landmarks sharing one — still slips through, and that is precisely
+what the composed-page pass is for and why it has to move to `_site/` before
+`website/` goes.
 
 **There are two page inventories right now, and that is temporary.**
 `docs/src/data/nav.ts` is the shared catalogue the Astro site will be generated
