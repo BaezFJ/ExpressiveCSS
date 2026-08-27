@@ -158,15 +158,39 @@ for (const asset of [
 
 // --- Documents for language models -----------------------------------------
 
-for (const doc of [
-  '/llms.txt',
-  '/llms-full.txt',
-  '/llm.md',
-  '/m3-guidelines.md',
-  '/CHANGELOG.md',
-  '/SEMANTICS.md',
-]) {
+for (const doc of ['/llms.txt', '/llms-full.txt']) {
   nonempty(doc, 'LLM document');
+}
+
+const sourceBackedDocuments = new Map([
+  ['/llm.md', 'llm.md'],
+  ['/m3-guidelines.md', 'm3-guidelines.md'],
+  ['/CHANGELOG.md', 'CHANGELOG.md'],
+  ['/SEMANTICS.md', 'SEMANTICS.md'],
+]);
+const repositoryDocument = (path) => readFileSync(new URL(path, root), 'utf8');
+
+for (const [published, source] of sourceBackedDocuments) {
+  nonempty(published, 'LLM document');
+  try {
+    if (read(published) !== repositoryDocument(source)) {
+      fail(`${published}: differs from the repository's ${source}`);
+    }
+  } catch {
+    // Already reported as missing above.
+  }
+}
+
+try {
+  const expectedFull = [
+    repositoryDocument('m3-guidelines.md'),
+    repositoryDocument('llm.md'),
+  ].join('\n\n');
+  if (read('/llms-full.txt') !== expectedFull) {
+    fail('/llms-full.txt: differs from m3-guidelines.md followed by llm.md');
+  }
+} catch {
+  // Already reported as missing above.
 }
 
 try {
