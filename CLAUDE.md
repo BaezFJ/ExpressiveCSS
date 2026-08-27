@@ -653,6 +653,11 @@ when it is *structurally identical* to the frozen one.
   the `<code>` after it — which is a rendered space, not formatting.
   ``The\n<code>min</code> means`` came out as `Themin means` on the Getting
   Started page.
+- **A page's own demo script is `<script is:inline>`.** Astro otherwise bundles
+  it and hoists it to `<head>` as a module, which moves it out of `<main>` --
+  and `<main>` is what a converted page is compared against. Nothing fails at
+  build time, so `tests/docs-astro.test.js` fails a bare one instead. Panes is
+  the first page with a real script; the component pages are full of them.
 - **`docs/public/` holds three symlinks**, and they are the whole of what keeps
   the site's established asset URLs: `static` to `docs/static`, and
   `dist/css` / `dist/js` to the framework build. Vite's public-dir copy `stat`s

@@ -1,0 +1,170 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "basic", label: "Basic", heading: false },
+  { id: "ellipsis", label: "Ellipsis" },
+  { id: "nowrap", label: "Nowrap" },
+  { id: "alias", label: "List alias" },
+]);
+---
+<DocsLayout page="pagination">
+<PageBody sections={S}>
+  <Section {...S.basic}>
+        <p class="flow-text">
+          Pagination is CSS-only. A <code>nav.pagination</code> whose child
+          is an <code>&lt;ol&gt;</code> of links. There is no JavaScript plugin.
+        </p>
+        <p>
+          Mark the current page with <code>aria-current="page"</code>
+          (or the older <code>active</code> class on the <code>li</code>).
+          Unavailable prev/next use <code>aria-disabled="true"</code>
+          (or <code>disabled</code> on the <code>li</code>).
+        </p>
+
+        <nav class="pagination" aria-label="Pagination">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page" aria-disabled="true">
+                <span class="material-symbols" aria-hidden="true">chevron_left</span>
+              </a>
+            </li>
+            <li><a href="#!" aria-current="page">1</a></li>
+            <li><a href="#!">2</a></li>
+            <li><a href="#!">3</a></li>
+            <li><a href="#!">4</a></li>
+            <li><a href="#!">5</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <span class="material-symbols" aria-hidden="true">chevron_right</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+<Code code={`
+<nav class="pagination" aria-label="Pagination">
+  <ol>
+    <li>
+      <a href="/p/1" aria-label="Previous page" aria-disabled="true">
+        <span class="material-symbols" aria-hidden="true">chevron_left</span>
+      </a>
+    </li>
+    <li><a href="/p/1" aria-current="page">1</a></li>
+    <li><a href="/p/2">2</a></li>
+    <li>
+      <a href="/p/3" aria-label="Next page">
+        <span class="material-symbols" aria-hidden="true">chevron_right</span>
+      </a>
+    </li>
+  </ol>
+</nav>
+`} />
+        <p>
+          Items are the original compact 2rem chips. The current page
+          fills with <code>primary</code>. Icon-only prev/next need an
+          <code>aria-label</code>. A <code>&lt;span&gt;</code> next to
+          the icon widens the control:
+        </p>
+        <nav class="pagination" aria-label="Pagination with labels">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page" aria-disabled="true">
+                <span class="material-symbols" aria-hidden="true">chevron_left</span>
+                <span>Prev</span>
+              </a>
+            </li>
+            <li><a href="#!" aria-current="page">1</a></li>
+            <li><a href="#!">2</a></li>
+            <li><a href="#!">3</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <span>Next</span>
+                <span class="material-symbols" aria-hidden="true">chevron_right</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+  </Section>
+  <Section {...S.ellipsis}>
+        <p>
+          A non-link <code>&lt;span&gt;</code> is an inert gap, not a target.
+        </p>
+        <nav class="pagination" aria-label="Pagination with ellipsis">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page">
+                <span class="material-symbols" aria-hidden="true">chevron_left</span>
+              </a>
+            </li>
+            <li><a href="#!">1</a></li>
+            <li><span aria-hidden="true">…</span></li>
+            <li><a href="#!">8</a></li>
+            <li><a href="#!" aria-current="page">9</a></li>
+            <li><a href="#!">10</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <span class="material-symbols" aria-hidden="true">chevron_right</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+<Code code={`
+<li><span aria-hidden="true">…</span></li>
+`} />
+  </Section>
+  <Section {...S.nowrap}>
+        <p>
+          Add <code>nowrap</code> so a long run scrolls instead of wrapping.
+          That replaces the old nested <code>li.pages</code> tree.
+        </p>
+        <nav class="pagination nowrap" aria-label="Scrolling pagination">
+          <ol>
+            <li>
+              <a href="#!" aria-label="Previous page">
+                <span class="material-symbols" aria-hidden="true">chevron_left</span>
+              </a>
+            </li>
+            <li><a href="#!">1</a></li>
+            <li><a href="#!">2</a></li>
+            <li><a href="#!">3</a></li>
+            <li><a href="#!">4</a></li>
+            <li><a href="#!" aria-current="page">5</a></li>
+            <li><a href="#!">6</a></li>
+            <li><a href="#!">7</a></li>
+            <li><a href="#!">8</a></li>
+            <li><a href="#!">9</a></li>
+            <li><a href="#!">10</a></li>
+            <li>
+              <a href="#!" aria-label="Next page">
+                <span class="material-symbols" aria-hidden="true">chevron_right</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+<Code code={`
+<nav class="pagination nowrap" aria-label="Pagination">…</nav>
+`} />
+  </Section>
+  <Section {...S.alias}>
+        <p>
+          A bare <code>&lt;ul class="pagination"&gt;</code> still renders.
+          <code>active</code>, <code>disabled</code>, <code>prev</code>,
+          <code>next</code>, and <code>pages</code> stay as aliases. It is not
+          the documented form: outside a labelled <code>&lt;nav&gt;</code> the
+          list is a row of numbers with nothing saying it paginates anything.
+        </p>
+<Code check={false} reason="pre-0.8.0 list alias, shown so readers recognise it" code={`
+<ul class="pagination">
+  <li class="disabled">
+    <a href="#!" aria-label="Previous"><span class="material-symbols" aria-hidden="true">chevron_left</span></a>
+  </li>
+  <li class="active"><a href="#!">1</a></li>
+</ul>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>

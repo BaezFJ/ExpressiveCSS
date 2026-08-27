@@ -1,0 +1,145 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+]);
+---
+<DocsLayout page="scrollspy">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          Scrollspy watches a set of sections and which one is currently in view.
+          The table of contents on the right of every documentation page is the live demo:
+          the matching link gets <code>active</code> and <code>aria-current="true"</code>.
+          Clicking a link is a normal hash jump — the offset is
+          <code>scroll-margin</code>, the motion is
+          <code>scroll-behavior: smooth</code>.
+        </p>
+        <p>
+          Put <code>scrollspy</code> and an <code>id</code> on each section.
+          The TOC is a set of destinations within the page, so it lives in a labelled <code>&lt;nav&gt;</code>; put <code>table-of-contents</code> on its list and point each link at
+          <code>#that-id</code>. <code>AutoInit()</code> starts every
+          <code>.scrollspy</code> except those marked <code>no-autoinit</code>.
+          Observation is <code>IntersectionObserver</code> — there is no
+          scroll listener.
+        </p>
+<Code code={`
+<div class="row">
+  <div class="s12 m9">
+    <div id="introduction" class="section scrollspy">
+      <p>Content</p>
+    </div>
+    <div id="structure" class="section scrollspy">
+      <p>Content</p>
+    </div>
+  </div>
+  <div class="hide-on-small-only m3">
+    <nav aria-label="On this page">
+      <ul class="section table-of-contents">
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#structure">Structure</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+`} />
+  </Section>
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.ScrollSpy</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>Expressive.AutoInit()</code> start every <code>.scrollspy</code>.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.scrollspy');
+  const instances = Expressive.ScrollSpy.init(elems, {
+    // specify options here
+  });
+});
+`} />
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<Code code={`
+Expressive.AutoInit(document.body, {
+  ScrollSpy: { scrollOffset: 200 }
+});
+`} />
+        <p>
+          The documentation TOC is <code>position: sticky</code>. Scrollspy
+          only updates which link is active.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+            <tr>
+              <td><code>scrollOffset</code></td>
+              <td>Number</td>
+              <td><code>200</code></td>
+              <td>
+                Offset in pixels. Written as
+                <code>--md-comp-scrollspy-offset</code> (section
+                <code>scroll-margin</code>) and used as the observer
+                <code>rootMargin</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>activeClass</code></td>
+              <td>String</td>
+              <td><code>'active'</code></td>
+              <td>Class applied to the active table-of-contents link.</td>
+            </tr>
+            <tr>
+              <td><code>getActiveElement</code></td>
+              <td>Function</td>
+              <td>see below</td>
+              <td>
+                Optional. Returns a CSS selector for the element that should
+                receive <code>activeClass</code>, given the section’s id.
+                The default finds <code>a[href="#id"]</code> by comparing
+                attributes — it does not interpolate the id into a selector.
+              </td>
+            </tr>
+            <tr>
+              <td><code>keepTopElementActive</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, keep the last section above the viewport active when nothing intersects. If there is no such section, the first one stays active.</td>
+            </tr>
+        </OptionsTable>
+        <h5 class="light">getActiveElement</h5>
+        <p>
+          Only needed when the TOC is not <code>a[href="#id"]</code>.
+          Return a CSS selector. Escape any author-controlled id yourself.
+        </p>
+<Code code={`
+function(id) {
+  return '[data-section="' + CSS.escape(id) + '"]';
+}
+`} />
+  </Section>
+  <Section {...S.methods}>
+        <InstanceNote plugin="ScrollSpy" />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Unobserve the section and tear down the shared observer when it is the last spy.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+  <Section {...S.properties}>
+        <PropertiesTable el="The DOM element the plugin was initialized with (the <code>.scrollspy</code> section)." />
+  </Section>
+</PageBody>
+</DocsLayout>

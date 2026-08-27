@@ -1,0 +1,121 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "footer", label: "Footer", heading: false },
+  { id: "sticky-footer", label: "Sticky Footer" },
+]);
+---
+<DocsLayout page="footer">
+<PageBody sections={S}>
+  <Section {...S.footer}>
+        <p class="flow-text">
+          Footers are a good place for site navigation and extra information. This is where people look after they finish the page, or when they want more about the site.
+        </p>
+        <p>
+          Put the page in the three HTML5 landmarks <code>header</code>, <code>main</code>, and <code>footer</code>.
+          The footer is CSS-only. A <code>&lt;footer&gt;</code> whose only
+          child is a <code>nav.navigation-bar</code> is the
+          <a href={route('navigation_bar')}>navigation bar</a>;
+          anything richer is the site footer. A heading is a column title, a
+          <code>&lt;nav&gt;</code> is a link list, and the last
+          <code>&lt;small&gt;</code> is the legal bar. There is no JavaScript
+          component.
+        </p>
+        <p>
+          Unfilled by default: a dashed hairline and theme tokens — not a solid primary bar.
+          Add <code>filled</code> (or <code>surface</code>) for a
+          <code>surface-container</code> well.
+        </p>
+
+        <footer>
+          <section>
+            <h2>Product</h2>
+            <p>A column with no links is not navigation — it is a section with a heading.</p>
+          </section>
+          <nav aria-labelledby="demo-footer-links">
+            <h2 id="demo-footer-links">Links</h2>
+            <a href="#!">Link 1</a>
+            <a href="#!">Link 2</a>
+            <a href="#!">Link 3</a>
+            <a href="#!">Link 4</a>
+          </nav>
+          <small>
+            <span>&copy; 2026 Copyright Text</span>
+            <a href="#!">More Links</a>
+          </small>
+        </footer>
+
+<Code code={`
+<footer>
+  <section>
+    <h2>Product</h2>
+    <p>A column with no links is not navigation — it is a section with a heading.</p>
+  </section>
+  <nav aria-labelledby="footer-links">
+    <h2 id="footer-links">Links</h2>
+    <a href="#!">Link 1</a>
+    <a href="#!">Link 2</a>
+  </nav>
+  <small>
+    <span>&copy; 2026 Copyright Text</span>
+    <a href="#!">More Links</a>
+  </small>
+</footer>
+`} />
+        <p>
+          The grid still works if you prefer columns. <code>.page-footer</code> and
+          <code>.footer-copyright</code> are <strong>not</strong> aliases — no rule in
+          the sheet matches either, and a bare <code>&lt;footer&gt;</code> with
+          <code>&lt;nav&gt;</code> columns and a trailing <code>&lt;small&gt;</code>
+          is the component.
+        </p>
+<Code code={`
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="s12 m6">
+        <h5>Footer Content</h5>
+        <p>You can use rows and columns here.</p>
+      </div>
+      <div class="s12 m6">
+        <h5>Links</h5>
+        <ul>
+          <li><a href="#!">Link 1</a></li>
+        </ul>
+      </div>
+    </div>
+    <small>
+      <span>&copy; 2026 Copyright Text</span>
+    </small>
+  </div>
+</footer>
+`} />
+        <p>
+          The trailing <code>&lt;small&gt;</code> is the copyright bar: a wrapping
+          flex row with space-between. Put the notice and the trailing link as two
+          children. A <code>right</code> float is not required.
+        </p>
+  </Section>
+  <Section {...S["sticky-footer"]}>
+        <p>
+          When the <code>&lt;footer&gt;</code> is a direct child of <code>body</code>,
+          the page is at least the viewport tall and <code>main</code> grows so the
+          footer sits at the bottom on a short page. That is not a fixed footer,
+          and it is not a navigation bar.
+        </p>
+<Code code={`
+<body>
+  <header>...</header>
+  <main>...</main>
+  <footer>...</footer>
+</body>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
