@@ -5,10 +5,9 @@
  *
  * `astro preview` is the obvious answer and is deliberately not this. Two
  * reasons: it forks a child that exits without a word on some Node builds
- * (silently, here), and it would tie the Astro pass to astro's own CLI at the
- * moment this suite is meant to be comparing two revisions' *output*. A
- * directory of files wants a directory server, and after the cutover both
- * passes run through this one.
+ * (silently, here), and it would tie the pass to astro's own CLI at the moment
+ * this suite is meant to compare two revisions' *output*. A directory of files
+ * wants a directory server, and both passes run through this one.
  */
 import { createServer } from 'node:http';
 import { createReadStream, statSync } from 'node:fs';
@@ -18,8 +17,8 @@ const dir = process.argv[2];
 const port = Number(process.argv[3]);
 
 // Content type is the load-bearing part: a stylesheet served as
-// application/octet-stream is not applied, and every page would differ from
-// its Flask counterpart by the whole of its styling.
+// application/octet-stream is not applied, and every page would differ by the
+// whole of its styling.
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',

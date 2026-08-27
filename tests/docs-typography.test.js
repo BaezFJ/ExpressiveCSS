@@ -3,30 +3,17 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const docsCss = readFileSync(new URL('../docs/static/docs.css', import.meta.url), 'utf8');
-const pageMacro = readFileSync(
-  new URL('../docs/templates/macros/page.html', import.meta.url),
+const pageBody = readFileSync(
+  new URL('../docs/src/components/PageBody.astro', import.meta.url),
   'utf8'
 );
-const bannerMacro = readFileSync(
-  new URL('../docs/templates/macros/banner.html', import.meta.url),
-  'utf8'
-);
-const baseTemplate = readFileSync(
-  new URL('../docs/templates/base.html', import.meta.url),
-  'utf8'
-);
-const panesTemplate = readFileSync(
-  new URL('../docs/templates/structure/panes.html', import.meta.url),
+const panes = readFileSync(
+  new URL('../docs/src/pages/panes.astro', import.meta.url),
   'utf8'
 );
 
 describe('Documentation typography', () => {
-  test('uses ExpressiveCSS display and headline roles in the shared banner', () => {
-    assert.match(bannerMacro, /docs-page-title display-large on-primary-container-text/);
-    assert.match(
-      bannerMacro,
-      /docs-page-description headline-small on-primary-container-text/
-    );
+  test('uses ExpressiveCSS display roles for the shared banner', () => {
     assert.match(
       docsCss,
       /\.docs-page-title[\s\S]*--md-sys-typescale-display-medium-font-size/
@@ -35,15 +22,6 @@ describe('Documentation typography', () => {
       docsCss,
       /@media \(width >= 840px\)[\s\S]*--md-sys-typescale-display-large-font-size/
     );
-  });
-
-  test('adds shared prose and section hooks instead of page-specific classes', () => {
-    assert.match(pageMacro, /class="section scrollspy docs-section"/);
-    assert.match(pageMacro, /docs-section-title \{\{ heading_role \}\}/);
-    assert.match(pageMacro, /docs-page-content/);
-    assert.match(pageMacro, /'h2': 'headline-large'/);
-    assert.match(pageMacro, /'h3': 'headline-medium'/);
-    assert.match(pageMacro, /'h4': 'title-large'/);
   });
 
   test('uses M3 title and body roles for readable documentation prose', () => {
@@ -73,22 +51,15 @@ describe('Documentation typography', () => {
     );
   });
 
-  test('versions the docs stylesheet so typography updates are not served stale', () => {
-    assert.match(
-      baseTemplate,
-      /url_for\('static', filename='docs\.css', v=version\)/
-    );
-  });
-
   test('keeps the wide Panes page on the shared content and TOC scaffold', () => {
     assert.match(
-      pageMacro,
-      /page_body\(toc_extra=None, container_class="", content_class=/
+      pageBody,
+      /contentClass = "s12 m8 offset-m1 xl7 offset-xl1"/
     );
     assert.match(
-      panesTemplate,
-      /page_body\(container_class="panes-page", content_class="s12 m9 l10", toc_class="m3 l2"\)/
+      panes,
+      /<PageBody sections=\{S\} containerClass="panes-page" contentClass="s12 m9 l10" tocClass="m3 l2">/
     );
-    assert.doesNotMatch(panesTemplate, /panes-page-(?:body|toc)/);
+    assert.doesNotMatch(panes, /panes-page-(?:body|toc)/);
   });
 });

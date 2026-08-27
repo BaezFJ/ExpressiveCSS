@@ -1,12 +1,8 @@
 // One screenshot per page per variant, over the whole documentation site.
 //
-// The page list is the shared catalogue, docs/src/data/nav.ts: the inventory
-// both generators are built from, so a page is covered from the commit that
-// documents it rather than from the commit that freezes it. It used to be
-// website/*.html, which cost a pass of six duplicate pages -- Frozen-Flask
-// follows each legacy 301 and writes a full second copy of the target at the
-// alias URL, so `dropdown.html` was photographed as a second Menu page. Astro
-// publishes a redirect there instead, and a redirect has no picture.
+// The page list is the shared catalogue, docs/src/data/nav.ts, so a page is
+// covered from the commit that documents it. Compatibility redirects are not
+// photographed because they carry no component rendering of their own.
 //
 // The variants are deliberately not a full cross product. Three widths in
 // light catch the adaptive regressions (the navigation rail appears at
@@ -23,7 +19,6 @@ import { PAGES } from '../docs/src/data/nav.ts';
 import { route } from '../docs/src/lib/catalogue.ts';
 
 const MODE = process.env.VISUAL_MODE ?? 'head';
-const GENERATOR = process.env.VISUAL_GEN ?? 'astro';
 
 /** The M3 window size classes worth photographing, plus one dark pass. */
 const VARIANTS = [
@@ -39,22 +34,15 @@ const FIXED_NOW = new Date('2026-01-15T10:04:00Z');
 
 const root = new URL('../', import.meta.url);
 
-/**
- * Where this pass's generator publishes a page.
- *
- * One page diverges and only one: Flask publishes the landing page at the
- * route the catalogue records, `/getting-started.html`, and Astro makes the
- * site root canonical instead. The shot is named for that catalogue route
- * either way, so the two passes still compare the same page to itself.
- */
-const url = (page) => (GENERATOR === 'flask' ? page.route : route(page.id));
+/** Where Astro publishes a page. */
+const url = (page) => route(page.id);
 
 /** The docs-site chrome, masked identically in both passes. See the note at the shutter. */
 const CHROME_MASK = (page) => [page.locator('#nav-mobile')];
 
 for (const entry of PAGES) {
-  // The page's name on the site, not its catalogue id. Ids are Flask endpoint
-  // names and nineteen of them carry an underscore, which Playwright rewrites
+  // The page's route on the site, not its catalogue id. Nineteen ids carry an
+  // underscore, which Playwright rewrites
   // to a hyphen on its way into a snapshot path -- so `side_sheet` wrote
   // `side-sheet--large.png` and then looked for `side_sheet--large.png`, found
   // nothing, and skipped itself as a new page. Seventy-six shots went
@@ -66,9 +54,8 @@ for (const entry of PAGES) {
     const shot = `${slug}--${variant.name}.png`;
 
     test(`${slug} @ ${variant.name}`, async ({ page }) => {
-      // The theme is read from localStorage by an inline script in the
-      // document shell -- base.html under Flask, BaseLayout.astro under Astro
-      // -- before first paint, so seeding it here avoids photographing a flash of
+      // The theme is read from localStorage by BaseLayout.astro before first
+      // paint, so seeding it here avoids photographing a flash of
       // the other scheme. --md-source is cleared for the same reason: a stored
       // seed would re-theme every token.
       await page.addInitScript((theme) => {
@@ -276,15 +263,13 @@ for (const entry of PAGES) {
       // it costs no height, and `display: none` on a fixed drawer risks
       // reflowing the content beside it.
       //
-      // Both selectors must match the *base* revision and the *other*
-      // generator, which is why neither is a hook added to a template. This
-      // spec is the head's, but the base pass serves the base worktree through
-      // whichever generator that revision has - a new id would exist on one
-      // side only, and the footer would be hidden in one pass and not the
-      // other. `body > footer` is the chrome's own shape under both: a sibling
+      // Both selectors must match the *base* revision, which is why neither is
+      // a hook added only to this tree. This spec is the head's, so a new id
+      // would exist on one side only and the footer would be hidden in one pass
+      // but not the other. `body > footer` is the chrome's own shape: a sibling
       // of <main>, while the four demo footers on the Footer page sit inside
-      // it. #nav-mobile is the drawer id in macros/nav.html and in
-      // NavigationDrawer.astro alike. Component coverage is untouched: the
+      // it. #nav-mobile is NavigationDrawer.astro's stable drawer id.
+      // Component coverage is untouched: the
       // Sidenav page demos ~30 drawers in its body and none of them is
       // #nav-mobile.
       await page.addStyleTag({ content: 'body > footer { display: none !important; }' });

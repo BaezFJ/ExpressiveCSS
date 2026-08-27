@@ -1,9 +1,8 @@
 // Enforces semantics.json against every surface that states component markup.
 //
 // Four surfaces state markup and can drift from each other: llm.md (the
-// contract LLMs consume), docs/templates/** and docs/src/**/*.astro (what
-// humans copy, under the two generators that coexist until the Astro cutover),
-// and tests/fixtures.js.
+// contract LLMs consume), docs/src/**/*.astro (what humans copy),
+// tests/fixtures.js, and the markup fragments in m3-guidelines.md.
 //
 // Fragments only. The document-level questions -- <main> nesting, a dialog's
 // name, two landmarks on one page sharing one -- are asked of the built site by
@@ -197,67 +196,9 @@ function examplesFromMarkdown(file) {
 }
 
 /**
- * Two kinds of example live in a template and both are surfaces:
- *   - {% call code() %} … {% endcall %}, the sample a reader copies. Opts out
- *     with code(check=false, reason="…").
- *   - everything else, the live demo the page actually renders. Checking only
- *     the code samples left half of every docs page unchecked, and a demo is
- *     the copy people see working.
- *
- * Jinja is stripped rather than skipped. Skipping was a silent, reasonless
- * escape hatch: the first templated example added would have been waved
- * through without anyone opting it out.
- */
-// Statements produce no output and are removed. Expressions DO produce text,
-// so they become a placeholder rather than vanishing - deleting them turned
-// `<a><span icon/>{{ page.label }}</a>` into an apparently nameless control
-// and the accessible-name rule duly flagged the docs' own sidenav.
-const stripJinja = (s) =>
-  s.replace(/\{%[\s\S]*?%\}/g, '').replace(/\{\{[\s\S]*?\}\}/g, 'x');
-
-// The argument list runs to the `)` that closes the call, not to the first `)`
-// in it - a reason is prose and may well contain one ("(pre-0.8.0)"). With
-// `[^)]*` such a block matched nothing at all, which is worse than it sounds:
-// it was then never removed from the rendered pass either, so an example that
-// had properly opted out got checked anyway, and the reason string was
-// truncated on top.
-const CODE_BLOCK = /\{%\s*call code\((.*?)\)\s*%\}\n([\s\S]*?)\{%\s*endcall\s*%\}/g;
-
-/** Exported for the extractor's own tests: parsing is where this can go quietly wrong. */
-export function templateExamples(src, file) {
-  const out = [];
-  let m;
-  CODE_BLOCK.lastIndex = 0;
-  while ((m = CODE_BLOCK.exec(src))) {
-    const args = m[1];
-    out.push({
-      surface: 'docs/templates',
-      location: `${file}:${src.slice(0, m.index).split('\n').length} (sample)`,
-      html: stripJinja(m[2]),
-      ignore: /check\s*=\s*false/.test(args),
-      reason: (args.match(/reason\s*=\s*["']([^"']*)["']/) ?? [])[1] ?? ''
-    });
-  }
-
-  // The rendered page, minus the code samples already taken above - they are
-  // escaped text there, and taking them twice would let a code-block opt-out
-  // be defeated by this pass.
-  out.push({
-    surface: 'docs/templates',
-    location: `${file} (rendered)`,
-    html: stripJinja(src.replace(CODE_BLOCK, '')),
-    ignore: false,
-    reason: ''
-  });
-  return out;
-}
-
-/**
- * The Astro pages, which state the same two kinds of example the Jinja
- * templates do (ADR 0003). Both generators are present until the cutover and a
- * conversion is exactly the moment markup goes quietly wrong, so the migrated
- * pages are a surface of their own rather than something the templates vouch
- * for.
+ * The Astro pages state two kinds of example: the sample a reader copies and
+ * the live demo the page renders. Both are checked because a demo is a
+ * specimen, not scaffolding around the documented contract.
  *
  * Only leaf expressions become the `x` placeholder. An Astro expression can
  * *contain* the markup -- `{NAV.map((group) => (<li>…</li>))}` is the whole
@@ -332,22 +273,6 @@ function examplesFromAstro() {
   return out;
 }
 
-function examplesFromTemplates() {
-  const out = [];
-  const walk = (dir) => {
-    for (const e of readdirSync(new URL(`docs/templates/${dir}`, root), { withFileTypes: true })) {
-      if (e.isDirectory()) {
-        walk(`${dir}${e.name}/`);
-        continue;
-      }
-      if (!e.name.endsWith('.html')) continue;
-      const file = `docs/templates/${dir}${e.name}`;
-      out.push(...templateExamples(read(file), file));
-    }
-  };
-  walk('');
-  return out;
-}
 
 /**
  * m3-guidelines.md states markup as inline code spans in prose, not as fenced
@@ -394,7 +319,6 @@ function examplesFromFixtures() {
 
 const examples = [
   ...examplesFromMarkdown('llm.md'),
-  ...examplesFromTemplates(),
   ...examplesFromAstro(),
   ...examplesFromFixtures(),
   ...examplesFromGuidelines()
@@ -640,37 +564,6 @@ describe('prose that names markup', () => {
   });
 });
 
-describe('template extractor', () => {
-  const wrap = (args, body) =>
-    `{% block page %}\n{% call code(${args}) %}\n${body}\n{% endcall %}\n{% endblock %}`;
-
-  test('a sample is extracted and the rendered pass does not double-count it', () => {
-    const got = templateExamples(wrap('', '<span class="chip">x</span>'), 'f.html');
-    assert.equal(got.length, 2, 'one sample plus the rendered page');
-    assert.match(got[0].html, /<span class="chip">x<\/span>/);
-    assert.doesNotMatch(got[1].html, /chip/, 'the sample must be cut from the rendered pass');
-  });
-
-  test('a reason containing parentheses does not truncate the arguments', () => {
-    // With `[^)]*` this matched nothing: the block was not recognised as a
-    // sample, so it was never cut from the rendered pass and the opt-out was
-    // silently ignored - a green-looking check on markup nobody had exempted.
-    const got = templateExamples(
-      wrap('check=false, reason="0.7.0 markup (pre-sweep), kept for migration"', '<div class="chip">old</div>'),
-      'f.html'
-    );
-    assert.equal(got.length, 2);
-    assert.equal(got[0].ignore, true);
-    assert.equal(got[0].reason, '0.7.0 markup (pre-sweep), kept for migration');
-    assert.doesNotMatch(got[1].html, /chip/, 'an opted-out sample must still be cut from the rendered pass');
-  });
-
-  test('a checked sample stays checked', () => {
-    const got = templateExamples(wrap('', '<div class="chip">old</div>'), 'f.html');
-    assert.equal(got[0].ignore, false);
-  });
-});
-
 describe('astro extractor', () => {
   const wrap = (attrs, body) =>
     `---\nconst x = 1;\n---\n<DocsLayout page="f">\n<Code ${attrs}code={\`\n${body}\n\`} />\n</DocsLayout>\n`;
@@ -730,7 +623,7 @@ describe('documented markup', () => {
   test('surfaces yield examples to check', () => {
     // Guards the extractors: a regex that silently stops matching would turn
     // this whole suite into a no-op that passes.
-    for (const surface of ['llm.md', 'docs/templates', 'docs/src', 'tests/fixtures.js', 'm3-guidelines.md']) {
+    for (const surface of ['llm.md', 'docs/src', 'tests/fixtures.js', 'm3-guidelines.md']) {
       const n = examples.filter((e) => e.surface === surface).length;
       assert.ok(n > 0, `no examples extracted from ${surface}`);
     }

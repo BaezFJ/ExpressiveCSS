@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-ExpressiveCSS is a new front-end framework being grown out of a vendored copy of MaterializeCSS v2.2.2 source (`src/ts` + `src/sass`), with a Flask app in `docs/` intended to become the documentation/showcase site.
+ExpressiveCSS is a new front-end framework being grown out of a vendored copy of MaterializeCSS v2.2.2 source (`src/ts` + `src/sass`), with an Astro documentation/showcase site in `docs/`.
 
 LLM-oriented docs: `llm.md` is markup and JavaScript APIs; `m3-guidelines.md` is Material 3 usage, anatomy, placement, adaptive design, and behaviors for those components.
 
@@ -34,7 +34,6 @@ npm test               # rebuild every JS bundle + the CSS, then run the jsdom s
 npm run test:run       # run tests against the existing dist/ bundle
 npm run watch          # sass --watch + esbuild --watch in parallel
 npm run build:semantics # semantics.json -> SEMANTICS.md
-npm run build:llms     # NAV + package.json -> llms.txt (needs uv)
 npm run test:visual    # screenshot the merge base, then this tree, and diff
 npm run clean          # remove dist/
 ```
@@ -53,9 +52,6 @@ npm run docs:preview   # serve what docs:build wrote
 npm run docs:verify    # re-check the built _site/ on its own
 ```
 
-The Flask application in `docs/` no longer publishes anything and is removed
-with the rest of that pipeline; `uv sync` and `uv run flask --app docs/app.py
-run` still work if you need to look at what the old generator did.
 
 `.claude/launch.json` is gitignored, so a fresh clone has none and the
 editor's preview pane has no server to start. Recreate it with the same
@@ -90,12 +86,12 @@ Notes:
 
 ## Releasing
 
-`package.json` holds the version, but nine files state it and only two derive it. The docs **footers** are the derived ones, one per generator: Flask's reads `package.json` through the `version` context variable, which is why it stopped needing a manual bump after v0.6.0, and Astro's `BaseLayout.astro` reads the same file directly. Because they read the raw version they also see prereleases, so each appends "(prerelease)" when the version carries one (`'-' in VERSION`) — otherwise the site advertises a version `npm install` does not hand out. The other seven drift silently — nothing fails if you miss one.
+`package.json` holds the version, and Astro's `BaseLayout.astro` reads it directly for the docs footer. Because it reads the raw version it also sees prereleases and appends "(prerelease)" when the version carries one (`'-' in VERSION`) — otherwise the site would advertise a version `npm install` does not hand out. The prose locations below drift silently, so nothing fails if one is missed.
 
 **Which files you bump depends on whether `latest` moves.** They fall into two groups:
 
 - *Must match the tag*, always: `package.json` and `src/ts/index.ts` (`export const version`) — `release.yml` compares the tag against `package.json` and aborts on a mismatch, and the version export is what the built bundle reports. Plus the line in **this file** naming what `index.ts` exports, so it stays true.
-- *Tells a reader which version to install*: `README.md`, `llm.md` (two places — the header and the "Getting started" prose), and the Getting Started page, which states it in prose under **both** generators — `docs/templates/start/index.html` and `docs/src/pages/index.astro` — until the cutover deletes the first.
+- *Tells a reader which version to install*: `README.md`, `llm.md` (two places — the header and the "Getting started" prose), and `docs/src/pages/index.astro`.
 
 For a **full release** both groups move. For a **prerelease** only the first moves: `latest` stays on the last stable version, so prose announcing the prerelease as "the project is at version x" would send readers to something `npm install` does not give them. That leaves `package.json` deliberately ahead of the prose for the life of the prerelease — e.g. `0.7.0-rc.0` in `package.json` against `0.6.0` in the prose. **That gap is intended; do not "fix" it.** It closes when the matching full release goes out and both groups move together.
 
@@ -137,23 +133,9 @@ job is `visual.yml`, pull requests only.
   page, which is exactly what it did when this was first written. Real changes
   are small in absolute terms and the pages they sit on are enormous, so a
   ratio scales the tolerance with the wrong thing.
-- **The head is served by Astro; the base by whichever generator that revision
-  still ships.** During the migration that is Flask, so the suite is what
-  accepts a converted page: it is migrated when its picture did not move.
-  `run.mjs` reads the base choice off the base worktree (`docs/app.py` present
-  -> Flask) rather than taking a flag, so the day that file is deleted the base
-  pass becomes Astro too and nothing in `visual/` needs editing.
-
-  **The head is not asked the same question, and that is the whole of it.**
-  Both revisions carry both generators for the entire migration, so a predicate
-  reading the working tree answers "flask" there too -- which is what the first
-  attempt did, and it compared Flask against itself: 236 shots of a no-op,
-  reported as a clean run in 20 seconds. The head is the *candidate*; it is
-  Astro by definition, not by detection.
-
-  Neither server is the frozen `website/`: nothing publishes it any more, and
-  its root-absolute `/dist/...` URLs point at a directory git ignores, so
-  serving the tree as it is checked out loses every framework asset.
+- **Both revisions are built and served through Astro.** The base worktree and
+  this tree each run their own `npm run docs:build`, so the comparison exercises
+  the same routes, assets, scripts and verification seam as production.
 
   **`astro preview` is deliberately not the Astro server.** It forks a child
   that on some Node builds exits without printing anything, and it would tie
@@ -161,17 +143,14 @@ job is `visual.yml`, pull requests only.
   `visual/serve.mjs` is that directory server, a page of `node:http`, and its
   one load-bearing detail is the content-type table: a stylesheet served as
   `application/octet-stream` is not applied, and every page would then differ
-  from its Flask counterpart by the whole of its styling.
-- **The page list is the shared catalogue** (`docs/src/data/nav.ts`), not
-  `website/*.html`. Reading the freeze cost a pass of six duplicate pages --
-  Frozen-Flask follows each legacy 301 and writes a full second copy of the
-  target at the alias URL, so `dropdown.html` was photographed as a second Menu
-  page -- and it could not cover a generator that does not freeze. A page this
-  branch adds has no baseline: the base pass skips it on the 404, the head pass
-  skips it on the missing file.
+  by the whole of its styling.
+- **The page list is the shared catalogue** (`docs/src/data/nav.ts`). Redirects
+  carry no component rendering and are not photographed. A page this branch
+  adds has no baseline: the base pass skips it on the 404, the head pass skips
+  it on the missing file.
 
   **The shot is named for the page's route, not its id**, and the difference is
-  not cosmetic. Ids are Flask endpoint names and nineteen carry an underscore,
+  not cosmetic. Nineteen ids carry an underscore,
   which Playwright rewrites to a hyphen on its way into a snapshot path: the
   base pass wrote `side-sheet--large.png`, the head pass looked for
   `side_sheet--large.png`, found nothing, and skipped itself as a new page.
@@ -179,11 +158,9 @@ job is `visual.yml`, pull requests only.
   which is the part worth remembering -- the missing-baseline skip is a silent
   path by design, so anything that perturbs a shot name disables coverage
   without failing.
-- **One page's URL differs between the generators and only one.** Flask
-  publishes the landing page at `/getting-started.html`; Astro makes the site
-  root canonical and redirects that path to it. `catalogue.ts` owns the
-  divergence and the spec asks it per pass, so both passes still photograph the
-  same page into the same shot.
+- **The landing page is photographed at the site root.**
+  `/getting-started.html` is a compatibility redirect. `catalogue.ts` owns the
+  exception so both passes photograph the same canonical page into the same shot.
 - **Every non-font third party is stubbed.** picsum.photos serves 51 demo
   images and is fulfilled with an SVG of exactly the requested size; the live
   YouTube iframe and MDN video on `media-css.html` are aborted; cdnjs is
@@ -230,11 +207,10 @@ job is `visual.yml`, pull requests only.
   reflowing the content beside it.
 
   **Both selectors have to match the base revision too.** The spec is always the
-  head's, but the base pass serves the base worktree's `docs/app.py`, so a hook
-  added to a template exists on one side only and the footer would be hidden in
-  one pass and not the other. `body > footer` is the chrome's own shape on any
-  revision -- a sibling of `<main>`, while the Footer page's demo footers sit
-  inside it -- and `#nav-mobile` already existed.
+  head's, so a new hook added only to this tree would hide chrome on one side
+  and not the other. `body > footer` is the chrome's own stable shape -- a
+  sibling of `<main>`, while the Footer page's demo footers sit inside it -- and
+  `#nav-mobile` is the drawer's stable id.
 
   **Masking the chrome costs no component coverage, but check that rather than
   assuming it.** The Sidenav page's `.navigation-drawer-demo` is made static
@@ -313,14 +289,6 @@ job is `visual.yml`, pull requests only.
   `page.evaluate()` before the layout freeze inserts enough delay to hide the
   failure, so a probe can make a flake look fixed.
 
-- **`visual/serve.py`, not `flask --app`.** Werkzeug logs ~1,400 access lines a
-  pass, which buries the results; the wrapper quiets that logger so stderr
-  stays free for real failures. Silencing stderr wholesale was the first
-  attempt and it hid a server that would not start at all -- Playwright could
-  only report "Exit code: 1". The wrapper registers the module in
-  `sys.modules` *before* executing it, because `Flask(__name__)` resolves its
-  template root through `sys.modules[import_name].__file__` and otherwise
-  points it at the cwd, where no template is found.
 
 ## HTML semantics
 
@@ -405,8 +373,8 @@ on. The five rules:
    (Datepicker and Timepicker already had one; Chips now does).
 
 `tests/semantics.test.js` enforces the rules against the surfaces that state
-markup — `llm.md`, `m3-guidelines.md`, `docs/src/**/*.astro`, `docs/templates/**`
-and `tests/fixtures.js`. Those are fragments; the whole-document questions are
+markup — `llm.md`, `m3-guidelines.md`, `docs/src/**/*.astro` and
+`tests/fixtures.js`. Those are fragments; the whole-document questions are
 asked of the built site by `scripts/verify-site.mjs`, which runs the same rules
 out of `scripts/semantics-rules.mjs`. Notes that matter when working on it:
 
@@ -643,67 +611,27 @@ built for development and renders a "run npm run build" banner when `dist/` is
 absent altogether. `docs/static/` holds only docs-site chrome (`docs.css`,
 `docs.js`), never framework styles.
 
-The Flask app did the same through its `dist_file` route and an
-`inject_build_assets` context processor. It publishes nothing now and goes with
-the rest of that pipeline; the paragraphs below describe the Jinja templates,
-which are likewise historical — **the authored source is `docs/src/`**, and
-"The Astro build" further down is the section that governs.
+The bundle only self-initializes Forms/Chips/Slider/Cards —
+`docs/static/docs.js` calls `Expressive.AutoInit()` on `DOMContentLoaded` for
+everything else, and toggles `<html theme="light|dark">` to exercise the token
+layer.
 
-The bundle only self-initializes Forms/Chips/Slider/Cards — `docs/static/docs.js` calls `Expressive.AutoInit()` on `DOMContentLoaded` for everything else, and toggles `<html theme="light|dark">` to exercise the token layer. That file is shared by both generators and is live.
-
-The Jinja templates were macro-driven; hand-writing the chrome is what caused every docs bug found so far. `NAV` in `app.py` is the single source for the sidenav *and* the footer (the `<details open>` test reads a derived endpoint list), and the footer version comes from `package.json`. A page declares `page_name` / `page_blurb` and `docs.html` builds the `<title>`, the app bar heading and the banner from them. `macros/page.html` holds the rest: `section(id, label)` registers itself in `toc_sections` (a fresh list per render, from the context processor) so `toc()` can generate the table of contents — write a section once and its TOC entry follows; `page_body()` wraps the standard two-column scaffold and emits that TOC; `code()` escapes a sample so you write real markup instead of `&lt;`. `macros/api.html` owns the Options/Properties/Tokens table headers and the methods `instance_note`. `{% do %}` is enabled for the registration, and the page macros must be imported `with context` because they read `toc_sections`.
-
-`llms.txt` is generated too, by `scripts/gen_llms.py` (`npm run build:llms`,
-which needs `uv`). It is the [llms.txt](https://llmstxt.org) link index for the
-site: an H1, a summary, then one `##` section per `NAV` group with one link per
-page, each link's note being that page's own `page_blurb`. Nothing in it is
-authored — the page list is `NAV`, the version and base URL are `package.json`,
-so adding a page to `NAV` adds it here too. **It is no longer checked and no
-longer publishes anything** — `docs/src/lib/llms.ts` generates the site's index
-from the shared catalogue, and that is the one `astro build` emits and
-`scripts/verify-site.mjs` verifies against the generator. The committed copy at
-the repo root is stale by construction — the deploy stopped running
-`gen_llms.py` with the rest of the Flask pipeline — and goes with it in #99.
-
-`/llms-full.txt` is *not* generated — the route concatenates `m3-guidelines.md`
-and `llm.md` per request, in that reading order, so there is no third copy to
-keep in step. All four LLM URLs (`/llms.txt`, `/llms-full.txt`, `/llm.md`,
-`/m3-guidelines.md`) are Flask routes so `flask run` serves what the site
-serves; the three large ones are gitignored under `website/` the way
-`website/dist/` is, since they duplicate files already in the repo. **Two views,
-not one view with two rules** — Frozen-Flask writes one file per *endpoint*, so
-a shared view silently freezes only one of its URLs.
-
-`website/` is generated and no longer verified. CI ran `freeze.py` and failed on a
-non-empty diff for as long as the frozen pages were what the composed-page checks
-read; both went when Astro became the documentation path, and those checks now run
-against `_site/`. `pages.yml` no longer regenerates or commits it either — the
-deploy uploads Astro's `_site/` directly — so it is frozen at whatever the last
-Flask deploy wrote and nothing will say so. Do not treat it as a source of truth.
+`llms.txt` is generated at build time by `docs/src/lib/llms.ts` from the shared
+catalogue and `package.json`. Astro also publishes `/llms-full.txt`, `/llm.md`
+and `/m3-guidelines.md` directly from the repository sources. No generated LLM
+document is tracked; `scripts/verify-site.mjs` verifies all four built outputs.
 
 ### The Astro build
 
 `docs/astro.config.mjs` is the documentation generator (ADR 0003). Every page
 lives under `docs/src/pages/`; output goes to a gitignored `_site/`, and
-`npm run docs:build` builds and verifies it. The frozen `website/` tree is a
-snapshot of what Flask published and is the thing to compare against while it
-is still in the repository: a converted page is right when it is *structurally
-identical* to the frozen one.
+`npm run docs:build` builds and verifies it.
 
 **Astro is what CI checks and what deploys.** `pages.yml` is `npm ci`,
 `npm run docs:build`, upload — the same command a contributor runs and the same
 directory it writes, published unmodified. Nothing is committed on deploy, so
 the workflow holds `contents: read` and cannot race a normal commit on master,
-and nothing has to be mirrored into `docs/app.py`, which publishes nothing. A
-page added to the catalogue is on the site with the next push to master.
-
-- **Compare `<main>`, not the whole document.** The chrome legitimately differs
-  on every page — the landing link is `/` rather than `/getting-started.html`,
-  and Astro drops the empty `class=""` Jinja leaves on an inactive drawer item
-  — so a whole-page diff reports ~238 lines on a page that is in fact
-  byte-equivalent where it matters. Parse both to a whitespace-insensitive
-  tag/attribute dump, slice out `<main>`, and diff that; it is 0 lines on every
-  page, and a chrome-only residue confirms the rest.
+and a page added to the catalogue is on the site with the next push to master.
 - **The docs toolchain needs Node >= 22.12, the package still needs >= 20.**
   That is astro 7's own `engines`, and it is a *contributor* requirement:
   `package.json`'s `engines` describes what a consumer needs to run the built
@@ -729,15 +657,15 @@ page added to the catalogue is on the site with the next push to master.
   Started page.
 - **A page's own demo script is `<script is:inline>`.** Astro otherwise bundles
   it and hoists it to `<head>` as a module, which moves it out of `<main>` --
-  and `<main>` is what a converted page is compared against. Nothing fails at
-  build time, so `tests/docs-astro.test.js` fails a bare one instead. Panes is
-  the first page with a real script; the component pages are full of them.
+  changing the authored execution order. Nothing fails at build time, so
+  `tests/docs-astro.test.js` fails a bare one instead. Panes is the first page
+  with a real script; the component pages are full of them.
 - **`docs/public/` holds three symlinks**, and they are the whole of what keeps
   the site's established asset URLs: `static` to `docs/static`, and
   `dist/css` / `dist/js` to the framework build. Vite's public-dir copy `stat`s
   each entry, so a symlinked directory is followed and lands in `_site/` as real
   files; the dev server serves through them too, which is why `npm run watch`
-  shows up on a browser reload exactly as it does under Flask.
+  shows up on a browser reload.
 
   **`dist` is two symlinks rather than one, deliberately.** Linking the whole of
   `dist/` published `dist/types/**` as well — 180 KB of `.d.ts` on a website —
@@ -750,28 +678,23 @@ page added to the catalogue is on the site with the next push to master.
   the source file, so it cannot address the repository. The repo root is
   stamped in as `__REPO_ROOT__` by `astro.config.mjs`, which is not bundled.
   `BaseLayout.astro` reads `package.json` and checks for `dist/` through it.
-- **The landing page is the one page whose route the generator changes.** The
-  catalogue records `/getting-started.html`, because that is what the freeze
-  publishes; Astro makes the site root canonical instead.
-  `docs/src/lib/catalogue.ts` owns that single divergence, and it is also the
-  only place the site looks a page up by id: both accessors throw on an unknown
-  one the way `url_for` does, so a mistyped link fails the build instead of
-  publishing a 404.
+- **The landing page is canonical at the site root.** The catalogue keeps
+  `/getting-started.html` as its historic compatibility path, and
+  `docs/src/lib/catalogue.ts` owns that exception. It is also the only place the
+  site looks a page up by id: both accessors throw on an unknown one, so a
+  mistyped link fails the build instead of publishing a 404.
 - **A page declares its sections once.** `defineSections()` returns them keyed
   by id and in order: `<PageBody>` builds the table of contents from it and each
   `<Section {...S.download}>` is spread from the same object, so a heading and
-  its entry cannot drift. Astro has no render-order side channel, which is what
-  the Jinja `section()` macro used. `Section` throws on a missing id, because a
-  mistyped key spreads *nothing* rather than failing.
+  its entry cannot drift. `Section` throws on a missing id, because a mistyped
+  key spreads *nothing* rather than failing.
 - **`<Code code={`…`} />` takes the sample as an explicit template literal**, so
   its whitespace is the author's. It escapes angle brackets and ampersands and
-  leaves quotes alone, matching the Jinja filter. `check={false}` plus a
-  `reason` is the same opt-out, and `tests/semantics.test.js` reads it — the
-  Astro pages are a surface of their own there (`docs/src`), because a
-  conversion is exactly the moment markup goes quietly wrong.
+  leaves quotes alone. `check={false}` plus a `reason` opts one sample out, and
+  `tests/semantics.test.js` reads it from the `docs/src` surface.
 - **One page hand-rolls the scaffold instead of `<PageBody>`, and must keep
   doing so.** `floating-action-button.astro` writes its own container, row and
-  table of contents, because the Jinja page did: its content column is
+  table of contents. Its content column is
   `s12 m8 offset-m1 xl7 offset-xl1` *without* `docs-page-content`, so none of
   the `.docs-page-content .docs-section` typography in `docs.css` reaches it.
   `<PageBody>` always appends that class -- correctly, since `panes` passes a
@@ -779,13 +702,11 @@ page added to the catalogue is on the site with the next push to master.
   -- so the page cannot go through it without changing how it renders. Add the
   class in a change that owns the visual diff, not in a migration. Its copy of
   the table-of-contents markup is pinned against `<PageBody>`'s by
-  `tests/docs-astro.test.js`, the way the drawer and footer copies are pinned
-  against the Jinja macros -- renaming `toc-wrapper` in one and not the other
-  is the failure that copy invites.
+  `tests/docs-astro.test.js`; renaming `toc-wrapper` in one and not the other is
+  the failure that copy invites.
 - **A page needing its own `<head>` content puts `slot="head"` on the element.**
-  That is the Jinja `extra_head` block; `DocsLayout` forwards the named slot to
-  `BaseLayout`, which renders it last in the head, where the block was. The
-  Typography page's extra Roboto weights are the only use today.
+  `DocsLayout` forwards the named slot to `BaseLayout`, which renders it last in
+  the head. The Typography page's extra Roboto weights are the only use today.
 - **The six legacy routes are one dynamic page, and the landing page's two
   compatibility paths swap roles.** `src/pages/[alias].astro` spreads
   `aliases()` over `RedirectLayout`, so a canonical target is stated once, not
@@ -851,12 +772,6 @@ page added to the catalogue is on the site with the next push to master.
   URL the pages already use resolves as written -- which is what let the deploy
   stop rewriting them for the project-subpath address. Supporting that address
   is explicitly not a requirement.
-- **`scripts/jinja-to-astro.mjs` is temporary and is deleted with Flask.** It
-  moves the predictable syntax and reports what it could not, with a line
-  number; macro-heavy pages are finished by hand. One thing it has to do that
-  is not obvious: an expression in a quoted attribute is a *literal string* in
-  Astro, so `href="{route('grid')}"` publishes those eleven characters and the
-  whole attribute has to become an expression.
 
 `tests/docs-astro.test.js` holds the pages to the catalogue — that each
 publishes at the route the catalogue gives it, that its declared and rendered
@@ -869,8 +784,8 @@ a page publishes at all, that its links resolve, that it satisfies the
 document-level semantics rules — is `scripts/verify-site.mjs`'s, and
 `npm run docs:build` chains it.
 
-**The composed-page checks moved with the migration, and they are the ones a
-fragment cannot answer.** `<main>` nesting, a dialog's name, and two landmarks
+**The composed-page checks ask what a fragment cannot answer.** `<main>`
+nesting, a dialog's name, and two landmarks
 on a page sharing one — the check that found 31 landmarks called "Main" — now
 run in `scripts/verify-site.mjs` over `_site/`, out of the same engine
 `semantics.test.js` uses (`scripts/semantics-rules.mjs`). That engine lives
@@ -878,24 +793,19 @@ under `scripts/` because a test file cannot be imported without running its
 tests. `npm run docs:build` chains the verifier, so the questions are asked on
 every build rather than against a committed snapshot of a previous one.
 
-That closes the gap `npm run test:visual` cannot: it photographs the Flask base
-against the Astro head, so a structural divergence that *renders* shows up as a
-moved page — but one that renders nothing, a landmark losing its name or two
-sharing one, moves no pixel. The two are complementary, and neither reads
-`website/` any more.
+That closes the gap `npm run test:visual` cannot: a structural divergence that
+*renders* shows up as a moved page, but one that renders nothing — a landmark
+losing its name or two sharing one — moves no pixel. The two are complementary.
 
 **`docs/src/data/nav.ts` is the only page inventory** (`adr/0003`): every
 canonical page's id, group, label, title, description, published route and
 legacy aliases, in one file. The pages, the drawer, the footer, the redirects,
 `llms.txt` and the verifier all read it, so adding a page is one edit plus one
-`.astro` file. `docs/app.py` still exists but publishes nothing, and the test
-that held the two together went with the agreement it was checking.
+`.astro` file.
 
-**The six legacy routes are redirect stubs under Astro, and were not under
-Flask.** Frozen-Flask followed each 301 and wrote a full copy of the target page
-at the alias URL, so `website/dropdown.html` is a byte-for-byte second Menu page
-— which is why the frozen count is 65 rather than 59. `[alias].astro` publishes
-a canonical-tagged redirect at each of those paths instead.
+**The six legacy routes are redirect stubs.** `[alias].astro` publishes a
+canonical-tagged redirect at each compatibility path rather than duplicating
+the target page.
 
 The catalogue is typechecked — `tsconfig.json` includes `docs/src`, while
 `tsconfig.build.json` keeps its own `include` so nothing from the site reaches
@@ -917,4 +827,4 @@ The five canonical roles, each label string equal to its name. None of them exis
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` at the repo root, ADRs in `adr/` — **not** `docs/adr/`, because `docs/` is the Flask docs-site app. See `docs/agents/domain.md`.
+Single-context: `CONTEXT.md` at the repo root, ADRs in `adr/` — **not** `docs/adr/`, because `docs/` is the Astro site. See `docs/agents/domain.md`.

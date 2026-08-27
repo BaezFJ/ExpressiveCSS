@@ -70,7 +70,6 @@
     "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",
     "build:types": "tsc -p tsconfig.build.json",
     "build:semantics": "node scripts/gen-semantics.mjs",
-    "build:llms": "uv run python scripts/gen_llms.py",
     "docs:dev": "run-s build docs:watch",
     "docs:watch": "run-p watch:css watch:js docs:server",
     "docs:server": "astro dev --root docs",

@@ -5,16 +5,9 @@
 // is why `visual/run.mjs` drives two passes rather than this config being run
 // directly. The reasons are in that file's header.
 //
-// Each pass names the generator that renders its revision. During the Astro
-// migration those differ -- Flask serves the base, Astro's built _site/ serves
-// the head, and a page is accepted when the two are the same picture. After
-// the cutover both passes are `astro` and nothing here needs changing: the
-// Flask branch retires with docs/app.py, because run.mjs picks the generator
-// from what the revision actually has.
-//
-// Neither server is the frozen website/. Nothing publishes it any more, its
-// root-absolute /dist/... URLs point at a directory git ignores, and it is
-// generated output -- which is also why the page list no longer comes from it.
+// Both passes serve the Astro artifact their revision builds. Generated output
+// stays untracked; visual/run.mjs creates each revision's `_site/` before this
+// configuration starts its server.
 
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -23,21 +16,12 @@ import { defineConfig, devices } from '@playwright/test';
 
 const port = Number(process.env.VISUAL_PORT ?? 5111);
 
-// Absolute, always. A pass points its server at a git worktree while `uv` and
-// node still run out of the main checkout, where .venv, uv.lock and
-// node_modules live -- and Playwright spawns webServer with its cwd at *this*
-// directory, so a relative default resolves to visual/docs/app.py and flask
-// exits 2.
+// Absolute, always. A pass points its server at a git worktree while
+// node_modules lives in the main checkout, and Playwright spawns webServer with
+// its cwd at this directory.
 const HERE = dirname(fileURLToPath(import.meta.url));
 const revision = process.env.VISUAL_ROOT ?? join(HERE, '..');
-
-// Astro is the default: after the cutover it is the only generator left, and
-// a default naming the one being retired would be the thing left to clean up.
-const generator = process.env.VISUAL_GEN ?? 'astro';
-const command =
-  generator === 'flask'
-    ? `uv run python "${join(HERE, 'serve.py')}" "${join(revision, 'docs/app.py')}" ${port}`
-    : `node "${join(HERE, 'serve.mjs')}" "${join(revision, '_site')}" ${port}`;
+const command = `node "${join(HERE, 'serve.mjs')}" "${join(revision, '_site')}" ${port}`;
 
 export default defineConfig({
   testDir: '.',
@@ -100,15 +84,10 @@ export default defineConfig({
 
   webServer: {
     command,
-    // The site root, because it is the one URL both generators publish: Flask
-    // serves the landing page there and at /getting-started.html, Astro serves
-    // it there and redirects the historic path to it.
+    // The canonical landing page is the site root; `/getting-started.html` is
+    // a compatibility redirect and is not photographed.
     url: `http://127.0.0.1:${port}/`,
     reuseExistingServer: false,
-    // serve.py quiets Werkzeug's per-request access log, so stderr can stay
-    // open for the failures worth seeing. Silencing it outright was the first
-    // attempt and it cost real time: a server that would not start reported
-    // nothing but "Exit code: 1".
     stdout: 'ignore',
     stderr: 'pipe',
     timeout: 60_000,

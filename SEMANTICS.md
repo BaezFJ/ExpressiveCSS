@@ -16,14 +16,14 @@ Element choice, landmark structure, and the ARIA that element choice implies. Ke
 
 ## Enforcement
 
-`tests/semantics.test.js` runs every rule below against three surfaces:
-`llm.md`, `docs/templates`, `tests/fixtures.js`, `m3-guidelines.md (forbid rules only)`.
+`tests/semantics.test.js` runs every rule below against 4 surfaces:
+`llm.md`, `docs/src`, `tests/fixtures.js`, `m3-guidelines.md (forbid rules only)`.
 
 A rule runs only when its component is **enforced**. An **exempt** component
 has not been swept yet; the exempt list only ever shrinks, and a component
 added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
-`code(check=false, reason="why")` in a docs template.
+`<Code check={false} reason="why" ... />` in an Astro page.
 
 **54 of 54 rows enforced; 0 remaining.**
 
@@ -32,7 +32,7 @@ The rest are not, and say which they are: `character-counter` (behavior), `docke
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
 
-`table_of_contents` has no row at all: the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's own page macro. The partial stays in the sheet; `scrollspy` owns its rule.
+`table_of_contents` has no row at all: the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule.
 
 **Conformance debt** is a separate axis from enforced/exempt: a fully enforced
 component may still withhold a composite role because the keyboard contract rule 2

@@ -1,13 +1,12 @@
 # Astro generates the documentation site, and nothing generated is committed
 
-The documentation site is authored in Flask and Jinja, frozen into a committed
+The documentation site was authored in Flask and Jinja, frozen into a committed
 `website/` tree by Frozen-Flask, and then reshaped again by the Pages workflow —
-three representations of one site, two of them generated, all three in Git. That
-arrangement is what is being replaced. **Astro becomes the sole static generator
-for `docs/`**, its output is ignored, and the Pages job uploads the built
-artifact directly.
+three representations of one site, two of them generated, all three in Git.
+**Astro is now the sole static generator for `docs/`**, its output is ignored,
+and the Pages job uploads the built artifact directly.
 
-This is recorded before implementation, because the parts of it that are easy to
+This was recorded before implementation, because the parts of it that are easy to
 undo by accident — the custom site, the ignored output, the custom domain — are
 exactly the parts a later contributor would "fix" without knowing they were
 decided.
@@ -21,11 +20,9 @@ generator's job here is to emit HTML that the framework's own bundle then brings
 to life. Astro's file-format output keeps the flat `.html` URLs the site already
 publishes, which is the property that makes the swap invisible to readers.
 
-The one URL that changes owner is the root. Today `/index.html` is a copy of
-`getting-started.html` made by the deploy, because Pages has no directory index
-and Frozen-Flask writes what `url_for` builds. Under Astro the root becomes the
-canonical landing page and `/getting-started.html` becomes one more alias — the
-same two documents, with the naming the site should have had.
+The one URL that changed owner is the root. Astro makes `/` the canonical
+landing page and `/getting-started.html` a compatibility alias. `/index.html`
+is the root document written by Astro's file-format build, not another alias.
 
 **The custom site is preserved, not replaced by a documentation theme.**
 Starlight and its peers are prose-shaped: sidebar, article, next/previous. This
@@ -51,9 +48,8 @@ workflow drops to read-only contents.
 canonical page's id, navigation group, label, title, description, published route
 and legacy aliases, and everything that needs a page list — the drawer, the
 footer, the `llms.txt` index, the alias redirects, the tests — reads it. The
-alternative is what exists today: the navigation in `docs/app.py`, the titles and
-descriptions in each template, the routes in the decorators, and the published
-set in `website/`, four places that agree only by hand.
+replaced system split that inventory among Flask routes, Jinja templates and a
+committed generated site, which agreed only by hand.
 
 **Documentation build terminology stays out of `CONTEXT.md`.** The glossary
 defines the framework's domain — components, tokens, semantics. "Catalogue",
@@ -81,14 +77,12 @@ are what Astro already is.
 
 ## Consequences
 
-The migration lands as one atomic change on the default branch: two competing
+The migration landed as one atomic change on the default branch: two competing
 documentation systems must never both be present there, because the second one
-to be updated is the one that quietly goes stale. It may still be *developed* as
-ordered commits on a branch, and this ADR plus the catalogue is the first of
-them — the catalogue shipped alongside the Flask application and was held to it
-by a parity test for as long as Flask published the site. Once Astro became the
-documentation path the catalogue became the sole inventory, and that test went
-with the agreement it existed to check.
+to be updated is the one that quietly goes stale. It was developed as ordered
+commits on a branch, including this ADR and the catalogue. Once Astro became the
+documentation path the catalogue became the sole inventory, and the temporary
+parity test went with the agreement it existed to check.
 
 Tests describe published behaviour rather than the generator. The seam is the
 built site: pages, aliases, assets and LLM endpoints enumerated from the
@@ -97,10 +91,9 @@ templates and frozen files agreed with each other have nothing left to prove and
 go with them.
 
 Visual regression keeps its merge-base comparison and its 100-pixel tolerance.
-During the migration the base revision is served by Flask and the candidate by
-Astro, which is the only period in which the suite compares two generators; byte
-formatting of the HTML is explicitly not compared, only the rendered result.
+Both revisions are built with `npm run docs:build` and served from `_site/`, so
+the suite compares the same published Astro seam on each side. Byte formatting
+of the HTML is explicitly not compared, only the rendered result.
 
-Python leaves the repository's documentation path entirely — `pyproject.toml`,
-`uv.lock`, `freeze.py` and `scripts/gen_llms.py` all exist to serve or freeze the
-Flask app. A clean checkout then builds and publishes the site with Node alone.
+Python has left the repository's documentation path entirely. A clean checkout
+builds, tests and publishes the site with Node alone.

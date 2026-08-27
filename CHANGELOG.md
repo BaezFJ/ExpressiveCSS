@@ -616,6 +616,14 @@ below is the whole story for that component.
 
 ### Removed
 
+- **The retired Flask documentation pipeline is gone.** Astro is the sole
+  documentation generator, so the Flask application and Jinja templates,
+  Frozen-Flask configuration, Python environment, migration script, committed
+  `website/` snapshot and generated root `llms.txt` have been removed. The
+  documentation site now builds, verifies and publishes from a clean checkout
+  with Node alone; visual regression builds both revisions through that same
+  Astro production path.
+
 - **Waves is gone, replaced by state layers.** Material 3 has no ink ripple; it
   has a state layer, and the framework's is complete — a `md.sys.state` opacity
   per state, documented on the State layers page, painted by the components

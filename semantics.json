@@ -33,7 +33,7 @@
   ],
   "surfaces": [
     "llm.md",
-    "docs/templates",
+    "docs/src",
     "tests/fixtures.js",
     "m3-guidelines.md (forbid rules only)"
   ],
@@ -43,7 +43,7 @@
     "landmarks"
   ],
   "notComponents": {
-    "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's own page macro. The partial stays in the sheet; `scrollspy` owns its rule."
+    "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule."
   },
   "rows": {
     "autocomplete": {

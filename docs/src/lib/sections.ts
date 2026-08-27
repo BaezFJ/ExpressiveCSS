@@ -1,11 +1,9 @@
 /**
  * A page's sections, declared once.
  *
- * The Jinja `section()` macro registered each section as it rendered and built
- * the table of contents from what registered, so an id and its TOC entry could
- * not drift. Astro has no render-order side channel, so the page states the
- * list up front instead: `<PageBody>` builds the TOC from it and each
- * `<Section>` is spread from the same object.
+ * The page states the list up front: `<PageBody>` builds the table of contents
+ * from it and each `<Section>` is spread from the same object, so an id and its
+ * entry cannot drift.
  */
 export interface SectionMeta {
   /** The anchor, and what the TOC links to. */

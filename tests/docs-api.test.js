@@ -33,9 +33,9 @@ const HOOKS = new Set([
 function docSources() {
   const out = [{ file: 'llm.md', text: read('llm.md') }];
   const walk = (dir) => {
-    for (const e of readdirSync(new URL(`docs/templates/${dir}`, root), { withFileTypes: true })) {
+    for (const e of readdirSync(new URL(`docs/src/${dir}`, root), { withFileTypes: true })) {
       if (e.isDirectory()) { walk(`${dir}${e.name}/`); continue; }
-      if (e.name.endsWith('.html')) out.push({ file: `docs/templates/${dir}${e.name}`, text: read(`docs/templates/${dir}${e.name}`) });
+      if (e.name.endsWith('.astro')) out.push({ file: `docs/src/${dir}${e.name}`, text: read(`docs/src/${dir}${e.name}`) });
     }
   };
   walk('');
