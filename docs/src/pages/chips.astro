@@ -1,0 +1,381 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "contact", label: "Contacts" },
+  { id: "tag", label: "Tags" },
+  { id: "basic", label: "Plugin", heading: "Javascript Plugin" },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+]);
+---
+<DocsLayout page="chips">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          A chip is a <code>.chip</code>, and the element says which kind it is — the
+          four Material 3 chip types, plus a non-interactive display chip, across three
+          root elements. Add <code>outlined</code> for a bordered style.
+          Static chips are CSS. The JavaScript plugin lives on a <code>.chips</code>
+          wrapper.
+        </p>
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Element</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Display</td>
+              <td><code>&lt;span class="chip"&gt;</code></td>
+              <td>Presents information. Not a control, not in the tab order.</td>
+            </tr>
+            <tr>
+              <td>Assist, suggestion</td>
+              <td><code>&lt;button type="button" class="chip"&gt;</code></td>
+              <td>One action on press.</td>
+            </tr>
+            <tr>
+              <td>Filter</td>
+              <td><code>&lt;input type="checkbox" class="chip-input"&gt;</code> + <code>&lt;label class="chip"&gt;</code></td>
+              <td>Multi-select and toggleable, and it carries a value into the form. No JavaScript.</td>
+            </tr>
+            <tr>
+              <td>Input</td>
+              <td><code>&lt;span class="chip"&gt;</code> + a nested <code>&lt;button class="close"&gt;</code></td>
+              <td>The chip is a token; the delete button is the control.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="chips mb-5">
+          <span class="chip outlined">Information</span>
+          <span class="chip">
+            <img src="https://picsum.photos/id/64/100/100" alt=""> Jane Doe
+          </span>
+          <button type="button" class="chip">
+            <span class="material-symbols" aria-hidden="true">event</span>
+            Add to calendar
+          </button>
+          <input type="checkbox" class="chip-input" id="demo-filter-flights">
+          <label class="chip" for="demo-filter-flights">
+            <span class="material-symbols" aria-hidden="true">check</span>
+            Flights
+          </label>
+          <span class="chip">
+            Tag
+            <button type="button" class="close" aria-label="Remove Tag">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </span>
+        </div>
+<Code code={`
+<span class="chip outlined">Information</span>
+
+<span class="chip">
+  <img src="photo.jpg" alt=""> Jane Doe
+</span>
+
+<button type="button" class="chip">
+  <span class="material-symbols" aria-hidden="true">event</span>
+  Add to calendar
+</button>
+
+<input type="checkbox" class="chip-input" id="filter-flights">
+<label class="chip" for="filter-flights">
+  <span class="material-symbols" aria-hidden="true">check</span>
+  Flights
+</label>
+
+<span class="chip">
+  Tag
+  <button type="button" class="close" aria-label="Remove Tag">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</span>
+`} />
+        <p>
+          The delete button needs its own <code>aria-label</code> naming the chip it
+          removes, because its only content is an icon. The icon is
+          <code>aria-hidden</code> in every chip: the ligature is real text and is
+          otherwise read out alongside the label.
+        </p>
+        <p>
+          A filter chip's selected state is <code>:checked</code> on its input, so it
+          needs no script. Everywhere else the selected look is the
+          <code>selected</code> class (<code>active</code> is the pre-0.8.0 name and
+          still works).
+        </p>
+        <p>
+          Clicking <code>.close</code> removes the chip only when it sits inside a
+          <code>.chips</code> container. Importing the bundle runs
+          <code>Chips.Init()</code> on <code>DOMContentLoaded</code>, which wires that
+          click. A lone <code>.chip</code> does not remove itself.
+        </p>
+        <p>
+          Before 0.8.0 every chip was a <code>&lt;div class="chip"&gt;</code> and the
+          delete affordance was an <code>&lt;i class="close"&gt;</code> — focusable via
+          <code>tabindex</code> but with no role and no name. That markup still
+          renders; it is no longer correct and is not documented.
+        </p>
+  </Section>
+
+  <Section {...S.contact}>
+        <p>
+          Put an image inside the chip. The name next to it is the accessible name
+          already, so the image is decorative — <code>alt=""</code>.
+        </p>
+        <span class="chip mb-3">
+          <img src="https://picsum.photos/id/64/100/100" alt="">
+          Jane Doe
+        </span>
+<Code code={`
+<span class="chip">
+  <img src="photo.jpg" alt="">
+  Jane Doe
+</span>
+`} />
+  </Section>
+
+  <Section {...S.tag}>
+        <p>
+          Put a <code>button.close</code> inside the chip. Give it
+          <code>type="button"</code> so it cannot submit a surrounding form, and an
+          <code>aria-label</code> naming what it removes.
+        </p>
+        <div class="chips mb-3">
+          <span class="chip">
+            Tag
+            <button type="button" class="close" aria-label="Remove Tag">
+              <span class="material-symbols" aria-hidden="true">close</span>
+            </button>
+          </span>
+        </div>
+<Code code={`
+<span class="chip">
+  Tag
+  <button type="button" class="close" aria-label="Remove Tag">
+    <span class="material-symbols" aria-hidden="true">close</span>
+  </button>
+</span>
+`} />
+  </Section>
+
+  <Section {...S.basic}>
+        <p>
+          The plugin turns a <code>.chips</code> container into an editable tag field.
+          Type a value and press Enter to add a chip. Delete with the chip's delete
+          button, or select a chip and press Backspace or Delete. Selecting a chip
+          marks it <code>selected</code> and moves focus to its delete button.
+        </p>
+        <p>
+          <code>allowUserInput</code> defaults to <code>false</code>. Without it there
+          is no text field and rendered chips have no delete button. Pass
+          <code>allowUserInput: true</code> for the interactive field.
+          <code>AutoInit()</code> starts every <code>.chips</code> except
+          <code>no-autoinit</code>, but it uses the defaults, so those wrappers stay
+          display-only until you call <code>init</code> with options.
+        </p>
+        <p>Empty field — type a tag and press Enter:</p>
+        <div id="chips-empty" class="chips no-autoinit mb-5"></div>
+        <p>Initial tags from the <code>data</code> option:</p>
+        <div id="chips-initial" class="chips no-autoinit mb-5"></div>
+        <p>Placeholders when the field is empty and after the first tag:</p>
+        <div id="chips-placeholder" class="chips no-autoinit mb-5"></div>
+        <p>Autocomplete suggestions while typing:</p>
+        <div id="chips-autocomplete" class="chips no-autoinit mb-5"></div>
+<Code code={`
+<div class="chips"></div>
+<div class="chips chips-initial"></div>
+<div class="chips chips-placeholder"></div>
+<div class="chips chips-autocomplete"></div>
+<!-- Optional: provide your own input -->
+<div class="chips">
+  <input class="custom-class">
+</div>
+`} />
+        <p>
+          The classes <code>chips-initial</code>, <code>chips-placeholder</code>, and
+          <code>chips-autocomplete</code> are only hooks for your selectors. They have
+          no styles of their own.
+        </p>
+  </Section>
+
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.Chips</code>.
+          Call <code>init</code> with <code>allowUserInput: true</code> (and any other
+          options) for an editable field. Re-init after adding a container dynamically.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.chips');
+  const instances = Expressive.Chips.init(elems, {
+    allowUserInput: true,
+    placeholder: 'Enter a tag',
+    secondaryPlaceholder: '+Tag',
+    autocompleteOptions: {
+      data: [
+        { id: 12, text: 'Apple' },
+        { id: 13, text: 'Microsoft' },
+        { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+      ]
+    }
+  });
+});
+`} />
+        <p>Chip data object. <code>id</code> is required; a chip without an id is not rendered.</p>
+<Code code={`
+const chip = {
+  id: '4711',
+  text: 'Title',
+  image: ''
+};
+`} />
+  </Section>
+
+  <Section {...S.options}>
+        <OptionsTable>
+            <tr>
+              <td><code>data</code></td>
+              <td>Array</td>
+              <td><code>[]</code></td>
+              <td>Initial chips. Each item is a chip data object.</td>
+            </tr>
+            <tr>
+              <td><code>placeholder</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Placeholder when there are no chips. Requires <code>allowUserInput</code>.</td>
+            </tr>
+            <tr>
+              <td><code>secondaryPlaceholder</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Placeholder after at least one chip exists.</td>
+            </tr>
+            <tr>
+              <td><code>closeIconClass</code></td>
+              <td>String</td>
+              <td><code>'material-symbols'</code></td>
+              <td>Class on the icon inside the delete button.</td>
+            </tr>
+            <tr>
+              <td><code>allowUserInput</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, render a text field and a delete button per chip, so the user can add and remove chips.</td>
+            </tr>
+            <tr>
+              <td><code>i18n</code></td>
+              <td>Object</td>
+              <td><code>&#123; remove: 'Remove' &#125;</code></td>
+              <td>Strings the component generates. <code>remove</code> prefixes the delete button's accessible name, giving "Remove Apple".</td>
+            </tr>
+            <tr>
+              <td><code>autocompleteOptions</code></td>
+              <td>Object</td>
+              <td><code>&#123;&#125;</code></td>
+              <td>Options passed to Autocomplete on the input. A non-empty object enables autocomplete.</td>
+            </tr>
+            <tr>
+              <td><code>autocompleteOnly</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>If true, Enter will not add a value that is not in the autocomplete list.</td>
+            </tr>
+            <tr>
+              <td><code>limit</code></td>
+              <td>Number</td>
+              <td><code>Infinity</code></td>
+              <td>Maximum number of chips.</td>
+            </tr>
+            <tr>
+              <td><code>onChipAdd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a chip is added. Receives the container and the chip element.</td>
+            </tr>
+            <tr>
+              <td><code>onChipSelect</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a chip is selected. Receives the container and the chip element.</td>
+            </tr>
+            <tr>
+              <td><code>onChipDelete</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called after a chip is deleted. Receives the container and the chip element.</td>
+            </tr>
+        </OptionsTable>
+  </Section>
+
+  <Section {...S.methods}>
+        <InstanceNote plugin="Chips" />
+
+        <h5 class="light">.addChip();</h5>
+        <p>Add a chip. Ignored if <code>id</code> is missing, already present, or the limit is reached.</p>
+<Code code={`
+instance.addChip({
+  id: 1337,
+  text: 'John Doe',
+  image: ''
+});
+`} />
+
+        <h5 class="light">.deleteChip();</h5>
+        <p>Delete the chip at this index.</p>
+<Code code={`
+instance.deleteChip(3);
+`} />
+
+        <h5 class="light">.selectChip();</h5>
+        <p>Focus the chip at this index.</p>
+<Code code={`
+instance.selectChip(2);
+`} />
+
+        <h5 class="light">.getData();</h5>
+        <p>The current chips as an array of chip data objects.</p>
+<Code code={`
+instance.getData();
+`} />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove rendered chips, and tear down its event handlers.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+
+  <Section {...S.properties}>
+        <PropertiesTable el="The container the plugin was initialized with.">
+            <tr>
+              <td><code>chipsData</code></td>
+              <td>Array</td>
+              <td>The current chip data.</td>
+            </tr>
+            <tr>
+              <td><code>hasAutocomplete</code></td>
+              <td>Boolean</td>
+              <td>Whether autocomplete is enabled.</td>
+            </tr>
+            <tr>
+              <td><code>autocomplete</code></td>
+              <td>Autocomplete</td>
+              <td>The Autocomplete instance, if any.</td>
+            </tr>
+        </PropertiesTable>
+  </Section>
+
+</PageBody>
+</DocsLayout>

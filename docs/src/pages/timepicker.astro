@@ -1,0 +1,313 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "initialization", label: "Initialization" },
+  { id: "display", label: "Display" },
+  { id: "options", label: "Options" },
+  { id: "internationalization", label: "Internationalization" },
+  { id: "twelve-hour", label: "12-hour and 24-hour" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+]);
+---
+<DocsLayout page="timepicker">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          Add <code>timepicker</code> to a text input. <code>AutoInit()</code> starts every
+          <code>.timepicker</code> except those marked <code>no-autoinit</code>.
+        </p>
+        <p>
+          The clock is inline, not a modal. It is appended to the input’s parent and stays
+          visible. There is no <code>openByDefault</code> flag.
+        </p>
+        <div class="field mb-3">
+          <input type="text" class="time-picker" id="timepicker-intro">
+          <label for="timepicker-intro">Lunchtime</label>
+        </div>
+<Code code={`
+<div class="field">
+  <input type="text" class="time-picker" id="lunchtime">
+  <label for="lunchtime">Lunchtime</label>
+</div>
+`} />
+        <p>
+          Wrap the input in its own <code>.field</code> (or another small parent). The
+          clock is appended inside that parent.
+        </p>
+        <p>
+          Click a hour on the dial, then a minute. With the default
+          <code>autoSubmit: true</code>, finishing the minute writes the input
+          (<code>HH:MM AM</code> or <code>HH:MM PM</code>). You can also type in the digital
+          hour and minute fields.
+        </p>
+  </Section>
+
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.Timepicker</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>Expressive.AutoInit()</code> start every <code>.timepicker</code>.
+          Unlike Datepicker, the default options already show the clock.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.timepicker');
+  const instances = Expressive.Timepicker.init(elems, {
+    // specify options here
+  });
+});
+`} />
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<Code code={`
+Expressive.AutoInit(document.body, {
+  Timepicker: { twelveHour: false }
+});
+`} />
+  </Section>
+
+  <Section {...S.display}>
+        <p>
+          The clock is a <code>.timepicker-container</code> in the page. There is no overlay
+          and no <code>autoClose</code> option.
+        </p>
+        <p>
+          <code>container</code> renders the clock into a specific element instead of the
+          input’s parent. Pass a selector or a DOM node.
+        </p>
+        <h5 class="light">Docked popover</h5>
+        <p>
+          <code>displayPlugin: 'docked'</code> wraps the clock in a
+          <code>.display-docked</code> popover that appears when the input is clicked or
+          confirmed with Enter, and hides when you click outside.
+        </p>
+<Code code={`
+Expressive.Timepicker.init(elem, {
+  displayPlugin: 'docked'
+});
+`} />
+        <p>
+          The popover is positioned in document coordinates and then appended to the
+          input’s parent. A <code>position: relative</code> parent — including
+          <code>.field</code> — shifts that position, so the clock will not sit
+          next to the field. Prefer a static wrapper if you use docked, or keep the
+          clock inline.
+        </p>
+        <p>
+          Optional <code>displayPluginOptions</code>: <code>margin</code> (default
+          <code>5</code>), <code>transition</code> (<code>10</code>),
+          <code>duration</code> (<code>250</code>), and <code>align</code>
+          (<code>'left'</code>).
+        </p>
+  </Section>
+
+  <Section {...S.options}>
+        <OptionsTable>
+            <tr>
+              <td><code>duration</code></td>
+              <td>Number</td>
+              <td><code>350</code></td>
+              <td>Transition between the hours and minutes views, in milliseconds.</td>
+            </tr>
+            <tr>
+              <td><code>container</code></td>
+              <td>Element or String</td>
+              <td><code>null</code></td>
+              <td>Element or selector to render the clock into. When omitted, it is appended to the input’s parent.</td>
+            </tr>
+            <tr>
+              <td><code>showClearBtn</code></td>
+              <td>Boolean</td>
+              <td><code>false</code></td>
+              <td>Show a Clear button in the footer.</td>
+            </tr>
+            <tr>
+              <td><code>autoSubmit</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added.</td>
+            </tr>
+            <tr>
+              <td><code>defaultTime</code></td>
+              <td>String</td>
+              <td><code>'now'</code></td>
+              <td>Initial time. <code>'now'</code> or a <code>'HH:MM'</code> string (optionally with <code>AM</code>/<code>PM</code>).</td>
+            </tr>
+            <tr>
+              <td><code>fromNow</code></td>
+              <td>Number</td>
+              <td><code>0</code></td>
+              <td>Millisecond offset added to <code>'now'</code>.</td>
+            </tr>
+            <tr>
+              <td><code>i18n</code></td>
+              <td>Object</td>
+              <td>See below</td>
+              <td>Labels for Cancel, Clear, and Ok.</td>
+            </tr>
+            <tr>
+              <td><code>twelveHour</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>If true, use a 12-hour clock with AM/PM. If false, use 24-hour hours on two rings.</td>
+            </tr>
+            <tr>
+              <td><code>vibrate</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Vibrate the device when the clock hand changes value.</td>
+            </tr>
+            <tr>
+              <td><code>onSelect</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when a time is chosen on the dial. Receives <code>(hour, minute)</code>.</td>
+            </tr>
+            <tr>
+              <td><code>onInputInteraction</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the input is clicked or confirmed with Enter.</td>
+            </tr>
+            <tr>
+              <td><code>onDone</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the Ok button is used. Only created when <code>autoSubmit</code> is false.</td>
+            </tr>
+            <tr>
+              <td><code>onCancel</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the Cancel button is used. Only created when <code>autoSubmit</code> is false.</td>
+            </tr>
+            <tr>
+              <td><code>displayPlugin</code></td>
+              <td>String</td>
+              <td><code>null</code></td>
+              <td>Set to <code>'docked'</code> for a click-to-open popover.</td>
+            </tr>
+            <tr>
+              <td><code>displayPluginOptions</code></td>
+              <td>Object</td>
+              <td><code>null</code></td>
+              <td>Options for the docked plugin: <code>margin</code>, <code>transition</code>, <code>duration</code>, <code>align</code>.</td>
+            </tr>
+        </OptionsTable>
+  </Section>
+
+  <Section {...S.internationalization}>
+        <p>Pass a partial <code>i18n</code> object. Missing keys keep the English defaults.</p>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>cancel</code></td>
+              <td><code>'Cancel'</code></td>
+            </tr>
+            <tr>
+              <td><code>clear</code></td>
+              <td><code>'Clear'</code></td>
+            </tr>
+            <tr>
+              <td><code>done</code></td>
+              <td><code>'Ok'</code></td>
+            </tr>
+          </tbody>
+        </table>
+  </Section>
+
+  <Section {...S["twelve-hour"]}>
+        <p>
+          <code>twelveHour</code> defaults to <code>true</code>. The intro clock above is
+          12-hour with AM/PM. Set <code>twelveHour: false</code> for a 24-hour dial: hours
+          1–12 on the inner ring, 13–00 on the outer ring. The written value is then
+          <code>HH:MM</code> with no meridian.
+        </p>
+        <div class="field mb-3">
+          <input type="text" class="time-picker no-autoinit" id="timepicker-24">
+          <label for="timepicker-24">24-hour</label>
+        </div>
+<Code code={`
+Expressive.Timepicker.init(document.getElementById('timepicker-24'), {
+  twelveHour: false
+});
+`} />
+  </Section>
+
+  <Section {...S.methods}>
+        <InstanceNote plugin="Timepicker" />
+
+        <h5 class="light">.showView();</h5>
+        <p>Show the hours or minutes face.</p>
+        <p><strong>String:</strong> <code>'hours'</code> or <code>'minutes'</code>.</p>
+<Code code={`
+instance.showView('hours');
+`} />
+
+        <h5 class="light">.done();</h5>
+        <p>Write the current hours and minutes to the input. Pass a truthy argument to clear the input instead.</p>
+<Code code={`
+instance.done();
+instance.done(true);
+`} />
+
+        <h5 class="light">.clear();</h5>
+        <p>Clear the input. Same as <code>done(true)</code>.</p>
+<Code code={`
+instance.clear();
+`} />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove the clock, and tear down its event handlers.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+
+  <Section {...S.properties}>
+        <PropertiesTable el="The input the plugin was initialized with.">
+            <tr>
+              <td><code>time</code></td>
+              <td>String</td>
+              <td>The last value written by <code>done()</code>, without the AM/PM suffix.</td>
+            </tr>
+            <tr>
+              <td><code>hours</code></td>
+              <td>Number</td>
+              <td>The hour currently shown on the clock.</td>
+            </tr>
+            <tr>
+              <td><code>minutes</code></td>
+              <td>Number</td>
+              <td>The minute currently shown on the clock.</td>
+            </tr>
+            <tr>
+              <td><code>amOrPm</code></td>
+              <td>String</td>
+              <td><code>'AM'</code> or <code>'PM'</code> when <code>twelveHour</code> is true.</td>
+            </tr>
+            <tr>
+              <td><code>currentView</code></td>
+              <td>String</td>
+              <td><code>'hours'</code> or <code>'minutes'</code>.</td>
+            </tr>
+        </PropertiesTable>
+  </Section>
+
+</PageBody>
+</DocsLayout>
