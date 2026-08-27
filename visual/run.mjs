@@ -8,11 +8,15 @@
  * three things: nothing binary enters git, there is no "update the snapshots"
  * ritual to forget, and the comparison is always this branch against its own
  * merge base rather than against whatever was blessed months ago. The cost is
- * one extra build per run.
+ * one extra build and one cached `npm ci` per run.
  *
  * Both revisions are built and served through Astro. The suite compares the
  * published artifacts rather than source representations, so routes, assets,
  * scripts and framework output all take the same path they do in production.
+ * Each build uses its revision's lockfile: this checkout is installed before
+ * the runner starts, and the base worktree gets its own `npm ci`. That is what
+ * makes a rendering change caused by a dependency bump visible rather than
+ * applying the bump to both sides and cancelling it out.
  *
  *   npm run test:visual                  compare against origin/master
  *   VISUAL_BASE=<ref> npm run test:visual   compare against <ref>
@@ -22,7 +26,7 @@
  * The report is visual/report/; `npm run test:visual:report` opens it.
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, rmSync, symlinkSync } from 'node:fs';
+import { existsSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 
@@ -66,10 +70,23 @@ function addWorktree(sha) {
   if (run('git', ['worktree', 'add', '--detach', WORKTREE, sha]).status !== 0) {
     die('Could not create the base worktree.');
   }
-  // The base revision's sources, this checkout's tools: the worktree gets no
-  // npm install of its own. Only sass, esbuild, tsc and astro run there, and a
-  // version skew between the two passes would show up as a diff on every page.
-  symlinkSync(join(ROOT, 'node_modules'), join(WORKTREE, 'node_modules'), 'dir');
+}
+
+/**
+ * Install the base revision's own lockfile. Sharing this checkout's
+ * node_modules would apply a dependency bump to both passes, make its rendering
+ * change cancel out, and turn the visual job into a smoke test rather than an
+ * attribution. `npm ci` also removes any installation left by `--keep`.
+ */
+function installBaseDependencies() {
+  const started = performance.now();
+  if (run('npm', ['ci'], { cwd: WORKTREE }).status !== 0) {
+    die(
+      'The base revision dependencies could not be installed with npm ci. ' +
+      'Its lockfile may not support the current Node or npm version.'
+    );
+  }
+  console.log(`\nBase dependencies installed in ${((performance.now() - started) / 1000).toFixed(1)}s.\n`);
 }
 
 /**
@@ -116,6 +133,7 @@ if (sha === capture('git', ['rev-parse', 'HEAD'])) {
 console.log(`\nBase: ${sha.slice(0, 10)} ${capture('git', ['log', '-1', '--format=%s', sha])}\n`);
 
 addWorktree(sha);
+installBaseDependencies();
 
 console.log('Generator: Astro (base and head)\n');
 
