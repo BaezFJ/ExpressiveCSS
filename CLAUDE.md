@@ -689,6 +689,20 @@ snapshot of what Flask published and is the thing to compare against while it
 is still in the repository: a converted page is right when it is *structurally
 identical* to the frozen one.
 
+**Until #98 lands, Astro is what CI checks and Flask is still what deploys**, and
+that gap is the one thing to hold in mind before landing documentation work.
+`pages.yml` triggers on `docs/**`, so a `docs/src/` change *does* redeploy — by
+running `freeze.py` against `docs/app.py`, which that change did not touch. The
+published site therefore does not gain it. Nothing publishes wrongly; it simply
+does not publish, until #98 uploads the Astro artifact instead.
+
+Editing a page's body was always in that position — no check ever held the two
+generators' page *content* together. What changed here is that adding or moving
+a page used to force an edit to `docs/app.py` as well, because
+`docs-nav-catalogue.test.js` compared the inventories; #97 removed that test
+along with the rest of the Flask-agreement suite. **So a page added before #98
+lands is on the site only after it.** Land #98 next, or expect the wait.
+
 - **Compare `<main>`, not the whole document.** The chrome legitimately differs
   on every page — the landing link is `/` rather than `/getting-started.html`,
   and Astro drops the empty `class=""` Jinja leaves on an inactive drawer item
