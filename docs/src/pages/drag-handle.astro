@@ -1,0 +1,185 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "dragging", label: "Dragging is not included" },
+  { id: "decorative", label: "Decorative or control" },
+  { id: "panes", label: "Between two panes" },
+  { id: "bottom-sheet", label: "On a bottom sheet" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="drag_handle">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A drag handle is the affordance that makes something legible as
+          draggable: the grabber on a
+          <a href={route('bottom_sheet')}>bottom sheet</a>, the bar in
+          the gutter between two <a href={route('panes')}>panes</a>, the
+          grip on a row that can be reordered.
+        </p>
+        <p>
+          Which element you write <em>is</em> the semantic. A
+          <code>&lt;span class="drag-handle" aria-hidden="true"&gt;</code> is
+          decoration — the usual case. A
+          <code>&lt;button class="drag-handle"&gt;</code> with a name is a
+          control, and you write that one only when something is genuinely
+          wired to it. Nothing else about the markup changes.
+        </p>
+        <div class="drag-handle-demo">
+          <div>Editor</div>
+          <span class="drag-handle" aria-hidden="true"></span>
+          <div>Preview</div>
+        </div>
+<Code code={`
+<span class="drag-handle" aria-hidden="true"></span>
+`} />
+  </Section>
+  <Section {...S.dragging}>
+        <p>
+          This component is a bar. Nothing in it starts a drag, moves anything,
+          or reorders anything. The one exception is not the handle's doing: a
+          handle written as a <code>&lt;button&gt;</code> inside a
+          <a href={route('bottom_sheet')}>bottom sheet</a> dismisses
+          that sheet, because the sheet's own behaviour claims it. Everywhere
+          else the bar is inert, and that is worth being blunt about.
+        </p>
+        <p>
+          Dragging is a pointer gesture. An outcome you can only reach by
+          dragging is an outcome nobody using a keyboard, a switch or a screen
+          reader can reach at all — so a handle is never the whole feature. If
+          you build reordering on top of one, the reordering needs a keyboard
+          path of its own: arrow keys on the focused row, a "Move up" / "Move
+          down" pair in a <a href={route('menu')}>menu</a>, or fields
+          that take a position directly.
+        </p>
+        <p>
+          ExpressiveCSS ships no reordering behaviour, so there is nothing here
+          that supplies that path for you. The handle makes the gesture
+          discoverable to people who can use it; the rest is yours.
+        </p>
+  </Section>
+  <Section {...S.decorative}>
+        <p>
+          A handle draws a bar and contains no text, so it reports nothing to a
+          screen reader. Left exposed it arrives in the reading order as an
+          unlabelled blank. Hide it:
+        </p>
+<Code code={`
+<span class="drag-handle" aria-hidden="true"></span>
+`} />
+        <p>
+          Make it a <code>&lt;button&gt;</code> only when activating it does
+          something — and then it needs a name, because there is no text inside
+          it to be named by. The interactive states (hover, focus ring, and the
+          swell to 12&times;52dp while it is held) are scoped to the button
+          spelling for exactly this reason: a decorative handle must not light
+          up under a pointer that merely crosses it.
+        </p>
+<Code code={`
+<button type="button" class="drag-handle" aria-label="Resize the editor"></button>
+`} />
+        <p>
+          What you must not write is a hidden button. <code>aria-hidden</code>
+          takes an element out of the accessibility tree without taking it out
+          of the tab order, so focus lands on something that, as far as
+          assistive technology is concerned, is not there.
+        </p>
+  </Section>
+  <Section {...S.panes}>
+        <p>
+          This is the shape Material tokenised: a vertical bar in the gutter of
+          a two-column layout, 4&times;48dp inside a 24dp hit target. The layout
+          is yours — a flex or grid row of your own, or a
+          <a href={route('panes')}>pane layout</a>. The handle is
+          whatever sits between the columns; it brings its own width and needs
+          no wrapper class.
+        </p>
+<Code code={`
+<section aria-label="Editor">…</section>
+<span class="drag-handle" aria-hidden="true"></span>
+<section aria-label="Preview">…</section>
+`} />
+        <p>
+          The handle is <code>cursor: grab</code> by default. A splitter that
+          resizes rather than moves reads better as
+          <code>cursor: col-resize</code> — one declaration, and the component
+          does not guess which of the two you meant.
+        </p>
+  </Section>
+  <Section {...S["bottom-sheet"]}>
+        <p>
+          A <a href={route('bottom_sheet')}>bottom sheet</a> paints its
+          grabber with <code>::before</code> and needs no markup at all. Write a
+          handle yourself only when you want a real element in that slot — and
+          it takes the sheet's shape rather than the vertical one, because
+          Material gives the sheet's grabber its own size and colour
+          (32&times;4dp at 40% <code>on-surface-variant</code>). One class,
+          whichever host it lands in.
+        </p>
+<Code code={`
+<dialog class="bottom-sheet" aria-labelledby="sheet-title">
+  <span class="drag-handle" aria-hidden="true"></span>
+  <h2 id="sheet-title">Share</h2>
+  …
+</dialog>
+`} />
+        <p>
+          Decoration is the default, and it is enough: dragging the sheet down
+          dismisses it, and <kbd>Esc</kbd> already does the same from the
+          keyboard, so the bar sits on top of a path that exists without it.
+        </p>
+        <p>
+          Write a <code>&lt;button&gt;</code> there instead when you want a
+          visible dismiss control. It is the one place a drag handle is wired to
+          anything: the sheet closes when the button is activated, by pointer or
+          by <kbd>Enter</kbd>, so the name on it is a promise the code keeps. A
+          drag that snaps back does not also dismiss — the click ending it is
+          told apart from a tap.
+        </p>
+<Code code={`
+<dialog class="bottom-sheet" aria-labelledby="share-title">
+  <button type="button" class="drag-handle" aria-label="Dismiss"></button>
+  <h2 id="share-title">Share</h2>
+  …
+</dialog>
+`} />
+        <p>
+          <code>.handle</code> is the pre-1.0 spelling of the same slot and
+          still works, decorative or wired.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Set these on the handle itself, or in a rule of your own that picks
+          out the handles you want to change. They are declared on the
+          component, so a value set on an ancestor <em>element</em> is shadowed
+          by the handle's own default rather than inherited.
+        </p>
+        <TokenTable>                <tr><td><code>--md-comp-drag-handle-container-width</code></td><td><code>24px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-width</code></td><td><code>4px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-height</code></td><td><code>48px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-shape</code></td><td><code>9999px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-color</code></td><td><code>var(--md-sys-color-outline)</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-pressed-width</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-pressed-height</code></td><td><code>52px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-pressed-shape</code></td><td><code>12px</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-pressed-color</code></td><td><code>var(--md-sys-color-on-surface)</code></td></tr>
+                <tr><td><code>--md-comp-drag-handle-state-layer-color</code></td><td><code>var(--md-sys-color-inverse-on-surface)</code></td></tr>
+        </TokenTable>        <p>
+          The container is sized to the <em>pressed</em> bar rather than the
+          resting one, so holding the handle swells the bar without moving
+          anything beside it. Inside a bottom sheet none of these apply — the
+          sheet's own <code>--md-comp-bottom-sheet-drag-handle-color</code>
+          does.
+        </p>
+  </Section></PageBody>
+</DocsLayout>
