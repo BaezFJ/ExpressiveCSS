@@ -1,0 +1,301 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+
+const S = defineSections([
+  { id: "introduction", label: "Introduction", heading: false },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+  { id: "disabled", label: "Disabled Styles" },
+]);
+---
+<DocsLayout page="select">
+<PageBody sections={S}>
+  <Section {...S.introduction}>
+        <p class="flow-text">
+          Select turns a native <code>&lt;select&gt;</code> into an exposed menu —
+          a text field plus a menu. Wrap it in
+          <code>.field</code> and give the label a matching
+          <code>for</code>. Add <code>outlined</code> (or <code>border</code>) on that
+          field for the outlined variant.
+          <code>AutoInit()</code> starts every <code>select</code> except those marked
+          <code>no-autoinit</code>. Add <code>browser-default</code> to keep the native control.
+        </p>
+
+        <div class="field mb-5">
+          <select id="form-select-1">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label for="form-select-1">Expressive Select</label>
+        </div>
+
+        <p>Add <code>multiple</code> to select several options. Chosen values appear as a comma-separated list.</p>
+        <div class="field mb-5">
+          <select id="form-select-2" multiple>
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label for="form-select-2">Multiple Select</label>
+        </div>
+
+        <p>Native <code>&lt;optgroup&gt;</code> elements become group headings in the menu.</p>
+        <div class="field mb-5">
+          <select id="form-select-3">
+            <optgroup label="team 1">
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+            </optgroup>
+            <optgroup label="team 2">
+              <option value="3">Option 3</option>
+              <option value="4">Option 4</option>
+            </optgroup>
+          </select>
+          <label for="form-select-3">Optgroups</label>
+        </div>
+
+        <p>
+          Put an image URL in <code>data-icon</code> on an option. Classes on that option
+          are copied to the image; <code>left</code> floats it left. Images float right
+          by default. There is no <code>icons</code> class on the <code>&lt;select&gt;</code>.
+        </p>
+        <form class="row">
+          <div class="s12 m6 field">
+            <select id="form-select-4">
+              <option value="" disabled selected>Choose your option</option>
+              <option value="1" data-icon="https://picsum.photos/id/1015/100/100">example 1</option>
+              <option value="2" data-icon="https://picsum.photos/id/1016/100/100">example 2</option>
+              <option value="3" data-icon="https://picsum.photos/id/64/100/100">example 3</option>
+            </select>
+            <label for="form-select-4">Images in select</label>
+          </div>
+          <div class="s12 m6 field">
+            <select id="form-select-5">
+              <option value="" disabled selected>Choose your option</option>
+              <option value="1" data-icon="https://picsum.photos/id/1015/100/100" class="left">example 1</option>
+              <option value="2" data-icon="https://picsum.photos/id/1016/100/100" class="left">example 2</option>
+              <option value="3" data-icon="https://picsum.photos/id/64/100/100" class="left">example 3</option>
+            </select>
+            <label for="form-select-5">Images in select</label>
+          </div>
+        </form>
+
+        <p>Add <code>browser-default</code> to skip the menu and keep the native select.</p>
+        <p class="mb-5">
+          <label for="form-select-6">Browser Select</label>
+          <select id="form-select-6" class="browser-default">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        </p>
+<Code code={`
+<div class="field">
+  <select id="form-select-1">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+  <label for="form-select-1">Expressive Select</label>
+</div>
+
+<div class="field">
+  <select id="form-select-2" multiple>
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+  <label for="form-select-2">Multiple Select</label>
+</div>
+
+<div class="field">
+  <select id="form-select-3">
+    <optgroup label="team 1">
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+    </optgroup>
+    <optgroup label="team 2">
+      <option value="3">Option 3</option>
+      <option value="4">Option 4</option>
+    </optgroup>
+  </select>
+  <label for="form-select-3">Optgroups</label>
+</div>
+
+<div class="field">
+  <select id="form-select-4">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1" data-icon="photo.jpg">example 1</option>
+    <option value="2" data-icon="photo.jpg" class="left">example 2</option>
+  </select>
+  <label for="form-select-4">Images in select</label>
+</div>
+
+<label for="form-select-6">Browser Select</label>
+<select id="form-select-6" class="browser-default">
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
+</select>
+`} />
+  </Section>
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.FormSelect</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          after adding a select dynamically, or after changing an existing select’s options.
+          Otherwise <code>Expressive.AutoInit()</code> starts every <code>select</code>.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('select');
+  const instances = Expressive.FormSelect.init(elems, {
+    // specify options here
+  });
+});
+`} />
+        <p>Per-instance options can also be passed through AutoInit:</p>
+<Code code={`
+Expressive.AutoInit(document.body, {
+  FormSelect: { menuOptions: { constrainWidth: false } }
+});
+`} />
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+            <tr>
+              <td><code>classes</code></td>
+              <td>String</td>
+              <td><code>''</code></td>
+              <td>Space-separated classes added to the generated <code>.select-wrapper</code>.</td>
+            </tr>
+            <tr>
+              <td><code>menuOptions</code></td>
+              <td>Object</td>
+              <td><code>&#123;&#125;</code></td>
+              <td>
+                Options passed to <code>Menu</code>. See
+                <a href={`${route('menu')}#options`}>Menu</a>.
+                <code>coverTrigger</code> is forced to <code>false</code> and
+                <code>closeOnClick</code> is forced to <code>false</code>.
+              </td>
+            </tr>
+        </OptionsTable>
+        <p>There is no <code>selected</code> option. Mark options with the HTML <code>selected</code> attribute instead.</p>
+  </Section>
+  <Section {...S.methods}>
+        <InstanceNote plugin="FormSelect" />
+
+        <h5 class="light">.getSelectedValues();</h5>
+        <p>Selected values as an array of strings.</p>
+<Code code={`
+instance.getSelectedValues();
+`} />
+
+        <h5 class="light">.refresh();</h5>
+        <p>
+          Re-read the native <code>&lt;select&gt;</code>. Call this after changing
+          <code>select.value</code> or after adding or removing
+          <code>&lt;option&gt;</code>s. The menu is rebuilt; the field and
+          Menu instance stay put.
+        </p>
+<Code code={`
+instance.refresh();
+`} />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, remove the menu, and restore the native select.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+  <Section {...S.properties}>
+        <PropertiesTable el="The native <code>&lt;select&gt;</code> the plugin was initialized with.">
+            <tr>
+              <td><code>isMultiple</code></td>
+              <td>Boolean</td>
+              <td>Whether this is a multiple select.</td>
+            </tr>
+            <tr>
+              <td><code>wrapper</code></td>
+              <td>Element</td>
+              <td>The generated <code>.select-wrapper</code>.</td>
+            </tr>
+            <tr>
+              <td><code>menuEl</code></td>
+              <td>Element</td>
+              <td>The generated <code>&lt;menu&gt;</code>.</td>
+            </tr>
+            <tr>
+              <td><code>labelEl</code></td>
+              <td>Element</td>
+              <td>The associated label, or <code>null</code> if none was found.</td>
+            </tr>
+            <tr>
+              <td><code>input</code></td>
+              <td>Element</td>
+              <td>The text input that shows the current selection.</td>
+            </tr>
+            <tr>
+              <td><code>menu</code></td>
+              <td>Menu</td>
+              <td>The Menu instance for this select.</td>
+            </tr>
+        </PropertiesTable>
+  </Section>
+  <Section {...S.disabled}>
+        <p>
+          <code>disabled</code> on the <code>&lt;select&gt;</code> disables the whole control.
+          <code>disabled</code> on an <code>&lt;option&gt;</code> makes that item unselectable.
+        </p>
+        <div class="field mb-5">
+          <select id="form-select-7" disabled>
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label for="form-select-7">Disabled Select</label>
+        </div>
+        <p class="mb-5">
+          <label for="form-select-8">Browser Disabled</label>
+          <select id="form-select-8" class="browser-default" disabled>
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        </p>
+<Code code={`
+<div class="field">
+  <select id="form-select-7" disabled>
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+  </select>
+  <label for="form-select-7">Disabled Select</label>
+</div>
+
+<label for="form-select-8">Browser Disabled</label>
+<select id="form-select-8" class="browser-default" disabled>
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
+</select>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>

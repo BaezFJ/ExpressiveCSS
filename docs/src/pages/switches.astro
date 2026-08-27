@@ -1,0 +1,95 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+]);
+---
+<DocsLayout page="switches">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;label class="switch"&gt;</code> wrapping
+          <code>&lt;input type="checkbox"&gt;</code> is the control. The
+          label text is a sibling of the input — no
+          <code>.lever</code> required. They are CSS only. There is no
+          JavaScript component and nothing to AutoInit.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/switch/specs">M3 switch spec</a>.
+          The track is 52×32dp. Unselected is
+          <code>surface-variant</code> with a 2dp <code>outline</code> and
+          a 16dp handle. Selected is a <code>primary</code> track and a
+          24dp <code>on-primary</code> handle. The state layer is 40dp at
+          8% hover and 10% focus. The touch target is 48dp. The label is
+          <code>body-large</code> / <code>on-surface</code>. Disabled is
+          38%.
+        </p>
+
+        <p>
+          <label class="switch">
+            <input type="checkbox">
+            Wi-Fi
+          </label>
+        </p>
+        <p>
+          <label class="switch">
+            <input type="checkbox" checked>
+            Bluetooth
+          </label>
+        </p>
+        <p>
+          <label class="switch">
+            <input type="checkbox" disabled>
+            Airplane mode
+          </label>
+        </p>
+        <p>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            Location
+          </label>
+        </p>
+<Code code={`
+<label class="switch">
+  <input type="checkbox">
+  Wi-Fi
+</label>
+
+<label class="switch">
+  <input type="checkbox" checked>
+  Bluetooth
+</label>
+
+<label class="switch">
+  <input type="checkbox" disabled>
+  Airplane mode
+</label>
+`} />
+        <p>
+          An <code>input + span</code> or <code>input + .lever</code> still
+          works if you already have that markup.
+        </p>
+        <p>
+          The on/off captions are decoration. Left as bare text they are folded
+          into the label, and the switch announces itself as “Off On” — so hide
+          them and name the control itself. A switch whose only text is a
+          caption needs an <code>aria-label</code>, because hiding both leaves
+          it with no name at all.
+        </p>
+<Code code={`
+<label class="switch">
+  <span aria-hidden="true">Off</span>
+  <input type="checkbox" aria-label="Dark mode">
+  <span class="lever"></span>
+  <span aria-hidden="true">On</span>
+</label>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>

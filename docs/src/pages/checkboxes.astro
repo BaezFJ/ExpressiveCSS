@@ -1,0 +1,149 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Introduction", heading: false },
+  { id: "row", label: "In a row" },
+  { id: "error", label: "Error" },
+]);
+---
+<DocsLayout page="checkboxes">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;label&gt;</code> wrapping
+          <code>&lt;input type="checkbox"&gt;</code> is the control. The
+          label text is a sibling of the input — no extra class, no
+          required <code>&lt;span&gt;</code>. They are CSS only. There is
+          no JavaScript component and nothing to AutoInit.
+        </p>
+        <p>
+          Tokens follow the
+          <a href="https://m3.material.io/components/checkbox/specs">M3 checkbox spec</a>.
+          The container is 18dp with 2dp corners. Unselected is a 2dp
+          <code>on-surface-variant</code> outline. Selected is a
+          <code>primary</code> fill with an <code>on-primary</code>
+          check. Indeterminate is the same fill with a dash. The state
+          layer is 40dp at 8% hover and 10% focus. The touch target is
+          48dp. The label is <code>body-large</code> /
+          <code>on-surface</code>. Disabled is 38%.
+        </p>
+        <p>
+          Put the input first. Add <code>checked</code> or
+          <code>disabled</code> on the input. Indeterminate is not an
+          HTML attribute — set <code>element.indeterminate = true</code>
+          in script. <code>filled-in</code> is a no-op: the selected
+          state is always the filled box.
+        </p>
+        <form>
+          <label>
+            <input type="checkbox">
+            Red
+          </label>
+          <label>
+            <input type="checkbox" checked>
+            Yellow
+          </label>
+          <label>
+            <input id="indeterminate-checkbox" type="checkbox">
+            Indeterminate
+          </label>
+          <label>
+            <input type="checkbox" checked disabled>
+            Green
+          </label>
+          <label>
+            <input type="checkbox" disabled>
+            Brown
+          </label>
+        </form>
+<Code code={`
+<label>
+  <input type="checkbox">
+  Red
+</label>
+<label>
+  <input type="checkbox" checked>
+  Yellow
+</label>
+<label>
+  <input type="checkbox" disabled>
+  Brown
+</label>
+`} />
+<Code code={`
+document.getElementById('indeterminate-checkbox').indeterminate = true;
+`} />
+        <p>
+          An <code>input + span</code> still works if you already have
+          that markup, or if you follow BeerCSS’s
+          <code>&lt;label class="checkbox"&gt;</code> pattern. Multiple
+          <code>&lt;select&gt;</code> still emits
+          <code>input + span</code> that way.
+        </p>
+<Code code={`
+<label class="checkbox">
+  <input type="checkbox">
+  <span>Yellow</span>
+</label>
+`} />
+  </Section>
+  <Section {...S.row}>
+        <p>
+          Put the labels in a <code>&lt;div class="inline"&gt;</code> to sit them on one
+          line. A bare group stacks vertically.
+        </p>
+        <div class="inline">
+          <label>
+            <input type="checkbox" checked>
+            Red
+          </label>
+          <label>
+            <input type="checkbox">
+            Yellow
+          </label>
+          <label>
+            <input type="checkbox">
+            Green
+          </label>
+        </div>
+<Code code={`
+<div class="inline">
+  <label>
+    <input type="checkbox" checked>
+    Red
+  </label>
+  <label>
+    <input type="checkbox">
+    Yellow
+  </label>
+</div>
+`} />
+  </Section>
+  <Section {...S.error}>
+        <p>
+          Add <code>aria-invalid="true"</code> or
+          <code>class="invalid"</code> on the input. The box uses
+          <code>error</code> / <code>on-error</code>.
+        </p>
+        <label>
+          <input type="checkbox" aria-invalid="true">
+          Accept the terms
+        </label>
+        <label>
+          <input type="checkbox" checked aria-invalid="true">
+          Required option
+        </label>
+<Code code={`
+<label>
+  <input type="checkbox" aria-invalid="true">
+  Accept the terms
+</label>
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
