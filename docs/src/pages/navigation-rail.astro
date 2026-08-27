@@ -1,0 +1,172 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "collapsed", label: "Collapsed" },
+  { id: "expanded", label: "Expanded" },
+  { id: "modal", label: "Modal" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="navigation_rail">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>nav.navigation-rail</code> holds 3–7 destinations plus an
+          optional FAB. Put it in the same place on every screen. Use it
+          in medium, expanded, large, or extra-large windows.
+        </p>
+        <p>
+          Collapsed is 96dp with the icon above the label. Add
+          <code>expanded</code> for 220–360dp, icon and label on one row,
+          and an extended FAB. The menu button toggles that class
+          (<code>AutoInit()</code> starts it). On compact windows an
+          expanded rail is modal — a scrim, and Escape or a scrim tap
+          collapses it. Add <code>modal</code> to keep that overlay at
+          every breakpoint.
+        </p>
+        <p>
+          Compact windows that need persistent destinations still use a
+          <a href={route('navigation_bar')}>navigation bar</a>.
+          A full overlay menu is a
+          <a href={route('sidenav')}>sidenav</a>.
+        </p>
+  </Section>
+  <Section {...S.collapsed}>
+        <p>
+          Default. 96dp. Icon above the label; the selected pill sits
+          behind the icon. The FAB is icon-only. Offset the rest of the
+          page by <code>--md-comp-nav-rail-collapsed-width</code>.
+        </p>
+        <div class="rail-demo mb-3">
+          <nav class="navigation-rail" aria-label="Main — Collapsed">
+            <button type="button" aria-label="Menu">
+              <span class="material-symbols" aria-hidden="true">menu</span>
+            </button>
+            <a class="button extra" href="#!">
+              <span class="material-symbols" aria-hidden="true">edit</span>
+              <span>Label</span>
+            </a>
+            <a href="#!" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Label
+            </a>
+            <a href="#!" aria-label="Starred, 3 unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
+              Label
+            </a>
+            <a href="#!" aria-label="Starred, unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge"></span></span>
+              Label
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Label
+            </a>
+          </nav>
+        </div>
+<Code code={`
+<nav class="navigation-rail" aria-label="Main">
+  <button type="button" aria-label="Menu">
+    <span class="material-symbols" aria-hidden="true">menu</span>
+  </button>
+  <a class="button extra" href="#!">
+    <span class="material-symbols" aria-hidden="true">edit</span>
+    <span>Label</span>
+  </a>
+  <a href="/" aria-current="page">
+    <span class="material-symbols" aria-hidden="true">star</span>
+    Label
+  </a>
+  <a href="/two" aria-label="Starred, 3 unread">
+    <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
+    Label
+  </a>
+</nav>
+`} />
+  </Section>
+  <Section {...S.expanded}>
+        <p>
+          Add <code>expanded</code>. Destinations become a row: icon,
+          then label, with the selected pill around both. The FAB grows
+          into an extended button. Section headings show only in this
+          layout.
+        </p>
+        <div class="rail-demo mb-3">
+          <nav class="navigation-rail expanded" aria-label="Main — Expanded">
+            <button type="button" aria-label="Menu">
+              <span class="material-symbols" aria-hidden="true">menu</span>
+            </button>
+            <a class="button extra" href="#!">
+              <span class="material-symbols" aria-hidden="true">edit</span>
+              <span>Label</span>
+            </a>
+            <a href="#!" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Label
+            </a>
+            <a href="#!" aria-label="Starred, 3 unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
+              Label
+            </a>
+            <h3>Section Header</h3>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Label
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">star</span>
+              Label
+            </a>
+          </nav>
+        </div>
+<Code code={`
+<nav class="navigation-rail expanded" aria-label="Main">
+  …
+  <h3>Section Header</h3>
+  <a href="/other">
+    <span class="material-symbols" aria-hidden="true">star</span>
+    Label
+  </a>
+</nav>
+`} />
+<Code code={`
+@media (width >= 600px) {
+  body {
+    padding-left: var(--md-comp-nav-rail-collapsed-width);
+  }
+  body:has(.navigation-rail.expanded) {
+    padding-left: var(--md-comp-nav-rail-expanded-width);
+  }
+}
+`} />
+  </Section>
+  <Section {...S.modal}>
+        <p>
+          On Compact windows, <code>expanded</code> already
+          overlays the page with a scrim. Add <code>modal</code> if you
+          want that overlay on tablets and desktops too — image 2 in
+          the spec, a compact window expanding in place.
+        </p>
+<Code code={`
+<nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <TokenTable>
+            <tr><td><code>--md-comp-nav-rail-collapsed-width</code></td><td>96px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-expanded-width</code></td><td>280px (clamped 220–360)</td></tr>
+            <tr><td><code>--md-comp-nav-rail-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-indicator-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-fab-size</code></td><td>56px</td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

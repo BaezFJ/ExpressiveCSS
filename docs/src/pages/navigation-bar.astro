@@ -1,0 +1,143 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "stacked", label: "Stacked" },
+  { id: "horizontal", label: "Horizontal" },
+  { id: "fixed", label: "Fixed" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="navigation_bar">
+<PageBody sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>nav.navigation-bar</code> holds 3–5 destinations of equal
+          importance. Destinations do not change from screen to screen.
+          There is no JavaScript — mark the current view with
+          <code>aria-current="page"</code> (or <code>active</code>).
+        </p>
+        <p>
+          This is not the
+          <a href={route('navbar')}>app bar</a>.
+          The app bar names the current page and holds 1–2 actions.
+          The navigation bar switches between the app’s top-level views.
+          Use it in compact and medium windows; a
+          <a href={route('navigation_rail')}>navigation rail</a>
+          covers mid-size screens and a
+          <a href={route('sidenav')}>sidenav</a> the rest.
+        </p>
+  </Section>
+  <Section {...S.stacked}>
+        <p>
+          Default. Icon above the label. The selected destination puts a
+          pill behind the icon and fills the glyph. Use this in compact
+          windows.
+        </p>
+        <div class="primary-container py-5 px-3 mb-3">
+          <nav class="navigation-bar" aria-label="Main — Stacked">
+            <a href="#!" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">home</span>
+              Home
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">explore</span>
+              Browse
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">radio</span>
+              Radio
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">library_music</span>
+              Library
+            </a>
+          </nav>
+        </div>
+<Code code={`
+<nav class="navigation-bar" aria-label="Main">
+  <a href="/" aria-current="page">
+    <span class="material-symbols" aria-hidden="true">home</span>
+    Home
+  </a>
+  <a href="/browse">
+    <span class="material-symbols" aria-hidden="true">explore</span>
+    Browse
+  </a>
+  <a href="/radio">
+    <span class="material-symbols" aria-hidden="true">radio</span>
+    Radio
+  </a>
+  <a href="/library">
+    <span class="material-symbols" aria-hidden="true">library_music</span>
+    Library
+  </a>
+</nav>
+`} />
+  </Section>
+  <Section {...S.horizontal}>
+        <p>
+          Add <code>horizontal</code>. Icon and label sit on one row, and
+          the selected pill wraps both. Use this in medium windows.
+        </p>
+        <div class="primary-container py-5 px-3 mb-3">
+          <nav class="navigation-bar horizontal" aria-label="Main — Horizontal">
+            <a href="#!" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">home</span>
+              Home
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">explore</span>
+              Browse
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">radio</span>
+              Radio
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">library_music</span>
+              Library
+            </a>
+          </nav>
+        </div>
+<Code code={`
+<nav class="navigation-bar horizontal" aria-label="Main">
+  <a href="/" aria-current="page">
+    <span class="material-symbols" aria-hidden="true">home</span>
+    Home
+  </a>
+  …
+</nav>
+`} />
+  </Section>
+  <Section {...S.fixed}>
+        <p>
+          Add <code>fixed</code> to stick the bar to the bottom of the
+          viewport. Padding includes <code>safe-area-inset-bottom</code>
+          so the destinations clear a home indicator.
+        </p>
+<Code code={`
+<nav class="navigation-bar fixed" aria-label="Main">…</nav>
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Set these on the bar (or on <code>:root</code>):</p>
+        <TokenTable>
+            <tr><td><code>--md-comp-nav-bar-container-color</code></td><td>on-surface 8% on surface</td></tr>
+            <tr><td><code>--md-comp-nav-bar-container-height</code></td><td>64px</td></tr>
+            <tr><td><code>--md-comp-nav-bar-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-nav-bar-indicator-width</code></td><td>56px</td></tr>
+            <tr><td><code>--md-comp-nav-bar-indicator-height</code></td><td>32px</td></tr>
+            <tr><td><code>--md-comp-nav-bar-indicator-shape</code></td><td>16px (100px horizontal)</td></tr>
+            <tr><td><code>--md-comp-nav-bar-active-indicator-color</code></td><td><code>--md-sys-color-secondary-container</code></td></tr>
+        </TokenTable>
+  </Section>
+</PageBody>
+</DocsLayout>

@@ -1,0 +1,314 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import PageBody from "../components/PageBody.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import InstanceNote from "../components/api/InstanceNote.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "structure", label: "Structure", heading: false },
+  { id: "initialization", label: "Initialization" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "properties", label: "Properties" },
+  { id: "close-trigger", label: "Close Trigger" },
+  { id: "variations", label: "Variations" },
+]);
+---
+<DocsLayout page="sidenav">
+<PageBody sections={S}>
+  <Section {...S.structure}>
+        <p class="flow-text">
+          This is a slide-out menu. Nest <code>&lt;details&gt;</code> /
+          <code>&lt;summary&gt;</code> for nested sections — the
+          documentation sidebar uses that. On Compact and Medium windows this same
+          drawer slides over the page.
+        </p>
+        <p>
+          An overlay sidenav is a modal <code>&lt;dialog&gt;</code>.
+          The framework wraps your <code>&lt;ul class="navigation-drawer"&gt;</code>;
+          <code>Escape</code> and a tap on the backdrop close it.
+          A <code>navigation-drawer-fixed</code> drawer stays open from Expanded as CSS —
+          no resize listener, no overlay.
+        </p>
+        <p>
+          The sidenav HTML must <strong>not</strong> sit inside the app bar’s
+          <code>&lt;nav&gt;</code>.
+          Put a <code>navigation-drawer-trigger</code> anywhere and set <code>data-target</code> to the navigation drawer’s
+          <code>id</code>. <code>AutoInit()</code> starts every <code>.navigation-drawer</code> except those marked
+          <code>no-autoinit</code>.
+        </p>
+        <p>
+          <button type="button" data-target="slide-out" class="button navigation-drawer-trigger filled">Toggle NavigationDrawer</button>
+        </p>
+        <nav aria-label="Main — Structure">
+          <ul id="slide-out" class="navigation-drawer no-autoinit">
+            <li>
+              <div class="user-view">
+                <div class="background">
+                  <img src="https://picsum.photos/id/1015/600/400" alt="">
+                </div>
+                <a href="#user" aria-label="Profile"><img class="circle" src="https://picsum.photos/id/64/128/128" alt=""></a>
+                <a href="#name"><span class="name">John Doe</span></a>
+                <a href="#email"><span class="email">jdoe@example.com</span></a>
+              </div>
+            </li>
+            <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
+            <li><a href="#!">Second Link</a></li>
+            <li><div class="divider"></div></li>
+            <li><span class="subheader">Subheader</span></li>
+            <li><a href="#!">Third Link</a></li>
+            <li><button type="button" class="navigation-drawer-close">Close</button></li>
+          </ul>
+        </nav>
+<Code code={`
+<nav aria-label="Main">
+  <ul id="slide-out" class="navigation-drawer">
+    <li>
+      <div class="user-view">
+        <div class="background">
+          <img src="images/office.jpg" alt="">
+        </div>
+        <a href="#user" aria-label="Profile"><img class="circle" src="images/portrait.jpg" alt=""></a>
+        <a href="#name"><span class="name">John Doe</span></a>
+        <a href="#email"><span class="email">jdoe@example.com</span></a>
+      </div>
+    </li>
+    <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
+    <li><a href="#!">Second Link</a></li>
+    <li><div class="divider"></div></li>
+    <li><span class="subheader">Subheader</span></li>
+    <li><a href="#!">Third Link</a></li>
+  </ul>
+</nav>
+<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
+`} />
+  </Section>
+  <Section {...S.initialization}>
+        <p>
+          The IIFE bundle exposes <code>Expressive.NavigationDrawer</code>.
+          Call <code>init</code> yourself when you need options other than the defaults,
+          or let <code>Expressive.AutoInit()</code> start every <code>.navigation-drawer</code>.
+        </p>
+<Code code={`
+document.addEventListener('DOMContentLoaded', function() {
+  const elems = document.querySelectorAll('.navigation-drawer');
+  const instances = Expressive.NavigationDrawer.init(elems, {
+    // specify options here
+  });
+});
+`} />
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+            <tr>
+              <td><code>edge</code></td>
+              <td>String</td>
+              <td><code>'left'</code></td>
+              <td>Side of the screen. <code>'left'</code> or <code>'right'</code>. The constructor adds <code>right-aligned</code> when the edge is right.</td>
+            </tr>
+            <tr>
+              <td><code>draggable</code></td>
+              <td>Boolean</td>
+              <td><code>true</code></td>
+              <td>Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on Expanded and wider windows.</td>
+            </tr>
+            <tr>
+              <td><code>dragTargetWidth</code></td>
+              <td>String</td>
+              <td><code>'10px'</code></td>
+              <td>Width of the screen-edge strip where a drag can start.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the navigation drawer starts opening.</td>
+            </tr>
+            <tr>
+              <td><code>onOpenEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the navigation drawer finishes opening.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseStart</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the navigation drawer starts closing.</td>
+            </tr>
+            <tr>
+              <td><code>onCloseEnd</code></td>
+              <td>Function</td>
+              <td><code>null</code></td>
+              <td>Called when the navigation drawer finishes closing.</td>
+            </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+        <InstanceNote plugin="NavigationDrawer" />
+
+        <h5 class="light">.open();</h5>
+        <p>Opens the navigation drawer.</p>
+<Code code={`
+instance.open();
+`} />
+
+        <h5 class="light">.close();</h5>
+        <p>Closes the navigation drawer.</p>
+<Code code={`
+instance.close();
+`} />
+
+        <h5 class="light">.destroy();</h5>
+        <p>Destroy the plugin instance, unwrap the dialog host, and remove the drag target and event handlers.</p>
+<Code code={`
+instance.destroy();
+`} />
+  </Section>
+  <Section {...S.properties}>
+        <PropertiesTable el="The DOM element the plugin was initialized with.">
+            <tr>
+              <td><code>isOpen</code></td>
+              <td>Boolean</td>
+              <td>Whether the overlay drawer is open. Stays false while a fixed sidenav is docked on Expanded and wider windows.</td>
+            </tr>
+            <tr>
+              <td><code>isFixed</code></td>
+              <td>Boolean</td>
+              <td>Whether the element has <code>navigation-drawer-fixed</code>.</td>
+            </tr>
+            <tr>
+              <td><code>isDragged</code></td>
+              <td>Boolean</td>
+              <td>Whether the navigation drawer is being dragged.</td>
+            </tr>
+        </PropertiesTable>
+  </Section>
+  <Section {...S["close-trigger"]}>
+        <p>
+          Add <code>navigation-drawer-close</code> to an element inside the navigation drawer. A click on that element
+          closes an overlay sidenav. That is useful in a single-page app where the page does not
+          reload. It does nothing while the navigation drawer is fixed on Expanded and wider windows.
+        </p>
+<Code code={`
+<nav aria-label="Main">
+  <ul id="slide-out" class="navigation-drawer">
+    <li><button type="button" class="navigation-drawer-close">Clicking this will close NavigationDrawer</button></li>
+  </ul>
+</nav>
+<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
+`} />
+  </Section>
+  <Section {...S.variations}>
+
+        <h5 class="light">Right edge</h5>
+        <p>
+          Pass <code>edge: 'right'</code>. Mark the element <code>no-autoinit</code> if you initialize it
+          yourself, otherwise AutoInit would start it on the left.
+        </p>
+        <p>
+          <button type="button" data-target="slide-out-right" class="button navigation-drawer-trigger tonal">Toggle Right NavigationDrawer</button>
+        </p>
+        <nav aria-label="Main — Variations">
+          <ul id="slide-out-right" class="navigation-drawer no-autoinit">
+            <li><a href="#!">First Sidebar Link</a></li>
+            <li><a href="#!">Second Sidebar Link</a></li>
+            <li><button type="button" class="navigation-drawer-close">Close</button></li>
+          </ul>
+        </nav>
+<Code code={`
+Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
+  edge: 'right'
+});
+`} />
+
+        <h5 class="light">Nested sections</h5>
+        <p>
+          Nest <code>&lt;details&gt;</code> for a section that opens in
+          place. Same <code>name</code> on several details is an
+          accordion. The documentation sidebar uses this for Foundations,
+          Structure, Components, and Forms.
+        </p>
+        <nav aria-label="Main — Variations 2">
+          <ul class="sidenav navigation-drawer-demo no-autoinit">
+            <li><a href="#!"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a></li>
+            <li>
+              <details name="sidenav-demo" open>
+                <summary>
+                  <span class="material-symbols" aria-hidden="true">palette</span>
+                  Foundations
+                </summary>
+                <ul>
+                  <li><a href="#!">Color</a></li>
+                  <li><a href="#!">Typography</a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details name="sidenav-demo">
+                <summary>
+                  <span class="material-symbols" aria-hidden="true">view_quilt</span>
+                  Structure
+                </summary>
+                <ul>
+                  <li><a href="#!">App bar</a></li>
+                  <li><a href="#!">NavigationDrawer</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </nav>
+<Code code={`
+<nav aria-label="Main">
+  <ul id="slide-out" class="navigation-drawer">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li>
+      <details name="docs-nav">
+        <summary>
+          <span class="material-symbols" aria-hidden="true">palette</span>
+          Foundations
+        </summary>
+        <ul>
+          <li><a href="#!">Color</a></li>
+          <li><a href="#!">Typography</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
+`} />
+
+        <h5 class="light">Fixed HTML Structure</h5>
+        <p>
+          Add <code>navigation-drawer-fixed</code> so the navigation drawer stays open from Expanded (840px and up)
+          and slides away on smaller ones. That dock is CSS, not a JavaScript <code>open()</code>.
+          The documentation sidebar on the left is this pattern.
+        </p>
+<Code code={`
+<nav aria-label="Main">
+  <ul id="slide-out" class="navigation-drawer navigation-drawer-fixed">
+    <li><a href="#!">First Sidebar Link</a></li>
+    <li><a href="#!">Second Sidebar Link</a></li>
+  </ul>
+</nav>
+<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
+`} />
+        <p>
+          Offset the rest of the page by the navigation drawer width. The width token is
+          <code>--md-comp-nav-drawer-width</code> (alias of <code>--md-comp-nav-drawer-width</code>, 300px).
+          Put the padding on <code>header</code>, <code>main</code>, and <code>footer</code>.
+        </p>
+<Code code={`
+@media (width >= 840px) {
+  header, main, footer {
+    padding-left: var(--md-comp-nav-drawer-width);
+  }
+}
+`} />
+  </Section>
+</PageBody>
+</DocsLayout>
