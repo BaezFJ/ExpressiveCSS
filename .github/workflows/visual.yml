@@ -58,7 +58,7 @@ jobs:
       # read, not the exit code.
       - run: npm run test:visual
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: visual-report
