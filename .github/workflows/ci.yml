@@ -80,6 +80,41 @@ jobs:
           done
           exit $missing
 
+  mcp:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 24]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: mcp/expressivecss/package-lock.json
+
+      - run: npm ci
+        working-directory: mcp/expressivecss
+
+      - run: npm test
+        working-directory: mcp/expressivecss
+
+      # Proves the published package carries its guide data and runs without
+      # reaching back into this checkout.
+      - name: Verify the MCP tarball in a clean consumer
+        if: matrix.node == 24
+        working-directory: mcp/expressivecss
+        run: |
+          npm pack --pack-destination "$RUNNER_TEMP"
+          mkdir "$RUNNER_TEMP/mcp-consumer"
+          cd "$RUNNER_TEMP/mcp-consumer"
+          npm init -y
+          tarballs=("$RUNNER_TEMP"/expressivecss-mcp-server-*.tgz)
+          npm install "${tarballs[0]}"
+          node node_modules/@expressivecss/mcp-server/smoke.mjs
+
   # The documentation site, built and verified the way a contributor does it -
   # `npm run docs:build`, no Python anywhere. The built artifact is the seam
   # the source-level tests cannot reach: a page can be authored correctly and

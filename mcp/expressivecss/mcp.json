@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "expressivecss-mcp": {
+      "command": "npx",
+      "args": ["-y", "@expressivecss/mcp-server@latest"],
+      "env": {
+        "EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS": "24000",
+        "EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS": "7",
+        "EXPRESSIVECSS_MCP_QA_MAX_FILES": "300",
+        "EXPRESSIVECSS_MCP_QA_MAX_MB": "2"
+      }
+    }
+  }
+}

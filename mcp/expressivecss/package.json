@@ -1,0 +1,42 @@
+{
+  "name": "@expressivecss/mcp-server",
+  "version": "0.1.0",
+  "description": "ExpressiveCSS MCP server with Design→QA workflow tools.",
+  "homepage": "https://www.expressivecss.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaezFJ/ExpressiveCSS.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "expressivecss-mcp": "server.js"
+  },
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "sync:guides": "node scripts/sync-guides.mjs",
+    "check:guides": "node scripts/sync-guides.mjs --check",
+    "test": "npm run check:guides && node smoke.mjs",
+    "prepack": "npm run sync:guides && npm test"
+  },
+  "files": [
+    "server.js",
+    "component-guides.json",
+    "semantics-data.json",
+    "smoke.mjs",
+    "scripts/sync-guides.mjs",
+    "README.md",
+    "mcp.json",
+    ".claude-plugin/plugin.json",
+    ".cursor-plugin/plugin.json",
+    "sample-hermes-config.yaml"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "jsdom": "^27.4.0",
+    "zod": "^3.25.67"
+  }
+}

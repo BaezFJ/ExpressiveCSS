@@ -27,6 +27,34 @@ Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 Node 22.12 or newer to run the documentation site: that is Astro's own
 requirement, not the framework's, which still builds and tests on 20.
 
+## MCP server for AI workflows
+
+This repository includes a local MCP server at `mcp/expressivecss/` that exposes an
+ExpressiveCSS design-to-QA workflow:
+
+- Setup Expert
+- Rules Enforcer
+- Creative Director
+- Page Arcjitect (`page_arcjitect`, with conventional `page_architect` compatibility)
+- Component Syntax Expert
+- Quality Inspector
+
+The MCP entry point is `mcp/expressivecss/server.js`, with sample config in
+`mcp/expressivecss/mcp.json`.
+
+Quick start:
+
+```sh
+cd mcp/expressivecss
+npm install
+node server.js
+```
+
+To use it with your MCP client, point the command to:
+
+- `node mcp/expressivecss/server.js`
+- or `node ./server.js` from `mcp/expressivecss` as the working directory.
+
 ## Getting started
 
 Clone the repository and install the JavaScript dependencies:

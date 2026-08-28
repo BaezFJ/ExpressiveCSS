@@ -1,0 +1,14 @@
+{
+  "name": "expressivecss-mcp",
+  "displayName": "ExpressiveCSS MCP",
+  "version": "0.1.0",
+  "description": "ExpressiveCSS workflow server with Setup Expert, Rules Enforcer, Creative Director, Page Arcjitect, Component Syntax Expert, and Quality Inspector.",
+  "author": {
+    "name": "BaezFJ",
+    "url": "https://github.com/BaezFJ"
+  },
+  "homepage": "https://www.expressivecss.com",
+  "repository": "https://github.com/BaezFJ/ExpressiveCSS",
+  "license": "MIT",
+  "mcpServers": "./mcp.json"
+}

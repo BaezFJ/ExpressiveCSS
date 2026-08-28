@@ -1,0 +1,1191 @@
+{
+  "schemaVersion": 1,
+  "frameworkVersion": "0.8.0",
+  "semantics": {
+    "about": "Normative HTML semantics for ExpressiveCSS. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. One row per roster entry, each stating its kind - component, foundation or behavior, as CONTEXT.md defines them. CONTEXT.md defines the rest of the vocabulary.",
+    "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
+    "rules": [
+      "Static semantics are the page author's; dynamic state is the framework's. See CONTEXT.md for both terms.",
+      "A component may declare a composite role only if its keyboard contract is implemented and tested. Tabs do not qualify: they are navigation (`<nav>` + anchors + `aria-current`), not a `tablist`. Carousel is a different case - its keyboard contract is implemented, and it rejects `tablist` because it follows the ARIA carousel pattern instead.",
+      "Icons are `<span class=\"material-symbols\" aria-hidden=\"true\">`. `<i>` keeps working but is undocumented.",
+      "`<nav>` is for genuine navigation only, and every one carries a required `aria-label`. Card action rows and toolbars are not navigation.",
+      "Every user-facing string the framework generates has an `i18n` option."
+    ],
+    "ruleKinds": {
+      "forbid": "selector must match nothing in a checked example",
+      "forbid-composite-roles": "selector must match nothing in a checked example once expanded over `compositeRoles` - the component may not *be* a composite widget of any kind",
+      "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)",
+      "require-accessible-name": "every element matching selector must end up with a non-empty accessible name (aria-label, aria-labelledby, or text that is not inside an aria-hidden subtree)"
+    },
+    "rowKinds": {
+      "component": "A part of the framework an author writes markup for. The default, and the only kind whose rules describe markup a page states directly. CONTEXT.md defines all three.",
+      "foundation": "A token or style system with no markup of its own. It has a partial, and therefore a row, but there is nothing an author writes to get it.",
+      "behavior": "Script that attaches to markup the author has already written. Any element it names is generated, not authored."
+    },
+    "compositeRoles": [
+      "combobox",
+      "grid",
+      "listbox",
+      "menu",
+      "menubar",
+      "radiogroup",
+      "tablist",
+      "toolbar",
+      "tree",
+      "treegrid"
+    ],
+    "surfaces": [
+      "llm.md",
+      "docs/src",
+      "tests/fixtures.js",
+      "m3-guidelines.md (forbid rules only)"
+    ],
+    "additional": [
+      "autocomplete",
+      "character-counter",
+      "landmarks"
+    ],
+    "notComponents": {
+      "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule."
+    },
+    "rows": {
+      "autocomplete": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The combobox it builds is checked at runtime in tests/autocomplete.test.js.",
+        "rules": [
+          {
+            "id": "autocomplete-options-are-options",
+            "kind": "forbid",
+            "selector": ".autocomplete-content li:not([role=\"option\"])",
+            "message": "The suggestion list is a listbox; every entry in it is an option."
+          }
+        ]
+      },
+      "badges": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. A badge nested in an icon is positioned against the glyph, so hiding the icon hides the count with it.",
+        "rules": [
+          {
+            "id": "badge-count-survives-a-hidden-icon",
+            "kind": "forbid",
+            "selector": ":is(a, button):not([aria-label]):not([aria-labelledby]) [aria-hidden=\"true\"] .badge:not(:empty)",
+            "message": "A badge inside a hidden icon is hidden with it - aria-hidden=\"false\" on a descendant does not undo that. Put the count in the control name (aria-label=\"Inbox, 3 unread\"), or move the badge out of the icon into the flow."
+          }
+        ]
+      },
+      "banners": {
+        "status": "enforced",
+        "note": "A persistent in-flow message with actions, added with the banner component (#33). Two variants off one root: `.banner` is the basic row and `.banner.rich` adds a heading and an image. Nothing is scripted and nothing is generated, so every rule here is about the markup an author writes. The two that earn their place are the landmark and the action row. `role=\"banner\"` is the page header landmark and has nothing to do with this component - a page has one, and a page can have several banners, so the two spellings of that confusion are both blocked. The action row is buttons, which rule 4 says is not navigation. No composite role appears here in either direction: a banner is a message with controls in it, so none is declared and none is withheld.",
+        "rules": [
+          {
+            "id": "banner-is-not-the-banner-landmark",
+            "kind": "forbid",
+            "selector": ".banner:is(header, [role=\"banner\"])",
+            "fragmentSafe": true,
+            "message": "`role=\"banner\"` is the page header landmark, not this component. A page has one of those and may have several banners; announcing each one as the site header buries the real header among them. A .banner is a <div>, or a <section> when it is worth naming."
+          },
+          {
+            "id": "banner-actions-are-not-nav",
+            "kind": "forbid",
+            "selector": ".banner nav",
+            "fragmentSafe": true,
+            "message": "A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4)."
+          },
+          {
+            "id": "banner-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".banner :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration."
+          },
+          {
+            "id": "banner-image-has-alt",
+            "kind": "forbid",
+            "selector": ".banner img:not([alt])",
+            "fragmentSafe": true,
+            "message": "A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt=\"\" is the correct answer for a decorative image, and an empty value does not satisfy require-attr."
+          }
+        ]
+      },
+      "bottom-app-bar": {
+        "status": "enforced",
+        "note": "A row of commands at the bottom edge, with an optional FAB, added in 1.x (#35). It is the counterpart of the top app bar, not of the navigation bar: a navigation bar holds 3-5 destinations that do not change per screen, and this holds the actions of the screen the reader is already on. So it is not a <nav> and takes no landmark (rule 4), and no composite role either - `toolbar` would promise arrow-key navigation nothing here implements (rule 2), the same account the toolbar row gives. The element rule names every landmark element, not just <nav>, and that is not pedantry: the retired version of this component was keyed on `footer:has(> nav:only-child)`, which claimed the landmark from the markup alone and left the two bars one slip apart. Nothing is scripted and nothing is generated, so every rule below is about the markup an author writes.",
+        "conformance": {
+          "withheld_role": "toolbar",
+          "blocked_on": "keyboard model",
+          "rule": "bottom-app-bar-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "bottom-app-bar-is-not-a-landmark",
+            "kind": "forbid",
+            "selector": ":is(nav, header, footer, main, aside).bottom-app-bar",
+            "fragmentSafe": true,
+            "message": "A bottom app bar holds this screen's commands - share, edit, delete - not destinations, so it is not a <nav> landmark (rule 4), and it is not any other landmark either: <footer> is contentinfo, <header> is banner, and a row of buttons is neither. The retired version of this component was keyed on `footer:has(> nav:only-child)`, which is why both of those spellings are named here rather than just the <nav> one. Write it on a <div>. Destinations at the bottom of the screen are nav.navigation-bar, a different component."
+          },
+          {
+            "id": "bottom-app-bar-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".bottom-app-bar",
+            "fragmentSafe": true,
+            "message": "A bottom app bar takes no composite role; its actions are reached with Tab, not arrow keys."
+          },
+          {
+            "id": "bottom-app-bar-action-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".bottom-app-bar > :is(a, button)",
+            "message": "Every action in the bar is icon-only, and the icon is aria-hidden, so the control needs an aria-label. Without one it arrives as an unnamed button."
+          },
+          {
+            "id": "bottom-app-bar-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".bottom-app-bar :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "The ligature is real text and is read out verbatim. Every icon here sits inside a control that carries its own name, so all of them are decoration."
+          }
+        ]
+      },
+      "bottom-sheet": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
+        "rules": []
+      },
+      "breadcrumb": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. A trail is an ordered list, because the order is the meaning.",
+        "rules": [
+          {
+            "id": "breadcrumb-is-ordered-list",
+            "kind": "forbid",
+            "selector": ".breadcrumb-wrapper > a",
+            "fragmentSafe": true,
+            "message": "Crumbs are an ordered list - nav > ol > li > a. Loose anchors give no count and no position, so \"3 of 4\" is never announced."
+          },
+          {
+            "id": "breadcrumb-marks-current",
+            "kind": "forbid",
+            "selector": ".breadcrumb-wrapper li:last-child :is(a, span):not([aria-current])",
+            "fragmentSafe": false,
+            "message": "The last crumb is the page you are on; it needs aria-current=\"page\" to say so."
+          }
+        ]
+      },
+      "buttons": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The FAB and its speed dial live in this partial, so its withheld role is recorded here: FloatingActionButton used to set role=\"menu\" on the action list and aria-haspopup=\"menu\" on the trigger, and there is no arrow-key model behind either. The FAB menu withholds the same role from its own host, one row over.",
+        "conformance": {
+          "withheld_role": "menu",
+          "blocked_on": "keyboard model",
+          "rule": "fab-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "icon-only-control-is-named",
+            "kind": "require-accessible-name",
+            "selector": ":is(a, button):has([aria-hidden=\"true\"])",
+            "message": "Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label."
+          },
+          {
+            "id": "fab-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ":is(.fab,.fixed-action-btn)",
+            "fragmentSafe": true,
+            "message": "The FAB's actions are reached with Tab, not arrow keys, so the list takes no composite role."
+          },
+          {
+            "id": "fab-expanded-is-not-authored",
+            "kind": "forbid",
+            "selector": ":is(.fab, .fixed-action-btn) [aria-expanded]",
+            "fragmentSafe": true,
+            "message": "Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten."
+          }
+        ]
+      },
+      "button-groups": {
+        "status": "enforced",
+        "note": "Added with the button group component (#41). A group of related buttons that read as one control without becoming one: each item is its own Tab stop and does its own thing, so the container declares no role at all. `toolbar` is rejected rather than withheld - Toolbar's case is a keyboard model that has not been written yet, this one is a component that is not a composite widget and does not want to be. A group that needs a name takes `role=\"group\"` with an `aria-label`, which promises no keyboard contract to break. Selection is absent for the same reason: a <button> holds no checked state, and the M3 connected group's selected shape belongs to `.segmented-button`, which is a <fieldset> of real controls.",
+        "rejects": {
+          "rejected_role": "toolbar",
+          "because": "its buttons are independent commands reached with Tab - the group is a visual grouping, not a composite widget, so there is no arrow-key model to implement and none to promise",
+          "rule": "button-group-is-not-an-authored-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "button-group-is-not-an-authored-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".button-group",
+            "fragmentSafe": true,
+            "message": "A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role=\"group\"` with an aria-label is the role that fits, and it promises no keyboard model."
+          },
+          {
+            "id": "button-group-items-are-controls",
+            "kind": "forbid",
+            "selector": ".button-group > :not(button):not(a.button[href])",
+            "fragmentSafe": true,
+            "message": "Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class=\"button\" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both."
+          },
+          {
+            "id": "button-group-item-is-not-an-icon-button",
+            "kind": "forbid",
+            "selector": ".button-group > .icon-button",
+            "fragmentSafe": true,
+            "message": "An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class=\"button circle\">, which the group sizes like any other."
+          },
+          {
+            "id": "button-group-selection-is-not-authored",
+            "kind": "forbid",
+            "selector": ".button-group :is([aria-checked], [aria-selected], [aria-pressed])",
+            "fragmentSafe": true,
+            "message": "A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself."
+          }
+        ]
+      },
+      "cards": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The action row is buttons, not destinations.",
+        "rules": [
+          {
+            "id": "card-action-row-not-nav",
+            "kind": "forbid",
+            "selector": "article nav",
+            "fragmentSafe": true,
+            "message": "Cards do not contain navigation or tabs. Put navigation outside the card and use <div class=\"actions\"> for its action buttons."
+          }
+        ]
+      },
+      "carousel": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Material 3 items remain exposed because several can be visible at once. Checked at runtime in tests/generated-a11y.test.js. Its keyboard contract is implemented and tested, so tablist is rejected rather than withheld. The role rule keeps out every composite role but not every role: role=\"group\" with aria-roledescription=\"carousel\" is the pattern carousel.ts writes and stays legal.",
+        "rejects": {
+          "rejected_role": "tablist",
+          "because": "it implements the ARIA carousel pattern instead - a group with aria-roledescription and independent indicator controls",
+          "rule": "carousel-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "hidden-subtree-holds-nothing-focusable",
+            "kind": "forbid",
+            "selector": "[aria-hidden=\"true\"]:has(:is(a[href], button, input, select, textarea, [tabindex]):not([tabindex=\"-1\"]):not([disabled]))",
+            "fragmentSafe": true,
+            "message": "Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex=\"-1\"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible."
+          },
+          {
+            "id": "carousel-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".carousel",
+            "fragmentSafe": true,
+            "message": "A carousel takes no composite role; it is a group of slides with independent controls."
+          },
+          {
+            "id": "carousel-indicators-are-not-tabs",
+            "kind": "forbid",
+            "selector": ".carousel [role=\"tab\"]",
+            "fragmentSafe": true,
+            "message": "Carousel indicators are independent controls, not tabs."
+          }
+        ]
+      },
+      "character-counter": {
+        "status": "enforced",
+        "kind": "behavior",
+        "note": "Swept 0.8.0. A behavior, not a component: the author writes `data-length` on a field they already had, and the counter element is generated. Checked at runtime in tests/character-counter.test.js.",
+        "rules": [
+          {
+            "id": "counter-is-announced",
+            "kind": "require-attr",
+            "selector": ".character-counter",
+            "attr": "aria-live",
+            "equals": "polite",
+            "message": "The count changes as the user types, so it has to be a live region or the remaining characters are never announced."
+          }
+        ]
+      },
+      "chips": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip, across three root elements; the delete affordance is a real button.",
+        "rules": [
+          {
+            "id": "chip-root-element",
+            "kind": "forbid",
+            "selector": ".chip:not(span):not(button):not(label)",
+            "message": "A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "chip-not-focusable-span",
+            "kind": "forbid",
+            "selector": "span.chip[tabindex]",
+            "message": "A display chip is not a control and must not be in the tab order. Put the action on a nested <button>.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "chip-close-is-button",
+            "kind": "forbid",
+            "selector": ".chip .close:not(button)",
+            "message": "The chip delete affordance is a control: use <button type=\"button\" class=\"close\">, not <i> or <span>.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "chip-close-type-button",
+            "kind": "require-attr",
+            "selector": ".chip button.close",
+            "attr": "type",
+            "equals": "button",
+            "message": "A <button> inside a form defaults to type=submit. Chip delete buttons must set type=\"button\"."
+          },
+          {
+            "id": "chip-close-has-label",
+            "kind": "require-attr",
+            "selector": ".chip button.close",
+            "attr": "aria-label",
+            "message": "The delete button contains only an icon, so it needs an accessible name naming the chip it removes."
+          },
+          {
+            "id": "chip-no-i-element",
+            "kind": "forbid",
+            "selector": ".chip i",
+            "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\" aria-hidden=\"true\">.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "chip-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".chip :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden."
+          },
+          {
+            "id": "filter-chip-label-for",
+            "kind": "require-attr",
+            "selector": "label.chip",
+            "attr": "for",
+            "message": "A filter chip is <input type=\"checkbox\"> + <label class=\"chip\">; the label must point at its input."
+          }
+        ]
+      },
+      "datepicker": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.",
+        "rules": []
+      },
+      "dialog": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "dialog-is-named",
+            "kind": "forbid",
+            "selector": "dialog:not([aria-label]):not([aria-labelledby])",
+            "message": "A <dialog> takes no name from its heading. Point aria-labelledby at that heading, or give it an aria-label - otherwise it opens announced as just \"dialog\"."
+          }
+        ]
+      },
+      "docked-display": {
+        "status": "enforced",
+        "kind": "behavior",
+        "note": "Swept 0.8.0. A behavior, not a component: the picker plugins generate this positioning wrapper, so there is no element an author writes to get one.",
+        "rules": []
+      },
+      "drag-handle": {
+        "status": "enforced",
+        "note": "The affordance that says a thing can be dragged, added with the drag handle component (#34). Which element it is *is* the whole semantic: a <span aria-hidden=\"true\"> when it is decoration - the usual case, and what a bottom sheet wants, since Escape already dismisses the sheet and the drag is a pointer nicety on top - and a <button> with a name when something is genuinely wired to it. The two rules below hold that split, and the sheet leans on it: `button.drag-handle` is where every interactive state in the partial is scoped, which is only correct because nothing else can be interactive. What no rule can check is the thing this component is most likely to be misused for. Dragging is a pointer gesture, so any outcome reachable only by dragging is unreachable without one; the framework ships no reordering behaviour to hang off this handle, and a page that builds one owes it a keyboard path of its own. The docs say so plainly rather than implying the handle supplies it. Every selector below names `.handle` beside `.drag-handle`: the bottom sheet styles the pre-1.0 spelling too, and an alias the framework blesses is an alias these rules have to reach. The first rule is deliberately not fragmentSafe - what it detects is a *missing* aria-hidden, and a fragment omits by nature.",
+        "rules": [
+          {
+            "id": "drag-handle-is-hidden-or-a-control",
+            "kind": "forbid",
+            "selector": ":is(.handle, .drag-handle):not(button):not([aria-hidden=\"true\"])",
+            "message": "A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden=\"true\". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated."
+          },
+          {
+            "id": "drag-handle-button-is-not-hidden",
+            "kind": "forbid",
+            "selector": "button:is(.handle, .drag-handle)[aria-hidden=\"true\"]",
+            "fragmentSafe": true,
+            "message": "aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed."
+          },
+          {
+            "id": "drag-handle-button-is-named",
+            "kind": "require-accessible-name",
+            "selector": "button:is(.handle, .drag-handle)",
+            "message": "The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves."
+          }
+        ]
+      },
+      "expanding-card": {
+        "status": "enforced",
+        "note": "Added 0.8.0. The compact article opens a named native dialog; its media and back actions are buttons.",
+        "rules": [
+          {
+            "id": "expanding-card-trigger-is-button",
+            "kind": "forbid",
+            "selector": "article.expanding-card .expanding-card-trigger:not(button)",
+            "message": "The media-sized trigger opens a dialog, so use a button for native keyboard and disabled behavior."
+          },
+          {
+            "id": "expanding-card-close-is-button",
+            "kind": "forbid",
+            "selector": "dialog.expanding-card-dialog .expanding-card-close:not(button)",
+            "message": "The back affordance closes the expanded surface, so use a button for native keyboard behavior."
+          }
+        ]
+      },
+      "fab-menu": {
+        "status": "enforced",
+        "note": "A FAB that expands into a list of labelled actions. It looks like a menu and is not one: its items are reached with Tab, so the role is withheld rather than declared. The `.fab` speed dial is the same script and withholds it under `buttons`, which owns the partial it is styled in.",
+        "conformance": {
+          "withheld_role": "menu",
+          "blocked_on": "keyboard model",
+          "rule": "fab-menu-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "fab-menu-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".fab-menu",
+            "fragmentSafe": true,
+            "message": "The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys."
+          },
+          {
+            "id": "fab-menu-expanded-is-not-authored",
+            "kind": "forbid",
+            "selector": ".fab-menu [aria-expanded]",
+            "fragmentSafe": true,
+            "message": "Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten."
+          }
+        ]
+      },
+      "floating-sheet": {
+        "status": "enforced",
+        "note": "A <dialog>, so the dialog rules carry it.",
+        "rules": []
+      },
+      "forms/checkboxes": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "checkbox-labelled",
+            "kind": "forbid",
+            "selector": "input[type=\"checkbox\"]:not([id]):not(label *):not(.chip-input)",
+            "message": "A checkbox must be inside its <label> or carry an id a label points at."
+          }
+        ]
+      },
+      "forms/fieldset": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "fieldset-has-legend",
+            "kind": "forbid",
+            "selector": "fieldset:not(:has(> legend))",
+            "message": "A fieldset without a legend groups controls visually but names nothing."
+          }
+        ]
+      },
+      "forms/file-input": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "file-input-not-nested",
+            "kind": "forbid",
+            "selector": ":is(button, a) input[type=\"file\"]",
+            "message": "A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "file-path-readonly",
+            "kind": "forbid",
+            "selector": "input.file-path:not([readonly])",
+            "message": "The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded."
+          }
+        ]
+      },
+      "forms/input-fields": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. .field is the container; icons name their side and are hidden; supporting text is linked to the control it describes.",
+        "rules": [
+          {
+            "id": "field-container-class",
+            "kind": "forbid",
+            "selector": ".input-field:not(.chips)",
+            "message": "The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "field-icon-not-i",
+            "kind": "forbid",
+            "selector": ".field i",
+            "message": "<i> means idiomatic text, not icon. Use <span class=\"material-symbols\">.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "field-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".field .material-symbols, .field .material-symbols-outlined, .field .material-symbols-rounded, .field .material-symbols-sharp, .field .material-icons",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "The ligature is read aloud. A field icon is decoration; the label names the control."
+          },
+          {
+            "id": "field-icon-side",
+            "kind": "forbid",
+            "selector": ".field > :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons):not(.prefix):not(.suffix)",
+            "message": "A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>."
+          },
+          {
+            "id": "field-label-for",
+            "kind": "require-attr",
+            "selector": ".field > label:not(:has(input, select, textarea))",
+            "attr": "for",
+            "message": "A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not."
+          },
+          {
+            "id": "field-control-id",
+            "kind": "require-attr",
+            "selector": ".field > :is(input, textarea, select)",
+            "attr": "id",
+            "message": "Without an id the label has nothing to point at."
+          },
+          {
+            "id": "field-supporting-text-id",
+            "kind": "require-attr",
+            "selector": ".field > small",
+            "attr": "id",
+            "message": "Supporting and error text has to be referenceable to be announced with the control."
+          },
+          {
+            "id": "field-supporting-text-linked",
+            "kind": "forbid",
+            "selector": ".field:has(> small) > :is(input, textarea, select):not([aria-describedby])",
+            "message": "A field with supporting text must point at it with aria-describedby, or the text is never read out with the control."
+          }
+        ]
+      },
+      "forms/radio-buttons": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. A radio is one of a set, and the set needs a name.",
+        "rules": [
+          {
+            "id": "radio-in-fieldset",
+            "kind": "forbid",
+            "selector": "input[type=\"radio\"]:not(fieldset *)",
+            "message": "A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered."
+          },
+          {
+            "id": "radio-labelled",
+            "kind": "forbid",
+            "selector": "input[type=\"radio\"]:not([id]):not(label *)",
+            "message": "A radio must be inside its <label> or carry an id a label points at."
+          }
+        ]
+      },
+      "forms/select": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select.test.js.",
+        "rules": [
+          {
+            "id": "option-has-selected-state",
+            "kind": "forbid",
+            "selector": "li[role=\"option\"]:not([aria-selected])",
+            "message": "role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen."
+          }
+        ]
+      },
+      "forms/slider": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; `.range` stays as an alias.",
+        "rules": [
+          {
+            "id": "range-labelled",
+            "kind": "forbid",
+            "selector": "input[type=\"range\"]:not([id]):not([aria-label]):not([aria-labelledby]):not(label *)",
+            "message": "A range announces only its value unless something names it."
+          }
+        ]
+      },
+      "forms/switches": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "switch-is-label",
+            "kind": "forbid",
+            "selector": ".switch:not(label)",
+            "message": "A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "switch-decorative-text-hidden",
+            "kind": "require-attr",
+            "selector": ".switch > span:not(.lever)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "On/off captions inside the label are folded into the accessible name, which then reads \"Off On\". Hide them and let the label text name the switch."
+          }
+        ]
+      },
+      "icon-buttons": {
+        "status": "enforced",
+        "note": "Added with the icon button component (#22). An icon button is the case rule 3 exists for: its only content is a decorative icon, so the name has to live on the control. `.button.circle` is the older icon button and is covered by the buttons row.",
+        "rules": [
+          {
+            "id": "icon-button-is-a-control",
+            "kind": "forbid",
+            "selector": ".icon-button:not(button):not(a[href])",
+            "fragmentSafe": true,
+            "message": "An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced."
+          },
+          {
+            "id": "icon-button-link-is-not-fake-disabled",
+            "kind": "forbid",
+            "selector": "a[href].icon-button:is(.disabled, [aria-disabled=\"true\"])",
+            "fragmentSafe": true,
+            "message": "A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link."
+          },
+          {
+            "id": "icon-button-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".icon-button :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden=\"true\"."
+          },
+          {
+            "id": "icon-button-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".icon-button",
+            "message": "The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label."
+          }
+        ]
+      },
+      "icons-material-design": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The canonical icon is <span class=\"material-symbols\">, and an icon is either decoration or an image - never unannounced text.",
+        "rules": [
+          {
+            "id": "icon-not-i-element",
+            "kind": "forbid",
+            "selector": "i.material-symbols, i.material-symbols-outlined, i.material-symbols-rounded, i.material-symbols-sharp, i.material-icons",
+            "message": "<i> means idiomatic text. The canonical icon element is <span class=\"material-symbols\">.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "icon-hidden-or-labelled",
+            "kind": "forbid",
+            "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-icons:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
+            "message": "The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden=\"true\", with the enclosing control carrying the name - or an image in its own right, role=\"img\" with a label. It is never left as bare text."
+          }
+        ]
+      },
+      "landmarks": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Cross-cutting: the landmark budget belongs to no single component.",
+        "rules": [
+          {
+            "id": "nav-needs-label",
+            "kind": "forbid",
+            "selector": "nav:not([aria-label]):not([aria-labelledby]):not(article nav):not(.tooltip nav):not(.toolbar)",
+            "fragmentSafe": false,
+            "message": "A page carries several <nav> landmarks - app bar, tabs, breadcrumbs, footer columns, drawer. Unlabelled they arrive in the landmark menu as a row of identical entries, which is worse than not being landmarks at all. Three carve-outs, each an action row that should not be <nav> at all so that labelling it would entrench the error: `article nav` (card actions, awaits the cards sweep), `.tooltip nav` (rich-tooltip actions, awaits the tooltip sweep), `.toolbar` (awaits the toolbar sweep). Delete each carve-out with its sweep."
+          },
+          {
+            "id": "main-not-nested",
+            "kind": "forbid",
+            "selector": "main main",
+            "fragmentSafe": true,
+            "message": "A document has one <main>. A pane that holds the primary content of a region is a <section> or a <div>."
+          }
+        ]
+      },
+      "lightbox": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "lightbox-trigger-is-operable",
+            "kind": "forbid",
+            "selector": "img.lightboxed:not([tabindex]):not(:is(a, button) > img)",
+            "fragmentSafe": true,
+            "message": "A .lightboxed image opens an overlay on click, which makes it a control - and a bare <img> is not focusable and not operable from the keyboard. Wrap it in a <button>, or give it tabindex=\"0\" and a role."
+          }
+        ]
+      },
+      "list": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "list-item-not-selected",
+            "kind": "forbid",
+            "selector": "li[aria-selected]:not([role])",
+            "message": "aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.",
+            "fragmentSafe": true
+          }
+        ]
+      },
+      "loading-indicator": {
+        "status": "enforced",
+        "note": "The M3 Expressive indicator for short waits. One empty <span> that reports nothing on its own, so the role and the name are both the author's - it is a live region, not a progressbar: it has no value to report. It supersedes the indeterminate circular case of `progress`, which keeps every determinate case and both linear bars.",
+        "rules": [
+          {
+            "id": "loading-indicator-reports-itself",
+            "kind": "require-attr",
+            "attr": "role",
+            "equals": "status",
+            "selector": ".loading-indicator",
+            "message": "An empty <span class=\"loading-indicator\"> is a shape drawn with CSS and reports nothing. It needs role=\"status\" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it."
+          },
+          {
+            "id": "loading-indicator-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".loading-indicator",
+            "message": "The indicator has no text of its own, so role=\"status\" would announce an empty string. Name it - aria-label=\"Loading\", or aria-labelledby pointing at the copy beside it."
+          }
+        ]
+      },
+      "menu": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "menu-children-are-list-items",
+            "kind": "forbid",
+            "selector": "menu > :not(li):not(script):not(template)",
+            "fragmentSafe": true,
+            "message": "<menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there."
+          }
+        ]
+      },
+      "navbar": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The bar is <header> whose child is <nav>; the landmark rules carry it.",
+        "rules": []
+      },
+      "navigation-bar": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "navigation-bar-marks-current",
+            "kind": "forbid",
+            "selector": ".navigation-bar a.active:not([aria-current])",
+            "fragmentSafe": false,
+            "message": "The active destination needs aria-current=\"page\"."
+          }
+        ]
+      },
+      "navigation-drawer": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an alias.",
+        "rules": [
+          {
+            "id": "sidenav-in-nav",
+            "kind": "forbid",
+            "selector": ":is(.navigation-drawer, .sidenav):not(nav):not(nav *)",
+            "fragmentSafe": true,
+            "message": "A drawer of destinations is navigation. Wrap the list in a labelled <nav>."
+          },
+          {
+            "id": "drawer-trigger-is-button",
+            "kind": "forbid",
+            "selector": ":is(.navigation-drawer-trigger, .sidenav-trigger):not(button)",
+            "fragmentSafe": true,
+            "message": "The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type=\"button\"> with data-target - an <a href=\"#!\"> announces as a link and adds a history entry for a drawer that never navigates."
+          },
+          {
+            "id": "drawer-close-is-button",
+            "kind": "forbid",
+            "selector": ":is(.navigation-drawer-close, .sidenav-close):not(button)",
+            "fragmentSafe": true,
+            "message": "The close row dismisses the drawer, so it is a command: use <button type=\"button\" class=\"navigation-drawer-close\">. Same call as expanding-card-close-is-button."
+          },
+          {
+            "id": "drawer-subheader-not-a-link",
+            "kind": "forbid",
+            "selector": ":is(.navigation-drawer, .sidenav) a.subheader",
+            "fragmentSafe": true,
+            "message": "A subheader labels the rows under it and goes nowhere. Write it as <span class=\"subheader\">; the <a> carried no href, and the sheet had to neutralise it with pointer-events: none."
+          },
+          {
+            "id": "drawer-marks-current",
+            "kind": "forbid",
+            "selector": ":is(.navigation-drawer, .sidenav) :is(li.active > a, a.active):not([aria-current])",
+            "fragmentSafe": true,
+            "message": "The current destination needs aria-current=\"page\". .active is a paint: it colours the row and says nothing to a screen reader. Same call as navigation-rail-marks-current."
+          },
+          {
+            "id": "drawer-avatar-link-is-named",
+            "kind": "require-accessible-name",
+            "selector": ":is(.navigation-drawer, .sidenav) .user-view > a:has(> img)",
+            "message": "A link wrapping only a decorative <img alt=\"\"> has no name left - it arrives in the links list as the bare URL. Give the link an aria-label."
+          }
+        ]
+      },
+      "navigation-rail": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "navigation-rail-marks-current",
+            "kind": "forbid",
+            "selector": ".navigation-rail a.active:not([aria-current])",
+            "fragmentSafe": false,
+            "message": "The active destination needs aria-current=\"page\"."
+          }
+        ]
+      },
+      "page-footer": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "footer-nav-has-links",
+            "kind": "forbid",
+            "selector": "footer nav:not(:has(a))",
+            "fragmentSafe": false,
+            "message": "A footer column with no links is not navigation - it is a <section> with a heading. Marking it <nav> spends a landmark on prose."
+          }
+        ]
+      },
+      "pagination": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "pagination-in-nav",
+            "kind": "forbid",
+            "selector": ".pagination:not(nav):not(nav *)",
+            "fragmentSafe": true,
+            "message": "Pagination is navigation and belongs in a labelled <nav>, or it is just a list of numbers."
+          },
+          {
+            "id": "pagination-marks-current",
+            "kind": "forbid",
+            "selector": ".pagination .active :is(a, span):not([aria-current])",
+            "fragmentSafe": false,
+            "message": "The current page needs aria-current=\"page\". A class only colours it."
+          },
+          {
+            "id": "pagination-disabled-not-a-link",
+            "kind": "forbid",
+            "selector": ".pagination .disabled a[href]",
+            "fragmentSafe": true,
+            "message": "A disabled control that is still an <a href> stays in the tab order and still navigates. Use a <span>, or drop the href."
+          }
+        ]
+      },
+      "panes": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "pane-is-not-main",
+            "kind": "forbid",
+            "selector": ":is(.panes, .pane-layout, .list-detail, .supporting-pane-layout) main",
+            "fragmentSafe": true,
+            "message": "A document has one <main>, and a pane is a region inside it, not another one. Use <section>."
+          }
+        ]
+      },
+      "progress": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.",
+        "rules": [
+          {
+            "id": "div-progress-reports-progress",
+            "kind": "forbid",
+            "selector": "div.progress:not([role=\"progressbar\"])",
+            "message": "<progress> reports itself. A <div class=\"progress\"> is a bar drawn with CSS and reports nothing - it needs role=\"progressbar\", plus aria-valuenow/min/max when it is determinate."
+          },
+          {
+            "id": "determinate-progress-reports-its-value",
+            "kind": "forbid",
+            "selector": "[role=\"progressbar\"]:has(> .determinate):not([aria-valuenow])",
+            "message": "role=\"progressbar\" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100."
+          }
+        ]
+      },
+      "scrim": {
+        "status": "enforced",
+        "kind": "foundation",
+        "note": "The wash a modal surface paints behind itself, added in 1.x (#37). A foundation, not a component: nothing is marked up to get one, so there is no element for a rule to name. `--md-comp-scrim-color` is the whole of it; the dialogs, sheets, navigation-drawer and navigation-rail rows own the markup that ends up wearing it.",
+        "rules": []
+      },
+      "search": {
+        "status": "enforced",
+        "note": "The bar is a `<search>` landmark holding an `<input type=\"search\">`; the view is the surface it expands into. Suggestions are Autocomplete's - `class=\"autocomplete\"` on the bar's input gives the combobox, its listbox and the keyboard contract that are already implemented and tested there, so this component neither duplicates them nor ships a second, weaker copy. Full-screen the view is a `<dialog>`, so the dialog rules carry it.",
+        "rejects": {
+          "rejected_role": "listbox",
+          "because": "the view is a surface holding content - recent searches, results, filters - reached with Tab, not a set of options over which one keyboard focus moves. Where a page does want a suggestion listbox, that pattern is Autocomplete's and Autocomplete implements it; a second listbox here would be the same promise with no keyboard model behind it.",
+          "rule": "search-view-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "search-view-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".search-view",
+            "fragmentSafe": true,
+            "message": "The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input."
+          },
+          {
+            "id": "search-bar-holds-a-search-input",
+            "kind": "forbid",
+            "selector": ".search-bar input:not([type=\"search\"])",
+            "fragmentSafe": true,
+            "message": "The bar's control is a search input. `type=\"search\"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken."
+          }
+        ]
+      },
+      "scrollspy": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. The sections it watches are the author's own; the table of contents beside them is markup the author writes, which is what keeps this a component and not a behavior. `_table_of_contents.scss` styles that list and states no component of its own, so the rule for it lives here.",
+        "rules": [
+          {
+            "id": "toc-in-nav",
+            "kind": "forbid",
+            "selector": ".table-of-contents:not(nav):not(nav *)",
+            "fragmentSafe": true,
+            "message": "A table of contents is a set of destinations within the page. It belongs in a labelled <nav>."
+          }
+        ]
+      },
+      "segmented-buttons": {
+        "status": "enforced",
+        "note": "A single- or multi-select group of connected buttons. The root is a <fieldset>, and each segment is an <input> plus the <label class=\"segment\"> beside it, tied by id: radios for single-select, checkboxes for multi-select. The control is the label's sibling rather than its child, the way a filter chip is written - a <label> wrapping one of those inputs is a radio or a checkbox to the rest of the sheet, and gets painted as one. The role is rejected rather than withheld, which is Carousel's case and not Tabs': rule 2 asks for an implemented keyboard contract before a component claims a composite role, and a native radio group has one the platform implements - so `radiogroup` is declined because the element already carries it, not deferred until some later commit. The rules are what keeps that true. Swap the <fieldset> for a <div>, the <input> for a <button>, or drop the shared `name`, and the arrow keys, the group name and the checked state leave with it - which is why `name` is required here even though the sheet never reads it.",
+        "rules": [
+          {
+            "id": "segmented-button-is-a-fieldset",
+            "kind": "forbid",
+            "selector": ".segmented-button:not(fieldset)",
+            "fragmentSafe": true,
+            "message": "A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model."
+          },
+          {
+            "id": "segmented-button-is-not-an-authored-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".segmented-button",
+            "fragmentSafe": true,
+            "message": "The group takes no authored composite role. `radiogroup` is what the fieldset and its radios already are, and every other composite role is a promise this component does not make."
+          },
+          {
+            "id": "segment-is-a-label",
+            "kind": "forbid",
+            "selector": ".segmented-button .segment:not(label)",
+            "fragmentSafe": true,
+            "message": "A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value."
+          },
+          {
+            "id": "segment-names-its-input",
+            "kind": "require-attr",
+            "selector": ".segmented-button label.segment",
+            "attr": "for",
+            "message": "The control is the label's sibling, not its child, so only `for` ties the two together: <input id=\"x\"> then <label class=\"segment\" for=\"x\">."
+          },
+          {
+            "id": "segment-radios-share-a-name",
+            "kind": "require-attr",
+            "selector": ".segmented-button input[type=\"radio\"]",
+            "attr": "name",
+            "message": "Radios are a group only because they share a `name`, and that group is where the arrow keys come from. Without it each segment is its own one-option group and the keyboard contract this component leans on does not exist."
+          },
+          {
+            "id": "segment-does-not-wrap-its-input",
+            "kind": "forbid",
+            "selector": ".segmented-button .segment :is([type=\"radio\"], [type=\"checkbox\"])",
+            "fragmentSafe": true,
+            "message": "A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it."
+          },
+          {
+            "id": "segment-selection-is-not-authored",
+            "kind": "forbid",
+            "selector": ".segmented-button :is([aria-checked], [aria-selected], [aria-pressed])",
+            "fragmentSafe": true,
+            "message": "Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates."
+          },
+          {
+            "id": "segment-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".segmented-button .segment :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration."
+          }
+        ],
+        "rejects": {
+          "rejected_role": "radiogroup",
+          "because": "a <fieldset> of radios already is one, with the arrow-key model implemented by the browser - an authored role would restate natively-supplied semantics and replace the group role the fieldset provides",
+          "rule": "segmented-button-is-not-an-authored-composite-widget"
+        }
+      },
+      "side-sheet": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
+        "rules": []
+      },
+      "split-button": {
+        "status": "enforced",
+        "note": "Added with the split button component (#42). A lead action and a trailing half that opens a menu, drawn as one shape with a 2dp seam. Two halves, two Tab stops, two different jobs - so the container declares no role at all. `toolbar` is rejected rather than withheld: there is no arrow-key model to write, because the only composite widget here is the <menu> the trailing half opens, and Menu implements and owns that contract. The trailing half *is* the menu trigger - `.menu-trigger` with a target is the JS contract Menu claims, and a split button whose trailing half opened nothing would be a lone button with a decoration glued to it. That is also what lets the expanded shape be drawn from a selector with no script of this component's own: Menu stamps `aria-expanded` on the trigger and rewrites it on every open and close, which is rule 1 working exactly as written. Two things the container cannot enforce for itself and the rules do. An `.icon-button` is not a half - it is its own component, setting its height, insets, colours and icon sizing on the element, so it reaches none of the split button's geometry; button groups refuse it for the same reason. The two-control contract is held from both ends - a third control gets the leading half's rules as well, and a container holding only the trigger leaves it squared off along a seam with nothing beside it. And the halves are told apart by *role* rather than by position, which keeps an authored <menu> from breaking the selectors - so nothing in the sheet notices a trigger written first, and a rule has to hold the order instead.",
+        "rejects": {
+          "rejected_role": "toolbar",
+          "because": "the two halves are independent commands reached with Tab - the pair is one shape, not one widget, so there is no arrow-key model to implement and none to promise. The menu the trailing half opens has its own, and Menu owns it",
+          "rule": "split-button-is-not-an-authored-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "split-button-is-not-an-authored-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".split-button",
+            "fragmentSafe": true,
+            "message": "A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role."
+          },
+          {
+            "id": "split-button-halves-are-controls",
+            "kind": "forbid",
+            "selector": ".split-button > :not(button):not(a.button[href]):not(menu)",
+            "fragmentSafe": true,
+            "message": "A split button is exactly two controls and the menu one of them opens: a <button>, or an <a class=\"button\" href> when it navigates. A wrapper element is refused too - the seam, the insets and the larger trailing icon are all written against direct children, so a nested <div> loses every one of them."
+          },
+          {
+            "id": "split-button-half-is-not-an-icon-button",
+            "kind": "forbid",
+            "selector": ".split-button > .icon-button",
+            "fragmentSafe": true,
+            "message": "An icon button is its own component: its height, insets, colours, icon sizing and transitions are all set on the element itself, so it reaches none of the split button's geometry and fights the seam it is handed. The trailing half is <button class=\"button menu-trigger\">, which the container sizes like the leading one."
+          },
+          {
+            "id": "split-button-trigger-is-the-trailing-half",
+            "kind": "forbid",
+            "selector": ".split-button > .menu-trigger ~ :not(menu)",
+            "fragmentSafe": true,
+            "message": "The menu trigger is the *trailing* half, and only the <menu> may follow it. Order is the whole of the geometry here: the halves are told apart by role, not by position, so a trigger written first still takes the trailing side's round outer corners while flex puts it on the leading side - a split button with its seam and its round ends swapped."
+          },
+          {
+            "id": "split-button-is-two-controls",
+            "kind": "forbid",
+            "selector": ".split-button > :is(button, a.button) ~ :is(button, a.button) ~ :is(button, a.button)",
+            "fragmentSafe": true,
+            "message": "A split button is exactly two controls: one lead action and one menu trigger. A third gets the leading half's rules as well, so two buttons draw round start corners and a seam against each other. Several peer actions are a button group; several related ones belong in the menu."
+          },
+          {
+            "id": "split-button-has-a-leading-action",
+            "kind": "forbid",
+            "selector": ".split-button:not(:has(> :is(button, a.button):not(.menu-trigger)))",
+            "message": "A split button is a lead action *and* a menu of related ones; without the lead it is a menu trigger wearing half a pill. The trailing half's shape is written for a seam, so the only control ends up squared off on the edge it should be joined along, with nothing to join to. One control that opens a menu is a menu trigger - drop the container. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature."
+          },
+          {
+            "id": "split-button-has-a-trailing-menu-trigger",
+            "kind": "forbid",
+            "selector": ".split-button:not(:has(> .menu-trigger))",
+            "message": "The trailing half is the whole point: it opens a menu of actions related to the leading one. Without `.menu-trigger` on it there is no menu, and the pair is a lone button with a chevron glued to it - write two buttons, or one. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature."
+          },
+          {
+            "id": "split-button-trigger-names-its-menu",
+            "kind": "forbid",
+            "selector": ".split-button > .menu-trigger:not([data-target]):not([href])",
+            "fragmentSafe": true,
+            "message": "Menu finds its surface through `data-target` on the trigger, falling back to an `href` fragment. A `.menu-trigger` with neither initializes against no element: it gets aria-haspopup and aria-expanded it will never change, which is a promise of a menu that does not exist."
+          },
+          {
+            "id": "split-button-trailing-icon-hidden",
+            "kind": "require-attr",
+            "selector": ".split-button > .menu-trigger :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)",
+            "attr": "aria-hidden",
+            "equals": "true",
+            "message": "The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half \"arrow_drop_down\". It is decoration - the control carries the name - so it is aria-hidden=\"true\", and `icon-only-control-is-named` then requires the aria-label."
+          },
+          {
+            "id": "split-button-expanded-is-not-authored",
+            "kind": "forbid",
+            "selector": ".split-button [aria-expanded]",
+            "fragmentSafe": true,
+            "message": "Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored \"true\" draws an open split button over a closed menu."
+          }
+        ]
+      },
+      "snackbar": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Generated markup: role=\"status\" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.",
+        "rules": []
+      },
+      "tabs": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Anchor navigation, not a tablist - see rule 2.",
+        "conformance": {
+          "withheld_role": "tablist",
+          "blocked_on": "keyboard model",
+          "rule": "tabs-not-a-tablist"
+        },
+        "rules": [
+          {
+            "id": "tabs-not-a-tablist",
+            "kind": "forbid",
+            "selector": ".tabs[role], .tabs [role=\"tab\"], .tabs [role=\"tabpanel\"]",
+            "fragmentSafe": true,
+            "message": "A tab strip takes no ARIA role here; these are links to in-page sections."
+          },
+          {
+            "id": "tabs-marks-current",
+            "kind": "forbid",
+            "selector": ".tabs a.active:not([aria-current])",
+            "fragmentSafe": false,
+            "message": "The active tab is the section you are on; aria-current says so where a class cannot."
+          }
+        ]
+      },
+      "timepicker": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. Generated markup inside a <dialog>; the dialog rules carry the container.",
+        "rules": []
+      },
+      "toolbar": {
+        "status": "enforced",
+        "note": "Swept 0.8.0. A toolbar holds commands, not destinations. The role rule is written without an exception, so it also covers div.fixed-action-btn.toolbar, which $_toolbar excludes: a withheld role is withheld everywhere, and the FAB transition has no more claim to it.",
+        "conformance": {
+          "withheld_role": "toolbar",
+          "blocked_on": "keyboard model",
+          "rule": "toolbar-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "toolbar-not-nav",
+            "kind": "forbid",
+            "selector": "nav.toolbar",
+            "message": "A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.",
+            "fragmentSafe": true
+          },
+          {
+            "id": "toolbar-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".toolbar",
+            "fragmentSafe": true,
+            "message": "A toolbar takes no composite role; its buttons are reached with Tab, not arrow keys."
+          }
+        ]
+      },
+      "tooltip": {
+        "status": "enforced",
+        "note": "Swept 0.8.0.",
+        "rules": [
+          {
+            "id": "css-tooltip-is-described-by",
+            "kind": "forbid",
+            "selector": ":is(a, button):has(> .tooltip):not([aria-describedby])",
+            "message": "A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it."
+          }
+        ]
+      },
+      "transitions": {
+        "status": "enforced",
+        "kind": "foundation",
+        "note": "Swept 0.8.0. A foundation, not a component: motion applied through classes to whatever element already exists, with no markup of its own.",
+        "rules": []
+      }
+    },
+    "fragmentSafe": "Set on a rule that fires on a wrong thing being PRESENT. Only these run against m3-guidelines.md, whose markup is prose fragments: a fragment can be wrong about what it contains, but omitting something is what a fragment is for. Note this is not the same as kind=forbid - `fieldset:not(:has(> legend))` forbids, but what it detects is an omission."
+  }
+}
