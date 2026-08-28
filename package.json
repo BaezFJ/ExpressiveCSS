@@ -69,6 +69,7 @@
     "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
     "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",
     "build:types": "tsc -p tsconfig.build.json",
+    "build:skill": "node scripts/gen-expressivecss-skill.mjs",
     "build:semantics": "node scripts/gen-semantics.mjs",
     "docs:dev": "run-s build docs:watch",
     "docs:watch": "run-p watch:css watch:js docs:server",
