@@ -56,11 +56,10 @@ the M3 token layer, and the guidelines** — not importable components.
   tokens and are never used in a `font-family`; the Sass says so explicitly.
 - `[FONT_REMOTE]` naming `"Oxygen-Sans"` — also expected: one entry in the
   `$font-stack` system stack.
-- **6 components ship the floor card** as of 2026-08-28: AutoInit, Carousel,
-  Datepicker, FormSelect, Timepicker, Tooltip — the six the section below
-  explains. An earlier version of this file said 18 and listed components that
-  were authored later in the same run; `.render-check.json`'s `fallbackCard`
-  flag is the count that is actually true. They stay authorable on any re-sync.
+- **1 component ships the floor card**: AutoInit, which is a function and has
+  no visual form. Everything else is authored. This line has been wrong twice —
+  it once said 18, then 6 — so read `.render-check.json`'s `fallbackCard` flag
+  rather than trusting the number written here.
 
 ## 2026-08-28 re-sync
 
@@ -80,6 +79,67 @@ the M3 token layer, and the guidelines** — not importable components.
   `aria-selected` and the spacing infixes `t`/`b`/`l`/`r`/`x`/`y` fail the
   naive backtick sweep, and neither is a class. Watch `.expanding-card*` and
   `.navigation-drawer*` on the next run — they are new vocabulary.
+
+## 2026-08-28, later: the floor cards came off
+
+Five of the six floor cards were authored. The blocker recorded above —
+"plugin-driven state does not render in cards" — was **too broad**. It is true
+that the `Init()` entry points run at import, before a card's React tree
+mounts. It does not follow that the plugin cannot run: a preview can call the
+component's own `init()` from a `useEffect`, which drives the real plugin after
+mount. That is not a lookalike and does not violate the skill's rule against
+hand-written stand-ins — it is the shipped component initializing itself, one
+tick later than usual.
+
+The pattern, in every one of the five:
+
+```tsx
+const ref = useRef<HTMLElement>(null);
+useEffect(() => {
+  const inst = (window as any).Expressive.<Component>.init(ref.current, options);
+  return () => inst?.destroy?.();
+}, []);
+```
+
+`window.Expressive` is guaranteed present: `emit.mjs` loads `_ds_bundle.js`
+before `_preview/<Name>.js`, and React effects run well after both.
+
+Per component:
+
+- **Carousel** — `Carousel.init()` on mount. The three layouts (multi-browse,
+  hero, uncontained) then render as three visibly different item ladders.
+- **Datepicker** — no init trick needed beyond `openByDefault: true`, which
+  llm.md already documents as "the reliable way to show it". The claim above
+  that it could only ever be a lookalike was wrong; the option was always there.
+  Use a fixed `defaultDate` so the card does not change month on every capture.
+- **Timepicker** — the default options already show the clock inline. Init on
+  mount is the whole fix.
+- **FormSelect** — init fixes the garbled overlap at the root, because the
+  overlap *was* the un-enhanced state. `inst.menu.open()` opens the generated
+  menu, which is the half of Select worth showing.
+- **Tooltip** — no plugin needed. The bubble is gated on
+  `:hover, :focus-visible, :focus-within` (`_tooltip.scss`), and a programmatic
+  `.focus()` satisfies `:focus-within`. One activator per cell, since only one
+  element can hold focus.
+
+**AutoInit keeps its floor card and always will** — it is a function, not a
+visual component. Any card for it would be a fabrication.
+
+### What cost a cycle
+
+- **A variant cell that renders identically to another is a failed cell**, not a
+  sparse one. `disableWeekends: true` looks exactly like the plain calendar
+  because the sheet does not style disabled days distinctly; it was replaced
+  with `isDateRange`, which shows the highlighted band. Check the axis actually
+  varies before grading.
+- **The `left`-positioned tooltip is clipped** by the default stage padding —
+  it needs ~140px of inline room, not 24px.
+- **`.timepicker-container` does not stretch to contain its dial.** At a
+  constrained wrapper width the dial sits outside the panel's background; 460px
+  and 620px produced byte-identical captures, so the wrapper is not what
+  controls it. Left unconstrained, where the panel and the input agree. This is
+  a **framework finding**, not a preview problem — the panel should size to its
+  content.
 
 ## Re-sync risks
 
@@ -134,24 +194,13 @@ it against the framework automatically — run the class audit in this file's
 history (compare every `class="..."` token in conventions.md against
 `ds-bundle/_ds_bundle.css`) after editing.
 
-## The six components that keep the floor card
+## The one component that keeps the floor card
 
-Authoring was attempted or considered for every one; these are the ones where a
-static card would have been misleading rather than merely sparse:
+**AutoInit** — a function, not a visual component. There is nothing to render
+and any card would be a fabrication. It stays on the floor permanently.
 
-- **FormSelect** — the plugin *replaces* the native `<select>` with a generated
-  `.field` + `<menu>`. Un-enhanced, the floating label sits on top of the
-  selected value and renders as garbled overlapping text. A preview was built,
-  seen to be wrong, and withdrawn. The same select was removed from the Forms
-  preview for the same reason.
-- **Carousel** — `.carousel-item`s are positioned by the plugin. Statically they
-  stack, so a three-image carousel renders as one image and reads as a plain
-  picture. Withdrawn after seeing it.
-- **Datepicker / Timepicker** — the calendar and clock dial are built into the
-  DOM by the plugin. Reproducing that markup by hand would be a lookalike, which
-  the skill explicitly rules out.
-- **Tooltip** — the tooltip element is created on hover.
-- **AutoInit** — a function, not a visual component.
-
-Everything else is authored. If any of these gains a static resting state in the
-framework, it becomes authorable on the next re-sync.
+The other five that used to sit here — FormSelect, Carousel, Datepicker,
+Timepicker, Tooltip — were all authored on 2026-08-28 using the init-on-mount
+pattern documented above. The reasoning that kept them here ("the plugin builds
+the DOM, so a static card can only be a lookalike") conflated *the plugin has
+not run* with *the plugin cannot run*. A preview can run it.
