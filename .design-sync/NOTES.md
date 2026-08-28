@@ -56,10 +56,30 @@ the M3 token layer, and the guidelines** — not importable components.
   tokens and are never used in a `font-family`; the Sass says so explicitly.
 - `[FONT_REMOTE]` naming `"Oxygen-Sans"` — also expected: one entry in the
   `$font-stack` system stack.
-- 18 components ship the **floor card** by design (the niche plugin surface:
-  AutoInit, Forms, ScrollSpy, CharacterCounter, Lightbox,
-  Autocomplete, FormSelect, Datepicker, Timepicker, Carousel, Menu, Snackbar,
-  Tooltip, FloatingActionButton, Range). They are authorable on any re-sync.
+- **6 components ship the floor card** as of 2026-08-28: AutoInit, Carousel,
+  Datepicker, FormSelect, Timepicker, Tooltip — the six the section below
+  explains. An earlier version of this file said 18 and listed components that
+  were authored later in the same run; `.render-check.json`'s `fallbackCard`
+  flag is the count that is actually true. They stay authorable on any re-sync.
+
+## 2026-08-28 re-sync
+
+- The framework gained `ExpandingCard` and `NavigationDrawer` as bundle exports
+  and dropped `Parallax` and `Waves`; the diff removed 12 remote paths for the
+  latter two. Both new components were authored rather than left on the floor
+  card — `NavigationDrawer` because it is the canonical M3 name whose *alias*
+  (`Sidenav`) already had a rich card, which reads backwards in the picker.
+- **`navigation-drawer-fixed` is the docked form**, the same trick
+  `Sidenav.tsx` uses: `position: static; transform: none` on the `<ul>` so it
+  renders in place instead of waiting on `open()`.
+- **ExpandingCard's resting state is the compact article.** Its
+  `<dialog class="expanding-card-dialog">` renders nothing while closed, so the
+  full contract can stay in the preview and the card still shows the feed item.
+- The class audit (compare every `class="..."` token in `conventions.md`
+  against `ds-bundle/_ds_bundle.css`) ran clean: 27/27 resolve. Only
+  `aria-selected` and the spacing infixes `t`/`b`/`l`/`r`/`x`/`y` fail the
+  naive backtick sweep, and neither is a class. Watch `.expanding-card*` and
+  `.navigation-drawer*` on the next run — they are new vocabulary.
 
 ## Re-sync risks
 
@@ -114,7 +134,7 @@ it against the framework automatically — run the class audit in this file's
 history (compare every `class="..."` token in conventions.md against
 `ds-bundle/_ds_bundle.css`) after editing.
 
-## The seven components that keep the floor card
+## The six components that keep the floor card
 
 Authoring was attempted or considered for every one; these are the ones where a
 static card would have been misleading rather than merely sparse:
