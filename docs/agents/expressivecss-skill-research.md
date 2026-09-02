@@ -1,14 +1,14 @@
 # ExpressiveCSS research brief for AI coding agents
 
-## Authority and decision order
+## Authority by question
 
-This brief separates **normative project rules** from **explanatory guidance**. For generated UI, use this order:
+This brief separates **normative project rules** from **explanatory guidance**. For generated UI, use the source that owns each question:
 
-1. **Normative:** `semantics.json` is the source of truth for authored element choice, landmark structure, and implied ARIA; `SEMANTICS.md` is generated from it, and `tests/semantics.test.js` enforces the rules across `llm.md`, `docs/src`, `tests/fixtures.js`, and the forbid rules in `m3-guidelines.md`. All 54 roster rows are enforced. (`semantics.json`; `SEMANTICS.md`; `tests/semantics.test.js`)
-2. **Normative public contract:** use the package exports, current source, and documented component markup/API as the truth for what ExpressiveCSS actually ships. (`package.json`; `src/ts/index.ts`; `src/ts/components/registry.ts`; `llm.md`; `docs/src/pages/`)
-3. **Design contract / explanatory guidance:** use `m3-guidelines.md` to choose components, anatomy, placement, emphasis, and adaptive behavior. If it conflicts with the live Material specification, Material wins for design intent; `llm.md` still wins for the implementation ExpressiveCSS provides. (`m3-guidelines.md`)
+- **Authored semantics:** `semantics.json` governs authored element choice, landmark structure, and implied ARIA; `SEMANTICS.md` is generated from it, and `tests/semantics.test.js` enforces the rules across `llm.md`, `docs/src`, `tests/fixtures.js`, and the forbid rules in `m3-guidelines.md`. All 54 roster rows are enforced. (`semantics.json`; `SEMANTICS.md`; `tests/semantics.test.js`)
+- **Shipped behavior:** use the package exports, matching-version source, and documented component markup/API as the truth for what ExpressiveCSS actually ships. (`package.json`; `src/ts/index.ts`; `src/ts/components/registry.ts`; `llm.md`; `docs/src/pages/`)
+- **Design intent:** use `m3-guidelines.md` to choose components, anatomy, placement, emphasis, and adaptive behavior. If it conflicts with the live Material specification, Material wins for design intent; matching-version documentation and source still win for the implementation ExpressiveCSS provides. (`m3-guidelines.md`)
 
-Two documentation conflicts found during this research demonstrate why that order matters; both are now guarded by `tests/docs-astro.test.js`:
+Two documentation conflicts found during this research demonstrate why domain ownership matters; both are now guarded by `tests/docs-astro.test.js`:
 
 - The loading indicator was listed as not shipped even though the implementation contract, semantics roster, stylesheet, docs page, and tests expose `.loading-indicator`. The guide now treats it as shipped. (`llm.md`; `semantics.json`; `src/sass/components/_loading-indicator.scss`; `docs/src/pages/loading-indicator.astro`; `tests/loading-indicator.test.js`)
 - The guideline cheat sheet named `button.circle` as the icon-button host even though the implementation has a distinct `.icon-button` component. The guide now uses `.icon-button` for the M3 icon-button token/size system and reserves `.button.circle` for the older round common-button form with different glyph sizing. (`llm.md`; `SEMANTICS.md`; `CLAUDE.md`; `src/sass/components/_icon-buttons.scss`)
@@ -67,9 +67,24 @@ Two documentation conflicts found during this research demonstrate why that orde
 - Before handing off generated UI, verify: the next narrower layout, exactly one persistent navigation pattern, at most one high-emphasis action per region, the correct feedback surface, accessible icon controls and labelled fields, role tokens rather than hex, one-pane compact list/detail behavior, no legacy classes, and exactly one initialization path per registry component. (`m3-guidelines.md`)
 - Exercise keyboard-only operation, visible focus, modal focus return/Escape behavior, zoom/reflow, light and dark themes, reduced motion, and text/non-text contrast in a real browser; jsdom and the semantics checker cannot prove these. (`semantics.json`; `CLAUDE.md`; [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/))
 
+## Impeccable comparison and adaptation
+
+The design workflow added in skill version 0.3.0 was informed by the [Impeccable skill](https://github.com/pbakaus/impeccable/tree/0330f61cef1c88291755beb373c81bef5f15be70/skill), reviewed at commit `0330f61cef1c88291755beb373c81bef5f15be70`. Its strongest transferable ideas were process rules rather than aesthetics:
+
+- classify a task before editing so refinement does not turn into an unapproved redesign;
+- inspect the existing product, rendered surface, real content, and project constraints before proposing a direction;
+- treat every reachable loading, empty, error, success, disabled, permission, and offline state, plus relevant long-content, localization, and right-to-left behavior, as part of the design;
+- separate source inspection from rendered evidence and request a fresh independent finish review when agent delegation is available;
+- batch responsive screenshots and fixes into bounded inspection rounds instead of polishing one detail at a time;
+- report review findings with impact, evidence, priority, and a concrete correction rather than a list of tastes.
+
+The adaptation deliberately does **not** import Impeccable's broad command system, open-ended visual-world selection, generic device breakpoints, 44 px target rule, font prohibitions, or web aesthetic bans. ExpressiveCSS already has a narrower authority split: Material 3 Expressive governs design intent, component choice, 48 dp targets, type roles, shape, state layers, motion, window size classes, and adaptive navigation; `semantics.json` governs authored element choice, landmark structure, and implied ARIA; target-version documentation and source govern shipped behavior. Product identity is expressed through Material role tokens, type and icon tokens, content, imagery, and assets without replacing familiar Material behavior.
+
+The resulting [`expressivecss-design` guide](../../skills/expressivecss/expressivecss-design/SKILL.md) is therefore a framework-specific design and review procedure, not a port of Impeccable. Its text is original and its external inspiration is attributed here and in the guide.
+
 ## Skill packaging and maintenance
 
-- The root skill is a discovery and routing surface, modeled on the daisyUI skill's task guides and per-component references rather than one monolithic procedure. Installation, usage, theming, runtime, and accessibility rules live in focused `SKILL.md` files so an agent loads the contract needed for the current task without paying for every other concern.
+- The root skill is a discovery and routing surface, modeled on the daisyUI skill's task guides and per-component references rather than one monolithic procedure. Design and review, installation, usage, theming, runtime, and accessibility rules live in focused `SKILL.md` files so an agent loads the contract needed for the current task without paying for every other concern.
 - The root component catalogue mirrors the public Structure, Components, and Forms documentation groups. Each component guide contains a concise contract, one canonical syntax example, the applicable semantic rule messages, and links to the full page-level Markdown and repository source.
 - Component guides are generated by `scripts/gen-expressivecss-skill.mjs` from `docs/src/data/nav.ts`, `llm.md`, and `semantics.json`. `npm run build:skill` refreshes them, while `tests/expressivecss-skill.test.js` runs the generator in check mode so documentation or semantic changes cannot leave stale component guidance behind.
 - The generator transforms `docs/src/data/nav.ts` in memory with esbuild instead of importing TypeScript directly, so it still runs on the package's Node 20 minimum. Component-specific syntax language and rule exclusions handle contracts where the first HTML example or a whole semantics row would be misleading.

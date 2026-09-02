@@ -5,6 +5,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **ExpressiveCSS design and review skill.** A focused workflow now classifies new work, extensions, refinements, redesigns, and reviews before editing; turns product and brand decisions into Material 3 Expressive components and tokens; covers every reachable state and relevant localization or offline behavior; and closes with responsive browser evidence plus an independent finish review when agent delegation is available.
+
 ## [0.8.0] - 2026-08-27
 
 Completes the HTML semantics sweep. Component markup is corrected so that

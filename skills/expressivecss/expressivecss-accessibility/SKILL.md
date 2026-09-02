@@ -8,7 +8,7 @@ description: Apply ExpressiveCSS semantics and accessibility.
 Read the selected component guide, then the target version's semantics contract. In this repository, `semantics.json` is normative and `SEMANTICS.md` is generated from it.
 
 1. Start with the documented native element. Buttons run commands; links with real `href` values navigate; `<nav>` contains destinations; `<dialog>`, `<input>`, `<select>`, `<progress>`, `<fieldset>`, and `<label>` keep their native contracts.
-2. Authors own static semantics: element choice, landmarks, labels, decorative state, and the presence of state attributes. Components own changing values such as `aria-expanded`, `aria-selected`, and generated IDs when their contract says so.
+2. Authors own static semantics: element choice, landmarks, labels, decorative hiding, and only the initial state that the target-version documentation explicitly requires at author time. Components own changing values such as `aria-expanded`, `aria-selected`, and generated IDs when their contract says so.
 3. Label every navigation landmark. Do not use `<nav>` for card actions, toolbars, app-bar commands, or other button rows.
 4. Use `<span class="material-symbols" aria-hidden="true">` for decorative icons. The ligature is real text and is otherwise announced.
 5. Give every icon-only control an accessible name, normally `aria-label`. Use a tooltip as additional visible explanation when no adjacent text explains the action.

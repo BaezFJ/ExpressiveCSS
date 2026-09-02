@@ -1,11 +1,11 @@
 ---
 name: expressivecss
-description: Use ExpressiveCSS components, styling, and accessibility.
+description: Use ExpressiveCSS for accessible Material 3 interfaces.
 license: MIT
 compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
   author: BaezFJ
-  version: "0.2.0"
+  version: "0.3.0"
   homepage: https://www.expressivecss.com
   repository: https://github.com/BaezFJ/ExpressiveCSS
   platforms: linux, macos, windows
@@ -14,13 +14,14 @@ metadata:
 
 # ExpressiveCSS
 
-ExpressiveCSS is a semantic HTML and Material Design 3 front-end framework. Use the target version's documentation as the contract; this skill organizes the required setup, usage, theming, runtime, accessibility, and component references.
+ExpressiveCSS is a semantic HTML and Material Design 3 Expressive front-end framework. Use the target version's documentation as the contract; this skill organizes design and review, setup, usage, theming, runtime, accessibility, and component references.
 
 ## When to use this skill
 
 Use this skill whenever a task involves `@expressivecss/expressive`, including:
 
 - choosing or implementing components, navigation, feedback, forms, or adaptive layouts;
+- designing, refining, hardening, or reviewing complete ExpressiveCSS surfaces and flows;
 - authoring, reviewing, or repairing ExpressiveCSS HTML, JSX, templates, Sass, CSS, or JavaScript;
 - installing the package, configuring themes, or initializing component behavior;
 - checking ExpressiveCSS semantics, accessibility, or Material 3 conformance;
@@ -33,6 +34,7 @@ Do not use it for generic Material Design work in a project that does not use Ex
 | Task | Guide | When to read it |
 | --- | --- | --- |
 | Install ExpressiveCSS | [expressivecss-install/SKILL.md](./expressivecss-install/SKILL.md) | When the target project does not already load the required package surfaces. |
+| Design or review an interface | [expressivecss-design/SKILL.md](./expressivecss-design/SKILL.md) | Before creating, redesigning, refining, hardening, or visually reviewing a surface or flow. |
 | Use classes, markup, layout, or utilities | [expressivecss-usage/SKILL.md](./expressivecss-usage/SKILL.md) | Before writing ExpressiveCSS classes or component markup. |
 | Use themes, tokens, or colors | [expressivecss-theming/SKILL.md](./expressivecss-theming/SKILL.md) | Before writing role colors, theme overrides, or custom component colors. |
 | Use JavaScript behavior | [expressivecss-runtime/SKILL.md](./expressivecss-runtime/SKILL.md) | Before calling `AutoInit()`, `init()`, component methods, or teardown. |
@@ -109,18 +111,20 @@ Before writing ExpressiveCSS code:
 
 If the user names a component and a guide with that name exists, read that guide first. Still compare alternatives when the requested behavior does not match the named component.
 
-## Source hierarchy
+## Authority by question
 
 Identify the exact installed version from the target project's manifest and lockfile. In this repository, use `package.json` and `CHANGELOG.md`.
 
-Resolve decisions in this order:
+Use the source that owns the decision:
 
-1. **Design intent:** [`m3-guidelines.md`](https://www.expressivecss.com/m3-guidelines.md) for component choice, anatomy, placement, emphasis, and adaptive behavior.
-2. **Shipped contract:** [`llm.md`](https://www.expressivecss.com/llm.md) or the matching component page for elements, classes, tokens, options, methods, properties, and events.
-3. **Authored semantics:** the component row in [`semantics.json`](https://github.com/BaezFJ/ExpressiveCSS/blob/master/semantics.json); [`SEMANTICS.md`](https://www.expressivecss.com/SEMANTICS.md) is generated from it.
-4. **Runtime truth:** Sass, TypeScript, the registry, neighboring examples, and tests when contributing or resolving documentation drift.
+- **Design intent:** [`m3-guidelines.md`](https://www.expressivecss.com/m3-guidelines.md) for component choice, anatomy, placement, emphasis, and adaptive behavior.
+- **Shipped contract:** [`llm.md`](https://www.expressivecss.com/llm.md) or the matching component page for elements, classes, tokens, options, methods, properties, and events.
+- **Authored semantics:** the component row in [`semantics.json`](https://github.com/BaezFJ/ExpressiveCSS/blob/master/semantics.json); [`SEMANTICS.md`](https://www.expressivecss.com/SEMANTICS.md) is generated from it.
+- **Runtime truth:** Sass, TypeScript, the registry, neighboring examples, and tests when contributing or resolving documentation drift.
 
-Outside this repository, start from [llms.txt](https://www.expressivecss.com/llms.txt), [llm.md](https://www.expressivecss.com/llm.md), and [m3-guidelines.md](https://www.expressivecss.com/m3-guidelines.md). Material Design wins on design intent. The target ExpressiveCSS version wins on what the framework ships. Report a disagreement instead of silently combining incompatible contracts.
+These sources own different questions; do not use one domain to overrule another. If two sources disagree about the same question, the live Material specification wins for design intent, `semantics.json` wins for authored semantics, and the installed ExpressiveCSS version wins for shipped behavior. Report the disagreement instead of silently combining incompatible contracts.
+
+Outside this repository, start from [llms.txt](https://www.expressivecss.com/llms.txt), [llm.md](https://www.expressivecss.com/llm.md), and [m3-guidelines.md](https://www.expressivecss.com/m3-guidelines.md). The public site describes the current release. For an older installed version, inspect the files in the installed package and the matching repository tag or commit before using current documentation. State when matching version documentation is unavailable.
 
 ## Framework contribution path
 

@@ -7,6 +7,8 @@ const skillUrl = new URL('../skills/expressivecss/SKILL.md', import.meta.url);
 const skillDirectory = new URL('../skills/expressivecss/', import.meta.url);
 const componentsDirectory = new URL('./components/', skillDirectory);
 const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+const research = readFileSync(new URL('../docs/agents/expressivecss-skill-research.md', import.meta.url), 'utf8');
+const changelog = readFileSync(new URL('../CHANGELOG.md', import.meta.url), 'utf8');
 const skill = readFileSync(skillUrl, 'utf8');
 const bodyStart = skill.indexOf('\n---\n', 4);
 const frontmatter = skill.slice(4, bodyStart);
@@ -14,6 +16,7 @@ const body = skill.slice(bodyStart + 5);
 
 const supportGuides = [
   'expressivecss-install/SKILL.md',
+  'expressivecss-design/SKILL.md',
   'expressivecss-usage/SKILL.md',
   'expressivecss-theming/SKILL.md',
   'expressivecss-runtime/SKILL.md',
@@ -44,12 +47,13 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.2\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.3\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
     assert.ok(description.length <= 60, `description is ${description.length} characters`);
     assert.ok(description.endsWith('.'), 'description is not a sentence');
+    assert.match(description, /^Use ExpressiveCSS for accessible Material 3 interfaces\.$/);
     assert.doesNotMatch(skill, /\/home\/|[A-Z]:\\Users\\/, 'skill contains a machine-local path');
     assert.doesNotMatch(skill, /\]\(\.\.\//, 'root skill links outside the portable skill directory');
   });
@@ -126,7 +130,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(result.stdout, /46 ExpressiveCSS component guides are current\./);
   });
 
-  test('states the source hierarchy in precedence order', () => {
+  test('assigns authority by question and version', () => {
     for (const url of [
       'https://www.expressivecss.com/m3-guidelines.md',
       'https://www.expressivecss.com/llm.md',
@@ -137,16 +141,18 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.ok(skill.includes(`](${url})`), `${url} is not linked`);
     }
 
-    const design = body.indexOf('**Design intent:**');
-    const shipped = body.indexOf('**Shipped contract:**');
-    const semantics = body.indexOf('**Authored semantics:**');
-    const runtime = body.indexOf('**Runtime truth:**');
-    assert.ok(design < shipped && shipped < semantics && semantics < runtime,
-      'source precedence is not stated in order');
+    assert.match(body, /## Authority by question/);
+    assert.doesNotMatch(body, /Resolve decisions in this order/);
+    assert.match(body, /\*\*Design intent:\*\*.*component choice.*adaptive behavior/);
+    assert.match(body, /\*\*Shipped contract:\*\*.*elements.*classes.*options.*methods/);
+    assert.match(body, /\*\*Authored semantics:\*\*.*semantics\.json/);
+    assert.match(body, /\*\*Runtime truth:\*\*.*Sass.*TypeScript.*tests/);
+    assert.match(body, /older.*installed version.*matching repository tag/is);
   });
 
-  test('keeps the load-bearing usage, runtime, theme, and accessibility rules', () => {
+  test('keeps the load-bearing design, usage, runtime, theme, and accessibility rules', () => {
     const install = readFileSync(new URL('expressivecss-install/SKILL.md', skillDirectory), 'utf8');
+    const design = readFileSync(new URL('expressivecss-design/SKILL.md', skillDirectory), 'utf8');
     const usage = readFileSync(new URL('expressivecss-usage/SKILL.md', skillDirectory), 'utf8');
     const runtime = readFileSync(new URL('expressivecss-runtime/SKILL.md', skillDirectory), 'utf8');
     const theming = readFileSync(new URL('expressivecss-theming/SKILL.md', skillDirectory), 'utf8');
@@ -154,6 +160,25 @@ describe('the ExpressiveCSS agent skill', () => {
 
     assert.match(install, /https:\/\/www\.expressivecss\.com\/index\.html\.md/);
     assert.doesNotMatch(install, /getting-started\.html\.md/);
+    assert.match(install, /older.*installed version.*node_modules.*matching repository tag/is);
+    assert.match(design, /new surface|refinement|redesign/i);
+    assert.match(design, /Material 3 Expressive/);
+    assert.match(design, /brand.*tokens/i);
+    assert.match(design, /Compact.*Medium.*Expanded.*Large.*Extra-large/s);
+    assert.match(design, /loading.*empty.*error.*success/s);
+    assert.match(design, /48 by 48 dp/);
+    assert.doesNotMatch(design, /44(?:×|x| by )44/);
+    assert.match(design, /semantics contract.*authored semantics/i);
+    assert.match(design, /Roboto.*Noto.*tokens/s);
+    assert.doesNotMatch(design, /density/i);
+    assert.match(design, /independent.*review/i);
+    assert.match(design, /two.*inspection rounds/i);
+    assert.doesNotMatch(design, /imitate|clone|pixel-match/i);
+    assert.match(research, /source that owns each question/);
+    assert.doesNotMatch(research, /use this order/);
+    assert.match(research, /`semantics\.json` governs authored element choice/);
+    assert.match(research, /does \*\*not\*\* import.*font prohibitions.*aesthetic bans/s);
+    assert.match(changelog, /every reachable state/);
     assert.match(usage, /`\.loading-indicator` for a short indeterminate wait/);
     assert.match(usage, /`\.icon-button` for the Material 3 icon-button component/);
     assert.match(usage, /`\.button\.circle` is the older round common-button form/);
@@ -164,5 +189,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(theming, /color-mix\(in oklab/);
     assert.match(accessibility, /48 by 48 dp/);
     assert.match(accessibility, /composite roles/);
+    assert.doesNotMatch(accessibility, /presence of state attributes/);
+    assert.match(accessibility, /explicitly requires? at author time/);
   });
 });

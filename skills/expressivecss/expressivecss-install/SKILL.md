@@ -5,7 +5,7 @@ description: Install and load ExpressiveCSS correctly.
 
 ## Install ExpressiveCSS
 
-Read the target version's [getting-started documentation](https://www.expressivecss.com/index.html.md) before changing an existing setup.
+Read the target version's [getting-started documentation](https://www.expressivecss.com/index.html.md) before changing an existing setup. The public site describes the current release. For an older installed version, inspect the package files under `node_modules/@expressivecss/expressive` and the matching repository tag or commit. Do not apply current documentation to a pinned older release without verifying the contract.
 
 1. Inspect the project's manifest and lockfile first. Preserve its package manager and pinned ExpressiveCSS version.
 2. For a new npm installation, use `terminal(command="npm install @expressivecss/expressive", timeout=600)`.
