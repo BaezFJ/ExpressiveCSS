@@ -11,15 +11,15 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `03a2bc1cbe809258aa0a04482e290f2ada826fcacd3da74d49f1ab1792518b07`
+Contract SHA-256: `0a2e458cf21be3030cbf91723d9d8e533412b0e1b794b34872ab903b2aeb6f48`
 
 #### Contract
 
 Material Design 3 top app bars, from the HTML.
 
-The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. The heading is the headline. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
+The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
-Tokens follow the [M3 app bar spec](https://m3.material.io/components/app-bars/specs). The container is `surface` at rest, the headline is `on-surface` at `title-large`, and icons are 24dp in a 48dp target, inset 4dp. Icons inherit the header color so a fill + `on-*` pair stays readable. The small bar is 64dp tall. Pair a fill utility with its `on-*` text class if you want a colored bar.
+Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
 
 #### Syntax
 
