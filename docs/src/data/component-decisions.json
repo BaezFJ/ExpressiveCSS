@@ -21,10 +21,10 @@
         ]
       },
       "jobs": [
-        "Material Design 3 top app bars, from the HTML."
+        "Material Design 3 Expressive app bars: small, medium flexible, large flexible, and search, from the HTML."
       ],
       "useWhen": [
-        "Material Design 3 top app bars, from the HTML."
+        "Material Design 3 Expressive app bars: small, medium flexible, large flexible, and search, from the HTML."
       ],
       "avoidWhen": [
         "A different documented component matches the user job or interaction model more directly."
@@ -35,7 +35,7 @@
         "breadcrumbs"
       ],
       "adaptive": [],
-      "runtime": "css-only",
+      "runtime": "auto-init",
       "guide": "../components/app-bar.md",
       "materialGuidance": {
         "status": "material",

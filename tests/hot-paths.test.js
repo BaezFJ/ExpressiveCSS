@@ -44,6 +44,24 @@ describe('layout reads per scroll tick', () => {
 
     spies.forEach((spy) => spy.destroy());
   });
+
+  test('AppBar does not read layout on scroll', () => {
+    document.body.innerHTML = `
+      <header class="medium">
+        <nav aria-label="Main"><h2>Title</h2></nav>
+      </header>`;
+    const header = document.querySelector('header');
+    const counter = { reads: 0 };
+    stubRect(header, counter);
+
+    const instance = Expressive.AppBar.init(header);
+    counter.reads = 0;
+
+    window.dispatchEvent(new window.Event('scroll'));
+    assert.equal(counter.reads, 0, `scroll still read ${counter.reads} rects`);
+
+    instance.destroy();
+  });
 });
 
 describe('Sidenav drag', () => {

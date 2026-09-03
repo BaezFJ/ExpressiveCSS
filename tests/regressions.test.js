@@ -748,8 +748,11 @@ describe('App bar trailing icon token', () => {
     );
     assert.equal(uses.length, 1, 'the trailing icon token must be consumed by exactly one rule');
 
-    // Scoped by DOM order: leading is before the headline, trailing after.
-    assert.match(uses[0].sel, /:is\(h1, h2, h3, h4, h5, h6\)\s*~/);
+    // Scoped by DOM order: leading is before the title slot, trailing after.
+    // The title slot is the heading, an hgroup, or a search-bar.
+    assert.match(uses[0].sel, /hgroup/);
+    assert.match(uses[0].sel, /search-bar/);
+    assert.match(uses[0].sel, /~/);
     assert.match(uses[0].sel, /\.material-symbols/);
 
     const declared = rules.filter((r) =>
@@ -790,11 +793,13 @@ describe('App bar medium and large geometry', () => {
     assert.ok(headline.some((b) => /flex:\s*1 1 calc\(100% \+ 1px\)/.test(b)));
 
     // Expanded headline: 16dp from the inline edges (4dp of it paid by the
-    // bar), 20dp above the bottom on medium and 28dp on large.
+    // bar), 20dp above the bottom on medium and on large without a subtitle.
+    // Large with a subtitle keeps 28dp so 8+48+44+24+28 = 152.
     const medium = bodyOf((sel) => /header\.medium\b/.test(sel) && !/header\.large\b/.test(sel));
     assert.ok(medium.some((b) => /padding-bottom:\s*20px/.test(b)));
     assert.ok(medium.some((b) => /padding:\s*0 12px/.test(b)));
     const large = bodyOf((sel) => /header\.large\b/.test(sel) && !/header\.medium\b/.test(sel));
+    assert.ok(large.some((b) => /padding-bottom:\s*20px/.test(b)));
     assert.ok(large.some((b) => /padding-bottom:\s*28px/.test(b)));
     assert.ok(large.some((b) => /padding:\s*0 12px/.test(b)));
   });

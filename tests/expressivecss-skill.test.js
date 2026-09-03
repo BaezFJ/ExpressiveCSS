@@ -124,6 +124,13 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.doesNotMatch(guide('time-picker.md'), /A <dialog> takes no name/);
     assert.doesNotMatch(guide('chips.md'), /^\| Type \|/m);
     assert.doesNotMatch(guide('progress.md'), /\]\(#loading-indicator\)/);
+    const appBar = guide('app-bar.md');
+    assert.match(appBar, /AppBar/);
+    assert.match(appBar, /search-bar/);
+    assert.match(appBar, /headline-medium/);
+    assert.match(appBar, /display-small/);
+    assert.match(appBar, /hgroup/);
+    assert.match(appBar, /collaps/);
   });
 
   test('keeps card actions out of navigation landmarks', () => {

@@ -105,7 +105,9 @@ if (window.HTMLDialogElement && !window.HTMLDialogElement.prototype.close) {
     this.setAttribute('open', '');
   };
   window.HTMLDialogElement.prototype.close = function close() {
+    if (!this.open) return;
     this.removeAttribute('open');
+    this.dispatchEvent(new window.Event('close'));
   };
 }
 

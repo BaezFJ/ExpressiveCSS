@@ -5,6 +5,7 @@
 // component's own module (e.g. `./menu`) when you need the type.
 
 export { Autocomplete } from "./autocomplete";
+export { AppBar } from "./appBar";
 export { FloatingActionButton } from "./buttons";
 export { Cards } from "./cards";
 export { ExpandingCard } from "./expandingCard";

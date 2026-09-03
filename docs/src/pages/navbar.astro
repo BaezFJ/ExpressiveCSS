@@ -11,7 +11,8 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "destinations", label: "Destinations" },
   { id: "center", label: "Center-aligned" },
-  { id: "medium", label: "Medium and large" },
+  { id: "medium", label: "Medium and large flexible" },
+  { id: "subtitle", label: "Subtitle" },
   { id: "fixed", label: "Fixed" },
   { id: "color", label: "Color" },
   { id: "navbar-menu", label: "Menu" },
@@ -43,8 +44,11 @@ const S = defineSections([
           <code>on-*</code> text class if you want a colored bar.
         </p>
         <p>
-          The bar is CSS-only. Menus and the navigation drawer are separate
-          components that <code>AutoInit()</code> starts. A
+          The bar is CSS for layout. <code>AppBar</code> collapses
+          <code>header.medium</code> and <code>header.large</code> on scroll,
+          and opens the related search view when a search field in the bar is
+          selected. Menus and the navigation drawer are separate components that
+          <code>AutoInit()</code> starts. A
           <code>navigation-drawer-trigger</code> inside the bar is still required — that
           class is the NavigationDrawer contract, not bar chrome. Tabs live in
           their own bar — do not nest <code>.tabs</code> in the header.
@@ -143,12 +147,16 @@ const S = defineSections([
   </Section>
   <Section {...S.medium}>
         <p>
-          Same markup as the small bar. <code>medium</code> is 112dp with a
-          <code>headline-small</code> title on the second row.
-          <code>large</code> is 152dp with <code>headline-medium</code>.
-          The title is <code>order</code>ed onto the bottom row so the
-          first row can hold the leading icon on the start and the
-          trailing icons on the end.
+          Same markup as the small bar. <code>medium</code> is the Expressive
+          medium-flexible bar: 112dp with a <code>headline-medium</code> title
+          on the second row. <code>large</code> is large-flexible: 120dp with
+          <code>display-small</code>. The deprecated medium/large bars used
+          <code>headline-small</code> / 152dp; do not recreate those. The title
+          wraps to two lines. It is <code>order</code>ed onto the bottom row
+          so the first row can hold the leading icon on the start and the
+          trailing icons on the end. Add <code>center</code> as well to
+          center that second-row title. On scroll, <code>AppBar</code> adds
+          <code>collapsed</code> and the bar is the small 64dp row.
         </p>
         <header class="medium mb-3">
           <nav aria-label="Main — Medium and large">
@@ -184,6 +192,42 @@ const S = defineSections([
 </header>
 
 <header class="large">…</header>
+`} />
+  </Section>
+  <Section {...S.subtitle}>
+        <p>
+          A subtitle is an <code>&lt;hgroup&gt;</code> wrapping the heading
+          and a <code>&lt;p&gt;</code>. That is the HTML for a heading plus
+          a subheading; there is no <code>subtitle</code> class. Small uses
+          <code>label-medium</code>. Medium-flexible grows to 136dp and uses
+          <code>label-large</code>. Large-flexible grows to 152dp and uses
+          <code>title-medium</code>.
+        </p>
+        <header class="medium mb-3">
+          <nav aria-label="Main — Subtitle">
+            <button type="button" aria-label="Back">
+              <span class="material-symbols" aria-hidden="true">arrow_back</span>
+            </button>
+            <hgroup>
+              <h2>Medium title</h2>
+              <p>Subtitle</p>
+            </hgroup>
+            <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+          </nav>
+        </header>
+<Code code={`
+<header class="medium">
+  <nav aria-label="Main">
+    <button type="button" aria-label="Back">
+      <span class="material-symbols" aria-hidden="true">arrow_back</span>
+    </button>
+    <hgroup>
+      <h2>Medium title</h2>
+      <p>Subtitle</p>
+    </hgroup>
+    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+  </nav>
+</header>
 `} />
   </Section>
   <Section {...S.fixed}>
@@ -309,33 +353,42 @@ document.addEventListener('DOMContentLoaded', function() {
   </Section>
   <Section {...S["search-docs"]}>
         <p>
-          A <code>&lt;form&gt;</code> in the nav fills the space between the
-          leading action and anything after it. The input is unstyled against
-          the bar — no extra field class.
+          The search app bar is a <code>&lt;search class="search-bar"&gt;</code>
+          in the nav, in place of the headline. Icons beside it sit outside
+          the search; icons inside it stay on the search-bar. The input is
+          centered. Focusing the field opens the related
+          <code>.search-view</code>.
         </p>
         <header class="mb-3">
           <nav aria-label="Main — Search">
-            <button type="button" aria-label="Back">
-              <span class="material-symbols" aria-hidden="true">arrow_back</span>
+            <button type="button" aria-label="Menu">
+              <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
-            <form role="search">
+            <search class="search-bar" aria-label="Search">
+              <span class="material-symbols" aria-hidden="true">search</span>
               <input id="navbar-search" type="search" placeholder="Search" aria-label="Search">
-            </form>
+            </search>
             <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
           </nav>
         </header>
 <Code code={`
 <header>
   <nav aria-label="Main">
-    <button type="button" aria-label="Back">
-      <span class="material-symbols" aria-hidden="true">arrow_back</span>
+    <button type="button" aria-label="Menu">
+      <span class="material-symbols" aria-hidden="true">menu</span>
     </button>
-    <form role="search">
+    <search class="search-bar" aria-label="Search">
+      <span class="material-symbols" aria-hidden="true">search</span>
       <input type="search" placeholder="Search" aria-label="Search">
-    </form>
+    </search>
   </nav>
 </header>
 `} />
+        <p>
+          A <code>&lt;form&gt;</code> in the nav still fills the space between
+          the leading action and anything after it. The input is unstyled
+          against the bar — no extra field class.
+        </p>
   </Section>
   <Section {...S["mobile-collapse"]}>
         <p>

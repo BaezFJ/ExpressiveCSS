@@ -17,6 +17,11 @@ import { EXPANDING_CARD_SELECTOR } from "./expandingCard";
  * CharacterCounter, Range, ...) simply stays out of this table.
  */
 export const AUTO_INIT_COMPONENTS = {
+  AppBar: {
+    component: Components.AppBar,
+    selector:
+      "header.medium, header.large, header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > :is(.search-bar, .searchbar))",
+  },
   Autocomplete: {
     component: Components.Autocomplete,
     selector: ".autocomplete",
