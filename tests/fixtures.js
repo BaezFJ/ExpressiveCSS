@@ -7,6 +7,11 @@
 
 export const AUTO_INIT_FIXTURES = [
   {
+    name: "AppBar",
+    selector: "header.medium",
+    html: `<header class="medium"><nav aria-label="Main"><h2>Title</h2></nav></header>`,
+  },
+  {
     name: "Autocomplete",
     selector: ".autocomplete",
     html: `<div class="field"><input class="autocomplete" type="text" id="ac"><label for="ac">A</label></div>`,

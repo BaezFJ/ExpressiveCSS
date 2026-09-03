@@ -2956,7 +2956,7 @@ The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. T
 
 Tokens follow the [M3 app bar spec](https://m3.material.io/components/app-bars/specs). The container is `surface` at rest, the headline is `on-surface` at `title-large`, and icons are 24dp in a 48dp target, inset 4dp. Icons inherit the header color so a fill + `on-*` pair stays readable. The small bar is 64dp tall. Pair a fill utility with its `on-*` text class if you want a colored bar.
 
-The bar is CSS-only. Menus and the navigation drawer are separate components that `AutoInit()` starts. A `navigation-drawer-trigger` inside the bar is still required — that class is the NavigationDrawer contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
+The bar is CSS for layout. `AppBar` (started by `AutoInit()`) collapses `header.medium` and `header.large` on scroll, and opens the related search view when a search field in the bar is selected. Menus and the navigation drawer are separate components. A `navigation-drawer-trigger` inside the bar is still required — that class is the NavigationDrawer contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
 
 ### Small
 
@@ -3010,9 +3010,9 @@ Add `center` to the header. The headline is taken out of flow so the leading and
 </header>
 ```
 
-### Medium and large
+### Medium and large flexible
 
-Same markup as the small bar. `medium` is 112dp with a `headline-small` title on the second row. `large` is 152dp with `headline-medium`. The title is `order`ed onto the bottom row so the first row can hold the leading icon on the start and the trailing icons on the end.
+Same markup as the small bar. `medium` is the Expressive medium-flexible bar: 112dp with a `headline-medium` title on the second row. `large` is large-flexible: 120dp with `display-small`. The deprecated medium/large bars used `headline-small` / 152dp; do not recreate those. The title wraps to two lines. It is `order`ed onto the bottom row so the first row can hold the leading icon on the start and the trailing icons on the end. Add `center` as well to center that second-row title.
 
 ```html
 <header class="medium">
@@ -3027,6 +3027,29 @@ Same markup as the small bar. `medium` is 112dp with a `headline-small` title on
 
 <header class="large">…</header>
 ```
+
+### Subtitle
+
+A subtitle is an `<hgroup>` wrapping the heading and a `<p>`. There is no `subtitle` class. Small uses `label-medium`. Medium-flexible grows to 136dp and uses `label-large`. Large-flexible grows to 152dp and uses `title-medium`.
+
+```html
+<header class="medium">
+  <nav aria-label="Main">
+    <button type="button" aria-label="Back">
+      <span class="material-symbols" aria-hidden="true">arrow_back</span>
+    </button>
+    <hgroup>
+      <h2>Medium title</h2>
+      <p>Subtitle</p>
+    </hgroup>
+    <a href="#!" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></a>
+  </nav>
+</header>
+```
+
+### Collapse
+
+`AppBar` watches a 1px sentinel immediately before `header.medium` and `header.large`. When the sentinel leaves the viewport the header gets `.collapsed` and the bar is the small 64dp row (`title-large`, single line). `destroy()` removes the sentinel. The class is also legal to set by hand.
 
 ### Fixed
 
@@ -3105,7 +3128,25 @@ Menus open on click by default (`hover: false`). Pass `{ hover: true }` to open 
 
 ### Search
 
-A `<form>` in the nav fills the space between the leading action and anything after it. The input is unstyled against the bar — no extra field class.
+The search app bar is a `<search class="search-bar">` in the nav, in place of the headline. Icons beside it sit outside the search; icons inside it stay on the search-bar rules. The input is centered. Focusing the field opens the related `.search-view`: `aria-controls` on the input, or a `.search-view` descendant. A full-screen view is a `dialog.search-view.full-screen` opened with `showModal()`.
+
+```html
+<header>
+  <nav aria-label="Main">
+    <button type="button" aria-label="Menu">
+      <span class="material-symbols" aria-hidden="true">menu</span>
+    </button>
+    <search class="search-bar" aria-label="Search">
+      <span class="material-symbols" aria-hidden="true">search</span>
+      <input type="search" placeholder="Search" aria-label="Search recipes" aria-controls="results" aria-expanded="false">
+      <div class="search-view" id="results" hidden></div>
+    </search>
+    <a href="#!" aria-label="Account"><span class="material-symbols" aria-hidden="true">account_circle</span></a>
+  </nav>
+</header>
+```
+
+A `<form>` in the nav still fills the space between the leading action and anything after it. The input is unstyled against the bar — no extra field class.
 
 ```html
 <header>

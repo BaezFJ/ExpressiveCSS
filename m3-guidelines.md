@@ -282,15 +282,18 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 
 | M3 | When | ExpressiveCSS |
 | --- | --- | --- |
-| Small (default) | Most pages | Default `<header><nav>` — 64 dp |
-| Medium / large | Scrolling pages that can collapse | Taller headline; see the Navbar docs. Do not fake it with `display-large`. |
-| Search app bar | Home when search is the product | Not a dedicated component. Use a search field in the bar, or a search destination. |
+| Small (default) | Most pages | Default `<header><nav>` — 64 dp. Optional subtitle in `<hgroup>`. Optional `center`. |
+| Medium flexible | Scrolling pages that can collapse | `header.medium` — 112 dp, `headline-medium`. 136 dp with a subtitle. Do not fake it with `display-large`. |
+| Large flexible | Emphasize the page headline | `header.large` — 120 dp, `display-small`. 152 dp with a subtitle. |
+| Search app bar | Home when search is the product | A `<search class="search-bar">` in the bar. Icons may sit inside the search or as siblings outside it. |
+
+The original medium (headline-small) and large (152 dp / headline-medium) bars are deprecated in M3 Expressive. `.medium` and `.large` here are the flexible replacements.
 
 **Anatomy**
 
 0. Container (`<header>`) — required
 1. Leading icon button (menu, back) — optional but usual
-2. Headline (`h1`–`h6`) — required in practice
+2. Headline (`h1`–`h6`) — required in practice; wrap in `<hgroup>` with a `<p>` for a subtitle
 3. Trailing icon buttons (1–2) — optional
 4. Text destinations (`<menu>`) — optional, hide below `large`
 
@@ -300,7 +303,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 **Adaptive.** Compact: leading menu + title + 1–2 icons. Medium+: text destinations may appear in a `<menu>` after the title; still pair with a rail, not with a second nav bar. Large/XL: a medium or large title is acceptable.
 
-**Behavior.** CSS-only. Menus and NavigationDrawer are separate components. A `navigation-drawer-trigger` in the bar is the NavigationDrawer contract, not bar chrome.
+**Behavior.** Layout is CSS. `AppBar` collapses `header.medium` / `header.large` on scroll (`.collapsed` is the small 64 dp row) and opens the related search view when the search field is selected. Menus and NavigationDrawer are separate components. A `navigation-drawer-trigger` in the bar is the NavigationDrawer contract, not bar chrome.
 
 **Don't**
 

@@ -748,8 +748,11 @@ describe('App bar trailing icon token', () => {
     );
     assert.equal(uses.length, 1, 'the trailing icon token must be consumed by exactly one rule');
 
-    // Scoped by DOM order: leading is before the headline, trailing after.
-    assert.match(uses[0].sel, /:is\(h1, h2, h3, h4, h5, h6\)\s*~/);
+    // Scoped by DOM order: leading is before the title slot, trailing after.
+    // The title slot is the heading, an hgroup, or a search-bar.
+    assert.match(uses[0].sel, /hgroup/);
+    assert.match(uses[0].sel, /search-bar/);
+    assert.match(uses[0].sel, /~/);
     assert.match(uses[0].sel, /\.material-symbols/);
 
     const declared = rules.filter((r) =>

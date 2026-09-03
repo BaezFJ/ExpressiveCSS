@@ -6,19 +6,22 @@
 // Headings are the headline, icon-only links/buttons are the leading and
 // trailing actions, <menu> / <ul> hold text destinations. Helpers are only
 // for variants the markup cannot express: .center, .medium, .large, .fixed.
+// `.medium` and `.large` are the Expressive flexible bars.
 // Destinations at the bottom of the screen are nav.navigation-bar, not this.
 //
-// Tokens follow the M3 top-app-bar spec
-// (https://m3.material.io/components/app-bars/specs):
-//   container      surface, 64dp small / 112 medium / 152 large
-//   headline       on-surface, title-large (small), headline-small/medium
+// Tokens follow the M3 Expressive app bar spec
+// (https://m3.material.io/components/app-bars/specs, Material Web v29.0.16):
+//   container      surface, 64dp small / 112 medium-flexible /
+//                  120 large-flexible (136 / 152 with a subtitle)
+//   headline       on-surface, title-large (small), headline-medium
+//                  (medium-flexible), display-small (large-flexible)
+//   subtitle       label-medium / label-large / title-medium in an <hgroup>
 //   icons          24dp in a 48dp target, 4dp inset. The spec mutes the
 //                  trailing ones (on-surface-variant) and leaves the leading
 //                  one on-surface; both inherit here instead, so a fill +
 //                  on-* pair on the header stays readable. The two tokens
 //                  below are the opt-in to the spec colors.
-//   medium/large   headline 16dp from the inline edges, 20dp (medium) /
-//                  28dp (large) above the container bottom
+//   medium/large   headline 16dp from the inline edges; wrap to two lines
 //   on scroll      surface-container fill (not elevation - the spec's
 //                  level2 elevation carries a transparent shadow) so the bar
 //                  separates from the body. A color utility on the
@@ -46,6 +49,9 @@
 // the page as an app bar. Same trap as $_icon in _icons-material-design.
 // :is() also keeps the specificity where nav:not(...) had it.
 $_bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
+$_heading: ":is(h1, h2, h3, h4, h5, h6)";
+$_title: ":is(#{$_heading}, hgroup)";
+$_search: ":is(.search-bar, .searchbar)";
 
 header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
@@ -81,7 +87,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
     margin: 0;
   }
 
-  > #{$_bar} > :is(h1, h2, h3, h4, h5, h6) {
+  > #{$_bar} > #{$_title} {
     flex: 1 1 auto;
     min-width: 0;
     margin: 0;
@@ -95,11 +101,36 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: inherit;
+  }
+
+  > #{$_bar} > #{$_heading},
+  > #{$_bar} > hgroup > #{$_heading} {
+    margin: 0;
+    color: inherit;
     font-family: var(--md-sys-typescale-title-large-font-family-name);
     font-size: var(--md-sys-typescale-title-large-font-size);
     font-weight: var(--md-sys-typescale-title-large-font-weight);
     line-height: var(--md-sys-typescale-title-large-line-height);
     letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+  }
+
+  > #{$_bar} > hgroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    white-space: normal;
+    text-overflow: unset;
+  }
+
+  > #{$_bar} > hgroup > p {
+    margin: 0;
+    color: inherit;
+    font-family: var(--md-sys-typescale-label-medium-font-family-name);
+    font-size: var(--md-sys-typescale-label-medium-font-size);
+    font-weight: var(--md-sys-typescale-label-medium-font-weight);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-letter-spacing);
   }
 
   // Icon-only actions — 48dp target, 24dp glyph, 4dp from the container edge.
@@ -150,7 +181,7 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
   // anatomy, here as everywhere else in this file. Without this the trailing
   // token was declared and consumed by nothing, so the documented way to opt
   // into the spec's muted trailing icons did nothing at all.
-  > #{$_bar} > :is(h1, h2, h3, h4, h5, h6) ~ :is(a, button):not(.button, .icon-button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
+  > #{$_bar} > :is(#{$_title}, #{$_search}) ~ :is(a, button):not(.button, .icon-button):not(.circle):not(.extra):has(> #{$icon}:only-child) {
     color: var(--md-comp-top-app-bar-trailing-icon-color);
   }
 
@@ -226,6 +257,22 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
       }
     }
   }
+
+  // Search app bar: the search component sits in the title slot. Icons
+  // beside it (siblings of the search) stay outside; icons inside it stay
+  // on the search-bar rules. Centered supporting text is the Expressive
+  // search-app-bar configuration.
+  > #{$_bar} > #{$_search} {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    align-self: center;
+    margin-block: 4px;
+
+    input {
+      text-align: center;
+    }
+  }
 }
 
 %app-bar-destination {
@@ -251,12 +298,14 @@ header:has(> :is(nav:not(.navigation-bar, .navigation-rail), .bar)) {
 }
 
 // Center-aligned small bar. The headline is taken out of flow so leading and
-// trailing actions can sit on the edges without shifting the title.
-header.center:has(> #{$_bar}) > #{$_bar} {
+// trailing actions can sit on the edges without shifting the title. Medium
+// and large keep the title on the second row and center it there instead.
+header.center:not(.medium, .large):has(> #{$_bar}) > #{$_bar},
+header.center.collapsed:has(> #{$_bar}) > #{$_bar} {
   position: relative;
   justify-content: space-between;
 
-  > :is(h1, h2, h3, h4, h5, h6) {
+  > #{$_title} {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -293,18 +342,28 @@ header.large:has(> #{$_bar}) > #{$_bar} {
     height: 48px;
   }
 
-  > :is(h1, h2, h3, h4, h5, h6) {
+  > #{$_title} {
     order: 1;
     // Wider than the line, so it always breaks onto its own one - a basis of
     // exactly 100% still fits beside the zero-width spacer above, which put
     // the headline back on the icon row. It shrinks to fit once there.
     flex: 1 1 calc(100% + 1px);
     white-space: normal;
-    overflow: visible;
+    overflow: hidden;
     text-overflow: unset;
   }
 
-  > :is(h1, h2, h3, h4, h5, h6) + * {
+  > #{$_heading},
+  > hgroup > #{$_heading} {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    white-space: normal;
+  }
+
+  > #{$_title} + * {
     margin-inline-start: auto;
   }
 }
@@ -313,27 +372,116 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
   min-height: 112px;
   padding-bottom: 20px;
 
-  > :is(h1, h2, h3, h4, h5, h6) {
-    padding: 0 12px;
-    font-family: var(--md-sys-typescale-headline-small-font-family-name);
-    font-size: var(--md-sys-typescale-headline-small-font-size);
-    font-weight: var(--md-sys-typescale-headline-small-font-weight);
-    line-height: var(--md-sys-typescale-headline-small-line-height);
-    letter-spacing: var(--md-sys-typescale-headline-small-letter-spacing);
-  }
-}
-
-header.large:has(> #{$_bar}) > #{$_bar} {
-  min-height: 152px;
-  padding-bottom: 28px;
-
-  > :is(h1, h2, h3, h4, h5, h6) {
+  > #{$_heading},
+  > hgroup > #{$_heading} {
     padding: 0 12px;
     font-family: var(--md-sys-typescale-headline-medium-font-family-name);
     font-size: var(--md-sys-typescale-headline-medium-font-size);
     font-weight: var(--md-sys-typescale-headline-medium-font-weight);
     line-height: var(--md-sys-typescale-headline-medium-line-height);
     letter-spacing: var(--md-sys-typescale-headline-medium-letter-spacing);
+  }
+
+  > hgroup > p {
+    padding: 0 12px;
+    font-family: var(--md-sys-typescale-label-large-font-family-name);
+    font-size: var(--md-sys-typescale-label-large-font-size);
+    font-weight: var(--md-sys-typescale-label-large-font-weight);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  }
+}
+
+header.medium:has(> #{$_bar} > hgroup > p) > #{$_bar} {
+  min-height: 136px;
+}
+
+header.large:has(> #{$_bar}) > #{$_bar} {
+  min-height: 120px;
+  padding-bottom: 28px;
+
+  > #{$_heading},
+  > hgroup > #{$_heading} {
+    padding: 0 12px;
+    font-family: var(--md-sys-typescale-display-small-font-family-name);
+    font-size: var(--md-sys-typescale-display-small-font-size);
+    font-weight: var(--md-sys-typescale-display-small-font-weight);
+    line-height: var(--md-sys-typescale-display-small-line-height);
+    letter-spacing: var(--md-sys-typescale-display-small-letter-spacing);
+  }
+
+  > hgroup > p {
+    padding: 0 12px;
+    font-family: var(--md-sys-typescale-title-medium-font-family-name);
+    font-size: var(--md-sys-typescale-title-medium-font-size);
+    font-weight: var(--md-sys-typescale-title-medium-font-weight);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+  }
+}
+
+header.large:has(> #{$_bar} > hgroup > p) > #{$_bar} {
+  min-height: 152px;
+}
+
+header.center.medium:not(.collapsed):has(> #{$_bar}) > #{$_bar} > #{$_title},
+header.center.large:not(.collapsed):has(> #{$_bar}) > #{$_bar} > #{$_title} {
+  text-align: center;
+  align-items: center;
+}
+
+// Collapse the flexible bars into the small 64dp row. AppBar toggles
+// `.collapsed` when the page has scrolled; the class is also legal to set
+// by hand. The two-row layout, the spacer, and the expanded type roles
+// all have to go, or the 64dp height just clips the second row.
+header.medium.collapsed:has(> #{$_bar}) > #{$_bar},
+header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+  min-height: 64px;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  &::before {
+    display: none;
+  }
+
+  > #{$_title} {
+    order: 0;
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > #{$_title} + * {
+    margin-inline-start: 0;
+  }
+
+  > #{$_heading},
+  > hgroup > #{$_heading} {
+    display: block;
+    padding: 0;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--md-sys-typescale-title-large-font-family-name);
+    font-size: var(--md-sys-typescale-title-large-font-size);
+    font-weight: var(--md-sys-typescale-title-large-font-weight);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+  }
+
+  > hgroup > p {
+    padding: 0;
+    font-family: var(--md-sys-typescale-label-medium-font-family-name);
+    font-size: var(--md-sys-typescale-label-medium-font-size);
+    font-weight: var(--md-sys-typescale-label-medium-font-weight);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    letter-spacing: var(--md-sys-typescale-label-medium-letter-spacing);
   }
 }
 
