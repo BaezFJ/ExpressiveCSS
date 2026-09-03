@@ -57,8 +57,6 @@ const canonical = new URL(path, Astro.site).href;
     <link rel="canonical" href={canonical}>
     <link rel="describedby" href="/llms.txt">
     {markdownPath && <link rel="alternate" type="text/markdown" href={markdownPath}>}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href={cssUrl}>
     <link rel="stylesheet" href={`/static/docs.css?v=${version}`}>
     {/* Apply a stored --md-source before first paint so the page does not flash the default seed. */}

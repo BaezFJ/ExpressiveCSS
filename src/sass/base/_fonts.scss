@@ -1,0 +1,63 @@
+@use "../abstracts" as *;
+
+// Self-hosted faces for the families the tokens and icon classes name.
+// Unlayered on purpose: @font-face inside a cascade layer is unreliable.
+// $expressive-font-path is relative to the compiled CSS (dist/css -> dist/fonts).
+
+@if $expressive-include-fonts {
+  @font-face {
+    font-family: "Material Symbols Outlined";
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: block;
+    src: url("#{$expressive-font-path}/material-symbols-outlined.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Material Symbols Rounded";
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: block;
+    src: url("#{$expressive-font-path}/material-symbols-rounded.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Material Symbols Sharp";
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: block;
+    src: url("#{$expressive-font-path}/material-symbols-sharp.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("#{$expressive-font-path}/roboto-latin-400.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("#{$expressive-font-path}/roboto-latin-500.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("#{$expressive-font-path}/noto-sans-latin-400.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("#{$expressive-font-path}/noto-sans-latin-500.woff2") format("woff2");
+  }
+}

@@ -41,6 +41,11 @@
 
 @forward "abstracts";
 
+// @font-face must stay unlayered. A face declared inside @layer base can
+// lose to any unlayered consumer face, or be ignored by engines that still
+// treat layered faces as experimental.
+@include meta.load-css("base/fonts");
+
 @layer tokens, base, components, utilities;
 
 @layer tokens {

@@ -24,19 +24,14 @@ const S = defineSections([
           <a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Material Symbols catalog</a>.
         </p>
         <p>
-          The framework does not ship the font files. Outlined, rounded, and
-          sharp are three separate variable fonts — bundling them would
-          dwarf the rest of the CSS. Load the families you actually use,
-          with the axis ranges so fill / weight / grade / optical size work.
-          Outlined alone is enough for the default.
+          The compiled stylesheet ships the outlined, rounded, and sharp
+          variable fonts. Browsers download a family only after markup uses
+          it, so the default outlined class does not fetch rounded or sharp.
+          Keep <code>dist/fonts/</code> next to <code>dist/css/</code> so
+          the sheet's <code>url(../fonts/...)</code> paths resolve. Override
+          <code>$expressive-include-fonts</code> when compiling Sass if the
+          page already loads these families.
         </p>
-<Code code={`
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
-
-<!-- Only if you switch style to rounded or sharp -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
-`} />
         <p>
           Put <code>material-symbols</code> on an element and use the ligature
           as the text. <code>.material-icons</code> is kept as an alias so

@@ -15,8 +15,6 @@ const S = defineSections([
 ]);
 ---
 <DocsLayout page="typography">
-<link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500&display=swap">
-
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
@@ -41,9 +39,9 @@ const S = defineSections([
           <code>--md-ref-typeface-plain</code> tokens both default to Roboto.
           Large display, headline, and title-large roles use brand; smaller
           title, body, and label roles use plain. Noto Sans is the fallback
-          for characters Roboto cannot cover. The framework does not ship
-          either font file, so applications should load them or override the
-          reference tokens.
+          for characters Roboto cannot cover. The compiled stylesheet ships
+          Latin Roboto and Noto Sans at 400 and 500. Override the reference
+          tokens to use a different family.
         </p>
 
         <h3>Semantic map</h3>
