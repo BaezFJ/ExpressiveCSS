@@ -176,8 +176,7 @@
       inset-inline-start: calc(50% + 12px);
       transform: translate(-50%, -50%);
 
-      &:dir(rtl),
-      [dir="rtl"] & {
+      &:dir(rtl) {
         transform: translate(50%, -50%);
       }
     }
@@ -266,8 +265,7 @@
         inset-inline-start: calc(16px + 24px);
         transform: translate(-50%, -50%);
 
-        &:dir(rtl),
-        [dir="rtl"] & {
+        &:dir(rtl) {
           transform: translate(50%, -50%);
         }
       }

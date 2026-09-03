@@ -58,12 +58,19 @@ describe('Badge', () => {
       (r) =>
         /navigation-(?:bar|rail)/.test(r.selector) &&
         /\.badge/.test(r.selector) &&
-        /:dir\(rtl\)|\[dir=["']rtl["']\]/.test(r.selector),
+        /:dir\(rtl\)/.test(r.selector),
     );
-    assert.ok(rtl.length >= 1, 'no RTL sibling badge rule on bar or rail');
+    assert.ok(rtl.length >= 1, 'no :dir(rtl) sibling badge rule on bar or rail');
     for (const rule of rtl) {
       assert.match(rule.body, /transform:\s*translate\(50%,\s*-50%\)/);
     }
+    const ancestor = rules.filter(
+      (r) =>
+        /navigation-(?:bar|rail)/.test(r.selector) &&
+        /\.badge/.test(r.selector) &&
+        /\[dir=(["']?)rtl\1\]/.test(r.selector),
+    );
+    assert.deepEqual(ancestor, [], 'ancestor [dir=rtl] still flips a locally LTR bar');
   });
 
 });
