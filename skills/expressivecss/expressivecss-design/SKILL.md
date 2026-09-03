@@ -11,6 +11,10 @@ Use this guide to shape, implement, harden, or review a complete ExpressiveCSS s
 
 Read this guide for a new surface or flow, a redesign, a visual refinement, a responsive adaptation, or a pre-release interface review. For a narrow markup or API change, use the relevant component guide and support guide without expanding the task into a redesign.
 
+## Do not use when
+
+Do not load this guide for setup-only, token-only, or narrow lifecycle work unless the request also includes a surface design or review decision. It does not replace the selected component contract.
+
 ## 1. Establish the brief
 
 Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document.
@@ -24,6 +28,8 @@ Classify the task before acting. Choose one operating mode, or run Critique foll
 - **Audit.** Check measurable implementation, semantics, runtime behavior, responsive behavior, and accessibility requirements without editing. Ground each finding in source, runtime, or test evidence.
 
 Critique and audit are no-edit modes unless the user separately asks for fixes. For a combined review, record the visual critique before audit findings can bias it, then synthesize both evidence sets. Do not silently widen a refinement into a redesign or a review into implementation.
+
+Refine and Redesign require matched before-and-after evidence. Capture the baseline before editing with the same route, task point, data, state, viewport, device scale, color scheme, motion preference, and relevant locale and direction. If a baseline is unavailable, record that limitation before editing.
 
 Ask only about missing decisions that would change the result. Resolve:
 
@@ -40,7 +46,9 @@ Do not ask the user to choose raw CSS values. Translate product and brand answer
 
 Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded.
 
-Read [`../expressivecss-usage/SKILL.md`](../expressivecss-usage/SKILL.md), [`../expressivecss-theming/SKILL.md`](../expressivecss-theming/SKILL.md), and [`../expressivecss-accessibility/SKILL.md`](../expressivecss-accessibility/SKILL.md). Read every candidate component guide before choosing. Use [Material 3 guidance](https://www.expressivecss.com/m3-guidelines.md) for design intent and the target-version component documentation for the shipped contract.
+## Routing dependency
+
+Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Read Material 3 guidance for design intent and the target-version component documentation for the shipped contract.
 
 Write a short working brief before code:
 
@@ -90,7 +98,9 @@ Keep default, hover, focus-visible, pressed, selected, and disabled states coher
 
 ## 5. Review with evidence
 
-Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Use the [review matrix](./references/review-matrix.md) for Critique, Audit, and combined finish reviews; record one evidence-backed status for every applicable row.
+Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Use the [review matrix](./references/review-matrix.md) for Critique, Audit, and combined finish reviews. Use the [evidence ledger](./references/evidence-ledger.md) to trace every reachable state and reached responsive boundary to evidence or `Blocked`. Record one evidence-backed status for every applicable matrix row. After component selection, add one review group per selected component. A family group is allowed only when every member shares the exact contract fact being reviewed; otherwise split the family. Record each component's target-version contract and each applicable generated-guide rule. A generic component summary does not replace these checks.
+
+When optional MCP tools contribute evidence, copy `checksPerformed`, `evidenceSources`, `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into the ledger. Mark an applicable unperformed check `Blocked`. MCP evidence does not replace browser interaction, rendered responsive, visual, or accessibility review.
 
 1. Run the consuming project's build and focused tests.
 2. Exercise the primary task with keyboard and pointer input. Use touch input when the feature targets it.

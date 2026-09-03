@@ -5,6 +5,14 @@ description: Initialize and destroy ExpressiveCSS components.
 
 ## ExpressiveCSS JavaScript runtime
 
+## When to use
+
+Use this guide for interactive components, initialization, dynamic content, remounting, teardown, or a JavaScript-backed Audit.
+
+## Do not use when
+
+Do not load this guide for a CSS-only Audit, static markup with no JavaScript behavior, or visual-token work. Critique does not need it unless interaction evidence is in scope.
+
 Read [Auto Init](https://www.expressivecss.com/auto-init.html.md) and the selected component guide before writing initialization code.
 
 ### Choose one initialization owner

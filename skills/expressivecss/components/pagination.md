@@ -3,7 +3,15 @@
 ### Pagination
 A list of pages. The HTML is the component.
 
-[Component documentation](https://www.expressivecss.com/pagination.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/pagination.astro)
+Component ID: `pagination`
+
+[Component documentation](https://www.expressivecss.com/pagination.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/pagination.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -35,11 +43,14 @@ The list lives in a `<nav aria-label="Pagination">` — a page's links are navig
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- Pagination is navigation and belongs in a labelled <nav>, or it is just a list of numbers.
-- The current page needs aria-current="page". A class only colours it.
-- A disabled control that is still an <a href> stays in the tab order and still navigates. Use a <span>, or drop the href.
+- `pagination-in-nav`: Pagination is navigation and belongs in a labelled <nav>, or it is just a list of numbers.
+- `pagination-marks-current`: The current page needs aria-current="page". A class only colours it.
+- `pagination-disabled-not-a-link`: A disabled control that is still an <a href> stays in the tab order and still navigates. Use a <span>, or drop the href.
+
+#### Guide checks
+
 - Label every <nav> landmark with aria-label or aria-labelledby.
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

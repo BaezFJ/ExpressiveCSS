@@ -3,7 +3,15 @@
 ### Bottom app bar
 This screen's commands at the bottom edge, with an optional FAB — not its destinations.
 
-[Component documentation](https://www.expressivecss.com/bottom-app-bar.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/bottom-app-bar.astro)
+Component ID: `bottom-app-bar`
+
+[Component documentation](https://www.expressivecss.com/bottom-app-bar.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/bottom-app-bar.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -31,11 +39,14 @@ Every action is icon-only, so every action carries an `aria-label`; the icon ins
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A bottom app bar holds this screen's commands - share, edit, delete - not destinations, so it is not a <nav> landmark (rule 4), and it is not any other landmark either: <footer> is contentinfo, <header> is banner, and a row of buttons is neither. The retired version of this component was keyed on `footer:has(> nav:only-child)`, which is why both of those spellings are named here rather than just the <nav> one. Write it on a <div>. Destinations at the bottom of the screen are nav.navigation-bar, a different component.
-- A bottom app bar takes no composite role; its actions are reached with Tab, not arrow keys.
-- Every action in the bar is icon-only, and the icon is aria-hidden, so the control needs an aria-label. Without one it arrives as an unnamed button.
-- The ligature is real text and is read out verbatim. Every icon here sits inside a control that carries its own name, so all of them are decoration.
+- `bottom-app-bar-is-not-a-landmark`: A bottom app bar holds this screen's commands - share, edit, delete - not destinations, so it is not a <nav> landmark (rule 4), and it is not any other landmark either: <footer> is contentinfo, <header> is banner, and a row of buttons is neither. The retired version of this component was keyed on `footer:has(> nav:only-child)`, which is why both of those spellings are named here rather than just the <nav> one. Write it on a <div>. Destinations at the bottom of the screen are nav.navigation-bar, a different component.
+- `bottom-app-bar-not-a-composite-widget`: A bottom app bar takes no composite role; its actions are reached with Tab, not arrow keys.
+- `bottom-app-bar-action-is-named`: Every action in the bar is icon-only, and the icon is aria-hidden, so the control needs an aria-label. Without one it arrives as an unnamed button.
+- `bottom-app-bar-icon-hidden`: The ligature is real text and is read out verbatim. Every icon here sits inside a control that carries its own name, so all of them are decoration.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "generatedBy": "mcp/expressivecss/scripts/sync-guides.mjs",
   "frameworkVersion": "0.8.0",
   "semantics": {
     "about": "Normative HTML semantics for ExpressiveCSS. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. One row per roster entry, each stating its kind - component, foundation or behavior, as CONTEXT.md defines them. CONTEXT.md defines the rest of the vocabulary.",

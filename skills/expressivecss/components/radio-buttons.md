@@ -3,7 +3,15 @@
 ### Radio buttons
 Material Design 3 radios, from the HTML.
 
-[Component documentation](https://www.expressivecss.com/radio-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/radio-buttons.astro)
+Component ID: `radio-buttons`
+
+[Component documentation](https://www.expressivecss.com/radio-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/radio-buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -35,10 +43,13 @@ A radio only means anything as one of a set, so the set is a `<fieldset>` and th
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
-- A radio must be inside its <label> or carry an id a label points at.
-- A fieldset without a legend groups controls visually but names nothing.
+- `radio-in-fieldset`: A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
+- `radio-labelled`: A radio must be inside its <label> or carry an id a label points at.
+- `fieldset-has-legend`: A fieldset without a legend groups controls visually but names nothing.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

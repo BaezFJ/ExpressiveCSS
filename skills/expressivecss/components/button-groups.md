@@ -3,7 +3,15 @@
 ### Button groups
 Related buttons that bump and reshape against each other, in two variants and five sizes.
 
-[Component documentation](https://www.expressivecss.com/button-groups.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/button-groups.astro)
+Component ID: `button-groups`
+
+[Component documentation](https://www.expressivecss.com/button-groups.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/button-groups.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -30,11 +38,14 @@ Items are controls and direct children — a `<button>`, or an `<a class="button
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
-- Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class="button" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both.
-- An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class="button circle">, which the group sizes like any other.
-- A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself.
+- `button-group-is-not-an-authored-composite-widget`: A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
+- `button-group-items-are-controls`: Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class="button" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both.
+- `button-group-item-is-not-an-icon-button`: An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class="button circle">, which the group sizes like any other.
+- `button-group-selection-is-not-authored`: A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

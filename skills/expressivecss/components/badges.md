@@ -3,7 +3,15 @@
 ### Badges
 Notifications, counts, or status on navigation items and icons.
 
-[Component documentation](https://www.expressivecss.com/badges.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/badges.astro)
+Component ID: `badges`
+
+[Component documentation](https://www.expressivecss.com/badges.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/badges.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -23,8 +31,11 @@ Nesting has a consequence worth stating: **a badge inside a hidden icon is hidde
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A badge inside a hidden icon is hidden with it - aria-hidden="false" on a descendant does not undo that. Put the count in the control name (aria-label="Inbox, 3 unread"), or move the badge out of the icon into the flow.
+- `badge-count-survives-a-hidden-icon`: A badge inside a hidden icon is hidden with it - aria-hidden="false" on a descendant does not undo that. Put the count in the control name (aria-label="Inbox, 3 unread"), or move the badge out of the icon into the flow.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

@@ -3,7 +3,15 @@
 ### Navigation drawer
 A slide-out menu, or a fixed sidebar on Expanded and wider screens.
 
-[Component documentation](https://www.expressivecss.com/sidenav.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/sidenav.astro)
+Component ID: `navigation-drawer`
+
+[Component documentation](https://www.expressivecss.com/sidenav.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/sidenav.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -40,14 +48,17 @@ The drawer HTML must **not** sit inside the app bar’s `<nav>`. Put a `navigati
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
-- The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type="button"> with data-target - an <a href="#!"> announces as a link and adds a history entry for a drawer that never navigates.
-- The close row dismisses the drawer, so it is a command: use <button type="button" class="navigation-drawer-close">. Same call as expanding-card-close-is-button.
-- A subheader labels the rows under it and goes nowhere. Write it as <span class="subheader">; the <a> carried no href, and the sheet had to neutralise it with pointer-events: none.
-- The current destination needs aria-current="page". .active is a paint: it colours the row and says nothing to a screen reader. Same call as navigation-rail-marks-current.
-- A link wrapping only a decorative <img alt=""> has no name left - it arrives in the links list as the bare URL. Give the link an aria-label.
+- `sidenav-in-nav`: A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
+- `drawer-trigger-is-button`: The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type="button"> with data-target - an <a href="#!"> announces as a link and adds a history entry for a drawer that never navigates.
+- `drawer-close-is-button`: The close row dismisses the drawer, so it is a command: use <button type="button" class="navigation-drawer-close">. Same call as expanding-card-close-is-button.
+- `drawer-subheader-not-a-link`: A subheader labels the rows under it and goes nowhere. Write it as <span class="subheader">; the <a> carried no href, and the sheet had to neutralise it with pointer-events: none.
+- `drawer-marks-current`: The current destination needs aria-current="page". .active is a paint: it colours the row and says nothing to a screen reader. Same call as navigation-rail-marks-current.
+- `drawer-avatar-link-is-named`: A link wrapping only a decorative <img alt=""> has no name left - it arrives in the links list as the bare URL. Give the link an aria-label.
+
+#### Guide checks
+
 - Label every <nav> landmark with aria-label or aria-labelledby.
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

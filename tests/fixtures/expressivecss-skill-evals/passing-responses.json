@@ -1,0 +1,2164 @@
+{
+  "schemaVersion": 3,
+  "responses": {
+    "setup-only-routing": {
+      "candidateResponse": {
+        "caseId": "setup-only-routing",
+        "mode": "Implement",
+        "evidenceArtifacts": []
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-install/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "css-only-markup-routing": {
+      "candidateResponse": {
+        "caseId": "css-only-markup-routing",
+        "mode": "Implement",
+        "evidenceArtifacts": []
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/buttons.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "token-only-theming-routing": {
+      "candidateResponse": {
+        "caseId": "token-only-theming-routing",
+        "mode": "Implement",
+        "evidenceArtifacts": []
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "critique-no-edit": {
+      "candidateResponse": {
+        "caseId": "critique-no-edit",
+        "mode": "Critique",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-rendered-capture",
+            "category": "rendered-capture",
+            "observation": "Observed rendered-capture contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "surface",
+            "expectedObservation": "Observed rendered-capture contract"
+          }
+        ],
+        "reviewRows": [
+          {
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "surface",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-rendered-capture"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    },
+    "css-only-audit": {
+      "candidateResponse": {
+        "caseId": "css-only-audit",
+        "mode": "Audit",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "checkboxes",
+            "expectedObservation": "Observed source contract"
+          },
+          {
+            "id": "artifact-accessibility-tree",
+            "category": "accessibility-tree",
+            "observation": "Observed accessibility-tree contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-LABEL",
+            "componentId": "checkboxes",
+            "expectedObservation": "Observed accessibility-tree contract"
+          }
+        ],
+        "reviewRows": [
+          {
+            "criterionId": "A-HOST-ELEMENT",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-source"
+            ],
+            "componentId": "checkboxes"
+          },
+          {
+            "criterionId": "A-LABEL",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-accessibility-tree"
+            ],
+            "componentId": "checkboxes"
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/checkboxes.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    },
+    "interactive-audit": {
+      "candidateResponse": {
+        "caseId": "interactive-audit",
+        "mode": "Audit",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed source contract"
+          },
+          {
+            "id": "artifact-runtime-inspection",
+            "category": "runtime-inspection",
+            "observation": "Observed runtime-inspection contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-RUNTIME-ARIA-UPDATE",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed runtime-inspection contract"
+          },
+          {
+            "id": "artifact-accessibility-tree",
+            "category": "accessibility-tree",
+            "observation": "Observed accessibility-tree contract",
+            "sequence": 32,
+            "timestamp": "2026-09-03T00:00:32.000Z",
+            "criterionId": "A-LABEL",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed accessibility-tree contract"
+          },
+          {
+            "id": "artifact-test-output",
+            "category": "test-output",
+            "observation": "Observed test-output contract",
+            "sequence": 33,
+            "timestamp": "2026-09-03T00:00:33.000Z",
+            "criterionId": "A-KEYBOARD-ACTION",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed test-output contract"
+          }
+        ],
+        "reviewRows": [
+          {
+            "criterionId": "A-HOST-ELEMENT",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-source"
+            ],
+            "componentId": "navigation-drawer"
+          },
+          {
+            "criterionId": "A-RUNTIME-ARIA-UPDATE",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-runtime-inspection"
+            ],
+            "componentId": "navigation-drawer"
+          },
+          {
+            "criterionId": "A-LABEL",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-accessibility-tree"
+            ],
+            "componentId": "navigation-drawer"
+          },
+          {
+            "criterionId": "A-KEYBOARD-ACTION",
+            "componentId": "navigation-drawer",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-test-output"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-runtime/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/navigation-drawer.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    },
+    "combined-review-order": {
+      "candidateResponse": {
+        "caseId": "combined-review-order",
+        "mode": "Critique+Audit",
+        "evidenceArtifacts": [
+          {
+            "id": "critique-render",
+            "category": "rendered-capture",
+            "observation": "Primary action hierarchy",
+            "mode": "Critique",
+            "criterionId": "C-TASK-PRIMARY",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "componentId": "surface",
+            "expectedObservation": "Primary action hierarchy"
+          },
+          {
+            "id": "audit-source",
+            "category": "source",
+            "observation": "Host element contract",
+            "mode": "Audit",
+            "criterionId": "A-HOST-ELEMENT",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "componentId": "surface",
+            "expectedObservation": "Host element contract"
+          }
+        ],
+        "reviewRows": [
+          {
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "surface",
+            "status": "Pass",
+            "evidenceIds": [
+              "critique-render"
+            ]
+          },
+          {
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "surface",
+            "status": "Pass",
+            "evidenceIds": [
+              "audit-source"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    },
+    "refine-preserves-product": {
+      "candidateResponse": {
+        "caseId": "refine-preserves-product",
+        "mode": "Refine",
+        "evidenceArtifacts": [
+          {
+            "id": "refine-preserves-product-pair-1-before",
+            "category": "rendered-capture",
+            "observation": "Pre-edit matched capture",
+            "criterionId": "C-MATCHED-CAPTURE",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "before",
+            "sequence": 10,
+            "timestamp": "2026-09-03T00:00:10.000Z"
+          },
+          {
+            "id": "refine-preserves-product-pair-1-after",
+            "category": "rendered-capture",
+            "observation": "Post-edit matched capture",
+            "criterionId": "C-MATCHED-CAPTURE",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "after",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z"
+          }
+        ],
+        "protectedBefore": {
+          "identity": "i1",
+          "content": "c1",
+          "informationArchitecture": "ia1",
+          "routeDestinations": "r1",
+          "behaviorTests": "b1"
+        },
+        "protectedAfter": {
+          "identity": "i1",
+          "content": "c1",
+          "informationArchitecture": "ia1",
+          "routeDestinations": "r1",
+          "behaviorTests": "b1"
+        },
+        "capturePairs": [
+          {
+            "pairId": "pair-1",
+            "baselineSequence": 10,
+            "baselineTimestamp": "2026-09-03T00:00:10.000Z",
+            "firstEditSequence": 20,
+            "firstEditTimestamp": "2026-09-03T00:00:20.000Z",
+            "beforeArtifact": "refine-preserves-product-pair-1-before",
+            "afterArtifact": "refine-preserves-product-pair-1-after",
+            "before": {
+              "route": "/dashboard",
+              "taskPoint": "loaded",
+              "dataFixtureId": "account-a",
+              "state": "default",
+              "viewportWidth": 1024,
+              "viewportHeight": 768,
+              "deviceScaleFactor": 1,
+              "colorScheme": "light",
+              "motionPreference": "no-preference",
+              "locale": "en-US",
+              "direction": "ltr"
+            },
+            "after": {
+              "route": "/dashboard",
+              "taskPoint": "loaded",
+              "dataFixtureId": "account-a",
+              "state": "default",
+              "viewportWidth": 1024,
+              "viewportHeight": 768,
+              "deviceScaleFactor": 1,
+              "colorScheme": "light",
+              "motionPreference": "no-preference",
+              "locale": "en-US",
+              "direction": "ltr"
+            },
+            "visibleDifferences": [
+              {
+                "id": "diff-1",
+                "classification": "intended",
+                "before": "two cards",
+                "after": "one pane",
+                "rationale": "declared scope"
+              }
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "redesign-preserves-requirements": {
+      "candidateResponse": {
+        "caseId": "redesign-preserves-requirements",
+        "mode": "Redesign",
+        "evidenceArtifacts": [
+          {
+            "id": "redesign-preserves-requirements-pair-1-before",
+            "category": "rendered-capture",
+            "observation": "Pre-edit matched capture",
+            "criterionId": "C-MATCHED-CAPTURE",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "before",
+            "sequence": 10,
+            "timestamp": "2026-09-03T00:00:10.000Z"
+          },
+          {
+            "id": "redesign-preserves-requirements-pair-1-after",
+            "category": "rendered-capture",
+            "observation": "Post-edit matched capture",
+            "criterionId": "C-MATCHED-CAPTURE",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "after",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z"
+          }
+        ],
+        "structuralChange": true,
+        "requirements": [
+          {
+            "id": "req-account",
+            "status": "Pass"
+          }
+        ],
+        "accessibilityAssertions": [
+          {
+            "id": "a11y-name",
+            "status": "Pass"
+          }
+        ],
+        "capturePairs": [
+          {
+            "pairId": "pair-1",
+            "baselineSequence": 10,
+            "baselineTimestamp": "2026-09-03T00:00:10.000Z",
+            "firstEditSequence": 20,
+            "firstEditTimestamp": "2026-09-03T00:00:20.000Z",
+            "beforeArtifact": "redesign-preserves-requirements-pair-1-before",
+            "afterArtifact": "redesign-preserves-requirements-pair-1-after",
+            "before": {
+              "route": "/dashboard",
+              "taskPoint": "loaded",
+              "dataFixtureId": "account-a",
+              "state": "default",
+              "viewportWidth": 1024,
+              "viewportHeight": 768,
+              "deviceScaleFactor": 1,
+              "colorScheme": "light",
+              "motionPreference": "no-preference",
+              "locale": "en-US",
+              "direction": "ltr"
+            },
+            "after": {
+              "route": "/dashboard",
+              "taskPoint": "loaded",
+              "dataFixtureId": "account-a",
+              "state": "default",
+              "viewportWidth": 1024,
+              "viewportHeight": 768,
+              "deviceScaleFactor": 1,
+              "colorScheme": "light",
+              "motionPreference": "no-preference",
+              "locale": "en-US",
+              "direction": "ltr"
+            },
+            "visibleDifferences": [
+              {
+                "id": "diff-1",
+                "classification": "intended",
+                "before": "two cards",
+                "after": "one pane",
+                "rationale": "declared scope"
+              }
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-runtime/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "feedback-component-choice": {
+      "candidateResponse": {
+        "caseId": "feedback-component-choice",
+        "mode": "Implement",
+        "evidenceArtifacts": [],
+        "selectedComponent": "snackbar",
+        "rejectionReasons": {
+          "banners": "The action does not need persistent placement.",
+          "dialogs": "Progress must not be blocked."
+        }
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-runtime/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/snackbar.md",
+            "status": "success"
+          },
+          {
+            "sequence": 6,
+            "timestamp": "2026-09-03T00:00:06.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/banners.md",
+            "status": "success"
+          },
+          {
+            "sequence": 7,
+            "timestamp": "2026-09-03T00:00:07.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/dialogs.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "feedback-banner-choice": {
+      "candidateResponse": {
+        "caseId": "feedback-banner-choice",
+        "mode": "Implement",
+        "evidenceArtifacts": [],
+        "selectedComponent": "banners",
+        "rejectionReasons": {
+          "snackbar": "The action must remain available after a transient message would disappear.",
+          "dialogs": "The user can continue without deciding now."
+        }
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/snackbar.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/banners.md",
+            "status": "success"
+          },
+          {
+            "sequence": 6,
+            "timestamp": "2026-09-03T00:00:06.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/dialogs.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "feedback-dialog-choice": {
+      "candidateResponse": {
+        "caseId": "feedback-dialog-choice",
+        "mode": "Implement",
+        "evidenceArtifacts": [],
+        "selectedComponent": "dialogs",
+        "rejectionReasons": {
+          "snackbar": "The decision cannot be safely ignored.",
+          "banners": "Progress must remain blocked until the choice is made."
+        }
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/snackbar.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/banners.md",
+            "status": "success"
+          },
+          {
+            "sequence": 6,
+            "timestamp": "2026-09-03T00:00:06.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/dialogs.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "switch-versus-checkbox": {
+      "candidateResponse": {
+        "caseId": "switch-versus-checkbox",
+        "mode": "Implement",
+        "evidenceArtifacts": [],
+        "selectedComponent": "switches",
+        "markup": "<label class=\"switch\"><input type=\"checkbox\" name=\"alerts\"><span>Alerts</span></label>",
+        "addsJavaScript": false,
+        "commitBehavior": "immediate"
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/switches.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/checkboxes.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "deferred-checkbox": {
+      "candidateResponse": {
+        "caseId": "deferred-checkbox",
+        "mode": "Implement",
+        "evidenceArtifacts": [],
+        "selectedComponent": "checkboxes",
+        "markup": "<label><input type=\"checkbox\" name=\"alerts\"><span>Alerts</span></label>",
+        "addsJavaScript": false,
+        "commitBehavior": "deferred-save"
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/switches.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/checkboxes.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "adaptive-navigation": {
+      "candidateResponse": {
+        "caseId": "adaptive-navigation",
+        "mode": "Implement",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-rendered-capture",
+            "category": "rendered-capture",
+            "observation": "Observed rendered-capture contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "navigation",
+            "expectedObservation": "Observed rendered-capture contract"
+          },
+          {
+            "id": "artifact-accessibility-tree",
+            "category": "accessibility-tree",
+            "observation": "Observed accessibility-tree contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-LABEL",
+            "componentId": "navigation",
+            "expectedObservation": "Observed accessibility-tree contract"
+          }
+        ],
+        "navigationByWidth": [
+          {
+            "width": 599,
+            "visiblePatterns": [
+              "navigation-bar"
+            ],
+            "accessibilityExposedPatterns": [
+              "navigation-bar"
+            ],
+            "destinations": [
+              "/home",
+              "/search",
+              "/profile"
+            ],
+            "currentDestination": "/home"
+          },
+          {
+            "width": 840,
+            "visiblePatterns": [
+              "navigation-rail"
+            ],
+            "accessibilityExposedPatterns": [
+              "navigation-rail"
+            ],
+            "destinations": [
+              "/home",
+              "/search",
+              "/profile"
+            ],
+            "currentDestination": "/home"
+          }
+        ],
+        "reviewRows": [
+          {
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "navigation",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-rendered-capture"
+            ]
+          },
+          {
+            "criterionId": "A-LABEL",
+            "componentId": "navigation",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-accessibility-tree"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/navigation-bar.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/navigation-rail.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "brand-through-tokens": {
+      "candidateResponse": {
+        "caseId": "brand-through-tokens",
+        "mode": "Implement",
+        "evidenceArtifacts": [],
+        "rawColorUses": [
+          {
+            "target": "--md-source",
+            "purpose": "seed"
+          }
+        ],
+        "componentColorUses": [
+          {
+            "background": "--md-sys-color-primary",
+            "foreground": "--md-sys-color-on-primary"
+          }
+        ],
+        "hostStructureBefore": "h1",
+        "hostStructureAfter": "h1",
+        "interactionBehaviorBefore": "b1",
+        "interactionBehaviorAfter": "b1"
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "runtime-owned-aria": {
+      "candidateResponse": {
+        "caseId": "runtime-owned-aria",
+        "mode": "Implement",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed source contract"
+          },
+          {
+            "id": "artifact-runtime-inspection",
+            "category": "runtime-inspection",
+            "observation": "Observed runtime-inspection contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-RUNTIME-ARIA-UPDATE",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed runtime-inspection contract"
+          }
+        ],
+        "sourceMarkup": "<button class=\"sidenav-trigger\" data-target=\"drawer\" aria-label=\"Open navigation\">Menu</button>",
+        "initializedDom": {
+          "aria-expanded": "false",
+          "aria-controls": "drawer"
+        },
+        "interactionUpdates": [
+          {
+            "field": "aria-expanded",
+            "before": "false",
+            "after": "true"
+          }
+        ],
+        "teardown": {
+          "staleAria": false,
+          "generatedIds": 0
+        },
+        "reviewRows": [
+          {
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "navigation-drawer",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-source"
+            ]
+          },
+          {
+            "criterionId": "A-RUNTIME-ARIA-UPDATE",
+            "componentId": "navigation-drawer",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-runtime-inspection"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-runtime/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/navigation-drawer.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "manual-init-teardown": {
+      "candidateResponse": {
+        "caseId": "manual-init-teardown",
+        "mode": "Implement",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-runtime-inspection",
+            "category": "runtime-inspection",
+            "observation": "Observed runtime-inspection contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-INIT-OWNER",
+            "componentId": "tooltips",
+            "expectedObservation": "Observed runtime-inspection contract"
+          },
+          {
+            "id": "artifact-test-output",
+            "category": "test-output",
+            "observation": "Observed test-output contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-CLEAN-LISTENER",
+            "componentId": "tooltips",
+            "expectedObservation": "Observed test-output contract"
+          }
+        ],
+        "registryElementId": "tip-save",
+        "markup": "<button id=\"tip-save\" class=\"tooltipped no-autoinit\">Save</button>",
+        "initialization": [
+          {
+            "elementId": "tip-save",
+            "owner": "manual",
+            "count": 1
+          }
+        ],
+        "instanceRetainedOrRecovered": true,
+        "lifecycle": [
+          {
+            "sequence": 30,
+            "event": "destroy",
+            "elementId": "tip-save"
+          },
+          {
+            "sequence": 31,
+            "event": "remove",
+            "elementId": "tip-save"
+          }
+        ],
+        "postTeardown": {
+          "instance": false,
+          "listeners": 0,
+          "timers": 0,
+          "overlays": 0,
+          "generatedNodes": 0
+        },
+        "reviewRows": [
+          {
+            "criterionId": "A-INIT-OWNER",
+            "componentId": "tooltips",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-runtime-inspection"
+            ]
+          },
+          {
+            "criterionId": "A-CLEAN-LISTENER",
+            "componentId": "tooltips",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-test-output"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-runtime/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/components/tooltips.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "older-version-contract": {
+      "candidateResponse": {
+        "caseId": "older-version-contract",
+        "mode": "Audit",
+        "evidenceArtifacts": [
+          {
+            "id": "artifact-version-resolution",
+            "category": "version-resolution",
+            "observation": "Observed version-resolution contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-TARGET-VERSION",
+            "componentId": "surface",
+            "expectedObservation": "Observed version-resolution contract"
+          },
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "surface",
+            "expectedObservation": "Observed source contract"
+          }
+        ],
+        "resolvedVersion": "0.7.0",
+        "contractVersion": "0.8.0",
+        "skillVersion": "0.4.0",
+        "contractStatus": "mismatch",
+        "documentationMode": "matching-tag",
+        "decoyApiRejected": true,
+        "unavailableDocsBehavior": "Blocked",
+        "reviewRows": [
+          {
+            "criterionId": "A-TARGET-VERSION",
+            "componentId": "surface",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-version-resolution"
+            ]
+          },
+          {
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "surface",
+            "status": "Pass",
+            "evidenceIds": [
+              "artifact-source"
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-install/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 5,
+            "timestamp": "2026-09-03T00:00:05.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    },
+    "reachable-state-ledger": {
+      "candidateResponse": {
+        "caseId": "reachable-state-ledger",
+        "mode": "Audit",
+        "evidenceArtifacts": [
+          {
+            "id": "coverage-state-loading",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for loading",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 40,
+            "timestamp": "2026-09-03T00:00:40.000Z"
+          },
+          {
+            "id": "coverage-state-empty",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for empty",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 41,
+            "timestamp": "2026-09-03T00:00:41.000Z"
+          },
+          {
+            "id": "coverage-state-error",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for error",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 42,
+            "timestamp": "2026-09-03T00:00:42.000Z"
+          },
+          {
+            "id": "coverage-state-offline",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for offline",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 44,
+            "timestamp": "2026-09-03T00:00:44.000Z"
+          },
+          {
+            "id": "coverage-boundary-compact-medium-below",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 599",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 45,
+            "timestamp": "2026-09-03T00:00:45.000Z"
+          },
+          {
+            "id": "coverage-boundary-compact-medium-above",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 600",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 46,
+            "timestamp": "2026-09-03T00:00:46.000Z"
+          },
+          {
+            "id": "coverage-boundary-medium-expanded-below",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 839",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 47,
+            "timestamp": "2026-09-03T00:00:47.000Z"
+          },
+          {
+            "id": "coverage-boundary-medium-expanded-above",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 840",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 48,
+            "timestamp": "2026-09-03T00:00:48.000Z"
+          },
+          {
+            "id": "coverage-data-long",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for long-content",
+            "criterionId": "C-LONG-CONTENT-FIT",
+            "componentId": "surface",
+            "sequence": 49,
+            "timestamp": "2026-09-03T00:00:49.000Z"
+          },
+          {
+            "id": "coverage-theme-dark",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for dark",
+            "criterionId": "C-THEME-HIERARCHY",
+            "componentId": "surface",
+            "sequence": 50,
+            "timestamp": "2026-09-03T00:00:50.000Z"
+          },
+          {
+            "id": "coverage-input-keyboard",
+            "category": "interaction-trace",
+            "observation": "Observed fixture coverage for keyboard",
+            "criterionId": "A-KEYBOARD-ACTION",
+            "componentId": "surface",
+            "sequence": 51,
+            "timestamp": "2026-09-03T00:00:51.000Z"
+          },
+          {
+            "id": "coverage-locale-ar",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for ar",
+            "criterionId": "C-LOCALIZED-CONTENT-FIT",
+            "componentId": "surface",
+            "sequence": 52,
+            "timestamp": "2026-09-03T00:00:52.000Z"
+          },
+          {
+            "id": "coverage-direction-rtl",
+            "category": "accessibility-tree",
+            "observation": "Observed fixture coverage for rtl",
+            "criterionId": "A-RTL-READING",
+            "componentId": "surface",
+            "sequence": 53,
+            "timestamp": "2026-09-03T00:00:53.000Z"
+          }
+        ],
+        "coverageRecords": [
+          {
+            "inventoryId": "state-loading",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "expectedObservation": "loading",
+            "sequence": 40,
+            "timestamp": "2026-09-03T00:00:40.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-state-loading"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "state-empty",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "expectedObservation": "empty",
+            "sequence": 41,
+            "timestamp": "2026-09-03T00:00:41.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-state-empty"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "state-error",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "expectedObservation": "error",
+            "sequence": 42,
+            "timestamp": "2026-09-03T00:00:42.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-state-error"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "state-permission",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "expectedObservation": "permission",
+            "sequence": 43,
+            "timestamp": "2026-09-03T00:00:43.000Z",
+            "result": "Blocked",
+            "evidenceIds": [],
+            "blockerReason": "Permission state fixture cannot be reached without unavailable credentials."
+          },
+          {
+            "inventoryId": "state-offline",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "expectedObservation": "offline",
+            "sequence": 44,
+            "timestamp": "2026-09-03T00:00:44.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-state-offline"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "boundary-compact-medium-below",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "expectedObservation": "599",
+            "sequence": 45,
+            "timestamp": "2026-09-03T00:00:45.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-boundary-compact-medium-below"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "boundary-compact-medium-above",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "expectedObservation": "600",
+            "sequence": 46,
+            "timestamp": "2026-09-03T00:00:46.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-boundary-compact-medium-above"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "boundary-medium-expanded-below",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "expectedObservation": "839",
+            "sequence": 47,
+            "timestamp": "2026-09-03T00:00:47.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-boundary-medium-expanded-below"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "boundary-medium-expanded-above",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "expectedObservation": "840",
+            "sequence": 48,
+            "timestamp": "2026-09-03T00:00:48.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-boundary-medium-expanded-above"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "data-long",
+            "criterionId": "C-LONG-CONTENT-FIT",
+            "componentId": "surface",
+            "expectedObservation": "long-content",
+            "sequence": 49,
+            "timestamp": "2026-09-03T00:00:49.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-data-long"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "theme-dark",
+            "criterionId": "C-THEME-HIERARCHY",
+            "componentId": "surface",
+            "expectedObservation": "dark",
+            "sequence": 50,
+            "timestamp": "2026-09-03T00:00:50.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-theme-dark"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "input-keyboard",
+            "criterionId": "A-KEYBOARD-ACTION",
+            "componentId": "surface",
+            "expectedObservation": "keyboard",
+            "sequence": 51,
+            "timestamp": "2026-09-03T00:00:51.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-input-keyboard"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "locale-ar",
+            "criterionId": "C-LOCALIZED-CONTENT-FIT",
+            "componentId": "surface",
+            "expectedObservation": "ar",
+            "sequence": 52,
+            "timestamp": "2026-09-03T00:00:52.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-locale-ar"
+            ],
+            "blockerReason": ""
+          },
+          {
+            "inventoryId": "direction-rtl",
+            "criterionId": "A-RTL-READING",
+            "componentId": "surface",
+            "expectedObservation": "rtl",
+            "sequence": 53,
+            "timestamp": "2026-09-03T00:00:53.000Z",
+            "result": "Pass",
+            "evidenceIds": [
+              "coverage-direction-rtl"
+            ],
+            "blockerReason": ""
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-runtime/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    },
+    "matched-before-after": {
+      "candidateResponse": {
+        "caseId": "matched-before-after",
+        "mode": "Refine",
+        "evidenceArtifacts": [
+          {
+            "id": "matched-before-after-pair-1-before",
+            "category": "rendered-capture",
+            "observation": "Pre-edit matched capture",
+            "criterionId": "C-MATCHED-CAPTURE",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "before",
+            "sequence": 10,
+            "timestamp": "2026-09-03T00:00:10.000Z"
+          },
+          {
+            "id": "matched-before-after-pair-1-after",
+            "category": "rendered-capture",
+            "observation": "Post-edit matched capture",
+            "criterionId": "C-MATCHED-CAPTURE",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "after",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z"
+          }
+        ],
+        "capturePairs": [
+          {
+            "pairId": "pair-1",
+            "baselineSequence": 10,
+            "baselineTimestamp": "2026-09-03T00:00:10.000Z",
+            "firstEditSequence": 20,
+            "firstEditTimestamp": "2026-09-03T00:00:20.000Z",
+            "beforeArtifact": "matched-before-after-pair-1-before",
+            "afterArtifact": "matched-before-after-pair-1-after",
+            "before": {
+              "route": "/dashboard",
+              "taskPoint": "loaded",
+              "dataFixtureId": "account-a",
+              "state": "default",
+              "viewportWidth": 1024,
+              "viewportHeight": 768,
+              "deviceScaleFactor": 1,
+              "colorScheme": "light",
+              "motionPreference": "no-preference",
+              "locale": "en-US",
+              "direction": "ltr"
+            },
+            "after": {
+              "route": "/dashboard",
+              "taskPoint": "loaded",
+              "dataFixtureId": "account-a",
+              "state": "default",
+              "viewportWidth": 1024,
+              "viewportHeight": 768,
+              "deviceScaleFactor": 1,
+              "colorScheme": "light",
+              "motionPreference": "no-preference",
+              "locale": "en-US",
+              "direction": "ltr"
+            },
+            "visibleDifferences": [
+              {
+                "id": "diff-1",
+                "classification": "intended",
+                "before": "two cards",
+                "after": "one pane",
+                "rationale": "declared scope"
+              }
+            ]
+          }
+        ]
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-theming/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 4,
+            "timestamp": "2026-09-03T00:00:04.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 20,
+            "timestamp": "2026-09-03T00:00:20.000Z",
+            "operation": "write",
+            "path": "src/app.css",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    "mcp-pass-is-scoped": {
+      "candidateResponse": {
+        "caseId": "mcp-pass-is-scoped",
+        "mode": "Audit",
+        "evidenceArtifacts": [],
+        "mcpStatus": "static_contract_pass",
+        "checksPerformed": [
+          "retired class scan",
+          "host syntax scan"
+        ],
+        "uncheckedAreas": [
+          "visual hierarchy",
+          "interaction",
+          "responsive",
+          "focus",
+          "announcement",
+          "assistive technology"
+        ],
+        "blockedChecks": [
+          "rendered review"
+        ],
+        "fullReviewStatus": "Blocked"
+      },
+      "executionEvidence": {
+        "source": "adapter",
+        "toolTrace": [
+          {
+            "sequence": 1,
+            "timestamp": "2026-09-03T00:00:01.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-design/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 2,
+            "timestamp": "2026-09-03T00:00:02.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-usage/SKILL.md",
+            "status": "success"
+          },
+          {
+            "sequence": 3,
+            "timestamp": "2026-09-03T00:00:03.000Z",
+            "operation": "read",
+            "path": "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+            "status": "success"
+          }
+        ],
+        "filesystem": {
+          "source": "adapter",
+          "independentlyComputed": true,
+          "algorithm": "sha256",
+          "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      }
+    }
+  }
+}

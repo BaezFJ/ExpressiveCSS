@@ -3,7 +3,15 @@
 ### Chips
 Small blocks for contacts, tags, and filters.
 
-[Component documentation](https://www.expressivecss.com/chips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/chips.astro)
+Component ID: `chips`
+
+[Component documentation](https://www.expressivecss.com/chips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/chips.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -41,15 +49,18 @@ A chip is a `.chip`, and **the element says which kind it is** — the four Mate
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>.
-- A display chip is not a control and must not be in the tab order. Put the action on a nested <button>.
-- The chip delete affordance is a control: use <button type="button" class="close">, not <i> or <span>.
-- A <button> inside a form defaults to type=submit. Chip delete buttons must set type="button".
-- The delete button contains only an icon, so it needs an accessible name naming the chip it removes.
-- <i> means idiomatic text, not icon. Use <span class="material-symbols" aria-hidden="true">.
-- A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
-- A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
+- `chip-root-element`: A chip is <span> (display), <button> (assist/suggestion/input), or <label> (filter). Never <div>.
+- `chip-not-focusable-span`: A display chip is not a control and must not be in the tab order. Put the action on a nested <button>.
+- `chip-close-is-button`: The chip delete affordance is a control: use <button type="button" class="close">, not <i> or <span>.
+- `chip-close-type-button`: A <button> inside a form defaults to type=submit. Chip delete buttons must set type="button".
+- `chip-close-has-label`: The delete button contains only an icon, so it needs an accessible name naming the chip it removes.
+- `chip-no-i-element`: <i> means idiomatic text, not icon. Use <span class="material-symbols" aria-hidden="true">.
+- `chip-icon-hidden`: A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
+- `filter-chip-label-for`: A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

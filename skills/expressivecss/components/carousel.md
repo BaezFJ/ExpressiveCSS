@@ -3,7 +3,15 @@
 ### Carousel
 Material 3 adaptive carousels for visual collections.
 
-[Component documentation](https://www.expressivecss.com/carousel.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/carousel.astro)
+Component ID: `carousel`
+
+[Component documentation](https://www.expressivecss.com/carousel.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/carousel.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -33,10 +41,13 @@ The default is multi-browse: one large, one medium, and one small item adapt as 
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
-- A carousel takes no composite role; it is a group of slides with independent controls.
-- Carousel indicators are independent controls, not tabs.
+- `hidden-subtree-holds-nothing-focusable`: Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
+- `carousel-not-a-composite-widget`: A carousel takes no composite role; it is a group of slides with independent controls.
+- `carousel-indicators-are-not-tabs`: Carousel indicators are independent controls, not tabs.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

@@ -5,6 +5,14 @@ description: Use ExpressiveCSS markup, layout, and utilities.
 
 ## ExpressiveCSS usage rules
 
+## When to use
+
+Use this guide for classes, markup, layout, utilities, or component selection and implementation.
+
+## Do not use when
+
+Do not load this guide when the task concerns only setup, visual tokens, or lifecycle code. Use the installation, theming, or runtime guide that owns that work. This guide does not replace a selected component's target-version contract.
+
 1. Identify the installed ExpressiveCSS version before writing classes or JavaScript.
 2. Read the applicable component guide in `../components/`, then the linked target-version documentation.
 3. Start with the documented native element and exact child structure. Required classes, IDs, `for`, `data-target`, and ARIA relationships are API.

@@ -1,0 +1,86 @@
+{
+  "cases": [
+    {
+      "name": "framework source",
+      "files": {
+        "package.json": "{\"name\":\"@expressivecss/expressive\",\"version\":\"0.8.0\"}",
+        "llm.md": "# ExpressiveCSS",
+        "semantics.json": "{\"rows\":{}}",
+        "docs/src/data/nav.ts": "export const NAV = [];"
+      },
+      "contractVersion": "0.8.0",
+      "expected": { "resolvedVersion": "0.8.0", "resolutionSource": "framework-source", "status": "match", "documentationMode": "current" }
+    },
+    {
+      "name": "installed package is selected but conflicting lock evidence blocks the contract",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}}",
+        "node_modules/@expressivecss/expressive/package.json": "{\"name\":\"@expressivecss/expressive\",\"version\":\"0.8.1\"}",
+        "package-lock.json": "{\"lockfileVersion\":3,\"packages\":{\"\":{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}},\"node_modules/@expressivecss/expressive\":{\"version\":\"0.8.0\"}}}"
+      },
+      "contractVersion": "0.8.1",
+      "expected": { "declaredRange": "^0.8.0", "resolvedVersion": "0.8.1", "resolutionSource": "installed-package", "status": "unresolved", "documentationMode": "installed-package", "currentDocsSafe": false, "warningIncludes": "differs from package-lock.json" }
+    },
+    {
+      "name": "npm lockfile",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}}",
+        "package-lock.json": "{\"lockfileVersion\":3,\"packages\":{\"\":{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}},\"node_modules/@expressivecss/expressive\":{\"version\":\"0.8.2\"}}}"
+      },
+      "contractVersion": "0.8.2",
+      "expected": { "packageManager": "npm", "resolvedVersion": "0.8.2", "resolutionSource": "lockfile", "status": "match", "candidates": [{ "source": "lockfile", "version": "0.8.2", "path": "package-lock.json" }] }
+    },
+    {
+      "name": "npm v1 lockfile version outside the current manifest range",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}}",
+        "package-lock.json": "{\"lockfileVersion\":1,\"dependencies\":{\"@expressivecss/expressive\":{\"version\":\"0.7.9\"}}}"
+      },
+      "contractVersion": "0.7.9",
+      "expected": { "packageManager": "npm", "resolvedVersion": null, "resolutionSource": "manifest-only", "status": "unresolved", "diagnosticCode": "lockfile-version-outside-manifest-range" }
+    },
+    {
+      "name": "pnpm lockfile",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}}",
+        "pnpm-lock.yaml": "lockfileVersion: '9.0'\nimporters:\n  .:\n    dependencies:\n      '@expressivecss/expressive':\n        specifier: ^0.8.0\n        version: 0.8.3\n"
+      },
+      "contractVersion": "0.8.3",
+      "expected": { "packageManager": "pnpm", "resolvedVersion": "0.8.3", "resolutionSource": "lockfile", "status": "match" }
+    },
+    {
+      "name": "yarn lockfile",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}}",
+        "yarn.lock": "# yarn lockfile v1\n\n\"@expressivecss/expressive@^0.8.0\":\n  version \"0.8.4\"\n  resolved \"https://example.invalid/package.tgz\"\n"
+      },
+      "contractVersion": "0.8.4",
+      "expected": { "packageManager": "yarn", "resolvedVersion": "0.8.4", "resolutionSource": "lockfile", "status": "match" }
+    },
+    {
+      "name": "manifest range is not a resolution",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"^0.8.0\"}}"
+      },
+      "contractVersion": "0.8.0",
+      "expected": { "declaredRange": "^0.8.0", "resolvedVersion": null, "resolutionSource": "manifest-only", "status": "unresolved", "documentationMode": "unavailable" }
+    },
+    {
+      "name": "contract mismatch",
+      "files": {
+        "package.json": "{\"dependencies\":{\"@expressivecss/expressive\":\"0.7.0\"}}",
+        "node_modules/@expressivecss/expressive/package.json": "{\"name\":\"@expressivecss/expressive\",\"version\":\"0.7.0\"}"
+      },
+      "contractVersion": "0.8.0",
+      "expected": { "resolvedVersion": "0.7.0", "matchingTag": null, "status": "mismatch", "documentationMode": "installed-package" }
+    },
+    {
+      "name": "no dependency",
+      "files": {
+        "package.json": "{\"name\":\"consumer\"}"
+      },
+      "contractVersion": "0.8.0",
+      "expected": { "declaredRange": null, "resolvedVersion": null, "resolutionSource": "none", "status": "unresolved" }
+    }
+  ]
+}

@@ -5,6 +5,14 @@ description: Theme ExpressiveCSS with Material 3 color roles.
 
 ## ExpressiveCSS themes and colors
 
+## When to use
+
+Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, or other visual tokens.
+
+## Do not use when
+
+Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
+
 Read the target version's [Themes](https://www.expressivecss.com/themes.html.md) and [Color](https://www.expressivecss.com/color.html.md) documentation before changing tokens.
 
 ### Select a scheme

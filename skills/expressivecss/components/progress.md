@@ -3,7 +3,15 @@
 ### Progress indicators
 Activity and progress. The HTML is the indicator.
 
-[Component documentation](https://www.expressivecss.com/preloader.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/preloader.astro)
+Component ID: `progress`
+
+[Component documentation](https://www.expressivecss.com/preloader.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/preloader.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -27,9 +35,12 @@ For an indeterminate wait under about five seconds, prefer the Loading indicator
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
-- role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+- `div-progress-reports-progress`: <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
+- `determinate-progress-reports-its-value`: role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

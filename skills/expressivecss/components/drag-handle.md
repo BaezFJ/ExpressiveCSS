@@ -3,7 +3,15 @@
 ### Drag handle
 The bar that says a thing can be dragged — and nothing that does the dragging.
 
-[Component documentation](https://www.expressivecss.com/drag-handle.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/drag-handle.astro)
+Component ID: `drag-handle`
+
+[Component documentation](https://www.expressivecss.com/drag-handle.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/drag-handle.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -23,10 +31,13 @@ Which element you write *is* the semantic. A `<span class="drag-handle" aria-hid
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
-- aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
-- The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
+- `drag-handle-is-hidden-or-a-control`: A drag handle has no text and reports nothing, so on any element but a <button> it is decoration and needs aria-hidden="true". Left exposed it arrives as an unlabelled blank in the reading order. Make it a <button> with a name if it is meant to be operated.
+- `drag-handle-button-is-not-hidden`: aria-hidden on a <button> hides it from assistive technology without taking it out of the tab order, so keyboard focus lands on something that is not there. Decoration is a <span>; a control stays exposed.
+- `drag-handle-button-is-named`: The handle is a bar drawn in CSS - there is no text inside it to be named by. A handle worth making a control is worth an aria-label saying what it moves.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

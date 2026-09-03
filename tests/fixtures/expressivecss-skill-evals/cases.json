@@ -1,0 +1,1280 @@
+{
+  "schemaVersion": 2,
+  "stableInvariantIds": [
+    "setup-only-routing/contract",
+    "css-only-markup-routing/contract",
+    "token-only-theming-routing/contract",
+    "critique-no-edit/contract",
+    "css-only-audit/contract",
+    "interactive-audit/contract",
+    "combined-review-order/contract",
+    "refine-preserves-product/contract",
+    "redesign-preserves-requirements/contract",
+    "feedback-component-choice/contract",
+    "feedback-banner-choice/contract",
+    "feedback-dialog-choice/contract",
+    "switch-versus-checkbox/contract",
+    "deferred-checkbox/contract",
+    "adaptive-navigation/contract",
+    "brand-through-tokens/contract",
+    "runtime-owned-aria/contract",
+    "manual-init-teardown/contract",
+    "older-version-contract/contract",
+    "reachable-state-ledger/contract",
+    "matched-before-after/contract",
+    "mcp-pass-is-scoped/contract"
+  ],
+  "cases": [
+    {
+      "id": "setup-only-routing",
+      "request": "Install ExpressiveCSS in this empty project.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-install"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "setup-only-routing/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "setup-only-routing/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "css-only-markup-routing",
+      "request": "Add a CSS-only common button with static markup.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:buttons"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "css-only-markup-routing/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "css-only-markup-routing/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed",
+        "btn"
+      ],
+      "forbiddenAuthoredRuntimeAria": [
+        "aria-expanded"
+      ],
+      "forbiddenUnsupportedClaims": [
+        "full visual audit passed"
+      ]
+    },
+    {
+      "id": "token-only-theming-routing",
+      "request": "Change only the existing theme source seed.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-theming"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "token-only-theming-routing/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "token-only-theming-routing/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "critique-no-edit",
+      "request": "Critique visual hierarchy without changing files.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Critique",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-theming",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [
+        "rendered-capture"
+      ],
+      "requiredEvidenceByCriterion": {
+        "C-TASK-PRIMARY": [
+          "rendered-capture"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "critique-no-edit/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "critique-no-edit/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "css-only-audit",
+      "request": "Audit CSS-only checkbox markup. Do not edit.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Audit",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:checkboxes"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [
+        "source",
+        "accessibility-tree"
+      ],
+      "requiredEvidenceByCriterion": {
+        "A-HOST-ELEMENT": [
+          "source"
+        ],
+        "A-LABEL": [
+          "accessibility-tree"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "css-only-audit/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "css-only-audit/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "interactive-audit",
+      "request": "Audit a JavaScript-backed navigation drawer. Do not edit.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Audit",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-runtime",
+        "expressivecss-accessibility",
+        "component:navigation-drawer"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [
+        "source",
+        "runtime-inspection",
+        "accessibility-tree",
+        "test-output"
+      ],
+      "requiredEvidenceByCriterion": {
+        "A-HOST-ELEMENT": [
+          "source"
+        ],
+        "A-RUNTIME-ARIA-UPDATE": [
+          "runtime-inspection"
+        ],
+        "A-LABEL": [
+          "accessibility-tree"
+        ],
+        "A-KEYBOARD-ACTION": [
+          "test-output"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "interactive-audit/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "interactive-audit/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "combined-review-order",
+      "request": "Run Critique followed by Audit without editing.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Critique+Audit",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-theming",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [
+        "rendered-capture",
+        "source"
+      ],
+      "requiredEvidenceByCriterion": {
+        "C-TASK-PRIMARY": [
+          "rendered-capture"
+        ],
+        "A-HOST-ELEMENT": [
+          "source"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "combined-review-order/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "combined-review-order/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "refine-preserves-product",
+      "request": "Refine the dashboard without changing identity, content, information architecture, routes, or behavior.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Refine",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-theming",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "refine-preserves-product/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "refine-preserves-product/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "captureDimensions": [
+        "route",
+        "taskPoint",
+        "dataFixtureId",
+        "state",
+        "viewportWidth",
+        "viewportHeight",
+        "deviceScaleFactor",
+        "colorScheme",
+        "motionPreference",
+        "locale",
+        "direction"
+      ],
+      "requiredDecisionFields": [
+        "protectedBefore",
+        "protectedAfter",
+        "capturePairs"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "redesign-preserves-requirements",
+      "request": "Redesign the flow while preserving every declared requirement and accessibility assertion.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Redesign",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-theming",
+        "expressivecss-runtime",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "redesign-preserves-requirements/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "redesign-preserves-requirements/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "captureDimensions": [
+        "route",
+        "taskPoint",
+        "dataFixtureId",
+        "state",
+        "viewportWidth",
+        "viewportHeight",
+        "deviceScaleFactor",
+        "colorScheme",
+        "motionPreference",
+        "locale",
+        "direction"
+      ],
+      "requiredDecisionFields": [
+        "structuralChange",
+        "requirements",
+        "accessibilityAssertions",
+        "capturePairs"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "feedback-component-choice",
+      "request": "Confirm completed ignorable status without interrupting the next task.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-runtime",
+        "expressivecss-accessibility",
+        "component:snackbar",
+        "component:banners",
+        "component:dialogs"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "feedback-component-choice/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "feedback-component-choice/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "expectedComponent": "snackbar",
+      "rejectedComponents": [
+        "banners",
+        "dialogs"
+      ],
+      "requiredDecisionFields": [
+        "selectedComponent",
+        "rejectionReasons"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "feedback-banner-choice",
+      "request": "Keep a nonblocking action visible until the user handles it.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:snackbar",
+        "component:banners",
+        "component:dialogs"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "feedback-banner-choice/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "feedback-banner-choice/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "expectedComponent": "banners",
+      "rejectedComponents": [
+        "snackbar",
+        "dialogs"
+      ],
+      "requiredDecisionFields": [
+        "selectedComponent",
+        "rejectionReasons"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "feedback-dialog-choice",
+      "request": "Block progress until the user chooses whether to discard edits.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:snackbar",
+        "component:banners",
+        "component:dialogs"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "feedback-dialog-choice/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "feedback-dialog-choice/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "expectedComponent": "dialogs",
+      "rejectedComponents": [
+        "snackbar",
+        "banners"
+      ],
+      "requiredDecisionFields": [
+        "selectedComponent",
+        "rejectionReasons"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "switch-versus-checkbox",
+      "request": "Choose a control for a setting that commits immediately.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:switches",
+        "component:checkboxes"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "switch-versus-checkbox/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "switch-versus-checkbox/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "selectedComponent",
+        "markup",
+        "addsJavaScript",
+        "commitBehavior"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "deferred-checkbox",
+      "request": "Choose a control for a setting committed by a later Save action.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:switches",
+        "component:checkboxes"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "deferred-checkbox/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "deferred-checkbox/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "selectedComponent",
+        "markup",
+        "addsJavaScript",
+        "commitBehavior"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "adaptive-navigation",
+      "request": "Implement peer navigation at Compact and Expanded widths without duplicates.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-accessibility",
+        "component:navigation-bar",
+        "component:navigation-rail"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [
+        "rendered-capture",
+        "accessibility-tree"
+      ],
+      "requiredEvidenceByCriterion": {
+        "C-TASK-PRIMARY": [
+          "rendered-capture"
+        ],
+        "A-LABEL": [
+          "accessibility-tree"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "adaptive-navigation/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "adaptive-navigation/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "navigationByWidth",
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "brand-through-tokens",
+      "request": "Apply Acme branding through the supported contract.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-theming",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "brand-through-tokens/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "brand-through-tokens/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "rawColorUses",
+        "componentColorUses",
+        "hostStructureBefore",
+        "hostStructureAfter",
+        "interactionBehaviorBefore",
+        "interactionBehaviorAfter"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "runtime-owned-aria",
+      "request": "Implement a runtime-owned expanding state and prove its lifecycle.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-usage",
+        "expressivecss-runtime",
+        "expressivecss-accessibility",
+        "component:navigation-drawer"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [
+        "source",
+        "runtime-inspection"
+      ],
+      "requiredEvidenceByCriterion": {
+        "A-HOST-ELEMENT": [
+          "source"
+        ],
+        "A-RUNTIME-ARIA-UPDATE": [
+          "runtime-inspection"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "runtime-owned-aria/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "runtime-owned-aria/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "runtimeOwnedFields": [
+        "aria-expanded",
+        "aria-controls"
+      ],
+      "staticRequiredFields": [
+        "aria-label"
+      ],
+      "requiredDecisionFields": [
+        "sourceMarkup",
+        "initializedDom",
+        "interactionUpdates",
+        "teardown",
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [
+        "aria-expanded",
+        "aria-controls"
+      ],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "manual-init-teardown",
+      "request": "Manually initialize and tear down one tooltip.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Implement",
+      "mustLoad": [
+        "expressivecss-usage",
+        "expressivecss-runtime",
+        "expressivecss-accessibility",
+        "component:tooltips"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [
+        "runtime-inspection",
+        "test-output"
+      ],
+      "requiredEvidenceByCriterion": {
+        "A-INIT-OWNER": [
+          "runtime-inspection"
+        ],
+        "A-CLEAN-LISTENER": [
+          "test-output"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "manual-init-teardown/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "manual-init-teardown/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "registryElementId",
+        "markup",
+        "initialization",
+        "instanceRetainedOrRecovered",
+        "lifecycle",
+        "postTeardown",
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "older-version-contract",
+      "request": "Audit a project resolved to 0.7.0 against a bundled 0.8.0 contract.",
+      "projectFixture": "consumer-older-version",
+      "versionState": "mismatch: installed 0.7.0, bundled contract 0.8.0",
+      "expectedOperatingMode": "Audit",
+      "mustLoad": [
+        "expressivecss-install",
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [
+        "version-resolution",
+        "source"
+      ],
+      "requiredEvidenceByCriterion": {
+        "A-TARGET-VERSION": [
+          "version-resolution"
+        ],
+        "A-HOST-ELEMENT": [
+          "source"
+        ]
+      },
+      "expectedCriticalInvariantIds": [
+        "older-version-contract/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "older-version-contract/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "resolvedVersion",
+        "contractVersion",
+        "skillVersion",
+        "contractStatus",
+        "documentationMode",
+        "decoyApiRejected",
+        "unavailableDocsBehavior",
+        "reviewRows"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "reachable-state-ledger",
+      "request": "Audit the fixture-owned states, responsive boundaries, and dimensions.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Audit",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-runtime",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "reachable-state-ledger/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "reachable-state-ledger/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "coverageInventory": [
+        {
+          "id": "state-loading",
+          "kind": "state",
+          "requiredValue": "loading",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "state-empty",
+          "kind": "state",
+          "requiredValue": "empty",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "state-error",
+          "kind": "state",
+          "requiredValue": "error",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "state-permission",
+          "kind": "state",
+          "requiredValue": "permission",
+          "evidenceAvailable": false
+        },
+        {
+          "id": "state-offline",
+          "kind": "state",
+          "requiredValue": "offline",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "boundary-compact-medium-below",
+          "kind": "boundary",
+          "requiredValue": 599,
+          "side": "below",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "boundary-compact-medium-above",
+          "kind": "boundary",
+          "requiredValue": 600,
+          "side": "above",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "boundary-medium-expanded-below",
+          "kind": "boundary",
+          "requiredValue": 839,
+          "side": "below",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "boundary-medium-expanded-above",
+          "kind": "boundary",
+          "requiredValue": 840,
+          "side": "above",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "data-long",
+          "kind": "data",
+          "requiredValue": "long-content",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "theme-dark",
+          "kind": "theme",
+          "requiredValue": "dark",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "input-keyboard",
+          "kind": "input-path",
+          "requiredValue": "keyboard",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "locale-ar",
+          "kind": "locale",
+          "requiredValue": "ar",
+          "evidenceAvailable": true
+        },
+        {
+          "id": "direction-rtl",
+          "kind": "direction",
+          "requiredValue": "rtl",
+          "evidenceAvailable": true
+        }
+      ],
+      "requiredDecisionFields": [
+        "coverageRecords"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "matched-before-after",
+      "request": "Refine the page with matched before and after captures.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Refine",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-theming",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": false,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "matched-before-after/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "matched-before-after/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "captureDimensions": [
+        "route",
+        "taskPoint",
+        "dataFixtureId",
+        "state",
+        "viewportWidth",
+        "viewportHeight",
+        "deviceScaleFactor",
+        "colorScheme",
+        "motionPreference",
+        "locale",
+        "direction"
+      ],
+      "requiredDecisionFields": [
+        "capturePairs"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": []
+    },
+    {
+      "id": "mcp-pass-is-scoped",
+      "request": "Use MCP static checks during a finish review.",
+      "projectFixture": "consumer-current",
+      "versionState": "match: installed and bundled contract 0.8.0",
+      "expectedOperatingMode": "Audit",
+      "mustLoad": [
+        "expressivecss-design",
+        "expressivecss-usage",
+        "expressivecss-accessibility"
+      ],
+      "mustNotLoad": [],
+      "noEdits": true,
+      "requiredEvidenceCategories": [],
+      "expectedCriticalInvariantIds": [
+        "mcp-pass-is-scoped/contract"
+      ],
+      "criticalInvariants": [
+        {
+          "id": "mcp-pass-is-scoped/contract",
+          "operator": "caseContract"
+        }
+      ],
+      "requiredDecisionFields": [
+        "mcpStatus",
+        "checksPerformed",
+        "uncheckedAreas",
+        "blockedChecks",
+        "fullReviewStatus"
+      ],
+      "requiredReportFields": [
+        "caseId",
+        "mode",
+        "evidenceArtifacts"
+      ],
+      "forbiddenEdits": [
+        "*"
+      ],
+      "forbiddenMarkup": [
+        "<script"
+      ],
+      "forbiddenClasses": [
+        "materialize-textarea",
+        "materialboxed"
+      ],
+      "forbiddenAuthoredRuntimeAria": [],
+      "forbiddenUnsupportedClaims": [
+        "full visual review passed",
+        "full accessibility review passed"
+      ]
+    }
+  ]
+}

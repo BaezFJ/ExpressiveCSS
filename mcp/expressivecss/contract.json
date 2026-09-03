@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/gen-expressivecss-skill.mjs",
+  "frameworkVersion": "0.8.0",
+  "skillVersion": "0.4.0",
+  "matchingTag": "v0.8.0",
+  "releaseTags": [
+    "v0.5.0",
+    "v0.6.0",
+    "v0.7.0",
+    "v0.7.0-rc.0",
+    "v0.8.0"
+  ],
+  "sources": [
+    "llm.md",
+    "semantics.json",
+    "docs/src/data/nav.ts",
+    "docs/src/data/component-decisions.json",
+    "package.json",
+    "CHANGELOG.md"
+  ],
+  "sourceHash": "8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b"
+}

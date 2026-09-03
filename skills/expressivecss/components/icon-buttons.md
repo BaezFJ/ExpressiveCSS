@@ -3,7 +3,15 @@
 ### Icon buttons
 A single icon as the whole control, in four styles and five sizes.
 
-[Component documentation](https://www.expressivecss.com/icon-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/icon-buttons.astro)
+Component ID: `icon-buttons`
+
+[Component documentation](https://www.expressivecss.com/icon-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/icon-buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -25,11 +33,14 @@ It is a component, not a modifier on the common button: M3 gives it its own toke
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced.
-- A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link.
-- The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden="true".
-- The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label.
+- `icon-button-is-a-control`: An icon button is a control: <button>, or <a href> when it navigates. A <div>, or an anchor with no href, is neither focusable nor announced.
+- `icon-button-link-is-not-fake-disabled`: A link cannot be disabled by a class. `pointer-events: none` stops the pointer and nothing else, so this stays in the tab order and still navigates on Enter - it looks inert and is not. Drop the href, or the link.
+- `icon-button-icon-hidden`: The ligature is real text and is read out verbatim. The icon in an icon button is decoration - the control carries the name - so it is aria-hidden="true".
+- `icon-button-is-named`: The icon is hidden from assistive technology, so an icon button has nothing left to be named by. Give it an aria-label.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

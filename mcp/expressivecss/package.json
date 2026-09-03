@@ -14,20 +14,20 @@
   },
   "main": "server.js",
   "engines": {
-    "node": ">=20"
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   },
   "scripts": {
-    "sync:guides": "node scripts/sync-guides.mjs",
-    "check:guides": "node scripts/sync-guides.mjs --check",
-    "test": "npm run check:guides && node smoke.mjs",
-    "prepack": "npm run sync:guides && npm test"
+    "test": "node smoke.mjs",
+    "prepack": "npm test"
   },
   "files": [
     "server.js",
     "component-guides.json",
+    "component-decisions.json",
+    "contract.json",
     "semantics-data.json",
     "smoke.mjs",
-    "scripts/sync-guides.mjs",
+    "scripts/resolve-version.mjs",
     "README.md",
     "mcp.json",
     ".claude-plugin/plugin.json",
@@ -38,5 +38,8 @@
     "@modelcontextprotocol/sdk": "^1.30.0",
     "jsdom": "^27.4.0",
     "zod": "^3.25.67"
+  },
+  "overrides": {
+    "qs": "6.16.0"
   }
 }

@@ -3,7 +3,15 @@
 ### Split button
 A lead action and a trailing half that opens a menu of related ones, in five sizes.
 
-[Component documentation](https://www.expressivecss.com/split-button.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/split-button.astro)
+Component ID: `split-button`
+
+[Component documentation](https://www.expressivecss.com/split-button.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/split-button.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -28,18 +36,21 @@ The trailing half is an ordinary Menu trigger, so everything Menu does it does h
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role.
-- A split button is exactly two controls and the menu one of them opens: a <button>, or an <a class="button" href> when it navigates. A wrapper element is refused too - the seam, the insets and the larger trailing icon are all written against direct children, so a nested <div> loses every one of them.
-- An icon button is its own component: its height, insets, colours, icon sizing and transitions are all set on the element itself, so it reaches none of the split button's geometry and fights the seam it is handed. The trailing half is <button class="button menu-trigger">, which the container sizes like the leading one.
-- The menu trigger is the *trailing* half, and only the <menu> may follow it. Order is the whole of the geometry here: the halves are told apart by role, not by position, so a trigger written first still takes the trailing side's round outer corners while flex puts it on the leading side - a split button with its seam and its round ends swapped.
-- A split button is exactly two controls: one lead action and one menu trigger. A third gets the leading half's rules as well, so two buttons draw round start corners and a seam against each other. Several peer actions are a button group; several related ones belong in the menu.
-- A split button is a lead action *and* a menu of related ones; without the lead it is a menu trigger wearing half a pill. The trailing half's shape is written for a seam, so the only control ends up squared off on the edge it should be joined along, with nothing to join to. One control that opens a menu is a menu trigger - drop the container. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature.
-- The trailing half is the whole point: it opens a menu of actions related to the leading one. Without `.menu-trigger` on it there is no menu, and the pair is a lone button with a chevron glued to it - write two buttons, or one. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature.
-- Menu finds its surface through `data-target` on the trigger, falling back to an `href` fragment. A `.menu-trigger` with neither initializes against no element: it gets aria-haspopup and aria-expanded it will never change, which is a promise of a menu that does not exist.
-- The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
-- Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
-- <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+- `split-button-is-not-an-authored-composite-widget`: A split button takes no composite role; its two halves are reached with Tab, not arrow keys. The <menu> the trailing half opens is the composite widget here, and it carries its own role.
+- `split-button-halves-are-controls`: A split button is exactly two controls and the menu one of them opens: a <button>, or an <a class="button" href> when it navigates. A wrapper element is refused too - the seam, the insets and the larger trailing icon are all written against direct children, so a nested <div> loses every one of them.
+- `split-button-half-is-not-an-icon-button`: An icon button is its own component: its height, insets, colours, icon sizing and transitions are all set on the element itself, so it reaches none of the split button's geometry and fights the seam it is handed. The trailing half is <button class="button menu-trigger">, which the container sizes like the leading one.
+- `split-button-trigger-is-the-trailing-half`: The menu trigger is the *trailing* half, and only the <menu> may follow it. Order is the whole of the geometry here: the halves are told apart by role, not by position, so a trigger written first still takes the trailing side's round outer corners while flex puts it on the leading side - a split button with its seam and its round ends swapped.
+- `split-button-is-two-controls`: A split button is exactly two controls: one lead action and one menu trigger. A third gets the leading half's rules as well, so two buttons draw round start corners and a seam against each other. Several peer actions are a button group; several related ones belong in the menu.
+- `split-button-has-a-leading-action`: A split button is a lead action *and* a menu of related ones; without the lead it is a menu trigger wearing half a pill. The trailing half's shape is written for a seam, so the only control ends up squared off on the edge it should be joined along, with nothing to join to. One control that opens a menu is a menu trigger - drop the container. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature.
+- `split-button-has-a-trailing-menu-trigger`: The trailing half is the whole point: it opens a menu of actions related to the leading one. Without `.menu-trigger` on it there is no menu, and the pair is a lone button with a chevron glued to it - write two buttons, or one. Not fragmentSafe: what it detects is an omission, and a fragment omits by nature.
+- `split-button-trigger-names-its-menu`: Menu finds its surface through `data-target` on the trigger, falling back to an `href` fragment. A `.menu-trigger` with neither initializes against no element: it gets aria-haspopup and aria-expanded it will never change, which is a promise of a menu that does not exist.
+- `split-button-trailing-icon-hidden`: The ligature is real text and is read out verbatim, so an unhidden chevron names the trailing half "arrow_drop_down". It is decoration - the control carries the name - so it is aria-hidden="true", and `icon-only-control-is-named` then requires the aria-label.
+- `split-button-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. Menu's constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten - and the expanded shape is drawn from that attribute, so an authored "true" draws an open split button over a closed menu.
+- `menu-children-are-list-items`: <menu> is a list: its content model permits only <li>. A bare <hr> between entries is invalid - put the separator inside an <li>, or use role=separator there.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

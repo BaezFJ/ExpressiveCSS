@@ -3,7 +3,15 @@
 ### Segmented buttons
 Two to five connected options, one choice or several, with no script behind them.
 
-[Component documentation](https://www.expressivecss.com/segmented-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/segmented-buttons.astro)
+Component ID: `segmented-buttons`
+
+[Component documentation](https://www.expressivecss.com/segmented-buttons.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/segmented-buttons.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -29,15 +37,18 @@ The control is the label's sibling rather than its child, the same way a filter 
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model.
-- The group takes no authored composite role. `radiogroup` is what the fieldset and its radios already are, and every other composite role is a promise this component does not make.
-- A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value.
-- The control is the label's sibling, not its child, so only `for` ties the two together: <input id="x"> then <label class="segment" for="x">.
-- Radios are a group only because they share a `name`, and that group is where the arrow keys come from. Without it each segment is its own one-option group and the keyboard contract this component leans on does not exist.
-- A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it.
-- Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates.
-- A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration.
+- `segmented-button-is-a-fieldset`: A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model.
+- `segmented-button-is-not-an-authored-composite-widget`: The group takes no authored composite role. `radiogroup` is what the fieldset and its radios already are, and every other composite role is a promise this component does not make.
+- `segment-is-a-label`: A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value.
+- `segment-names-its-input`: The control is the label's sibling, not its child, so only `for` ties the two together: <input id="x"> then <label class="segment" for="x">.
+- `segment-radios-share-a-name`: Radios are a group only because they share a `name`, and that group is where the arrow keys come from. Without it each segment is its own one-option group and the keyboard contract this component leans on does not exist.
+- `segment-does-not-wrap-its-input`: A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it.
+- `segment-selection-is-not-authored`: Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates.
+- `segment-icon-hidden`: A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

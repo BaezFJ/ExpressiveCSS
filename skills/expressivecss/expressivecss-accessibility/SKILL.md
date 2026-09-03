@@ -5,6 +5,14 @@ description: Apply ExpressiveCSS semantics and accessibility.
 
 ## ExpressiveCSS accessibility rules
 
+## When to use
+
+Use this guide for an interface implementation or Audit when semantics, keyboard, focus, announcements, contrast, zoom, reflow, touch, RTL, or motion is in scope.
+
+## Do not use when
+
+Do not load this guide for a visual-only Critique, token-only theming, or setup-only work. Do not use it as a substitute for the selected component contract, Material 3 design guidance, or runtime lifecycle guidance.
+
 Read the selected component guide, then the target version's semantics contract. In this repository, `semantics.json` is normative and `SEMANTICS.md` is generated from it.
 
 1. Start with the documented native element. Buttons run commands; links with real `href` values navigate; `<nav>` contains destinations; `<dialog>`, `<input>`, `<select>`, `<progress>`, `<fieldset>`, and `<label>` keep their native contracts.

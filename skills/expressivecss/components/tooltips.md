@@ -3,7 +3,15 @@
 ### Tooltips
 Material Design 3 tooltips, from the HTML.
 
-[Component documentation](https://www.expressivecss.com/tooltips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tooltips.astro)
+Component ID: `tooltips`
+
+[Component documentation](https://www.expressivecss.com/tooltips.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tooltips.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -29,8 +37,11 @@ Tokens follow the [M3 tooltip spec](https://m3.material.io/components/tooltips/s
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it.
+- `css-tooltip-is-described-by`: A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

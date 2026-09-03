@@ -3,7 +3,15 @@
 ### Loading indicator
 A shape that morphs while it spins, for waits under five seconds.
 
-[Component documentation](https://www.expressivecss.com/loading-indicator.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/loading-indicator.astro)
+Component ID: `loading-indicator`
+
+[Component documentation](https://www.expressivecss.com/loading-indicator.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/loading-indicator.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -21,9 +29,12 @@ One element, CSS-only, no JavaScript plugin. The element is empty, so it reports
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- An empty <span class="loading-indicator"> is a shape drawn with CSS and reports nothing. It needs role="status" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it.
-- The indicator has no text of its own, so role="status" would announce an empty string. Name it - aria-label="Loading", or aria-labelledby pointing at the copy beside it.
+- `loading-indicator-reports-itself`: An empty <span class="loading-indicator"> is a shape drawn with CSS and reports nothing. It needs role="status" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it.
+- `loading-indicator-is-named`: The indicator has no text of its own, so role="status" would announce an empty string. Name it - aria-label="Loading", or aria-labelledby pointing at the copy beside it.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

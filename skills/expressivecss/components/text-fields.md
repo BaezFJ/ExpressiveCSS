@@ -3,7 +3,15 @@
 ### Text fields
 Material Design 3 text fields, from the HTML.
 
-[Component documentation](https://www.expressivecss.com/text-inputs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/text-inputs.astro)
+Component ID: `text-fields`
+
+[Component documentation](https://www.expressivecss.com/text-inputs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/text-inputs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -37,18 +45,21 @@ A `.field` is the container. The `<label>` after the control is the floating lab
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
-- <i> means idiomatic text, not icon. Use <span class="material-symbols">.
-- The ligature is read aloud. A field icon is decoration; the label names the control.
-- A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
-- A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
-- Without an id the label has nothing to point at.
-- Supporting and error text has to be referenceable to be announced with the control.
-- A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
-- A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.
-- The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded.
-- The count changes as the user types, so it has to be a live region or the remaining characters are never announced.
+- `field-container-class`: The field container is `.field`. `.input-field` matches nothing in the sheet - the only `.input-field` rule is `.chips.input-field`.
+- `field-icon-not-i`: <i> means idiomatic text, not icon. Use <span class="material-symbols">.
+- `field-icon-hidden`: The ligature is read aloud. A field icon is decoration; the label names the control.
+- `field-icon-side`: A field icon must name its side with .prefix or .suffix. The positional fallback counts elements of the same *type*, which only ever worked for <i>.
+- `field-label-for`: A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
+- `field-control-id`: Without an id the label has nothing to point at.
+- `field-supporting-text-id`: Supporting and error text has to be referenceable to be announced with the control.
+- `field-supporting-text-linked`: A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.
+- `file-input-not-nested`: A control inside a control is not valid HTML and gives two overlapping hit targets. Use a <label> styled as a button.
+- `file-path-readonly`: The path field only ever displays what the file input holds; leaving it writable offers an edit that is discarded.
+- `counter-is-announced`: The count changes as the user types, so it has to be a live region or the remaining characters are never announced.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

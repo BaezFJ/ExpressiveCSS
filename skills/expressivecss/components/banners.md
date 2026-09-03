@@ -3,7 +3,15 @@
 ### Banners
 A prominent message that stays put until the user deals with it.
 
-[Component documentation](https://www.expressivecss.com/banners.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/banners.astro)
+Component ID: `banners`
+
+[Component documentation](https://www.expressivecss.com/banners.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/banners.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -30,11 +38,14 @@ A `<div class="banner">` is the container and a `<p>` is the message. Everything
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- `role="banner"` is the page header landmark, not this component. A page has one of those and may have several banners; announcing each one as the site header buries the real header among them. A .banner is a <div>, or a <section> when it is worth naming.
-- A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4).
-- The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration.
-- A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt="" is the correct answer for a decorative image, and an empty value does not satisfy require-attr.
+- `banner-is-not-the-banner-landmark`: `role="banner"` is the page header landmark, not this component. A page has one of those and may have several banners; announcing each one as the site header buries the real header among them. A .banner is a <div>, or a <section> when it is worth naming.
+- `banner-actions-are-not-nav`: A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4).
+- `banner-icon-hidden`: The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration.
+- `banner-image-has-alt`: A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt="" is the correct answer for a decorative image, and an empty value does not satisfy require-attr.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

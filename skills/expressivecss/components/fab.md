@@ -3,7 +3,15 @@
 ### Floating action button
 A circular action that can open a menu of related shortcuts.
 
-[Component documentation](https://www.expressivecss.com/floating-action-button.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/floating-action-button.astro)
+Component ID: `fab`
+
+[Component documentation](https://www.expressivecss.com/floating-action-button.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/floating-action-button.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -31,11 +39,15 @@ Wrap a 56dp FAB (`circle extra`) and a list of 40dp ones (`circle extra small`) 
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
-- The FAB's actions are reached with Tab, not arrow keys, so the list takes no composite role.
-- Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
-- The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
+- `icon-only-control-is-named`: Every icon is hidden from assistive technology, so a control whose only content is one has no name left. Give it an aria-label.
+- `fab-not-a-composite-widget`: The FAB's actions are reached with Tab, not arrow keys, so the list takes no composite role.
+- `fab-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
+- `fab-menu-not-a-composite-widget`: The FAB menu takes no composite role; its actions are reached with Tab, not arrow keys.
+- `fab-menu-expanded-is-not-authored`: Expanded is dynamic state, so the framework owns it. The constructor stamps aria-expanded on the trigger and every open() and close() rewrites it; authoring it states a value that is about to be overwritten.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.

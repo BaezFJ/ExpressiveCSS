@@ -1,0 +1,1817 @@
+{
+  "schemaVersion": 1,
+  "frameworkVersion": "0.8.0",
+  "authority": "This catalogue owns component-selection metadata. Component guides own syntax and semantics.json owns authored semantics.",
+  "components": [
+    {
+      "slug": "app-bar",
+      "title": "App bar",
+      "aliases": [
+        "navbar",
+        "top app bar"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "navbar",
+        "heading": "Navbar",
+        "headingLevel": 2,
+        "semantics": [
+          "navbar"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 top app bars, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 top app bars, from the HTML."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "navigation-bar",
+        "tabs",
+        "breadcrumbs"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/app-bar.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "bottom-app-bar",
+      "title": "Bottom app bar",
+      "aliases": [
+        "bottom command bar"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "bottom_app_bar",
+        "heading": "Bottom app bar",
+        "headingLevel": 2,
+        "semantics": [
+          "bottom-app-bar"
+        ]
+      },
+      "jobs": [
+        "This screen's commands at the bottom edge, with an optional FAB — not its destinations."
+      ],
+      "useWhen": [
+        "This screen's commands at the bottom edge, with an optional FAB — not its destinations."
+      ],
+      "avoidWhen": [
+        "The items are destinations rather than commands, or a top toolbar fits the task."
+      ],
+      "alternatives": [
+        "navigation-bar",
+        "toolbars"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/bottom-app-bar.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "navigation-bar",
+      "title": "Navigation bar",
+      "aliases": [
+        "bottom navigation"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "navigation_bar",
+        "heading": "Navigation bar",
+        "headingLevel": 2,
+        "semantics": [
+          "navigation-bar"
+        ]
+      },
+      "jobs": [
+        "Switch between UI views on compact and medium screens."
+      ],
+      "useWhen": [
+        "Switch between UI views on compact and medium screens."
+      ],
+      "avoidWhen": [
+        "The items are commands rather than persistent peer destinations."
+      ],
+      "alternatives": [
+        "navigation-rail",
+        "navigation-drawer",
+        "bottom-app-bar"
+      ],
+      "adaptive": [
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "navigation-rail",
+          "reason": "Use persistent peer navigation at wider widths."
+        },
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "navigation-drawer",
+          "reason": "Use a drawer when nested destinations need more space."
+        }
+      ],
+      "runtime": "css-only",
+      "guide": "../components/navigation-bar.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "navigation-rail",
+      "title": "Navigation rail",
+      "aliases": [
+        "side navigation rail"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "navigation_rail",
+        "heading": "Navigation rail",
+        "headingLevel": 2,
+        "semantics": [
+          "navigation-rail"
+        ]
+      },
+      "jobs": [
+        "Switch between UI views on mid-sized devices."
+      ],
+      "useWhen": [
+        "Switch between UI views on mid-sized devices."
+      ],
+      "avoidWhen": [
+        "Destinations are nested or the surface is Compact."
+      ],
+      "alternatives": [
+        "navigation-bar",
+        "navigation-drawer"
+      ],
+      "adaptive": [
+        {
+          "window": "compact",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "navigation-bar",
+          "reason": "Compact peer destinations fit the bottom edge."
+        },
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "variant",
+          "reason": "Use the expanded rail when labels should remain visible."
+        },
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "navigation-drawer",
+          "reason": "Use a drawer when nested destinations need more space."
+        }
+      ],
+      "runtime": "auto-init",
+      "guide": "../components/navigation-rail.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "navigation-drawer",
+      "title": "Navigation drawer",
+      "aliases": [
+        "sidenav",
+        "drawer",
+        "sidebar"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "sidenav",
+        "heading": "Navigation drawer",
+        "headingLevel": 2,
+        "semantics": [
+          "navigation-drawer"
+        ]
+      },
+      "jobs": [
+        "A slide-out menu, or a fixed sidebar on Expanded and wider screens."
+      ],
+      "useWhen": [
+        "A slide-out menu, or a fixed sidebar on Expanded and wider screens."
+      ],
+      "avoidWhen": [
+        "Flat peer destinations fit a bar or rail, or the content is details for the current item."
+      ],
+      "alternatives": [
+        "navigation-rail",
+        "side-sheet"
+      ],
+      "adaptive": [
+        {
+          "window": "compact",
+          "basis": "window",
+          "kind": "variant",
+          "reason": "Use a modal drawer when destinations overflow compact navigation."
+        },
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "variant",
+          "reason": "Use a fixed drawer when nested destinations need persistence."
+        }
+      ],
+      "runtime": "auto-init",
+      "guide": "../components/navigation-drawer.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "panes",
+      "title": "Panes",
+      "aliases": [
+        "split view",
+        "two pane"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "panes",
+        "heading": "Panes",
+        "headingLevel": 2,
+        "semantics": [
+          "panes"
+        ]
+      },
+      "jobs": [
+        "Material 3 canonical layouts, from the HTML."
+      ],
+      "useWhen": [
+        "Material 3 canonical layouts, from the HTML."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "lists"
+      ],
+      "adaptive": [
+        {
+          "window": "medium",
+          "basis": "container",
+          "kind": "variant",
+          "reason": "Stack or collapse panes when their container cannot preserve useful pane widths."
+        }
+      ],
+      "runtime": "css-only",
+      "guide": "../components/panes.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "footer",
+      "title": "Footer",
+      "aliases": [],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "footer",
+        "heading": "Footer",
+        "headingLevel": 2,
+        "semantics": [
+          "page-footer"
+        ]
+      },
+      "jobs": [
+        "Site navigation and extra information at the end of a page."
+      ],
+      "useWhen": [
+        "Site navigation and extra information at the end of a page."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/footer.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "tabs",
+      "title": "Tabs",
+      "aliases": [
+        "tab navigation"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "tabs",
+        "heading": "Tabs",
+        "headingLevel": 2,
+        "semantics": [
+          "tabs"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 tabs, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 tabs, from the HTML."
+      ],
+      "avoidWhen": [
+        "Destinations are top-level app peers or the control only changes a local value."
+      ],
+      "alternatives": [
+        "navigation-bar",
+        "segmented-buttons"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/tabs.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "breadcrumbs",
+      "title": "Breadcrumbs",
+      "aliases": [
+        "breadcrumb trail"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "breadcrumbs",
+        "heading": "Breadcrumbs",
+        "headingLevel": 2,
+        "semantics": [
+          "breadcrumb"
+        ]
+      },
+      "jobs": [
+        "The path to this page, from the HTML."
+      ],
+      "useWhen": [
+        "The path to this page, from the HTML."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/breadcrumbs.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "pagination",
+      "title": "Pagination",
+      "aliases": [
+        "pager"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "pagination",
+        "heading": "Pagination",
+        "headingLevel": 2,
+        "semantics": [
+          "pagination"
+        ]
+      },
+      "jobs": [
+        "A list of pages. The HTML is the component."
+      ],
+      "useWhen": [
+        "A list of pages. The HTML is the component."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/pagination.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "menu",
+      "title": "Menu",
+      "aliases": [
+        "dropdown menu"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "menu",
+        "heading": "Menu",
+        "headingLevel": 2,
+        "semantics": [
+          "menu"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 menus, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 menus, from the HTML."
+      ],
+      "avoidWhen": [
+        "The choices need persistent layout space, blocking interaction, or peer navigation."
+      ],
+      "alternatives": [
+        "bottom-sheet",
+        "side-sheet",
+        "navigation-drawer"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/menu.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "scrollspy",
+      "title": "Scrollspy",
+      "aliases": [
+        "active table of contents"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "scrollspy",
+        "heading": "Scrollspy",
+        "headingLevel": 2,
+        "semantics": [
+          "scrollspy"
+        ]
+      },
+      "jobs": [
+        "Highlight the table of contents as the page scrolls."
+      ],
+      "useWhen": [
+        "Highlight the table of contents as the page scrolls."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/scrollspy.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "reason": "ExpressiveCSS extension without a direct Material 3 component contract."
+      }
+    },
+    {
+      "slug": "buttons",
+      "title": "Buttons",
+      "aliases": [
+        "button"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "buttons",
+        "heading": "Buttons",
+        "headingLevel": 2,
+        "semantics": [
+          "buttons"
+        ],
+        "excludeRules": [
+          "fab-not-a-composite-widget",
+          "fab-expanded-is-not-authored"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 common buttons, icon buttons, and FABs — from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 common buttons, icon buttons, and FABs — from the HTML."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/buttons.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "icon-buttons",
+      "title": "Icon buttons",
+      "aliases": [
+        "icon button"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "icon_buttons",
+        "heading": "Icon buttons",
+        "headingLevel": 2,
+        "semantics": [
+          "icon-buttons"
+        ]
+      },
+      "jobs": [
+        "A single icon as the whole control, in four styles and five sizes."
+      ],
+      "useWhen": [
+        "A single icon as the whole control, in four styles and five sizes."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "buttons",
+        "tooltips"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/icon-buttons.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "segmented-buttons",
+      "title": "Segmented buttons",
+      "aliases": [
+        "segmented control"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "segmented_buttons",
+        "heading": "Segmented buttons",
+        "headingLevel": 2,
+        "semantics": [
+          "segmented-buttons"
+        ]
+      },
+      "jobs": [
+        "Two to five connected options, one choice or several, with no script behind them."
+      ],
+      "useWhen": [
+        "Two to five connected options, one choice or several, with no script behind them."
+      ],
+      "avoidWhen": [
+        "Each item runs an independent command instead of recording a selection."
+      ],
+      "alternatives": [
+        "button-groups",
+        "radio-buttons"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/segmented-buttons.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "button-groups",
+      "title": "Button groups",
+      "aliases": [
+        "button group"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "button_groups",
+        "heading": "Button groups",
+        "headingLevel": 2,
+        "semantics": [
+          "button-groups"
+        ]
+      },
+      "jobs": [
+        "Related buttons that bump and reshape against each other, in two variants and five sizes."
+      ],
+      "useWhen": [
+        "Related buttons that bump and reshape against each other, in two variants and five sizes."
+      ],
+      "avoidWhen": [
+        "The controls choose one or more values as a selection set."
+      ],
+      "alternatives": [
+        "segmented-buttons",
+        "split-button"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/button-groups.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "split-button",
+      "title": "Split button",
+      "aliases": [
+        "split action"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "split_button",
+        "heading": "Split button",
+        "headingLevel": 2,
+        "semantics": [
+          "split-button",
+          "menu"
+        ]
+      },
+      "jobs": [
+        "A lead action and a trailing half that opens a menu of related ones, in five sizes."
+      ],
+      "useWhen": [
+        "A lead action and a trailing half that opens a menu of related ones, in five sizes."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "button-groups",
+        "menu"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/split-button.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "fab",
+      "title": "Floating action button",
+      "aliases": [
+        "fab",
+        "speed dial"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "floating_action_button",
+        "heading": "Floating Action Button",
+        "headingLevel": 2,
+        "semantics": [
+          "buttons",
+          "fab-menu"
+        ]
+      },
+      "jobs": [
+        "A circular action that can open a menu of related shortcuts."
+      ],
+      "useWhen": [
+        "A circular action that can open a menu of related shortcuts."
+      ],
+      "avoidWhen": [
+        "The action is not the single highest-priority screen action."
+      ],
+      "alternatives": [
+        "buttons",
+        "bottom-app-bar"
+      ],
+      "adaptive": [
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "variant",
+          "reason": "Use the extended FAB when the action benefits from a visible label."
+        }
+      ],
+      "runtime": "auto-init",
+      "guide": "../components/fab.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "cards",
+      "title": "Cards",
+      "aliases": [
+        "card"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "cards",
+        "heading": "Cards",
+        "headingLevel": 2,
+        "semantics": [
+          "cards",
+          "expanding-card"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 cards, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 cards, from the HTML."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "lists",
+        "carousel",
+        "badges"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/cards.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "lists",
+      "title": "Lists",
+      "aliases": [
+        "list"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "lists",
+        "heading": "Lists",
+        "headingLevel": 2,
+        "semantics": [
+          "list"
+        ]
+      },
+      "jobs": [
+        "Continuous vertical indexes of text and images."
+      ],
+      "useWhen": [
+        "Continuous vertical indexes of text and images."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "cards",
+        "carousel",
+        "panes"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/lists.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "dialogs",
+      "title": "Dialogs",
+      "aliases": [
+        "dialog",
+        "modal"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "dialogs",
+        "heading": "Dialogs",
+        "headingLevel": 2,
+        "semantics": [
+          "dialog"
+        ]
+      },
+      "jobs": [
+        "Important prompts in a user flow. Dedicated to a single task."
+      ],
+      "useWhen": [
+        "Important prompts in a user flow. Dedicated to a single task."
+      ],
+      "avoidWhen": [
+        "The user can continue without making an immediate blocking decision."
+      ],
+      "alternatives": [
+        "snackbar",
+        "banners",
+        "bottom-sheet",
+        "side-sheet",
+        "floating-sheet"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/dialogs.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "bottom-sheet",
+      "title": "Bottom sheet",
+      "aliases": [
+        "action sheet"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "bottom_sheet",
+        "heading": "Bottom sheet",
+        "headingLevel": 3,
+        "semantics": [
+          "bottom-sheet",
+          "dialog",
+          "drag-handle"
+        ]
+      },
+      "jobs": [
+        "Secondary content anchored to the bottom of the screen."
+      ],
+      "useWhen": [
+        "Secondary content anchored to the bottom of the screen."
+      ],
+      "avoidWhen": [
+        "Persistent wider-window secondary content or a small anchored choice fits another component."
+      ],
+      "alternatives": [
+        "side-sheet",
+        "menu",
+        "dialogs"
+      ],
+      "adaptive": [
+        {
+          "window": "expanded",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "side-sheet",
+          "reason": "Persistent secondary content fits beside the main task."
+        }
+      ],
+      "runtime": "native",
+      "guide": "../components/bottom-sheet.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "side-sheet",
+      "title": "Side sheet",
+      "aliases": [
+        "side panel"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "side_sheet",
+        "heading": "Side sheet",
+        "headingLevel": 3,
+        "semantics": [
+          "side-sheet",
+          "dialog"
+        ]
+      },
+      "jobs": [
+        "Optional content and actions, without interrupting the main view."
+      ],
+      "useWhen": [
+        "Optional content and actions, without interrupting the main view."
+      ],
+      "avoidWhen": [
+        "The content is peer navigation or requires a blocking modal decision."
+      ],
+      "alternatives": [
+        "navigation-drawer",
+        "bottom-sheet",
+        "dialogs"
+      ],
+      "adaptive": [
+        {
+          "window": "compact",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "bottom-sheet",
+          "reason": "Secondary content must fit a compact window."
+        },
+        {
+          "window": "compact",
+          "basis": "window",
+          "kind": "replace-with",
+          "component": "dialogs",
+          "reason": "Use a dialog when a compact task must block progress."
+        }
+      ],
+      "runtime": "native",
+      "guide": "../components/side-sheet.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "floating-sheet",
+      "title": "Floating sheet",
+      "aliases": [
+        "floating panel"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "floating_sheet",
+        "heading": "Floating sheet",
+        "headingLevel": 3,
+        "semantics": [
+          "floating-sheet",
+          "dialog"
+        ]
+      },
+      "jobs": [
+        "Secondary content on a surface that floats free of every window edge."
+      ],
+      "useWhen": [
+        "Secondary content on a surface that floats free of every window edge."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "dialogs",
+        "bottom-sheet",
+        "side-sheet"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/floating-sheet.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "drag-handle",
+      "title": "Drag handle",
+      "aliases": [
+        "grab handle"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "drag_handle",
+        "heading": "Drag handle",
+        "headingLevel": 2,
+        "semantics": [
+          "drag-handle"
+        ]
+      },
+      "jobs": [
+        "The bar that says a thing can be dragged — and nothing that does the dragging."
+      ],
+      "useWhen": [
+        "The bar that says a thing can be dragged — and nothing that does the dragging."
+      ],
+      "avoidWhen": [
+        "No pointer drag behavior and equivalent keyboard path are implemented by the containing component."
+      ],
+      "alternatives": [
+        "bottom-sheet",
+        "side-sheet"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/drag-handle.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "badges",
+      "title": "Badges",
+      "aliases": [
+        "badge",
+        "count badge"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "badges",
+        "heading": "Badges",
+        "headingLevel": 2,
+        "semantics": [
+          "badges"
+        ]
+      },
+      "jobs": [
+        "Notifications, counts, or status on navigation items and icons."
+      ],
+      "useWhen": [
+        "Notifications, counts, or status on navigation items and icons."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "chips",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/badges.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "tooltips",
+      "title": "Tooltips",
+      "aliases": [
+        "tooltip",
+        "hover hint"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "tooltips",
+        "heading": "Tooltips",
+        "headingLevel": 2,
+        "semantics": [
+          "tooltip"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 tooltips, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 tooltips, from the HTML."
+      ],
+      "avoidWhen": [
+        "The icon already has visible text, or the tooltip would be the control’s only accessible name."
+      ],
+      "alternatives": [
+        "icon-buttons"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/tooltips.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "snackbar",
+      "title": "Snackbar",
+      "aliases": [
+        "toast"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "snackbar",
+        "heading": "Snackbar",
+        "headingLevel": 2,
+        "semantics": [
+          "snackbar"
+        ],
+        "syntaxLanguage": "js"
+      },
+      "jobs": [
+        "Material Design 3 snackbars, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 snackbars, from the HTML."
+      ],
+      "avoidWhen": [
+        "The message must remain until acted on or must block progress."
+      ],
+      "alternatives": [
+        "banners",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/snackbar.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "banners",
+      "title": "Banners",
+      "aliases": [
+        "banner"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "banners",
+        "heading": "Banners",
+        "headingLevel": 2,
+        "semantics": [
+          "banners"
+        ]
+      },
+      "jobs": [
+        "A prominent message that stays put until the user deals with it."
+      ],
+      "useWhen": [
+        "A prominent message that stays put until the user deals with it."
+      ],
+      "avoidWhen": [
+        "The message is transient confirmation or requires a blocking decision."
+      ],
+      "alternatives": [
+        "snackbar",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/banners.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "progress",
+      "title": "Progress indicators",
+      "aliases": [
+        "progress",
+        "preloader",
+        "progress indicator"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "preloader",
+        "heading": "Progress indicators",
+        "headingLevel": 2,
+        "semantics": [
+          "progress"
+        ]
+      },
+      "jobs": [
+        "Activity and progress. The HTML is the indicator."
+      ],
+      "useWhen": [
+        "Activity and progress. The HTML is the indicator."
+      ],
+      "avoidWhen": [
+        "The wait is brief and no real progress value exists."
+      ],
+      "alternatives": [
+        "loading-indicator"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/progress.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "loading-indicator",
+      "title": "Loading indicator",
+      "aliases": [
+        "spinner"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "loading_indicator",
+        "heading": "Loading indicator",
+        "headingLevel": 2,
+        "semantics": [
+          "loading-indicator"
+        ]
+      },
+      "jobs": [
+        "A shape that morphs while it spins, for waits under five seconds."
+      ],
+      "useWhen": [
+        "A shape that morphs while it spins, for waits under five seconds."
+      ],
+      "avoidWhen": [
+        "Real determinate progress exists or the operation is long-running."
+      ],
+      "alternatives": [
+        "progress"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/loading-indicator.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "carousel",
+      "title": "Carousel",
+      "aliases": [
+        "gallery"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "carousel",
+        "heading": "Carousel",
+        "headingLevel": 2,
+        "semantics": [
+          "carousel"
+        ]
+      },
+      "jobs": [
+        "Material 3 adaptive carousels for visual collections."
+      ],
+      "useWhen": [
+        "Material 3 adaptive carousels for visual collections."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "lists",
+        "cards",
+        "lightbox"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/carousel.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "lightbox",
+      "title": "Lightbox",
+      "aliases": [
+        "media",
+        "image viewer"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "media",
+        "heading": "Lightbox",
+        "headingLevel": 3,
+        "semantics": [
+          "lightbox"
+        ]
+      },
+      "jobs": [
+        "Lightbox for enlarge-on-click images."
+      ],
+      "useWhen": [
+        "Lightbox for enlarge-on-click images."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "carousel",
+        "dialogs",
+        "floating-sheet"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/lightbox.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "reason": "ExpressiveCSS extension without a direct Material 3 component contract."
+      }
+    },
+    {
+      "slug": "toolbars",
+      "title": "Toolbars",
+      "aliases": [
+        "toolbar"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "toolbars",
+        "heading": "Toolbars",
+        "headingLevel": 2,
+        "semantics": [
+          "toolbar"
+        ]
+      },
+      "jobs": [
+        "Frequently used actions for the current page."
+      ],
+      "useWhen": [
+        "Frequently used actions for the current page."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/toolbars.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "search",
+      "title": "Search",
+      "aliases": [
+        "search box"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "search",
+        "heading": "Search",
+        "headingLevel": 2,
+        "semantics": [
+          "search"
+        ]
+      },
+      "jobs": [
+        "A search bar, and the view it expands into."
+      ],
+      "useWhen": [
+        "A search bar, and the view it expands into."
+      ],
+      "avoidWhen": [
+        "The field is ordinary data entry rather than finding content."
+      ],
+      "alternatives": [
+        "text-fields",
+        "autocomplete"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/search.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "fieldsets",
+      "title": "Fieldsets",
+      "aliases": [
+        "fieldset"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "fieldsets",
+        "heading": "Fieldsets",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/fieldset"
+        ]
+      },
+      "jobs": [
+        "Grouped form sections, from the HTML."
+      ],
+      "useWhen": [
+        "Grouped form sections, from the HTML."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/fieldsets.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "text-fields",
+      "title": "Text fields",
+      "aliases": [
+        "text inputs",
+        "text input",
+        "input field"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "text_inputs",
+        "heading": "Text Inputs",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/input-fields",
+          "forms/file-input",
+          "character-counter"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 text fields, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 text fields, from the HTML."
+      ],
+      "avoidWhen": [
+        "The value comes from a constrained set better represented by selection controls."
+      ],
+      "alternatives": [
+        "search",
+        "autocomplete",
+        "select"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/text-fields.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "select",
+      "title": "Select",
+      "aliases": [
+        "dropdown",
+        "select input"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "select",
+        "heading": "Select",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/select",
+          "forms/input-fields"
+        ]
+      },
+      "jobs": [
+        "Choose one option, or several, from a styled menu."
+      ],
+      "useWhen": [
+        "Choose one option, or several, from a styled menu."
+      ],
+      "avoidWhen": [
+        "A short option set should remain visible or free-form entry is required."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "autocomplete"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/select.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "checkboxes",
+      "title": "Checkboxes",
+      "aliases": [
+        "checkbox"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "checkboxes",
+        "heading": "Checkboxes",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/checkboxes"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 checkboxes, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 checkboxes, from the HTML."
+      ],
+      "avoidWhen": [
+        "The setting applies immediately or exactly one option must be chosen."
+      ],
+      "alternatives": [
+        "switches",
+        "radio-buttons",
+        "segmented-buttons",
+        "chips"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/checkboxes.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "radio-buttons",
+      "title": "Radio buttons",
+      "aliases": [
+        "radio"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "radio_buttons",
+        "heading": "Radio Buttons",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/radio-buttons",
+          "forms/fieldset"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 radios, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 radios, from the HTML."
+      ],
+      "avoidWhen": [
+        "Several choices may be selected or compact direct manipulation is better."
+      ],
+      "alternatives": [
+        "segmented-buttons",
+        "checkboxes"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/radio-buttons.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "switches",
+      "title": "Switches",
+      "aliases": [
+        "switch",
+        "toggle"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "switches",
+        "heading": "Switches",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/switches"
+        ]
+      },
+      "jobs": [
+        "Material Design 3 switches, from the HTML."
+      ],
+      "useWhen": [
+        "Material Design 3 switches, from the HTML."
+      ],
+      "avoidWhen": [
+        "A later Save action commits the choice."
+      ],
+      "alternatives": [
+        "checkboxes"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/switches.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "slider",
+      "title": "Slider",
+      "aliases": [
+        "sliders",
+        "range input"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "sliders",
+        "heading": "Sliders",
+        "headingLevel": 2,
+        "semantics": [
+          "forms/slider"
+        ]
+      },
+      "jobs": [
+        "Selections from a range of values."
+      ],
+      "useWhen": [
+        "Selections from a range of values."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/slider.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "chips",
+      "title": "Chips",
+      "aliases": [
+        "chip",
+        "filter chip"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "chips",
+        "heading": "Chips",
+        "headingLevel": 2,
+        "semantics": [
+          "chips"
+        ]
+      },
+      "jobs": [
+        "Small blocks for contacts, tags, and filters."
+      ],
+      "useWhen": [
+        "Small blocks for contacts, tags, and filters."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "checkboxes",
+        "badges"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/chips.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "autocomplete",
+      "title": "Autocomplete",
+      "aliases": [
+        "typeahead",
+        "combobox"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "autocomplete",
+        "heading": "Autocomplete",
+        "headingLevel": 2,
+        "semantics": [
+          "autocomplete",
+          "forms/input-fields"
+        ]
+      },
+      "jobs": [
+        "Suggest values under a text field as the user types."
+      ],
+      "useWhen": [
+        "Suggest values under a text field as the user types."
+      ],
+      "avoidWhen": [
+        "Suggestions are unavailable or the value must be limited to a small visible set."
+      ],
+      "alternatives": [
+        "text-fields",
+        "select"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/autocomplete.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "date-picker",
+      "title": "Date picker",
+      "aliases": [
+        "datepicker",
+        "calendar picker"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "datepicker",
+        "heading": "Date Picker",
+        "headingLevel": 2,
+        "semantics": [
+          "datepicker"
+        ]
+      },
+      "jobs": [
+        "Select a date, a range, or several dates from a calendar."
+      ],
+      "useWhen": [
+        "Choose a date, date range, or several dates from the framework’s inline calendar."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "text-fields",
+        "time-picker"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/date-picker.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    },
+    {
+      "slug": "time-picker",
+      "title": "Time picker",
+      "aliases": [
+        "timepicker",
+        "clock picker"
+      ],
+      "selectable": true,
+      "excludeReason": null,
+      "guideSource": {
+        "pageId": "timepicker",
+        "heading": "Time Picker",
+        "headingLevel": 2,
+        "semantics": [
+          "timepicker"
+        ]
+      },
+      "jobs": [
+        "Pick a time from a clock face, in 12-hour or 24-hour form."
+      ],
+      "useWhen": [
+        "Choose a time from the framework’s inline 12-hour or 24-hour clock face."
+      ],
+      "avoidWhen": [
+        "A different documented component matches the user job or interaction model more directly."
+      ],
+      "alternatives": [
+        "text-fields",
+        "date-picker"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/time-picker.md",
+      "materialGuidance": {
+        "status": "material",
+        "href": "https://www.expressivecss.com/m3-guidelines.md"
+      }
+    }
+  ]
+}

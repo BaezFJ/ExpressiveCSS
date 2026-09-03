@@ -3,7 +3,15 @@
 ### Toolbars
 Frequently used actions for the current page.
 
-[Component documentation](https://www.expressivecss.com/toolbars.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/toolbars.astro)
+Component ID: `toolbars`
+
+[Component documentation](https://www.expressivecss.com/toolbars.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/toolbars.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+
+Contract: ExpressiveCSS 0.8.0
+
+Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
+
+Contract SHA-256: `8523b17b4d73aa198b6f99e1448b93668304138727e810414dd86874f722a18b`
 
 #### Contract
 
@@ -31,9 +39,12 @@ Tokens follow the [M3 toolbar spec](https://m3.material.io/components/toolbars/s
 
 #### Rules
 
-The following are end-state semantic invariants. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
+The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.
-- A toolbar takes no composite role; its buttons are reached with Tab, not arrow keys.
+- `toolbar-not-nav`: A toolbar holds commands (Bold, Italic), not navigation, so it is not a <nav> landmark.
+- `toolbar-not-a-composite-widget`: A toolbar takes no composite role; its buttons are reached with Tab, not arrow keys.
+
+#### Guide checks
+
 - Read the full target-version component documentation before using variants, options, methods, or events not shown here.
 - The target version's documentation and source override this generated summary if they disagree.
