@@ -45,6 +45,7 @@
     },
     "./css": "./dist/css/expressive.css",
     "./css/min": "./dist/css/expressive.min.css",
+    "./fonts/*": "./dist/fonts/*",
     "./scss": "./src/sass/expressive.scss",
     "./scss/*": "./src/sass/*"
   },
@@ -60,7 +61,8 @@
     "prepack": "npm run build",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build": "run-s clean build:css build:js build:types",
-    "build:css": "run-s build:css:expanded build:css:min",
+    "build:fonts": "node scripts/copy-fonts.mjs",
+    "build:css": "run-s build:fonts build:css:expanded build:css:min",
     "build:css:expanded": "sass src/sass/expressive.scss dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
     "build:css:min": "sass src/sass/expressive.scss dist/css/expressive.min.css --style=compressed --source-map --load-path=src/sass",
     "build:js": "run-s build:js:esm build:js:cjs build:js:iife build:js:iife-min",
@@ -101,6 +103,11 @@
     "not dead"
   ],
   "devDependencies": {
+    "@fontsource-variable/material-symbols-outlined": "^5.3.4",
+    "@fontsource-variable/material-symbols-rounded": "^5.3.4",
+    "@fontsource-variable/material-symbols-sharp": "^5.3.4",
+    "@fontsource/noto-sans": "^5.3.0",
+    "@fontsource/roboto": "^5.3.0",
     "@playwright/test": "^1.56.0",
     "astro": "^7.2.8",
     "esbuild": "^0.28.2",

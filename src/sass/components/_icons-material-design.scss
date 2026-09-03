@@ -1,11 +1,11 @@
 @use "../abstracts" as *;
 
-// Material Symbols. The framework does not ship the font files — outlined,
-// rounded, and sharp are three separate variable fonts, and pulling all
-// three into the main sheet would dwarf the rest of the CSS. Load the
-// families you use (see the Icons docs). Outlined with every axis:
-//
-//   fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200
+// Material Symbols. The compiled sheet ships @font-face rules for outlined,
+// rounded, and sharp variable fonts (opsz / wght / FILL / GRAD) plus Roboto
+// and Noto Sans. Browsers only download a family after markup uses it, so
+// rounded and sharp stay cheap until `icon-style` or a family class asks
+// for them. Override $expressive-include-fonts when compiling Sass if the
+// page already loads these families.
 //
 // Style (outlined / rounded / sharp) is the font family, not a variation
 // axis. Switch it with the `icon-style` attribute (same idea as `theme`)

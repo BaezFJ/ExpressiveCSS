@@ -71,6 +71,14 @@ dist/
 ├── css/
 │   ├── expressive.css
 │   └── expressive.min.css
+├── fonts/
+│   ├── material-symbols-outlined.woff2
+│   ├── material-symbols-rounded.woff2
+│   ├── material-symbols-sharp.woff2
+│   ├── roboto-latin-400.woff2
+│   ├── roboto-latin-500.woff2
+│   ├── noto-sans-latin-400.woff2
+│   └── noto-sans-latin-500.woff2
 ├── js/
 │   ├── expressive.cjs
 │   ├── expressive.js
@@ -79,7 +87,9 @@ dist/
 └── types/
 ```
 
-Source maps are produced alongside the CSS and JavaScript bundles.
+Source maps are produced alongside the CSS and JavaScript bundles. The
+stylesheet loads fonts from `../fonts/`, so keep `dist/fonts/` next to
+`dist/css/`.
 
 ## Usage
 

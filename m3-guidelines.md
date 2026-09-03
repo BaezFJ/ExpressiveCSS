@@ -179,7 +179,7 @@ Do not put `display-large` in an app bar. Do not wrap or truncate button labels.
 
 ## 2.6 Icons
 
-Material Symbols, outlined by default. Load the variable font with `opsz,wght,FILL,GRAD` axes. The framework does not ship the files.
+Material Symbols, outlined by default. The compiled sheet ships the variable font with `opsz,wght,FILL,GRAD` axes. Rounded and sharp families are in the same package and load when markup asks for them.
 
 - Ligature names from the [Material Symbols catalog](https://fonts.google.com/icons?icon.set=Material+Symbols).
 - Default optical size 24 dp; buttons use 18 dp next to a label.

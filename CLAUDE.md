@@ -16,7 +16,7 @@ The public surface is rebranded. Instances are stashed on elements as `el['Expre
 | `.materialize-textarea` | `.expressive-textarea` |
 | `el['M_<Component>']`, global `M` | `el['Expressive_<Component>']`, global `Expressive` |
 
-Icons are Material Symbols, outlined by default (`--md-icon-font`). Style (outlined / rounded / sharp) is the font family — switch it with the `icon-style` attribute or `--md-icon-font`. Fill, weight, grade, and optical size are variation axes (`--md-icon-fill`, `--md-icon-weight`, `--md-icon-grade`, `--md-icon-optical-size`). The font files are **not** shipped: three variable families would dwarf the sheet, and most pages only need outlined. `.material-icons` is a compat alias that now uses Symbols. The `--md-sys-*` / `--md-ref-*` tokens stay Material Design 3 spec names.
+Icons are Material Symbols, outlined by default (`--md-icon-font`). Style (outlined / rounded / sharp) is the font family — switch it with the `icon-style` attribute or `--md-icon-font`. Fill, weight, grade, and optical size are variation axes (`--md-icon-fill`, `--md-icon-weight`, `--md-icon-grade`, `--md-icon-optical-size`). The compiled CSS ships unlayered `@font-face` rules and `dist/fonts/` holds the woff2 files: outlined, rounded, and sharp variable Symbols (opsz / wght / FILL / GRAD), Latin Roboto 400/500, and Latin Noto Sans 400/500. `build:css` copies them from Fontsource packages via `scripts/copy-fonts.mjs`. Browsers fetch a family only after markup uses it. Keep `dist/fonts/` next to `dist/css/` so `url(../fonts/...)` resolves. Sass consumers can set `$expressive-font-path` or `$expressive-include-fonts: false`. `.material-icons` is a compat alias that uses Symbols; do not ship the older Material Icons font. The `--md-sys-*` / `--md-ref-*` tokens stay Material Design 3 spec names.
 
 Links to `github.com/materializecss/materialize` issues in code comments are real upstream references and should stay.
 
@@ -26,7 +26,8 @@ Framework build is npm-based (dart-sass + esbuild + tsc). `npm install` first.
 
 ```bash
 npm run build          # css + js + type declarations -> dist/
-npm run build:css      # sass -> dist/css/expressive.css (+ .min.css, source maps)
+npm run build:fonts    # copy woff2 files from Fontsource into dist/fonts/
+npm run build:css      # fonts + sass -> dist/css/expressive.css (+ .min.css, source maps)
 npm run build:js       # esbuild -> dist/js/expressive.{mjs,cjs,js,min.js}
 npm run build:types    # tsc --emitDeclarationOnly -> dist/types/
 npm run typecheck      # tsc --noEmit, no output
@@ -173,8 +174,8 @@ job is `visual.yml`, pull requests only.
   two stabilisation captures changes the page height, which is precisely how
   the first CI run failed (1440x8729 against 1440x8786). The icon font is the
   one exception: icon sizing is a regression this exists to catch (24px ->
-  18px shipped once), so Google Fonts loads and `document.fonts.ready` is
-  awaited before the shutter.
+  18px shipped once), so the self-hosted faces in the compiled sheet load and
+  `document.fonts.ready` is awaited before the shutter.
 - **`page.clock.install()` then `runFor`, never `setFixedTime`.** The pickers
   open on *now*, so the clock has to be pinned or the minute digit ticks over
   between the two passes. But freezing `Date` outright breaks
@@ -548,7 +549,7 @@ Other things worth knowing:
 - **Translucent colors use `color-mix(in oklab, var(--token) N%, transparent)`, never `rgba(var(--token), 0.N)`.** The tokens hold hex colors, not comma-separated channels, so the `rgba(var(…))` form is invalid and the browser drops the declaration silently — it accounted for every dead rule found so far (hover tints, disabled inputs, medium-emphasis text).
 - `abstracts/_elevation.scss` owns the shadow map; the `.z-depth-*` classes in `base/_global.scss` are generated from it, so the classes and the `z-depth()` mixin cannot drift.
 - `abstracts/_breakpoints.scss` owns the exact M3 window size classes: Compact `< 600px`, Medium `600–839px`, Expanded `840–1199px`, Large `1200–1599px`, and Extra-large `>= 1600px`. The canonical Sass keys are `compact`, `medium`, `expanded`, `large`, and `extra-large`; `bp-up()` / `bp-down()` / `bp-between()` emit media-query range syntax. Grid prefixes remain `.s` / `.m` / `.l` / `.xl` / `.xxl` in that order. At Extra-large the container cap is 1920px; `.container.wide` caps at 2400px and `.container.max` has no cap.
-- `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`) — mostly `!default`, several now aliasing CSS custom properties. Typography leaves the browser root size untouched and converts M3's sp values to rem on the standard 16px basis. The type-scale roles choose `--md-ref-typeface-brand` or `--md-ref-typeface-plain`; both default to Roboto and append the Noto Sans fallback.
+- `abstracts/_variables.scss` holds the remaining Sass-time knobs (`$root-font-size`, the flow-text bounds, `$font-stack`, `$gutter-width`, `$expressive-font-path`, `$expressive-include-fonts`) — mostly `!default`, several now aliasing CSS custom properties. Typography leaves the browser root size untouched and converts M3's sp values to rem on the standard 16px basis. The type-scale roles choose `--md-ref-typeface-brand` or `--md-ref-typeface-plain`; both default to Roboto and append the Noto Sans fallback. `base/_fonts.scss` is loaded unlayered from `expressive.scss` (not inside `@layer base`) and emits the `@font-face` rules. `tests/fonts.test.js` asserts the woff2 files, relative urls, and `package.json` `./fonts/*` export.
 - Partials renamed with their components in 0.8.0: `_sidenav` → `_navigation-drawer`, `forms/_range` → `forms/_slider`, `_preloader` → `_progress`. The old slideshow partial, `_slider`, was deleted with that component.
 - `base/_normalize.scss` is normalize.css v8.0.1 trimmed to the support baseline: every rule whose own comment named IE, Edge Legacy or Chrome 57- is gone, and the removals are listed in a header comment so nobody re-adds them. `::-webkit-file-upload-button` became the standard `::file-selector-button`.
 - `base/_global.scss` (181 lines, down from 433) is element defaults only — box-sizing, `body`, form-control fonts, links, blockquote, icons, tables. Every selector in it is a bare element; helper classes live in `utilities/`, and component-owned rules in that component's partial (`components/_page-footer`, `_docked-display`, `_transitions`).
@@ -710,7 +711,8 @@ and a page added to the catalogue is on the site with the next push to master.
   the failure that copy invites.
 - **A page needing its own `<head>` content puts `slot="head"` on the element.**
   `DocsLayout` forwards the named slot to `BaseLayout`, which renders it last in
-  the head. The Typography page's extra Roboto weights are the only use today.
+  the head. Fonts no longer go there: `BaseLayout` loads the compiled sheet,
+  which already ships `@font-face`.
 - **The six legacy routes are one dynamic page, and the landing page's two
   compatibility paths swap roles.** `src/pages/[alias].astro` spreads
   `aliases()` over `RedirectLayout`, so a canonical target is stated once, not

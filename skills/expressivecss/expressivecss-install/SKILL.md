@@ -42,13 +42,9 @@ The package also exports `@expressivecss/expressive/scss` and individual `scss/*
 
 Load the compiled stylesheet, then the IIFE JavaScript bundle near the end of `<body>`. Call `Expressive.AutoInit()` after the component markup exists. The IIFE global is `Expressive`, not `M`.
 
-A complete page also needs:
+A complete page also needs `<meta name="viewport" content="width=device-width, initial-scale=1">`.
 
-- `<meta name="viewport" content="width=device-width, initial-scale=1">`;
-- Material Symbols when icon-font markup is used;
-- the chosen text fonts or overrides for the framework font tokens.
-
-ExpressiveCSS does not ship font files.
+The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined, rounded, sharp), Roboto 400/500, and Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Override the brand/plain tokens when the page uses different typefaces. `.material-icons` is a compat alias that uses Symbols; do not load the older Material Icons stylesheet.
 
 ## Rules
 

@@ -136,6 +136,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 | `@expressivecss/expressive` | JavaScript module and TypeScript declarations |
 | `@expressivecss/expressive/css` | Expanded compiled stylesheet |
 | `@expressivecss/expressive/css/min` | Minified compiled stylesheet |
+| `@expressivecss/expressive/fonts/*` | Self-hosted woff2 files |
 | `@expressivecss/expressive/scss` | Sass entry point |
 | `@expressivecss/expressive/scss/*` | Individual Sass source paths |
 
@@ -147,8 +148,6 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap">
     <link rel="stylesheet" href="dist/css/expressive.min.css">
   </head>
   <body>
@@ -165,7 +164,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 </html>
 ```
 
-The IIFE bundle exposes the global `Expressive` object. The two Google Fonts stylesheets above are the same ones the docs site loads: variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. The framework does not ship those font files. Drop the Symbols link only if the page has no icon-font markup; replace the typeface link if you override the brand/plain tokens. The older Material Icons stylesheet is optional and is not required for `.material-symbols`.
+The IIFE bundle exposes the global `Expressive` object. The compiled stylesheet ships `@font-face` rules for variable Material Symbols (outlined, rounded, and sharp, with the opsz / wght / FILL / GRAD axes), Roboto 400 / 500, and the Noto Sans fallback. Keep `dist/fonts/` next to `dist/css/` so the relative font URLs resolve. Override the brand/plain tokens when the page uses different typefaces. The older Material Icons stylesheet is not required; `.material-icons` is a compat alias that uses Symbols.
 
 ## ES module setup
 
@@ -358,6 +357,9 @@ MyWebsite/
   |--css/
   |  |--expressive.css
   |
+  |--fonts/
+  |  |--material-symbols-outlined.woff2
+  |
   |--js/
   |  |--expressive.js
   |
@@ -372,15 +374,11 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 <!DOCTYPE html>
 <html lang="en" theme="light">
   <head>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import expressive.css-->
-    <link rel="stylesheet" href="css/expressive.min.css">
-    <!--Let browser know website is optimized for mobile-->
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/expressive.min.css">
   </head>
   <body>
-    <!--JavaScript at end of body for optimized loading-->
     <script src="js/expressive.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -1403,7 +1401,7 @@ The type scale is the HTML. `<h1>`–`<h6>` are display and headline roles, `<p>
 
 Tokens follow the [M3 type system](https://m3.material.io/styles/typography/overview). Each role sets family, size, weight, line-height, and letter-spacing from `--md-sys-typescale-*`. They do not set `font-style` — the token named `-font-family-style` holds “Regular” / “Medium”, which are weights, not CSS `font-style` keywords.
 
-M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. The framework does not ship either font file, so applications should load them or override the reference tokens.
+M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. The compiled stylesheet ships Latin Roboto and Noto Sans at 400 and 500. Override the reference tokens to use a different family.
 
 ### Semantic map
 
@@ -2900,7 +2898,7 @@ main {
 
 Google Material Icons and Material Symbols, sized with a few helper classes.
 
-Expressive uses Google’s Material Icons and every Material Symbols set — outlined, rounded, and sharp. The class names are Google’s. Expressive does not rename them, because the font stylesheet you load is what defines them.
+Expressive uses Material Symbols: outlined, rounded, and sharp. The class names are Google's. `.material-icons` is a compat alias that uses the outlined Symbols family.
 
 **An icon is a `<span>`, not an `<i>`.** `<i>` means idiomatic text — a term, a thought, a phrase in another language — and an icon is none of those. `<i>` still renders; it is not the documented form.
 
@@ -2911,22 +2909,9 @@ Expressive uses Google’s Material Icons and every Material Symbols set — out
 
 The size and float modifiers (`tiny`, `small`, `medium`, `large`, `left`, `right`) hang off the icon class, not off `<i>`, so they follow either element.
 
-Google publishes a [searchable Material Icons list](https://fonts.google.com/icons?icon.set=Material+Icons) and a [Material Symbols list](https://fonts.google.com/icons?icon.set=Material+Symbols). Those catalogs are the source for ligature names. You can also download the fonts from the [Material Icons guide](https://developers.google.com/fonts/docs/material_icons).
+Google publishes a [Material Symbols list](https://fonts.google.com/icons?icon.set=Material+Symbols). That catalog is the source for ligature names.
 
-The Expressive stylesheet does not ship the font files. Include one or more of these lines in `<head>`:
-
-```html
-<!-- Material Icons -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- Material Symbols — Outlined -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<!-- Material Symbols — Rounded -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
-<!-- Material Symbols — Sharp -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet">
-```
-
-Put the matching class on an element and use the ligature as the text content.
+The compiled stylesheet ships the outlined, rounded, and sharp variable fonts. Keep `dist/fonts/` next to `dist/css/` so the relative `url(../fonts/...)` paths resolve. Browsers download a family only after markup uses it.
 
 Icons
 

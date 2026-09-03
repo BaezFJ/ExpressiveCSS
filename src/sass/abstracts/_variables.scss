@@ -64,6 +64,14 @@ $element-bottom-margin: math.div($gutter-width * 2, 3) !default;
 // M3's typeface tokens choose Roboto by default. Noto Sans is the first
 // fallback so unsupported scripts keep a compatible visual style.
 $font-stack: var(--md-ref-typeface-plain), var(--md-ref-typeface-fallback) !default;
+
+// Self-hosted woff2 directory, relative to the compiled CSS file. The npm
+// build writes CSS to dist/css/ and fonts to dist/fonts/. Override when
+// compiling Sass to a different location. Set $expressive-include-fonts to
+// false to emit no @font-face rules (for example when the page already
+// loads these families from elsewhere).
+$expressive-font-path: "../fonts" !default;
+$expressive-include-fonts: true !default;
 $text-color: var(--md-sys-color-on-background) !default;
 
 // Modern browsers default to 16px. M3's web conversion is SP_SIZE / 16 = rem;
