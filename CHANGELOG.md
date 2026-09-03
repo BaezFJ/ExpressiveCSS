@@ -18,6 +18,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - **App bar search dialog.** Closing a full-screen search view no longer reopens it when focus returns to the field.
+- **Badge hosts.** Sibling badges on the stacked navigation bar and collapsed rail use logical inset and flip in RTL. Tabs nest a badge in the destination icon.
 - **Card action semantics.** Material 3 card anatomy now uses `<div class="actions">` for command buttons instead of creating a false `<nav>` landmark.
 
 ## [0.8.0] - 2026-08-27

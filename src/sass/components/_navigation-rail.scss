@@ -173,8 +173,13 @@
       position: absolute;
       z-index: 1;
       top: calc(6px + (var(--md-comp-nav-rail-indicator-height) - 24px) / 2);
-      left: calc(50% + 12px);
+      inset-inline-start: calc(50% + 12px);
       transform: translate(-50%, -50%);
+
+      &:dir(rtl),
+      [dir="rtl"] & {
+        transform: translate(50%, -50%);
+      }
     }
   }
 
@@ -260,6 +265,11 @@
         left: auto;
         inset-inline-start: calc(16px + 24px);
         transform: translate(-50%, -50%);
+
+        &:dir(rtl),
+        [dir="rtl"] & {
+          transform: translate(50%, -50%);
+        }
       }
     }
 

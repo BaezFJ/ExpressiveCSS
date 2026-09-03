@@ -1613,7 +1613,7 @@ Put a number or short label in the badge. Height is 16dp, corners are a stadium,
 
 ### On navigation
 
-Nest the badge in the destination icon, or leave it as a sibling — the bar and rail place a sibling on the icon’s upper trailing corner.
+Nest the badge in the destination icon, or leave it as a sibling — the bar and rail place a sibling on the icon’s upper trailing corner. Tabs take the nested form.
 
 ```html
 <a href="#!" aria-label="Inbox, 3 unread">
@@ -4547,7 +4547,7 @@ header, main, footer {
 
 Material Design 3 tabs, from the HTML.
 
-A `<nav class="tabs" aria-label="Sections">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<span class="material-symbols">` is the icon. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
+A `<nav class="tabs" aria-label="Sections">` of `<a href="#panel">` is the bar. A `<span>` (or the link text) is the label; a leading `<span class="material-symbols">` is the icon. Nest a `<span class="badge">` in the icon for a count, and put that count in the tab's `aria-label` so a hidden icon does not swallow it. `.active` is the selected tab. There is no `li.tab` required — `ul.tabs > li.tab > a` stays as an alias. `AutoInit()` starts every `.tabs` except those marked `no-autoinit`.
 
 Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). Primary tabs sit on `surface`, 48dp (64dp with a stacked icon). The label is `title-small` / `on-surface-variant`; selected is `primary`. The indicator is 3dp `primary` with 3dp top corners. The icon is 24dp. A 1dp `outline-variant` divider runs under the bar. Hover is 8%; focus is 10%. Disabled is 38%.
 
@@ -4557,8 +4557,8 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
     <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Flight</span>
   </a>
-  <a class="active" aria-current="page" href="#luggage">
-    <span class="material-symbols" aria-hidden="true">luggage</span>
+  <a class="active" aria-current="page" href="#luggage" aria-label="Luggage, 3 unread">
+    <span class="material-symbols" aria-hidden="true">luggage<span class="badge">3</span></span>
     <span>Luggage</span>
   </a>
   <a href="#explore">

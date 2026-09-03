@@ -30,6 +30,9 @@ const S = defineSections([
           <code>&lt;a href="#panel"&gt;</code> is the bar. A
           <code>&lt;span&gt;</code> (or the link text) is the label; a
           leading <code>&lt;span class="material-symbols" aria-hidden="true"&gt;</code> is the icon.
+          Nest a <code>&lt;span class="badge"&gt;</code> in the icon for a count,
+          and put that count in the tab's <code>aria-label</code> so a hidden
+          icon does not swallow it.
           <code>.active</code> is the selected tab. There is no
           <code>li.tab</code> required —
           <code>ul.tabs &gt; li.tab &gt; a</code> stays as an alias.
@@ -50,7 +53,7 @@ const S = defineSections([
 
         <nav class="tabs" aria-label="Travel">
           <a href="#tabs-intro-flight"><span class="material-symbols" aria-hidden="true">flight</span><span>Flight</span></a>
-          <a class="active" aria-current="page" href="#tabs-intro-luggage"><span class="material-symbols" aria-hidden="true">luggage</span><span>Luggage</span></a>
+          <a class="active" aria-current="page" href="#tabs-intro-luggage" aria-label="Luggage, 3 unread"><span class="material-symbols" aria-hidden="true">luggage<span class="badge">3</span></span><span>Luggage</span></a>
           <a href="#tabs-intro-explore"><span class="material-symbols" aria-hidden="true">explore</span><span>Explore</span></a>
         </nav>
         <div id="tabs-intro-flight" class="py-3">Flight</div>
@@ -62,8 +65,8 @@ const S = defineSections([
     <span class="material-symbols" aria-hidden="true">flight</span>
     <span>Flight</span>
   </a>
-  <a class="active" aria-current="page" href="#luggage">
-    <span class="material-symbols" aria-hidden="true">luggage</span>
+  <a class="active" aria-current="page" href="#luggage" aria-label="Luggage, 3 unread">
+    <span class="material-symbols" aria-hidden="true">luggage<span class="badge">3</span></span>
     <span>Luggage</span>
   </a>
   <a href="#explore">
