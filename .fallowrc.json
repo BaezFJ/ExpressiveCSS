@@ -1,0 +1,25 @@
+{
+  "entry": [
+    "docs/src/pages/**/*.astro",
+    "docs/src/pages/**/*.ts"
+  ],
+  "ignoreUnresolvedImports": [
+    "./js/expressive.min.js"
+  ],
+  "usedClassMembers": [
+    "getInstance",
+    "dismissAll",
+    {
+      "extends": "Component",
+      "members": [
+        "destroy",
+        "pause",
+        "start",
+        "getData",
+        "index",
+        "updateTabIndicator",
+        "select"
+      ]
+    }
+  ]
+}

@@ -21,5 +21,6 @@
       "Bash(npm -v)",
       "WebFetch(domain:docs.npmjs.com)"
     ]
-  }
+  },
+  "includeCoAuthoredBy": false
 }
