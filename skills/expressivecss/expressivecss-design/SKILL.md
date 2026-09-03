@@ -15,13 +15,15 @@ Read this guide for a new surface or flow, a redesign, a visual refinement, a re
 
 Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document.
 
-Classify the task before editing:
+Classify the task before acting. Choose one operating mode, or run Critique followed by Audit for a combined review:
 
-- **New surface:** create a page, screen, or flow inside the established product and theme.
-- **Extension:** add a component or state without changing the surrounding design language.
-- **Refinement:** preserve identity, information architecture, content, behavior, and scope while fixing hierarchy, consistency, or finish.
-- **Redesign:** preserve product truth, required content, functionality, accessibility, and constraints while replacing the surface structure or visual treatment.
-- **Review:** gather evidence and report findings without editing unless the user also asks for fixes.
+- **Implement.** Build a new surface or extend an existing one inside the established product and theme. Change code, render the real interface, run the focused tests, and report the resulting evidence.
+- **Refine.** Improve hierarchy, consistency, responsiveness, or finish while you preserve the existing product identity, content, information architecture, behavior, and scope.
+- **Redesign.** Make structural changes when they are explicitly in scope, while preserving product requirements, factual content, functionality, accessibility, and stated constraints.
+- **Critique.** Assess visual hierarchy, Material 3 Expressive quality, coherence, and usability without editing. Ground each finding in rendered evidence and an applicable rule.
+- **Audit.** Check measurable implementation, semantics, runtime behavior, responsive behavior, and accessibility requirements without editing. Ground each finding in source, runtime, or test evidence.
+
+Critique and audit are no-edit modes unless the user separately asks for fixes. For a combined review, record the visual critique before audit findings can bias it, then synthesize both evidence sets. Do not silently widen a refinement into a redesign or a review into implementation.
 
 Ask only about missing decisions that would change the result. Resolve:
 
@@ -88,7 +90,7 @@ Keep default, hover, focus-visible, pressed, selected, and disabled states coher
 
 ## 5. Review with evidence
 
-Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior.
+Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Use the [review matrix](./references/review-matrix.md) for Critique, Audit, and combined finish reviews; record one evidence-backed status for every applicable row.
 
 1. Run the consuming project's build and focused tests.
 2. Exercise the primary task with keyboard and pointer input. Use touch input when the feature targets it.
@@ -111,7 +113,7 @@ Use severity sparingly:
 - **P2:** a responsive, state, consistency, or design-system defect with a workaround.
 - **P3:** finish that does not block use.
 
-Fix the first evidence batch in one grouped edit, then run one confirmation batch. Two inspection rounds are the normal ceiling for self-directed polish, not permission to ship known P0 or P1 defects. Ask the user before widening scope or continuing subjective polish after the confirmation pass.
+In Implement, Refine, Redesign, or a review where the user separately requested fixes, fix the first evidence batch in one grouped edit, then run one confirmation batch. In Critique or Audit alone, stop after reporting evidence and findings. Two inspection rounds are the normal ceiling for self-directed polish, not permission to ship known P0 or P1 defects. Ask the user before widening scope or continuing subjective polish after the confirmation pass.
 
 ## Pitfalls
 

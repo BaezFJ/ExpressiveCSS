@@ -7,7 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- **ExpressiveCSS design and review skill.** A focused workflow now classifies new work, extensions, refinements, redesigns, and reviews before editing; turns product and brand decisions into Material 3 Expressive components and tokens; covers every reachable state and relevant localization or offline behavior; and closes with responsive browser evidence plus an independent finish review when agent delegation is available.
+- **ExpressiveCSS design and review skill.** The workflow now uses explicit Implement, Refine, Redesign, Critique, and Audit modes; turns product and brand decisions into Material 3 Expressive components and tokens; covers every reachable state and relevant localization or offline behavior; and closes with responsive browser evidence, an independent finish review when delegation is available, and a non-numeric review matrix with pass, intentional-adaptation, fail, and not-applicable outcomes.
+
+### Fixed
+
+- **Card action semantics.** Material 3 card anatomy now uses `<div class="actions">` for command buttons instead of creating a false `<nav>` landmark.
 
 ## [0.8.0] - 2026-08-27
 

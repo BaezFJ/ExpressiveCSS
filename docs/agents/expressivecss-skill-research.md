@@ -8,10 +8,11 @@ This brief separates **normative project rules** from **explanatory guidance**. 
 - **Shipped behavior:** use the package exports, matching-version source, and documented component markup/API as the truth for what ExpressiveCSS actually ships. (`package.json`; `src/ts/index.ts`; `src/ts/components/registry.ts`; `llm.md`; `docs/src/pages/`)
 - **Design intent:** use `m3-guidelines.md` to choose components, anatomy, placement, emphasis, and adaptive behavior. If it conflicts with the live Material specification, Material wins for design intent; matching-version documentation and source still win for the implementation ExpressiveCSS provides. (`m3-guidelines.md`)
 
-Two documentation conflicts found during this research demonstrate why domain ownership matters; both are now guarded by `tests/docs-astro.test.js`:
+Three documentation conflicts found during this research demonstrate why domain ownership matters; they are now guarded by `tests/docs-astro.test.js` or `tests/expressivecss-skill.test.js`:
 
 - The loading indicator was listed as not shipped even though the implementation contract, semantics roster, stylesheet, docs page, and tests expose `.loading-indicator`. The guide now treats it as shipped. (`llm.md`; `semantics.json`; `src/sass/components/_loading-indicator.scss`; `docs/src/pages/loading-indicator.astro`; `tests/loading-indicator.test.js`)
 - The guideline cheat sheet named `button.circle` as the icon-button host even though the implementation has a distinct `.icon-button` component. The guide now uses `.icon-button` for the M3 icon-button token/size system and reserves `.button.circle` for the older round common-button form with different glyph sizing. (`llm.md`; `SEMANTICS.md`; `CLAUDE.md`; `src/sass/components/_icon-buttons.scss`)
+- The card anatomy guidance used `<nav>` for command actions even though the semantics contract forbids `article nav`. Card action rows now use `<div class="actions">`; navigation landmarks remain reserved for destination groups. (`m3-guidelines.md`; `semantics.json`; `SEMANTICS.md`)
 
 ## Installation and public assets/APIs
 
@@ -69,14 +70,15 @@ Two documentation conflicts found during this research demonstrate why domain ow
 
 ## Impeccable comparison and adaptation
 
-The design workflow added in skill version 0.3.0 was informed by the [Impeccable skill](https://github.com/pbakaus/impeccable/tree/0330f61cef1c88291755beb373c81bef5f15be70/skill), reviewed at commit `0330f61cef1c88291755beb373c81bef5f15be70`. Its strongest transferable ideas were process rules rather than aesthetics:
+The design workflow added in skill version 0.3.0 and sharpened in version 0.4.0 was informed by the [Impeccable skill](https://github.com/pbakaus/impeccable/tree/0330f61cef1c88291755beb373c81bef5f15be70/skill), reviewed at commit `0330f61cef1c88291755beb373c81bef5f15be70`. Its strongest transferable ideas were process rules rather than aesthetics:
 
-- classify a task before editing so refinement does not turn into an unapproved redesign;
+- choose an explicit Implement, Refine, Redesign, Critique, or Audit mode before editing so reviews remain non-destructive and refinement does not turn into an unapproved redesign;
 - inspect the existing product, rendered surface, real content, and project constraints before proposing a direction;
 - treat every reachable loading, empty, error, success, disabled, permission, and offline state, plus relevant long-content, localization, and right-to-left behavior, as part of the design;
+- separate visual Critique from measurable Audit, recording the critique first so technical findings do not bias it;
 - separate source inspection from rendered evidence and request a fresh independent finish review when agent delegation is available;
 - batch responsive screenshots and fixes into bounded inspection rounds instead of polishing one detail at a time;
-- report review findings with impact, evidence, priority, and a concrete correction rather than a list of tastes.
+- report review findings with pass, intentional-adaptation, fail, or not-applicable status plus impact, evidence, priority, location, and a concrete correction rather than a numerical score or a list of tastes.
 
 The adaptation deliberately does **not** import Impeccable's broad command system, open-ended visual-world selection, generic device breakpoints, 44 px target rule, font prohibitions, or web aesthetic bans. ExpressiveCSS already has a narrower authority split: Material 3 Expressive governs design intent, component choice, 48 dp targets, type roles, shape, state layers, motion, window size classes, and adaptive navigation; `semantics.json` governs authored element choice, landmark structure, and implied ARIA; target-version documentation and source govern shipped behavior. Product identity is expressed through Material role tokens, type and icon tokens, content, imagery, and assets without replacing familiar Material behavior.
 

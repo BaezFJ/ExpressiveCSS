@@ -9,6 +9,7 @@ const componentsDirectory = new URL('./components/', skillDirectory);
 const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const research = readFileSync(new URL('../docs/agents/expressivecss-skill-research.md', import.meta.url), 'utf8');
 const changelog = readFileSync(new URL('../CHANGELOG.md', import.meta.url), 'utf8');
+const m3Guidelines = readFileSync(new URL('../m3-guidelines.md', import.meta.url), 'utf8');
 const skill = readFileSync(skillUrl, 'utf8');
 const bodyStart = skill.indexOf('\n---\n', 4);
 const frontmatter = skill.slice(4, bodyStart);
@@ -47,7 +48,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.3\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.4\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -118,6 +119,11 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.doesNotMatch(guide('time-picker.md'), /A <dialog> takes no name/);
     assert.doesNotMatch(guide('chips.md'), /^\| Type \|/m);
     assert.doesNotMatch(guide('progress.md'), /\]\(#loading-indicator\)/);
+  });
+
+  test('keeps card actions out of navigation landmarks', () => {
+    assert.doesNotMatch(m3Guidelines, /Actions \(`<nav>` of buttons/);
+    assert.match(m3Guidelines, /Actions \(`<div class="actions">` of buttons/);
   });
 
   test('keeps generated component guides synchronized with their sources', () => {
@@ -191,5 +197,51 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(accessibility, /composite roles/);
     assert.doesNotMatch(accessibility, /presence of state attributes/);
     assert.match(accessibility, /explicitly requires? at author time/);
+  });
+
+  test('defines explicit design operating modes and edit boundaries', () => {
+    const design = readFileSync(new URL('expressivecss-design/SKILL.md', skillDirectory), 'utf8');
+    const modeLine = (mode) => design.match(new RegExp(`^- \\*\\*${mode}\\.\\*\\*.+$`, 'm'))?.[0] ?? '';
+
+    for (const mode of ['Implement', 'Refine', 'Redesign', 'Critique', 'Audit']) {
+      assert.ok(modeLine(mode), `${mode} mode is missing`);
+    }
+
+    assert.match(modeLine('Implement'), /change code.*render.*test.*evidence/i);
+    assert.match(modeLine('Refine'), /preserve.*identity.*content.*information architecture/i);
+    assert.match(modeLine('Redesign'), /structural changes.*product requirements/i);
+    assert.match(modeLine('Critique'), /visual hierarchy.*without editing/i);
+    assert.match(modeLine('Audit'), /measurable.*semantics.*runtime.*responsive.*accessibility.*without editing/i);
+    assert.match(design, /Choose one operating mode, or run Critique followed by Audit for a combined review/i);
+    assert.match(design, /critique before (?:the )?audit/i);
+    assert.match(body, /Before implementing, refining, redesigning, critiquing, or auditing a surface or flow\./);
+    assert.match(design, /Implement, Refine, Redesign, or a review where the user separately requested fixes[\s\S]*fix the first evidence batch/i);
+    assert.match(design, /In Critique or Audit alone, stop after reporting/i);
+  });
+
+  test('uses an evidence-based Material review matrix without a numeric score', () => {
+    const design = readFileSync(new URL('expressivecss-design/SKILL.md', skillDirectory), 'utf8');
+    const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
+
+    assert.match(design, /\[review matrix\]\(\.\/references\/review-matrix\.md\)/i);
+    assert.match(matrix, /Pass[\s\S]*Intentional adaptation[\s\S]*Fail[\s\S]*Not applicable/);
+    assert.match(matrix, /Area \| Criterion \| Status \| Evidence \| Impact \| Location \| Concrete fix/);
+
+    for (const area of [
+      'Component choice and anatomy',
+      'Emphasis, containment, shape, type, icons, motion, and state layers',
+      'Window-class adaptation and navigation',
+      'Semantic color roles and themes',
+      'Authored semantics and runtime-owned ARIA',
+      'Loading, empty, error, permission, and recovery',
+      'Keyboard, focus, contrast, reflow, RTL, and reduced motion',
+      'Initialization and teardown',
+    ]) {
+      assert.ok(matrix.includes(area), `missing review area: ${area}`);
+    }
+
+    assert.match(matrix, /Do not calculate a numeric or aggregate score/i);
+    assert.match(matrix, /Intentional adaptation[\s\S]*documented rationale[\s\S]*preserves/i);
+    assert.match(matrix, /Not applicable[\s\S]*reason/i);
   });
 });

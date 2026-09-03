@@ -741,7 +741,7 @@ The `vibrant` *attribute* is the emphasis foundation, not this class: its ramp i
 2. Subhead
 3. Supporting text
 4. Image / media (`<img>` or `<figure>`)
-5. Actions (`<nav>` of buttons — usually text / tonal)
+5. Actions (`<div class="actions">` of buttons — usually text / tonal)
 
 **Placement.** In a feed, a grid, or a supporting pane. Not inside another card.
 

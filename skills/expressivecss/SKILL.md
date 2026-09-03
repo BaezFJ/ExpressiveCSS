@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
   author: BaezFJ
-  version: "0.3.0"
+  version: "0.4.0"
   homepage: https://www.expressivecss.com
   repository: https://github.com/BaezFJ/ExpressiveCSS
   platforms: linux, macos, windows
@@ -34,7 +34,7 @@ Do not use it for generic Material Design work in a project that does not use Ex
 | Task | Guide | When to read it |
 | --- | --- | --- |
 | Install ExpressiveCSS | [expressivecss-install/SKILL.md](./expressivecss-install/SKILL.md) | When the target project does not already load the required package surfaces. |
-| Design or review an interface | [expressivecss-design/SKILL.md](./expressivecss-design/SKILL.md) | Before creating, redesigning, refining, hardening, or visually reviewing a surface or flow. |
+| Design or review an interface | [expressivecss-design/SKILL.md](./expressivecss-design/SKILL.md) | Before implementing, refining, redesigning, critiquing, or auditing a surface or flow. |
 | Use classes, markup, layout, or utilities | [expressivecss-usage/SKILL.md](./expressivecss-usage/SKILL.md) | Before writing ExpressiveCSS classes or component markup. |
 | Use themes, tokens, or colors | [expressivecss-theming/SKILL.md](./expressivecss-theming/SKILL.md) | Before writing role colors, theme overrides, or custom component colors. |
 | Use JavaScript behavior | [expressivecss-runtime/SKILL.md](./expressivecss-runtime/SKILL.md) | Before calling `AutoInit()`, `init()`, component methods, or teardown. |
