@@ -372,9 +372,12 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
   min-height: 112px;
   padding-bottom: 20px;
 
+  > #{$_title} {
+    padding: 0 12px;
+  }
+
   > #{$_heading},
   > hgroup > #{$_heading} {
-    padding: 0 12px;
     font-family: var(--md-sys-typescale-headline-medium-font-family-name);
     font-size: var(--md-sys-typescale-headline-medium-font-size);
     font-weight: var(--md-sys-typescale-headline-medium-font-weight);
@@ -383,7 +386,6 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
   }
 
   > hgroup > p {
-    padding: 0 12px;
     font-family: var(--md-sys-typescale-label-large-font-family-name);
     font-size: var(--md-sys-typescale-label-large-font-size);
     font-weight: var(--md-sys-typescale-label-large-font-weight);
@@ -398,11 +400,14 @@ header.medium:has(> #{$_bar} > hgroup > p) > #{$_bar} {
 
 header.large:has(> #{$_bar}) > #{$_bar} {
   min-height: 120px;
-  padding-bottom: 28px;
+  padding-bottom: 20px;
+
+  > #{$_title} {
+    padding: 0 12px;
+  }
 
   > #{$_heading},
   > hgroup > #{$_heading} {
-    padding: 0 12px;
     font-family: var(--md-sys-typescale-display-small-font-family-name);
     font-size: var(--md-sys-typescale-display-small-font-size);
     font-weight: var(--md-sys-typescale-display-small-font-weight);
@@ -411,7 +416,6 @@ header.large:has(> #{$_bar}) > #{$_bar} {
   }
 
   > hgroup > p {
-    padding: 0 12px;
     font-family: var(--md-sys-typescale-title-medium-font-family-name);
     font-size: var(--md-sys-typescale-title-medium-font-size);
     font-weight: var(--md-sys-typescale-title-medium-font-weight);
@@ -422,6 +426,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 
 header.large:has(> #{$_bar} > hgroup > p) > #{$_bar} {
   min-height: 152px;
+  padding-bottom: 28px;
 }
 
 header.center.medium:not(.collapsed):has(> #{$_bar}) > #{$_bar} > #{$_title},

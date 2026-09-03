@@ -137,4 +137,29 @@ describe('AppBar search view', () => {
     assert.equal(view.open, true);
     instance.destroy();
   });
+
+  test('closing a full-screen dialog does not reopen on restored focus', () => {
+    document.body.innerHTML = `
+      <header>
+        <nav aria-label="Main">
+          <search class="search-bar" aria-label="Search">
+            <input type="search" aria-label="Search" aria-controls="search-full">
+          </search>
+        </nav>
+      </header>
+      <dialog class="search-view full-screen" id="search-full" aria-label="Search"></dialog>`;
+    const header = document.querySelector('header');
+    const input = header.querySelector('input');
+    const view = document.getElementById('search-full');
+    const instance = Expressive.AppBar.init(header);
+    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
+    assert.equal(view.open, true);
+    view.close();
+    assert.equal(view.open, false);
+    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
+    assert.equal(view.open, false);
+    input.dispatchEvent(new window.Event('focus', { bubbles: true }));
+    assert.equal(view.open, true);
+    instance.destroy();
+  });
 });

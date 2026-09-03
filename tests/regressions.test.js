@@ -793,11 +793,13 @@ describe('App bar medium and large geometry', () => {
     assert.ok(headline.some((b) => /flex:\s*1 1 calc\(100% \+ 1px\)/.test(b)));
 
     // Expanded headline: 16dp from the inline edges (4dp of it paid by the
-    // bar), 20dp above the bottom on medium and 28dp on large.
+    // bar), 20dp above the bottom on medium and on large without a subtitle.
+    // Large with a subtitle keeps 28dp so 8+48+44+24+28 = 152.
     const medium = bodyOf((sel) => /header\.medium\b/.test(sel) && !/header\.large\b/.test(sel));
     assert.ok(medium.some((b) => /padding-bottom:\s*20px/.test(b)));
     assert.ok(medium.some((b) => /padding:\s*0 12px/.test(b)));
     const large = bodyOf((sel) => /header\.large\b/.test(sel) && !/header\.medium\b/.test(sel));
+    assert.ok(large.some((b) => /padding-bottom:\s*20px/.test(b)));
     assert.ok(large.some((b) => /padding-bottom:\s*28px/.test(b)));
     assert.ok(large.some((b) => /padding:\s*0 12px/.test(b)));
   });

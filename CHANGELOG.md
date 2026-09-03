@@ -17,6 +17,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **App bar search dialog.** Closing a full-screen search view no longer reopens it when focus returns to the field.
 - **Card action semantics.** Material 3 card anatomy now uses `<div class="actions">` for command buttons instead of creating a false `<nav>` landmark.
 
 ## [0.8.0] - 2026-08-27

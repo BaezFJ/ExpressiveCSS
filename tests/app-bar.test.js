@@ -37,6 +37,11 @@ describe('App bar M3 Expressive types', () => {
       (r) => r.selector.includes('header.large') && /min-height:\s*120px/.test(r.body),
     );
     assert.ok(height, 'large bar is not 120dp');
+    assert.match(
+      height.body,
+      /padding-bottom:\s*20px/,
+      'large bar padding-bottom is not 20dp (8+48+44+20=120)',
+    );
     const withoutSubtitle = rules.filter(
       (r) =>
         r.selector.includes('header.large') &&
@@ -95,6 +100,11 @@ describe('App bar M3 Expressive types', () => {
         /min-height:\s*152px/.test(r.body),
     );
     assert.ok(height, 'large + subtitle is not 152dp');
+    assert.match(
+      height.body,
+      /padding-bottom:\s*28px/,
+      'large subtitle padding-bottom is not 28dp (8+48+44+24+28=152)',
+    );
 
     const subtitle = rules.find(
       (r) =>
@@ -115,6 +125,29 @@ describe('App bar M3 Expressive types', () => {
     for (const rule of titles) {
       assert.doesNotMatch(rule.body, /text-overflow:\s*ellipsis/);
     }
+  });
+
+  test('hgroup children do not add a second 12px inset', () => {
+    const inner = rules.filter(
+      (r) =>
+        (/header\.medium/.test(r.selector) || /header\.large/.test(r.selector)) &&
+        /hgroup\s*>/.test(r.selector) &&
+        !/\.collapsed/.test(r.selector),
+    );
+    assert.ok(inner.length >= 1, 'no hgroup child rules');
+    for (const rule of inner) {
+      assert.doesNotMatch(rule.body, /padding:\s*0 12px/);
+    }
+    assert.ok(
+      rules.some(
+        (r) =>
+          (/header\.medium/.test(r.selector) || /header\.large/.test(r.selector)) &&
+          /hgroup/.test(r.selector) &&
+          !/hgroup\s*>/.test(r.selector) &&
+          /padding:\s*0 12px/.test(r.body),
+      ),
+      'title slot lost the 12px inset',
+    );
   });
 
   test('center-aligned works on small, medium, and large bars', () => {
