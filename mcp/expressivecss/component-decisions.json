@@ -840,7 +840,7 @@
         "floating-sheet"
       ],
       "adaptive": [],
-      "runtime": "native",
+      "runtime": "shared-runtime",
       "guide": "../components/dialogs.md",
       "materialGuidance": {
         "status": "material",
@@ -888,7 +888,7 @@
           "reason": "Persistent secondary content fits beside the main task."
         }
       ],
-      "runtime": "native",
+      "runtime": "shared-runtime",
       "guide": "../components/bottom-sheet.md",
       "materialGuidance": {
         "status": "material",
@@ -942,7 +942,7 @@
           "reason": "Use a dialog when a compact task must block progress."
         }
       ],
-      "runtime": "native",
+      "runtime": "shared-runtime",
       "guide": "../components/side-sheet.md",
       "materialGuidance": {
         "status": "material",
@@ -981,7 +981,7 @@
         "side-sheet"
       ],
       "adaptive": [],
-      "runtime": "native",
+      "runtime": "shared-runtime",
       "guide": "../components/floating-sheet.md",
       "materialGuidance": {
         "status": "material",

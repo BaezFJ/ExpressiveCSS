@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { accessSync, constants as fsConstants, readFileSync, realpathSync, statSync } from 'node:fs';
+import { accessSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
 import { access, lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,6 +17,11 @@ const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
 const DEFAULT_QA_MAX_FILES = 300;
 const DEFAULT_QA_MAX_MB = 2;
+const DEFAULT_QA_MAX_TOTAL_MB = 16;
+const MAX_STATIC_ISSUES = 200;
+const MAX_STATIC_ISSUES_PER_REQUEST = 1_000;
+const MAX_STATIC_MARKUP_DELIMITERS = 4_000;
+const STATIC_INSPECTION_TIMEOUT_MS = 5_000;
 const DEFAULT_COMMAND_TIMEOUT_MS = 120_000;
 const MAX_PROJECT_ROOT_CHARS = 4_096;
 const MAX_WORKFLOW_ID_CHARS = 256;
@@ -26,14 +31,7 @@ const MAX_COMPONENT_NAME_CHARS = 120;
 const MAX_FILE_PATH_CHARS = 4_096;
 const MAX_CONTRACT_SOURCE_BYTES = 2 * 1024 * 1024;
 const MAX_CONTRACT_TOTAL_BYTES = 8 * 1024 * 1024;
-const CANONICAL_CONTRACT_SOURCES = Object.freeze([
-  'llm.md',
-  'semantics.json',
-  'docs/src/data/nav.ts',
-  'docs/src/data/component-decisions.json',
-  'package.json',
-  'CHANGELOG.md',
-]);
+
 
 function configuredCommandRoots(value) {
   if (!value?.trim()) return [];
@@ -54,6 +52,7 @@ const SETTINGS = {
   maxComponentSkips: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS || 7),
   qaMaxFiles: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_FILES || DEFAULT_QA_MAX_FILES),
   qaMaxMb: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_MB || DEFAULT_QA_MAX_MB),
+  qaMaxTotalMb: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB || DEFAULT_QA_MAX_TOTAL_MB),
   commandTimeoutMs: Number(process.env.EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS || DEFAULT_COMMAND_TIMEOUT_MS),
   allowedCommandRoots: configuredCommandRoots(process.env.EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS),
 };
@@ -72,7 +71,7 @@ const LegacyPatternList = [
     id: 'legacy-btn-class',
     severity: 'high',
     description: 'Replace `.btn` with the ExpressiveCSS button contract (`<button>`, `.button`, or component-specific button classes).',
-    pattern: /\bclass(?:Name)?\s*=\s*["'][^"']*\bbtn\b[^"']*["']/g,
+    pattern: /\bclass(?:Name)?\s*=\s*(?:"[^"]*\bbtn\b[^"]*"|'[^']*\bbtn\b[^']*'|`[^`]*\bbtn\b[^`]*`|\{\s*(?:"[^"]*\bbtn\b[^"]*"|'[^']*\bbtn\b[^']*'|`[^`]*\bbtn\b[^`]*`)\s*\}|btn(?=[\s>]))/gu,
   },
   {
     id: 'legacy-card-content',
@@ -365,8 +364,12 @@ function tokenize(value) {
     .filter((token) => token.length > 2);
 }
 
-function resolveGuideDirectory(projectRoot) {
-  const packageJson = requireSafeJson(path.join(projectRoot, 'package.json'));
+async function resolveGuideDirectory(projectRoot) {
+  let packageJson = null;
+  try {
+    const manifest = await readInspectionFile(path.join(projectRoot, 'package.json'), projectRoot, 1 * 1024 * 1024);
+    packageJson = JSON.parse(manifest.text);
+  } catch {}
   if (packageJson?.name !== '@expressivecss/expressive') {
     return null;
   }
@@ -425,14 +428,15 @@ async function readHandleBounded(handle, maxBytes) {
   };
 }
 
-async function verifyLocalContractProvenance(projectRoot, contract) {
+async function verifyLocalContractProvenance(projectRoot, contract, canonicalSources) {
   if (!contract) {
     return { status: 'missing', expectedHash: null, computedHash: null, missingSources: [] };
   }
   if (
-    !Array.isArray(contract.sources)
-    || contract.sources.length !== CANONICAL_CONTRACT_SOURCES.length
-    || contract.sources.some((source, index) => source !== CANONICAL_CONTRACT_SOURCES[index])
+    !Array.isArray(canonicalSources)
+    || !Array.isArray(contract.sources)
+    || contract.sources.length !== canonicalSources.length
+    || contract.sources.some((source, index) => source !== canonicalSources[index])
     || !/^[a-f0-9]{64}$/u.test(contract.sourceHash ?? '')
   ) {
     return { status: 'invalid', expectedHash: contract.sourceHash ?? null, computedHash: null, missingSources: [] };
@@ -551,7 +555,12 @@ async function loadGuideCatalog(projectRoot) {
     if (bundled.schemaVersion !== 1 || !bundled.frameworkVersion || !Array.isArray(bundled.guides)) {
       throw new Error(`Bundled ExpressiveCSS component guide data is invalid at ${bundledPath}`);
     }
-    const bundledContract = requireSafeJson(path.join(SERVER_DIR, 'contract.json'));
+    const bundledContractRead = await readInspectionFile(
+      path.join(SERVER_DIR, 'contract.json'),
+      SERVER_DIR,
+      MAX_CONTRACT_SOURCE_BYTES,
+    );
+    const bundledContract = JSON.parse(bundledContractRead.text);
     const components = new Map();
     for (const entry of bundled.guides) {
       const guide = parseGuide(entry.file, entry.content);
@@ -560,6 +569,7 @@ async function loadGuideCatalog(projectRoot) {
     bundledGuideCache = {
       frameworkVersion: bundledContract?.frameworkVersion ?? bundled.frameworkVersion ?? null,
       sourceHash: bundledContract?.sourceHash ?? bundled.sourceHash ?? null,
+      contractSources: bundledContract?.sources ?? [],
       count: components.size,
       components,
     };
@@ -567,11 +577,48 @@ async function loadGuideCatalog(projectRoot) {
 
   let provenance;
 
-  const guideDir = resolveGuideDirectory(projectRoot);
+  const guideDir = await resolveGuideDirectory(projectRoot);
   const dirStat = guideDir ? await stat(guideDir).catch(() => null) : null;
+  const projectResolution = await resolveExpressiveVersion({
+    projectRoot,
+    contractVersion: bundledGuideCache.frameworkVersion,
+  });
+  const isFrameworkSource = projectResolution.resolutionSource === 'framework-source';
   if (dirStat?.isDirectory()) {
-    const localContract = requireSafeJson(path.join(projectRoot, 'skills', 'expressivecss', 'references', 'contract.json'));
-    provenance = await verifyLocalContractProvenance(projectRoot, localContract);
+    const localContractPath = path.join(projectRoot, 'skills', 'expressivecss', 'references', 'contract.json');
+    const localContractRead = await readInspectionFile(
+      localContractPath,
+      projectRoot,
+      MAX_CONTRACT_SOURCE_BYTES,
+    ).catch(() => null);
+    let localContract = null;
+    try {
+      localContract = localContractRead ? JSON.parse(localContractRead.text) : null;
+    } catch {
+      localContract = null;
+    }
+    provenance = await verifyLocalContractProvenance(
+      projectRoot,
+      localContract,
+      bundledGuideCache.contractSources,
+    );
+    const packageCompatible = localContract?.frameworkVersion === bundledGuideCache.frameworkVersion
+      && localContract?.sourceHash === bundledGuideCache.sourceHash;
+    provenance = {
+      ...provenance,
+      packageExpectedVersion: bundledGuideCache.frameworkVersion,
+      packageExpectedHash: bundledGuideCache.sourceHash,
+      ...(provenance.status === 'verified' && !packageCompatible ? { status: 'divergent' } : {}),
+    };
+  } else if (isFrameworkSource) {
+    provenance = {
+      status: 'missing',
+      expectedHash: bundledGuideCache.sourceHash,
+      computedHash: null,
+      missingSources: ['skills/expressivecss/components'],
+      packageExpectedVersion: bundledGuideCache.frameworkVersion,
+      packageExpectedHash: bundledGuideCache.sourceHash,
+    };
   } else {
     provenance = {
       status: 'bundled-verified',
@@ -662,7 +709,7 @@ function nearestMatches(catalog, token, limit = 5) {
   return scored.slice(0, limit);
 }
 
-function projectSummary(projectRoot) {
+async function projectSummary(projectRoot) {
   const summary = {
     projectRoot,
     isExpressiveProject: false,
@@ -685,7 +732,11 @@ function projectSummary(projectRoot) {
         : 'pnpm';
   }
 
-  const packageJson = requireSafeJson(packagePath);
+  let packageJson = null;
+  try {
+    const manifest = await readInspectionFile(packagePath, projectRoot, 1 * 1024 * 1024);
+    packageJson = JSON.parse(manifest.text);
+  } catch {}
   if (packageJson && typeof packageJson === 'object') {
     if (packageJson.name === '@expressivecss/expressive') {
       summary.isExpressiveProject = true;
@@ -783,19 +834,46 @@ function accessibleName(element, document) {
   return clone.textContent.trim();
 }
 
-function inspectSemanticRules(snippet) {
+function markInspectionTruncated(issues, reason) {
+  Object.defineProperty(issues, 'truncatedReason', { value: reason, enumerable: false });
+  return issues;
+}
+
+function inspectionStopReason(issues, maxIssues, deadline) {
+  if (issues.length >= maxIssues) return 'issue limit reached';
+  if (Date.now() >= deadline) return 'time limit reached';
+  return null;
+}
+
+function markupStructureExceedsLimit(snippet) {
+  let delimiters = 0;
+  for (let index = 0; index < snippet.length; index += 1) {
+    if (snippet.charCodeAt(index) === 60 && ++delimiters > MAX_STATIC_MARKUP_DELIMITERS) return true;
+  }
+  return false;
+}
+
+function inspectSemanticRules(snippet, maxIssues = MAX_STATIC_ISSUES, deadline = Infinity) {
   const { semantics, frameworkVersion } = loadSemanticsContract();
+  if (maxIssues <= 0) return markInspectionTruncated([], 'issue limit reached');
+  if (markupStructureExceedsLimit(snippet)) return markInspectionTruncated([], 'markup structure limit reached');
   const { document } = new JSDOM(`<!doctype html><body>${snippet}</body>`).window;
   const issues = [];
 
   for (const rule of enforcedSemanticRules(semantics)) {
-    const hits = [...document.querySelectorAll(expandedSemanticSelector(rule, semantics.compositeRoles))];
+    const beforeRule = inspectionStopReason(issues, maxIssues, deadline);
+    if (beforeRule) return markInspectionTruncated(issues, beforeRule);
+    const hits = document.querySelectorAll(expandedSemanticSelector(rule, semantics.compositeRoles));
     if (rule.kind === 'forbid' || rule.kind === 'forbid-composite-roles') {
       for (const element of hits) {
+        const stop = inspectionStopReason(issues, maxIssues, deadline);
+        if (stop) return markInspectionTruncated(issues, stop);
         issues.push(semanticIssue(rule, element, frameworkVersion));
       }
     } else if (rule.kind === 'require-attr') {
       for (const element of hits) {
+        const stop = inspectionStopReason(issues, maxIssues, deadline);
+        if (stop) return markInspectionTruncated(issues, stop);
         const value = element.getAttribute(rule.attr);
         const valid = rule.equals ? value === rule.equals : value !== null && value !== '';
         if (!valid) {
@@ -804,6 +882,8 @@ function inspectSemanticRules(snippet) {
       }
     } else if (rule.kind === 'require-accessible-name') {
       for (const element of hits) {
+        const stop = inspectionStopReason(issues, maxIssues, deadline);
+        if (stop) return markInspectionTruncated(issues, stop);
         if (!accessibleName(element, document)) {
           issues.push(semanticIssue(rule, element, frameworkVersion));
         }
@@ -813,6 +893,8 @@ function inspectSemanticRules(snippet) {
 
   const seenLandmarkNames = new Set();
   for (const nav of document.querySelectorAll('nav')) {
+    const stop = inspectionStopReason(issues, maxIssues, deadline);
+    if (stop) return markInspectionTruncated(issues, stop);
     const name = authoredName(nav, document);
     if (!name) {
       continue;
@@ -846,15 +928,6 @@ function semanticIssue(rule, element, frameworkVersion) {
   };
 }
 
-function requireSafeJson(filePath) {
-  try {
-    const raw = readFileSync(filePath, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
 function lineForMatch(text, index) {
   const prefix = text.slice(0, index);
   const line = prefix.split('\n').length;
@@ -862,13 +935,21 @@ function lineForMatch(text, index) {
   return { line, column: col };
 }
 
-function inspectAuthoringRules(snippet) {
+function inspectAuthoringRules(
+  snippet,
+  maxIssues = MAX_STATIC_ISSUES,
+  deadline = Date.now() + STATIC_INSPECTION_TIMEOUT_MS,
+) {
   const issues = [];
 
   for (const rule of LegacyPatternList) {
+    const beforeRule = inspectionStopReason(issues, maxIssues, deadline);
+    if (beforeRule) return markInspectionTruncated(issues, beforeRule);
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags.includes('g') ? rule.pattern.flags : `${rule.pattern.flags}g`);
     let match;
     while ((match = regex.exec(snippet)) !== null) {
+      const stop = inspectionStopReason(issues, maxIssues, deadline);
+      if (stop) return markInspectionTruncated(issues, stop);
       const loc = lineForMatch(snippet, match.index);
       issues.push({
         id: rule.id,
@@ -885,8 +966,10 @@ function inspectAuthoringRules(snippet) {
 
   const autoInit = /(?:Expressive\.)?AutoInit\s*\(/u.test(snippet);
   const manualInitPattern = /(?:(?:const|let|var)\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*=\s*)?(?:Expressive\.)?[A-Z][A-Za-z0-9]*\.init\s*\(/gu;
-  const manualInits = [...snippet.matchAll(manualInitPattern)];
-  for (const manualInit of manualInits) {
+  let manualInit;
+  while ((manualInit = manualInitPattern.exec(snippet)) !== null) {
+    const stop = inspectionStopReason(issues, maxIssues, deadline);
+    if (stop) return markInspectionTruncated(issues, stop);
     if (autoInit) {
       const loc = lineForMatch(snippet, manualInit.index);
       issues.push({
@@ -914,7 +997,9 @@ function inspectAuthoringRules(snippet) {
     }
   }
 
-  issues.push(...inspectSemanticRules(snippet));
+  const semanticIssues = inspectSemanticRules(snippet, maxIssues - issues.length, deadline);
+  issues.push(...semanticIssues);
+  if (semanticIssues.truncatedReason) return markInspectionTruncated(issues, semanticIssues.truncatedReason);
 
   return issues;
 }
@@ -1229,6 +1314,7 @@ function commandExecutionPolicy(projectRoot) {
     configured: SETTINGS.allowedCommandRoots.length > 0,
     allowed: Boolean(matchedRoot),
     matchedRoot,
+    projectRoot: resolvedProjectRoot,
   };
 }
 
@@ -1259,7 +1345,11 @@ function commandEnvironment(projectRoot) {
 function stopProcessTree(proc, signal) {
   if (!proc.pid) return;
   if (process.platform === 'win32') {
-    proc.kill(signal);
+    const killer = spawn('taskkill', ['/pid', String(proc.pid), '/t', '/f'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    killer.unref();
     return;
   }
   try {
@@ -1271,48 +1361,133 @@ function stopProcessTree(proc, signal) {
 
 function redactSensitiveText(value) {
   return String(value)
-    .replace(/\bBearer\s+[^\s"']+/gi, 'Bearer [REDACTED]')
-    .replace(/\b(?:gh[pousr]_[A-Za-z0-9_]+|sk-[A-Za-z0-9_-]{8,})\b/g, '[REDACTED]')
-    .replace(/\b(API[_-]?KEY|TOKEN|PASSWORD|PASSWD|SECRET|CONNECTION[_-]?STRING)\s*[:=]\s*[^\s,;]+/gi, '$1=[REDACTED]')
-    .replace(/([a-z][a-z0-9+.-]*:\/\/)[^\s/@:]+:[^\s/@]+@/gi, '$1[REDACTED]@');
+    .replace(/(Authorization\s*:\s*Bearer\s+)[^\s,;]+/giu, '$1[REDACTED]')
+    .replace(/\b(Bearer\s+)[A-Za-z0-9._~+\/-]{16,}/giu, '$1[REDACTED]')
+    .replace(/((?:Set-)?Cookie\s*:\s*)[^\r\n]+/giu, '$1[REDACTED]')
+    .replace(/\bgh[pousr]_[A-Za-z0-9_]{20,}\b/gu, '[REDACTED]')
+    .replace(/\bglpat-[A-Za-z0-9_-]{20,}\b/gu, '[REDACTED]')
+    .replace(/\bnpm_[A-Za-z0-9]{20,}\b/gu, '[REDACTED]')
+    .replace(/\bxox[baprs]-[A-Za-z0-9-]{20,}\b/gu, '[REDACTED]')
+    .replace(/\bsk-[A-Za-z0-9_-]{20,}\b/gu, '[REDACTED]')
+    .replace(/\bAKIA[0-9A-Z]{16}\b/gu, '[REDACTED]')
+    .replace(/\b[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/gu, '[REDACTED]')
+    .replace(/-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/gu, '[REDACTED]')
+    .replace(/(["'])(API[_-]?KEY|TOKEN|PASSWORD|PASSWD|SECRET|CLIENT[_-]?SECRET|CLIENTSECRET|CONNECTION[_-]?STRING|ACCESS_TOKEN|REFRESH_TOKEN|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY)\1\s*:\s*(["'])[^"'\r\n]*\3/giu, '$1$2$1:$3[REDACTED]$3')
+    .replace(/\b(API[_-]?KEY|TOKEN|PASSWORD|PASSWD|SECRET|CLIENT[_-]?SECRET|CLIENTSECRET|CONNECTION[_-]?STRING|ACCESS_TOKEN|REFRESH_TOKEN|AWS_ACCESS_KEY_ID|AWS_SECRET_ACCESS_KEY)\s*[:=]\s*[^\s,;]+/giu, '$1=[REDACTED]')
+    .replace(/([a-z][a-z0-9+.-]*:\/\/)[^\s/@:]+:[^\s/@]+@/giu, '$1[REDACTED]@')
+    .replace(/\/(?:home|Users)\/[^/\s"'<>]+(?:\/[^\s"'<>),;\]}]*)?/gu, '[LOCAL_PATH]')
+    .replace(/\/(?:private\/)?tmp\/[^\s"'<>),;\]}]+/gu, '[LOCAL_PATH]')
+    .replace(/[A-Z]:\\+Users\\+[^\\\s]+(?:\\+[^\s]*)?/giu, '[LOCAL_PATH]');
 }
 
-function findFileViolations(fileInfoList) {
+async function readInspectionFile(filePath, projectRoot, byteLimit) {
+  const resolvedRoot = await realpath(projectRoot);
+  const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
+  const handle = await open(filePath, fsConstants.O_RDONLY | noFollow);
+  try {
+    const before = await handle.stat({ bigint: true });
+    const pathBefore = await lstat(filePath, { bigint: true });
+    if (pathBefore.isSymbolicLink()) throw new Error('path is a symbolic link');
+    if (!before.isFile() || !pathBefore.isFile()) throw new Error('path is not a regular file');
+    if (before.dev !== pathBefore.dev || before.ino !== pathBefore.ino) throw new Error('file identity changed before reading');
+    const openedPath = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => realpath(filePath));
+    if (!isPathInside(resolvedRoot, openedPath)) throw new Error('opened file is outside projectRoot');
+    if (before.size > BigInt(byteLimit)) {
+      const error = new Error(`file exceeds ${byteLimit} byte read limit`);
+      error.code = 'INSPECTION_FILE_TOO_LARGE';
+      throw error;
+    }
+
+    const bytes = Buffer.allocUnsafe(byteLimit + 1);
+    let total = 0;
+    while (total <= byteLimit) {
+      const chunk = await handle.read(bytes, total, byteLimit + 1 - total, total);
+      if (chunk.bytesRead === 0) break;
+      total += chunk.bytesRead;
+    }
+    if (total > byteLimit) {
+      const error = new Error(`file exceeds ${byteLimit} byte read limit`);
+      error.code = 'INSPECTION_FILE_TOO_LARGE';
+      throw error;
+    }
+
+    const after = await handle.stat({ bigint: true });
+    const pathAfter = await lstat(filePath, { bigint: true });
+    if (pathAfter.isSymbolicLink() || !pathAfter.isFile()
+      || before.dev !== after.dev || before.ino !== after.ino
+      || before.size !== after.size || before.mtimeNs !== after.mtimeNs || before.ctimeNs !== after.ctimeNs
+      || after.dev !== pathAfter.dev || after.ino !== pathAfter.ino) {
+      throw new Error('file changed while reading');
+    }
+    return { text: bytes.subarray(0, total).toString('utf8'), bytes: total };
+  } finally {
+    await handle.close();
+  }
+}
+
+async function findFileViolations(fileInfoList, projectRoot) {
   const findings = [];
   const inspected = [];
   const uninspected = [];
-  const maxBytes = Math.max(1, SETTINGS.qaMaxMb * 1024 * 1024);
+  const perFileMb = Number.isFinite(SETTINGS.qaMaxMb) && SETTINGS.qaMaxMb > 0
+    ? SETTINGS.qaMaxMb
+    : DEFAULT_QA_MAX_MB;
+  const totalMb = Number.isFinite(SETTINGS.qaMaxTotalMb) && SETTINGS.qaMaxTotalMb > 0
+    ? SETTINGS.qaMaxTotalMb
+    : DEFAULT_QA_MAX_TOTAL_MB;
+  const maxBytes = Math.max(1, Math.floor(perFileMb * 1024 * 1024));
+  const maxTotalBytes = Math.max(1, Math.floor(totalMb * 1024 * 1024));
+  const deadline = Date.now() + STATIC_INSPECTION_TIMEOUT_MS;
+  let totalBytes = 0;
+  let totalIssues = 0;
 
-  for (const file of fileInfoList) {
+  for (let index = 0; index < fileInfoList.length; index += 1) {
+    const file = fileInfoList[index];
+    if (Date.now() >= deadline || totalIssues >= MAX_STATIC_ISSUES_PER_REQUEST || totalBytes >= maxTotalBytes) {
+      const reason = Date.now() >= deadline
+        ? 'static inspection time limit reached'
+        : totalIssues >= MAX_STATIC_ISSUES_PER_REQUEST
+          ? 'static inspection issue limit reached'
+          : 'aggregate byte limit reached';
+      uninspected.push(...fileInfoList.slice(index).map((entry) => ({ file: entry.requested, reason })));
+      break;
+    }
     try {
-      const fileStat = statSync(file.absolute);
-      if (!fileStat.isFile()) {
-        uninspected.push({ file: file.requested, reason: 'path is not a regular file' });
-        continue;
-      }
-      const size = fileStat.size;
-      if (size > maxBytes) {
-        uninspected.push({
-          file: file.requested,
-          reason: `file exceeds size limit: ${Math.round(size / 1024 / 1024 * 100) / 100}MB > ${SETTINGS.qaMaxMb}MB`,
-        });
-        continue;
-      }
-
-      const text = readFileSync(file.absolute, 'utf8');
-      inspected.push(file.requested);
-      const issues = inspectAuthoringRules(text);
+      const remainingBytes = Math.floor(Math.min(maxBytes, maxTotalBytes - totalBytes));
+      const read = await readInspectionFile(file.absolute, projectRoot, remainingBytes);
+      totalBytes += read.bytes;
+      const issues = inspectAuthoringRules(
+        read.text,
+        Math.min(MAX_STATIC_ISSUES, MAX_STATIC_ISSUES_PER_REQUEST - totalIssues),
+        deadline,
+      );
+      totalIssues += issues.length;
       if (issues.length > 0) {
         findings.push({
           file: file.requested,
           issues,
         });
       }
+      if (issues.truncatedReason) {
+        uninspected.push({ file: file.requested, reason: `static inspection ${issues.truncatedReason}` });
+      } else {
+        inspected.push(file.requested);
+      }
     } catch (error) {
+      const aggregateLimit = error.code === 'INSPECTION_FILE_TOO_LARGE' && maxTotalBytes - totalBytes < maxBytes;
       uninspected.push({
         file: file.requested,
-        reason: `file read failed: ${error.message}`,
+        reason: aggregateLimit
+          ? 'aggregate byte limit reached'
+          : `file read failed: ${error.message}`,
       });
+      if (aggregateLimit) {
+        uninspected.push(...fileInfoList.slice(index + 1).map((entry) => ({
+          file: entry.requested,
+          reason: 'aggregate byte limit reached',
+        })));
+        break;
+      }
     }
   }
 
@@ -1326,14 +1501,43 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
     ? SETTINGS.commandTimeoutMs
     : DEFAULT_COMMAND_TIMEOUT_MS;
   const effectiveTimeout = Math.min(timeoutMs, configuredTimeout);
+  let directoryFd;
+  let pinnedCwd;
+  try {
+    const directoryFlags = fsConstants.O_RDONLY
+      | (fsConstants.O_DIRECTORY ?? 0)
+      | (fsConstants.O_NOFOLLOW ?? 0);
+    directoryFd = openSync(projectRoot, directoryFlags);
+    const descriptorStat = fstatSync(directoryFd, { bigint: true });
+    const pathStat = lstatSync(projectRoot, { bigint: true });
+    const canonicalRoot = realpathSync(projectRoot);
+    if (!descriptorStat.isDirectory() || !pathStat.isDirectory() || pathStat.isSymbolicLink()
+      || !sameFileIdentity(descriptorStat, pathStat) || canonicalRoot !== projectRoot) {
+      throw new Error('authorized project root changed before command execution');
+    }
+    pinnedCwd = process.platform === 'linux' ? `/proc/self/fd/${directoryFd}` : canonicalRoot;
+  } catch (error) {
+    if (directoryFd !== undefined) closeSync(directoryFd);
+    return {
+      manager,
+      command,
+      exitStatus: null,
+      exitCode: null,
+      completed: false,
+      timedOut: false,
+      spawnError: true,
+      output: redactSensitiveText(`Failed to pin command root: ${error.message}`),
+    };
+  }
   return new Promise((resolve) => {
     const proc = spawn(manager, args, {
-      cwd: projectRoot,
+      cwd: pinnedCwd,
       shell: false,
       detached: process.platform !== 'win32',
       stdio: ['ignore', 'pipe', 'pipe'],
       env: commandEnvironment(projectRoot),
     });
+    closeSync(directoryFd);
 
     let stdout = '';
     let stderr = '';
@@ -1344,14 +1548,27 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      clearTimeout(forceKillTimer);
+      if (!timedOut) clearTimeout(forceKillTimer);
       resolve(result);
     };
     const timer = setTimeout(() => {
       timedOut = true;
       stopProcessTree(proc, 'SIGTERM');
-      forceKillTimer = setTimeout(() => stopProcessTree(proc, 'SIGKILL'), 5_000);
+      proc.stdout.destroy();
+      proc.stderr.destroy();
+      forceKillTimer = setTimeout(() => stopProcessTree(proc, 'SIGKILL'), 50);
       forceKillTimer.unref();
+      const output = redactSensitiveText(`${stdout}\n${stderr}`);
+      finish({
+        manager,
+        command,
+        exitStatus: null,
+        exitCode: null,
+        completed: false,
+        timedOut: true,
+        spawnError: false,
+        output: clampText(output, 20_000),
+      });
     }, effectiveTimeout);
 
     proc.stdout.on('data', (chunk) => {
@@ -1430,7 +1647,7 @@ async function setupExpertHandler(args) {
   const parsed = setupExpertSchema.parse(args);
   const workflowId = parsed.workflowId || randomUUID();
   const projectRoot = resolveProjectRoot(parsed.projectRoot);
-  const snapshot = projectSummary(projectRoot);
+  const snapshot = await projectSummary(projectRoot);
   const catalog = await loadGuideCatalog(projectRoot);
   const contractVersion = catalog.frameworkVersion;
   const version = await resolveExpressiveVersion({ projectRoot, contractVersion });
@@ -1558,6 +1775,7 @@ async function rulesEnforcerHandler(args) {
   }));
 
   const issues = hasSnippet ? inspectAuthoringRules(parsed.snippet) : [];
+  const inspectionTruncated = Boolean(issues.truncatedReason);
   const componentGuidance = [];
   for (const match of componentMatches) {
     if (!match.guide) {
@@ -1584,6 +1802,8 @@ async function rulesEnforcerHandler(args) {
   const componentValidationBlocked = componentGuidance.length > 0;
   const staticStatus = blocking.length
     ? 'needs_fix'
+    : inspectionTruncated
+      ? 'blocked'
     : !hasSnippet
       ? 'blocked'
       : issues.length
@@ -1592,7 +1812,7 @@ async function rulesEnforcerHandler(args) {
   const reportedStaticStatus = staticStatus === 'pass' ? 'heuristic_pass' : staticStatus;
   const status = staticStatus === 'needs_fix'
     ? 'needs_fix'
-    : contractBlocked || provenanceBlock || unknownComponents.length || componentValidationBlocked
+    : contractBlocked || provenanceBlock || unknownComponents.length || componentValidationBlocked || inspectionTruncated
       ? 'blocked'
       : staticStatus;
 
@@ -1643,6 +1863,7 @@ async function rulesEnforcerHandler(args) {
         ...(unknownComponents.length ? ['unknown requested component contracts'] : []),
         ...(componentValidationBlocked ? ['requested component-rule validation'] : []),
         ...(!hasSnippet ? ['empty snippet'] : []),
+        ...(inspectionTruncated ? ['static inspection limit reached'] : []),
       ],
       guidance: {
         alwaysPrefer: 'Read component guides before adding structure.',
@@ -1871,7 +2092,7 @@ async function qualityInspectorHandler(args) {
   const version = await resolveExpressiveVersion({ projectRoot, contractVersion });
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
 
-  const fileInspection = findFileViolations(fileSummary.existing);
+  const fileInspection = await findFileViolations(fileSummary.existing, projectRoot);
   const staticFindings = fileInspection.findings;
   const filesUninspected = [
     ...fileSummary.skipped.map((item) => ({ file: item.requested, reason: item.reason })),
@@ -1885,7 +2106,7 @@ async function qualityInspectorHandler(args) {
   const commandRootBlocked = commandsRequested && !executionPolicy.allowed;
   const packageManagerBlocked = commandsRequested && !['npm', 'pnpm', 'yarn'].includes(version.packageManager);
   if (commandsRequested && !commandRootBlocked && !packageManagerBlocked) {
-    commandChecks.push(...await runQualityCommands(projectRoot, parsed.runType, version.packageManager));
+    commandChecks.push(...await runQualityCommands(executionPolicy.projectRoot, parsed.runType, version.packageManager));
   }
 
   const commandBlocked = commandChecks.filter((run) => !run.completed);

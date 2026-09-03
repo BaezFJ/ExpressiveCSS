@@ -1,16 +1,66 @@
 // Generated from scripts/lib/resolve-expressivecss-version.mjs. Do not edit.
-import { readFile } from 'node:fs/promises';
+import { constants as fsConstants } from 'node:fs';
+import { lstat, open, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PACKAGE_NAME = '@expressivecss/expressive';
+const MAX_MANIFEST_BYTES = 1 * 1024 * 1024;
+const MAX_LOCKFILE_BYTES = 16 * 1024 * 1024;
+const MAX_FRAMEWORK_MARKER_BYTES = 2 * 1024 * 1024;
+
+function readLimit(filePath) {
+  const name = path.basename(filePath);
+  if (['package-lock.json', 'pnpm-lock.yaml', 'yarn.lock'].includes(name)) return MAX_LOCKFILE_BYTES;
+  if (['llm.md', 'semantics.json'].includes(name)) return MAX_FRAMEWORK_MARKER_BYTES;
+  return MAX_MANIFEST_BYTES;
+}
+
+function sameFile(left, right) {
+  return left.dev === right.dev && left.ino === right.ino && left.size === right.size
+    && left.mtimeNs === right.mtimeNs && left.ctimeNs === right.ctimeNs;
+}
+
+async function readBounded(filePath) {
+  let handle;
+  try {
+    const pathBefore = await lstat(filePath, { bigint: true });
+    if (pathBefore.isSymbolicLink()) return { error: 'symbolic-link' };
+    if (!pathBefore.isFile()) return { error: 'not-regular-file' };
+    const noFollow = fsConstants.O_NOFOLLOW ?? 0;
+    handle = await open(filePath, fsConstants.O_RDONLY | noFollow);
+    const before = await handle.stat({ bigint: true });
+    if (!before.isFile() || !sameFile(before, pathBefore)) return { error: 'identity-changed' };
+    const limit = readLimit(filePath);
+    if (before.size > BigInt(limit)) return { error: 'oversized' };
+    const buffer = Buffer.alloc(limit + 1);
+    let offset = 0;
+    while (offset < buffer.length) {
+      const { bytesRead } = await handle.read(buffer, offset, buffer.length - offset, offset);
+      if (bytesRead === 0) break;
+      offset += bytesRead;
+    }
+    if (offset > limit) return { error: 'oversized' };
+    const after = await handle.stat({ bigint: true });
+    const pathAfter = await lstat(filePath, { bigint: true });
+    const currentResolved = await realpath(filePath);
+    const openedResolved = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => currentResolved);
+    if (!sameFile(before, after) || !sameFile(after, pathAfter) || currentResolved !== openedResolved) {
+      return { error: 'identity-changed' };
+    }
+    return { text: buffer.subarray(0, offset).toString('utf8') };
+  } catch (error) {
+    if (error?.code === 'ENOENT') return { missing: true };
+    if (error?.code === 'ELOOP' || error?.code === 'EMLINK') return { error: 'symbolic-link' };
+    return { error: 'unreadable' };
+  } finally {
+    await handle?.close().catch(() => {});
+  }
+}
 
 async function readText(filePath) {
-  try {
-    return await readFile(filePath, 'utf8');
-  } catch {
-    return null;
-  }
+  const result = await readBounded(filePath);
+  return result.text ?? null;
 }
 
 async function readJson(filePath) {
@@ -41,6 +91,12 @@ function parseSemver(value) {
     patch: Number(match[3]),
     prerelease: match[4]?.split('.') ?? [],
   };
+}
+
+function versionsHaveEqualPrecedence(left, right) {
+  const parsedLeft = parseSemver(left);
+  const parsedRight = parseSemver(right);
+  return Boolean(parsedLeft && parsedRight && compareSemver(parsedLeft, parsedRight) === 0);
 }
 
 function compareSemver(left, right) {
@@ -133,26 +189,28 @@ function manifestRange(manifest) {
     ?? null;
 }
 
+function verifiedLockVersion(version, declaredRange, source, file) {
+  const satisfies = versionSatisfiesRange(version, declaredRange);
+  if (satisfies === true) return { version, diagnostics: [] };
+  return {
+    version: null,
+    diagnostics: [{
+      code: satisfies === false ? 'lockfile-version-outside-manifest-range' : 'unsupported-manifest-range',
+      severity: 'blocked',
+      source,
+      path: file,
+      message: satisfies === false
+        ? `${file} resolves ${version}, outside manifest range ${JSON.stringify(declaredRange)}.`
+        : `Cannot verify ${file} version ${version} against unsupported manifest range ${JSON.stringify(declaredRange)}.`,
+    }],
+  };
+}
+
 function npmLockResolution(lock, declaredRange) {
   if (lock?.lockfileVersion === 1) {
     const entry = lock?.dependencies?.[PACKAGE_NAME];
     const version = cleanVersion(entry?.version);
-    if (version) {
-      const satisfies = versionSatisfiesRange(version, declaredRange);
-      if (satisfies === true) return { version, diagnostics: [] };
-      return {
-        version: null,
-        diagnostics: [{
-          code: satisfies === false ? 'lockfile-version-outside-manifest-range' : 'unsupported-manifest-range',
-          severity: 'blocked',
-          source: 'npm',
-          path: 'package-lock.json',
-          message: satisfies === false
-            ? `package-lock.json resolves ${version}, outside manifest range ${JSON.stringify(declaredRange)}.`
-            : `Cannot safely bind the npm v1 lock entry to unsupported manifest range ${JSON.stringify(declaredRange)}.`,
-        }],
-      };
-    }
+    if (version) return verifiedLockVersion(version, declaredRange, 'npm', 'package-lock.json');
     return entry
       ? { version: null, diagnostics: [malformedLockVersion('npm', 'package-lock.json')] }
       : { version: null, diagnostics: [directEntryMissing('npm', 'package-lock.json')] };
@@ -176,7 +234,7 @@ function npmLockResolution(lock, declaredRange) {
   }
   const version = cleanVersion(lock?.packages?.[`node_modules/${PACKAGE_NAME}`]?.version);
   return version
-    ? { version, diagnostics: [] }
+    ? verifiedLockVersion(version, declaredRange, 'npm', 'package-lock.json')
     : { version: null, diagnostics: [malformedLockVersion('npm', 'package-lock.json')] };
 }
 
@@ -269,7 +327,7 @@ function pnpmLockResolution(text, declaredRange) {
   }
   const version = cleanVersion(rawVersion);
   return version
-    ? { version, diagnostics: [] }
+    ? verifiedLockVersion(version, declaredRange, 'pnpm', 'pnpm-lock.yaml')
     : {
       version: null,
       diagnostics: [{
@@ -315,7 +373,7 @@ function yarnLockResolution(text, declaredRange) {
       const rawVersion = /^\s+version(?:\s+|:\s*)["']?([^\s"']+)["']?\s*$/u.exec(line)?.[1];
       if (!rawVersion) continue;
       const version = cleanVersion(rawVersion);
-      if (version) return { version, diagnostics: [] };
+      if (version) return verifiedLockVersion(version, declaredRange, 'yarn', 'yarn.lock');
       break;
     }
     return {
@@ -336,8 +394,33 @@ async function resolveLockfile(projectRoot, packageManagerField = null, declared
   const declaredManager = typeof packageManagerField === 'string'
     ? /^(npm|pnpm|yarn)@/u.exec(packageManagerField)?.[1] ?? null
     : null;
-  const npmPath = path.join(projectRoot, 'package-lock.json');
-  const npmText = await readText(npmPath);
+  const lockfiles = [
+    { manager: 'npm', file: 'package-lock.json' },
+    { manager: 'pnpm', file: 'pnpm-lock.yaml' },
+    { manager: 'yarn', file: 'yarn.lock' },
+  ];
+  const reads = {};
+  for (const entry of lockfiles) {
+    reads[entry.manager] = { ...entry, ...(await readBounded(path.join(projectRoot, entry.file))) };
+  }
+  const unreadable = lockfiles
+    .map((entry) => reads[entry.manager])
+    .filter((entry) => entry.error);
+  if (unreadable.length > 0) {
+    return {
+      packageManager: declaredManager ?? unreadable[0].manager,
+      version: null,
+      file: unreadable[0].file,
+      diagnostics: unreadable.map((entry) => ({
+        code: 'unreadable-lockfile',
+        severity: 'blocked',
+        source: entry.manager,
+        path: entry.file,
+        message: `${entry.file} could not be read as a regular file (${entry.error}).`,
+      })),
+    };
+  }
+  const npmText = reads.npm.text ?? null;
   let npmLock = null;
   if (npmText !== null) {
     try {
@@ -346,8 +429,8 @@ async function resolveLockfile(projectRoot, packageManagerField = null, declared
       npmLock = null;
     }
   }
-  const pnpmText = await readText(path.join(projectRoot, 'pnpm-lock.yaml'));
-  const yarnText = await readText(path.join(projectRoot, 'yarn.lock'));
+  const pnpmText = reads.pnpm.text ?? null;
+  const yarnText = reads.yarn.text ?? null;
   const existing = [
     npmText !== null ? 'npm' : null,
     pnpmText !== null ? 'pnpm' : null,
@@ -513,6 +596,20 @@ export async function resolveExpressiveVersion({
         path: installedRelativePath,
       };
       candidates.push(installedCandidate);
+      const installedSatisfiesRange = versionSatisfiesRange(installedVersion, declaredRange);
+      if (installedSatisfiesRange !== true) {
+        diagnostics.push({
+          code: installedSatisfiesRange === false
+            ? 'installed-version-outside-manifest-range'
+            : 'unsupported-manifest-range',
+          severity: 'blocked',
+          source: 'installed-package',
+          path: installedRelativePath,
+          message: installedSatisfiesRange === false
+            ? `Installed ExpressiveCSS ${installedVersion} does not satisfy the direct manifest range ${declaredRange}.`
+            : `Cannot verify installed ExpressiveCSS ${installedVersion} against unsupported manifest range ${declaredRange}.`,
+        });
+      }
       if (lock.version && lock.version !== installedVersion) {
         const lockCandidate = { source: 'lockfile', version: lock.version, path: lock.file };
         candidates.push(lockCandidate);
@@ -545,7 +642,7 @@ export async function resolveExpressiveVersion({
   const hasBlockingDiagnostic = diagnostics.some((diagnostic) => diagnostic.severity === 'blocked');
   const status = hasBlockingDiagnostic || !resolvedVersion || !normalizedContract
     ? 'unresolved'
-    : resolvedVersion === normalizedContract
+    : versionsHaveEqualPrecedence(resolvedVersion, normalizedContract)
       ? 'match'
       : 'mismatch';
   const matchingTag = resolvedVersion && Array.isArray(contract?.releaseTags)

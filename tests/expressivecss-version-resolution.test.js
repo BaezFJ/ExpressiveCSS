@@ -51,6 +51,41 @@ describe('ExpressiveCSS version resolution', () => {
     });
   }
 
+  test('installed package outside the direct manifest range blocks contract use', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"name":"consumer","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+      'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0"}',
+    });
+
+    const result = await resolveExpressiveVersion({ projectRoot, contractVersion: '0.8.0' });
+
+    assert.equal(result.resolvedVersion, '0.8.0');
+    assert.equal(result.exactInstalledVersion, '0.8.0');
+    assert.equal(result.resolutionSource, 'installed-package');
+    assert.equal(result.status, 'unresolved');
+    assert.equal(result.currentDocsSafe, false);
+    assert.deepEqual(result.diagnostics, [{
+      code: 'installed-version-outside-manifest-range',
+      severity: 'blocked',
+      source: 'installed-package',
+      path: 'node_modules/@expressivecss/expressive/package.json',
+      message: 'Installed ExpressiveCSS 0.8.0 does not satisfy the direct manifest range ^0.7.0.',
+    }]);
+  });
+
+  test('treats semver build metadata as precedence-equal to the contract', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"name":"consumer","dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
+      'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0+local.1"}',
+    });
+
+    const result = await resolveExpressiveVersion({ projectRoot, contractVersion: '0.8.0' });
+    assert.equal(result.resolvedVersion, '0.8.0+local.1');
+    assert.equal(result.status, 'match');
+    assert.equal(result.contractStatus, 'match');
+    assert.equal(result.currentDocsSafe, true);
+  });
+
   test('consumer resolution requires a direct manifest declaration', async () => {
     const projectRoot = await materialize({
       'package.json': '{"name":"consumer"}',
@@ -132,6 +167,41 @@ describe('ExpressiveCSS version resolution', () => {
     assert.deepEqual(result.conflicts, []);
   });
 
+  test('supported lockfiles reject resolved versions outside the direct manifest range', async () => {
+    const fixtures = [
+      {
+        name: 'npm',
+        files: {
+          'package.json': '{"packageManager":"npm@10.0.0","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+          'package-lock.json': '{"lockfileVersion":3,"packages":{"":{"dependencies":{"@expressivecss/expressive":"^0.7.0"}},"node_modules/@expressivecss/expressive":{"version":"0.8.0"}}}',
+        },
+      },
+      {
+        name: 'pnpm',
+        files: {
+          'package.json': '{"packageManager":"pnpm@9.15.0","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+          'pnpm-lock.yaml': "lockfileVersion: '9.0'\nimporters:\n  .:\n    dependencies:\n      '@expressivecss/expressive':\n        specifier: ^0.7.0\n        version: 0.8.0\n",
+        },
+      },
+      {
+        name: 'yarn',
+        files: {
+          'package.json': '{"packageManager":"yarn@1.22.22","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+          'yarn.lock': '# yarn lockfile v1\n\n"@expressivecss/expressive@^0.7.0":\n  version "0.8.0"\n',
+        },
+      },
+    ];
+
+    for (const fixture of fixtures) {
+      const projectRoot = await materialize(fixture.files);
+      const result = await resolveExpressiveVersion({ projectRoot, contractVersion: '0.8.0' });
+      assert.equal(result.resolvedVersion, null, fixture.name);
+      assert.equal(result.status, 'unresolved', fixture.name);
+      assert.equal(result.diagnostics[0]?.code, 'lockfile-version-outside-manifest-range', fixture.name);
+      assert.equal(result.diagnostics[0]?.severity, 'blocked', fixture.name);
+    }
+  });
+
   test('a malformed npm lockfile returns a blocked diagnostic', async () => {
     const projectRoot = await materialize({
       'package.json': '{"dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
@@ -146,6 +216,25 @@ describe('ExpressiveCSS version resolution', () => {
     assert.equal(result.diagnostics[0]?.code, 'malformed-lockfile');
     assert.equal(result.diagnostics[0]?.severity, 'blocked');
     assert.equal(result.diagnostics[0]?.path, 'package-lock.json');
+  });
+
+  test('fails closed on oversized manifests and symbolic-linked lockfiles', async () => {
+    const oversizedRoot = await materialize({
+      'package.json': 'x'.repeat((1024 * 1024) + 1),
+    });
+    const oversized = await resolveExpressiveVersion({ projectRoot: oversizedRoot, contractVersion: '0.8.0' });
+    assert.equal(oversized.resolvedVersion, null);
+    assert.equal(oversized.status, 'unresolved');
+
+    const symlinkRoot = await materialize({
+      'package.json': '{"dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
+      'outside-lock.json': '{"lockfileVersion":3,"packages":{"":{"dependencies":{"@expressivecss/expressive":"^0.8.0"}},"node_modules/@expressivecss/expressive":{"version":"0.8.0"}}}',
+    });
+    await symlink(path.join(symlinkRoot, 'outside-lock.json'), path.join(symlinkRoot, 'package-lock.json'));
+    const symlinked = await resolveExpressiveVersion({ projectRoot: symlinkRoot, contractVersion: '0.8.0' });
+    assert.equal(symlinked.resolvedVersion, null);
+    assert.equal(symlinked.status, 'unresolved');
+    assert.ok(symlinked.diagnostics.some((item) => item.severity === 'blocked'));
   });
 
   test('an unsupported npm lockfile version returns a blocked diagnostic', async () => {

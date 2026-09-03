@@ -1,16 +1,19 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import {
+  PROJECT_FIXTURES,
   assembleSkillBundle,
   DEFAULT_ADAPTER_TIMEOUT_MS,
+  EVALUATOR_LIMITS,
   evaluateCase,
   redactValue,
   runEvaluations,
   validateCaseDefinitions,
 } from '../scripts/eval-expressivecss-skill.mjs';
+import { resolveExpressiveVersion } from '../scripts/lib/resolve-expressivecss-version.mjs';
 
 const caseData = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url), 'utf8'));
 const cases = caseData.cases;
@@ -116,6 +119,38 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       && event.path.endsWith('/expressivecss-runtime/SKILL.md')));
   });
 
+  test('rejects symlinked and oversized root skills before adapter execution', async () => {
+    const symlinkRoot = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-root-symlink-'));
+    const outsideRoot = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-root-outside-'));
+    const oversizedRoot = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-root-oversized-'));
+    try {
+      await mkdir(path.join(symlinkRoot, 'skills', 'expressivecss'), { recursive: true });
+      const outsideSkill = path.join(outsideRoot, 'SKILL.md');
+      await writeFile(outsideSkill, '# outside');
+      await symlink(outsideSkill, path.join(symlinkRoot, 'skills', 'expressivecss', 'SKILL.md'));
+      await assert.rejects(
+        assembleSkillBundle(caseById('interactive-audit'), symlinkRoot),
+        /symbolic link|outside the repository/u,
+      );
+
+      await mkdir(path.join(oversizedRoot, 'skills', 'expressivecss'), { recursive: true });
+      await writeFile(
+        path.join(oversizedRoot, 'skills', 'expressivecss', 'SKILL.md'),
+        'x'.repeat(EVALUATOR_LIMITS.rootSkillBytes + 1),
+      );
+      await assert.rejects(
+        assembleSkillBundle(caseById('interactive-audit'), oversizedRoot),
+        /exceeds/u,
+      );
+    } finally {
+      await Promise.all([
+        rm(symlinkRoot, { recursive: true, force: true }),
+        rm(outsideRoot, { recursive: true, force: true }),
+        rm(oversizedRoot, { recursive: true, force: true }),
+      ]);
+    }
+  });
+
   test('requires every case to declare the generic response contract fields', () => {
     for (const field of [
       'requiredDecisionFields',
@@ -179,6 +214,35 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       const result = evaluateCase(caseById(id), response, trusted);
       assert.equal(result.status, 'fail', `${id} forbidden mutation passed`);
       assert.ok(result.invariants.some((item) => item.id === invariantId && item.status === 'fail'), JSON.stringify(result));
+    }
+  });
+
+  test('rejects forbidden classes in unquoted HTML and JSX class attributes', () => {
+    for (const markup of [
+      '<button class=btn>Open</button>',
+      '<button className="btn">Open</button>',
+    ]) {
+      const response = clone(responses['css-only-markup-routing']);
+      response.markup = markup;
+      const result = evaluateCase(
+        caseById('css-only-markup-routing'),
+        response,
+        executionEvidence['css-only-markup-routing'],
+      );
+      assert.equal(result.status, 'fail', `${markup} passed`);
+      assert.ok(result.invariants.some((item) => item.id === 'contract/forbidden-content' && item.status === 'fail'));
+    }
+  });
+
+  test('scans alternate code fields and literal JSX expressions for forbidden content', () => {
+    for (const [field, value] of [
+      ['html', '<script src="evil.js"></script>'],
+      ['code', '<button class=btn>Legacy</button>'],
+      ['snippet', '<button className={"btn"}>Legacy</button>'],
+      ['source', "<button className={'btn'}>Legacy</button>"],
+      ['content', '<button className={`btn`}>Legacy</button>'],
+    ]) {
+      expectMutationFailure('css-only-markup-routing', (response) => { response[field] = value; }, 'forbidden');
     }
   });
 
@@ -246,12 +310,24 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
 
   test('accepts trace, artifact, and row boundaries and rejects one item over each limit', () => {
     const response = clone(responses['setup-only-routing']);
-    response.evidenceArtifacts = Array.from({ length: TEST_LIMITS.artifactCount }, (_, index) => ({
+    const trusted = clone(executionEvidence['setup-only-routing']);
+    trusted.artifacts = Array.from({ length: TEST_LIMITS.artifactCount }, (_, index) => ({
       id: `artifact-${index}`,
       category: 'source',
+      criterionId: 'limit-test',
+      componentId: 'limit-test',
+      observation: 'Observed at the artifact-count boundary.',
+      expectedObservation: 'Observed at the artifact-count boundary.',
+      sequence: index + 1,
+      timestamp: new Date(Date.UTC(2026, 0, 2, 0, 0, index + 1)).toISOString(),
     }));
-    response.reviewRows = Array.from({ length: TEST_LIMITS.rowCount }, () => ({ status: 'Blocked' }));
-    const trusted = clone(executionEvidence['setup-only-routing']);
+    response.reviewRows = Array.from({ length: TEST_LIMITS.rowCount }, (_, index) => ({
+      criterionId: `limit-criterion-${index}`,
+      componentId: 'limit-test',
+      status: 'Blocked',
+      blockerReason: 'Boundary fixture intentionally blocks this synthetic row.',
+      evidenceIds: [],
+    }));
     trusted.toolTrace = Array.from({ length: TEST_LIMITS.traceCount }, (_, index) => ({
       sequence: index + 1,
       timestamp: new Date(Date.UTC(2026, 0, 1, 0, 0, index + 1)).toISOString(),
@@ -259,7 +335,11 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       path: index === 0 ? 'skills/expressivecss/expressivecss-install/SKILL.md' : `src/generated-${index}.css`,
       status: 'success',
     }));
-    assert.equal(evaluateCase(caseById('setup-only-routing'), response, trusted).status, 'pass');
+    const limitCase = clone(caseById('setup-only-routing'));
+    limitCase.artifactExpectations = trusted.artifacts.map(({
+      id, category, criterionId, componentId, expectedObservation,
+    }) => ({ id, category, criterionId, componentId, expectedObservation }));
+    assert.equal(evaluateCase(limitCase, response, trusted).status, 'pass');
 
     for (const mutate of [
       (_candidate, evidence) => evidence.toolTrace.push({
@@ -269,13 +349,28 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
         path: 'src/one-too-many.css',
         status: 'success',
       }),
-      (candidate) => candidate.evidenceArtifacts.push({ id: 'one-too-many', category: 'source' }),
-      (candidate) => candidate.reviewRows.push({ status: 'Blocked' }),
+      (_candidate, evidence) => evidence.artifacts.push({
+        id: 'one-too-many',
+        category: 'source',
+        criterionId: 'limit-test',
+        componentId: 'limit-test',
+        observation: 'One over the artifact boundary.',
+        expectedObservation: 'One over the artifact boundary.',
+        sequence: TEST_LIMITS.artifactCount + 1,
+        timestamp: new Date(Date.UTC(2026, 0, 2, 0, 0, TEST_LIMITS.artifactCount + 1)).toISOString(),
+      }),
+      (candidate) => candidate.reviewRows.push({
+        criterionId: 'one-too-many',
+        componentId: 'limit-test',
+        status: 'Blocked',
+        blockerReason: 'One over the review-row boundary.',
+        evidenceIds: [],
+      }),
     ]) {
       const overResponse = clone(response);
       const overTrusted = clone(trusted);
       mutate(overResponse, overTrusted);
-      const result = evaluateCase(caseById('setup-only-routing'), overResponse, overTrusted);
+      const result = evaluateCase(limitCase, overResponse, overTrusted);
       assert.equal(result.status, 'fail');
       assert.ok(result.invariants.some((item) => item.id === 'limits/structure' && item.status === 'fail'), JSON.stringify(result));
     }
@@ -296,6 +391,23 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       assert.equal(result.status, 'fail');
       assert.ok(result.invariants.some((item) => item.id === 'limits/structure' && item.status === 'fail'), JSON.stringify(result));
     }
+  });
+
+  test('rejects oversized object keys and redacts credential-shaped keys', () => {
+    const response = clone(responses['setup-only-routing']);
+    response['x'.repeat(TEST_LIMITS.stringBytes + 1)] = 'value';
+    const result = evaluateCase(
+      caseById('setup-only-routing'),
+      response,
+      executionEvidence['setup-only-routing'],
+    );
+    assert.equal(result.status, 'fail');
+    assert.ok(result.invariants.some((item) => item.id === 'limits/structure' && item.status === 'fail'));
+
+    const secretKey = `sk-${'q'.repeat(30)}`;
+    const serialized = JSON.stringify(redactValue({ [secretKey]: 'value' }));
+    assert.ok(!serialized.includes(secretKey));
+    assert.match(serialized, /\[REDACTED_KEY/u);
   });
 
   test('accepts the maximum object depth and rejects one nested object beyond it', () => {
@@ -487,19 +599,35 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }, 'write trace');
   });
 
+  test('accepts only operator-controlled evidence artifacts', () => {
+    const testCase = cases.find((item) => item.id === 'interactive-audit');
+    const envelope = clone(envelopes['interactive-audit']);
+    assert.equal(evaluateCase(testCase, envelope.candidateResponse, envelope.executionEvidence).status, 'pass');
+
+    const forged = clone(envelope);
+    forged.candidateResponse.evidenceArtifacts = forged.executionEvidence.artifacts.map((artifact) => ({
+      ...artifact,
+      observation: 'fabricated',
+      expectedObservation: 'fabricated',
+    }));
+    delete forged.executionEvidence.artifacts;
+    assert.equal(evaluateCase(testCase, forged.candidateResponse, forged.executionEvidence).status, 'fail');
+  });
+
   test('rejects a missing required evidence artifact', () => {
-    expectMutationFailure('interactive-audit', (response) => {
-      response.evidenceArtifacts = response.evidenceArtifacts.filter((artifact) => artifact.category !== 'accessibility-tree');
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts = trusted.artifacts.filter((artifact) => artifact.category !== 'accessibility-tree');
     }, 'required evidence');
   });
 
-  test('requires criterion-owned evidence to match its expected observation', () => {
-    expectMutationFailure('interactive-audit', (response) => {
-      delete response.evidenceArtifacts[0].expectedObservation;
-    }, 'expected observation');
-    expectMutationFailure('interactive-audit', (response) => {
-      response.evidenceArtifacts[0].expectedObservation = 'Contradictory observation';
-    }, 'expected observation');
+  test('uses fixture-owned expected observations instead of trusted-producer expectations', () => {
+    const producerClaim = clone(executionEvidence['interactive-audit']);
+    producerClaim.artifacts[0].expectedObservation = 'Contradictory observation';
+    assert.equal(evaluateCase(caseById('interactive-audit'), responses['interactive-audit'], producerClaim).status, 'pass');
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts[0].expectedObservation = 'Fabricated replacement observation';
+      trusted.artifacts[0].observation = 'Fabricated replacement observation';
+    }, 'fixture-owned artifact expectations');
   });
 
   test('rejects unknown review statuses', () => {
@@ -508,21 +636,65 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }, 'review status');
   });
 
+  test('fails closed on malformed candidate rows and collection types', () => {
+    for (const mutate of [
+      (response) => { response.reviewRows[0] = { status: 'Blocked', blockerReason: 'Unavailable.', evidenceIds: [] }; },
+      (response) => { response.coverageRecords = {}; },
+    ]) {
+      const response = clone(responses['interactive-audit']);
+      mutate(response);
+      assert.doesNotThrow(() => evaluateCase(caseById('interactive-audit'), response, executionEvidence['interactive-audit']));
+      assert.equal(evaluateCase(caseById('interactive-audit'), response, executionEvidence['interactive-audit']).status, 'fail');
+    }
+  });
+
+  test('binds candidate case IDs to the selected fixture', () => {
+    for (const caseId of [null, 'wrong-case', 'css-only-audit']) {
+      expectMutationFailure('interactive-audit', (response) => { response.caseId = caseId; }, 'selected fixture ID');
+    }
+  });
+
+  test('requires trusted artifact IDs and chronology to be unique and increasing', () => {
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts.push(clone(trusted.artifacts[0]));
+    }, 'trusted artifact');
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts[1].sequence = trusted.artifacts[0].sequence;
+    }, 'trusted artifact');
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts[1].timestamp = '2026-09-02T23:59:59.000Z';
+    }, 'trusted artifact');
+  });
+
+  test('requires status-specific fields for every non-Pass review row', () => {
+    const mutations = [
+      ['Intentional adaptation', { rationale: '', accessibilityPreserved: false, evidenceIds: [] }],
+      ['Blocked', { blockerReason: '', evidenceIds: ['artifact-source'] }],
+      ['Not applicable', { applicabilityReason: '', evidenceIds: [] }],
+      ['Fail', { observedDeviation: '', correction: '', evidenceIds: [] }],
+    ];
+    for (const [status, fields] of mutations) {
+      expectMutationFailure('interactive-audit', (response) => {
+        Object.assign(response.reviewRows[0], { status }, fields);
+      }, 'status-specific');
+    }
+  });
+
   test('rejects Pass evidence for another criterion or component', () => {
-    expectMutationFailure('interactive-audit', (response) => {
-      response.evidenceArtifacts.find((artifact) => artifact.id === 'artifact-source').criterionId = 'A-LABEL';
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.id === 'artifact-source').criterionId = 'A-LABEL';
     }, 'criterion and component');
 
-    expectMutationFailure('interactive-audit', (response) => {
-      response.evidenceArtifacts.find((artifact) => artifact.id === 'artifact-source').componentId = 'other-drawer';
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.id === 'artifact-source').componentId = 'other-drawer';
     }, 'criterion and component');
   });
 
   test('does not let unrelated artifacts satisfy criterion-owned evidence kinds', () => {
-    expectMutationFailure('interactive-audit', (response) => {
-      const artifact = response.evidenceArtifacts.find((item) => item.id === 'artifact-accessibility-tree');
+    expectMutationFailure('interactive-audit', (_response, trusted) => {
+      const artifact = trusted.artifacts.find((item) => item.id === 'artifact-accessibility-tree');
       artifact.category = 'source';
-      response.evidenceArtifacts.push({
+      trusted.artifacts.push({
         id: 'unrelated-accessibility-tree',
         category: 'accessibility-tree',
         observation: 'An unrelated accessibility tree',
@@ -541,8 +713,8 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
   });
 
   test('rejects Audit evidence collected before Critique evidence', () => {
-    expectMutationFailure('combined-review-order', (response) => {
-      response.evidenceArtifacts.find((artifact) => artifact.mode === 'Audit').sequence = 1;
+    expectMutationFailure('combined-review-order', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.mode === 'Audit').sequence = 1;
     }, 'Critique before Audit');
   });
 
@@ -553,12 +725,16 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
   });
 
   test('rejects coverage Pass records with missing or mismatched artifacts', () => {
-    expectMutationFailure('reachable-state-ledger', (response) => {
-      response.evidenceArtifacts = response.evidenceArtifacts.filter((artifact) => artifact.id !== 'coverage-state-loading');
+    expectMutationFailure('reachable-state-ledger', (_response, trusted) => {
+      trusted.artifacts = trusted.artifacts.filter((artifact) => artifact.id !== 'coverage-state-loading');
+    }, 'coverage evidence');
+
+    expectMutationFailure('reachable-state-ledger', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.id === 'coverage-state-loading').componentId = 'other-surface';
     }, 'coverage evidence');
 
     expectMutationFailure('reachable-state-ledger', (response) => {
-      response.evidenceArtifacts.find((artifact) => artifact.id === 'coverage-state-loading').componentId = 'other-surface';
+      response.coverageRecords.find((record) => record.inventoryId === 'state-empty').evidenceIds = ['coverage-state-loading'];
     }, 'coverage evidence');
   });
 
@@ -576,14 +752,91 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }, 'exact capture dimensions');
   });
 
-  test('requires matched capture IDs to resolve to rendered before and after artifacts', () => {
+  test('binds matched dimensions to trusted rendered artifacts', () => {
     expectMutationFailure('matched-before-after', (response) => {
-      response.evidenceArtifacts.find((artifact) => artifact.captureRole === 'after').captureRole = 'before';
+      response.capturePairs[0].before.viewportWidth = 777;
+      response.capturePairs[0].after.viewportWidth = 777;
+    }, 'matched capture');
+  });
+
+  test('requires matched capture IDs to resolve to rendered before and after artifacts', () => {
+    expectMutationFailure('matched-before-after', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.captureRole === 'after').captureRole = 'before';
     }, 'rendered before and after artifacts');
 
-    expectMutationFailure('matched-before-after', (response) => {
-      response.evidenceArtifacts.find((artifact) => artifact.captureRole === 'after').category = 'source';
+    expectMutationFailure('matched-before-after', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.captureRole === 'after').category = 'source';
     }, 'rendered before and after artifacts');
+  });
+
+  test('binds matched capture chronology to artifact metadata and the trusted first edit', () => {
+    expectMutationFailure('matched-before-after', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.captureRole === 'before').sequence = 25;
+    }, 'capture chronology');
+
+    expectMutationFailure('matched-before-after', (_response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.captureRole === 'after').timestamp = '2026-09-03T00:00:15.000Z';
+    }, 'capture chronology');
+
+    expectMutationFailure('matched-before-after', (response) => {
+      response.capturePairs[0].firstEditSequence = 21;
+    }, 'capture chronology');
+  });
+
+  test('rejects candidate-invented Refine preservation claims', () => {
+    expectMutationFailure('refine-preserves-product', (response) => {
+      for (const field of Object.keys(response.protectedBefore)) {
+        response.protectedBefore[field] = 'invented';
+        response.protectedAfter[field] = 'invented';
+      }
+    }, 'refine-preserves-product/contract');
+  });
+
+  test('rejects candidate-invented adaptive navigation claims', () => {
+    expectMutationFailure('adaptive-navigation', (response) => {
+      for (const entry of response.navigationByWidth) {
+        entry.width = 1;
+        entry.visiblePatterns = ['bogus'];
+        entry.accessibilityExposedPatterns = ['bogus'];
+        entry.destinations = ['x'];
+        entry.currentDestination = 'x';
+      }
+    }, 'adaptive-navigation/contract');
+  });
+
+  test('materializes a concrete 0.7.0 install for the older-version fixture', async () => {
+    const files = PROJECT_FIXTURES['consumer-older-version'];
+    const root = await mkdtemp(path.join(tmpdir(), 'expressivecss-older-fixture-'));
+    try {
+      for (const [relative, content] of Object.entries(files)) {
+        const target = path.join(root, relative);
+        await mkdir(path.dirname(target), { recursive: true });
+        await writeFile(target, content);
+      }
+      const result = await resolveExpressiveVersion({
+        projectRoot: root,
+        contractVersion: '0.8.0',
+        contractManifestPath: path.join(process.cwd(), 'skills/expressivecss/references/contract.json'),
+      });
+      assert.equal(result.resolvedVersion, '0.7.0');
+      assert.equal(result.resolutionSource, 'installed-package');
+      assert.equal(result.status, 'mismatch');
+      assert.equal(result.documentationMode, 'matching-tag');
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  test('requires fixture-owned requirement and accessibility evidence for Redesign', () => {
+    expectMutationFailure('redesign-preserves-requirements', (response) => {
+      response.requirements[0].evidenceIds = [];
+    }, 'critical invariant');
+    expectMutationFailure('redesign-preserves-requirements', (response, trusted) => {
+      trusted.artifacts.find((artifact) => artifact.id === 'redesign-requirement-account').observation = 'Different result';
+    }, 'fixture-owned artifact expectations');
+    expectMutationFailure('redesign-preserves-requirements', (response) => {
+      response.accessibilityAssertions[0].id = 'candidate-invented';
+    }, 'critical invariant');
   });
 
   test('requires an explicit classification for matched visible differences', () => {
@@ -707,7 +960,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     assert.ok(redactValue(tooManyStrings).length <= TEST_LIMITS.stringCount + 1);
   });
 
-  test('passes rootSkill to a live adapter as an argument array', async () => {
+  test('keeps the scoring oracle private and gives a live adapter a materialized sandbox', async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-adapter-'));
     try {
       const adapterPath = path.join(directory, 'adapter.mjs');
@@ -721,8 +974,12 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
         if (typeof payload.rootSkill !== 'string' || !payload.rootSkill.includes('# ExpressiveCSS')) process.exit(21);
         if (Object.hasOwn(payload, 'skillBundle')) process.exit(22);
         if (process.argv[2] !== 'argument with spaces;$HOME') process.exit(23);
+        if (Object.hasOwn(payload, 'testCase') || Object.hasOwn(payload.task, 'expectedOperatingMode') || Object.hasOwn(payload.task, 'criticalInvariants')) process.exit(24);
+        if (payload.task.id !== 'setup-only-routing' || typeof payload.task.request !== 'string') process.exit(25);
+        if (payload.task.projectFixture !== 'consumer-current') process.exit(26);
+        if (!readFileSync(new URL('package.json', 'file://' + payload.projectRoot + '/'), 'utf8').includes('@expressivecss/expressive')) process.exit(27);
         const responses = JSON.parse(readFileSync(process.argv[3], 'utf8')).responses;
-        process.stdout.write(JSON.stringify(responses[payload.testCase.id]));
+        process.stdout.write(JSON.stringify(responses[payload.task.id]));
       `);
       const report = await runEvaluations({
         casesPath: new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url).pathname,
@@ -759,14 +1016,16 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }
   });
 
-  test('terminates a live adapter at the configured timeout', async () => {
+  test('terminates a live adapter at a hard outer timeout after SIGTERM is trapped', async () => {
     assert.equal(DEFAULT_ADAPTER_TIMEOUT_MS, 120_000);
     const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-timeout-'));
     try {
       const adapterPath = path.join(directory, 'adapter.mjs');
       await writeFile(adapterPath, `
-        setTimeout(() => process.stdout.write('{}'), 250);
+        process.on('SIGTERM', () => setTimeout(() => process.exit(0), 300));
+        setInterval(() => {}, 1000);
       `);
+      const started = Date.now();
       await assert.rejects(
         runEvaluations({
           casesPath: new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url).pathname,
@@ -778,6 +1037,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
         }),
         (error) => error?.code === 'ETIMEDOUT',
       );
+      assert.ok(Date.now() - started < 200, 'timeout waited for a signal-trapping adapter');
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
@@ -785,8 +1045,8 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
 
   test('documents the live adapter input field and bounded timeout', async () => {
     const docs = await readFile(new URL('../docs/agents/expressivecss-skill-evals.md', import.meta.url), 'utf8');
-    assert.match(docs, /input contains `testCase` and `rootSkill`/i);
-    assert.doesNotMatch(docs, /input contains `testCase` and `skillBundle`/i);
+    assert.match(docs, /input contains `task`, `projectRoot`, and `rootSkill`/i);
+    assert.doesNotMatch(docs, /input contains `testCase`/i);
     assert.match(docs, /adapter timeout/i);
   });
 });

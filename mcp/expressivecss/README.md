@@ -43,9 +43,11 @@ npm test
 
 Static findings are heuristic and require source or runtime confirmation before remediation. A clean static check is reported as `staticStatus: "heuristic_pass"`; any overall MCP `pass` applies only to `checksPerformed`. Neither proves visual hierarchy, responsive rendering, focus behavior, motion, contrast, screen-reader announcements, or component-rule conformance unless separate evidence covers those areas. Read `uncheckedAreas`, `blockedChecks`, `coverageStatus`, `contractCompatibility`, and `contractProvenance` before using a result in a finish review.
 
-`creative_director` and both page architect spellings resolve the target ExpressiveCSS version before reading current contract guidance. They return no recommendations or architecture when the version is mismatched or unresolved, when local contract provenance is missing or stale, or when an architecture request contains an inexact component name. Fuzzy creative matches remain labelled `confidence: "fallback"`; page architecture never accepts them silently.
+`creative_director` and both page architect spellings resolve the target ExpressiveCSS version before reading current contract guidance. They return no recommendations or architecture when the version is mismatched or unresolved, when local contract provenance is missing, stale, invalid, or divergent from the bundled package contract, or when an architecture request contains an inexact component name. Fuzzy creative matches remain labelled `confidence: "fallback"`; page architecture never accepts them silently.
 
-For a framework source checkout, the server accepts only the generated contract's canonical source list. It resolves the real project and source paths, rejects symbolic links and non-regular files, and caps each source at 2 MiB and the set at 8 MiB. It recomputes provenance for every tool call in manifest order with the generator's SHA-256 input format, `source path + NUL + file content + NUL`. Contract-dependent output is blocked when the source set is invalid, missing, oversized, or stale. Invalid source paths never produce a computed hash. Generated data shipped in this package reports `contractProvenance: "bundled-verified"` because package consumers do not receive the framework source files.
+For a framework source checkout, the server accepts only the generated contract's canonical source list. It resolves the real project and source paths, rejects symbolic links and non-regular files, and caps each source at 2 MiB and the set at 8 MiB. It recomputes provenance for every tool call in manifest order with the generator's SHA-256 input format, `source path + NUL + file content + NUL`. The verified local manifest must also match the bundled package's framework version and source hash because the MCP serves bundled guidance. Contract-dependent output is blocked when the source set is invalid, missing, oversized, stale, or divergent. Invalid source paths never produce a computed hash. Generated data shipped in this package reports `contractProvenance: "bundled-verified"` because package consumers do not receive the framework source files.
+
+Static inspection uses descriptor-level, no-follow bounded reads and rechecks file identity after each read. It caps files at 2 MiB each and 16 MiB per request by default, stops after 200 issues per file or 1,000 per request, and applies a five-second scan budget. Any unread, changed, over-budget, or partially scanned file appears under `filesUninspected`, which prevents a pass.
 
 ## Environment variables
 
@@ -53,6 +55,7 @@ For a framework source checkout, the server accepts only the generated contract'
 - `EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS`
 - `EXPRESSIVECSS_MCP_QA_MAX_FILES`
 - `EXPRESSIVECSS_MCP_QA_MAX_MB`
+- `EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB`
 - `EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS`
 - `EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS`
 - `SKIP_SETUP_EXPERT`
@@ -105,5 +108,5 @@ Hermes uses the top-level `mcp_servers` setting shown in `sample-hermes-config.y
 
 - Published package scripts are self-contained: `npm test` runs the live MCP protocol smoke test, and `npm pack --dry-run` runs that test through `prepack`.
 - Repository maintainers can verify generated sources with `node ../../scripts/gen-expressivecss-skill.mjs --check` and `node scripts/sync-guides.mjs --check`, then run `npm test`. To refresh them, run those two generator commands without `--check` before packing.
-- `setup_expert` resolves framework source, an installed package, or supported lockfiles in that order. A manifest range alone is reported as unresolved rather than treated as the installed version.
+- `setup_expert` resolves framework source, an installed package, or supported lockfiles in that order. A manifest range alone is reported as unresolved rather than treated as the installed version. An installed version outside the direct manifest range also blocks contract-dependent guidance.
 - Pass `projectRoot` in tool calls when the target project differs from the MCP process working directory.

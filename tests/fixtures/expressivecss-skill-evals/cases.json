@@ -49,8 +49,7 @@
       "requiredDecisionFields": [],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -61,7 +60,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "css-only-markup-routing",
@@ -89,8 +89,7 @@
       "requiredDecisionFields": [],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -106,7 +105,8 @@
       ],
       "forbiddenUnsupportedClaims": [
         "full visual audit passed"
-      ]
+      ],
+      "artifactExpectations": []
     },
     {
       "id": "token-only-theming-routing",
@@ -132,8 +132,7 @@
       "requiredDecisionFields": [],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -144,7 +143,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "critique-no-edit",
@@ -182,8 +182,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -196,7 +195,16 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-rendered-capture",
+          "category": "rendered-capture",
+          "criterionId": "C-TASK-PRIMARY",
+          "componentId": "surface",
+          "expectedObservation": "Observed rendered-capture contract"
+        }
+      ]
     },
     {
       "id": "css-only-audit",
@@ -238,8 +246,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -252,7 +259,23 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-source",
+          "category": "source",
+          "criterionId": "A-HOST-ELEMENT",
+          "componentId": "checkboxes",
+          "expectedObservation": "Observed source contract"
+        },
+        {
+          "id": "artifact-accessibility-tree",
+          "category": "accessibility-tree",
+          "criterionId": "A-LABEL",
+          "componentId": "checkboxes",
+          "expectedObservation": "Observed accessibility-tree contract"
+        }
+      ]
     },
     {
       "id": "interactive-audit",
@@ -273,7 +296,7 @@
         "source",
         "runtime-inspection",
         "accessibility-tree",
-        "test-output"
+        "interaction-trace"
       ],
       "requiredEvidenceByCriterion": {
         "A-HOST-ELEMENT": [
@@ -286,7 +309,7 @@
           "accessibility-tree"
         ],
         "A-KEYBOARD-ACTION": [
-          "test-output"
+          "interaction-trace"
         ]
       },
       "expectedCriticalInvariantIds": [
@@ -303,8 +326,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -317,7 +339,37 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-source",
+          "category": "source",
+          "criterionId": "A-HOST-ELEMENT",
+          "componentId": "navigation-drawer",
+          "expectedObservation": "Observed source contract"
+        },
+        {
+          "id": "artifact-runtime-inspection",
+          "category": "runtime-inspection",
+          "criterionId": "A-RUNTIME-ARIA-UPDATE",
+          "componentId": "navigation-drawer",
+          "expectedObservation": "Observed runtime-inspection contract"
+        },
+        {
+          "id": "artifact-accessibility-tree",
+          "category": "accessibility-tree",
+          "criterionId": "A-LABEL",
+          "componentId": "navigation-drawer",
+          "expectedObservation": "Observed accessibility-tree contract"
+        },
+        {
+          "id": "artifact-test-output",
+          "category": "interaction-trace",
+          "criterionId": "A-KEYBOARD-ACTION",
+          "componentId": "navigation-drawer",
+          "expectedObservation": "Observed test-output contract"
+        }
+      ]
     },
     {
       "id": "combined-review-order",
@@ -359,8 +411,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -373,7 +424,23 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "critique-render",
+          "category": "rendered-capture",
+          "criterionId": "C-TASK-PRIMARY",
+          "componentId": "surface",
+          "expectedObservation": "Primary action hierarchy"
+        },
+        {
+          "id": "audit-source",
+          "category": "source",
+          "criterionId": "A-HOST-ELEMENT",
+          "componentId": "surface",
+          "expectedObservation": "Host element contract"
+        }
+      ]
     },
     {
       "id": "refine-preserves-product",
@@ -417,10 +484,16 @@
         "protectedAfter",
         "capturePairs"
       ],
+      "protectedProduct": {
+        "identity": "i1",
+        "content": "c1",
+        "informationArchitecture": "ia1",
+        "routeDestinations": "r1",
+        "behaviorTests": "b1"
+      },
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -431,7 +504,45 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "refine-preserves-product-pair-1-before",
+          "category": "rendered-capture",
+          "criterionId": "C-ADAPTIVE-COMPOSITION",
+          "componentId": "surface",
+          "expectedObservation": "Pre-edit matched capture",
+          "route": "/dashboard",
+          "taskPoint": "loaded",
+          "dataFixtureId": "account-a",
+          "state": "default",
+          "viewportWidth": 1024,
+          "viewportHeight": 768,
+          "deviceScaleFactor": 1,
+          "colorScheme": "light",
+          "motionPreference": "no-preference",
+          "locale": "en-US",
+          "direction": "ltr"
+        },
+        {
+          "id": "refine-preserves-product-pair-1-after",
+          "category": "rendered-capture",
+          "criterionId": "C-ADAPTIVE-COMPOSITION",
+          "componentId": "surface",
+          "expectedObservation": "Post-edit matched capture",
+          "route": "/dashboard",
+          "taskPoint": "loaded",
+          "dataFixtureId": "account-a",
+          "state": "default",
+          "viewportWidth": 1024,
+          "viewportHeight": 768,
+          "deviceScaleFactor": 1,
+          "colorScheme": "light",
+          "motionPreference": "no-preference",
+          "locale": "en-US",
+          "direction": "ltr"
+        }
+      ]
     },
     {
       "id": "redesign-preserves-requirements",
@@ -471,6 +582,24 @@
         "locale",
         "direction"
       ],
+      "requirementInventory": [
+        {
+          "id": "req-account",
+          "criterionId": "REQ-ACCOUNT-FLOW",
+          "componentId": "surface",
+          "category": "test-output",
+          "expectedObservation": "Account flow remains complete"
+        }
+      ],
+      "accessibilityInventory": [
+        {
+          "id": "a11y-name",
+          "criterionId": "A-LABEL",
+          "componentId": "surface",
+          "category": "accessibility-tree",
+          "expectedObservation": "Account control retains its accessible name"
+        }
+      ],
       "requiredDecisionFields": [
         "structuralChange",
         "requirements",
@@ -479,8 +608,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -491,7 +619,59 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "redesign-preserves-requirements-pair-1-before",
+          "category": "rendered-capture",
+          "criterionId": "C-ADAPTIVE-COMPOSITION",
+          "componentId": "surface",
+          "expectedObservation": "Pre-edit matched capture",
+          "route": "/dashboard",
+          "taskPoint": "loaded",
+          "dataFixtureId": "account-a",
+          "state": "default",
+          "viewportWidth": 1024,
+          "viewportHeight": 768,
+          "deviceScaleFactor": 1,
+          "colorScheme": "light",
+          "motionPreference": "no-preference",
+          "locale": "en-US",
+          "direction": "ltr"
+        },
+        {
+          "id": "redesign-requirement-account",
+          "category": "test-output",
+          "criterionId": "REQ-ACCOUNT-FLOW",
+          "componentId": "surface",
+          "expectedObservation": "Account flow remains complete"
+        },
+        {
+          "id": "redesign-a11y-name",
+          "category": "accessibility-tree",
+          "criterionId": "A-LABEL",
+          "componentId": "surface",
+          "expectedObservation": "Account control retains its accessible name"
+        },
+        {
+          "id": "redesign-preserves-requirements-pair-1-after",
+          "category": "rendered-capture",
+          "criterionId": "C-ADAPTIVE-COMPOSITION",
+          "componentId": "surface",
+          "expectedObservation": "Post-edit matched capture",
+          "route": "/dashboard",
+          "taskPoint": "loaded",
+          "dataFixtureId": "account-a",
+          "state": "default",
+          "viewportWidth": 1024,
+          "viewportHeight": 768,
+          "deviceScaleFactor": 1,
+          "colorScheme": "light",
+          "motionPreference": "no-preference",
+          "locale": "en-US",
+          "direction": "ltr"
+        }
+      ]
     },
     {
       "id": "feedback-component-choice",
@@ -531,8 +711,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -543,7 +722,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "feedback-banner-choice",
@@ -582,8 +762,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -594,7 +773,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "feedback-dialog-choice",
@@ -633,8 +813,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -645,7 +824,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "switch-versus-checkbox",
@@ -679,8 +859,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -691,7 +870,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "deferred-checkbox",
@@ -725,8 +905,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -737,7 +916,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "adaptive-navigation",
@@ -779,10 +959,31 @@
         "navigationByWidth",
         "reviewRows"
       ],
+      "navigationContract": [
+        {
+          "width": 599,
+          "visiblePattern": "navigation-bar",
+          "destinations": [
+            "/home",
+            "/search",
+            "/profile"
+          ],
+          "currentDestination": "/home"
+        },
+        {
+          "width": 840,
+          "visiblePattern": "navigation-rail",
+          "destinations": [
+            "/home",
+            "/search",
+            "/profile"
+          ],
+          "currentDestination": "/home"
+        }
+      ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -793,7 +994,23 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-rendered-capture",
+          "category": "rendered-capture",
+          "criterionId": "C-TASK-PRIMARY",
+          "componentId": "navigation",
+          "expectedObservation": "Observed rendered-capture contract"
+        },
+        {
+          "id": "artifact-accessibility-tree",
+          "category": "accessibility-tree",
+          "criterionId": "A-LABEL",
+          "componentId": "navigation",
+          "expectedObservation": "Observed accessibility-tree contract"
+        }
+      ]
     },
     {
       "id": "brand-through-tokens",
@@ -829,8 +1046,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -841,7 +1057,8 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": []
     },
     {
       "id": "runtime-owned-aria",
@@ -894,8 +1111,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -909,7 +1125,23 @@
         "aria-expanded",
         "aria-controls"
       ],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-source",
+          "category": "source",
+          "criterionId": "A-HOST-ELEMENT",
+          "componentId": "navigation-drawer",
+          "expectedObservation": "Observed source contract"
+        },
+        {
+          "id": "artifact-runtime-inspection",
+          "category": "runtime-inspection",
+          "criterionId": "A-RUNTIME-ARIA-UPDATE",
+          "componentId": "navigation-drawer",
+          "expectedObservation": "Observed runtime-inspection contract"
+        }
+      ]
     },
     {
       "id": "manual-init-teardown",
@@ -926,15 +1158,15 @@
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [
-        "runtime-inspection",
-        "test-output"
+        "source",
+        "runtime-inspection"
       ],
       "requiredEvidenceByCriterion": {
         "A-INIT-OWNER": [
-          "runtime-inspection"
+          "source"
         ],
         "A-CLEAN-LISTENER": [
-          "test-output"
+          "runtime-inspection"
         ]
       },
       "expectedCriticalInvariantIds": [
@@ -957,8 +1189,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -969,7 +1200,23 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-runtime-inspection",
+          "category": "source",
+          "criterionId": "A-INIT-OWNER",
+          "componentId": "tooltips",
+          "expectedObservation": "Observed runtime-inspection contract"
+        },
+        {
+          "id": "artifact-test-output",
+          "category": "runtime-inspection",
+          "criterionId": "A-CLEAN-LISTENER",
+          "componentId": "tooltips",
+          "expectedObservation": "Observed test-output contract"
+        }
+      ]
     },
     {
       "id": "older-version-contract",
@@ -986,12 +1233,11 @@
       "mustNotLoad": [],
       "noEdits": true,
       "requiredEvidenceCategories": [
-        "version-resolution",
         "source"
       ],
       "requiredEvidenceByCriterion": {
         "A-TARGET-VERSION": [
-          "version-resolution"
+          "source"
         ],
         "A-HOST-ELEMENT": [
           "source"
@@ -1018,8 +1264,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -1032,7 +1277,23 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "artifact-version-resolution",
+          "category": "source",
+          "criterionId": "A-TARGET-VERSION",
+          "componentId": "surface",
+          "expectedObservation": "Observed version-resolution contract"
+        },
+        {
+          "id": "artifact-source",
+          "category": "source",
+          "criterionId": "A-HOST-ELEMENT",
+          "componentId": "surface",
+          "expectedObservation": "Observed source contract"
+        }
+      ]
     },
     {
       "id": "reachable-state-ledger",
@@ -1153,8 +1414,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -1167,7 +1427,113 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "coverage-state-loading",
+          "category": "rendered-capture",
+          "criterionId": "C-STATE-NONCOLOR",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for loading",
+          "inventoryId": "state-loading"
+        },
+        {
+          "id": "coverage-state-empty",
+          "category": "rendered-capture",
+          "criterionId": "C-STATE-NONCOLOR",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for empty",
+          "inventoryId": "state-empty"
+        },
+        {
+          "id": "coverage-state-error",
+          "category": "rendered-capture",
+          "criterionId": "C-STATE-NONCOLOR",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for error",
+          "inventoryId": "state-error"
+        },
+        {
+          "id": "coverage-state-offline",
+          "category": "rendered-capture",
+          "criterionId": "C-STATE-NONCOLOR",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for offline",
+          "inventoryId": "state-offline"
+        },
+        {
+          "id": "coverage-boundary-compact-medium-below",
+          "category": "rendered-capture",
+          "criterionId": "A-REFLOW-320",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for 599",
+          "inventoryId": "boundary-compact-medium-below"
+        },
+        {
+          "id": "coverage-boundary-compact-medium-above",
+          "category": "rendered-capture",
+          "criterionId": "A-REFLOW-320",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for 600",
+          "inventoryId": "boundary-compact-medium-above"
+        },
+        {
+          "id": "coverage-boundary-medium-expanded-below",
+          "category": "rendered-capture",
+          "criterionId": "A-REFLOW-320",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for 839",
+          "inventoryId": "boundary-medium-expanded-below"
+        },
+        {
+          "id": "coverage-boundary-medium-expanded-above",
+          "category": "rendered-capture",
+          "criterionId": "A-REFLOW-320",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for 840",
+          "inventoryId": "boundary-medium-expanded-above"
+        },
+        {
+          "id": "coverage-data-long",
+          "category": "rendered-capture",
+          "criterionId": "C-LONG-CONTENT-FIT",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for long-content",
+          "inventoryId": "data-long"
+        },
+        {
+          "id": "coverage-theme-dark",
+          "category": "rendered-capture",
+          "criterionId": "C-THEME-HIERARCHY",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for dark",
+          "inventoryId": "theme-dark"
+        },
+        {
+          "id": "coverage-input-keyboard",
+          "category": "interaction-trace",
+          "criterionId": "A-KEYBOARD-ACTION",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for keyboard",
+          "inventoryId": "input-keyboard"
+        },
+        {
+          "id": "coverage-locale-ar",
+          "category": "rendered-capture",
+          "criterionId": "C-LOCALIZED-CONTENT-FIT",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for ar",
+          "inventoryId": "locale-ar"
+        },
+        {
+          "id": "coverage-direction-rtl",
+          "category": "accessibility-tree",
+          "criterionId": "A-RTL-READING",
+          "componentId": "surface",
+          "expectedObservation": "Observed fixture coverage for rtl",
+          "inventoryId": "direction-rtl"
+        }
+      ]
     },
     {
       "id": "matched-before-after",
@@ -1211,8 +1577,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [],
       "forbiddenMarkup": [
@@ -1223,7 +1588,45 @@
         "materialboxed"
       ],
       "forbiddenAuthoredRuntimeAria": [],
-      "forbiddenUnsupportedClaims": []
+      "forbiddenUnsupportedClaims": [],
+      "artifactExpectations": [
+        {
+          "id": "matched-before-after-pair-1-before",
+          "category": "rendered-capture",
+          "criterionId": "C-ADAPTIVE-COMPOSITION",
+          "componentId": "surface",
+          "expectedObservation": "Pre-edit matched capture",
+          "route": "/dashboard",
+          "taskPoint": "loaded",
+          "dataFixtureId": "account-a",
+          "state": "default",
+          "viewportWidth": 1024,
+          "viewportHeight": 768,
+          "deviceScaleFactor": 1,
+          "colorScheme": "light",
+          "motionPreference": "no-preference",
+          "locale": "en-US",
+          "direction": "ltr"
+        },
+        {
+          "id": "matched-before-after-pair-1-after",
+          "category": "rendered-capture",
+          "criterionId": "C-ADAPTIVE-COMPOSITION",
+          "componentId": "surface",
+          "expectedObservation": "Post-edit matched capture",
+          "route": "/dashboard",
+          "taskPoint": "loaded",
+          "dataFixtureId": "account-a",
+          "state": "default",
+          "viewportWidth": 1024,
+          "viewportHeight": 768,
+          "deviceScaleFactor": 1,
+          "colorScheme": "light",
+          "motionPreference": "no-preference",
+          "locale": "en-US",
+          "direction": "ltr"
+        }
+      ]
     },
     {
       "id": "mcp-pass-is-scoped",
@@ -1257,8 +1660,7 @@
       ],
       "requiredReportFields": [
         "caseId",
-        "mode",
-        "evidenceArtifacts"
+        "mode"
       ],
       "forbiddenEdits": [
         "*"
@@ -1274,7 +1676,8 @@
       "forbiddenUnsupportedClaims": [
         "full visual review passed",
         "full accessibility review passed"
-      ]
+      ],
+      "artifactExpectations": []
     }
   ]
 }

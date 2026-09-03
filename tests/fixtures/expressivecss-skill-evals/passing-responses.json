@@ -4,8 +4,7 @@
     "setup-only-routing": {
       "candidateResponse": {
         "caseId": "setup-only-routing",
-        "mode": "Implement",
-        "evidenceArtifacts": []
+        "mode": "Implement"
       },
       "executionEvidence": {
         "source": "adapter",
@@ -31,14 +30,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "css-only-markup-routing": {
       "candidateResponse": {
         "caseId": "css-only-markup-routing",
-        "mode": "Implement",
-        "evidenceArtifacts": []
+        "mode": "Implement"
       },
       "executionEvidence": {
         "source": "adapter",
@@ -78,14 +77,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "token-only-theming-routing": {
       "candidateResponse": {
         "caseId": "token-only-theming-routing",
-        "mode": "Implement",
-        "evidenceArtifacts": []
+        "mode": "Implement"
       },
       "executionEvidence": {
         "source": "adapter",
@@ -111,25 +110,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "critique-no-edit": {
       "candidateResponse": {
         "caseId": "critique-no-edit",
         "mode": "Critique",
-        "evidenceArtifacts": [
-          {
-            "id": "artifact-rendered-capture",
-            "category": "rendered-capture",
-            "observation": "Observed rendered-capture contract",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "criterionId": "C-TASK-PRIMARY",
-            "componentId": "surface",
-            "expectedObservation": "Observed rendered-capture contract"
-          }
-        ],
         "reviewRows": [
           {
             "criterionId": "C-TASK-PRIMARY",
@@ -179,35 +167,25 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "artifact-rendered-capture",
+            "category": "rendered-capture",
+            "observation": "Observed rendered-capture contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "surface",
+            "expectedObservation": "Observed rendered-capture contract"
+          }
+        ]
       }
     },
     "css-only-audit": {
       "candidateResponse": {
         "caseId": "css-only-audit",
         "mode": "Audit",
-        "evidenceArtifacts": [
-          {
-            "id": "artifact-source",
-            "category": "source",
-            "observation": "Observed source contract",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "criterionId": "A-HOST-ELEMENT",
-            "componentId": "checkboxes",
-            "expectedObservation": "Observed source contract"
-          },
-          {
-            "id": "artifact-accessibility-tree",
-            "category": "accessibility-tree",
-            "observation": "Observed accessibility-tree contract",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "criterionId": "A-LABEL",
-            "componentId": "checkboxes",
-            "expectedObservation": "Observed accessibility-tree contract"
-          }
-        ],
         "reviewRows": [
           {
             "criterionId": "A-HOST-ELEMENT",
@@ -265,14 +243,8 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
-      }
-    },
-    "interactive-audit": {
-      "candidateResponse": {
-        "caseId": "interactive-audit",
-        "mode": "Audit",
-        "evidenceArtifacts": [
+        },
+        "artifacts": [
           {
             "id": "artifact-source",
             "category": "source",
@@ -280,40 +252,26 @@
             "sequence": 30,
             "timestamp": "2026-09-03T00:00:30.000Z",
             "criterionId": "A-HOST-ELEMENT",
-            "componentId": "navigation-drawer",
+            "componentId": "checkboxes",
             "expectedObservation": "Observed source contract"
-          },
-          {
-            "id": "artifact-runtime-inspection",
-            "category": "runtime-inspection",
-            "observation": "Observed runtime-inspection contract",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "criterionId": "A-RUNTIME-ARIA-UPDATE",
-            "componentId": "navigation-drawer",
-            "expectedObservation": "Observed runtime-inspection contract"
           },
           {
             "id": "artifact-accessibility-tree",
             "category": "accessibility-tree",
             "observation": "Observed accessibility-tree contract",
-            "sequence": 32,
-            "timestamp": "2026-09-03T00:00:32.000Z",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
             "criterionId": "A-LABEL",
-            "componentId": "navigation-drawer",
+            "componentId": "checkboxes",
             "expectedObservation": "Observed accessibility-tree contract"
-          },
-          {
-            "id": "artifact-test-output",
-            "category": "test-output",
-            "observation": "Observed test-output contract",
-            "sequence": 33,
-            "timestamp": "2026-09-03T00:00:33.000Z",
-            "criterionId": "A-KEYBOARD-ACTION",
-            "componentId": "navigation-drawer",
-            "expectedObservation": "Observed test-output contract"
           }
-        ],
+        ]
+      }
+    },
+    "interactive-audit": {
+      "candidateResponse": {
+        "caseId": "interactive-audit",
+        "mode": "Audit",
         "reviewRows": [
           {
             "criterionId": "A-HOST-ELEMENT",
@@ -394,37 +352,55 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed source contract"
+          },
+          {
+            "id": "artifact-runtime-inspection",
+            "category": "runtime-inspection",
+            "observation": "Observed runtime-inspection contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-RUNTIME-ARIA-UPDATE",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed runtime-inspection contract"
+          },
+          {
+            "id": "artifact-accessibility-tree",
+            "category": "accessibility-tree",
+            "observation": "Observed accessibility-tree contract",
+            "sequence": 32,
+            "timestamp": "2026-09-03T00:00:32.000Z",
+            "criterionId": "A-LABEL",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed accessibility-tree contract"
+          },
+          {
+            "id": "artifact-test-output",
+            "category": "interaction-trace",
+            "observation": "Observed test-output contract",
+            "sequence": 33,
+            "timestamp": "2026-09-03T00:00:33.000Z",
+            "criterionId": "A-KEYBOARD-ACTION",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed test-output contract"
+          }
+        ]
       }
     },
     "combined-review-order": {
       "candidateResponse": {
         "caseId": "combined-review-order",
         "mode": "Critique+Audit",
-        "evidenceArtifacts": [
-          {
-            "id": "critique-render",
-            "category": "rendered-capture",
-            "observation": "Primary action hierarchy",
-            "mode": "Critique",
-            "criterionId": "C-TASK-PRIMARY",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "componentId": "surface",
-            "expectedObservation": "Primary action hierarchy"
-          },
-          {
-            "id": "audit-source",
-            "category": "source",
-            "observation": "Host element contract",
-            "mode": "Audit",
-            "criterionId": "A-HOST-ELEMENT",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "componentId": "surface",
-            "expectedObservation": "Host element contract"
-          }
-        ],
         "reviewRows": [
           {
             "criterionId": "C-TASK-PRIMARY",
@@ -482,37 +458,37 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "critique-render",
+            "category": "rendered-capture",
+            "observation": "Primary action hierarchy",
+            "mode": "Critique",
+            "criterionId": "C-TASK-PRIMARY",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "componentId": "surface",
+            "expectedObservation": "Primary action hierarchy"
+          },
+          {
+            "id": "audit-source",
+            "category": "source",
+            "observation": "Host element contract",
+            "mode": "Audit",
+            "criterionId": "A-HOST-ELEMENT",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "componentId": "surface",
+            "expectedObservation": "Host element contract"
+          }
+        ]
       }
     },
     "refine-preserves-product": {
       "candidateResponse": {
         "caseId": "refine-preserves-product",
         "mode": "Refine",
-        "evidenceArtifacts": [
-          {
-            "id": "refine-preserves-product-pair-1-before",
-            "category": "rendered-capture",
-            "observation": "Pre-edit matched capture",
-            "criterionId": "C-MATCHED-CAPTURE",
-            "componentId": "surface",
-            "pairId": "pair-1",
-            "captureRole": "before",
-            "sequence": 10,
-            "timestamp": "2026-09-03T00:00:10.000Z"
-          },
-          {
-            "id": "refine-preserves-product-pair-1-after",
-            "category": "rendered-capture",
-            "observation": "Post-edit matched capture",
-            "criterionId": "C-MATCHED-CAPTURE",
-            "componentId": "surface",
-            "pairId": "pair-1",
-            "captureRole": "after",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z"
-          }
-        ],
         "protectedBefore": {
           "identity": "i1",
           "content": "c1",
@@ -619,48 +595,76 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "refine-preserves-product-pair-1-before",
+            "category": "rendered-capture",
+            "observation": "Pre-edit matched capture",
+            "criterionId": "C-ADAPTIVE-COMPOSITION",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "before",
+            "sequence": 10,
+            "timestamp": "2026-09-03T00:00:10.000Z",
+            "route": "/dashboard",
+            "taskPoint": "loaded",
+            "dataFixtureId": "account-a",
+            "state": "default",
+            "viewportWidth": 1024,
+            "viewportHeight": 768,
+            "deviceScaleFactor": 1,
+            "colorScheme": "light",
+            "motionPreference": "no-preference",
+            "locale": "en-US",
+            "direction": "ltr"
+          },
+          {
+            "id": "refine-preserves-product-pair-1-after",
+            "category": "rendered-capture",
+            "observation": "Post-edit matched capture",
+            "criterionId": "C-ADAPTIVE-COMPOSITION",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "after",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "route": "/dashboard",
+            "taskPoint": "loaded",
+            "dataFixtureId": "account-a",
+            "state": "default",
+            "viewportWidth": 1024,
+            "viewportHeight": 768,
+            "deviceScaleFactor": 1,
+            "colorScheme": "light",
+            "motionPreference": "no-preference",
+            "locale": "en-US",
+            "direction": "ltr"
+          }
+        ]
       }
     },
     "redesign-preserves-requirements": {
       "candidateResponse": {
         "caseId": "redesign-preserves-requirements",
         "mode": "Redesign",
-        "evidenceArtifacts": [
-          {
-            "id": "redesign-preserves-requirements-pair-1-before",
-            "category": "rendered-capture",
-            "observation": "Pre-edit matched capture",
-            "criterionId": "C-MATCHED-CAPTURE",
-            "componentId": "surface",
-            "pairId": "pair-1",
-            "captureRole": "before",
-            "sequence": 10,
-            "timestamp": "2026-09-03T00:00:10.000Z"
-          },
-          {
-            "id": "redesign-preserves-requirements-pair-1-after",
-            "category": "rendered-capture",
-            "observation": "Post-edit matched capture",
-            "criterionId": "C-MATCHED-CAPTURE",
-            "componentId": "surface",
-            "pairId": "pair-1",
-            "captureRole": "after",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z"
-          }
-        ],
         "structuralChange": true,
         "requirements": [
           {
             "id": "req-account",
-            "status": "Pass"
+            "status": "Pass",
+            "evidenceIds": [
+              "redesign-requirement-account"
+            ]
           }
         ],
         "accessibilityAssertions": [
           {
             "id": "a11y-name",
-            "status": "Pass"
+            "status": "Pass",
+            "evidenceIds": [
+              "redesign-a11y-name"
+            ]
           }
         ],
         "capturePairs": [
@@ -762,14 +766,79 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "redesign-preserves-requirements-pair-1-before",
+            "category": "rendered-capture",
+            "observation": "Pre-edit matched capture",
+            "criterionId": "C-ADAPTIVE-COMPOSITION",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "before",
+            "sequence": 10,
+            "timestamp": "2026-09-03T00:00:10.000Z",
+            "route": "/dashboard",
+            "taskPoint": "loaded",
+            "dataFixtureId": "account-a",
+            "state": "default",
+            "viewportWidth": 1024,
+            "viewportHeight": 768,
+            "deviceScaleFactor": 1,
+            "colorScheme": "light",
+            "motionPreference": "no-preference",
+            "locale": "en-US",
+            "direction": "ltr"
+          },
+          {
+            "id": "redesign-requirement-account",
+            "category": "test-output",
+            "observation": "Account flow remains complete",
+            "expectedObservation": "Account flow remains complete",
+            "criterionId": "REQ-ACCOUNT-FLOW",
+            "componentId": "surface",
+            "sequence": 25,
+            "timestamp": "2026-09-03T00:00:25.000Z"
+          },
+          {
+            "id": "redesign-a11y-name",
+            "category": "accessibility-tree",
+            "observation": "Account control retains its accessible name",
+            "expectedObservation": "Account control retains its accessible name",
+            "criterionId": "A-LABEL",
+            "componentId": "surface",
+            "sequence": 26,
+            "timestamp": "2026-09-03T00:00:26.000Z"
+          },
+          {
+            "id": "redesign-preserves-requirements-pair-1-after",
+            "category": "rendered-capture",
+            "observation": "Post-edit matched capture",
+            "criterionId": "C-ADAPTIVE-COMPOSITION",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "after",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "route": "/dashboard",
+            "taskPoint": "loaded",
+            "dataFixtureId": "account-a",
+            "state": "default",
+            "viewportWidth": 1024,
+            "viewportHeight": 768,
+            "deviceScaleFactor": 1,
+            "colorScheme": "light",
+            "motionPreference": "no-preference",
+            "locale": "en-US",
+            "direction": "ltr"
+          }
+        ]
       }
     },
     "feedback-component-choice": {
       "candidateResponse": {
         "caseId": "feedback-component-choice",
         "mode": "Implement",
-        "evidenceArtifacts": [],
         "selectedComponent": "snackbar",
         "rejectionReasons": {
           "banners": "The action does not need persistent placement.",
@@ -842,14 +911,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "feedback-banner-choice": {
       "candidateResponse": {
         "caseId": "feedback-banner-choice",
         "mode": "Implement",
-        "evidenceArtifacts": [],
         "selectedComponent": "banners",
         "rejectionReasons": {
           "snackbar": "The action must remain available after a transient message would disappear.",
@@ -915,14 +984,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "feedback-dialog-choice": {
       "candidateResponse": {
         "caseId": "feedback-dialog-choice",
         "mode": "Implement",
-        "evidenceArtifacts": [],
         "selectedComponent": "dialogs",
         "rejectionReasons": {
           "snackbar": "The decision cannot be safely ignored.",
@@ -988,14 +1057,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "switch-versus-checkbox": {
       "candidateResponse": {
         "caseId": "switch-versus-checkbox",
         "mode": "Implement",
-        "evidenceArtifacts": [],
         "selectedComponent": "switches",
         "markup": "<label class=\"switch\"><input type=\"checkbox\" name=\"alerts\"><span>Alerts</span></label>",
         "addsJavaScript": false,
@@ -1046,14 +1115,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "deferred-checkbox": {
       "candidateResponse": {
         "caseId": "deferred-checkbox",
         "mode": "Implement",
-        "evidenceArtifacts": [],
         "selectedComponent": "checkboxes",
         "markup": "<label><input type=\"checkbox\" name=\"alerts\"><span>Alerts</span></label>",
         "addsJavaScript": false,
@@ -1104,35 +1173,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "adaptive-navigation": {
       "candidateResponse": {
         "caseId": "adaptive-navigation",
         "mode": "Implement",
-        "evidenceArtifacts": [
-          {
-            "id": "artifact-rendered-capture",
-            "category": "rendered-capture",
-            "observation": "Observed rendered-capture contract",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "criterionId": "C-TASK-PRIMARY",
-            "componentId": "navigation",
-            "expectedObservation": "Observed rendered-capture contract"
-          },
-          {
-            "id": "artifact-accessibility-tree",
-            "category": "accessibility-tree",
-            "observation": "Observed accessibility-tree contract",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "criterionId": "A-LABEL",
-            "componentId": "navigation",
-            "expectedObservation": "Observed accessibility-tree contract"
-          }
-        ],
         "navigationByWidth": [
           {
             "width": 599,
@@ -1236,14 +1284,35 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "artifact-rendered-capture",
+            "category": "rendered-capture",
+            "observation": "Observed rendered-capture contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "C-TASK-PRIMARY",
+            "componentId": "navigation",
+            "expectedObservation": "Observed rendered-capture contract"
+          },
+          {
+            "id": "artifact-accessibility-tree",
+            "category": "accessibility-tree",
+            "observation": "Observed accessibility-tree contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-LABEL",
+            "componentId": "navigation",
+            "expectedObservation": "Observed accessibility-tree contract"
+          }
+        ]
       }
     },
     "brand-through-tokens": {
       "candidateResponse": {
         "caseId": "brand-through-tokens",
         "mode": "Implement",
-        "evidenceArtifacts": [],
         "rawColorUses": [
           {
             "target": "--md-source",
@@ -1306,35 +1375,14 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": []
       }
     },
     "runtime-owned-aria": {
       "candidateResponse": {
         "caseId": "runtime-owned-aria",
         "mode": "Implement",
-        "evidenceArtifacts": [
-          {
-            "id": "artifact-source",
-            "category": "source",
-            "observation": "Observed source contract",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "criterionId": "A-HOST-ELEMENT",
-            "componentId": "navigation-drawer",
-            "expectedObservation": "Observed source contract"
-          },
-          {
-            "id": "artifact-runtime-inspection",
-            "category": "runtime-inspection",
-            "observation": "Observed runtime-inspection contract",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "criterionId": "A-RUNTIME-ARIA-UPDATE",
-            "componentId": "navigation-drawer",
-            "expectedObservation": "Observed runtime-inspection contract"
-          }
-        ],
         "sourceMarkup": "<button class=\"sidenav-trigger\" data-target=\"drawer\" aria-label=\"Open navigation\">Menu</button>",
         "initializedDom": {
           "aria-expanded": "false",
@@ -1415,35 +1463,35 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed source contract"
+          },
+          {
+            "id": "artifact-runtime-inspection",
+            "category": "runtime-inspection",
+            "observation": "Observed runtime-inspection contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-RUNTIME-ARIA-UPDATE",
+            "componentId": "navigation-drawer",
+            "expectedObservation": "Observed runtime-inspection contract"
+          }
+        ]
       }
     },
     "manual-init-teardown": {
       "candidateResponse": {
         "caseId": "manual-init-teardown",
         "mode": "Implement",
-        "evidenceArtifacts": [
-          {
-            "id": "artifact-runtime-inspection",
-            "category": "runtime-inspection",
-            "observation": "Observed runtime-inspection contract",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "criterionId": "A-INIT-OWNER",
-            "componentId": "tooltips",
-            "expectedObservation": "Observed runtime-inspection contract"
-          },
-          {
-            "id": "artifact-test-output",
-            "category": "test-output",
-            "observation": "Observed test-output contract",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "criterionId": "A-CLEAN-LISTENER",
-            "componentId": "tooltips",
-            "expectedObservation": "Observed test-output contract"
-          }
-        ],
         "registryElementId": "tip-save",
         "markup": "<button id=\"tip-save\" class=\"tooltipped no-autoinit\">Save</button>",
         "initialization": [
@@ -1537,35 +1585,35 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "artifact-runtime-inspection",
+            "category": "source",
+            "observation": "Observed runtime-inspection contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-INIT-OWNER",
+            "componentId": "tooltips",
+            "expectedObservation": "Observed runtime-inspection contract"
+          },
+          {
+            "id": "artifact-test-output",
+            "category": "runtime-inspection",
+            "observation": "Observed test-output contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-CLEAN-LISTENER",
+            "componentId": "tooltips",
+            "expectedObservation": "Observed test-output contract"
+          }
+        ]
       }
     },
     "older-version-contract": {
       "candidateResponse": {
         "caseId": "older-version-contract",
         "mode": "Audit",
-        "evidenceArtifacts": [
-          {
-            "id": "artifact-version-resolution",
-            "category": "version-resolution",
-            "observation": "Observed version-resolution contract",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z",
-            "criterionId": "A-TARGET-VERSION",
-            "componentId": "surface",
-            "expectedObservation": "Observed version-resolution contract"
-          },
-          {
-            "id": "artifact-source",
-            "category": "source",
-            "observation": "Observed source contract",
-            "sequence": 31,
-            "timestamp": "2026-09-03T00:00:31.000Z",
-            "criterionId": "A-HOST-ELEMENT",
-            "componentId": "surface",
-            "expectedObservation": "Observed source contract"
-          }
-        ],
         "resolvedVersion": "0.7.0",
         "contractVersion": "0.8.0",
         "skillVersion": "0.4.0",
@@ -1630,132 +1678,35 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "artifact-version-resolution",
+            "category": "source",
+            "observation": "Observed version-resolution contract",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "criterionId": "A-TARGET-VERSION",
+            "componentId": "surface",
+            "expectedObservation": "Observed version-resolution contract"
+          },
+          {
+            "id": "artifact-source",
+            "category": "source",
+            "observation": "Observed source contract",
+            "sequence": 31,
+            "timestamp": "2026-09-03T00:00:31.000Z",
+            "criterionId": "A-HOST-ELEMENT",
+            "componentId": "surface",
+            "expectedObservation": "Observed source contract"
+          }
+        ]
       }
     },
     "reachable-state-ledger": {
       "candidateResponse": {
         "caseId": "reachable-state-ledger",
         "mode": "Audit",
-        "evidenceArtifacts": [
-          {
-            "id": "coverage-state-loading",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for loading",
-            "criterionId": "C-STATE-NONCOLOR",
-            "componentId": "surface",
-            "sequence": 40,
-            "timestamp": "2026-09-03T00:00:40.000Z"
-          },
-          {
-            "id": "coverage-state-empty",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for empty",
-            "criterionId": "C-STATE-NONCOLOR",
-            "componentId": "surface",
-            "sequence": 41,
-            "timestamp": "2026-09-03T00:00:41.000Z"
-          },
-          {
-            "id": "coverage-state-error",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for error",
-            "criterionId": "C-STATE-NONCOLOR",
-            "componentId": "surface",
-            "sequence": 42,
-            "timestamp": "2026-09-03T00:00:42.000Z"
-          },
-          {
-            "id": "coverage-state-offline",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for offline",
-            "criterionId": "C-STATE-NONCOLOR",
-            "componentId": "surface",
-            "sequence": 44,
-            "timestamp": "2026-09-03T00:00:44.000Z"
-          },
-          {
-            "id": "coverage-boundary-compact-medium-below",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for 599",
-            "criterionId": "A-REFLOW-320",
-            "componentId": "surface",
-            "sequence": 45,
-            "timestamp": "2026-09-03T00:00:45.000Z"
-          },
-          {
-            "id": "coverage-boundary-compact-medium-above",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for 600",
-            "criterionId": "A-REFLOW-320",
-            "componentId": "surface",
-            "sequence": 46,
-            "timestamp": "2026-09-03T00:00:46.000Z"
-          },
-          {
-            "id": "coverage-boundary-medium-expanded-below",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for 839",
-            "criterionId": "A-REFLOW-320",
-            "componentId": "surface",
-            "sequence": 47,
-            "timestamp": "2026-09-03T00:00:47.000Z"
-          },
-          {
-            "id": "coverage-boundary-medium-expanded-above",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for 840",
-            "criterionId": "A-REFLOW-320",
-            "componentId": "surface",
-            "sequence": 48,
-            "timestamp": "2026-09-03T00:00:48.000Z"
-          },
-          {
-            "id": "coverage-data-long",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for long-content",
-            "criterionId": "C-LONG-CONTENT-FIT",
-            "componentId": "surface",
-            "sequence": 49,
-            "timestamp": "2026-09-03T00:00:49.000Z"
-          },
-          {
-            "id": "coverage-theme-dark",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for dark",
-            "criterionId": "C-THEME-HIERARCHY",
-            "componentId": "surface",
-            "sequence": 50,
-            "timestamp": "2026-09-03T00:00:50.000Z"
-          },
-          {
-            "id": "coverage-input-keyboard",
-            "category": "interaction-trace",
-            "observation": "Observed fixture coverage for keyboard",
-            "criterionId": "A-KEYBOARD-ACTION",
-            "componentId": "surface",
-            "sequence": 51,
-            "timestamp": "2026-09-03T00:00:51.000Z"
-          },
-          {
-            "id": "coverage-locale-ar",
-            "category": "rendered-capture",
-            "observation": "Observed fixture coverage for ar",
-            "criterionId": "C-LOCALIZED-CONTENT-FIT",
-            "componentId": "surface",
-            "sequence": 52,
-            "timestamp": "2026-09-03T00:00:52.000Z"
-          },
-          {
-            "id": "coverage-direction-rtl",
-            "category": "accessibility-tree",
-            "observation": "Observed fixture coverage for rtl",
-            "criterionId": "A-RTL-READING",
-            "componentId": "surface",
-            "sequence": 53,
-            "timestamp": "2026-09-03T00:00:53.000Z"
-          }
-        ],
         "coverageRecords": [
           {
             "inventoryId": "state-loading",
@@ -1977,37 +1928,145 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "coverage-state-loading",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for loading",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 40,
+            "timestamp": "2026-09-03T00:00:40.000Z",
+            "inventoryId": "state-loading"
+          },
+          {
+            "id": "coverage-state-empty",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for empty",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 41,
+            "timestamp": "2026-09-03T00:00:41.000Z",
+            "inventoryId": "state-empty"
+          },
+          {
+            "id": "coverage-state-error",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for error",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 42,
+            "timestamp": "2026-09-03T00:00:42.000Z",
+            "inventoryId": "state-error"
+          },
+          {
+            "id": "coverage-state-offline",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for offline",
+            "criterionId": "C-STATE-NONCOLOR",
+            "componentId": "surface",
+            "sequence": 44,
+            "timestamp": "2026-09-03T00:00:44.000Z",
+            "inventoryId": "state-offline"
+          },
+          {
+            "id": "coverage-boundary-compact-medium-below",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 599",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 45,
+            "timestamp": "2026-09-03T00:00:45.000Z",
+            "inventoryId": "boundary-compact-medium-below"
+          },
+          {
+            "id": "coverage-boundary-compact-medium-above",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 600",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 46,
+            "timestamp": "2026-09-03T00:00:46.000Z",
+            "inventoryId": "boundary-compact-medium-above"
+          },
+          {
+            "id": "coverage-boundary-medium-expanded-below",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 839",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 47,
+            "timestamp": "2026-09-03T00:00:47.000Z",
+            "inventoryId": "boundary-medium-expanded-below"
+          },
+          {
+            "id": "coverage-boundary-medium-expanded-above",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for 840",
+            "criterionId": "A-REFLOW-320",
+            "componentId": "surface",
+            "sequence": 48,
+            "timestamp": "2026-09-03T00:00:48.000Z",
+            "inventoryId": "boundary-medium-expanded-above"
+          },
+          {
+            "id": "coverage-data-long",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for long-content",
+            "criterionId": "C-LONG-CONTENT-FIT",
+            "componentId": "surface",
+            "sequence": 49,
+            "timestamp": "2026-09-03T00:00:49.000Z",
+            "inventoryId": "data-long"
+          },
+          {
+            "id": "coverage-theme-dark",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for dark",
+            "criterionId": "C-THEME-HIERARCHY",
+            "componentId": "surface",
+            "sequence": 50,
+            "timestamp": "2026-09-03T00:00:50.000Z",
+            "inventoryId": "theme-dark"
+          },
+          {
+            "id": "coverage-input-keyboard",
+            "category": "interaction-trace",
+            "observation": "Observed fixture coverage for keyboard",
+            "criterionId": "A-KEYBOARD-ACTION",
+            "componentId": "surface",
+            "sequence": 51,
+            "timestamp": "2026-09-03T00:00:51.000Z",
+            "inventoryId": "input-keyboard"
+          },
+          {
+            "id": "coverage-locale-ar",
+            "category": "rendered-capture",
+            "observation": "Observed fixture coverage for ar",
+            "criterionId": "C-LOCALIZED-CONTENT-FIT",
+            "componentId": "surface",
+            "sequence": 52,
+            "timestamp": "2026-09-03T00:00:52.000Z",
+            "inventoryId": "locale-ar"
+          },
+          {
+            "id": "coverage-direction-rtl",
+            "category": "accessibility-tree",
+            "observation": "Observed fixture coverage for rtl",
+            "criterionId": "A-RTL-READING",
+            "componentId": "surface",
+            "sequence": 53,
+            "timestamp": "2026-09-03T00:00:53.000Z",
+            "inventoryId": "direction-rtl"
+          }
+        ]
       }
     },
     "matched-before-after": {
       "candidateResponse": {
         "caseId": "matched-before-after",
         "mode": "Refine",
-        "evidenceArtifacts": [
-          {
-            "id": "matched-before-after-pair-1-before",
-            "category": "rendered-capture",
-            "observation": "Pre-edit matched capture",
-            "criterionId": "C-MATCHED-CAPTURE",
-            "componentId": "surface",
-            "pairId": "pair-1",
-            "captureRole": "before",
-            "sequence": 10,
-            "timestamp": "2026-09-03T00:00:10.000Z"
-          },
-          {
-            "id": "matched-before-after-pair-1-after",
-            "category": "rendered-capture",
-            "observation": "Post-edit matched capture",
-            "criterionId": "C-MATCHED-CAPTURE",
-            "componentId": "surface",
-            "pairId": "pair-1",
-            "captureRole": "after",
-            "sequence": 30,
-            "timestamp": "2026-09-03T00:00:30.000Z"
-          }
-        ],
         "capturePairs": [
           {
             "pairId": "pair-1",
@@ -2100,14 +2159,59 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-        }
+        },
+        "artifacts": [
+          {
+            "id": "matched-before-after-pair-1-before",
+            "category": "rendered-capture",
+            "observation": "Pre-edit matched capture",
+            "criterionId": "C-ADAPTIVE-COMPOSITION",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "before",
+            "sequence": 10,
+            "timestamp": "2026-09-03T00:00:10.000Z",
+            "route": "/dashboard",
+            "taskPoint": "loaded",
+            "dataFixtureId": "account-a",
+            "state": "default",
+            "viewportWidth": 1024,
+            "viewportHeight": 768,
+            "deviceScaleFactor": 1,
+            "colorScheme": "light",
+            "motionPreference": "no-preference",
+            "locale": "en-US",
+            "direction": "ltr"
+          },
+          {
+            "id": "matched-before-after-pair-1-after",
+            "category": "rendered-capture",
+            "observation": "Post-edit matched capture",
+            "criterionId": "C-ADAPTIVE-COMPOSITION",
+            "componentId": "surface",
+            "pairId": "pair-1",
+            "captureRole": "after",
+            "sequence": 30,
+            "timestamp": "2026-09-03T00:00:30.000Z",
+            "route": "/dashboard",
+            "taskPoint": "loaded",
+            "dataFixtureId": "account-a",
+            "state": "default",
+            "viewportWidth": 1024,
+            "viewportHeight": 768,
+            "deviceScaleFactor": 1,
+            "colorScheme": "light",
+            "motionPreference": "no-preference",
+            "locale": "en-US",
+            "direction": "ltr"
+          }
+        ]
       }
     },
     "mcp-pass-is-scoped": {
       "candidateResponse": {
         "caseId": "mcp-pass-is-scoped",
         "mode": "Audit",
-        "evidenceArtifacts": [],
         "mcpStatus": "static_contract_pass",
         "checksPerformed": [
           "retired class scan",
@@ -2157,7 +2261,8 @@
           "algorithm": "sha256",
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "artifacts": []
       }
     }
   }

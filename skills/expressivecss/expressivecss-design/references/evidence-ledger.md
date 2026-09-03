@@ -49,7 +49,7 @@ Refine and Redesign require baseline and after artifacts. Keep each dimension in
 
 Acceptance requires exact string or numeric equality across every declared dimension in the before and after artifact metadata: route, task point, data fixture ID, state, viewport width, viewport height, device scale factor, color scheme, motion preference, locale, and direction. The baseline sequence and timestamp must predate the first edit sequence and timestamp. A true-looking `matched` flag is not evidence.
 
-Add one difference row for every visible difference. An empty table asserts that the comparison found no visible difference.
+Add one difference row for every visible difference. Refine and Redesign require at least one classified visible change; an empty difference table is incomplete because it does not demonstrate that the requested change reached the rendered result.
 
 | Pair ID | Difference ID | Region | Before observation | After observation | Classification | Requirement or rationale |
 | --- | --- | --- | --- | --- | --- | --- |

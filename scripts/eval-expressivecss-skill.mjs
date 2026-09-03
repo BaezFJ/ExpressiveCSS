@@ -1,11 +1,27 @@
-import { open, readFile, stat, writeFile } from 'node:fs/promises';
-import { spawnSync } from 'node:child_process';
+import { constants as fsConstants } from 'node:fs';
+import { lstat, mkdir, mkdtemp, open, realpath, rm, writeFile } from 'node:fs/promises';
+import { spawn } from 'node:child_process';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const THIS_FILE = fileURLToPath(import.meta.url);
 const DEFAULT_ROOT = path.resolve(path.dirname(THIS_FILE), '..');
 const ROOT_SKILL_PATH = 'skills/expressivecss/SKILL.md';
+export const PROJECT_FIXTURES = Object.freeze({
+  'consumer-current': Object.freeze({
+    'package.json': '{"name":"eval-consumer-current","private":true,"dependencies":{"@expressivecss/expressive":"0.8.0"}}\n',
+    'src/index.html': '<!doctype html><html lang="en"><body><main id="app"></main></body></html>\n',
+    'src/app.css': '@import "@expressivecss/expressive";\n',
+  }),
+  'consumer-older-version': Object.freeze({
+    'package.json': '{"name":"eval-consumer-older","private":true,"dependencies":{"@expressivecss/expressive":"0.7.0"}}\n',
+    'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.7.0"}\n',
+    'package-lock.json': '{"lockfileVersion":3,"packages":{"":{"dependencies":{"@expressivecss/expressive":"0.7.0"}},"node_modules/@expressivecss/expressive":{"version":"0.7.0"}}}\n',
+    'src/index.html': '<!doctype html><html lang="en"><body><main id="app"></main></body></html>\n',
+    'src/app.css': '@import "@expressivecss/expressive";\n',
+  }),
+});
 const SUPPORT_GUIDES = new Map([
   ['skills/expressivecss/expressivecss-design/SKILL.md', 'expressivecss-design'],
   ['skills/expressivecss/expressivecss-install/SKILL.md', 'expressivecss-install'],
@@ -20,12 +36,14 @@ const REVIEW_STATUSES = new Set(['Pass', 'Intentional adaptation', 'Fail', 'Not 
 export const DEFAULT_ADAPTER_TIMEOUT_MS = 120_000;
 export const EVALUATOR_LIMITS = Object.freeze({
   replayFileBytes: 1_048_576,
+  rootSkillBytes: 1_048_576,
   caseCount: 22,
   responseCount: 22,
   traceCount: 256,
   artifactCount: 256,
   rowCount: 256,
   stringCount: 4096,
+  keyCount: 20_000,
   stringBytes: 65_536,
   objectDepth: 32,
   traversalCount: 20_000,
@@ -73,13 +91,41 @@ function rootPath(value) {
   return path.resolve(value ?? DEFAULT_ROOT);
 }
 
-async function readBoundedJson(filePath, byteLimit, label) {
-  const handle = await open(filePath, 'r');
+function isPathInside(root, candidate) {
+  const relative = path.relative(root, candidate);
+  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
+}
+
+async function readBoundedRegularFile(filePath, byteLimit, label, expectedRoot = null) {
+  const target = path.resolve(filePath);
+  let resolvedRoot = null;
+  if (expectedRoot) {
+    resolvedRoot = await realpath(expectedRoot);
+    const relative = path.relative(path.resolve(expectedRoot), target);
+    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+      throw new Error(`${label} file is outside the repository`);
+    }
+    let current = resolvedRoot;
+    for (const segment of relative.split(path.sep)) {
+      current = path.join(current, segment);
+      const entry = await lstat(current, { bigint: true });
+      if (entry.isSymbolicLink()) throw new Error(`${label} file path contains a symbolic link`);
+    }
+  }
+
+  const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
+  const handle = await open(target, fsConstants.O_RDONLY | noFollow);
   try {
     const before = await handle.stat({ bigint: true });
-    const pathBefore = await stat(filePath, { bigint: true });
+    const pathBefore = await lstat(target, { bigint: true });
+    if (pathBefore.isSymbolicLink()) throw new Error(`${label} file is a symbolic link`);
+    if (!before.isFile() || !pathBefore.isFile()) throw new Error(`${label} file is not a regular file`);
     if (before.dev !== pathBefore.dev || before.ino !== pathBefore.ino) {
       throw new Error(`${label} file identity changed before reading`);
+    }
+    if (resolvedRoot) {
+      const openedPath = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => realpath(target));
+      if (!isPathInside(resolvedRoot, openedPath)) throw new Error(`${label} file is outside the repository`);
     }
     if (before.size > BigInt(byteLimit)) throw new Error(`${label} file exceeds ${byteLimit} bytes`);
 
@@ -93,20 +139,31 @@ async function readBoundedJson(filePath, byteLimit, label) {
     if (total > byteLimit) throw new Error(`${label} file exceeds ${byteLimit} bytes`);
 
     const after = await handle.stat({ bigint: true });
-    const pathAfter = await stat(filePath, { bigint: true });
+    const pathAfter = await lstat(target, { bigint: true });
     const handleChanged = before.dev !== after.dev || before.ino !== after.ino
       || before.size !== after.size || before.mtimeNs !== after.mtimeNs || before.ctimeNs !== after.ctimeNs;
-    const pathChanged = after.dev !== pathAfter.dev || after.ino !== pathAfter.ino;
+    const pathChanged = pathAfter.isSymbolicLink() || !pathAfter.isFile()
+      || after.dev !== pathAfter.dev || after.ino !== pathAfter.ino;
     if (handleChanged || pathChanged) throw new Error(`${label} file changed while reading`);
-    return JSON.parse(bytes.subarray(0, total).toString('utf8'));
+    return bytes.subarray(0, total).toString('utf8');
   } finally {
     await handle.close();
   }
 }
 
+async function readBoundedJson(filePath, byteLimit, label) {
+  return JSON.parse(await readBoundedRegularFile(filePath, byteLimit, label));
+}
+
 export async function assembleSkillBundle(_testCase, repositoryRoot = DEFAULT_ROOT) {
   const root = rootPath(repositoryRoot);
-  return `<!-- ${ROOT_SKILL_PATH} -->\n${await readFile(path.join(root, ROOT_SKILL_PATH), 'utf8')}`;
+  const skill = await readBoundedRegularFile(
+    path.join(root, ROOT_SKILL_PATH),
+    EVALUATOR_LIMITS.rootSkillBytes,
+    'root skill',
+    root,
+  );
+  return `<!-- ${ROOT_SKILL_PATH} -->\n${skill}`;
 }
 
 function hasPath(value, dottedPath) {
@@ -155,6 +212,20 @@ function actualGuideReads(executionEvidence) {
 function trustedExecutionIsValid(executionEvidence) {
   if (!executionEvidence || executionEvidence.source !== 'adapter'
     || !Array.isArray(executionEvidence.toolTrace)) return false;
+  if (!Array.isArray(executionEvidence.artifacts)
+    || !executionEvidence.artifacts.every(artifactIsRecord)) return false;
+  const artifactIds = new Set();
+  let previousArtifactSequence = -1;
+  let previousArtifactTimestamp = -Infinity;
+  for (const artifact of executionEvidence.artifacts) {
+    const timestamp = Date.parse(artifact.timestamp);
+    if (artifactIds.has(artifact.id)
+      || !Number.isSafeInteger(artifact.sequence) || artifact.sequence <= previousArtifactSequence
+      || !Number.isFinite(timestamp) || timestamp <= previousArtifactTimestamp) return false;
+    artifactIds.add(artifact.id);
+    previousArtifactSequence = artifact.sequence;
+    previousArtifactTimestamp = timestamp;
+  }
   let previousSequence = -1;
   let previousTimestamp = -Infinity;
   for (const event of executionEvidence.toolTrace) {
@@ -200,6 +271,7 @@ function nestedLimitErrors(...roots) {
   const seen = new WeakSet();
   let traversed = 0;
   let strings = 0;
+  let keys = 0;
   while (stack.length > 0) {
     const current = stack.pop();
     traversed += 1;
@@ -237,8 +309,18 @@ function nestedLimitErrors(...roots) {
       break;
     }
     for (let index = entries.length - 1; index >= 0; index -= 1) {
+      keys += 1;
+      if (keys > EVALUATOR_LIMITS.keyCount) {
+        errors.push(`object key count exceeds ${EVALUATOR_LIMITS.keyCount}`);
+        break;
+      }
+      if (Buffer.byteLength(entries[index][0], 'utf8') > EVALUATOR_LIMITS.stringBytes) {
+        errors.push(`object key exceeds ${EVALUATOR_LIMITS.stringBytes} bytes`);
+        break;
+      }
       stack.push({ value: entries[index][1], depth: current.depth + 1 });
     }
+    if (errors.length > 0) break;
   }
   return errors;
 }
@@ -246,7 +328,7 @@ function nestedLimitErrors(...roots) {
 function collectionLimitErrors(response, executionEvidence) {
   const errors = nestedLimitErrors(response, executionEvidence);
   const traceCount = Array.isArray(executionEvidence?.toolTrace) ? executionEvidence.toolTrace.length : 0;
-  const artifactCount = Array.isArray(response?.evidenceArtifacts) ? response.evidenceArtifacts.length : 0;
+  const artifactCount = Array.isArray(executionEvidence?.artifacts) ? executionEvidence.artifacts.length : 0;
   const rowCount = ['reviewRows', 'coverageRecords', 'requirements', 'accessibilityAssertions']
     .reduce((total, field) => total + (Array.isArray(response?.[field]) ? response[field].length : 0), 0);
   if (traceCount > EVALUATOR_LIMITS.traceCount) errors.push(`trace count ${traceCount}`);
@@ -292,18 +374,76 @@ function artifactIsRecord(artifact) {
     && Number.isInteger(artifact.sequence) && validTimestamp(artifact.timestamp));
 }
 
-function artifactMatchesExpectedObservation(artifact) {
+function artifactMatchesExpectedObservation(artifact, expectedObservation) {
   return artifactIsRecord(artifact)
-    && typeof artifact.expectedObservation === 'string'
-    && artifact.expectedObservation.trim().length > 0
-    && artifact.observation.includes(artifact.expectedObservation);
+    && typeof expectedObservation === 'string'
+    && expectedObservation.trim().length > 0
+    && artifact.observation.includes(expectedObservation);
+}
+
+function artifactExpectationsMatch(testCase, executionEvidence) {
+  const expected = testCase.artifactExpectations ?? [];
+  const artifacts = executionEvidence?.artifacts ?? [];
+  if (!Array.isArray(expected) || !Array.isArray(artifacts)
+    || artifacts.length !== expected.length
+    || new Set(artifacts.map((artifact) => artifact.id)).size !== artifacts.length) return false;
+  const byId = new Map(artifacts.map((artifact) => [artifact.id, artifact]));
+  return expected.every((contract) => {
+    const artifact = byId.get(contract.id);
+    const { expectedObservation, ...ownedFields } = contract;
+    return artifactMatchesExpectedObservation(artifact, expectedObservation)
+      && Object.entries(ownedFields).every(([key, value]) => Object.is(artifact[key], value));
+  });
+}
+
+function rowEvidenceMatches(row, artifacts) {
+  if (!row.criterionId || !row.componentId || !Array.isArray(row.evidenceIds)
+    || row.evidenceIds.length === 0 || new Set(row.evidenceIds).size !== row.evidenceIds.length) return false;
+  return row.evidenceIds.every((id) => {
+    const artifact = artifacts.get(id);
+    return artifactIsRecord(artifact)
+      && artifact.criterionId === row.criterionId
+      && artifact.componentId === row.componentId;
+  });
+}
+
+function plainRecord(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function candidateStructureIsValid(response) {
+  if (!plainRecord(response)) return false;
+  const collectionFields = ['reviewRows', 'coverageRecords', 'requirements', 'accessibilityAssertions', 'capturePairs', 'selectedComponents'];
+  if (collectionFields.some((field) => Object.hasOwn(response, field) && !Array.isArray(response[field]))) return false;
+  return (response.reviewRows ?? []).every((row) => plainRecord(row)
+    && typeof row.criterionId === 'string' && row.criterionId.length > 0
+    && typeof row.componentId === 'string' && row.componentId.length > 0);
+}
+
+function reviewStatusContractIsValid(row, artifactsById) {
+  if (!REVIEW_STATUSES.has(row?.status)) return false;
+  if (row.status === 'Pass') return true;
+  if (row.status === 'Intentional adaptation') {
+    return Boolean(row.rationale?.trim()) && row.accessibilityPreserved === true
+      && rowEvidenceMatches(row, artifactsById);
+  }
+  if (row.status === 'Blocked') {
+    return Boolean(row.blockerReason?.trim()) && Array.isArray(row.evidenceIds)
+      && row.evidenceIds.length === 0;
+  }
+  if (row.status === 'Not applicable') {
+    return Boolean(row.applicabilityReason?.trim()) && Array.isArray(row.evidenceIds)
+      && row.evidenceIds.length === 0;
+  }
+  return Boolean(row.observedDeviation?.trim()) && Boolean(row.correction?.trim())
+    && rowEvidenceMatches(row, artifactsById);
 }
 
 function reviewRowsUseEvidence(response, requiredByCriterion = {}, allowedPrefix = null) {
   if (!Array.isArray(response.reviewRows) || response.reviewRows.length === 0) return false;
   const artifacts = artifactsById(response);
   return response.reviewRows.every((row) => {
-    if (!REVIEW_STATUSES.has(row.status)) return false;
+    if (!reviewStatusContractIsValid(row, artifacts)) return false;
     if (allowedPrefix && row.status === 'Pass' && !row.criterionId?.startsWith(allowedPrefix)) return false;
     if (row.status !== 'Pass') return true;
     if (!row.criterionId || !row.componentId || !Array.isArray(row.evidenceIds)
@@ -329,13 +469,24 @@ function pairDimensionsAreValid(pair, dimensions = CAPTURE_DIMENSIONS) {
   return Boolean(pair.beforeArtifact && pair.afterArtifact);
 }
 
-function pairArtifactsAreValid(pair, artifacts) {
+function pairArtifactsAreValid(pair, artifacts, executionEvidence) {
   const before = artifacts.get(pair?.beforeArtifact);
   const after = artifacts.get(pair?.afterArtifact);
+  const firstEdit = (executionEvidence?.toolTrace ?? [])
+    .find((event) => ['write', 'patch', 'create', 'delete'].includes(event.operation));
   return artifactIsRecord(before) && artifactIsRecord(after)
     && before.category === 'rendered-capture' && after.category === 'rendered-capture'
     && before.pairId === pair.pairId && after.pairId === pair.pairId
-    && before.captureRole === 'before' && after.captureRole === 'after';
+    && before.captureRole === 'before' && after.captureRole === 'after'
+    && CAPTURE_DIMENSIONS.every((key) => Object.is(before[key], pair.before?.[key])
+      && Object.is(after[key], pair.after?.[key]))
+    && Number.isInteger(before.sequence) && Number.isInteger(after.sequence)
+    && validTimestamp(before.timestamp) && validTimestamp(after.timestamp)
+    && before.sequence === pair.baselineSequence && before.timestamp === pair.baselineTimestamp
+    && firstEdit?.sequence === pair.firstEditSequence && firstEdit.timestamp === pair.firstEditTimestamp
+    && before.sequence < firstEdit.sequence && after.sequence > firstEdit.sequence
+    && Date.parse(before.timestamp) < Date.parse(firstEdit.timestamp)
+    && Date.parse(after.timestamp) > Date.parse(firstEdit.timestamp);
 }
 
 function pairDifferencesAreValid(pair) {
@@ -361,6 +512,23 @@ function controlContract(response, kind) {
     && (kind === 'switch'
       ? response.selectedComponent === 'switches' && response.commitBehavior === 'immediate' && hasSwitchClass
       : response.selectedComponent === 'checkboxes' && response.commitBehavior === 'deferred-save' && !hasSwitchClass);
+}
+
+function fixtureInventoryPass(rows, inventory, artifacts) {
+  if (!Array.isArray(rows) || !Array.isArray(inventory) || inventory.length === 0) return false;
+  if (!sameMembers(rows.map((row) => row.id), inventory.map((item) => item.id))) return false;
+  return inventory.every((item) => {
+    const row = rows.find((candidate) => candidate.id === item.id);
+    if (row?.status !== 'Pass' || !Array.isArray(row.evidenceIds) || row.evidenceIds.length === 0) return false;
+    return row.evidenceIds.every((id) => {
+      const artifact = artifacts.get(id);
+      return artifactIsRecord(artifact)
+        && artifact.criterionId === item.criterionId
+        && artifact.componentId === item.componentId
+        && artifact.category === item.category
+        && artifact.expectedObservation === item.expectedObservation;
+    });
+  });
 }
 
 function caseContract(testCase, response, executionEvidence) {
@@ -397,17 +565,19 @@ function caseContract(testCase, response, executionEvidence) {
       passed = response.mode === 'Critique+Audit';
       break;
     case 'refine-preserves-product': {
-      const fields = ['identity', 'content', 'informationArchitecture', 'routeDestinations', 'behaviorTests'];
-      passed = fields.every((field) => response.protectedBefore?.[field]
+      const expected = testCase.protectedProduct ?? {};
+      const fields = Object.keys(expected);
+      passed = fields.length > 0 && fields.every((field) => expected[field] === response.protectedBefore?.[field]
         && response.protectedBefore[field] === response.protectedAfter?.[field]);
       break;
     }
-    case 'redesign-preserves-requirements':
+    case 'redesign-preserves-requirements': {
+      const artifacts = artifactsById(response);
       passed = response.structuralChange === true
-        && response.requirements?.length > 0 && response.requirements.every((item) => item.status === 'Pass')
-        && response.accessibilityAssertions?.length > 0
-        && response.accessibilityAssertions.every((item) => item.status === 'Pass');
+        && fixtureInventoryPass(response.requirements, testCase.requirementInventory, artifacts)
+        && fixtureInventoryPass(response.accessibilityAssertions, testCase.accessibilityInventory, artifacts);
       break;
+    }
     case 'feedback-component-choice':
     case 'feedback-banner-choice':
     case 'feedback-dialog-choice':
@@ -420,13 +590,20 @@ function caseContract(testCase, response, executionEvidence) {
       passed = controlContract(response, 'checkbox');
       break;
     case 'adaptive-navigation': {
+      const expected = testCase.navigationContract ?? [];
       const widths = response.navigationByWidth;
-      passed = Array.isArray(widths) && widths.length >= 2
-        && widths.every((entry) => entry.visiblePatterns?.length === 1
-          && entry.accessibilityExposedPatterns?.length === 1
-          && entry.visiblePatterns[0] === entry.accessibilityExposedPatterns[0]
-          && new Set(entry.destinations).size === entry.destinations.length
-          && entry.destinations.filter((item) => item === entry.currentDestination).length === 1)
+      passed = Array.isArray(widths) && expected.length > 0 && widths.length === expected.length
+        && expected.every((contract, index) => {
+          const entry = widths[index];
+          return entry
+            && entry.width === contract.width
+            && JSON.stringify(entry.visiblePatterns) === JSON.stringify([contract.visiblePattern])
+            && JSON.stringify(entry.accessibilityExposedPatterns) === JSON.stringify([contract.visiblePattern])
+            && JSON.stringify(entry.destinations) === JSON.stringify(contract.destinations)
+            && entry.currentDestination === contract.currentDestination
+            && new Set(entry.destinations).size === entry.destinations.length
+            && entry.destinations.filter((item) => item === entry.currentDestination).length === 1;
+        })
         && widths.slice(1).every((entry) => JSON.stringify(entry.destinations) === JSON.stringify(widths[0].destinations)
           && entry.currentDestination === widths[0].currentDestination);
       break;
@@ -571,7 +748,7 @@ function definitionInvariants(testCase) {
   return output;
 }
 
-export function evaluateCase(testCase, response, executionEvidence = null) {
+function evaluateCaseInternal(testCase, response, executionEvidence = null) {
   const limitErrors = collectionLimitErrors(response, executionEvidence);
   const limitInvariant = result('limits/structure', limitErrors.length === 0 ? 'pass' : 'fail',
     'trace, artifact, row, string, depth, and nested traversal values must remain within evaluator limits', {
@@ -583,10 +760,20 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
   }
   const invariants = [limitInvariant, ...definitionInvariants(testCase)];
   const trustedExecution = trustedExecutionIsValid(executionEvidence)
-    && !['toolTrace', 'preRunFilesystemHash', 'postRunFilesystemHash', 'executionEvidence']
+    && !['toolTrace', 'preRunFilesystemHash', 'postRunFilesystemHash', 'executionEvidence', 'evidenceArtifacts']
       .some((key) => Object.hasOwn(response ?? {}, key));
   invariants.push(result('execution/trusted-evidence', trustedExecution ? 'pass' : 'fail',
-    'guide reads, writes, and filesystem hashes require separate trusted adapter evidence'));
+    'guide reads, writes, filesystem hashes, and trusted artifacts require separate valid adapter evidence'));
+  invariants.push(result('execution/artifact-expectations', artifactExpectationsMatch(testCase, executionEvidence) ? 'pass' : 'fail',
+    'trusted artifacts must match fixture-owned artifact expectations exactly'));
+  invariants.push(result('response/case-id', response?.caseId === testCase.id ? 'pass' : 'fail',
+    'candidate caseId must exactly equal the selected fixture ID', {
+      expected: testCase.id,
+      actual: response?.caseId,
+    }));
+  const candidateStructurePass = candidateStructureIsValid(response);
+  invariants.push(result('response/schema', candidateStructurePass ? 'pass' : 'fail',
+    'candidate response collections and review-row identifiers must have the declared structure'));
   const requiredFields = [...new Set([
     ...(testCase.requiredDecisionFields ?? []),
     ...(testCase.requiredReportFields ?? []),
@@ -609,14 +796,19 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
     }));
 
   const candidateStrings = collectStrings(response);
-  const markupStrings = candidateStrings.filter((entry) => /(?:^|\.)(?:markup|sourceMarkup)$/u.test(entry.path));
+  const markupStrings = candidateStrings;
   const normalizedMarkup = markupStrings.map((entry) => entry.value.toLowerCase()).join('\n');
-  const allText = candidateStrings.map((entry) => entry.value.toLowerCase()).join('\n');
+  const allText = normalizedMarkup;
   const forbiddenMarkup = (testCase.forbiddenMarkup ?? []).filter((token) => normalizedMarkup.includes(token.toLowerCase()));
   const authoredClasses = new Set();
   for (const entry of markupStrings) {
-    for (const attribute of entry.value.matchAll(/\bclass\s*=\s*["']([^"']*)["']/giu)) {
-      for (const className of attribute[1].split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
+    for (const attribute of entry.value.matchAll(/\b(?:class|className)\s*=\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`|([^\s"'`=<>]+))/giu)) {
+      const value = attribute[1] ?? attribute[2] ?? attribute[3] ?? attribute[4] ?? '';
+      for (const className of value.split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
+    }
+    for (const attribute of entry.value.matchAll(/\bclassName\s*=\s*\{\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`)\s*\}/giu)) {
+      const value = attribute[1] ?? attribute[2] ?? attribute[3] ?? '';
+      for (const className of value.split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
     }
   }
   const forbiddenClasses = (testCase.forbiddenClasses ?? []).filter((className) => authoredClasses.has(className));
@@ -655,8 +847,9 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
       'write trace and filesystem hash must remain unchanged', { expected: [], actual: writes }));
   }
 
-  const evidence = Array.isArray(response?.evidenceArtifacts) ? response.evidenceArtifacts : [];
-  const artifacts = artifactsById(response ?? {});
+  const evidence = Array.isArray(executionEvidence?.artifacts) ? executionEvidence.artifacts : [];
+  const scoredResponse = { ...(response ?? {}), evidenceArtifacts: evidence };
+  const artifacts = artifactsById(scoredResponse);
   const reviewRows = Array.isArray(response?.reviewRows) ? response.reviewRows : [];
   if (reviewRows.length > 0) {
     const statusesValid = reviewRows.every((row) => REVIEW_STATUSES.has(row?.status));
@@ -664,12 +857,17 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
       'review status must be Pass, Intentional adaptation, Fail, Not applicable, or Blocked', {
         actual: reviewRows.map((row) => row?.status),
       }));
+    const statusContractsValid = reviewRows.every((row) => reviewStatusContractIsValid(row, artifacts));
+    invariants.push(result('review/status-contracts', statusContractsValid ? 'pass' : 'fail',
+      'every review row must satisfy its status-specific evidence, rationale, blocker, applicability, deviation, and correction contract', {
+        actual: reviewRows,
+      }));
     const passEvidenceMatches = reviewRows.filter((row) => row.status === 'Pass').every((row) => {
       if (!row.criterionId || !row.componentId || !Array.isArray(row.evidenceIds)
         || row.evidenceIds.length === 0 || new Set(row.evidenceIds).size !== row.evidenceIds.length) return false;
       return row.evidenceIds.every((id) => {
         const artifact = artifacts.get(id);
-        return artifactMatchesExpectedObservation(artifact)
+        return artifactIsRecord(artifact)
           && artifact.criterionId === row.criterionId
           && artifact.componentId === row.componentId;
       });
@@ -690,7 +888,7 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
   }
 
   const requiredByCriterion = testCase.requiredEvidenceByCriterion ?? {};
-  const evidenceValid = Object.entries(requiredByCriterion).every(([criterionId, categories]) => categories.every((category) => evidence.some((artifact) => artifactMatchesExpectedObservation(artifact)
+  const evidenceValid = Object.entries(requiredByCriterion).every(([criterionId, categories]) => categories.every((category) => evidence.some((artifact) => artifactIsRecord(artifact)
     && artifact.criterionId === criterionId && artifact.category === category)));
   invariants.push(result('evidence/required-categories', evidenceValid ? 'pass' : 'fail',
     'criterion-owned required evidence artifacts must exist with a matching expected observation, sequence, and timestamp', {
@@ -717,16 +915,21 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
       expected: inventoryIds,
       actual: recordIds,
     }));
-    const coverageEvidenceValid = records.filter((record) => ['Pass', 'Fail'].includes(record.result)).every((record) => Array.isArray(record.evidenceIds)
-      && record.evidenceIds.length > 0
-      && record.evidenceIds.every((id) => {
-        const artifact = artifacts.get(id);
-        return artifactIsRecord(artifact)
-          && artifact.criterionId === record.criterionId
-          && artifact.componentId === record.componentId;
-      }));
+    const coveredEvidenceIds = records.filter((record) => ['Pass', 'Fail'].includes(record.result))
+      .flatMap((record) => Array.isArray(record.evidenceIds) ? record.evidenceIds : []);
+    const coverageEvidenceValid = new Set(coveredEvidenceIds).size === coveredEvidenceIds.length
+      && records.filter((record) => ['Pass', 'Fail'].includes(record.result)).every((record) => Array.isArray(record.evidenceIds)
+        && record.evidenceIds.length > 0
+        && record.evidenceIds.every((id) => {
+          const artifact = artifacts.get(id);
+          return artifactIsRecord(artifact)
+            && artifact.criterionId === record.criterionId
+            && artifact.componentId === record.componentId
+            && artifact.inventoryId === record.inventoryId
+            && artifact.observation.includes(record.expectedObservation);
+        }));
     invariants.push(result('coverage/evidence-links', coverageEvidenceValid ? 'pass' : 'fail',
-      'coverage evidence IDs must resolve to artifacts for the record criterion and component', { actual: records }));
+      'coverage evidence IDs must resolve one-to-one to fixture-owned inventory observations for the record criterion and component', { actual: records }));
     const blockedCoverageValid = records.filter((record) => record.result === 'Blocked')
       .every((record) => Array.isArray(record.evidenceIds) && record.evidenceIds.length === 0 && Boolean(record.blockerReason?.trim()));
     invariants.push(result('coverage/blocked-contract', blockedCoverageValid ? 'pass' : 'fail',
@@ -742,9 +945,10 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
         expected: testCase.captureDimensions,
         actual: pairs,
       }));
-    const pairArtifactsValid = pairs.length > 0 && pairs.every((pair) => pairArtifactsAreValid(pair, artifacts));
+    const pairArtifactsValid = pairs.length > 0
+      && pairs.every((pair) => pairArtifactsAreValid(pair, artifacts, executionEvidence));
     invariants.push(result('capture/rendered-artifacts', pairArtifactsValid ? 'pass' : 'fail',
-      'matched capture IDs must resolve to rendered before and after artifacts for the same pair and roles', {
+      'matched capture IDs must resolve to rendered before and after artifacts, with roles and capture chronology bound to the trusted first edit', {
         actual: pairs,
       }));
     const differencesValid = pairs.length > 0 && pairs.every(pairDifferencesAreValid);
@@ -765,7 +969,7 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
   for (const assertion of testCase.criticalInvariants ?? []) {
     if (!KNOWN_CRITICAL_INVARIANT_IDS.has(assertion.id)) continue;
     const checked = assertion.operator === 'caseContract'
-      ? caseContract(testCase, response, executionEvidence)
+      ? caseContract(testCase, scoredResponse, executionEvidence)
       : evaluateBasicAssertion(assertion, response);
     invariants.push(result(assertion.id, checked.status, `critical invariant ${assertion.id}`, {
       expected: assertion.value,
@@ -787,6 +991,22 @@ export function evaluateCase(testCase, response, executionEvidence = null) {
     actualGuideReads: reads,
     invariants,
   };
+}
+
+export function evaluateCase(testCase, response, executionEvidence = null) {
+  try {
+    return evaluateCaseInternal(testCase, response, executionEvidence);
+  } catch (error) {
+    return {
+      caseId: testCase?.id ?? null,
+      status: 'fail',
+      actualGuideReads: actualGuideReads(executionEvidence),
+      invariants: [result('response/schema', 'fail',
+        'malformed candidate structures must fail closed without aborting the evaluation', {
+          actual: error instanceof Error ? error.message : 'unknown evaluator error',
+        })],
+    };
+  }
 }
 
 function keyIsSensitive(parentKey) {
@@ -828,41 +1048,50 @@ export function redactValue(value, parentKey = '') {
   const stack = [{ source: value, target: output, depth: 0, ancestors: [value] }];
   let traversed = 1;
   let stringCount = 0;
+  let redactedKeyCount = 0;
   let exhausted = false;
   while (stack.length > 0 && !exhausted) {
     const current = stack.pop();
     const entries = Object.entries(current.source);
     for (const [key, child] of entries) {
+      const redactedKey = redactString(key);
+      let outputKey = key;
+      if (redactedKey !== key) {
+        redactedKeyCount += 1;
+        outputKey = redactedKey === '[TRUNCATED]'
+          ? `[TRUNCATED_KEY_${redactedKeyCount}]`
+          : `[REDACTED_KEY_${redactedKeyCount}]`;
+      }
       traversed += 1;
       if (traversed > EVALUATOR_LIMITS.traversalCount) {
-        current.target[key] = '[TRUNCATED]';
+        current.target[outputKey] = '[TRUNCATED]';
         exhausted = true;
         break;
       }
       if (keyIsSensitive(key)) {
-        current.target[key] = '[REDACTED]';
+        current.target[outputKey] = '[REDACTED]';
         continue;
       }
       if (typeof child === 'string') {
         stringCount += 1;
         if (stringCount > EVALUATOR_LIMITS.stringCount) {
-          current.target[key] = '[TRUNCATED]';
+          current.target[outputKey] = '[TRUNCATED]';
           exhausted = true;
           break;
         }
-        current.target[key] = redactString(child);
+        current.target[outputKey] = redactString(child);
         continue;
       }
       if (!child || typeof child !== 'object') {
-        current.target[key] = child;
+        current.target[outputKey] = child;
         continue;
       }
       if (current.depth + 1 > EVALUATOR_LIMITS.objectDepth || current.ancestors.includes(child)) {
-        current.target[key] = '[TRUNCATED]';
+        current.target[outputKey] = '[TRUNCATED]';
         continue;
       }
       const target = Array.isArray(child) ? [] : {};
-      current.target[key] = target;
+      current.target[outputKey] = target;
       stack.push({
         source: child,
         target,
@@ -886,21 +1115,111 @@ function parseArguments(argv) {
   return parsed;
 }
 
-async function responseFromAdapter(adapter, adapterArgs, testCase, rootSkill, timeout) {
-  const execution = spawnSync(adapter, adapterArgs, {
-    input: JSON.stringify({ testCase, rootSkill }),
-    encoding: 'utf8',
-    maxBuffer: 10 * 1024 * 1024,
-    shell: false,
-    timeout,
-  });
-  if (execution.error) {
-    const error = new Error(redactValue(execution.error.message));
-    error.code = execution.error.code;
-    throw error;
+async function materializeProjectFixture(fixtureId) {
+  const fixture = PROJECT_FIXTURES[fixtureId];
+  if (!fixture) throw new Error(`Unknown project fixture ${fixtureId}`);
+  const sandbox = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-project-'));
+  for (const [relativePath, content] of Object.entries(fixture)) {
+    const target = path.join(sandbox, relativePath);
+    await mkdir(path.dirname(target), { recursive: true });
+    await writeFile(target, content, { flag: 'wx' });
   }
-  if (execution.status !== 0) throw new Error(redactValue(`Adapter exited ${execution.status}: ${execution.stderr}`));
-  return JSON.parse(execution.stdout);
+  return sandbox;
+}
+
+function terminateProcessTree(child, signal) {
+  if (!child.pid) return;
+  if (process.platform === 'win32') {
+    const killer = spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    killer.unref();
+    return;
+  }
+  try {
+    process.kill(-child.pid, signal);
+  } catch {
+    try { child.kill(signal); } catch {}
+  }
+}
+
+async function responseFromAdapter(adapter, adapterArgs, task, projectRoot, rootSkill, timeout) {
+  const input = JSON.stringify({ task, projectRoot, rootSkill });
+  return new Promise((resolve, reject) => {
+    const child = spawn(adapter, adapterArgs, {
+      detached: process.platform !== 'win32',
+      shell: false,
+      stdio: ['pipe', 'pipe', 'pipe'],
+      windowsHide: true,
+    });
+    const chunks = { stdout: [], stderr: [] };
+    const sizes = { stdout: 0, stderr: 0 };
+    const maxBuffer = 10 * 1024 * 1024;
+    let settled = false;
+
+    const settle = (callback) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      callback();
+    };
+    const failBuffer = () => {
+      terminateProcessTree(child, 'SIGKILL');
+      child.stdin.destroy();
+      child.stdout.destroy();
+      child.stderr.destroy();
+      const error = new Error('Adapter output exceeded the 10 MiB limit');
+      error.code = 'ENOBUFS';
+      settle(() => reject(error));
+    };
+    for (const streamName of ['stdout', 'stderr']) {
+      child[streamName].on('data', (chunk) => {
+        if (settled) return;
+        sizes[streamName] += chunk.length;
+        if (sizes[streamName] > maxBuffer) {
+          failBuffer();
+          return;
+        }
+        chunks[streamName].push(chunk);
+      });
+    }
+    child.once('error', (executionError) => {
+      settle(() => {
+        const error = new Error(redactValue(executionError.message));
+        error.code = executionError.code;
+        reject(error);
+      });
+    });
+    child.once('close', (status) => {
+      settle(() => {
+        const stderr = Buffer.concat(chunks.stderr).toString('utf8');
+        if (status !== 0) {
+          reject(new Error(redactValue(`Adapter exited ${status}: ${stderr}`)));
+          return;
+        }
+        try {
+          resolve(JSON.parse(Buffer.concat(chunks.stdout).toString('utf8')));
+        } catch (error) {
+          reject(new Error(redactValue(`Adapter returned invalid JSON: ${error.message}`)));
+        }
+      });
+    });
+    const timer = setTimeout(() => {
+      if (settled) return;
+      terminateProcessTree(child, 'SIGTERM');
+      child.stdin.destroy();
+      child.stdout.destroy();
+      child.stderr.destroy();
+      const forceKill = setTimeout(() => terminateProcessTree(child, 'SIGKILL'), 50);
+      forceKill.unref();
+      const error = new Error(`Adapter exceeded the ${timeout}ms timeout`);
+      error.code = 'ETIMEDOUT';
+      settle(() => reject(error));
+    }, timeout);
+    timer.unref();
+    child.stdin.end(input);
+  });
 }
 
 export async function runEvaluations({
@@ -936,9 +1255,23 @@ export async function runEvaluations({
   const results = [];
   for (const testCase of selected) {
     const rootSkill = await assembleSkillBundle(testCase, repositoryRoot);
-    const envelope = replay
-      ? replay[testCase.id]
-      : await responseFromAdapter(adapter, adapterArgs, testCase, rootSkill, adapterTimeoutMs);
+    const task = {
+      id: testCase.id,
+      request: testCase.request,
+      projectFixture: testCase.projectFixture,
+    };
+    if (!PROJECT_FIXTURES[task.projectFixture]) throw new Error(`Unknown project fixture ${task.projectFixture}`);
+    let envelope;
+    if (replay) {
+      envelope = replay[testCase.id];
+    } else {
+      const sandbox = await materializeProjectFixture(task.projectFixture);
+      try {
+        envelope = await responseFromAdapter(adapter, adapterArgs, task, sandbox, rootSkill, adapterTimeoutMs);
+      } finally {
+        await rm(sandbox, { recursive: true, force: true });
+      }
+    }
     if (!envelope) throw new Error(`No response for ${testCase.id}`);
     const response = envelope.candidateResponse;
     const executionEvidence = envelope.executionEvidence;

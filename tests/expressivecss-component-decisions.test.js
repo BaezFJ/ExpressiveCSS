@@ -26,6 +26,7 @@ const guideNames = (await readdir(new URL('../skills/expressivecss/components/',
   .filter((name) => name.endsWith('.md'))
   .map((name) => name.replace(/\.md$/u, ''))
   .sort();
+const bySlug = new Map(data.components.map((item) => [item.slug, item]));
 
 describe('ExpressiveCSS component decisions', () => {
   test('cover every generated guide exactly once with usable fields', async () => {
@@ -59,7 +60,7 @@ describe('ExpressiveCSS component decisions', () => {
   });
 
   test('records common confusions and adaptive substitutions', () => {
-    const bySlug = new Map(data.components.map((item) => [item.slug, item]));
+
     for (const [left, right] of [
       ['dialogs', 'snackbar'],
       ['dialogs', 'banners'],
@@ -109,6 +110,12 @@ describe('ExpressiveCSS component decisions', () => {
     assert.ok(bySlug.get('navigation-bar').aliases.includes('bottom navigation'));
     assert.ok(bySlug.get('autocomplete').aliases.includes('typeahead'));
     assert.ok(bySlug.get('dialogs').aliases.includes('modal'));
+  });
+
+  test('separates native host semantics from shared runtime ownership', () => {
+    for (const slug of ['dialogs', 'bottom-sheet', 'side-sheet', 'floating-sheet']) {
+      assert.equal(bySlug.get(slug).runtime, 'shared-runtime', `${slug} must route through shared dialog runtime guidance`);
+    }
   });
 
   test('keeps generated skill and MCP decision data synchronized', () => {

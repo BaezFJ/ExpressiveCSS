@@ -86,12 +86,16 @@ const staleSourceDir = path.join(outsideDir, 'stale-source');
 const tamperedGuideDir = path.join(outsideDir, 'tampered-guide-source');
 const olderSourceDir = path.join(outsideDir, 'older-source');
 const oversizedFile = path.join(outsideDir, 'oversized.css');
+const aggregateFileA = path.join(outsideDir, 'aggregate-a.css');
+const aggregateFileB = path.join(outsideDir, 'aggregate-b.css');
 const unreadablePath = path.join(outsideDir, 'directory-as-file');
 const pnpmDir = path.join(outsideDir, 'pnpm-project');
 const yarnDir = path.join(outsideDir, 'yarn-project');
 const timeoutDir = path.join(outsideDir, 'timeout-project');
+const trapDir = path.join(outsideDir, 'trap-project');
 const matchingDir = path.join(outsideDir, 'matching-project');
 const validSourceDir = path.join(outsideDir, 'valid-source');
+const sourceWithoutGuidesDir = path.join(outsideDir, 'source-without-guides');
 const unprovenSourceDir = path.join(outsideDir, 'unproven-source');
 const multipleLockDir = path.join(outsideDir, 'multiple-lock-project');
 const noncanonicalSourceDir = path.join(outsideDir, 'noncanonical-source');
@@ -110,6 +114,8 @@ await writeFile(
 await writeFile(rawColorFile, '.account-panel { color: #6750a4; background-color: #ffffff; }\n');
 await writeFile(retiredMarkupFile, '<div class="input-field"><textarea class="materialize-textarea"></textarea></div>\n');
 await writeFile(oversizedFile, 'x'.repeat((2 * 1024 * 1024) + 1));
+await writeFile(aggregateFileA, 'a'.repeat(600 * 1024));
+await writeFile(aggregateFileB, 'b'.repeat(600 * 1024));
 await mkdir(unreadablePath);
 for (const projectDir of [pnpmDir, yarnDir]) {
   await mkdir(projectDir);
@@ -125,6 +131,13 @@ await writeFile(path.join(timeoutDir, 'package.json'), JSON.stringify({
   scripts: { typecheck: 'node -e "setTimeout(() => process.exit(0), 1000)"' },
 }));
 await writeFile(path.join(timeoutDir, 'package-lock.json'), '{}');
+await mkdir(trapDir);
+await writeFile(path.join(trapDir, 'package.json'), JSON.stringify({
+  scripts: {
+    typecheck: "node -e \"process.on('SIGTERM', () => {}); setTimeout(() => { require('node:fs').writeFileSync('survived.txt', 'yes'); process.exit(0); }, 1500);\"",
+  },
+}));
+await writeFile(path.join(trapDir, 'package-lock.json'), '{}');
 await mkdir(path.join(matchingDir, 'node_modules', '@expressivecss', 'expressive'), { recursive: true });
 await writeFile(path.join(matchingDir, 'package.json'), JSON.stringify({
   dependencies: { '@expressivecss/expressive': `^${contractVersion ?? '0.8.0'}` },
@@ -136,7 +149,7 @@ await writeFile(path.join(matchingDir, 'node_modules', '@expressivecss', 'expres
 }));
 await writeFile(path.join(outsideDir, 'package.json'), JSON.stringify({
   scripts: {
-    typecheck: "node -e \"console.log(JSON.stringify({ path: Boolean(process.env.PATH), ci: process.env.CI, secret: process.env.EXPRESSIVECSS_TEST_SECRET ?? null, home: process.env.HOME ?? null }))\"",
+    typecheck: "node -e \"console.log(JSON.stringify({ path: Boolean(process.env.PATH), ci: process.env.CI, secret: process.env.EXPRESSIVECSS_TEST_SECRET ?? null, client_secret: 'plain-secret-value', home: process.env.HOME ?? null }))\"",
   },
 }));
 await writeFile(path.join(outsideDir, 'package-lock.json'), '{}');
@@ -165,6 +178,8 @@ await writeFile(path.join(versionedDir, 'node_modules', '@expressivecss', 'expre
   version: '0.7.0',
 }));
 await writeLocalSourceFixture(validSourceDir);
+await writeLocalSourceFixture(sourceWithoutGuidesDir);
+await rm(path.join(sourceWithoutGuidesDir, 'skills', 'expressivecss', 'components'), { recursive: true });
 await writeLocalSourceFixture(staleSourceDir, { stale: true });
 await writeLocalSourceFixture(tamperedGuideDir);
 await writeLocalSourceFixture(olderSourceDir, { frameworkVersion: '0.7.0' });
@@ -214,6 +229,7 @@ const transport = new StdioClientTransport({
   env: {
     ...process.env,
     EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS: outsideDir,
+    EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB: '1',
     EXPRESSIVECSS_TEST_SECRET: 'must-not-reach-child',
   },
 });
@@ -287,7 +303,17 @@ try {
     arguments: { projectRoot: validSourceDir },
   });
   assert.equal(localSetup.structuredContent.contractCompatibility, 'match');
-  assert.equal(localSetup.structuredContent.contractProvenance, 'verified');
+  assert.equal(localSetup.structuredContent.contractProvenance, 'divergent');
+  assert.ok(localSetup.structuredContent.blockedChecks.includes('local contract provenance is divergent'));
+  assert.equal(localSetup.structuredContent.contractProvenanceDetails.packageExpectedHash, contractData.sourceHash);
+
+  const missingLocalGuides = await client.callTool({
+    name: 'setup_expert',
+    arguments: { projectRoot: sourceWithoutGuidesDir },
+  });
+  assert.notEqual(missingLocalGuides.structuredContent.contractProvenance, 'bundled-verified');
+  assert.ok(missingLocalGuides.structuredContent.blockedChecks.some((item) => item.includes('local contract provenance')));
+
   await writeFile(path.join(validSourceDir, 'llm.md'), '# changed after the first provenance check\n');
   const changedLocalSetup = await client.callTool({
     name: 'setup_expert',
@@ -324,6 +350,38 @@ try {
   assert.equal(rules.structuredContent.status, 'needs_fix');
   assert.equal(rules.structuredContent.framework.contractVersion, contractVersion);
   assertScopedResult(rules, 'rules_enforcer');
+
+  for (const snippet of [
+    '<button class=btn>Save</button>',
+    '<button className="btn">Save</button>',
+    '<button className={"btn"}>Save</button>',
+  ]) {
+    const alternateRetiredClass = await client.callTool({
+      name: 'rules_enforcer',
+      arguments: { projectRoot: packageDir, snippet, targetComponents: ['buttons'] },
+    });
+    assert.equal(alternateRetiredClass.structuredContent.status, 'needs_fix');
+    assert.ok(alternateRetiredClass.structuredContent.issues.some((issue) => issue.id === 'legacy-btn-class'));
+  }
+
+  const boundedRules = await client.callTool({
+    name: 'rules_enforcer',
+    arguments: {
+      projectRoot: packageDir,
+      snippet: '<button class="btn">Save</button>'.repeat(1_000),
+    },
+  });
+  assert.ok(boundedRules.structuredContent.issueCount <= 200);
+  assert.ok(boundedRules.structuredContent.blockedChecks.includes('static inspection limit reached'));
+
+  const nestedMarkupStartedAt = Date.now();
+  const nestedMarkup = await client.callTool({
+    name: 'rules_enforcer',
+    arguments: { projectRoot: packageDir, snippet: '<div>'.repeat(6_000) + '</div>'.repeat(6_000) },
+  });
+  assert.ok(Date.now() - nestedMarkupStartedAt < 5_000);
+  assert.equal(nestedMarkup.structuredContent.status, 'blocked');
+  assert.ok(nestedMarkup.structuredContent.blockedChecks.includes('static inspection limit reached'));
 
   const validRail = await client.callTool({
     name: 'rules_enforcer',
@@ -366,7 +424,7 @@ try {
   });
   assert.equal(olderSourceRules.structuredContent.framework.contractVersion, contractVersion);
   assert.equal(olderSourceRules.structuredContent.contractCompatibility, 'mismatch');
-  assert.equal(olderSourceRules.structuredContent.contractProvenance, 'verified');
+  assert.equal(olderSourceRules.structuredContent.contractProvenance, 'divergent');
   assert.equal(olderSourceRules.structuredContent.status, 'blocked');
 
   const unknownRules = await client.callTool({
@@ -741,6 +799,19 @@ try {
   assert.equal(blockedFindingIds.includes('file-too-large'), false);
   assert.equal(blockedFindingIds.includes('read-failure'), false);
 
+  const aggregateLimited = await client.callTool({
+    name: 'quality_inspector',
+    arguments: {
+      projectRoot: outsideDir,
+      files: ['aggregate-a.css', 'aggregate-b.css'],
+      runType: 'quick',
+    },
+  });
+  assert.equal(aggregateLimited.structuredContent.status, 'blocked');
+  assert.ok(aggregateLimited.structuredContent.coverage.filesUninspected.some(
+    (entry) => entry.reason.includes('aggregate byte limit'),
+  ));
+
   for (const [manager, projectRoot] of [['pnpm', pnpmDir], ['yarn', yarnDir]]) {
     const managerCheck = await client.callTool({
       name: 'quality_inspector',
@@ -799,6 +870,31 @@ try {
     await timeoutClient.close();
   }
 
+  const trapTransport = new StdioClientTransport({
+    command: process.execPath,
+    args: [path.join(packageDir, 'server.js')],
+    cwd: packageDir,
+    stderr: 'pipe',
+    env: {
+      ...process.env,
+      EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS: '50',
+      EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS: trapDir,
+    },
+  });
+  const trapClient = new Client({ name: 'expressivecss-mcp-trap-smoke', version: '0.1.0' });
+  try {
+    await trapClient.connect(trapTransport);
+    const trapped = await trapClient.callTool({
+      name: 'quality_inspector',
+      arguments: { projectRoot: trapDir, files: [], runType: 'standard', runCommands: true },
+    });
+    assert.equal(trapped.structuredContent.commandChecks[0].timedOut, true);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    await assert.rejects(access(path.join(trapDir, 'survived.txt')), { code: 'ENOENT' });
+  } finally {
+    await trapClient.close();
+  }
+
   const allowedEnvironment = await client.callTool({
     name: 'quality_inspector',
     arguments: {
@@ -814,8 +910,9 @@ try {
   assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"path":true/);
   assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"ci":"1"/);
   assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"secret":null/);
-  assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, new RegExp(`"home":"${outsideDir.replaceAll('\\', '\\\\')}"`));
-  assert.doesNotMatch(allowedEnvironment.structuredContent.commandChecks[0].output, /must-not-reach-child/);
+  assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"home":"\[LOCAL_PATH\]"/);
+  assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"client_secret":"\[REDACTED\]"/);
+  assert.doesNotMatch(allowedEnvironment.structuredContent.commandChecks[0].output, /plain-secret-value|must-not-reach-child/);
 
   const skippedTransport = new StdioClientTransport({
     command: process.execPath,

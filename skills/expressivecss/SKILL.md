@@ -77,7 +77,7 @@ Resolve the exact installed framework version before reading contract-dependent 
 
 `terminal(command="node skills/expressivecss/scripts/resolve-version.mjs --project-root <project> --contract-version <contract-version>", timeout=120)`
 
-The explicit contract argument is an override. The portable copy otherwise reads its generated contract manifest. Resolution precedence is framework source, installed package, lockfile, then manifest range as declaration-only evidence. Do not infer an exact installed version from a manifest range. Malformed, unsupported, ambiguous, or conflicting active installation evidence makes the contract `unresolved`, even when `node_modules` contains an exact version. Report the selected candidate and every blocked diagnostic; never present current documentation as verified in that state.
+The explicit contract argument is an override. The portable copy otherwise reads its generated contract manifest. Resolution precedence is framework source, installed package, lockfile, then manifest range as declaration-only evidence. Do not infer an exact installed version from a manifest range. An installed or locked version outside the direct manifest range blocks contract use. Malformed, unsupported, ambiguous, or conflicting active installation evidence makes the contract `unresolved`, even when `node_modules` contains an exact version. Report the selected candidate and every blocked diagnostic; never present current documentation as verified in that state.
 
 - On `match`, current documentation matches the bundled contract. Use it with the generated-guide source hash.
 - On `mismatch`, use the matching tag or commit and the installed package. Mark contract-dependent checks `Blocked` if matching guidance is unavailable.
