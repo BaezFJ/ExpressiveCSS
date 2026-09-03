@@ -73,8 +73,7 @@
     inset-inline-end: calc((100% - var(--md-comp-badge-icon-size)) / 2);
     transform: translate(50%, -50%);
 
-    &:dir(rtl),
-    [dir="rtl"] & {
+    &:dir(rtl) {
       transform: translate(-50%, -50%);
     }
   }
