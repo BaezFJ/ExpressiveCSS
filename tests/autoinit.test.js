@@ -54,10 +54,98 @@ describe("AutoInit", () => {
     assert.ok(Expressive.Tooltip.getInstance(normal));
   });
 
+  test("AutoInit ignores an article reveal without a usable trigger", () => {
+    document.body.innerHTML = `
+      <article><aside id="orphaned-details"><p>reveal</p></aside></article>
+      <article><button class="card-reveal-trigger">Missing type</button><aside id="missing-type-details"><p>reveal</p></aside></article>
+      <article><button type="submit" class="card-reveal-trigger">Submit</button><aside id="submit-details"><p>reveal</p></aside></article>
+      <article><button type="button" class="card-reveal-trigger">Missing panel ID</button><aside><p>reveal</p></aside></article>
+      <article><button type="button" class="card-reveal-trigger" disabled>Disabled</button><aside id="disabled-details"><p>reveal</p></aside></article>
+      <article><button type="button" class="card-reveal-trigger" aria-disabled="true">ARIA disabled</button><aside id="aria-disabled-details"><p>reveal</p></aside></article>
+      <article><button type="button" class="card-reveal-trigger">Multiple panels</button><aside id="first-details"><p>first</p></aside><aside id="second-details"><p>second</p></aside></article>`;
+    const cards = [...document.querySelectorAll("article")];
+
+    Expressive.AutoInit();
+
+    cards.forEach((el) => {
+      assert.equal(Expressive.Cards.getInstance(el), undefined);
+      assert.notEqual(el.querySelector("aside").inert, true);
+    });
+  });
+
+  test("AutoInit assigns nested triggers to their closest card", () => {
+    document.body.innerHTML = `
+      <article id="outer-card">
+        <div>
+          <article id="inner-card">
+            <button type="button" class="card-reveal-trigger" aria-label="Toggle inner details" aria-controls="inner-details">Inner</button>
+            <aside id="inner-details"><button type="button">Inner action</button></aside>
+          </article>
+        </div>
+        <aside id="outer-details">Outer details</aside>
+      </article>`;
+    const outer = document.getElementById("outer-card");
+    const inner = document.getElementById("inner-card");
+    const trigger = inner.querySelector(".card-reveal-trigger");
+    const innerPanel = document.getElementById("inner-details");
+    const outerPanel = document.getElementById("outer-details");
+
+    Expressive.AutoInit();
+
+    assert.equal(Expressive.Cards.getInstance(outer), undefined);
+    const innerInstance = Expressive.Cards.getInstance(inner);
+    assert.ok(innerInstance);
+    trigger.click();
+    assert.equal(innerInstance.isOpen, true);
+    assert.equal(innerPanel.classList.contains("open"), true);
+    assert.equal(outerPanel.classList.contains("open"), false);
+    assert.notEqual(outerPanel.inert, true);
+
+    innerPanel.dispatchEvent(
+      new window.KeyboardEvent("keydown", { bubbles: true, key: "Escape" }),
+    );
+    assert.equal(innerInstance.isOpen, false);
+  });
+
+  test("nested card Escape closes only the closest card", () => {
+    document.body.innerHTML = `
+      <article id="outer-card">
+        <button type="button" class="card-reveal-trigger" aria-label="Toggle outer details" aria-controls="outer-details">Outer</button>
+        <div>
+          <article id="inner-card">
+            <button type="button" class="card-reveal-trigger" aria-label="Toggle inner details" aria-controls="inner-details">Inner</button>
+            <aside id="inner-details"><button type="button">Inner action</button></aside>
+          </article>
+        </div>
+        <aside id="outer-details">Outer details</aside>
+      </article>`;
+    const outer = document.getElementById("outer-card");
+    const inner = document.getElementById("inner-card");
+    const outerTrigger = outer.querySelector(":scope > .card-reveal-trigger");
+    const innerTrigger = inner.querySelector(".card-reveal-trigger");
+    const innerPanel = document.getElementById("inner-details");
+
+    Expressive.AutoInit();
+    const outerInstance = Expressive.Cards.getInstance(outer);
+    const innerInstance = Expressive.Cards.getInstance(inner);
+
+    outerTrigger.click();
+    innerTrigger.click();
+    assert.equal(outerInstance.isOpen, true);
+    assert.equal(innerInstance.isOpen, true);
+
+    innerPanel.dispatchEvent(
+      new window.KeyboardEvent("keydown", { bubbles: true, key: "Escape" }),
+    );
+
+    assert.equal(innerInstance.isOpen, false);
+    assert.equal(outerInstance.isOpen, true);
+  });
+
   test(".no-autoinit is honoured on a card article", () => {
     document.body.innerHTML = `
-      <article class="no-autoinit"><span class="activator">T</span><aside><p>b</p></aside></article>
-      <article><span class="activator">T</span><aside><p>b</p></aside></article>`;
+      <article class="no-autoinit"><button type="button" class="card-reveal-trigger" aria-label="Toggle details" aria-controls="opted-out-details">T</button><aside id="opted-out-details"><p>b</p></aside></article>
+      <article><button type="button" class="card-reveal-trigger" aria-label="Toggle details" aria-controls="normal-details">T</button><aside id="normal-details"><p>b</p></aside></article>`;
     const [optedOut, normal] = document.querySelectorAll("article");
 
     Expressive.AutoInit();
@@ -70,7 +158,7 @@ describe("AutoInit", () => {
   });
 
   test("AutoInit starts Cards on the semantic article markup the docs use", () => {
-    document.body.innerHTML = `<article><span class="activator">T</span><aside><p>reveal</p></aside></article>`;
+    document.body.innerHTML = `<article><figure><button type="button" class="card-reveal-trigger" aria-label="Toggle details" aria-controls="autoinit-details">T</button></figure><aside id="autoinit-details"><p>reveal</p></aside></article>`;
     const el = document.querySelector("article");
 
     Expressive.AutoInit();

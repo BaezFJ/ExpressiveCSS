@@ -55,7 +55,7 @@ if (process.argv.includes('--check')) {
   const currentContract = await readFile(contractDestination, 'utf8').catch(() => '');
   const generatedContract = `${JSON.stringify(contract, null, 2)}\n`;
   if (current !== generated || currentSemantics !== generatedSemantics || currentDecisions !== generatedDecisions || currentContract !== generatedContract) {
-    throw new Error('Bundled guides, semantics, component decisions, or contract manifest are stale; run npm run sync:guides');
+    throw new Error('Bundled guides, semantics, component decisions, or contract manifest are stale; run npm run build:skill');
   }
   console.log(`Verified ${guides.length} bundled guides and normative semantics.`);
 } else {

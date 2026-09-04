@@ -89,26 +89,27 @@ $_card: "article";
 
 :where(#{$_card}).filled {
   --md-comp-card-container-color: var(--md-comp-filled-card-container-color);
-  @include z-depth("0");
+  box-shadow: none;
 }
 
 :where(#{$_card}).outlined,
 :where(#{$_card}).border {
   --md-comp-card-container-color: var(--md-comp-outlined-card-container-color);
-  @include z-depth("0");
+  box-shadow: none;
   border: 1px solid var(--md-comp-outlined-card-outline-color);
 }
 
-// Hovered cards lift one level and apply an 8% on-surface state layer.
-:where(#{$_card}):not(.filled, .outlined, .border):has(> .primary-action:hover) {
+// Hovered cards lift one level and apply an 8% on-surface state layer. Dragged
+// and picked-up states take precedence over retained pointer state.
+:where(#{$_card}):not(.dragged, .picked-up):not(.filled, .outlined, .border):has(> .primary-action:hover) {
   @include z-depth("2");
 }
 
-:where(#{$_card}):is(.filled, .outlined, .border):has(> .primary-action:hover) {
+:where(#{$_card}):not(.dragged, .picked-up):is(.filled, .outlined, .border):has(> .primary-action:hover) {
   @include z-depth("1");
 }
 
-:where(#{$_card}):has(> .primary-action:hover)::after {
+:where(#{$_card}):not(.dragged, .picked-up):has(> .primary-action:hover)::after {
   opacity: var(--md-comp-card-hover-state-layer-opacity);
 }
 
@@ -119,7 +120,7 @@ $_card: "article";
   outline-offset: var(--md-comp-card-focus-indicator-offset);
 }
 
-:where(#{$_card}):has(> .primary-action:focus-visible)::after {
+:where(#{$_card}):not(.dragged, .picked-up):has(> .primary-action:focus-visible)::after {
   opacity: var(--md-comp-card-focus-state-layer-opacity);
 }
 
@@ -127,16 +128,31 @@ $_card: "article";
   border-color: var(--md-sys-color-on-surface);
 }
 
-:where(#{$_card}):has(> .primary-action:active)::after {
+:where(#{$_card}):not(.dragged, .picked-up):has(> .primary-action:active)::after {
   opacity: var(--md-comp-card-pressed-state-layer-opacity);
 }
 
-// A reorder interaction toggles `.dragged`; every variant rises to level 3.
-:where(#{$_card}).dragged {
+:where(#{$_card}):not(.dragged, .picked-up):not(.filled, .outlined, .border):has(> .primary-action:active) {
+  @include z-depth("1");
+}
+
+:where(#{$_card}):not(.dragged, .picked-up):is(.filled, .outlined, .border):has(> .primary-action:active) {
+  @include z-depth("0");
+}
+
+// A reorder interaction toggles `.dragged` or `.picked-up`. The elevated
+// variant rises to level 4; filled and outlined variants rise to level 3.
+:where(#{$_card}):not(.filled, .outlined, .border):is(.dragged, .picked-up) {
+  z-index: 4;
+  @include z-depth("4");
+}
+
+:where(#{$_card}):is(.filled, .outlined, .border):is(.dragged, .picked-up) {
+  z-index: 4;
   @include z-depth("3");
 }
 
-:where(#{$_card}).dragged::after {
+:where(#{$_card}):is(.dragged, .picked-up)::after {
   opacity: var(--md-comp-card-dragged-state-layer-opacity);
 }
 
@@ -145,12 +161,12 @@ $_card: "article";
 // cards that do not use a link.
 :where(#{$_card}):is(.disabled, [aria-disabled="true"]),
 :where(#{$_card}):has(> .primary-action[aria-disabled="true"]) {
-  @include z-depth("0");
   outline: 0;
 }
 
 :where(#{$_card}):not(.filled, .outlined, .border):is(.disabled, [aria-disabled="true"]),
 :where(#{$_card}):not(.filled, .outlined, .border):has(> .primary-action[aria-disabled="true"]) {
+  @include z-depth("1");
   background-color: color-mix(
     in oklab,
     var(--md-sys-color-surface) var(--md-comp-card-disabled-container-opacity),
@@ -160,15 +176,17 @@ $_card: "article";
 
 :where(#{$_card}).filled:is(.disabled, [aria-disabled="true"]),
 :where(#{$_card}).filled:has(> .primary-action[aria-disabled="true"]) {
+  @include z-depth("0");
   background-color: color-mix(
     in oklab,
-    var(--md-sys-color-on-surface) var(--md-comp-card-disabled-container-opacity),
+    var(--md-sys-color-surface-variant) var(--md-comp-card-disabled-container-opacity),
     transparent
   );
 }
 
 :where(#{$_card}):is(.outlined, .border):is(.disabled, [aria-disabled="true"]),
 :where(#{$_card}):is(.outlined, .border):has(> .primary-action[aria-disabled="true"]) {
+  @include z-depth("0");
   background-color: var(--md-comp-outlined-card-container-color);
   border-color: color-mix(
     in oklab,
@@ -331,8 +349,8 @@ article > .primary-action > figure > figcaption > svg {
 
 // Collections are a grid by default. The full track definition is a token so
 // applications can supply fixed, responsive, or asymmetric columns without
-// fighting component selectors. Every card rests on the same plane; only the
-// picked-up / dragged state rises above its neighbours.
+// fighting component selectors. Each card keeps its variant-specific resting
+// elevation; picked-up / dragged state raises each variant above its rest.
 :where(.card-collection) {
   --md-comp-card-collection-gap: 8px;
   --md-comp-card-collection-min-card-width: 240px;
@@ -340,11 +358,6 @@ article > .primary-action > figure > figcaption > svg {
     auto-fit,
     minmax(min(100%, var(--md-comp-card-collection-min-card-width)), 1fr)
   );
-  --md-comp-card-collection-resting-shadow: none;
-  --md-comp-card-collection-picked-up-shadow:
-    0 8px 17px 2px rgba(0, 0, 0, 0.14),
-    0 3px 14px 2px rgba(0, 0, 0, 0.12),
-    0 5px 5px -3px rgba(0, 0, 0, 0.2);
   --md-comp-card-collection-mosaic-row-size: 80px;
   --md-comp-card-collection-carousel-height: 320px;
   --md-comp-card-collection-carousel-card-width: min(82%, 360px);
@@ -355,15 +368,6 @@ article > .primary-action > figure > figcaption > svg {
   align-items: stretch;
   margin: 0;
   padding: 0;
-}
-
-:where(.card-collection article):not(.dragged, .picked-up) {
-  box-shadow: var(--md-comp-card-collection-resting-shadow) !important;
-}
-
-:where(.card-collection article):is(.dragged, .picked-up) {
-  z-index: 4;
-  box-shadow: var(--md-comp-card-collection-picked-up-shadow) !important;
 }
 
 :where(.card-collection article):not(.horizontal) {
@@ -425,10 +429,9 @@ article > .primary-action > figure > figcaption > svg {
   display: block;
 }
 
-// Horizontal uses the same direct semantic slots as the vertical card. Grid
-// moves the media to the start and stacks headline, subhead, supporting text,
-// and actions beside it without requiring a second content wrapper.
-article.horizontal {
+// Horizontal uses the same semantic slots as the vertical card. They may be
+// direct children or children of the direct primary-action link.
+@mixin horizontal-card-layout($with-actions: true) {
   display: grid;
   grid-template-columns:
     minmax(0, var(--md-comp-card-horizontal-media-width))
@@ -470,12 +473,29 @@ article.horizontal {
     grid-row: 3;
   }
 
-  > .actions {
-    grid-column: 2;
-    grid-row: 4;
-    align-self: end;
-    justify-content: flex-end;
+  @if $with-actions {
+    > .actions {
+      grid-column: 2;
+      grid-row: 4;
+      align-self: end;
+      justify-content: flex-end;
+    }
   }
+}
+
+article.horizontal {
+  @include horizontal-card-layout;
+}
+
+article.horizontal:has(> .primary-action) {
+  display: block;
+}
+
+article.horizontal > .primary-action {
+  @include horizontal-card-layout(false);
+
+  width: 100%;
+  min-height: inherit;
 }
 
 // Fixed heights for uniform grids.
@@ -493,7 +513,7 @@ article.small, article.medium, article.large {
     overflow: hidden;
   }
 
-  > img, > figure img {
+  > img, > picture img, > figure img {
     height: 100%;
   }
 
@@ -518,15 +538,46 @@ article.horizontal.large {
   }
 }
 
-// Reveal panel. The summary and media remain in place while the card grows
-// downward to expose additional actions, matching the M3 expand/collapse
-// example. `interpolate-size` lets intrinsic content height animate without a
-// fixed cap; the @supports fallback keeps the interaction functional.
-:where(#{$_card}):has(> aside) {
+article.horizontal:is(.small, .medium, .large):has(> .primary-action) {
+  display: block;
+}
+
+article.horizontal:is(.small, .medium, .large) > .primary-action {
+  height: 100%;
+}
+
+// Compact windows use the vertical spelling. This keeps media and controls
+// large enough to scan and operate without changing their source order.
+@include bp-down("medium") {
+  article.horizontal,
+  article.horizontal.small,
+  article.horizontal.medium,
+  article.horizontal.large {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+  }
+
+  article.horizontal > .primary-action,
+  article.horizontal:is(.small, .medium, .large) > .primary-action {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+  }
+}
+
+// Reveal panel. Panels stay available until Cards confirms the disclosure
+// contract and adds its runtime marker. The summary and media remain in place
+// while the initialized card grows downward to expose additional actions.
+// `interpolate-size` lets intrinsic content height animate without a fixed cap;
+// the @supports fallback keeps the interaction functional.
+:where(#{$_card}.card-reveal-initialized) {
   interpolate-size: allow-keywords;
 }
 
-article > aside {
+article.card-reveal-initialized > aside {
   --md-comp-card-reveal-duration: 500ms;
   --md-comp-card-reveal-easing: cubic-bezier(0.2, 0, 0, 1);
 
@@ -550,7 +601,7 @@ article > aside {
     visibility 0s var(--md-comp-card-reveal-duration);
 }
 
-article > aside[aria-expanded="true"] {
+article.card-reveal-initialized > aside.open {
   height: auto;
   padding-block: 0 var(--md-comp-card-content-padding);
   opacity: 1;
@@ -564,18 +615,14 @@ article > aside[aria-expanded="true"] {
 }
 
 @supports not (interpolate-size: allow-keywords) {
-  article > aside {
+  article.card-reveal-initialized > aside {
+    display: none;
     height: auto;
-    max-height: 0;
-    transition:
-      max-height var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
-      padding-block var(--md-comp-card-reveal-duration) var(--md-comp-card-reveal-easing),
-      opacity 150ms ease-out,
-      visibility 0s var(--md-comp-card-reveal-duration);
+    transition: none;
   }
 
-  article > aside[aria-expanded="true"] {
-    max-height: var(--md-comp-card-reveal-fallback-height, 320px);
+  article.card-reveal-initialized > aside.open {
+    display: block;
   }
 }
 
@@ -664,12 +711,15 @@ article > aside > .reveal-actions > .reveal-action > :is(.material-symbols, .car
 }
 
 @media (prefers-reduced-motion: reduce) {
-  article > aside {
+  :where(#{$_card}),
+  :where(#{$_card})::after,
+  article > figure > .card-reveal-trigger,
+  article.card-reveal-initialized > aside {
     transition: none;
   }
 }
 
-article.sticky > :is(nav, .actions) {
+article.sticky > .actions {
   position: relative;
   z-index: 4;
   background-color: inherit;

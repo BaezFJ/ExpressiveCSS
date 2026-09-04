@@ -4,6 +4,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const scss = readFileSync(new URL('../src/sass/components/_cards.scss', import.meta.url), 'utf8');
+const cardsDocs = readFileSync(new URL('../docs/src/pages/cards.astro', import.meta.url), 'utf8');
+const llm = readFileSync(new URL('../llm.md', import.meta.url), 'utf8');
 
 describe('Cards CSS', () => {
   test('maps the three variants to the M3 container roles', () => {
@@ -98,6 +101,7 @@ describe('Cards CSS', () => {
     assert.match(css, /article\s*>\s*figure,[^{]+\.primary-action\s*>\s*figure\s*\{/s);
     assert.match(css, /article\s*>\s*\.actions\s*\{/);
     assert.doesNotMatch(css, /article\s*>[^\{]*nav[^\{]*\{/);
+    assert.doesNotMatch(css, /article\.sticky\s*>\s*:is\(nav/);
     assert.doesNotMatch(css, /\.card-(?:tabs|panel)\b/);
   });
 
@@ -117,20 +121,49 @@ describe('Cards CSS', () => {
       /article\.horizontal\s*>\s*\.actions\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*4[^}]*align-self:\s*end[^}]*justify-content:\s*flex-end/s
     );
     assert.doesNotMatch(css, /article\.horizontal\s*>\s*div\s*\{/);
+    assert.match(
+      css,
+      /article\.horizontal\s*>\s*\.primary-action\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:[^}]*var\(--md-comp-card-horizontal-media-width\)/s
+    );
+    assert.match(
+      css,
+      /article\.horizontal:is\(\.small, \.medium, \.large\):has\(> \.primary-action\)\s*\{[^}]*display:\s*block/s
+    );
   });
 
-  test('lays out coplanar card collections as grids, lists, mosaics, staggered flows, or carousels', () => {
+  test('stacks horizontal cards at the compact breakpoint', () => {
+    assert.match(
+      css,
+      /@media \(width < 600px\)\s*\{[\s\S]*?article\.horizontal,\s*article\.horizontal\.small,\s*article\.horizontal\.medium,\s*article\.horizontal\.large\s*\{[^}]*display:\s*flex[^}]*flex-direction:\s*column[^}]*height:\s*auto/s
+    );
+    assert.match(
+      css,
+      /@media \(width < 600px\)\s*\{[\s\S]*?article\.horizontal\s*>\s*\.primary-action,\s*article\.horizontal:is\(\.small, \.medium, \.large\)\s*>\s*\.primary-action\s*\{[^}]*display:\s*flex[^}]*flex-direction:\s*column[^}]*height:\s*auto/s
+    );
+  });
+
+  test('sizes picture media inside fixed-height cards', () => {
+    assert.match(
+      css,
+      /article\.small\s*>\s*picture img,[^{]+article\.large\s*>\s*picture img[^{]*\{[^}]*height:\s*100%/s
+    );
+  });
+
+  test('documents variant-specific collection resting elevations', () => {
+    for (const source of [scss, cardsDocs, llm]) {
+      assert.match(source, /variant-specific resting(?:\s|\/)*elevation/i);
+      assert.doesNotMatch(source, /(?:coplanar at rest|rests? on the same plane)/i);
+    }
+  });
+
+  test('lays out card collections as grids, lists, mosaics, staggered flows, or carousels', () => {
     assert.match(
       css,
       /:where\(\.card-collection\)\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*var\(--md-comp-card-collection-grid-template-columns\)[^}]*gap:\s*var\(--md-comp-card-collection-gap\)/s
     );
-    assert.match(
+    assert.doesNotMatch(
       css,
-      /:where\(\.card-collection article\):not\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*var\(--md-comp-card-collection-resting-shadow\)\s*!important/s
-    );
-    assert.match(
-      css,
-      /:where\(\.card-collection article\):is\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*var\(--md-comp-card-collection-picked-up-shadow\)\s*!important/s
+      /:where\(\.card-collection article\)[^{]*\{[^}]*box-shadow/s
     );
     assert.match(
       css,
@@ -173,16 +206,60 @@ describe('Cards CSS', () => {
     );
   });
 
-  test('raises hovered and dragged cards to the specified elevations', () => {
+  test('uses each variant’s specified hover and dragged elevation', () => {
     assert.match(
       css,
-      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:(?!\s*none)/s
+      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:\s*0 4px 5px/s
     );
     assert.match(
       css,
-      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:(?!\s*none)/s
+      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:hover\)\s*\{[^}]*box-shadow:\s*0 2px 2px/s
     );
-    assert.match(css, /:where\(article\)\.dragged\s*\{[^}]*box-shadow:(?!\s*none)/s);
+    assert.match(
+      css,
+      /:not\(\.filled, \.outlined, \.border\):is\(\.dragged, \.picked-up\)\s*\{[^}]*z-index:\s*4[^}]*box-shadow:\s*0 16px 24px/s
+    );
+    assert.match(
+      css,
+      /:is\(\.filled, \.outlined, \.border\):is\(\.dragged, \.picked-up\)\s*\{[^}]*box-shadow:\s*0 8px 17px/s
+    );
+  });
+
+  test('keeps level-zero bases overridable by hover and dragged states', () => {
+    assert.doesNotMatch(
+      css,
+      /:where\(article\)\.filled\s*\{[^}]*box-shadow:\s*none\s*!important/s
+    );
+    assert.doesNotMatch(
+      css,
+      /:where\(article\):is\(\.outlined, \.border\)\s*\{[^}]*box-shadow:\s*none\s*!important/s
+    );
+  });
+
+  test('uses each variant’s specified pressed elevation even while hovered', () => {
+    assert.match(
+      css,
+      /:not\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*0 2px 2px/s
+    );
+    assert.match(
+      css,
+      /:is\(\.filled, \.outlined, \.border\):has\(> \.primary-action:active\)\s*\{[^}]*box-shadow:\s*none\s*!important/s
+    );
+  });
+
+  test('keeps disabled elevation and container color variant-specific', () => {
+    assert.match(
+      css,
+      /:not\(\.filled, \.outlined, \.border\):is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*0 2px 2px/s
+    );
+    assert.match(
+      css,
+      /:not\(\.filled, \.outlined, \.border\):is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*var\(--md-sys-color-surface\) var\(--md-comp-card-disabled-container-opacity\)/s
+    );
+    assert.match(
+      css,
+      /\.filled:is\(\.disabled, \[aria-disabled=true\]\)[^{]*\{[^}]*box-shadow:\s*none\s*!important[^}]*var\(--md-sys-color-surface-variant\) var\(--md-comp-card-disabled-container-opacity\)/s
+    );
   });
 
   test('publishes disabled container and outlined-stroke opacity', () => {
@@ -197,11 +274,11 @@ describe('Cards CSS', () => {
   test('expands reveals in flow while keeping the summary and media in place', () => {
     assert.match(
       css,
-      /article\s*>\s*aside\s*\{[^}]*position:\s*relative[^}]*height:\s*0[^}]*overflow:\s*clip/s
+      /article\.card-reveal-initialized\s*>\s*aside\s*\{[^}]*position:\s*relative[^}]*height:\s*0[^}]*overflow:\s*clip/s
     );
     assert.match(
       css,
-      /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*height:\s*auto[^}]*opacity:\s*1/s
+      /article\.card-reveal-initialized\s*>\s*aside\.open\s*\{[^}]*height:\s*auto[^}]*opacity:\s*1/s
     );
     assert.match(css, /article\s*>\s*figure\s*>\s*\.card-reveal-trigger\s*\{[^}]*position:\s*absolute[^}]*inset:\s*0/s);
     // The trigger carries its own state layer: the card's ::after keys on
@@ -213,6 +290,26 @@ describe('Cards CSS', () => {
         new RegExp(`\\.card-reveal-trigger:${state}\\s*\\{[^}]*--md-comp-card-state-layer-color\\) calc\\(var\\(--md-comp-card-${token}-state-layer-opacity\\)`, "s")
       );
     }
-    assert.doesNotMatch(css, /article\s*>\s*aside\[aria-expanded=true\]\s*\{[^}]*overflow-y:\s*auto/s);
+    assert.doesNotMatch(css, /article\s*>\s*aside\[aria-expanded/);
+    assert.doesNotMatch(
+      css,
+      /(?:^|,)\s*article\s*>\s*aside\s*\{[^}]*height:\s*0/s
+    );
+    assert.doesNotMatch(css, /article\.card-reveal-initialized\s*>\s*aside\.open\s*\{[^}]*overflow-y:\s*auto/s);
+    assert.doesNotMatch(
+      css,
+      /@supports not \(interpolate-size: allow-keywords\)[\s\S]*?card-reveal-fallback-height|@supports not \(interpolate-size: allow-keywords\)[\s\S]*?max-height:\s*320px/
+    );
+    assert.match(
+      css,
+      /@supports not \(interpolate-size: allow-keywords\)\s*\{[\s\S]*?article\.card-reveal-initialized\s*>\s*aside\s*\{[^}]*display:\s*none[^}]*transition:\s*none[\s\S]*?article\.card-reveal-initialized\s*>\s*aside\.open\s*\{[^}]*display:\s*block/s
+    );
+  });
+
+  test('disables card state and reveal transitions for reduced motion', () => {
+    assert.match(
+      css,
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*:where\(article\),\s*:where\(article\)::after,\s*article\s*>\s*figure\s*>\s*\.card-reveal-trigger,\s*article\.card-reveal-initialized\s*>\s*aside\s*\{[^}]*transition:\s*none/s
+    );
   });
 });

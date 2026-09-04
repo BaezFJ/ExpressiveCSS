@@ -400,93 +400,190 @@ describe("Cards reveal", () => {
 
   const html = `
     <article>
-      <h3 class="activator">Title</h3>
+      <figure>
+        <button type="button" class="card-reveal-trigger"
+                aria-label="Show contact details" aria-controls="card-details"></button>
+      </figure>
+      <h3>Title</h3>
       <p>body</p>
-      <aside>
-        <h4>More</h4>
-        <p>reveal</p>
+      <aside id="card-details">
+        <a href="#details">More details</a>
       </aside>
     </article>`;
 
-  test("open() keeps the reveal expanded until close()", () => {
+  test("initializes and synchronizes an accessible disclosure", () => {
     document.body.innerHTML = html;
     const el = document.querySelector("article");
+    const trigger = el.querySelector(".card-reveal-trigger");
     const reveal = el.querySelector("aside");
     const instance = Expressive.Cards.init(el);
 
+    assert.equal(el.classList.contains("card-reveal-initialized"), true);
+    assert.equal(trigger.getAttribute("aria-expanded"), "false");
+    assert.equal(trigger.getAttribute("aria-controls"), "card-details");
+    assert.equal(trigger.getAttribute("role"), null);
+    assert.equal(reveal.hasAttribute("aria-expanded"), false);
+    assert.equal(reveal.inert, true);
+
     instance.open();
     assert.equal(instance.isOpen, true);
-    assert.equal(reveal.getAttribute("aria-expanded"), "true");
-    assert.equal(el.style.transform, "", "open() wrote an inline transform");
-    assert.equal(
-      reveal.style.transform,
-      "",
-      "the reveal transform is CSS, not inline",
-    );
+    assert.equal(trigger.getAttribute("aria-expanded"), "true");
+    assert.equal(reveal.classList.contains("open"), true);
+    assert.equal(reveal.inert, false);
 
     instance.open();
     assert.equal(instance.isOpen, true, "a second open() closed the reveal");
 
     instance.close();
     assert.equal(instance.isOpen, false);
-    assert.equal(reveal.getAttribute("aria-expanded"), "false");
+    assert.equal(trigger.getAttribute("aria-expanded"), "false");
+    assert.equal(reveal.classList.contains("open"), false);
+    assert.equal(reveal.inert, true);
+    instance.destroy();
+    assert.equal(el.classList.contains("card-reveal-initialized"), false);
+  });
+
+  test("does not hide a panel when initialized without a usable trigger", () => {
+    document.body.innerHTML = `<article><button type="submit" class="card-reveal-trigger">Submit</button><aside id="details">Details</aside></article>`;
+    const el = document.querySelector("article");
+    const panel = el.querySelector("aside");
+    const instance = Expressive.Cards.init(el);
+
+    assert.notEqual(panel.inert, true);
+    instance.open();
+    assert.equal(instance.isOpen, false);
+    assert.equal(panel.classList.contains("open"), false);
+    instance.destroy();
+  });
+
+  test("does not hide a panel when its only trigger is disabled", () => {
+    document.body.innerHTML = `<article><button type="button" class="card-reveal-trigger" disabled>Toggle details</button><aside id="details">Details</aside></article>`;
+    const el = document.querySelector("article");
+    const panel = el.querySelector("aside");
+    const instance = new Expressive.Cards(el);
+
+    assert.equal(el.classList.contains("card-reveal-initialized"), false);
+    assert.notEqual(panel.inert, true);
+    instance.open();
+    assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
+  test("destroy preserves panel state when disclosure setup was skipped", () => {
+    document.body.innerHTML = `<article><button type="submit" class="card-reveal-trigger">Submit</button><aside id="details" class="open" inert>Details</aside></article>`;
+    const el = document.querySelector("article");
+    const panel = el.querySelector("aside");
+    const instance = new Expressive.Cards(el);
+
+    instance.destroy();
+
+    assert.equal(panel.classList.contains("open"), true);
+    assert.equal(panel.hasAttribute("inert"), true);
+  });
+
+  test("does not hide an unidentified reveal panel", () => {
+    document.body.innerHTML = `<article><button type="button" class="card-reveal-trigger">Toggle details</button><aside>Details</aside></article>`;
+    const el = document.querySelector("article");
+    const panel = el.querySelector("aside");
+    const instance = new Expressive.Cards(el);
+
+    assert.notEqual(panel.inert, true);
+    assert.equal(el.querySelector("button").hasAttribute("aria-expanded"), false);
+    instance.open();
+    assert.equal(instance.isOpen, false);
+    assert.equal(panel.classList.contains("open"), false);
+    instance.destroy();
+  });
+
+  test("does not partially initialize a card with multiple reveal panels", () => {
+    document.body.innerHTML = `<article><button type="button" class="card-reveal-trigger">Toggle details</button><aside id="first-details">First</aside><aside id="second-details">Second</aside></article>`;
+    const el = document.querySelector("article");
+    const panels = [...el.querySelectorAll("aside")];
+    const instance = new Expressive.Cards(el);
+
+    assert.deepEqual(
+      panels.map((panel) => panel.inert === true),
+      [false, false],
+    );
+    instance.open();
+    assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
+  test("uses the panel id for aria-controls", () => {
+    document.body.innerHTML = html.replace(
+      'aria-controls="card-details"',
+      'aria-controls="wrong-panel"',
+    );
+    const el = document.querySelector("article");
+    const trigger = el.querySelector(".card-reveal-trigger");
+    const instance = Expressive.Cards.init(el);
+
+    assert.equal(trigger.getAttribute("aria-controls"), "card-details");
+    instance.destroy();
+    assert.equal(trigger.getAttribute("aria-controls"), "wrong-panel");
+  });
+
+  test("uses the native button click without synthesizing key activation", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector("article");
+    const trigger = el.querySelector(".card-reveal-trigger");
+    const instance = Expressive.Cards.init(el);
+
+    trigger.dispatchEvent(
+      new window.KeyboardEvent("keypress", {
+        bubbles: true,
+        cancelable: true,
+        key: " ",
+      }),
+    );
+    assert.equal(instance.isOpen, false);
+
+    fire(trigger, "click");
+    assert.equal(instance.isOpen, true);
+    fire(trigger, "click");
+    assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
+  test("Escape closes the reveal and returns focus from its contents", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector("article");
+    const trigger = el.querySelector(".card-reveal-trigger");
+    const reveal = el.querySelector("aside");
+    const link = reveal.querySelector("a");
+    const instance = Expressive.Cards.init(el);
+
+    fire(trigger, "click");
+    link.focus();
+    assert.equal(document.activeElement, link);
+    link.dispatchEvent(
+      new window.KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: "Escape",
+      }),
+    );
+
+    assert.equal(instance.isOpen, false);
+    assert.equal(document.activeElement, trigger);
+    instance.destroy();
+  });
+
+  test("destroy removes runtime-owned disclosure state", () => {
+    document.body.innerHTML = html;
+    const el = document.querySelector("article");
+    const trigger = el.querySelector(".card-reveal-trigger");
+    const reveal = el.querySelector("aside");
+    const instance = Expressive.Cards.init(el);
 
     instance.open();
-    assert.equal(instance.isOpen, true, "the reveal could not be opened again");
     instance.destroy();
-  });
 
-  test("clicking the activator opens the reveal", () => {
-    document.body.innerHTML = html;
-    const el = document.querySelector("article");
-    const instance = Expressive.Cards.init(el);
-
-    const activator = el.querySelector(".activator");
-    fire(activator, "click");
-    assert.equal(instance.isOpen, true);
-    assert.equal(
-      el.querySelector("aside").getAttribute("aria-expanded"),
-      "true",
-    );
-    assert.equal(activator.getAttribute("aria-expanded"), "true");
-
-    fire(activator, "click");
-    assert.equal(instance.isOpen, false);
-    assert.equal(
-      el.querySelector("aside").getAttribute("aria-expanded"),
-      "false",
-    );
-    assert.equal(activator.getAttribute("aria-expanded"), "false");
-    instance.destroy();
-  });
-
-  test("Space toggles a non-native activator without removing it from the tab order", () => {
-    document.body.innerHTML = html;
-    const el = document.querySelector("article");
-    const instance = Expressive.Cards.init(el);
-    const activator = el.querySelector(".activator");
-
-    assert.equal(activator.getAttribute("role"), "button");
-    assert.equal(activator.tabIndex, 0);
-    activator.dispatchEvent(
-      new window.KeyboardEvent("keypress", {
-        bubbles: true,
-        cancelable: true,
-        key: " ",
-      }),
-    );
-    assert.equal(instance.isOpen, true);
-    assert.equal(activator.tabIndex, 0);
-
-    activator.dispatchEvent(
-      new window.KeyboardEvent("keypress", {
-        bubbles: true,
-        cancelable: true,
-        key: " ",
-      }),
-    );
-    assert.equal(instance.isOpen, false);
-    instance.destroy();
+    assert.equal(reveal.classList.contains("open"), false);
+    assert.equal(reveal.inert, false);
+    assert.equal(trigger.hasAttribute("aria-expanded"), false);
+    assert.equal(trigger.getAttribute("aria-controls"), "card-details");
   });
 });
 

@@ -96,6 +96,26 @@ export function violationsIn(document, rules, compositeRoles, { fragmentSafe = f
         const ok = rule.equals ? v === rule.equals : v !== null && v !== '';
         if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
       }
+    } else if (rule.kind === 'require-idref') {
+      for (const el of hits) {
+        const ids = (el.getAttribute(rule.attr) ?? '').trim().split(/\s+/).filter(Boolean);
+        const container = rule.container ? el.closest(rule.container) : document;
+        const targets = container
+          ? new Set(container.querySelectorAll(rule.targetSelector))
+          : new Set();
+        const ok = ids.length > 0 && ids.every((id) => targets.has(document.getElementById(id)));
+        if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
+      }
+    } else if (rule.kind === 'require-owned-descendant') {
+      for (const el of hits) {
+        const ok = [...el.querySelectorAll(rule.descendantSelector)].some((candidate) => {
+          if (candidate.closest(rule.ownerSelector) !== el) return false;
+          if (!rule.excludeAncestorSelector) return true;
+          const excludedAncestor = candidate.closest(rule.excludeAncestorSelector);
+          return !excludedAncestor || !el.contains(excludedAncestor);
+        });
+        if (!ok) found.push({ rule, tag: el.outerHTML.slice(0, 90) });
+      }
     } else if (rule.kind === 'require-accessible-name') {
       // The one thing a selector cannot ask. "Has no accessible name" depends
       // on text *nodes*, and CSS cannot see them: `:has(> .icon:only-child)`

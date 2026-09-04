@@ -242,7 +242,7 @@ Opt an element out when it needs manual options:
 | Component | Selector |
 | --- | --- |
 | `Autocomplete` | `.autocomplete` |
-| `Cards` | `article:has(> aside)` |
+| `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Datepicker` | `.datepicker` |
@@ -2157,13 +2157,9 @@ Height, the leading half's outer inset, the outline width and every colour come 
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, `<p class="supporting-text">` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component. The action row is not a `<nav>`: a row of buttons is not a set of destinations, and one landmark per card floods the landmark list.
+An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, `<p class="supporting-text">` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
 
-Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The elevated container is `surface-container-low` with 12dp corners. The default sits at elevation 1; an interactive card rises to 2 on hover. The headline is `title-medium` / `on-surface`, the subhead is `title-small` / `on-surface`, and supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
-
-### Card title
-
-I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.
+A Card reveal is a disclosure with exactly one identified direct `<aside>` and an enabled, accessibly named `button.card-reveal-trigger[type="button"]` outside that panel. Its `aria-controls` must resolve to the panel, and its closest `<article>` owns it—even when a complete nested card sits inside an outer reveal panel. After accepting the contract, Cards writes `aria-expanded`, marks the closed panel `inert`, closes it with Escape, and returns focus from the panel to the trigger. Rejected, disabled-only, unidentified, and multi-panel disclosures remain visible and unmanaged.
 
 ```html
 <article>
@@ -2184,18 +2180,6 @@ I am a very simple card. I am good at containing small bits of information. I am
 
 Default is elevated. `filled` uses `surface-container-highest` at rest (no shadow). `outlined` (or `border`) draws a 1dp `outline-variant` stroke over `surface`.
 
-### Elevated
-
-Surface-container-low, elevation 1.
-
-### Filled
-
-Surface-container-highest, no elevation.
-
-### Outlined
-
-Surface plus a 1dp outline.
-
 ```html
 <article>…</article>
 <article class="filled">…</article>
@@ -2204,7 +2188,7 @@ Surface plus a 1dp outline.
 
 ### Primary action and states
 
-A static card has no hover treatment. To make the card an entry point, wrap its primary content in a direct `<a class="primary-action">`. That gives the card M3 hover, focus, pressed, and focus-indicator states while keeping secondary buttons outside the link. Toggle `dragged` during reordering, or put `aria-disabled="true"` on the primary action for the disabled appearance.
+A static card has no hover treatment. To make the card an entry point, wrap its primary content in a direct `<a class="primary-action">`. That gives the card M3 hover, focus, pressed, and focus-indicator states. A directly actionable card has no other links or buttons. When the content needs several actions, leave the card static and put the controls in `.actions`. Toggle `dragged` or `picked-up` during reordering; that state retains its dragged elevation and 16% state layer while the primary action remains hovered or pressed. For a disabled destination, remove `href` and set both `aria-disabled="true"` and `tabindex="-1"` on the primary action.
 
 ```html
 <article>
@@ -2212,15 +2196,12 @@ A static card has no hover treatment. To make the card an entry point, wrap its 
     <h3>Upcoming reservation</h3>
     <p>Open the reservation details.</p>
   </a>
-  <div class="actions">
-    <button type="button" class="text">Share</button>
-  </div>
 </article>
 ```
 
 ### Collections
 
-`card-collection` creates a responsive grid with no more than 8dp between cards. Every card is coplanar at rest; add `picked-up` or `dragged` only while it is being moved. Add `list`, `staggered`, `mosaic`, or `carousel uncontained` for the other collection layouts. Sorting and filtering controls stay outside the collection.
+`card-collection` creates a responsive grid with no more than 8dp between cards. Cards keep their variant-specific resting elevation: level 1 for elevated, level 0 for filled and outlined. Add `picked-up` or `dragged` only while a card is being moved. Add `list`, `staggered`, `mosaic`, or `carousel uncontained` for the other collection layouts. Sorting and filtering controls stay outside the collection.
 
 ```html
 <!-- Responsive grid (the default). Override the track token as needed. -->
@@ -2258,8 +2239,6 @@ A static card has no hover treatment. To make the card an entry point, wrap its 
 
 A direct `<img>` is full-bleed across the top and its media surface has rounded corners matching the card. Wrap it in a `<figure>` if you want a caption on the image. The `<figcaption>` is an opaque, rounded bounding shape using the paired `surface` and `on-surface` roles, so image colors cannot reduce the contrast of its text or icons. Normal text must retain at least 4.5:1 contrast; large text and meaningful icons require at least 3:1. Recheck those ratios if you override either color token.
 
-I am a very simple card. I am good at containing small bits of information.
-
 ```html
 <article>
   <figure>
@@ -2278,7 +2257,7 @@ I am a very simple card. I am good at containing small bits of information.
 
 ### Horizontal
 
-The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it.
+The same card can use two orientations without changing its content order. Add `horizontal` to move the media to the start and stack the headline, supporting text, and action beside it. A direct `.primary-action` link can wrap those same slots when the whole horizontal card is one destination. Without a size helper, its height follows content with a 240px minimum; `small`, `medium`, and `large` provide fixed expanded heights. Below 600px, both forms return to the vertical layout and fixed heights reset to content.
 
 ```html
 <!-- Vertical -->
@@ -2300,31 +2279,32 @@ The same card can use two orientations without changing its content order. Add `
     <button type="button" class="tonal">Get tickets</button>
   </div>
 </article>
+
+<!-- Directly actionable horizontal card. -->
+<article class="outlined horizontal">
+  <a class="primary-action" href="/performances/the-hideout">
+    <img src="images/the-hideout.jpg" alt="Musician playing guitar during a live performance">
+    <h3>Performances at The Hideout</h3>
+    <p>Watch exclusive live performances every Saturday.</p>
+  </a>
+</article>
 ```
 
 ### Reveal
 
-An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger.activator` button over the media; the same button opens and closes the details. `Cards.Init()` (and `AutoInit()` on an `<article>` containing an `<aside>`) wires up `aria-expanded`, Enter, and Space. The reveal grows the card instead of covering or internally scrolling it. A first heading inside the aside remains an optional close target.
-
-### Card titlemore_vert
-
-This is a link
-
-### closeCard title
-
-Here is some more information about this product that is only revealed once clicked on.
+An `<aside>` expands in normal flow below the persistent media, headline, and subhead. Place a `.card-reveal-trigger` button over the media; the same button opens and closes the details. `Cards.Init()` and `AutoInit()` own `aria-expanded` when the card contains both that button and one identified direct `<aside>`, and they apply closed-panel styles only after accepting that disclosure contract. The trigger must be enabled when Cards initializes; rejected, disabled-only, unidentified, or multi-panel disclosures leave every panel visible, available, and untouched. The native button handles Enter and Space. Escape closes an open panel and returns focus to its trigger. A trigger belongs to its closest `<article>`; nested cards, including cards inside an outer reveal panel, keep their own disclosure ownership and do not initialize or toggle the outer card. The reveal grows the card instead of covering or internally scrolling it. This replaces legacy `.activator` markup and heading-based close controls; use the same native button to open and close the panel.
 
 ```html
 <article class="filled">
   <figure>
     <img src="images/ana-russo.jpg" alt="Portrait of Ana Russo">
-    <button type="button" class="card-reveal-trigger activator" aria-label="Toggle contact details" aria-controls="ana-contact" aria-expanded="false"></button>
+    <button type="button" class="card-reveal-trigger" aria-label="Toggle contact details" aria-controls="ana-contact"></button>
   </figure>
   <header class="card-reveal-summary">
     <h3>Ana Russo</h3>
     <p class="subhead">Sibling</p>
   </header>
-  <aside id="ana-contact" aria-expanded="false">
+  <aside id="ana-contact">
     <address class="reveal-actions">
       <a class="reveal-action" href="tel:+16505551234">
         <span class="material-symbols" aria-hidden="true">call</span>
@@ -2377,10 +2357,6 @@ An expanding card performs a shared-container transition from a compact feed ite
 ### Sizes
 
 `small`, `medium`, and `large` lock the height at 300px, 400px, and 500px so a row of cards lines up. Media takes the top 60%; the action row sticks to the bottom. These sizes are not in the M3 spec — they are optional layout helpers.
-
-### Small
-
-The small card is 300px tall.
 
 ```html
 <article class="small">…</article>
@@ -3814,7 +3790,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | Name | Selector |
 | --- | --- |
 | `Autocomplete` | `.autocomplete` |
-| `Cards` | `article:has(> aside)` |
+| `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
 | `Datepicker` | `.datepicker` |
