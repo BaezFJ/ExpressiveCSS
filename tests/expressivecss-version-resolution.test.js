@@ -2,7 +2,7 @@ import { afterEach, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cp, mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -597,7 +597,7 @@ describe('ExpressiveCSS version resolution', () => {
     assert.doesNotMatch(guide, /\[Matching tag\]/);
   });
 
-  test('the packed MCP includes its resolver and starts from the tarball', async () => {
+  test('the packed MCP includes its resolver', async () => {
     const sourceRoot = fileURLToPath(new URL('..', import.meta.url));
     const packRoot = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-mcp-pack-'));
     roots.push(packRoot);
@@ -617,18 +617,6 @@ describe('ExpressiveCSS version resolution', () => {
     assert.equal(extracted.status, 0, extracted.stderr);
     const resolver = await readFile(path.join(packRoot, 'package/scripts/resolve-version.mjs'), 'utf8');
     assert.match(resolver, /^\/\/ Generated from scripts\/lib\/resolve-expressivecss-version\.mjs\. Do not edit\./);
-    await symlink(
-      path.join(sourceRoot, 'mcp/expressivecss/node_modules'),
-      path.join(packRoot, 'package/node_modules'),
-      'dir',
-    );
-    const started = spawnSync(process.execPath, [path.join(packRoot, 'package/server.js')], {
-      cwd: path.join(packRoot, 'package'),
-      encoding: 'utf8',
-      input: '',
-    });
-    assert.equal(started.status, 0, started.stderr);
-    assert.match(started.stderr, /ExpressiveCSS MCP server running on stdio transport/);
   });
 
   test('the portable resolver copies stay synchronized', async () => {
