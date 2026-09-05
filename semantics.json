@@ -12,6 +12,8 @@
     "forbid": "selector must match nothing in a checked example",
     "forbid-composite-roles": "selector must match nothing in a checked example once expanded over `compositeRoles` - the component may not *be* a composite widget of any kind",
     "require-attr": "every element matching selector must carry attr (and equal `equals`, when given)",
+    "require-idref": "every element matching selector must carry attr whose ID references resolve to targetSelector inside its closest container",
+    "require-owned-descendant": "every element matching selector must contain a descendant matching descendantSelector whose closest ownerSelector is that element and which is outside excludeAncestorSelector within that owner when given",
     "require-accessible-name": "every element matching selector must end up with a non-empty accessible name (aria-label, aria-labelledby, or text that is not inside an aria-hidden subtree)"
   },
   "rowKinds": {
@@ -241,7 +243,7 @@
     },
     "cards": {
       "status": "enforced",
-      "note": "Swept 0.8.0. The action row is buttons, not destinations.",
+      "note": "Swept 0.8.0. Cards use native disclosure controls, and a directly actionable card contains no second action.",
       "rules": [
         {
           "id": "card-action-row-not-nav",
@@ -249,6 +251,106 @@
           "selector": "article nav",
           "fragmentSafe": true,
           "message": "Cards do not contain navigation or tabs. Put navigation outside the card and use <div class=\"actions\"> for its action buttons."
+        },
+        {
+          "id": "card-primary-action-is-control",
+          "kind": "forbid",
+          "selector": "article > .primary-action:not(a[href]):not(a[aria-disabled=\"true\"])",
+          "fragmentSafe": true,
+          "message": "A directly actionable card uses one native link as its primary action. Use the action row for commands; common button styles do not turn a button into the card container."
+        },
+        {
+          "id": "card-disabled-link-has-no-href",
+          "kind": "forbid",
+          "selector": "article > a.primary-action[aria-disabled=\"true\"][href]",
+          "fragmentSafe": true,
+          "message": "A disabled card destination must not retain href. aria-disabled does not stop a link from navigating when activated from the keyboard."
+        },
+        {
+          "id": "card-disabled-link-not-tabbable",
+          "kind": "forbid",
+          "selector": "article > a.primary-action[aria-disabled=\"true\"]:not([tabindex=\"-1\"])",
+          "fragmentSafe": true,
+          "message": "A disabled card destination is not operable, so remove it from the tab order with tabindex=\"-1\"."
+        },
+        {
+          "id": "card-primary-action-is-only-action",
+          "kind": "forbid",
+          "selector": "article:has(> .primary-action) :is(a[href], button, input, select, textarea):not(.primary-action)",
+          "fragmentSafe": true,
+          "message": "A directly actionable card contains no second action. Use one primary-action link, or make the card non-actionable and put its controls in the action row."
+        },
+        {
+          "id": "card-primary-action-is-single",
+          "kind": "forbid",
+          "selector": "article > .primary-action ~ .primary-action",
+          "fragmentSafe": true,
+          "message": "A directly actionable card has exactly one direct primary-action link. Remove duplicate primary actions or use a non-actionable card with an action row."
+        },
+        {
+          "id": "card-reveal-has-trigger",
+          "kind": "require-owned-descendant",
+          "selector": "article:has(> aside)",
+          "descendantSelector": "button.card-reveal-trigger",
+          "ownerSelector": "article",
+          "excludeAncestorSelector": "aside",
+          "fragmentSafe": true,
+          "scope": "row",
+          "severity": "error",
+          "message": "A card with a direct reveal panel requires a native card-reveal-trigger button whose closest article is that card and which sits outside the reveal panel."
+        },
+        {
+          "id": "card-reveal-has-one-panel",
+          "kind": "forbid",
+          "selector": "article > aside ~ aside",
+          "fragmentSafe": true,
+          "scope": "row",
+          "severity": "error",
+          "message": "A card reveal has exactly one direct aside panel. With multiple direct panels, Cards rejects disclosure setup and every panel remains visible and unmanaged."
+        },
+        {
+          "id": "card-reveal-trigger-is-button",
+          "kind": "forbid",
+          "selector": ".card-reveal-trigger:not(button)",
+          "fragmentSafe": true,
+          "message": "The reveal trigger is a native button so Enter, Space, disabled state, and focus work without synthetic keyboard handling."
+        },
+        {
+          "id": "card-reveal-trigger-type-button",
+          "kind": "require-attr",
+          "selector": "button.card-reveal-trigger",
+          "attr": "type",
+          "equals": "button",
+          "message": "A card reveal button may appear inside a form, so set type=\"button\" to prevent accidental submission."
+        },
+        {
+          "id": "card-reveal-trigger-has-label",
+          "kind": "require-accessible-name",
+          "selector": "button.card-reveal-trigger",
+          "message": "The reveal button needs a non-empty accessible name describing the details it toggles; icon-only triggers should use aria-label."
+        },
+        {
+          "id": "card-reveal-trigger-controls-panel",
+          "kind": "require-idref",
+          "selector": "button.card-reveal-trigger",
+          "attr": "aria-controls",
+          "container": "article",
+          "targetSelector": ":scope > aside",
+          "message": "Name the reveal panel from aria-controls so assistive technology can relate the disclosure button to its content."
+        },
+        {
+          "id": "card-reveal-panel-has-id",
+          "kind": "require-attr",
+          "selector": "article:has(.card-reveal-trigger) > aside",
+          "attr": "id",
+          "message": "The reveal panel needs the id referenced by its trigger's aria-controls."
+        },
+        {
+          "id": "card-reveal-expanded-is-not-authored",
+          "kind": "forbid",
+          "selector": ".card-reveal-trigger[aria-expanded], article > aside[aria-expanded]",
+          "fragmentSafe": true,
+          "message": "Cards writes aria-expanded on the disclosure button. Do not author a stale initial value, and do not put aria-expanded on the panel."
         }
       ]
     },
