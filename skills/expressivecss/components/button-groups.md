@@ -11,25 +11,25 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `1593e283ece7ac4e94ee28cd673b225a1a80a761c3a442c336db9e28c35cc60a`
+Contract SHA-256: `daa5f3cc9644df583a98d37841c211ca54bbdb405d8fd005bfe0cb6d9530ea93`
 
 #### Contract
 
-A row of related actions that reads as one control without becoming one — a formatting row, a set of view actions, a player's transport. The root is a `<div class="button-group">` and the items are ordinary buttons written directly inside it; add `circle` to an item for the icon-only shape M3 draws a group with most often. Nothing is scripted and nothing is selected: each item is its own Tab stop and does its own thing. When two to five options answer one question, that is a segmented button, whose `<input>` holds the answer.
+A Material 3 Expressive button group places related commands or toggle buttons in one visual cluster. The root is a `<div class="button-group">`; direct children can be common buttons or `.icon-button` controls. `ButtonGroup` is initialized by `Expressive.AutoInit()` to coordinate standard press widths. Selection management is opt-in through `data-selection`.
 
-An `.icon-button` is *not* an item: it is its own component, with its own size ladder, insets and pressed shape set on the element itself, so a group can neither size nor reshape it without fighting rules it already has. Write `<button class="button circle">` instead.
+Common buttons and icon buttons both inherit group sizing and participate in standard growth and connected shape morphing. Standard press growth is 15% of the item's measured width and is taken from its immediate neighbors, keeping the group's total width stable. An explicit size class on a child overrides the group size. Use a visible container style: filled, tonal, outlined, or elevated for common buttons; filled, tonal, or outlined for icon buttons. Material warns against text buttons and standard icon buttons in groups because their transparent containers hide the shape interaction.
 
-Items are controls and direct children — a `<button>`, or an `<a class="button" href>` when it navigates. A bare `<a href>` is refused: it passes for a control and renders as a link, reaching none of the group's corners, press behaviour or inherited size. A wrapper element around them loses both the gap and the connected corners, which are written against direct children. An icon-only item carries its own `aria-label`, since the icon is `aria-hidden`.
+Action-group items are direct controls: a `<button>`, or an `<a class="button" href>` when it navigates. Selection groups accept only native `<button type="button">` children, each with `aria-pressed`. A wrapper loses the gap and connected corners. Every icon-only item carries its own accessible name because the icon is `aria-hidden`.
 
 #### Syntax
 
 ```html
-<div class="button-group">
-  <button class="button tonal">
+<div class="button-group" data-selection="multiple" role="group" aria-label="Text formatting">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_bold</span>
     Bold
   </button>
-  <button class="button tonal">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_italic</span>
     Italic
   </button>
@@ -42,8 +42,17 @@ The following are end-state semantic invariants. The rule IDs come directly from
 
 - `button-group-is-not-an-authored-composite-widget`: A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
 - `button-group-items-are-controls`: Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class="button" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both.
-- `button-group-item-is-not-an-icon-button`: An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class="button circle">, which the group sizes like any other.
-- `button-group-selection-is-not-authored`: A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself.
+- `button-group-items-have-containers`: Material warns against text buttons in a group because they have no visible container for the shape interaction. Use filled, tonal, outlined, or elevated buttons.
+- `button-group-icon-items-have-containers`: Material warns against standard icon buttons in a group because they have no visible container for the shape interaction. Use a filled, tonal, or outlined icon button.
+- `button-group-selection-mode-is-valid`: ButtonGroup supports data-selection="single" or data-selection="multiple". Any other value exposes toggle state without a defined selection model.
+- `button-group-required-needs-selection`: data-selection-required only has meaning on a single- or multiple-selection ButtonGroup.
+- `button-group-connected-is-selectable`: Material connected button groups contain toggleable choices. Add data-selection="single|multiple", or use the standard group for one-shot actions.
+- `button-group-selection-items-are-buttons`: Selection items are native buttons. Links navigate and cannot represent toggle-button state.
+- `button-group-selection-button-type`: A selection button inside a form must not submit it; set type="button".
+- `button-group-selection-state-is-pressed`: Author each toggle button's initial aria-pressed value. ButtonGroup maintains that state after initialization.
+- `button-group-selection-state-is-boolean`: A toggle button's initial aria-pressed value is true or false; mixed is not a Button Group state.
+- `button-group-selection-does-not-use-choice-state`: These are toggle buttons, not radios, checkboxes, options, or tabs. Expose their state with aria-pressed.
+- `button-group-action-does-not-claim-selection`: aria-pressed requires ButtonGroup selection behavior. Add data-selection="single|multiple" or remove the toggle state.
 
 #### Guide checks
 

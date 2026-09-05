@@ -26,6 +26,10 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.Autocomplete,
     selector: ".autocomplete",
   },
+  ButtonGroup: {
+    component: Components.ButtonGroup,
+    selector: ".button-group",
+  },
   // Shared with Cards.Init() - see CARDS_SELECTOR. This entry used to read
   // '.cards', which no card markup uses.
   Cards: { component: Components.Cards, selector: CARDS_SELECTOR },

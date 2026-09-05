@@ -1,52 +1,26 @@
 @use "sass:map";
 @use "../abstracts" as *;
 
-// Button groups.
+// Material 3 Expressive button groups: standard and connected, each across
+// xsmall through xlarge. Direct children can be common buttons or icon
+// buttons. A size on the group propagates to children unless a child has an
+// explicit size of its own.
 //
-// Anatomy is the HTML. A <div class="button-group"> holding two or more
-// buttons - related actions that read as one control without becoming one.
-// The group is a container of independent buttons: each is its own Tab stop,
-// each does its own thing, and nothing here is scripted.
+// ButtonGroup supplies standard-group width redistribution for every group.
+// Toggle groups opt into managed selection with `data-selection="single|multiple"`;
+// groups without it retain native action-button semantics. Native buttons keep
+// their normal Tab, Space, and Enter behavior. The container may use
+// `role="group"` and an accessible name, but never a composite role such as
+// `toolbar` because this component has no roving-focus or arrow-key contract.
 //
-// No composite role is declared. `role="toolbar"` and its nine siblings
-// promise arrow-key navigation this component does not implement and does not
-// want to - SEMANTICS rule 2. A group that needs a name takes `role="group"`
-// with an `aria-label`, which promises no keyboard model at all.
-//
-// Two variants and five sizes, which M3 states as ten token families
-// (md.comp.button-group.{standard,connected}.{xsmall…xlarge}, DSP 34.0.21).
-// They collapse to one family here the way the button's own ladder does: the
-// size class rewrites the tokens, and only the numbers that actually differ
-// are named twice.
-//
-//   standard   items keep their own round shape; the gap closes as the
-//              buttons grow (18 / 12 / 8 / 8 / 8dp), and pressing one widens
-//              it by 15% of its width
-//   connected  items sit 2dp apart at every size, the ends of the row are
-//              round and the joins are square-ish, and pressing an item
-//              squares its inner corners further
-//
-// Selection is deliberately absent. M3's connected group has a selected state
-// with fully round corners, and holding it takes either script or a checked
-// control - which is `.segmented-button`, a <fieldset> of radios that already
-// does exactly that. A group of <button>s has no state to read.
-
-// The items: common buttons, and `.circle` for an icon-only one - which is
-// the shape M3 draws a group with most often, and which the group sizes like
-// any other item.
-//
-// `.icon-button` is deliberately *not* an item. It is its own component with
-// its own size ladder, its own insets and its own pressed shape, all set on
-// the element by its own rule - so a group could not size it by handing its
-// items tokens, and the corner morph here would fight the one it already
-// draws. Write `<button class="button circle">` for an icon-only group.
-//
-// This is also not `_buttons.scss`'s `$_btn`, which excludes the widget chrome
-// that happens to be a <button> (a datepicker day, a chip). Chrome cannot
-// reach a group anyway: `button-group-items-are-controls` in semantics.json
-// admits only a <button> or an <a href> as a direct child, so the buttons
-// here are the ones an author put here.
-$_item: ":is(button:not(.icon-button), a.button)";
+// Standard groups keep separate items and grow/reshape the pressed one.
+// Connected groups fill their available width, divide it evenly, keep a 2dp
+// seam, and morph the shared corners. Toggle selection changes color, shape,
+// and icon fill so color is never the only cue.
+$_item: ":is(button, a.button)";
+$_label-item: ":is(button:not(.icon-button), a.button)";
+$_filled-item: ":where(.filled, :not(.elevated, .filled, .tonal, .outlined, .text))";
+$_toggle-item: ":is(button:not(.icon-button):not(.text), a.button:not(.text), .icon-button:is(.filled, .tonal, .outlined))";
 
 // The size classes, as one `:not()` argument list - which takes the weight of
 // a single class, not five. An item carrying its own size class sets the
@@ -65,19 +39,50 @@ $_standard-space: (
   "xlarge": 8px,
 );
 
+// md.comp.button.<size>.{container-shape-square, pressed-container-shape}.
+// Common buttons and icon buttons share these numbers, so the group can morph
+// either kind of child through one pair of properties.
+$_item-shapes: (
+  "xsmall": (square: 12px, pressed: 8px),
+  "small": (square: 12px, pressed: 8px),
+  "medium": (square: 16px, pressed: 12px),
+  "large": (square: 28px, pressed: 16px),
+  "xlarge": (square: 28px, pressed: 16px),
+);
+
 // md.comp.button-group.connected.<size>.{inner-corner, pressed.inner-corner}.
-// The three small sizes share corner.value.small / corner.value.extra-small,
-// which is the group's default, so only the two that differ are listed.
+// The live M3 measurement is authoritative for XS (4px). Material Web 34.0.21
+// still emits 8px there; S and M agree at 8px.
 $_connected-corners: (
+  "xsmall": (inner: 4px, pressed: 4px),
   "large": (inner: 16px, pressed: 12px),
   "xlarge": (inner: 20px, pressed: 16px),
 );
 
+@mixin _disabled-toggle {
+  @include z-depth("0");
+  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+  pointer-events: none;
+  box-shadow: none;
+  cursor: default;
+}
+
 .button-group {
   --md-comp-button-group-between-space: 12px;
+  --md-comp-button-group-item-shape-round: 9999px;
+  --md-comp-button-group-item-shape-square: 12px;
+  --md-comp-button-group-pressed-item-shape: 8px;
   // M3 states this as a percentage of the item's own width. CSS cannot
   // multiply a length by one, so it is the same figure as a ratio.
   --md-comp-button-group-pressed-item-width-multiplier: .15;
+  // Material's fast-spatial spring (damping .9, stiffness 1400), sampled into
+  // a CSS linear easing so width and corner motion use the published dynamics.
+  --md-comp-button-group-motion: linear(
+    0, .056 5%, .1796 10%, .3252 15%, .4675 20%, .5936 25%,
+    .6988 30%, .7828 35%, .8475 40%, .8959 45%, .931 50%,
+    .9559 55%, .973 60%, .9845 65%, .9919 70%, .9965 75%,
+    .9992 80%, 1.0006 85%, 1.0013 90%, 1.0015 95%, 1.0015
+  );
 
   display: flex;
   align-items: center;
@@ -93,46 +98,184 @@ $_connected-corners: (
       @include button-size($name);
 
       --md-comp-button-group-between-space: #{map.get($_standard-space, $name)};
+      --md-comp-button-group-item-shape-square: #{map.get(map.get($_item-shapes, $name), square)};
+      --md-comp-button-group-pressed-item-shape: #{map.get(map.get($_item-shapes, $name), pressed)};
 
-      > #{$_item}:not(#{$_sized}) {
+      > #{$_label-item}:not(#{$_sized}) {
         @include typescale(map.get($s, label));
+      }
+
+      > .icon-button:not(#{$_sized}) {
+        @include icon-button-size($name);
+      }
+
+      > .icon-button.narrow:not(#{$_sized}) {
+        --md-comp-icon-button-leading-space: #{map.get(map.get($icon-button-sizes, $name), narrow)};
+        --md-comp-icon-button-trailing-space: #{map.get(map.get($icon-button-sizes, $name), narrow)};
+      }
+
+      > .icon-button.wide:not(#{$_sized}) {
+        --md-comp-icon-button-leading-space: #{map.get(map.get($icon-button-sizes, $name), wide)};
+        --md-comp-icon-button-trailing-space: #{map.get(map.get($icon-button-sizes, $name), wide)};
       }
     }
   }
 
   > #{$_item} {
-    transition: padding .2s ease-out, width .2s ease-out,
-      border-radius .2s ease-out, background-color .2s ease-out;
+    position: relative;
+    transition:
+      width 200ms var(--md-comp-button-group-motion),
+      border-radius 200ms var(--md-comp-button-group-motion),
+      background-color 200ms ease-out;
   }
 
-  // Pressing an item in a standard group widens it. M3 compresses the two
-  // neighbours by the same amount so the group's own width never changes;
-  // that needs each item's measured width, which is script.
-  //
-  // ponytail: the grow is 15% of the item's *height* - exact for a `.circle`,
-  // whose width is its height, and close for a label - and the items after it
-  // slide rather than compress. Measure and compress in JS if a group ever
-  // sits in a fixed-width row where the slide is visible.
-  &:not(.connected) > #{$_item}:active {
-    --_grow: calc(
-      var(--md-comp-filled-button-container-height) *
-        var(--md-comp-button-group-pressed-item-width-multiplier) / 2
+  // Every item owns a centered 48dp minimum hit target. For M/L/XL this is a
+  // no-op because the visible container already exceeds it; the unconditional
+  // rule also covers a default-small group and explicit XS/S child overrides.
+  > #{$_item}::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    min-width: 48px;
+    min-height: 48px;
+    translate: -50% -50%;
+  }
+
+  &:not(.connected) > #{$_item} {
+    --_corner: var(--md-comp-button-group-item-shape-round);
+    border-radius: var(--_corner);
+  }
+
+  &.square:not(.connected) > #{$_item} {
+    --_corner: var(--md-comp-button-group-item-shape-square);
+  }
+
+  &:not(.connected) > #{$_item}[aria-pressed=true] {
+    --_corner: var(--md-comp-button-group-item-shape-square);
+  }
+
+  &.square:not(.connected) > #{$_item}[aria-pressed=true] {
+    --_corner: var(--md-comp-button-group-item-shape-round);
+  }
+
+  // Toggle-button colors come from md.comp.button.<style>.{unselected,selected}.
+  // Shape and the filled icon below provide two non-color selection cues.
+  > #{$_label-item}#{$_filled-item}[aria-pressed=false],
+  > .icon-button.filled[aria-pressed=false] {
+    --_toggle-container-color: var(--md-sys-color-surface-container);
+    --_toggle-state-color: var(--md-sys-color-on-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}#{$_filled-item}[aria-pressed=true],
+  > .icon-button.filled[aria-pressed=true] {
+    --_toggle-container-color: var(--md-sys-color-primary);
+    --_toggle-state-color: var(--md-sys-color-on-primary);
+    color: var(--md-sys-color-on-primary);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}.tonal[aria-pressed=false],
+  > .icon-button.tonal[aria-pressed=false] {
+    --_toggle-container-color: var(--md-sys-color-secondary-container);
+    --_toggle-state-color: var(--md-sys-color-on-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}.tonal[aria-pressed=true],
+  > .icon-button.tonal[aria-pressed=true] {
+    --_toggle-container-color: var(--md-sys-color-secondary);
+    --_toggle-state-color: var(--md-sys-color-on-secondary);
+    color: var(--md-sys-color-on-secondary);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}.outlined[aria-pressed=false],
+  > .icon-button.outlined[aria-pressed=false] {
+    --_toggle-container-color: transparent;
+    --_toggle-state-color: var(--md-sys-color-on-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}.outlined[aria-pressed=true],
+  > .icon-button.outlined[aria-pressed=true] {
+    --_toggle-container-color: var(--md-sys-color-inverse-surface);
+    --_toggle-state-color: var(--md-sys-color-inverse-on-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}.elevated[aria-pressed=false] {
+    --_toggle-container-color: var(--md-sys-color-surface-container-low);
+    --_toggle-state-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-primary);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_label-item}.elevated[aria-pressed=true] {
+    --_toggle-container-color: var(--md-sys-color-primary);
+    --_toggle-state-color: var(--md-sys-color-on-primary);
+    color: var(--md-sys-color-on-primary);
+    background-color: var(--_toggle-container-color);
+  }
+
+  > #{$_toggle-item}[aria-pressed]:hover {
+    background-color: color-mix(
+      in oklab,
+      var(--_toggle-state-color) state-opacity("hover"),
+      var(--_toggle-container-color)
     );
   }
 
-  // A label button is as wide as its insets make it, so it grows by them.
-  &:not(.connected) > #{$_item}:not(.circle):active {
-    padding-inline:
-      calc(var(--md-comp-filled-button-leading-space) + var(--_grow))
-      calc(var(--md-comp-filled-button-trailing-space) + var(--_grow));
+  > #{$_toggle-item}[aria-pressed]:focus {
+    background-color: color-mix(
+      in oklab,
+      var(--_toggle-state-color) state-opacity("focus"),
+      var(--_toggle-container-color)
+    );
   }
 
-  // A `.circle` states its own width and has no insets to grow - padding would
-  // squeeze the icon inside the same box rather than widen it.
-  &:not(.connected) > #{$_item}.circle:active {
-    width: calc(
-      var(--md-comp-filled-button-container-height) + 2 * var(--_grow)
+  > #{$_toggle-item}[aria-pressed]:active {
+    background-color: color-mix(
+      in oklab,
+      var(--_toggle-state-color) state-opacity("pressed"),
+      var(--_toggle-container-color)
     );
+  }
+
+  > #{$_label-item}#{$_filled-item}[aria-pressed]:is(:disabled, [disabled], .disabled),
+  > #{$_label-item}:is(.tonal, .elevated)[aria-pressed]:is(:disabled, [disabled], .disabled),
+  > .icon-button:is(.filled, .tonal)[aria-pressed]:is(:disabled, [disabled], .disabled),
+  > #{$_label-item}.outlined[aria-pressed=true]:is(:disabled, [disabled], .disabled),
+  > .icon-button.outlined[aria-pressed=true]:is(:disabled, [disabled], .disabled) {
+    @include _disabled-toggle;
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
+    border-color: transparent;
+  }
+
+  > #{$_label-item}.outlined[aria-pressed=false]:is(:disabled, [disabled], .disabled),
+  > .icon-button.outlined[aria-pressed=false]:is(:disabled, [disabled], .disabled) {
+    @include _disabled-toggle;
+    background-color: transparent;
+    border-color: var(--md-sys-color-outline-variant);
+  }
+
+  > #{$_item}[aria-pressed=true] > #{$icon} {
+    --md-icon-fill: 1;
+  }
+
+  // ButtonGroup measures the pressed item and takes its 15% growth from the
+  // immediate neighbors, keeping the standard group's total width stable.
+  // CSS owns only the simultaneous shape change.
+  &:not(.connected) > #{$_item}:active,
+  &.square:not(.connected) > #{$_item}[aria-pressed=true]:active {
+    --_corner: var(--md-comp-button-group-pressed-item-shape);
   }
 
   // Connected. Emitted after the size rules on purpose: `.button-group.medium`
@@ -143,6 +286,9 @@ $_connected-corners: (
     --md-comp-button-group-container-shape: 9999px;
     --md-comp-button-group-inner-corner-corner-size: 8px;
     --md-comp-button-group-pressed-inner-corner-corner-size: 4px;
+    --md-comp-button-group-selected-inner-corner-corner-size: 50%;
+
+    width: 100%;
 
     @each $name, $c in $_connected-corners {
       &.#{$name} {
@@ -151,13 +297,28 @@ $_connected-corners: (
       }
     }
 
+    &.square {
+      --md-comp-button-group-container-shape: var(--md-comp-button-group-inner-corner-corner-size);
+    }
+
+    > #{$_item} {
+      min-width: 48px;
+    }
+
     // The corner goes through a variable so that pressing an item changes one
     // value rather than restating `border-radius`. A shorthand under `:active`
     // would take the end items' round outer corners with it.
     > #{$_item} {
       --_corner: var(--md-comp-button-group-inner-corner-corner-size);
+      --_outer-corner: var(--md-comp-button-group-container-shape);
 
+      flex: 1 1 0;
       border-radius: var(--_corner);
+
+      &[aria-pressed=true] {
+        --_corner: var(--md-comp-button-group-selected-inner-corner-corner-size);
+        --_outer-corner: var(--md-comp-button-group-selected-inner-corner-corner-size);
+      }
 
       &:active {
         --_corner: var(--md-comp-button-group-pressed-inner-corner-corner-size);
@@ -165,13 +326,13 @@ $_connected-corners: (
 
       // Logical, so the ends of the row are the ends of the row in RTL too.
       &:first-child {
-        border-start-start-radius: var(--md-comp-button-group-container-shape);
-        border-end-start-radius: var(--md-comp-button-group-container-shape);
+        border-start-start-radius: var(--_outer-corner);
+        border-end-start-radius: var(--_outer-corner);
       }
 
       &:last-child {
-        border-start-end-radius: var(--md-comp-button-group-container-shape);
-        border-end-end-radius: var(--md-comp-button-group-container-shape);
+        border-start-end-radius: var(--_outer-corner);
+        border-end-end-radius: var(--_outer-corner);
       }
     }
   }
