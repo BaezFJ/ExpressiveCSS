@@ -112,3 +112,14 @@ $button-sizes: (
   "large": (height: 96px, icon: 32px, space: 48px, gap: 12px, outline: 2px, label: "headline-small"),
   "xlarge": (height: 136px, icon: 40px, space: 64px, gap: 16px, outline: 3px, label: "headline-large"),
 );
+
+// Icon-button geometry is shared with button groups. A group-size class must
+// reach both common buttons and icon buttons without asking authors to repeat
+// the size on every child.
+$icon-button-sizes: (
+  "xsmall": (height: 32px, icon: 20px, space: 6px, narrow: 4px, wide: 10px, square: 12px, pressed: 8px, outline: 1px),
+  "small": (height: 40px, icon: 24px, space: 8px, narrow: 4px, wide: 14px, square: 12px, pressed: 8px, outline: 1px),
+  "medium": (height: 56px, icon: 24px, space: 16px, narrow: 12px, wide: 24px, square: 16px, pressed: 12px, outline: 1px),
+  "large": (height: 96px, icon: 32px, space: 32px, narrow: 16px, wide: 48px, square: 28px, pressed: 16px, outline: 2px),
+  "xlarge": (height: 136px, icon: 40px, space: 48px, narrow: 32px, wide: 72px, square: 28px, pressed: 16px, outline: 3px),
+);

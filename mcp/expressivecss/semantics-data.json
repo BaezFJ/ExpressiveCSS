@@ -206,7 +206,7 @@
       },
       "button-groups": {
         "status": "enforced",
-        "note": "Added with the button group component (#41). A group of related buttons that read as one control without becoming one: each item is its own Tab stop and does its own thing, so the container declares no role at all. `toolbar` is rejected rather than withheld - Toolbar's case is a keyboard model that has not been written yet, this one is a component that is not a composite widget and does not want to be. A group that needs a name takes `role=\"group\"` with an `aria-label`, which promises no keyboard contract to break. Selection is absent for the same reason: a <button> holds no checked state, and the M3 connected group's selected shape belongs to `.segmented-button`, which is a <fieldset> of real controls.",
+        "note": "Material 3 Expressive button groups support action buttons and opt-in toggle-button selection. ButtonGroup redistributes standard-group width during press after AutoInit(). Every item remains a native Tab stop; the container is not a composite widget and must not claim toolbar or radiogroup behavior. Named clusters use role=\"group\". Selection groups use data-selection=\"single|multiple\", direct native buttons, and aria-pressed; ButtonGroup owns subsequent state changes.",
         "rejects": {
           "rejected_role": "toolbar",
           "because": "its buttons are independent commands reached with Tab - the group is a visual grouping, not a composite widget, so there is no arrow-key model to implement and none to promise",
@@ -228,18 +228,82 @@
             "message": "Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class=\"button\" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both."
           },
           {
-            "id": "button-group-item-is-not-an-icon-button",
+            "id": "button-group-items-have-containers",
             "kind": "forbid",
-            "selector": ".button-group > .icon-button",
+            "selector": ".button-group > :is(button, a.button).text",
             "fragmentSafe": true,
-            "message": "An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class=\"button circle\">, which the group sizes like any other."
+            "message": "Material warns against text buttons in a group because they have no visible container for the shape interaction. Use filled, tonal, outlined, or elevated buttons."
           },
           {
-            "id": "button-group-selection-is-not-authored",
+            "id": "button-group-icon-items-have-containers",
             "kind": "forbid",
-            "selector": ".button-group :is([aria-checked], [aria-selected], [aria-pressed])",
+            "selector": ".button-group > .icon-button:not(.filled):not(.tonal):not(.outlined)",
             "fragmentSafe": true,
-            "message": "A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself."
+            "message": "Material warns against standard icon buttons in a group because they have no visible container for the shape interaction. Use a filled, tonal, or outlined icon button."
+          },
+          {
+            "id": "button-group-selection-mode-is-valid",
+            "kind": "forbid",
+            "selector": ".button-group[data-selection]:not([data-selection=\"single\"]):not([data-selection=\"multiple\"])",
+            "fragmentSafe": true,
+            "message": "ButtonGroup supports data-selection=\"single\" or data-selection=\"multiple\". Any other value exposes toggle state without a defined selection model."
+          },
+          {
+            "id": "button-group-required-needs-selection",
+            "kind": "forbid",
+            "selector": ".button-group[data-selection-required]:not([data-selection])",
+            "fragmentSafe": true,
+            "message": "data-selection-required only has meaning on a single- or multiple-selection ButtonGroup."
+          },
+          {
+            "id": "button-group-connected-is-selectable",
+            "kind": "forbid",
+            "selector": ".button-group.connected:not([data-selection])",
+            "fragmentSafe": true,
+            "message": "Material connected button groups contain toggleable choices. Add data-selection=\"single|multiple\", or use the standard group for one-shot actions."
+          },
+          {
+            "id": "button-group-selection-items-are-buttons",
+            "kind": "forbid",
+            "selector": ".button-group[data-selection] > :not(button)",
+            "fragmentSafe": true,
+            "message": "Selection items are native buttons. Links navigate and cannot represent toggle-button state."
+          },
+          {
+            "id": "button-group-selection-button-type",
+            "kind": "require-attr",
+            "selector": ".button-group[data-selection] > button",
+            "attr": "type",
+            "equals": "button",
+            "message": "A selection button inside a form must not submit it; set type=\"button\"."
+          },
+          {
+            "id": "button-group-selection-state-is-pressed",
+            "kind": "require-attr",
+            "selector": ".button-group[data-selection] > button",
+            "attr": "aria-pressed",
+            "message": "Author each toggle button's initial aria-pressed value. ButtonGroup maintains that state after initialization."
+          },
+          {
+            "id": "button-group-selection-state-is-boolean",
+            "kind": "forbid",
+            "selector": ".button-group[data-selection] > button[aria-pressed]:not([aria-pressed=\"true\"]):not([aria-pressed=\"false\"])",
+            "fragmentSafe": true,
+            "message": "A toggle button's initial aria-pressed value is true or false; mixed is not a Button Group state."
+          },
+          {
+            "id": "button-group-selection-does-not-use-choice-state",
+            "kind": "forbid",
+            "selector": ".button-group[data-selection] > :is([aria-checked], [aria-selected])",
+            "fragmentSafe": true,
+            "message": "These are toggle buttons, not radios, checkboxes, options, or tabs. Expose their state with aria-pressed."
+          },
+          {
+            "id": "button-group-action-does-not-claim-selection",
+            "kind": "forbid",
+            "selector": ".button-group:not([data-selection]) > [aria-pressed]",
+            "fragmentSafe": true,
+            "message": "aria-pressed requires ButtonGroup selection behavior. Add data-selection=\"single|multiple\" or remove the toggle state."
           }
         ]
       },

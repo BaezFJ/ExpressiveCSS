@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "standard", label: "Standard" },
   { id: "connected", label: "Connected" },
+  { id: "selection", label: "Selection" },
   { id: "sizes", label: "Sizes" },
   { id: "semantics", label: "Semantics" },
   { id: "tokens", label: "Tokens" },
@@ -19,258 +20,254 @@ const S = defineSections([
 <DocsLayout page="button_groups">
 <PageBody sections={S}>
   <Section {...S.anatomy}>
-        <p class="flow-text">
-          A button group is a row of related actions that reads as one control
-          without becoming one — a formatting row, a set of view actions, a
-          player's transport. Each button stays its own button.
-        </p>
-        <p>
-          The root is a <code>&lt;div class="button-group"&gt;</code> and the
-          items are ordinary
-          <a href={route('buttons')}>buttons</a>, written directly
-          inside it — add <code>circle</code> to an item for the icon-only
-          shape Material draws a group with most often. There is no plugin and
-          nothing to initialize.
-        </p>
-        <div>
-          <div class="button-group">
-            <button class="button tonal">
-              <span class="material-symbols" aria-hidden="true">format_bold</span>
-              Bold
-            </button>
-            <button class="button tonal">
-              <span class="material-symbols" aria-hidden="true">format_italic</span>
-              Italic
-            </button>
-            <button class="button tonal">
-              <span class="material-symbols" aria-hidden="true">format_underlined</span>
-              Underline
-            </button>
-          </div>
-        </div>
+    <p class="flow-text">
+      A button group places related buttons in one visual cluster. Use it for
+      commands such as playback controls or for toggle buttons such as text
+      formatting. Each item remains a native button and a Tab stop.
+    </p>
+    <p>
+      The root is a <code>&lt;div class="button-group"&gt;</code>. Common
+      <a href={route("buttons")}>buttons</a> and
+      <a href={route("icon_buttons")}>icon buttons</a> can be direct children.
+      <code>Expressive.AutoInit()</code> keeps standard-group width stable while
+      the pressed item grows; <code>data-selection</code> additionally enables
+      managed toggle state.
+    </p>
+    <div>
+      <div class="button-group" data-selection="multiple" role="group" aria-label="Text formatting">
+        <button type="button" class="button tonal" aria-pressed="false">
+          <span class="material-symbols" aria-hidden="true">format_bold</span>
+          Bold
+        </button>
+        <button type="button" class="button tonal" aria-pressed="false">
+          <span class="material-symbols" aria-hidden="true">format_italic</span>
+          Italic
+        </button>
+        <button type="button" class="button tonal" aria-pressed="false">
+          <span class="material-symbols" aria-hidden="true">format_underlined</span>
+          Underline
+        </button>
+      </div>
+    </div>
 <Code code={`
-<div class="button-group">
-  <button class="button tonal">
+<div class="button-group" data-selection="multiple"
+     role="group" aria-label="Text formatting">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_bold</span>
     Bold
   </button>
-  <button class="button tonal">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_italic</span>
     Italic
   </button>
-  <button class="button tonal">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_underlined</span>
     Underline
   </button>
 </div>
 `} />
-        <p>
-          The group is a container of independent buttons: each one is its own
-          Tab stop and does its own thing. It is not a choice — nothing in a
-          group is selected. When two to five options answer one question, that
-          is a
-          <a href={route('segmented_buttons')}>segmented button</a>,
-          whose <code>&lt;input&gt;</code> holds the answer.
-        </p>
+    <p>
+      Use a plain group for commands. Add selection behavior only when pressing
+      a button toggles an on/off state. Use a
+      <a href={route("segmented_buttons")}>segmented button</a> when two to five
+      choices form a compact form field whose value belongs in radios or
+      checkboxes.
+    </p>
   </Section>
+
   <Section {...S.standard}>
-        <p>
-          The default. Every button keeps its own round shape and the gap
-          between them closes as they grow — 18dp at the smallest size down to
-          8dp at the three largest, which is Material's own ladder. Press one
-          and it widens; the buttons beside it move over.
-        </p>
-        <div>
-          <div class="button-group">
-            <button class="button circle" aria-label="Previous track">
-              <span class="material-symbols" aria-hidden="true">skip_previous</span>
-            </button>
-            <button class="button circle" aria-label="Play">
-              <span class="material-symbols" aria-hidden="true">play_arrow</span>
-            </button>
-            <button class="button circle" aria-label="Next track">
-              <span class="material-symbols" aria-hidden="true">skip_next</span>
-            </button>
-          </div>
-        </div>
+    <p>
+      Standard is the default. Items keep separate shapes, and the gap closes
+      as the size grows: 18dp at <code>xsmall</code>, 12dp at
+      <code>small</code>, and 8dp from <code>medium</code> through
+      <code>xlarge</code>. Pressing an item widens it by 15% of its measured
+      width and morphs its corners toward the square shape for that size. The
+      immediate neighbors provide the width, so the group's outer width stays
+      fixed.
+    </p>
+    <div>
+      <div class="button-group" role="group" aria-label="Playback">
+        <button type="button" class="icon-button filled" aria-label="Previous track">
+          <span class="material-symbols" aria-hidden="true">skip_previous</span>
+        </button>
+        <button type="button" class="icon-button filled" aria-label="Play">
+          <span class="material-symbols" aria-hidden="true">play_arrow</span>
+        </button>
+        <button type="button" class="icon-button filled" aria-label="Next track">
+          <span class="material-symbols" aria-hidden="true">skip_next</span>
+        </button>
+      </div>
+    </div>
 <Code code={`
-<div class="button-group">
-  <button class="button circle" aria-label="Previous track">
+<div class="button-group" role="group" aria-label="Playback">
+  <button type="button" class="icon-button filled" aria-label="Previous track">
     <span class="material-symbols" aria-hidden="true">skip_previous</span>
   </button>
-  <button class="button circle" aria-label="Play">
+  <button type="button" class="icon-button filled" aria-label="Play">
     <span class="material-symbols" aria-hidden="true">play_arrow</span>
   </button>
-  <button class="button circle" aria-label="Next track">
+  <button type="button" class="icon-button filled" aria-label="Next track">
     <span class="material-symbols" aria-hidden="true">skip_next</span>
   </button>
 </div>
 `} />
   </Section>
+
   <Section {...S.connected}>
-        <p>
-          Add <code>connected</code>. The items sit 2dp apart at every size,
-          the two ends of the row stay fully round and the joins in the middle
-          are squared off. Pressing an item squares its inner corners further
-          — 8dp to 4dp at the three smaller sizes, and more at the two large
-          ones, where the corners are larger to begin with.
-        </p>
-        <div>
-          <div class="button-group connected">
-            <button class="button tonal circle" aria-label="Align left">
-              <span class="material-symbols" aria-hidden="true">format_align_left</span>
-            </button>
-            <button class="button tonal circle" aria-label="Align center">
-              <span class="material-symbols" aria-hidden="true">format_align_center</span>
-            </button>
-            <button class="button tonal circle" aria-label="Align right">
-              <span class="material-symbols" aria-hidden="true">format_align_right</span>
-            </button>
-          </div>
-        </div>
+    <p>
+      Add <code>connected</code> to a selection group; do not use the connected
+      treatment for one-shot actions. The group fills its container with equal
+      items separated by 2dp. The outer ends remain round while the joins are
+      squared off. The live M3 measurement keeps the <code>xsmall</code> join
+      at 4dp; pressing <code>small</code> and <code>medium</code> changes their
+      inner corners from 8dp to 4dp. The larger pairs are 16dp to 12dp at
+      <code>large</code> and 20dp to 16dp at <code>xlarge</code>.
+    </p>
+    <div>
+      <div class="button-group connected" data-selection="single" data-selection-required role="group" aria-label="Text alignment">
+        <button type="button" class="icon-button tonal" aria-label="Align left" aria-pressed="true">
+          <span class="material-symbols" aria-hidden="true">format_align_left</span>
+        </button>
+        <button type="button" class="icon-button tonal" aria-label="Align center" aria-pressed="false">
+          <span class="material-symbols" aria-hidden="true">format_align_center</span>
+        </button>
+        <button type="button" class="icon-button tonal" aria-label="Align right" aria-pressed="false">
+          <span class="material-symbols" aria-hidden="true">format_align_right</span>
+        </button>
+      </div>
+    </div>
 <Code code={`
-<div class="button-group connected">
-  <button class="button tonal circle" aria-label="Align left">
+<div class="button-group connected"
+     data-selection="single"
+     data-selection-required
+     role="group"
+     aria-label="Text alignment">
+  <button type="button" class="icon-button tonal"
+          aria-label="Align left" aria-pressed="true">
     <span class="material-symbols" aria-hidden="true">format_align_left</span>
   </button>
-  <button class="button tonal circle" aria-label="Align center">
+  <button type="button" class="icon-button tonal"
+          aria-label="Align center" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_align_center</span>
   </button>
-  <button class="button tonal circle" aria-label="Align right">
+  <button type="button" class="icon-button tonal"
+          aria-label="Align right" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_align_right</span>
   </button>
 </div>
 `} />
-        <p>
-          An <a href={route('icon_buttons')}>icon button</a> is not an
-          item. It is its own component — its own size ladder, its own insets
-          and its own pressed shape, all set on the element itself — so a group
-          can neither size it nor reshape it without fighting rules it already
-          has. <code>&lt;button class="button circle"&gt;</code> is the
-          icon-only item, and the group sizes it like any other.
-        </p>
-        <p>
-          A connected group has no selected state. Material's connected group
-          draws one, and holding it takes a control that remembers the answer
-          — which is the
-          <a href={route('segmented_buttons')}>segmented button</a>,
-          a fieldset of radios or checkboxes. A row of
-          <code>&lt;button&gt;</code>s has nothing to read it off.
-        </p>
   </Section>
+
+  <Section {...S.selection}>
+    <p>
+      A selection group contains toggle buttons. Add
+      <code>data-selection="single"</code> when at most one item may be on, or
+      <code>data-selection="multiple"</code> for independent toggles. Add
+      <code>data-selection-required</code> when at least one must remain on.
+      Give every item its initial <code>aria-pressed</code> value;
+      <code>ButtonGroup</code> maintains it after <code>AutoInit()</code>.
+    </p>
+<Code code={`
+<div class="button-group connected"
+     data-selection="multiple"
+     role="group"
+     aria-label="Text formatting">
+  <button type="button" class="button filled" aria-pressed="true">Bold</button>
+  <button type="button" class="button filled" aria-pressed="false">Italic</button>
+  <button type="button" class="button filled" aria-pressed="false">Underline</button>
+</div>
+
+<script>
+  Expressive.AutoInit();
+</script>
+`} />
+    <p>
+      Selection changes color, shape, and icon fill, so color is not the only
+      cue. Native buttons provide Enter and Space activation; all items remain
+      in the Tab order. Keep visible labels when space allows. Give an unfamiliar
+      icon-only item a tooltip as well as an <code>aria-label</code>.
+    </p>
+  </Section>
+
   <Section {...S.sizes}>
-        <p>
-          The same five sizes as a button — <code>xsmall</code>,
-          <code>small</code> (the default), <code>medium</code>,
-          <code>large</code>, <code>xlarge</code> — but written once, on the
-          group. The group sets the button tokens its items inherit, so the
-          buttons inside need no size class of their own; one that carries one
-          anyway still wins for itself.
-        </p>
-        <div>
-          <div class="button-group connected xsmall">
-            <button class="button tonal">One</button>
-            <button class="button tonal">Two</button>
-            <button class="button tonal">Three</button>
-          </div>
-          <div class="button-group connected small">
-            <button class="button tonal">One</button>
-            <button class="button tonal">Two</button>
-            <button class="button tonal">Three</button>
-          </div>
-          <div class="button-group connected medium">
-            <button class="button tonal">One</button>
-            <button class="button tonal">Two</button>
-            <button class="button tonal">Three</button>
-          </div>
-          <div class="button-group connected large">
-            <button class="button tonal">One</button>
-            <button class="button tonal">Two</button>
-          </div>
-        </div>
-        <p>
-          The same class on a standard group moves its gap too — 18dp at
-          <code>xsmall</code>, 12dp at <code>small</code>, 8dp from
-          <code>medium</code> up. <code>xlarge</code> is the last rung, 136dp
-          tall, for a group that is the only thing on a screen.
-        </p>
-        <div>
-          <div class="button-group xsmall">
-            <button class="button tonal">One</button>
-            <button class="button tonal">Two</button>
-          </div>
-          <div class="button-group medium">
-            <button class="button tonal">One</button>
-            <button class="button tonal">Two</button>
-          </div>
-        </div>
+    <p>
+      Put <code>xsmall</code>, <code>small</code> (the default),
+      <code>medium</code>, <code>large</code>, or <code>xlarge</code> on the
+      group. Common and icon buttons inherit the matching 32dp, 40dp, 56dp,
+      96dp, or 136dp geometry. An explicit size on a child still wins. The
+      32dp and 40dp visual sizes keep a minimum 48dp interaction target.
+    </p>
+    <div>
+      <div class="button-group xsmall">
+        <button type="button" class="button tonal">One</button>
+        <button type="button" class="button tonal">Two</button>
+        <button type="button" class="button tonal">Three</button>
+      </div>
+      <div class="button-group medium">
+        <button type="button" class="button tonal">One</button>
+        <button type="button" class="button tonal">Two</button>
+        <button type="button" class="button tonal">Three</button>
+      </div>
+      <div class="button-group large">
+        <button type="button" class="button tonal">One</button>
+        <button type="button" class="button tonal">Two</button>
+      </div>
+    </div>
 <Code code={`
-<div class="button-group connected medium">
-  <button class="button tonal">One</button>
-  <button class="button tonal">Two</button>
-  <button class="button tonal">Three</button>
+<div class="button-group medium">
+  <button type="button" class="button tonal">One</button>
+  <button type="button" class="button tonal">Two</button>
+  <button type="button" class="button tonal">Three</button>
 </div>
 `} />
   </Section>
+
   <Section {...S.semantics}>
-        <p>
-          The group declares no role. A
-          <a href="https://github.com/BaezFJ/ExpressiveCSS/blob/master/SEMANTICS.md">composite role</a>
-          such as <code>toolbar</code> promises arrow-key navigation, and this
-          component <em>rejects</em> it rather than withholding it: its buttons
-          are independent commands reached with Tab, so there is no keyboard
-          model to implement and none to promise.
-        </p>
-        <p>
-          When the group needs a name — several groups on one screen, or a row
-          whose purpose is not obvious from its buttons — give it
-          <code>role="group"</code> and an <code>aria-label</code>. That role
-          is a grouping and nothing more, so it promises no keyboard contract
-          to break.
-        </p>
-<Code code={`
-<div class="button-group" role="group" aria-label="Text style">
-  <button class="button circle" aria-label="Bold">
-    <span class="material-symbols" aria-hidden="true">format_bold</span>
-  </button>
-  <button class="button circle" aria-label="Italic">
-    <span class="material-symbols" aria-hidden="true">format_italic</span>
-  </button>
-</div>
-`} />
-        <p>
-          Items are controls, written as direct children: a
-          <code>&lt;button&gt;</code>, or an
-          <code>&lt;a class="button" href&gt;</code> when it navigates. A bare
-          <code>&lt;a href&gt;</code> is refused — it passes for a control and
-          renders as a link, reaching none of the group's corners, press
-          behaviour or inherited size. A wrapper element is refused too — the gap
-          and the connected corners are written against direct children, so a
-          nested <code>&lt;div&gt;</code> loses both. Every icon-only item
-          needs its own <code>aria-label</code>, since the icon inside it is
-          <code>aria-hidden</code>.
-        </p>
+    <p>
+      A button group is not a composite widget. Do not use
+      <code>role="toolbar"</code>, <code>radiogroup</code>, or a roving
+      <code>tabindex</code>: items are reached with Tab. When the cluster needs
+      a name, use <code>role="group"</code> with <code>aria-label</code> or
+      <code>aria-labelledby</code>. This role adds no arrow-key contract.
+    </p>
+    <p>
+      Action groups accept a direct <code>&lt;button&gt;</code> or
+      <code>&lt;a class="button" href&gt;</code>. Selection groups accept only
+      direct <code>&lt;button type="button"&gt;</code> items, each with an
+      initial <code>aria-pressed</code>. Links cannot expose toggle state. The
+      native button supplies keyboard activation, and <code>ButtonGroup</code>
+      changes the state on the resulting click.
+    </p>
+    <p>
+      Give every icon-only item an accessible name because its decorative icon
+      is <code>aria-hidden</code>. Avoid a standard icon button when its meaning
+      is not familiar; use a filled, tonal, or outlined container and a tooltip.
+      Reduced-motion preferences remove the width and shape transitions.
+    </p>
   </Section>
+
   <Section {...S.tokens}>
-        <p>
-          Set these on the group, or in a rule of your own that picks out the
-          groups you want to change. The values below are the defaults — a
-          small standard group; the size and variant classes rewrite them.
-        </p>
-        <TokenTable>
-                <tr><td><code>--md-comp-button-group-between-space</code></td><td><code>12px</code></td></tr>
-                <tr><td><code>--md-comp-button-group-pressed-item-width-multiplier</code></td><td><code>.15</code></td></tr>
-                <tr><td><code>--md-comp-button-group-container-shape</code></td><td><code>9999px</code> (connected)</td></tr>
-                <tr><td><code>--md-comp-button-group-inner-corner-corner-size</code></td><td><code>8px</code> (connected)</td></tr>
-                <tr><td><code>--md-comp-button-group-pressed-inner-corner-corner-size</code></td><td><code>4px</code> (connected)</td></tr>
-        </TokenTable>
-        <p>
-          The items are buttons, so their height, insets and colours come from
-          the <a href={route('buttons')}>button</a> tokens, which the
-          group's size class sets for them. Material states the press-time
-          growth as 15% of the item's width; CSS cannot multiply a length by a
-          percentage, so the token holds the same figure as a ratio and the
-          growth is taken from the item's height.
-        </p>
-  </Section></PageBody>
+    <p>
+      Set these properties on the group. The defaults describe a small standard
+      group; size and variant classes replace the values that differ.
+    </p>
+    <TokenTable>
+      <tr><td><code>--md-comp-button-group-between-space</code></td><td><code>12px</code></td></tr>
+      <tr><td><code>--md-comp-button-group-pressed-item-width-multiplier</code></td><td><code>.15</code></td></tr>
+      <tr><td><code>--md-comp-button-group-item-shape-round</code></td><td><code>9999px</code></td></tr>
+      <tr><td><code>--md-comp-button-group-item-shape-square</code></td><td><code>12px</code></td></tr>
+      <tr><td><code>--md-comp-button-group-pressed-item-shape</code></td><td><code>8px</code></td></tr>
+      <tr><td><code>--md-comp-button-group-container-shape</code></td><td><code>9999px</code> (connected)</td></tr>
+      <tr><td><code>--md-comp-button-group-inner-corner-corner-size</code></td><td><code>8px</code> (connected)</td></tr>
+      <tr><td><code>--md-comp-button-group-pressed-inner-corner-corner-size</code></td><td><code>4px</code> (connected)</td></tr>
+      <tr><td><code>--md-comp-button-group-selected-inner-corner-corner-size</code></td><td><code>50%</code> (connected)</td></tr>
+    </TokenTable>
+    <p>
+      Child geometry and colors still come from the button or icon-button token
+      family. Toggle groups map the selected and unselected Material button
+      colors onto <code>aria-pressed</code> and retain hover, focus, pressed,
+      disabled, and focus-ring feedback.
+    </p>
+  </Section>
+</PageBody>
 </DocsLayout>

@@ -46,6 +46,12 @@ const withoutFallback = new Set(
 // so a token that gets wired up cannot be left listed here.
 const UNREAD_ALLOWED = new Map([
   [
+    '--md-comp-button-group-pressed-item-width-multiplier',
+    'read at runtime by ButtonGroup because CSS cannot multiply a measured ' +
+      'item width or redistribute it to adjacent items. It remains a public ' +
+      'component token in the sheet so authors can tune the scripted geometry.',
+  ],
+  [
     '--md-comp-pane-primary-min-width',
     'declared and documented in _panes.scss but applied nowhere. Which pane it ' +
       'should constrain and at which breakpoint is an open design question - ' +

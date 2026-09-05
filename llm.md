@@ -2040,43 +2040,43 @@ The group is a grid of equal columns filling the width it is given, as Material 
 
 ## Button groups
 
-A row of related actions that reads as one control without becoming one — a formatting row, a set of view actions, a player's transport. The root is a `<div class="button-group">` and the items are ordinary buttons written directly inside it; add `circle` to an item for the icon-only shape M3 draws a group with most often. Nothing is scripted and nothing is selected: each item is its own Tab stop and does its own thing. When two to five options answer one question, that is a segmented button, whose `<input>` holds the answer.
+A Material 3 Expressive button group places related commands or toggle buttons in one visual cluster. The root is a `<div class="button-group">`; direct children can be common buttons or `.icon-button` controls. `ButtonGroup` is initialized by `Expressive.AutoInit()` to coordinate standard press widths. Selection management is opt-in through `data-selection`.
 
-An `.icon-button` is *not* an item: it is its own component, with its own size ladder, insets and pressed shape set on the element itself, so a group can neither size nor reshape it without fighting rules it already has. Write `<button class="button circle">` instead.
+Common buttons and icon buttons both inherit group sizing and participate in standard growth and connected shape morphing. Standard press growth is 15% of the item's measured width and is taken from its immediate neighbors, keeping the group's total width stable. An explicit size class on a child overrides the group size. Use a visible container style: filled, tonal, outlined, or elevated for common buttons; filled, tonal, or outlined for icon buttons. Material warns against text buttons and standard icon buttons in groups because their transparent containers hide the shape interaction.
 
-Items are controls and direct children — a `<button>`, or an `<a class="button" href>` when it navigates. A bare `<a href>` is refused: it passes for a control and renders as a link, reaching none of the group's corners, press behaviour or inherited size. A wrapper element around them loses both the gap and the connected corners, which are written against direct children. An icon-only item carries its own `aria-label`, since the icon is `aria-hidden`.
+Action-group items are direct controls: a `<button>`, or an `<a class="button" href>` when it navigates. Selection groups accept only native `<button type="button">` children, each with `aria-pressed`. A wrapper loses the gap and connected corners. Every icon-only item carries its own accessible name because the icon is `aria-hidden`.
 
 ```html
-<div class="button-group">
-  <button class="button tonal">
+<div class="button-group" data-selection="multiple" role="group" aria-label="Text formatting">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_bold</span>
     Bold
   </button>
-  <button class="button tonal">
+  <button type="button" class="button tonal" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_italic</span>
     Italic
   </button>
 </div>
 ```
 
-Standard is the default: every item keeps its own round shape, the gap closes as the buttons grow (18dp at `xsmall` down to 8dp at the three largest), and pressing an item widens it.
+Standard is the default: every item keeps its own separate shape, the gap closes as the buttons grow (18dp at `xsmall`, 12dp at `small`, and 8dp at the three largest), and pressing an item widens it while morphing toward the square shape for its size.
 
-Add `connected` for the second variant. Items sit 2dp apart at every size, the ends of the row stay fully round and the joins are squared off; pressing an item squares its inner corners further — 8dp to 4dp at the three smaller sizes, 16dp to 12dp at `large`, 20dp to 16dp at `xlarge`. A connected group has no selected state: M3 draws one, and holding it takes a control that remembers the answer, which is the segmented button.
+Add `connected` for equal-width toggle items that fill the available width. Connected groups are selection controls, not one-shot action rows, so pair the class with `data-selection`. Items sit 2dp apart at every size; the ends stay round and the joins are squared off. Pressing an item changes its inner corners from 8dp to 4dp at the three smaller sizes, 16dp to 12dp at `large`, and 20dp to 16dp at `xlarge`. Add `square` to use the size-specific inner corner on the outer edge too.
 
 ```html
-<div class="button-group connected">
-  <button class="button tonal circle" aria-label="Align left">
+<div class="button-group connected" data-selection="single" data-selection-required role="group" aria-label="Text alignment">
+  <button type="button" class="icon-button tonal" aria-label="Align left" aria-pressed="true">
     <span class="material-symbols" aria-hidden="true">format_align_left</span>
   </button>
-  <button class="button tonal circle" aria-label="Align center">
+  <button type="button" class="icon-button tonal" aria-label="Align center" aria-pressed="false">
     <span class="material-symbols" aria-hidden="true">format_align_center</span>
   </button>
 </div>
 ```
 
-The five button sizes — `xsmall`, `small` (the default), `medium`, `large`, `xlarge` — are written once, on the group. It sets the button tokens its items inherit, so an item needs no size class of its own; one that carries one anyway still wins for itself.
+The five button sizes — `xsmall`, `small` (the default), `medium`, `large`, `xlarge` — are written once on the group and propagate to common buttons and icon buttons. An explicit child size still wins. The 32dp and 40dp visual controls retain a minimum 48dp interaction target.
 
-The group declares no role. A composite role such as `toolbar` promises arrow-key navigation, and this component *rejects* it rather than withholding it: its buttons are independent commands reached with Tab. When the group needs a name, give it `role="group"` and an `aria-label` — a grouping and nothing more, so it promises no keyboard contract.
+The group is not a composite widget. A role such as `toolbar` promises arrow-key navigation this component does not implement. Items are reached with Tab; native toggle buttons activate with Space or Enter. When the group needs a name, use `role="group"` with `aria-label` or `aria-labelledby`.
 
 ```html
 <div class="button-group medium" role="group" aria-label="Text style">
@@ -2089,11 +2089,15 @@ The group declares no role. A composite role such as `toolbar` promises arrow-ke
 | --- | --- |
 | `--md-comp-button-group-between-space` | 12px |
 | `--md-comp-button-group-pressed-item-width-multiplier` | .15 |
+| `--md-comp-button-group-item-shape-round` | 9999px |
+| `--md-comp-button-group-item-shape-square` | 12px |
+| `--md-comp-button-group-pressed-item-shape` | 8px |
 | `--md-comp-button-group-container-shape` | 9999px (connected) |
 | `--md-comp-button-group-inner-corner-corner-size` | 8px (connected) |
 | `--md-comp-button-group-pressed-inner-corner-corner-size` | 4px (connected) |
+| `--md-comp-button-group-selected-inner-corner-corner-size` | 50% (connected) |
 
-The items are buttons, so their height, insets and colours come from the button tokens, which the group's size class sets for them. M3 states the press-time growth as 15% of the item's width; CSS cannot multiply a length by a percentage, so the token holds the same figure as a ratio and the growth is taken from the item's height, and the items beside the pressed one slide rather than compress.
+For selection, use `data-selection="single"` or `data-selection="multiple"`; add `data-selection-required` when at least one item must remain on. Author each item's initial `aria-pressed="true|false"`, then call `Expressive.AutoInit()`. Selection changes color, shape, and icon fill, so color is not the only cue. Toggle colors retain hover, focus, pressed, disabled, and focus-ring feedback. Reduced-motion preferences remove width and corner transitions.
 
 ---
 

@@ -7,6 +7,7 @@
 export { Autocomplete } from "./autocomplete";
 export { AppBar } from "./appBar";
 export { FloatingActionButton } from "./buttons";
+export { ButtonGroup } from "./buttonGroup";
 export { Cards } from "./cards";
 export { ExpandingCard } from "./expandingCard";
 export { Carousel } from "./carousel";
