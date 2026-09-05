@@ -51,6 +51,42 @@ describe('ButtonGroup selection', () => {
     }
   });
 
+  test('a zero width multiplier disables standard press growth', () => {
+    document.body.innerHTML = `
+      <div class="button-group"
+        style="--md-comp-button-group-pressed-item-width-multiplier: 0">
+        <button type="button" class="button filled">One</button>
+        <button type="button" class="button filled">Two</button>
+      </div>`;
+    const group = document.querySelector('.button-group');
+    const buttons = [...group.querySelectorAll('button')];
+    buttons.forEach((button) => {
+      button.getBoundingClientRect = () => ({
+        width: 100,
+        height: 40,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        x: 0,
+        y: 0,
+        toJSON() {}
+      });
+    });
+
+    Expressive.AutoInit();
+    const instance = Expressive.ButtonGroup.getInstance(group);
+
+    try {
+      assert.ok(instance);
+      fire(buttons[0], 'pointerdown');
+      assert.deepEqual(buttons.map((button) => button.style.width), ['', '']);
+    } finally {
+      fire(document, 'pointerup');
+      instance?.destroy();
+    }
+  });
+
   test('multiple selection toggles aria-pressed on activation', () => {
     document.body.innerHTML = `
       <div class="button-group connected" data-selection="multiple">

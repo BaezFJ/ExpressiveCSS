@@ -43,6 +43,14 @@ const CONNECTED_CORNERS = {
   xlarge: { inner: '20px', pressed: '16px' }
 };
 
+const ITEM_SHAPES = {
+  xsmall: { square: '12px', pressed: '8px' },
+  small: { square: '12px', pressed: '8px' },
+  medium: { square: '16px', pressed: '12px' },
+  large: { square: '28px', pressed: '16px' },
+  xlarge: { square: '28px', pressed: '16px' }
+};
+
 const ICON_WIDTH_SPACES = {
   xsmall: { narrow: '4px', wide: '10px' },
   small: { narrow: '4px', wide: '14px' },
@@ -263,6 +271,22 @@ describe('Button group shape morph', () => {
       /--md-comp-filled-button-icon-size:\s*24px/);
     assert.equal(rules.filter((r) => r.selector === `.button-group.medium > ${item}`).length, 0);
   });
+
+  for (const [size, shape] of Object.entries(ITEM_SHAPES)) {
+    test(`an explicit ${size} item overrides inherited group shape tokens`, () => {
+      const explicit = ruleFor(`.button-group > ${item}.${size}`);
+      const connected = CONNECTED_CORNERS[size];
+      assert.ok(explicit, `no explicit ${size} item shape rule`);
+      assert.match(explicit,
+        new RegExp(`--md-comp-button-group-item-shape-square:\\s*${shape.square}`));
+      assert.match(explicit,
+        new RegExp(`--md-comp-button-group-pressed-item-shape:\\s*${shape.pressed}`));
+      assert.match(explicit,
+        new RegExp(`--md-comp-button-group-inner-corner-corner-size:\\s*${connected.inner}`));
+      assert.match(explicit,
+        new RegExp(`--md-comp-button-group-pressed-inner-corner-corner-size:\\s*${connected.pressed}`));
+    });
+  }
 
   test('a group size reaches icon-button geometry', () => {
     const sized = ':not(.xsmall, .small, .medium, .large, .xlarge)';

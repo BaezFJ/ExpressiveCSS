@@ -193,12 +193,12 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     const activeWidth = rects[activeIndex].width;
     if (activeWidth <= 0) return;
 
-    const multiplier =
-      Number.parseFloat(
-        getComputedStyle(this.el).getPropertyValue(
-          "--md-comp-button-group-pressed-item-width-multiplier",
-        ),
-      ) || 0.15;
+    const parsedMultiplier = Number.parseFloat(
+      getComputedStyle(this.el).getPropertyValue(
+        "--md-comp-button-group-pressed-item-width-multiplier",
+      ),
+    );
+    const multiplier = Number.isFinite(parsedMultiplier) ? parsedMultiplier : 0.15;
     const desiredGrowth = activeWidth * multiplier;
     const neighborIndexes = [activeIndex - 1, activeIndex + 1].filter(
       (index) => index >= 0 && index < items.length,

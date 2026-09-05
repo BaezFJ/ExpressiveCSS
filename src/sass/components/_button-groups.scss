@@ -55,6 +55,8 @@ $_item-shapes: (
 // still emits 8px there; S and M agree at 8px.
 $_connected-corners: (
   "xsmall": (inner: 4px, pressed: 4px),
+  "small": (inner: 8px, pressed: 4px),
+  "medium": (inner: 8px, pressed: 4px),
   "large": (inner: 16px, pressed: 12px),
   "xlarge": (inner: 20px, pressed: 16px),
 );
@@ -118,6 +120,15 @@ $_connected-corners: (
         --md-comp-icon-button-leading-space: #{map.get(map.get($icon-button-sizes, $name), wide)};
         --md-comp-icon-button-trailing-space: #{map.get(map.get($icon-button-sizes, $name), wide)};
       }
+    }
+
+    // Group shape tokens inherit, so an explicitly sized item must rewrite
+    // them on itself just as its button geometry tokens do.
+    > #{$_item}.#{$name} {
+      --md-comp-button-group-item-shape-square: #{map.get(map.get($_item-shapes, $name), square)};
+      --md-comp-button-group-pressed-item-shape: #{map.get(map.get($_item-shapes, $name), pressed)};
+      --md-comp-button-group-inner-corner-corner-size: #{map.get(map.get($_connected-corners, $name), inner)};
+      --md-comp-button-group-pressed-inner-corner-corner-size: #{map.get(map.get($_connected-corners, $name), pressed)};
     }
   }
 
