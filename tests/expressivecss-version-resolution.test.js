@@ -606,6 +606,7 @@ describe('ExpressiveCSS version resolution', () => {
       './mcp/expressivecss',
       '--pack-destination',
       packRoot,
+      '--ignore-scripts',
     ], { cwd: sourceRoot, encoding: 'utf8' });
     assert.equal(packed.status, 0, `${packed.stdout}\n${packed.stderr}`);
     const tarball = (await readdir(packRoot)).find((name) => name.endsWith('.tgz'));

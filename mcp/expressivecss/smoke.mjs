@@ -3,13 +3,15 @@ import { access, mkdir, mkdtemp, readFile, rm, symlink, truncate, writeFile } fr
 import os from 'node:os';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 const packageDir = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 const packageManifest = JSON.parse(await readFile(path.join(packageDir, 'package.json'), 'utf8'));
-const jsdomManifest = JSON.parse(await readFile(path.join(packageDir, 'node_modules', 'jsdom', 'package.json'), 'utf8'));
+const jsdomManifest = JSON.parse(await readFile(require.resolve('jsdom/package.json'), 'utf8'));
 const guideData = JSON.parse(await readFile(path.join(packageDir, 'component-guides.json'), 'utf8'));
 const semanticsData = JSON.parse(await readFile(path.join(packageDir, 'semantics-data.json'), 'utf8'));
 const decisionsData = JSON.parse(await readFile(path.join(packageDir, 'component-decisions.json'), 'utf8'));
