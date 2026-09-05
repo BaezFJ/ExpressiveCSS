@@ -86,6 +86,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",
+    "test:browser": "run-s build:js build:css test:browser:run",
+    "test:browser:run": "node --test tests/*-browser.test.js",
     "test:watch": "node --test --watch",
     "test:visual": "node visual/run.mjs",
     "test:visual:report": "playwright show-report visual/report",

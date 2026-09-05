@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
 
 async function cardState(card) {
   return card.evaluate((el) => ({
@@ -12,7 +13,7 @@ async function cardState(card) {
   }));
 }
 
-test('dragged and picked-up states override simultaneous pointer states', async () => {
+browserTest('dragged and picked-up states override simultaneous pointer states', async () => {
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
@@ -57,7 +58,7 @@ test('dragged and picked-up states override simultaneous pointer states', async 
   }
 });
 
-test('invalid disclosures keep their panels visible and operable', async () => {
+browserTest('invalid disclosures keep their panels visible and operable', async () => {
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage();
@@ -105,7 +106,7 @@ test('invalid disclosures keep their panels visible and operable', async () => {
   }
 });
 
-test('directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint', async () => {
+browserTest('directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint', async () => {
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 600, height: 900 } });
