@@ -469,6 +469,26 @@ describe("Cards reveal", () => {
     instance.destroy();
   });
 
+  test("does not hide a panel when its only trigger is unnamed", () => {
+    document.body.innerHTML = `
+      <article>
+        <button type="button" class="card-reveal-trigger">
+          <span aria-hidden="true">more_vert</span>
+        </button>
+        <aside id="details">Details</aside>
+      </article>`;
+    const el = document.querySelector("article");
+    const panel = el.querySelector("aside");
+    const instance = new Expressive.Cards(el);
+
+    assert.equal(el.classList.contains("card-reveal-initialized"), false);
+    assert.notEqual(panel.inert, true);
+    assert.equal(el.querySelector("button").hasAttribute("aria-expanded"), false);
+    instance.open();
+    assert.equal(instance.isOpen, false);
+    instance.destroy();
+  });
+
   test("destroy preserves panel state when disclosure setup was skipped", () => {
     document.body.innerHTML = `<article><button type="submit" class="card-reveal-trigger">Submit</button><aside id="details" class="open" inert>Details</aside></article>`;
     const el = document.querySelector("article");

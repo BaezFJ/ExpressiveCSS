@@ -22,6 +22,26 @@ export const CARDS_SELECTOR =
 
 const REVEAL_INITIALIZED_CLASS = 'card-reveal-initialized';
 
+function hasAccessibleName(trigger: HTMLButtonElement) {
+  const label = trigger.getAttribute('aria-label');
+  if (label?.trim()) return true;
+
+  const labelledBy = trigger.getAttribute('aria-labelledby');
+  if (labelledBy) {
+    const referencedText = labelledBy
+      .trim()
+      .split(/\s+/)
+      .map((id) => trigger.ownerDocument.getElementById(id)?.textContent ?? '')
+      .join(' ')
+      .trim();
+    if (referencedText) return true;
+  }
+
+  const content = trigger.cloneNode(true) as HTMLButtonElement;
+  content.querySelectorAll('[aria-hidden="true"]').forEach((node) => node.remove());
+  return Boolean(content.textContent?.trim());
+}
+
 function isUsableCardTrigger(
   trigger: HTMLButtonElement,
   card: Element,
@@ -31,7 +51,8 @@ function isUsableCardTrigger(
     trigger.closest('article') === card &&
     !panel.contains(trigger) &&
     !trigger.disabled &&
-    trigger.getAttribute('aria-disabled') !== 'true'
+    trigger.getAttribute('aria-disabled') !== 'true' &&
+    hasAccessibleName(trigger)
   );
 }
 
