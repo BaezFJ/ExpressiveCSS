@@ -104,6 +104,7 @@ const escapedSourceDir = path.join(outsideDir, 'escaped-source');
 const directorySourceDir = path.join(outsideDir, 'directory-source');
 const oversizedSourceDir = path.join(outsideDir, 'oversized-source');
 const oversizedContractDir = path.join(outsideDir, 'oversized-contract');
+const emptyBinDir = path.join(outsideDir, 'empty-bin');
 await writeFile(outsideFile, 'outside project root');
 await writeFile(invalidMarkupFile, '<nav class="navigation-bar"><a class="active" href="/">Home</a></nav>');
 await writeFile(mechanicalFile, 'Expressive.AutoInit();\nconst instance = Expressive.Tooltip.init(button);\nother.destroy();\nconst color = "#6750a4";\n');
@@ -117,6 +118,7 @@ await writeFile(oversizedFile, 'x'.repeat((2 * 1024 * 1024) + 1));
 await writeFile(aggregateFileA, 'a'.repeat(600 * 1024));
 await writeFile(aggregateFileB, 'b'.repeat(600 * 1024));
 await mkdir(unreadablePath);
+await mkdir(emptyBinDir);
 for (const projectDir of [pnpmDir, yarnDir]) {
   await mkdir(projectDir);
   await writeFile(path.join(projectDir, 'package.json'), JSON.stringify({
@@ -812,18 +814,38 @@ try {
     (entry) => entry.reason.includes('aggregate byte limit'),
   ));
 
-  for (const [manager, projectRoot] of [['pnpm', pnpmDir], ['yarn', yarnDir]]) {
-    const managerCheck = await client.callTool({
-      name: 'quality_inspector',
-      arguments: { projectRoot, files: [], runType: 'standard', runCommands: true },
-    });
-    const command = managerCheck.structuredContent.commandChecks[0];
-    assert.equal(command.manager, manager);
-    assert.equal(command.command, `${manager} run typecheck`);
-    assert.equal(command.exitStatus, null);
-    assert.equal(command.completed, false);
-    assert.ok(managerCheck.structuredContent.blockedChecks.includes('typecheck command could not be launched'));
-    assert.notEqual(managerCheck.structuredContent.status, 'pass');
+  const unavailableManagerTransport = new StdioClientTransport({
+    command: process.execPath,
+    args: [path.join(packageDir, 'server.js')],
+    cwd: packageDir,
+    stderr: 'pipe',
+    env: {
+      ...process.env,
+      PATH: emptyBinDir,
+      EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS: outsideDir,
+    },
+  });
+  const unavailableManagerClient = new Client({
+    name: 'expressivecss-mcp-unavailable-manager-smoke',
+    version: '0.1.0',
+  });
+  try {
+    await unavailableManagerClient.connect(unavailableManagerTransport);
+    for (const [manager, projectRoot] of [['pnpm', pnpmDir], ['yarn', yarnDir]]) {
+      const managerCheck = await unavailableManagerClient.callTool({
+        name: 'quality_inspector',
+        arguments: { projectRoot, files: [], runType: 'standard', runCommands: true },
+      });
+      const command = managerCheck.structuredContent.commandChecks[0];
+      assert.equal(command.manager, manager);
+      assert.equal(command.command, `${manager} run typecheck`);
+      assert.equal(command.exitStatus, null);
+      assert.equal(command.completed, false);
+      assert.ok(managerCheck.structuredContent.blockedChecks.includes('typecheck command could not be launched'));
+      assert.notEqual(managerCheck.structuredContent.status, 'pass');
+    }
+  } finally {
+    await unavailableManagerClient.close();
   }
 
   const unknownManager = await client.callTool({
