@@ -223,7 +223,7 @@ describe('destroy() clears the instance off the element', () => {
   });
 
   test('Cards', () => {
-    document.body.innerHTML = `<article><h3 class="activator">T</h3><aside><h4>T</h4><p>body</p></aside></article>`;
+    document.body.innerHTML = `<article><button type="button" class="card-reveal-trigger" aria-label="Toggle details" aria-controls="teardown-card-details">T</button><aside id="teardown-card-details"><h4>T</h4><p>body</p></aside></article>`;
     const el = document.querySelector('article');
     const instance = Expressive.Cards.init(el);
 

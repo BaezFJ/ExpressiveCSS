@@ -12,22 +12,69 @@ const _defaults: CardsOptions = {
 };
 
 /**
- * What counts as a card.
+ * What counts as a card reveal.
  *
- * Shared with `components/registry.ts` rather than written out twice: the
- * registry used to claim `.cards`, which matches nothing this component
- * actually initializes, so the AutoInit entry was dead while `Cards.Init()`
- * quietly did the work through the selector below.
+ * Shared with `components/registry.ts` so `Cards.Init()` and `AutoInit()` use
+ * the same semantic selector.
  */
-export const CARDS_SELECTOR = 'article:has(> aside)';
+export const CARDS_SELECTOR =
+  'article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])';
+
+const REVEAL_INITIALIZED_CLASS = 'card-reveal-initialized';
+
+function hasAccessibleName(trigger: HTMLButtonElement) {
+  const label = trigger.getAttribute('aria-label');
+  if (label?.trim()) return true;
+
+  const labelledBy = trigger.getAttribute('aria-labelledby');
+  if (labelledBy) {
+    const referencedText = labelledBy
+      .trim()
+      .split(/\s+/)
+      .map((id) => trigger.ownerDocument.getElementById(id)?.textContent ?? '')
+      .join(' ')
+      .trim();
+    if (referencedText) return true;
+  }
+
+  const content = trigger.cloneNode(true) as HTMLButtonElement;
+  content.querySelectorAll('[aria-hidden="true"]').forEach((node) => node.remove());
+  return Boolean(content.textContent?.trim());
+}
+
+function isUsableCardTrigger(
+  trigger: HTMLButtonElement,
+  card: Element,
+  panel: HTMLElement
+) {
+  return (
+    trigger.closest('article') === card &&
+    !panel.contains(trigger) &&
+    !trigger.disabled &&
+    trigger.getAttribute('aria-disabled') !== 'true' &&
+    hasAccessibleName(trigger)
+  );
+}
+
+export function isCardReveal(el: Element): el is HTMLElement {
+  if (el.tagName !== 'ARTICLE') return false;
+  const panels = el.querySelectorAll<HTMLElement>(':scope > aside');
+  if (panels.length !== 1 || !panels[0].id) return false;
+
+  return Array.from(
+    el.querySelectorAll<HTMLButtonElement>('button.card-reveal-trigger[type="button"]')
+  ).some((trigger) => isUsableCardTrigger(trigger, el, panels[0]));
+}
 
 export class Cards extends Component<CardsOptions> implements Openable {
   isOpen: boolean = false;
   private readonly cardReveal: HTMLElement | null;
-  private _activators: HTMLElement[] | null;
-  private cardRevealClose: HTMLElement | null;
+  private _activators: HTMLButtonElement[];
+  private _ownsRevealInitializedClass = false;
+  private _initialAriaControls = new Map<HTMLButtonElement, string | null>();
+  private _lastActivator: HTMLButtonElement | null = null;
 
-  constructor(el: HTMLElement, options: Partial<CardsOptions>) {
+  constructor(el: HTMLElement, options: Partial<CardsOptions> = {}) {
     super(el, options, Cards);
     this.el['Expressive_Cards'] = this;
 
@@ -36,30 +83,32 @@ export class Cards extends Component<CardsOptions> implements Openable {
       ...options
     };
 
-    this._activators = [];
+    const cardReveals = this.el.querySelectorAll<HTMLElement>(':scope > aside');
+    const cardReveal = cardReveals.length === 1 ? cardReveals[0] : null;
+    const activators = cardReveal
+      ? Array.from(
+          this.el.querySelectorAll<HTMLButtonElement>(
+            'button.card-reveal-trigger[type="button"]'
+          )
+        ).filter(
+          (activator) => isUsableCardTrigger(activator, this.el, cardReveal)
+        )
+      : [];
 
-    this.cardReveal = this.el.querySelector(':scope > aside');
+    this.cardReveal = cardReveal?.id && activators.length > 0 ? cardReveal : null;
+    this._activators = this.cardReveal ? activators : [];
+
     if (this.cardReveal) {
-      this._activators = Array.from(
-        this.el.querySelectorAll<HTMLElement>('.activator')
-      ).filter(
-        (activator: HTMLElement) => !this.cardReveal.contains(activator)
-      );
-      this._activators.forEach((el: HTMLElement) => {
-        if (!el) return;
-        el.tabIndex = 0;
-        el.ariaExpanded = 'false';
-        if (!el.matches('a[href], button, input, select, textarea')) {
-          el.setAttribute('role', 'button');
-        }
+      this._ownsRevealInitializedClass = !this.el.classList.contains(REVEAL_INITIALIZED_CLASS);
+      this.el.classList.add(REVEAL_INITIALIZED_CLASS);
+      this._activators.forEach((activator) => {
+        this._initialAriaControls.set(activator, activator.getAttribute('aria-controls'));
+        activator.ariaExpanded = 'false';
+        activator.setAttribute('aria-controls', this.cardReveal.id);
       });
 
-      this.cardRevealClose = this.cardReveal.querySelector(
-        ':scope > :is(h1, h2, h3, h4, h5, h6)'
-      );
-      if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
-
-      this.cardReveal.ariaExpanded = 'false';
+      this.cardReveal.classList.remove('open');
+      this.cardReveal.inert = true;
       this._setupEventHandlers();
     }
   }
@@ -101,55 +150,55 @@ export class Cards extends Component<CardsOptions> implements Openable {
    */
   destroy() {
     this._removeEventHandlers();
-    if (this.cardRevealClose) this._removeRevealCloseEventHandlers();
+    if (this.cardReveal) {
+      this.cardReveal.classList.remove('open');
+      this.cardReveal.inert = false;
+      if (this._ownsRevealInitializedClass) this.el.classList.remove(REVEAL_INITIALIZED_CLASS);
+    }
+    this._activators.forEach((activator) => {
+      activator.removeAttribute('aria-expanded');
+      const initialAriaControls = this._initialAriaControls.get(activator);
+      if (initialAriaControls === null) activator.removeAttribute('aria-controls');
+      else if (initialAriaControls !== undefined) {
+        activator.setAttribute('aria-controls', initialAriaControls);
+      }
+    });
+    this.isOpen = false;
     this._activators = [];
+    this._initialAriaControls.clear();
+    this._lastActivator = null;
     this.el['Expressive_Cards'] = undefined;
   }
 
   _setupEventHandlers = () => {
-    this._activators.forEach((el: HTMLElement) => {
-      el.addEventListener('click', this._handleClickInteraction);
-      el.addEventListener('keypress', this._handleKeypressEvent);
+    this._activators.forEach((activator) => {
+      activator.addEventListener('click', this._handleClickInteraction);
     });
+    this.el.addEventListener('keydown', this._handleKeydownEvent);
   };
 
   _removeEventHandlers = () => {
-    this._activators.forEach((el: HTMLElement) => {
-      el.removeEventListener('click', this._handleClickInteraction);
-      el.removeEventListener('keypress', this._handleKeypressEvent);
+    this._activators.forEach((activator) => {
+      activator.removeEventListener('click', this._handleClickInteraction);
     });
+    this.el.removeEventListener('keydown', this._handleKeydownEvent);
   };
 
-  _handleClickInteraction = () => {
+  _handleClickInteraction = (event: MouseEvent) => {
+    this._lastActivator = event.currentTarget as HTMLButtonElement;
     this._handleRevealEvent();
   };
 
-  _handleKeypressEvent: (e: KeyboardEvent) => void = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER || e.key === ' ') {
-      e.preventDefault();
-      this._handleRevealEvent();
-    }
+  _handleKeydownEvent = (event: KeyboardEvent) => {
+    const target = event.target instanceof Element ? event.target.closest('article') : null;
+    if (target !== this.el || event.key !== 'Escape' || !this.isOpen) return;
+    event.preventDefault();
+    this.close();
   };
 
   _handleRevealEvent = () => {
     if (this.isOpen) this.close();
     else this.open();
-  };
-
-  _setupRevealCloseEventHandlers = () => {
-    this.cardRevealClose.addEventListener('click', this.close);
-    this.cardRevealClose.addEventListener('keypress', this._handleKeypressCloseEvent);
-  };
-
-  _removeRevealCloseEventHandlers = () => {
-    this.cardRevealClose.removeEventListener('click', this.close);
-    this.cardRevealClose.removeEventListener('keypress', this._handleKeypressCloseEvent);
-  };
-
-  _handleKeypressCloseEvent: (e: KeyboardEvent) => void = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER) {
-      this.close();
-    }
   };
 
   /**
@@ -158,14 +207,12 @@ export class Cards extends Component<CardsOptions> implements Openable {
   open: () => void = () => {
     if (this.isOpen || !this.cardReveal) return;
     this.isOpen = true;
-    this.cardReveal.ariaExpanded = 'true';
-    this._activators.forEach((el: HTMLElement) => (el.ariaExpanded = 'true'));
-    // A reveal without a title has no close affordance; that is allowed.
-    if (this.cardRevealClose) this.cardRevealClose.tabIndex = 0;
+    this.cardReveal.classList.add('open');
+    this.cardReveal.inert = false;
+    this._activators.forEach((activator) => (activator.ariaExpanded = 'true'));
     if (typeof this.options.onOpen === 'function') {
-      this.options.onOpen.call(this);
+      this.options.onOpen.call(this, this.el);
     }
-    if (this.cardRevealClose) this._setupRevealCloseEventHandlers();
   };
 
   /**
@@ -173,20 +220,24 @@ export class Cards extends Component<CardsOptions> implements Openable {
    */
   close: () => void = () => {
     if (!this.isOpen || !this.cardReveal) return;
+
+    const focusWasInside = this.cardReveal.contains(document.activeElement);
     this.isOpen = false;
-    this.cardReveal.ariaExpanded = 'false';
-    this._activators.forEach((el: HTMLElement) => (el.ariaExpanded = 'false'));
-    if (this.cardRevealClose) this.cardRevealClose.tabIndex = -1;
+    this.cardReveal.classList.remove('open');
+    this.cardReveal.inert = true;
+    this._activators.forEach((activator) => (activator.ariaExpanded = 'false'));
     if (typeof this.options.onClose === 'function') {
-      this.options.onClose.call(this);
+      this.options.onClose.call(this, this.el);
     }
-    if (this.cardRevealClose) this._removeRevealCloseEventHandlers();
+
+    if (focusWasInside) {
+      (this._lastActivator ?? this._activators[0])?.focus();
+    }
   };
 
   static Init() {
-    // Handle initialization of static cards.
     Utils.onDocumentReady(() => {
-      const cards = document.querySelectorAll(CARDS_SELECTOR);
+      const cards = Array.from(document.querySelectorAll(CARDS_SELECTOR)).filter(isCardReveal);
       cards.forEach((el) => {
         if (el && el['Expressive_Cards'] == undefined) this.init(el as HTMLElement);
       });

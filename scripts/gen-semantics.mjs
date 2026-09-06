@@ -146,7 +146,14 @@ function renderComponent(name, c) {
           ? 'must not match with any composite role'
           : r.kind === 'require-accessible-name'
             ? 'must end up with an accessible name'
-            : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
+            : r.kind === 'require-idref'
+              ? `${code(r.attr)} must reference ${code(r.targetSelector)} inside ${code(r.container)}`
+              : r.kind === 'require-owned-descendant'
+                ? `must contain ${code(r.descendantSelector)} owned by its closest ${code(r.ownerSelector)}` +
+                  (r.excludeAncestorSelector
+                    ? ` outside ${code(r.excludeAncestorSelector)} within that owner`
+                    : '')
+                : `must have ${code(r.attr)}` + (r.equals ? ` = ${code(r.equals)}` : '');
     l.push(`| ${code(r.id)} | ${r.kind} | ${code(r.selector)} | ${req} |`);
   }
   l.push('');

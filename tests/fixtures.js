@@ -22,7 +22,7 @@ export const AUTO_INIT_FIXTURES = [
     // no card markup anywhere uses.
     name: "Cards",
     selector: "article",
-    html: `<article><h3>Title</h3><span class="activator">T</span><aside><h4>Title</h4><p>body</p></aside></article>`,
+    html: `<article><h3>Title</h3><button type="button" class="card-reveal-trigger" aria-label="Toggle details" aria-controls="fixture-card-details">T</button><aside id="fixture-card-details"><h4>Title</h4><p>body</p></aside></article>`,
   },
   {
     name: "ExpandingCard",

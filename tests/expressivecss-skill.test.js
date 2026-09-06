@@ -133,19 +133,43 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(appBar, /collaps/);
   });
 
+  test('keeps the generated Cards guide load-bearing contract complete', () => {
+    const cards = readFileSync(new URL('cards.md', componentsDirectory), 'utf8');
+    assert.match(cards, /direct [`<]*a\.primary-action/);
+    assert.match(cards, /no second (?:link|action|control)/);
+    assert.match(cards, /dragged.*picked-up.*16%.*hovered.*pressed/is);
+    assert.match(cards, /horizontal.*below 600px/is);
+    assert.match(cards, /button\.card-reveal-trigger\[type="button"\]/);
+    assert.match(cards, /exactly one identified direct [`<]*aside/);
+    assert.match(cards, /rejected.*remain visible/is);
+    assert.match(cards, /closest [`<]*article.*outer reveal panel/is);
+    assert.match(cards, /aria-controls.*aria-expanded.*inert.*Escape.*focus/is);
+  });
+
   test('keeps card actions out of navigation landmarks', () => {
     assert.doesNotMatch(m3Guidelines, /Actions \(`<nav>` of buttons/);
     assert.match(m3Guidelines, /Actions \(`<div class="actions">` of buttons/);
   });
 
   test('keeps generated component guides synchronized with their sources', () => {
-    assert.equal(packageJson.scripts['build:skill'], 'node scripts/gen-expressivecss-skill.mjs');
+    assert.equal(
+      packageJson.scripts['build:skill'],
+      'node scripts/gen-expressivecss-skill.mjs && node mcp/expressivecss/scripts/sync-guides.mjs',
+    );
     const result = spawnSync(process.execPath, ['scripts/gen-expressivecss-skill.mjs', '--check'], {
       cwd: new URL('..', import.meta.url),
       encoding: 'utf8',
     });
     assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
     assert.match(result.stdout, /46 ExpressiveCSS component guides are current\./);
+
+    const mcpResult = spawnSync(
+      process.execPath,
+      ['mcp/expressivecss/scripts/sync-guides.mjs', '--check'],
+      { cwd: new URL('..', import.meta.url), encoding: 'utf8' },
+    );
+    assert.equal(mcpResult.status, 0, `${mcpResult.stdout}${mcpResult.stderr}`);
+    assert.match(mcpResult.stdout, /Verified 46 bundled guides and normative semantics\./);
   });
 
   test('assigns authority by question and version', () => {

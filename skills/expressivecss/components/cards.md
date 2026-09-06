@@ -11,15 +11,15 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `1593e283ece7ac4e94ee28cd673b225a1a80a761c3a442c336db9e28c35cc60a`
+Contract SHA-256: `709e5aa355e937d621552d8fb925649d34ddfdf994d02212ec2c3197f0509f11`
 
 #### Contract
 
 Material Design 3 cards, from the HTML.
 
-An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, `<p class="supporting-text">` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class — the element is the component. The action row is not a `<nav>`: a row of buttons is not a set of destinations, and one landmark per card floods the landmark list.
+An `<article>` is an elevated card. Any heading is the headline, `<p class="subhead">` is the optional subhead, `<p class="supporting-text">` is supporting copy, direct `<img>`, `<picture>`, or `<figure>` is media, and direct `<div class="actions">` is the action row. Include only the slots the content needs. There is no `card-content`, `card-title`, `card-action`, `card` or `card-panel` class—the element is the component, and the action row is not a `<nav>`. Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs): all variants use 12dp corners; elevated rests at level 1, filled and outlined at level 0. A directly actionable card wraps its primary content in one direct `a.primary-action[href]` and has no second link or control. Horizontal cards preserve that source order, use content height with a 240px minimum unless a size helper fixes the expanded height, and stack below 600px with fixed heights reset to content. During reordering, `.dragged` or `.picked-up` preserves the 16% state layer and dragged elevation while the primary action remains hovered or pressed.
 
-Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs). The elevated container is `surface-container-low` with 12dp corners. The default sits at elevation 1; an interactive card rises to 2 on hover. The headline is `title-medium` / `on-surface`, the subhead is `title-small` / `on-surface`, and supporting text is `body-medium` / `on-surface-variant`. Inset is 16dp.
+A Card reveal is a disclosure with exactly one identified direct `<aside>` and an enabled, accessibly named `button.card-reveal-trigger[type="button"]` outside that panel. Its `aria-controls` must resolve to the panel, and its closest `<article>` owns it—even when a complete nested card sits inside an outer reveal panel. After accepting the contract, Cards writes `aria-expanded`, marks the closed panel `inert`, closes it with Escape, and returns focus from the panel to the trigger. Rejected, disabled-only, unidentified, and multi-panel disclosures remain visible and unmanaged.
 
 #### Syntax
 
@@ -43,6 +43,19 @@ Tokens follow the [M3 card spec](https://m3.material.io/components/cards/specs).
 The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
 - `card-action-row-not-nav`: Cards do not contain navigation or tabs. Put navigation outside the card and use <div class="actions"> for its action buttons.
+- `card-primary-action-is-control`: A directly actionable card uses one native link as its primary action. Use the action row for commands; common button styles do not turn a button into the card container.
+- `card-disabled-link-has-no-href`: A disabled card destination must not retain href. aria-disabled does not stop a link from navigating when activated from the keyboard.
+- `card-disabled-link-not-tabbable`: A disabled card destination is not operable, so remove it from the tab order with tabindex="-1".
+- `card-primary-action-is-only-action`: A directly actionable card contains no second action. Use one primary-action link, or make the card non-actionable and put its controls in the action row.
+- `card-primary-action-is-single`: A directly actionable card has exactly one direct primary-action link. Remove duplicate primary actions or use a non-actionable card with an action row.
+- `card-reveal-has-trigger`: A card with a direct reveal panel requires a native card-reveal-trigger button whose closest article is that card and which sits outside the reveal panel.
+- `card-reveal-has-one-panel`: A card reveal has exactly one direct aside panel. With multiple direct panels, Cards rejects disclosure setup and every panel remains visible and unmanaged.
+- `card-reveal-trigger-is-button`: The reveal trigger is a native button so Enter, Space, disabled state, and focus work without synthetic keyboard handling.
+- `card-reveal-trigger-type-button`: A card reveal button may appear inside a form, so set type="button" to prevent accidental submission.
+- `card-reveal-trigger-has-label`: The reveal button needs a non-empty accessible name describing the details it toggles; icon-only triggers should use aria-label.
+- `card-reveal-trigger-controls-panel`: Name the reveal panel from aria-controls so assistive technology can relate the disclosure button to its content.
+- `card-reveal-panel-has-id`: The reveal panel needs the id referenced by its trigger's aria-controls.
+- `card-reveal-expanded-is-not-authored`: Cards writes aria-expanded on the disclosure button. Do not author a stale initial value, and do not put aria-expanded on the panel.
 - `expanding-card-trigger-is-button`: The media-sized trigger opens a dialog, so use a button for native keyboard and disabled behavior.
 - `expanding-card-close-is-button`: The back affordance closes the expanded surface, so use a button for native keyboard behavior.
 

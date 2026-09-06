@@ -17,9 +17,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **Card reveal accessibility.** Reveal panels now use a native `.card-reveal-trigger` button with a verified `aria-controls` relationship, runtime-owned `aria-expanded`, `inert` closed content, Escape handling, and focus return. AutoInit skips incomplete or disabled-only disclosures, and explicit initialization no longer hides a panel when it lacks a usable enabled `type="button"` trigger or exactly one identified direct panel. Closed-panel CSS is activated only after successful runtime setup, so rejected disclosures remain visible without JavaScript-managed state. This is a markup change: legacy `.activator` headings and separate heading-based close controls no longer toggle the panel.
 - **App bar search dialog.** Closing a full-screen search view no longer reopens it when focus returns to the field.
 - **Badge hosts.** Sibling badges on the stacked navigation bar and collapsed rail use logical inset and flip in RTL. Tabs nest a badge in the destination icon.
 - **Card action semantics.** Material 3 card anatomy now uses `<div class="actions">` for command buttons instead of creating a false `<nav>` landmark.
+- **Card layout and state parity.** Elevated, filled, and outlined cards now keep their Material variant elevations through hover, press, drag, and disabled states; dragged and picked-up elevation plus the 16% state layer take precedence over retained hover or active pointer state. Horizontal cards, including directly actionable cards and fixed-size helpers, keep intrinsic or specified heights when expanded and stack below 600px with fixed heights reset to content. Reveal content is no longer capped in browsers without intrinsic-size interpolation.
+- **Nested card disclosure isolation.** Reveal triggers and Escape handling now belong to their closest card, so nested cards—including a complete card inside an outer reveal panel—retain their own disclosure ownership and cannot initialize, open, or close the outer card.
 
 ## [0.8.0] - 2026-08-27
 

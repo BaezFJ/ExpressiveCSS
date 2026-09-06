@@ -14,6 +14,9 @@ const sample = `<!doctype html>
       <div id="anatomy" class="docs-section">
         <p>A <code>&lt;menu&gt;</code> is the surface.</p>
         <span aria-hidden="true">more_vert</span>
+        <article data-markdown-ignore><h3>Live demo title</h3><button>Live action</button></article>
+        <h5>Retained after demo</h5>
+        <h5>Sibling retained heading</h5>
         <img src="/decorative.png" alt="">
         <pre><code>&lt;menu id="actions"&gt;&lt;/menu&gt;</code></pre>
       </div>
@@ -48,5 +51,9 @@ describe('the documentation HTML-to-Markdown adapter', () => {
     assert.match(markdown, /\n### Standard menu\n/);
     assert.doesNotMatch(markdown, /^#{4,6} Standard menu$/m);
     assert.doesNotMatch(markdown, /more_vert|decorative\.png|On this page/);
+    assert.doesNotMatch(markdown, /Live demo title|Live action/);
+    assert.match(markdown, /^### Retained after demo$/m);
+    assert.match(markdown, /^### Sibling retained heading$/m);
+    assert.doesNotMatch(markdown, /^#### (?:Retained after demo|Sibling retained heading)$/m);
   });
 });

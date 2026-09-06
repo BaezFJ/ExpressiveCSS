@@ -48,6 +48,8 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
+      - run: npm run test:browser
+
       # Builds and serves both revisions through Astro. A failure here means
       # pages moved, which is often intended -- the report is the thing to
       # read, not the exit code.

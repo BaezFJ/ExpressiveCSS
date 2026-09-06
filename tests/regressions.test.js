@@ -265,8 +265,8 @@ describe('optional markup does not crash a component', () => {
   test('a card reveal with no title', () => {
     document.body.innerHTML = `
       <article>
-        <span class="activator">T</span>
-        <aside><p>body</p></aside>
+        <button type="button" class="card-reveal-trigger" aria-label="Toggle details" aria-controls="untitled-card-details">T</button>
+        <aside id="untitled-card-details"><p>body</p></aside>
       </article>`;
     const instance = Expressive.Cards.init(document.querySelector('article'));
 

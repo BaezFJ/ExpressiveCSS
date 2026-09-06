@@ -163,13 +163,39 @@ Swept 0.8.0. The FAB and its speed dial live in this partial, so its withheld ro
 
 ### cards
 
-Swept 0.8.0. The action row is buttons, not destinations.
+Swept 0.8.0. Cards use native disclosure controls, and a directly actionable card contains no second action.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `card-action-row-not-nav` | forbid | `article nav` | must not match |
+| `card-primary-action-is-control` | forbid | `article > .primary-action:not(a[href]):not(a[aria-disabled="true"])` | must not match |
+| `card-disabled-link-has-no-href` | forbid | `article > a.primary-action[aria-disabled="true"][href]` | must not match |
+| `card-disabled-link-not-tabbable` | forbid | `article > a.primary-action[aria-disabled="true"]:not([tabindex="-1"])` | must not match |
+| `card-primary-action-is-only-action` | forbid | `article:has(> .primary-action) :is(a[href], button, input, select, textarea):not(.primary-action)` | must not match |
+| `card-primary-action-is-single` | forbid | `article > .primary-action ~ .primary-action` | must not match |
+| `card-reveal-has-trigger` | require-owned-descendant | `article:has(> aside)` | must contain `button.card-reveal-trigger` owned by its closest `article` outside `aside` within that owner |
+| `card-reveal-has-one-panel` | forbid | `article > aside ~ aside` | must not match |
+| `card-reveal-trigger-is-button` | forbid | `.card-reveal-trigger:not(button)` | must not match |
+| `card-reveal-trigger-type-button` | require-attr | `button.card-reveal-trigger` | must have `type` = `button` |
+| `card-reveal-trigger-has-label` | require-accessible-name | `button.card-reveal-trigger` | must end up with an accessible name |
+| `card-reveal-trigger-controls-panel` | require-idref | `button.card-reveal-trigger` | `aria-controls` must reference `:scope > aside` inside `article` |
+| `card-reveal-panel-has-id` | require-attr | `article:has(.card-reveal-trigger) > aside` | must have `id` |
+| `card-reveal-expanded-is-not-authored` | forbid | `.card-reveal-trigger[aria-expanded], article > aside[aria-expanded]` | must not match |
 
 - **card-action-row-not-nav** - Cards do not contain navigation or tabs. Put navigation outside the card and use <div class="actions"> for its action buttons.
+- **card-primary-action-is-control** - A directly actionable card uses one native link as its primary action. Use the action row for commands; common button styles do not turn a button into the card container.
+- **card-disabled-link-has-no-href** - A disabled card destination must not retain href. aria-disabled does not stop a link from navigating when activated from the keyboard.
+- **card-disabled-link-not-tabbable** - A disabled card destination is not operable, so remove it from the tab order with tabindex="-1".
+- **card-primary-action-is-only-action** - A directly actionable card contains no second action. Use one primary-action link, or make the card non-actionable and put its controls in the action row.
+- **card-primary-action-is-single** - A directly actionable card has exactly one direct primary-action link. Remove duplicate primary actions or use a non-actionable card with an action row.
+- **card-reveal-has-trigger** - A card with a direct reveal panel requires a native card-reveal-trigger button whose closest article is that card and which sits outside the reveal panel.
+- **card-reveal-has-one-panel** - A card reveal has exactly one direct aside panel. With multiple direct panels, Cards rejects disclosure setup and every panel remains visible and unmanaged.
+- **card-reveal-trigger-is-button** - The reveal trigger is a native button so Enter, Space, disabled state, and focus work without synthetic keyboard handling.
+- **card-reveal-trigger-type-button** - A card reveal button may appear inside a form, so set type="button" to prevent accidental submission.
+- **card-reveal-trigger-has-label** - The reveal button needs a non-empty accessible name describing the details it toggles; icon-only triggers should use aria-label.
+- **card-reveal-trigger-controls-panel** - Name the reveal panel from aria-controls so assistive technology can relate the disclosure button to its content.
+- **card-reveal-panel-has-id** - The reveal panel needs the id referenced by its trigger's aria-controls.
+- **card-reveal-expanded-is-not-authored** - Cards writes aria-expanded on the disclosure button. Do not author a stale initial value, and do not put aria-expanded on the panel.
 
 ### carousel
 
