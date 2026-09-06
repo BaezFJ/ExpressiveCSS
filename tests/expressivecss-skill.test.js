@@ -25,6 +25,15 @@ const supportGuides = [
 ];
 
 const decisionIndex = readFileSync(new URL('references/component-decisions.md', skillDirectory), 'utf8');
+const usageGuideUrl = new URL('expressivecss-usage/SKILL.md', skillDirectory);
+const gridReferenceUrl = new URL('expressivecss-usage/references/grid.md', skillDirectory);
+const helpersReferenceUrl = new URL('expressivecss-usage/references/helpers.md', skillDirectory);
+const compiledCss = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const gridSass = readFileSync(new URL('../src/sass/base/_grid.scss', import.meta.url), 'utf8');
+const spacingSass = readFileSync(new URL('../src/sass/utilities/_spacing.scss', import.meta.url), 'utf8');
+const visibilitySass = readFileSync(new URL('../src/sass/utilities/_visibility.scss', import.meta.url), 'utf8');
+const elevationSass = readFileSync(new URL('../src/sass/abstracts/_elevation.scss', import.meta.url), 'utf8');
+const breakpointsSass = readFileSync(new URL('../src/sass/abstracts/_breakpoints.scss', import.meta.url), 'utf8');
 const componentEntries = [...decisionIndex.matchAll(/^\| \[([^\]]+)\]\(\.\.\/components\/([a-z-]+\.md)\) \|/gm)]
   .map((match) => ({ label: match[1], name: match[2] }));
 const componentLinks = componentEntries.map(({ name }) => name);
@@ -49,7 +58,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.4\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.5\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -233,6 +242,86 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(accessibility, /composite roles/);
     assert.doesNotMatch(accessibility, /presence of state attributes/);
     assert.match(accessibility, /explicitly requires? at author time/);
+  });
+
+  test('gives agents exact grid and helper-class references', () => {
+    const usage = readFileSync(usageGuideUrl, 'utf8');
+    assert.ok(existsSync(gridReferenceUrl), 'grid reference is missing');
+    assert.ok(existsSync(helpersReferenceUrl), 'helpers reference is missing');
+    assert.match(usage, /\[grid reference\]\(\.\/references\/grid\.md\)/i);
+    assert.match(usage, /\[helper-class reference\]\(\.\/references\/helpers\.md\)/i);
+
+    const grid = readFileSync(gridReferenceUrl, 'utf8');
+    assert.match(grid, /`\.row`[\s\S]*`\.s1`[–-]`\.s12`[\s\S]*`\.xxl1`[–-]`\.xxl12`/);
+    assert.match(grid, /Compact[\s\S]*Medium[\s\S]*Expanded[\s\S]*Large[\s\S]*Extra-large/);
+    assert.match(grid, /`\.container`[\s\S]*`\.container\.wide`[\s\S]*`\.container\.max`/);
+    assert.match(grid, /`\.offset-\{prefix\}\{1\.\.11\}`/);
+    assert.match(grid, /`\.g-0`[–-]`\.g-5`/);
+    assert.match(grid, /Do not use `push-\*` or `pull-\*`/);
+    assert.match(grid, /wider span class[\s\S]*resets[\s\S]*earlier offset/i);
+
+    const gridClasses = ['container', 'row', 'section', ...Array.from({ length: 6 }, (_, i) => `g-${i}`)];
+    for (const prefix of ['s', 'm', 'l', 'xl', 'xxl']) {
+      for (let i = 1; i <= 12; i += 1) gridClasses.push(`${prefix}${i}`);
+      for (let i = 1; i <= 11; i += 1) gridClasses.push(`offset-${prefix}${i}`);
+    }
+    for (const className of gridClasses) {
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+
+    for (const [name, value] of [['medium', '600px'], ['expanded', '840px'], ['large', '1200px'], ['extra-large', '1600px']]) {
+      assert.match(breakpointsSass, new RegExp(`"${name}"\\s*:\\s*${value}`));
+      assert.ok(grid.includes(value), `grid reference omits ${value}`);
+    }
+    for (const [className, multiplier] of [['g-0', '0'], ['g-1', '0.25'], ['g-2', '0.5'], ['g-3', '1'], ['g-4', '1.5'], ['g-5', '3']]) {
+      assert.match(gridSass, new RegExp(`\\.${className}\\s*\\{\\s*gap:\\s*(?:calc\\()?${multiplier}`));
+      assert.ok(grid.includes(`| \`.${className}\` | ${multiplier} |`), `grid reference has the wrong ${className} multiplier`);
+    }
+
+    const helpers = readFileSync(helpersReferenceUrl, 'utf8');
+    assert.match(helpers, /`\{m\|p\}\{side\?\}-\{value\}`/);
+    assert.match(helpers, /`0`, `1`, `2`, `3`, `4`, `5`, `6`, `auto`/);
+    assert.match(helpers, /`auto` is meaningful for margin only/i);
+    assert.match(helpers, /combine a base `\.hide` with one `\.show-on-\*` class/i);
+    for (const className of [
+      'valign-wrapper', 'left-align', 'right-align', 'center-align', 'center-on-small-only',
+      'divider', 'no-select', 'circle', 'center-block', 'truncate', 'no-padding',
+      'responsive-img', 'responsive-video', 'video-container', 'hoverable', 'browser-default',
+    ]) assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+    for (const className of ['z-depth-0', 'z-depth-1', 'z-depth-1-half', 'z-depth-2', 'z-depth-3', 'z-depth-4', 'z-depth-5']) {
+      assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(helpers, /`\.z-depth-0`[\s\S]*`!important`/);
+    assert.match(elevationSass, /"0": none[\s\S]*"1-half":[\s\S]*"5":/);
+    assert.match(elevationSass, /box-shadow: none !important/);
+    assert.match(helpers, /`\.hide-on-med-and-down`[\s\S]*below 840px/i);
+    assert.match(helpers, /`\.hide-on-med-and-up`[\s\S]*600px and above/i);
+    assert.doesNotMatch(helpers, /`\.hide-on-med-and-(?:down|up)`[^\n]*alias/i);
+    assert.match(helpers, /`\.hoverable`[\s\S]*fixed hover shadow/i);
+
+    const spacingClasses = [];
+    for (const prefix of ['m', 'p']) {
+      for (const side of ['', 't', 'r', 'b', 'l', 'x', 'y']) {
+        for (const value of ['0', '1', '2', '3', '4', '5', '6', 'auto']) spacingClasses.push(`${prefix}${side}-${value}`);
+      }
+    }
+    for (const className of spacingClasses) {
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    for (const [name, value] of [['0', '0'], ['1', '0.25rem'], ['2', '0.5rem'], ['3', '0.75rem'], ['4', '1rem'], ['5', '1.5rem'], ['6', '3rem'], ['auto', 'auto']]) {
+      assert.match(spacingSass, new RegExp(`"${name}"\\s*:\\s*${value.replace('.', '\\.')}`));
+      assert.ok(helpers.includes(`| \`${name}\` | \`${value}\` |`), `helpers reference has the wrong spacing value for ${name}`);
+    }
+    for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)/g)].map((match) => match[1]))]) {
+      assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+
+    for (const [name, content] of [['grid', grid], ['helpers', helpers]]) {
+      assert.doesNotMatch(content, /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
+      assert.doesNotMatch(content, /\]\(\.\.\/\.\.\//, `${name} reference links outside the portable skill directory`);
+    }
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {

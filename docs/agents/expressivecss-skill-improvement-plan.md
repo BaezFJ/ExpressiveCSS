@@ -231,7 +231,7 @@ Create a dependency-free resolver with a stable JSON result:
   "declaredRange": "^0.8.0",
   "resolvedVersion": "0.8.1",
   "resolutionSource": "installed-package|lockfile|framework-source|manifest-only|none",
-  "skillVersion": "0.4.0",
+  "skillVersion": "0.5.0",
   "contractVersion": "0.8.0",
   "matchingTag": "v0.8.1",
   "status": "match|mismatch|unresolved",

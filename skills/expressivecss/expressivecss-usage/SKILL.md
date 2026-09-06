@@ -24,6 +24,12 @@ Do not load this guide when the task concerns only setup, visual tokens, or life
 9. Keep application CSS unlayered unless the project deliberately participates in the framework's `tokens`, `base`, `components`, and `utilities` cascade layers.
 10. Treat the target version's documentation and source as authoritative over cached examples, including these guides.
 
+## Layout and utility references
+
+For grid work, read the [grid reference](./references/grid.md) before writing layout classes. It gives agents the container variants, 12-column class grammar, M3 window-prefix cascade, offsets, gap scale, copyable responsive patterns, and boundary checklist.
+
+For spacing, visibility, alignment, formatting, responsive media, or native form opt-outs, read the [helper-class reference](./references/helpers.md). It distinguishes class syntax from compatibility aliases and records the `!important`, `display: block`, RTL, padding-auto, and accessibility constraints that are easy to miss when combining utilities.
+
 ## Responsive model
 
 | Window class | Width | Grid prefix |
