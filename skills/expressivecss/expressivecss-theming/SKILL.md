@@ -7,13 +7,13 @@ description: Theme ExpressiveCSS with Material 3 color roles.
 
 ## When to use
 
-Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, or other visual tokens such as elevation and shadows.
+Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens such as elevation and shadows.
 
 ## Do not use when
 
 Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
 
-Read the target version's Foundation documentation before changing tokens: [Color](https://www.expressivecss.com/color.html.md), [Themes](https://www.expressivecss.com/themes.html.md), [Shadow](https://www.expressivecss.com/shadow.html.md), [Icons](https://www.expressivecss.com/icons.html.md), and [Typography](https://www.expressivecss.com/typography.html.md).
+Read the target version's Foundation documentation before changing tokens: [Color](https://www.expressivecss.com/color.html.md), [Themes](https://www.expressivecss.com/themes.html.md), [Shadow](https://www.expressivecss.com/shadow.html.md), [Icons](https://www.expressivecss.com/icons.html.md), [Typography](https://www.expressivecss.com/typography.html.md), and [State layers](https://www.expressivecss.com/state-layers.html.md).
 
 ## Focused references
 
@@ -24,6 +24,7 @@ Load only the references needed for the task:
 - For `z-depth-*`, Sass elevation mixins, and shadow-state rules, read the [elevation reference](./references/elevation.md).
 - For Material Symbols families, axes, sizing, font delivery, and icon accessibility, read the [icons reference](./references/icons.md).
 - For the 15 M3 type roles, typeface tokens, text helpers, and semantic hierarchy, read the [typography reference](./references/typography.md).
+- For hover, focus, pressed, and dragged opacity tokens, overlay and ring forms, and per-component overrides, read the [state-layers reference](./references/state-layers.md).
 
 ### Select a scheme
 

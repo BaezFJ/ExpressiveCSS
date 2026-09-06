@@ -28,8 +28,10 @@ const decisionIndex = readFileSync(new URL('references/component-decisions.md', 
 const usageGuideUrl = new URL('expressivecss-usage/SKILL.md', skillDirectory);
 const gridReferenceUrl = new URL('expressivecss-usage/references/grid.md', skillDirectory);
 const helpersReferenceUrl = new URL('expressivecss-usage/references/helpers.md', skillDirectory);
+const usageFoundationReferenceUrls = Object.fromEntries(['media', 'table', 'transitions']
+  .map((name) => [name, new URL(`expressivecss-usage/references/${name}.md`, skillDirectory)]));
 const themingGuideUrl = new URL('expressivecss-theming/SKILL.md', skillDirectory);
-const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography']
+const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'state-layers']
   .map((name) => [name, new URL(`expressivecss-theming/references/${name}.md`, skillDirectory)]));
 const compiledCss = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const gridSass = readFileSync(new URL('../src/sass/base/_grid.scss', import.meta.url), 'utf8');
@@ -42,6 +44,9 @@ const referenceSass = readFileSync(new URL('../src/sass/tokens/_reference.scss',
 const themeSass = readFileSync(new URL('../src/sass/tokens/_theme.scss', import.meta.url), 'utf8');
 const vibrantSass = readFileSync(new URL('../src/sass/tokens/_vibrant.scss', import.meta.url), 'utf8');
 const globalSass = readFileSync(new URL('../src/sass/base/_global.scss', import.meta.url), 'utf8');
+const helpersSass = readFileSync(new URL('../src/sass/utilities/_helpers.scss', import.meta.url), 'utf8');
+const transitionsSass = readFileSync(new URL('../src/sass/components/_transitions.scss', import.meta.url), 'utf8');
+const stateSass = readFileSync(new URL('../src/sass/tokens/_state.scss', import.meta.url), 'utf8');
 const baseTypographySass = readFileSync(new URL('../src/sass/base/_typography.scss', import.meta.url), 'utf8');
 const colorsSass = readFileSync(new URL('../src/sass/utilities/_colors.scss', import.meta.url), 'utf8');
 const scrimSass = readFileSync(new URL('../src/sass/components/_scrim.scss', import.meta.url), 'utf8');
@@ -72,7 +77,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.6\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.7\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -338,6 +343,53 @@ describe('the ExpressiveCSS agent skill', () => {
     }
   });
 
+  test('covers the remaining usage foundations with source-checked references', () => {
+    const usage = readFileSync(usageGuideUrl, 'utf8');
+    const references = {};
+    for (const [name, url] of Object.entries(usageFoundationReferenceUrls)) {
+      assert.ok(existsSync(url), `${name} foundation reference is missing`);
+      assert.match(usage, new RegExp(`\\[${name} reference\\]\\(\\.\\/references\\/${name}\\.md\\)`, 'i'));
+      references[name] = readFileSync(url, 'utf8');
+      assert.doesNotMatch(references[name], /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
+      assert.doesNotMatch(references[name], /\]\(\.\.\/\.\.\//, `${name} reference links outside the portable skill directory`);
+    }
+
+    for (const className of ['responsive-img', 'responsive-video', 'video-container', 'circle']) {
+      assert.ok(references.media.includes(`\`.${className}\``), `media reference omits .${className}`);
+    }
+    assert.match(helpersSass, /img\.responsive-img,[\s\S]*video\.responsive-video[\s\S]*max-width:\s*100%[\s\S]*height:\s*auto/);
+    assert.match(helpersSass, /\.video-container[\s\S]*aspect-ratio:\s*16 \/ 9[\s\S]*iframe, object, embed[\s\S]*inset:\s*0/);
+    assert.match(references.media, /`\.responsive-img` only affects `<img>`[\s\S]*`\.responsive-video` only affects `<video>`/i);
+    assert.match(references.media, /`\.video-container`[\s\S]*`16 \/ 9`[\s\S]*`iframe`[\s\S]*`object`[\s\S]*`embed`/i);
+    assert.match(references.media, /intrinsic `width` and `height`/i);
+    assert.match(references.media, /meaningful `alt`[\s\S]*empty `alt`[\s\S]*captions[\s\S]*`title`/i);
+
+    for (const className of ['striped', 'highlight', 'centered', 'responsive-table']) {
+      assert.ok(references.table.includes(`\`.${className}\``), `table reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(globalSass, /@include bp-down\("expanded"\)[\s\S]*table\.responsive-table/);
+    assert.match(globalSass, /tbody > tr:nth-child\(odd\)[\s\S]*rgba\(0, 0, 0, 0\.08\)/);
+    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*rgba\(0, 0, 0, 0\.04\)/);
+    assert.match(references.table, /below `840px`/i);
+    assert.match(references.table, /`<caption>`[\s\S]*scope="col"[\s\S]*do not use a table for page layout/i);
+    assert.match(references.table, /keeps the header cells in one fixed column[\s\S]*scrolls the body rows horizontally/i);
+    assert.match(references.table, /physical floats, padding, borders, and text alignment[\s\S]*RTL/i);
+    assert.match(references.table, /hard-coded black alpha colors[\s\S]*light and dark/i);
+
+    for (const className of ['scale-transition', 'scale-out', 'scale-in']) {
+      assert.ok(references.transitions.includes(`\`.${className}\``), `transitions reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(transitionsSass, /transition:\s*transform \.3s cubic-bezier\(0\.53, 0\.01, 0\.36, 1\.63\) !important/);
+    assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform \.2s !important/);
+    assert.match(transitionsSass, /&\.scale-in[\s\S]*transform:\s*scale\(1\)/);
+    assert.match(references.transitions, /`\.scale-out`[\s\S]*does not remove[\s\S]*layout[\s\S]*accessibility tree[\s\S]*tab order/i);
+    assert.match(references.transitions, /no built-in `prefers-reduced-motion` rule/i);
+    assert.match(references.transitions, /transition: none !important/);
+    assert.match(references.transitions, /wait at least one rendered frame/i);
+  });
+
   test('gives agents source-checked foundation references', () => {
     const theming = readFileSync(themingGuideUrl, 'utf8');
     const references = {};
@@ -451,6 +503,24 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(globalSass, /a\s*\{[\s\S]*?text-decoration:\s*none;/);
     assert.match(references.typography, /Links use the primary role and remove text decoration by default/);
     assert.doesNotMatch(references.typography, /`\.(?:large|medium|small)-text`/);
+
+    const stateLayers = references['state-layers'];
+    const expectedStateOpacities = { hover: '0.08', focus: '0.1', pressed: '0.1', dragged: '0.16' };
+    for (const [state, value] of Object.entries(expectedStateOpacities)) {
+      const token = `--md-sys-state-${state}-state-layer-opacity`;
+      assert.match(stateSass, new RegExp(`${token}:\\s*${value.replace('.', '\\.')}\\s*;`));
+      assert.ok(stateLayers.includes(`\`${token}\``), `state-layer reference omits ${token}`);
+      assert.ok(stateLayers.includes(`| \`${token}\` | \`${value}\` |`), `state-layer reference has the wrong ${state} value`);
+    }
+    assert.match(stateSass, /:root,[\s\S]*:host[\s\S]*--md-sys-state-hover-state-layer-opacity/);
+    assert.doesNotMatch(stateSass, /--md-sys-state-(?:selected|disabled)-state-layer-opacity/);
+    assert.match(stateLayers, /foundation[\s\S]*no markup of its own/i);
+    assert.match(stateLayers, /unitless numbers[\s\S]*`0` through `1`/i);
+    assert.match(stateLayers, /overlay[\s\S]*`opacity`[\s\S]*ring[\s\S]*`color-mix\(\)`[\s\S]*`100%`/i);
+    assert.match(stateLayers, /does not replace the focus indicator/i);
+    assert.match(stateLayers, /selected and disabled[\s\S]*do not have system state-layer opacity tokens/i);
+    const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
+    assert.doesNotMatch(matrix, /framework selected state-layer token|framework disabled state-layer token/i);
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {
@@ -697,7 +767,7 @@ describe('the ExpressiveCSS agent skill', () => {
         avoid: /only setup, visual tokens, or lifecycle code/i,
       },
       'expressivecss-theming/SKILL.md': {
-        use: /color, typography, icon styling, themes, schemes, vibrant regions, or other visual tokens/i,
+        use: /color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens/i,
         avoid: /unrelated markup repair[\s\S]*component contract/i,
       },
       'expressivecss-runtime/SKILL.md': {
