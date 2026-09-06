@@ -22,6 +22,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   private _releaseStyles = new Map<HTMLElement, SavedItemStyle>();
   private _releaseTimer: number | null = null;
   private _originalPressed = new Map<HTMLButtonElement, string | null>();
+  private _activeItem: HTMLElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<ButtonGroupOptions> = {}) {
     super(el, options, ButtonGroup);
@@ -34,6 +35,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     }
     this.el.addEventListener("pointerdown", this._handlePointerDown);
     this.el.addEventListener("keydown", this._handleKeyDown);
+    this.el.addEventListener("focusout", this._handleFocusOut);
     document.addEventListener("pointerup", this._resetPress);
     document.addEventListener("pointercancel", this._resetPress);
     document.addEventListener("keyup", this._handleKeyUp);
@@ -66,6 +68,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     this.el.removeEventListener("click", this._handleClick);
     this.el.removeEventListener("pointerdown", this._handlePointerDown);
     this.el.removeEventListener("keydown", this._handleKeyDown);
+    this.el.removeEventListener("focusout", this._handleFocusOut);
     document.removeEventListener("pointerup", this._resetPress);
     document.removeEventListener("pointercancel", this._resetPress);
     document.removeEventListener("keyup", this._handleKeyUp);
@@ -181,6 +184,10 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     if (event.key === " " || event.key === "Enter") this._resetPress();
   };
 
+  private _handleFocusOut = (event: FocusEvent) => {
+    if (event.target === this._activeItem) this._resetPress();
+  };
+
   private _startPress(item: HTMLElement) {
     if (this.el.classList.contains("connected") || this._pressedStyles.size) return;
     this._finishRelease();
@@ -226,6 +233,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     const actualGrowth = [...compression.values()].reduce((sum, value) => sum + value, 0);
     if (actualGrowth <= 0) return;
 
+    this._activeItem = item;
     items.forEach((candidate, index) => {
       this._pressedStyles.set(candidate, {
         width: candidate.style.width,
@@ -246,6 +254,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   }
 
   private _resetPress = () => {
+    this._activeItem = null;
     if (!this._pressedStyles.size) return;
     this._finishRelease();
     this._releaseStyles = new Map(this._pressedStyles);

@@ -61,6 +61,12 @@ export function renderMarkdownPage(html, markdownLinks = markdownLinkMap()) {
       .map((link) => [link.getAttribute('href').slice(1), link.textContent.trim()]),
   );
 
+  for (const element of content.querySelectorAll(
+    'script, style, template, [data-markdown-ignore], [aria-hidden="true"], img[alt=""]',
+  )) {
+    element.remove();
+  }
+
   for (const section of content.querySelectorAll('.docs-section[id]')) {
     const heading = section.querySelector(':scope > .docs-section-title');
     if (heading) {
@@ -77,22 +83,26 @@ export function renderMarkdownPage(html, markdownLinks = markdownLinkMap()) {
   }
 
   // The HTML headings carry display levels chosen for the docs stylesheet.
-  // Markdown has no surrounding chrome to supply the missing levels, so clamp
-  // each descendant to the next legal outline level while preserving depth
-  // wherever the authored outline already has it.
-  let previousHeading = 1;
+  // Markdown has no surrounding chrome to supply the missing levels. Map each
+  // authored level to one normalized level so sibling headings stay siblings,
+  // while a deeper level advances by at most one.
+  const normalizedByLevel = new Map([[1, 1]]);
   for (const heading of [...content.querySelectorAll('h1, h2, h3, h4, h5, h6')]) {
     const level = Number(heading.tagName.slice(1));
-    const normalizedLevel = Math.max(2, Math.min(level, previousHeading + 1));
+    for (const knownLevel of normalizedByLevel.keys()) {
+      if (knownLevel > level) normalizedByLevel.delete(knownLevel);
+    }
+
+    let normalizedLevel = normalizedByLevel.get(level);
+    if (normalizedLevel === undefined) {
+      const parentLevel = Math.max(...[...normalizedByLevel.keys()].filter((known) => known < level));
+      normalizedLevel = Math.min(6, normalizedByLevel.get(parentLevel) + 1);
+      normalizedByLevel.set(level, normalizedLevel);
+    }
+
     if (normalizedLevel !== level) replaceTag(document, heading, `h${normalizedLevel}`);
-    previousHeading = normalizedLevel;
   }
 
-  for (const element of content.querySelectorAll(
-    'script, style, template, [aria-hidden="true"], img[alt=""]',
-  )) {
-    element.remove();
-  }
   for (const link of content.querySelectorAll('a[href]')) {
     const href = link.getAttribute('href');
     if (href === '#!') {

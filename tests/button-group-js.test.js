@@ -51,6 +51,45 @@ describe('ButtonGroup selection', () => {
     }
   });
 
+  test('keyboard press growth resets when the active item loses focus', () => {
+    document.body.innerHTML = `
+      <div class="button-group">
+        <button type="button" class="button filled">One</button>
+        <button type="button" class="button filled">Two</button>
+      </div>`;
+    const group = document.querySelector('.button-group');
+    const buttons = [...group.querySelectorAll('button')];
+    buttons.forEach((button) => {
+      button.getBoundingClientRect = () => ({
+        width: 100,
+        height: 40,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        x: 0,
+        y: 0,
+        toJSON() {}
+      });
+    });
+
+    Expressive.AutoInit();
+    const instance = Expressive.ButtonGroup.getInstance(group);
+
+    try {
+      buttons[0].dispatchEvent(new window.KeyboardEvent('keydown', {
+        key: ' ',
+        bubbles: true
+      }));
+      assert.deepEqual(buttons.map((button) => button.style.width), ['115px', '85px']);
+
+      fire(buttons[0], 'focusout', window.FocusEvent);
+      assert.deepEqual(buttons.map((button) => button.style.width), ['100px', '100px']);
+    } finally {
+      instance?.destroy();
+    }
+  });
+
   test('a zero width multiplier disables standard press growth', () => {
     document.body.innerHTML = `
       <div class="button-group"

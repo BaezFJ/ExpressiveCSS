@@ -374,6 +374,15 @@ describe('semantics.json', () => {
         assert.ok(r.id && r.message, `${name}: rule needs an id and a message`);
         assert.ok(Object.keys(data.ruleKinds).includes(r.kind), `${r.id}: bad kind ${r.kind}`);
         if (r.kind === 'require-attr') assert.ok(r.attr, `${r.id}: require-attr needs attr`);
+        if (r.kind === 'require-idref') {
+          assert.ok(r.attr, `${r.id}: require-idref needs attr`);
+          assert.ok(r.container, `${r.id}: require-idref needs container`);
+          assert.ok(r.targetSelector, `${r.id}: require-idref needs targetSelector`);
+        }
+        if (r.kind === 'require-owned-descendant') {
+          assert.ok(r.descendantSelector, `${r.id}: require-owned-descendant needs descendantSelector`);
+          assert.ok(r.ownerSelector, `${r.id}: require-owned-descendant needs ownerSelector`);
+        }
         if (r.kind === 'forbid-composite-roles') {
           // rolesBlockedBy reports all ten for this kind without reading the
           // selector, so a conditional base would enforce narrower than it claims.

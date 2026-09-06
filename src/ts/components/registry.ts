@@ -1,6 +1,6 @@
 import { InitElements, InitElement } from "../core/component";
 import * as Components from "./index";
-import { CARDS_SELECTOR } from "./cards";
+import { CARDS_SELECTOR, isCardReveal } from "./cards";
 import { EXPANDING_CARD_SELECTOR } from "./expandingCard";
 
 /**
@@ -32,7 +32,7 @@ export const AUTO_INIT_COMPONENTS = {
   },
   // Shared with Cards.Init() - see CARDS_SELECTOR. This entry used to read
   // '.cards', which no card markup uses.
-  Cards: { component: Components.Cards, selector: CARDS_SELECTOR },
+  Cards: { component: Components.Cards, selector: CARDS_SELECTOR, filter: isCardReveal },
   ExpandingCard: {
     component: Components.ExpandingCard,
     selector: EXPANDING_CARD_SELECTOR,
@@ -81,7 +81,13 @@ export type AutoInitOptions = {
 
 /** The shape every entry in the table satisfies; see the cast in AutoInit. */
 type AutoInitable = {
-  init(els: InitElements<InitElement>, options: Partial<object>): unknown;
+  init(els: InitElement | InitElements<InitElement>, options: Partial<object>): unknown;
+};
+
+type AutoInitEntry = {
+  component: AutoInitable;
+  selector: string;
+  filter?: (el: Element) => boolean;
 };
 
 /**
@@ -94,7 +100,9 @@ export function AutoInit(
   options?: Partial<AutoInitOptions>,
 ) {
   for (const name of Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[]) {
-    const { component, selector } = AUTO_INIT_COMPONENTS[name];
+    const { component, selector, filter } = AUTO_INIT_COMPONENTS[
+      name
+    ] as unknown as AutoInitEntry;
     // `:is()` so that `:not(.no-autoinit)` applies to the whole selector. A
     // bare `${selector}:not(...)` binds the negation to the last alternative
     // only, which would silently break the opt-out for any comma-separated
@@ -102,6 +110,12 @@ export function AutoInit(
     const els = context.querySelectorAll(`:is(${selector}):not(.no-autoinit)`);
     // Each component's static `init` is overloaded; indexing the table widens
     // it to a union TypeScript cannot call, so narrow it once, here.
-    (component as unknown as AutoInitable).init(els, options?.[name] ?? {});
+    if (filter) {
+      els.forEach((el) => {
+        if (filter(el)) component.init(el, options?.[name] ?? {});
+      });
+    } else {
+      component.init(els, options?.[name] ?? {});
+    }
   }
 }
