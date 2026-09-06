@@ -17,6 +17,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="field"><input class="autocomplete" type="text" id="ac"><label for="ac">A</label></div>`,
   },
   {
+    name: "ButtonGroup",
+    selector: ".button-group",
+    html: `<div class="button-group connected" data-selection="single" role="group" aria-label="View"><button type="button" aria-pressed="true">Day</button><button type="button" aria-pressed="false">Week</button></div>`,
+  },
+  {
     // Semantic <article> + <aside>, which is what the docs use and what
     // Cards.Init() has always matched - the registry claimed `.cards`, which
     // no card markup anywhere uses.

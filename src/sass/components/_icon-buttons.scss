@@ -42,32 +42,10 @@
 // Width is not a token: it is leading + icon + trailing. That is why every
 // size's default width equals its height, and why `.narrow` / `.wide` need
 // nothing but a different inset.
-$_sizes: (
-  "xsmall": (height: 32px, icon: 20px, space: 6px, narrow: 4px, wide: 10px, square: 12px, pressed: 8px, outline: 1px),
-  "small": (height: 40px, icon: 24px, space: 8px, narrow: 4px, wide: 14px, square: 12px, pressed: 8px, outline: 1px),
-  "medium": (height: 56px, icon: 24px, space: 16px, narrow: 12px, wide: 24px, square: 16px, pressed: 12px, outline: 1px),
-  "large": (height: 96px, icon: 32px, space: 32px, narrow: 16px, wide: 48px, square: 28px, pressed: 16px, outline: 2px),
-  "xlarge": (height: 136px, icon: 40px, space: 48px, narrow: 32px, wide: 72px, square: 28px, pressed: 16px, outline: 3px),
-);
-
-@mixin _size($name) {
-  $s: map.get($_sizes, $name);
-
-  --md-comp-icon-button-container-height: #{map.get($s, height)};
-  --md-comp-icon-button-icon-size: #{map.get($s, icon)};
-  --md-comp-icon-button-leading-space: #{map.get($s, space)};
-  --md-comp-icon-button-trailing-space: #{map.get($s, space)};
-  --md-comp-icon-button-narrow-space: #{map.get($s, narrow)};
-  --md-comp-icon-button-wide-space: #{map.get($s, wide)};
-  --md-comp-icon-button-container-shape-square: #{map.get($s, square)};
-  --md-comp-icon-button-pressed-container-shape: #{map.get($s, pressed)};
-  --md-comp-icon-button-outline-width: #{map.get($s, outline)};
-}
-
 // Standard is the default style: no container, `on-surface-variant` icon. Every
 // other style is two tokens.
 .icon-button {
-  @include _size("small");
+  @include icon-button-size("small");
 
   --md-comp-icon-button-color: var(--md-sys-color-on-surface-variant);
   --md-comp-icon-button-container-color: transparent;
@@ -145,7 +123,7 @@ $_sizes: (
 // Sizes. Default is small (40dp), which is M3's default icon button.
 @each $name in ("xsmall", "medium", "large", "xlarge") {
   .icon-button.#{$name} {
-    @include _size($name);
+    @include icon-button-size($name);
   }
 }
 

@@ -129,7 +129,7 @@ Swept 0.8.0. A trail is an ordered list, because the order is the meaning.
 
 ### button-groups
 
-Added with the button group component (#41). A group of related buttons that read as one control without becoming one: each item is its own Tab stop and does its own thing, so the container declares no role at all. `toolbar` is rejected rather than withheld - Toolbar's case is a keyboard model that has not been written yet, this one is a component that is not a composite widget and does not want to be. A group that needs a name takes `role="group"` with an `aria-label`, which promises no keyboard contract to break. Selection is absent for the same reason: a <button> holds no checked state, and the M3 connected group's selected shape belongs to `.segmented-button`, which is a <fieldset> of real controls.
+Material 3 Expressive button groups support action buttons and opt-in toggle-button selection. ButtonGroup redistributes standard-group width during press after AutoInit(). Every item remains a native Tab stop; the container is not a composite widget and must not claim toolbar or radiogroup behavior. Named clusters use role="group". Selection groups use data-selection="single|multiple", direct native buttons, and aria-pressed; ButtonGroup owns subsequent state changes.
 
 **Rejected role:** `toolbar` is not withheld but declined - its buttons are independent commands reached with Tab - the group is a visual grouping, not a composite widget, so there is no arrow-key model to implement and none to promise. `button-group-is-not-an-authored-composite-widget` enforces that, keeping every composite role out.
 
@@ -137,13 +137,31 @@ Added with the button group component (#41). A group of related buttons that rea
 | --- | --- | --- | --- |
 | `button-group-is-not-an-authored-composite-widget` | forbid-composite-roles | `.button-group` | must not match with any composite role |
 | `button-group-items-are-controls` | forbid | `.button-group > :not(button):not(a.button[href])` | must not match |
-| `button-group-item-is-not-an-icon-button` | forbid | `.button-group > .icon-button` | must not match |
-| `button-group-selection-is-not-authored` | forbid | `.button-group :is([aria-checked], [aria-selected], [aria-pressed])` | must not match |
+| `button-group-items-have-containers` | forbid | `.button-group > :is(button, a.button).text` | must not match |
+| `button-group-icon-items-have-containers` | forbid | `.button-group > .icon-button:not(.filled):not(.tonal):not(.outlined)` | must not match |
+| `button-group-selection-mode-is-valid` | forbid | `.button-group[data-selection]:not([data-selection="single"]):not([data-selection="multiple"])` | must not match |
+| `button-group-required-needs-selection` | forbid | `.button-group[data-selection-required]:not([data-selection])` | must not match |
+| `button-group-connected-is-selectable` | forbid | `.button-group.connected:not([data-selection])` | must not match |
+| `button-group-selection-items-are-buttons` | forbid | `.button-group[data-selection] > :not(button)` | must not match |
+| `button-group-selection-button-type` | require-attr | `.button-group[data-selection] > button` | must have `type` = `button` |
+| `button-group-selection-state-is-pressed` | require-attr | `.button-group[data-selection] > button` | must have `aria-pressed` |
+| `button-group-selection-state-is-boolean` | forbid | `.button-group[data-selection] > button[aria-pressed]:not([aria-pressed="true"]):not([aria-pressed="false"])` | must not match |
+| `button-group-selection-does-not-use-choice-state` | forbid | `.button-group[data-selection] > :is([aria-checked], [aria-selected])` | must not match |
+| `button-group-action-does-not-claim-selection` | forbid | `.button-group:not([data-selection]) > [aria-pressed]` | must not match |
 
 - **button-group-is-not-an-authored-composite-widget** - A button group takes no composite role; its buttons are reached with Tab, not arrow keys. `role="group"` with an aria-label is the role that fits, and it promises no keyboard model.
 - **button-group-items-are-controls** - Every item in a group is a control the user can reach, and one the sheet styles as a button: a <button>, or an <a class="button" href> when it navigates. A bare <a href> passes for a control and renders as a link - none of the group's corners, press behaviour or inherited size reach it. A wrapper element is refused too: the gap and the connected corners are written against direct children, so a nested <div> loses both.
-- **button-group-item-is-not-an-icon-button** - An icon button is its own component: its size ladder, its insets and its pressed shape are all set on the element itself, so the group can neither size it nor reshape it without fighting rules it already has. An icon-only item is <button class="button circle">, which the group sizes like any other.
-- **button-group-selection-is-not-authored** - A button group holds independent commands, not a choice. Nothing in it tracks a selected state, so an ARIA one would be a claim no code updates - use a segmented button, whose <input> holds the state itself.
+- **button-group-items-have-containers** - Material warns against text buttons in a group because they have no visible container for the shape interaction. Use filled, tonal, outlined, or elevated buttons.
+- **button-group-icon-items-have-containers** - Material warns against standard icon buttons in a group because they have no visible container for the shape interaction. Use a filled, tonal, or outlined icon button.
+- **button-group-selection-mode-is-valid** - ButtonGroup supports data-selection="single" or data-selection="multiple". Any other value exposes toggle state without a defined selection model.
+- **button-group-required-needs-selection** - data-selection-required only has meaning on a single- or multiple-selection ButtonGroup.
+- **button-group-connected-is-selectable** - Material connected button groups contain toggleable choices. Add data-selection="single|multiple", or use the standard group for one-shot actions.
+- **button-group-selection-items-are-buttons** - Selection items are native buttons. Links navigate and cannot represent toggle-button state.
+- **button-group-selection-button-type** - A selection button inside a form must not submit it; set type="button".
+- **button-group-selection-state-is-pressed** - Author each toggle button's initial aria-pressed value. ButtonGroup maintains that state after initialization.
+- **button-group-selection-state-is-boolean** - A toggle button's initial aria-pressed value is true or false; mixed is not a Button Group state.
+- **button-group-selection-does-not-use-choice-state** - These are toggle buttons, not radios, checkboxes, options, or tabs. Expose their state with aria-pressed.
+- **button-group-action-does-not-claim-selection** - aria-pressed requires ButtonGroup selection behavior. Add data-selection="single|multiple" or remove the toggle state.
 
 ### buttons
 

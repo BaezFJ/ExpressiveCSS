@@ -624,20 +624,20 @@
         ]
       },
       "jobs": [
-        "Related buttons that bump and reshape against each other, in two variants and five sizes."
+        "Related action or toggle buttons that grow and reshape together, in two variants and five sizes."
       ],
       "useWhen": [
-        "Related buttons that bump and reshape against each other, in two variants and five sizes."
+        "Related commands or toggle-button states belong in one visual cluster."
       ],
       "avoidWhen": [
-        "The controls choose one or more values as a selection set."
+        "The choices are a form field whose radio or checkbox value must be submitted."
       ],
       "alternatives": [
         "segmented-buttons",
         "split-button"
       ],
       "adaptive": [],
-      "runtime": "css-only",
+      "runtime": "auto-init",
       "guide": "../components/button-groups.md",
       "materialGuidance": {
         "status": "material",

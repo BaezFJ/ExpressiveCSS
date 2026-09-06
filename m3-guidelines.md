@@ -1214,30 +1214,34 @@ Three **selection controls**. They are not interchangeable.
 
 ## 8.12 Button groups
 
-**M3:** Button group (standard, connected), five sizes each. **ExpressiveCSS:** `div.button-group` holding ordinary buttons (CSS only).
+**M3:** Button group (standard, connected), five sizes each. **ExpressiveCSS:** `div.button-group` holding direct common-button or icon-button children. `ButtonGroup` initializes through `AutoInit()` to redistribute standard press widths; toggle-state management remains opt-in through `data-selection`.
 
-**Use when** two or more related actions belong together as one visual unit — a formatting row, a set of view actions, a player's transport. A group is a set of *commands*, not a choice.
+**Use when** two or more related actions or toggle buttons belong together as one visual unit — a formatting row, a set of view actions, a player's transport.
 
 | Variant | Markup | Job |
 | --- | --- | --- |
 | Standard | `<div class="button-group">` | Each item keeps its own round shape; the gap closes as the buttons grow, and a pressed item widens |
-| Connected | `<div class="button-group connected">` | Items 2 dp apart, round at the ends of the row, squared at the joins; a pressed item squares its inner corners further |
+| Connected | `<div class="button-group connected" data-selection="single">` | Toggle items fill the group at equal widths, 2 dp apart, round at the ends and squared at the joins; a pressed item squares its inner corners further |
+| Single selection | `data-selection="single"` + `aria-pressed` buttons | At most one toggle on; add `data-selection-required` when one must remain on |
+| Multiple selection | `data-selection="multiple"` + `aria-pressed` buttons | Each toggle changes independently |
 
 **Don't**
 
-- Don't use a group for a choice. Two to five options answering one question is a segmented button, whose `<input>` holds the answer; a group of `<button>`s holds no state and nothing marks one selected.
+- Don't use a selection group as a form field. When two to five options should submit a radio or checkbox value, use a segmented button. Use Button Group selection for toggle-button commands whose state is exposed through `aria-pressed`.
+- Don't use the connected treatment for one-shot actions. Current M3 guidance reserves connected groups for single- or multiple-selection toggle buttons.
 - Don't put a composite role on the group. Its buttons are independent commands reached with Tab, so `toolbar` and its siblings are rejected. `role="group"` with an `aria-label` is the role that fits when the group needs a name.
 - Don't wrap the items in anything. The gap and the connected corners are written against direct children, so a nested `<div>` loses both.
 - Don't leave an icon-only item unnamed. The icon is `aria-hidden`, so the button needs its own `aria-label`.
 - Don't repeat the size on every button. The size class goes on the group, which sets the button tokens its items inherit.
 - Don't write a bare `<a href>` as an item. It renders as a link and reaches none of the group's shape or sizing; the item is `<a class="button" href>`.
-- Don't put an `.icon-button` in a group. It is its own component, with its own sizes and pressed shape set on the element, so the group can neither size nor reshape it. An icon-only item is `<button class="button circle">`.
+- Don't put links in a selection group. Toggle state belongs on `<button type="button" aria-pressed="…">`; links remain valid only in action groups.
+- Don't use text buttons or standard icon buttons in a group. Their transparent containers hide the shape interaction. Use filled, tonal, outlined, or elevated common buttons, and filled, tonal, or outlined icon buttons.
 
-**Anatomy.** A row of buttons. Heights are the button ladder — 32 / 40 / 56 / 96 / 136 dp for `xsmall` / `small` / `medium` / `large` / `xlarge` — and the gap is 18 / 12 / 8 / 8 / 8 dp standard, 2 dp connected at every size. Connected joins are 8 dp at the three smaller sizes, 16 dp at `large`, 20 dp at `xlarge`, each squaring one step further while pressed.
+**Anatomy.** A row of direct common-button or icon-button children. Heights are the button ladder — 32 / 40 / 56 / 96 / 136 dp for `xsmall` / `small` / `medium` / `large` / `xlarge` — and the gap is 18 / 12 / 8 / 8 / 8 dp standard, 2 dp connected at every size. Connected joins are 4 dp at `xsmall`, 8 dp at `small` and `medium`, 16 dp at `large`, and 20 dp at `xlarge`; their pressed values are 4 / 4 / 4 / 12 / 16 dp. The XS 4dp join follows the live M3 measurement; Material Web 34.0.21 still emits an 8px unselected token there. XS and S retain a minimum 48 dp interaction target.
 
 **Placement.** Beside the content the actions apply to. One group per cluster of related actions; two groups side by side read as one and should be merged or separated by other content.
 
-**Behavior.** No script. Press feedback is the whole interaction model: a standard group grows the pressed item, a connected group reshapes it.
+**Behavior.** Standard press feedback grows the pressed item by 15% of its measured width and takes that width from its immediate neighbors, so the group's total width stays fixed; connected press feedback reshapes the joins. For toggle groups, `data-selection="single|multiple"` opts into managed selection, and `data-selection-required` prevents the last active item from turning off. Author each initial `aria-pressed`, then `AutoInit()` maintains it. Selection changes color, shape and icon fill, not color alone. Every button remains a Tab stop and uses native Space/Enter activation; do not add a composite role or arrow-key model. Width and corner changes use the fast-spatial spring; reduced motion removes their transitions.
 
 ---
 
