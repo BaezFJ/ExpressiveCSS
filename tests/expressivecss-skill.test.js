@@ -28,12 +28,26 @@ const decisionIndex = readFileSync(new URL('references/component-decisions.md', 
 const usageGuideUrl = new URL('expressivecss-usage/SKILL.md', skillDirectory);
 const gridReferenceUrl = new URL('expressivecss-usage/references/grid.md', skillDirectory);
 const helpersReferenceUrl = new URL('expressivecss-usage/references/helpers.md', skillDirectory);
+const themingGuideUrl = new URL('expressivecss-theming/SKILL.md', skillDirectory);
+const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography']
+  .map((name) => [name, new URL(`expressivecss-theming/references/${name}.md`, skillDirectory)]));
 const compiledCss = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const gridSass = readFileSync(new URL('../src/sass/base/_grid.scss', import.meta.url), 'utf8');
 const spacingSass = readFileSync(new URL('../src/sass/utilities/_spacing.scss', import.meta.url), 'utf8');
 const visibilitySass = readFileSync(new URL('../src/sass/utilities/_visibility.scss', import.meta.url), 'utf8');
 const elevationSass = readFileSync(new URL('../src/sass/abstracts/_elevation.scss', import.meta.url), 'utf8');
 const breakpointsSass = readFileSync(new URL('../src/sass/abstracts/_breakpoints.scss', import.meta.url), 'utf8');
+const variablesSass = readFileSync(new URL('../src/sass/abstracts/_variables.scss', import.meta.url), 'utf8');
+const referenceSass = readFileSync(new URL('../src/sass/tokens/_reference.scss', import.meta.url), 'utf8');
+const themeSass = readFileSync(new URL('../src/sass/tokens/_theme.scss', import.meta.url), 'utf8');
+const vibrantSass = readFileSync(new URL('../src/sass/tokens/_vibrant.scss', import.meta.url), 'utf8');
+const globalSass = readFileSync(new URL('../src/sass/base/_global.scss', import.meta.url), 'utf8');
+const baseTypographySass = readFileSync(new URL('../src/sass/base/_typography.scss', import.meta.url), 'utf8');
+const colorsSass = readFileSync(new URL('../src/sass/utilities/_colors.scss', import.meta.url), 'utf8');
+const scrimSass = readFileSync(new URL('../src/sass/components/_scrim.scss', import.meta.url), 'utf8');
+const iconSass = readFileSync(new URL('../src/sass/components/_icons-material-design.scss', import.meta.url), 'utf8');
+const iconsDocs = readFileSync(new URL('../docs/src/pages/icons.astro', import.meta.url), 'utf8');
+const typescaleSass = readFileSync(new URL('../src/sass/utilities/_typescale.scss', import.meta.url), 'utf8');
 const componentEntries = [...decisionIndex.matchAll(/^\| \[([^\]]+)\]\(\.\.\/components\/([a-z-]+\.md)\) \|/gm)]
   .map((match) => ({ label: match[1], name: match[2] }));
 const componentLinks = componentEntries.map(({ name }) => name);
@@ -58,7 +72,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.5\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.6\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -322,6 +336,121 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.doesNotMatch(content, /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
       assert.doesNotMatch(content, /\]\(\.\.\/\.\.\//, `${name} reference links outside the portable skill directory`);
     }
+  });
+
+  test('gives agents source-checked foundation references', () => {
+    const theming = readFileSync(themingGuideUrl, 'utf8');
+    const references = {};
+    for (const [name, url] of Object.entries(foundationReferenceUrls)) {
+      assert.ok(existsSync(url), `${name} foundation reference is missing`);
+      assert.match(theming, new RegExp(`\\[${name} reference\\]\\(\\.\\/references\\/${name}\\.md\\)`, 'i'));
+      references[name] = readFileSync(url, 'utf8');
+      assert.doesNotMatch(references[name], /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
+    }
+
+    const roleBlock = variablesSass.match(/\$sys-color-roles:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const colorRoles = [...roleBlock.matchAll(/"([a-z-]+)"/g)].map((match) => match[1]);
+    assert.ok(colorRoles.length > 0, 'could not read color roles from Sass');
+    for (const role of colorRoles) {
+      assert.ok(references.color.includes(`\`.${role}\``), `color reference omits .${role}`);
+      assert.ok(references.color.includes(`\`.${role}-text\``), `color reference omits .${role}-text`);
+      assert.match(compiledCss, new RegExp(`\\.${role}(?![\\w-])`), `compiled CSS omits .${role}`);
+      assert.match(compiledCss, new RegExp(`\\.${role}-text(?![\\w-])`), `compiled CSS omits .${role}-text`);
+    }
+    assert.match(references.color, /background class[\s\S]*`-text`[\s\S]*foreground/i);
+    assert.match(references.color, /container[\s\S]*matching `on-\*`/i);
+    assert.match(references.color, /color-mix\(in oklab/);
+    assert.match(references.color, /Do not write `rgba\(var\(--md-sys-color-/);
+    const roleNamedColors = colorsSass.match(/\$_role-named:\s*([^;]+);/)?.[1].match(/[a-z][a-z-]+/g) ?? [];
+    assert.deepEqual(roleNamedColors, ['primary-container', 'secondary-container', 'tertiary-container']);
+    assert.match(colorsSass, /\$_role-named-hosts:\s*":not\(\.extend\):not\(\.fab-menu\)"/);
+    assert.match(references.color, /`primary-container`, `secondary-container`, and `tertiary-container`[\s\S]*`.extend`[\s\S]*`.fab-menu`[\s\S]*`-text` forms still apply/);
+    assert.doesNotMatch(references.color, /class="[^"]*button[^"]*\b(?:primary|secondary|tertiary|error)(?:-container)?\b/);
+    assert.match(scrimSass, /--md-comp-scrim-color:\s*color-mix\(in oklab, var\(--md-sys-color-scrim\) 32%, transparent\)/);
+    assert.match(references.color, /`.scrim` is the opaque system role[\s\S]*`--md-comp-scrim-color`/);
+
+    for (const scheme of ['light', 'dark', 'auto']) assert.ok(themeSass.includes(`:root[theme='${scheme}']`));
+    assert.match(references.themes, /no `theme` attribute[\s\S]*`theme="auto"`[\s\S]*`theme="light"`[\s\S]*`theme="dark"`/i);
+    assert.match(references.themes, /no `Expressive\.theme`/);
+    assert.match(referenceSass, /--md-source:/);
+    assert.match(references.themes, /`--md-source`[\s\S]*error ramp[\s\S]*does not/i);
+    assert.match(vibrantSass, /\[vibrant\],[\s\S]*:host\(\[vibrant\]\)/);
+    assert.match(references.themes, /`\[vibrant\]`[\s\S]*focused subtree[\s\S]*not[\s\S]*whole page/i);
+
+    const elevationBlock = elevationSass.match(/\$elevations:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const elevationKeys = [...elevationBlock.matchAll(/"([\w-]+)"\s*:/g)].map((match) => match[1]);
+    assert.ok(elevationKeys.length > 0, 'could not read elevation levels from Sass');
+    for (const level of elevationKeys) {
+      assert.ok(references.elevation.includes(`\`.z-depth-${level}\``), `elevation reference omits .z-depth-${level}`);
+      assert.match(compiledCss, new RegExp(`\\.z-depth-${level}(?![\\w-])`));
+    }
+    assert.match(references.elevation, /`\.z-depth-0`[\s\S]*`!important`/);
+    assert.match(references.elevation, /`@include z-depth\("2"\)`[\s\S]*not[\s\S]*`@extend/i);
+    assert.doesNotMatch(compiledCss, /--md-sys-elevation/);
+    assert.match(references.elevation, /does not publish CSS custom-property elevation levels/);
+    assert.match(references.elevation, /fixed shadow can lower an element that already has a higher elevation/);
+
+    for (const className of ['material-symbols', 'material-symbols-outlined', 'material-symbols-rounded', 'material-symbols-sharp', 'material-icons', 'icon-filled']) {
+      assert.ok(references.icons.includes(`\`.${className}\``), `icons reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    for (const token of ['--md-icon-font', '--md-icon-fill', '--md-icon-weight', '--md-icon-grade', '--md-icon-optical-size']) {
+      assert.ok(iconSass.includes(`${token}:`), `icon Sass omits ${token}`);
+      assert.ok(references.icons.includes(`\`${token}\``), `icons reference omits ${token}`);
+    }
+    const normalizedIconReference = references.icons.replaceAll('`', '');
+    for (const range of ['0 or 1', '100–700', '−50–200', '20–48']) {
+      assert.ok(iconsDocs.includes(range), `icon docs omit ${range}`);
+      assert.ok(normalizedIconReference.includes(range), `icons reference omits ${range}`);
+    }
+    assert.match(references.icons, /convenience presets; they do not restrict per-icon axis values/);
+    assert.match(references.icons, /`icon-style="outlined"`[\s\S]*`icon-style="rounded"`[\s\S]*`icon-style="sharp"`/);
+    for (const style of ['outlined', 'rounded', 'sharp']) {
+      assert.ok(iconSass.includes(`[icon-style="${style}"]`));
+      assert.ok(references.icons.includes(`\`icon-style="${style}"\``));
+    }
+    assert.match(references.icons, /decorative[\s\S]*`aria-hidden="true"`[\s\S]*icon-only[\s\S]*accessible name/i);
+    for (const [size, value, optical] of [['tiny', '1rem', '20'], ['small', '2rem', '24'], ['medium', '4rem', '40'], ['large', '6rem', '48']]) {
+      assert.match(iconSass, new RegExp(`&\\.${size}[\\s\\S]*?font-size:\\s*${value}`));
+      assert.match(iconSass, new RegExp(`&\\.${size}[\\s\\S]*?--md-icon-optical-size:\\s*${optical}`));
+      assert.ok(references.icons.includes(`| \`.${size}\` | \`${value}\` | \`${optical}\` |`), `icons reference has the wrong .${size} size`);
+    }
+    assert.match(iconSass, /&\.left[\s\S]*margin-left:\s*-8px/);
+    assert.match(references.icons, /`\.left`[\s\S]*`margin-left: -8px`/);
+
+    const typeRoleBlock = typescaleSass.match(/\$typescale-roles:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const typeRoles = [...typeRoleBlock.matchAll(/"([a-z-]+)"/g)].map((match) => match[1]);
+    assert.equal(typeRoles.length, 15);
+    for (const role of typeRoles) {
+      assert.ok(references.typography.includes(`\`.${role}\``), `typography reference omits .${role}`);
+      assert.match(compiledCss, new RegExp(`\\.${role}(?![\\w-])`), `compiled CSS omits .${role}`);
+      const metric = (property) => referenceSass.match(new RegExp(`--md-sys-typescale-${role}-${property}:\\s*([^;]+);`))?.[1];
+      const values = ['font-size', 'line-height', 'font-weight', 'letter-spacing'].map(metric);
+      assert.ok(values.every(Boolean), `typography source omits metrics for ${role}`);
+      assert.ok(
+        references.typography.includes(`| \`.${role}\` | ${values.map((value) => `\`${value}\``).join(' | ')} |`),
+        `typography reference has the wrong metrics for .${role}`,
+      );
+    }
+    for (const className of ['italic', 'bold', 'light', 'thin', 'underline', 'overline', 'upper', 'lower', 'capitalize', 'flow-text']) {
+      assert.ok(references.typography.includes(`\`.${className}\``), `typography reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(references.typography, /semantic HTML first/i);
+    assert.match(references.typography, /type-role loop and text helpers live in `src\/sass\/utilities\/_typescale\.scss`/);
+    assert.match(references.typography, /element defaults and `\.flow-text` live in `src\/sass\/base\/_typography\.scss`/);
+    assert.match(baseTypographySass, /body\s*\{[\s\S]*?@include typescale\("body-medium"\)/);
+    assert.match(references.typography, /`body` uses body-medium/);
+    const flowTextSize = compiledCss.match(/\.flow-text\s*\{\s*font-size:\s*([^;]+);/)?.[1];
+    assert.equal(flowTextSize, 'clamp(1.2rem, 0.912rem + 1.28vw, 1.68rem)');
+    assert.ok(references.typography.includes(`\`${flowTextSize}\``));
+    assert.match(references.typography, /role utilities consume all except `-font-family-style`/);
+    assert.match(typescaleSass, /\.bold\s*\{\s*font-weight:\s*500/);
+    assert.match(references.typography, /`\.bold` \| `font-weight: 500`/);
+    assert.match(references.typography, /`--md-ref-typeface-brand`[\s\S]*`--md-ref-typeface-plain`[\s\S]*`--md-ref-typeface-fallback`/);
+    assert.match(globalSass, /a\s*\{[\s\S]*?text-decoration:\s*none;/);
+    assert.match(references.typography, /Links use the primary role and remove text decoration by default/);
+    assert.doesNotMatch(references.typography, /`\.(?:large|medium|small)-text`/);
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {

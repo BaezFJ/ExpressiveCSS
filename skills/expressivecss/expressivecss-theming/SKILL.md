@@ -7,13 +7,23 @@ description: Theme ExpressiveCSS with Material 3 color roles.
 
 ## When to use
 
-Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, or other visual tokens.
+Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, or other visual tokens such as elevation and shadows.
 
 ## Do not use when
 
 Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
 
-Read the target version's [Themes](https://www.expressivecss.com/themes.html.md) and [Color](https://www.expressivecss.com/color.html.md) documentation before changing tokens.
+Read the target version's Foundation documentation before changing tokens: [Color](https://www.expressivecss.com/color.html.md), [Themes](https://www.expressivecss.com/themes.html.md), [Shadow](https://www.expressivecss.com/shadow.html.md), [Icons](https://www.expressivecss.com/icons.html.md), and [Typography](https://www.expressivecss.com/typography.html.md).
+
+## Focused references
+
+Load only the references needed for the task:
+
+- For semantic color tokens, utility classes, role pairings, and transparency, read the [color reference](./references/color.md).
+- For light/dark/auto selection, seed overrides, nested schemes, Shadow DOM, and vibrant regions, read the [themes reference](./references/themes.md).
+- For `z-depth-*`, Sass elevation mixins, and shadow-state rules, read the [elevation reference](./references/elevation.md).
+- For Material Symbols families, axes, sizing, font delivery, and icon accessibility, read the [icons reference](./references/icons.md).
+- For the 15 M3 type roles, typeface tokens, text helpers, and semantic hierarchy, read the [typography reference](./references/typography.md).
 
 ### Select a scheme
 
