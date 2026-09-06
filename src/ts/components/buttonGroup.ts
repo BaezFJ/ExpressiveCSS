@@ -9,6 +9,8 @@ type SavedItemStyle = {
 
 const _defaults: ButtonGroupOptions = {};
 const VALID_SELECTION_MODES = new Set(["single", "multiple"]);
+const PRESSED_CLASS = "button-group-pressed";
+const MAX_ICON_COMPRESSION = 0.15;
 
 /**
  * Coordinates Material button-group press geometry and optional toggle state.
@@ -31,7 +33,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
 
     if (this._selectionMode) {
       this._normalizeSelection();
-      this.el.addEventListener("click", this._handleClick);
+      this.el.addEventListener("click", this._handleClick, true);
     }
     this.el.addEventListener("pointerdown", this._handlePointerDown);
     this.el.addEventListener("keydown", this._handleKeyDown);
@@ -65,7 +67,7 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   destroy() {
     this._resetPress();
     this._finishRelease();
-    this.el.removeEventListener("click", this._handleClick);
+    this.el.removeEventListener("click", this._handleClick, true);
     this.el.removeEventListener("pointerdown", this._handlePointerDown);
     this.el.removeEventListener("keydown", this._handleKeyDown);
     this.el.removeEventListener("focusout", this._handleFocusOut);
@@ -189,12 +191,16 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
   };
 
   private _startPress(item: HTMLElement) {
-    if (this.el.classList.contains("connected") || this._pressedStyles.size) return;
+    if (this._activeItem) return;
     this._finishRelease();
 
     const items = this._items;
     const activeIndex = items.indexOf(item);
-    if (activeIndex < 0 || items.length < 2) return;
+    if (activeIndex < 0) return;
+
+    this._activeItem = item;
+    item.classList.add(PRESSED_CLASS);
+    if (this.el.classList.contains("connected") || items.length < 2) return;
 
     const rects = items.map((candidate) => candidate.getBoundingClientRect());
     const activeWidth = rects[activeIndex].width;
@@ -214,16 +220,23 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
 
     if (neighborIndexes.length === 1) {
       const index = neighborIndexes[0];
-      compression.set(index, Math.min(desiredGrowth, this._compressionCapacity(rects[index])));
+      compression.set(
+        index,
+        Math.min(desiredGrowth, this._compressionCapacity(items[index], rects[index])),
+      );
     } else {
       const half = desiredGrowth / 2;
       for (const index of neighborIndexes) {
-        compression.set(index, Math.min(half, this._compressionCapacity(rects[index])));
+        compression.set(
+          index,
+          Math.min(half, this._compressionCapacity(items[index], rects[index])),
+        );
       }
       let remaining = desiredGrowth - [...compression.values()].reduce((sum, value) => sum + value, 0);
       for (const index of neighborIndexes) {
         if (remaining <= 0) break;
-        const capacity = this._compressionCapacity(rects[index]) - compression.get(index);
+        const capacity =
+          this._compressionCapacity(items[index], rects[index]) - compression.get(index);
         const extra = Math.min(remaining, capacity);
         compression.set(index, compression.get(index) + extra);
         remaining -= extra;
@@ -233,7 +246,6 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     const actualGrowth = [...compression.values()].reduce((sum, value) => sum + value, 0);
     if (actualGrowth <= 0) return;
 
-    this._activeItem = item;
     items.forEach((candidate, index) => {
       this._pressedStyles.set(candidate, {
         width: candidate.style.width,
@@ -249,11 +261,15 @@ export class ButtonGroup extends Component<ButtonGroupOptions> {
     });
   }
 
-  private _compressionCapacity(rect: DOMRect): number {
-    return Math.max(0, rect.width - rect.height);
+  private _compressionCapacity(item: HTMLElement, rect: DOMRect): number {
+    const minimumWidth = item.classList.contains("icon-button")
+      ? rect.width * (1 - MAX_ICON_COMPRESSION)
+      : rect.height;
+    return Math.max(0, rect.width - minimumWidth);
   }
 
   private _resetPress = () => {
+    this._activeItem?.classList.remove(PRESSED_CLASS);
     this._activeItem = null;
     if (!this._pressedStyles.size) return;
     this._finishRelease();

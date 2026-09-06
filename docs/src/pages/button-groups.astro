@@ -167,6 +167,16 @@ const S = defineSections([
       Give every item its initial <code>aria-pressed</code> value;
       <code>ButtonGroup</code> maintains it after <code>AutoInit()</code>.
     </p>
+    <div>
+      <div class="button-group connected"
+           data-selection="multiple"
+           role="group"
+           aria-label="Text formatting">
+        <button type="button" class="button filled" aria-pressed="true">Bold</button>
+        <button type="button" class="button filled" aria-pressed="false">Italic</button>
+        <button type="button" class="button filled" aria-pressed="false">Underline</button>
+      </div>
+    </div>
 <Code code={`
 <div class="button-group connected"
      data-selection="multiple"

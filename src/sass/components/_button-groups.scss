@@ -252,7 +252,7 @@ $_connected-corners: (
     );
   }
 
-  > #{$_toggle-item}[aria-pressed]:active {
+  > #{$_toggle-item}[aria-pressed]:is(:active, .button-group-pressed) {
     background-color: color-mix(
       in oklab,
       var(--_toggle-state-color) state-opacity("pressed"),
@@ -284,8 +284,8 @@ $_connected-corners: (
   // ButtonGroup measures the pressed item and takes its 15% growth from the
   // immediate neighbors, keeping the standard group's total width stable.
   // CSS owns only the simultaneous shape change.
-  &:not(.connected) > #{$_item}:active,
-  &.square:not(.connected) > #{$_item}[aria-pressed=true]:active {
+  &:not(.connected) > #{$_item}:is(:active, .button-group-pressed),
+  &.square:not(.connected) > #{$_item}[aria-pressed=true]:is(:active, .button-group-pressed) {
     --_corner: var(--md-comp-button-group-pressed-item-shape);
   }
 
@@ -317,8 +317,8 @@ $_connected-corners: (
     }
 
     // The corner goes through a variable so that pressing an item changes one
-    // value rather than restating `border-radius`. A shorthand under `:active`
-    // would take the end items' round outer corners with it.
+    // value rather than restating `border-radius`. A shorthand for the pressed
+    // state would take the end items' round outer corners with it.
     > #{$_item} {
       --_corner: var(--md-comp-button-group-inner-corner-corner-size);
       --_outer-corner: var(--md-comp-button-group-container-shape);
@@ -331,7 +331,7 @@ $_connected-corners: (
         --_outer-corner: var(--md-comp-button-group-selected-inner-corner-corner-size);
       }
 
-      &:active {
+      &:is(:active, .button-group-pressed) {
         --_corner: var(--md-comp-button-group-pressed-inner-corner-corner-size);
       }
 

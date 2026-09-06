@@ -90,6 +90,42 @@ describe('ButtonGroup selection', () => {
     }
   });
 
+  test('square icon-button neighbors can fund standard press growth', () => {
+    document.body.innerHTML = `
+      <div class="button-group">
+        <button type="button" class="icon-button filled" aria-label="Previous"></button>
+        <button type="button" class="icon-button filled" aria-label="Play"></button>
+        <button type="button" class="icon-button filled" aria-label="Next"></button>
+      </div>`;
+    const group = document.querySelector('.button-group');
+    const buttons = [...group.querySelectorAll('button')];
+    buttons.forEach((button) => {
+      button.getBoundingClientRect = () => ({
+        width: 40,
+        height: 40,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        x: 0,
+        y: 0,
+        toJSON() {}
+      });
+    });
+
+    Expressive.AutoInit();
+    const instance = Expressive.ButtonGroup.getInstance(group);
+
+    try {
+      fire(buttons[1], 'pointerdown');
+      assert.deepEqual(buttons.map((button) => button.style.width), ['37px', '46px', '37px']);
+      fire(document, 'pointerup');
+      assert.deepEqual(buttons.map((button) => button.style.width), ['40px', '40px', '40px']);
+    } finally {
+      instance?.destroy();
+    }
+  });
+
   test('a zero width multiplier disables standard press growth', () => {
     document.body.innerHTML = `
       <div class="button-group"
@@ -140,9 +176,14 @@ describe('ButtonGroup selection', () => {
 
     try {
       assert.ok(instance);
+      let pressedStateSeenByButton;
+      buttons[1].addEventListener('click', () => {
+        pressedStateSeenByButton = buttons[1].getAttribute('aria-pressed');
+      });
       fire(buttons[1], 'click');
       assert.equal(buttons[0].getAttribute('aria-pressed'), 'false');
       assert.equal(buttons[1].getAttribute('aria-pressed'), 'true');
+      assert.equal(pressedStateSeenByButton, 'true');
     } finally {
       instance?.destroy();
     }

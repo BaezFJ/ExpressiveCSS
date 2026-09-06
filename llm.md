@@ -242,6 +242,7 @@ Opt an element out when it needs manual options:
 | Component | Selector |
 | --- | --- |
 | `Autocomplete` | `.autocomplete` |
+| `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
@@ -3794,6 +3795,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | Name | Selector |
 | --- | --- |
 | `Autocomplete` | `.autocomplete` |
+| `ButtonGroup` | `.button-group` |
 | `Cards` | `article:has(> aside[id]:not([id=""])):not(:has(> aside ~ aside)):has(> button.card-reveal-trigger[type="button"], > :not(aside) button.card-reveal-trigger[type="button"])` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |

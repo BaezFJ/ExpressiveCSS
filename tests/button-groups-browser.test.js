@@ -180,3 +180,64 @@ browserTest('standard press redistribution keeps its rendered width stable', asy
     await browser.close();
   }
 });
+
+browserTest('keyboard press changes icon widths and rendered corners', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`
+      <style>${css}</style>
+      <div id="standard" class="button-group">
+        <button class="icon-button filled" aria-label="Previous"><span class="material-symbols" aria-hidden="true">skip_previous</span></button>
+        <button class="icon-button filled" aria-label="Play"><span class="material-symbols" aria-hidden="true">play_arrow</span></button>
+        <button class="icon-button filled" aria-label="Next"><span class="material-symbols" aria-hidden="true">skip_next</span></button>
+      </div>
+      <div id="connected" class="button-group connected">
+        <button class="button tonal">Left</button>
+        <button class="button tonal">Center</button>
+        <button class="button tonal">Right</button>
+      </div>
+    `);
+    await page.addScriptTag({ content: js });
+    await page.evaluate(() => window.Expressive.AutoInit());
+
+    const metrics = (selector) => page.locator(`${selector} > button`).evaluateAll((items) => ({
+      widths: items.map((item) => item.getBoundingClientRect().width),
+      centerRadius: Number.parseFloat(getComputedStyle(items[1]).borderStartStartRadius)
+    }));
+
+    const standardBefore = await metrics('#standard');
+    await page.locator('#standard > button:nth-child(2)').focus();
+    await page.keyboard.down('Enter');
+    await page.waitForTimeout(250);
+    const standardPressed = await metrics('#standard');
+    assert.ok(standardPressed.widths[1] > standardBefore.widths[1]);
+    assert.ok(standardPressed.centerRadius < standardBefore.centerRadius);
+    assert.ok(
+      Math.abs(
+        standardPressed.widths.reduce((sum, width) => sum + width, 0)
+        - standardBefore.widths.reduce((sum, width) => sum + width, 0)
+      ) < 1,
+      `icon widths changed from ${standardBefore.widths.join(', ')} to ${standardPressed.widths.join(', ')}`
+    );
+    await page.keyboard.up('Enter');
+    await page.waitForTimeout(250);
+    const standardReleased = await metrics('#standard');
+    assert.ok(standardReleased.widths.every(
+      (width, index) => Math.abs(width - standardBefore.widths[index]) < 1
+    ));
+
+    const connectedBefore = await metrics('#connected');
+    await page.locator('#connected > button:nth-child(2)').focus();
+    await page.keyboard.down('Space');
+    await page.waitForTimeout(250);
+    const connectedPressed = await metrics('#connected');
+    assert.ok(connectedPressed.centerRadius < connectedBefore.centerRadius);
+    await page.keyboard.up('Space');
+    await page.waitForTimeout(250);
+    const connectedReleased = await metrics('#connected');
+    assert.ok(Math.abs(connectedReleased.centerRadius - connectedBefore.centerRadius) < 0.1);
+  } finally {
+    await browser.close();
+  }
+});

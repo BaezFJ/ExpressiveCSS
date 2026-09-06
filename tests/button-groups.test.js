@@ -142,6 +142,7 @@ describe('Button group tokens', () => {
 
 describe('Button group shape morph', () => {
   const item = ':is(button, a.button)';
+  const press = ':is(:active, .button-group-pressed)';
 
   test('an item reads its corner off one variable', () => {
     const rule = rules.find((candidate) =>
@@ -164,7 +165,7 @@ describe('Button group shape morph', () => {
   });
 
   test('pressing an item moves the variable, not the border-radius', () => {
-    const active = ruleFor(`.button-group.connected > ${item}:active`);
+    const active = ruleFor(`.button-group.connected > ${item}${press}`);
     assert.ok(active, 'no press rule on a connected item');
     assert.match(active, /--_corner:\s*var\(--md-comp-button-group-pressed-inner-corner-corner-size\)/);
     assert.doesNotMatch(active, /border-radius/,
@@ -182,7 +183,7 @@ describe('Button group shape morph', () => {
 
   test('a standard group reshapes the pressed item while ButtonGroup owns width', () => {
     const active = rules.find((rule) =>
-      rule.selector.includes(`.button-group:not(.connected) > ${item}:active`)
+      rule.selector.includes(`.button-group:not(.connected) > ${item}${press}`)
     )?.body;
     assert.ok(active, 'no press rule on a standard group item');
     assert.match(active, /--_corner:\s*var\(--md-comp-button-group-pressed-item-shape\)/);
@@ -200,7 +201,7 @@ describe('Button group shape morph', () => {
     assert.match(squareSelected, /--_corner:\s*var\(--md-comp-button-group-item-shape-round\)/);
 
     const selectedPressed = rules.find((rule) =>
-      rule.selector.includes(`.button-group.square:not(.connected) > ${item}[aria-pressed=true]:active`)
+      rule.selector.includes(`.button-group.square:not(.connected) > ${item}[aria-pressed=true]${press}`)
     )?.body;
     assert.match(selectedPressed, /--_corner:\s*var\(--md-comp-button-group-pressed-item-shape\)/);
   });
@@ -230,7 +231,7 @@ describe('Button group shape morph', () => {
     const toggleItem = ':is(button:not(.icon-button):not(.text), a.button:not(.text), .icon-button:is(.filled, .tonal, .outlined))';
     const hover = ruleFor(`.button-group > ${toggleItem}[aria-pressed]:hover`);
     const focus = ruleFor(`.button-group > ${toggleItem}[aria-pressed]:focus`);
-    const pressed = ruleFor(`.button-group > ${toggleItem}[aria-pressed]:active`);
+    const pressed = ruleFor(`.button-group > ${toggleItem}[aria-pressed]${press}`);
     const filledDisabled = bodyFor(
       '.button-group > :is(button:not(.icon-button), a.button):where(.filled, :not(.elevated, .filled, .tonal, .outlined, .text))[aria-pressed]:is(:disabled, [disabled], .disabled)'
     );
@@ -248,9 +249,9 @@ describe('Button group shape morph', () => {
 
   test('CSS does not duplicate the scripted standard-width redistribution', () => {
     const labelItem = ':is(button:not(.icon-button), a.button)';
-    assert.equal(ruleFor(`.button-group:not(.connected) > ${labelItem}:not(.circle):active`), undefined);
-    assert.equal(ruleFor(`.button-group:not(.connected) > ${labelItem}.circle:active`), undefined);
-    assert.equal(ruleFor('.button-group:not(.connected) > .icon-button:active'), undefined);
+    assert.equal(ruleFor(`.button-group:not(.connected) > ${labelItem}:not(.circle)${press}`), undefined);
+    assert.equal(ruleFor(`.button-group:not(.connected) > ${labelItem}.circle${press}`), undefined);
+    assert.equal(ruleFor(`.button-group:not(.connected) > .icon-button${press}`), undefined);
   });
 
   test('an item with its own size class keeps its own type role', () => {
