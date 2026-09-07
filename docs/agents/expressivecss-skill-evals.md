@@ -382,3 +382,47 @@ candidate claims separate from operator evidence. A passing fixture check or
 browser emulation does not establish full WCAG conformance or assistive-technology
 speech. Retain source comparisons, captures, settings/hashes, and limitations
 before removing temporary consumers.
+
+## Material decision cases
+
+The implementation benchmark includes three approved tasks on the runnable
+newsletter editor: `material-component-review`, `material-expression-repair`,
+and `material-motion-repair`. Select them together through the existing runner:
+
+```sh
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/baseline-skill --candidate=/absolute/candidate-skill --output=/tmp/material-comparison --repetitions=1 --case=material-component-review,material-expression-repair,material-motion-repair
+```
+
+The fixture reuses the portable editor and adds deliberate defects from
+`tests/fixtures/expressivecss-skill-evals/material/`. Its native form controls and
+commands remain semantically valid. The review asks about a submitted delivery
+value represented by command toggles, a routine save interrupted by a modal, and
+weak task emphasis. The expression repair asks for the installed headline role,
+scoped primary sizing/shape, and better containment. The motion repair preserves
+the ordinary reveal while removing spatial movement under reduced motion.
+All requested facts and scope limits appear in the prompt and fixture.
+
+Independent browser collection covers 375 and 1280 CSS px, restrained and
+expressive treatments, and normal and reduced motion: eight matched scenes per
+phase. Initial, preview and saved captures, computed styles, accessibility-tree
+snapshots, task interactions and animation keyframes are retained. Contract checks
+cover declared typography, local button shape/sizing, preserved roles, visible
+preview, safe text rendering, keyboard commands, focus return, saving, and motion
+preferences. Review tasks forbid edits; repairs allow only `src/app.css`.
+
+`materialReview` validates coverage and references to successful browser records.
+Coverage accepts topic labels with scoped suffixes (such as `motion-preference`)
+and equivalent IDs from the skill review matrix (such as `C-TYPE-ROLE`).
+It does not automatically judge whether a recommendation is appropriate.
+`material-review.json` separately retains candidate judgments and operator
+before/after evidence with `pending-human-review` status. Review component fit,
+hierarchy, containment and the reasons for typography, shape and motion choices
+in Skill Creator's existing viewer. A contract pass rate is not a Material design
+quality score. Neither browser emulation nor these two light-mode widths establish
+full accessibility conformance or universal responsive quality.
+
+The collector participates in the existing grader hash; fixture sources and
+portable examples participate in fixture hashes. Changing them requires a fresh
+run archive. An evaluator-only change can use identical skill snapshots for a
+repeatability smoke check; label that explicitly and make no skill-improvement
+or speed claim from it.

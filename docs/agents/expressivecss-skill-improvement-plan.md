@@ -1,5 +1,20 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Material decision evaluation follow-up, September 7, 2026
+
+The existing benchmark now tests component fit, expressive hierarchy, installed
+typography/shape contracts, and motion preferences in three runnable editor tasks.
+Intentional Material weaknesses remain semantically valid so markup conformance
+cannot substitute for design judgment. Read-only review and CSS-only repair
+scopes are independently enforced. Matched operator captures and behavior checks
+remain separate from pending human judgments about the design.
+
+No skill instructions, framework APIs, stylesheets, or dependencies change in
+this iteration. The existing Skill Creator viewer shows source, captures and
+results. See the [evaluation protocol](./expressivecss-skill-evals.md#material-decision-cases)
+for reproducible commands and review boundaries. The [comparison report](./expressivecss-skill-comparison.md#material-decision-evaluation-follow-up) records six completed tasks, the transparent report-label correction, and pending human design review.
+
+
 ## Web accessibility follow-up, September 7, 2026
 
 Accessibility guidance now separates Material target recommendations, WCAG 2.2

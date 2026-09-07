@@ -1,0 +1,3 @@
+/* Deliberate defect: specificity and importance defeat the example's reduced-motion rule. */
+#preview:not([hidden]) { animation: material-preview-reveal 600ms ease-out both !important; }
+@keyframes material-preview-reveal { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

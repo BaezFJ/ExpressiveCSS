@@ -6,7 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
-import { benchmarkResponseInstructions, gradeAssetReferences, gradeAuditResponse, gradeInterfaceReviewReferences, gradeMatchedInterfaceScenes, gradeProjectChanges, gradeVersionResponse, INTERFACE_REVIEW_CRITERIA, onlyViewportRepair, preservedControlLabel, prepareReviewOutputs, runBenchmark, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
+import { MATERIAL_REVIEW_CRITERIA, gradeMaterialReviewReferences, benchmarkResponseInstructions, gradeAssetReferences, gradeAuditResponse, gradeInterfaceReviewReferences, gradeMatchedInterfaceScenes, gradeProjectChanges, gradeVersionResponse, INTERFACE_REVIEW_CRITERIA, onlyViewportRepair, preservedControlLabel, prepareReviewOutputs, runBenchmark, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
 
 import { INTERFACE_SCENARIOS } from '../scripts/expressivecss-interface-quality.mjs';
 
@@ -190,9 +190,9 @@ test('benchmark statistics cover paired medians, population variability, and rea
 
 test('benchmark definitions retain distinct scoped and whole-interface tasks with balanced discovery coverage', async () => {
   const definitions = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/benchmark.json', import.meta.url), 'utf8'));
-  assert.equal(definitions.cases.length, 8);
-  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 8);
-  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 8);
+  assert.equal(definitions.cases.length, 11);
+  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 11);
+  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 11);
   assert.ok(definitions.cases.find(({ name }) => name === 'no-edit-audit')?.readOnly);
   assert.ok(definitions.cases.find(({ name }) => name === 'interface-review')?.readOnly);
   assert.ok(definitions.cases.find(({ name }) => name === 'interface-refine').request.includes('primary user task'));
@@ -350,4 +350,54 @@ test('whole-interface preservation accepts described tooltips without allowing r
     assert.equal(preservedControlLabel(get('first'), get('spaced')), false);
     assert.equal(preservedControlLabel(get('original'), null), false);
   } finally { dom.window.close(); }
+});
+
+test('Material report coverage accepts different judgments but requires authentic references', () => {
+  const records = [{ id: 'view', action: 'screenshot', status: 'success' }, { id: 'preflight', action: 'preflight', status: 'success' }, { id: 'failed', action: 'evaluate', status: 'error' }];
+  for (const [name, criteria] of Object.entries(MATERIAL_REVIEW_CRITERIA)) {
+    const report = () => ({ materialReview: criteria.map(criterionId => ({ criterionId, status: 'Pass', observation: 'Every save should interrupt with a dialog. This deliberately poor judgment needs human review.', evidenceIds: ['view'] })) });
+    assert.equal(gradeMaterialReviewReferences(name, report(), records).passed, true);
+    assert.match(benchmarkResponseInstructions(name), /materialReview/);
+    for (const id of ['invented', 'preflight', 'failed']) {
+      const value = report(); value.materialReview[0].evidenceIds = [id];
+      assert.equal(gradeMaterialReviewReferences(name, value, records).passed, false);
+    }
+    const missing = report(); missing.materialReview.pop();
+    assert.equal(gradeMaterialReviewReferences(name, missing, records).passed, false);
+    const blocked = report(); blocked.materialReview[0] = { ...blocked.materialReview[0], status: 'Blocked', observation: 'Image viewer unavailable; no visual judgment.', evidenceIds: [] };
+    assert.equal(gradeMaterialReviewReferences(name, blocked, records).passed, true);
+    blocked.materialReview[0].status = 'Pass';
+    assert.equal(gradeMaterialReviewReferences(name, blocked, records).passed, false);
+    const extra = report(); extra.materialReview.push({ criterionId: 'additional-context', status: 'Fail', observation: 'Alternative terminology and extra relevant evidence are accepted.', evidenceIds: ['view'] });
+    assert.equal(gradeMaterialReviewReferences(name, extra, records).passed, true);
+  }
+});
+
+test('Material review forbids edits and repairs permit only CSS', () => {
+  const hash = value => `sha256:${value.repeat(64)}`;
+  const base = { source: 'adapter', algorithm: 'sha256', independentlyComputed: true, before: hash('a'), after: hash('b'), beforeManifest: { 'src/app.css': { type: 'file', sha256: hash('c') } } };
+  for (const name of Object.keys(MATERIAL_REVIEW_CRITERIA)) {
+    assert.equal(gradeProjectChanges(name, { ...base, after: base.before, afterManifest: base.beforeManifest })[0].passed, true);
+    for (const file of ['src/app.css', 'src/app.js', 'src/index.html', 'package.json']) {
+      const evidence = { ...base, afterManifest: { ...base.beforeManifest, [file]: { type: 'file', sha256: hash('d') } } };
+      assert.equal(gradeProjectChanges(name, evidence)[0].passed, name !== 'material-component-review' && file === 'src/app.css');
+    }
+  }
+});
+
+
+test('Material coverage accepts equivalent skill matrix IDs without accepting invented evidence', () => {
+  const records = [{ id: 'capture', action: 'screenshot', status: 'success' }];
+  const report = { materialReview: ['C-TASK-PRIMARY', 'C-TYPE-ROLE', 'C-SHAPE-CONTRACT'].map(criterionId => ({ criterionId, status: 'Pass', observation: 'A concrete judgment with an authentic reference.', evidenceIds: ['capture'] })) };
+  assert.equal(gradeMaterialReviewReferences('material-expression-repair', report, records).passed, true);
+  report.materialReview[0].evidenceIds = ['invented'];
+  assert.equal(gradeMaterialReviewReferences('material-expression-repair', report, records).passed, false);
+  const motion = { materialReview: [{ criterionId: 'C-MOTION-REDUCED-OUTCOME', status: 'Blocked', observation: 'Interaction evidence unavailable.', evidenceIds: [] }] };
+  assert.equal(gradeMaterialReviewReferences('material-motion-repair', motion, records).passed, true);
+  for (const criterionId of ['motion-preference', 'motion.respects-reduced-preference']) {
+    motion.materialReview[0].criterionId = criterionId;
+    assert.equal(gradeMaterialReviewReferences('material-motion-repair', motion, records).passed, true);
+  }
+  motion.materialReview[0].criterionId = 'C-TYPE-ROLE';
+  assert.equal(gradeMaterialReviewReferences('material-motion-repair', motion, records).passed, false);
 });

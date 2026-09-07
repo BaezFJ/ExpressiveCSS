@@ -10,6 +10,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const EVALUATION_SOURCE_FILES = Object.freeze([
   'scripts/eval-expressivecss-skill.mjs', 'scripts/benchmark-expressivecss-skill.mjs',
   'scripts/expressivecss-codex-adapter.mjs', 'scripts/expressivecss-eval-browser.mjs',
+  'scripts/expressivecss-material-quality.mjs',
   'scripts/expressivecss-interface-quality.mjs', 'scripts/expressivecss-eval-provenance.mjs',
   'skills/expressivecss/references/contract.json', 'package.json', 'package-lock.json',
   'mcp/expressivecss/package.json', 'mcp/expressivecss/package-lock.json',

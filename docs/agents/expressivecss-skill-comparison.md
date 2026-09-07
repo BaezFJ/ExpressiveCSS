@@ -896,3 +896,90 @@ other browsers, and every transition frame remain outside these checks.
 [Read the focused web checks](../../skills/expressivecss/expressivecss-accessibility/references/web-checks.md),
 [open the review viewer](../../.cache/expressivecss-web-accessibility/comparison/review.html),
 or inspect the [benchmark and provenance](../../.cache/expressivecss-web-accessibility/comparison/benchmark.json).
+
+## Material decision evaluation follow-up
+
+September 7, 2026. This iteration extends the existing benchmark with the three
+approved newsletter-editor tasks: component-choice review, expressive hierarchy/
+typography/shape repair, and reduced-motion repair. It adds no design-quality
+score. Independent checks establish task behavior, stated framework contracts,
+file scope and evidence provenance; `material-review.json` leaves interpretation
+and recommendations pending human review.
+
+This is an evaluator validation with **identical current-skill snapshots** in the
+runner's historical `old_skill` and `with_skill` slots. These names do not identify
+old/new guidance for this study. Each task runs twice, one execution per slot,
+with the configured GPT-6 Astra/high settings, identical fixtures and tool access.
+The pair dispatch order alternates. There is no skill-change or speed-improvement
+claim; six runs cannot establish broad Material design quality.
+
+The shared skill hash is
+`cb3c36a5cab820b7fd882b0631e6ac63f06a1d9fbd3ad7017377b37b1cc50415`.
+Fixture hash:
+`5e008f60335eabe2e1dadcdc880b10d22285858c47feebaf3eb86e4e0ae92135`.
+Grader hash:
+`cf940cbd5bc9c3a3f346caab9ed5f4f20381701bb616b0de18b804c7d30c366d`.
+Full settings and source hashes live in the retained `provenance.json`.
+
+Verification passed `npm run verify` (**981 tests, zero skips**, generated checks,
+typecheck and documentation verification), `npm run test:skill` (**228 tests,
+zero skips**, plus 22 replay cases), the existing browser suite (**17 tests,
+zero skips**), MCP smoke (**7 tools**) and isolated framework/MCP package checks.
+Generated metadata was refreshed through `build:semantics` and `build:skill`
+because adding the test command changes the package manifest's source hash.
+No instructional guidance, framework API, stylesheet behavior or dependency changed.
+
+The new browser regression checks prove the deliberately flawed fixtures pass
+static semantics, no-op repairs fail, ordinary motion must remain, reduced motion
+must leave visible content, unrelated styles stay stable, and saved delivery
+values/modal dismissal work. Missing, malformed or candidate-authored browser
+observations receive no contract credit. Reference validation accepts alternative
+wording and deliberately does not certify the recommendation. During full-suite
+validation, focus/selection transitions caused transient style differences;
+collection now waits for document animations before stable style observations,
+while sampling the preview's motion immediately after activation.
+
+### Live results and reference-check correction
+
+All six executions completed without infrastructure failures. Every implementation,
+behavior, file-scope and verification-claim check passed. Original report coverage
+passed in three runs and falsely failed in three: one used the skill matrix IDs
+`C-TASK-PRIMARY`, `C-TYPE-ROLE`, `C-SHAPE-CONTRACT`; two used descriptive motion
+suffixes such as `motion-preference`. Coverage now accepts those equivalent matrix
+IDs and scoped topic suffixes while still rejecting missing topics, preflight-only
+references and invented evidence. Regression checks cover both forms.
+
+The original run evidence and scores remain unchanged. A separate reference-only
+recheck validates retained archive provenance, hashes the original reports and
+browser records, and runs the corrected coverage function. It passes all six
+reports with no other failed checks. No model/browser execution or design judgment
+was repeated, and no new result was silently inserted into the frozen comparison.
+Corrected grader hash:
+`fce10c055731893371da75ba0550e0faccc382847a24cce709e221f8b5a15964`.
+
+Run A is the historical `old_skill` slot; B is `with_skill`. Both contain exactly
+the same skill. Times measure the Codex turn, excluding operator collection.
+Tokens are input plus output and include cached input; separate cached/input/output
+counts, guide reads and tool calls remain in each run's metadata.
+
+| Task | Original checks A / B | Time median (range), seconds | Tokens median (range) |
+| --- | --- | --- | --- |
+| Component review | 25/25 / 25/25 | 186.9 (178.9–195.0) | 819,908 (743,085–896,731) |
+| Expression repair | 53/54 / 54/54 | 182.1 (175.0–189.2) | 1,209,900 (1,078,925–1,340,875) |
+| Motion repair | 57/58 / 57/58 | 118.7 (116.8–120.7) | 475,049 (402,709–547,389) |
+
+There are only two observations per task. These medians/ranges describe this smoke
+study, not a reliable estimate of skill performance or a speed comparison.
+Both repair implementations restore the requested behavior. The review reports
+propose native radio-based delivery selection, preserve independent formatting
+commands, and recommend nonblocking save feedback. Their Material appropriateness
+and visual hierarchy remain **pending human review**, not automatically certified.
+
+Retained local artifacts are under `.cache/expressivecss-material-decisions/`:
+`comparison/benchmark.json`, `comparison/results.json`, per-run source/captures,
+`reference-recheck.json`, and `comparison/review.html`. The viewer intentionally
+shows original scores; consult the separate reference recheck for the three
+label-only corrections. Its browser check confirms all six runs and the benchmark
+tab load without page errors. Generated viewer JSON escapes embedded HTML, and
+unavailable metrics remain unavailable. Logs, the snapshot, recheck command and
+viewer-generation command remain alongside the archive; caches are not committed.

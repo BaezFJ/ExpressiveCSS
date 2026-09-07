@@ -10,6 +10,8 @@ import { assertSameProvenance, collectEvaluationProvenance, validateRetainedResu
 import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
 import { captureInterfaceQuality, gradeInterfaceQuality, INTERFACE_SCENARIOS, retainedInterfaceEvidence } from './expressivecss-interface-quality.mjs';
 
+import { captureMaterialQuality, gradeMaterialQuality, isMaterialCase, retainedMaterialEvidence } from './expressivecss-material-quality.mjs';
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFINITIONS = JSON.parse(await readFile(path.join(ROOT, 'tests/fixtures/expressivecss-skill-evals/benchmark.json'), 'utf8'));
 const save = async (filename, value) => { await mkdir(path.dirname(filename), { recursive: true }); await writeFile(filename, `${JSON.stringify(value, null, 2)}\n`); };
@@ -28,6 +30,27 @@ export function gradeInterfaceReviewReferences(response, records) {
     && Array.isArray(row.evidenceIds) && row.evidenceIds.length <= 100
     && row.evidenceIds.every((id) => successful.has(id)) && (row.status === 'Blocked' || row.evidenceIds.length > 0));
   return check('Visual review covers requested criteria with recorded references or explicit blockers', validRows && INTERFACE_REVIEW_CRITERIA.every((id) => rows.some((row) => row.criterionId === id)), 'Checks report coverage and browser proof references only; interpretation requires independent review');
+}
+
+export const MATERIAL_REVIEW_CRITERIA = Object.freeze({
+  'material-component-review': ['component-choice', 'hierarchy'],
+  'material-expression-repair': ['hierarchy', 'typography', 'shape'],
+  'material-motion-repair': ['motion'],
+});
+
+// Coverage and authentic references only: a plausible but wrong design judgment can pass
+// this check and must still be assessed in the separate human review.
+export function gradeMaterialReviewReferences(name, response, records) {
+  const rows = response?.materialReview;
+  // The skill's review matrix names these same decisions with stable criterion IDs.
+  const equivalent = { 'C-TASK-PRIMARY': 'hierarchy', 'C-TYPE-ROLE': 'typography', 'C-SHAPE-CONTRACT': 'shape', 'C-MOTION-REDUCED-OUTCOME': 'motion' };
+  const successful = new Set((records ?? []).filter((row) => row.status === 'success' && row.action !== 'preflight').map((row) => row.id));
+  const valid = Array.isArray(rows) && rows.length > 0 && rows.length <= 100 && rows.every((row) =>
+    row && typeof row.criterionId === 'string' && ['Pass', 'Fail', 'Intentional adaptation', 'Blocked'].includes(row.status)
+    && typeof row.observation === 'string' && row.observation.trim().length > 0 && row.observation.length <= 4000
+    && Array.isArray(row.evidenceIds) && row.evidenceIds.length <= 100 && row.evidenceIds.every((id) => successful.has(id))
+    && (row.status === 'Blocked' || row.evidenceIds.length > 0));
+  return check('Material report covers requested decisions with recorded references or explicit blockers', valid && Boolean(MATERIAL_REVIEW_CRITERIA[name]) && MATERIAL_REVIEW_CRITERIA[name].every((id) => rows.some((row) => equivalent[row.criterionId] === id || row.criterionId === id || row.criterionId.startsWith(`${id}-`) || row.criterionId.startsWith(`${id}.`))), 'Coverage only; recommendation quality and interpretation remain pending human review');
 }
 
 export function gradeMatchedInterfaceScenes(before, after) {
@@ -52,12 +75,16 @@ export function benchmarkResponseInstructions(name) {
     'no-edit-audit': 'Do not change any project files.',
     'interface-refine': 'Only src/index.html and src/app.css may change. Preserve application behavior, packages and assets.',
     'interface-review': 'Do not change any project files.',
+    'material-component-review': 'Do not change any project files.',
+    'material-expression-repair': 'Only src/app.css may change.',
+    'material-motion-repair': 'Only src/app.css may change.',
     'version-mismatch': 'Preserve dependency and lock files, installed packages, assets and application code. Safe setup repairs may only add or correct standard viewport metadata in src/index.html.',
   }[name] ?? '';
   const contract = name === 'no-edit-audit' ? `Include audit: {conclusion: "defects-found"|"no-defects"|"unavailable", findings: [{category: "accessible-name"|"navigation-semantics" or another category, source: {path: project-relative file path, line: one-based element start line, selector: CSS selector}, defect: boolean, observed: {accessibleName: string when relevant, tagName: lowercase string when relevant, containsCommand: boolean when relevant}, fixHtml: proposed replacement HTML for this element}]}. Report source observations and your actual conclusion, with proposed fixes rather than edits. Separate browser verification from source findings.`
     : name === 'version-mismatch' ? `Include versionAssessment: {installedVersion: string|null, bundledVersion: string|null, relationship: "match"|"mismatch"|"unknown", bundledContractSafe: boolean, currentDocsSafe: boolean, matchingEvidence: "available"|"unavailable"|"unknown", unsupportedClaims: "blocked"|"allowed", sources: [{path: project-relative direct metadata source, line: one-based line containing the version field}]}. Cite direct installed-package and bundled-contract metadata. Distinguish version metadata from available implementation documentation and verified public-site provenance.` : '';
   const review = isInterfaceCase(name) ? `Include interfaceReview as an array of {criterionId, status: "Pass"|"Fail"|"Intentional adaptation"|"Blocked", observation, evidenceIds: browser proof IDs, recommendation?}. Cover ${INTERFACE_REVIEW_CRITERIA.join(', ')}. Use separate rows when scenes or results differ. Each observed judgment cites a successful browser proof ID; blocked rows explain unavailable evidence. These references establish provenance, not the truth of your interpretation. Do not provide an aggregate design score. Use the browser emulate action for colorScheme and reducedMotion. The preview selector can be changed via evaluate with a change event. For text-size stress, reload first, then double each element's computed font-size; this is not browser zoom. Use fullPage:true for whole-page captures and open the returned absolute screenshot path with the image viewer before making visual judgments. Budget the 100 browser calls by scene, combine related evaluate observations, and reuse captures across criteria. The operator performs the independent review after this run; do not spawn another agent.` : '';
-  return `${scope}\n${contract}\n${review}`.trim();
+  const material = isMaterialCase(name) ? `Include materialReview as an array of {criterionId, status: "Pass"|"Fail"|"Intentional adaptation"|"Blocked", observation, evidenceIds: browser proof IDs, recommendation?}. Cover ${MATERIAL_REVIEW_CRITERIA[name].join(', ')}. Cite successful browser records for observations; explain blockers. Extra relevant criteria and different wording are welcome. Separate measured behavior from Material interpretation; do not give an aggregate design score. Capture full-page views and view the returned screenshots before making visual judgments. Use browser emulate for reducedMotion, and evaluate with a change event to switch #treatment. Operator captures before/after independently; human review remains pending. Do not spawn another agent.` : '';
+  return `${scope}\n${contract}\n${review}\n${material}`.trim();
 }
 
 export function gradeProjectChanges(name, filesystem) {
@@ -72,6 +99,7 @@ export function gradeProjectChanges(name, filesystem) {
     'tooltip-remount': ['src/index.html', 'src/app.js'], 'navigation-media': ['src/index.html', 'src/app.css'],
     'no-edit-audit': [], 'version-mismatch': ['src/index.html'],
     'interface-refine': ['src/index.html', 'src/app.css'], 'interface-review': [],
+    'material-component-review': [], 'material-expression-repair': ['src/app.css'], 'material-motion-repair': ['src/app.css'],
   }[name] ?? [];
   const outside = changed.filter((file) => !allowed.includes(file));
   const consistentDigests = changed.length ? filesystem.before !== filesystem.after : filesystem.before === filesystem.after;
@@ -271,6 +299,7 @@ async function prepareCase(testCase) {
 }
 
 async function browserEvidence(root, outputDirectory, name) {
+  if (isMaterialCase(name)) return captureMaterialQuality(root, outputDirectory, name);
   if (isInterfaceCase(name)) return captureInterfaceQuality(root, outputDirectory);
   await mkdir(outputDirectory, { recursive: true });
   const server = await startFixtureServer(root);
@@ -320,7 +349,7 @@ async function browserEvidence(root, outputDirectory, name) {
   } finally { await browser?.close(); await server.close(); }
 }
 
-export async function grade(testCase, root, before, envelope, browser) {
+export async function grade(testCase, root, before, envelope, browser, baselineCapture = null) {
   const after = await readCompletionFiles(root);
   const html = after['src/index.html'] ?? '';
   const dom = new JSDOM(html);
@@ -351,6 +380,9 @@ export async function grade(testCase, root, before, envelope, browser) {
       finally { old.window.close(); }
       findings.push(check('Refine preserves profile destination and save behavior', dom.window.document.querySelector('main a[href="/profile"]') && browser?.formBehavior?.saved, JSON.stringify(browser?.formBehavior)));
       findings.push(check('Refine preserves the brand seed', /--md-source\s*:\s*#006a79\b/i.test(after['src/app.css']), after['src/app.css']));
+    } else if (isMaterialCase(testCase.name)) {
+      findings.push(...gradeMaterialQuality(browser, { name: testCase.name, before: baselineCapture }));
+      if (!testCase.readOnly) findings.push(check('Material repair implements CSS changes', before['src/app.css'] !== after['src/app.css'], 'Compared source CSS; design quality remains separate'));
     } else if (isInterfaceCase(testCase.name)) {
       findings.push(...gradeInterfaceQuality(browser, { reviewOnly: testCase.name === 'interface-review' }));
       const old = new JSDOM(before['src/index.html']);
@@ -430,24 +462,28 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
             ? { capability: { status: 'unavailable', reason: 'Only older package metadata is available; no target-version browser contract can be verified.' }, records: [], close: async () => {} }
             : await startEvaluationBrowser({ projectRoot: root, artifactDirectory: path.join(outputDirectory, 'candidate-browser') });
           initialCapability = structuredClone(browserSession.capability);
-          const baselineCapture = testCase.name === 'navigation-media' || isInterfaceCase(testCase.name) ? await browserEvidence(root, path.join(outputDirectory, 'before'), testCase.name) : null;
+          const baselineCapture = testCase.name === 'navigation-media' || isInterfaceCase(testCase.name) || isMaterialCase(testCase.name) ? await browserEvidence(root, path.join(outputDirectory, 'before'), testCase.name) : null;
           const envelope = await runCodex({ task: testCase, projectRoot: root, skillRoot, rootSkill: await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), artifactDirectory: outputDirectory, readOnly: testCase.readOnly,
             responseInstructions: benchmarkResponseInstructions(testCase.name) }, { browserSession });
           let browser = null;
           let browserError = null;
           if (testCase.name !== 'version-mismatch') try { browser = await browserEvidence(root, path.join(outputDirectory, 'after'), testCase.name); } catch (error) { browserError = error.message; }
-          const expectations = await grade(testCase, root, before, envelope, browser);
+          const expectations = await grade(testCase, root, before, envelope, browser, baselineCapture);
           if (isInterfaceCase(testCase.name)) {
             expectations.push(gradeMatchedInterfaceScenes(baselineCapture, browser));
             expectations.push(gradeInterfaceReviewReferences(envelope.candidateResponse, envelope.executionEvidence?.browser?.records));
             await save(path.join(outputDirectory, 'interface-review.json'), { status: 'pending-independent-review', criteria: INTERFACE_REVIEW_CRITERIA, instructions: 'Use the existing Design review matrix. Review whole-page hierarchy, typography, containment, identity, adaptive composition, state clarity and focus visibility against screenshots and source. Record individual statuses, impact and concrete evidence; no aggregate design score. Candidate judgments remain untrusted. Automated pass_rate describes named checks only.', candidateReview: redactValue(envelope.candidateResponse.interfaceReview ?? null), before: retainedInterfaceEvidence(baselineCapture), after: retainedInterfaceEvidence(browser) });
+          }
+          if (isMaterialCase(testCase.name)) {
+            expectations.push(gradeMaterialReviewReferences(testCase.name, envelope.candidateResponse, envelope.executionEvidence?.browser?.records));
+            await save(path.join(outputDirectory, 'material-review.json'), { status: 'pending-human-review', criteria: MATERIAL_REVIEW_CRITERIA[testCase.name], instructions: 'Judge component fit, expressive hierarchy and containment, supported typography and shape choices, or motion rationale for this task against retained source and captures. Record evidence, impact, alternatives and unresolved limitations. Candidate judgments are untrusted; automated pass_rate covers contracts, behavior and report coverage only, never design quality.', candidateReview: redactValue(envelope.candidateResponse.materialReview ?? null), before: retainedMaterialEvidence(baselineCapture), after: retainedMaterialEvidence(browser) });
           }
           const verificationFailures = validateVerificationClaims(envelope.candidateResponse, envelope.executionEvidence);
           expectations.push(check('Reported browser operations and tool errors match operator evidence', !verificationFailures.length, JSON.stringify(verificationFailures)));
           if (testCase.name !== 'version-mismatch') expectations.push(check('Candidate uses the working fixture browser',
             initialCapability.status === 'available' && browserSession.records.some((row) => row.action !== 'preflight' && row.status === 'success'), JSON.stringify(initialCapability)));
           if (browserError) expectations.push(check('Browser verification available', false, browserError));
-          await save(path.join(outputDirectory, 'browser.json'), { before: isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(baselineCapture) : baselineCapture, after: isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(browser) : browser, error: redactValue(browserError) });
+          await save(path.join(outputDirectory, 'browser.json'), { before: isMaterialCase(testCase.name) ? retainedMaterialEvidence(baselineCapture) : isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(baselineCapture) : baselineCapture, after: isMaterialCase(testCase.name) ? retainedMaterialEvidence(browser) : isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(browser) : browser, error: redactValue(browserError) });
           const passed = expectations.filter((item) => item.passed).length;
           const usage = envelope.runMetadata.usage;
           const result = { pass_rate: passed / expectations.length, passed, failed: expectations.length - passed, total: expectations.length,

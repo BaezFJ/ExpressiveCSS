@@ -39,7 +39,7 @@ const BASE_PROJECT_FIXTURES = Object.freeze({
 });
 export const EXAMPLE_NAMES = Object.freeze(['settings', 'editor', 'list-detail']);
 const exampleRoot = path.join(DEFAULT_ROOT, 'skills/expressivecss/assets/examples');
-export const PROJECT_FIXTURES = Object.freeze({
+const STANDARD_PROJECT_FIXTURES = Object.freeze({
   ...BASE_PROJECT_FIXTURES,
   'consumer-web-accessibility': Object.freeze({
     ...BASE_PROJECT_FIXTURES['consumer-current'],
@@ -53,6 +53,21 @@ export const PROJECT_FIXTURES = Object.freeze({
     'src/app.js': readFileSync(path.join(exampleRoot, 'app.js'), 'utf8'),
     'fixture.json': JSON.stringify({ example: name, treatments: ['restrained', 'expressive'], themes: ['light', 'dark'], persistence: 'session only', source: 'skills/expressivecss/assets/examples' }),
   })])),
+});
+const materialFile = name => readFileSync(path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/material', name), 'utf8');
+export const PROJECT_FIXTURES = Object.freeze({
+  ...STANDARD_PROJECT_FIXTURES,
+  ...Object.fromEntries(['component-review', 'expression-repair', 'motion-repair'].map(name => {
+    const base = STANDARD_PROJECT_FIXTURES['example-editor'];
+    const review = name === 'component-review';
+    return [`material-${name}`, Object.freeze({
+      ...base,
+      'src/index.html': review ? base['src/index.html'].replace('<form id="editor-form" class="editor-fields">', `<form id="editor-form" class="editor-fields">${materialFile('review.html')}`) : base['src/index.html'],
+      'src/app.css': `${base['src/app.css']}\n${materialFile(name === 'motion-repair' ? 'motion.css' : 'expression.css')}`,
+      'src/app.js': review ? `${base['src/app.js']}\n${materialFile('review.js')}` : base['src/app.js'],
+      'fixture.json': JSON.stringify({ example: 'editor', task: name, intentionallyPoorMaterialChoices: true, treatments: ['restrained', 'expressive'], motion: ['no-preference', 'reduce'], persistence: 'page session only', primaryTask: 'Write, preview, and save a local newsletter draft', unavailableChecks: ['publishing', 'screen-reader speech', 'native device testing'] }),
+    })];
+  })),
 });
 const SUPPORT_GUIDES = new Map([
   ['skills/expressivecss/expressivecss-design/SKILL.md', 'expressivecss-design'],
@@ -1158,7 +1173,7 @@ export async function materializeProjectFixture(fixtureId, repositoryRoot = DEFA
       await mkdir(path.dirname(target), { recursive: true });
       await writeFile(target, content, { flag: 'wx' });
     }
-    if (['consumer-current', 'consumer-web-accessibility'].includes(fixtureId) || EXAMPLE_NAMES.some((name) => fixtureId === `example-${name}`)) {
+    if (['consumer-current', 'consumer-web-accessibility', 'material-component-review', 'material-expression-repair', 'material-motion-repair'].includes(fixtureId) || EXAMPLE_NAMES.some((name) => fixtureId === `example-${name}`)) {
       // Use the already-built package. The older-version fixture never receives today's runtime.
       await cp(path.join(rootPath(repositoryRoot), 'dist'), path.join(sandbox, 'node_modules/@expressivecss/expressive/dist'), { recursive: true, errorOnExist: true, force: false });
     }
