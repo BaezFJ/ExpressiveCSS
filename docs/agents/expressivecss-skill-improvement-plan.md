@@ -52,9 +52,13 @@ for scene coverage and review limits. The earlier six-case, 36-run study retains
 its original scope and results.
 
 For an interrupted comparison, `--resume=true` retains completed results only
-when the skill content hashes and prompts match. Select only operator-reviewed
-local results and keep the fixture and grading protocol unchanged for retained
-cases. Interrupted attempts are not successful runs. The responsive case removes
+when skill, fixture, grader, plan and recorded runtime/settings provenance match.
+Legacy archives without provenance and orphan attempt directories require a new
+output directory; validation happens before any resume writes. Select only
+operator-reviewed local results. Interrupted attempts are not successful runs.
+Natural discovery now has an independently authored held-out split and a frozen
+protocol; see its [separate workflow](./expressivecss-skill-evals.md#natural-discovery-and-frozen-comparisons).
+The responsive case removes
 the fixture's unrelated header overflow before introducing navigation and hero
 defects; it does not grade that inherited defect as a candidate regression.
 

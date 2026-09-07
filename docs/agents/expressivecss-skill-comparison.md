@@ -393,3 +393,102 @@ Validation passes 927 contributor tests with no skips, generated/documentation
 checks, and 178 skill tests plus 22 replay cases. No new model executions were
 needed to reproduce the read-accounting bug; the fake CLI regression exposes
 complete text before a failure and verifies the retained status directly.
+
+## Natural discovery and reproducibility follow-up
+
+The natural discovery protocol uses ordinary work requests in disposable consumer
+projects. The candidate receives the request verbatim and discovers the local
+skill through its normal CLI environment. No applicability question, root guide,
+expected label or response schema is supplied in the prompt. Development and
+held-out requests are balanced separately, with three ExpressiveCSS tasks and
+three adjacent tasks per split. An independent author prepared the held-out set;
+neither skill description is changed during this comparison.
+
+The protocol was frozen before either split ran. Its complete identity is
+`sha256:4885aad16c58fbd39926fb682d2da8dfc2c9b559460725ecac1ac71cf7010f4b`.
+The fixture hash is
+`sha256:ecdf42b44db118945125722232d27c8cd1959eee91582ec092a6073b33ca543f`,
+and the grader hash is
+`sha256:d3b8ea1b392a6443ddccf93fb98086939c9fb89f328d63e5c9ca7c158ed97435`.
+The old skill is the original study's `e7eaca55…` snapshot; the current snapshot is
+`sha256:6980d9991357035e645dbd9686096186f856addd2c8e88c50033c0c9a38ef5c2`.
+Both use `gpt-6-astra`, high reasoning, Node 24.20.0 and a 180-second task deadline.
+Old/new dispatch order alternates, with each pair running concurrently.
+
+Results use a complete-root-output proxy. A complete root guide observed in
+command output confirms exposure. Missing telemetry receives null and no credit.
+An available event stream without complete root text records false for that
+proxy, while actual invocation remains unverified. Proxy matches are not actual
+activation accuracy, task correctness or evidence of visual quality. Independent
+output review must distinguish those outcomes. Each prompt is used once per
+version; this is not a repeated performance experiment.
+
+Implementation and natural-discovery resumptions now verify fixture and grader
+hashes alongside the skill, plan and recorded settings. Validation checks every
+retained row before writing, and requires matching grades and operator artifacts.
+Empty run directories, missing or contradictory evidence, changed inputs and
+legacy archives without provenance are rejected. The original archives remain
+readable. Regression tests cover both changed-input rejection and unchanged
+resumption without overwriting retained results.
+
+Artifacts live in `.cache/expressivecss-natural-discovery/`. The `frozen` directory
+records the shared protocol; `development` and `heldout` keep results separate.
+The actual CLI/browser executable contents and external service state are outside
+the fingerprint guarantee. Credentials and unrelated configuration are excluded.
+
+All twelve development executions completed. Each version matched the expected
+complete-root-output pattern on three positive and three negative requests, with
+no unavailable proxy observations. The negative matches mean no complete root
+text was observed; actual invocation remains unverified. Independent review of
+retained source and project manifests supports completion of all twelve requested
+tasks and found no unauthorized project edits. Both Preview-button responses
+claim a browser permission blocker without a corresponding retained server launch
+or error. Those causes remain unverified; successful discovery does not validate
+candidate-authored diagnostics.
+
+A live resume of the completed development archive launched no new candidates
+and preserved `results.json` byte for byte. The existing Skill Creator development
+viewer renders all twelve outputs and the benchmark without page errors. Human
+review remains pending.
+
+All twelve held-out executions also completed under the same frozen protocol.
+Neither version had unavailable observations or proxy mismatches:
+
+| Split | Version | Positive proxy matches | Negative proxy matches | Completed executions |
+| --- | --- | --- | --- | --- |
+| Development | Old | 3/3 | 3/3 | 6/6 |
+| Development | Current | 3/3 | 3/3 | 6/6 |
+| Held out | Old | 3/3 | 3/3 | 6/6 |
+| Held out | Current | 3/3 | 3/3 | 6/6 |
+
+Independent review supports completion of all twelve held-out tasks and found no
+unauthorized edits or fabricated verification claims. Both theme explanations
+match the installed contract and preserve files; the copy and confirmation edits
+stay within scope; both native reading pages preserve the supplied copy without
+dependencies. Source reconstructed from redacted exports was executed only after
+its SHA-256 matched the operator's after-manifest.
+
+Focused browser checks independently verified both versions' tooltip behavior
+through ten remounts, old-instance cleanup, pagehide teardown and preserved
+dashboard interactions. Both navigation outputs passed layout checks at 839,
+840 and 1280 pixels without horizontal overflow. The candidates' reported browser
+blockers are supported by retained failures; these independent checks supply
+separate evidence. Candidate-added regression test files were not preserved in
+the source exports, so their contents remain unverified. This review does not
+establish complete visual or accessibility quality.
+
+The existing Skill Creator [development viewer](../../.cache/expressivecss-natural-discovery/development/review.html)
+and [held-out viewer](../../.cache/expressivecss-natural-discovery/heldout/review.html)
+each render twelve outputs and their benchmark without page errors. Independent
+reviews are retained in `development-output-review.json`,
+`heldout-output-review.json` and `heldout-browser-review.json` under the artifact
+root. Human comparison remains pending. These local ignored artifacts must be
+preserved separately when sharing the report. The one-run-per-prompt results
+support neither a general speed improvement nor an actual invocation-accuracy
+improvement; both versions have the same observed exposure outcomes.
+
+Validation passes 967 contributor tests with no skips, generated/documentation
+checks, 218 skill tests and 22 replay cases, the seven-tool MCP smoke check, and
+isolated framework and MCP package checks. No framework API, stylesheet behavior,
+package exports or dependencies changed. Regenerated contract and component-guide
+source hashes reflect the updated test command in `package.json`.

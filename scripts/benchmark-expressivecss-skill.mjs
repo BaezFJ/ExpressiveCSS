@@ -5,7 +5,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
 import { EVALUATOR_LIMITS, materializeProjectFixture, readCompletionFiles, readBoundedRegularFile, redactValue } from './eval-expressivecss-skill.mjs';
-import { hashProject, retainedBrowserEvidence, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
+import { configuredDefaults, hashProject, retainedBrowserEvidence, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
+import { assertSameProvenance, collectEvaluationProvenance, validateRetainedResults } from './expressivecss-eval-provenance.mjs';
 import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
 import { captureInterfaceQuality, gradeInterfaceQuality, INTERFACE_SCENARIOS, retainedInterfaceEvidence } from './expressivecss-interface-quality.mjs';
 
@@ -379,27 +380,43 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
   if (!Number.isSafeInteger(repetitions) || repetitions < 1 || repetitions > 3) throw new Error('repetitions must be 1–3');
   const versions = { with_skill: path.resolve(candidate), old_skill: path.resolve(baseline) };
   const hashes = Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, await hashProject(directory)])));
-  const previous = resume ? JSON.parse(await readBoundedRegularFile(path.join(output, 'results.json'), 16 * 1024 * 1024, 'operator comparison results')) : [];
   const selectedNames = caseName ? caseName.split(',') : null;
-  if (selectedNames?.some((name) => !DEFINITIONS.cases.some((item) => item.name === name))) throw new Error('Unknown case');
+  if (selectedNames && (new Set(selectedNames).size !== selectedNames.length || selectedNames.some((name) => !DEFINITIONS.cases.some((item) => item.name === name)))) throw new Error('Unknown case or duplicate selection');
   const definitions = selectedNames ? DEFINITIONS.cases.filter((item) => selectedNames.includes(item.name)) : DEFINITIONS.cases;
-  const results = [];
+  const collect = async () => collectEvaluationProvenance({ protocol: 'implementation-benchmark-v1',
+    plan: { cases: definitions, repetitions, skillHashes: Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, await hashProject(directory)]))), timeoutMs: 600000 },
+    modelSettings: await configuredDefaults() });
+  const provenance = await collect();
+  if (Object.entries(hashes).some(([name, hash]) => provenance.plan.skillHashes[name] !== hash)) throw new Error('Skill inputs changed while preparing the benchmark');
+  const expectedRows = definitions.flatMap((testCase) => Object.keys(versions).flatMap((configuration) => Array.from({ length: repetitions }, (_, index) => ({
+    eval_name: testCase.name, eval_id: DEFINITIONS.cases.indexOf(testCase) + 1, configuration, run_number: index + 1, skillHash: hashes[configuration], prompt: testCase.request,
+  }))));
+  // Validate every retained row and metadata file before creating or replacing anything.
+  const previous = resume ? await validateRetainedResults({ output, provenance, expectedRows }) : [];
+  if (!resume) {
+    try { if ((await readdir(output)).length) throw new Error('Output directory is not empty; use a new directory or validated resume'); }
+    catch (error) { if (error.code !== 'ENOENT') throw error; }
+    await save(path.join(output, 'provenance.json'), provenance);
+    for (const testCase of definitions) await save(path.join(output, `eval-${testCase.name}`, 'eval_metadata.json'), {
+      eval_id: DEFINITIONS.cases.indexOf(testCase) + 1, eval_name: testCase.name, prompt: testCase.request, assertions: [], provenance,
+    });
+    await save(path.join(output, 'results.json'), []);
+  }
+  const results = [...previous];
   for (let repetition = 1; repetition <= repetitions; repetition++) {
     for (const testCase of definitions) {
       const caseIndex = DEFINITIONS.cases.indexOf(testCase);
       const configurations = (repetition + caseIndex) % 2 ? ['with_skill', 'old_skill'] : ['old_skill', 'with_skill'];
+      assertSameProvenance(provenance, await collect());
       const pair = await Promise.all(configurations.map(async (configuration) => {
         const runDirectory = path.join(output, `eval-${testCase.name}`, configuration, `run-${repetition}`);
         const outputDirectory = path.join(runDirectory, 'outputs');
         const retained = previous.find((row) => row.eval_name === testCase.name && row.configuration === configuration && row.run_number === repetition);
         if (retained) {
-          const metadata = JSON.parse(await readFile(path.join(output, `eval-${testCase.name}`, 'eval_metadata.json'), 'utf8'));
-          if (retained.runMetadata?.skillHash !== hashes[configuration] || metadata.prompt !== testCase.request) throw new Error('Cannot resume results from different skill contents or prompts');
           console.log(`${testCase.name} ${configuration} ${repetition}: retained completed result`);
           return retained;
         }
         await mkdir(outputDirectory, { recursive: true });
-        await save(path.join(output, `eval-${testCase.name}`, 'eval_metadata.json'), { eval_id: caseIndex + 1, eval_name: testCase.name, prompt: testCase.request, assertions: [] });
         let root;
         let record;
         let browserSession;
@@ -435,18 +452,18 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
           const usage = envelope.runMetadata.usage;
           const result = { pass_rate: passed / expectations.length, passed, failed: expectations.length - passed, total: expectations.length,
             time_seconds: envelope.runMetadata.wallTimeMs / 1000, tokens: Number.isFinite(usage?.input_tokens) && Number.isFinite(usage?.output_tokens) ? usage.input_tokens + usage.output_tokens : null, tool_calls: envelope.runMetadata.toolCalls, errors: envelope.runMetadata.infrastructureError ? 1 : 0 };
-          await save(path.join(runDirectory, 'grading.json'), { expectations, summary: result });
+          await save(path.join(runDirectory, 'grading.json'), { expectations, summary: result, provenance });
           await save(path.join(runDirectory, 'timing.json'), { total_tokens: result.tokens, duration_ms: envelope.runMetadata.wallTimeMs, total_duration_seconds: result.time_seconds });
-          record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, result, expectations, runMetadata: redactValue(envelope.runMetadata) };
+          record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, skillHash: hashes[configuration], provenance, result, expectations, runMetadata: redactValue(envelope.runMetadata) };
           console.log(`${testCase.name} ${configuration} ${repetition}: ${passed}/${expectations.length}, ${result.time_seconds.toFixed(1)}s`);
           return record;
         } catch (error) {
           const expectations = [check('Benchmark infrastructure completed', false, redactValue(error.message))];
           const result = { pass_rate: 0, passed: 0, failed: 1, total: 1, time_seconds: null, tokens: null, tool_calls: null, errors: 1 };
-          await save(path.join(runDirectory, 'grading.json'), { expectations, summary: result });
+          await save(path.join(runDirectory, 'grading.json'), { expectations, summary: result, provenance });
           await save(path.join(outputDirectory, 'infrastructure-error.json'), { error: redactValue(error.message) });
           console.log(`${testCase.name} ${configuration} ${repetition}: infrastructure failure: ${redactValue(error.message)}`);
-          record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, result, expectations };
+          record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, skillHash: hashes[configuration], provenance, result, expectations };
           return record;
         } finally {
           if (browserSession) {
@@ -467,14 +484,15 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
           }
         }
       }));
-      results.push(...pair);
+      assertSameProvenance(provenance, await collect());
+      results.push(...pair.filter((row) => !previous.includes(row)));
       await save(path.join(output, 'results.json'), results);
     }
   }
   const run_summary = {};
   for (const configuration of ['with_skill', 'old_skill']) run_summary[configuration] = Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, statistics(results.filter((row) => row.configuration === configuration).map((row) => row.result[metric]))]));
   run_summary.delta = Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, Number.isFinite(run_summary.with_skill[metric].mean) && Number.isFinite(run_summary.old_skill[metric].mean) ? run_summary.with_skill[metric].mean - run_summary.old_skill[metric].mean : null]));
-  const benchmark = { metadata: { skill_name: 'expressivecss', timestamp: new Date().toISOString(), executor_model: 'configured Codex default', runs_per_configuration: repetitions, evals_run: definitions.map((item) => item.name), baselineHash: await hashProject(versions.old_skill), candidateHash: await hashProject(versions.with_skill) }, runs: results.sort((a, b) => a.configuration === b.configuration ? 0 : a.configuration === 'with_skill' ? -1 : 1), run_summary,
+  const benchmark = { metadata: { skill_name: 'expressivecss', timestamp: new Date().toISOString(), executor_model: 'configured Codex default', runs_per_configuration: repetitions, evals_run: definitions.map((item) => item.name), baselineHash: hashes.old_skill, candidateHash: hashes.with_skill, provenance }, runs: results.sort((a, b) => a.configuration === b.configuration ? 0 : a.configuration === 'with_skill' ? -1 : 1), run_summary,
     per_case: Object.fromEntries(definitions.map((item) => [item.name, Object.fromEntries(['with_skill', 'old_skill'].map((config) => [config, Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, statistics(results.filter((row) => row.eval_name === item.name && row.configuration === config).map((row) => row.result[metric]))]))]))])),
     notes: ['Local browser measurements are laboratory evidence, not field Core Web Vitals.', 'Human visual review remains required.', 'Guide read telemetry counts complete guide contents observed in successful tool output; partial reads are unavailable.'] };
   await save(path.join(output, 'benchmark.json'), benchmark);

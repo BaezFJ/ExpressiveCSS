@@ -273,3 +273,63 @@ Use a new output directory for each protocol change. These focused runs check
 correctness and browser access; one repetition does not establish a speed change.
 The existing Skill Creator viewer and its HTML-escaping recipe are documented in
 [the improvement plan](./expressivecss-skill-improvement-plan.md).
+
+## Natural discovery and frozen comparisons
+
+`scripts/eval-expressivecss-natural-discovery.mjs` tests ordinary work requests.
+The adapter supplies exactly the request. It does not ask the agent to classify
+applicability, preload the root skill, prescribe a JSON answer, or reveal expected
+labels. Each temporary consumer contains the selected skill in `.agents/skills`,
+its actual project files and any task-specific content. The agent can perform the
+requested task with its usual CLI tools. The older explicit applicability probes
+remain available as constrained diagnostics; do not combine their scores with
+natural discovery results.
+
+The reviewed catalogue has six development requests and six independently authored
+held-out requests, balanced within each split. Freeze both skill snapshots,
+the complete catalogue, fixtures, grader and settings before running development
+cases. Held-out prompts remain unused during development; run them only against
+the frozen protocol. Once their results inform a revision, they are no longer
+unseen and a future iteration needs a new held-out set. Keeping the labels out of
+candidate projects prevents leakage; simply naming a file "heldout" does not.
+
+```sh
+node scripts/eval-expressivecss-natural-discovery.mjs --baseline=/absolute/old-skill --candidate=/absolute/new-skill --output=/tmp/natural-freeze --freeze=true
+node scripts/eval-expressivecss-natural-discovery.mjs --baseline=/absolute/old-skill --candidate=/absolute/new-skill --output=/tmp/natural-development --manifest=/tmp/natural-freeze/frozen-protocol.json --split=development
+node scripts/eval-expressivecss-natural-discovery.mjs --baseline=/absolute/old-skill --candidate=/absolute/new-skill --output=/tmp/natural-heldout --manifest=/tmp/natural-freeze/frozen-protocol.json --split=heldout
+```
+
+Each split runs one old/new pair per request with alternating dispatch order.
+The default task deadline is 180 seconds, recorded in the frozen protocol. Report
+positive and negative root-exposure matches and infrastructure failures separately.
+A complete root guide observed in command output establishes a read. Candidate
+claims, partial reads and unobservable tools do not establish a complete read.
+The absence of a recorded read is therefore an observation under this adapter,
+not proof of every possible skill invocation mechanism. `rootExposureMatch` is a
+complete-root-output proxy, not actual invocation accuracy. Missing read telemetry
+produces null and receives no credit. With an available event stream but no complete
+root text, the proxy records false while `invocationStatus` remains `unverified`.
+
+Invocation success does not grade the resulting task. Review retained source and
+responses independently before judging whether the work was useful. An agent that
+loads the right skill but leaves an implementation unfinished can pass the read
+assertion; the report must keep that distinction. No-edit cases additionally
+require unchanged independent project hashes. Original transcripts, settings,
+usage and sources are retained before temporary projects are removed. Use the
+existing Skill Creator viewer for both split outputs and their benchmark data.
+
+Both implementation comparisons and natural discovery record a `provenance.json`
+before execution and attach its contents to case metadata, each result and the
+aggregate. `fixtureHash` covers fixture sources and the built distribution.
+`graderHash` covers the evaluator, adapter, browser collectors, relevant manifests
+and lockfiles. The combined hash also covers the plan, observed model settings and
+runtime. Skill hashes remain separate. Credentials are not copied. The record
+explicitly identifies limits, including external service state and untracked
+Codex/browser executable contents.
+
+Resume validates the entire archive before writing metadata or executing work.
+Missing historical provenance, changed inputs/settings, duplicate or unexpected
+rows, mismatched skill hashes/prompts, missing grading/operator evidence and orphan
+attempt directories are rejected.
+Use a fresh output directory when the protocol changes. Completed results remain
+available even when a later run fails; a rejected resume leaves the archive intact.

@@ -90,7 +90,7 @@ export async function snapshotProject(root) {
 export async function hashProject(root) { return (await snapshotProject(root)).hash; }
 
 // Only expose and pin observed defaults, never arbitrary config or caller metadata.
-async function configuredDefaults(configPath) {
+export async function configuredDefaults(configPath = path.join(process.env.CODEX_HOME || path.join(homedir(), '.codex'), 'config.toml')) {
   try {
     const config = parseToml(await readBoundedRegularFile(configPath, 1_048_576, 'Codex configuration'));
     const profile = typeof config.profile === 'string' ? config.profiles?.[config.profile] : null;
