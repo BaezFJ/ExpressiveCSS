@@ -1,6 +1,6 @@
 ---
 name: expressivecss-install
-description: Install and load ExpressiveCSS correctly.
+description: Install and configure @expressivecss/expressive, imports, package versions, assets, and build integration. Use for setup or version uncertainty; exclude unrelated markup and visual refinement.
 ---
 
 ## Install ExpressiveCSS
@@ -13,7 +13,7 @@ Use this guide for setup, imports, package changes, version problems, or contrac
 
 Do not load this guide when the project already loads the target version and the task changes only unrelated markup. Use the usage and selected component guides instead.
 
-Read the target version's [getting-started documentation](https://www.expressivecss.com/index.html.md) before changing an existing setup. The public site describes the current release. For an older installed version, inspect the package files under `node_modules/@expressivecss/expressive` and the matching repository tag or commit. Do not apply current documentation to a pinned older release without verifying the contract.
+Reuse the root version resolution, or run its bundled resolver if loaded directly. This matching bundled guide covers the setup below; consult [getting-started documentation](https://www.expressivecss.com/index.html.md) for missing details. The public site's version is unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.
 
 1. Inspect the project's manifest and lockfile first. Preserve its package manager and pinned ExpressiveCSS version.
 2. For a new npm installation, use `terminal(command="npm install @expressivecss/expressive", timeout=600)`.
@@ -52,6 +52,10 @@ The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined,
 - Do not load compiled CSS and the Sass entry point together.
 - Do not initialize a registry component before its markup exists.
 - Do not silently upgrade an existing project to a different framework release.
+
+## Loading performance
+
+Keep one CSS delivery path and one initialization owner. Use the bundled fonts or intentional replacements without duplicate external font stylesheets. Check the network panel for duplicate CSS, fonts, missing assets, and unused JavaScript before adding preloads or another dependency. A CSS-only page needs no JavaScript bundle.
 
 ## Verification
 

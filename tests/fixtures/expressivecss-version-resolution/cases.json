@@ -3,13 +3,14 @@
     {
       "name": "framework source",
       "files": {
+        "contract.json": "{\"frameworkVersion\":\"0.8.0\"}",
         "package.json": "{\"name\":\"@expressivecss/expressive\",\"version\":\"0.8.0\"}",
         "llm.md": "# ExpressiveCSS",
         "semantics.json": "{\"rows\":{}}",
         "docs/src/data/nav.ts": "export const NAV = [];"
       },
       "contractVersion": "0.8.0",
-      "expected": { "resolvedVersion": "0.8.0", "resolutionSource": "framework-source", "status": "match", "documentationMode": "current" }
+      "expected": { "resolvedVersion": "0.8.0", "resolutionSource": "framework-source", "status": "match", "documentationMode": "bundled", "currentDocsSafe": false, "bundledContractSafe": true }
     },
     {
       "name": "installed package is selected but conflicting lock evidence blocks the contract",

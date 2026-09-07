@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
 #### Contract
 
 The bar that makes something legible as draggable: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.

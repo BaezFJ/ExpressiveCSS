@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
 #### Contract
 
 This screen's commands at the bottom edge, with an optional FAB. A `div.bottom-app-bar` holds 3–4 icon-only actions that belong to the screen the reader is on. CSS only.

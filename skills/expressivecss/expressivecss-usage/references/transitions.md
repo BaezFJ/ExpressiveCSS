@@ -1,6 +1,6 @@
 # Transitions foundation
 
-Read this after the Usage guide when a task uses ExpressiveCSS CSS-only entrance or exit motion. Resolve the installed ExpressiveCSS version first. The [target-version Transitions documentation](https://www.expressivecss.com/css-transitions.html.md) and [transition Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/components/_transitions.scss) override this summary if they differ.
+Read this after the Usage guide when a task uses ExpressiveCSS CSS-only entrance or exit motion. Reuse the root guide's installed-version resolution. The [target-version Transitions documentation](https://www.expressivecss.com/css-transitions.html.md) and [transition Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/components/_transitions.scss) override this summary if they differ.
 
 ## Scale class contract
 

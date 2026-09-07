@@ -13,6 +13,13 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+- expanded window: replace-with [navigation-rail](./navigation-rail.md). Use persistent peer navigation at wider widths.
+- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Use a drawer when nested destinations need more space.
+
 #### Contract
 
 Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).

@@ -1,6 +1,6 @@
 ---
 name: expressivecss-design
-description: Design and review Material 3 Expressive web interfaces.
+description: Design, refine, redesign, critique, and audit ExpressiveCSS interfaces and responsive flows. Use for product hierarchy, adaptive composition, state coverage, and rendered performance review; exclude setup-only, token-only, or narrow lifecycle repairs.
 ---
 
 # ExpressiveCSS design and review
@@ -48,7 +48,7 @@ Material 3 Expressive governs design intent, component choice, adaptive behavior
 
 ## Routing dependency
 
-Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Read Material 3 guidance for design intent and the target-version component documentation for the shipped contract.
+Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Use selected component guides for the matching bundled contract and adaptive decisions. Consult Material 3 guidance or target-version documentation for missing details or conflicts.
 
 Write a short working brief before code:
 
@@ -124,6 +124,12 @@ Use severity sparingly:
 - **P3:** finish that does not block use.
 
 In Implement, Refine, Redesign, or a review where the user separately requested fixes, fix the first evidence batch in one grouped edit, then run one confirmation batch. In Critique or Audit alone, stop after reporting evidence and findings. Two inspection rounds are the normal ceiling for self-directed polish, not permission to ship known P0 or P1 defects. Ask the user before widening scope or continuing subjective polish after the confirmation pass.
+
+## Performance requests
+
+Measure the requested slow path before editing and repeat the same route, data, viewport, cache state, network/CPU settings, and interaction after the change. Inspect resource loading and duplicate assets, layout shifts, interaction traces and long tasks, and resources retained after remount and teardown. Record browser/tool versions, settings, raw observations, and repeated-run variability. Use the Installation, Runtime, or Media reference for the cause found.
+
+Run this performance pass when performance is requested or a measured regression needs investigation; ordinary markup work does not require a full audit. Laboratory results describe those runs, not field Core Web Vitals or real-user percentiles. Report unavailable measurements and avoid speed claims based only on fewer bytes or shorter code.
 
 ## Pitfalls
 

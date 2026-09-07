@@ -86,9 +86,12 @@ describe('the ExpressiveCSS agent skill', () => {
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
-    assert.ok(description.length <= 60, `description is ${description.length} characters`);
+    assert.ok(description.length <= 400, `description is ${description.length} characters`);
     assert.ok(description.endsWith('.'), 'description is not a sentence');
-    assert.match(description, /^Use ExpressiveCSS for accessible Material 3 interfaces\.$/);
+    for (const scope of ['ExpressiveCSS', '@expressivecss/expressive', 'install', 'theme', 'runtime', 'accessibility', 'contributions']) {
+      assert.ok(description.includes(scope), `description omits ${scope}`);
+    }
+    assert.match(description, /exclude.*without ExpressiveCSS/i);
     assert.doesNotMatch(skill, /\/home\/|[A-Z]:\\Users\\/, 'skill contains a machine-local path');
     assert.doesNotMatch(skill, /\]\(\.\.\//, 'root skill links outside the portable skill directory');
   });
@@ -103,7 +106,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.match(guide, new RegExp(`^name: ${path.split('/')[0]}$`, 'm'));
       const description = guide.match(/^description: (.+)$/m)?.[1];
       assert.ok(description, `${path} has no description`);
-      assert.ok(description.length <= 60, `${path} description is too long`);
+      assert.ok(description.length <= 400, `${path} description is too long`);
       assert.ok(description.endsWith('.'), `${path} description is not a sentence`);
       assert.doesNotMatch(guide, /\/home\/|[A-Z]:\\Users\\/, `${path} contains a machine-local path`);
       assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//, `${path} links outside the portable skill directory`);
@@ -117,7 +120,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.equal(new Set(componentLinks).size, componentLinks.length, 'a component guide is listed more than once');
     assert.doesNotMatch(body, /\]\(\.\/components\/[a-z-]+\.md\)/, 'root skill duplicates the generated inventory');
     assert.match(body, /decision index[\s\S]*owns the complete component inventory/i);
-    assert.match(body, /Read every plausible candidate guide identified by the index before choosing/i);
+    assert.match(body, /uncertain.*read all plausible candidate guides before choosing/i);
 
     for (const name of componentFiles) {
       const guideUrl = new URL(name, componentsDirectory);
@@ -740,7 +743,9 @@ describe('the ExpressiveCSS agent skill', () => {
       ['Visual Critique', 'Design, Usage, Theming, Accessibility', 'Install, Runtime'],
       ['CSS-only Audit', 'Design, Usage, Accessibility, selected component guides', 'Install, Theming, Runtime'],
       ['JavaScript-backed Audit', 'Design, Usage, Runtime, Accessibility, selected component guides', 'Install, Theming'],
-      ['Manual initialization', 'Usage, Runtime, Accessibility, selected component guides', 'Install, Design, Theming'],
+      ['Manual initialization with markup changes', 'Usage, Runtime, Accessibility, selected component guides', 'Install, Design, Theming'],
+      ['Narrow runtime lifecycle repair', 'Runtime, selected component guides', 'Install, Design, Usage, Theming, Accessibility'],
+      ['New surface, Refine, or Redesign', 'Design, Usage, Theming, Accessibility, selected component guides', 'Install'],
     ];
 
     assert.match(routing, /Start with this root guide only\./i);
@@ -750,10 +755,9 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const [task, load, avoid] of expectedRows) {
       assert.ok(routing.includes(`| ${task} | ${load} | ${avoid} |`), `wrong route for ${task}`);
     }
-    assert.match(routing, /inspect candidate runtime ownership in.*decision index.*before deciding whether to read Runtime/is);
+    assert.match(routing, /Before reading Runtime.*inspect candidate runtime ownership in the decision index/is);
     assert.match(routing, /Usage and Accessibility for every interface implementation or review/i);
     assert.match(routing, /Theming for visual or token work/i);
-    assert.match(routing, /every plausible candidate guide.*every selected component guide/i);
     assert.match(routing, /Runtime only.*JavaScript.*Auto Init.*shared-runtime.*manual/is);
     assert.match(routing, /Setup only.*Install/is);
     assert.doesNotMatch(design, /\| Guide \| Load condition \|/, 'design guide duplicates the routing truth table');
@@ -783,8 +787,8 @@ describe('the ExpressiveCSS agent skill', () => {
         avoid: /CSS-only Audit[\s\S]*static markup[\s\S]*visual-token/i,
       },
       'expressivecss-accessibility/SKILL.md': {
-        use: /interface implementation or Audit when semantics, keyboard, focus, announcements, contrast, zoom, reflow, touch, RTL, or motion is in scope/i,
-        avoid: /visual-only Critique[\s\S]*substitute for.*component contract/i,
+        use: /interface implementation, Critique, or Audit.*visual reviews/is,
+        avoid: /token-only theming, setup-only work[\s\S]*substitute for.*component contract/i,
       },
     };
 
@@ -800,17 +804,9 @@ describe('the ExpressiveCSS agent skill', () => {
   });
 
   test('keeps root discovery broad and separates skill from framework versions', () => {
-    const whenToUse = body.slice(body.indexOf('## When to use this skill'), body.indexOf('## Guide routing'));
-    for (const taskClass of [
-      /installing the package/i,
-      /HTML, JSX, templates, Sass, CSS, or JavaScript/i,
-      /configuring themes/i,
-      /initializing component behavior/i,
-      /semantics, accessibility/i,
-      /designing, refining, hardening, or reviewing/i,
-      /contributing components, documentation, tests, or styles/i,
-    ]) {
-      assert.match(whenToUse, taskClass);
+    const description = frontmatter.match(/^description: (.+)$/m)?.[1];
+    for (const taskClass of [/install/i, /markup/i, /theme/i, /runtime/i, /accessibility/i, /refine.*review/i, /contributions/i]) {
+      assert.match(description, taskClass);
     }
     assert.match(body, /metadata `version` is the skill workflow version, not the ExpressiveCSS framework or generated contract version\./i);
   });
@@ -827,7 +823,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(routing, /\| CSS-only static markup \| Usage, Accessibility, selected component guides \|/);
     assert.match(routing, /\| Token-only theming \| Theming \|/);
     assert.match(routing, /\| Visual Critique \| Design, Usage, Theming, Accessibility \|/);
-    assert.match(routing, /Read only every guide in the applicable `Must read` cell/i);
+    assert.match(routing, /Read only applicable guides/i);
   });
 
   test('uses the generated decision index before opening candidate component guides', () => {
@@ -835,20 +831,47 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(existsSync(decisionIndex), 'generated component decision index is missing');
     assert.ok(body.includes('[component decision index](./references/component-decisions.md)'));
     const protocol = body.slice(body.indexOf('## Component discovery protocol'), body.indexOf('## Authority by question'));
-    assert.match(protocol, /read the \[component decision index\]/i);
-    assert.match(protocol, /use when.*avoid when.*alternatives.*adaptive.*runtime/is);
-    assert.match(protocol, /uncertain.*read all candidate guides/i);
+    assert.match(protocol, /read the component decision index entry/i);
+    assert.match(protocol, /use when.*avoid when.*alternatives.*runtime/is);
+    assert.match(protocol, /selected guide.*adaptive decisions/is);
+    assert.match(protocol, /uncertain.*read all plausible candidate guides/i);
+    assert.match(protocol, /unambiguous component.*only its selected guide/i);
   });
 
   test('resolves the exact installed framework version before using a contract', () => {
     assert.ok(body.includes('[version resolver](./scripts/resolve-version.mjs)'));
     const authority = body.slice(body.indexOf('## Authority by question'), body.indexOf('## Framework contribution path'));
-    assert.match(authority, /terminal\(command="node skills\/expressivecss\/scripts\/resolve-version\.mjs --project-root <project> --contract-version <contract-version>"/);
+    assert.match(authority, /node "<skill-directory>\/scripts\/resolve-version\.mjs" --project-root "<project>"/);
+    assert.match(authority, /once per task/i);
+    assert.match(authority, /Repeat only after dependency evidence changes/i);
+    assert.doesNotMatch(authority, /node skills\/expressivecss\//);
     assert.match(authority, /installed package.*lockfile.*manifest range/is);
-    assert.match(authority, /`match`.*current documentation/is);
+    assert.match(authority, /`match`.*bundled matching guidance/is);
+    assert.match(authority, /bundled match does not verify the public website/i);
     assert.match(authority, /`mismatch`.*matching tag or commit/is);
     assert.match(authority, /`unresolved`.*state that target-version guidance is unavailable/is);
     assert.match(authority, /do not infer an exact installed version from a manifest range/i);
+  });
+
+  test('keeps the complete basic-button reading path below its baseline budget', () => {
+    const paths = ['SKILL.md', 'references/component-decisions.md', 'expressivecss-usage/SKILL.md', 'expressivecss-accessibility/SKILL.md', 'components/buttons.md'];
+    const bytes = paths.reduce((total, path) => total + readFileSync(new URL(path, skillDirectory)).length, 0);
+    assert.ok(bytes <= 40670 * 0.75, `basic-button reading uses ${bytes} bytes, above the 25% reduction budget`);
+    assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
+  });
+
+  test('teaches measured loading and lifecycle performance without imposing a full audit', () => {
+    const readGuide = (name) => readFileSync(new URL(`expressivecss-${name}/SKILL.md`, skillDirectory), 'utf8');
+    const media = readFileSync(usageFoundationReferenceUrls.media, 'utf8');
+    assert.match(readGuide('install'), /duplicate.*font stylesheets/is);
+    assert.match(readGuide('runtime'), /Scope initialization to the newly mounted container/i);
+    assert.match(readGuide('runtime'), /before and after.*retained.*after teardown/is);
+    assert.match(media, /LCP image.*do not lazy-load/i);
+    assert.match(media, /loading="lazy".*offscreen/i);
+    assert.match(readGuide('design'), /same route.*cache state.*network\/CPU/is);
+    assert.match(readGuide('design'), /ordinary markup work does not require a full audit/i);
+    assert.match(readGuide('design'), /not field Core Web Vitals/i);
+    assert.doesNotMatch(research, /fonts are external assets.*not shipped/i);
   });
 
   test('maps optional MCP tools to bounded workflow steps', () => {

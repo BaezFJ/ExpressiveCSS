@@ -1,6 +1,6 @@
 # State layers foundation
 
-Read this after the Theming guide when changing interaction feedback or reviewing a custom interactive surface. Resolve the installed ExpressiveCSS version first. The [target-version State layers documentation](https://www.expressivecss.com/state-layers.html.md), [state token Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/tokens/_state.scss), and target component Sass override this summary if they differ.
+Read this after the Theming guide when changing interaction feedback or reviewing a custom interactive surface. Reuse the root guide's installed-version resolution. The [target-version State layers documentation](https://www.expressivecss.com/state-layers.html.md), [state token Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/tokens/_state.scss), and target component Sass override this summary if they differ.
 
 A state layer is a foundation with no markup of its own. ExpressiveCSS components paint their own overlay or ring for hover, visible focus, press, and drag. Application markup should not add a generic state-layer element or restore an ink-ripple script.
 

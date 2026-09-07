@@ -777,7 +777,12 @@ async function resolveAgainstContract(projectRoot, contractVersion) {
     status: 'unresolved',
     contractStatus: 'unresolved',
     documentationMode: 'unavailable',
+    bundledContractSafe: false,
     currentDocsSafe: false,
+    documentationSources: {
+      ...version.documentationSources,
+      bundled: { ...version.documentationSources.bundled, available: false },
+    },
   };
 }
 
@@ -1726,6 +1731,9 @@ async function setupExpertHandler(args) {
         },
         matchingTag: version.matchingTag,
         documentationMode: version.documentationMode,
+        documentationSources: version.documentationSources,
+        bundledContractSafe: version.bundledContractSafe,
+        currentDocsSafe: version.currentDocsSafe,
         warnings: version.warnings,
         diagnostics: version.diagnostics,
       },
@@ -1833,6 +1841,9 @@ async function rulesEnforcerHandler(args) {
         guideSource: catalog.guideSource,
         contractCompatibility: version.status,
         documentationMode: version.documentationMode,
+        documentationSources: version.documentationSources,
+        bundledContractSafe: version.bundledContractSafe,
+        currentDocsSafe: version.currentDocsSafe,
       },
       issueCount: issues.length,
       blockingIssueCount: blocking.length,

@@ -292,6 +292,8 @@ try {
   assert.equal(mismatchedSetup.structuredContent.framework.resolutionSource, 'installed-package');
   assert.equal(mismatchedSetup.structuredContent.framework.contractCompatibility, 'mismatch');
   assert.equal(mismatchedSetup.structuredContent.framework.documentationMode, 'matching-tag');
+  assert.equal(mismatchedSetup.structuredContent.framework.bundledContractSafe, false);
+  assert.equal(mismatchedSetup.structuredContent.framework.currentDocsSafe, false);
   assert.ok(mismatchedSetup.structuredContent.blockedChecks.includes('target-version contract checks'));
 
   const multipleLockSetup = await client.callTool({
@@ -669,6 +671,11 @@ try {
     arguments: { projectRoot: matchingDir },
   });
   assert.equal(matchingSetup.structuredContent.contractCompatibility, 'match');
+  assert.equal(matchingSetup.structuredContent.framework.documentationMode, 'bundled');
+  assert.equal(matchingSetup.structuredContent.framework.bundledContractSafe, true);
+  assert.equal(matchingSetup.structuredContent.framework.documentationSources.bundled.available, true);
+  assert.equal(matchingSetup.structuredContent.framework.currentDocsSafe, false);
+  assert.equal(matchingSetup.structuredContent.framework.documentationSources.current.available, false);
   assert.equal(matchingSetup.structuredContent.blockedChecks.includes('target-version contract checks'), false);
 
   const matchingSyntax = await client.callTool({

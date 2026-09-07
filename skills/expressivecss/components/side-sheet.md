@@ -13,6 +13,13 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `shared-runtime`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+- compact window: replace-with [bottom-sheet](./bottom-sheet.md). Secondary content must fit a compact window.
+- compact window: replace-with [dialogs](./dialogs.md). Use a dialog when a compact task must block progress.
+
 #### Contract
 
 A `dialog.side-sheet` (or `.right` / `.left`) is optional content anchored to the side. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.

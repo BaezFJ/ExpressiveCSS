@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `shared-runtime`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+- expanded window: replace-with [side-sheet](./side-sheet.md). Persistent secondary content fits beside the main task.
+
 #### Contract
 
 A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss; a handle written as a `<button>` also dismisses when activated, so the keyboard reaches it too, and <kbd>Esc</kbd> closes the sheet natively.

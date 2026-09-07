@@ -13,6 +13,14 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+- compact window: replace-with [navigation-bar](./navigation-bar.md). Compact peer destinations fit the bottom edge.
+- expanded window: variant. Use the expanded rail when labels should remain visible.
+- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Use a drawer when nested destinations need more space.
+
 #### Contract
 
 Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.

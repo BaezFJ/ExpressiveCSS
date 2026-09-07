@@ -70,20 +70,11 @@ function renderDecisionIndex(data) {
   const cell = (value) => String(value).replaceAll('|', '\\|').replaceAll('\n', ' ');
   const rows = data.components.map((component) => {
     const alternatives = component.alternatives.length
-      ? component.alternatives.map((slug) => `[${slug}](../components/${slug}.md)`).join(', ')
+      ? component.alternatives.map((slug) => `\`${slug}\``).join(', ')
       : 'Compare plausible candidates';
-    const adaptive = component.adaptive
-      .map((item) => {
-        const target = item.component ? ` ${item.component}` : '';
-        return `${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
-      })
-      .join('; ') || 'Read full guidance';
-    const materialGuidance = component.materialGuidance.status === 'material'
-      ? `[Material guidance](${component.materialGuidance.href})`
-      : 'Framework extra';
-    return `| [${cell(component.title)}](${component.guide}) | ${cell(component.useWhen.join('; '))} | ${cell(component.avoidWhen.join('; '))} | ${cell(alternatives)} | ${cell(adaptive)} | ${cell(component.runtime)} | ${materialGuidance} |`;
+    return `| [${cell(component.title)}](${component.guide}) | ${cell(component.useWhen.join('; '))} | ${cell(component.avoidWhen.join('; '))} | ${cell(alternatives)} | ${cell(component.runtime)} |`;
   });
-  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nUse this index to narrow candidates by user job, interaction model, and window class. Then read every plausible candidate guide. This index does not replace component syntax, semantics, or target-version documentation.\n\n| Component | Use when | Avoid when | Alternatives | Adaptive | Runtime | Material guidance |\n| --- | --- | --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nFind the entry matching the requested job. Read its selected guide; compare alternatives only when the behavior is ambiguous. Adaptive decisions, Material links, syntax, and semantics live in the guides.\n\n| Component | Use when | Avoid when | Alternatives | Runtime |\n| --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
 }
 
 async function syncDecisionIndex(checkOnly) {
@@ -164,6 +155,9 @@ const components = cataloguePages.map((pageId) => decisionComponentsByPage.get(p
   semantics: component.guideSource.semantics,
   excludeRules: component.guideSource.excludeRules ?? [],
   syntaxLanguage: component.guideSource.syntaxLanguage,
+  adaptive: component.adaptive,
+  runtime: component.runtime,
+  materialGuidance: component.materialGuidance,
 }));
 
 async function validateComponentInventory() {
@@ -259,8 +253,15 @@ function renderGuide(component, page, section, rules, provenance) {
     links.push(`[Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/${provenance.matchingTag})`);
   }
   const renderedSources = CONTRACT_SOURCES.map((source) => `\`${source}\``).join(', ');
+  const adaptive = component.adaptive.map((item) => {
+    const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
+    return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
+  }).join('\n') || 'Use the documented component at each reachable width; no catalogue substitution is prescribed.';
+  const material = component.materialGuidance.status === 'material'
+    ? `[Material guidance](${component.materialGuidance.href})`
+    : 'Framework extra; follow the shipped contract.';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${adaptive}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
 }
 
 async function generatedGuides() {

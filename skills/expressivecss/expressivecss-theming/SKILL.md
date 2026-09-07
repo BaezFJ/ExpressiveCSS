@@ -1,6 +1,6 @@
 ---
 name: expressivecss-theming
-description: Theme ExpressiveCSS with Material 3 color roles.
+description: Theme ExpressiveCSS color roles, brand seeds, typography, icons, elevation, state layers, and light/dark schemes. Use for visual tokens and brand changes; exclude unrelated markup and runtime lifecycle repairs.
 ---
 
 ## ExpressiveCSS themes and colors
@@ -13,7 +13,7 @@ Use this guide for color, typography, icon styling, themes, schemes, vibrant reg
 
 Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
 
-Read the target version's Foundation documentation before changing tokens: [Color](https://www.expressivecss.com/color.html.md), [Themes](https://www.expressivecss.com/themes.html.md), [Shadow](https://www.expressivecss.com/shadow.html.md), [Icons](https://www.expressivecss.com/icons.html.md), [Typography](https://www.expressivecss.com/typography.html.md), and [State layers](https://www.expressivecss.com/state-layers.html.md).
+Reuse the root version resolution and load only the relevant focused reference below. Consult its linked target-version documentation for missing details, conflicts, or version uncertainty.
 
 ## Focused references
 

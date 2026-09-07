@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `shared-runtime`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
 #### Contract
 
 A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - the third member of M3's sheet family. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.

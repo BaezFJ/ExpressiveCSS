@@ -1,6 +1,6 @@
 ---
 name: expressivecss-runtime
-description: Initialize and destroy ExpressiveCSS components.
+description: Initialize and destroy ExpressiveCSS JavaScript components, repair remounts, and inspect interaction performance. Use for Auto Init, manual or shared runtime work; exclude CSS-only markup and token changes.
 ---
 
 ## ExpressiveCSS JavaScript runtime
@@ -13,7 +13,7 @@ Use this guide for interactive components, initialization, dynamic content, remo
 
 Do not load this guide for a CSS-only Audit, static markup with no JavaScript behavior, or visual-token work. Critique does not need it unless interaction evidence is in scope.
 
-Read [Auto Init](https://www.expressivecss.com/auto-init.html.md) and the selected component guide before writing initialization code.
+Reuse the root version resolution and read the selected component guide. Consult [Auto Init](https://www.expressivecss.com/auto-init.html.md) or component documentation only for missing lifecycle details, conflicts, or version uncertainty.
 
 ### Choose one initialization owner
 
@@ -55,7 +55,7 @@ const current = ComponentName.getInstance(element);
 current?.destroy();
 ```
 
-Create markup before initialization. Destroy an instance before removing its mounted element or tearing down the owning view. Re-read the target version's component documentation for exact options, methods, properties, callbacks, and events.
+Create markup before initialization. Destroy an instance before removing its mounted element or tearing down the owning view. Consult the target version's documentation for options, methods, properties, callbacks, and events missing from the selected guide.
 
 ### Runtime boundaries
 
@@ -72,6 +72,10 @@ Create markup before initialization. Destroy an instance before removing its mou
 - Do not pre-author dynamic ARIA values that the component updates.
 - Retain or recover the instance when teardown is possible.
 - Treat timers, global listeners, generated nodes, and instance properties as teardown obligations.
+
+## Runtime performance
+
+Scope initialization to the newly mounted container. Avoid scanning the document again for each update. For a reported slowdown, record the same interaction and remount scenario before and after the change. Compare long tasks and retained listeners, timers, overlays, nodes, and instances after teardown; keep input, data, and browser settings fixed. Use the existing browser profiler before changing lifecycle ownership.
 
 ## Verification
 

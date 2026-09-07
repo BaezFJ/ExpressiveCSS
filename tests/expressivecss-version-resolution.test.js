@@ -34,6 +34,7 @@ describe('ExpressiveCSS version resolution', () => {
       const result = await resolveExpressiveVersion({
         projectRoot,
         contractVersion: fixture.contractVersion,
+        contractManifestPath: path.join(projectRoot, 'contract.json'),
         skillVersion: '0.4.0',
       });
       for (const [key, expected] of Object.entries(fixture.expected)) {
@@ -48,6 +49,10 @@ describe('ExpressiveCSS version resolution', () => {
       assert.equal(result.declaredRange, result.declaredVersion);
       assert.equal(result.exactInstalledVersion, result.resolutionSource === 'installed-package' ? result.resolvedVersion : null);
       assert.equal(result.skillContractVersion, fixture.contractVersion);
+      assert.equal(result.currentDocsSafe, false);
+      assert.equal(result.documentationSources.current.available, false);
+      assert.equal(result.bundledContractSafe, fixture.expected.bundledContractSafe ?? false);
+      assert.equal(result.documentationSources.bundled.available, result.bundledContractSafe);
     });
   }
 
@@ -77,13 +82,45 @@ describe('ExpressiveCSS version resolution', () => {
     const projectRoot = await materialize({
       'package.json': '{"name":"consumer","dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
       'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0+local.1"}',
+      'contract.json': '{"frameworkVersion":"0.8.0"}',
     });
 
-    const result = await resolveExpressiveVersion({ projectRoot, contractVersion: '0.8.0' });
+    const result = await resolveExpressiveVersion({
+      projectRoot,
+      contractVersion: '0.8.0',
+      contractManifestPath: path.join(projectRoot, 'contract.json'),
+    });
     assert.equal(result.resolvedVersion, '0.8.0+local.1');
     assert.equal(result.status, 'match');
     assert.equal(result.contractStatus, 'match');
-    assert.equal(result.currentDocsSafe, true);
+    assert.equal(result.bundledContractSafe, true);
+    assert.equal(result.documentationMode, 'bundled');
+    assert.equal(result.currentDocsSafe, false);
+  });
+
+  test('comparison overrides cannot claim a different or missing bundled contract', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"dependencies":{"@expressivecss/expressive":"0.7.0"}}',
+      'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.7.0"}',
+      'contract.json': '{"frameworkVersion":"0.8.0","sourceHash":"bundle-0.8-source","releaseTags":["v0.7.0"]}',
+    });
+    for (const manifest of ['contract.json', 'missing.json']) {
+      const result = await resolveExpressiveVersion({
+        projectRoot,
+        contractVersion: '0.7.0',
+        contractManifestPath: path.join(projectRoot, manifest),
+      });
+      assert.equal(result.status, 'match');
+      assert.equal(result.contractVersion, '0.7.0');
+      assert.equal(result.bundledContractSafe, false);
+      assert.equal(result.currentDocsSafe, false);
+      assert.equal(result.documentationMode, manifest === 'contract.json' ? 'matching-tag' : 'installed-package');
+      assert.deepEqual(result.documentationSources.bundled, {
+        available: false,
+        frameworkVersion: manifest === 'contract.json' ? '0.8.0' : null,
+        sourceHash: manifest === 'contract.json' ? 'bundle-0.8-source' : null,
+      });
+    }
   });
 
   test('consumer resolution requires a direct manifest declaration', async () => {
@@ -437,6 +474,7 @@ describe('ExpressiveCSS version resolution', () => {
     assert.equal(result.matchingTag, null);
     assert.equal(result.documentationMode, 'installed-package');
     assert.deepEqual(result.documentationSources, {
+      bundled: { available: false, frameworkVersion: '0.8.0', sourceHash: null },
       current: { available: false, url: 'https://www.expressivecss.com' },
       matchingTag: { available: false, url: null },
       installedPackage: {
@@ -518,6 +556,14 @@ describe('ExpressiveCSS version resolution', () => {
     assert.equal(output.skillContractVersion, '0.8.0');
     assert.equal(output.contractSourceHash, contracts[0].sourceHash);
     assert.equal(output.contractStatus, 'match');
+    assert.equal(output.documentationMode, 'bundled');
+    assert.equal(output.bundledContractSafe, true);
+    assert.equal(output.currentDocsSafe, false);
+    assert.deepEqual(output.documentationSources.bundled, {
+      available: true,
+      frameworkVersion: contracts[0].frameworkVersion,
+      sourceHash: contracts[0].sourceHash,
+    });
   });
 
   test('generated component guides carry deterministic contract provenance', async () => {

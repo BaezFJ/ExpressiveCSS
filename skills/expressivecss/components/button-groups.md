@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
 #### Contract
 
 A Material 3 Expressive button group places related commands or toggle buttons in one visual cluster. The root is a `<div class="button-group">`; direct children can be common buttons or `.icon-button` controls. `ButtonGroup` is initialized by `Expressive.AutoInit()` to coordinate standard press widths. Selection management is opt-in through `data-selection`.

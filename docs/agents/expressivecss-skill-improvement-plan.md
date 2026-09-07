@@ -1,5 +1,78 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Reliability and performance follow-up, September 2026
+
+The phases below record the original implementation plan. The follow-up keeps
+the six support guides and existing evaluator, with these changes:
+
+- One root routing policy, useful discovery descriptions, and a shorter generated
+  decision index. Adaptive details live with their selected component guide.
+- Resolve once per task and prefer matching bundled guidance. A bundled version
+  match does not verify the current public website.
+- Focused asset-loading, lifecycle, media, and browser-measurement guidance.
+- Runnable consumer fixtures, source-based completion checks, structured evidence
+  matching, retained infrastructure failures, and an operator-owned Codex adapter.
+
+The complete basic-button read path is 30,368 bytes, compared with 40,670 bytes
+before the change: 25.3% less. This counts entire files, including the whole index;
+it is a deterministic context-size comparison, not a token or latency benchmark.
+
+The completed measurements and evidence limits are recorded in the
+[comparison report](./expressivecss-skill-comparison.md).
+
+The focused live comparison uses the six cases and twenty discovery probes in
+`tests/fixtures/expressivecss-skill-evals/benchmark.json`. Keep an immutable copy of
+the original skill before editing. Run old and revised versions on independent
+copies of the same fixtures with the same Codex configuration:
+
+```sh
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --output=/tmp/expressivecss-comparison
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --output=/tmp/expressivecss-discovery --triggers=true
+```
+
+The implementation comparison runs each case three times per version, for 36
+runs. Each old/new pair runs concurrently; the dispatch order alternates. The
+report includes per-case medians, variability, observed usage, correctness checks,
+screenshots, and source outputs. Missing telemetry stays unavailable. Discovery
+uses constrained selection probes and is reported separately from task completion;
+it does not estimate natural-task invocation rates.
+
+For an interrupted comparison, `--resume=true` retains completed results only
+when the skill content hashes and prompts match. Select only operator-reviewed
+local results and keep the fixture and grading protocol unchanged for retained
+cases. Interrupted attempts are not successful runs. The responsive case removes
+the fixture's unrelated header overflow before introducing navigation and hero
+defects; it does not grade that inherited defect as a candidate regression.
+
+Review the outputs with Skill Creator's existing viewer, not a new dashboard:
+
+```sh
+python /absolute/path/to/skill-creator/eval-viewer/generate_review.py /tmp/expressivecss-comparison --skill-name expressivecss --benchmark /tmp/expressivecss-comparison/benchmark.json --static /tmp/expressivecss-comparison/review.html
+```
+
+The installed viewer generator embeds raw JSON in a script block. Until it
+escapes HTML delimiters upstream, source snippets containing `</script>` break
+the export. Escape the generated data without changing its contents or viewer:
+
+```sh
+python3 - /tmp/expressivecss-comparison/review.html <<'PY'
+import json, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+html = p.read_text()
+prefix = '    const EMBEDDED_DATA = '
+line = next(line for line in html.splitlines() if line.startswith(prefix))
+data = json.loads(line[len(prefix):].removesuffix(';'))
+safe = json.dumps(data, ensure_ascii=True).replace('<', '\\u003c')
+p.write_text(html.replace(line, prefix + safe + ';', 1))
+PY
+```
+
+Human review remains necessary for visual quality and the accuracy of audit
+findings. Browser measurements describe these local fixtures, not field Core Web
+Vitals. A failed critical check or infrastructure failure cannot support a release
+claim. Publishing and installing the revised skill are separate work.
+
 ## Goal
 
 Make the ExpressiveCSS skill more deterministic, easier to load correctly, and harder to declare complete without evidence. Preserve the current focused design-and-review structure. Do not add a broad command suite or replace Material 3 Expressive rules with generic aesthetic guidance.

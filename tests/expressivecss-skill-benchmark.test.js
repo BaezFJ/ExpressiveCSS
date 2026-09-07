@@ -1,0 +1,132 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { prepareReviewOutputs, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
+
+test('review outputs expose metadata, captures, and source content without moving originals', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'expressivecss-review-'));
+  const metadata = { eval_id: 1, eval_name: 'form-action', prompt: 'Add Preview', assertions: [] };
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=', 'base64');
+  try {
+    const evalDirectory = path.join(root, 'eval-form-action');
+    await mkdir(evalDirectory);
+    const metadataText = JSON.stringify(metadata);
+    await writeFile(path.join(evalDirectory, 'eval_metadata.json'), metadataText);
+    const copies = [];
+    for (const configuration of ['with_skill', 'old_skill']) {
+      const run = path.join(evalDirectory, configuration, 'run-1');
+      const outputs = path.join(run, 'outputs');
+      for (const [source, destination, content] of [
+        ['after/375.png', 'after-375.png', png],
+        ['src/index.html', 'source-index.html.txt', Buffer.from(`<button>${configuration}</button>\n`)],
+        ['src/app.css', 'source-app.css.txt', Buffer.from(':root { --md-source: #6750a4; }\n')],
+        ['src/app.js', 'source-app.js.txt', Buffer.from('Expressive.AutoInit();\n')],
+        ...(configuration === 'with_skill' ? [['before/375.png', 'before-375.png', png]] : []),
+      ]) {
+        const original = path.join(outputs, source);
+        await mkdir(path.dirname(original), { recursive: true });
+        await writeFile(original, content);
+        copies.push({ original, destination: path.join(outputs, destination), content });
+      }
+    }
+    await prepareReviewOutputs(root);
+    for (const configuration of ['with_skill', 'old_skill']) {
+      const run = path.join(evalDirectory, configuration, 'run-1');
+      assert.deepEqual(JSON.parse(await readFile(path.join(run, 'eval_metadata.json'), 'utf8')), metadata);
+    }
+    for (const { original, destination, content } of copies) {
+      assert.deepEqual(await readFile(destination), content, `viewer copy changed ${destination}`);
+      assert.deepEqual(await readFile(original), content, `original changed ${original}`);
+    }
+    assert.equal(await readFile(path.join(evalDirectory, 'eval_metadata.json'), 'utf8'), metadataText);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test('benchmark statistics preserve missing telemetry and do not alter samples', () => {
+  const unavailable = { mean: null, median: null, stddev: null, min: null, max: null };
+  assert.deepEqual(statistics([]), unavailable);
+  assert.deepEqual(statistics([null, undefined, NaN, Infinity, -Infinity, '30']), unavailable);
+  const values = [9, null, 1, undefined, 5];
+  assert.deepEqual(statistics(values), { mean: 5, median: 5, stddev: Math.sqrt(32 / 3), min: 1, max: 9 });
+  assert.deepEqual(values, [9, null, 1, undefined, 5]);
+});
+
+test('benchmark statistics cover paired medians, population variability, and real zero samples', () => {
+  assert.deepEqual(statistics([8, 2, 6, 4]), { mean: 5, median: 5, stddev: Math.sqrt(5), min: 2, max: 8 });
+  assert.deepEqual(statistics([0]), { mean: 0, median: 0, stddev: 0, min: 0, max: 0 });
+  assert.deepEqual(statistics([3, 3, 3]), { mean: 3, median: 3, stddev: 0, min: 3, max: 3 });
+});
+
+test('benchmark definitions retain six distinct tasks and balanced discovery coverage', async () => {
+  const definitions = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/benchmark.json', import.meta.url), 'utf8'));
+  assert.equal(definitions.cases.length, 6);
+  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 6);
+  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 6);
+  assert.ok(definitions.cases.find(({ name }) => name === 'no-edit-audit')?.readOnly);
+  assert.equal(definitions.triggers.length, 20);
+  assert.equal(new Set(definitions.triggers.map(({ query }) => query)).size, 20);
+  assert.equal(definitions.triggers.filter(({ should_trigger }) => should_trigger === true).length, 10);
+  assert.equal(definitions.triggers.filter(({ should_trigger }) => should_trigger === false).length, 10);
+});
+
+test('failed live cases retain bounded redacted source without symlinks and still remove temporary projects', async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-benchmark-failure-'));
+  try {
+    const bin = path.join(directory, 'bin');
+    const skill = path.join(directory, 'skill');
+    const output = path.join(directory, 'outputs');
+    const roots = path.join(directory, 'project-roots.jsonl');
+    const outside = path.join(directory, 'outside.txt');
+    const secret = `ghp_${'z'.repeat(36)}`;
+    await Promise.all([mkdir(bin), mkdir(skill)]);
+    await writeFile(path.join(skill, 'SKILL.md'), '# ExpressiveCSS test skill\n');
+    await writeFile(outside, 'Private external content must not enter review outputs.');
+    // A local transport stub, never a model: force grading to fail on an unsafe source link.
+    await writeFile(path.join(bin, 'codex'), `#!${process.execPath}\n
+      const { appendFileSync, writeFileSync, symlinkSync } = require('node:fs');
+      process.stdin.resume();
+      process.stdin.on('end', () => {
+        const root = process.argv[process.argv.indexOf('-C') + 1];
+        appendFileSync(process.env.EXPRESSIVECSS_TEST_ROOTS, JSON.stringify(root) + '\\n');
+        writeFileSync(root + '/src/index.html', '<main>Partial edit ${secret}</main>');
+        writeFileSync(root + '/src/unrequested.txt', 'Do not copy arbitrary extra files.');
+        symlinkSync(process.env.EXPRESSIVECSS_TEST_OUTSIDE, root + '/src/app.js');
+        const emit = (event) => process.stdout.write(JSON.stringify(event) + '\\n');
+        emit({type:'item.completed',item:{type:'agent_message',text:'{"summary":"Controlled failure fixture"}'}});
+        emit({type:'turn.completed',usage:{input_tokens:1,cached_input_tokens:0,output_tokens:1}});
+      });
+    `, { mode: 0o700 });
+    const moduleUrl = new URL('../scripts/benchmark-expressivecss-skill.mjs', import.meta.url).href;
+    const checked = spawnSync(process.execPath, ['--input-type=module', '-e', `
+      import { runBenchmark } from ${JSON.stringify(moduleUrl)};
+      await runBenchmark({ baseline: process.argv[1], candidate: process.argv[1], output: process.argv[2], repetitions: 1, caseName: 'version-mismatch' });
+    `, skill, output], {
+      encoding: 'utf8', timeout: 15000,
+      env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}`, EXPRESSIVECSS_TEST_ROOTS: roots, EXPRESSIVECSS_TEST_OUTSIDE: outside },
+    });
+    assert.equal(checked.status, 0, checked.error?.message ?? checked.stderr);
+    const results = JSON.parse(await readFile(path.join(output, 'results.json'), 'utf8'));
+    assert.equal(results.length, 2);
+    for (const result of results) {
+      assert.equal(result.result.errors, 1);
+      assert.match(result.expectations[0].evidence, /symbolic link/u);
+      assert.equal(result.retentionErrors[0].source, 'src/app.js');
+      const artifacts = path.join(output, 'eval-version-mismatch', result.configuration, 'run-1', 'outputs');
+      const html = await readFile(path.join(artifacts, 'src/index.html'), 'utf8');
+      assert.match(html, /Partial edit/u);
+      assert.match(html, /\[REDACTED\]/u);
+      assert.ok(!html.includes(secret));
+      assert.match(await readFile(path.join(artifacts, 'infrastructure-error.json'), 'utf8'), /completion source.*symbolic link/u);
+      assert.match(await readFile(path.join(artifacts, 'source-retention-errors.json'), 'utf8'), /review source.*symbolic link/u);
+      await assert.rejects(readFile(path.join(artifacts, 'src/app.js')), { code: 'ENOENT' });
+      await assert.rejects(readFile(path.join(artifacts, 'src/unrequested.txt')), { code: 'ENOENT' });
+    }
+    const projects = (await readFile(roots, 'utf8')).trim().split('\n').map(JSON.parse);
+    assert.equal(projects.length, 2);
+    for (const project of projects) await assert.rejects(readFile(path.join(project, 'src/index.html')), { code: 'ENOENT' });
+    assert.equal(await readFile(outside, 'utf8'), 'Private external content must not enter review outputs.');
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});

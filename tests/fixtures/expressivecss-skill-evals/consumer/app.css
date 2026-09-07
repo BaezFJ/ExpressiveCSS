@@ -1,0 +1,9 @@
+:root { --md-source: #006a79; }
+body { margin: 0 auto; padding: 1rem; max-width: 72rem; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+main { display: grid; gap: 1.5rem; }
+section { padding: 1rem; background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface); }
+nav.navigation-bar, nav.navigation-rail { position: static; gap: 1rem; margin-block: 1rem; }
+nav.navigation-bar { display: flex; }
+nav.navigation-rail { display: none; }
+@media (width >= 840px) { nav.navigation-bar { display: none; } nav.navigation-rail { display: flex; } }

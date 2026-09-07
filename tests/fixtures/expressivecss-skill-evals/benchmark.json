@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {"id": "css-only-markup-routing", "name": "form-action", "fixture": "consumer-current", "request": "Add a CSS-only common button named Preview preferences inside form#preferences. It must not submit the form. Preserve the existing save behavior and accessible markup. Do not add JavaScript for this action."},
+    {"id": "token-only-theming-routing", "name": "brand-token", "fixture": "consumer-current", "request": "Change the existing ExpressiveCSS brand seed to #6750a4 through the semantic theming system. This is token-only work: preserve HTML, layout, content, and JavaScript."},
+    {"id": "manual-init-teardown", "name": "tooltip-remount", "fixture": "consumer-current", "request": "Repair the Privacy help tooltip. Initialize #account-help manually with Expressive.Tooltip, destroy its old instance before #remount-help replaces the host, initialize the replacement, and clean up when the page is left. Preserve AutoInit ownership for other controls and prevent duplicate tooltip instances."},
+    {"id": "interactive-audit", "name": "no-edit-audit", "fixture": "consumer-current", "readOnly": true, "request": "Audit this account dashboard without editing any files. Check the new icon-only action and whether the Save command belongs in its navigation landmark. Report the actual accessibility and semantics defects with source locations and fixes. Separate source findings from browser observations and unavailable checks."},
+    {"id": "refine-preserves-product", "name": "navigation-media", "fixture": "consumer-current", "request": "Refine this account dashboard's responsive navigation and hero image loading. The bar and rail currently overlap at wide widths, and the prominent hero has no dimensions and is lazy-loaded. Show exactly one peer navigation at Compact and Expanded widths, preserve all three destinations and existing identity/content/actions, reserve the hero's intrinsic 1200 by 600 ratio and avoid delaying its loading. Capture before/after evidence and check 839px and 840px. Keep changes limited to these defects."},
+    {"id": "older-version-contract", "name": "version-mismatch", "fixture": "consumer-older-version", "request": "Review and repair setup only where it is safe for this project pinned to ExpressiveCSS 0.7.0. Compare the installed version with the bundled skill contract. Preserve the pinned dependency; do not upgrade or invent missing files. Only metadata for the older package is available and network documentation is unavailable in this scenario. Report the version mismatch and block any unsupported target-version claims instead of treating current website documentation as verified."}
+  ],
+  "triggers": [
+    {"query": "In our ExpressiveCSS dashboard, add a save action inside the notification form without making Preview submit it.", "should_trigger": true},
+    {"query": "The package.json pins @expressivecss/expressive 0.7.0 but the docs examples seem newer. Check setup before fixing imports.", "should_trigger": true},
+    {"query": "Brand our ExpressiveCSS account page purple using tokens, preserving dark mode and current layout.", "should_trigger": true},
+    {"query": "Our ExpressiveCSS tooltip duplicates after HTMX replaces the panel. Fix initialization and teardown.", "should_trigger": true},
+    {"query": "Audit keyboard and landmarks in this ExpressiveCSS template without editing it.", "should_trigger": true},
+    {"query": "Refine our ExpressiveCSS mobile navigation so it adapts to a wide window without two sets of destinations.", "should_trigger": true},
+    {"query": "Help contribute a component to the ExpressiveCSS framework while keeping semantics and generated guides synchronized.", "should_trigger": true},
+    {"query": "The ExpressiveCSS hero image shifts everything during loading. Measure the problem and fix the markup.", "should_trigger": true},
+    {"query": "Should this ExpressiveCSS save confirmation use a dialog, banner, or snackbar? Users must continue working.", "should_trigger": true},
+    {"query": "Review our @expressivecss/expressive Sass imports, icon fonts and CSS bundle setup for duplicate loading.", "should_trigger": true},
+    {"query": "Build a Material 3 screen in Jetpack Compose. This is a native Android app with no web framework.", "should_trigger": false},
+    {"query": "Theme our existing MUI React dashboard purple. Keep using @mui/material and its ThemeProvider.", "should_trigger": false},
+    {"query": "Fix a Tailwind tooltip disappearing on hover. This project uses Radix and Tailwind, not ExpressiveCSS.", "should_trigger": false},
+    {"query": "Explain what expressive design means in Material 3, without implementing a particular CSS framework.", "should_trigger": false},
+    {"query": "Audit keyboard access in a plain HTML page that has no framework dependency. Keep it dependency-free.", "should_trigger": false},
+    {"query": "Optimize a Bootstrap storefront hero image and investigate layout shifts. Do not migrate its design system.", "should_trigger": false},
+    {"query": "Rewrite the prose in our release email mentioning ExpressiveCSS. No code or technical fact changes.", "should_trigger": false},
+    {"query": "Fix notification preference saving in our Flask database service; the ExpressiveCSS template is unchanged.", "should_trigger": false},
+    {"query": "Compare CSS Grid and Flexbox for a framework-free portfolio and show a small native CSS example.", "should_trigger": false},
+    {"query": "Rename this Git branch from docs/expressivecss-notes to docs/release-notes. Do not inspect or change application code.", "should_trigger": false}
+  ]
+}

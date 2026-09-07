@@ -1,19 +1,19 @@
 ---
 name: expressivecss-accessibility
-description: Apply ExpressiveCSS semantics and accessibility.
+description: Implement and review ExpressiveCSS semantics, keyboard, focus, names, contrast, reflow, touch targets, and motion. Use for interface implementations, visual critiques, and audits; exclude setup-only and token-only work.
 ---
 
 ## ExpressiveCSS accessibility rules
 
 ## When to use
 
-Use this guide for an interface implementation or Audit when semantics, keyboard, focus, announcements, contrast, zoom, reflow, touch, RTL, or motion is in scope.
+Use this guide for every interface implementation, Critique, or Audit, including visual reviews. Check semantics, keyboard, focus, announcements, contrast, zoom, reflow, touch, RTL, and motion where relevant.
 
 ## Do not use when
 
-Do not load this guide for a visual-only Critique, token-only theming, or setup-only work. Do not use it as a substitute for the selected component contract, Material 3 design guidance, or runtime lifecycle guidance.
+Do not load this guide for token-only theming, setup-only work, or narrow lifecycle changes that leave accessibility behavior unchanged. Do not use it as a substitute for the selected component contract, Material 3 design guidance, or runtime lifecycle guidance.
 
-Read the selected component guide, then the target version's semantics contract. In this repository, `semantics.json` is normative and `SEMANTICS.md` is generated from it.
+Reuse the root version resolution. Read the selected component guide's generated semantic rules; consult the full target-version semantics contract for missing details or conflicts. In this repository, `semantics.json` is normative and `SEMANTICS.md` is generated from it.
 
 1. Start with the documented native element. Buttons run commands; links with real `href` values navigate; `<nav>` contains destinations; `<dialog>`, `<input>`, `<select>`, `<progress>`, `<fieldset>`, and `<label>` keep their native contracts.
 2. Authors own static semantics: element choice, landmarks, labels, decorative hiding, and only the initial state that the target-version documentation explicitly requires at author time. Components own changing values such as `aria-expanded`, `aria-selected`, and generated IDs when their contract says so.

@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+- expanded window: variant. Use the extended FAB when the action benefits from a visible label.
+
 #### Contract
 
 A circular action that can open a menu of related shortcuts.

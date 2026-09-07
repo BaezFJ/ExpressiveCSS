@@ -11,6 +11,8 @@ This folder contains a self-hosted MCP server for the ExpressiveCSS design-to-QA
 
 The server bundles generated component guides, selection data, contract metadata, and the normative semantics data. All component guidance comes from this synchronized package data. A framework source checkout contributes only target-version and contract-provenance evidence, so local prose cannot replace the packaged guidance.
 
+A resolved version matching the bundled contract reports `documentationMode: "bundled"` and `bundledContractSafe: true`. `documentationSources.bundled` identifies the contract version and source hash. This resolver does not verify the public website, so `currentDocsSafe` and `documentationSources.current.available` remain false even on a match. Use matching bundled guidance, installed sources, or a proven release tag for version-specific claims.
+
 ## Run it locally
 
 The server supports Node `^22.22.2 || ^24.15.0 || >=26.0.0`, matching its `jsdom` runtime dependency.

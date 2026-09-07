@@ -13,6 +13,12 @@ Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/comp
 
 Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
 
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
 #### Contract
 
 One action the user will take most of the time, next to a menu of the ones they might take instead — Save and "save as", Reply and "reply all", Export and every other format. The root is a `<div class="split-button">` holding two buttons: a leading one that does the work, and a trailing `.menu-trigger` that opens a `<menu>`. The pair sits 2dp apart, the outside is round, and the seam between them is square-ish.

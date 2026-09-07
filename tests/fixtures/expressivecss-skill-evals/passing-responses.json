@@ -31,7 +31,14 @@
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
         },
-        "artifacts": []
+        "artifacts": [],
+        "completionChecks": [
+          {
+            "id": "setup-only-routing/output",
+            "passed": true,
+            "evidence": "Reviewed replay of the required source change; this fixture is evaluator regression data, not a live model result."
+          }
+        ]
       }
     },
     "css-only-markup-routing": {
@@ -78,7 +85,14 @@
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
         },
-        "artifacts": []
+        "artifacts": [],
+        "completionChecks": [
+          {
+            "id": "css-only-markup-routing/output",
+            "passed": true,
+            "evidence": "Reviewed replay of the required source change; this fixture is evaluator regression data, not a live model result."
+          }
+        ]
       }
     },
     "token-only-theming-routing": {
@@ -111,7 +125,14 @@
           "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
         },
-        "artifacts": []
+        "artifacts": [],
+        "completionChecks": [
+          {
+            "id": "token-only-theming-routing/output",
+            "passed": true,
+            "evidence": "Reviewed replay of the required source change; this fixture is evaluator regression data, not a live model result."
+          }
+        ]
       }
     },
     "critique-no-edit": {
@@ -798,7 +819,8 @@
             "criterionId": "REQ-ACCOUNT-FLOW",
             "componentId": "surface",
             "sequence": 25,
-            "timestamp": "2026-09-03T00:00:25.000Z"
+            "timestamp": "2026-09-03T00:00:25.000Z",
+            "inventoryId": "req-account"
           },
           {
             "id": "redesign-a11y-name",
@@ -808,7 +830,8 @@
             "criterionId": "A-LABEL",
             "componentId": "surface",
             "sequence": 26,
-            "timestamp": "2026-09-03T00:00:26.000Z"
+            "timestamp": "2026-09-03T00:00:26.000Z",
+            "inventoryId": "a11y-name"
           },
           {
             "id": "redesign-preserves-requirements-pair-1-after",
@@ -1938,7 +1961,8 @@
             "componentId": "surface",
             "sequence": 40,
             "timestamp": "2026-09-03T00:00:40.000Z",
-            "inventoryId": "state-loading"
+            "inventoryId": "state-loading",
+            "observedValue": "loading"
           },
           {
             "id": "coverage-state-empty",
@@ -1948,7 +1972,8 @@
             "componentId": "surface",
             "sequence": 41,
             "timestamp": "2026-09-03T00:00:41.000Z",
-            "inventoryId": "state-empty"
+            "inventoryId": "state-empty",
+            "observedValue": "empty"
           },
           {
             "id": "coverage-state-error",
@@ -1958,7 +1983,8 @@
             "componentId": "surface",
             "sequence": 42,
             "timestamp": "2026-09-03T00:00:42.000Z",
-            "inventoryId": "state-error"
+            "inventoryId": "state-error",
+            "observedValue": "error"
           },
           {
             "id": "coverage-state-offline",
@@ -1968,7 +1994,8 @@
             "componentId": "surface",
             "sequence": 44,
             "timestamp": "2026-09-03T00:00:44.000Z",
-            "inventoryId": "state-offline"
+            "inventoryId": "state-offline",
+            "observedValue": "offline"
           },
           {
             "id": "coverage-boundary-compact-medium-below",
@@ -1978,7 +2005,8 @@
             "componentId": "surface",
             "sequence": 45,
             "timestamp": "2026-09-03T00:00:45.000Z",
-            "inventoryId": "boundary-compact-medium-below"
+            "inventoryId": "boundary-compact-medium-below",
+            "observedValue": 599
           },
           {
             "id": "coverage-boundary-compact-medium-above",
@@ -1988,7 +2016,8 @@
             "componentId": "surface",
             "sequence": 46,
             "timestamp": "2026-09-03T00:00:46.000Z",
-            "inventoryId": "boundary-compact-medium-above"
+            "inventoryId": "boundary-compact-medium-above",
+            "observedValue": 600
           },
           {
             "id": "coverage-boundary-medium-expanded-below",
@@ -1998,7 +2027,8 @@
             "componentId": "surface",
             "sequence": 47,
             "timestamp": "2026-09-03T00:00:47.000Z",
-            "inventoryId": "boundary-medium-expanded-below"
+            "inventoryId": "boundary-medium-expanded-below",
+            "observedValue": 839
           },
           {
             "id": "coverage-boundary-medium-expanded-above",
@@ -2008,7 +2038,8 @@
             "componentId": "surface",
             "sequence": 48,
             "timestamp": "2026-09-03T00:00:48.000Z",
-            "inventoryId": "boundary-medium-expanded-above"
+            "inventoryId": "boundary-medium-expanded-above",
+            "observedValue": 840
           },
           {
             "id": "coverage-data-long",
@@ -2018,7 +2049,8 @@
             "componentId": "surface",
             "sequence": 49,
             "timestamp": "2026-09-03T00:00:49.000Z",
-            "inventoryId": "data-long"
+            "inventoryId": "data-long",
+            "observedValue": "long-content"
           },
           {
             "id": "coverage-theme-dark",
@@ -2028,7 +2060,8 @@
             "componentId": "surface",
             "sequence": 50,
             "timestamp": "2026-09-03T00:00:50.000Z",
-            "inventoryId": "theme-dark"
+            "inventoryId": "theme-dark",
+            "observedValue": "dark"
           },
           {
             "id": "coverage-input-keyboard",
@@ -2038,7 +2071,8 @@
             "componentId": "surface",
             "sequence": 51,
             "timestamp": "2026-09-03T00:00:51.000Z",
-            "inventoryId": "input-keyboard"
+            "inventoryId": "input-keyboard",
+            "observedValue": "keyboard"
           },
           {
             "id": "coverage-locale-ar",
@@ -2048,7 +2082,8 @@
             "componentId": "surface",
             "sequence": 52,
             "timestamp": "2026-09-03T00:00:52.000Z",
-            "inventoryId": "locale-ar"
+            "inventoryId": "locale-ar",
+            "observedValue": "ar"
           },
           {
             "id": "coverage-direction-rtl",
@@ -2058,7 +2093,8 @@
             "componentId": "surface",
             "sequence": 53,
             "timestamp": "2026-09-03T00:00:53.000Z",
-            "inventoryId": "direction-rtl"
+            "inventoryId": "direction-rtl",
+            "observedValue": "rtl"
           }
         ]
       }
