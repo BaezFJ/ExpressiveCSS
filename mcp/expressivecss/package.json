@@ -14,7 +14,7 @@
   },
   "main": "server.js",
   "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
   "scripts": {
     "test": "node smoke.mjs",
@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "jsdom": "^27.4.0",
+    "jsdom": "^30.0.1",
     "zod": "^4.5.4"
   },
   "overrides": {
