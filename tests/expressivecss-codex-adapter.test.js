@@ -61,6 +61,26 @@ test('operator metadata pins config defaults, preserves Unicode and rejects cand
   });
 });
 
+test('complete guide output counts before a later failure without trusting read claims', async () => {
+  await fixture(async ({ run, skillRoot, artifactDirectory }) => {
+    const guide = '# Focused guide\nRead only the relevant contract.\n';
+    await writeFile(path.join(skillRoot, 'focused.md'), guide);
+    await writeFile(path.join(skillRoot, 'partial.md'), '# Partial guide\nUnseen contract.\n');
+    const result = await run(`
+      emit({type:'item.completed',item:{id:'read-then-fail',type:'command_execution',exit_code:128,status:'failed',aggregated_output:${JSON.stringify(guide + 'fatal: not a git repository')}}});
+      emit({type:'item.completed',item:{type:'command_execution',exit_code:0,command:'cat partial.md',aggregated_output:'# Partial guide'}});
+      emit({type:'item.completed',item:{type:'agent_message',text:'I read partial.md in full.'}});
+      ${completion}
+    `);
+    assert.deepEqual(result.runMetadata.observedGuideReads, ['skills/expressivecss/focused.md']);
+    assert.ok(result.executionEvidence.toolTrace.some((entry) => entry.operation === 'read' && entry.path === 'skills/expressivecss/focused.md'));
+    const events = JSON.parse(await readFile(path.join(artifactDirectory, 'transcript.json'), 'utf8'));
+    const failed = events.find((event) => event.item?.id === 'read-then-fail').item;
+    assert.equal(failed.exit_code, 128);
+    assert.equal(failed.status, 'failed');
+  });
+});
+
 test('missing usage remains unavailable and unfinished runs fail', async () => {
   await fixture(async ({ run, configPath }) => {
     await writeFile(configPath, 'not valid TOML {');

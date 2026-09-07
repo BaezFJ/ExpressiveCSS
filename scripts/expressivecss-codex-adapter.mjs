@@ -221,8 +221,9 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
     events.push(event);
     const item = event.item;
     if (event.type !== 'item.completed' || !item) return;
-    if (item.type === 'command_execution' && item.exit_code === 0 && typeof item.aggregated_output === 'string') {
-      // Only count a complete guide visible in successful tool output, not a path in a command or prose.
+    if (item.type === 'command_execution' && typeof item.aggregated_output === 'string') {
+      // Complete text proves exposure even if a later compound-command step fails.
+      // A path or partial output is insufficient; this does not mark the command successful.
       for (const guide of guides) if (guide.text && item.aggregated_output.includes(guide.text.trim())) {
         const relative = `skills/expressivecss/${path.relative(input.skillRoot, guide.filename).split(path.sep).join('/')}`;
         guideReads.add(relative);

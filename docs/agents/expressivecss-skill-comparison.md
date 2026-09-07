@@ -295,3 +295,101 @@ passes 177 tests plus 22 replay cases. Generated guidance is regenerated through
 the existing build command; the dedicated browser suite passes 13 tests. MCP
 smoke verifies seven tools and both isolated package checks pass. No framework
 implementation or dependencies change.
+
+## Investigation of the theming and navigation regressions
+
+This investigation reopens the twelve original `brand-token` and
+`navigation-media` transcripts, three runs per version and task. It does not mix
+the later browser-enabled protocol into the original timing sample. The archived
+skill hashes above identify the guidance actually used. Complete Markdown text
+was matched against those immutable snapshots, including output preceding a
+compound-command failure. The resulting event IDs, source hashes, guide exposures
+and raw usage are in
+`../../.cache/expressivecss-performance-investigation/transcript-summary.json`.
+This is retained-evidence analysis, not a new model benchmark.
+
+| Observation, median unless stated | Theming old | Theming revised | Navigation old | Navigation revised |
+| --- | ---: | ---: | ---: | ---: |
+| Seconds | 66.2 | 75.5 | 150.4 | 143.2 |
+| Input plus output tokens | 201,601 | 206,506 | 467,548 | 543,508 |
+| Uncached input tokens | 31,730 | 28,090 | 45,351 | 43,575 |
+| Cached input tokens | 173,568 | 177,408 | 424,960 | 496,640 |
+| Output tokens | 1,275 | 1,437 | 3,432 | 3,293 |
+| Tool calls | 10 | 9 | 18 | 16 |
+| Complete guide exposures by run | 3 / 3 / 3 | 3 / 3 / 3 | 8 / 8 / 7 | 11 / 16 / 11 |
+| Duplicate guide exposures by run | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | 2 / 5 / 2 |
+
+Each metric has its own median; column medians are not additive. Input totals
+include cache hits and are neither unique context size nor a monetary cost
+estimate. There are no per-event timestamps or token totals to assign an exact
+latency or token penalty to an individual read or retry.
+
+Theming does not support a guide-bloat explanation. All six runs exposed Theming,
+color and themes exactly once, with 16,070 bytes of complete guide content in each
+old run and 15,991 in each revised run. These counts exclude the operator-supplied
+root, unrelated skills and partial reads. Each run produced one version-resolution
+result and one final source-preservation check. All six also encountered the
+fixture's missing Git repository once. That shared setup mistake does not explain
+the old/new difference, and it did not become a Git retry loop.
+
+Revised theming run 1, the slowest at 82.9 seconds, attempted `node server.mjs`
+in `item_9`, received `listen EPERM`, then tried the Playwright connector in
+`item_12`, which required unavailable approval. This is observable extra work.
+The 75.5-second median run made only seven tool calls, however, so the failed
+browser route cannot by itself explain the median increase. Revised runs 2 and 3
+claim a blocked server without a corresponding server-launch event; those claims
+are not evidence of additional measured retries. Old runs each issued one public
+documentation search, whereas revised runs used matching bundled guidance.
+No further shortening of the theming references is justified by this sample.
+
+Navigation has specific avoidable reading. Revised run 1 rereads Design and Usage
+in `item_5` after complete output in `item_3`. Run 2 rereads Design in `item_5`,
+then navigation rail, Runtime, media and the evidence ledger in `item_8`. Run 3
+rereads Usage and Theming in `item_5`. Duplicate complete output totals 18,926,
+31,550 and 8,069 bytes respectively. The transcripts do not establish whether
+the model's display truncated earlier output, so these are repeated exposures,
+not proof that every reread was unnecessary to that model.
+
+Revised navigation also follows the stricter Refine route, loading Design and
+Theming that the old runs omitted. Removing required design or accessibility
+coverage to match the old read volume would trade away correctness. Run 2 alone
+loads the 22,057-byte review matrix and 5,239-byte evidence ledger, and has the
+highest token total. The matrix belongs to Critique, Audit and combined finish
+reviews; a narrow repair should establish whether that scope is actually needed
+before loading it. Each of the six navigation runs resolves the version once.
+
+All revised navigation runs repeat a denied Playwright call with another tool
+from the same connector. Old runs 1 and 3 do so too. Revised run 2 additionally
+tries Chrome DevTools. This is real retry overhead across both versions, not a
+new revised-only behavior. Current guidance already stops permission/connection
+retries until capability changes, and the current adapter supplies a preflighted,
+fixture-only browser. Those changes postdate the sample and must be evaluated
+under their own protocol, not credited retroactively with faster historical runs.
+
+Old navigation run 1 repeats its static checker in `item_20` after `item_18`
+already prints passing checks; the earlier compound command also contains a diff
+and returns 1. Other navigation runs execute one final static validation script.
+A nonzero compound-command status does not identify which subcommand failed.
+Local browser exits with empty output likewise do not establish the specific
+socket errors claimed in some candidate reports.
+
+The investigation uncovered a measurement defect worth fixing now: the adapter
+discarded complete guide output whenever the compound command exited nonzero.
+That undercounted two theming references in revised runs 2 and 3, and six guides
+in old navigation run 3. Read detection now accepts complete observed text while
+retaining the failed command status. A regression test rejects partial output and
+claimed reads and verifies that the original failure remains archived. Historical
+grades and telemetry remain unchanged; the table uses the explicitly corrected
+exposure analysis.
+
+The next performance experiment should isolate reuse of already available guide
+content, requesting only missing or truncated sections when needed. Keep the
+current browser route, model settings, fixture and correctness requirements fixed.
+The present investigation changes measurement and documents supported causes;
+it does not claim to have eliminated either regression, weaken verification,
+or change the skill's required reading path.
+
+Validation passes 927 contributor tests with no skips, generated/documentation
+checks, and 178 skill tests plus 22 replay cases. No new model executions were
+needed to reproduce the read-accounting bug; the fake CLI regression exposes
+complete text before a failure and verifies the retained status directly.
