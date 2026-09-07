@@ -87,13 +87,17 @@
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",
     "test:browser": "run-s build:js build:css test:browser:run",
-    "test:browser:run": "node --test tests/*-browser.test.js",
+    "test:browser:run": "node scripts/check-browser.mjs && node --test tests/*-browser.test.js",
     "test:watch": "node --test --watch",
     "test:visual": "node visual/run.mjs",
     "test:visual:report": "playwright show-report visual/report",
     "watch": "run-p watch:css watch:js",
     "watch:css": "sass --watch src/sass/expressive.scss:dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
-    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap --watch=forever"
+    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap --watch=forever",
+    "check:generated": "node scripts/gen-semantics.mjs --check && node scripts/gen-expressivecss-skill.mjs --check && node mcp/expressivecss/scripts/sync-guides.mjs --check",
+    "verify": "run-s build typecheck test:run check:generated docs:build:astro docs:verify",
+    "verify:packages": "node scripts/verify-packages.mjs",
+    "test:node": "node scripts/test-node.mjs"
   },
   "engines": {
     "node": ">=20"

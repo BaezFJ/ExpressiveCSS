@@ -45,9 +45,11 @@ jobs:
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 24
           cache: npm
@@ -62,7 +64,7 @@ jobs:
       # back to token auth (i.e. an EOTP or ENEEDAUTH) rather than saying so.
       - name: Ensure npm supports trusted publishing
         run: |
-          npm install -g npm@latest
+          npm install -g npm@11.19.0
           echo "npm $(npm --version) / node $(node --version)"
 
       # There is no token to test against, so the pre-flight check is that the

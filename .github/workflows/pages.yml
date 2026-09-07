@@ -55,13 +55,14 @@ jobs:
       # Building whatever master points at makes a late run harmless -- it
       # republishes the current site rather than a past one. It also means a
       # manual dispatch always publishes master, which is what a retry wants.
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: master
+          persist-credentials: false
 
       # 24 rather than the package's own floor of 20: astro 7 declares
       # ">=22.12.0", so no `docs:*` script runs on 20.
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 24
           cache: npm
@@ -76,9 +77,9 @@ jobs:
       # the assets, nothing assembled that `npm run docs:build` did not.
       - run: npm run docs:build
 
-      - uses: actions/configure-pages@v6
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: _site
 
@@ -98,4 +99,4 @@ jobs:
 
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
