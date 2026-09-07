@@ -2,6 +2,8 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { compile } from 'sass';
 
 const skillUrl = new URL('../skills/expressivecss/SKILL.md', import.meta.url);
 const skillDirectory = new URL('../skills/expressivecss/', import.meta.url);
@@ -25,6 +27,37 @@ const supportGuides = [
 ];
 
 const decisionIndex = readFileSync(new URL('references/component-decisions.md', skillDirectory), 'utf8');
+const usageGuideUrl = new URL('expressivecss-usage/SKILL.md', skillDirectory);
+const gridReferenceUrl = new URL('expressivecss-usage/references/grid.md', skillDirectory);
+const helpersReferenceUrl = new URL('expressivecss-usage/references/helpers.md', skillDirectory);
+const usageFoundationReferenceUrls = Object.fromEntries(['media', 'table', 'transitions']
+  .map((name) => [name, new URL(`expressivecss-usage/references/${name}.md`, skillDirectory)]));
+const themingGuideUrl = new URL('expressivecss-theming/SKILL.md', skillDirectory);
+const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'state-layers']
+  .map((name) => [name, new URL(`expressivecss-theming/references/${name}.md`, skillDirectory)]));
+const compiledCss = compile(fileURLToPath(new URL('../src/sass/expressive.scss', import.meta.url)), {
+  loadPaths: [fileURLToPath(new URL('../src/sass/', import.meta.url))],
+  silenceDeprecations: ['if-function'],
+}).css;
+const gridSass = readFileSync(new URL('../src/sass/base/_grid.scss', import.meta.url), 'utf8');
+const spacingSass = readFileSync(new URL('../src/sass/utilities/_spacing.scss', import.meta.url), 'utf8');
+const visibilitySass = readFileSync(new URL('../src/sass/utilities/_visibility.scss', import.meta.url), 'utf8');
+const elevationSass = readFileSync(new URL('../src/sass/abstracts/_elevation.scss', import.meta.url), 'utf8');
+const breakpointsSass = readFileSync(new URL('../src/sass/abstracts/_breakpoints.scss', import.meta.url), 'utf8');
+const variablesSass = readFileSync(new URL('../src/sass/abstracts/_variables.scss', import.meta.url), 'utf8');
+const referenceSass = readFileSync(new URL('../src/sass/tokens/_reference.scss', import.meta.url), 'utf8');
+const themeSass = readFileSync(new URL('../src/sass/tokens/_theme.scss', import.meta.url), 'utf8');
+const vibrantSass = readFileSync(new URL('../src/sass/tokens/_vibrant.scss', import.meta.url), 'utf8');
+const globalSass = readFileSync(new URL('../src/sass/base/_global.scss', import.meta.url), 'utf8');
+const helpersSass = readFileSync(new URL('../src/sass/utilities/_helpers.scss', import.meta.url), 'utf8');
+const transitionsSass = readFileSync(new URL('../src/sass/components/_transitions.scss', import.meta.url), 'utf8');
+const stateSass = readFileSync(new URL('../src/sass/tokens/_state.scss', import.meta.url), 'utf8');
+const baseTypographySass = readFileSync(new URL('../src/sass/base/_typography.scss', import.meta.url), 'utf8');
+const colorsSass = readFileSync(new URL('../src/sass/utilities/_colors.scss', import.meta.url), 'utf8');
+const scrimSass = readFileSync(new URL('../src/sass/components/_scrim.scss', import.meta.url), 'utf8');
+const iconSass = readFileSync(new URL('../src/sass/components/_icons-material-design.scss', import.meta.url), 'utf8');
+const iconsDocs = readFileSync(new URL('../docs/src/pages/icons.astro', import.meta.url), 'utf8');
+const typescaleSass = readFileSync(new URL('../src/sass/utilities/_typescale.scss', import.meta.url), 'utf8');
 const componentEntries = [...decisionIndex.matchAll(/^\| \[([^\]]+)\]\(\.\.\/components\/([a-z-]+\.md)\) \|/gm)]
   .map((match) => ({ label: match[1], name: match[2] }));
 const componentLinks = componentEntries.map(({ name }) => name);
@@ -49,7 +82,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.4\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.7\.0"$/m);
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
@@ -233,6 +266,269 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(accessibility, /composite roles/);
     assert.doesNotMatch(accessibility, /presence of state attributes/);
     assert.match(accessibility, /explicitly requires? at author time/);
+  });
+
+  test('gives agents exact grid and helper-class references', () => {
+    const usage = readFileSync(usageGuideUrl, 'utf8');
+    assert.ok(existsSync(gridReferenceUrl), 'grid reference is missing');
+    assert.ok(existsSync(helpersReferenceUrl), 'helpers reference is missing');
+    assert.match(usage, /\[grid reference\]\(\.\/references\/grid\.md\)/i);
+    assert.match(usage, /\[helper-class reference\]\(\.\/references\/helpers\.md\)/i);
+
+    const grid = readFileSync(gridReferenceUrl, 'utf8');
+    assert.match(grid, /`\.row`[\s\S]*`\.s1`[–-]`\.s12`[\s\S]*`\.xxl1`[–-]`\.xxl12`/);
+    assert.match(grid, /Compact[\s\S]*Medium[\s\S]*Expanded[\s\S]*Large[\s\S]*Extra-large/);
+    assert.match(grid, /`\.container`[\s\S]*`\.container\.wide`[\s\S]*`\.container\.max`/);
+    assert.match(grid, /`\.offset-\{prefix\}\{1\.\.11\}`/);
+    assert.match(grid, /`\.g-0`[–-]`\.g-5`/);
+    assert.match(grid, /Do not use `push-\*` or `pull-\*`/);
+    assert.match(grid, /wider span class[\s\S]*resets[\s\S]*earlier offset/i);
+
+    const gridClasses = ['container', 'row', 'section', ...Array.from({ length: 6 }, (_, i) => `g-${i}`)];
+    for (const prefix of ['s', 'm', 'l', 'xl', 'xxl']) {
+      for (let i = 1; i <= 12; i += 1) gridClasses.push(`${prefix}${i}`);
+      for (let i = 1; i <= 11; i += 1) gridClasses.push(`offset-${prefix}${i}`);
+    }
+    for (const className of gridClasses) {
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+
+    for (const [name, value] of [['medium', '600px'], ['expanded', '840px'], ['large', '1200px'], ['extra-large', '1600px']]) {
+      assert.match(breakpointsSass, new RegExp(`"${name}"\\s*:\\s*${value}`));
+      assert.ok(grid.includes(value), `grid reference omits ${value}`);
+    }
+    for (const [className, multiplier] of [['g-0', '0'], ['g-1', '0.25'], ['g-2', '0.5'], ['g-3', '1'], ['g-4', '1.5'], ['g-5', '3']]) {
+      assert.match(gridSass, new RegExp(`\\.${className}\\s*\\{\\s*gap:\\s*(?:calc\\()?${multiplier}`));
+      assert.ok(grid.includes(`| \`.${className}\` | ${multiplier} |`), `grid reference has the wrong ${className} multiplier`);
+    }
+
+    const helpers = readFileSync(helpersReferenceUrl, 'utf8');
+    assert.match(helpers, /`\{m\|p\}\{side\?\}-\{value\}`/);
+    assert.match(helpers, /`0`, `1`, `2`, `3`, `4`, `5`, `6`, `auto`/);
+    assert.match(helpers, /`auto` is meaningful for margin only/i);
+    assert.match(helpers, /combine a base `\.hide` with one `\.show-on-\*` class/i);
+    for (const className of [
+      'valign-wrapper', 'left-align', 'right-align', 'center-align', 'center-on-small-only',
+      'divider', 'no-select', 'circle', 'center-block', 'truncate', 'no-padding',
+      'responsive-img', 'responsive-video', 'video-container', 'hoverable', 'browser-default',
+    ]) assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+    for (const className of ['z-depth-0', 'z-depth-1', 'z-depth-1-half', 'z-depth-2', 'z-depth-3', 'z-depth-4', 'z-depth-5']) {
+      assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(helpers, /`\.z-depth-0`[\s\S]*`!important`/);
+    assert.match(elevationSass, /"0": none[\s\S]*"1-half":[\s\S]*"5":/);
+    assert.match(elevationSass, /box-shadow: none !important/);
+    assert.match(helpers, /`\.hide-on-med-and-down`[\s\S]*below 840px/i);
+    assert.match(helpers, /`\.hide-on-med-and-up`[\s\S]*600px and above/i);
+    assert.doesNotMatch(helpers, /`\.hide-on-med-and-(?:down|up)`[^\n]*alias/i);
+    assert.match(helpers, /`\.hoverable`[\s\S]*fixed hover shadow/i);
+
+    const spacingClasses = [];
+    for (const prefix of ['m', 'p']) {
+      for (const side of ['', 't', 'r', 'b', 'l', 'x', 'y']) {
+        for (const value of ['0', '1', '2', '3', '4', '5', '6', 'auto']) spacingClasses.push(`${prefix}${side}-${value}`);
+      }
+    }
+    for (const className of spacingClasses) {
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    for (const [name, value] of [['0', '0'], ['1', '0.25rem'], ['2', '0.5rem'], ['3', '0.75rem'], ['4', '1rem'], ['5', '1.5rem'], ['6', '3rem'], ['auto', 'auto']]) {
+      assert.match(spacingSass, new RegExp(`"${name}"\\s*:\\s*${value.replace('.', '\\.')}`));
+      assert.ok(helpers.includes(`| \`${name}\` | \`${value}\` |`), `helpers reference has the wrong spacing value for ${name}`);
+    }
+    for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)/g)].map((match) => match[1]))]) {
+      assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+
+    for (const [name, content] of [['grid', grid], ['helpers', helpers]]) {
+      assert.doesNotMatch(content, /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
+      assert.doesNotMatch(content, /\]\(\.\.\/\.\.\//, `${name} reference links outside the portable skill directory`);
+    }
+  });
+
+  test('covers the remaining usage foundations with source-checked references', () => {
+    const usage = readFileSync(usageGuideUrl, 'utf8');
+    const references = {};
+    for (const [name, url] of Object.entries(usageFoundationReferenceUrls)) {
+      assert.ok(existsSync(url), `${name} foundation reference is missing`);
+      assert.match(usage, new RegExp(`\\[${name} reference\\]\\(\\.\\/references\\/${name}\\.md\\)`, 'i'));
+      references[name] = readFileSync(url, 'utf8');
+      assert.doesNotMatch(references[name], /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
+      assert.doesNotMatch(references[name], /\]\(\.\.\/\.\.\//, `${name} reference links outside the portable skill directory`);
+    }
+
+    for (const className of ['responsive-img', 'responsive-video', 'video-container', 'circle']) {
+      assert.ok(references.media.includes(`\`.${className}\``), `media reference omits .${className}`);
+    }
+    assert.match(helpersSass, /img\.responsive-img,[\s\S]*video\.responsive-video[\s\S]*max-width:\s*100%[\s\S]*height:\s*auto/);
+    assert.match(helpersSass, /\.video-container[\s\S]*aspect-ratio:\s*16 \/ 9[\s\S]*iframe, object, embed[\s\S]*inset:\s*0/);
+    assert.match(references.media, /`\.responsive-img` only affects `<img>`[\s\S]*`\.responsive-video` only affects `<video>`/i);
+    assert.match(references.media, /`\.video-container`[\s\S]*`16 \/ 9`[\s\S]*`iframe`[\s\S]*`object`[\s\S]*`embed`/i);
+    assert.match(references.media, /intrinsic `width` and `height`/i);
+    assert.match(references.media, /meaningful `alt`[\s\S]*empty `alt`[\s\S]*captions[\s\S]*`title`/i);
+
+    for (const className of ['striped', 'highlight', 'centered', 'responsive-table']) {
+      assert.ok(references.table.includes(`\`.${className}\``), `table reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(globalSass, /@include bp-down\("expanded"\)[\s\S]*table\.responsive-table/);
+    assert.match(globalSass, /tbody > tr:nth-child\(odd\)[\s\S]*rgba\(0, 0, 0, 0\.08\)/);
+    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*rgba\(0, 0, 0, 0\.04\)/);
+    assert.match(globalSass, /&\.centered\s*\{[\s\S]*thead tr th, tbody tr td\s*\{[\s\S]*text-align:\s*center/);
+    assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*remain left-aligned/i);
+    assert.doesNotMatch(references.table, /Centers all header and body cell text/i);
+    assert.match(references.table, /below `840px`/i);
+    assert.match(references.table, /`<caption>`[\s\S]*scope="col"[\s\S]*do not use a table for page layout/i);
+    assert.match(references.table, /keeps the header cells in one fixed column[\s\S]*scrolls the body rows horizontally/i);
+    assert.match(references.table, /physical floats, padding, borders, and text alignment[\s\S]*RTL/i);
+    assert.match(references.table, /hard-coded black alpha colors[\s\S]*light and dark/i);
+
+    for (const className of ['scale-transition', 'scale-out', 'scale-in']) {
+      assert.ok(references.transitions.includes(`\`.${className}\``), `transitions reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(transitionsSass, /transition:\s*transform \.3s cubic-bezier\(0\.53, 0\.01, 0\.36, 1\.63\) !important/);
+    assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform \.2s !important/);
+    assert.match(transitionsSass, /&\.scale-in[\s\S]*transform:\s*scale\(1\)/);
+    assert.match(references.transitions, /`\.scale-out`[\s\S]*does not remove[\s\S]*layout[\s\S]*accessibility tree[\s\S]*tab order/i);
+    assert.match(references.transitions, /no built-in `prefers-reduced-motion` rule/i);
+    assert.match(references.transitions, /transition: none !important/);
+    assert.match(references.transitions, /wait at least one rendered frame/i);
+  });
+
+  test('gives agents source-checked foundation references', () => {
+    const theming = readFileSync(themingGuideUrl, 'utf8');
+    const references = {};
+    for (const [name, url] of Object.entries(foundationReferenceUrls)) {
+      assert.ok(existsSync(url), `${name} foundation reference is missing`);
+      assert.match(theming, new RegExp(`\\[${name} reference\\]\\(\\.\\/references\\/${name}\\.md\\)`, 'i'));
+      references[name] = readFileSync(url, 'utf8');
+      assert.doesNotMatch(references[name], /\/home\/|[A-Z]:\\Users\\/, `${name} reference contains a machine-local path`);
+    }
+
+    const roleBlock = variablesSass.match(/\$sys-color-roles:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const colorRoles = [...roleBlock.matchAll(/"([a-z-]+)"/g)].map((match) => match[1]);
+    assert.ok(colorRoles.length > 0, 'could not read color roles from Sass');
+    for (const role of colorRoles) {
+      assert.ok(references.color.includes(`\`.${role}\``), `color reference omits .${role}`);
+      assert.ok(references.color.includes(`\`.${role}-text\``), `color reference omits .${role}-text`);
+      assert.match(compiledCss, new RegExp(`\\.${role}(?![\\w-])`), `compiled CSS omits .${role}`);
+      assert.match(compiledCss, new RegExp(`\\.${role}-text(?![\\w-])`), `compiled CSS omits .${role}-text`);
+    }
+    assert.match(references.color, /background class[\s\S]*`-text`[\s\S]*foreground/i);
+    assert.match(references.color, /container[\s\S]*matching `on-\*`/i);
+    assert.match(references.color, /color-mix\(in oklab/);
+    assert.match(references.color, /Do not write `rgba\(var\(--md-sys-color-/);
+    const roleNamedColors = colorsSass.match(/\$_role-named:\s*([^;]+);/)?.[1].match(/[a-z][a-z-]+/g) ?? [];
+    assert.deepEqual(roleNamedColors, ['primary-container', 'secondary-container', 'tertiary-container']);
+    assert.match(colorsSass, /\$_role-named-hosts:\s*":not\(\.extend\):not\(\.fab-menu\)"/);
+    assert.match(references.color, /`primary-container`, `secondary-container`, and `tertiary-container`[\s\S]*`.extend`[\s\S]*`.fab-menu`[\s\S]*`-text` forms still apply/);
+    assert.doesNotMatch(references.color, /class="[^"]*button[^"]*\b(?:primary|secondary|tertiary|error)(?:-container)?\b/);
+    assert.match(scrimSass, /--md-comp-scrim-color:\s*color-mix\(in oklab, var\(--md-sys-color-scrim\) 32%, transparent\)/);
+    assert.match(references.color, /`.scrim` is the opaque system role[\s\S]*`--md-comp-scrim-color`/);
+
+    for (const scheme of ['light', 'dark', 'auto']) assert.ok(themeSass.includes(`:root[theme='${scheme}']`));
+    assert.match(references.themes, /no `theme` attribute[\s\S]*`theme="auto"`[\s\S]*`theme="light"`[\s\S]*`theme="dark"`/i);
+    assert.match(references.themes, /no `Expressive\.theme`/);
+    assert.match(referenceSass, /--md-source:/);
+    assert.match(references.themes, /`--md-source`[\s\S]*error ramp[\s\S]*does not/i);
+    assert.match(vibrantSass, /\[vibrant\],[\s\S]*:host\(\[vibrant\]\)/);
+    assert.match(references.themes, /`\[vibrant\]`[\s\S]*focused subtree[\s\S]*not[\s\S]*whole page/i);
+
+    const elevationBlock = elevationSass.match(/\$elevations:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const elevationKeys = [...elevationBlock.matchAll(/"([\w-]+)"\s*:/g)].map((match) => match[1]);
+    assert.ok(elevationKeys.length > 0, 'could not read elevation levels from Sass');
+    for (const level of elevationKeys) {
+      assert.ok(references.elevation.includes(`\`.z-depth-${level}\``), `elevation reference omits .z-depth-${level}`);
+      assert.match(compiledCss, new RegExp(`\\.z-depth-${level}(?![\\w-])`));
+    }
+    assert.match(references.elevation, /`\.z-depth-0`[\s\S]*`!important`/);
+    assert.match(references.elevation, /`@include z-depth\("2"\)`[\s\S]*not[\s\S]*`@extend/i);
+    assert.doesNotMatch(compiledCss, /--md-sys-elevation/);
+    assert.match(references.elevation, /does not publish CSS custom-property elevation levels/);
+    assert.match(references.elevation, /fixed shadow can lower an element that already has a higher elevation/);
+
+    for (const className of ['material-symbols', 'material-symbols-outlined', 'material-symbols-rounded', 'material-symbols-sharp', 'material-icons', 'icon-filled']) {
+      assert.ok(references.icons.includes(`\`.${className}\``), `icons reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    for (const token of ['--md-icon-font', '--md-icon-fill', '--md-icon-weight', '--md-icon-grade', '--md-icon-optical-size']) {
+      assert.ok(iconSass.includes(`${token}:`), `icon Sass omits ${token}`);
+      assert.ok(references.icons.includes(`\`${token}\``), `icons reference omits ${token}`);
+    }
+    const normalizedIconReference = references.icons.replaceAll('`', '');
+    for (const range of ['0 or 1', '100–700', '−50–200', '20–48']) {
+      assert.ok(iconsDocs.includes(range), `icon docs omit ${range}`);
+      assert.ok(normalizedIconReference.includes(range), `icons reference omits ${range}`);
+    }
+    assert.match(references.icons, /convenience presets; they do not restrict per-icon axis values/);
+    assert.match(references.icons, /`icon-style="outlined"`[\s\S]*`icon-style="rounded"`[\s\S]*`icon-style="sharp"`/);
+    for (const style of ['outlined', 'rounded', 'sharp']) {
+      assert.ok(iconSass.includes(`[icon-style="${style}"]`));
+      assert.ok(references.icons.includes(`\`icon-style="${style}"\``));
+    }
+    assert.match(references.icons, /decorative[\s\S]*`aria-hidden="true"`[\s\S]*icon-only[\s\S]*accessible name/i);
+    for (const [size, value, optical] of [['tiny', '1rem', '20'], ['small', '2rem', '24'], ['medium', '4rem', '40'], ['large', '6rem', '48']]) {
+      assert.match(iconSass, new RegExp(`&\\.${size}[\\s\\S]*?font-size:\\s*${value}`));
+      assert.match(iconSass, new RegExp(`&\\.${size}[\\s\\S]*?--md-icon-optical-size:\\s*${optical}`));
+      assert.ok(references.icons.includes(`| \`.${size}\` | \`${value}\` | \`${optical}\` |`), `icons reference has the wrong .${size} size`);
+    }
+    assert.match(iconSass, /&\.left[\s\S]*margin-left:\s*-8px/);
+    assert.match(references.icons, /`\.left`[\s\S]*`margin-left: -8px`/);
+
+    const typeRoleBlock = typescaleSass.match(/\$typescale-roles:\s*\(([\s\S]*?)\)\s*!default;/)?.[1] ?? '';
+    const typeRoles = [...typeRoleBlock.matchAll(/"([a-z-]+)"/g)].map((match) => match[1]);
+    assert.equal(typeRoles.length, 15);
+    for (const role of typeRoles) {
+      assert.ok(references.typography.includes(`\`.${role}\``), `typography reference omits .${role}`);
+      assert.match(compiledCss, new RegExp(`\\.${role}(?![\\w-])`), `compiled CSS omits .${role}`);
+      const metric = (property) => referenceSass.match(new RegExp(`--md-sys-typescale-${role}-${property}:\\s*([^;]+);`))?.[1];
+      const values = ['font-size', 'line-height', 'font-weight', 'letter-spacing'].map(metric);
+      assert.ok(values.every(Boolean), `typography source omits metrics for ${role}`);
+      assert.ok(
+        references.typography.includes(`| \`.${role}\` | ${values.map((value) => `\`${value}\``).join(' | ')} |`),
+        `typography reference has the wrong metrics for .${role}`,
+      );
+    }
+    for (const className of ['italic', 'bold', 'light', 'thin', 'underline', 'overline', 'upper', 'lower', 'capitalize', 'flow-text']) {
+      assert.ok(references.typography.includes(`\`.${className}\``), `typography reference omits .${className}`);
+      assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
+    }
+    assert.match(references.typography, /semantic HTML first/i);
+    assert.match(references.typography, /type-role loop and text helpers live in `src\/sass\/utilities\/_typescale\.scss`/);
+    assert.match(references.typography, /element defaults and `\.flow-text` live in `src\/sass\/base\/_typography\.scss`/);
+    assert.match(baseTypographySass, /body\s*\{[\s\S]*?@include typescale\("body-medium"\)/);
+    assert.match(references.typography, /`body` uses body-medium/);
+    const flowTextSize = compiledCss.match(/\.flow-text\s*\{\s*font-size:\s*([^;]+);/)?.[1];
+    assert.equal(flowTextSize, 'clamp(1.2rem, 0.912rem + 1.28vw, 1.68rem)');
+    assert.ok(references.typography.includes(`\`${flowTextSize}\``));
+    assert.match(references.typography, /role utilities consume all except `-font-family-style`/);
+    assert.match(typescaleSass, /\.bold\s*\{\s*font-weight:\s*500/);
+    assert.match(references.typography, /`\.bold` \| `font-weight: 500`/);
+    assert.match(references.typography, /`--md-ref-typeface-brand`[\s\S]*`--md-ref-typeface-plain`[\s\S]*`--md-ref-typeface-fallback`/);
+    assert.match(globalSass, /a\s*\{[\s\S]*?text-decoration:\s*none;/);
+    assert.match(references.typography, /Links use the primary role and remove text decoration by default/);
+    assert.doesNotMatch(references.typography, /`\.(?:large|medium|small)-text`/);
+
+    const stateLayers = references['state-layers'];
+    const expectedStateOpacities = { hover: '0.08', focus: '0.1', pressed: '0.1', dragged: '0.16' };
+    for (const [state, value] of Object.entries(expectedStateOpacities)) {
+      const token = `--md-sys-state-${state}-state-layer-opacity`;
+      assert.match(stateSass, new RegExp(`${token}:\\s*${value.replace('.', '\\.')}\\s*;`));
+      assert.ok(stateLayers.includes(`\`${token}\``), `state-layer reference omits ${token}`);
+      assert.ok(stateLayers.includes(`| \`${token}\` | \`${value}\` |`), `state-layer reference has the wrong ${state} value`);
+    }
+    assert.match(stateSass, /:root,[\s\S]*:host[\s\S]*--md-sys-state-hover-state-layer-opacity/);
+    assert.doesNotMatch(stateSass, /--md-sys-state-(?:selected|disabled)-state-layer-opacity/);
+    assert.match(stateLayers, /foundation[\s\S]*no markup of its own/i);
+    assert.match(stateLayers, /unitless numbers[\s\S]*`0` through `1`/i);
+    assert.match(stateLayers, /overlay[\s\S]*`opacity`[\s\S]*ring[\s\S]*`color-mix\(\)`[\s\S]*`100%`/i);
+    assert.match(stateLayers, /does not replace the focus indicator/i);
+    assert.match(stateLayers, /selected and disabled[\s\S]*do not have system state-layer opacity tokens/i);
+    const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
+    assert.doesNotMatch(matrix, /framework selected state-layer token|framework disabled state-layer token/i);
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {
@@ -479,7 +775,7 @@ describe('the ExpressiveCSS agent skill', () => {
         avoid: /only setup, visual tokens, or lifecycle code/i,
       },
       'expressivecss-theming/SKILL.md': {
-        use: /color, typography, icon styling, themes, schemes, vibrant regions, or other visual tokens/i,
+        use: /color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens/i,
         avoid: /unrelated markup repair[\s\S]*component contract/i,
       },
       'expressivecss-runtime/SKILL.md': {

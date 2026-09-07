@@ -1616,7 +1616,7 @@
         "mode": "Audit",
         "resolvedVersion": "0.7.0",
         "contractVersion": "0.8.0",
-        "skillVersion": "0.4.0",
+        "skillVersion": "0.7.0",
         "contractStatus": "mismatch",
         "documentationMode": "matching-tag",
         "decoyApiRejected": true,

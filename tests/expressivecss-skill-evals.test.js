@@ -18,6 +18,7 @@ import { resolveExpressiveVersion } from '../scripts/lib/resolve-expressivecss-v
 const caseData = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url), 'utf8'));
 const cases = caseData.cases;
 const replayData = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/passing-responses.json', import.meta.url), 'utf8'));
+const generatedContract = JSON.parse(await readFile(new URL('../skills/expressivecss/references/contract.json', import.meta.url), 'utf8'));
 const envelopes = replayData.responses;
 const responses = Object.fromEntries(Object.entries(envelopes).map(([id, envelope]) => [id, envelope.candidateResponse]));
 const executionEvidence = Object.fromEntries(Object.entries(envelopes).map(([id, envelope]) => [id, envelope.executionEvidence]));
@@ -51,6 +52,16 @@ function expectMutationFailure(id, mutate, evidence) {
 }
 
 describe('ExpressiveCSS behavioral evaluation runner', () => {
+  test('uses the generated skill version for the older-version contract case', () => {
+    const item = caseById('older-version-contract');
+    const response = clone(responses[item.id]);
+    assert.equal(response.skillVersion, generatedContract.skillVersion);
+    assert.equal(evaluateCase(item, response, executionEvidence[item.id]).status, 'pass');
+
+    response.skillVersion = '0.4.0';
+    assert.equal(evaluateCase(item, response, executionEvidence[item.id]).status, 'fail');
+  });
+
   test('owns stable critical invariants and covers every routing boundary', () => {
     const validation = validateCaseDefinitions(caseData);
     assert.equal(validation.status, 'pass', JSON.stringify(validation, null, 2));

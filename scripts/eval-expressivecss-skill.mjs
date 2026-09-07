@@ -1,4 +1,4 @@
-import { constants as fsConstants } from 'node:fs';
+import { constants as fsConstants, readFileSync } from 'node:fs';
 import { lstat, mkdir, mkdtemp, open, realpath, rm, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -8,6 +8,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const THIS_FILE = fileURLToPath(import.meta.url);
 const DEFAULT_ROOT = path.resolve(path.dirname(THIS_FILE), '..');
 const ROOT_SKILL_PATH = 'skills/expressivecss/SKILL.md';
+const BUNDLED_SKILL_VERSION = JSON.parse(readFileSync(
+  path.join(DEFAULT_ROOT, 'skills/expressivecss/references/contract.json'),
+  'utf8',
+)).skillVersion;
 export const PROJECT_FIXTURES = Object.freeze({
   'consumer-current': Object.freeze({
     'package.json': '{"name":"eval-consumer-current","private":true,"dependencies":{"@expressivecss/expressive":"0.8.0"}}\n',
@@ -642,7 +646,7 @@ function caseContract(testCase, response, executionEvidence) {
     }
     case 'older-version-contract':
       passed = response.resolvedVersion === '0.7.0' && response.contractVersion === '0.8.0'
-        && response.skillVersion === '0.4.0' && response.contractStatus === 'mismatch'
+        && response.skillVersion === BUNDLED_SKILL_VERSION && response.contractStatus === 'mismatch'
         && response.documentationMode === 'matching-tag' && response.decoyApiRejected === true
         && response.unavailableDocsBehavior === 'Blocked';
       break;

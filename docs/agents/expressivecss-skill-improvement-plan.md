@@ -179,7 +179,7 @@ Replace the unconditional guide-loading sentence in `expressivecss-design/SKILL.
 | --- | --- |
 | Usage | Every interface implementation or review. |
 | Accessibility | Every interface implementation or review. |
-| Theming | Color, typography, icon styling, theme, scheme, vibrant-region, or other visual-token work. |
+| Theming | Color, typography, icon styling, theme, scheme, vibrant-region, elevation, shadow, state-layer, or other visual-token work. |
 | Runtime | Interactive components, initialization, dynamic content, remounting, teardown, or Audit. |
 | Installation | Setup, imports, package changes, version problems, or contract-source uncertainty. |
 | Component guides | Every plausible candidate during selection, then every selected component during implementation and review. |
@@ -231,7 +231,7 @@ Create a dependency-free resolver with a stable JSON result:
   "declaredRange": "^0.8.0",
   "resolvedVersion": "0.8.1",
   "resolutionSource": "installed-package|lockfile|framework-source|manifest-only|none",
-  "skillVersion": "0.4.0",
+  "skillVersion": "0.7.0",
   "contractVersion": "0.8.0",
   "matchingTag": "v0.8.1",
   "status": "match|mismatch|unresolved",

@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
   author: BaezFJ
-  version: "0.4.0"
+  version: "0.7.0"
   homepage: https://www.expressivecss.com
   repository: https://github.com/BaezFJ/ExpressiveCSS
   platforms: linux, macos, windows
