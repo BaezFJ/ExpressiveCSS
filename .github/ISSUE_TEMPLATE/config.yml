@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and proposals
+    url: https://github.com/BaezFJ/ExpressiveCSS/discussions
+    about: Discuss ideas before starting substantial work.
+  - name: Private vulnerability report
+    url: https://github.com/BaezFJ/ExpressiveCSS/security/advisories/new
+    about: Do not disclose vulnerabilities in public issues.

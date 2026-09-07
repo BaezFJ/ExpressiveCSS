@@ -1,0 +1,26 @@
+name: Bug report
+description: Report a reproducible problem. Report vulnerabilities privately.
+body:
+  - type: markdown
+    attributes:
+      value: "Security issue? Use https://github.com/BaezFJ/ExpressiveCSS/security/advisories/new instead."
+  - type: input
+    id: version
+    attributes:
+      label: Package and version
+      placeholder: "@expressivecss/expressive 0.8.0"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include steps, markup or a link, browser version, and operating system.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true

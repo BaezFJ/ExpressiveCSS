@@ -20,12 +20,10 @@ the M3 token layer, and the guidelines** — not importable components.
 
 ## Gotchas that cost a debugging cycle
 
-- **Fonts.** The framework deliberately ships no Material Symbols font files
-  (CLAUDE.md explains why). Designs receive only the `styles.css` @import
-  closure, so every icon rendered as its ligature text. `.design-sync/build-css.mjs`
-  prepends the Google Fonts @imports to a generated copy of the compiled CSS and
-  `cssEntry` points at that. Regenerate it whenever `dist/css` changes — it is
-  part of `buildCmd`.
+- **Fonts.** The framework ships Material Symbols, Roboto, and Noto Sans in
+  `dist/fonts/`. Some design consumers transfer only CSS and cannot resolve its
+  relative font URLs. `.design-sync/build-css.mjs` adds Google Fonts imports for
+  those optional consumers. Regenerate the adapter CSS whenever `dist/css` changes.
 - **CSS-only patterns cannot be cards.** `package-validate.mjs` fails
   `[BUNDLE_EXPORT]` for any component not exported on `window.Expressive`, with
   no config escape. Button, List, Badge, Table, Grid and Panes therefore have no
