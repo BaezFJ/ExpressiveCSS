@@ -9,7 +9,8 @@ tag. Publishing from every push can advertise unpublished or failed releases.
 
 Retain the Astro build and artifact deployment from ADR 0003. Replace the push
 trigger with a reusable documentation workflow called only after successful
-stable framework publication. Build the exact tagged commit, verify its ancestry
+stable framework publication. Check out the calling release event's immutable
+`github.sha`, never a caller-supplied checkout ref. Verify its ancestry
 on protected master, and recheck npm latest immediately before deployment.
 
 Serialize the complete release workflow through publication and documentation

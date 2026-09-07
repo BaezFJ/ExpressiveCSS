@@ -30,7 +30,10 @@ The release workflow selects the package from its tag, verifies that its commit
 belongs to protected `master`, checks the package version and prerelease flag,
 and validates before asking for publishing approval. Stable versions go to
 `latest`; prereleases go to `next`. Each release must advance its target dist-tag,
-including numeric prerelease identifiers such as `rc.9` to `rc.10`. A manual dispatch only validates and dry-runs.
+including numeric prerelease identifiers such as `rc.9` to `rc.10`. A manual dispatch
+only validates and dry-runs. Its credential-free `--dry-run --force` permits
+rehearsing the current version even when it is already on npm; real publishing
+never uses `--force` and rejects previously published or backward versions.
 
 The `npm-publish` environment requires BaezFJ's approval and accepts only release
 tags. Only the publishing job receives OIDC permission. Each package needs an npm
@@ -65,6 +68,9 @@ The implementation is split into contributor guidance, CI/security, release
 coordination, and stable documentation deployment PRs. Merge CI before enabling
 its required result. Confirm the named `required` check has succeeded on GitHub,
 then require it with an up-to-date branch, PRs, and resolved conversations.
+Require CodeQL results separately through GitHub's code scanning ruleset, blocking
+errors and high or critical security findings introduced by a PR. Successful
+analysis upload alone does not mean that its findings passed the merge policy.
 Keep mandatory approving reviews at zero during the single-maintainer stage.
 The community board is https://github.com/users/BaezFJ/projects/8.
 Test a failing PR and a passing owner PR before considering rollout complete.
