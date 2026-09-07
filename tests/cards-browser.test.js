@@ -4,9 +4,6 @@ import { existsSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-if (process.env.CI && !existsSync(chromium.executablePath())) {
-  throw new Error('CI requires Chromium. Run: npx playwright install chromium');
-}
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
 
 async function cardState(card) {

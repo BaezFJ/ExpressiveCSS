@@ -5,138 +5,111 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      dist-tag:
-        description: npm dist-tag to publish under
+      package:
+        description: Package to validate and dry-run; manual runs never publish
         required: true
-        default: next
+        default: framework
         type: choice
-        options: [next, latest]
-      dry-run:
-        description: Pack and validate, but do not publish
-        required: false
-        default: true
-        type: boolean
+        options: [framework, mcp]
 
 permissions:
   contents: read
-  # Mints the OIDC token that signs the provenance attestation. Also the
-  # permission trusted publishing needs, once this package exists on npm and a
-  # trusted publisher is configured for it (see the Publish step).
-  id-token: write
+
+# Serialize releases so an older version cannot race a newer npm dist-tag update.
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ github.event.release.tag_name }}
+  RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+  RELEASE_PACKAGE: ${{ inputs.package }}
 
 jobs:
-  publish:
+  validate:
     runs-on: ubuntu-latest
+    outputs:
+      kind: ${{ steps.package.outputs.kind }}
+      directory: ${{ steps.package.outputs.directory }}
+      name: ${{ steps.package.outputs.name }}
+      version: ${{ steps.package.outputs.version }}
+      distTag: ${{ steps.package.outputs.distTag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require a commit merged into master
+        run: git merge-base --is-ancestor HEAD origin/master
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Select and validate the release package
+        id: package
+        run: node scripts/release.mjs
+      - run: npm ci
+      - run: npm ci --prefix mcp/expressivecss
+      - run: npx playwright install --with-deps chromium
+      - run: npm run verify
+      - run: npm test --prefix mcp/expressivecss
+      - run: npm run verify:packages
+      - name: Check registry availability
+        if: github.event_name == 'release'
+        run: node scripts/release.mjs --registry
+      - name: Pack the validated release
+        working-directory: ${{ steps.package.outputs.directory }}
+        run: npm pack --pack-destination "$RUNNER_TEMP"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: release-package
+          path: ${{ runner.temp }}/*.tgz
+          if-no-files-found: error
+          retention-days: 7
+      - name: Manual dry run
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          DIST_TAG: ${{ steps.package.outputs.distTag }}
+        run: |
+          packages=("$RUNNER_TEMP"/*.tgz)
+          test "${#packages[@]}" -eq 1
+          npm publish "${packages[0]}" --access public --tag "$DIST_TAG" --ignore-scripts --dry-run
+          echo 'Validation and dry run succeeded; nothing was published.' >> "$GITHUB_STEP_SUMMARY"
 
-    # Every publish waits for a human click: the "npm-publish" environment has
-    # BaezFJ as a required reviewer, so the job pauses before it can reach the
-    # registry. The name is also part of the identity npm matches against in
-    # the trusted publisher config on npmjs.com -- the two must agree, or the
-    # OIDC exchange is rejected and the publish fails at the last step.
+  publish:
+    needs: validate
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
     environment: npm-publish
-
-    env:
-      # release: prereleases go to "next", full releases to "latest".
-      # workflow_dispatch: whatever was chosen in the run dialog.
-      DIST_TAG: >-
-        ${{ github.event_name == 'workflow_dispatch'
-            && inputs.dist-tag
-            || (github.event.release.prerelease && 'next' || 'latest') }}
-      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
-
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: 24
-          cache: npm
-          # Writes an .npmrc pointing at the public registry, which is where
-          # the OIDC exchange happens. Still required without a token.
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
-
-      - run: npm ci
-
-      # Trusted publishing needs npm >= 11.5.1. Node 24 ships an npm 11, but
-      # not necessarily a new enough one, and a too-old CLI fails by falling
-      # back to token auth (i.e. an EOTP or ENEEDAUTH) rather than saying so.
-      - name: Ensure npm supports trusted publishing
-        run: |
-          npm install -g npm@11.19.0
-          echo "npm $(npm --version) / node $(node --version)"
-
-      # There is no token to test against, so the pre-flight check is that the
-      # OIDC machinery is actually available: these two variables only exist
-      # when `permissions: id-token: write` is in effect. Without them npm
-      # silently falls back to token auth and fails at the publish step.
-      - name: Verify OIDC is available
-        run: |
-          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ] || [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
-            echo "::error::No OIDC token available -- check 'permissions: id-token: write'"
-            exit 1
-          fi
-          echo "OIDC token endpoint present"
-          scope="$(node -p "require('./package.json').name.split('/')[0]")"
-          echo "publishing under scope: $scope"
-
-      # A release tag that disagrees with package.json publishes a version whose
-      # git tag points at different code. Fail loudly instead.
-      - name: Verify package version matches the release tag
-        if: github.event_name == 'release'
+      - run: npm install -g npm@11.19.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: release-package
+          path: ${{ runner.temp }}/release
+      - name: Recheck registry after approval
+        run: node scripts/release.mjs --registry
+      - name: Publish the validated tarball with OIDC
         env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          DIST_TAG: ${{ needs.validate.outputs.distTag }}
         run: |
-          pkg="$(node -p "require('./package.json').version")"
-          tag="${TAG_NAME#v}"
-          if [ "$pkg" != "$tag" ]; then
-            echo "::error::package.json version ($pkg) does not match release tag ($tag)"
-            exit 1
-          fi
-          echo "version $pkg matches tag $TAG_NAME"
-
-      - name: Refuse to overwrite an existing version
+          packages=("$RUNNER_TEMP"/release/*.tgz)
+          test "${#packages[@]}" -eq 1
+          npm publish "${packages[0]}" --access public --tag "$DIST_TAG" --ignore-scripts
+      - name: Record successful publication
+        env:
+          PACKAGE_NAME: ${{ needs.validate.outputs.name }}
+          PACKAGE_VERSION: ${{ needs.validate.outputs.version }}
+          DIST_TAG: ${{ needs.validate.outputs.distTag }}
         run: |
-          name="$(node -p "require('./package.json').name")"
-          version="$(node -p "require('./package.json').version")"
-          if npm view "$name@$version" version >/dev/null 2>&1; then
-            echo "::error::$name@$version is already published"
-            exit 1
-          fi
-          echo "$name@$version is not yet on the registry"
-
-      - run: npm run typecheck
-
-      # `npm test` rebuilds every JS bundle first, then runs the jsdom suite.
-      - run: npm test
-
-      # Trusted publishing: npm mints a short-lived OIDC credential for this
-      # exact repo + workflow, so there is no NODE_AUTH_TOKEN. The trusted
-      # publisher is configured on the package at npmjs.com and every field is
-      # case-sensitive, including the workflow filename "release.yml".
-      #
-      # No --provenance flag: provenance is generated automatically here.
-      # Token auth previously failed with EOTP because the account requires 2FA
-      # for writes; an OIDC credential is not a user credential, so it is not
-      # subject to that.
-      - name: Publish
-        if: env.DRY_RUN != 'true'
-        run: npm publish --access public --tag "$DIST_TAG"
-
-      - name: Dry run (pack only)
-        if: env.DRY_RUN == 'true'
-        run: npm publish --access public --tag "$DIST_TAG" --dry-run
-
-      - name: Summary
-        if: always()
-        run: |
-          name="$(node -p "require('./package.json').name")"
-          version="$(node -p "require('./package.json').version")"
-          if [ "$DRY_RUN" = "true" ]; then verb="Dry run"; else verb="Published"; fi
-          {
-            echo "### $verb \`$name@$version\`"
-            echo
-            echo "- dist-tag: \`$DIST_TAG\`"
-            echo "- trigger: \`$GITHUB_EVENT_NAME\`"
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "Published $PACKAGE_NAME@$PACKAGE_VERSION to $DIST_TAG." >> "$GITHUB_STEP_SUMMARY"
