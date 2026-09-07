@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Breaking: update jsdom to 30.0.1 and require Node `^22.22.2 || ^24.15.0 || >=26.0.0`.
+  Upgrade the Node executable used by your MCP client before reinstalling the
+  server. Node 20 is no longer supported. Ship this change in the next MCP minor
+  release, not a patch release. Framework runtime requirements are unchanged.
 - Coordinate independently versioned MCP releases through protected `mcp-v*` tags.
 - Include this changelog in the published package.
 - Bundled framework guidance: ExpressiveCSS 0.8.0. Update this line when refreshing guidance for a release.

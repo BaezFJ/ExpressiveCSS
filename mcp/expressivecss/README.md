@@ -13,11 +13,14 @@ The server bundles generated component guides, selection data, contract metadata
 
 ## Run it locally
 
-The server supports Node `^20.19.0 || ^22.12.0 || >=24.0.0`, matching its `jsdom` runtime dependency.
+The server supports Node `^22.22.2 || ^24.15.0 || >=26.0.0`, matching its `jsdom` runtime dependency.
+When upgrading, update the Node executable used by your MCP client before
+reinstalling the server. Node 20 and earlier Node 22/24 patch releases are no
+longer supported. For a contributor checkout, use the latest Node 24 release.
 
 ```bash
 cd mcp/expressivecss
-npm install
+npm ci
 node server.js
 ```
 

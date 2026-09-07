@@ -59,7 +59,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20, 24]
+        # Exercise the supported Node 22/24 floors and the current Node 26 release.
+        node: ['22.22.2', '24.15.0', '26']
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -72,14 +73,14 @@ jobs:
           cache: npm
           cache-dependency-path: mcp/expressivecss/package-lock.json
 
-      - run: npm ci
+      - run: npm ci --engine-strict
         working-directory: mcp/expressivecss
 
       - run: npm test
         working-directory: mcp/expressivecss
 
       - name: Verify the MCP tarball in a clean consumer
-        if: matrix.node == 24
+        if: matrix.node == '24.15.0'
         run: |
           npm ci
           node scripts/verify-packages.mjs mcp
