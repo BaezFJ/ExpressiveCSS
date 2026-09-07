@@ -163,7 +163,11 @@ an invalid selector may be corrected. Source work can continue with browser chec
 unavailable. Probe results and final capability are recorded separately.
 
 The browser returns an operator proof ID, DOM/accessibility observations, and a
-screenshot hash. Candidate `verificationChecks` reference that ID with `observed`
+screenshot hash. Capture paths are absolute so the candidate can open them from
+its temporary project. `fullPage: true` captures the whole page up to 12,000px high
+and the existing 4MB image limit; each response reports `remainingCalls` against
+the existing 100-call limit. Reuse captures across criteria instead of repeatedly
+scrolling and inspecting the same scene. Candidate `verificationChecks` reference that ID with `observed`
 or `failed`; they do not certify broad accessibility or performance claims.
 `verificationErrors` must quote recorded failure output. Browser-operation errors
 use a proof ID; page-console errors may be recorded during a successful inspection.
@@ -171,6 +175,14 @@ Connector failures before a browser response use the connector and
 tool names, and command errors must match nonzero command output. Missing events
 and guessed error codes fail validation. A compound command does not establish
 individual subcommand results. Free-form interpretation still needs review.
+
+Large adapter reports are redacted per bounded section, event, manifest entry and
+browser record. This preserves earlier evidence when the complete report would
+exhaust one redactor traversal budget. Individual redaction limits and overall
+process, browser and filesystem limits remain unchanged. Native image, patch and
+collaboration calls may be absent from Codex JSON events; do not infer their
+success or error output from candidate prose. The benchmark operator performs the
+independent review after each complete-interface run.
 
 Audit results supply structured conclusions, source selectors and element-start
 lines, actual name/landmark observations, and proposed replacement markup. The
@@ -200,6 +212,57 @@ Run a focused comparison against an immutable original skill:
 ```sh
 node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --candidate=/absolute/path/to/revised-skill --output=/tmp/expressivecss-evidence --case=tooltip-remount,no-edit-audit,version-mismatch --repetitions=1
 ```
+
+## Complete-interface evaluations
+
+`interface-refine` and `interface-review` assess the existing Northstar account
+dashboard as a whole. The primary task is choosing Email alerts, saving, and
+reading confirmation. The first permits HTML/CSS refinement; the second permits
+no file changes. Both state the identity, content, destinations, controls and
+runtime behavior that must remain. The fixture's missing retry action is a review
+finding, not an undisclosed requirement to implement new behavior.
+
+The operator captures matching before/after scenes at 320, 599, 600, 839, 840 and
+1280 CSS pixels, plus dark mode, long content, loading, empty, error, offline and
+doubled text sizes. Each scene uses a fresh restricted browser context and records
+its exact settings, accessibility snapshot, geometry, errors and screenshot hash.
+Independent keyboard and pointer traces exercise the checkbox and Save action;
+the drawer trace checks opening, Escape dismissal and focus return. Failed scenes
+retain their error and do not erase completed captures.
+
+Automated checks establish named facts: required regions, one peer navigation,
+overflow, primary-action visibility, preserved content and working interactions.
+The default-state brief explicitly requires Save in the first 900px-high viewport.
+For a no-edit review, the faulty interface itself need not pass these requirements;
+the evaluator checks collected evidence and preserved files, while independent
+review judges the candidate's findings against the real interface.
+
+Visual quality remains separate. `interface-review.json` starts with
+`pending-independent-review`, the candidate's untrusted observations, and the
+existing Design matrix criteria for task hierarchy, emphasis, containment, type,
+identity, adaptive composition, themes, content fit, state clarity and visible
+focus. Reference validation checks coverage and actual browser proof IDs, not the
+truth of interpretations. An independent reviewer reads captures and source,
+records each applicable verdict with evidence and impact, and names unavailable
+checks. Do not convert automated pass rates or reference completeness into an
+overall design score. Human review remains separate from an agent's review.
+
+This case declares English/LTR only. Doubled computed font sizes are text-size
+stress, not browser zoom or proof of WCAG conformance. Screen-reader speech,
+localized content, touch interaction, contrast certification and field performance
+remain unmeasured. The browser tool's bounded `emulate` action supports light/dark
+and reduced-motion preferences so candidates can inspect these scenes themselves.
+
+Run the two tasks against immutable old/new skill snapshots:
+
+```sh
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --candidate=/absolute/path/to/revised-skill --output=/tmp/expressivecss-interface --case=interface-refine,interface-review --repetitions=1
+```
+
+Use Skill Creator's existing review viewer for the resulting screenshots, retained
+source, candidate reports and named checks. The catalogue now has eight execution
+cases; an unfiltered three-repetition comparison runs 48 executions. The original
+36-run study remains historical evidence for its six scoped cases.
 
 Use a new output directory for each protocol change. These focused runs check
 correctness and browser access; one repetition does not establish a speed change.

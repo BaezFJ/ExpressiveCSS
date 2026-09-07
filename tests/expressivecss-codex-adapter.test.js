@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { hashProject, snapshotProject, runCodex, summarizeEvents, validateVerificationClaims } from '../scripts/expressivecss-codex-adapter.mjs';
+import { hashProject, snapshotProject, runCodex, summarizeEvents, validateVerificationClaims, retainedAdapterEnvelope, retainedBrowserEvidence } from '../scripts/expressivecss-codex-adapter.mjs';
 
 async function fixture(check) {
   const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-codex-test-'));
@@ -210,4 +210,49 @@ test('verification claims cannot turn missing operations or guessed error codes 
   ]) assert.ok(validateVerificationClaims(response, evidence).length);
   // A compound command's failure cannot corroborate an invented subcommand error.
   assert.ok(validateVerificationClaims({ ...valid, verificationErrors: [{ source: 'command', excerpt: 'mock test failed' }] }, { ...evidence, commandErrors: [{ command: 'node mock.js; chrome', exitCode: 1, output: 'Chrome failed to launch' }] }).length);
+});
+
+
+test('large retained runs preserve every bounded record and section without sharing redaction budgets', async () => {
+  const records = Array.from({ length: 101 }, (_, index) => ({ id: `browser-${index}`, action: 'inspect', status: 'success', result: {
+    evidenceId: `browser-${index}`, html: '<main>API_KEY=fixture-secret</main>', controls: Array.from({ length: 100 }, (_, control) => ({ id: `control-${control}`, tag: 'button', text: 'Save', label: 'Action', password: 'fixture-secret' })),
+  } }));
+  const manifest = Object.fromEntries(Array.from({ length: 4200 }, (_, index) => [`src/file-${index}`, { type: 'file', sha256: 'a'.repeat(64) }]));
+  const envelope = { candidateResponse: { summary: 'API_KEY=fixture-secret', findings: [{ observation: 'Retain this candidate finding' }], password: 'fixture-secret' },
+    executionEvidence: { source: 'adapter', filesystem: { source: 'adapter', before: 'sha256:before', after: 'sha256:after', beforeManifest: manifest, afterManifest: manifest }, browser: { capability: { status: 'available' }, records }, commandErrors: [{ output: 'API_KEY=fixture-secret' }], connectorErrors: [{ output: 'API_KEY=fixture-secret' }] },
+    runMetadata: { finalMessage: 'API_KEY=fixture-secret', usage: { input_tokens: 100 }, model: 'test' } };
+  const retained = retainedAdapterEnvelope(envelope);
+  assert.equal(retained.candidateResponse.findings[0].observation, 'Retain this candidate finding');
+  assert.equal(retained.executionEvidence.filesystem.before, 'sha256:before');
+  for (const field of ['beforeManifest', 'afterManifest']) {
+    assert.equal(Object.keys(retained.executionEvidence.filesystem[field]).length, 4200);
+    assert.equal(retained.executionEvidence.filesystem[field]['src/file-0'].type, 'file');
+    assert.equal(retained.executionEvidence.filesystem[field]['src/file-4199'].sha256, 'a'.repeat(64));
+  }
+  for (const browser of [retained.executionEvidence.browser, retainedBrowserEvidence({ initialCapability: { status: 'available' }, finalCapability: { status: 'available' }, records })]) {
+    assert.equal(browser.records.length, 101);
+    assert.equal(browser.records[0].result.controls.length, 100);
+    assert.equal(browser.records[100].result.evidenceId, 'browser-100');
+    assert.doesNotMatch(JSON.stringify(browser), /fixture-secret/);
+  }
+  assert.equal(retained.runMetadata.model, 'test');
+  assert.equal(retained.runMetadata.usage.input_tokens, 100);
+  assert.match(retained.executionEvidence.commandErrors[0].output, /REDACTED/);
+  assert.match(retained.executionEvidence.connectorErrors[0].output, /REDACTED/);
+  assert.doesNotMatch(JSON.stringify(retained), /fixture-secret/);
+  assert.match(envelope.candidateResponse.summary, /fixture-secret/, 'redaction never changes live evidence');
+  const keys = retainedAdapterEnvelope({ candidateResponse: { '[REDACTED_KEY_3]': 1, 'API_KEY=first': 2, 'API_KEY=second': 3 } }).candidateResponse;
+  assert.equal(Object.keys(keys).length, 3, 'redacted field names cannot overwrite another retained field');
+  assert.doesNotMatch(JSON.stringify(keys), /first|second/);
+  await fixture(async ({ run, artifactDirectory }) => {
+    await run(`for(let i=0;i<101;i++)emit({type:'item.completed',item:{type:'mcp_tool_call',status:'completed',result:{observations:Array.from({length:100},(_,n)=>({id:n,text:'API_KEY=fixture-secret',label:'Save',tag:'button',state:'enabled'}))}}});${completion}`, { browserSession: { url: 'http://127.0.0.1:12345/test/mcp', capability: { status: 'available' }, records } });
+    const savedEvents = JSON.parse(await readFile(path.join(artifactDirectory, 'transcript.json'), 'utf8'));
+    const savedResponse = JSON.parse(await readFile(path.join(artifactDirectory, 'response.json'), 'utf8'));
+    assert.equal(savedEvents[0].item.result.observations.length, 100);
+    assert.equal(savedEvents[100].item.result.observations.length, 100);
+    assert.equal(savedResponse.candidateResponse.summary, 'Done');
+    assert.equal(savedResponse.executionEvidence.browser.records[0].result.controls.length, 100);
+    assert.match(savedResponse.executionEvidence.filesystem.before, /^sha256:/);
+    assert.doesNotMatch(JSON.stringify([savedEvents,savedResponse]), /fixture-secret/);
+  });
 });

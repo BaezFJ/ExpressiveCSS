@@ -27,7 +27,7 @@ exercise lifecycle repair, no-edit audit, and unavailable version documentation.
 Their results and a correction to the console-error validator are recorded in the
 comparison report; they are separate from the original 36-run performance study.
 
-The focused live comparison uses the six cases and twenty discovery probes in
+The live catalogue now contains eight cases and twenty discovery probes in
 `tests/fixtures/expressivecss-skill-evals/benchmark.json`. Keep an immutable copy of
 the original skill before editing. Run old and revised versions on independent
 copies of the same fixtures with the same Codex configuration:
@@ -37,12 +37,19 @@ node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/orig
 node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --output=/tmp/expressivecss-discovery --triggers=true
 ```
 
-The implementation comparison runs each case three times per version, for 36
+The unfiltered comparison runs each case three times per version, for 48
 runs. Each old/new pair runs concurrently; the dispatch order alternates. The
 report includes per-case medians, variability, observed usage, correctness checks,
 screenshots, and source outputs. Missing telemetry stays unavailable. Discovery
 uses constrained selection probes and is reported separately from task completion;
 it does not estimate natural-task invocation rates.
+
+The two complete-interface cases add full-page refinement and no-edit review,
+using matched browser scenes and task interactions. Measured assertions remain
+separate from the existing Design matrix's qualitative verdicts. See the
+[evaluation protocol](./expressivecss-skill-evals.md#complete-interface-evaluations)
+for scene coverage and review limits. The earlier six-case, 36-run study retains
+its original scope and results.
 
 For an interrupted comparison, `--resume=true` retains completed results only
 when the skill content hashes and prompts match. Select only operator-reviewed
@@ -59,7 +66,8 @@ python /absolute/path/to/skill-creator/eval-viewer/generate_review.py /tmp/expre
 
 The installed viewer generator embeds raw JSON in a script block. Until it
 escapes HTML delimiters upstream, source snippets containing `</script>` break
-the export. Escape the generated data without changing its contents or viewer:
+the export. Its statistics formatter also throws on unavailable token means.
+Apply these two export fixes; preserve missing telemetry as unavailable:
 
 ```sh
 python3 - /tmp/expressivecss-comparison/review.html <<'PY'
@@ -71,7 +79,10 @@ prefix = '    const EMBEDDED_DATA = '
 line = next(line for line in html.splitlines() if line.startswith(prefix))
 data = json.loads(line[len(prefix):].removesuffix(';'))
 safe = json.dumps(data, ensure_ascii=True).replace('<', '\\u003c')
-p.write_text(html.replace(line, prefix + safe + ';', 1))
+html = html.replace(line, prefix + safe + ';', 1)
+html = html.replace('if (!stat) return "—";',
+                    'if (!stat || stat.mean == null || stat.stddev == null) return "Unavailable";', 1)
+p.write_text(html)
 PY
 ```
 

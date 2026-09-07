@@ -10,6 +10,37 @@ import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { redactValue, readBoundedRegularFile } from './eval-expressivecss-skill.mjs';
 
+// Partition existing bounded records before redaction: one large observation must
+// not exhaust another section's traversal budget. Each call keeps the same limits.
+function retainedFields(value, processors = {}) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return redactValue(value);
+  const used = new Set();
+  return Object.fromEntries(Object.entries(value).map(([key, child], index) => {
+    const [[safeKey, marker]] = Object.entries(redactValue({ [key]: null }));
+    let outputKey = safeKey, collision = index;
+    while (used.has(outputKey)) outputKey = `[REDACTED_KEY_${++collision}]`;
+    used.add(outputKey);
+    const retained = marker === '[REDACTED]' ? marker : Object.hasOwn(processors, key) ? processors[key](child)
+      : Array.isArray(child) ? child.map((record) => redactValue(record)) : redactValue(child, key);
+    return [outputKey, retained];
+  }));
+}
+
+export function retainedBrowserEvidence(browser) {
+  return retainedFields(browser);
+}
+
+export function retainedAdapterEnvelope(envelope) {
+  return retainedFields(envelope, {
+    candidateResponse: retainedFields,
+    executionEvidence: (evidence) => retainedFields(evidence, {
+      filesystem: (filesystem) => retainedFields(filesystem, { beforeManifest: retainedFields, afterManifest: retainedFields }),
+      browser: retainedBrowserEvidence,
+    }),
+    runMetadata: retainedFields,
+  });
+}
+
 async function walkFiles(root, visitFile, visitDirectory = () => {}) {
   const resolvedRoot = await realpath(root);
   if ((await lstat(root)).isSymbolicLink()) throw new Error('Root is a symbolic link');
@@ -101,7 +132,7 @@ async function guideFiles(root) {
 function browserInstructions(capability) {
   return [
     `Operator browser preflight: ${JSON.stringify(capability)}.`,
-    'When available, use only expressivecss_eval_browser.browser for this fixture. Start with inspect; use reload after source edits. It can inspect, resize, interact, evaluate in the browser, and capture evidence. It cannot access another site or change project files. Do not start another server or install a browser.',
+    'When available, use only expressivecss_eval_browser.browser for this fixture. Start with inspect; use reload after source edits. Use fullPage:true for full-page captures. The browser has a 100-call budget: combine related read-only observations and use the returned remainingCalls count to budget further checks. It can inspect, resize, emulate color scheme and motion, interact, evaluate in the browser, and capture evidence. It cannot access another site or change project files. Do not start another server or install a browser.',
     'If unavailable, continue independent source work and mark browser checks unavailable. After a browser permission, connection, or launch failure, stop retrying that route unless its capability changes. Correcting a bad selector is not a capability retry.',
     'Return verificationChecks as an array of {evidenceId, status:"observed"|"failed"} referencing the browser tool response. These entries describe recorded operations, not a blanket accessibility or performance pass.',
     'For claimed tool errors, return verificationErrors as an array of {source:"browser"|"command"|"connector", excerpt, evidenceId?, server?, tool?}. Copy a short exact error excerpt from recorded tool output or page-console messages. Browser errors need its evidenceId; connector failures before a browser response need server and tool names instead. Use empty arrays if there are none. Do not infer an error code or claim an individual subcommand passed from a compound command status.',
@@ -266,8 +297,8 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
   };
   if (input.artifactDirectory) {
     await mkdir(input.artifactDirectory, { recursive: true });
-    await writeFile(path.join(input.artifactDirectory, 'transcript.json'), JSON.stringify(redactValue(events), null, 2));
-    await writeFile(path.join(input.artifactDirectory, 'response.json'), JSON.stringify(redactValue(envelope), null, 2));
+    await writeFile(path.join(input.artifactDirectory, 'transcript.json'), JSON.stringify(events.map((event) => redactValue(event)), null, 2));
+    await writeFile(path.join(input.artifactDirectory, 'response.json'), JSON.stringify(retainedAdapterEnvelope(envelope), null, 2));
   }
   return envelope;
 }

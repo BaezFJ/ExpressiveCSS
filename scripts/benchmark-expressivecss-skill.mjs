@@ -5,13 +5,42 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
 import { EVALUATOR_LIMITS, materializeProjectFixture, readCompletionFiles, readBoundedRegularFile, redactValue } from './eval-expressivecss-skill.mjs';
-import { hashProject, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
+import { hashProject, retainedBrowserEvidence, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
 import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
+import { captureInterfaceQuality, gradeInterfaceQuality, INTERFACE_SCENARIOS, retainedInterfaceEvidence } from './expressivecss-interface-quality.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFINITIONS = JSON.parse(await readFile(path.join(ROOT, 'tests/fixtures/expressivecss-skill-evals/benchmark.json'), 'utf8'));
 const save = async (filename, value) => { await mkdir(path.dirname(filename), { recursive: true }); await writeFile(filename, `${JSON.stringify(value, null, 2)}\n`); };
-const check = (text, passed, evidence) => ({ text, passed: Boolean(passed), evidence: String(evidence) });
+const check = (text, passed, evidence) => ({ text, passed: Boolean(passed), evidence: redactValue(String(evidence)) });
+const isInterfaceCase = (name) => ['interface-refine', 'interface-review'].includes(name);
+export const INTERFACE_REVIEW_CRITERIA = ['C-TASK-PRIMARY', 'C-EMPHASIS-ONE', 'C-CONTAINER-PURPOSE', 'C-TYPE-ROLE', 'C-IDENTITY-CHANNELS', 'C-ADAPTIVE-COMPOSITION', 'C-THEME-HIERARCHY', 'C-LONG-CONTENT-FIT', 'C-STATE-NONCOLOR', 'A-FOCUS-VISIBLE'];
+
+// Report completeness and provenance only. Independent review judges interpretations.
+export function gradeInterfaceReviewReferences(response, records) {
+  const rows = response?.interfaceReview;
+  const successful = new Set((records ?? []).filter((row) => row.status === 'success' && row.action !== 'preflight').map((row) => row.id));
+  const validRows = Array.isArray(rows) && rows.length > 0 && rows.length <= 100 && rows.every((row) =>
+    row && typeof row.criterionId === 'string' && ['Pass', 'Fail', 'Intentional adaptation', 'Blocked'].includes(row.status)
+    && !(row.criterionId.startsWith('A-') && row.status === 'Intentional adaptation')
+    && typeof row.observation === 'string' && row.observation.trim().length > 0 && row.observation.length <= 4000
+    && Array.isArray(row.evidenceIds) && row.evidenceIds.length <= 100
+    && row.evidenceIds.every((id) => successful.has(id)) && (row.status === 'Blocked' || row.evidenceIds.length > 0));
+  return check('Visual review covers requested criteria with recorded references or explicit blockers', validRows && INTERFACE_REVIEW_CRITERIA.every((id) => rows.some((row) => row.criterionId === id)), 'Checks report coverage and browser proof references only; interpretation requires independent review');
+}
+
+export function gradeMatchedInterfaceScenes(before, after) {
+  const complete = [before, after].every((evidence) => evidence?.source === 'operator-browser'
+    && Array.isArray(evidence.scenes) && evidence.scenes.length === INTERFACE_SCENARIOS.length);
+  const matched = complete && INTERFACE_SCENARIOS.every(({ id }) => {
+    const previous = before.scenes.filter((scene) => scene.id === id);
+    const next = after.scenes.filter((scene) => scene.id === id);
+    return previous.length === 1 && next.length === 1 && previous[0].status === 'success' && next[0].status === 'success'
+      && JSON.stringify(previous[0].settings) === JSON.stringify(next[0].settings)
+      && [previous[0], next[0]].every((scene) => /^[a-f0-9]{64}$/.test(scene.screenshot?.sha256 ?? ''));
+  });
+  return check('Whole-interface before and after scenes have matching settings and retained captures', matched, 'Compared operator scene IDs, settings and capture digests; visual interpretation remains separate');
+}
 
 export function benchmarkResponseInstructions(name) {
   const scope = {
@@ -20,11 +49,14 @@ export function benchmarkResponseInstructions(name) {
     'tooltip-remount': 'Only src/index.html and src/app.js may change.',
     'navigation-media': 'Only src/index.html and src/app.css may change.',
     'no-edit-audit': 'Do not change any project files.',
+    'interface-refine': 'Only src/index.html and src/app.css may change. Preserve application behavior, packages and assets.',
+    'interface-review': 'Do not change any project files.',
     'version-mismatch': 'Preserve dependency and lock files, installed packages, assets and application code. Safe setup repairs may only add or correct standard viewport metadata in src/index.html.',
   }[name] ?? '';
   const contract = name === 'no-edit-audit' ? `Include audit: {conclusion: "defects-found"|"no-defects"|"unavailable", findings: [{category: "accessible-name"|"navigation-semantics" or another category, source: {path: project-relative file path, line: one-based element start line, selector: CSS selector}, defect: boolean, observed: {accessibleName: string when relevant, tagName: lowercase string when relevant, containsCommand: boolean when relevant}, fixHtml: proposed replacement HTML for this element}]}. Report source observations and your actual conclusion, with proposed fixes rather than edits. Separate browser verification from source findings.`
     : name === 'version-mismatch' ? `Include versionAssessment: {installedVersion: string|null, bundledVersion: string|null, relationship: "match"|"mismatch"|"unknown", bundledContractSafe: boolean, currentDocsSafe: boolean, matchingEvidence: "available"|"unavailable"|"unknown", unsupportedClaims: "blocked"|"allowed", sources: [{path: project-relative direct metadata source, line: one-based line containing the version field}]}. Cite direct installed-package and bundled-contract metadata. Distinguish version metadata from available implementation documentation and verified public-site provenance.` : '';
-  return `${scope}\n${contract}`.trim();
+  const review = isInterfaceCase(name) ? `Include interfaceReview as an array of {criterionId, status: "Pass"|"Fail"|"Intentional adaptation"|"Blocked", observation, evidenceIds: browser proof IDs, recommendation?}. Cover ${INTERFACE_REVIEW_CRITERIA.join(', ')}. Use separate rows when scenes or results differ. Each observed judgment cites a successful browser proof ID; blocked rows explain unavailable evidence. These references establish provenance, not the truth of your interpretation. Do not provide an aggregate design score. Use the browser emulate action for colorScheme and reducedMotion. The preview selector can be changed via evaluate with a change event. For text-size stress, reload first, then double each element's computed font-size; this is not browser zoom. Use fullPage:true for whole-page captures and open the returned absolute screenshot path with the image viewer before making visual judgments. Budget the 100 browser calls by scene, combine related evaluate observations, and reuse captures across criteria. The operator performs the independent review after this run; do not spawn another agent.` : '';
+  return `${scope}\n${contract}\n${review}`.trim();
 }
 
 export function gradeProjectChanges(name, filesystem) {
@@ -38,6 +70,7 @@ export function gradeProjectChanges(name, filesystem) {
     'form-action': ['src/index.html'], 'brand-token': ['src/app.css'],
     'tooltip-remount': ['src/index.html', 'src/app.js'], 'navigation-media': ['src/index.html', 'src/app.css'],
     'no-edit-audit': [], 'version-mismatch': ['src/index.html'],
+    'interface-refine': ['src/index.html', 'src/app.css'], 'interface-review': [],
   }[name] ?? [];
   const outside = changed.filter((file) => !allowed.includes(file));
   const consistentDigests = changed.length ? filesystem.before !== filesystem.after : filesystem.before === filesystem.after;
@@ -70,6 +103,19 @@ function accessibleName(node) {
   visible.querySelectorAll('[aria-hidden="true"],[hidden]').forEach((child) => child.remove());
   visible.querySelectorAll('img[alt]').forEach((child) => child.replaceWith(child.getAttribute('alt')));
   return visible.textContent.trim() || node.getAttribute('title')?.trim() || '';
+}
+
+// The fixture permits the documented CSS tooltip as a description, not a renamed control.
+export function preservedControlLabel(original, next) {
+  if (!original || !next || original.localName !== next.localName) return false;
+  if (original.localName === 'select') {
+    const options = (node) => [...node.querySelectorAll('option')].map((option) => [option.value, option.textContent.trim()]);
+    return JSON.stringify(options(original)) === JSON.stringify(options(next));
+  }
+  const labelled = next.cloneNode(true);
+  const descriptions = new Set((next.getAttribute('aria-describedby') ?? '').split(/\s+/));
+  labelled.querySelectorAll('.tooltip[id]').forEach((node) => { if (descriptions.has(node.id)) node.remove(); });
+  return accessibleName(original) === accessibleName(labelled);
 }
 
 function enabledCommand(button) {
@@ -206,6 +252,12 @@ async function prepareCase(testCase) {
   const root = await materializeProjectFixture(testCase.fixture, ROOT);
   const htmlPath = path.join(root, 'src/index.html');
   let html = await readFile(htmlPath, 'utf8');
+  if (isInterfaceCase(testCase.name)) {
+    const inventoryPath = path.join(root, 'fixture.json');
+    const inventory = JSON.parse(await readFile(inventoryPath, 'utf8'));
+    Object.assign(inventory, { locales: ['en-US'], directions: ['ltr'], widths: [320, 599, 600, 839, 840, 1280], input: ['keyboard', 'pointer'], primaryTask: 'Choose Email alerts and Save preferences; read confirmation', unavailableChecks: ['localized content', 'RTL translation', 'assistive-technology speech', 'browser zoom'], textStress: '200 percent computed font sizes', recovery: 'Activity retry is not implemented; report the limitation' });
+    await save(inventoryPath, inventory);
+  }
   if (testCase.name === 'no-edit-audit') html = html.replace('</main>', '<button id="unnamed-action" type="button"><span class="material-symbols" aria-hidden="true">delete</span></button><nav aria-label="Save commands"><button type="button">Save account</button></nav></main>');
   if (testCase.name === 'navigation-media') {
     html = html.replace('<main id="app">', '<main id="app"><img id="account-hero" src="/hero.svg" loading="lazy" alt="Account activity overview">');
@@ -218,6 +270,7 @@ async function prepareCase(testCase) {
 }
 
 async function browserEvidence(root, outputDirectory, name) {
+  if (isInterfaceCase(name)) return captureInterfaceQuality(root, outputDirectory);
   await mkdir(outputDirectory, { recursive: true });
   const server = await startFixtureServer(root);
   let browser;
@@ -297,6 +350,17 @@ export async function grade(testCase, root, before, envelope, browser) {
       finally { old.window.close(); }
       findings.push(check('Refine preserves profile destination and save behavior', dom.window.document.querySelector('main a[href="/profile"]') && browser?.formBehavior?.saved, JSON.stringify(browser?.formBehavior)));
       findings.push(check('Refine preserves the brand seed', /--md-source\s*:\s*#006a79\b/i.test(after['src/app.css']), after['src/app.css']));
+    } else if (isInterfaceCase(testCase.name)) {
+      findings.push(...gradeInterfaceQuality(browser, { reviewOnly: testCase.name === 'interface-review' }));
+      const old = new JSDOM(before['src/index.html']);
+      try {
+        for (const selector of ['h1', '#account-title', '#account-summary', '#preferences-title', '#state-title']) findings.push(check(`Whole-interface work preserves ${selector}`, Boolean(old.window.document.querySelector(selector)) && old.window.document.querySelector(selector)?.textContent === dom.window.document.querySelector(selector)?.textContent, 'Compared product content'));
+        const links = [...dom.window.document.querySelectorAll('a[href]')];
+        findings.push(check('Whole-interface work preserves link destinations and names', [...old.window.document.querySelectorAll('a[href]')].every((original) => links.some((node) => node.getAttribute('href') === original.getAttribute('href') && accessibleName(node) === accessibleName(original))), 'Compared every original named destination; repeated peer navigation may share a destination'));
+        for (const selector of ['#account-help', '#remount-help', '#preview-state']) findings.push(check(`Whole-interface work preserves ${selector}`, preservedControlLabel(old.window.document.querySelector(selector), dom.window.document.querySelector(selector)), 'Compared control labels and preview options, allowing documented tooltip descriptions; rendered reachability is checked separately'));
+      } finally { old.window.close(); }
+      findings.push(check('Whole-interface work preserves application JavaScript', before['src/app.js'] === after['src/app.js'], 'Compared runtime source'));
+      if (testCase.name === 'interface-refine') findings.push(check('Refinement implements source changes', before['src/index.html'] !== html || before['src/app.css'] !== after['src/app.css'], 'Compared HTML and CSS; visual quality is reviewed separately'));
     } else {
       findings.push(check('Pinned version is preserved', before['package.json'] === after['package.json'], after['package.json']));
       findings.push(check('Setup repair changes only standard viewport metadata', onlyViewportRepair(before['src/index.html'], html), 'Compared parsed documents apart from standard viewport metadata and head whitespace'));
@@ -304,7 +368,7 @@ export async function grade(testCase, root, before, envelope, browser) {
       const contract = await readBoundedRegularFile(path.join(root, contractPath), EVALUATOR_LIMITS.stringBytes, 'bundled contract', root);
       findings.push(...gradeVersionResponse(envelope.candidateResponse, { ...before, [contractPath]: contract }));
     }
-    if (browser) findings.push(check('No page JavaScript errors', !browser.errors.length, JSON.stringify(browser.errors)));
+    if (browser && testCase.name !== 'interface-review') findings.push(check('No page JavaScript errors', !browser.errors.length, JSON.stringify(browser.errors)));
     findings.push(check('Codex execution completed', !envelope.runMetadata.infrastructureError, envelope.runMetadata.infrastructureError ?? 'Completed turn with usage and final response'));
     return findings;
   } finally { dom.window.close(); }
@@ -349,26 +413,31 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
             ? { capability: { status: 'unavailable', reason: 'Only older package metadata is available; no target-version browser contract can be verified.' }, records: [], close: async () => {} }
             : await startEvaluationBrowser({ projectRoot: root, artifactDirectory: path.join(outputDirectory, 'candidate-browser') });
           initialCapability = structuredClone(browserSession.capability);
-          const baselineCapture = testCase.name === 'navigation-media' ? await browserEvidence(root, path.join(outputDirectory, 'before'), testCase.name) : null;
+          const baselineCapture = testCase.name === 'navigation-media' || isInterfaceCase(testCase.name) ? await browserEvidence(root, path.join(outputDirectory, 'before'), testCase.name) : null;
           const envelope = await runCodex({ task: testCase, projectRoot: root, skillRoot, rootSkill: await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), artifactDirectory: outputDirectory, readOnly: testCase.readOnly,
             responseInstructions: benchmarkResponseInstructions(testCase.name) }, { browserSession });
           let browser = null;
           let browserError = null;
           if (testCase.name !== 'version-mismatch') try { browser = await browserEvidence(root, path.join(outputDirectory, 'after'), testCase.name); } catch (error) { browserError = error.message; }
           const expectations = await grade(testCase, root, before, envelope, browser);
+          if (isInterfaceCase(testCase.name)) {
+            expectations.push(gradeMatchedInterfaceScenes(baselineCapture, browser));
+            expectations.push(gradeInterfaceReviewReferences(envelope.candidateResponse, envelope.executionEvidence?.browser?.records));
+            await save(path.join(outputDirectory, 'interface-review.json'), { status: 'pending-independent-review', criteria: INTERFACE_REVIEW_CRITERIA, instructions: 'Use the existing Design review matrix. Review whole-page hierarchy, typography, containment, identity, adaptive composition, state clarity and focus visibility against screenshots and source. Record individual statuses, impact and concrete evidence; no aggregate design score. Candidate judgments remain untrusted. Automated pass_rate describes named checks only.', candidateReview: redactValue(envelope.candidateResponse.interfaceReview ?? null), before: retainedInterfaceEvidence(baselineCapture), after: retainedInterfaceEvidence(browser) });
+          }
           const verificationFailures = validateVerificationClaims(envelope.candidateResponse, envelope.executionEvidence);
           expectations.push(check('Reported browser operations and tool errors match operator evidence', !verificationFailures.length, JSON.stringify(verificationFailures)));
           if (testCase.name !== 'version-mismatch') expectations.push(check('Candidate uses the working fixture browser',
             initialCapability.status === 'available' && browserSession.records.some((row) => row.action !== 'preflight' && row.status === 'success'), JSON.stringify(initialCapability)));
           if (browserError) expectations.push(check('Browser verification available', false, browserError));
-          await save(path.join(outputDirectory, 'browser.json'), { before: baselineCapture, after: browser, error: browserError });
+          await save(path.join(outputDirectory, 'browser.json'), { before: isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(baselineCapture) : baselineCapture, after: isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(browser) : browser, error: redactValue(browserError) });
           const passed = expectations.filter((item) => item.passed).length;
           const usage = envelope.runMetadata.usage;
           const result = { pass_rate: passed / expectations.length, passed, failed: expectations.length - passed, total: expectations.length,
             time_seconds: envelope.runMetadata.wallTimeMs / 1000, tokens: Number.isFinite(usage?.input_tokens) && Number.isFinite(usage?.output_tokens) ? usage.input_tokens + usage.output_tokens : null, tool_calls: envelope.runMetadata.toolCalls, errors: envelope.runMetadata.infrastructureError ? 1 : 0 };
           await save(path.join(runDirectory, 'grading.json'), { expectations, summary: result });
           await save(path.join(runDirectory, 'timing.json'), { total_tokens: result.tokens, duration_ms: envelope.runMetadata.wallTimeMs, total_duration_seconds: result.time_seconds });
-          record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, result, expectations, runMetadata: envelope.runMetadata };
+          record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, result, expectations, runMetadata: redactValue(envelope.runMetadata) };
           console.log(`${testCase.name} ${configuration} ${repetition}: ${passed}/${expectations.length}, ${result.time_seconds.toFixed(1)}s`);
           return record;
         } catch (error) {
@@ -381,7 +450,7 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
           return record;
         } finally {
           if (browserSession) {
-            try { await save(path.join(outputDirectory, 'candidate-browser.json'), redactValue({ initialCapability, finalCapability: browserSession.capability, records: browserSession.records })); }
+            try { await save(path.join(outputDirectory, 'candidate-browser.json'), { initialCapability: redactValue(initialCapability), finalCapability: redactValue(browserSession.capability), records: retainedBrowserEvidence({ records: browserSession.records }).records }); }
             catch (error) { if (record) record.browserRetentionError = redactValue(error.message); }
             try { await browserSession.close(); }
             catch (error) { if (record) record.browserCleanupError = redactValue(error.message); }
@@ -431,7 +500,7 @@ export async function runTriggerEvaluations({ baseline, candidate = path.join(RO
         const rootRead = envelope.runMetadata.observedGuideReads.includes('skills/expressivecss/SKILL.md');
         const passed = !envelope.runMetadata.infrastructureError && actual === test.should_trigger && rootRead === test.should_trigger;
         console.log(`trigger-${index + 1} ${configuration}: ${passed ? 'pass' : 'fail'}`);
-        return { query: test.query, should_trigger: test.should_trigger, actual: actual ?? null, rootRead, configuration, passed, runMetadata: envelope.runMetadata };
+        return { query: test.query, should_trigger: test.should_trigger, actual: actual ?? null, rootRead, configuration, passed, runMetadata: redactValue(envelope.runMetadata) };
       } catch (error) { return { query: test.query, configuration, passed: false, infrastructureError: redactValue(error.message) }; }
       finally { await rm(root, { recursive: true, force: true }); }
     }));

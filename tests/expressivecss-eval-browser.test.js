@@ -36,13 +36,18 @@ test('evaluation browser serves a real SDK session with independent evidence and
   if (!await requireBrowser(t)) return;
   const files = await fixture(); let bridge, client;
   try {
-    bridge = await startEvaluationBrowser(files);
+    bridge = await startEvaluationBrowser({ ...files, artifactDirectory: path.relative(process.cwd(), files.artifactDirectory) });
     assert.equal(bridge.capability.status, 'available', bridge.capability.error);
     client = await clientFor(bridge.url);
     assert.deepEqual((await client.listTools()).tools.map((tool) => tool.name), ['browser']);
     const inspection = await call(client, { action: 'inspect' });
     assert.match(inspection.data.accessibility, /Save/);
     assert.match(inspection.data.html, /id="name"/);
+    assert.equal(path.isAbsolute(inspection.data.screenshot), true, 'captures must resolve from the candidate temporary working directory');
+    assert.equal(inspection.data.remainingCalls, 99);
+    const full = await call(client, { action: 'evaluate', expression: 'document.body.style.minHeight = "1500px"', fullPage: true });
+    assert.equal(full.data.fullPage, true);
+    assert.ok((await readFile(full.data.screenshot)).readUInt32BE(20) >= 1500, 'full-page PNG includes content beyond the viewport');
     const icon = await call(client, { action: 'evaluate', expression: '(async () => { const image = new Image(); image.src = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221%22 height=%221%22/%3E"; document.body.append(image); await image.decode(); return image.naturalWidth; })()' });
     assert.equal(icon.data.observation, 1, 'framework inline images remain usable without external access');
     await call(client, { action: 'fill', selector: '#name', value: '' });
@@ -52,6 +57,9 @@ test('evaluation browser serves a real SDK session with independent evidence and
     assert.equal(state.data.observation, 'Northstar');
     const resized = await call(client, { action: 'resize', width: 840 });
     assert.equal(resized.data.viewport.width, 840);
+    const dark = await call(client, { action: 'emulate', colorScheme: 'dark', reducedMotion: 'no-preference' });
+    assert.deepEqual(dark.data.media, { colorScheme: 'dark', reducedMotion: 'no-preference' });
+    assert.equal((await call(client, { action: 'emulate', reducedMotion: 'reduce' })).data.media.colorScheme, 'dark', 'unspecified media settings persist');
     await call(client, { action: 'press', selector: '#name', key: 'Tab' });
     await writeFile(path.join(files.projectRoot, 'src/app.js'), 'window.loaded = "updated";');
     await call(client, { action: 'reload' });
@@ -123,7 +131,7 @@ test('browser rejects unsupported commands and cannot fetch external or private 
     bridge = await startEvaluationBrowser(files);
     assert.equal(bridge.capability.status, 'available', bridge.capability.error);
     client = await clientFor(bridge.url);
-    for (const input of [{ action: 'navigate', value: 'https://example.com' }, { action: 'evaluate', expression: '1', path: '/etc/passwd' }, { action: 'resize', width: 5000 }, { action: 'click' }]) {
+    for (const input of [{ action: 'navigate', value: 'https://example.com' }, { action: 'evaluate', expression: '1', path: '/etc/passwd' }, { action: 'resize', width: 5000 }, { action: 'click' }, { action: 'emulate' }, { action: 'emulate', colorScheme: 'unknown' }, { action: 'emulate', reducedMotion: true }, { action: 'inspect', fullPage: 'true' }]) {
       const result = await call(client, input);
       assert.equal(result.isError, true);
       assert.equal(bridge.records.at(-1).error, result.data.error);
@@ -131,6 +139,9 @@ test('browser rejects unsupported commands and cannot fetch external or private 
     const oversized = await call(client, { action: 'evaluate', expression: '"x".repeat(40_000)' });
     assert.equal(oversized.isError, true);
     assert.match(oversized.data.error, /output limit/);
+    const tall = await call(client, { action: 'evaluate', expression: 'document.body.style.minHeight = "13000px"', fullPage: true });
+    assert.equal(tall.isError, true);
+    assert.match(tall.data.error, /height limit/);
     for (const target of ['https://example.com/', '/package.json', bridge.url]) {
       const result = await call(client, { action: 'evaluate', expression: `fetch(${JSON.stringify(target)}).then(r => r.text()).catch(error => error.message)` });
       assert.equal(result.isError, undefined);

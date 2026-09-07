@@ -213,3 +213,85 @@ The skill suite passes **170 tests** plus its 22 replay cases; the dedicated bro
 suite passes **13 tests**. MCP smoke verifies **7 tools**, and both isolated package
 checks pass. No framework API, stylesheet, package export, dependency, or saved
 Codex configuration changes were introduced.
+
+## Complete-interface evaluation follow-up
+
+The next comparison uses committed `dd3bd6d` as its baseline. It adds the two
+reviewed tasks on the same Northstar account dashboard: refine the complete page
+while preserving identity and behavior, and review it without editing files.
+Thirteen matched scenes cover six responsive widths, dark mode, long content,
+loading, empty, error, offline and doubled computed text sizes. Separate browser
+traces exercise pointer and keyboard Save, confirmation, and drawer focus return.
+The existing Design matrix guides independent interpretation of hierarchy,
+typography, containment, identity, states and focus; automated assertions do not
+award an overall design score.
+
+Two diagnostic rounds each ran both tasks against both skill snapshots using
+`gpt-6-astra`, high reasoning, the same fixture and tool access, a 100-call browser
+budget and a ten-minute execution deadline. Dispatch order alternated and each
+old/new pair ran concurrently. These eight runs are correctness investigations,
+not repetitions of an unchanged performance protocol. No timing median,
+variability estimate or speed improvement is claimed.
+
+| Round | Task | Baseline seconds / named checks | Revised seconds / named checks |
+| --- | --- | --- | --- |
+| 1 | Complete-page refinement | 517.1 / 144 of 145 | 547.0 / 143 of 145 |
+| 1 | No-edit review | 457.0 / 35 of 36 | 505.3 / 36 of 36 |
+| 2 | Complete-page refinement | 601.0 / 141 of 145, incomplete | 601.0 / 141 of 145, incomplete |
+| 2 | No-edit review | 600.8 / 33 of 36, incomplete | 519.9 / 36 of 36 |
+
+The table preserves original grades. Round 1 exposed relative screenshot paths
+and aggregate redaction that dropped early records in large archives. The shared
+browser tool now returns absolute capture paths, supports bounded full-page
+captures and reports remaining calls. Adapter retention applies the existing
+redaction limits separately to records and manifest entries. Round 2 retains all
+100 candidate browser calls plus preflight, including early evidence. Regression
+checks cover these failures without increasing resource limits. Uncorroborated
+tool-error claims in round 1 remain unverified; the incomplete archives limit
+further diagnosis.
+
+Round 2's two refinements retained their edited pages and passed the independent
+scene and interaction checks, but both timed out before delivering the required
+report. Their grades also contain one source-label false positive: a documented
+tooltip description nested in the help button was counted as a changed control
+name. The corrected shared assertion accepts that description while preserving
+the accessible name. `grading-corrections.json` verifies both retained source
+hashes against the operator manifests and records 142 of 145 named checks for
+each refinement. It leaves original grades unchanged and preserves all three
+completion/report failures. This correction is not another model run.
+
+The revised round-2 no-edit review completed with unchanged project hashes and
+36 of 36 named checks. Its input usage was 1,759,457 tokens, including 1,620,864
+cached tokens, with 14,485 output tokens and 113 recorded tool calls. Usage for
+the three timed-out runs is unavailable, not zero. Budget exhaustion remains a
+practical limitation of complete-page work; passing browser checks does not make
+an unfinished candidate successful.
+
+Independent inspection found the revised no-edit report substantially supported
+by captures, source and recorded behavior; the baseline's interim observations
+were accurate but incomplete. A blind refinement comparison marginally preferred
+the revised result for compact task prominence and clearer error feedback. Both
+corrected the wide rail displacing the primary task. Apparent fixed-navigation
+overlap in full-page screenshots was withdrawn as a defect after supplemental
+scrolling, hit-testing, native activation and doubled-text keyboard checks showed
+that content cleared the bar. This is a limited qualitative preference, not proof
+of general improvement or acceptance of the unfinished deliveries.
+
+Artifacts are retained under `.cache/expressivecss-interface-workspace/`:
+`iteration-1` preserves the first protocol, `iteration-2` the repaired protocol,
+and `blind-refine` the independent screenshot comparison and supplemental browser
+checks. Each iteration has the existing Skill Creator `review.html`, source,
+operator captures, transcripts and original benchmark data. The round-2 viewer
+shows original grades; read its adjacent `grading-corrections.json` with them.
+Retained source is redacted review material, not necessarily executable: any
+supplemental reconstruction must use the original fixture runtime and identify
+the candidate HTML/CSS overlay and its hashes.
+
+Human visual review remains pending. English/LTR and doubled text-size stress do
+not establish localization, screen-reader behavior, browser zoom conformance or
+field performance. The full basic-button read path remains 30,501 bytes. Final
+contributor verification passes 926 tests with no skips, and the skill suite
+passes 177 tests plus 22 replay cases. Generated guidance is regenerated through
+the existing build command; the dedicated browser suite passes 13 tests. MCP
+smoke verifies seven tools and both isolated package checks pass. No framework
+implementation or dependencies change.

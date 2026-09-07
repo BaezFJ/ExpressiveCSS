@@ -1,10 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { benchmarkResponseInstructions, gradeAssetReferences, gradeAuditResponse, gradeProjectChanges, gradeVersionResponse, onlyViewportRepair, prepareReviewOutputs, runBenchmark, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
+import { chromium } from '@playwright/test';
+import { JSDOM } from 'jsdom';
+import { benchmarkResponseInstructions, gradeAssetReferences, gradeAuditResponse, gradeInterfaceReviewReferences, gradeMatchedInterfaceScenes, gradeProjectChanges, gradeVersionResponse, INTERFACE_REVIEW_CRITERIA, onlyViewportRepair, preservedControlLabel, prepareReviewOutputs, runBenchmark, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
+
+import { INTERFACE_SCENARIOS } from '../scripts/expressivecss-interface-quality.mjs';
 
 const auditHtml = '<!doctype html><html><body><main>\n<button id="unnamed-action" type="button"><span aria-hidden="true">delete</span></button>\n<nav aria-label="Save commands"><button type="button">Save account</button></nav>\n</main></body></html>';
 const auditResponse = () => ({ audit: { conclusion: 'defects-found', findings: [
@@ -87,6 +91,9 @@ test('per-path grading catches dependency, lockfile, arbitrary file and invented
   const afterManifest = { ...beforeManifest, 'src/index.html': file('new-html') };
   assert.equal(gradeProjectChanges('form-action', { ...provenance, beforeManifest, afterManifest })[0].passed, true);
   assert.equal(gradeProjectChanges('no-edit-audit', { ...provenance, beforeManifest, afterManifest })[0].passed, false);
+  assert.equal(gradeProjectChanges('interface-review', { ...provenance, beforeManifest, afterManifest })[0].passed, false);
+  assert.equal(gradeProjectChanges('interface-refine', { ...provenance, beforeManifest, afterManifest })[0].passed, true);
+  assert.equal(gradeProjectChanges('interface-refine', { ...provenance, beforeManifest, afterManifest: { ...beforeManifest, 'src/app.js': file('changed') } })[0].passed, false);
   const deletion = { ...beforeManifest }; delete deletion['package-lock.json'];
   assert.equal(gradeProjectChanges('version-mismatch', { ...provenance, beforeManifest, afterManifest: deletion })[0].passed, false);
   assert.equal(gradeProjectChanges('form-action', {})[0].passed, false);
@@ -181,12 +188,14 @@ test('benchmark statistics cover paired medians, population variability, and rea
   assert.deepEqual(statistics([3, 3, 3]), { mean: 3, median: 3, stddev: 0, min: 3, max: 3 });
 });
 
-test('benchmark definitions retain six distinct tasks and balanced discovery coverage', async () => {
+test('benchmark definitions retain distinct scoped and whole-interface tasks with balanced discovery coverage', async () => {
   const definitions = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/benchmark.json', import.meta.url), 'utf8'));
-  assert.equal(definitions.cases.length, 6);
-  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 6);
-  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 6);
+  assert.equal(definitions.cases.length, 8);
+  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 8);
+  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 8);
   assert.ok(definitions.cases.find(({ name }) => name === 'no-edit-audit')?.readOnly);
+  assert.ok(definitions.cases.find(({ name }) => name === 'interface-review')?.readOnly);
+  assert.ok(definitions.cases.find(({ name }) => name === 'interface-refine').request.includes('primary user task'));
   assert.equal(definitions.triggers.length, 20);
   assert.equal(new Set(definitions.triggers.map(({ query }) => query)).size, 20);
   assert.equal(definitions.triggers.filter(({ should_trigger }) => should_trigger === true).length, 10);
@@ -256,4 +265,89 @@ test('failed live cases retain bounded redacted source without symlinks and stil
     for (const project of projects) await assert.rejects(readFile(path.join(project, 'src/index.html')), { code: 'ENOENT' });
     assert.equal(await readFile(outside, 'utf8'), 'Private external content must not enter review outputs.');
   } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+
+test('whole-interface review references cannot substitute preflight or invented evidence for observations', () => {
+  const records = [{ id: 'probe', action: 'preflight', status: 'success' }, { id: 'view', action: 'inspect', status: 'success' }, { id: 'failed', action: 'inspect', status: 'error' }];
+  const report = () => ({ interfaceReview: INTERFACE_REVIEW_CRITERIA.map((criterionId) => ({ criterionId, status: 'Fail', observation: 'Concrete observation for independent review.', evidenceIds: ['view'] })) });
+  assert.equal(gradeInterfaceReviewReferences(report(), records).passed, true);
+  for (const id of ['probe', 'failed', 'invented']) {
+    const response = report(); response.interfaceReview[0].evidenceIds = [id];
+    assert.equal(gradeInterfaceReviewReferences(response, records).passed, false);
+  }
+  const missing = report(); missing.interfaceReview.pop();
+  assert.equal(gradeInterfaceReviewReferences(missing, records).passed, false);
+  const blocked = report(); blocked.interfaceReview[0] = { ...blocked.interfaceReview[0], status: 'Blocked', evidenceIds: [] };
+  assert.equal(gradeInterfaceReviewReferences(blocked, records).passed, true, 'an explicit blocker is valid reporting, not an interface pass');
+  blocked.interfaceReview[0].status = 'Pass';
+  assert.equal(gradeInterfaceReviewReferences(blocked, records).passed, false);
+  const inappropriate = report(); inappropriate.interfaceReview.at(-1).status = 'Intentional adaptation';
+  assert.equal(gradeInterfaceReviewReferences(inappropriate, records).passed, false, 'accessibility checks cannot be waived as design adaptations');
+  assert.equal(gradeInterfaceReviewReferences({}, records).passed, false);
+});
+
+
+test('matched whole-interface captures reject missing scenes, failed captures and changed settings', () => {
+  const before = { source: 'operator-browser', scenes: INTERFACE_SCENARIOS.map((settings) => ({ id: settings.id, settings, status: 'success', screenshot: { sha256: 'a'.repeat(64) } })) };
+  assert.equal(gradeMatchedInterfaceScenes(before, structuredClone(before)).passed, true);
+  for (const mutate of [
+    (value) => value.scenes.pop(),
+    (value) => { value.scenes[0].status = 'error'; },
+    (value) => { value.scenes[0].settings.colorScheme = 'dark'; },
+    (value) => { value.scenes[0].screenshot.sha256 = ''; },
+    (value) => { value.scenes[0] = value.scenes[1]; },
+  ]) {
+    const after = structuredClone(before); mutate(after);
+    assert.equal(gradeMatchedInterfaceScenes(before, after).passed, false);
+  }
+  assert.equal(gradeMatchedInterfaceScenes(null, before).passed, false);
+});
+
+
+test('whole-interface aggregate reports redact browser observations and final response metadata', { timeout: 120000 }, async (t) => {
+  try { await access(chromium.executablePath()); } catch { t.skip('Chromium is not installed'); return; }
+  const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-interface-redaction-'));
+  try {
+    const bin = path.join(directory, 'bin'), skill = path.join(directory, 'skill'), output = path.join(directory, 'outputs');
+    await mkdir(bin); await mkdir(skill);
+    await writeFile(path.join(skill, 'SKILL.md'), '# ExpressiveCSS test skill');
+    // A transport stub tests artifact boundaries; it is not a live model evaluation.
+    await writeFile(path.join(bin, 'codex'), `#!${process.execPath}
+      const {appendFileSync} = require('node:fs');
+      process.stdin.resume(); process.stdin.on('end', () => {
+        const root = process.argv[process.argv.indexOf('-C') + 1];
+        appendFileSync(root + '/src/index.html', '<script>console.error("API_KEY=fixture-secret")</script>');
+        const emit = event => process.stdout.write(JSON.stringify(event) + '\\n');
+        emit({type:'item.completed',item:{type:'agent_message',text:JSON.stringify({summary:'API_KEY=fixture-secret',verificationChecks:[],verificationErrors:[]})}});
+        emit({type:'turn.completed',usage:{input_tokens:1,cached_input_tokens:0,output_tokens:1}});
+      });
+    `, { mode: 0o700 });
+    const checked = spawnSync(process.execPath, ['--input-type=module', '-e', `
+      import {runBenchmark} from ${JSON.stringify(new URL('../scripts/benchmark-expressivecss-skill.mjs', import.meta.url).href)};
+      await runBenchmark({baseline:process.argv[1],candidate:process.argv[1],output:process.argv[2],repetitions:1,caseName:'interface-refine'});
+    `, skill, output], { encoding: 'utf8', timeout: 100000, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` } });
+    assert.equal(checked.status, 0, checked.error?.message ?? checked.stderr);
+    for (const file of ['benchmark.json', 'results.json', ...['old_skill', 'with_skill'].flatMap((configuration) => ['grading.json', 'outputs/browser.json', 'outputs/interface-review.json', 'outputs/response.json'].map((name) => `eval-interface-refine/${configuration}/run-1/${name}`))]) {
+      const content = await readFile(path.join(output, file), 'utf8');
+      assert.doesNotMatch(content, /fixture-secret/, file);
+      assert.match(content, /REDACTED/, file);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+
+test('whole-interface preservation accepts described tooltips without allowing renamed controls', () => {
+  const dom = new JSDOM('<button id="original" data-tooltip="Private">Privacy help</button><button id="described" aria-describedby="tip">Privacy help<span class="tooltip" id="tip">Private</span></button><button id="renamed" aria-label="Delete account">Privacy help</button><select id="first"><option value="empty">Empty</option></select><select id="spaced">\n<option value="empty">Empty</option>\n</select>');
+  try {
+    const get = (id) => dom.window.document.getElementById(id);
+    assert.equal(preservedControlLabel(get('original'), get('described')), true);
+    assert.equal(preservedControlLabel(get('original'), get('renamed')), false);
+    get('described').removeAttribute('aria-describedby');
+    assert.equal(preservedControlLabel(get('original'), get('described')), false);
+    assert.equal(preservedControlLabel(get('first'), get('spaced')), true);
+    get('spaced').querySelector('option').value = 'error';
+    assert.equal(preservedControlLabel(get('first'), get('spaced')), false);
+    assert.equal(preservedControlLabel(get('original'), null), false);
+  } finally { dom.window.close(); }
 });
