@@ -1,5 +1,9 @@
 # ExpressiveCSS skill reliability and performance comparison
 
+The original 36-run study below describes the first reliability revision. The
+[browser and grading follow-up](#browser-and-grading-follow-up) records subsequent
+changes and six focused executions separately.
+
 ## Changes and verification
 
 The skill now has one routing policy, task-specific discovery descriptions,
@@ -151,3 +155,61 @@ The generated Skill Creator review viewer contains screenshots, source outputs,
 formal grades, and benchmark data. Human review of the full output set is still
 required before making a release-quality claim. No release or installation was
 performed by this change.
+
+## Browser and grading follow-up
+
+Candidate execution now has a preflighted, operator-owned browser connection.
+Four runnable candidates used it during their tasks; the two older-version
+fixtures explicitly lacked matching runnable code and reported browser checks
+unavailable. Independent post-run checks still determine lifecycle completion.
+Error claims must match retained browser, console, command, or connector output.
+Audit and version assertions now check source facts and effective proposed fixes,
+with full-project manifests detecting unauthorized changes beyond the main file.
+
+This follow-up uses the committed first revision (`bb95b39`) as its baseline,
+not the pre-improvement baseline from the original study. Both versions used
+`gpt-6-astra`, high reasoning, the same fixtures and ephemeral tool configuration;
+audit shells were read-only and implementation shells permitted workspace writes.
+Each pair ran concurrently with alternating dispatch order. One execution per
+case and version is a correctness check, insufficient for a speed or variability
+claim. Input totals below include cached input; cached and output usage remain
+separate in the raw artifacts.
+
+| Case | Baseline seconds | Revised seconds | Baseline input + output tokens | Revised input + output tokens | Reviewed checks, each version |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Tooltip remount | 116.8 | 135.3 | 354,136 | 430,116 | 11/11 |
+| No-edit audit | 107.5 | 99.3 | 257,679 | 235,971 | 9/9 |
+| Unavailable version documentation | 76.4 | 79.5 | 255,368 | 181,999 | 9/9 |
+
+All six completed their scoped tasks without unauthorized edits. Both lifecycle
+repairs passed five independently observed ownership/cleanup checks; audits
+preserved every project path and identified the fixture defects; version repairs
+changed only viewport metadata and preserved dependency pins and lockfiles.
+
+Three initial grades failed only because the validator rejected real page-console
+errors recorded during successful inspection calls. Independent review confirmed
+each exact error excerpt in the operator records. The corrected validator was
+applied to retained evidence in a separate reviewed copy; these are corrected
+grades, not additional model runs. Original grades, responses, and their hashes
+are preserved. The warnings also exposed a fixture CSP issue with embedded
+checkbox images. The fixture now permits data images, verified by a browser
+regression test; that policy correction was not active in the six historical runs.
+An earlier two-run integration trial is retained separately: its browser worked,
+but Codex rejected tool calls until the ephemeral configuration explicitly
+approved this fixture-only tool.
+
+Artifacts live in `.cache/expressivecss-evidence-workspace/`: `iteration-2` holds
+the original six results and independent operator review; `iteration-2-reviewed`
+contains the corrected grades, `verification-review.json`, and the existing
+Skill Creator `review.html` viewer. Screenshots from candidate browser calls are
+included alongside independent captures and source outputs. Human visual review
+remains outstanding. These checks do not establish broad accessibility compliance,
+production performance, or the truth of arbitrary free-form claims.
+
+The current complete basic-button read path is **30,501 bytes**, retaining a
+**25.0% reduction** from the original 40,670-byte baseline. Contributor verification
+passes **919 tests with no skips**, generated-file and documentation checks.
+The skill suite passes **170 tests** plus its 22 replay cases; the dedicated browser
+suite passes **13 tests**. MCP smoke verifies **7 tools**, and both isolated package
+checks pass. No framework API, stylesheet, package export, dependency, or saved
+Codex configuration changes were introduced.

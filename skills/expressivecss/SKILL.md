@@ -14,11 +14,11 @@ metadata:
 
 # ExpressiveCSS
 
-ExpressiveCSS is a semantic HTML and Material Design 3 Expressive framework. The frontmatter metadata `version` is the skill workflow version, not the ExpressiveCSS framework or generated contract version.
+ExpressiveCSS implements Material Design 3 Expressive with semantic HTML. Metadata `version` identifies this workflow; the contract manifest identifies the framework.
 
 ## Staged guide routing
 
-Start with this root guide only. Classify the task, shortlist guides, inspect runtime ownership, then read the applicable guides. A guide is loaded only after its `SKILL.md` contents are actually read. Keep reads in the tool trace.
+Start here. Classify the task and runtime ownership before reading support guides. Record actual reads; a link does not count as loaded guidance.
 
 Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expressivecss-design/SKILL.md), [Usage](./expressivecss-usage/SKILL.md), [Theming](./expressivecss-theming/SKILL.md), [Runtime](./expressivecss-runtime/SKILL.md), [Accessibility](./expressivecss-accessibility/SKILL.md), and [component guides](./components/).
 
@@ -34,7 +34,7 @@ Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expre
 | Narrow runtime lifecycle repair | Runtime, selected component guides | Install, Design, Usage, Theming, Accessibility |
 | New surface, Refine, or Redesign | Design, Usage, Theming, Accessibility, selected component guides | Install |
 
-Take the union when rows overlap. Apply Usage and Accessibility for every interface implementation or review, including visual critiques. Narrow lifecycle repair leaves markup unchanged; add those guides if the repair changes markup or accessibility behavior. Add Theming for visual or token work, and Install for setup or discovered version uncertainty. Before reading Runtime for component work, inspect candidate runtime ownership in the decision index: read Runtime only for JavaScript, Auto Init, shared-runtime, or manual ownership. CSS-only and native ownership do not require it. A Critique needs Runtime only when interaction evidence is in scope. Read only applicable guides and note why the task widened in the trace.
+Combine overlapping routes. Interface implementation and review require Usage and Accessibility; add them to narrow lifecycle work when markup or accessibility behavior changes. Add Theming for visual/token work and Install for setup/version uncertainty. Inspect runtime ownership in the decision index: JavaScript, Auto Init, shared-runtime, and manual ownership require Runtime; CSS-only and native ownership do not. Critiques need Runtime when interaction evidence is in scope. Record why a route widens.
 
 ## Component guides
 
@@ -42,7 +42,7 @@ The generated [component decision index](./references/component-decisions.md) ow
 
 ## Component discovery protocol
 
-1. Identify the user's job, behavior, content, and reachable window classes. Read the component decision index entry for the named or likely component.
+1. Identify the user's job, behavior, content, and reachable window classes. Read the index entry for the named or likely component.
 2. Compare use when, avoid when, alternatives, and runtime ownership. For an unambiguous component, read only its selected guide. When selection remains uncertain, read all plausible candidate guides before choosing; names and appearance alone do not prove fit.
 3. Apply the selected guide's adaptive decisions and define the next narrower layout. Choose the smallest component or combination that fully meets the job.
 4. Copy the documented host, children, relationships, classes, and initialization mode. Apply the guide's semantic rules.
@@ -56,7 +56,7 @@ Resolve the exact installed framework version once per task before contract-depe
 node "<skill-directory>/scripts/resolve-version.mjs" --project-root "<project>"
 ```
 
-The portable resolver reads its generated contract manifest; `--contract-version <version>` is an explicit override. Resolution precedence is framework source, installed package, lockfile, then manifest range as declaration-only evidence. Do not infer an exact installed version from a manifest range. Conflicting, malformed, ambiguous, or unsupported active installation evidence is unresolved even with an installed exact candidate. Report the candidate and blocked diagnostics.
+The resolver reads the bundled contract manifest; `--contract-version` overrides its comparison version. Evidence precedence: framework source, installed package, lockfile, then declaration-only manifest range. A range is not an installed version. Conflicting, malformed, ambiguous, or unsupported installation evidence remains unresolved; report the candidate and blocked diagnostics.
 
 - On `match`, use bundled matching guidance only when `bundledContractSafe` is true. Otherwise use installed sources or a matching tag. A bundled match does not verify the public website's version; `currentDocsSafe` requires independent site provenance.
 - On `mismatch`, inspect the installed package and matching tag or commit. Mark only dependent checks `Blocked` if matching guidance is unavailable.
@@ -71,9 +71,15 @@ Use the source that owns the question, at the resolved version:
 
 Public-site and master-branch links are discovery pointers, not proof of the target version. For an older installed version use installed sources and a matching repository tag or commit. Report disagreements instead of combining incompatible contracts.
 
+## Browser evidence
+
+Before browser-dependent claims, probe one available route by loading the target. Prefer supplied project/browser tooling; a listed connector is not proof it works. Reuse a working route. After a permission, connection, or launch failure, stop retrying it until capability changes; continue independent source work. A bad selector can be corrected without changing routes.
+
+Separate source findings, browser observations, and unavailable checks. Reference actual tool output or captures. Quote observed errors without guessing codes or causes. A compound command's status does not prove each subcommand passed. Keep verification proportional to the task; source checks do not establish browser conformance.
+
 ## Optional MCP acceleration
 
-The Markdown workflow remains complete when the MCP server is unavailable.
+MCP is optional; the Markdown workflow stands alone.
 
 | Tool | Use |
 | --- | --- |
@@ -82,7 +88,7 @@ The Markdown workflow remains complete when the MCP server is unavailable.
 | `component_syntax_expert` | Retrieve candidate syntax and contract details. |
 | `quality_inspector` | Run static checks and declared verification commands. |
 
-An MCP pass applies only to `checksPerformed` and named evidence sources. It does not replace visual, responsive, keyboard, focus, accessibility-tree, assistive-technology, contrast, zoom, motion, or touch review. Carry `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into review evidence. Contract mismatch leaves dependent claims `Blocked` until matching evidence exists.
+An MCP pass covers only `checksPerformed` and named sources. It does not establish browser, visual, or accessibility conformance. Report `uncheckedAreas`, `coverageStatus`, and `blockedChecks`. Contract mismatch blocks dependent claims until matching evidence exists.
 
 ## Framework contribution path
 

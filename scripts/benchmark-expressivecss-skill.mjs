@@ -1,17 +1,155 @@
 #!/usr/bin/env node
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { createServer } from 'node:http';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
 import { EVALUATOR_LIMITS, materializeProjectFixture, readCompletionFiles, readBoundedRegularFile, redactValue } from './eval-expressivecss-skill.mjs';
-import { hashProject, runCodex } from './expressivecss-codex-adapter.mjs';
+import { hashProject, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
+import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFINITIONS = JSON.parse(await readFile(path.join(ROOT, 'tests/fixtures/expressivecss-skill-evals/benchmark.json'), 'utf8'));
 const save = async (filename, value) => { await mkdir(path.dirname(filename), { recursive: true }); await writeFile(filename, `${JSON.stringify(value, null, 2)}\n`); };
 const check = (text, passed, evidence) => ({ text, passed: Boolean(passed), evidence: String(evidence) });
+
+export function benchmarkResponseInstructions(name) {
+  const scope = {
+    'form-action': 'Only src/index.html may change.',
+    'brand-token': 'Only src/app.css may change.',
+    'tooltip-remount': 'Only src/index.html and src/app.js may change.',
+    'navigation-media': 'Only src/index.html and src/app.css may change.',
+    'no-edit-audit': 'Do not change any project files.',
+    'version-mismatch': 'Preserve dependency and lock files, installed packages, assets and application code. Safe setup repairs may only add or correct standard viewport metadata in src/index.html.',
+  }[name] ?? '';
+  const contract = name === 'no-edit-audit' ? `Include audit: {conclusion: "defects-found"|"no-defects"|"unavailable", findings: [{category: "accessible-name"|"navigation-semantics" or another category, source: {path: project-relative file path, line: one-based element start line, selector: CSS selector}, defect: boolean, observed: {accessibleName: string when relevant, tagName: lowercase string when relevant, containsCommand: boolean when relevant}, fixHtml: proposed replacement HTML for this element}]}. Report source observations and your actual conclusion, with proposed fixes rather than edits. Separate browser verification from source findings.`
+    : name === 'version-mismatch' ? `Include versionAssessment: {installedVersion: string|null, bundledVersion: string|null, relationship: "match"|"mismatch"|"unknown", bundledContractSafe: boolean, currentDocsSafe: boolean, matchingEvidence: "available"|"unavailable"|"unknown", unsupportedClaims: "blocked"|"allowed", sources: [{path: project-relative direct metadata source, line: one-based line containing the version field}]}. Cite direct installed-package and bundled-contract metadata. Distinguish version metadata from available implementation documentation and verified public-site provenance.` : '';
+  return `${scope}\n${contract}`.trim();
+}
+
+export function gradeProjectChanges(name, filesystem) {
+  const before = filesystem?.beforeManifest;
+  const after = filesystem?.afterManifest;
+  const validHash = (value) => typeof value === 'string' && /^sha256:[a-f0-9]{64}$/.test(value);
+  if (filesystem?.source !== 'adapter' || filesystem?.algorithm !== 'sha256' || filesystem?.independentlyComputed !== true
+      || !validHash(filesystem.before) || !validHash(filesystem.after) || !before || !after) return [check('Independent per-path project evidence is available', false, 'Missing operator manifests or valid SHA-256 provenance')];
+  const changed = [...new Set([...Object.keys(before), ...Object.keys(after)])].filter((file) => JSON.stringify(before[file]) !== JSON.stringify(after[file]));
+  const allowed = {
+    'form-action': ['src/index.html'], 'brand-token': ['src/app.css'],
+    'tooltip-remount': ['src/index.html', 'src/app.js'], 'navigation-media': ['src/index.html', 'src/app.css'],
+    'no-edit-audit': [], 'version-mismatch': ['src/index.html'],
+  }[name] ?? [];
+  const outside = changed.filter((file) => !allowed.includes(file));
+  const consistentDigests = changed.length ? filesystem.before !== filesystem.after : filesystem.before === filesystem.after;
+  return [check('Changes stay within the requested files, preserving dependencies and assets', !outside.length && consistentDigests, JSON.stringify({ changed, unauthorized: outside, consistentDigests }))];
+}
+
+export function gradeAssetReferences(before, after) {
+  const references = (files) => {
+    const dom = new JSDOM(files['src/index.html'] ?? '');
+    try {
+      const values = [...dom.window.document.querySelectorAll('[src],[srcset],link[href],object[data],video[poster]')]
+        .flatMap((node) => ['src', 'srcset', ...(node.localName === 'link' ? ['href'] : []), ...(node.localName === 'object' ? ['data'] : []), ...(node.localName === 'video' ? ['poster'] : [])]
+          .filter((attribute) => node.hasAttribute(attribute)).map((attribute) => node.getAttribute(attribute)));
+      const css = [files['src/app.css'] ?? '', ...[...dom.window.document.querySelectorAll('style')].map((node) => node.textContent), ...[...dom.window.document.querySelectorAll('[style]')].map((node) => node.getAttribute('style'))].join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
+      for (const match of css.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)|@import\s+(['"])(.*?)\3/gi)) values.push(match[2] ?? match[4]);
+      return new Set(values);
+    } finally { dom.window.close(); }
+  };
+  const previous = references(before);
+  const added = [...references(after)].filter((reference) => !previous.has(reference));
+  return check('Scoped tasks introduce no invented declarative asset references', !added.length, JSON.stringify({ added }));
+}
+
+// Fixture-scoped source check; browser/assistive-technology results remain separate evidence.
+function accessibleName(node) {
+  if (!node) return '';
+  if (node.hasAttribute('aria-labelledby')) return node.getAttribute('aria-labelledby').split(/\s+/).map((id) => node.ownerDocument.getElementById(id)?.textContent ?? '').join(' ').trim();
+  if (node.hasAttribute('aria-label')) return node.getAttribute('aria-label').trim();
+  const visible = node.cloneNode(true);
+  visible.querySelectorAll('[aria-hidden="true"],[hidden]').forEach((child) => child.remove());
+  visible.querySelectorAll('img[alt]').forEach((child) => child.replaceWith(child.getAttribute('alt')));
+  return visible.textContent.trim() || node.getAttribute('title')?.trim() || '';
+}
+
+function enabledCommand(button) {
+  return button?.getAttribute('type') === 'button' && !button.disabled
+    && (!button.hasAttribute('role') || button.getAttribute('role') === 'button')
+    && !button.closest('[hidden],[aria-hidden="true"],[aria-disabled="true"],[inert],fieldset[disabled]');
+}
+
+export function gradeAuditResponse(response, html) {
+  const dom = new JSDOM(html, { includeNodeLocations: true });
+  const findings = [];
+  try {
+    const report = response?.audit;
+    findings.push(check('Audit concludes that the fixture has defects', report?.conclusion === 'defects-found', report?.conclusion ?? 'Missing structured conclusion'));
+    for (const category of ['accessible-name', 'navigation-semantics']) {
+      const target = category === 'accessible-name' ? dom.window.document.querySelector('#unnamed-action')
+        : [...dom.window.document.querySelectorAll('nav')].find((node) => node.querySelector('button')?.textContent.trim() === 'Save account');
+      const assessments = (Array.isArray(report?.findings) ? report.findings : []).filter((finding) => {
+        if (finding?.category !== category || finding.source?.path !== 'src/index.html' || typeof finding.source.selector !== 'string') return false;
+        try { return [...dom.window.document.querySelectorAll(finding.source.selector)].includes(target); } catch { return false; }
+      });
+      const valid = assessments.length > 0 && assessments.every((finding) => {
+        if (finding?.category !== category || finding.defect !== true || finding.source?.path !== 'src/index.html' || typeof finding.source.selector !== 'string') return false;
+        let node;
+        try { const nodes = dom.window.document.querySelectorAll(finding.source.selector); if (nodes.length !== 1) return false; node = nodes[0]; } catch { return false; }
+        if (dom.nodeLocation(node)?.startLine !== finding.source.line || typeof finding.fixHtml !== 'string' || finding.fixHtml.length > 16000) return false;
+        const fix = new JSDOM(finding.fixHtml);
+        try {
+          if (fix.window.document.querySelector('script') || [...fix.window.document.querySelectorAll('*')].some((element) => [...element.attributes].some(({ name }) => /^on/i.test(name)))) return false;
+          if (category === 'accessible-name') {
+            const replacement = fix.window.document.querySelector('button');
+            return node.id === 'unnamed-action' && accessibleName(node) === '' && finding.observed?.accessibleName === ''
+              && enabledCommand(replacement) && Boolean(accessibleName(replacement));
+          }
+          const originalCommand = node.querySelector('button');
+          const replacement = [...fix.window.document.querySelectorAll('button')].find((button) => accessibleName(button) === accessibleName(originalCommand));
+          return node.localName === 'nav' && originalCommand?.textContent.trim() === 'Save account' && !node.querySelector('a[href]')
+            && finding.observed?.tagName === 'nav' && finding.observed?.containsCommand === true
+            && enabledCommand(replacement) && !replacement.closest('nav,[role="navigation"]');
+        } finally { fix.window.close(); }
+      });
+      findings.push(check(`Audit grounds ${category} defect and fix in the cited source`, valid, JSON.stringify(report?.findings ?? 'Missing structured findings')));
+    }
+    return findings;
+  } finally { dom.window.close(); }
+}
+
+export function gradeVersionResponse(response, sources) {
+  const installedPath = 'node_modules/@expressivecss/expressive/package.json';
+  const contractPath = '.agents/skills/expressivecss/references/contract.json';
+  const installed = JSON.parse(sources[installedPath]).version;
+  const bundled = JSON.parse(sources[contractPath]).frameworkVersion;
+  const assessment = response?.versionAssessment;
+  const cited = [[installedPath, 'version'], [contractPath, 'frameworkVersion']].every(([file, property]) =>
+    (Array.isArray(assessment?.sources) ? assessment.sources : []).some((source) => source?.path === file && Number.isSafeInteger(source.line) && source.line > 0
+      && sources[file].split('\n')[source.line - 1]?.includes(`"${property}"`)));
+  return [
+    check('Version assessment cites actual installed and bundled metadata', assessment?.installedVersion === installed && assessment?.bundledVersion === bundled && cited, JSON.stringify(assessment ?? 'Missing versionAssessment')),
+    check('Version relationship agrees with package evidence', assessment?.relationship === (installed === bundled ? 'match' : 'mismatch'), `${installed} installed; ${bundled} bundled`),
+    check('Unavailable target documentation blocks unsupported claims and public-site assurance', assessment?.matchingEvidence === 'unavailable' && assessment?.unsupportedClaims === 'blocked' && assessment?.currentDocsSafe === false && assessment?.bundledContractSafe === false, JSON.stringify(assessment ?? 'Missing versionAssessment')),
+  ];
+}
+
+export function onlyViewportRepair(before, after) {
+  if (before === after) return true;
+  const old = new JSDOM(before, { includeNodeLocations: true });
+  const next = new JSDOM(after, { includeNodeLocations: true });
+  try {
+    const viewport = next.window.document.querySelectorAll('head meta[name="viewport"]');
+    const values = viewport[0]?.getAttribute('content')?.split(',').map((value) => value.trim().replace(/\s*=\s*/g, '=')) ?? [];
+    if (viewport.length !== 1 || values.length !== 2 || !values.includes('width=device-width') || !values.some((value) => /^initial-scale=1(?:\.0+)?$/.test(value))
+      || [...viewport[0].attributes].some(({ name }) => !['name', 'content'].includes(name))) return false;
+    const withoutViewport = (dom) => {
+      dom.window.document.querySelectorAll('head meta[name="viewport"]').forEach((node) => node.remove());
+      for (const node of [...dom.window.document.head.childNodes]) if (node.nodeType === 3 && !node.textContent.trim()) node.remove();
+      return dom.serialize();
+    };
+    return withoutViewport(old) === withoutViewport(next);
+  } finally { old.window.close(); next.window.close(); }
+}
 
 async function retainSourceArtifacts(root, outputDirectory) {
   const errors = [];
@@ -49,7 +187,7 @@ export async function prepareReviewOutputs(output) {
         const runDirectory = path.join(configDirectory, run.name);
         await save(path.join(runDirectory, 'eval_metadata.json'), metadata);
         const outputs = path.join(runDirectory, 'outputs');
-        for (const phase of ['before', 'after']) {
+        for (const phase of ['before', 'after', 'candidate-browser']) {
           const phaseDirectory = path.join(outputs, phase);
           for (const capture of await readdir(phaseDirectory).catch(() => [])) {
             if (capture.endsWith('.png')) await cp(path.join(phaseDirectory, capture), path.join(outputs, `${phase}-${capture}`));
@@ -81,25 +219,13 @@ async function prepareCase(testCase) {
 
 async function browserEvidence(root, outputDirectory, name) {
   await mkdir(outputDirectory, { recursive: true });
-  const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
-  const server = createServer(async (request, response) => {
-    try {
-      const urlPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-      const relative = ['/', '/dashboard', '/home', '/search', '/profile'].includes(urlPath) ? 'src/index.html' : urlPath.replace(/^\//, '');
-      const file = path.resolve(root, relative);
-      const data = await readBoundedRegularFile(file, 32 * 1024 * 1024, 'browser asset', root, null);
-      response.writeHead(200, { 'Content-Type': mime[path.extname(file)] ?? 'application/octet-stream' });
-      response.end(data);
-    } catch { response.writeHead(404); response.end('Not found'); }
-  });
+  const server = await startFixtureServer(root);
   let browser;
   const captures = [];
   const errors = [];
   try {
-    await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
     browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
-    const page = await context.newPage();
+    const { page } = await createRestrictedFixturePage(browser, server.origin, { colorScheme: 'light', reducedMotion: 'reduce' });
     page.on('pageerror', (error) => errors.push(error.message));
     await page.addInitScript(() => {
       window.__perf = { lcp: null, cls: 0 };
@@ -108,7 +234,7 @@ async function browserEvidence(root, outputDirectory, name) {
     });
     for (const width of name === 'navigation-media' ? [375, 839, 840, 1024] : [375]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto(`http://127.0.0.1:${server.address().port}/dashboard`, { waitUntil: 'networkidle' });
+      await page.goto(`${server.origin}/dashboard`, { waitUntil: 'networkidle' });
       await page.screenshot({ path: path.join(outputDirectory, `${width}.png`), fullPage: true });
       captures.push(await page.evaluate(() => ({ width: innerWidth, overflow: document.documentElement.scrollWidth > innerWidth,
         navigation: [...document.querySelectorAll('nav.navigation-bar,nav.navigation-rail')].filter((node) => node.checkVisibility()).map((node) => ({ kind: node.classList.contains('navigation-rail') ? 'rail' : 'bar', destinations: [...node.querySelectorAll('a')].map((a) => a.getAttribute('href')) })),
@@ -137,14 +263,14 @@ async function browserEvidence(root, outputDirectory, name) {
       });
     }
     return { captures, errors, lifecycle, formBehavior, collectedAt: new Date().toISOString() };
-  } finally { await browser?.close(); await new Promise((resolve) => server.close(resolve)); }
+  } finally { await browser?.close(); await server.close(); }
 }
 
-async function grade(testCase, root, before, envelope, browser) {
+export async function grade(testCase, root, before, envelope, browser) {
   const after = await readCompletionFiles(root);
   const html = after['src/index.html'] ?? '';
   const dom = new JSDOM(html);
-  const findings = [];
+  const findings = [...gradeProjectChanges(testCase.name, envelope.executionEvidence?.filesystem), gradeAssetReferences(before, after)];
   try {
     if (testCase.name === 'form-action') {
       const button = [...dom.window.document.querySelectorAll('#preferences button')].find((node) => node.textContent.trim() === 'Preview preferences');
@@ -160,11 +286,7 @@ async function grade(testCase, root, before, envelope, browser) {
     } else if (testCase.name === 'tooltip-remount') {
       for (const key of ['initialized', 'destroyedBeforeRemoval', 'remounted', 'cleaned', 'manualOwner']) findings.push(check(`Tooltip lifecycle: ${key}`, browser?.lifecycle?.[key], JSON.stringify(browser?.lifecycle ?? 'Browser unavailable')));
     } else if (testCase.name === 'no-edit-audit') {
-      const response = JSON.stringify(envelope.candidateResponse);
-      findings.push(check('Audit does not edit the project', envelope.executionEvidence.filesystem.before === envelope.executionEvidence.filesystem.after, 'Independent project digests'));
-      findings.push(check('Audit identifies the unnamed action', /unnamed-action|icon.only|accessible name|unlabel/i.test(response), response));
-      findings.push(check('Audit identifies commands in navigation', /nav|landmark/i.test(response) && /command|save account/i.test(response), response));
-      findings.push(check('Audit supplies source locations and concrete fixes', /src\/index\.html|unnamed-action/.test(response) && /aria-label|accessible name/i.test(response) && /replace|div|remove.*nav/i.test(response), response));
+      findings.push(...gradeAuditResponse(envelope.candidateResponse, before['src/index.html']));
     } else if (testCase.name === 'navigation-media') {
       for (const capture of browser?.captures ?? []) findings.push(check(`One appropriate navigation and no overflow at ${capture.width}px`, capture.navigation.length === 1 && !capture.overflow && capture.navigation[0].kind === (capture.width < 840 ? 'bar' : 'rail') && ['/home', '/search', '/profile'].every((url) => capture.navigation[0].destinations.includes(url)), JSON.stringify(capture)));
       findings.push(check('Responsive browser evidence collected at four widths', browser?.captures.length === 4, `${browser?.captures.length ?? 0} captures`));
@@ -176,9 +298,11 @@ async function grade(testCase, root, before, envelope, browser) {
       findings.push(check('Refine preserves profile destination and save behavior', dom.window.document.querySelector('main a[href="/profile"]') && browser?.formBehavior?.saved, JSON.stringify(browser?.formBehavior)));
       findings.push(check('Refine preserves the brand seed', /--md-source\s*:\s*#006a79\b/i.test(after['src/app.css']), after['src/app.css']));
     } else {
-      const response = JSON.stringify(envelope.candidateResponse);
       findings.push(check('Pinned version is preserved', before['package.json'] === after['package.json'], after['package.json']));
-      findings.push(check('Mismatch and unavailable matching evidence are reported', /0\.7\.0/.test(response) && /mismatch|older|bundled/i.test(response) && /block|unavailable|cannot|missing/i.test(response), response));
+      findings.push(check('Setup repair changes only standard viewport metadata', onlyViewportRepair(before['src/index.html'], html), 'Compared parsed documents apart from standard viewport metadata and head whitespace'));
+      const contractPath = '.agents/skills/expressivecss/references/contract.json';
+      const contract = await readBoundedRegularFile(path.join(root, contractPath), EVALUATOR_LIMITS.stringBytes, 'bundled contract', root);
+      findings.push(...gradeVersionResponse(envelope.candidateResponse, { ...before, [contractPath]: contract }));
     }
     if (browser) findings.push(check('No page JavaScript errors', !browser.errors.length, JSON.stringify(browser.errors)));
     findings.push(check('Codex execution completed', !envelope.runMetadata.infrastructureError, envelope.runMetadata.infrastructureError ?? 'Completed turn with usage and final response'));
@@ -192,11 +316,13 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
   const versions = { with_skill: path.resolve(candidate), old_skill: path.resolve(baseline) };
   const hashes = Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, await hashProject(directory)])));
   const previous = resume ? JSON.parse(await readBoundedRegularFile(path.join(output, 'results.json'), 16 * 1024 * 1024, 'operator comparison results')) : [];
-  const definitions = caseName ? DEFINITIONS.cases.filter((item) => item.name === caseName) : DEFINITIONS.cases;
-  if (!definitions.length) throw new Error('Unknown case');
+  const selectedNames = caseName ? caseName.split(',') : null;
+  if (selectedNames?.some((name) => !DEFINITIONS.cases.some((item) => item.name === name))) throw new Error('Unknown case');
+  const definitions = selectedNames ? DEFINITIONS.cases.filter((item) => selectedNames.includes(item.name)) : DEFINITIONS.cases;
   const results = [];
   for (let repetition = 1; repetition <= repetitions; repetition++) {
-    for (const [caseIndex, testCase] of definitions.entries()) {
+    for (const testCase of definitions) {
+      const caseIndex = DEFINITIONS.cases.indexOf(testCase);
       const configurations = (repetition + caseIndex) % 2 ? ['with_skill', 'old_skill'] : ['old_skill', 'with_skill'];
       const pair = await Promise.all(configurations.map(async (configuration) => {
         const runDirectory = path.join(output, `eval-${testCase.name}`, configuration, `run-${repetition}`);
@@ -212,17 +338,28 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
         await save(path.join(output, `eval-${testCase.name}`, 'eval_metadata.json'), { eval_id: caseIndex + 1, eval_name: testCase.name, prompt: testCase.request, assertions: [] });
         let root;
         let record;
+        let browserSession;
+        let initialCapability;
         try {
           root = await prepareCase(testCase);
           const skillRoot = path.join(root, '.agents/skills/expressivecss');
           await cp(versions[configuration], skillRoot, { recursive: true });
           const before = await readCompletionFiles(root);
+          browserSession = testCase.name === 'version-mismatch'
+            ? { capability: { status: 'unavailable', reason: 'Only older package metadata is available; no target-version browser contract can be verified.' }, records: [], close: async () => {} }
+            : await startEvaluationBrowser({ projectRoot: root, artifactDirectory: path.join(outputDirectory, 'candidate-browser') });
+          initialCapability = structuredClone(browserSession.capability);
           const baselineCapture = testCase.name === 'navigation-media' ? await browserEvidence(root, path.join(outputDirectory, 'before'), testCase.name) : null;
-          const envelope = await runCodex({ task: testCase, projectRoot: root, skillRoot, rootSkill: await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), artifactDirectory: outputDirectory, readOnly: testCase.readOnly });
+          const envelope = await runCodex({ task: testCase, projectRoot: root, skillRoot, rootSkill: await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), artifactDirectory: outputDirectory, readOnly: testCase.readOnly,
+            responseInstructions: benchmarkResponseInstructions(testCase.name) }, { browserSession });
           let browser = null;
           let browserError = null;
           if (testCase.name !== 'version-mismatch') try { browser = await browserEvidence(root, path.join(outputDirectory, 'after'), testCase.name); } catch (error) { browserError = error.message; }
           const expectations = await grade(testCase, root, before, envelope, browser);
+          const verificationFailures = validateVerificationClaims(envelope.candidateResponse, envelope.executionEvidence);
+          expectations.push(check('Reported browser operations and tool errors match operator evidence', !verificationFailures.length, JSON.stringify(verificationFailures)));
+          if (testCase.name !== 'version-mismatch') expectations.push(check('Candidate uses the working fixture browser',
+            initialCapability.status === 'available' && browserSession.records.some((row) => row.action !== 'preflight' && row.status === 'success'), JSON.stringify(initialCapability)));
           if (browserError) expectations.push(check('Browser verification available', false, browserError));
           await save(path.join(outputDirectory, 'browser.json'), { before: baselineCapture, after: browser, error: browserError });
           const passed = expectations.filter((item) => item.passed).length;
@@ -243,6 +380,12 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
           record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, result, expectations };
           return record;
         } finally {
+          if (browserSession) {
+            try { await save(path.join(outputDirectory, 'candidate-browser.json'), redactValue({ initialCapability, finalCapability: browserSession.capability, records: browserSession.records })); }
+            catch (error) { if (record) record.browserRetentionError = redactValue(error.message); }
+            try { await browserSession.close(); }
+            catch (error) { if (record) record.browserCleanupError = redactValue(error.message); }
+          }
           if (root) {
             try {
               const errors = await retainSourceArtifacts(root, outputDirectory);

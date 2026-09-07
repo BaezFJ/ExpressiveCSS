@@ -79,4 +79,6 @@ Scope initialization to the newly mounted container. Avoid scanning the document
 
 ## Verification
 
+Apply the root [browser evidence protocol](../SKILL.md#browser-evidence) before interaction checks.
+
 Open and close every interactive state, exercise keyboard and pointer paths, remove and remount the owning view, and verify that no listener, timer, overlay, generated node, stale ARIA state, or instance survives destruction. Confirm the console reports no duplicate initialization or missing target errors.

@@ -20,7 +20,6 @@ async function walkFiles(root, visitFile, visitDirectory = () => {}) {
       throw new Error('Directory contains a symbolic link or changed identity');
     }
     for (const entry of (await readdir(directory, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
-      if (directory === resolvedRoot && entry.name === '.git') continue;
       const filename = path.join(directory, entry.name);
       const relative = path.relative(resolvedRoot, filename);
       if (++count > 20_000) throw new Error('Directory exceeds 20000 entries');
@@ -40,17 +39,24 @@ async function walkFiles(root, visitFile, visitDirectory = () => {}) {
   await visit(resolvedRoot);
 }
 
-export async function hashProject(root) {
+export async function snapshotProject(root) {
   const hash = createHash('sha256');
+  const manifest = Object.create(null);
   let bytes = 0;
   await walkFiles(root, async (filename, relative, resolvedRoot) => {
     const content = await readBoundedRegularFile(filename, 32 * 1024 * 1024, 'project file', resolvedRoot, null);
     bytes += content.length;
     if (bytes > 128 * 1024 * 1024) throw new Error('Project exceeds 128 MiB');
+    manifest[relative.split(path.sep).join('/')] = { type: 'file', sha256: createHash('sha256').update(content).digest('hex') };
     hash.update('file\0').update(relative).update('\0').update(content).update('\0');
-  }, (relative) => hash.update('directory\0').update(relative).update('\0'));
-  return `sha256:${hash.digest('hex')}`;
+  }, (relative) => {
+    manifest[relative.split(path.sep).join('/')] = { type: 'directory', sha256: null };
+    hash.update('directory\0').update(relative).update('\0');
+  });
+  return { hash: `sha256:${hash.digest('hex')}`, manifest };
 }
+
+export async function hashProject(root) { return (await snapshotProject(root)).hash; }
 
 // Only expose and pin observed defaults, never arbitrary config or caller metadata.
 async function configuredDefaults(configPath) {
@@ -92,11 +98,47 @@ async function guideFiles(root) {
   return files;
 }
 
-export async function runCodex(input, { executable = 'codex', timeoutMs = 600_000, configPath = path.join(process.env.CODEX_HOME || path.join(homedir(), '.codex'), 'config.toml') } = {}) {
+function browserInstructions(capability) {
+  return [
+    `Operator browser preflight: ${JSON.stringify(capability)}.`,
+    'When available, use only expressivecss_eval_browser.browser for this fixture. Start with inspect; use reload after source edits. It can inspect, resize, interact, evaluate in the browser, and capture evidence. It cannot access another site or change project files. Do not start another server or install a browser.',
+    'If unavailable, continue independent source work and mark browser checks unavailable. After a browser permission, connection, or launch failure, stop retrying that route unless its capability changes. Correcting a bad selector is not a capability retry.',
+    'Return verificationChecks as an array of {evidenceId, status:"observed"|"failed"} referencing the browser tool response. These entries describe recorded operations, not a blanket accessibility or performance pass.',
+    'For claimed tool errors, return verificationErrors as an array of {source:"browser"|"command"|"connector", excerpt, evidenceId?, server?, tool?}. Copy a short exact error excerpt from recorded tool output or page-console messages. Browser errors need its evidenceId; connector failures before a browser response need server and tool names instead. Use empty arrays if there are none. Do not infer an error code or claim an individual subcommand passed from a compound command status.',
+  ].join('\n');
+}
+
+// Validates references to observed operations, never the truth of free-form prose.
+export function validateVerificationClaims(response, evidence) {
+  const failures = [];
+  const browser = evidence?.browser;
+  const records = browser?.records ?? [];
+  const checks = response?.verificationChecks;
+  const errors = response?.verificationErrors;
+  if (!Array.isArray(checks) || checks.length > 100 || !Array.isArray(errors) || errors.length > 100) return ['Bounded verificationChecks and verificationErrors arrays are required'];
+  for (const check of checks) {
+    const record = records.find((row) => row.id === check?.evidenceId);
+    const status = check?.status === 'observed' ? 'success' : check?.status === 'failed' ? 'error' : null;
+    if (!record || !status || record.status !== status) failures.push('Browser observation references a missing or contradictory operator record');
+  }
+  for (const error of errors) {
+    const excerpt = error?.excerpt;
+    let outputs = [];
+    if (error?.source === 'browser') outputs = records.filter((row) => row.id === error.evidenceId)
+      .flatMap((row) => row.status === 'error' ? [row.error] : row.result?.consoleErrors ?? []);
+    if (error?.source === 'command') outputs = (evidence?.commandErrors ?? []).map((row) => row.output);
+    if (error?.source === 'connector') outputs = (evidence?.connectorErrors ?? []).filter((row) => row.server === error.server && row.tool === error.tool).map((row) => row.output);
+    if (typeof excerpt !== 'string' || excerpt.trim().length < 8 || excerpt.length > 1000 || !outputs.some((output) => typeof output === 'string' && output.includes(excerpt))) failures.push('Claimed tool error has no matching recorded failure output');
+  }
+  return failures;
+}
+
+export async function runCodex(input, { executable = 'codex', timeoutMs = 600_000, configPath = path.join(process.env.CODEX_HOME || path.join(homedir(), '.codex'), 'config.toml'), browserSession = null } = {}) {
   if (!input?.projectRoot || !input?.task?.request) throw new Error('projectRoot and task.request are required');
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1) throw new Error('timeoutMs must be a positive integer');
   const started = performance.now();
   let before = null;
+  let beforeManifest = null;
   let guides = [];
   let skillHash = null;
   const defaults = await configuredDefaults(configPath);
@@ -121,9 +163,21 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
     rootText ? `The root skill has been read and is supplied below:\n${rootText}` : '',
     'Use the project files as task facts. Do not access evaluation cases, passing responses, grading scripts, or other runs.',
     'Do the requested work and verification. Report blockers honestly. Do not install or upgrade dependencies unless the task requests it.',
+    input.responseInstructions ?? '',
+    browserSession ? browserInstructions(browserSession.capability) : '',
     `Return a JSON object with caseId, mode, summary, findings, and any task-specific decision/evidence fields. caseId is ${input.task.id}. Do not manufacture tool traces, filesystem hashes, or verification artifacts.`,
   ].join('\n\n');
   const args = ['exec', '--ephemeral', '--skip-git-repo-check', '--json', '-s', input.readOnly ? 'read-only' : 'workspace-write', '-C', input.projectRoot, '-'];
+  if (browserSession?.capability.status === 'available') {
+    const endpoint = new URL(browserSession.url);
+    if (endpoint.protocol !== 'http:' || endpoint.hostname !== '127.0.0.1' || !endpoint.port || endpoint.username || endpoint.password) throw new Error('Evaluation browser must use an operator-owned loopback URL');
+    args.splice(-1, 0, '-c', `mcp_servers.expressivecss_eval_browser.url=${JSON.stringify(endpoint.href)}`,
+      '-c', 'mcp_servers.expressivecss_eval_browser.enabled_tools=["browser"]',
+      // Only this operator-owned, fixture-restricted tool is authorized for the noninteractive run.
+      '-c', 'mcp_servers.expressivecss_eval_browser.tools.browser.approval_mode="approve"',
+      '-c', 'mcp_servers.expressivecss_eval_browser.startup_timeout_sec=15',
+      '-c', 'mcp_servers.expressivecss_eval_browser.tool_timeout_sec=20');
+  }
   if (defaults.model) args.splice(-1, 0, '-m', defaults.model);
   for (const key of ['model_reasoning_effort', 'model_provider']) {
     if (defaults[key]) args.splice(-1, 0, '-c', `${key}=${JSON.stringify(defaults[key])}`);
@@ -150,7 +204,9 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
   };
   let failure = null;
   try {
-    before = await hashProject(input.projectRoot);
+    const snapshot = await snapshotProject(input.projectRoot);
+    before = snapshot.hash;
+    beforeManifest = snapshot.manifest;
     guides = await guideFiles(input.skillRoot);
     skillHash = input.skillRoot ? await hashProject(input.skillRoot) : null;
     await new Promise((resolve, reject) => {
@@ -192,14 +248,20 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
   if (!failure && telemetry.errors.length) failure = 'Codex reported a failed turn';
   if (!failure && (!telemetry.completedTurns || !telemetry.finalMessage)) failure = 'Codex ended without a completed turn and final message';
   let after = null;
-  try { after = await hashProject(input.projectRoot); }
+  let afterManifest = null;
+  try { const snapshot = await snapshotProject(input.projectRoot); after = snapshot.hash; afterManifest = snapshot.manifest; }
   catch (error) { failure ??= redactValue(error.message); }
   let candidateResponse;
   try { candidateResponse = JSON.parse(telemetry.finalMessage.replace(/^```json\s*|\s*```$/g, '')); }
   catch { candidateResponse = { caseId: input.task.id, summary: telemetry.finalMessage }; }
   const envelope = {
     candidateResponse,
-    executionEvidence: { source: 'adapter', toolTrace: trace, filesystem: { source: 'adapter', independentlyComputed: true, algorithm: 'sha256', before, after }, artifacts: [] },
+    executionEvidence: { source: 'adapter', toolTrace: trace, filesystem: { source: 'adapter', independentlyComputed: true, algorithm: 'sha256', before, after, beforeManifest, afterManifest }, artifacts: [],
+      browser: browserSession ? { capability: browserSession.capability, records: structuredClone(browserSession.records) } : null,
+      commandErrors: events.filter((event) => event.type === 'item.completed' && event.item?.type === 'command_execution' && Number.isInteger(event.item.exit_code) && event.item.exit_code !== 0)
+        .map(({ item }) => ({ command: item.command, exitCode: item.exit_code, output: item.aggregated_output ?? '' })),
+      connectorErrors: events.filter((event) => event.type === 'item.completed' && event.item?.type === 'mcp_tool_call' && (event.item.status === 'failed' || event.item.error || event.item.result?.isError))
+        .map(({ item }) => ({ server: item.server, tool: item.tool, output: item.error?.message ?? item.result?.content?.filter((block) => block.type === 'text').map((block) => block.text).join('\n') ?? '' })) },
     runMetadata: { wallTimeMs: performance.now() - started, ...telemetry, observedGuideReads: [...guideReads], guideReadCoverage: 'complete-file tool output only; partial reads and unobservable tools are unavailable; shell edits are covered by filesystem hashes, not the edit trace', infrastructureError: failure, model: defaults.model, modelSource: defaults.model ? 'user-config default pinned in CLI' : 'unavailable', settings: { sandbox: input.readOnly ? 'read-only' : 'workspace-write', ephemeral: true, reasoningEffort: defaults.model_reasoning_effort, provider: defaults.model_provider }, skillHash },
   };
   if (input.artifactDirectory) {

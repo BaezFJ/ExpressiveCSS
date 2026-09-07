@@ -4,7 +4,127 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { prepareReviewOutputs, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
+import { benchmarkResponseInstructions, gradeAssetReferences, gradeAuditResponse, gradeProjectChanges, gradeVersionResponse, onlyViewportRepair, prepareReviewOutputs, runBenchmark, statistics } from '../scripts/benchmark-expressivecss-skill.mjs';
+
+const auditHtml = '<!doctype html><html><body><main>\n<button id="unnamed-action" type="button"><span aria-hidden="true">delete</span></button>\n<nav aria-label="Save commands"><button type="button">Save account</button></nav>\n</main></body></html>';
+const auditResponse = () => ({ audit: { conclusion: 'defects-found', findings: [
+  { category: 'accessible-name', source: { path: 'src/index.html', line: 2, selector: '#unnamed-action' }, defect: true, observed: { accessibleName: '' }, fixHtml: '<button type="button" aria-label="Delete account"><span aria-hidden="true">delete</span></button>' },
+  { category: 'navigation-semantics', source: { path: 'src/index.html', line: 3, selector: 'nav[aria-label="Save commands"]' }, defect: true, observed: { tagName: 'nav', containsCommand: true }, fixHtml: '<div><button type="button">Save account</button></div>' },
+] } });
+
+test('audit grading requires true source observations, conclusions and effective proposed fixes', () => {
+  assert.ok(gradeAuditResponse(auditResponse(), auditHtml).every(({ passed }) => passed));
+  const alternative = auditResponse();
+  alternative.audit.findings[0].fixHtml = '<button type="button">Delete account</button>';
+  alternative.audit.findings[1].fixHtml = '<section aria-label="Account actions"><button type="button">Save account</button></section>';
+  alternative.audit.findings.push({ category: 'other', note: 'Additional context is allowed.' });
+  assert.ok(gradeAuditResponse(alternative, auditHtml).every(({ passed }) => passed));
+  for (const mutate of [
+    (response) => { response.audit.conclusion = 'no-defects'; },
+    (response) => { response.audit.findings[0].defect = false; },
+    (response) => { response.audit.findings[0].observed.accessibleName = 'delete'; },
+    (response) => { response.audit.findings[0].source.line = 3; },
+    (response) => { response.audit.findings[0].source.path = '../outside.html'; },
+    (response) => { response.audit.findings[0].source.selector = 'button'; },
+    (response) => { response.audit.findings[0].fixHtml = '<button type="button"><span aria-hidden="true">accessible name aria-label</span></button>'; },
+    (response) => { response.audit.findings[1].observed.containsCommand = false; },
+    (response) => { response.audit.findings[1].fixHtml = '<nav><button type="button">Save account</button></nav>'; },
+    (response) => { response.audit.findings[1].fixHtml = '<div>Remove nav landmark and Save account command</div>'; },
+  ]) {
+    const response = auditResponse();
+    response.summary = 'unnamed-action accessible name aria-label src/index.html replace nav landmark div Save account command';
+    mutate(response);
+    assert.ok(gradeAuditResponse(response, auditHtml).some(({ passed }) => !passed));
+  }
+  assert.ok(gradeAuditResponse({ summary: 'unnamed-action accessible name aria-label src/index.html replace nav landmark div Save account command' }, auditHtml).every(({ passed }) => !passed));
+});
+
+test('version grading uses direct metadata and rejects reassuring conclusions containing all old keywords', () => {
+  const installedPath = 'node_modules/@expressivecss/expressive/package.json';
+  const contractPath = '.agents/skills/expressivecss/references/contract.json';
+  const sources = { [installedPath]: '{"version":"0.7.0"}', [contractPath]: '{\n"frameworkVersion":"0.8.0"\n}' };
+  const assessment = { installedVersion: '0.7.0', bundledVersion: '0.8.0', relationship: 'mismatch', bundledContractSafe: false, currentDocsSafe: false, matchingEvidence: 'unavailable', unsupportedClaims: 'blocked', sources: [{ path: installedPath, line: 1 }, { path: contractPath, line: 2 }] };
+  assert.ok(gradeVersionResponse({ versionAssessment: assessment }, sources).every(({ passed }) => passed));
+  for (const replacement of [
+    { installedVersion: '0.8.0' }, { bundledVersion: '0.7.0' }, { relationship: 'match' },
+    { bundledContractSafe: true }, { currentDocsSafe: true }, { matchingEvidence: 'available' },
+    { unsupportedClaims: 'allowed' }, { sources: [{ path: installedPath, line: 1 }, { path: contractPath, line: 1 }] },
+  ]) {
+    const response = { summary: '0.7.0 older bundled mismatch unavailable missing blocked cannot', versionAssessment: { ...assessment, ...replacement } };
+    assert.ok(gradeVersionResponse(response, sources).some(({ passed }) => !passed));
+  }
+});
+
+test('audit rejects conflicting duplicate assessments while accepting findings for other sources', () => {
+  for (const replacement of [{ defect: false }, { observed: { accessibleName: 'delete' } }, { fixHtml: '<button type="button"></button>' }]) {
+    const response = auditResponse();
+    response.audit.findings.push({ ...response.audit.findings[0], ...replacement, source: { path: 'src/index.html', line: 2, selector: 'main > button' } });
+    assert.equal(gradeAuditResponse(response, auditHtml).find(({ text }) => text.includes('accessible-name')).passed, false);
+  }
+  const response = auditResponse();
+  response.audit.findings.push({ category: 'accessible-name', source: { path: 'src/index.html', line: 3, selector: 'nav button' }, defect: false, observed: { accessibleName: 'Save account' } });
+  assert.ok(gradeAuditResponse(response, auditHtml).every(({ passed }) => passed));
+});
+
+test('audit fixes retain enabled native command semantics', () => {
+  for (const attributes of ['aria-disabled="true"', 'inert', 'role="img"']) {
+    for (const index of [0, 1]) {
+      const response = auditResponse();
+      response.audit.findings[index].fixHtml = response.audit.findings[index].fixHtml.replace('<button ', `<button ${attributes} `);
+      assert.ok(gradeAuditResponse(response, auditHtml).some(({ passed }) => !passed));
+    }
+  }
+});
+
+test('per-path grading catches dependency, lockfile, arbitrary file and invented asset changes', () => {
+  const file = (sha256) => ({ type: 'file', sha256 });
+  const provenance = { source: 'adapter', algorithm: 'sha256', independentlyComputed: true, before: `sha256:${'a'.repeat(64)}`, after: `sha256:${'b'.repeat(64)}` };
+  const beforeManifest = { 'src/index.html': file('html'), 'src/app.js': file('js'), 'src/app.css': file('css'), 'package.json': file('package'), 'package-lock.json': file('lock'), 'node_modules/@expressivecss/expressive/package.json': file('installed'), 'server.mjs': file('server') };
+  for (const changed of ['package.json', 'package-lock.json', 'node_modules/@expressivecss/expressive/package.json', 'server.mjs', 'invented-font.woff2', 'src/unrequested.txt', '.cache']) {
+    const afterManifest = { ...beforeManifest, [changed]: changed === '.cache' ? { type: 'directory', sha256: null } : file('changed') };
+    assert.equal(gradeProjectChanges('version-mismatch', { ...provenance, beforeManifest, afterManifest })[0].passed, false, changed);
+  }
+  const afterManifest = { ...beforeManifest, 'src/index.html': file('new-html') };
+  assert.equal(gradeProjectChanges('form-action', { ...provenance, beforeManifest, afterManifest })[0].passed, true);
+  assert.equal(gradeProjectChanges('no-edit-audit', { ...provenance, beforeManifest, afterManifest })[0].passed, false);
+  const deletion = { ...beforeManifest }; delete deletion['package-lock.json'];
+  assert.equal(gradeProjectChanges('version-mismatch', { ...provenance, beforeManifest, afterManifest: deletion })[0].passed, false);
+  assert.equal(gradeProjectChanges('form-action', {})[0].passed, false);
+  const unchanged = { ...provenance, after: provenance.before, beforeManifest, afterManifest: beforeManifest };
+  assert.equal(gradeProjectChanges('no-edit-audit', unchanged)[0].passed, true);
+  for (const forged of [{ source: 'candidate' }, { algorithm: 'md5' }, { independentlyComputed: false }, { before: null }, { after: null }, { before: 'arbitrary' }, { after: provenance.after }]) {
+    assert.equal(gradeProjectChanges('no-edit-audit', { ...unchanged, ...forged })[0].passed, false);
+  }
+});
+
+test('safe setup repair permits viewport metadata while preserving body, assets and scripts', () => {
+  const before = '<!doctype html><html lang="en"><body><main id="app"></main></body></html>\n';
+  const after = before.replace('<body>', '<head>\n<meta name="viewport" content="width=device-width, initial-scale=1">\n</head><body>');
+  assert.equal(onlyViewportRepair(before, before), true);
+  assert.equal(onlyViewportRepair(before, after), true);
+  for (const unsafe of [
+    after.replace('</head>', '<script src="invented.js"></script></head>'),
+    after.replace('<main id="app">', '<main id="app"><img src="fake.svg">'),
+    after.replace('initial-scale=1', 'initial-scale=1,user-scalable=no'),
+    after.replace('<body>', '<body onload="alert(1)">'),
+    after.replace('</head>', '<link rel="stylesheet" href="missing.css"></head>'),
+  ]) assert.equal(onlyViewportRepair(before, unsafe), false);
+  assert.ok(!benchmarkResponseInstructions('no-edit-audit').includes('unnamed-action'));
+  assert.ok(!benchmarkResponseInstructions('version-mismatch').includes('0.7.0'));
+});
+
+test('grading detects invented HTML and CSS asset URLs even without creating asset files', () => {
+  const before = { 'src/index.html': '<img src="/hero.svg"><script src="/src/app.js"></script>', 'src/app.css': ':root { --md-source: #006a79; }' };
+  assert.equal(gradeAssetReferences(before, before).passed, true);
+  assert.equal(gradeAssetReferences(before, { ...before, 'src/index.html': `${before['src/index.html']}<link rel="preload" as="image" href="/hero.svg">` }).passed, true);
+  for (const change of [
+    { 'src/index.html': `${before['src/index.html']}<img src="/invented.svg">` },
+    { 'src/index.html': `${before['src/index.html']}<script src="https://example.com/unrequested.js"></script>` },
+    { 'src/app.css': '@font-face { src: url("/invented.woff2"); }' },
+    { 'src/app.css': '@import "missing.css";' },
+    { 'src/index.html': `${before['src/index.html']}<div style="background: url(missing.png)"></div>` },
+  ]) assert.equal(gradeAssetReferences(before, { ...before, ...change }).passed, false);
+});
 
 test('review outputs expose metadata, captures, and source content without moving originals', async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'expressivecss-review-'));
@@ -21,6 +141,7 @@ test('review outputs expose metadata, captures, and source content without movin
       const outputs = path.join(run, 'outputs');
       for (const [source, destination, content] of [
         ['after/375.png', 'after-375.png', png],
+        ['candidate-browser/browser-2.png', 'candidate-browser-browser-2.png', png],
         ['src/index.html', 'source-index.html.txt', Buffer.from(`<button>${configuration}</button>\n`)],
         ['src/app.css', 'source-app.css.txt', Buffer.from(':root { --md-source: #6750a4; }\n')],
         ['src/app.js', 'source-app.js.txt', Buffer.from('Expressive.AutoInit();\n')],
@@ -70,6 +191,8 @@ test('benchmark definitions retain six distinct tasks and balanced discovery cov
   assert.equal(new Set(definitions.triggers.map(({ query }) => query)).size, 20);
   assert.equal(definitions.triggers.filter(({ should_trigger }) => should_trigger === true).length, 10);
   assert.equal(definitions.triggers.filter(({ should_trigger }) => should_trigger === false).length, 10);
+  const skill = path.resolve('skills/expressivecss');
+  await assert.rejects(runBenchmark({ baseline: skill, output: path.join(tmpdir(), 'expressivecss-invalid-case'), caseName: 'no-edit-audit,unknown' }), /Unknown case/);
 });
 
 test('failed live cases retain bounded redacted source without symlinks and still remove temporary projects', async () => {
@@ -111,6 +234,7 @@ test('failed live cases retain bounded redacted source without symlinks and stil
     const results = JSON.parse(await readFile(path.join(output, 'results.json'), 'utf8'));
     assert.equal(results.length, 2);
     for (const result of results) {
+      assert.equal(result.eval_id, 6, 'selected case retains its catalogue identity');
       assert.equal(result.result.errors, 1);
       assert.match(result.expectations[0].evidence, /symbolic link/u);
       assert.equal(result.retentionErrors[0].source, 'src/app.js');
@@ -121,6 +245,9 @@ test('failed live cases retain bounded redacted source without symlinks and stil
       assert.ok(!html.includes(secret));
       assert.match(await readFile(path.join(artifacts, 'infrastructure-error.json'), 'utf8'), /completion source.*symbolic link/u);
       assert.match(await readFile(path.join(artifacts, 'source-retention-errors.json'), 'utf8'), /review source.*symbolic link/u);
+      const browser = JSON.parse(await readFile(path.join(artifacts, 'candidate-browser.json'), 'utf8'));
+      assert.equal(browser.initialCapability.status, 'unavailable');
+      assert.deepEqual(browser.records, []);
       await assert.rejects(readFile(path.join(artifacts, 'src/app.js')), { code: 'ENOENT' });
       await assert.rejects(readFile(path.join(artifacts, 'src/unrequested.txt')), { code: 'ENOENT' });
     }

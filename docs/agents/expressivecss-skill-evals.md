@@ -135,3 +135,73 @@ Reports retain the prompt, selected guides, candidate response, trusted executio
 Adapter exit failures, invalid output, and timeouts become per-case infrastructure failures with elapsed time. The runner retains earlier results and continues with the remaining cases. With `--output-directory`, it keeps redacted snapshots of the inspected source files in each case directory; adapters save their captures and other artifacts there before returning. The report links these directories through relative `artifactsPath` values. Temporary project directories are removed in `finally` blocks, including on failure. Source snapshots and controlled adapter tests do not establish live model or browser success.
 
 Live model evaluations are release evidence, not a normal merge gate, until repeated runs establish acceptable variance. A failed critical invariant blocks a skill release until reviewed. Do not approve a case because the prose sounds plausible.
+
+## Focused browser and evidence checks
+
+The Codex comparison runner uses an operator-owned browser for runnable fixtures.
+Its loopback MCP connection serves only the temporary consumer's public assets.
+Preflight loads the page before starting the candidate. Both candidate access and
+independent post-run verification block external requests, WebSockets, workers,
+popups, downloads, private metadata, path traversal, and symbolic links.
+
+The connection uses the installed Playwright and MCP SDK dependencies; no new
+package is required. The SDK is optional for ordinary skill use. Browser bridge
+checks explicitly skip when the optional SDK or Chromium is absent; a live
+browser-required benchmark fails its capability check instead of claiming success.
+Run `npm ci --prefix mcp/expressivecss` and install Chromium for that comparison.
+
+Only `expressivecss_eval_browser.browser` receives per-run approval. The adapter
+keeps the candidate shell sandbox and other tools' policies intact, and does not
+change saved user configuration. This uses Codex's documented
+[per-tool MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
+The first integration trial demonstrated why the distinction matters: a working
+browser alone did not make a tool callable under a non-interactive approval policy.
+
+Candidates begin with `inspect`, reload after source edits, and reuse the route.
+Permission, connection, or launch failures stop retries until capability changes;
+an invalid selector may be corrected. Source work can continue with browser checks
+unavailable. Probe results and final capability are recorded separately.
+
+The browser returns an operator proof ID, DOM/accessibility observations, and a
+screenshot hash. Candidate `verificationChecks` reference that ID with `observed`
+or `failed`; they do not certify broad accessibility or performance claims.
+`verificationErrors` must quote recorded failure output. Browser-operation errors
+use a proof ID; page-console errors may be recorded during a successful inspection.
+Connector failures before a browser response use the connector and
+tool names, and command errors must match nonzero command output. Missing events
+and guessed error codes fail validation. A compound command does not establish
+individual subcommand results. Free-form interpretation still needs review.
+
+Audit results supply structured conclusions, source selectors and element-start
+lines, actual name/landmark observations, and proposed replacement markup. The
+grader checks these against the fixture and rejects contradictory assessments,
+ineffective fixes, hidden or disabled commands, and incompatible command roles.
+Version results cite installed-package and bundled-contract metadata and separate
+version agreement, bundled availability, public-site assurance, and unavailable
+matching implementation evidence. Correct keywords alone cannot satisfy either
+case.
+
+Operator manifests cover every project path, including `.git`, lockfiles, installed
+packages, binary assets, new directories, and files outside the main application
+sources. Task-specific write boundaries are stated in the candidate request. The
+older-version case permits only a standard viewport metadata repair; dependencies,
+application behavior, styles, and asset references must remain unchanged.
+Declarative HTML/CSS asset checks also reject invented URLs without requiring a
+new file. Constructed JavaScript URLs remain a browser/operator review concern.
+
+These are fixture-scoped checks, not a general HTML accessibility engine or a
+semantic judge of arbitrary prose. Valid additional findings are allowed, but
+conflicting claims about the same target fail. Browser observations and bounded,
+redacted source snapshots are preserved even when grading fails, before temporary
+projects are removed.
+
+Run a focused comparison against an immutable original skill:
+
+```sh
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --candidate=/absolute/path/to/revised-skill --output=/tmp/expressivecss-evidence --case=tooltip-remount,no-edit-audit,version-mismatch --repetitions=1
+```
+
+Use a new output directory for each protocol change. These focused runs check
+correctness and browser access; one repetition does not establish a speed change.
+The existing Skill Creator viewer and its HTML-escaping recipe are documented in
+[the improvement plan](./expressivecss-skill-improvement-plan.md).

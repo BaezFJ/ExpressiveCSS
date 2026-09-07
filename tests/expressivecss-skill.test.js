@@ -748,17 +748,18 @@ describe('the ExpressiveCSS agent skill', () => {
       ['New surface, Refine, or Redesign', 'Design, Usage, Theming, Accessibility, selected component guides', 'Install'],
     ];
 
-    assert.match(routing, /Start with this root guide only\./i);
-    assert.match(routing, /Classify.*Shortlist.*Inspect.*Read/is);
-    assert.match(routing, /A guide is loaded only after its `SKILL\.md` contents are actually read/i);
+    assert.match(routing, /Classify the task.*before reading support guides/i);
+    assert.match(routing, /Classify.*runtime ownership.*before reading/is);
+    assert.match(routing, /actual reads.*link does not count as loaded guidance/is);
     assert.match(routing, /\| Task classification \| Must read \| Must not read by default \|/);
     for (const [task, load, avoid] of expectedRows) {
       assert.ok(routing.includes(`| ${task} | ${load} | ${avoid} |`), `wrong route for ${task}`);
     }
-    assert.match(routing, /Before reading Runtime.*inspect candidate runtime ownership in the decision index/is);
-    assert.match(routing, /Usage and Accessibility for every interface implementation or review/i);
-    assert.match(routing, /Theming for visual or token work/i);
-    assert.match(routing, /Runtime only.*JavaScript.*Auto Init.*shared-runtime.*manual/is);
+    assert.match(routing, /Inspect runtime ownership in the decision index/is);
+    assert.match(routing, /Interface implementation and review require Usage and Accessibility/i);
+    assert.match(routing, /Theming for visual\/token work/i);
+    assert.match(routing, /JavaScript.*Auto Init.*shared-runtime.*manual ownership require Runtime/is);
+    assert.match(routing, /CSS-only and native ownership do not/i);
     assert.match(routing, /Setup only.*Install/is);
     assert.doesNotMatch(design, /\| Guide \| Load condition \|/, 'design guide duplicates the routing truth table');
     assert.match(design, /follow the root staged routing truth table/i);
@@ -808,7 +809,8 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const taskClass of [/install/i, /markup/i, /theme/i, /runtime/i, /accessibility/i, /refine.*review/i, /contributions/i]) {
       assert.match(description, taskClass);
     }
-    assert.match(body, /metadata `version` is the skill workflow version, not the ExpressiveCSS framework or generated contract version\./i);
+    assert.match(body, /metadata `version`.*workflow/i);
+    assert.match(body, /contract manifest.*framework/i);
   });
 
   test('routes narrow root tasks without implying every guide is mandatory', () => {
@@ -817,13 +819,13 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(routingStart >= 0, 'root staged guide routing is missing');
     const routing = body.slice(routingStart, routingEnd);
 
-    assert.match(routing, /Start with this root guide only\./i);
+    assert.match(routing, /Classify the task.*before reading support guides/i);
     assert.doesNotMatch(body, /## References that you must read/);
     assert.match(routing, /\| Setup only \| Install \|/);
     assert.match(routing, /\| CSS-only static markup \| Usage, Accessibility, selected component guides \|/);
     assert.match(routing, /\| Token-only theming \| Theming \|/);
     assert.match(routing, /\| Visual Critique \| Design, Usage, Theming, Accessibility \|/);
-    assert.match(routing, /Read only applicable guides/i);
+    assert.match(routing, /Combine overlapping routes/i);
   });
 
   test('uses the generated decision index before opening candidate component guides', () => {
@@ -831,7 +833,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(existsSync(decisionIndex), 'generated component decision index is missing');
     assert.ok(body.includes('[component decision index](./references/component-decisions.md)'));
     const protocol = body.slice(body.indexOf('## Component discovery protocol'), body.indexOf('## Authority by question'));
-    assert.match(protocol, /read the component decision index entry/i);
+    assert.match(protocol, /read the index entry/i);
     assert.match(protocol, /use when.*avoid when.*alternatives.*runtime/is);
     assert.match(protocol, /selected guide.*adaptive decisions/is);
     assert.match(protocol, /uncertain.*read all plausible candidate guides/i);
@@ -850,7 +852,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(authority, /bundled match does not verify the public website/i);
     assert.match(authority, /`mismatch`.*matching tag or commit/is);
     assert.match(authority, /`unresolved`.*state that target-version guidance is unavailable/is);
-    assert.match(authority, /do not infer an exact installed version from a manifest range/i);
+    assert.match(authority, /range is not an installed version/i);
   });
 
   test('keeps the complete basic-button reading path below its baseline budget', () => {
@@ -880,11 +882,21 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const tool of ['setup_expert', 'rules_enforcer', 'component_syntax_expert', 'quality_inspector']) {
       assert.ok(section.includes(`\`${tool}\``), `${tool} is not routed`);
     }
-    assert.match(section, /Markdown workflow remains complete when the MCP server is unavailable/i);
-    assert.match(section, /pass applies only to `checksPerformed`/i);
-    assert.match(section, /does not replace.*visual.*responsive.*keyboard.*assistive/is);
-    assert.match(section, /contract.*mismatch.*Blocked/is);
+    assert.match(section, /MCP is optional.*Markdown workflow/is);
+    assert.match(section, /pass covers only `checksPerformed`/i);
+    assert.match(section, /does not establish browser, visual, or accessibility conformance/i);
+    assert.match(section, /contract.*mismatch.*blocks/is);
     assert.match(design, /MCP[\s\S]*`checksPerformed`[\s\S]*`uncheckedAreas`[\s\S]*`Blocked`/i);
     assert.match(design, /MCP[\s\S]*does not replace[\s\S]*browser[\s\S]*accessibility/i);
+  });
+
+  test('requires a capability probe, bounded retries, and observed browser evidence', () => {
+    const protocol = body.slice(body.indexOf('## Browser evidence'), body.indexOf('## Optional MCP'));
+    assert.match(protocol, /probe.*route.*loading the target/i);
+    assert.match(protocol, /stop retrying.*until capability changes/i);
+    assert.match(protocol, /continue independent source work/i);
+    assert.match(protocol, /tool output or captures/i);
+    assert.match(protocol, /errors without guessing codes or causes/i);
+    assert.match(protocol, /compound command.*does not prove each subcommand passed/i);
   });
 });

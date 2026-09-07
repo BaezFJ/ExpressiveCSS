@@ -13,12 +13,19 @@ the six support guides and existing evaluator, with these changes:
 - Runnable consumer fixtures, source-based completion checks, structured evidence
   matching, retained infrastructure failures, and an operator-owned Codex adapter.
 
-The complete basic-button read path is 30,368 bytes, compared with 40,670 bytes
-before the change: 25.3% less. This counts entire files, including the whole index;
+The complete basic-button read path is now 30,501 bytes, compared with 40,670 bytes
+before the change: 25.0% less. This counts entire files, including the whole index;
 it is a deterministic context-size comparison, not a token or latency benchmark.
 
 The completed measurements and evidence limits are recorded in the
 [comparison report](./expressivecss-skill-comparison.md).
+
+The next reliability increment adds browser access during candidate execution,
+recorded capability failures, proof-backed error reporting, structured audit and
+version assertions, and full-project edit boundaries. Six focused live executions
+exercise lifecycle repair, no-edit audit, and unavailable version documentation.
+Their results and a correction to the console-error validator are recorded in the
+comparison report; they are separate from the original 36-run performance study.
 
 The focused live comparison uses the six cases and twenty discovery probes in
 `tests/fixtures/expressivecss-skill-evals/benchmark.json`. Keep an immutable copy of
