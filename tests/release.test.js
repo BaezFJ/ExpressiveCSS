@@ -12,6 +12,7 @@ test('release policy rejects mismatches and prevents stable rollback', () => {
   for (const tag of ['v0.8.0', 'v00.9.0', '../master', 'v0.9.0\n', 'mcp-v0.9.0']) {
     assert.throws(() => releaseMetadata(tag, manifests, false));
   }
+  assert.throws(() => releaseMetadata('v0.9.0\n', { ...manifests, framework: { ...manifests.framework, version: '0.9.0\n' } }, false));
   assert.throws(() => releaseMetadata('v0.9.0', manifests, true));
   assert.throws(() => releaseMetadata('mcp-v0.2.0-rc.1', manifests, false));
   assertForwardRelease('0.10.0', '0.9.9');

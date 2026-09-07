@@ -9,6 +9,8 @@ import { parseSemver, compareSemver } from './lib/resolve-expressivecss-version.
 const versionPattern = '(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?';
 const tagPattern = new RegExp(`^(mcp-)?v${versionPattern}$`);
 export function releaseMetadata(tag, manifests, prerelease) {
+  assert.equal(typeof tag, 'string', 'Release tag is required');
+  assert.ok(!/[\r\n]/.test(tag), 'Release tag must be a single line');
   const match = tagPattern.exec(tag);
   assert.ok(match, 'Expected vX.Y.Z or mcp-vX.Y.Z, optionally with a prerelease suffix');
   const kind = match[1] ? 'mcp' : 'framework';

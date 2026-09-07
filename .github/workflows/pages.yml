@@ -1,84 +1,50 @@
-name: Deploy docs site
+name: Deploy stable documentation
 
+# Only the successful stable framework release calls this workflow.
 on:
-  # Everything that changes what the site publishes -- `package.json` and its
-  # lockfile because BaseLayout renders the version out of the first into every
-  # footer and the second decides which astro builds the site.
-  #
-  # That version path is also what replaces the `workflow_run: [Release]`
-  # trigger this used to carry: the release commit bumps `package.json` on
-  # master and deploys from here like any other change. It is not equivalent,
-  # and the difference is deliberate. The old trigger fired only on a
-  # *successful* publish, so the site could never advertise a version that
-  # never reached npm; the push fires when the commit lands, which is before
-  # the `npm-publish` reviewer has approved anything. A failed or unapproved
-  # release now leaves the footer a version ahead of the registry until the
-  # next deploy. Traded for a workflow that holds no write access to master.
-  push:
-    branches: [master]
-    paths:
-      - 'docs/**'
-      - 'src/**'
-      # Published verbatim at /llm.md and /m3-guidelines.md, and concatenated
-      # into /llms-full.txt. Neither sits under docs/, so without these a
-      # commit touching only a primary document would leave the published
-      # copies stale.
-      - 'llm.md'
-      - 'm3-guidelines.md'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/pages.yml'
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
 
-# Read-only contents: the deploy uploads an artifact and commits nothing
-# (ADR 0003), so it can never race a normal development commit on master.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Never cancel a deploy in flight: a half-published site is worse than a
-# slightly stale one. Queued runs wait instead.
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
   build:
+    if: github.event_name == 'release' && !github.event.release.prerelease && startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
-      # The branch tip, not the triggering commit. Order within a concurrency
-      # group is not guaranteed: two pushes landing close together can be
-      # picked up out of order, and the loser would then publish an older tree
-      # over a newer one with nothing to correct it until the next deploy.
-      # Building whatever master points at makes a late run harmless -- it
-      # republishes the current site rather than a past one. It also means a
-      # manual dispatch always publishes master, which is what a retry wants.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: master
+          ref: ${{ github.sha }}
+          fetch-depth: 0
           persist-credentials: false
-
-      # 24 rather than the package's own floor of 20: astro 7 declares
-      # ">=22.12.0", so no `docs:*` script runs on 20.
+      - name: Verify the exact stable release commit
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          test "$RELEASE_TAG" = "v$RELEASE_VERSION"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")"
+          git merge-base --is-ancestor HEAD origin/master
+          node -e 'const p=JSON.parse(require("fs").readFileSync("package.json","utf8")); if (p.version !== process.env.RELEASE_VERSION || !/^\d+\.\d+\.\d+$/.test(p.version)) process.exit(1)'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
-
       - run: npm ci
-
-      # The whole build: the framework first (docs/public/dist is a symlink
-      # into dist/, and Vite's public-dir copy stats every entry), then Astro
-      # into _site/, then scripts/verify-site.mjs over what it wrote. That is
-      # the same command a contributor runs and the same directory it
-      # produces, published here unmodified -- no rewriting, no second copy of
-      # the assets, nothing assembled that `npm run docs:build` did not.
       - run: npm run docs:build
-
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: _site
@@ -86,17 +52,35 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     environment:
       name: github-pages
-      # The custom domain, https://www.expressivecss.com. Read from the
-      # deployment rather than written out here, so it cannot claim an address
-      # the site does not have. The domain itself is repository configuration
-      # (Settings -> Pages), *not* docs/public/CNAME: an artifact deploy --
-      # `build_type: workflow` -- ignores that file, which is published as a
-      # versioned declaration of where the site lives and nothing more.
       url: ${{ steps.deployment.outputs.page_url }}
-
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+      - name: Recheck npm latest immediately before deployment
+        id: current
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          node --input-type=module <<'JS'
+          import { execFileSync } from 'node:child_process';
+          import { appendFileSync } from 'node:fs';
+          import { isCurrentStable } from './scripts/release.mjs';
+          const latest = JSON.parse(execFileSync('npm', ['view', '@expressivecss/expressive@latest', 'version', '--json'], { encoding: 'utf8', timeout: 60000 }));
+          const current = isCurrentStable(process.env.RELEASE_VERSION, latest);
+          appendFileSync(process.env.GITHUB_OUTPUT, `current=${current}\n`);
+          if (!current) appendFileSync(process.env.GITHUB_STEP_SUMMARY, 'Skipped documentation deployment: this release is no longer npm latest.\n');
+          JS
       - id: deployment
+        if: steps.current.outputs.current == 'true'
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5

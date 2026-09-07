@@ -73,7 +73,9 @@ jobs:
         run: |
           packages=("$RUNNER_TEMP"/*.tgz)
           test "${#packages[@]}" -eq 1
-          npm publish "${packages[0]}" --access public --tag "$DIST_TAG" --ignore-scripts --dry-run
+          # Rehearse an already-published version without a registry write.
+          # --force is restricted to this credential-free --dry-run step.
+          npm publish "${packages[0]}" --access public --tag "$DIST_TAG" --ignore-scripts --dry-run --force
           echo 'Validation and dry run succeeded; nothing was published.' >> "$GITHUB_STEP_SUMMARY"
 
   publish:
@@ -113,3 +115,15 @@ jobs:
           DIST_TAG: ${{ needs.validate.outputs.distTag }}
         run: |
           echo "Published $PACKAGE_NAME@$PACKAGE_VERSION to $DIST_TAG." >> "$GITHUB_STEP_SUMMARY"
+
+  docs:
+    needs: [validate, publish]
+    if: github.event_name == 'release' && needs.validate.outputs.kind == 'framework' && needs.validate.outputs.distTag == 'latest'
+    uses: ./.github/workflows/pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    with:
+      tag: ${{ github.event.release.tag_name }}
+      version: ${{ needs.validate.outputs.version }}

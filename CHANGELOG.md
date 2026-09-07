@@ -7,6 +7,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Community contribution and security policies, required CI, independently versioned MCP releases, and stable-release documentation deployment. Tracks [#134](https://github.com/BaezFJ/ExpressiveCSS/issues/134).
 - **Self-hosted fonts.** The compiled stylesheet ships `@font-face` rules and `dist/fonts/` holds the woff2 files the tokens name: variable Material Symbols (outlined, rounded, sharp), Latin Roboto 400/500, and Latin Noto Sans 400/500. Keep `dist/fonts/` next to `dist/css/`. Sass consumers can set `$expressive-font-path` or `$expressive-include-fonts: false`.
 - **M3 Expressive Button Groups.** Standard groups now redistribute a pressed item's 15% width growth from adjacent items; connected groups support native-button single and multiple selection through `data-selection` and `aria-pressed`. All five sizes support common and icon buttons, explicit child-size overrides, fast-spatial shape motion, 48dp minimum targets, selected color/shape/icon cues, and optional required selection.
 - **M3 Expressive app bar.** `.medium` and `.large` are the flexible bars: 112dp / `headline-medium` and 120dp / `display-small`. A subtitle is `<hgroup>` plus a `<p>` (136dp / 152dp). Titles wrap to two lines. `center` works on all three sizes. The search app bar is a `<search class="search-bar">` in the header. `AppBar` collapses the flexible bars on scroll and opens the related search view when the search field is selected.
