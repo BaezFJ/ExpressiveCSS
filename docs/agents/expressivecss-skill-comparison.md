@@ -696,3 +696,104 @@ the matcher or weakening its regression assertion.
 
 [Open the Skill Creator review viewer](../../.cache/expressivecss-component-selection/comparison/review.html)
 and [machine-readable results](../../.cache/expressivecss-component-selection/comparison/benchmark.json).
+
+## Complete examples follow-up
+
+### Scope and reuse
+
+Three runnable Common Ground examples cover workspace settings, a newsletter
+editor, and a reading-list/detail flow. Each presents restrained and expressive
+treatments with the same content and behavior. Inline annotations connect action
+size, containment, typography, semantic color pairs, and shape to the visit's
+purpose. State lasts only until reload; the examples make no backend claims.
+
+The portable skill owns the HTML and shared CSS/JavaScript. The contributor
+preview and existing evaluator materialize those exact assets, rather than
+maintaining separate example fixtures. Their contents participate in fixture
+provenance. Only the editor loads framework JavaScript, with scoped ButtonGroup
+initialization and teardown. No dependency, public API, framework stylesheet, or
+package export changed. The Design guide links to the examples optionally;
+required local reading for a basic button remains **30,159 bytes**.
+
+### Focused comparison
+
+One run per version used each of three adaptation requests: add an Event
+cancellations checkbox, emphasize the expressive newsletter preview subject,
+and add a secondary Mark all unread action. Both versions received the same
+final fixture, request, browser access, model (`gpt-6-astra`), and high reasoning
+setting. The old/new pair ran concurrently for each case, with dispatch order
+alternated. These are execution checks with the root skill supplied, not natural
+discovery tests or a test of designing an interface from scratch.
+
+Baseline commit: `cbeb697`; skill hash:
+`sha256:c5db3e229bb841dc2859436850e9306c2e1aca69f5241507f3309d03e938fcd9`.
+Revised snapshot:
+`sha256:7ea1a58e6f376b0d084ee66a6492d427da3c5df666dabb247f01b779d3279c02`.
+The final archive records fixture/grader hashes, settings, source comparisons,
+filesystem manifests, browser observations, matched captures, and raw telemetry.
+
+| Task | Old task checks | Revised task checks | Old seconds | Revised seconds | Old tokens | Revised tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Settings checkbox | 3/3 | 3/3 | 65.8 | 77.8 | 336,270 | 359,516 |
+| Preview emphasis | 3/3 | 3/3 | 90.6 | 103.8 | 464,014 | 619,395 |
+| Reading reset | 3/3 | 3/3 | 110.4 | 111.4 | 439,662 | 583,088 |
+
+The operator independently checked actual source changes, unchanged package
+manifests, the requested behavior in both treatments, and browser errors/overflow.
+Settings runs added only the checkbox. Editor runs changed only scoped preview
+CSS. Reading runs added the secondary action and reset handler plus a browser
+regression script; the retained script text matches its final filesystem hash.
+No unrelated project, dependency, or installed-skill edits appeared in the
+filesystem comparisons.
+
+Tokens include input plus output, including cached input; raw telemetry retains
+all three fields separately. Old/revised tool counts were 19/37, 24/51, and 41/45.
+The revised editor run made more browser checks and read more component guides.
+No complete example-guide read was observed; partial reads are not measurable.
+Both agents already had the annotated examples as task files. These results
+establish that the examples support the tested adaptations; they do not establish
+better teaching, accuracy, or speed. With one observation per case and shared
+host contention, per-case variability is unavailable. Revised runs used more
+time and tokens in this sample.
+
+### Reporting evidence and limits
+
+All structured browser references match trusted operator records. The separate
+claim review is **not fully passing**: both editor responses and the revised
+reading response claim an agent-creation error absent from the retained tool
+records. Those claims remain unverified, rather than being accepted as evidence
+or called fabricated without proof. Two reported Git errors do appear in
+compound-command output, although the adapter's failed-command index omits them
+because the last subcommand succeeded. This is a telemetry limitation to address
+separately. Task-check scores above do not grade reporting honesty; see
+`claim-review.json` alongside the benchmark.
+
+An earlier draft comparison stopped when final wrapping polish changed the
+fixture hash. Its four completed outputs remain under `comparison/` and are
+excluded. All six results above came from a new frozen `comparison-final/`
+archive; no draft result was resumed into it. The first final pair briefly
+shared the host with the last draft pair, another limit on timing inference.
+
+### Verification and review
+
+Browser review corrected textarea styling, unintended article-card styling,
+mobile action placement, and enlarged-text wrapping. The new regression tests
+cover both treatments, light/dark schemes, 320/839/840/1280px widths, native
+keyboard interaction, focus, session state, safe preview text, scoped lifecycle,
+local asset loading, and 200% text at 320px. Eighteen matched captures support
+visual review. These checks do not certify assistive-technology speech, translated
+or RTL content, field Core Web Vitals, or overall Google specification parity.
+
+- `npm run verify`: 973 tests passed, no skips; generated files, typechecking,
+  builds, and documentation verification passed on the final implementation.
+- `npm run test:skill`: 221 tests and 22 replay cases passed.
+- `npm run test:browser`: 16 tests passed without skips; the three new example
+  tests were repeated successfully after final wrapping polish.
+- MCP smoke: all seven tools passed; isolated framework and MCP package checks passed.
+- The existing Skill Creator viewer exposes all six outputs and the benchmark
+  without browser page errors. Human comparison remains available.
+
+[Run the examples](../../skills/expressivecss/assets/examples/README.md),
+[open the review viewer](../../.cache/expressivecss-complete-examples/comparison-final/review.html),
+or inspect [results](../../.cache/expressivecss-complete-examples/comparison-final/benchmark.json)
+and [claim review](../../.cache/expressivecss-complete-examples/comparison-final/claim-review.json).

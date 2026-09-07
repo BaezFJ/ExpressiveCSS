@@ -15,7 +15,7 @@ const save = async (root, relative, value) => {
 const fakeRepository = async (t) => {
   const root = await mkdtemp(path.join(tmpdir(), 'expressivecss-provenance-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  for (const relative of [...EVALUATION_SOURCE_FILES, 'tests/fixtures/expressivecss-skill-evals/consumer/src/index.html', 'dist/css/expressive.css']) await save(root, relative, relative);
+  for (const relative of [...EVALUATION_SOURCE_FILES, 'tests/fixtures/expressivecss-skill-evals/consumer/src/index.html', 'skills/expressivecss/assets/examples/settings.html', 'dist/css/expressive.css']) await save(root, relative, relative);
   return root;
 };
 const collect = (repositoryRoot, options = {}) => collectEvaluationProvenance({ repositoryRoot, protocol: 'test-evaluation-v1', plan: { cases: ['form-action'], repetitions: 1 }, modelSettings: { model: 'test-model' }, ...options });
@@ -25,7 +25,7 @@ test('provenance fingerprints fixture sources, built assets, grader sources, loc
   const original = await collect(root);
   assertSameProvenance(original, await collect(root));
   assert.equal(original.graderInputs['mcp/expressivecss/node_modules/@modelcontextprotocol/sdk/package.json'], null);
-  for (const relative of ['tests/fixtures/expressivecss-skill-evals/consumer/src/index.html', 'dist/css/expressive.css']) {
+  for (const relative of ['tests/fixtures/expressivecss-skill-evals/consumer/src/index.html', 'skills/expressivecss/assets/examples/settings.html', 'dist/css/expressive.css']) {
     await save(root, relative, 'changed');
     const changed = await collect(root);
     assert.notEqual(changed.fixtureHash, original.fixtureHash, relative);

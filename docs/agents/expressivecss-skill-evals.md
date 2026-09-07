@@ -27,6 +27,31 @@ The three basic implementation cases additionally require operator-owned `comple
 
 ## Project fixtures
 
+The shared materializer also exposes `example-settings`, `example-editor`, and
+`example-list-detail`. These use the exact portable sources from
+`skills/expressivecss/assets/examples`, plus the same built package and consumer
+server. The example tree is included in `fixtureHash`, so changing its HTML,
+styles, handlers, or annotations invalidates a frozen comparison.
+
+The reviewed adaptation prompts in
+`tests/fixtures/expressivecss-skill-evals/expression-examples.json` cover a new
+checkbox, scoped preview typography, and resetting per-story reading state.
+They are live comparison prompts, not additional replay cases or a replacement
+for the existing case-contract suite. Use the exported
+`materializeProjectFixture` and Codex adapter with these fixture IDs; collect
+matched before/after captures and independent browser observations before
+removing each temporary consumer. Never grade a candidate's completion claim as
+proof that the task works. The sample's session-only state is an explicit task
+fact; there is no backend to verify.
+
+`tests/expressivecss-examples-browser.test.js` tests the source examples in both
+treatments and themes, at 320/839/840/1280px, including doubled text and complete
+keyboard/task paths. It also checks source reuse, no external resource loading,
+editor-only framework JavaScript, safe text preview, and formatting teardown.
+Run the normal browser suite, or set `EXPRESSIVECSS_EXAMPLE_SCREENSHOTS` to a local
+output directory to retain the tested source scenes. Read the examples' README
+for the contributor preview command and portable integration instructions.
+
 `consumer-current` is a runnable local consumer, with `/dashboard`, `/home`, `/search`, and `/profile` routes, a labeled checkbox form, named drawer, adaptive navigation, and activity-state controls. The evaluator copies the already-built framework from `dist/`, including its fonts, into the temporary installed package. Build first with `npm run build`; no package download is needed to materialize it. Run `npm start` inside the temporary project to start its local server; it prints its URL. `PORT` can select a port, otherwise the OS chooses one.
 
 The readable `fixture.json` describes route, data, state, viewport, locale, direction, theme, and input facts. Activity states are available through `#preview-state` or the `state` query parameter. Permission state is explicitly unavailable. The tooltip host starts without manual initialization, with a remount control for lifecycle tasks.

@@ -36,6 +36,7 @@ export async function collectEvaluationProvenance({ repositoryRoot = ROOT, proto
   }
   const fixtureInputs = {
     sourceTree: await hashProject(path.join(repositoryRoot, 'tests/fixtures/expressivecss-skill-evals')),
+    examples: await hashProject(path.join(repositoryRoot, 'skills/expressivecss/assets/examples')),
     builtDistribution: await hashProject(path.join(repositoryRoot, 'dist')),
     package: fileHashes['package.json'],
   };

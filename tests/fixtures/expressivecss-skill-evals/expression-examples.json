@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "settings-cancellation-alert",
+      "fixture": "example-settings",
+      "request": "In this ExpressiveCSS workspace settings example, add an unchecked Event cancellations option to Email updates. It must be a native checkbox named updates with value cancellations and work with the existing Save preferences flow in both treatments. Keep all current options, copy, treatment differences, and feedback behavior. Match the surrounding form hierarchy and target size; add no dependencies or runtime initialization. Explain why the two treatments suit different visit contexts and verify the added option without claiming any email or account persistence."
+    },
+    {
+      "id": "editor-preview-emphasis",
+      "fixture": "example-editor",
+      "request": "Refine this ExpressiveCSS newsletter example for a first-time community writer: only in the expressive treatment, make #preview-subject use the existing headline-small type scale at weight 500. Keep the restrained preview, draft fields, formatting controls, Save draft, Preview newsletter, all copy, colors, and layout unchanged. Use scoped framework type tokens, add no fonts or motion, and verify the draft-to-preview flow in both treatments. Explain how this emphasis supports the product context."
+    },
+    {
+      "id": "reading-status-reset",
+      "fixture": "example-list-detail",
+      "request": "In this ExpressiveCSS reading-list example, add a secondary Mark all unread action inside the reading-list pane. It should clear every story's read state, update visible Read/Unread text and the selected story's primary action, and announce the reset. Preserve the selected story, its content and order, both visual treatments, keyboard focus, Back to list, and state across the 840px pane boundary. Keep the selected story's primary action visually dominant. Do not add persistence, dependencies, or framework JavaScript; verify reset after marking multiple stories read."
+    }
+  ]
+}

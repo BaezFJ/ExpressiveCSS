@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Community newsletter · ExpressiveCSS example</title>
+  <link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css">
+  <link rel="stylesheet" href="/src/app.css">
+  <script defer src="/node_modules/@expressivecss/expressive/dist/js/expressive.js"></script>
+  <script defer src="/src/app.js"></script>
+</head>
+<body data-example="editor" data-treatment="restrained">
+  <a class="skip-link" href="#app">Skip to newsletter editor</a>
+  <div class="example-controls" role="region" aria-label="Example controls">
+    <label for="treatment">Treatment</label><select id="treatment"><option value="restrained">Restrained</option><option value="expressive">Expressive</option></select>
+    <label for="theme">Theme</label><select id="theme"><option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+  </div>
+  <main id="app" class="workspace" tabindex="-1">
+    <p class="product-name">Common Ground / Newsletter</p>
+    <section class="focal" aria-labelledby="page-title">
+      <h1 id="page-title" class="headline-medium">A note for the neighborhood</h1>
+      <p>Draft this week's garden update, then check how it reads.</p>
+    </section>
+    <form id="editor-form" class="editor-fields">
+      <div class="field outlined">
+        <input id="subject" name="subject" placeholder=" " required maxlength="120" value="Saturday in the garden">
+        <label for="subject">Subject</label>
+      </div>
+      <div class="field outlined">
+        <textarea class="expressive-textarea" id="message" name="message" placeholder=" " required rows="8" aria-describedby="message-help">Join us on Saturday at 9 am to plant the autumn beds. Bring a water bottle; gloves and tools are waiting in the shed.
+
+New neighbors are welcome. Meet by the painted gate and we will find a job that suits you.</textarea>
+        <label for="message">Message</label><small id="message-help">Plain text. Formatting below applies to the whole preview message.</small>
+      </div>
+      <p id="format-label" class="title-medium">Preview formatting</p>
+      <!-- Toggle buttons change preview presentation; they are not submitted radio values. -->
+      <div id="formatting" class="button-group connected medium" data-selection="multiple" role="group" aria-labelledby="format-label">
+        <button id="bold" class="button tonal" type="button" aria-pressed="false"><span class="material-symbols" aria-hidden="true">format_bold</span><span>Bold</span></button>
+        <button id="italic" class="button tonal" type="button" aria-pressed="false"><span class="material-symbols" aria-hidden="true">format_italic</span><span>Italic</span></button>
+      </div>
+      <button id="preview-button" class="primary-action medium" type="button" aria-controls="preview" aria-expanded="false"><span class="material-symbols" aria-hidden="true">visibility</span><span>Preview newsletter</span></button>
+      <button class="tonal medium" type="submit">Save draft</button>
+    </form>
+    <section id="preview" class="preview" aria-labelledby="preview-title" hidden>
+      <h2 id="preview-title" class="headline-small" tabindex="-1">Newsletter preview</h2>
+      <h3 id="preview-subject" class="title-large"></h3><p id="preview-message"></p>
+      <button id="edit-button" class="outlined medium" type="button">Back to editing</button>
+    </section>
+    <p id="status" role="status">Sample only. Drafts last until this page reloads; nothing is sent.</p>
+  </main>
+  <details class="annotations">
+    <summary>Why these treatments?</summary>
+    <p>Restrained suits a coordinator drafting updates every week. Expressive suits a community workshop where the preview step helps first-time writers check their work. The same subject, message and formatting survive switching treatments.</p>
+    <ul>
+      <li>Action size: medium Preview becomes large; the secondary Save draft stays medium. Preview is the focal action because this sample cannot publish.</li>
+      <li>Containment: the introduction is one contained region. The writing area stays open and outlined; the preview has a separate reading boundary.</li>
+      <li>Typography: expressive enlarges only the page headline and sets its weight to 500. Editor labels and newsletter body remain stable.</li>
+      <li>Color: primary-container/on-primary-container marks the expressive introduction. Tonal formatting buttons remain secondary, and their pressed state also changes shape.</li>
+      <li>Shape: expressive increases the introductory corners and scopes Preview's primary-action corner token. Connected toggles use their documented runtime shapes in both modes.</li>
+    </ul>
+    <p>Only the formatting group needs framework initialization. The sample uses a textarea and textContent, not HTML editing. Preview formatting applies to the whole message, and Save draft stores it in memory.</p>
+  </details>
+</body>
+</html>

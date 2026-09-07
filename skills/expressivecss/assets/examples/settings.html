@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workspace notifications · ExpressiveCSS example</title>
+  <link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css">
+  <link rel="stylesheet" href="/src/app.css">
+  <script defer src="/src/app.js"></script>
+</head>
+<body data-example="settings" data-treatment="restrained">
+  <a class="skip-link" href="#app">Skip to notifications</a>
+  <div class="example-controls" role="region" aria-label="Example controls">
+    <label for="treatment">Treatment</label><select id="treatment"><option value="restrained">Restrained</option><option value="expressive">Expressive</option></select>
+    <label for="theme">Theme</label><select id="theme"><option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+  </div>
+  <main id="app" class="workspace" tabindex="-1">
+    <p class="product-name">Common Ground / Workspace</p>
+    <form id="settings-form">
+      <!-- A single focal region changes emphasis; controls and values stay identical. -->
+      <section class="focal" aria-labelledby="page-title">
+        <h1 id="page-title" class="headline-medium">Make room for focused work</h1>
+        <p>Choose which updates reach you from the community garden team.</p>
+      </section>
+      <fieldset class="setting-section">
+        <legend class="title-large">Email updates</legend>
+        <p id="email-help">Select any updates you want. Changes apply when you save.</p>
+        <label class="choice-row"><input type="checkbox" name="updates" value="mentions" checked aria-describedby="email-help"><span>When someone mentions me</span></label>
+        <label class="choice-row"><input type="checkbox" name="updates" value="schedule" checked aria-describedby="email-help"><span>Changes to my volunteer shifts</span></label>
+        <label class="choice-row"><input type="checkbox" name="updates" value="digest" aria-describedby="email-help"><span>A weekly garden digest</span></label>
+      </fieldset>
+      <fieldset class="setting-section">
+        <legend class="title-large">Quiet hours</legend>
+        <p id="quiet-help">Hold non-urgent updates from 6 pm to 8 am in this sample.</p>
+        <label class="choice-row"><input type="checkbox" name="quiet" value="enabled" checked aria-describedby="quiet-help"><span>Keep evenings quiet</span></label>
+      </fieldset>
+        <button class="primary-action medium" type="submit"><span class="material-symbols" aria-hidden="true">check</span><span>Save preferences</span></button>
+      <p id="status" role="status">Sample only. Preferences last until this page reloads.</p>
+    </form>
+  </main>
+  <details class="annotations">
+    <summary>Why these treatments?</summary>
+    <p>Restrained fits a workspace people revisit to make small changes. Expressive fits a first visit where choosing a manageable routine is the main task. Neither mode changes the options or their saved meaning.</p>
+    <ul>
+      <li>Action size: medium Save in restrained; large Save in expressive. Every interactive target remains at least 48px high.</li>
+      <li>Containment: a quiet surface groups the introduction; expressive gives that same region a stronger boundary. Fields remain in native fieldsets.</li>
+      <li>Typography: headline-medium becomes headline-large, with a scoped weight of 500. Labels keep the same readable scale and bundled Roboto.</li>
+      <li>Color: surface-container-low/on-surface becomes primary-container/on-primary-container only in the introduction. Save keeps the primary/on-primary pair. Error roles are never decoration.</li>
+      <li>Shape: the focal region changes from 16px to 32px corners, with Save at 16px through its scoped container-shape token. These are application choices, not a common-button morph API.</li>
+    </ul>
+    <p>No framework JavaScript is needed here. The sample handles native form submission in memory; it sends no email and writes no account settings.</p>
+  </details>
+</body>
+</html>

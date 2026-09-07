@@ -17,7 +17,7 @@ const CONSUMER_FILES = Object.fromEntries(['index.html', 'app.css', 'app.js', 's
   name === 'server.mjs' ? name : `src/${name}`,
   readFileSync(path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/consumer', name), 'utf8'),
 ]));
-export const PROJECT_FIXTURES = Object.freeze({
+const BASE_PROJECT_FIXTURES = Object.freeze({
   'consumer-empty': Object.freeze({
     'package.json': '{"name":"eval-consumer-empty","private":true}\n',
     'src/index.html': '<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><main id="app"></main></body></html>\n',
@@ -36,6 +36,18 @@ export const PROJECT_FIXTURES = Object.freeze({
     'src/index.html': '<!doctype html><html lang="en"><body><main id="app"></main></body></html>\n',
     'src/app.css': '@import "@expressivecss/expressive";\n',
   }),
+});
+export const EXAMPLE_NAMES = Object.freeze(['settings', 'editor', 'list-detail']);
+const exampleRoot = path.join(DEFAULT_ROOT, 'skills/expressivecss/assets/examples');
+export const PROJECT_FIXTURES = Object.freeze({
+  ...BASE_PROJECT_FIXTURES,
+  ...Object.fromEntries(EXAMPLE_NAMES.map((name) => [`example-${name}`, Object.freeze({
+    ...BASE_PROJECT_FIXTURES['consumer-current'],
+    'src/index.html': readFileSync(path.join(exampleRoot, `${name}.html`), 'utf8'),
+    'src/app.css': readFileSync(path.join(exampleRoot, 'app.css'), 'utf8'),
+    'src/app.js': readFileSync(path.join(exampleRoot, 'app.js'), 'utf8'),
+    'fixture.json': JSON.stringify({ example: name, treatments: ['restrained', 'expressive'], themes: ['light', 'dark'], persistence: 'session only', source: 'skills/expressivecss/assets/examples' }),
+  })])),
 });
 const SUPPORT_GUIDES = new Map([
   ['skills/expressivecss/expressivecss-design/SKILL.md', 'expressivecss-design'],
@@ -1141,7 +1153,7 @@ export async function materializeProjectFixture(fixtureId, repositoryRoot = DEFA
       await mkdir(path.dirname(target), { recursive: true });
       await writeFile(target, content, { flag: 'wx' });
     }
-    if (fixtureId === 'consumer-current') {
+    if (fixtureId === 'consumer-current' || EXAMPLE_NAMES.some((name) => fixtureId === `example-${name}`)) {
       // Use the already-built package. The older-version fixture never receives today's runtime.
       await cp(path.join(rootPath(repositoryRoot), 'dist'), path.join(sandbox, 'node_modules/@expressivecss/expressive/dist'), { recursive: true, errorOnExist: true, force: false });
     }

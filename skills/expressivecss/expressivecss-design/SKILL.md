@@ -65,6 +65,8 @@ The brief is a decision aid, not a new public artifact. Save it only when the pr
 
 ## 3. Compose with Material hierarchy
 
+For a complete settings, editor, or list-detail flow, consult the matching [runnable example](../assets/examples/README.md) after selecting components. Compare its restrained and expressive treatments, including the product context in its annotations. Borrow the relationships between action size, containment, type, color, and shape; preserve the consuming product's identity and use its matching component contracts. These examples are optional references, not required reading for isolated component work.
+
 Build the task path before adding decoration.
 
 - Use window size classes, panes, and documented navigation changes. Do not shrink a wide layout into Compact or leave phone navigation unchanged at wide sizes.

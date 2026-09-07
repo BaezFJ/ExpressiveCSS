@@ -1,5 +1,28 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Complete examples follow-up, September 7, 2026
+
+Three runnable Common Ground examples now teach composition through workspace
+settings, a newsletter editor, and a reading-list/detail flow. Each switches
+between restrained and expressive treatments without resetting content or state.
+Inline disclosures explain how action size, containment, typography, semantic
+color, and shape serve different product contexts. Sample state is explicitly
+session-only; no account settings, messages, or reading history reach a backend.
+
+The Design guide links to these optional assets after component selection.
+The examples remain outside the basic-button reading path. Their source lives
+inside the portable skill and is reused directly by the existing evaluator.
+A small contributor preview command uses the existing restricted fixture server
+and removes its temporary consumer on shutdown. No server framework, frontend
+dependency, public framework API, or component stylesheet was added.
+
+Browser review corrected textarea typography/theme styling, unintended article
+card styling, mobile action placement, and doubled-text editor overflow. The
+regression checks cover responsive boundaries, both treatments and themes,
+native keyboard behavior, feedback, safe text preview, and teardown/remount.
+See the [comparison report](./expressivecss-skill-comparison.md#complete-examples-follow-up)
+for matched captures, focused adaptation runs, and remaining review limits.
+
 ## Component selection follow-up, September 7, 2026
 
 All 21 generic avoidance warnings now name the competing job or component.
