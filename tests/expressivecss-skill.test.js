@@ -2,6 +2,8 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { compile } from 'sass';
 
 const skillUrl = new URL('../skills/expressivecss/SKILL.md', import.meta.url);
 const skillDirectory = new URL('../skills/expressivecss/', import.meta.url);
@@ -33,7 +35,10 @@ const usageFoundationReferenceUrls = Object.fromEntries(['media', 'table', 'tran
 const themingGuideUrl = new URL('expressivecss-theming/SKILL.md', skillDirectory);
 const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'state-layers']
   .map((name) => [name, new URL(`expressivecss-theming/references/${name}.md`, skillDirectory)]));
-const compiledCss = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const compiledCss = compile(fileURLToPath(new URL('../src/sass/expressive.scss', import.meta.url)), {
+  loadPaths: [fileURLToPath(new URL('../src/sass/', import.meta.url))],
+  silenceDeprecations: ['if-function'],
+}).css;
 const gridSass = readFileSync(new URL('../src/sass/base/_grid.scss', import.meta.url), 'utf8');
 const spacingSass = readFileSync(new URL('../src/sass/utilities/_spacing.scss', import.meta.url), 'utf8');
 const visibilitySass = readFileSync(new URL('../src/sass/utilities/_visibility.scss', import.meta.url), 'utf8');
@@ -371,6 +376,9 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(globalSass, /@include bp-down\("expanded"\)[\s\S]*table\.responsive-table/);
     assert.match(globalSass, /tbody > tr:nth-child\(odd\)[\s\S]*rgba\(0, 0, 0, 0\.08\)/);
     assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*rgba\(0, 0, 0, 0\.04\)/);
+    assert.match(globalSass, /&\.centered\s*\{[\s\S]*thead tr th, tbody tr td\s*\{[\s\S]*text-align:\s*center/);
+    assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*remain left-aligned/i);
+    assert.doesNotMatch(references.table, /Centers all header and body cell text/i);
     assert.match(references.table, /below `840px`/i);
     assert.match(references.table, /`<caption>`[\s\S]*scope="col"[\s\S]*do not use a table for page layout/i);
     assert.match(references.table, /keeps the header cells in one fixed column[\s\S]*scrolls the body rows horizontally/i);

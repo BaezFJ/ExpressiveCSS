@@ -34,7 +34,7 @@ ExpressiveCSS makes every table full width, collapses borders, colors the header
 | --- | --- | --- |
 | `.striped` | Colors odd body rows and removes their bottom borders. | The stripe uses a hard-coded black alpha color, not a semantic theme token. |
 | `.highlight` | Colors a body row on pointer hover with a 250ms background transition. | Hover does not provide keyboard focus or make a row interactive. |
-| `.centered` | Centers all header and body cell text. | Numeric or long text often reads better with deliberate per-column alignment. |
+| `.centered` | Centers column headers and body data cells. | Body row headers (`<tbody> <th scope="row">`) remain left-aligned. Numeric or long text often reads better with deliberate per-column alignment. |
 | `.responsive-table` | Changes the table below `840px` into a fixed header column beside horizontally scrolling body rows. | It is a structural visual transformation, not a generic overflow wrapper. |
 
 The classes can be combined, but inspect the result instead of assuming each effect composes cleanly. In particular, `.striped` and `.highlight` use hard-coded black alpha colors. Check row contrast and hover feedback in light and dark schemes. Add application overrides with semantic roles when those colors do not work on the chosen surface.
