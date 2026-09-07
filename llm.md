@@ -2515,7 +2515,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Dragging is a pointer gesture, so an outcome reachable only by dragging is unreachable without a pointer: reordering built on a handle needs a keyboard path of its own — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position directly. The handle makes the gesture discoverable; it does not make the outcome reachable.
+**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
 
@@ -2527,11 +2527,11 @@ The two-column layout is the page's own — a flex or grid row, or a pane layout
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
 
-On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. Decoration is the default and is enough: dragging the sheet down dismisses it and <kbd>Esc</kbd> already does the same from the keyboard, so the bar sits on top of a path that exists without it. Write a `<button>` there instead when you want a visible dismiss control — activating it closes the sheet, by pointer or by <kbd>Enter</kbd>, and a drag that snaps back does not also dismiss because the click ending a drag is told apart from a tap. This is the only place a drag handle is wired to anything. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. This is the only place a drag handle is wired to anything. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
-  <span class="drag-handle" aria-hidden="true"></span>
+  <button type="button" class="drag-handle" aria-label="Dismiss"></button>
   <h2 id="sheet-title">Share</h2>
 </dialog>
 ```
@@ -4153,7 +4153,7 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
-A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss; a handle written as a `<button>` also dismisses when activated, so the keyboard reaches it too, and <kbd>Esc</kbd> closes the sheet natively.
+A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="open-file-title">

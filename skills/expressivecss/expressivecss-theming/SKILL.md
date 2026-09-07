@@ -82,4 +82,4 @@ The error ramp deliberately does not follow the seed. Override documented `-ligh
 
 ## Verification
 
-Check light, dark, auto/OS-following, nested scheme overrides, and any vibrant region. Verify text and non-text contrast, native-control color scheme, and the absence of a wrong-theme flash when the application persists a choice.
+Check light, dark, auto/OS-following, nested scheme overrides, and any vibrant region. Use the [focused web checks](../expressivecss-accessibility/references/web-checks.md#contrast-after-theme-overrides) for affected contrast and forced colors. Verify native-control color scheme, and the absence of a wrong-theme flash when the application persists a choice.

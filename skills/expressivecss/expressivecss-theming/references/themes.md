@@ -57,7 +57,7 @@ Override the unsuffixed live role when one value should apply in both schemes. W
 }
 ```
 
-Do not consume `--md-sys-color-*-light` or `--md-sys-color-*-dark` in component rules. Load application overrides after ExpressiveCSS.
+Do not consume `--md-sys-color-*-light` or `--md-sys-color-*-dark` in component rules. Load application overrides after ExpressiveCSS. Recheck affected contrast after seed or role changes; matching `on-*` names are not evidence that custom values remain readable. Follow the [contrast and forced-colors checks](../../expressivecss-accessibility/references/web-checks.md#contrast-after-theme-overrides).
 
 ## Scoped schemes
 

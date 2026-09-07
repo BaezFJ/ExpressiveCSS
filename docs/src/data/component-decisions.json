@@ -1383,7 +1383,7 @@
         "The bar that says a thing can be dragged — and nothing that does the dragging."
       ],
       "avoidWhen": [
-        "No pointer drag behavior and equivalent keyboard path are implemented by the containing component."
+        "The containing component lacks drag behavior, keyboard operation, or an equivalent single-pointer path without dragging."
       ],
       "alternatives": [
         "bottom-sheet",
@@ -1401,7 +1401,7 @@
           "documentedSupport": "Decorative grip and actionable button grip.",
           "webAdaptation": "The host element determines semantics; no general dragging engine.",
           "limitations": [
-            "A grip outside supported sheets does not implement dragging or its keyboard alternative."
+            "A grip outside supported sheets implements neither dragging nor keyboard or non-drag pointer alternatives."
           ]
         },
         "relationship": "related",

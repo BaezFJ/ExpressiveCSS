@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `88ca160b60b164edc2fea0eba0bc743e73a5fc3f3ce830a8473ff4a8052799c6`
+Contract SHA-256: `936349dcebf3019024a30655fe6e6ce2782c70f2664afe74044a320d811f5037`
 
 #### Selection and adaptation
 
@@ -31,7 +31,7 @@ Support (2026-09-07, `llm.md#drag-handle`): Decorative grip and actionable butto
 
 Web adaptation: The host element determines semantics; no general dragging engine.
 
-Known boundary: A grip outside supported sheets does not implement dragging or its keyboard alternative.
+Known boundary: A grip outside supported sheets implements neither dragging nor keyboard or non-drag pointer alternatives.
 
 Full parity and browser conformance remain unassessed.
 
@@ -41,7 +41,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Dragging is a pointer gesture, so an outcome reachable only by dragging is unreachable without a pointer: reordering built on a handle needs a keyboard path of its own — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position directly. The handle makes the gesture discoverable; it does not make the outcome reachable.
+**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 #### Syntax
 

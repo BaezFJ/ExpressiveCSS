@@ -39,7 +39,9 @@ test('evaluation browser serves a real SDK session with independent evidence and
     bridge = await startEvaluationBrowser({ ...files, artifactDirectory: path.relative(process.cwd(), files.artifactDirectory) });
     assert.equal(bridge.capability.status, 'available', bridge.capability.error);
     client = await clientFor(bridge.url);
-    assert.deepEqual((await client.listTools()).tools.map((tool) => tool.name), ['browser']);
+    const tools = (await client.listTools()).tools;
+    assert.deepEqual(tools.map((tool) => tool.name), ['browser']);
+    assert.deepEqual(tools[0].inputSchema.properties.forcedColors.enum, ['active', 'none']);
     const inspection = await call(client, { action: 'inspect' });
     assert.match(inspection.data.accessibility, /Save/);
     assert.match(inspection.data.html, /id="name"/);
@@ -58,7 +60,14 @@ test('evaluation browser serves a real SDK session with independent evidence and
     const resized = await call(client, { action: 'resize', width: 840 });
     assert.equal(resized.data.viewport.width, 840);
     const dark = await call(client, { action: 'emulate', colorScheme: 'dark', reducedMotion: 'no-preference' });
-    assert.deepEqual(dark.data.media, { colorScheme: 'dark', reducedMotion: 'no-preference' });
+    assert.deepEqual(dark.data.media, { colorScheme: 'dark', reducedMotion: 'no-preference', forcedColors: 'none' });
+    const forced = await call(client, { action: 'emulate', forcedColors: 'active' });
+    assert.deepEqual(forced.data.media, { colorScheme: 'dark', reducedMotion: 'no-preference', forcedColors: 'active' });
+    assert.deepEqual(bridge.records.find((record) => record.id === forced.data.evidenceId).result.media, forced.data.media);
+    assert.equal((await call(client, { action: 'evaluate', expression: "matchMedia('(forced-colors: active)').matches" })).data.observation, true);
+    assert.equal((await call(client, { action: 'emulate', reducedMotion: 'reduce' })).data.media.forcedColors, 'active', 'unspecified forced colors persist');
+    assert.equal((await call(client, { action: 'emulate', forcedColors: 'none' })).data.media.forcedColors, 'none');
+    assert.equal((await call(client, { action: 'evaluate', expression: "matchMedia('(forced-colors: active)').matches" })).data.observation, false);
     assert.equal((await call(client, { action: 'emulate', reducedMotion: 'reduce' })).data.media.colorScheme, 'dark', 'unspecified media settings persist');
     await call(client, { action: 'press', selector: '#name', key: 'Tab' });
     await writeFile(path.join(files.projectRoot, 'src/app.js'), 'window.loaded = "updated";');
@@ -131,7 +140,7 @@ test('browser rejects unsupported commands and cannot fetch external or private 
     bridge = await startEvaluationBrowser(files);
     assert.equal(bridge.capability.status, 'available', bridge.capability.error);
     client = await clientFor(bridge.url);
-    for (const input of [{ action: 'navigate', value: 'https://example.com' }, { action: 'evaluate', expression: '1', path: '/etc/passwd' }, { action: 'resize', width: 5000 }, { action: 'click' }, { action: 'emulate' }, { action: 'emulate', colorScheme: 'unknown' }, { action: 'emulate', reducedMotion: true }, { action: 'inspect', fullPage: 'true' }]) {
+    for (const input of [{ action: 'navigate', value: 'https://example.com' }, { action: 'evaluate', expression: '1', path: '/etc/passwd' }, { action: 'resize', width: 5000 }, { action: 'click' }, { action: 'emulate' }, { action: 'emulate', colorScheme: 'unknown' }, { action: 'emulate', reducedMotion: true }, { action: 'emulate', forcedColors: 'unknown' }, { action: 'emulate', forcedColors: true }, { action: 'emulate', forcedColors: null }, { action: 'inspect', fullPage: 'true' }]) {
       const result = await call(client, input);
       assert.equal(result.isError, true);
       assert.equal(bridge.records.at(-1).error, result.data.error);

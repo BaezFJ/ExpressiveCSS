@@ -41,6 +41,11 @@ export const EXAMPLE_NAMES = Object.freeze(['settings', 'editor', 'list-detail']
 const exampleRoot = path.join(DEFAULT_ROOT, 'skills/expressivecss/assets/examples');
 export const PROJECT_FIXTURES = Object.freeze({
   ...BASE_PROJECT_FIXTURES,
+  'consumer-web-accessibility': Object.freeze({
+    ...BASE_PROJECT_FIXTURES['consumer-current'],
+    ...Object.fromEntries(['index.html', 'app.css', 'app.js'].map(name => [`src/${name}`, readFileSync(path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/web-accessibility', name), 'utf8')])),
+    'fixture.json': JSON.stringify({ intentionallyFlawed: true, themes: ['light', 'dark'], forcedColors: ['active', 'none'], targets: ['spaced', 'packed', '32px', 'inline'], reorder: ['drag', 'Alt+ArrowUp', 'Alt+ArrowDown'], persistence: 'session only' }),
+  }),
   ...Object.fromEntries(EXAMPLE_NAMES.map((name) => [`example-${name}`, Object.freeze({
     ...BASE_PROJECT_FIXTURES['consumer-current'],
     'src/index.html': readFileSync(path.join(exampleRoot, `${name}.html`), 'utf8'),
@@ -1153,7 +1158,7 @@ export async function materializeProjectFixture(fixtureId, repositoryRoot = DEFA
       await mkdir(path.dirname(target), { recursive: true });
       await writeFile(target, content, { flag: 'wx' });
     }
-    if (fixtureId === 'consumer-current' || EXAMPLE_NAMES.some((name) => fixtureId === `example-${name}`)) {
+    if (['consumer-current', 'consumer-web-accessibility'].includes(fixtureId) || EXAMPLE_NAMES.some((name) => fixtureId === `example-${name}`)) {
       // Use the already-built package. The older-version fixture never receives today's runtime.
       await cp(path.join(rootPath(repositoryRoot), 'dist'), path.join(sandbox, 'node_modules/@expressivecss/expressive/dist'), { recursive: true, errorOnExist: true, force: false });
     }

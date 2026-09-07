@@ -34,7 +34,7 @@ Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expre
 | Narrow runtime lifecycle repair | Runtime, selected component guides | Install, Design, Usage, Theming, Accessibility |
 | New surface, Refine, or Redesign | Design, Usage, Theming, Accessibility, selected component guides | Install |
 
-Combine overlapping routes. Interface implementation and review require Usage and Accessibility; add them to narrow lifecycle work when markup or accessibility behavior changes. Add Theming for visual/token work and Install for setup/version uncertainty. Inspect runtime ownership in the decision index: JavaScript, Auto Init, shared-runtime, and manual ownership require Runtime; CSS-only and native ownership do not. Critiques need Runtime when interaction evidence is in scope. Record why a route widens.
+Combine overlapping routes. Interface implementation and review require Usage and Accessibility; add them to narrow lifecycle work when markup or accessibility behavior changes. Add Theming for visual/token work and Install for setup/version uncertainty. Inspect runtime ownership in the decision index: JavaScript, Auto Init, shared-runtime, and manual ownership require Runtime; CSS-only and native ownership do not. Critiques need Runtime when interaction evidence is in scope. For contrast or forced-colors investigations, including token-only changes, add Accessibility. Other token work uses Theming's focused checks. Record why a route widens.
 
 ## Component guides
 

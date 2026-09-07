@@ -1,5 +1,24 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Web accessibility follow-up, September 7, 2026
+
+Accessibility guidance now separates Material target recommendations, WCAG 2.2
+criteria, and measured browser behavior. A focused reference covers target-size
+exceptions, independent pointer alternatives to dragging, forced colors, and
+contrast after theme overrides. Root routing includes explicit contrast and
+forced-colors investigations while ordinary token work uses focused Theming
+checks. The required basic-button reading path remains below the 25% reduction
+budget at 30,253 bytes.
+
+The source drag-handle documentation and generated guides now require a non-drag
+pointer alternative as well as keyboard access. Audit rows distinguish those
+checks and treat Material's 48dp recommendation separately from WCAG failures.
+The existing evaluator gains forced-colors emulation and a deliberately flawed
+fixture for a no-edit review and scoped repair. No framework behavior, public
+API, or dependency changed. See the [comparison report](./expressivecss-skill-comparison.md#web-accessibility-follow-up)
+for results, evidence limits, and review artifacts.
+
+
 ## Complete examples follow-up, September 7, 2026
 
 Three runnable Common Ground examples now teach composition through workspace

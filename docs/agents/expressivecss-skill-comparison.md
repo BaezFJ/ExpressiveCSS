@@ -797,3 +797,102 @@ or RTL content, field Core Web Vitals, or overall Google specification parity.
 [open the review viewer](../../.cache/expressivecss-complete-examples/comparison-final/review.html),
 or inspect [results](../../.cache/expressivecss-complete-examples/comparison-final/benchmark.json)
 and [claim review](../../.cache/expressivecss-complete-examples/comparison-final/claim-review.json).
+
+## Web accessibility follow-up
+
+### Changes and checks
+
+The Accessibility guide now distinguishes Material recommendations, WCAG 2.2
+success criteria, and browser observations. Its optional web reference covers
+target-size exceptions, click/tap alternatives to dragging, forced colors, and
+contrast after theme overrides. Theming links to affected-state contrast checks;
+root routing adds Accessibility for explicit contrast or forced-colors work.
+The required basic-button path is 30,253 bytes, below the 30,502.5-byte budget.
+
+The drag-handle catalogue and public documentation now require keyboard access
+and an independent non-drag pointer alternative. A decorative bottom-sheet
+handle example includes a native Close button. Generated skill and MCP guides
+were rebuilt from their owning sources. No framework styles, component runtime,
+API, exports, or dependencies changed.
+
+The existing browser evaluator accepts forced-colors emulation and records the
+actual media-query result. A deliberately flawed fixture verifies target
+geometry, keyboard-only reordering, and the disappearance of shadow-only
+boundaries/focus. The fixture participates in existing provenance hashes.
+Baseline text contrast is 1.16:1 in light and 1.30:1 in dark. Ordinary forced
+colors restores text contrast in this fixture but removes its control boundary
+and focus indicator, demonstrating why a contrast ratio alone is insufficient.
+
+Validation:
+
+- `npm run verify`: 975 tests passed without skips, with generated checks,
+  typechecking, builds, and documentation verification.
+- `npm run test:skill`: 222 tests and the 22 replay cases passed.
+- `npm run test:browser:run`: 17 tests passed without skips against those built
+  bundles. Forced-colors active/none input, query state, and retained records are
+  covered by the existing browser-tool tests.
+- The built drag-handle page rendered at 375px and 1280px without overflow or page
+  errors. This focused check does not claim the full published-doc visual suite.
+
+### Comparison protocol
+
+One old/new pair reviewed target sizing and dragging without edits; another
+repaired only the Email reminders panel's theme and forced-colors styles.
+Requests, fixture, model `gpt-6-astra`, high reasoning, and browser access matched
+within each pair. Pairs ran concurrently, with dispatch order alternated. Root
+skill text was supplied, so these are execution tests, not natural discovery.
+The browser regression suite briefly shared the host during execution.
+
+Baseline commit `2a7dd1e`, skill hash:
+`sha256:7ea1a58e6f376b0d084ee66a6492d427da3c5df666dabb247f01b779d3279c02`.
+Revised skill hash:
+`sha256:206c48f1a56c646674f2232d4646af283f6e107db3e5c2619d0348323da33e42`.
+Fixture, grader, model settings, and rubric hashes accompany the archived runs.
+Source comparisons and browser captures were retained before temporary consumers
+were removed. The operator rubric includes a separate evidence-honesty check;
+a task result does not make an unsupported verification claim pass.
+
+### Observed results
+
+| Task | Old grade | Revised grade | Old seconds | Revised seconds | Old tokens | Revised tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Target sizing and dragging review | 4/5 | 4/5 | 118.9 | 137.8 | 363,776 | 515,666 |
+| Theme and forced-colors repair | 5/5 | 4/5 | 158.4 | 185.2 | 694,345 | 680,817 |
+
+All four runs passed their four task checks. Both reviews correctly separated
+48dp design advice, 24 CSS-pixel AA sizing, spacing/inline exceptions, and
+non-drag pointer alternatives. Their project manifests remained unchanged.
+Both repairs changed only `src/app.css`, using scoped role pairs and real button
+borders/outlines while preserving content, dimensions, theme selection, and
+Save feedback. Independent measurements found text contrast of 8.13:1/9.64:1
+in the old repair and 7.90:1/8.88:1 in the revised repair, light/dark respectively.
+Both retained automatic forced-color adjustment with visible button boundaries
+and focus in the tested emulated palettes. No browser errors or overflow appeared
+in the independent post-run observations.
+
+The fifth rubric item checks evidence reporting and is not fully passing. Both
+review runs claim a web-fetch error absent from retained tool response records;
+the revised repair also claims a JSON parsing error absent from retained command
+outputs. These three claims remain unverified, not demonstrated fabricated.
+Their structured browser references do match the trusted records. The old repair
+passes the evidence check, including its recorded Git error. No run claims full
+WCAG certification. The viewer preserves these failures rather than counting
+successful implementation as evidence of fully reliable reporting.
+
+Tokens are input plus output, including cached input; raw metadata keeps those
+fields separate. Old/revised tool counts are 23/30 for the review and 55/61 for
+the repair. Revised review cost increased; revised repair used fewer tokens but
+more time. One sample per version per case has no measurable per-case
+variability. These results do not establish improved accuracy or speed. The
+unverified error reports remain an evaluation/telemetry follow-up rather than a
+reason to weaken the evidence requirement.
+
+MCP smoke passed all seven tools; isolated framework and MCP package checks
+passed. The existing Skill Creator viewer exposes all four outputs and benchmark
+results without browser page errors. Human comparison remains available.
+Physical touch/drag, screen-reader speech, native Windows High Contrast palettes,
+other browsers, and every transition frame remain outside these checks.
+
+[Read the focused web checks](../../skills/expressivecss/expressivecss-accessibility/references/web-checks.md),
+[open the review viewer](../../.cache/expressivecss-web-accessibility/comparison/review.html),
+or inspect the [benchmark and provenance](../../.cache/expressivecss-web-accessibility/comparison/benchmark.json).

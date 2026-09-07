@@ -358,3 +358,27 @@ rows, mismatched skill hashes/prompts, missing grading/operator evidence and orp
 attempt directories are rejected.
 Use a fresh output directory when the protocol changes. Completed results remain
 available even when a later run fails; a rejected resume leaves the archive intact.
+
+## Web accessibility follow-up
+
+`consumer-web-accessibility` is an intentionally flawed runnable fixture. It
+contains spaced and crowded 20px targets, a 32px target, an inline help link,
+drag/keyboard reordering without click/tap controls, and low-contrast theme
+values with shadow-only button boundaries/focus. Its source lives in
+`tests/fixtures/expressivecss-skill-evals/web-accessibility/` and participates in
+existing fixture hashes. The browser regression test verifies that these defects
+are present, so an accidentally repaired fixture cannot silently weaken a review.
+
+The two requests in `web-accessibility.json` separate a no-edit target/dragging
+review from a scoped theme/forced-colors repair. Use the existing materializer
+and Codex adapter with identical fixtures for each skill version. The browser
+tool accepts `forcedColors: "active"` or `"none"` on `emulate` and records the
+actual media-query result. CSS injected into the page is not OS emulation.
+
+Grade the review's actual size/spacing distinctions and independent non-drag
+pointer requirement. Grade the repair's changed files, measured resolved color
+pairs, visible forced-colors boundary/focus, and preserved actions. Keep
+candidate claims separate from operator evidence. A passing fixture check or
+browser emulation does not establish full WCAG conformance or assistive-technology
+speech. Retain source comparisons, captures, settings/hashes, and limitations
+before removing temporary consumers.

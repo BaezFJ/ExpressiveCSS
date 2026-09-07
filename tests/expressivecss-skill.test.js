@@ -828,7 +828,7 @@ describe('the ExpressiveCSS agent skill', () => {
       },
       'expressivecss-accessibility/SKILL.md': {
         use: /interface implementation, Critique, or Audit.*visual reviews/is,
-        avoid: /token-only theming, setup-only work[\s\S]*substitute for.*component contract/i,
+        avoid: /setup-only work[\s\S]*accessibility behavior unchanged[\s\S]*substitute for.*component contract/i,
       },
     };
 
@@ -938,4 +938,23 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(protocol, /errors without guessing codes or causes/i);
     assert.match(protocol, /compound command.*does not prove each subcommand passed/i);
   });
+});
+
+
+test('distinguishes Material recommendations, web criteria, and observed behavior', () => {
+  const accessibility = readFileSync(new URL('expressivecss-accessibility/SKILL.md', skillDirectory), 'utf8');
+  const checks = readFileSync(new URL('expressivecss-accessibility/references/web-checks.md', skillDirectory), 'utf8');
+  for (const topic of ['target-size-minimum', 'dragging-movements', 'contrast-minimum', 'non-text-contrast', 'css-color-adjust']) assert.ok(checks.includes(topic), `missing primary source for ${topic}`);
+  for (const exception of ['Spacing', 'Equivalent', 'Inline', 'User agent', 'Essential']) assert.ok(checks.includes(`**${exception}:**`), `missing target exception ${exception}`);
+  assert.match(accessibility, /48 by 48 dp[\s\S]*not WCAG[\s\S]*24 by 24 CSS-pixel/);
+  assert.match(checks, /devicePixelRatio/);
+  assert.match(checks, /Keyboard access is a[\s\S]*separate requirement/);
+  assert.match(checks, /forced-color-adjust: none/);
+  assert.match(checks, /Semantic `on-\*` pairings[\s\S]*overrides can still break contrast/);
+  assert.match(checks, /4\.5:1[\s\S]*3:1[\s\S]*18pt[\s\S]*14pt/);
+  assert.match(body, /contrast or forced-colors investigations[\s\S]*add Accessibility/);
+  const theming = readFileSync(new URL('expressivecss-theming/SKILL.md', skillDirectory), 'utf8');
+  assert.ok(theming.includes('expressivecss-accessibility/references/web-checks.md'));
+  const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
+  for (const row of ['A-DRAG-POINTER', 'A-FORCED-COLORS']) assert.ok(matrix.includes(row));
 });

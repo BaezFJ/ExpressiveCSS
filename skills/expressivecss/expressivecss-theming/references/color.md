@@ -125,4 +125,4 @@ Do not write `rgba(var(--md-sys-color-primary), .08)`. Do not restore the remove
 - A class named for an `on-*` role is still a background utility unless it ends in `-text`.
 - Never use color alone to communicate error, selection, or status.
 - Fixed accent roles do not adapt between light and dark. Use them only when scheme-invariant identity is intended.
-- Verify text contrast, icon contrast, focus indicators, disabled state, and both schemes.
+- Role names and generated palettes do not prove contrast after overrides. For color, opacity, or type changes, measure affected text, necessary icons, boundaries, and focus states against their actual backgrounds in both schemes. Use the [focused web checks](../../expressivecss-accessibility/references/web-checks.md#contrast-after-theme-overrides); an explicit contrast or forced-colors investigation also loads Accessibility through the root route.

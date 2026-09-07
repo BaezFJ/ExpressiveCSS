@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Garden planning settings</title>
+<link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css"><link rel="stylesheet" href="/src/app.css"><script src="/src/app.js" defer></script></head>
+<body><main>
+<h1>Garden planning settings</h1>
+<label for="theme">Theme</label><select id="theme"><option value="light">Light</option><option value="dark">Dark</option></select>
+<section aria-labelledby="targets-title"><h2 id="targets-title">Compact actions</h2>
+<p>Each square button is its full hit area. These actions only announce their names.</p>
+<div class="target-row spaced"><button class="tiny" type="button" aria-label="Previous month">‹</button><button class="tiny" type="button" aria-label="Next month">›</button></div>
+<div class="target-row packed"><button class="tiny" type="button" aria-label="Previous week">‹</button><button class="tiny" type="button" aria-label="Next week">›</button></div>
+<button id="medium-target" type="button" aria-label="Today">T</button>
+<p>Read the <a href="#help">garden planning help</a> before changing a plan.</p></section>
+<section aria-labelledby="order-title"><h2 id="order-title">Task order</h2><p>Drag a row to reorder. Keyboard users can focus a row and press Alt+ArrowUp or Alt+ArrowDown. There are currently no click/tap reorder controls.</p>
+<ol id="tasks"><li tabindex="0" draggable="true">Prepare beds</li><li tabindex="0" draggable="true">Plant seeds</li><li tabindex="0" draggable="true">Water gently</li></ol></section>
+<section id="brand-panel" aria-labelledby="brand-title"><h2 id="brand-title">Email reminders</h2><p id="brand-copy">Receive a reminder before your next garden shift.</p>
+<button id="save" type="button">Save reminder</button></section>
+<p id="status" role="status">Changes are for this page session only.</p>
+<section id="help"><h2>Planning help</h2><p>Pick a date and order the tasks before saving your reminder.</p></section>
+</main></body></html>

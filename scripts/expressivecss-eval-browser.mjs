@@ -46,7 +46,7 @@ export async function startFixtureServer(projectRoot) {
 
 const TOOL = { name: 'browser', description: 'Inspect and exercise the running local consumer fixture. State persists between calls. Reload after source edits. The task has 100 tool calls; batch related observations. Each successful call returns an operator proof ID, remaining calls and screenshot. Set fullPage true to capture the complete page without repeated scrolling. This browser cannot access external URLs or arbitrary project files.', inputSchema: {
   type: 'object', required: ['action'], additionalProperties: false,
-  properties: { action: { type: 'string', enum: ['inspect', 'reload', 'click', 'fill', 'press', 'resize', 'emulate', 'evaluate'] }, selector: { type: 'string', maxLength: 1024 }, value: { type: 'string', maxLength: 4096 }, key: { type: 'string', maxLength: 100 }, width: { type: 'integer', minimum: 320, maximum: 1920 }, colorScheme: { type: 'string', enum: ['light', 'dark'] }, reducedMotion: { type: 'string', enum: ['reduce', 'no-preference'] }, fullPage: { type: 'boolean' }, expression: { type: 'string', maxLength: 8192 } }
+  properties: { action: { type: 'string', enum: ['inspect', 'reload', 'click', 'fill', 'press', 'resize', 'emulate', 'evaluate'] }, selector: { type: 'string', maxLength: 1024 }, value: { type: 'string', maxLength: 4096 }, key: { type: 'string', maxLength: 100 }, width: { type: 'integer', minimum: 320, maximum: 1920 }, colorScheme: { type: 'string', enum: ['light', 'dark'] }, reducedMotion: { type: 'string', enum: ['reduce', 'no-preference'] }, forcedColors: { type: 'string', enum: ['active', 'none'] }, fullPage: { type: 'boolean' }, expression: { type: 'string', maxLength: 8192 } }
 } };
 
 function validateInput(input) {
@@ -55,8 +55,8 @@ function validateInput(input) {
   for (const key of ['selector', 'value', 'key', 'expression']) if (input[key] !== undefined && (typeof input[key] !== 'string' || input[key].length > TOOL.inputSchema.properties[key].maxLength)) throw new Error(`Invalid ${key}`);
   if (input.width !== undefined && (!Number.isInteger(input.width) || input.width < 320 || input.width > 1920)) throw new Error('Invalid viewport width');
   if (input.fullPage !== undefined && typeof input.fullPage !== 'boolean') throw new Error('Invalid fullPage flag');
-  for (const key of ['colorScheme', 'reducedMotion']) if (input[key] !== undefined && !TOOL.inputSchema.properties[key].enum.includes(input[key])) throw new Error(`Invalid ${key}`);
-  if (input.action === 'emulate' && input.colorScheme === undefined && input.reducedMotion === undefined) throw new Error('Missing media setting');
+  for (const key of ['colorScheme', 'reducedMotion', 'forcedColors']) if (input[key] !== undefined && !TOOL.inputSchema.properties[key].enum.includes(input[key])) throw new Error(`Invalid ${key}`);
+  if (input.action === 'emulate' && input.colorScheme === undefined && input.reducedMotion === undefined && input.forcedColors === undefined) throw new Error('Missing media setting');
   for (const required of ({ click: ['selector'], fill: ['selector', 'value'], press: ['key'], resize: ['width'], evaluate: ['expression'] }[input.action] ?? [])) if (input[required] === undefined || (required !== 'value' && input[required] === '')) throw new Error(`Missing ${required}`);
 }
 
@@ -99,7 +99,7 @@ export async function startEvaluationBrowser({ projectRoot, artifactDirectory })
     const [{ Server }, { StreamableHTTPServerTransport }, { CallToolRequestSchema, ListToolsRequestSchema }] = await Promise.all([sdk('server/index.js'), sdk('server/streamableHttp.js'), sdk('types.js')]);
     fixture = await startFixtureServer(projectRoot);
     browser = await chromium.launch({ headless: true, timeout: LIMITS.timeout });
-    const session = await createRestrictedFixturePage(browser, fixture.origin, { viewport: { width: 375, height: 900 }, reducedMotion: 'reduce', colorScheme: 'light' });
+    const session = await createRestrictedFixturePage(browser, fixture.origin, { viewport: { width: 375, height: 900 }, reducedMotion: 'reduce', colorScheme: 'light', forcedColors: 'none' });
     page = session.page;
     const { errors, blockedRequests } = session;
     const loaded = await page.goto(`${fixture.origin}/dashboard`, { waitUntil: 'load', timeout: LIMITS.timeout });
@@ -123,7 +123,7 @@ export async function startEvaluationBrowser({ projectRoot, artifactDirectory })
           if (input.action === 'fill') await page.locator(input.selector).fill(input.value);
           if (input.action === 'press') await (input.selector ? page.locator(input.selector) : page.keyboard).press(input.key);
           if (input.action === 'resize') await page.setViewportSize({ width: input.width, height: 900 });
-          if (input.action === 'emulate') await page.emulateMedia({ ...(input.colorScheme ? { colorScheme: input.colorScheme } : {}), ...(input.reducedMotion ? { reducedMotion: input.reducedMotion } : {}) });
+          if (input.action === 'emulate') await page.emulateMedia({ ...(input.colorScheme ? { colorScheme: input.colorScheme } : {}), ...(input.reducedMotion ? { reducedMotion: input.reducedMotion } : {}), ...(input.forcedColors ? { forcedColors: input.forcedColors } : {}) });
           if (input.action === 'evaluate') observation = await page.evaluate(async (expression) => {
             const value = await (0, eval)(expression);
             const serialized = JSON.stringify(value);
@@ -132,7 +132,7 @@ export async function startEvaluationBrowser({ projectRoot, artifactDirectory })
           }, input.expression);
           const snapshot = await page.locator('body').ariaSnapshot();
           const dom = await page.locator('body').evaluate((body) => ({ html: body.outerHTML.slice(0, 24_000), controls: [...body.querySelectorAll('button,input,select,textarea,a[href]')].filter((node) => node.checkVisibility()).slice(0, 100).map((node) => ({ tag: node.tagName, id: node.id, text: node.textContent?.trim().slice(0, 200), label: node.getAttribute('aria-label'), type: node.getAttribute('type'), disabled: Boolean(node.disabled) })) }));
-          const media = await page.evaluate(() => ({ colorScheme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light', reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : 'no-preference' }));
+          const media = await page.evaluate(() => ({ colorScheme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light', reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : 'no-preference', forcedColors: matchMedia('(forced-colors: active)').matches ? 'active' : 'none' }));
           const data = { evidenceId: id, observation, accessibility: snapshot.slice(0, 16_000), ...dom, viewport: page.viewportSize(), media, consoleErrors: [...errors], blockedRequests: [...blockedRequests] };
           if (Buffer.byteLength(JSON.stringify(data)) > LIMITS.output) throw new Error('Browser result exceeds output limit');
           if (input.fullPage && await page.evaluate(() => document.documentElement.scrollHeight) > 12000) throw new Error('Full-page capture exceeds 12000px height limit');
