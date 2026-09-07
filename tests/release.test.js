@@ -17,6 +17,17 @@ test('release policy rejects mismatches and prevents stable rollback', () => {
   assertForwardRelease('0.10.0', '0.9.9');
   assertForwardRelease('1.0.0', '0.99.99');
   assertForwardRelease('0.2.0-rc.1', '0.1.0');
+  assertForwardRelease('0.2.0-rc.10', '0.2.0-rc.9');
+  assert.throws(() => assertForwardRelease('0.2.0-rc.99999999999999999998', '0.2.0-rc.99999999999999999999'));
+  assertForwardRelease('0.2.0-beta', '0.2.0-alpha');
+  assertForwardRelease('0.2.0-beta', '0.2.0-9');
+  assertForwardRelease('0.2.0-beta.1', '0.2.0-beta');
+  assertForwardRelease('0.2.0', '0.2.0-rc.1');
+  assert.throws(() => assertForwardRelease('0.2.0-rc.1', '0.2.0-rc.2'));
+  assert.throws(() => assertForwardRelease('0.2.0-rc.1', '0.2.0'));
+  assert.throws(() => assertForwardRelease('0.2.0-beta', '0.2.0-beta.1'));
+  assert.throws(() => assertForwardRelease('0.2.0-9', '0.2.0-beta'));
+  assert.throws(() => assertForwardRelease('0.2.0-rc.1', '0.2.0-rc.1'));
   assert.throws(() => assertForwardRelease('0.9.0', '0.9.0'));
   assert.throws(() => assertForwardRelease('0.8.9', '0.9.0'));
   assert.equal(isCurrentStable('0.9.0', '0.9.0'), true);

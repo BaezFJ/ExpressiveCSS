@@ -29,7 +29,8 @@ or deleted; fix mistakes with a new version.
 The release workflow selects the package from its tag, verifies that its commit
 belongs to protected `master`, checks the package version and prerelease flag,
 and validates before asking for publishing approval. Stable versions go to
-`latest`; prereleases go to `next`. A manual dispatch only validates and dry-runs.
+`latest`; prereleases go to `next`. Each release must advance its target dist-tag,
+including numeric prerelease identifiers such as `rc.9` to `rc.10`. A manual dispatch only validates and dry-runs.
 
 The `npm-publish` environment requires BaezFJ's approval and accepts only release
 tags. Only the publishing job receives OIDC permission. Each package needs an npm

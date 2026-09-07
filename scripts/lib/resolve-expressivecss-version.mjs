@@ -80,7 +80,7 @@ function cleanVersion(value) {
     : null;
 }
 
-function parseSemver(value) {
+export function parseSemver(value) {
   const cleaned = cleanVersion(value);
   if (!cleaned) return null;
   const match = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/u.exec(cleaned);
@@ -98,7 +98,7 @@ function versionsHaveEqualPrecedence(left, right) {
   return Boolean(parsedLeft && parsedRight && compareSemver(parsedLeft, parsedRight) === 0);
 }
 
-function compareSemver(left, right) {
+export function compareSemver(left, right) {
   for (const key of ['major', 'minor', 'patch']) {
     if (left[key] !== right[key]) return left[key] < right[key] ? -1 : 1;
   }
@@ -111,8 +111,8 @@ function compareSemver(left, right) {
     const rightPart = right.prerelease[index];
     if (leftPart === undefined || rightPart === undefined) return leftPart === undefined ? -1 : 1;
     if (leftPart === rightPart) continue;
-    const leftNumber = /^\d+$/u.test(leftPart) ? Number(leftPart) : null;
-    const rightNumber = /^\d+$/u.test(rightPart) ? Number(rightPart) : null;
+    const leftNumber = /^\d+$/u.test(leftPart) ? BigInt(leftPart) : null;
+    const rightNumber = /^\d+$/u.test(rightPart) ? BigInt(rightPart) : null;
     if (leftNumber !== null && rightNumber !== null) return leftNumber < rightNumber ? -1 : 1;
     if (leftNumber !== null || rightNumber !== null) return leftNumber !== null ? -1 : 1;
     return leftPart < rightPart ? -1 : 1;

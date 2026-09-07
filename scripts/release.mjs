@@ -4,6 +4,7 @@ import { appendFileSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
+import { parseSemver, compareSemver } from './lib/resolve-expressivecss-version.mjs';
 
 const versionPattern = '(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?';
 const tagPattern = new RegExp(`^(mcp-)?v${versionPattern}$`);
@@ -21,14 +22,12 @@ export function releaseMetadata(tag, manifests, prerelease) {
   return { kind, directory: kind === 'mcp' ? 'mcp/expressivecss' : '.', name: expectedName, version,
     distTag: isPrerelease ? 'next' : 'latest' };
 }
-export function assertForwardRelease(version, latest) {
-  if (version.includes('-') || !latest) return;
-  assert.match(latest, /^\d+\.\d+\.\d+$/, 'Registry latest must be a stable version');
-  const current = latest.split('.').map(Number);
-  const candidate = version.split('.').map(Number);
-  const firstDifference = candidate.findIndex((part, i) => part !== current[i]);
-  assert.ok(firstDifference >= 0 && candidate[firstDifference] > current[firstDifference],
-    'A stable release must advance npm latest');
+export function assertForwardRelease(version, current) {
+  if (!current) return;
+  const candidate = parseSemver(version);
+  const previous = parseSemver(current);
+  assert.ok(candidate && previous, 'Registry version must be valid SemVer');
+  assert.ok(compareSemver(candidate, previous) > 0, 'A release must advance its npm dist-tag');
 }
 export function isCurrentStable(version, latest) {
   return /^\d+\.\d+\.\d+$/.test(version) && version === latest;
@@ -59,7 +58,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const release = releaseMetadata(tag, manifests, prerelease);
   if (process.argv.includes('--registry')) {
     assert.equal(npmView(`${release.name}@${release.version}`), null, 'Version is already published');
-    assertForwardRelease(release.version, npmView(`${release.name}@latest`));
+    assertForwardRelease(release.version, npmView(`${release.name}@${release.distTag}`));
   }
   if (process.env.GITHUB_OUTPUT) {
     for (const [key, value] of Object.entries(release)) appendFileSync(process.env.GITHUB_OUTPUT, `${key}=${value}\n`);
