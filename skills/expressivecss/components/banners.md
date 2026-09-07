@@ -11,13 +11,25 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `78475083f85d7c98ba6e4054695c2ace7b08102389d4ed96908f31dd0b4131fe`
+Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
 
 #### Selection and adaptation
 
-Runtime ownership: `css-only`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+Runtime ownership: `css-only`. [Related Google guidance](https://m3.material.io/components/snackbar/overview)
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: related. Retained framework pattern absent from the reviewed current M3 component inventory; related current guidance does not certify this implementation.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#banners`): Basic/rich and standard/vibrant; square basic banners.
+
+Web adaptation: Persistent in-flow feedback; application owns dismissal.
+
+Full parity and browser conformance remain unassessed.
 
 #### Contract
 

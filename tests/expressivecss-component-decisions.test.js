@@ -112,6 +112,39 @@ describe('ExpressiveCSS component decisions', () => {
     assert.ok(bySlug.get('dialogs').aliases.includes('modal'));
   });
 
+  test('keeps upstream evidence distinct from documented support and web extensions', async () => {
+    const llm = await readFile(new URL('../llm.md', import.meta.url), 'utf8');
+    for (const component of data.components) {
+      const mapping = component.materialGuidance;
+      assert.ok(['component', 'pattern', 'related', 'none'].includes(mapping.relationship));
+      assert.equal(mapping.status, ['component', 'pattern'].includes(mapping.relationship) ? 'material' : 'framework-extra');
+      for (const href of [mapping.href, mapping.specHref, mapping.guidelinesHref, mapping.upstreamReview.source, ...(mapping.relatedHrefs ?? [])].filter(Boolean)) {
+        const url = new URL(href);
+        assert.equal(url.protocol, 'https:');
+        assert.ok(['m2.material.io', 'm3.material.io', 'github.com'].includes(url.hostname));
+        if (url.hostname === 'github.com') assert.ok(url.pathname.startsWith('/material-components/material-components-android/'));
+      }
+      assert.ok(mapping.upstreamReview.scope);
+      assert.match(mapping.upstreamReview.reviewedOn, /^\d{4}-\d{2}-\d{2}$/);
+      const implementation = mapping.implementation;
+      assert.match(implementation.reviewedOn, /^\d{4}-\d{2}-\d{2}$/);
+      assert.ok(implementation.documentedSupport && implementation.webAdaptation);
+      assert.ok(Array.isArray(implementation.limitations));
+      assert.ok(llm.includes(`${'#'.repeat(component.guideSource.headingLevel)} ${component.guideSource.heading}\n`));
+      assert.ok(implementation.source.startsWith('llm.md#'));
+      const guide = await readFile(new URL(`../skills/expressivecss/components/${component.slug}.md`, import.meta.url), 'utf8');
+      for (const evidence of [mapping.relationship, mapping.upstreamReview.scope, mapping.upstreamReview.source, implementation.documentedSupport, implementation.webAdaptation, ...implementation.limitations]) {
+        assert.ok(guide.includes(evidence), `${component.slug} dropped mapping evidence: ${evidence}`);
+      }
+    }
+    for (const slug of ['fieldsets', 'floating-sheet', 'select', 'autocomplete', 'drag-handle']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'related');
+    for (const slug of ['footer', 'breadcrumbs', 'pagination', 'scrollspy', 'lightbox']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'none');
+    assert.equal(bySlug.get('panes').materialGuidance.relationship, 'pattern');
+    assert.equal(new URL(bySlug.get('bottom-app-bar').materialGuidance.href).hostname, 'm2.material.io');
+    assert.ok(bySlug.get('date-picker').materialGuidance.implementation.limitations.length);
+    assert.ok(bySlug.get('buttons').materialGuidance.implementation.limitations.length);
+  });
+
   test('separates native host semantics from shared runtime ownership', () => {
     for (const slug of ['dialogs', 'bottom-sheet', 'side-sheet', 'floating-sheet']) {
       assert.equal(bySlug.get(slug).runtime, 'shared-runtime', `${slug} must route through shared dialog runtime guidance`);

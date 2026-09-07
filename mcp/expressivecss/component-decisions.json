@@ -28,7 +28,7 @@
         "Material Design 3 Expressive app bars: small, medium flexible, large flexible, and search, from the HTML."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "navigation-bar",
@@ -40,7 +40,20 @@
       "guide": "../components/app-bar.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/app-bars/overview",
+        "implementation": {
+          "source": "llm.md#navbar",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Small, medium flexible, large flexible, and search app bars.",
+          "webAdaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -77,7 +90,24 @@
       "guide": "../components/bottom-app-bar.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m2.material.io/components/app-bars-bottom",
+        "implementation": {
+          "source": "llm.md#bottom-app-bar",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Bottom command bar with optional FAB.",
+          "webAdaptation": "Tab-reachable commands; no toolbar composite role.",
+          "limitations": [
+            "Retained API; use a docked toolbar for new M3 Expressive work when its behavior fits."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "document-reviewed",
+          "note": "Google MDC Android marks bottom app bar available but deprecated/not recommended in M3 Expressive; docked toolbar replaces it. Legacy M2 link observed: https://m2.material.io/components/app-bars-bottom ."
+        },
+        "reason": "Legacy Material component; Google deprecates it for M3 Expressive in favor of docked toolbars."
       }
     },
     {
@@ -130,7 +160,20 @@
       "guide": "../components/navigation-bar.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/navigation-bar/overview",
+        "implementation": {
+          "source": "llm.md#navigation-bar",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Stacked and horizontal destination layouts.",
+          "webAdaptation": "Links navigate; the application marks the current destination.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -188,7 +231,22 @@
       "guide": "../components/navigation-rail.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/navigation-rail/overview",
+        "implementation": {
+          "source": "llm.md#navigation-rail",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Collapsed, expanded, and modal rails.",
+          "webAdaptation": "The compact expanded rail uses a scrim and dismissal behavior.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components/navigation-rail/overview",
+          "reviewedOn": "2026-09-07",
+          "scope": "overview-reviewed",
+          "note": "tab observed; destination not followed; link-observed; full specifications not reviewed"
+        },
+        "specHref": "https://m3.material.io/components/navigation-rail/specs"
       }
     },
     {
@@ -240,7 +298,22 @@
       "guide": "../components/navigation-drawer.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/navigation-drawer/overview",
+        "implementation": {
+          "source": "llm.md#navigation-drawer",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Sliding and fixed drawers with nested sections.",
+          "webAdaptation": "Native details/summary supports nesting.",
+          "limitations": [
+            "Retained baseline navigation component; current Expressive guidance points to expanded navigation rail as its replacement."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -267,7 +340,7 @@
         "Material 3 canonical layouts, from the HTML."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "lists"
@@ -284,7 +357,22 @@
       "guide": "../components/panes.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/foundations/layout/canonical-examples/overview",
+        "implementation": {
+          "source": "llm.md#panes",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "List-detail, supporting pane, and equal panes.",
+          "webAdaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
+          "limitations": []
+        },
+        "relationship": "pattern",
+        "upstreamReview": {
+          "source": "https://m3.material.io/foundations/layout/canonical-examples/overview",
+          "reviewedOn": "2026-09-07",
+          "scope": "component-guidance-reviewed",
+          "note": "Rendered canonical examples overview reviewed: feed, list-detail, supporting pane; equal and three-pane framework variants are not verified upstream specifications."
+        },
+        "reason": "Canonical layout pattern, not a standalone component."
       }
     },
     {
@@ -308,15 +396,29 @@
         "Site navigation and extra information at the end of a page."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
       "runtime": "css-only",
       "guide": "../components/footer.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#footer",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Native footer with navigation columns and copyright content.",
+          "webAdaptation": "Web page landmark styled with theme roles.",
+          "limitations": []
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       }
     },
     {
@@ -353,7 +455,21 @@
       "guide": "../components/tabs.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/tabs/overview",
+        "implementation": {
+          "source": "llm.md#tabs",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Primary and secondary tabs; stacked and horizontal icon layouts.",
+          "webAdaptation": "Links target panels; use the shipped runtime keyboard contract.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/tabs/specs"
       }
     },
     {
@@ -379,15 +495,29 @@
         "The path to this page, from the HTML."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
       "runtime": "css-only",
       "guide": "../components/breadcrumbs.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#breadcrumbs",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Breadcrumb links and app-bar composition.",
+          "webAdaptation": "Labelled navigation with an ordered list and current-page link.",
+          "limitations": []
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       }
     },
     {
@@ -413,15 +543,29 @@
         "A list of pages. The HTML is the component."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
       "runtime": "css-only",
       "guide": "../components/pagination.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#pagination",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Page links, active page, and unavailable previous/next items.",
+          "webAdaptation": "CSS-only navigation; the application supplies destinations.",
+          "limitations": []
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       }
     },
     {
@@ -459,7 +603,20 @@
       "guide": "../components/menu.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/menus/overview",
+        "implementation": {
+          "source": "llm.md#menu",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Vertical menus, nested flyouts, grouping, and standard/vibrant styles.",
+          "webAdaptation": "Native menu/li structure; Menu owns opening and keyboard behavior.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -485,7 +642,7 @@
         "Highlight the table of contents as the page scrolls."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
@@ -493,7 +650,21 @@
       "guide": "../components/scrollspy.md",
       "materialGuidance": {
         "status": "framework-extra",
-        "reason": "ExpressiveCSS extension without a direct Material 3 component contract."
+        "implementation": {
+          "source": "llm.md#scrollspy",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Section tracking and table-of-contents links.",
+          "webAdaptation": "Web document navigation helper.",
+          "limitations": []
+        },
+        "relationship": "none",
+        "href": null,
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       }
     },
     {
@@ -523,7 +694,7 @@
         "Material Design 3 common buttons, icon buttons, and FABs — from the HTML."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
@@ -531,7 +702,25 @@
       "guide": "../components/buttons.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/buttons/overview",
+        "implementation": {
+          "source": "llm.md#buttons",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Filled, tonal, outlined, elevated, and text; xsmall through xlarge.",
+          "webAdaptation": "Native buttons run commands; a.button links navigate.",
+          "limitations": [
+            "Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components/buttons/overview",
+          "reviewedOn": "2026-09-07",
+          "scope": "overview-reviewed",
+          "note": "rendered main content reviewed in part; link-observed; full specifications not reviewed"
+        },
+        "specHref": "https://m3.material.io/components/buttons/specs",
+        "guidelinesHref": "https://m3.material.io/components/buttons/guidelines"
       }
     },
     {
@@ -557,7 +746,7 @@
         "A single icon as the whole control, in four styles and five sizes."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "buttons",
@@ -568,7 +757,22 @@
       "guide": "../components/icon-buttons.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/icon-buttons/overview",
+        "implementation": {
+          "source": "llm.md#icon-buttons",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.",
+          "webAdaptation": "Accessible name belongs to the control; the glyph is decorative.",
+          "limitations": [
+            "Elevated and text are not icon-button variants."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -605,7 +809,22 @@
       "guide": "../components/segmented-buttons.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/segmented-buttons/overview",
+        "implementation": {
+          "source": "llm.md#segmented-buttons",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Single-select radio and multi-select checkbox groups.",
+          "webAdaptation": "Native fieldset/input/label owns selection and form values.",
+          "limitations": [
+            "The selected check icon is authored; the framework does not insert it."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -642,7 +861,20 @@
       "guide": "../components/button-groups.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/button-groups/overview",
+        "implementation": {
+          "source": "llm.md#button-groups",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Standard and connected groups; commands and opt-in selection.",
+          "webAdaptation": "Runtime coordinates neighboring widths and selection; CSS handles connected shapes.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -669,7 +901,7 @@
         "A lead action and a trailing half that opens a menu of related ones, in five sizes."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "button-groups",
@@ -680,7 +912,20 @@
       "guide": "../components/split-button.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/split-button",
+        "implementation": {
+          "source": "llm.md#split-button",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Leading action and trailing menu trigger with matching styles.",
+          "webAdaptation": "Reuses Menu; no separate split-button runtime.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -726,7 +971,24 @@
       "guide": "../components/fab.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/floating-action-button/overview",
+        "implementation": {
+          "source": "llm.md#floating-action-button",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "FAB sizes, extended FABs, and menus of related actions.",
+          "webAdaptation": "Floating action behavior uses the documented FAB runtime.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "relatedHrefs": [
+          "https://m3.material.io/components/extended-fab/overview",
+          "https://m3.material.io/components/fab-menu/overview"
+        ]
       }
     },
     {
@@ -753,7 +1015,7 @@
         "Material Design 3 cards, from the HTML."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "lists",
@@ -765,7 +1027,21 @@
       "guide": "../components/cards.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/cards/overview",
+        "implementation": {
+          "source": "llm.md#cards",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Elevated, filled, outlined, horizontal, and directly actionable cards.",
+          "webAdaptation": "Native article anatomy; primary-action links preserve navigation semantics.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/cards/specs"
       }
     },
     {
@@ -791,7 +1067,7 @@
         "Continuous vertical indexes of text and images."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "cards",
@@ -803,7 +1079,20 @@
       "guide": "../components/lists.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/lists/overview",
+        "implementation": {
+          "source": "llm.md#lists",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Standard and segmented lists.",
+          "webAdaptation": "Native list semantics; visual selection alone does not justify aria-selected.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -844,7 +1133,21 @@
       "guide": "../components/dialogs.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/dialogs/overview",
+        "implementation": {
+          "source": "llm.md#dialogs",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Basic and full-screen dialogs.",
+          "webAdaptation": "Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/dialogs/specs"
       }
     },
     {
@@ -892,7 +1195,20 @@
       "guide": "../components/bottom-sheet.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/bottom-sheets/overview",
+        "implementation": {
+          "source": "llm.md#bottom-sheet",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Standard and modal bottom sheets.",
+          "webAdaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -946,7 +1262,20 @@
       "guide": "../components/side-sheet.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/side-sheets/overview",
+        "implementation": {
+          "source": "llm.md#side-sheet",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Standard and modal side sheets.",
+          "webAdaptation": "Native dialog and shared drag/dismiss behavior.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -973,7 +1302,7 @@
         "Secondary content on a surface that floats free of every window edge."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "dialogs",
@@ -984,8 +1313,22 @@
       "runtime": "shared-runtime",
       "guide": "../components/floating-sheet.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": "https://m3.material.io/components/dialogs/overview",
+        "implementation": {
+          "source": "llm.md#floating-sheet",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Inset floating dialog surface.",
+          "webAdaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
+          "limitations": []
+        },
+        "relationship": "related",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Related guidance is not a dedicated component specification."
       }
     },
     {
@@ -1021,8 +1364,25 @@
       "runtime": "css-only",
       "guide": "../components/drag-handle.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": "https://m3.material.io/components/bottom-sheets/overview",
+        "implementation": {
+          "source": "llm.md#drag-handle",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Decorative grip and actionable button grip.",
+          "webAdaptation": "The host element determines semantics; no general dragging engine.",
+          "limitations": [
+            "A grip outside supported sheets does not implement dragging or its keyboard alternative."
+          ]
+        },
+        "relationship": "related",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "document-reviewed",
+          "note": "Optional drag handle is bottom sheet anatomy. Android handle supports accessible expand/collapse. This does not verify the generic vertical handle or ExpressiveCSS dismiss-on-tap behavior as an identical spec."
+        },
+        "reason": "Related guidance is not a dedicated component specification."
       }
     },
     {
@@ -1049,7 +1409,7 @@
         "Notifications, counts, or status on navigation items and icons."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "chips",
@@ -1060,7 +1420,20 @@
       "guide": "../components/badges.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/badges/overview",
+        "implementation": {
+          "source": "llm.md#badges",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Small dot and large count badges.",
+          "webAdaptation": "Expose counts through the enclosing control name when its icon is hidden.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -1097,7 +1470,21 @@
       "guide": "../components/tooltips.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/tooltips/overview",
+        "implementation": {
+          "source": "llm.md#tooltips",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Plain and rich tooltips; CSS child and runtime-generated forms.",
+          "webAdaptation": "The selected form determines ownership; CSS-only hover/focus is not runtime initialization.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/tooltips/specs"
       }
     },
     {
@@ -1135,7 +1522,21 @@
       "guide": "../components/snackbar.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/snackbar/overview",
+        "implementation": {
+          "source": "llm.md#snackbar",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Transient message with optional action and close control.",
+          "webAdaptation": "Use the documented announcement and timeout behavior.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/snackbar/specs"
       }
     },
     {
@@ -1171,8 +1572,22 @@
       "runtime": "css-only",
       "guide": "../components/banners.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": "https://m3.material.io/components/snackbar/overview",
+        "implementation": {
+          "source": "llm.md#banners",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Basic/rich and standard/vibrant; square basic banners.",
+          "webAdaptation": "Persistent in-flow feedback; application owns dismissal.",
+          "limitations": []
+        },
+        "relationship": "related",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Retained framework pattern absent from the reviewed current M3 component inventory; related current guidance does not certify this implementation."
       }
     },
     {
@@ -1210,7 +1625,20 @@
       "guide": "../components/progress.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/progress-indicators/overview",
+        "implementation": {
+          "source": "llm.md#progress-indicators",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Linear and circular progress, determinate and indeterminate.",
+          "webAdaptation": "Prefer native progress where applicable; supply accessible state for custom hosts.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -1246,7 +1674,20 @@
       "guide": "../components/loading-indicator.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/loading-indicator/overview",
+        "implementation": {
+          "source": "llm.md#loading-indicator",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Uncontained and contained morphing loading indicator.",
+          "webAdaptation": "CSS-only; the author supplies an accessible waiting message.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -1272,7 +1713,7 @@
         "Material 3 adaptive carousels for visual collections."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "lists",
@@ -1284,7 +1725,20 @@
       "guide": "../components/carousel.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/carousel/overview",
+        "implementation": {
+          "source": "llm.md#carousel",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Adaptive visual collections with documented layout variants.",
+          "webAdaptation": "Runtime owns sizing and navigation; reduced motion removes parallax and morphing.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -1311,7 +1765,7 @@
         "Lightbox for enlarge-on-click images."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "carousel",
@@ -1323,7 +1777,21 @@
       "guide": "../components/lightbox.md",
       "materialGuidance": {
         "status": "framework-extra",
-        "reason": "ExpressiveCSS extension without a direct Material 3 component contract."
+        "implementation": {
+          "source": "llm.md#lightbox",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Enlarge-on-activation image and dismissal.",
+          "webAdaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
+          "limitations": []
+        },
+        "relationship": "none",
+        "href": null,
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       }
     },
     {
@@ -1349,7 +1817,7 @@
         "Frequently used actions for the current page."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
@@ -1357,7 +1825,21 @@
       "guide": "../components/toolbars.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/toolbars/overview",
+        "implementation": {
+          "source": "llm.md#toolbars",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Floating/docked, standard/vibrant, vertical floating, and companion FAB.",
+          "webAdaptation": "CSS-only commands; no automatic composite toolbar keyboard model.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/toolbars/specs"
       }
     },
     {
@@ -1394,7 +1876,20 @@
       "guide": "../components/search.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/search/overview",
+        "implementation": {
+          "source": "llm.md#search",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Search bar and expanded search view.",
+          "webAdaptation": "Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -1420,15 +1915,29 @@
         "Grouped form sections, from the HTML."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
       "runtime": "css-only",
       "guide": "../components/fieldsets.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": "https://m3.material.io/components/text-fields/overview",
+        "implementation": {
+          "source": "llm.md#fieldsets",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Outlined, filled, and rounded form groups.",
+          "webAdaptation": "Native fieldset/legend; related text-field tokens do not make this an M3 component.",
+          "limitations": []
+        },
+        "relationship": "related",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "reason": "Related guidance is not a dedicated component specification."
       }
     },
     {
@@ -1470,7 +1979,21 @@
       "guide": "../components/text-fields.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/text-fields/overview",
+        "implementation": {
+          "source": "llm.md#text-inputs",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Filled and outlined fields, supporting text, and error states.",
+          "webAdaptation": "Native input/textarea with explicit label and description relationships.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/text-fields/specs"
       }
     },
     {
@@ -1508,8 +2031,23 @@
       "runtime": "auto-init",
       "guide": "../components/select.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": "https://m3.material.io/components/menus/overview",
+        "implementation": {
+          "source": "llm.md#select",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Single/multiple selection, optgroups, and browser-default fallback.",
+          "webAdaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
+          "limitations": []
+        },
+        "relationship": "related",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "document-reviewed",
+          "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
+        },
+        "reason": "Related guidance is not a dedicated component specification."
       }
     },
     {
@@ -1548,7 +2086,21 @@
       "guide": "../components/checkboxes.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/checkbox/overview",
+        "implementation": {
+          "source": "llm.md#checkboxes",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Unchecked, checked, indeterminate, and disabled.",
+          "webAdaptation": "Native checkbox; indeterminate is set through the DOM property.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/checkbox/specs"
       }
     },
     {
@@ -1586,7 +2138,21 @@
       "guide": "../components/radio-buttons.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/radio-button/overview",
+        "implementation": {
+          "source": "llm.md#radio-buttons",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Native radio groups and disabled controls.",
+          "webAdaptation": "Shared name provides exclusivity; fieldset/legend names the group.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/radio-button/specs"
       }
     },
     {
@@ -1623,7 +2189,21 @@
       "guide": "../components/switches.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/switch/overview",
+        "implementation": {
+          "source": "llm.md#switches",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Native checkbox switches and disabled controls.",
+          "webAdaptation": "Input state owns selection and form value.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/switch/specs"
       }
     },
     {
@@ -1650,7 +2230,7 @@
         "Selections from a range of values."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [],
       "adaptive": [],
@@ -1658,7 +2238,21 @@
       "guide": "../components/slider.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/sliders/overview",
+        "implementation": {
+          "source": "llm.md#sliders",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Standard, centered, range, horizontal/vertical, and five sizes.",
+          "webAdaptation": "Native range inputs with runtime value-label and range coordination.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        },
+        "specHref": "https://m3.material.io/components/sliders/specs"
       }
     },
     {
@@ -1685,7 +2279,7 @@
         "Small blocks for contacts, tags, and filters."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "checkboxes",
@@ -1696,7 +2290,20 @@
       "guide": "../components/chips.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/chips/overview",
+        "implementation": {
+          "source": "llm.md#chips",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Assist, suggestion, filter, input, and display chips.",
+          "webAdaptation": "Element choice defines behavior; display chips are a framework extension.",
+          "limitations": []
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-07",
+          "scope": "inventory-reviewed"
+        }
       }
     },
     {
@@ -1734,8 +2341,23 @@
       "runtime": "auto-init",
       "guide": "../components/autocomplete.md",
       "materialGuidance": {
-        "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "status": "framework-extra",
+        "href": "https://m3.material.io/components/menus/overview",
+        "implementation": {
+          "source": "llm.md#autocomplete",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Single and multi-select suggestions.",
+          "webAdaptation": "Runtime combobox behavior attached to a text field; no standalone upstream component claim.",
+          "limitations": []
+        },
+        "relationship": "related",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "document-reviewed",
+          "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
+        },
+        "reason": "Related guidance is not a dedicated component specification."
       }
     },
     {
@@ -1762,7 +2384,7 @@
         "Choose a date, date range, or several dates from the framework’s inline calendar."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "text-fields",
@@ -1773,7 +2395,25 @@
       "guide": "../components/date-picker.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/date-pickers/overview",
+        "implementation": {
+          "source": "llm.md#date-picker",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Inline single-date, range, and multiple-date calendar.",
+          "webAdaptation": "Inline adaptation; open()/close() are deprecated no-ops.",
+          "limitations": [
+            "Modal picker parity is not provided by the documented inline API."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components/date-pickers/overview",
+          "reviewedOn": "2026-09-07",
+          "scope": "links-reviewed",
+          "note": "destination and main heading verified; full guideline not reviewed; link-observed; full specifications not reviewed"
+        },
+        "specHref": "https://m3.material.io/components/date-pickers/specs",
+        "guidelinesHref": "https://m3.material.io/components/date-pickers/guidelines"
       }
     },
     {
@@ -1800,7 +2440,7 @@
         "Choose a time from the framework’s inline 12-hour or 24-hour clock face."
       ],
       "avoidWhen": [
-        "A different documented component matches the user job or interaction model more directly."
+        "Another component fits the job better."
       ],
       "alternatives": [
         "text-fields",
@@ -1811,8 +2451,31 @@
       "guide": "../components/time-picker.md",
       "materialGuidance": {
         "status": "material",
-        "href": "https://www.expressivecss.com/m3-guidelines.md"
+        "href": "https://m3.material.io/components/time-pickers/overview",
+        "implementation": {
+          "source": "llm.md#time-picker",
+          "reviewedOn": "2026-09-07",
+          "documentedSupport": "Inline clock and digital input; 12-hour and 24-hour formats.",
+          "webAdaptation": "Inline adaptation; open()/close() are deprecated no-ops.",
+          "limitations": [
+            "Modal picker parity is not provided by the documented inline API."
+          ]
+        },
+        "relationship": "component",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components/time-pickers/overview",
+          "reviewedOn": "2026-09-07",
+          "scope": "links-reviewed",
+          "note": "destination and selected Guidelines tab verified; full guideline not reviewed; link-observed; full specifications not reviewed"
+        },
+        "specHref": "https://m3.material.io/components/time-pickers/specs",
+        "guidelinesHref": "https://m3.material.io/components/time-pickers/guidelines"
       }
     }
-  ]
+  ],
+  "materialMappingPolicy": {
+    "implementation": "documentedSupport is a source-reviewed summary for frameworkVersion, not a complete variant inventory or a browser pass; guideSource identifies the owning contract section.",
+    "upstream": "relationship identifies an upstream component (including explicitly marked legacy components), layout pattern, related guidance, or framework extension. upstreamReview states exactly which source and scope were reviewed; a link alone is not a specification review.",
+    "parity": "Full upstream parity and browser conformance are not assessed by this mapping. Unlisted limitations are unknown, not evidence of completeness."
+  }
 }

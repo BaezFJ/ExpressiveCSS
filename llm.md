@@ -1671,7 +1671,7 @@ A banner is **not** `role="banner"`. That role is the page header landmark: a pa
 </div>
 ```
 
-Two colour variants and one shape modifier. Standard is the default — `surface-container` with `on-surface` text. `vibrant` is `primary-container` with `on-primary-container`, for the most important message on the screen. `square` flattens the 28dp corners for a banner running flush under an app bar — basic banners only, since Material gives the rich layout one shape and no square counterpart.
+Two colour variants and one shape modifier. Standard is the default — `surface-container` with `on-surface` text. `vibrant` is `primary-container` with `on-primary-container`, for the most important message on the screen. `square` flattens the 28dp corners for a banner running flush under an app bar — basic banners only, since ExpressiveCSS gives the rich layout one shape and no square counterpart.
 
 ```html
 <div class="banner vibrant square">
@@ -1696,7 +1696,7 @@ Two colour variants and one shape modifier. Standard is the default — `surface
 </div>
 ```
 
-Tokens follow M3 Expressive `md.comp.banners.*`. The basic row is 56dp tall with 4dp insets, a 48dp icon container around a 24dp icon, `body-medium` text with 14dp above and below, and actions 8dp apart. Below 600dp the actions take their own line and the row grows to 112dp. The rich layout has 12dp insets, a title at `body-medium` weight 500, and its actions 12dp under the message. Set `--md-comp-banners-color`, `--md-comp-banners-body-text-color`, `--md-comp-banners-title-text-color`, `--md-comp-banners-icon-color` and `--md-comp-banners-close-button-color` for colour; the geometry tokens are `--md-comp-banners-basic-*` and `--md-comp-banners-rich-*`.
+ExpressiveCSS uses `md.comp.banners.*`-style tokens; a dedicated current M3 specification for these variants has not been verified. The basic row is 56dp tall with 4dp insets, a 48dp icon container around a 24dp icon, `body-medium` text with 14dp above and below, and actions 8dp apart. Below 600dp the actions take their own line and the row grows to 112dp. The rich layout has 12dp insets, a title at `body-medium` weight 500, and its actions 12dp under the message. Set `--md-comp-banners-color`, `--md-comp-banners-body-text-color`, `--md-comp-banners-title-text-color`, `--md-comp-banners-icon-color` and `--md-comp-banners-close-button-color` for colour; the geometry tokens are `--md-comp-banners-basic-*` and `--md-comp-banners-rich-*`.
 
 ---
 
@@ -4195,7 +4195,7 @@ document.getElementById('sheet').showModal(); // modal
 
 ### Floating sheet
 
-A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - the third member of M3's sheet family. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
+A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - an ExpressiveCSS dialog extension, not a verified standalone M3 component. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
 
 There are no edge modifiers: `.bottom` selects a bottom sheet and `.left` / `.right` a side sheet. Anchor it with `inset` / `margin`, or move it with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`.
 

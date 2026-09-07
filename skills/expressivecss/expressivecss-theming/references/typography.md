@@ -45,6 +45,33 @@ Display, headline, and `title-large` use the brand typeface token. Body, label, 
 
 Every role exposes `--md-sys-typescale-{role}-font-family-name`, `-font-family-style`, `-font-weight`, `-font-size`, `-line-height`, and `-letter-spacing`. The role utilities consume all except `-font-family-style`; its `Regular` and `Medium` values describe weight and are not valid CSS `font-style` values.
 
+## Expressive emphasis and current limits
+
+Google's [typography guidance](https://m3.material.io/styles/typography/overview) and [Android typography implementation](https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md) include an emphasized counterpart for each baseline role. They use stronger weight to distinguish selected content, actions, headlines, and editorial hierarchy. Reviewed 2026-09-07. The Android style names are design evidence, not CSS classes.
+
+| Roles | Google emphasized weight | ExpressiveCSS application path |
+| --- | --- | --- |
+| Display, headline, title-large, body | Medium, conventionally `500` | Scope the existing role's `-font-weight` token to the intended element. Bundled fonts supply `500`. |
+| Title-medium, title-small, label | Bold, conventionally `700` | Supply a real `700` face or a variable font covering it, then scope the existing role token. Bundled fonts do not supply `700`. |
+
+ExpressiveCSS emits only the 15 baseline roles above. It has no emphasized type-role utility or `--md-sys-typescale-emphasized-*` token family. The rich banner title already applies body-medium at `500` locally; that component treatment does not expose a reusable emphasized scale. See `src/sass/components/_banners.scss`.
+
+For a selected headline treatment, this is an application-owned override of an existing token:
+
+```css
+.account-heading {
+  --md-sys-typescale-headline-small-font-weight: 500;
+}
+```
+
+```html
+<h2 class="headline-small account-heading">Account security</h2>
+```
+
+Scope emphasis to the text or intended subtree. Changing all weights at `:root` would erase the contrast between ordinary and emphasized text. Keep the role's size, line height, and spacing unless the brand requires a tested adjustment. `.bold` means `500` in this framework, so it cannot stand in for the `700` emphasized label treatment. Do not invent `.label-large-emphasized` or imply that heavier text changes selection semantics.
+
+Use emphasis sparingly around the task's important action or content. Keep ordinary prose comfortable to read; use semantic `<strong>` when the text itself has greater importance. Verify the actual loaded font face and weight, text wrapping, fallback scripts, and zoom. A font-family declaration alone does not load a font, and synthetic bold is not proof that the requested face exists.
+
 ## Typeface tokens and bundled fonts
 
 Override the reference tokens rather than all 15 roles:

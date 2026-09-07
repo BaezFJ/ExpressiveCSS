@@ -46,6 +46,8 @@ Do not ask the user to choose raw CSS values. Translate product and brand answer
 
 Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded.
 
+For a decision involving expressive foundations, read only the relevant Theming reference: [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md). Each separates Google's design intent from implemented web contracts and framework gaps. Do not claim an Android capability exists in ExpressiveCSS without matching implementation evidence.
+
 ## Routing dependency
 
 Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Use selected component guides for the matching bundled contract and adaptive decisions. Consult Material 3 guidance or target-version documentation for missing details or conflicts.

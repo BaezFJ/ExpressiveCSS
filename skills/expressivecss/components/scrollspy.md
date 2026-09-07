@@ -11,13 +11,25 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `78475083f85d7c98ba6e4054695c2ace7b08102389d4ed96908f31dd0b4131fe`
+Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
 
 #### Selection and adaptation
 
-Runtime ownership: `auto-init`. Framework extra; follow the shipped contract.
+Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#scrollspy`): Section tracking and table-of-contents links.
+
+Web adaptation: Web document navigation helper.
+
+Full parity and browser conformance remain unassessed.
 
 #### Contract
 

@@ -919,7 +919,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ## 7.4 Floating sheets
 
-**M3:** Floating sheets. **ExpressiveCSS:** `dialog.floating-sheet`. No plugin — light dismiss is `Dialogs.Init()`, the same as any `<dialog>`.
+**Mapping:** ExpressiveCSS inset-dialog extension; related dialog guidance does not establish a standalone M3 floating-sheet specification. **ExpressiveCSS:** `dialog.floating-sheet`. No plugin — light dismiss is `Dialogs.Init()`, the same as any `<dialog>`.
 
 **Use when** secondary content should float **above** the page rather than dock to an edge: a mini player, a filter panel, a detail card over a map or canvas.
 
@@ -962,7 +962,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ## 7.6 Banners
 
-**M3:** Banners (basic / rich). **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
+**Mapping:** Persistent feedback pattern; the reviewed current M3 component inventory has no dedicated banner entry. Basic/rich support is an ExpressiveCSS contract, not verified upstream parity. **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
 
 **Use when** a condition **persists** and the user can keep working around it: offline, a failed sync, an expiring trial, a cookie or privacy choice. The message stays until the user acts on it.
 

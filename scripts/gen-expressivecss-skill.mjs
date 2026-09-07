@@ -257,11 +257,26 @@ function renderGuide(component, page, section, rules, provenance) {
     const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
     return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
   }).join('\n') || 'Use the documented component at each reachable width; no catalogue substitution is prescribed.';
-  const material = component.materialGuidance.status === 'material'
-    ? `[Material guidance](${component.materialGuidance.href})`
-    : 'Framework extra; follow the shipped contract.';
+  const mapping = component.materialGuidance;
+  const material = mapping.href
+    ? `[${mapping.relationship === 'related' ? 'Related Google guidance' : 'Google guidance'}](${mapping.href})`
+    : 'No dedicated entry in the reviewed Google component inventory.';
+  const implementation = mapping.implementation;
+  const upstream = mapping.upstreamReview;
+  const mappingLines = [
+    `Relationship: ${mapping.relationship}. ${mapping.reason ?? ''}`.trim(),
+    `Upstream: ${upstream.scope}${upstream.reviewedOn ? ` (${upstream.reviewedOn})` : ''}; [evidence](${upstream.source}).`,
+    ...(upstream.note ? [upstream.note] : []),
+    ...(mapping.specHref ? [`[Specification link](${mapping.specHref}); full specs unreviewed.`] : []),
+    ...(mapping.guidelinesHref ? [`[Google guidelines](${mapping.guidelinesHref}).`] : []),
+    ...(mapping.relatedHrefs ?? []).map((href) => `[Related Google component](${href}).`),
+    `Support (${implementation.reviewedOn}, \`${implementation.source}\`): ${implementation.documentedSupport}`,
+    `Web adaptation: ${implementation.webAdaptation}`,
+    ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
+    'Full parity and browser conformance remain unassessed.',
+  ].join('\n\n');
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${adaptive}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
 }
 
 async function generatedGuides() {

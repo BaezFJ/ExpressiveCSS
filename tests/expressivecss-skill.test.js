@@ -33,7 +33,7 @@ const helpersReferenceUrl = new URL('expressivecss-usage/references/helpers.md',
 const usageFoundationReferenceUrls = Object.fromEntries(['media', 'table', 'transitions']
   .map((name) => [name, new URL(`expressivecss-usage/references/${name}.md`, skillDirectory)]));
 const themingGuideUrl = new URL('expressivecss-theming/SKILL.md', skillDirectory);
-const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'state-layers']
+const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'shape', 'motion', 'state-layers']
   .map((name) => [name, new URL(`expressivecss-theming/references/${name}.md`, skillDirectory)]));
 const compiledCss = compile(fileURLToPath(new URL('../src/sass/expressive.scss', import.meta.url)), {
   loadPaths: [fileURLToPath(new URL('../src/sass/', import.meta.url))],
@@ -532,6 +532,45 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(stateLayers, /selected and disabled[\s\S]*do not have system state-layer opacity tokens/i);
     const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
     assert.doesNotMatch(matrix, /framework selected state-layer token|framework disabled state-layer token/i);
+  });
+
+  test('keeps expressive foundation examples within implemented contracts', () => {
+    const references = Object.fromEntries(['shape', 'motion', 'typography']
+      .map((name) => [name, readFileSync(foundationReferenceUrls[name], 'utf8')]));
+    for (const [name, reference] of Object.entries(references)) {
+      assert.ok(reference.includes(`docs/theming/${name[0].toUpperCase()}${name.slice(1)}.md`), `${name} lacks primary implementation provenance`);
+      assert.match(reference, /Reviewed \d{4}-\d{2}-\d{2}/);
+      for (const [, example] of reference.matchAll(/```css\n([\s\S]*?)\n```/g)) {
+        for (const [, token] of example.matchAll(/(--md-[\w-]+)\s*:/g)) {
+          assert.ok(compiledCss.includes(`${token}:`), `${name} example overrides undefined token ${token}`);
+          assert.ok(compiledCss.includes(`var(${token}`), `${name} example overrides unused token ${token}`);
+        }
+      }
+    }
+
+    // These gaps describe compiled capabilities, not speculative CSS APIs.
+    for (const prefix of ['--md-sys-shape-', '--md-sys-motion-', '--md-sys-typescale-emphasized-']) {
+      assert.ok(!compiledCss.includes(prefix), `${prefix} support changed; revise the documented gap`);
+      assert.ok(Object.values(references).some((reference) => reference.includes(`${prefix}*`)), `${prefix} gap is undocumented`);
+    }
+    assert.doesNotMatch(compiledCss, /\.(?:display|headline|title|body|label)-(?:large|medium|small)-emphasized\b/);
+    assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*9999px/);
+    assert.match(compiledCss, /--md-comp-button-group-motion:\s*linear\(/);
+    assert.match(compiledCss, /border-radius 200ms var\(--md-comp-button-group-motion\)/);
+    assert.match(references.typography, /Bundled fonts do not supply `700`/);
+    assert.match(references.typography, /\.bold` means `500`/);
+    const fontFaces = [...compiledCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
+      .map(([, declarations]) => declarations)
+      .filter((declarations) => /font-family:\s*["']?(?:Roboto|Noto Sans)["']?\s*;/.test(declarations));
+    assert.ok(fontFaces.length >= 4, 'could not inspect bundled text font faces');
+    assert.deepEqual([...new Set(fontFaces.map((face) => face.match(/font-weight:\s*([^;]+);/)?.[1]))].sort(), ['400', '500']);
+
+    const expandingCard = readFileSync(new URL('../src/ts/components/expandingCard.ts', import.meta.url), 'utf8');
+    const closeDuration = expandingCard.match(/const MOTION_DURATION = (\d+);/)?.[1];
+    assert.ok(closeDuration, 'could not inspect close cleanup timing');
+    assert.match(expandingCard, /setTimeout\(finish, MOTION_DURATION\)/);
+    assert.ok(references.motion.includes(`independently uses \`${closeDuration}ms\``));
+    assert.match(references.motion, /does not synchronize that timer/);
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {

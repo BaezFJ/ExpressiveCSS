@@ -1,13 +1,13 @@
 ---
 name: expressivecss-theming
-description: Theme ExpressiveCSS color roles, brand seeds, typography, icons, elevation, state layers, and light/dark schemes. Use for visual tokens and brand changes; exclude unrelated markup and runtime lifecycle repairs.
+description: Theme ExpressiveCSS color roles, brand seeds, typography, shape, motion, icons, elevation, state layers, and light/dark schemes. Use for visual tokens and brand changes; exclude unrelated markup and runtime lifecycle repairs.
 ---
 
 ## ExpressiveCSS themes and colors
 
 ## When to use
 
-Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens such as elevation and shadows.
+Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens such as shape, motion, elevation, and shadows.
 
 ## Do not use when
 
@@ -23,7 +23,9 @@ Load only the references needed for the task:
 - For light/dark/auto selection, seed overrides, nested schemes, Shadow DOM, and vibrant regions, read the [themes reference](./references/themes.md).
 - For `z-depth-*`, Sass elevation mixins, and shadow-state rules, read the [elevation reference](./references/elevation.md).
 - For Material Symbols families, axes, sizing, font delivery, and icon accessibility, read the [icons reference](./references/icons.md).
-- For the 15 M3 type roles, typeface tokens, text helpers, and semantic hierarchy, read the [typography reference](./references/typography.md).
+- For the 15 baseline type roles, expressive emphasis, font support, and semantic hierarchy, read the [typography reference](./references/typography.md).
+- For component corners, state shape changes, and shape support gaps, read the [shape reference](./references/shape.md).
+- For spatial versus effects motion, component timing ownership, and reduced motion, read the [motion reference](./references/motion.md).
 - For hover, focus, pressed, and dragged opacity tokens, overlay and ring forms, and per-component overrides, read the [state-layers reference](./references/state-layers.md).
 
 ### Select a scheme

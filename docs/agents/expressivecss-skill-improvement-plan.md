@@ -1,5 +1,37 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Material mapping and expressive foundations, September 7, 2026
+
+The existing component catalogue now owns dated upstream evidence, documented
+support, web adaptations, and known boundaries. Its 46 entries distinguish 34
+Material components, including the explicitly marked legacy bottom app bar, one
+layout pattern, six related patterns, and five web extensions. The selected
+generated guide and optional MCP decision response carry the same mapping.
+Upstream inventory review confirms an observed Google entry; it does not certify
+every specification or the framework's visual parity. Source-reviewed support
+does not constitute a browser pass. Specification links remain pointers unless
+the evidence scope says the specification itself was reviewed.
+
+Shape and motion have focused Theming references; typography now explains
+emphasized treatments through existing scoped weight tokens and actual font
+coverage. These references identify framework gaps rather than inventing APIs:
+no reusable emphasized type scale, global shape scale, or global motion theme is
+shipped. Component-specific shape/motion remains available. The common-button
+square/toggle morph boundary, inline picker behavior, and independent expanding
+card CSS/cleanup timing are documented limits, not implementation changes.
+
+Shared floating-sheet and banner documentation was corrected where it implied
+unverified upstream authority. Search mapping preserves application ownership of
+view opening. Current Google guidance about expanded rails and docked toolbars is
+recorded without removing the existing drawer or bottom-app-bar contracts.
+
+The complete basic-button path is 30,444 bytes, a 25.14% reduction from the original
+40,670-byte baseline. Repeated selection text was shortened to keep the new
+evidence within the existing reading budget. No dependency, stylesheet behavior,
+runtime API, export, or installation changed. See the
+[comparison report](./expressivecss-skill-comparison.md#material-mapping-and-foundations)
+for the focused old/new task review and validation evidence.
+
 ## Reliability and performance follow-up, September 2026
 
 The phases below record the original implementation plan. The follow-up keeps

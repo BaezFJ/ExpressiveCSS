@@ -492,3 +492,111 @@ checks, 218 skill tests and 22 replay cases, the seven-tool MCP smoke check, and
 isolated framework and MCP package checks. No framework API, stylesheet behavior,
 package exports or dependencies changed. Regenerated contract and component-guide
 source hashes reflect the updated test command in `package.json`.
+
+## Material mapping and foundations
+
+The September 7 follow-up improves design-system knowledge while preserving the
+framework contract. Google component inventory was rendered and inspected in
+Chrome. The review captured 36 upstream entries, including FAB families that
+share an ExpressiveCSS guide and a divider that has no standalone guide. The
+existing 46-entry framework catalogue remains the inventory owner; it now records
+the relationship, exact upstream link, review date/scope, documented support,
+web adaptation, and known limitations for each selected guide.
+
+Google's [component inventory](https://m3.material.io/components) supports the
+component mappings. [Canonical layouts](https://m3.material.io/foundations/layout/canonical-examples/overview)
+are patterns. Google's [bottom app bar documentation](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md)
+marks that baseline component deprecated for Expressive and points to docked
+toolbars. The [rail overview](https://m3.material.io/components/navigation-rail/overview)
+identifies expanded rail as the drawer replacement. These are design directions,
+not grounds to remove a consuming application's existing behavior.
+
+Fieldsets, floating sheets, generic drag handles, select/autocomplete, and banners
+have related guidance rather than verified dedicated current component specs.
+Footer, breadcrumbs, pagination, scrollspy, and lightbox remain web extensions.
+Absence from the reviewed current inventory does not prove historical absence.
+The mapping records partial review honestly: representative specification links
+were observed, but complete specifications and pixel parity were not audited.
+Known support summaries come from the identified `llm.md` sections; missing
+limitations are unknown rather than a promise of completeness.
+
+The new [shape reference](../../skills/expressivecss/expressivecss-theming/references/shape.md),
+[motion reference](../../skills/expressivecss/expressivecss-theming/references/motion.md),
+and expanded [typography reference](../../skills/expressivecss/expressivecss-theming/references/typography.md)
+compare Google's Android design evidence with emitted CSS and component source.
+Android attributes are not CSS APIs. Tests verify example token declarations and
+consumers, bundled font weights, the sampled button-group spring, and absent
+global token families. Expanding-card CSS duration is independent of runtime's
+500ms close cleanup; this is a documented framework finding, not fixed here.
+
+Two user-reviewed requests compare committed `f7de257` with the revised skill:
+
+1. Review direct Material support versus framework adaptations for fieldsets,
+   floating sheets, bottom app bars, and standalone common-button shape changes,
+   without edits.
+2. Apply headline-small at weight 500 to `#account-title` and 16px corners only to
+   the Save preferences button through existing tokens. Preserve copy, other
+   controls, JavaScript, dependencies, and colors; explain the available
+   emphasized type, shape, and motion systems without adding animation.
+
+The ordinary requests use the same runnable consumer and configured model, once
+per version. Each old/new pair runs concurrently, with launch order alternating.
+The existing Codex adapter retains filesystem manifests, transcripts, timing,
+usage and redacted before/after sources. The shared provenance collector records
+the fixture, skill and evaluator inputs, including the temporary operator script.
+Neither prompt labels nor scoring expectations are supplied to candidates.
+This is a focused task comparison, not a discovery or speed benchmark.
+
+Local ignored artifacts live under `.cache/expressivecss-material-foundations/`.
+The reviewed upstream inventory is `material-inventory.json`; the operator script
+and frozen comparison are retained there for inspection. Preserve that directory
+separately when sharing this report.
+
+The frozen protocol is
+`sha256:f8cbfacc12c98d270e76d930333d90952eef32680bd88c21c74a0daee70bdcc1`.
+It records fixture hash
+`sha256:ecdf42b44db118945125722232d27c8cd1959eee91582ec092a6073b33ca543f`
+and evaluator hash
+`sha256:2d69262770ad57f2461b7a6673aafa81ac1189b7c8836501c079016283b4f5fc`.
+Both versions used `gpt-6-astra`, high reasoning, Node 24.20.0 and a 300-second
+deadline. The revised skill hash is
+`sha256:e0f62843ae5217e993bc5e578a2792429afca593c0b8239f2f84df74c62cee50`;
+the committed baseline is `6980d999…`. Candidate inputs remained fixed throughout.
+The later independent review and browser-check artifacts supplement this frozen
+execution protocol; they were not part of its evaluator hash.
+
+| Request | Old skill | Revised skill | Independent result |
+| --- | --- | --- | --- |
+| Support review | 5/5 checks | 5/5 checks | Accurate support distinctions; no edits. |
+| Scoped foundation tokens | 6/7 checks | 6/7 checks | Correct source edits; unsupported browser-error claim in both responses. |
+
+Both token responses claimed that a preview server failed with `listen EPERM`.
+Neither retained transcript contains that server launch or error. These claims
+fail evidence integrity even though the edits themselves are correct. The support
+review's approval-policy browser blockers do have retained tool evidence. Web
+search events record requests without complete returned pages, so a requested URL
+alone does not prove that a candidate read its contents.
+
+Separate operator browser checks matched retained HTML/CSS against filesystem
+digests before executing them. At 375px/light and 1280px/dark, both outputs render
+the headline at 24px/32px and weight 500 with loaded bundled Roboto, and only Save
+has 16px corners. Peer controls and brand colors match the baseline, and Save
+still submits successfully. The first operator attempt targeted the visually
+hidden native checkbox; the completed check clicks its visible label and verifies
+the checked state. This selector correction changes no candidate source. Browser
+results are in `browser-review.json` and do not repair the candidates' unsupported
+claims. This focused check is not a complete accessibility or visual audit.
+
+The existing Skill Creator [review viewer](../../.cache/expressivecss-material-foundations/comparison/review.html)
+renders all four outputs, grades, and the benchmark without page errors.
+`comparison/independent-output-review.json` retains the review findings; human
+comparison is pending. Both versions completed the source tasks with equal grades.
+This small comparison demonstrates the new guidance can be used successfully,
+but establishes no accuracy or speed improvement. Reliable reporting of browser
+blocker causes remains an evaluation finding for a separate follow-up.
+
+Validation passes `npm run verify` with 969 tests and no skips, `npm run test:skill`
+with 220 tests plus 22 replay cases, all 13 browser tests, seven MCP smoke tools,
+and isolated framework/MCP package checks. Generated skill and MCP copies are
+current. The basic-button read path is 30,444 bytes, preserving the 25% reduction
+requirement against the original 40,670-byte baseline.

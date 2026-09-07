@@ -11,13 +11,29 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `78475083f85d7c98ba6e4054695c2ace7b08102389d4ed96908f31dd0b4131fe`
+Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
 
 #### Selection and adaptation
 
-Runtime ownership: `css-only`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+Runtime ownership: `css-only`. [Related Google guidance](https://m3.material.io/components/bottom-sheets/overview)
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: related. Related guidance is not a dedicated component specification.
+
+Upstream: document-reviewed (2026-09-07); [evidence](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md).
+
+Optional drag handle is bottom sheet anatomy. Android handle supports accessible expand/collapse. This does not verify the generic vertical handle or ExpressiveCSS dismiss-on-tap behavior as an identical spec.
+
+Support (2026-09-07, `llm.md#drag-handle`): Decorative grip and actionable button grip.
+
+Web adaptation: The host element determines semantics; no general dragging engine.
+
+Known boundary: A grip outside supported sheets does not implement dragging or its keyboard alternative.
+
+Full parity and browser conformance remain unassessed.
 
 #### Contract
 

@@ -11,13 +11,33 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `78475083f85d7c98ba6e4054695c2ace7b08102389d4ed96908f31dd0b4131fe`
+Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
 
 #### Selection and adaptation
 
-Runtime ownership: `css-only`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: overview-reviewed (2026-09-07); [evidence](https://m3.material.io/components/buttons/overview).
+
+rendered main content reviewed in part; link-observed; full specifications not reviewed
+
+[Specification link](https://m3.material.io/components/buttons/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/buttons/guidelines).
+
+Support (2026-09-07, `llm.md#buttons`): Filled, tonal, outlined, elevated, and text; xsmall through xlarge.
+
+Web adaptation: Native buttons run commands; a.button links navigate.
+
+Known boundary: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.
+
+Full parity and browser conformance remain unassessed.
 
 #### Contract
 

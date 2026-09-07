@@ -11,15 +11,31 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `78475083f85d7c98ba6e4054695c2ace7b08102389d4ed96908f31dd0b4131fe`
+Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
 
 #### Selection and adaptation
 
-Runtime ownership: `auto-init`. [Material guidance](https://www.expressivecss.com/m3-guidelines.md)
+Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/navigation-rail/overview)
 
 - compact window: replace-with [navigation-bar](./navigation-bar.md). Compact peer destinations fit the bottom edge.
 - expanded window: variant. Use the expanded rail when labels should remain visible.
 - expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Use a drawer when nested destinations need more space.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: overview-reviewed (2026-09-07); [evidence](https://m3.material.io/components/navigation-rail/overview).
+
+tab observed; destination not followed; link-observed; full specifications not reviewed
+
+[Specification link](https://m3.material.io/components/navigation-rail/specs); full specs unreviewed.
+
+Support (2026-09-07, `llm.md#navigation-rail`): Collapsed, expanded, and modal rails.
+
+Web adaptation: The compact expanded rail uses a scrim and dismissal behavior.
+
+Full parity and browser conformance remain unassessed.
 
 #### Contract
 
