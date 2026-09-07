@@ -1,0 +1,25 @@
+name: Accepted feature or improvement
+description: Turn an agreed proposal into actionable work.
+body:
+  - type: markdown
+    attributes:
+      value: "Discuss new APIs and major design changes in Discussions first. Report vulnerabilities privately at https://github.com/BaezFJ/ExpressiveCSS/security/advisories/new."
+  - type: input
+    id: discussion
+    attributes:
+      label: Related discussion
+      description: Link the accepted proposal, or explain why this is a small improvement.
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Intended outcome
+      description: Who benefits, and what should change?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Describe observable results, including accessibility and compatibility requirements.
+    validations:
+      required: true

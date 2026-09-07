@@ -24,8 +24,9 @@ Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 - [Node.js](https://nodejs.org/) 20 or newer
 - npm
 
-Node 22.12 or newer to run the documentation site: that is Astro's own
-requirement, not the framework's, which still builds and tests on 20.
+Use Node 24 for repository development, selected by `.nvmrc`. The framework's
+runtime compatibility range remains unchanged. See [CONTRIBUTING.md](CONTRIBUTING.md)
+for setup, checks, and the community workflow.
 
 ## MCP server for AI workflows
 
@@ -46,7 +47,7 @@ Quick start:
 
 ```sh
 cd mcp/expressivecss
-npm install
+npm ci
 node server.js
 ```
 
@@ -60,7 +61,7 @@ To use it with your MCP client, point the command to:
 Clone the repository and install the JavaScript dependencies:
 
 ```sh
-npm install
+npm ci
 npm run build
 ```
 
@@ -175,6 +176,7 @@ Available npm commands include:
 | `npm run build:js` | Build ESM, CommonJS, and browser bundles |
 | `npm run build:types` | Generate TypeScript declarations |
 | `npm run watch` | Watch Sass and TypeScript sources |
+| `npm run verify` | Build, typecheck, test, check generated data, and verify docs |
 | `npm run typecheck` | Check the TypeScript source without emitting files |
 | `npm test` | Build the ESM bundle and run the test suite |
 | `npm run clean` | Remove generated build output |
@@ -198,18 +200,20 @@ It is the same site published at
 
 ## Project structure
 
-```text
-src/
-├── sass/        Design tokens, utilities, base styles, and component styles
-└── ts/          Core APIs, behaviors, plugins, and interactive components
-docs/            Documentation site and build smoke test (Astro)
-tests/           Node test runner and jsdom tests
-dist/            Generated distributable files
-```
+| Location | Purpose | Tracked? |
+| --- | --- | --- |
+| `src/sass`, `src/ts` | Framework source | Yes |
+| `docs/src` | Astro documentation and examples | Yes |
+| `mcp/expressivecss` | Independently versioned MCP package | Yes |
+| `skills/expressivecss` | Agent guidance and generated component references | Yes |
+| `scripts`, `tests`, `visual` | Generators, verification, and test tooling | Source only |
+| `semantics.json`, `llm.md`, `m3-guidelines.md` | Markup rules, API reference, design guidance | Yes |
+| `SEMANTICS.md`, generated skill/MCP data | Derived files checked for drift | Yes |
+| `dist`, `_site`, visual reports and caches | Build output | No |
+| `.design-sync` | Optional external design previews | Configuration and source only |
 
-See [`src/sass/README.md`](src/sass/README.md) for Sass architecture and
-[`src/ts/README.md`](src/ts/README.md) for component conventions and testing
-guidance.
+See [Sass architecture](src/sass/README.md), [TypeScript conventions](src/ts/README.md),
+and [development notes](docs/development-notes.md).
 
 ## Testing
 
@@ -226,8 +230,9 @@ behavior rather than geometry or visual transitions.
 
 ## Contributing
 
-Keep generated files out of commits, add tests for behavior changes, and run
-both the test suite and type checker before submitting a change. New JavaScript
-components must be exported from `src/ts/components/index.ts`; components that
-support automatic initialization must also be registered in
-`src/ts/components/registry.ts`.
+Start with [CONTRIBUTING.md](CONTRIBUTING.md). Use
+[Discussions](https://github.com/BaezFJ/ExpressiveCSS/discussions) for questions and
+proposals, and [Issues](https://github.com/BaezFJ/ExpressiveCSS/issues) for accepted
+work and reproducible bugs. Read our [governance](GOVERNANCE.md),
+[code of conduct](CODE_OF_CONDUCT.md), [security policy](SECURITY.md), and
+[release workflow](RELEASING.md).

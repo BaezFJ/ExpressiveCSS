@@ -1,11 +1,8 @@
 // Builds the stylesheet the design system ships.
 //
-// The framework deliberately does not ship the Material Symbols font files
-// (three variable families would dwarf the sheet — see CLAUDE.md). The docs
-// site pulls them from Google Fonts instead. A design built in Claude Design
-// gets only the styles.css @import closure, so without these @imports every
-// icon renders as its ligature text. Prepending them here is what makes icons
-// actually appear. Regenerate with: node .design-sync/build-css.mjs
+// The framework bundles fonts in dist/fonts/. This optional adapter adds remote
+// imports for design consumers that transfer CSS without its relative assets.
+// Regenerate with: node .design-sync/build-css.mjs
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
 const SYMBOLS = 'opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
