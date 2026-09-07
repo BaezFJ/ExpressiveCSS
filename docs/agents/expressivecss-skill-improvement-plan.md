@@ -1,5 +1,26 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Component selection follow-up, September 7, 2026
+
+All 21 generic avoidance warnings now name the competing job or component.
+Thirty selected guides include a concrete scenario showing why a plausible
+choice is wrong. The existing catalogue owns the examples; the generator and
+optional MCP bundle carry them without another catalogue or runtime dependency.
+
+The main distinctions cover app destinations versus local panels, native form
+values versus command/toggle buttons, transient versus persistent versus blocking
+feedback, and measured versus unmeasured waits. Button-group toggle support,
+indeterminate linear progress, snackbar Undo, native input alternatives, and
+inline picker limits remain explicit. These are selection examples grounded in
+the existing package contracts, not new claims of Google specification parity.
+
+The complete basic-button reading path is 30,159 bytes, 25.84% below the original
+40,670-byte baseline and 285 bytes below the preceding revision. Examples live in
+the selected guides rather than the mandatory index. Regression checks protect
+example coverage, generation, existing MCP selection outcomes, and the reading
+budget. See the [focused comparison](./expressivecss-skill-comparison.md#component-selection-follow-up)
+for the two approved tasks, observed outputs, and validation limits.
+
 ## Material mapping and expressive foundations, September 7, 2026
 
 The existing component catalogue now owns dated upstream evidence, documented

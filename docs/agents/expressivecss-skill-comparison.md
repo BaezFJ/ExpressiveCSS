@@ -600,3 +600,99 @@ with 220 tests plus 22 replay cases, all 13 browser tests, seven MCP smoke tools
 and isolated framework/MCP package checks. Generated skill and MCP copies are
 current. The basic-button read path is 30,444 bytes, preserving the 25% reduction
 requirement against the original 40,670-byte baseline.
+
+## Component selection follow-up
+
+September 7, 2026. The source catalogue replaces all 21 generic avoidance
+warnings and adds wrong-choice examples to 30 selected component guides. The
+index distinguishes jobs; the selected guides explain scenarios. Generated skill
+and optional MCP bundles share the same catalogue. No framework behavior or
+public API changed.
+
+The basic-button path is **30,159 bytes**, down from 30,444 in the preceding
+revision and **25.84% below the original 40,670-byte baseline**. This counts whole
+required local files, not tokens or latency. The index stays below 100 lines.
+
+### Approved tasks and method
+
+The user approved two review tasks. Both use independent copies of the existing
+runnable account-dashboard consumer fixture, ordinary requests, and the same
+configured Codex model, `gpt-6-astra` with high reasoning. Each version runs once
+per task. Old/new pairs run concurrently, alternating dispatch order. Both tasks
+prohibit edits, installation, and browser-verification claims.
+
+1. Review a mockup with Home/Search/Profile as tabs, Overview/Activity as app
+   navigation, submitted Economy/Express delivery values and Cut/Copy/Paste as
+   connected button groups, and Bold/Italic command states as segmented inputs.
+   Recommend components, state ownership, and keyboard behavior.
+2. Review modal Save feedback, timed offline feedback despite continued local
+   editing, banner confirmation before irreversible deletion, a short circular
+   spinner, a byte-reporting upload with a loading shape, and a minute-long
+   unmeasured export with that shape. Explain suitable components, timing,
+   accessible state, ownership, snackbar Undo, and indeterminate linear progress.
+
+Exact requests, settings, fixture/grader hashes, operator script, skill snapshots,
+redacted commands, source comparisons, filesystem manifests, and telemetry remain
+in `.cache/expressivecss-component-selection/`. The operator's separately recorded
+rubric and its hash accompany the review grades; they are not candidate claims
+or browser measurements. Source retention redacts part of the fixture JavaScript.
+Its original fixture digest matches the operator manifest, and its redacted text
+matches the retained copy. All before/after filesystem hashes match.
+
+An earlier draft pair is retained under `draft-comparison/` and excluded from
+these results. The provenance guard stopped that comparison after the banner
+wording changed to restore an existing MCP selection check. No draft results
+were resumed into the final comparison.
+
+Baseline is commit `b4c8033`, skill hash
+`sha256:e0f62843ae5217e993bc5e578a2792429afca593c0b8239f2f84df74c62cee50`.
+The final revised snapshot hash is
+`sha256:c5db3e229bb841dc2859436850e9306c2e1aca69f5241507f3309d03e938fcd9`.
+
+### Observed results
+
+| Task | Old checks | Revised checks | Old seconds | Revised seconds | Old tokens | Revised tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Navigation and controls | 7/7 | 7/7 | 50.2 | 49.2 | 233,484 | 176,657 |
+| Feedback and loading | 9/9 | 9/9 | 56.0 | 54.8 | 290,020 | 221,950 |
+
+All four reviews completed with unchanged project files, no installations, and
+no fabricated browser pass or blocker in the retained responses. Both versions
+correctly distinguished app destinations from panels, submitted native values
+from toggle commands, and standard command groups from connected toggle groups.
+Both preserved the package's native-link Tabs keyboard behavior rather than
+inventing an ARIA tablist implementation.
+
+Both versions chose the intended feedback/loading components. They also caught
+that transferred bytes need a known total to establish a fraction and that Undo
+requires real reversibility. Both retained indeterminate linear progress and
+distinguished CSS-only indicators/banner, manual Snackbar, and native/shared
+dialog behavior.
+
+Tokens are input plus output, including cached input. Raw records retain those
+fields separately. Revised tool counts were 9 and 11; old counts were 10 and 9.
+The revised navigation run read four full component guides versus five in the
+old run. Partial guide reads are not counted as complete reads. These are single
+observations, so per-case variability is unavailable. The results show successful
+component selection with the clearer guidance, **not an established accuracy or
+speed improvement**. No interface was implemented or visually assessed by these
+review tasks.
+
+### Verification and review
+
+- `npm run test:skill`: 221 tests passed, plus the replay checks.
+- `npm run verify`: 970 tests passed without skips; generated-file checks,
+  typechecking, builds, and documentation verification passed.
+- `npm run test:browser`: 13 tests passed without skips.
+- MCP smoke: all 7 tools passed; isolated framework and MCP package checks passed.
+- Existing Skill Creator viewer: all four outputs navigable, benchmark visible,
+  and no browser page errors. Human comparison remains available.
+
+The first skill-suite attempt overlapped the contributor build and correctly
+failed its frozen-provenance check. Repeating after the build passed. MCP smoke
+also caught the loss of “transient confirmation” from the banner avoidance
+wording; restoring that concrete distinction fixed the failure without changing
+the matcher or weakening its regression assertion.
+
+[Open the Skill Creator review viewer](../../.cache/expressivecss-component-selection/comparison/review.html)
+and [machine-readable results](../../.cache/expressivecss-component-selection/comparison/benchmark.json).

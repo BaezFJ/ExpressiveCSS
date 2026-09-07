@@ -11,11 +11,13 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
+Contract SHA-256: `88ca160b60b164edc2fea0eba0bc743e73a5fc3f3ce830a8473ff4a8052799c6`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
+
+Example: A saved delivery-speed choice needs radios or segmented inputs, not three action buttons.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 

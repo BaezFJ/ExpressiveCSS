@@ -112,6 +112,34 @@ describe('ExpressiveCSS component decisions', () => {
     assert.ok(bySlug.get('dialogs').aliases.includes('modal'));
   });
 
+  test('replaces generic warnings with concrete selection examples in the guides', async () => {
+    const exampleSlugs = [
+      'app-bar', 'panes', 'footer', 'breadcrumbs', 'pagination', 'scrollspy',
+      'buttons', 'icon-buttons', 'split-button', 'cards', 'lists', 'floating-sheet',
+      'badges', 'carousel', 'lightbox', 'toolbars', 'fieldsets', 'slider', 'chips',
+      'date-picker', 'time-picker', 'tabs', 'navigation-bar', 'segmented-buttons',
+      'button-groups', 'snackbar', 'banners', 'dialogs', 'progress', 'loading-indicator',
+    ];
+    for (const component of data.components) {
+      assert.doesNotMatch(component.avoidWhen.join(' '), /another component fits|fits the job better/i);
+    }
+    for (const slug of exampleSlugs) {
+      const component = bySlug.get(slug);
+      assert.equal(typeof component.selectionExample, 'string', `${slug} needs a wrong-choice example`);
+      assert.ok(component.selectionExample.length > 40, `${slug} needs a scenario and reason`);
+      const guide = await readFile(new URL(`../skills/expressivecss/components/${slug}.md`, import.meta.url), 'utf8');
+      assert.ok(guide.includes(component.selectionExample), `${slug} drops its selection example`);
+      assert.ok(!generated.includes(component.selectionExample), `${slug} bloats the decision index`);
+    }
+    // Protect the distinctions most likely to be lost in further shortening.
+    assert.match(bySlug.get('tabs').selectionExample, /navigation.*panels/is);
+    assert.match(bySlug.get('button-groups').selectionExample, /submit.*radio/is);
+    assert.match(bySlug.get('segmented-buttons').selectionExample, /commands.*radio/is);
+    assert.match(bySlug.get('snackbar').selectionExample, /save.*banner.*dialog/is);
+    assert.match(bySlug.get('loading-indicator').selectionExample, /determinate.*indeterminate/is);
+    assert.match(bySlug.get('progress').selectionExample, /indeterminate linear/i);
+  });
+
   test('keeps upstream evidence distinct from documented support and web extensions', async () => {
     const llm = await readFile(new URL('../llm.md', import.meta.url), 'utf8');
     for (const component of data.components) {

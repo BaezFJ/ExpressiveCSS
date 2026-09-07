@@ -11,11 +11,13 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `5c2bf390ed8e96eeb3bc8cb1638a3c0c582a42759e41299d5f882e811832d6f6`
+Contract SHA-256: `88ca160b60b164edc2fea0eba0bc743e73a5fc3f3ce830a8473ff4a8052799c6`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/navigation-bar/overview)
+
+Example: Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths.
 
 - expanded window: replace-with [navigation-rail](./navigation-rail.md). Use persistent peer navigation at wider widths.
 - expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Use a drawer when nested destinations need more space.
