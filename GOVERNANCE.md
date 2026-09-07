@@ -6,7 +6,7 @@ propose changes through public discussions, issues, and pull requests.
 
 ## Work and decisions
 
-The ExpressiveCSS community Project is the shared board. Its columns are Backlog,
+The [ExpressiveCSS community Project](https://github.com/users/BaezFJ/projects/8) is the shared board. Its columns are Backlog,
 Ready, In progress, In review, and Done. Issues contain acceptance criteria; PRs
 link to issues. Release milestones express intent, not deadlines.
 

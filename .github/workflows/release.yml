@@ -113,3 +113,16 @@ jobs:
           DIST_TAG: ${{ needs.validate.outputs.distTag }}
         run: |
           echo "Published $PACKAGE_NAME@$PACKAGE_VERSION to $DIST_TAG." >> "$GITHUB_STEP_SUMMARY"
+
+  docs:
+    needs: [validate, publish]
+    if: github.event_name == 'release' && needs.validate.outputs.kind == 'framework' && needs.validate.outputs.distTag == 'latest'
+    uses: ./.github/workflows/pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    with:
+      commit: ${{ github.sha }}
+      tag: ${{ github.event.release.tag_name }}
+      version: ${{ needs.validate.outputs.version }}

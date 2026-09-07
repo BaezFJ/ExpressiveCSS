@@ -54,8 +54,8 @@ deploying. Prereleases and MCP releases do not deploy the main site. Unreleased
 docs are available through local development and CI artifacts. Documentation-only
 changes reach the public site in a framework patch release.
 
-If publication fails, the stable site stays unchanged. Retry failed infrastructure
-without retagging. If a package was published but is defective, publish a corrective
+If publication fails, the stable site stays unchanged. Use GitHub's "Re-run failed jobs" to retry a failed docs deployment without
+rerunning the successful publish job or retagging. If a package was published but is defective, publish a corrective
 version and deprecate the bad version when appropriate. Never overwrite a published
 version. Re-running a successful release is not a way to replace its package.
 
@@ -66,4 +66,5 @@ coordination, and stable documentation deployment PRs. Merge CI before enabling
 its required result. Confirm the named `required` check has succeeded on GitHub,
 then require it with an up-to-date branch, PRs, and resolved conversations.
 Keep mandatory approving reviews at zero during the single-maintainer stage.
+The community board is https://github.com/users/BaezFJ/projects/8.
 Test a failing PR and a passing owner PR before considering rollout complete.
