@@ -33,7 +33,7 @@ test('provenance fingerprints fixture sources, built assets, grader sources, loc
     assert.throws(() => assertSameProvenance(original, changed), /provenance/);
     await save(root, relative, relative);
   }
-  for (const relative of ['scripts/expressivecss-eval-browser.mjs', 'scripts/expressivecss-codex-adapter.mjs', 'package-lock.json', 'mcp/expressivecss/package-lock.json']) {
+  for (const relative of ['scripts/expressivecss-eval-browser.mjs', 'scripts/lib/bounded-file.mjs', 'scripts/lib/consumer-browser.mjs', 'scripts/expressivecss-codex-adapter.mjs', 'package-lock.json', 'mcp/expressivecss/package-lock.json']) {
     await save(root, relative, 'changed');
     const changed = await collect(root);
     assert.notEqual(changed.graderHash, original.graderHash, relative);

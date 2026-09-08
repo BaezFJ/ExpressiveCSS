@@ -1,3 +1,4 @@
+import { createBrowserSession } from './lib/consumer-browser.mjs';
 import { createHash, randomBytes } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
@@ -5,7 +6,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
-import { readBoundedRegularFile } from './eval-expressivecss-skill.mjs';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const LIMITS = { requests: 1000, calls: 100, input: 16_384, output: 65_536, image: 4 * 1024 * 1024, timeout: 8000 };
@@ -60,25 +61,9 @@ function validateInput(input) {
   for (const required of ({ click: ['selector'], fill: ['selector', 'value'], press: ['key'], resize: ['width'], evaluate: ['expression'] }[input.action] ?? [])) if (input[required] === undefined || (required !== 'value' && input[required] === '')) throw new Error(`Missing ${required}`);
 }
 
-/** Shared network boundary for both candidate tools and independent post-run checks. */
-export async function createRestrictedFixturePage(browser, origin, options = {}) {
-  const context = await browser.newContext({ ...options, serviceWorkers: 'block', acceptDownloads: false });
-  const errors = [], blockedRequests = [];
-  await context.route('**/*', (route) => {
-    try {
-      const target = new URL(route.request().url());
-      if (target.origin !== origin || !['GET', 'HEAD'].includes(route.request().method())) throw new Error('External or mutating request');
-      fixturePath(target.pathname);
-      return route.continue();
-    } catch { if (blockedRequests.length < 50) blockedRequests.push(route.request().url().slice(0, 512)); return route.abort('blockedbyclient'); }
-  });
-  await context.routeWebSocket('**/*', (socket) => { if (blockedRequests.length < 50) blockedRequests.push(socket.url().slice(0, 512)); socket.close(); });
-  const page = await context.newPage();
-  page.setDefaultTimeout(3000);
-  page.on('pageerror', (error) => { if (errors.length < 50) errors.push(error.message.slice(0, 2048)); });
-  page.on('console', (message) => { if (message.type() === 'error' && errors.length < 50) errors.push(message.text().slice(0, 2048)); });
-  context.on('page', (popup) => { if (popup !== page) void popup.close().catch(() => {}); });
-  return { context, page, errors, blockedRequests };
+/** Fixture paths stay narrower than ordinary consumer routes. */
+export function createRestrictedFixturePage(browser, origin, options = {}) {
+  return createBrowserSession(browser, origin, options, { checkPath: fixturePath });
 }
 
 /** The evaluator owns the browser and records. Candidate responses are never verification evidence. */

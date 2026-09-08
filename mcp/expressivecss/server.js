@@ -202,7 +202,7 @@ const syntaxSchema = {
 const inspectSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   files: z.array(z.string().max(MAX_FILE_PATH_CHARS)).max(DEFAULT_QA_MAX_FILES).default([]),
-  runType: z.enum(['quick', 'standard', 'full']).default('quick'),
+  runType: z.enum(['quick', 'standard', 'full', 'consumer']).default('quick'),
   runCommands: z.boolean().default(false),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
@@ -1625,6 +1625,8 @@ async function runQualityCommands(projectRoot, runType, packageManager) {
     commands.push(['test', 360_000]);
   }
 
+  if (runType === 'consumer') commands.push(['verify:expressivecss', 360_000]);
+
   const results = [];
   for (const [script, timeout] of commands) {
     const result = await runCommandInProject(projectRoot, packageManager, script, timeout);
@@ -2112,7 +2114,7 @@ async function qualityInspectorHandler(args) {
   const highCount = staticFindings.reduce((count, entry) => count + entry.issues.filter((issue) => issue.severity === 'high').length, 0);
 
   const commandChecks = [];
-  const commandsRequested = parsed.runCommands && (parsed.runType === 'standard' || parsed.runType === 'full');
+  const commandsRequested = parsed.runCommands && (['standard', 'full', 'consumer'].includes(parsed.runType));
   const executionPolicy = commandExecutionPolicy(projectRoot);
   const commandRootBlocked = commandsRequested && !executionPolicy.allowed;
   const packageManagerBlocked = commandsRequested && !['npm', 'pnpm', 'yarn'].includes(version.packageManager);
@@ -2205,6 +2207,7 @@ async function qualityInspectorHandler(args) {
         ...commandBlocked.map((run) => `${run.command.split(' ').at(-1)} command ${run.timedOut ? 'timed out' : 'could not be launched'}`),
       ],
       recommendations: [
+        ...(parsed.runType === 'consumer' ? ['Consumer commands are project-authored. Inspect operator-collected report.json and captures; exit status or printed claims alone do not establish browser conformance.'] : []),
         'If status is warn, resolve medium/high-severity issues before shipping.',
         'If runCommands is disabled, pair this call with `runCommands: true` for command verification.',
       ],

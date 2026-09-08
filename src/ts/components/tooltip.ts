@@ -85,6 +85,7 @@ export class Tooltip extends Component<TooltipOptions> {
   tooltipEl: HTMLElement;
   private _exitDelayTimeout: ReturnType<typeof setTimeout>;
   private _enterDelayTimeout: ReturnType<typeof setTimeout>;
+  private _animationTimeout: ReturnType<typeof setTimeout>;
   xMovement: number;
   yMovement: number;
 
@@ -138,6 +139,12 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   destroy() {
+    clearTimeout(this._enterDelayTimeout);
+    clearTimeout(this._exitDelayTimeout);
+    clearTimeout(this._animationTimeout);
+    this.isOpen = false;
+    this.isHovered = false;
+    this.isFocused = false;
     if (this.el.getAttribute('aria-describedby') === this.tooltipEl.id) {
       this.el.removeAttribute('aria-describedby');
     }
@@ -312,7 +319,8 @@ export class Tooltip extends Component<TooltipOptions> {
     this.tooltipEl.style.transition = `
       transform ${duration}ms ease-out,
       opacity ${duration}ms ease-out`;
-    setTimeout(() => {
+    clearTimeout(this._animationTimeout);
+    this._animationTimeout = setTimeout(() => {
       this.tooltipEl.style.transform = `translateX(${this.xMovement}px) translateY(${this.yMovement}px)`;
       this.tooltipEl.style.opacity = (this.options.opacity || 1).toString();
     }, 1);
@@ -324,7 +332,8 @@ export class Tooltip extends Component<TooltipOptions> {
     this.tooltipEl.style.transition = `
       transform ${duration}ms ease-out,
       opacity ${duration}ms ease-out`;
-    setTimeout(() => {
+    clearTimeout(this._animationTimeout);
+    this._animationTimeout = setTimeout(() => {
       this.tooltipEl.style.transform = `translateX(0px) translateY(0px)`;
       this.tooltipEl.style.opacity = '0';
     }, 1);

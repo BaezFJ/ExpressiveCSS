@@ -66,6 +66,11 @@ and builds and verifies the docs. Browser behavior tests require Chromium; the
 explicit browser command and CI fail if it is absent. Node-only local tests can
 skip browser tests when Chromium is not installed.
 
+For repeatable checks of a running consumer application, use
+`npm run verify:consumer -- --project-root <app> --scenario <checks.json> --origin http://127.0.0.1:<port>`.
+See the [scenario format and evidence limits](skills/expressivecss/references/consumer-verification.md).
+The command reuses the consumer's installed Playwright; it does not start its server.
+
 For MCP changes, also run:
 
 ```sh

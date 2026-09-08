@@ -54,6 +54,23 @@ For a framework source checkout, the server accepts only the generated contract'
 
 Static inspection uses descriptor-level, no-follow bounded reads and rechecks file identity after each read. It caps files at 2 MiB each and 16 MiB per request by default, stops after 200 issues per file or 1,000 per request, and applies a five-second scan budget. Any unread, changed, over-budget, or partially scanned file appears under `filesUninspected`, which prevents a pass.
 
+## Consumer browser scenarios
+
+`quality_inspector` accepts `runType: "consumer"` with `runCommands: true` to run
+only the consuming project's `verify:expressivecss` package script. Bind that
+script to the skill's portable `scripts/verify-consumer.mjs`, a reviewed scenario,
+and an already-running local development server. The consumer supplies its
+existing `@playwright/test` and Chromium. MCP adds no browser dependency.
+
+The existing operator root allowlist, environment filtering, output redaction,
+and command timeout apply. No arbitrary command text or script name is accepted.
+A disabled `runCommands` flag never launches the script. A missing or failed
+script cannot pass command verification. Project scripts and their printed claims
+are untrusted evidence; inspect the independently collected report and captures.
+`reviewComplete` remains false, and uninspected review areas remain explicit.
+See the skill's `references/consumer-verification.md` for the scenario format,
+network limits, evidence handling, and bounded repair workflow.
+
 ## Environment variables
 
 - `EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS`

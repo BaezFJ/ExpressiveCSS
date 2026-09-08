@@ -66,6 +66,20 @@ async function syncResolver(checkOnly) {
   }
 }
 
+async function syncConsumerTools(checkOnly) {
+  for (const name of ['verify-consumer.mjs', 'consumer-browser.mjs', 'bounded-file.mjs']) {
+    const source = `scripts/lib/${name}`;
+    const destination = resolve(ROOT, 'skills/expressivecss/scripts', name);
+    const expected = `// Generated from ${source}. Do not edit.\n${await readFile(resolve(ROOT, source), 'utf8')}`;
+    if (checkOnly) {
+      if (await readFile(destination, 'utf8').catch(() => '') !== expected) throw new Error(`Generated consumer tool is stale: ${name}`);
+    } else {
+      await mkdir(dirname(destination), { recursive: true });
+      await writeFile(destination, expected);
+    }
+  }
+}
+
 function renderDecisionIndex(data) {
   const cell = (value) => String(value).replaceAll('|', '\\|').replaceAll('\n', ' ');
   const rows = data.components.map((component) => {
@@ -348,6 +362,7 @@ await validateComponentInventory();
 const guides = await generatedGuides();
 const checkOnly = process.argv.includes('--check');
 await syncResolver(checkOnly);
+await syncConsumerTools(checkOnly);
 await syncDecisionIndex(checkOnly);
 await syncContractManifest(checkOnly);
 if (checkOnly) await check(guides);

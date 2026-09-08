@@ -19,6 +19,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Tooltip teardown now cancels pending entry, exit, and animation callbacks.
+- FormSelect retains ownership of its generated Menu during repeated AutoInit, preventing a retained Menu registry entry.
+
 - **Card reveal accessibility.** Reveal panels now use a native `.card-reveal-trigger` button with a verified `aria-controls` relationship, runtime-owned `aria-expanded`, `inert` closed content, Escape handling, and focus return. AutoInit skips incomplete or disabled-only disclosures, and explicit initialization no longer hides a panel when it lacks a usable enabled `type="button"` trigger or exactly one identified direct panel. Closed-panel CSS is activated only after successful runtime setup, so rejected disclosures remain visible without JavaScript-managed state. This is a markup change: legacy `.activator` headings and separate heading-based close controls no longer toggle the panel.
 - **App bar search dialog.** Closing a full-screen search view no longer reopens it when focus returns to the field.
 - **Badge hosts.** Sibling badges on the stacked navigation bar and collapsed rail use logical inset and flip in RTL. Tabs nest a badge in the destination icon.

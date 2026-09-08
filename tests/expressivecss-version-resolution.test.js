@@ -590,6 +590,9 @@ describe('ExpressiveCSS version resolution', () => {
     const inputs = [
       'scripts/gen-expressivecss-skill.mjs',
       'scripts/lib/resolve-expressivecss-version.mjs',
+      'scripts/lib/verify-consumer.mjs',
+      'scripts/lib/consumer-browser.mjs',
+      'scripts/lib/bounded-file.mjs',
       'llm.md',
       'semantics.json',
       'docs/src/data/nav.ts',
@@ -617,6 +620,9 @@ describe('ExpressiveCSS version resolution', () => {
       'skills/expressivecss/components/app-bar.md',
       'skills/expressivecss/components/time-picker.md',
       'skills/expressivecss/scripts/resolve-version.mjs',
+      'skills/expressivecss/scripts/verify-consumer.mjs',
+      'skills/expressivecss/scripts/consumer-browser.mjs',
+      'skills/expressivecss/scripts/bounded-file.mjs',
       'mcp/expressivecss/contract.json',
       'mcp/expressivecss/scripts/resolve-version.mjs',
     ]) {

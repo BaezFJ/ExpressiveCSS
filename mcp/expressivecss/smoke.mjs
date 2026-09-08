@@ -156,6 +156,9 @@ await writeFile(path.join(outsideDir, 'package.json'), JSON.stringify({
     typecheck: "node -e \"console.log(JSON.stringify({ path: Boolean(process.env.PATH), ci: process.env.CI, secret: process.env.EXPRESSIVECSS_TEST_SECRET ?? null, client_secret: 'plain-secret-value', home: process.env.HOME ?? null }))\"",
   },
 }));
+const commandPackage = JSON.parse(await readFile(path.join(outsideDir, 'package.json'), 'utf8'));
+commandPackage.scripts['verify:expressivecss'] = "node -e \"console.log('CANDIDATE_CLAIM_ONLY')\"";
+await writeFile(path.join(outsideDir, 'package.json'), JSON.stringify(commandPackage));
 await writeFile(path.join(outsideDir, 'package-lock.json'), '{}');
 await mkdir(path.join(deniedCommandDir, 'node_modules', '@expressivecss', 'expressive'), { recursive: true });
 await writeFile(path.join(deniedCommandDir, 'package.json'), JSON.stringify({
@@ -944,6 +947,26 @@ try {
   assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"home":"\[LOCAL_PATH\]"/);
   assert.match(allowedEnvironment.structuredContent.commandChecks[0].output, /"client_secret":"\[REDACTED\]"/);
   assert.doesNotMatch(allowedEnvironment.structuredContent.commandChecks[0].output, /plain-secret-value|must-not-reach-child/);
+
+  const consumerCommand = await client.callTool({
+    name: 'quality_inspector',
+    arguments: { projectRoot: outsideDir, runType: 'consumer', runCommands: true },
+  });
+  assert.equal(consumerCommand.structuredContent.commandChecks.length, 1);
+  assert.equal(consumerCommand.structuredContent.commandChecks[0].command, 'npm run verify:expressivecss');
+  assert.equal(consumerCommand.structuredContent.commandChecks[0].exitStatus, 0);
+  assert.match(consumerCommand.structuredContent.commandChecks[0].output, /CANDIDATE_CLAIM_ONLY/);
+  assert.equal(consumerCommand.structuredContent.reviewComplete, false);
+  assert.ok(consumerCommand.structuredContent.uncheckedAreas.includes('focus visibility and order'));
+  for (const arguments_ of [
+    { projectRoot: outsideDir, runType: 'consumer', runCommands: false },
+    { projectRoot: deniedCommandDir, runType: 'consumer', runCommands: true },
+  ]) {
+    const deniedConsumer = await client.callTool({ name: 'quality_inspector', arguments: arguments_ });
+    assert.deepEqual(deniedConsumer.structuredContent.commandChecks, []);
+  }
+  const missingConsumer = await client.callTool({ name: 'quality_inspector', arguments: { projectRoot: matchingDir, runType: 'consumer', runCommands: true } });
+  assert.notEqual(missingConsumer.structuredContent.status, 'pass');
 
   const skippedTransport = new StdioClientTransport({
     command: process.execPath,

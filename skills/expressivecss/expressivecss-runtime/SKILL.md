@@ -55,6 +55,12 @@ const current = ComponentName.getInstance(element);
 current?.destroy();
 ```
 
+AutoInit selects descendants of its context and reconstructs existing instances.
+Scope it to the incoming route container to preserve persistent shell components;
+initialize a component host itself explicitly when it is the supplied context.
+Destroy route-owned instances before replacing HTML or navigating away. Removing
+DOM alone does not dispose generated portals or shared registry entries.
+
 Create markup before initialization. Destroy an instance before removing its mounted element or tearing down the owning view. Consult the target version's documentation for options, methods, properties, callbacks, and events missing from the selected guide.
 
 ### Runtime boundaries

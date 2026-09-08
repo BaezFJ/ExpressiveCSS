@@ -79,6 +79,9 @@ Before browser-dependent claims, probe one available route by loading the target
 
 Separate source findings, browser observations, and unavailable checks. Reference actual tool output or captures. Quote observed errors without guessing codes or causes. A compound command's status does not prove each subcommand passed. Keep verification proportional to the task; source checks do not establish browser conformance.
 
+For repeatable local browser checks, reuse project tests or the optional
+[consumer runner](./references/consumer-verification.md).
+
 ## Optional MCP acceleration
 
 MCP is optional; the Markdown workflow stands alone.
