@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from 'esbuild';
+import { buildCapabilityRoadmap, renderCapabilityRoadmap } from './lib/material-capabilities.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = resolve(ROOT, 'skills/expressivecss/components');
@@ -288,7 +289,7 @@ function renderGuide(component, page, section, rules, provenance) {
     `Support (${implementation.reviewedOn}, \`${implementation.source}\`): ${implementation.documentedSupport}`,
     `Web adaptation: ${implementation.webAdaptation}`,
     ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
-    'Full parity and browser conformance remain unassessed.',
+    `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
   ].join('\n\n');
   const selectionExample = component.selectionExample
     ? `Example: ${component.selectionExample}\n\n`
@@ -365,5 +366,12 @@ await syncResolver(checkOnly);
 await syncConsumerTools(checkOnly);
 await syncDecisionIndex(checkOnly);
 await syncContractManifest(checkOnly);
+const roadmap = await buildCapabilityRoadmap(decisionData, ROOT);
+for (const [name, expected] of [['capability-roadmap.json', JSON.stringify(roadmap, null, 2) + '\n'], ['capability-roadmap.md', renderCapabilityRoadmap(roadmap)]]) {
+  const destination = resolve(ROOT, 'skills/expressivecss/references', name);
+  if (checkOnly) {
+    if (await readFile(destination, 'utf8').catch(() => '') !== expected) throw new Error(`Generated capability roadmap is stale: ${name}`);
+  } else await writeFile(destination, expected);
+}
 if (checkOnly) await check(guides);
 else await write(guides);

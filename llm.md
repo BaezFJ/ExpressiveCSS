@@ -5194,7 +5194,7 @@ Select a date, a range, or several dates from a calendar.
 
 Add `datepicker` to a text input. `AutoInit()` starts every `.datepicker` except those marked `no-autoinit`.
 
-The calendar is inline, not a modal. `open()` and `close()` are deprecated no-ops. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
+The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
 
 ```html
 <div class="field">
@@ -5398,7 +5398,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-Deprecated. Both log a warning and do nothing. The calendar is not a modal; show it with `openByDefault` or the docked display plugin.
+These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking. Both require `openByDefault: true` to show the calendar. No modal implementation is available.
 
 ### Properties
 
@@ -5418,7 +5418,7 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Add `timepicker` to a text input. `AutoInit()` starts every `.timepicker` except those marked `no-autoinit`.
 
-The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are deprecated no-ops.
+The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
 
 ```html
 <div class="field">
@@ -5557,7 +5557,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-Deprecated. Both log a warning and do nothing. The clock is not a modal.
+These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
 
 ### Properties
 

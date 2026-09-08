@@ -24,6 +24,7 @@
     "server.js",
     "component-guides.json",
     "component-decisions.json",
+    "capability-roadmap.json",
     "contract.json",
     "semantics-data.json",
     "smoke.mjs",

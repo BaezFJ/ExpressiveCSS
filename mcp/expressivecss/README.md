@@ -13,6 +13,22 @@ The server bundles generated component guides, selection data, contract metadata
 
 A resolved version matching the bundled contract reports `documentationMode: "bundled"` and `bundledContractSafe: true`. `documentationSources.bundled` identifies the contract version and source hash. This resolver does not verify the public website, so `currentDocsSafe` and `documentationSources.current.available` remain false even on a match. Use matching bundled guidance, installed sources, or a proven release tag for version-specific claims.
 
+## Material capability evidence
+
+`component_syntax_expert` adds a scoped `capability` record to each found component.
+For foundations, pass `foundations: ["typography", "shape", "motion"]`; component
+names are optional for this request. Results distinguish documented scope,
+pinned source review, feature/integration gaps, mapped checks and recorded results.
+Version or contract-provenance failures block capability results.
+
+`capabilityEvidence` identifies the bundled review snapshot and browser run.
+This evidence concerns the reviewed checkout. It does not verify the installed
+package's implementation, the consumer's browser, or full Google specification
+parity. Changed inputs invalidate evidence during generation; serving the package
+does not rerun tests or re-review sources. The optional Markdown
+[roadmap](https://github.com/BaezFJ/ExpressiveCSS/blob/master/skills/expressivecss/references/capability-roadmap.md) and packaged
+`capability-roadmap.json` come from the same catalogue.
+
 ## Run it locally
 
 The server supports Node `^22.22.2 || ^24.15.0 || >=26.0.0`, matching its `jsdom` runtime dependency.

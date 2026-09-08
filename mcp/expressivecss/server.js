@@ -13,6 +13,8 @@ import { resolveExpressiveVersion } from './scripts/resolve-version.mjs';
 
 const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
 const COMPONENT_DECISIONS = JSON.parse(readFileSync(path.join(SERVER_DIR, 'component-decisions.json'), 'utf8'));
+const CAPABILITY_ROADMAP = JSON.parse(readFileSync(path.join(SERVER_DIR, 'capability-roadmap.json'), 'utf8'));
+const CAPABILITIES_BY_SLUG = new Map(CAPABILITY_ROADMAP.entries.map((entry) => [entry.slug, entry]));
 const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((entry) => [entry.slug, entry]));
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
 const DEFAULT_QA_MAX_FILES = 300;
@@ -153,7 +155,7 @@ const TOOL_DESCRIPTIONS = {
   },
   component_syntax_expert: {
     stage: 'Component Syntax Expert',
-    description: 'Return authoritative syntax, contract, and usage constraints for selected components.',
+    description: 'Return component syntax and constraints, plus scoped Material capability evidence. Request typography, shape, or motion through foundations.',
   },
   quality_inspector: {
     stage: 'Quality Inspector',
@@ -195,7 +197,8 @@ const pageArchitectSchema = {
 
 const syntaxSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
-  components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).min(1).max(12),
+  components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).max(12).default([]),
+  foundations: z.array(z.enum(['typography', 'shape', 'motion'])).max(3).default([]),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
@@ -1643,7 +1646,7 @@ const setupExpertSchema = z.object(setupSchema);
 const rulesSchemaParsed = z.object(rulesSchema);
 const creativeSchemaParsed = z.object(creativeSchema);
 const architectSchemaParsed = z.object(pageArchitectSchema);
-const syntaxSchemaParsed = z.object(syntaxSchema);
+const syntaxSchemaParsed = z.object(syntaxSchema).refine((value) => value.components.length + value.foundations.length > 0, 'Request at least one component or foundation');
 const qualitySchemaParsed = z.object(inspectSchema);
 
 async function setupExpertHandler(args) {
@@ -2036,6 +2039,7 @@ async function componentSyntaxExpertHandler(args) {
   const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
 
+  const capabilitySafe = version.status === 'match' && !provenanceBlock && CAPABILITY_ROADMAP.frameworkVersion === catalog.frameworkVersion;
   const requested = parsed.components;
   const found = [];
   const missing = [];
@@ -2049,7 +2053,7 @@ async function componentSyntaxExpertHandler(args) {
         nearest: nearestMatches(catalog, component, skipLimit).map((row) => row.slug),
       });
     } else {
-      found.push(summarizeGuide(guide));
+      found.push({ ...summarizeGuide(guide), capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null });
     }
   }
 
@@ -2057,13 +2061,15 @@ async function componentSyntaxExpertHandler(args) {
     'component_syntax_expert',
     {
       foundCount: found.length,
+      foundations: capabilitySafe ? parsed.foundations.map((slug) => CAPABILITIES_BY_SLUG.get(slug)) : [],
+      capabilityEvidence: { status: capabilitySafe ? 'bundled-review-snapshot' : 'blocked', basis: CAPABILITY_ROADMAP.basis, browserRun: capabilitySafe ? CAPABILITY_ROADMAP.browserRun : null },
       contractVersion: catalog.frameworkVersion,
       guideSource: catalog.guideSource,
       found,
       missing,
-      status: version.status === 'match' && !provenanceBlock && missing.length === 0 ? 'available' : 'blocked',
-      checksPerformed: ['named component contract lookup'],
-      evidenceSources: found.map((component) => `${catalog.guideSource}:${component.file}`),
+      status: version.status === 'match' && !provenanceBlock && missing.length === 0 && (!parsed.foundations.length || capabilitySafe) ? 'available' : 'blocked',
+      checksPerformed: [...(requested.length ? ['named component contract lookup'] : []), ...(capabilitySafe ? ['bundled capability snapshot lookup'] : [])],
+      evidenceSources: [...found.map((component) => `${catalog.guideSource}:${component.file}`), ...(capabilitySafe ? ['bundled:capability-roadmap.json'] : [])],
       uncheckedAreas: [
         'rendered component behavior',
         'visual hierarchy',
@@ -2073,11 +2079,12 @@ async function componentSyntaxExpertHandler(args) {
       contractCompatibility: version.status,
       contractProvenance: catalog.provenance.status,
       contractProvenanceDetails: catalog.provenance,
-      coverageStatus: missing.length ? 'partial-named-component-contracts' : 'named-component-contracts',
+      coverageStatus: !requested.length ? 'named-foundation-review-snapshot' : missing.length ? 'partial-named-component-contracts' : 'named-component-contracts',
       blockedChecks: [
         ...(version.status === 'match' ? [] : ['target-version contract checks']),
         ...(provenanceBlock ? [provenanceBlock] : []),
         ...(missing.length ? ['missing requested component contracts'] : []),
+        ...(!capabilitySafe && parsed.foundations.length ? ['requested foundation capability evidence'] : []),
       ],
       maxCharactersPerComponent: SETTINGS.maxComponentResponseChars,
       notes: [

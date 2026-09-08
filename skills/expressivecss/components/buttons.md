@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `b6932faca34a9bc7c8a63e59713b4369999e62858e7cee46bc605c89b167e053`
+Contract SHA-256: `982df72b92606622a0451e4f35019ec2f4ac9e1b493060b428507aa87fe22251`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ Web adaptation: Native buttons run commands; a.button links navigate.
 
 Known boundary: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.
 
-Full parity and browser conformance remain unassessed.
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#buttons).
 
 #### Contract
 

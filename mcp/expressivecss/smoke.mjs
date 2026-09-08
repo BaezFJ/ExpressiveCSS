@@ -661,6 +661,8 @@ try {
   assert.equal(staleSyntax.structuredContent.contractCompatibility, 'match');
   assert.equal(staleSyntax.structuredContent.contractProvenance, 'stale');
   assert.equal(staleSyntax.structuredContent.status, 'blocked');
+  assert.equal(staleSyntax.structuredContent.found[0].capability, null);
+  assert.equal(staleSyntax.structuredContent.capabilityEvidence.status, 'blocked');
 
   const tamperedGuideSyntax = await client.callTool({
     name: 'component_syntax_expert',
@@ -687,6 +689,15 @@ try {
   });
   assert.equal(matchingSyntax.structuredContent.contractCompatibility, 'match');
   assert.equal(matchingSyntax.structuredContent.status, 'available');
+  assert.equal(matchingSyntax.structuredContent.found[0].capability.support, 'partial');
+  assert.match(matchingSyntax.structuredContent.capabilityEvidence.basis, /not proof of published package/);
+  const foundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, foundations: ['typography', 'shape', 'motion'] } });
+  assert.equal(foundations.structuredContent.foundCount, 0);
+  assert.deepEqual(foundations.structuredContent.foundations.map((entry) => entry.slug), ['typography', 'shape', 'motion']);
+  assert.ok(foundations.structuredContent.foundations.every((entry) => entry.support === 'partial'));
+  const blockedFoundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: versionedDir, foundations: ['shape'] } });
+  assert.equal(blockedFoundations.structuredContent.capabilityEvidence.status, 'blocked');
+  assert.deepEqual(blockedFoundations.structuredContent.foundations, []);
 
   const quality = await client.callTool({
     name: 'quality_inspector',

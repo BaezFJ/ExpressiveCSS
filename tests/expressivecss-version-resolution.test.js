@@ -590,6 +590,7 @@ describe('ExpressiveCSS version resolution', () => {
     const inputs = [
       'scripts/gen-expressivecss-skill.mjs',
       'scripts/lib/resolve-expressivecss-version.mjs',
+      'scripts/lib/material-capabilities.mjs',
       'scripts/lib/verify-consumer.mjs',
       'scripts/lib/consumer-browser.mjs',
       'scripts/lib/bounded-file.mjs',
@@ -601,7 +602,13 @@ describe('ExpressiveCSS version resolution', () => {
       'CHANGELOG.md',
       'skills/expressivecss/SKILL.md',
     ];
-    for (const input of inputs) {
+    const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
+    // Include reviewed inputs so the Git-free snapshot has the same evidence availability.
+    inputs.push(...(decisions.capabilityBrowserEvidence?.inputs ?? []).map((input) => input.path));
+    for (const directory of ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts']) {
+      await cp(path.join(sourceRoot, directory), path.join(projectRoot, directory), { recursive: true });
+    }
+    for (const input of new Set(inputs)) {
       const destination = path.join(projectRoot, input);
       await mkdir(path.dirname(destination), { recursive: true });
       await cp(path.join(sourceRoot, input), destination);
@@ -617,6 +624,8 @@ describe('ExpressiveCSS version resolution', () => {
     for (const output of [
       'skills/expressivecss/references/contract.json',
       'skills/expressivecss/references/component-decisions.md',
+      'skills/expressivecss/references/capability-roadmap.md',
+      'skills/expressivecss/references/capability-roadmap.json',
       'skills/expressivecss/components/app-bar.md',
       'skills/expressivecss/components/time-picker.md',
       'skills/expressivecss/scripts/resolve-version.mjs',

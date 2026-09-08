@@ -311,3 +311,78 @@ describe('ExpressiveCSS component decisions', () => {
     assert.match(componentReview, /\| `buttons` \| `icon-only-control-is-named` \|/);
   });
 });
+
+// Capability evidence is an operator snapshot, never inferred from test registrations.
+describe('Material capability roadmap', () => {
+  test('covers the catalogue and foundations without turning constraints into feature gaps', async () => {
+    const { buildCapabilityRoadmap } = await import('../scripts/lib/material-capabilities.mjs');
+    const { fileURLToPath } = await import('node:url');
+    const roadmap = await buildCapabilityRoadmap(data, fileURLToPath(root));
+    assert.equal(roadmap.entries.length, data.components.length + 3);
+    assert.ok(roadmap.entries.every((entry) => entry.sourceReview === 'source-reviewed'));
+    assert.deepEqual(roadmap.entries.filter((entry) => entry.kind === 'component' && entry.support === 'partial').map((entry) => entry.slug).sort(), ['buttons', 'date-picker', 'time-picker']);
+    for (const slug of ['bottom-app-bar', 'navigation-drawer', 'icon-buttons', 'segmented-buttons', 'drag-handle']) {
+      assert.equal(roadmap.entries.find((entry) => entry.slug === slug).gaps.length, 0, slug);
+    }
+    for (const slug of ['typography', 'shape', 'motion']) assert.equal(roadmap.entries.find((entry) => entry.slug === slug).support, 'partial');
+    const generatedRoadmap = await readFile(new URL('../skills/expressivecss/references/capability-roadmap.json', import.meta.url), 'utf8');
+    assert.deepEqual(JSON.parse(generatedRoadmap), roadmap);
+    assert.equal(await readFile(new URL('../mcp/expressivecss/capability-roadmap.json', import.meta.url), 'utf8'), generatedRoadmap);
+  });
+
+  test('invalidates changed, missing and added inputs and distinguishes unavailable evidence', async () => {
+    const { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises');
+    const { tmpdir } = await import('node:os');
+    const path = await import('node:path');
+    const { CAPABILITY_INPUT_DIRECTORIES, buildCapabilityRoadmap, pinDirectory, sha256 } = await import('../scripts/lib/material-capabilities.mjs');
+    const temporary = await mkdtemp(path.join(tmpdir(), 'material-capabilities-'));
+    try {
+      for (const directory of CAPABILITY_INPUT_DIRECTORIES) await mkdir(path.join(temporary, directory), { recursive: true });
+      await writeFile(path.join(temporary, 'src/component.ts'), 'original');
+      await writeFile(path.join(temporary, 'tests/check.test.js'), 'test');
+      const pins = await pinDirectory(temporary, 'src');
+      const review = { reviewedOn: '2026-09-07', support: 'partial', sources: pins, inventorySha256: sha256(JSON.stringify(pins)), gaps: [], browserChecks: [{ file: 'tests/check.test.js', name: 'scoped assertion', scope: 'One assertion only' }] };
+      const entry = (slug) => ({ slug, title: slug, capabilityReview: structuredClone(review), materialGuidance: { relationship: 'foundation', implementation: { documentedSupport: 'Named scope', webAdaptation: 'Web' }, upstreamReview: { source: 'https://example.com', reviewedOn: '2026-09-07', scope: 'unassessed' } } });
+      const fixture = { frameworkVersion: '0.8.0', components: [], foundations: ['typography', 'shape', 'motion'].map(entry) };
+      const first = async () => (await buildCapabilityRoadmap(fixture, temporary)).entries[0];
+      assert.equal((await first()).browserChecks[0].state, 'not-recorded');
+      const directories = [], inputs = [];
+      for (const directory of CAPABILITY_INPUT_DIRECTORIES) {
+        const directoryPins = await pinDirectory(temporary, directory);
+        inputs.push(...directoryPins); directories.push({ path: directory, sha256: sha256(JSON.stringify(directoryPins)) });
+      }
+      fixture.capabilityBrowserEvidence = { collector: 'scripts/record-capability-evidence.mjs', recordedOn: '2026-09-07', engine: 'chromium', status: 'passed', reportSha256: sha256('report'), directories, inputs, results: [{ file: 'tests/check.test.js', name: 'scoped assertion', status: 'passed' }] };
+      assert.equal((await first()).browserEvidence, 'recorded-scoped-pass');
+      fixture.capabilityBrowserEvidence.results[0].status = 'failed';
+      assert.equal((await first()).browserChecks[0].state, 'recorded-failed');
+      fixture.capabilityBrowserEvidence.results[0].status = 'skipped';
+      assert.equal((await first()).browserChecks[0].state, 'skipped');
+      fixture.capabilityBrowserEvidence.results[0].status = 'passed';
+      fixture.capabilityBrowserEvidence.status = 'blocked';
+      assert.equal((await first()).browserChecks[0].state, 'blocked');
+      fixture.capabilityBrowserEvidence.status = 'passed';
+      await writeFile(path.join(temporary, 'tests/new.test.js'), 'new');
+      assert.equal((await first()).browserEvidence, 'needs-rerun');
+      await rm(path.join(temporary, 'tests/new.test.js'));
+      await writeFile(path.join(temporary, 'src/new.ts'), 'new feature');
+      assert.equal((await first()).sourceReview, 'needs-review');
+      await rm(path.join(temporary, 'src/new.ts'));
+      await writeFile(path.join(temporary, 'src/component.ts'), 'changed');
+      assert.equal((await first()).support, 'unassessed');
+      await rm(path.join(temporary, 'src/component.ts'));
+      assert.equal((await first()).sourceReview, 'needs-review');
+      fixture.foundations[0].capabilityReview.sources[0].path = '../outside';
+      await assert.rejects(first, /Invalid reviewed source pin/);
+    } finally { await rm(temporary, { recursive: true, force: true }); }
+  });
+
+  test('collects native test events without accepting prose verification claims', async () => {
+    const { recordedTestEvent } = await import('../scripts/record-capability-evidence.mjs');
+    const event = { type: 'test:pass', data: { file: '/repo/tests/check.test.js', name: 'assertion', details: { duration_ms: 12 } } };
+    assert.deepEqual(recordedTestEvent(event, '/repo'), { file: 'tests/check.test.js', name: 'assertion', status: 'passed', durationMs: 12 });
+    assert.equal(recordedTestEvent({ type: 'test:stdout', data: { message: 'All tests passed' } }), null);
+    assert.equal(recordedTestEvent({ ...event, data: { ...event.data, details: { type: 'suite' } } }), null);
+    assert.equal(recordedTestEvent({ ...event, data: { ...event.data, skip: true } }, '/repo').status, 'skipped');
+    assert.equal(recordedTestEvent({ ...event, type: 'test:fail' }, '/repo').status, 'failed');
+  });
+});

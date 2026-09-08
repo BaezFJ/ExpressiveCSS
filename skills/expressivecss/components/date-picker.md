@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `b6932faca34a9bc7c8a63e59713b4369999e62858e7cee46bc605c89b167e053`
+Contract SHA-256: `982df72b92606622a0451e4f35019ec2f4ac9e1b493060b428507aa87fe22251`
 
 #### Selection and adaptation
 
@@ -35,11 +35,11 @@ destination and main heading verified; full guideline not reviewed; link-observe
 
 Support (2026-09-07, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
 
-Web adaptation: Inline adaptation; open()/close() are deprecated no-ops.
+Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Full parity and browser conformance remain unassessed.
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#date-picker).
 
 #### Contract
 
@@ -47,7 +47,7 @@ Select a date, a range, or several dates from a calendar.
 
 Add `datepicker` to a text input. `AutoInit()` starts every `.datepicker` except those marked `no-autoinit`.
 
-The calendar is inline, not a modal. `open()` and `close()` are deprecated no-ops. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
+The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
 
 #### Syntax
 

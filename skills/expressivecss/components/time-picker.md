@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `b6932faca34a9bc7c8a63e59713b4369999e62858e7cee46bc605c89b167e053`
+Contract SHA-256: `982df72b92606622a0451e4f35019ec2f4ac9e1b493060b428507aa87fe22251`
 
 #### Selection and adaptation
 
@@ -35,11 +35,11 @@ destination and selected Guidelines tab verified; full guideline not reviewed; l
 
 Support (2026-09-07, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
 
-Web adaptation: Inline adaptation; open()/close() are deprecated no-ops.
+Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
 
 Known boundary: Modal picker parity is not provided by the documented inline API.
 
-Full parity and browser conformance remain unassessed.
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
 
 #### Contract
 
@@ -47,7 +47,7 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Add `timepicker` to a text input. `AutoInit()` starts every `.timepicker` except those marked `no-autoinit`.
 
-The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are deprecated no-ops.
+The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
 
 #### Syntax
 

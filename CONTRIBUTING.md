@@ -71,6 +71,14 @@ For repeatable checks of a running consumer application, use
 See the [scenario format and evidence limits](skills/expressivecss/references/consumer-verification.md).
 The command reuses the consumer's installed Playwright; it does not start its server.
 
+For the Material capability roadmap, review source changes in
+`docs/src/data/component-decisions.json` before updating its source pins. Build
+the framework, then run `npm run record:capabilities` to execute mapped browser
+checks and record their input hashes. The collector preserves its raw report
+under `.cache/material-capabilities/`; regenerate with `npm run build:skill`.
+Generation never renews source reviews or runs tests. See the
+[roadmap](skills/expressivecss/references/capability-roadmap.md) for coverage limits.
+
 For MCP changes, also run:
 
 ```sh

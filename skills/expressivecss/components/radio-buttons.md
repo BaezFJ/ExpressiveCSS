@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `b6932faca34a9bc7c8a63e59713b4369999e62858e7cee46bc605c89b167e053`
+Contract SHA-256: `982df72b92606622a0451e4f35019ec2f4ac9e1b493060b428507aa87fe22251`
 
 #### Selection and adaptation
 
@@ -31,7 +31,7 @@ Support (2026-09-07, `llm.md#radio-buttons`): Native radio groups and disabled c
 
 Web adaptation: Shared name provides exclusivity; fieldset/legend names the group.
 
-Full parity and browser conformance remain unassessed.
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#radio-buttons).
 
 #### Contract
 

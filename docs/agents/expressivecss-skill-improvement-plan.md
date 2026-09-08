@@ -1,5 +1,61 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Capability roadmap follow-up, September 7, 2026
+
+The [generated roadmap](../../skills/expressivecss/references/capability-roadmap.md)
+uses the existing component catalogue for all 46 components and separate
+typography, shape and motion records. Each entry states its documented scope,
+reviewed source hashes, upstream review limits, intentional web adaptations,
+feature/integration gaps, available browser checks and recorded results.
+`implemented` applies only to the named scope. It never means full Material parity.
+
+Source changes require a new review; changed browser inputs require a new run.
+The source inventory guard is conservative: any `src/` change invalidates all
+reviews, including changes to shared tokens or runtime helpers. Review owners
+listed per entry before renewing pins; matching hashes are never a new audit.
+Missing evidence remains unavailable. The operator collector executes native
+Node tests, records Chromium and Node versions, hashes inputs and retains a raw
+report. It cannot ingest candidate-authored verification prose. Skill and MCP
+receive generated snapshots; MCP blocks dependent results on version/provenance
+failure. The roadmap is optional reading, outside the ordinary component path.
+
+Concrete feature gaps include standalone common-button shape morphing, modal
+date/time pickers, an emphasized type scale with font coverage, shared shape
+roles, and shared motion roles. Separate integration findings concern the scale
+utility's reduced-motion behavior and expanding-card CSS/runtime timing. These
+remain roadmap items; this change adds no framework APIs or style behavior.
+Retained navigation components and intentionally excluded variants are usage
+constraints, not automatically missing capabilities. Stale picker prose now
+states that `open()`/`close()` methods are absent.
+
+Foundation design evidence comes from inspectable Google Android documentation.
+The JavaScript-only Material pages were not fully reviewed, so full web
+specification coverage stays unassessed. Existing expanding-card tests call
+`cubic-bezier(0.2, 0, 0, 1)` emphasized; Google's inspected motion guidance calls
+it standard. This naming mismatch is recorded without changing the curve.
+
+Validation passed: `npm run verify` completed 992 tests with no skips,
+typecheck, generated-file checks, and the documentation build/site checks.
+`npm run test:skill` passed 231 tests and 22 replay cases; the explicit browser
+suite passed 23 tests. MCP smoke checks passed for seven tools, and isolated
+framework/MCP package verification passed. Generated files were checked again
+after packaging. The basic-button reading path is 30,407 bytes, 25.23% below the
+original 40,670-byte baseline.
+
+The accepted operator collection records 17 passing tests on Chromium
+151.0.7922.34 and Node v24.20.0, dated September 8 UTC. Inputs stayed unchanged.
+Its raw report SHA-256 is
+`519796bd2f6583a831928a3bafd0e05adbe012d56f8fdef69fb1cf7036df990c`.
+Thirteen components and all three foundations have scoped mapped assertions;
+33 components have no directly mapped browser checks. An earlier run passed
+its tests but was discarded because collector inputs changed during collection.
+Independent review confirmed the source guards, MCP foundation blocking,
+complete script/semantics fingerprints and matching generated snapshots.
+
+No live agent benchmark, new human visual assessment, published-package parity
+claim, installation or publication is part of this follow-up.
+
+
 ## Material decision evaluation follow-up, September 7, 2026
 
 The existing benchmark now tests component fit, expressive hierarchy, installed

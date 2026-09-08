@@ -55,7 +55,24 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A Home/Search/Profile row belongs in navigation, even if placed at the top. Keep the app bar for the title and screen actions."
+      "selectionExample": "A Home/Search/Profile row belongs in navigation, even if placed at the top. Keep the app bar for the title and screen actions.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_navbar.scss",
+            "sha256": "2d3a2accd4d0dfeb524f628f9eb2be81bad5a50ab7feea40c0c0ddd58016da96"
+          },
+          {
+            "path": "src/ts/components/appBar.ts",
+            "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "bottom-app-bar",
@@ -109,6 +126,19 @@
           "note": "Google MDC Android marks bottom app bar available but deprecated/not recommended in M3 Expressive; docked toolbar replaces it. Legacy M2 link observed: https://m2.material.io/components/app-bars-bottom ."
         },
         "reason": "Legacy Material component; Google deprecates it for M3 Expressive in favor of docked toolbars."
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_bottom-app-bar.scss",
+            "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -176,7 +206,20 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths."
+      "selectionExample": "Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_navigation-bar.scss",
+            "sha256": "e42c5c395c9f2cdc1dc9c8c4cfdff1a06cb12183cae1d17bcea915536f0aa9c2"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "navigation-rail",
@@ -249,6 +292,29 @@
           "note": "tab observed; destination not followed; link-observed; full specifications not reviewed"
         },
         "specHref": "https://m3.material.io/components/navigation-rail/specs"
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_navigation-rail.scss",
+            "sha256": "7dcc854d90a48a541ae9ed2380d28063e8217e567f697e27a21fe1ab84e055bb"
+          },
+          {
+            "path": "src/ts/components/navigationRail.ts",
+            "sha256": "f7b4e682a87ea664dc8b8927ea86a784fd61ab1d538a9996f97d5c2e95db4406"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+            "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -316,6 +382,23 @@
           "reviewedOn": "2026-09-07",
           "scope": "inventory-reviewed"
         }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_navigation-drawer.scss",
+            "sha256": "6f1a81c328dcdfe1d0127764b33b9f88529ea4a059b0ccb9f30436801a85da89"
+          },
+          {
+            "path": "src/ts/components/navigationDrawer.ts",
+            "sha256": "d68973e7e9b0f73270449270021adf2587b95a9573678731af4b602b26da4823"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -376,7 +459,26 @@
         },
         "reason": "Canonical layout pattern, not a standalone component."
       },
-      "selectionExample": "A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region."
+      "selectionExample": "A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_panes.scss",
+            "sha256": "09f9d783b94ba5464410e8a005f8b4b3d25ed7f1afcf8533e023fcd5194915b8"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete list-detail example preserves both treatments and its task path",
+            "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "footer",
@@ -425,7 +527,20 @@
         },
         "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       },
-      "selectionExample": "Home/Search/Profile should not require scrolling to a footer. Use a navigation bar or rail for those destinations."
+      "selectionExample": "Home/Search/Profile should not require scrolling to a footer. Use a navigation bar or rail for those destinations.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_page-footer.scss",
+            "sha256": "71f385db254eb07874be949d5bcb0cdd0ec8835342c1d5a89ba0def76d3668ab"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "tabs",
@@ -477,7 +592,24 @@
         },
         "specHref": "https://m3.material.io/components/tabs/specs"
       },
-      "selectionExample": "Home/Search/Profile are app destinations, so use a navigation bar or rail. Overview/Activity panels within one account page can use tabs; Day/Week/Month as a view setting can use segmented inputs."
+      "selectionExample": "Home/Search/Profile are app destinations, so use a navigation bar or rail. Overview/Activity panels within one account page can use tabs; Day/Week/Month as a view setting can use segmented inputs.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_tabs.scss",
+            "sha256": "136d7b15bffd791fdaef451f98fad945bd478a25163528aac572b1f94903d9f6"
+          },
+          {
+            "path": "src/ts/components/tabs.ts",
+            "sha256": "154b97877b4683a1277d9cbfb1cb320a2d25c8dcefe900d0be3e6835ecf5d178"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "breadcrumbs",
@@ -529,7 +661,20 @@
         },
         "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       },
-      "selectionExample": "Overview/Activity/Billing are peers, not ancestors. Use tabs for their same-page panels, not a breadcrumb trail."
+      "selectionExample": "Overview/Activity/Billing are peers, not ancestors. Use tabs for their same-page panels, not a breadcrumb trail.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_breadcrumb.scss",
+            "sha256": "9961900fec76177ae0078a8f68a74fc36155fe97f86d2351c1b527c808642c9e"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "pagination",
@@ -580,7 +725,20 @@
         },
         "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       },
-      "selectionExample": "A long article with Introduction/Methods/Results needs section links, optionally with scrollspy, not numbered result pages."
+      "selectionExample": "A long article with Introduction/Methods/Results needs section links, optionally with scrollspy, not numbered result pages.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_pagination.scss",
+            "sha256": "7637a970c2ae783f4f5803d82f4373409de9160d1f635327fd855574312704c3"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "menu",
@@ -631,6 +789,34 @@
           "reviewedOn": "2026-09-07",
           "scope": "inventory-reviewed"
         }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_menu.scss",
+            "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+          },
+          {
+            "path": "src/ts/components/menu.ts",
+            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+            "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement."
+          },
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "resource observations detect omitted teardown after a partial replacement",
+            "scope": "Negative control proves resources remain without destroy; no visual parity assertion."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -683,7 +869,28 @@
         },
         "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       },
-      "selectionExample": "A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document."
+      "selectionExample": "A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_scrollspy.scss",
+            "sha256": "39e23fb90c5b0bc2a5d34513bec7342a9a12d0a080043074f287ab8594d87c69"
+          },
+          {
+            "path": "src/sass/components/_table_of_contents.scss",
+            "sha256": "ebf956a3836c8a68d55a44f83f5abf8ecaa603e3f7435421f07e5819cd5b90c7"
+          },
+          {
+            "path": "src/ts/components/scrollspy.ts",
+            "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "buttons",
@@ -743,7 +950,50 @@
         "specHref": "https://m3.material.io/components/buttons/specs",
         "guidelinesHref": "https://m3.material.io/components/buttons/guidelines"
       },
-      "selectionExample": "A saved delivery-speed choice needs radios or segmented inputs, not three action buttons."
+      "selectionExample": "A saved delivery-speed choice needs radios or segmented inputs, not three action buttons.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "partial",
+        "sources": [
+          {
+            "path": "src/sass/components/_buttons.scss",
+            "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+          },
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+          },
+          {
+            "path": "src/sass/abstracts/_variables.scss",
+            "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "feature",
+            "description": "Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.",
+            "nextStep": "Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete settings example preserves both treatments and its task path",
+            "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
+          },
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete editor example preserves both treatments and its task path",
+            "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
+          },
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete list-detail example preserves both treatments and its task path",
+            "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "icon-buttons",
@@ -796,7 +1046,39 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A novel approval workflow should use a labeled button. A tooltip on an ambiguous icon cannot replace a clear label or the control's accessible name."
+      "selectionExample": "A novel approval workflow should use a labeled button. A tooltip on an ambiguous icon cannot replace a clear label or the control's accessible name.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_icon-buttons.scss",
+            "sha256": "c77a969e392a03be07f10aa6021758d5fa7ddccd999440755c93942a9dbb38e8"
+          },
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+          },
+          {
+            "path": "src/sass/abstracts/_variables.scss",
+            "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "button-group toggle colors resolve in a browser",
+            "scope": "Filled icon button selected color and glyph fill inside a button group only."
+          },
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "keyboard press changes icon widths and rendered corners",
+            "scope": "Icon children inside button group only."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "segmented-buttons",
@@ -849,7 +1131,20 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "Cut/Copy/Paste are commands, not stored choices. Use a standard button group. A shipping-speed value submitted with a form fits single-select segmented inputs with one shared radio name."
+      "selectionExample": "Cut/Copy/Paste are commands, not stored choices. Use a standard button group. A shipping-speed value submitted with a form fits single-select segmented inputs with one shared radio name.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_segmented-buttons.scss",
+            "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "button-groups",
@@ -900,7 +1195,50 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "Economy/Express delivery submitted on Save needs radios or segmented inputs. Standard groups fit Cut/Copy/Paste; connected groups fit toggle states, not one-shot commands. A pressed button does not submit a radio value."
+      "selectionExample": "Economy/Express delivery submitted on Save needs radios or segmented inputs. Standard groups fit Cut/Copy/Paste; connected groups fit toggle states, not one-shot commands. A pressed button does not submit a radio value.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_button-groups.scss",
+            "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+          },
+          {
+            "path": "src/ts/components/buttonGroup.ts",
+            "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "button-group toggle colors resolve in a browser",
+            "scope": "Rendered group behavior; does not establish standalone common/icon-button parity."
+          },
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "button-group geometry resolves for overrides, targets, and RTL",
+            "scope": "Rendered group behavior; does not establish standalone common/icon-button parity."
+          },
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "standard press redistribution keeps its rendered width stable",
+            "scope": "Rendered group behavior; does not establish standalone common/icon-button parity."
+          },
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "keyboard press changes icon widths and rendered corners",
+            "scope": "Rendered group behavior; does not establish standalone common/icon-button parity."
+          },
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete editor example preserves both treatments and its task path",
+            "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "split-button",
@@ -952,7 +1290,24 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "PDF/CSV format selection for a later Export action belongs in a select or segmented inputs. A split button fits Export now plus alternate export commands."
+      "selectionExample": "PDF/CSV format selection for a later Export action belongs in a select or segmented inputs. A split button fits Export now plus alternate export commands.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_split-button.scss",
+            "sha256": "8afbc0079bfe13d514e8680086e5b2cdd50d9b0e68e5354d378809445f78eec4"
+          },
+          {
+            "path": "src/ts/components/menu.ts",
+            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "fab",
@@ -1015,6 +1370,27 @@
           "https://m3.material.io/components/extended-fab/overview",
           "https://m3.material.io/components/fab-menu/overview"
         ]
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_buttons.scss",
+            "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+          },
+          {
+            "path": "src/sass/components/_fab-menu.scss",
+            "sha256": "f1d7b579ea34271824a0fdc75d209d00830a1beb352ddbbd670d31bebf5548d0"
+          },
+          {
+            "path": "src/ts/components/buttons.ts",
+            "sha256": "8f693be33245b1984742a4f51272c4f39927f4a75c735583583f530ace701940"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -1069,7 +1445,48 @@
         },
         "specHref": "https://m3.material.io/components/cards/specs"
       },
-      "selectionExample": "A hundred compact activity records need a list. Giving every row a card adds separation without a separate content or action group."
+      "selectionExample": "A hundred compact activity records need a list. Giving every row a card adds separation without a separate content or action group.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_cards.scss",
+            "sha256": "59dec972c523603525d0db5401ff87c4dc8d55b958c06dfc454d65b7d48871dc"
+          },
+          {
+            "path": "src/sass/components/_expanding-card.scss",
+            "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+          },
+          {
+            "path": "src/ts/components/cards.ts",
+            "sha256": "83b5bce0fcf0393cfd71a7e7bfe6ce49c9f46b65a8c93a9ddecd68f85879cd21"
+          },
+          {
+            "path": "src/ts/components/expandingCard.ts",
+            "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/cards-browser.test.js",
+            "name": "dragged and picked-up states override simultaneous pointer states",
+            "scope": "Specific card state, disclosure fallback, or horizontal layout contract."
+          },
+          {
+            "file": "tests/cards-browser.test.js",
+            "name": "invalid disclosures keep their panels visible and operable",
+            "scope": "Specific card state, disclosure fallback, or horizontal layout contract."
+          },
+          {
+            "file": "tests/cards-browser.test.js",
+            "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
+            "scope": "Specific card state, disclosure fallback, or horizontal layout contract."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "lists",
@@ -1121,7 +1538,26 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A product with a large image, description, price, and several actions may need a card. A simple product-name index remains a list."
+      "selectionExample": "A product with a large image, description, price, and several actions may need a card. A simple product-name index remains a list.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_list.scss",
+            "sha256": "dec11dbc88d047cac5ba72da9ebcef10fef598767dfdb41418a9b84bb39c9b65"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete list-detail example preserves both treatments and its task path",
+            "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "dialogs",
@@ -1177,7 +1613,24 @@
         },
         "specHref": "https://m3.material.io/components/dialogs/specs"
       },
-      "selectionExample": "Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and a banner for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action."
+      "selectionExample": "Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and a banner for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_dialog.scss",
+            "sha256": "05a7ec3c2578a3e850548b8d6207043e1ff66fdb2fd44d1e3328b73dce95b3f6"
+          },
+          {
+            "path": "src/ts/behaviors/dialogs.ts",
+            "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "bottom-sheet",
@@ -1238,6 +1691,31 @@
           "reviewedOn": "2026-09-07",
           "scope": "inventory-reviewed"
         }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_bottom-sheet.scss",
+            "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
+          },
+          {
+            "path": "src/ts/behaviors/dialogs.ts",
+            "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+          },
+          {
+            "path": "src/ts/behaviors/bottomSheets.ts",
+            "sha256": "3f3ae0c8b1cc1247ba75cd1e13c8c2a9a0fad5d284b51f6efac5887a78c3dcf7"
+          },
+          {
+            "path": "src/ts/behaviors/sheetDrag.ts",
+            "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -1305,6 +1783,31 @@
           "reviewedOn": "2026-09-07",
           "scope": "inventory-reviewed"
         }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_side-sheet.scss",
+            "sha256": "3a907e237d6eb6cb46894a980707c26e53fcd71feec7d1b45f4cab3d0dfe0263"
+          },
+          {
+            "path": "src/ts/behaviors/dialogs.ts",
+            "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+          },
+          {
+            "path": "src/ts/behaviors/sideSheets.ts",
+            "sha256": "29c28c886eeccf05b4e5834bb57c424b77ed48800e907de5436a384bb79cf749"
+          },
+          {
+            "path": "src/ts/behaviors/sheetDrag.ts",
+            "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -1359,7 +1862,24 @@
         },
         "reason": "Related guidance is not a dedicated component specification."
       },
-      "selectionExample": "A required delete confirmation needs a dialog. Floating geometry alone does not make a secondary sheet the right decision prompt."
+      "selectionExample": "A required delete confirmation needs a dialog. Floating geometry alone does not make a secondary sheet the right decision prompt.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_floating-sheet.scss",
+            "sha256": "a638bb17dc87b76273e94a37db584f5603a3ce5fd518353f8c4594546b664d10"
+          },
+          {
+            "path": "src/ts/behaviors/dialogs.ts",
+            "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "drag-handle",
@@ -1413,6 +1933,19 @@
           "note": "Optional drag handle is bottom sheet anatomy. Android handle supports accessible expand/collapse. This does not verify the generic vertical handle or ExpressiveCSS dismiss-on-tap behavior as an identical spec."
         },
         "reason": "Related guidance is not a dedicated component specification."
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_drag-handle.scss",
+            "sha256": "a1ba374ed080c749b0c8f4f5fe6f931bebfe5d12c8151ecfa72b484810e0e238"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -1465,7 +1998,20 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "An unread count belongs on the inbox icon as a badge. A selectable Unread filter needs a chip or selection control with its own name and state."
+      "selectionExample": "An unread count belongs on the inbox icon as a badge. A selectable Unread filter needs a chip or selection control with its own name and state.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_badges.scss",
+            "sha256": "1d9ade7617c30f8584cfee9b3f2fe5d3c5d39f5ed7fa2fd362a9f8205fa15693"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "tooltips",
@@ -1516,6 +2062,39 @@
           "scope": "inventory-reviewed"
         },
         "specHref": "https://m3.material.io/components/tooltips/specs"
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_tooltip.scss",
+            "sha256": "cfd11ea9b5934690458973587b8fa76cd0253badbe1c78e345e29f7a477cc35b"
+          },
+          {
+            "path": "src/ts/components/tooltip.ts",
+            "sha256": "0c3b24fc13c7fd5d8958652f22e71bb0105dcdc766c830c54f5d5867e58ea938"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+            "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement."
+          },
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "resource observations detect omitted teardown after a partial replacement",
+            "scope": "Negative control proves resources remain without destroy; no visual parity assertion."
+          },
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "Tooltip destroy cancels pending delay and animation callbacks",
+            "scope": "Runtime timer cancellation for enter, exit and animation scheduling."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -1569,7 +2148,24 @@
         },
         "specHref": "https://m3.material.io/components/snackbar/specs"
       },
-      "selectionExample": "A successful save can use a snackbar. Offline status that still allows editing needs a persistent banner; a required irreversible-delete confirmation needs a dialog before the action."
+      "selectionExample": "A successful save can use a snackbar. Offline status that still allows editing needs a persistent banner; a required irreversible-delete confirmation needs a dialog before the action.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_snackbar.scss",
+            "sha256": "538018b8fc0728c1d2933507cb6dd1c24ea6db1e8924449fb9b4e132c3c53d4e"
+          },
+          {
+            "path": "src/ts/components/snackbar.ts",
+            "sha256": "bb2f35946ede77074ea743fc573bcfbf1203a9abc8e72d811dfddbdb60b87f1a"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "banners",
@@ -1621,7 +2217,20 @@
         },
         "reason": "Retained framework pattern absent from the reviewed current M3 component inventory; related current guidance does not certify this implementation."
       },
-      "selectionExample": "A Saved message should not leave a permanent banner. Use a snackbar. A sync outage that permits local edits fits a banner; an unavoidable decision fits a dialog. This banner is a framework feedback pattern, not a verified current M3 component."
+      "selectionExample": "A Saved message should not leave a permanent banner. Use a snackbar. A sync outage that permits local edits fits a banner; an unavoidable decision fits a dialog. This banner is a framework feedback pattern, not a verified current M3 component.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_banners.scss",
+            "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "progress",
@@ -1673,7 +2282,20 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A two-second refresh with no measured fraction fits a loading indicator. An upload with bytes transferred needs determinate progress, even if short; a long job with no fraction can use indeterminate progress. Never invent a percentage. Indeterminate linear bars remain supported; the short-wait replacement specifically targets indeterminate circular spinners."
+      "selectionExample": "A two-second refresh with no measured fraction fits a loading indicator. An upload with bytes transferred needs determinate progress, even if short; a long job with no fraction can use indeterminate progress. Never invent a percentage. Indeterminate linear bars remain supported; the short-wait replacement specifically targets indeterminate circular spinners.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_progress.scss",
+            "sha256": "3dbb0324f6203f154ddd0bda1c1c0e1cf318323523f0dbba23acc880b5d8591e"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "loading-indicator",
@@ -1723,7 +2345,20 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A file upload reporting 42% needs determinate progress, not the morphing loading shape. A longer unmeasured job needs indeterminate progress. Do not flash an indicator for an effectively instant response or announce a fabricated value."
+      "selectionExample": "A file upload reporting 42% needs determinate progress, not the morphing loading shape. A longer unmeasured job needs indeterminate progress. Do not flash an indicator for an effectively instant response or announce a fabricated value.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_loading-indicator.scss",
+            "sha256": "1121e043f42b471963aa823d9c5d651306ab7aeed135bee7a1427c5afe7e5228"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "carousel",
@@ -1775,7 +2410,24 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A transaction history must support scanning rows and values. Use a list instead of hiding records across carousel slides."
+      "selectionExample": "A transaction history must support scanning rows and values. Use a list instead of hiding records across carousel slides.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_carousel.scss",
+            "sha256": "5a9a8e459c61e84fa4d205fd25e9fd7520f0c80489ad816ba6198fe3ebd71f3f"
+          },
+          {
+            "path": "src/ts/components/carousel.ts",
+            "sha256": "772609159091d79c516820e5a68042407d641cd67d78b1a7d09ed6346fe44ced"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "lightbox",
@@ -1829,7 +2481,24 @@
         },
         "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
       },
-      "selectionExample": "A payment confirmation needs a dialog, even if its design contains an image. Lightbox is for inspecting enlarged media."
+      "selectionExample": "A payment confirmation needs a dialog, even if its design contains an image. Lightbox is for inspecting enlarged media.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_lightbox.scss",
+            "sha256": "df62c6c3d359089fcb5f7fe2500464afb8f6cb7c57fbc3f7a04a0cf9fc452599"
+          },
+          {
+            "path": "src/ts/components/lightbox.ts",
+            "sha256": "22e0686f6f7dc9cfd6be5d7d259b197818eb6046818c3a67d2597fca8c0c573f"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "toolbars",
@@ -1881,7 +2550,20 @@
         },
         "specHref": "https://m3.material.io/components/toolbars/specs"
       },
-      "selectionExample": "Home/Search/Profile belong in navigation. A toolbar near a document can hold edit, share, and formatting actions."
+      "selectionExample": "Home/Search/Profile belong in navigation. A toolbar near a document can hold edit, share, and formatting actions.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_toolbar.scss",
+            "sha256": "8fb21bf9336332897e0b4290b80b7ea31a523410a7db893ab7b49cd8abee005b"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "search",
@@ -1931,6 +2613,19 @@
           "reviewedOn": "2026-09-07",
           "scope": "inventory-reviewed"
         }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_search.scss",
+            "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -1982,7 +2677,26 @@
         },
         "reason": "Related guidance is not a dedicated component specification."
       },
-      "selectionExample": "A promotional feature block needs a section or card. Use a fieldset when a shared legend explains related inputs, such as delivery preferences."
+      "selectionExample": "A promotional feature block needs a section or card. Use a fieldset when a shared legend explains related inputs, such as delivery preferences.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_fieldset.scss",
+            "sha256": "0de91ee778fb360cd8a5451c920df81dd2b1cd5fb9d26993729afe1f745d7e65"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete settings example preserves both treatments and its task path",
+            "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "text-fields",
@@ -2038,6 +2752,37 @@
           "scope": "inventory-reviewed"
         },
         "specHref": "https://m3.material.io/components/text-fields/specs"
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_input-fields.scss",
+            "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+          },
+          {
+            "path": "src/sass/components/forms/_file-input.scss",
+            "sha256": "cc856d49ae84dcae4970c75dd587194b69219a4f707ad95d4598d974eb491221"
+          },
+          {
+            "path": "src/ts/behaviors/forms.ts",
+            "sha256": "c90046cd163d73d9046b0bfc2b4888ba87626704782f295054d9da63b3395d57"
+          },
+          {
+            "path": "src/ts/components/characterCounter.ts",
+            "sha256": "5f12ff055e1ee92562839b9ad103808873d9f81c2e646d588fef9f63dbc16536"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete editor example preserves both treatments and its task path",
+            "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -2092,6 +2837,42 @@
           "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
         },
         "reason": "Related guidance is not a dedicated component specification."
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_select.scss",
+            "sha256": "e91abfb218a90a92f2b87922154836ba0eb6ceb5ccbbe2ed18a7f44f65065a31"
+          },
+          {
+            "path": "src/sass/components/_menu.scss",
+            "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+          },
+          {
+            "path": "src/ts/components/select.ts",
+            "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+          },
+          {
+            "path": "src/ts/components/menu.ts",
+            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+            "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement."
+          },
+          {
+            "file": "tests/expressivecss-lifecycle-browser.test.js",
+            "name": "resource observations detect omitted teardown after a partial replacement",
+            "scope": "Negative control proves resources remain without destroy; no visual parity assertion."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -2145,6 +2926,25 @@
           "scope": "inventory-reviewed"
         },
         "specHref": "https://m3.material.io/components/checkbox/specs"
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_checkboxes.scss",
+            "sha256": "3fd662bcbca486e3b05413ce9b1ff9a10a8002e3e3ea6e853bd179e8fcfe2f09"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete settings example preserves both treatments and its task path",
+            "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -2197,6 +2997,19 @@
           "scope": "inventory-reviewed"
         },
         "specHref": "https://m3.material.io/components/radio-button/specs"
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_radio-buttons.scss",
+            "sha256": "a8054892643f184463052ad5e566ee0d8c96d2f125f9dea433915eba5f3b7cf1"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -2248,6 +3061,19 @@
           "scope": "inventory-reviewed"
         },
         "specHref": "https://m3.material.io/components/switch/specs"
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_switches.scss",
+            "sha256": "3700fa309d0524fce4eff27c1f337d1ab03f592c567423a275cc9332144b2e8a"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -2300,7 +3126,24 @@
         },
         "specHref": "https://m3.material.io/components/sliders/specs"
       },
-      "selectionExample": "An invoice amount needs a labeled number field with appropriate precision. A slider fits approximate volume or brightness adjustment."
+      "selectionExample": "An invoice amount needs a labeled number field with appropriate precision. A slider fits approximate volume or brightness adjustment.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_slider.scss",
+            "sha256": "0a3325ff0e1976529146ac7bf82a12267bc327054c3ddddcd9ba67a2c1b393ce"
+          },
+          {
+            "path": "src/ts/components/slider.ts",
+            "sha256": "bb22f1baaa0814b6d9389ec115cd6b705c73fbac8ddda1b35f32124ff6766128"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "chips",
@@ -2352,7 +3195,24 @@
           "scope": "inventory-reviewed"
         }
       },
-      "selectionExample": "A passive unread count is a badge. Turning it into a filter chip falsely suggests a selectable state unless filtering is implemented."
+      "selectionExample": "A passive unread count is a badge. Turning it into a filter chip falsely suggests a selectable state unless filtering is implemented.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_chips.scss",
+            "sha256": "a906b31175533e454803c06bd6b47f141764792d2edd8f2add58c26c5308230f"
+          },
+          {
+            "path": "src/ts/components/chips.ts",
+            "sha256": "6cb6af3f1b41f5634de1e1bf3a821ad080b006a922d7238466915c87f775f47d"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "autocomplete",
@@ -2406,6 +3266,31 @@
           "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
         },
         "reason": "Related guidance is not a dedicated component specification."
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_input-fields.scss",
+            "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+          },
+          {
+            "path": "src/sass/components/_menu.scss",
+            "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+          },
+          {
+            "path": "src/ts/components/autocomplete.ts",
+            "sha256": "5cf06711627918a0a5b2605c72f025494bbe9cd0aaebcc47b8e4b6f08d8c7b45"
+          },
+          {
+            "path": "src/ts/components/menu.ts",
+            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          }
+        ],
+        "gaps": [],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
       }
     },
     {
@@ -2448,7 +3333,7 @@
           "source": "llm.md#date-picker",
           "reviewedOn": "2026-09-07",
           "documentedSupport": "Inline single-date, range, and multiple-date calendar.",
-          "webAdaptation": "Inline adaptation; open()/close() are deprecated no-ops.",
+          "webAdaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
           "limitations": [
             "Modal picker parity is not provided by the documented inline API."
           ]
@@ -2463,7 +3348,42 @@
         "specHref": "https://m3.material.io/components/date-pickers/specs",
         "guidelinesHref": "https://m3.material.io/components/date-pickers/guidelines"
       },
-      "selectionExample": "A single date with no calendar-specific requirements can use a labeled native date input. Do not choose this picker expecting a popup: its calendar is inline and requires the documented visibility option."
+      "selectionExample": "A single date with no calendar-specific requirements can use a labeled native date input. Do not choose this picker expecting a popup: its calendar is inline and requires the documented visibility option.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "partial",
+        "sources": [
+          {
+            "path": "src/sass/components/_datepicker.scss",
+            "sha256": "3a30cd4a9c57386989e95c7623822e189aa04faf101ee5a4a8ba43f6674b654b"
+          },
+          {
+            "path": "src/sass/components/_docked-display.scss",
+            "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+          },
+          {
+            "path": "src/ts/components/datepicker.ts",
+            "sha256": "595a41a522aee4057c635085819476461cc2c0ff7a4100db55e463562503b800"
+          },
+          {
+            "path": "src/ts/components/select.ts",
+            "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+          },
+          {
+            "path": "src/ts/plugins/dockedDisplayPlugin.ts",
+            "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "feature",
+            "description": "Modal picker parity is not provided by the documented inline API.",
+            "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
+          }
+        ],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     },
     {
       "slug": "time-picker",
@@ -2505,7 +3425,7 @@
           "source": "llm.md#time-picker",
           "reviewedOn": "2026-09-07",
           "documentedSupport": "Inline clock and digital input; 12-hour and 24-hour formats.",
-          "webAdaptation": "Inline adaptation; open()/close() are deprecated no-ops.",
+          "webAdaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
           "limitations": [
             "Modal picker parity is not provided by the documented inline API."
           ]
@@ -2520,12 +3440,1585 @@
         "specHref": "https://m3.material.io/components/time-pickers/specs",
         "guidelinesHref": "https://m3.material.io/components/time-pickers/guidelines"
       },
-      "selectionExample": "An appointment time can use a labeled native time input when platform entry is enough. Do not choose this picker expecting a popup: its clock stays inline."
+      "selectionExample": "An appointment time can use a labeled native time input when platform entry is enough. Do not choose this picker expecting a popup: its clock stays inline.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "partial",
+        "sources": [
+          {
+            "path": "src/sass/components/_timepicker.scss",
+            "sha256": "87330125fa818b3463a1c4e4f80535e7551d39bdd83795462ac8ec0cc092c439"
+          },
+          {
+            "path": "src/sass/components/_docked-display.scss",
+            "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+          },
+          {
+            "path": "src/ts/components/timepicker.ts",
+            "sha256": "09351a82823567f4c6254d734e88e1b3ff5e2a80a721feb4884389b5fdc7460e"
+          },
+          {
+            "path": "src/ts/plugins/dockedDisplayPlugin.ts",
+            "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "feature",
+            "description": "Modal picker parity is not provided by the documented inline API.",
+            "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
+          }
+        ],
+        "browserChecks": [],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      }
     }
   ],
   "materialMappingPolicy": {
     "implementation": "documentedSupport is a source-reviewed summary for frameworkVersion, not a complete variant inventory or a browser pass; guideSource identifies the owning contract section.",
     "upstream": "relationship identifies an upstream component (including explicitly marked legacy components), layout pattern, related guidance, or framework extension. upstreamReview states exactly which source and scope were reviewed; a link alone is not a specification review.",
     "parity": "Full upstream parity and browser conformance are not assessed by this mapping. Unlisted limitations are unknown, not evidence of completeness."
+  },
+  "foundations": [
+    {
+      "slug": "typography",
+      "title": "Typography",
+      "materialGuidance": {
+        "relationship": "foundation",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "android-foundation-reviewed; full web specification unassessed"
+        },
+        "implementation": {
+          "documentedSupport": "Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.",
+          "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
+        }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "partial",
+        "sources": [
+          {
+            "path": "src/sass/tokens/_reference.scss",
+            "sha256": "5725dc82aedcd277d99ff8a5483866b08970647bdd2fc3c67c662d958cd15f4d"
+          },
+          {
+            "path": "src/sass/utilities/_typescale.scss",
+            "sha256": "4f3d7b2c48dd10173ef82eb00473694c9a07c3079380d0eae1797faa6204add3"
+          },
+          {
+            "path": "src/sass/base/_typography.scss",
+            "sha256": "fc8b4d714a911e38fb3dd3e9105853ff33ce3c96fdde984c932f9748b83b9204"
+          },
+          {
+            "path": "src/sass/base/_fonts.scss",
+            "sha256": "0b768be36675e97378e1ba9567896ee6bb87437352e3e6a059c56a9dde11a628"
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42",
+        "gaps": [
+          {
+            "kind": "feature",
+            "description": "No emphasized role utilities or emphasized token family; emphasized labels and smaller titles requiring 700 need an application-supplied real face.",
+            "nextStep": "Define an additive emphasized-scale contract and a font-loading policy before implementing public names."
+          },
+          {
+            "kind": "feature",
+            "description": "Bundled text fonts cover Latin and 400/500 only; a Noto Sans fallback declaration does not establish non-Latin coverage.",
+            "nextStep": "Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-examples-browser.test.js",
+            "name": "complete settings example preserves both treatments and its task path",
+            "scope": "32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity."
+          },
+          {
+            "file": "tests/expressivecss-material-quality.test.js",
+            "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+            "scope": "Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "shape",
+      "title": "Shape",
+      "materialGuidance": {
+        "relationship": "foundation",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Shape.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "android-foundation-reviewed; full web specification unassessed"
+        },
+        "implementation": {
+          "documentedSupport": "Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
+          "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
+        }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "partial",
+        "sources": [
+          {
+            "path": "src/sass/components/_buttons.scss",
+            "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+          },
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+          },
+          {
+            "path": "src/sass/components/_button-groups.scss",
+            "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42",
+        "gaps": [
+          {
+            "kind": "feature",
+            "description": "No shared md-sys-shape token family or general rounded/cut-corner theming system.",
+            "nextStep": "Inventory existing component corner defaults against proposed shared roles before introducing an additive shape scale; preserve existing component overrides and state shapes."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "button-group geometry resolves for overrides, targets, and RTL",
+            "scope": "Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero."
+          },
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "keyboard press changes icon widths and rendered corners",
+            "scope": "Standard and connected button-group pressed corner changes and release with keyboard activation."
+          },
+          {
+            "file": "tests/expressivecss-material-quality.test.js",
+            "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+            "scope": "Application-scoped common-button 16px corner repair; does not establish shape-system parity."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "motion",
+      "title": "Motion",
+      "materialGuidance": {
+        "relationship": "foundation",
+        "upstreamReview": {
+          "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md",
+          "reviewedOn": "2026-09-07",
+          "scope": "android-foundation-reviewed; full web specification unassessed"
+        },
+        "implementation": {
+          "documentedSupport": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups disable transitions under reduced motion; expanding cards disable CSS transitions and immediately complete close under that preference.",
+          "webAdaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only."
+        }
+      },
+      "capabilityReview": {
+        "reviewedOn": "2026-09-07",
+        "support": "partial",
+        "sources": [
+          {
+            "path": "src/sass/components/_button-groups.scss",
+            "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+          },
+          {
+            "path": "src/ts/components/buttonGroup.ts",
+            "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
+          },
+          {
+            "path": "src/sass/components/_expanding-card.scss",
+            "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+          },
+          {
+            "path": "src/ts/components/expandingCard.ts",
+            "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+          },
+          {
+            "path": "src/sass/components/_transitions.scss",
+            "sha256": "6421ac5f9288c802aebbfcc72c715521305c23321f25611cbbc62fc0c8484e7b"
+          }
+        ],
+        "inventorySha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42",
+        "gaps": [
+          {
+            "kind": "feature",
+            "description": "No shared md-sys-motion token family, general spring solver, or unified motion-theme selector.",
+            "nextStep": "Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
+          },
+          {
+            "kind": "integration",
+            "description": "Scale utility has no built-in reduced-motion rule; component-specific rules do not prove universal preference support.",
+            "nextStep": "Audit application-visible motion owners for reduced-motion behavior, starting with the scale utility; preserve final state and focus when animation is suppressed."
+          },
+          {
+            "kind": "integration",
+            "description": "Expanding-card close completion uses a fixed 500ms timer independently of its public CSS duration property; overriding CSS duration can desynchronize visual transition and cleanup.",
+            "nextStep": "Prioritize synchronizing expanding-card completion with its supported CSS timing and test zero-duration, long-duration, reversal and removal paths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "standard press redistribution keeps its rendered width stable",
+            "scope": "Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity."
+          },
+          {
+            "file": "tests/button-groups-browser.test.js",
+            "name": "button-group geometry resolves for overrides, targets, and RTL",
+            "scope": "Connected group's transition duration is zero under emulated reduced motion."
+          },
+          {
+            "file": "tests/expressivecss-material-quality.test.js",
+            "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+            "scope": "Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage."
+          }
+        ]
+      }
+    }
+  ],
+  "capabilityBrowserEvidence": {
+    "collector": "scripts/record-capability-evidence.mjs",
+    "recordedOn": "2026-09-08",
+    "engine": "chromium",
+    "engineVersion": "151.0.7922.34",
+    "nodeVersion": "v24.20.0",
+    "status": "passed",
+    "files": [
+      "tests/button-groups-browser.test.js",
+      "tests/cards-browser.test.js",
+      "tests/expressivecss-examples-browser.test.js",
+      "tests/expressivecss-lifecycle-browser.test.js",
+      "tests/expressivecss-material-quality.test.js"
+    ],
+    "inputs": [
+      {
+        "path": "src/sass/abstracts/_breakpoints.scss",
+        "sha256": "4303ed39044d5daad1dfbc284e3dcf26c9b0cb3f6e6d0b7bea7489582e660f4f"
+      },
+      {
+        "path": "src/sass/abstracts/_elevation.scss",
+        "sha256": "160234d82fa64e635d0f8ab6c5d3bcc5dbb5744014a67bdf6e37bdb541322356"
+      },
+      {
+        "path": "src/sass/abstracts/_index.scss",
+        "sha256": "018019398fc34022e17fa049a2253fca9dff4c4ae9528618690df89b38d2631d"
+      },
+      {
+        "path": "src/sass/abstracts/_mixins.scss",
+        "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+      },
+      {
+        "path": "src/sass/abstracts/_variables.scss",
+        "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+      },
+      {
+        "path": "src/sass/base/_fonts.scss",
+        "sha256": "0b768be36675e97378e1ba9567896ee6bb87437352e3e6a059c56a9dde11a628"
+      },
+      {
+        "path": "src/sass/base/_global.scss",
+        "sha256": "f8a4c7c73d279da840d7f5e95d21f1421871a1e93aa492dd9744f49e39e7b4ed"
+      },
+      {
+        "path": "src/sass/base/_grid.scss",
+        "sha256": "0bf70b8cdb31d937d0962b28342948312239a9c03c07a99d6f6886fb80644dd8"
+      },
+      {
+        "path": "src/sass/base/_index.scss",
+        "sha256": "42cb25251e10e9eec30745091e3a12d3ade7c6b70c1d12aba7b82001ed85e392"
+      },
+      {
+        "path": "src/sass/base/_normalize.scss",
+        "sha256": "a158fda62af4af502dff10986817d06282c64f51c13706a773fb1cdbf78ed269"
+      },
+      {
+        "path": "src/sass/base/_typography.scss",
+        "sha256": "fc8b4d714a911e38fb3dd3e9105853ff33ce3c96fdde984c932f9748b83b9204"
+      },
+      {
+        "path": "src/sass/components/_badges.scss",
+        "sha256": "1d9ade7617c30f8584cfee9b3f2fe5d3c5d39f5ed7fa2fd362a9f8205fa15693"
+      },
+      {
+        "path": "src/sass/components/_banners.scss",
+        "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
+      },
+      {
+        "path": "src/sass/components/_bottom-app-bar.scss",
+        "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
+      },
+      {
+        "path": "src/sass/components/_bottom-sheet.scss",
+        "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
+      },
+      {
+        "path": "src/sass/components/_breadcrumb.scss",
+        "sha256": "9961900fec76177ae0078a8f68a74fc36155fe97f86d2351c1b527c808642c9e"
+      },
+      {
+        "path": "src/sass/components/_button-groups.scss",
+        "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+      },
+      {
+        "path": "src/sass/components/_buttons.scss",
+        "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+      },
+      {
+        "path": "src/sass/components/_cards.scss",
+        "sha256": "59dec972c523603525d0db5401ff87c4dc8d55b958c06dfc454d65b7d48871dc"
+      },
+      {
+        "path": "src/sass/components/_carousel.scss",
+        "sha256": "5a9a8e459c61e84fa4d205fd25e9fd7520f0c80489ad816ba6198fe3ebd71f3f"
+      },
+      {
+        "path": "src/sass/components/_chips.scss",
+        "sha256": "a906b31175533e454803c06bd6b47f141764792d2edd8f2add58c26c5308230f"
+      },
+      {
+        "path": "src/sass/components/_datepicker.scss",
+        "sha256": "3a30cd4a9c57386989e95c7623822e189aa04faf101ee5a4a8ba43f6674b654b"
+      },
+      {
+        "path": "src/sass/components/_dialog.scss",
+        "sha256": "05a7ec3c2578a3e850548b8d6207043e1ff66fdb2fd44d1e3328b73dce95b3f6"
+      },
+      {
+        "path": "src/sass/components/_docked-display.scss",
+        "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+      },
+      {
+        "path": "src/sass/components/_drag-handle.scss",
+        "sha256": "a1ba374ed080c749b0c8f4f5fe6f931bebfe5d12c8151ecfa72b484810e0e238"
+      },
+      {
+        "path": "src/sass/components/_expanding-card.scss",
+        "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+      },
+      {
+        "path": "src/sass/components/_fab-menu.scss",
+        "sha256": "f1d7b579ea34271824a0fdc75d209d00830a1beb352ddbbd670d31bebf5548d0"
+      },
+      {
+        "path": "src/sass/components/_floating-sheet.scss",
+        "sha256": "a638bb17dc87b76273e94a37db584f5603a3ce5fd518353f8c4594546b664d10"
+      },
+      {
+        "path": "src/sass/components/_icon-buttons.scss",
+        "sha256": "c77a969e392a03be07f10aa6021758d5fa7ddccd999440755c93942a9dbb38e8"
+      },
+      {
+        "path": "src/sass/components/_icons-material-design.scss",
+        "sha256": "5e1295fb3e13acf8a42c1fbbea9c1b73cab550768162590fd4786b438be5e535"
+      },
+      {
+        "path": "src/sass/components/_index.scss",
+        "sha256": "6bbf549be011ec143a520f5c92c3c2b48b956b5bfdf1afc6fc2317f2e278b51b"
+      },
+      {
+        "path": "src/sass/components/_lightbox.scss",
+        "sha256": "df62c6c3d359089fcb5f7fe2500464afb8f6cb7c57fbc3f7a04a0cf9fc452599"
+      },
+      {
+        "path": "src/sass/components/_list.scss",
+        "sha256": "dec11dbc88d047cac5ba72da9ebcef10fef598767dfdb41418a9b84bb39c9b65"
+      },
+      {
+        "path": "src/sass/components/_loading-indicator.scss",
+        "sha256": "1121e043f42b471963aa823d9c5d651306ab7aeed135bee7a1427c5afe7e5228"
+      },
+      {
+        "path": "src/sass/components/_menu.scss",
+        "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+      },
+      {
+        "path": "src/sass/components/_navbar.scss",
+        "sha256": "2d3a2accd4d0dfeb524f628f9eb2be81bad5a50ab7feea40c0c0ddd58016da96"
+      },
+      {
+        "path": "src/sass/components/_navigation-bar.scss",
+        "sha256": "e42c5c395c9f2cdc1dc9c8c4cfdff1a06cb12183cae1d17bcea915536f0aa9c2"
+      },
+      {
+        "path": "src/sass/components/_navigation-drawer.scss",
+        "sha256": "6f1a81c328dcdfe1d0127764b33b9f88529ea4a059b0ccb9f30436801a85da89"
+      },
+      {
+        "path": "src/sass/components/_navigation-rail.scss",
+        "sha256": "7dcc854d90a48a541ae9ed2380d28063e8217e567f697e27a21fe1ab84e055bb"
+      },
+      {
+        "path": "src/sass/components/_page-footer.scss",
+        "sha256": "71f385db254eb07874be949d5bcb0cdd0ec8835342c1d5a89ba0def76d3668ab"
+      },
+      {
+        "path": "src/sass/components/_pagination.scss",
+        "sha256": "7637a970c2ae783f4f5803d82f4373409de9160d1f635327fd855574312704c3"
+      },
+      {
+        "path": "src/sass/components/_panes.scss",
+        "sha256": "09f9d783b94ba5464410e8a005f8b4b3d25ed7f1afcf8533e023fcd5194915b8"
+      },
+      {
+        "path": "src/sass/components/_progress.scss",
+        "sha256": "3dbb0324f6203f154ddd0bda1c1c0e1cf318323523f0dbba23acc880b5d8591e"
+      },
+      {
+        "path": "src/sass/components/_scrim.scss",
+        "sha256": "604e66fcd4d0259c70f6af50933ea1cce3a5d620b8f787885ab1aadab1288f01"
+      },
+      {
+        "path": "src/sass/components/_scrollspy.scss",
+        "sha256": "39e23fb90c5b0bc2a5d34513bec7342a9a12d0a080043074f287ab8594d87c69"
+      },
+      {
+        "path": "src/sass/components/_search.scss",
+        "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
+      },
+      {
+        "path": "src/sass/components/_segmented-buttons.scss",
+        "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
+      },
+      {
+        "path": "src/sass/components/_side-sheet.scss",
+        "sha256": "3a907e237d6eb6cb46894a980707c26e53fcd71feec7d1b45f4cab3d0dfe0263"
+      },
+      {
+        "path": "src/sass/components/_snackbar.scss",
+        "sha256": "538018b8fc0728c1d2933507cb6dd1c24ea6db1e8924449fb9b4e132c3c53d4e"
+      },
+      {
+        "path": "src/sass/components/_split-button.scss",
+        "sha256": "8afbc0079bfe13d514e8680086e5b2cdd50d9b0e68e5354d378809445f78eec4"
+      },
+      {
+        "path": "src/sass/components/_table_of_contents.scss",
+        "sha256": "ebf956a3836c8a68d55a44f83f5abf8ecaa603e3f7435421f07e5819cd5b90c7"
+      },
+      {
+        "path": "src/sass/components/_tabs.scss",
+        "sha256": "136d7b15bffd791fdaef451f98fad945bd478a25163528aac572b1f94903d9f6"
+      },
+      {
+        "path": "src/sass/components/_timepicker.scss",
+        "sha256": "87330125fa818b3463a1c4e4f80535e7551d39bdd83795462ac8ec0cc092c439"
+      },
+      {
+        "path": "src/sass/components/_toolbar.scss",
+        "sha256": "8fb21bf9336332897e0b4290b80b7ea31a523410a7db893ab7b49cd8abee005b"
+      },
+      {
+        "path": "src/sass/components/_tooltip.scss",
+        "sha256": "cfd11ea9b5934690458973587b8fa76cd0253badbe1c78e345e29f7a477cc35b"
+      },
+      {
+        "path": "src/sass/components/_transitions.scss",
+        "sha256": "6421ac5f9288c802aebbfcc72c715521305c23321f25611cbbc62fc0c8484e7b"
+      },
+      {
+        "path": "src/sass/components/forms/_checkboxes.scss",
+        "sha256": "3fd662bcbca486e3b05413ce9b1ff9a10a8002e3e3ea6e853bd179e8fcfe2f09"
+      },
+      {
+        "path": "src/sass/components/forms/_fieldset.scss",
+        "sha256": "0de91ee778fb360cd8a5451c920df81dd2b1cd5fb9d26993729afe1f745d7e65"
+      },
+      {
+        "path": "src/sass/components/forms/_file-input.scss",
+        "sha256": "cc856d49ae84dcae4970c75dd587194b69219a4f707ad95d4598d974eb491221"
+      },
+      {
+        "path": "src/sass/components/forms/_index.scss",
+        "sha256": "d9906468988a57568d0e703fe39b3ebae415b25aba0e064c7503ab9228fcec16"
+      },
+      {
+        "path": "src/sass/components/forms/_input-fields.scss",
+        "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+      },
+      {
+        "path": "src/sass/components/forms/_radio-buttons.scss",
+        "sha256": "a8054892643f184463052ad5e566ee0d8c96d2f125f9dea433915eba5f3b7cf1"
+      },
+      {
+        "path": "src/sass/components/forms/_select.scss",
+        "sha256": "e91abfb218a90a92f2b87922154836ba0eb6ceb5ccbbe2ed18a7f44f65065a31"
+      },
+      {
+        "path": "src/sass/components/forms/_slider.scss",
+        "sha256": "0a3325ff0e1976529146ac7bf82a12267bc327054c3ddddcd9ba67a2c1b393ce"
+      },
+      {
+        "path": "src/sass/components/forms/_switches.scss",
+        "sha256": "3700fa309d0524fce4eff27c1f337d1ab03f592c567423a275cc9332144b2e8a"
+      },
+      {
+        "path": "src/sass/expressive.scss",
+        "sha256": "e7d1ec9fbba92333770cc096e5519c382cbdddcdc81eefa568a600719ba22e32"
+      },
+      {
+        "path": "src/sass/README.md",
+        "sha256": "73eac887d7029f3f71c31b7eea2e9283d191b4e27d056a95558e5bd6337c2b55"
+      },
+      {
+        "path": "src/sass/tokens/_index.scss",
+        "sha256": "38108c37aebf4d0357f8b97503e09bd3e605ab624f0fdb514ac481c1cc87075a"
+      },
+      {
+        "path": "src/sass/tokens/_reference.scss",
+        "sha256": "5725dc82aedcd277d99ff8a5483866b08970647bdd2fc3c67c662d958cd15f4d"
+      },
+      {
+        "path": "src/sass/tokens/_state.scss",
+        "sha256": "bc90642664fe5b840845c010fe670ec1b5ed964cafe96cd879e2b7dd45ad1b0e"
+      },
+      {
+        "path": "src/sass/tokens/_theme.scss",
+        "sha256": "c0f1b5bca3b6cf9bda305d9fb14f033728bfcf279c7a32922dce6a5b02e30f00"
+      },
+      {
+        "path": "src/sass/tokens/_vibrant.scss",
+        "sha256": "a2c1f455e675f00e19dfbd12869979f7047628193595730eed7abcf770badc3d"
+      },
+      {
+        "path": "src/sass/utilities/_colors.scss",
+        "sha256": "992410fa3aee55477fa26a49b7ffb2c5a12eb3f24d73bb4dc4cc40605b7c2361"
+      },
+      {
+        "path": "src/sass/utilities/_helpers.scss",
+        "sha256": "562299f417909982cfe401e0e5ad100bb51ba75c910d96434db59c2c14baacd8"
+      },
+      {
+        "path": "src/sass/utilities/_index.scss",
+        "sha256": "0405c93293cca85c9b3e8465f0d2330909417743632605ae8b108ecfb060420c"
+      },
+      {
+        "path": "src/sass/utilities/_spacing.scss",
+        "sha256": "5740fa521d7f767f437a1735000466ce561e25ea2e7de4a620abf7245146e988"
+      },
+      {
+        "path": "src/sass/utilities/_typescale.scss",
+        "sha256": "4f3d7b2c48dd10173ef82eb00473694c9a07c3079380d0eae1797faa6204add3"
+      },
+      {
+        "path": "src/sass/utilities/_visibility.scss",
+        "sha256": "05b198669d4826fbd876285d3f8713c87e05e3903e1f90ec26bdc8db64be2acd"
+      },
+      {
+        "path": "src/sass/utilities/_z-depth.scss",
+        "sha256": "7fcfc9e4900ef5ce0a954228e324b493789c57d8877218197a12940c127c9c9c"
+      },
+      {
+        "path": "src/ts/behaviors/bottomSheets.ts",
+        "sha256": "3f3ae0c8b1cc1247ba75cd1e13c8c2a9a0fad5d284b51f6efac5887a78c3dcf7"
+      },
+      {
+        "path": "src/ts/behaviors/dialogs.ts",
+        "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+      },
+      {
+        "path": "src/ts/behaviors/forms.ts",
+        "sha256": "c90046cd163d73d9046b0bfc2b4888ba87626704782f295054d9da63b3395d57"
+      },
+      {
+        "path": "src/ts/behaviors/sheetDrag.ts",
+        "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+      },
+      {
+        "path": "src/ts/behaviors/sideSheets.ts",
+        "sha256": "29c28c886eeccf05b4e5834bb57c424b77ed48800e907de5436a384bb79cf749"
+      },
+      {
+        "path": "src/ts/components/appBar.ts",
+        "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
+      },
+      {
+        "path": "src/ts/components/autocomplete.ts",
+        "sha256": "5cf06711627918a0a5b2605c72f025494bbe9cd0aaebcc47b8e4b6f08d8c7b45"
+      },
+      {
+        "path": "src/ts/components/buttonGroup.ts",
+        "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
+      },
+      {
+        "path": "src/ts/components/buttons.ts",
+        "sha256": "8f693be33245b1984742a4f51272c4f39927f4a75c735583583f530ace701940"
+      },
+      {
+        "path": "src/ts/components/cards.ts",
+        "sha256": "83b5bce0fcf0393cfd71a7e7bfe6ce49c9f46b65a8c93a9ddecd68f85879cd21"
+      },
+      {
+        "path": "src/ts/components/carousel.ts",
+        "sha256": "772609159091d79c516820e5a68042407d641cd67d78b1a7d09ed6346fe44ced"
+      },
+      {
+        "path": "src/ts/components/characterCounter.ts",
+        "sha256": "5f12ff055e1ee92562839b9ad103808873d9f81c2e646d588fef9f63dbc16536"
+      },
+      {
+        "path": "src/ts/components/chips.ts",
+        "sha256": "6cb6af3f1b41f5634de1e1bf3a821ad080b006a922d7238466915c87f775f47d"
+      },
+      {
+        "path": "src/ts/components/datepicker.ts",
+        "sha256": "595a41a522aee4057c635085819476461cc2c0ff7a4100db55e463562503b800"
+      },
+      {
+        "path": "src/ts/components/expandingCard.ts",
+        "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+      },
+      {
+        "path": "src/ts/components/index.ts",
+        "sha256": "03262ca857f8f6cb09be3077534f378d4b1c4ca835a01c749f7469cc54eddc7c"
+      },
+      {
+        "path": "src/ts/components/lightbox.ts",
+        "sha256": "22e0686f6f7dc9cfd6be5d7d259b197818eb6046818c3a67d2597fca8c0c573f"
+      },
+      {
+        "path": "src/ts/components/menu.ts",
+        "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+      },
+      {
+        "path": "src/ts/components/navigationDrawer.ts",
+        "sha256": "d68973e7e9b0f73270449270021adf2587b95a9573678731af4b602b26da4823"
+      },
+      {
+        "path": "src/ts/components/navigationRail.ts",
+        "sha256": "f7b4e682a87ea664dc8b8927ea86a784fd61ab1d538a9996f97d5c2e95db4406"
+      },
+      {
+        "path": "src/ts/components/registry.ts",
+        "sha256": "4fee437817251d2ce971e939c64ea150fe36e22a96ddb08cb2bfbfdaab5e0f99"
+      },
+      {
+        "path": "src/ts/components/scrollspy.ts",
+        "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
+      },
+      {
+        "path": "src/ts/components/select.ts",
+        "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+      },
+      {
+        "path": "src/ts/components/slider.ts",
+        "sha256": "bb22f1baaa0814b6d9389ec115cd6b705c73fbac8ddda1b35f32124ff6766128"
+      },
+      {
+        "path": "src/ts/components/snackbar.ts",
+        "sha256": "bb2f35946ede77074ea743fc573bcfbf1203a9abc8e72d811dfddbdb60b87f1a"
+      },
+      {
+        "path": "src/ts/components/tabs.ts",
+        "sha256": "154b97877b4683a1277d9cbfb1cb320a2d25c8dcefe900d0be3e6835ecf5d178"
+      },
+      {
+        "path": "src/ts/components/timepicker.ts",
+        "sha256": "09351a82823567f4c6254d734e88e1b3ff5e2a80a721feb4884389b5fdc7460e"
+      },
+      {
+        "path": "src/ts/components/tooltip.ts",
+        "sha256": "0c3b24fc13c7fd5d8958652f22e71bb0105dcdc766c830c54f5d5867e58ea938"
+      },
+      {
+        "path": "src/ts/core/component.ts",
+        "sha256": "865a48796e96cb8ca1ad62fb7f92f8f93d19bfe84630156465eb2825f0a0b347"
+      },
+      {
+        "path": "src/ts/core/utils.ts",
+        "sha256": "16175de2b2593d32215d30b3820ae17dfb951fcb7f35c3cd22fdfa2bb672d4c2"
+      },
+      {
+        "path": "src/ts/index.ts",
+        "sha256": "da7c7f74039a6f8d65af488d17340f09c7b52f256a8223a11621c7da22eff01e"
+      },
+      {
+        "path": "src/ts/plugins/dockedDisplayPlugin.ts",
+        "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+      },
+      {
+        "path": "src/ts/README.md",
+        "sha256": "03850ef99540f5742db6a41188c03bbe54ea12fec9e631eedc17324a88d5735b"
+      },
+      {
+        "path": "tests/app-bar-js.test.js",
+        "sha256": "015a2ce6aaec906bbc16cb5d28b4342f61644893bfb0ea83dc08300e3abd8d82"
+      },
+      {
+        "path": "tests/app-bar.test.js",
+        "sha256": "d22e79a900e3faf0cd57e5347deef4f9452989940dc06e629bc3601a5d4a1590"
+      },
+      {
+        "path": "tests/autoinit.test.js",
+        "sha256": "64eac4a2a9ee95290df9fc074b8ab01c77017123a30a6db6604f259694c0139f"
+      },
+      {
+        "path": "tests/badges.test.js",
+        "sha256": "8c1df289ff6b66a4f7dee0b1700af4ef1def6160943871422dec35cdd4406fb9"
+      },
+      {
+        "path": "tests/banners.test.js",
+        "sha256": "ed3db04f652220f0c8e28fd0a9e401b7e5d822f8e212e4c895db59a334a779a2"
+      },
+      {
+        "path": "tests/bottom-app-bar.test.js",
+        "sha256": "5b85f1dbeca04c1148656f1daf1ef9d90095d420586b167906d11eab80e85380"
+      },
+      {
+        "path": "tests/bottom-sheet.test.js",
+        "sha256": "01c325223ec7de035f65c5dd2118e2e272cc643839803b6ba6db33cf1a3c1565"
+      },
+      {
+        "path": "tests/bundle.test.js",
+        "sha256": "89e8e722ca7e59919b16dd433b416eb333baa77e5a60bdda0be5a94ade4aeff6"
+      },
+      {
+        "path": "tests/button-group-js.test.js",
+        "sha256": "6347b784489524ec1c912de98d4c336f7543d18f3d8def3f92cd112dfa4ef287"
+      },
+      {
+        "path": "tests/button-groups-browser.test.js",
+        "sha256": "9744e533fb49ab1f3650dafce5fb86f0e86de39c9a3ab319b9833fb91fd25a42"
+      },
+      {
+        "path": "tests/button-groups.test.js",
+        "sha256": "044167fb3243cd809ca28c4727862e6c227c34aa95efaf5509cf3d62fe51557c"
+      },
+      {
+        "path": "tests/buttons.test.js",
+        "sha256": "d330da14047fd91c18418586aa1a694c4c14e23b90fd7cc632f1bdd298a7d9e5"
+      },
+      {
+        "path": "tests/cards-browser.test.js",
+        "sha256": "5ca33fcea6a53c7ffc6835046ac321ed10422aef309ca62bd7cd9da4e104b127"
+      },
+      {
+        "path": "tests/cards-semantics.test.js",
+        "sha256": "7f998e025ff569a4db1798d49de7db93c80ec0088883ad331513a28b053a8c94"
+      },
+      {
+        "path": "tests/cards.test.js",
+        "sha256": "c45fbd791f476dfe9ce6111316be63841b20e35dffd93c3dfb5a54dae4e1150a"
+      },
+      {
+        "path": "tests/carousel.test.js",
+        "sha256": "5d216b9de4b0404497393d6f1f7ed0d8c771120846e6b66ff2ace0c42b5dfbc5"
+      },
+      {
+        "path": "tests/chips.test.js",
+        "sha256": "ae102bdda84ace5308955a3cfa5a36e0b56803a410ebe29206942ba064c79e1e"
+      },
+      {
+        "path": "tests/color-drift.test.js",
+        "sha256": "a49cc940cefb5a0239997fbe8b3dba81e9b8dff684469a7a021484fb89906b98"
+      },
+      {
+        "path": "tests/color-roles.test.js",
+        "sha256": "c28a199bcd91ecb3990f7e3fe9d7aa5b1590ba0abc0100b666eb539cfb457c2b"
+      },
+      {
+        "path": "tests/components.test.js",
+        "sha256": "dd91b492bb3018530a9b8013d92097b4eee2da53b02fecf43dad1d1dc1e9a883"
+      },
+      {
+        "path": "tests/css.js",
+        "sha256": "4e5885e4cace7c6611e6b9ff7c4c5da9099255eb95a1657f1c0b4d723dc7e607"
+      },
+      {
+        "path": "tests/dialogs.test.js",
+        "sha256": "a1d1bf7b9d8d84e0dc3f90039de44dda28d36dfa3561f469aa59dfb20b8c8e9f"
+      },
+      {
+        "path": "tests/docs-api.test.js",
+        "sha256": "663afbcf9e4a53e7c045fad24b24f41d538665c064c464c6f79fbda1deac787e"
+      },
+      {
+        "path": "tests/docs-astro.test.js",
+        "sha256": "fcafad5bdf470fdcc35798455826f354d2e51c776e6d25b1b54420f21eddabd0"
+      },
+      {
+        "path": "tests/docs-code-blocks.test.js",
+        "sha256": "8db17b9e9c32a4f69a402bd400136bd074294f68b436825024c68de4298d29fa"
+      },
+      {
+        "path": "tests/docs-typography.test.js",
+        "sha256": "32969e35192071e0f2ba9989df041e5aa563bededcee580c5f535020010d2970"
+      },
+      {
+        "path": "tests/drag-handle.test.js",
+        "sha256": "f4ee594b1b15af6b5662221ce1064acf70faf58f513ec0ac751e642efb4ceec2"
+      },
+      {
+        "path": "tests/expanding-card.test.js",
+        "sha256": "2c158a527782154ca7bcc0c3bd21d5cdae230d62a3dcb33a5cb7ba80ca9823b2"
+      },
+      {
+        "path": "tests/expressivecss-codex-adapter.test.js",
+        "sha256": "3092a3e3dc7c9a1758d590e8a287dab275ecb118d6e4096a3996eec5f0e4d330"
+      },
+      {
+        "path": "tests/expressivecss-component-decisions.test.js",
+        "sha256": "560d2b898463d97f9d79b09025a7eaab0ee6a4faf94ad849b8f153f23e5f4ce9"
+      },
+      {
+        "path": "tests/expressivecss-consumer-browser.test.js",
+        "sha256": "046027be9bcbe593b9335d95efadd3d8b1d517c902477b233f35c0ade1990b88"
+      },
+      {
+        "path": "tests/expressivecss-consumer.test.js",
+        "sha256": "a5830fd9484df11bbae8be65f569fa7d3fc4a0d4909d52413ca5cb82b741738e"
+      },
+      {
+        "path": "tests/expressivecss-eval-browser.test.js",
+        "sha256": "374c12306200908b76d8163fa15ad983fc373dbd350368e6cc76e2162e390b58"
+      },
+      {
+        "path": "tests/expressivecss-eval-provenance.test.js",
+        "sha256": "6ab7be4148454168b1944ca5fcba26146bc206d77d7996421e7c85fbc1029809"
+      },
+      {
+        "path": "tests/expressivecss-examples-browser.test.js",
+        "sha256": "8e4816eeab98b2acdf180cf9afb6ca217e16d08558b4c74b5147374e2d1c2c04"
+      },
+      {
+        "path": "tests/expressivecss-interface-quality.test.js",
+        "sha256": "aaf9520249aba3c52b304ae00f6fadf35a87d1bdbac080b5fbad71c1e0ee8d9b"
+      },
+      {
+        "path": "tests/expressivecss-lifecycle-browser.test.js",
+        "sha256": "0ed07f21255bbd379015f769032872a7560b1508c0fdd64501cdcea7728ee094"
+      },
+      {
+        "path": "tests/expressivecss-material-quality.test.js",
+        "sha256": "8862f83b3d4a97797a6df671a8a6373261ada16bcf16c5e3cac9f1ec553abec5"
+      },
+      {
+        "path": "tests/expressivecss-natural-discovery.test.js",
+        "sha256": "6487d358ca4c6c777e055119f188e88bbcd8cf86621996c893ea578574a7d8db"
+      },
+      {
+        "path": "tests/expressivecss-skill-benchmark.test.js",
+        "sha256": "59c0c5f02e46f2fd154bb7bba192d399b2f70864835e9dfeaa9e7a01d0c4d2f4"
+      },
+      {
+        "path": "tests/expressivecss-skill-evals.test.js",
+        "sha256": "e5d8f1ce38201bb38040fe8a554c1b75e17f2e35281dd262d89b9405778aa0a5"
+      },
+      {
+        "path": "tests/expressivecss-skill.test.js",
+        "sha256": "d1778ca5b03832994b6d9970db70fe4a4fb10a2ae4e7d88b2a0b56abc1e7a8df"
+      },
+      {
+        "path": "tests/expressivecss-version-resolution.test.js",
+        "sha256": "46e3f72de2edb29ceda79f61395f714dc7ccd954c54d9a06bf7c6330ef8c43d3"
+      },
+      {
+        "path": "tests/expressivecss-web-accessibility-browser.test.js",
+        "sha256": "93b261c6dd9aa92727a52afa506eae474d4a9fde97137c67eaaba2c688d5d85b"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/benchmark.json",
+        "sha256": "fd5771137ba947f70ad31ec9ab578fc7aaca9964c64913ec683860bfd7e80819"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/cases.json",
+        "sha256": "60ef88d1724065dddff50997b3bfc416b9aa1c135ab18a4437f89777db8a2b48"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/consumer/app.css",
+        "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/consumer/app.js",
+        "sha256": "c942c2ed45abd7b2d4be9876a7847d84bad32a28132a431197cbe93f5a870aac"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/consumer/index.html",
+        "sha256": "3627270e226ce477605dd420633741f90b37eab9883d9d770f21278053ecbdcc"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/consumer/server.mjs",
+        "sha256": "98177491026892128e3c0f215feb5df755fbe20bcb3cc31d3872df54007ed0e8"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/expression-examples.json",
+        "sha256": "4d6992e0b08b7c93550e9da2d73809192f59957e78c25e25d75b9a664f5bad42"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/material/expression.css",
+        "sha256": "4b6280b6911b45aa106cdeab4a47d54b3cab81b207fd1227c9f1a14fefab0ed6"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/material/motion.css",
+        "sha256": "a85f0a5210ab28b68d55db670c37c441e2371a08889e6b3f7edaa028ebf7db4b"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/material/review.html",
+        "sha256": "ef81cd27f77b5ed0e9579ead59c5429c1dc8914a7a4a0998db533e2bde36bfed"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/material/review.js",
+        "sha256": "f10e6a52e6e69d262c5243d5e9a0449b5b9ce00cd7ed524780b32cdcb5b8b449"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/natural-discovery.json",
+        "sha256": "a130d21ded19a8d2cf98c06b27fead001ca3c18e00f8557a60706688ed6bfd4e"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/passing-responses.json",
+        "sha256": "3f02157ef4792db966ae916b3ae81845a767de2f66c0c4971f855ee3edd208c8"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/web-accessibility/app.css",
+        "sha256": "a53f565dd5de1990e4916b7a1fa364fde5246e903a60e0af6604c4037e3cd6f5"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/web-accessibility/app.js",
+        "sha256": "79d2c54f18b3ffed4378ef6de4d3b14db86d03f92569d2730e88197ac0f805d6"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/web-accessibility/index.html",
+        "sha256": "af18be2b82cb365ac611e8499682402fb32d00262ab0c7b9f693a367c4f03490"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/web-accessibility.json",
+        "sha256": "81e5d48c3a4ddcab98b1f5a5a5f51d105ac876c2c8aca2bcd6436d702bb8deb8"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-version-resolution/cases.json",
+        "sha256": "0504dd1ee007c05bb1c12292a0a221c846bbab62f864b92ce0060dbc259eded2"
+      },
+      {
+        "path": "tests/fixtures.js",
+        "sha256": "bdbe3903aba7418e27c73af28678497dbc3305c6b372c2ea152aab94ec3c7261"
+      },
+      {
+        "path": "tests/floating-sheet.test.js",
+        "sha256": "0ad6a0616e87c2ae87671ad3945798ef813cd49486c0d865a6a1a550340d7196"
+      },
+      {
+        "path": "tests/fonts.test.js",
+        "sha256": "df5adc0755dd66d66de4667aab0842c3ffc1f22202a661a5017f46f92208e058"
+      },
+      {
+        "path": "tests/forms-generated.test.js",
+        "sha256": "366db648ade3fab67d36cfb235d00da949d19e36d934a283b7b1d5232a89d07a"
+      },
+      {
+        "path": "tests/generated-a11y.test.js",
+        "sha256": "a52296ad28aee7fc41538f35b423557be5f4aab7467835266c4a4770f28d25e9"
+      },
+      {
+        "path": "tests/grid.test.js",
+        "sha256": "7f0431010e9dd175ff92939a269bd38214b4f285bef206cd6e39e7089efc0af9"
+      },
+      {
+        "path": "tests/hot-paths.test.js",
+        "sha256": "07b5a094a2171ea92def26769ab0ce7004255c31aff535caa04752de445130b0"
+      },
+      {
+        "path": "tests/icon-buttons.test.js",
+        "sha256": "cf5250855bb3d503950776dbf35f63b46e162a588d336d39eab375df25636a07"
+      },
+      {
+        "path": "tests/injection.test.js",
+        "sha256": "440e13d602e4693377604e50b92334f97a4823fd16ca70eabe32c6f1085bfeaf"
+      },
+      {
+        "path": "tests/lists.test.js",
+        "sha256": "f5133d24efe98f4bfcc1133fed0ca5ae57b54ad4adba2b3bc860c735f4adb75d"
+      },
+      {
+        "path": "tests/loading-indicator.test.js",
+        "sha256": "6c7376efda24f6b1034c8e3decb9409ac664d4b8918873c22666659a1e1cce8a"
+      },
+      {
+        "path": "tests/m3-naming.test.js",
+        "sha256": "b5562bc5f5bda288d40f377a5d242588314a0b6909c64e2246d735a9d8c302d8"
+      },
+      {
+        "path": "tests/m3-reference-ramps.js",
+        "sha256": "ee5408c37c2b25fc1e441729e042d96dc4c6bfd1f77725bb7efccf0db75ef7cf"
+      },
+      {
+        "path": "tests/markdown-pages.test.js",
+        "sha256": "50396d2ca7962f8311b742da750c56a9d8bbf107c59a54e4f979d848eba9cfc1"
+      },
+      {
+        "path": "tests/menu.test.js",
+        "sha256": "f87a316452ca2b6127ed31c2671ab9e6b86f287dd304069b8102dae047766bb8"
+      },
+      {
+        "path": "tests/navigation-bar.test.js",
+        "sha256": "207c98c439f4b1210a30132f9037dd56dca9b2120792f2c2e9a1c11ea5ca3990"
+      },
+      {
+        "path": "tests/navigation-rail.test.js",
+        "sha256": "e7288520467661acea82dfdf595e954bca38bc23a697bae5b0ebcbecb1bdcc4d"
+      },
+      {
+        "path": "tests/panes.test.js",
+        "sha256": "6ac675da9710ec129213a0f266c13c23562db3e7157db87c5023130fe5fa387c"
+      },
+      {
+        "path": "tests/portals.test.js",
+        "sha256": "c84516406ff189f0a6cab4f0e9ab9648c16377470b8ca5bfa3b5e08fdf22257d"
+      },
+      {
+        "path": "tests/range.test.js",
+        "sha256": "20c6acfd0fe0c2ec4fcae01b02d6f0c6fb3811430861381f998c699fb33a194f"
+      },
+      {
+        "path": "tests/regressions.test.js",
+        "sha256": "b964fc33accc404c4ad0fcda8f8fa53e7dc4d2d2a3e5bcd785b93132e4cc0de8"
+      },
+      {
+        "path": "tests/release.test.js",
+        "sha256": "5c10d44fac6663895a905129c4137c6032363599df98b128f422210e3d645805"
+      },
+      {
+        "path": "tests/scrim.test.js",
+        "sha256": "d0d4ba5a62da2be575fca12b0241bc207a5addd63ea663c623ce98488f906375"
+      },
+      {
+        "path": "tests/segmented-buttons.test.js",
+        "sha256": "558246482945f4e2ad168cabd28413b3a69028c6381d48a1d59edd1313f4f636"
+      },
+      {
+        "path": "tests/semantics.test.js",
+        "sha256": "305b2dc126318ad76ba972eb4925ec335ec86b1be60024fd898c943e41410cbc"
+      },
+      {
+        "path": "tests/setup.js",
+        "sha256": "2389e77f5cec1db04b9f1b11151bf923a28257b43abfac5b03d9c5393b0123df"
+      },
+      {
+        "path": "tests/shadow-dom.test.js",
+        "sha256": "2ad55046616affe2cdf9d8b05500e9c2aab2fd4bf7b4ce31c93aa7e474fcb1e4"
+      },
+      {
+        "path": "tests/side-sheet.test.js",
+        "sha256": "268077ea034a3a4b4c3d826ae40534301ab46ca2dab92c8e375083ef30df8aec"
+      },
+      {
+        "path": "tests/sidenav.test.js",
+        "sha256": "a81f8ceed999c8eaa5644b78442a0a5ded02b9d32a3c5da6c521e5f42d3cd334"
+      },
+      {
+        "path": "tests/snackbar.test.js",
+        "sha256": "eedc1da86fce3c76cfe8b7040e935df79b09ce6d3db2c8eaefd9c628cfb9a416"
+      },
+      {
+        "path": "tests/split-button.test.js",
+        "sha256": "6a3f338d3b0f458aae5aa91076ac43bcb065bc26c08977cc0b89c1c357e6f01e"
+      },
+      {
+        "path": "tests/state-layers.test.js",
+        "sha256": "06f6fb77efc123ea4dde124132e62863027517ea9182c3f8ff147b416ef4f783"
+      },
+      {
+        "path": "tests/teardown.test.js",
+        "sha256": "cafb16469345cecab529ad66cb903291586a9ae90a2240c2b8e840b9fb01219f"
+      },
+      {
+        "path": "tests/tokens.test.js",
+        "sha256": "82f85826e184927f7b5f6d5616027ebe2b9b8864135e0c150977b74120f8db91"
+      },
+      {
+        "path": "tests/toolbar.test.js",
+        "sha256": "ed4ea138464cc38af0402ef70a3edbf71fa2471c404ce44446c7ca6e5d246823"
+      },
+      {
+        "path": "tests/typography.test.js",
+        "sha256": "e7c55a57a2f460c411fec4ecf9ad3b886e82dcc56b6bc971b6c9ef255826f27c"
+      },
+      {
+        "path": "tests/visual-run.test.mjs",
+        "sha256": "8100ff4b6d069fbb01ef7e264526887b127e842585553e8363e7ded6e9e96855"
+      },
+      {
+        "path": "dist/css/expressive.css",
+        "sha256": "0ff6adc0674875bf27dd3f009a1de7ea094a15a20baa73b70e09d9797da3d38f"
+      },
+      {
+        "path": "dist/css/expressive.css.map",
+        "sha256": "416d093bf8dd1b26aeee943ad3abd3203ad217712c6e8d22b069ed336af69ea5"
+      },
+      {
+        "path": "dist/css/expressive.min.css",
+        "sha256": "ebbc79dc2e72d3add8de3a6d09ae7e8a5a6feaf6b664bf72b92c28d53cce6a45"
+      },
+      {
+        "path": "dist/css/expressive.min.css.map",
+        "sha256": "713f828efdf2b71dd79ca42f5aaa6ea2638c6bf2d81f6fa7cb0a4b6d50c70b64"
+      },
+      {
+        "path": "dist/fonts/LICENSE-material-symbols",
+        "sha256": "18aabf190848725e2576eefb5c29ba06aac1029d02132252a7f312eac2e50cf3"
+      },
+      {
+        "path": "dist/fonts/LICENSE-noto-sans",
+        "sha256": "54ec7b5a35310ad66f9f3091426f7028484cbf9ae1ab5da30122ee412a3009e1"
+      },
+      {
+        "path": "dist/fonts/LICENSE-roboto",
+        "sha256": "84044c09058803d87a241bd28abb4ce30a433d7db9c27a04da3efad6a0ca539c"
+      },
+      {
+        "path": "dist/fonts/material-symbols-outlined.woff2",
+        "sha256": "329f6eb34ac05b0c0b1bb172e36d004bbc57cb5112abeeccc70755afdc4f2d8d"
+      },
+      {
+        "path": "dist/fonts/material-symbols-rounded.woff2",
+        "sha256": "fb133d3ec8288e46a570bd987a2e6c1e90caa1eb174660ac8f0c9c04ddb83f16"
+      },
+      {
+        "path": "dist/fonts/material-symbols-sharp.woff2",
+        "sha256": "f0adc706b2f7a1e8e340fc0143162a9e7384d6e5d117e5955343c58cc5f82b65"
+      },
+      {
+        "path": "dist/fonts/noto-sans-latin-400.woff2",
+        "sha256": "09aee8065d25508f23a4c3d92cd777ac869c52d93fd868a88f025d888a7937d6"
+      },
+      {
+        "path": "dist/fonts/noto-sans-latin-500.woff2",
+        "sha256": "1d35aaecc5c7a375d87c12787e1e4c5d6a695315b757e1e18a479d1a2f84e973"
+      },
+      {
+        "path": "dist/fonts/roboto-latin-400.woff2",
+        "sha256": "425c0713a8176f92273d378599c7eac57de7fafabd4bd0ed457b70eb8f80d371"
+      },
+      {
+        "path": "dist/fonts/roboto-latin-500.woff2",
+        "sha256": "5bcc3aa180e7f26f643cd5b2621cd7c2de193d0661d913a94afd3d4881a7a34b"
+      },
+      {
+        "path": "dist/js/expressive.cjs",
+        "sha256": "22ac612e760a9c39d165407179536aa010dd872c2f97a8506cdea1f8c1b87b04"
+      },
+      {
+        "path": "dist/js/expressive.cjs.map",
+        "sha256": "e0616201e7a21c61c40fa8ccfee7a3c1c8dea49abd27bd28abf49d5fb823c0f5"
+      },
+      {
+        "path": "dist/js/expressive.js",
+        "sha256": "262f9a7e9fd63d42a39ea82072142f46863d481c8d7656a64ce2d7ee5336fc97"
+      },
+      {
+        "path": "dist/js/expressive.js.map",
+        "sha256": "503ad288ba31569e2068fa4e1aec6634610d8db2115ce098dcf5871c7ef46f8c"
+      },
+      {
+        "path": "dist/js/expressive.min.js",
+        "sha256": "880b24afb0590d1738f51032f0e896ad2c07a4eb70addc85d323a38354de767f"
+      },
+      {
+        "path": "dist/js/expressive.min.js.map",
+        "sha256": "51222c0c59b8937d7b9be7aee838905f8b33e0256615d945da69c1c2438c7d1e"
+      },
+      {
+        "path": "dist/js/expressive.mjs",
+        "sha256": "d7b908ecc7c6078f9cddec7d06a4b17ce3683c5d7b2cb898b4bc8e72ce7636bc"
+      },
+      {
+        "path": "dist/js/expressive.mjs.map",
+        "sha256": "9986d779ab6013b8089a3999ee01677d1524040ab7e55e28f9b8f90088025090"
+      },
+      {
+        "path": "dist/types/behaviors/bottomSheets.d.ts",
+        "sha256": "27298e42e8edc499b86081c45e97fc8aa5f953330101c5727ac17b20f2580e08"
+      },
+      {
+        "path": "dist/types/behaviors/dialogs.d.ts",
+        "sha256": "ca40c8280484472ae2fdc6ddfbbe8edc91aa9bc8f8f67a7c4a434cbfa263892b"
+      },
+      {
+        "path": "dist/types/behaviors/forms.d.ts",
+        "sha256": "b09c21db8720872d3d6933d78cc8854220d2ed2c8c63ea4cc4cf411b714c7365"
+      },
+      {
+        "path": "dist/types/behaviors/sheetDrag.d.ts",
+        "sha256": "be1722b9cdc82b66746d4f0c29e278e1047d179d84a5dc773da5a5ab198712b9"
+      },
+      {
+        "path": "dist/types/behaviors/sideSheets.d.ts",
+        "sha256": "a6f8e22fbbe01ac5b604104bbe88339c72abe4b1184efcab2700e716ad64db5f"
+      },
+      {
+        "path": "dist/types/components/appBar.d.ts",
+        "sha256": "b61a52b2cd6f986760da9c4d4b15ef25ae97a1a0cd86769d05c03eebc5ae45a0"
+      },
+      {
+        "path": "dist/types/components/autocomplete.d.ts",
+        "sha256": "19139d370c64b5d75517054f348c1e301a7faeb3de31ee4962da1059b18d9930"
+      },
+      {
+        "path": "dist/types/components/buttonGroup.d.ts",
+        "sha256": "eed1eea4fbd6a57adba94fb5a092cb6c91ca6d4403f63de41fb77ee16832b438"
+      },
+      {
+        "path": "dist/types/components/buttons.d.ts",
+        "sha256": "a8a2f58246dd27ecd65a87174b4468793617023e415b476824c07ff889b858a4"
+      },
+      {
+        "path": "dist/types/components/cards.d.ts",
+        "sha256": "c08fb5b8fbb685008bbeb243502725f976eb476e4949b26fd4701986120fa118"
+      },
+      {
+        "path": "dist/types/components/carousel.d.ts",
+        "sha256": "c1f26fb100fa29db82fa803c08c814b8a56fa9e70bb7b30b900fb663373661cd"
+      },
+      {
+        "path": "dist/types/components/characterCounter.d.ts",
+        "sha256": "4ed7e43193504fb9610bb2ce8de6036774c7a3ab6702bd642bdf44115d8cdb30"
+      },
+      {
+        "path": "dist/types/components/chips.d.ts",
+        "sha256": "ada29c2f97d666edb7fc6c1e0661dc790040f404505751e6a6e5ca49dd0de36a"
+      },
+      {
+        "path": "dist/types/components/datepicker.d.ts",
+        "sha256": "418fdbf3e962337ba2bf3ad399a2adaa327c2e27662441f6080e4cd66116a003"
+      },
+      {
+        "path": "dist/types/components/expandingCard.d.ts",
+        "sha256": "8d00e1b0b13cb431c7e7402083e573b581f75061b73237d9851fe71a0668a2b2"
+      },
+      {
+        "path": "dist/types/components/index.d.ts",
+        "sha256": "71c72070da4d7a22cd613399bcfa6f5ac3e020c90531372564601aadb168913c"
+      },
+      {
+        "path": "dist/types/components/lightbox.d.ts",
+        "sha256": "51dc52231a5ee12527526eeb939079bd06ae56345820901b677bbd78b8e1bc8d"
+      },
+      {
+        "path": "dist/types/components/menu.d.ts",
+        "sha256": "a36e205c2a23f0a92e4c776c84f0211c368432d85eb447861f01a8286a0c7412"
+      },
+      {
+        "path": "dist/types/components/navigationDrawer.d.ts",
+        "sha256": "ac16a7bcca7a6a3a3276f087b320ac92c6e937051f499ea752c7f537e7b65c59"
+      },
+      {
+        "path": "dist/types/components/navigationRail.d.ts",
+        "sha256": "689442ca84871733884a8951e98856e91088e986ffdfc1502f3866372e80df72"
+      },
+      {
+        "path": "dist/types/components/registry.d.ts",
+        "sha256": "f7c78afc27b448827c32e6a977be971a13423b9fea54817b18169bf10013d149"
+      },
+      {
+        "path": "dist/types/components/scrollspy.d.ts",
+        "sha256": "479f62139863e104b4c4aa3a643ac9b2bfcc87b31d9af2081af0a8592f13aa42"
+      },
+      {
+        "path": "dist/types/components/select.d.ts",
+        "sha256": "3861e47bd932c9ddfa0103d85048cce75658e0f1fb8e10505191ce8cb6c38cfc"
+      },
+      {
+        "path": "dist/types/components/slider.d.ts",
+        "sha256": "6605a349febd260123c0a3f9aa2579ca5d46065f9b3387e9722cbeeda57d13c8"
+      },
+      {
+        "path": "dist/types/components/snackbar.d.ts",
+        "sha256": "52315228518c25112ef851beb58c14f9757e59349bffbde607f27e233815bffe"
+      },
+      {
+        "path": "dist/types/components/tabs.d.ts",
+        "sha256": "a2367c252ad46583f03cbf13430b215c42341735b10b2e7e293cb8d601249e30"
+      },
+      {
+        "path": "dist/types/components/timepicker.d.ts",
+        "sha256": "1ceecb98bab3e75bf17b6dd9fd1da72d6c964fb983d7cdf7debd12711588a5db"
+      },
+      {
+        "path": "dist/types/components/tooltip.d.ts",
+        "sha256": "d0ad7941964825b0f14d14a30e38f9fccfc6a1a5b54e8fb28b7f3abe9f0d237d"
+      },
+      {
+        "path": "dist/types/core/component.d.ts",
+        "sha256": "6b64da64d0766076a6152df43cd8fb58aeb1d6e9846bfb70e21645b132d8a21c"
+      },
+      {
+        "path": "dist/types/core/utils.d.ts",
+        "sha256": "3da2e17712d50d5dac15c343549257721eb48b9914ab45dc90b67088a22df5db"
+      },
+      {
+        "path": "dist/types/index.d.ts",
+        "sha256": "0d7028d0994856769e0a3675e0a6973e145113f567ae76648095c99277f5e381"
+      },
+      {
+        "path": "dist/types/plugins/dockedDisplayPlugin.d.ts",
+        "sha256": "46bd2a2de471505168226d20f528bdaeb6e297acffb1049c71e33989a10a1951"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples/app.css",
+        "sha256": "686ffe9276cf898a2a9c15936c85e9a92b1b56c9ea678190c6cfdf9e09725c4b"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples/app.js",
+        "sha256": "0d816e2ffefbf34302a14f85ca4cd07b0e5cedcb3cc95871ce6595ff311d4923"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples/editor.html",
+        "sha256": "18adbfee90e9706d9da3fd8641500baa4f2061aa2912ea9bfec333ddb9db8491"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples/list-detail.html",
+        "sha256": "c824327ffb40fe39fe24a9f413e34fe97921d0139c9484c2487f37d3343c92ec"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples/README.md",
+        "sha256": "f0a81e20ce3d284faec678e7f713cca2217bf0c10ddeb3d747d0818306114521"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples/settings.html",
+        "sha256": "3bf3f1c5657f00b59c759dea7da2f5c66f61293bc2a12c95f75a51f36b3a0107"
+      },
+      {
+        "path": "scripts/benchmark-expressivecss-skill.mjs",
+        "sha256": "83d3be3ed8a079c3f2df0f50b389bae399e7f9104aa7dc155c3fe16dfa82dd32"
+      },
+      {
+        "path": "scripts/check-browser.mjs",
+        "sha256": "2c493c1c9b025fb5245499787e168999c836efcc9643397ddb2952172381de76"
+      },
+      {
+        "path": "scripts/copy-fonts.mjs",
+        "sha256": "31542c3514e3fcb5eda028a7b2962a9e400f5d04faf60d81366b70b40f3fd1a9"
+      },
+      {
+        "path": "scripts/eval-expressivecss-natural-discovery.mjs",
+        "sha256": "a8f14ce1b2994a1c802abc7df9c15b8e73f74886a498ccef6021a429c19b9f96"
+      },
+      {
+        "path": "scripts/eval-expressivecss-skill.mjs",
+        "sha256": "b23e5769164146fe9b3572b8c91ca902923bfddc9ebea40ab47cf0b483cca2a5"
+      },
+      {
+        "path": "scripts/expressivecss-codex-adapter.mjs",
+        "sha256": "2b6de0ab5bbe7ee3a4175930e47f41e13c5613b9658963e73fdcd13b7da31a29"
+      },
+      {
+        "path": "scripts/expressivecss-eval-browser.mjs",
+        "sha256": "4bdcaa55d4da7dc91b52e6c78287147f8dc87e1cc85d7ab37f53477461934578"
+      },
+      {
+        "path": "scripts/expressivecss-eval-provenance.mjs",
+        "sha256": "e8579da382a7d6a0fa6b4efca0a8dfdb3001b11cde4eee1dbc6b3e3b2e3f6c37"
+      },
+      {
+        "path": "scripts/expressivecss-interface-quality.mjs",
+        "sha256": "79f3953b3d50e6651f816dc102103e28320aac9dd5b1799669365fef389584a1"
+      },
+      {
+        "path": "scripts/expressivecss-material-quality.mjs",
+        "sha256": "1ebf38ffdeead2c8b33624a75edadff988930a0affccbbb65913f9f9a9b51c38"
+      },
+      {
+        "path": "scripts/gen-expressivecss-skill.mjs",
+        "sha256": "d5797b55e1bad01a7207c24aa0176e2b22874325e7e9231f4b9fedafca486864"
+      },
+      {
+        "path": "scripts/gen-semantics.mjs",
+        "sha256": "1e88dd7d8e26f947b2a1d4eee29b4b91837eeee872092479f2caa828102da035"
+      },
+      {
+        "path": "scripts/generate-markdown-pages.mjs",
+        "sha256": "3f229e5ffbe227f6218bf9a59b5562235d0795cc6b08d7377994bd7c34281202"
+      },
+      {
+        "path": "scripts/lib/bounded-file.mjs",
+        "sha256": "2601f8349583b4bef3f579813a5d76418cef742a785fb36de4f70e489c476534"
+      },
+      {
+        "path": "scripts/lib/consumer-browser.mjs",
+        "sha256": "571e207dff1144fe577fa914fe2b855d87b54283e14d9526dfe729dea6ac7789"
+      },
+      {
+        "path": "scripts/lib/material-capabilities.mjs",
+        "sha256": "e5442e2760e01f6a3d7e25d1e2c6c6fb8a08d675c84d9fdca8b23fddca62a181"
+      },
+      {
+        "path": "scripts/lib/resolve-expressivecss-version.mjs",
+        "sha256": "3da308c9e278ca4073135f2378a810a893aa54d53f745eedc393e47ab6a612a0"
+      },
+      {
+        "path": "scripts/lib/verify-consumer.mjs",
+        "sha256": "1357e571f5a0eac2836326f5821a33a6ca71ed78c72064c79cf03c57a678058c"
+      },
+      {
+        "path": "scripts/preview-expressivecss-examples.mjs",
+        "sha256": "22c16795a27b31584ae09328d7c4a69a15571dae618a9d8d17710536c5a60cf3"
+      },
+      {
+        "path": "scripts/record-capability-evidence.mjs",
+        "sha256": "6590cdbe6bdf1a82fd51b6281aeca93667fb2c03183b81271ef5a9101a8aa913"
+      },
+      {
+        "path": "scripts/release.mjs",
+        "sha256": "896ced09d7ef381b89e7ede3762f26f101bbad4b3a48fd17fee8190820333966"
+      },
+      {
+        "path": "scripts/run-node-tests.mjs",
+        "sha256": "3120f3a65b33bc989f1586fd2438829856b0e7091992721875381c9a3bd6a269"
+      },
+      {
+        "path": "scripts/semantics-rules.mjs",
+        "sha256": "28924659a35de094ed1bf7c18457bdd6eb3214488c14f03ae9fe33f17fe3987d"
+      },
+      {
+        "path": "scripts/verify-packages.mjs",
+        "sha256": "65e82c6d3f3cd362622040e2e09aa1baa7445d689e57e0f6d0c4929ed70d21a5"
+      },
+      {
+        "path": "scripts/verify-site.mjs",
+        "sha256": "884050db7b77ffe52a79cf0fa878cf37635dd52d46bc1d6bd9ebc82f9a400e96"
+      },
+      {
+        "path": "package.json",
+        "sha256": "aaf565cfa2d9f5e06e1180dab4712320fb39efe7dc5a458785e05a8ae3605cef"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "2caa5ffd2de349fd69236c5d20dc699bbb0175b94ab8539772dcf3ce0153f9b1"
+      },
+      {
+        "path": "semantics.json",
+        "sha256": "42b467efab1844df7532451875605195607a8ef76f4d2b6c504877a733b14223"
+      }
+    ],
+    "results": [
+      {
+        "file": "tests/button-groups-browser.test.js",
+        "name": "button-group toggle colors resolve in a browser",
+        "status": "passed",
+        "durationMs": 177.997244
+      },
+      {
+        "file": "tests/button-groups-browser.test.js",
+        "name": "button-group geometry resolves for overrides, targets, and RTL",
+        "status": "passed",
+        "durationMs": 143.942507
+      },
+      {
+        "file": "tests/button-groups-browser.test.js",
+        "name": "standard press redistribution keeps its rendered width stable",
+        "status": "passed",
+        "durationMs": 688.304961
+      },
+      {
+        "file": "tests/button-groups-browser.test.js",
+        "name": "keyboard press changes icon widths and rendered corners",
+        "status": "passed",
+        "durationMs": 1215.80192
+      },
+      {
+        "file": "tests/cards-browser.test.js",
+        "name": "dragged and picked-up states override simultaneous pointer states",
+        "status": "passed",
+        "durationMs": 755.921149
+      },
+      {
+        "file": "tests/cards-browser.test.js",
+        "name": "invalid disclosures keep their panels visible and operable",
+        "status": "passed",
+        "durationMs": 174.23921
+      },
+      {
+        "file": "tests/cards-browser.test.js",
+        "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
+        "status": "passed",
+        "durationMs": 152.25603
+      },
+      {
+        "file": "tests/expressivecss-examples-browser.test.js",
+        "name": "complete settings example preserves both treatments and its task path",
+        "status": "passed",
+        "durationMs": 10263.28454
+      },
+      {
+        "file": "tests/expressivecss-examples-browser.test.js",
+        "name": "complete editor example preserves both treatments and its task path",
+        "status": "passed",
+        "durationMs": 10491.361662
+      },
+      {
+        "file": "tests/expressivecss-examples-browser.test.js",
+        "name": "complete list-detail example preserves both treatments and its task path",
+        "status": "passed",
+        "durationMs": 10409.917489
+      },
+      {
+        "file": "tests/expressivecss-lifecycle-browser.test.js",
+        "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+        "status": "passed",
+        "durationMs": 823.13469
+      },
+      {
+        "file": "tests/expressivecss-lifecycle-browser.test.js",
+        "name": "resource observations detect omitted teardown after a partial replacement",
+        "status": "passed",
+        "durationMs": 169.542632
+      },
+      {
+        "file": "tests/expressivecss-lifecycle-browser.test.js",
+        "name": "Tooltip destroy cancels pending delay and animation callbacks",
+        "status": "passed",
+        "durationMs": 147.524592
+      },
+      {
+        "file": "tests/expressivecss-lifecycle-browser.test.js",
+        "name": "Node can import the ESM bundle but runtime initialization requires a document",
+        "status": "passed",
+        "durationMs": 24.240514
+      },
+      {
+        "file": "tests/expressivecss-material-quality.test.js",
+        "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
+        "status": "passed",
+        "durationMs": 7.171631
+      },
+      {
+        "file": "tests/expressivecss-material-quality.test.js",
+        "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+        "status": "passed",
+        "durationMs": 22559.660468
+      },
+      {
+        "file": "tests/expressivecss-material-quality.test.js",
+        "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
+        "status": "passed",
+        "durationMs": 534.972488
+      }
+    ],
+    "directories": [
+      {
+        "path": "src",
+        "sha256": "447ac06786ee1cd39cffabf93199807f5ecb1ca9fc62b773cfb7ae3376cc7c42"
+      },
+      {
+        "path": "tests",
+        "sha256": "7777ab6c7611dbea156985d59f1d28a701173e220a9d5e157b1a07c248cb91bb"
+      },
+      {
+        "path": "dist",
+        "sha256": "4412c1a43d9304a11378343017466fe663ee674cfea689766e327e250d3b98eb"
+      },
+      {
+        "path": "skills/expressivecss/assets/examples",
+        "sha256": "69f49506e3ae0556ac0a9d33a63e5bb4f35b4c52b795176a074752682973dcbd"
+      },
+      {
+        "path": "scripts",
+        "sha256": "32e11d6975785960a524c9b193e394809cdf25aa341350240cfa88b5cc582abc"
+      }
+    ],
+    "inputsUnchanged": true,
+    "reportSha256": "519796bd2f6583a831928a3bafd0e05adbe012d56f8fdef69fb1cf7036df990c"
   }
 }

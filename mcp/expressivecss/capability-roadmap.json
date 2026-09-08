@@ -1,0 +1,2044 @@
+{
+  "schemaVersion": 1,
+  "frameworkVersion": "0.8.0",
+  "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
+  "browserRun": {
+    "recordedOn": "2026-09-08",
+    "engine": "chromium",
+    "engineVersion": "151.0.7922.34",
+    "nodeVersion": "v24.20.0",
+    "status": "passed",
+    "inputsCurrent": true,
+    "reportSha256": "519796bd2f6583a831928a3bafd0e05adbe012d56f8fdef69fb1cf7036df990c",
+    "collector": "scripts/record-capability-evidence.mjs"
+  },
+  "entries": [
+    {
+      "slug": "app-bar",
+      "title": "App bar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Small, medium flexible, large flexible, and search app bars.",
+      "adaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_navbar.scss",
+          "sha256": "2d3a2accd4d0dfeb524f628f9eb2be81bad5a50ab7feea40c0c0ddd58016da96"
+        },
+        {
+          "path": "src/ts/components/appBar.ts",
+          "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "bottom-app-bar",
+      "title": "Bottom app bar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Bottom command bar with optional FAB.",
+      "adaptation": "Tab-reachable commands; no toolbar composite role.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "document-reviewed",
+        "note": "Google MDC Android marks bottom app bar available but deprecated/not recommended in M3 Expressive; docked toolbar replaces it. Legacy M2 link observed: https://m2.material.io/components/app-bars-bottom ."
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_bottom-app-bar.scss",
+          "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "navigation-bar",
+      "title": "Navigation bar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Stacked and horizontal destination layouts.",
+      "adaptation": "Links navigate; the application marks the current destination.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_navigation-bar.scss",
+          "sha256": "e42c5c395c9f2cdc1dc9c8c4cfdff1a06cb12183cae1d17bcea915536f0aa9c2"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "navigation-rail",
+      "title": "Navigation rail",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Collapsed, expanded, and modal rails.",
+      "adaptation": "The compact expanded rail uses a scrim and dismissal behavior.",
+      "upstream": {
+        "source": "https://m3.material.io/components/navigation-rail/overview",
+        "reviewedOn": "2026-09-07",
+        "scope": "overview-reviewed",
+        "note": "tab observed; destination not followed; link-observed; full specifications not reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_navigation-rail.scss",
+          "sha256": "7dcc854d90a48a541ae9ed2380d28063e8217e567f697e27a21fe1ab84e055bb"
+        },
+        {
+          "path": "src/ts/components/navigationRail.ts",
+          "sha256": "f7b4e682a87ea664dc8b8927ea86a784fd61ab1d538a9996f97d5c2e95db4406"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+          "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "navigation-drawer",
+      "title": "Navigation drawer",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Sliding and fixed drawers with nested sections.",
+      "adaptation": "Native details/summary supports nesting.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_navigation-drawer.scss",
+          "sha256": "6f1a81c328dcdfe1d0127764b33b9f88529ea4a059b0ccb9f30436801a85da89"
+        },
+        {
+          "path": "src/ts/components/navigationDrawer.ts",
+          "sha256": "d68973e7e9b0f73270449270021adf2587b95a9573678731af4b602b26da4823"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "panes",
+      "title": "Panes",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "List-detail, supporting pane, and equal panes.",
+      "adaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
+      "upstream": {
+        "source": "https://m3.material.io/foundations/layout/canonical-examples/overview",
+        "reviewedOn": "2026-09-07",
+        "scope": "component-guidance-reviewed",
+        "note": "Rendered canonical examples overview reviewed: feed, list-detail, supporting pane; equal and three-pane framework variants are not verified upstream specifications."
+      },
+      "relationship": "pattern",
+      "sources": [
+        {
+          "path": "src/sass/components/_panes.scss",
+          "sha256": "09f9d783b94ba5464410e8a005f8b4b3d25ed7f1afcf8533e023fcd5194915b8"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete list-detail example preserves both treatments and its task path",
+          "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "footer",
+      "title": "Footer",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Native footer with navigation columns and copyright content.",
+      "adaptation": "Web page landmark styled with theme roles.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_page-footer.scss",
+          "sha256": "71f385db254eb07874be949d5bcb0cdd0ec8835342c1d5a89ba0def76d3668ab"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "tabs",
+      "title": "Tabs",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Primary and secondary tabs; stacked and horizontal icon layouts.",
+      "adaptation": "Links target panels; use the shipped runtime keyboard contract.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_tabs.scss",
+          "sha256": "136d7b15bffd791fdaef451f98fad945bd478a25163528aac572b1f94903d9f6"
+        },
+        {
+          "path": "src/ts/components/tabs.ts",
+          "sha256": "154b97877b4683a1277d9cbfb1cb320a2d25c8dcefe900d0be3e6835ecf5d178"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "breadcrumbs",
+      "title": "Breadcrumbs",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Breadcrumb links and app-bar composition.",
+      "adaptation": "Labelled navigation with an ordered list and current-page link.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_breadcrumb.scss",
+          "sha256": "9961900fec76177ae0078a8f68a74fc36155fe97f86d2351c1b527c808642c9e"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "pagination",
+      "title": "Pagination",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Page links, active page, and unavailable previous/next items.",
+      "adaptation": "CSS-only navigation; the application supplies destinations.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_pagination.scss",
+          "sha256": "7637a970c2ae783f4f5803d82f4373409de9160d1f635327fd855574312704c3"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "menu",
+      "title": "Menu",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Vertical menus, nested flyouts, grouping, and standard/vibrant styles.",
+      "adaptation": "Native menu/li structure; Menu owns opening and keyboard behavior.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_menu.scss",
+          "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+        },
+        {
+          "path": "src/ts/components/menu.ts",
+          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+          "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "resource observations detect omitted teardown after a partial replacement",
+          "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "scrollspy",
+      "title": "Scrollspy",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Section tracking and table-of-contents links.",
+      "adaptation": "Web document navigation helper.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_scrollspy.scss",
+          "sha256": "39e23fb90c5b0bc2a5d34513bec7342a9a12d0a080043074f287ab8594d87c69"
+        },
+        {
+          "path": "src/sass/components/_table_of_contents.scss",
+          "sha256": "ebf956a3836c8a68d55a44f83f5abf8ecaa603e3f7435421f07e5819cd5b90c7"
+        },
+        {
+          "path": "src/ts/components/scrollspy.ts",
+          "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "buttons",
+      "title": "Buttons",
+      "kind": "component",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Filled, tonal, outlined, elevated, and text; xsmall through xlarge.",
+      "adaptation": "Native buttons run commands; a.button links navigate.",
+      "upstream": {
+        "source": "https://m3.material.io/components/buttons/overview",
+        "reviewedOn": "2026-09-07",
+        "scope": "overview-reviewed",
+        "note": "rendered main content reviewed in part; link-observed; full specifications not reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_buttons.scss",
+          "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+        },
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+        },
+        {
+          "path": "src/sass/abstracts/_variables.scss",
+          "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers.",
+          "nextStep": "Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete settings example preserves both treatments and its task path",
+          "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete editor example preserves both treatments and its task path",
+          "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete list-detail example preserves both treatments and its task path",
+          "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "icon-buttons",
+      "title": "Icon buttons",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.",
+      "adaptation": "Accessible name belongs to the control; the glyph is decorative.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_icon-buttons.scss",
+          "sha256": "c77a969e392a03be07f10aa6021758d5fa7ddccd999440755c93942a9dbb38e8"
+        },
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+        },
+        {
+          "path": "src/sass/abstracts/_variables.scss",
+          "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "button-group toggle colors resolve in a browser",
+          "scope": "Filled icon button selected color and glyph fill inside a button group only.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "keyboard press changes icon widths and rendered corners",
+          "scope": "Icon children inside button group only.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "segmented-buttons",
+      "title": "Segmented buttons",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Single-select radio and multi-select checkbox groups.",
+      "adaptation": "Native fieldset/input/label owns selection and form values.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_segmented-buttons.scss",
+          "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "button-groups",
+      "title": "Button groups",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Standard and connected groups; commands and opt-in selection.",
+      "adaptation": "Runtime coordinates neighboring widths and selection; CSS handles connected shapes.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_button-groups.scss",
+          "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+        },
+        {
+          "path": "src/ts/components/buttonGroup.ts",
+          "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "button-group toggle colors resolve in a browser",
+          "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "button-group geometry resolves for overrides, targets, and RTL",
+          "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "standard press redistribution keeps its rendered width stable",
+          "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "keyboard press changes icon widths and rendered corners",
+          "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete editor example preserves both treatments and its task path",
+          "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "split-button",
+      "title": "Split button",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Leading action and trailing menu trigger with matching styles.",
+      "adaptation": "Reuses Menu; no separate split-button runtime.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_split-button.scss",
+          "sha256": "8afbc0079bfe13d514e8680086e5b2cdd50d9b0e68e5354d378809445f78eec4"
+        },
+        {
+          "path": "src/ts/components/menu.ts",
+          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "fab",
+      "title": "Floating action button",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "FAB sizes, extended FABs, and menus of related actions.",
+      "adaptation": "Floating action behavior uses the documented FAB runtime.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_buttons.scss",
+          "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+        },
+        {
+          "path": "src/sass/components/_fab-menu.scss",
+          "sha256": "f1d7b579ea34271824a0fdc75d209d00830a1beb352ddbbd670d31bebf5548d0"
+        },
+        {
+          "path": "src/ts/components/buttons.ts",
+          "sha256": "8f693be33245b1984742a4f51272c4f39927f4a75c735583583f530ace701940"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "cards",
+      "title": "Cards",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Elevated, filled, outlined, horizontal, and directly actionable cards.",
+      "adaptation": "Native article anatomy; primary-action links preserve navigation semantics.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_cards.scss",
+          "sha256": "59dec972c523603525d0db5401ff87c4dc8d55b958c06dfc454d65b7d48871dc"
+        },
+        {
+          "path": "src/sass/components/_expanding-card.scss",
+          "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+        },
+        {
+          "path": "src/ts/components/cards.ts",
+          "sha256": "83b5bce0fcf0393cfd71a7e7bfe6ce49c9f46b65a8c93a9ddecd68f85879cd21"
+        },
+        {
+          "path": "src/ts/components/expandingCard.ts",
+          "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/cards-browser.test.js",
+          "name": "dragged and picked-up states override simultaneous pointer states",
+          "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/cards-browser.test.js",
+          "name": "invalid disclosures keep their panels visible and operable",
+          "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/cards-browser.test.js",
+          "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
+          "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "lists",
+      "title": "Lists",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Standard and segmented lists.",
+      "adaptation": "Native list semantics; visual selection alone does not justify aria-selected.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_list.scss",
+          "sha256": "dec11dbc88d047cac5ba72da9ebcef10fef598767dfdb41418a9b84bb39c9b65"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete list-detail example preserves both treatments and its task path",
+          "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "dialogs",
+      "title": "Dialogs",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Basic and full-screen dialogs.",
+      "adaptation": "Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_dialog.scss",
+          "sha256": "05a7ec3c2578a3e850548b8d6207043e1ff66fdb2fd44d1e3328b73dce95b3f6"
+        },
+        {
+          "path": "src/ts/behaviors/dialogs.ts",
+          "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "bottom-sheet",
+      "title": "Bottom sheet",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Standard and modal bottom sheets.",
+      "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_bottom-sheet.scss",
+          "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
+        },
+        {
+          "path": "src/ts/behaviors/dialogs.ts",
+          "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+        },
+        {
+          "path": "src/ts/behaviors/bottomSheets.ts",
+          "sha256": "3f3ae0c8b1cc1247ba75cd1e13c8c2a9a0fad5d284b51f6efac5887a78c3dcf7"
+        },
+        {
+          "path": "src/ts/behaviors/sheetDrag.ts",
+          "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "side-sheet",
+      "title": "Side sheet",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Standard and modal side sheets.",
+      "adaptation": "Native dialog and shared drag/dismiss behavior.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_side-sheet.scss",
+          "sha256": "3a907e237d6eb6cb46894a980707c26e53fcd71feec7d1b45f4cab3d0dfe0263"
+        },
+        {
+          "path": "src/ts/behaviors/dialogs.ts",
+          "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+        },
+        {
+          "path": "src/ts/behaviors/sideSheets.ts",
+          "sha256": "29c28c886eeccf05b4e5834bb57c424b77ed48800e907de5436a384bb79cf749"
+        },
+        {
+          "path": "src/ts/behaviors/sheetDrag.ts",
+          "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "floating-sheet",
+      "title": "Floating sheet",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Inset floating dialog surface.",
+      "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "related",
+      "sources": [
+        {
+          "path": "src/sass/components/_floating-sheet.scss",
+          "sha256": "a638bb17dc87b76273e94a37db584f5603a3ce5fd518353f8c4594546b664d10"
+        },
+        {
+          "path": "src/ts/behaviors/dialogs.ts",
+          "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "drag-handle",
+      "title": "Drag handle",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Decorative grip and actionable button grip.",
+      "adaptation": "The host element determines semantics; no general dragging engine.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "document-reviewed",
+        "note": "Optional drag handle is bottom sheet anatomy. Android handle supports accessible expand/collapse. This does not verify the generic vertical handle or ExpressiveCSS dismiss-on-tap behavior as an identical spec."
+      },
+      "relationship": "related",
+      "sources": [
+        {
+          "path": "src/sass/components/_drag-handle.scss",
+          "sha256": "a1ba374ed080c749b0c8f4f5fe6f931bebfe5d12c8151ecfa72b484810e0e238"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "badges",
+      "title": "Badges",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Small dot and large count badges.",
+      "adaptation": "Expose counts through the enclosing control name when its icon is hidden.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_badges.scss",
+          "sha256": "1d9ade7617c30f8584cfee9b3f2fe5d3c5d39f5ed7fa2fd362a9f8205fa15693"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "tooltips",
+      "title": "Tooltips",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Plain and rich tooltips; CSS child and runtime-generated forms.",
+      "adaptation": "The selected form determines ownership; CSS-only hover/focus is not runtime initialization.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_tooltip.scss",
+          "sha256": "cfd11ea9b5934690458973587b8fa76cd0253badbe1c78e345e29f7a477cc35b"
+        },
+        {
+          "path": "src/ts/components/tooltip.ts",
+          "sha256": "0c3b24fc13c7fd5d8958652f22e71bb0105dcdc766c830c54f5d5867e58ea938"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+          "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "resource observations detect omitted teardown after a partial replacement",
+          "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "Tooltip destroy cancels pending delay and animation callbacks",
+          "scope": "Runtime timer cancellation for enter, exit and animation scheduling.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "snackbar",
+      "title": "Snackbar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Transient message with optional action and close control.",
+      "adaptation": "Use the documented announcement and timeout behavior.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_snackbar.scss",
+          "sha256": "538018b8fc0728c1d2933507cb6dd1c24ea6db1e8924449fb9b4e132c3c53d4e"
+        },
+        {
+          "path": "src/ts/components/snackbar.ts",
+          "sha256": "bb2f35946ede77074ea743fc573bcfbf1203a9abc8e72d811dfddbdb60b87f1a"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "banners",
+      "title": "Banners",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Basic/rich and standard/vibrant; square basic banners.",
+      "adaptation": "Persistent in-flow feedback; application owns dismissal.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "related",
+      "sources": [
+        {
+          "path": "src/sass/components/_banners.scss",
+          "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "progress",
+      "title": "Progress indicators",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Linear and circular progress, determinate and indeterminate.",
+      "adaptation": "Prefer native progress where applicable; supply accessible state for custom hosts.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_progress.scss",
+          "sha256": "3dbb0324f6203f154ddd0bda1c1c0e1cf318323523f0dbba23acc880b5d8591e"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "loading-indicator",
+      "title": "Loading indicator",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Uncontained and contained morphing loading indicator.",
+      "adaptation": "CSS-only; the author supplies an accessible waiting message.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_loading-indicator.scss",
+          "sha256": "1121e043f42b471963aa823d9c5d651306ab7aeed135bee7a1427c5afe7e5228"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "carousel",
+      "title": "Carousel",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Adaptive visual collections with documented layout variants.",
+      "adaptation": "Runtime owns sizing and navigation; reduced motion removes parallax and morphing.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_carousel.scss",
+          "sha256": "5a9a8e459c61e84fa4d205fd25e9fd7520f0c80489ad816ba6198fe3ebd71f3f"
+        },
+        {
+          "path": "src/ts/components/carousel.ts",
+          "sha256": "772609159091d79c516820e5a68042407d641cd67d78b1a7d09ed6346fe44ced"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "lightbox",
+      "title": "Lightbox",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Enlarge-on-activation image and dismissal.",
+      "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_lightbox.scss",
+          "sha256": "df62c6c3d359089fcb5f7fe2500464afb8f6cb7c57fbc3f7a04a0cf9fc452599"
+        },
+        {
+          "path": "src/ts/components/lightbox.ts",
+          "sha256": "22e0686f6f7dc9cfd6be5d7d259b197818eb6046818c3a67d2597fca8c0c573f"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "toolbars",
+      "title": "Toolbars",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Floating/docked, standard/vibrant, vertical floating, and companion FAB.",
+      "adaptation": "CSS-only commands; no automatic composite toolbar keyboard model.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_toolbar.scss",
+          "sha256": "8fb21bf9336332897e0b4290b80b7ea31a523410a7db893ab7b49cd8abee005b"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "search",
+      "title": "Search",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Search bar and expanded search view.",
+      "adaptation": "Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_search.scss",
+          "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "fieldsets",
+      "title": "Fieldsets",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Outlined, filled, and rounded form groups.",
+      "adaptation": "Native fieldset/legend; related text-field tokens do not make this an M3 component.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "related",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_fieldset.scss",
+          "sha256": "0de91ee778fb360cd8a5451c920df81dd2b1cd5fb9d26993729afe1f745d7e65"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete settings example preserves both treatments and its task path",
+          "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "text-fields",
+      "title": "Text fields",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Filled and outlined fields, supporting text, and error states.",
+      "adaptation": "Native input/textarea with explicit label and description relationships.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_input-fields.scss",
+          "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+        },
+        {
+          "path": "src/sass/components/forms/_file-input.scss",
+          "sha256": "cc856d49ae84dcae4970c75dd587194b69219a4f707ad95d4598d974eb491221"
+        },
+        {
+          "path": "src/ts/behaviors/forms.ts",
+          "sha256": "c90046cd163d73d9046b0bfc2b4888ba87626704782f295054d9da63b3395d57"
+        },
+        {
+          "path": "src/ts/components/characterCounter.ts",
+          "sha256": "5f12ff055e1ee92562839b9ad103808873d9f81c2e646d588fef9f63dbc16536"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete editor example preserves both treatments and its task path",
+          "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "select",
+      "title": "Select",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
+      "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "document-reviewed",
+        "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
+      },
+      "relationship": "related",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_select.scss",
+          "sha256": "e91abfb218a90a92f2b87922154836ba0eb6ceb5ccbbe2ed18a7f44f65065a31"
+        },
+        {
+          "path": "src/sass/components/_menu.scss",
+          "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+        },
+        {
+          "path": "src/ts/components/select.ts",
+          "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+        },
+        {
+          "path": "src/ts/components/menu.ts",
+          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
+          "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "resource observations detect omitted teardown after a partial replacement",
+          "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "checkboxes",
+      "title": "Checkboxes",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Unchecked, checked, indeterminate, and disabled.",
+      "adaptation": "Native checkbox; indeterminate is set through the DOM property.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_checkboxes.scss",
+          "sha256": "3fd662bcbca486e3b05413ce9b1ff9a10a8002e3e3ea6e853bd179e8fcfe2f09"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete settings example preserves both treatments and its task path",
+          "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "radio-buttons",
+      "title": "Radio buttons",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Native radio groups and disabled controls.",
+      "adaptation": "Shared name provides exclusivity; fieldset/legend names the group.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_radio-buttons.scss",
+          "sha256": "a8054892643f184463052ad5e566ee0d8c96d2f125f9dea433915eba5f3b7cf1"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "switches",
+      "title": "Switches",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Native checkbox switches and disabled controls.",
+      "adaptation": "Input state owns selection and form value.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_switches.scss",
+          "sha256": "3700fa309d0524fce4eff27c1f337d1ab03f592c567423a275cc9332144b2e8a"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "slider",
+      "title": "Slider",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Standard, centered, range, horizontal/vertical, and five sizes.",
+      "adaptation": "Native range inputs with runtime value-label and range coordination.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_slider.scss",
+          "sha256": "0a3325ff0e1976529146ac7bf82a12267bc327054c3ddddcd9ba67a2c1b393ce"
+        },
+        {
+          "path": "src/ts/components/slider.ts",
+          "sha256": "bb22f1baaa0814b6d9389ec115cd6b705c73fbac8ddda1b35f32124ff6766128"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "chips",
+      "title": "Chips",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Assist, suggestion, filter, input, and display chips.",
+      "adaptation": "Element choice defines behavior; display chips are a framework extension.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-09-07",
+        "scope": "inventory-reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_chips.scss",
+          "sha256": "a906b31175533e454803c06bd6b47f141764792d2edd8f2add58c26c5308230f"
+        },
+        {
+          "path": "src/ts/components/chips.ts",
+          "sha256": "6cb6af3f1b41f5634de1e1bf3a821ad080b006a922d7238466915c87f775f47d"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "autocomplete",
+      "title": "Autocomplete",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Single and multi-select suggestions.",
+      "adaptation": "Runtime combobox behavior attached to a text field; no standalone upstream component claim.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "document-reviewed",
+        "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
+      },
+      "relationship": "related",
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_input-fields.scss",
+          "sha256": "b3cd9aceac937a183ff554fe75efb5d72e4317e522c702a89cf7a24614e7f088"
+        },
+        {
+          "path": "src/sass/components/_menu.scss",
+          "sha256": "8ad4eab498fa24199203070cf2b5792f6d61aa52e18b75770549ffcc7e0c64dc"
+        },
+        {
+          "path": "src/ts/components/autocomplete.ts",
+          "sha256": "5cf06711627918a0a5b2605c72f025494bbe9cd0aaebcc47b8e4b6f08d8c7b45"
+        },
+        {
+          "path": "src/ts/components/menu.ts",
+          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+        }
+      ],
+      "gaps": [],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "date-picker",
+      "title": "Date picker",
+      "kind": "component",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Inline single-date, range, and multiple-date calendar.",
+      "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
+      "upstream": {
+        "source": "https://m3.material.io/components/date-pickers/overview",
+        "reviewedOn": "2026-09-07",
+        "scope": "links-reviewed",
+        "note": "destination and main heading verified; full guideline not reviewed; link-observed; full specifications not reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_datepicker.scss",
+          "sha256": "3a30cd4a9c57386989e95c7623822e189aa04faf101ee5a4a8ba43f6674b654b"
+        },
+        {
+          "path": "src/sass/components/_docked-display.scss",
+          "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+        },
+        {
+          "path": "src/ts/components/datepicker.ts",
+          "sha256": "595a41a522aee4057c635085819476461cc2c0ff7a4100db55e463562503b800"
+        },
+        {
+          "path": "src/ts/components/select.ts",
+          "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+        },
+        {
+          "path": "src/ts/plugins/dockedDisplayPlugin.ts",
+          "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "Modal picker parity is not provided by the documented inline API.",
+          "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
+        }
+      ],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "time-picker",
+      "title": "Time picker",
+      "kind": "component",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Inline clock and digital input; 12-hour and 24-hour formats.",
+      "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
+      "upstream": {
+        "source": "https://m3.material.io/components/time-pickers/overview",
+        "reviewedOn": "2026-09-07",
+        "scope": "links-reviewed",
+        "note": "destination and selected Guidelines tab verified; full guideline not reviewed; link-observed; full specifications not reviewed"
+      },
+      "relationship": "component",
+      "sources": [
+        {
+          "path": "src/sass/components/_timepicker.scss",
+          "sha256": "87330125fa818b3463a1c4e4f80535e7551d39bdd83795462ac8ec0cc092c439"
+        },
+        {
+          "path": "src/sass/components/_docked-display.scss",
+          "sha256": "39107a3b4cde4c0763fff6c077fd7ebf7b964d5312f2435c9786e22c018709a5"
+        },
+        {
+          "path": "src/ts/components/timepicker.ts",
+          "sha256": "09351a82823567f4c6254d734e88e1b3ff5e2a80a721feb4884389b5fdc7460e"
+        },
+        {
+          "path": "src/ts/plugins/dockedDisplayPlugin.ts",
+          "sha256": "8411242a17cbbb95fa9863270f471e03dc487474224994b952f67bc555e2eda7"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "Modal picker parity is not provided by the documented inline API.",
+          "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
+        }
+      ],
+      "browserChecks": [],
+      "browserEvidence": "no-mapped-checks",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "typography",
+      "title": "Typography",
+      "kind": "foundation",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.",
+      "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "android-foundation-reviewed; full web specification unassessed"
+      },
+      "relationship": "foundation",
+      "sources": [
+        {
+          "path": "src/sass/tokens/_reference.scss",
+          "sha256": "5725dc82aedcd277d99ff8a5483866b08970647bdd2fc3c67c662d958cd15f4d"
+        },
+        {
+          "path": "src/sass/utilities/_typescale.scss",
+          "sha256": "4f3d7b2c48dd10173ef82eb00473694c9a07c3079380d0eae1797faa6204add3"
+        },
+        {
+          "path": "src/sass/base/_typography.scss",
+          "sha256": "fc8b4d714a911e38fb3dd3e9105853ff33ce3c96fdde984c932f9748b83b9204"
+        },
+        {
+          "path": "src/sass/base/_fonts.scss",
+          "sha256": "0b768be36675e97378e1ba9567896ee6bb87437352e3e6a059c56a9dde11a628"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "No emphasized role utilities or emphasized token family; emphasized labels and smaller titles requiring 700 need an application-supplied real face.",
+          "nextStep": "Define an additive emphasized-scale contract and a font-loading policy before implementing public names."
+        },
+        {
+          "kind": "feature",
+          "description": "Bundled text fonts cover Latin and 400/500 only; a Noto Sans fallback declaration does not establish non-Latin coverage.",
+          "nextStep": "Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-examples-browser.test.js",
+          "name": "complete settings example preserves both treatments and its task path",
+          "scope": "32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-material-quality.test.js",
+          "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+          "scope": "Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "shape",
+      "title": "Shape",
+      "kind": "foundation",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
+      "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Shape.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "android-foundation-reviewed; full web specification unassessed"
+      },
+      "relationship": "foundation",
+      "sources": [
+        {
+          "path": "src/sass/components/_buttons.scss",
+          "sha256": "cc0b3dd320002682c9b2cbe9e2192dd0af124047fd7ced7811456fecfc9b689a"
+        },
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+        },
+        {
+          "path": "src/sass/components/_button-groups.scss",
+          "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "No shared md-sys-shape token family or general rounded/cut-corner theming system.",
+          "nextStep": "Inventory existing component corner defaults against proposed shared roles before introducing an additive shape scale; preserve existing component overrides and state shapes."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "button-group geometry resolves for overrides, targets, and RTL",
+          "scope": "Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "keyboard press changes icon widths and rendered corners",
+          "scope": "Standard and connected button-group pressed corner changes and release with keyboard activation.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-material-quality.test.js",
+          "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+          "scope": "Application-scoped common-button 16px corner repair; does not establish shape-system parity.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "motion",
+      "title": "Motion",
+      "kind": "foundation",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-09-07",
+      "scope": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups disable transitions under reduced motion; expanding cards disable CSS transitions and immediately complete close under that preference.",
+      "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
+      "upstream": {
+        "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md",
+        "reviewedOn": "2026-09-07",
+        "scope": "android-foundation-reviewed; full web specification unassessed"
+      },
+      "relationship": "foundation",
+      "sources": [
+        {
+          "path": "src/sass/components/_button-groups.scss",
+          "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
+        },
+        {
+          "path": "src/ts/components/buttonGroup.ts",
+          "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
+        },
+        {
+          "path": "src/sass/components/_expanding-card.scss",
+          "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+        },
+        {
+          "path": "src/ts/components/expandingCard.ts",
+          "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+        },
+        {
+          "path": "src/sass/components/_transitions.scss",
+          "sha256": "6421ac5f9288c802aebbfcc72c715521305c23321f25611cbbc62fc0c8484e7b"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "No shared md-sys-motion token family, general spring solver, or unified motion-theme selector.",
+          "nextStep": "Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
+        },
+        {
+          "kind": "integration",
+          "description": "Scale utility has no built-in reduced-motion rule; component-specific rules do not prove universal preference support.",
+          "nextStep": "Audit application-visible motion owners for reduced-motion behavior, starting with the scale utility; preserve final state and focus when animation is suppressed."
+        },
+        {
+          "kind": "integration",
+          "description": "Expanding-card close completion uses a fixed 500ms timer independently of its public CSS duration property; overriding CSS duration can desynchronize visual transition and cleanup.",
+          "nextStep": "Prioritize synchronizing expanding-card completion with its supported CSS timing and test zero-duration, long-duration, reversal and removal paths."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "standard press redistribution keeps its rendered width stable",
+          "scope": "Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/button-groups-browser.test.js",
+          "name": "button-group geometry resolves for overrides, targets, and RTL",
+          "scope": "Connected group's transition duration is zero under emulated reduced motion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-material-quality.test.js",
+          "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
+          "scope": "Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    }
+  ]
+}

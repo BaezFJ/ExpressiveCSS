@@ -40,7 +40,7 @@ Combine overlapping routes. Interface implementation and review require Usage an
 
 The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, use/avoid boundaries, alternatives, runtime ownership, and guide links. Detailed adaptive decisions and Material links live in each component guide.
 
-Selected guides distinguish Google components, patterns, related guidance, and web extensions. Their dated evidence and support boundaries do not establish full specification parity or browser conformance.
+For support gaps or parity questions, read the optional [capability roadmap](./references/capability-roadmap.md). Scoped source and browser evidence never imply full Material parity.
 
 ## Component discovery protocol
 
