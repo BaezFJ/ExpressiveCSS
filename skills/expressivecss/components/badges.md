@@ -5,13 +5,13 @@ Notifications, counts, or status on navigation items and icons.
 
 Component ID: `badges`
 
-[Component documentation](https://www.expressivecss.com/badges.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/badges.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.0)
+[Component documentation](https://www.expressivecss.com/badges.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/badges.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.1)
 
-Contract: ExpressiveCSS 0.9.0
+Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `17bbf93141049c1a34bb5821ddadf64f4df2328ecd447910ec7258e6b9556acc`
+Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
 
 #### Selection and adaptation
 

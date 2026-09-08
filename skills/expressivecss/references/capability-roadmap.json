@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "frameworkVersion": "0.9.0",
+  "frameworkVersion": "0.9.1",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-09-08",
@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "34fb4a331106f7fece05291033f94366ee70a48752a91420e836d30aca32be1e",
+    "reportSha256": "6e5b79d974875d99aa004a77cd4136a53bdc21d33bef4111ba3dcc1a0927a83c",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -20,7 +20,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Small, medium flexible, large flexible, and search app bars.",
       "adaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
       "upstream": {
@@ -55,7 +55,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Bottom command bar with optional FAB.",
       "adaptation": "Tab-reachable commands; no toolbar composite role.",
       "upstream": {
@@ -87,7 +87,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Stacked and horizontal destination layouts.",
       "adaptation": "Links navigate; the application marks the current destination.",
       "upstream": {
@@ -118,7 +118,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Collapsed, expanded, and modal rails.",
       "adaptation": "The compact expanded rail uses a scrim and dismissal behavior.",
       "upstream": {
@@ -161,7 +161,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Sliding and fixed drawers with nested sections.",
       "adaptation": "Native details/summary supports nesting.",
       "upstream": {
@@ -196,7 +196,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "List-detail, supporting pane, and equal panes.",
       "adaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
       "upstream": {
@@ -235,7 +235,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Native footer with navigation columns and copyright content.",
       "adaptation": "Web page landmark styled with theme roles.",
       "upstream": {
@@ -266,7 +266,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Primary and secondary tabs; stacked and horizontal icon layouts.",
       "adaptation": "Links target panels; use the shipped runtime keyboard contract.",
       "upstream": {
@@ -301,7 +301,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Breadcrumb links and app-bar composition.",
       "adaptation": "Labelled navigation with an ordered list and current-page link.",
       "upstream": {
@@ -332,7 +332,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Page links, active page, and unavailable previous/next items.",
       "adaptation": "CSS-only navigation; the application supplies destinations.",
       "upstream": {
@@ -417,7 +417,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Section tracking and table-of-contents links.",
       "adaptation": "Web document navigation helper.",
       "upstream": {
@@ -573,7 +573,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Single-select radio and multi-select checkbox groups.",
       "adaptation": "Native fieldset/input/label owns selection and form values.",
       "upstream": {
@@ -604,7 +604,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Standard and connected groups; commands and opt-in selection.",
       "adaptation": "Runtime coordinates neighboring widths and selection; CSS handles connected shapes.",
       "upstream": {
@@ -705,7 +705,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "FAB sizes, extended FABs, and menus of related actions.",
       "adaptation": "Floating action behavior uses the documented FAB runtime.",
       "upstream": {
@@ -812,7 +812,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Standard and segmented lists.",
       "adaptation": "Native list semantics; visual selection alone does not justify aria-selected.",
       "upstream": {
@@ -850,7 +850,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Basic and full-screen dialogs.",
       "adaptation": "Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.",
       "upstream": {
@@ -885,7 +885,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Standard and modal bottom sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
       "upstream": {
@@ -928,7 +928,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Standard and modal side sheets.",
       "adaptation": "Native dialog and shared drag/dismiss behavior.",
       "upstream": {
@@ -971,7 +971,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Inset floating dialog surface.",
       "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
       "upstream": {
@@ -1006,7 +1006,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Decorative grip and actionable button grip.",
       "adaptation": "The host element determines semantics; no general dragging engine.",
       "upstream": {
@@ -1038,7 +1038,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Small dot and large count badges.",
       "adaptation": "Expose counts through the enclosing control name when its icon is hidden.",
       "upstream": {
@@ -1129,7 +1129,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Transient message with optional action and close control.",
       "adaptation": "Use the documented announcement and timeout behavior.",
       "upstream": {
@@ -1164,7 +1164,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Basic/rich and standard/vibrant; square basic banners.",
       "adaptation": "Persistent in-flow feedback; application owns dismissal.",
       "upstream": {
@@ -1195,7 +1195,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Linear and circular progress, determinate and indeterminate.",
       "adaptation": "Prefer native progress where applicable; supply accessible state for custom hosts.",
       "upstream": {
@@ -1226,7 +1226,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Uncontained and contained morphing loading indicator.",
       "adaptation": "CSS-only; the author supplies an accessible waiting message.",
       "upstream": {
@@ -1257,7 +1257,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Adaptive visual collections with documented layout variants.",
       "adaptation": "Runtime owns sizing and navigation; reduced motion removes parallax and morphing.",
       "upstream": {
@@ -1292,7 +1292,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Enlarge-on-activation image and dismissal.",
       "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
       "upstream": {
@@ -1327,7 +1327,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Floating/docked, standard/vibrant, vertical floating, and companion FAB.",
       "adaptation": "CSS-only commands; no automatic composite toolbar keyboard model.",
       "upstream": {
@@ -1358,7 +1358,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Search bar and expanded search view.",
       "adaptation": "Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.",
       "upstream": {
@@ -1389,7 +1389,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Outlined, filled, and rounded form groups.",
       "adaptation": "Native fieldset/legend; related text-field tokens do not make this an M3 component.",
       "upstream": {
@@ -1427,7 +1427,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Filled and outlined fields, supporting text, and error states.",
       "adaptation": "Native input/textarea with explicit label and description relationships.",
       "upstream": {
@@ -1540,7 +1540,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Unchecked, checked, indeterminate, and disabled.",
       "adaptation": "Native checkbox; indeterminate is set through the DOM property.",
       "upstream": {
@@ -1578,7 +1578,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Native radio groups and disabled controls.",
       "adaptation": "Shared name provides exclusivity; fieldset/legend names the group.",
       "upstream": {
@@ -1609,7 +1609,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Native checkbox switches and disabled controls.",
       "adaptation": "Input state owns selection and form value.",
       "upstream": {
@@ -1640,7 +1640,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Standard, centered, range, horizontal/vertical, and five sizes.",
       "adaptation": "Native range inputs with runtime value-label and range coordination.",
       "upstream": {
@@ -1675,7 +1675,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Assist, suggestion, filter, input, and display chips.",
       "adaptation": "Element choice defines behavior; display chips are a framework extension.",
       "upstream": {
@@ -1858,7 +1858,7 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {

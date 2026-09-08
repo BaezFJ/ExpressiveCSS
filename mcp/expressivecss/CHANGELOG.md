@@ -10,7 +10,7 @@
   release, not a patch release. Framework runtime requirements are unchanged.
 - Coordinate independently versioned MCP releases through protected `mcp-v*` tags.
 - Include this changelog in the published package.
-- Bundled framework guidance: ExpressiveCSS 0.9.0. Update this line when refreshing guidance for a release.
+- Bundled framework guidance: ExpressiveCSS 0.9.1. Update this line when refreshing guidance for a release.
 
 ## 0.1.0
 

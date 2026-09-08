@@ -8,7 +8,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `34fb4a331106f7fece05291033f94366ee70a48752a91420e836d30aca32be1e`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `6e5b79d974875d99aa004a77cd4136a53bdc21d33bef4111ba3dcc1a0927a83c`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -68,7 +68,7 @@ Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs mat
 
 **implemented within the stated scope.** Small, medium flexible, large flexible, and search app bars.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_navbar.scss](../../../src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](../../../src/ts/components/appBar.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_navbar.scss](../../../src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](../../../src/ts/components/appBar.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -84,7 +84,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Bottom command bar with optional FAB.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_bottom-app-bar.scss](../../../src/sass/components/_bottom-app-bar.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_bottom-app-bar.scss](../../../src/sass/components/_bottom-app-bar.scss).
 
 Google relationship: component. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md).
 
@@ -100,7 +100,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Stacked and horizontal destination layouts.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_navigation-bar.scss](../../../src/sass/components/_navigation-bar.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_navigation-bar.scss](../../../src/sass/components/_navigation-bar.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -116,7 +116,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Collapsed, expanded, and modal rails.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_navigation-rail.scss](../../../src/sass/components/_navigation-rail.scss), [src/ts/components/navigationRail.ts](../../../src/ts/components/navigationRail.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_navigation-rail.scss](../../../src/sass/components/_navigation-rail.scss), [src/ts/components/navigationRail.ts](../../../src/ts/components/navigationRail.ts).
 
 Google relationship: component. Upstream review: overview-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/navigation-rail/overview).
 
@@ -132,7 +132,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Sliding and fixed drawers with nested sections.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_navigation-drawer.scss](../../../src/sass/components/_navigation-drawer.scss), [src/ts/components/navigationDrawer.ts](../../../src/ts/components/navigationDrawer.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_navigation-drawer.scss](../../../src/sass/components/_navigation-drawer.scss), [src/ts/components/navigationDrawer.ts](../../../src/ts/components/navigationDrawer.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -148,7 +148,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** List-detail, supporting pane, and equal panes.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_panes.scss](../../../src/sass/components/_panes.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_panes.scss](../../../src/sass/components/_panes.scss).
 
 Google relationship: pattern. Upstream review: component-guidance-reviewed (2026-09-07); [reviewed source](https://m3.material.io/foundations/layout/canonical-examples/overview).
 
@@ -164,7 +164,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Native footer with navigation columns and copyright content.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_page-footer.scss](../../../src/sass/components/_page-footer.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_page-footer.scss](../../../src/sass/components/_page-footer.scss).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -180,7 +180,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Primary and secondary tabs; stacked and horizontal icon layouts.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_tabs.scss](../../../src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](../../../src/ts/components/tabs.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_tabs.scss](../../../src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](../../../src/ts/components/tabs.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -196,7 +196,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Breadcrumb links and app-bar composition.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_breadcrumb.scss](../../../src/sass/components/_breadcrumb.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_breadcrumb.scss](../../../src/sass/components/_breadcrumb.scss).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -212,7 +212,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Page links, active page, and unavailable previous/next items.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_pagination.scss](../../../src/sass/components/_pagination.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_pagination.scss](../../../src/sass/components/_pagination.scss).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -246,7 +246,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Section tracking and table-of-contents links.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_scrollspy.scss](../../../src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](../../../src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](../../../src/ts/components/scrollspy.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_scrollspy.scss](../../../src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](../../../src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](../../../src/ts/components/scrollspy.ts).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -297,7 +297,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Single-select radio and multi-select checkbox groups.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_segmented-buttons.scss](../../../src/sass/components/_segmented-buttons.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_segmented-buttons.scss](../../../src/sass/components/_segmented-buttons.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -313,7 +313,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard and connected groups; commands and opt-in selection.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -349,7 +349,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** FAB sizes, extended FABs, and menus of related actions.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/components/_fab-menu.scss](../../../src/sass/components/_fab-menu.scss), [src/ts/components/buttons.ts](../../../src/ts/components/buttons.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/components/_fab-menu.scss](../../../src/sass/components/_fab-menu.scss), [src/ts/components/buttons.ts](../../../src/ts/components/buttons.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -384,7 +384,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Standard and segmented lists.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_list.scss](../../../src/sass/components/_list.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_list.scss](../../../src/sass/components/_list.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -400,7 +400,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Basic and full-screen dialogs.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_dialog.scss](../../../src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_dialog.scss](../../../src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -416,7 +416,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard and modal bottom sheets.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_bottom-sheet.scss](../../../src/sass/components/_bottom-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](../../../src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_bottom-sheet.scss](../../../src/sass/components/_bottom-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](../../../src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -432,7 +432,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard and modal side sheets.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_side-sheet.scss](../../../src/sass/components/_side-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](../../../src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_side-sheet.scss](../../../src/sass/components/_side-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](../../../src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -448,7 +448,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Inset floating dialog surface.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_floating-sheet.scss](../../../src/sass/components/_floating-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_floating-sheet.scss](../../../src/sass/components/_floating-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
 
 Google relationship: related. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -464,7 +464,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Decorative grip and actionable button grip.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_drag-handle.scss](../../../src/sass/components/_drag-handle.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_drag-handle.scss](../../../src/sass/components/_drag-handle.scss).
 
 Google relationship: related. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md).
 
@@ -480,7 +480,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Small dot and large count badges.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_badges.scss](../../../src/sass/components/_badges.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_badges.scss](../../../src/sass/components/_badges.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -515,7 +515,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Transient message with optional action and close control.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_snackbar.scss](../../../src/sass/components/_snackbar.scss), [src/ts/components/snackbar.ts](../../../src/ts/components/snackbar.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_snackbar.scss](../../../src/sass/components/_snackbar.scss), [src/ts/components/snackbar.ts](../../../src/ts/components/snackbar.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -531,7 +531,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Basic/rich and standard/vibrant; square basic banners.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_banners.scss](../../../src/sass/components/_banners.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_banners.scss](../../../src/sass/components/_banners.scss).
 
 Google relationship: related. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -547,7 +547,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Linear and circular progress, determinate and indeterminate.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_progress.scss](../../../src/sass/components/_progress.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_progress.scss](../../../src/sass/components/_progress.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -563,7 +563,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Uncontained and contained morphing loading indicator.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_loading-indicator.scss](../../../src/sass/components/_loading-indicator.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_loading-indicator.scss](../../../src/sass/components/_loading-indicator.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -579,7 +579,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Adaptive visual collections with documented layout variants.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_carousel.scss](../../../src/sass/components/_carousel.scss), [src/ts/components/carousel.ts](../../../src/ts/components/carousel.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_carousel.scss](../../../src/sass/components/_carousel.scss), [src/ts/components/carousel.ts](../../../src/ts/components/carousel.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -595,7 +595,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Enlarge-on-activation image and dismissal.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_lightbox.scss](../../../src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](../../../src/ts/components/lightbox.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_lightbox.scss](../../../src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](../../../src/ts/components/lightbox.ts).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -611,7 +611,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Floating/docked, standard/vibrant, vertical floating, and companion FAB.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_toolbar.scss](../../../src/sass/components/_toolbar.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_toolbar.scss](../../../src/sass/components/_toolbar.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -627,7 +627,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Search bar and expanded search view.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_search.scss](../../../src/sass/components/_search.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_search.scss](../../../src/sass/components/_search.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -643,7 +643,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Outlined, filled, and rounded form groups.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_fieldset.scss](../../../src/sass/components/forms/_fieldset.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_fieldset.scss](../../../src/sass/components/forms/_fieldset.scss).
 
 Google relationship: related. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -659,7 +659,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Filled and outlined fields, supporting text, and error states.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/forms/_file-input.scss](../../../src/sass/components/forms/_file-input.scss), [src/ts/behaviors/forms.ts](../../../src/ts/behaviors/forms.ts), [src/ts/components/characterCounter.ts](../../../src/ts/components/characterCounter.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/forms/_file-input.scss](../../../src/sass/components/forms/_file-input.scss), [src/ts/behaviors/forms.ts](../../../src/ts/behaviors/forms.ts), [src/ts/components/characterCounter.ts](../../../src/ts/components/characterCounter.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -693,7 +693,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Unchecked, checked, indeterminate, and disabled.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_checkboxes.scss](../../../src/sass/components/forms/_checkboxes.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_checkboxes.scss](../../../src/sass/components/forms/_checkboxes.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -709,7 +709,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Native radio groups and disabled controls.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_radio-buttons.scss](../../../src/sass/components/forms/_radio-buttons.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_radio-buttons.scss](../../../src/sass/components/forms/_radio-buttons.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -725,7 +725,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Native checkbox switches and disabled controls.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_switches.scss](../../../src/sass/components/forms/_switches.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_switches.scss](../../../src/sass/components/forms/_switches.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -741,7 +741,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard, centered, range, horizontal/vertical, and five sizes.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_slider.scss](../../../src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](../../../src/ts/components/slider.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_slider.scss](../../../src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](../../../src/ts/components/slider.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -757,7 +757,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Assist, suggestion, filter, input, and display chips.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_chips.scss](../../../src/sass/components/_chips.scss), [src/ts/components/chips.ts](../../../src/ts/components/chips.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_chips.scss](../../../src/sass/components/_chips.scss), [src/ts/components/chips.ts](../../../src/ts/components/chips.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -821,7 +821,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/tokens/_reference.scss](../../../src/sass/tokens/_reference.scss), [src/sass/utilities/_typescale.scss](../../../src/sass/utilities/_typescale.scss), [src/sass/base/_typography.scss](../../../src/sass/base/_typography.scss), [src/sass/base/_fonts.scss](../../../src/sass/base/_fonts.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/tokens/_reference.scss](../../../src/sass/tokens/_reference.scss), [src/sass/utilities/_typescale.scss](../../../src/sass/utilities/_typescale.scss), [src/sass/base/_typography.scss](../../../src/sass/base/_typography.scss), [src/sass/base/_fonts.scss](../../../src/sass/base/_fonts.scss).
 
 Google relationship: foundation. Upstream review: android-foundation-reviewed; full web specification unassessed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md).
 

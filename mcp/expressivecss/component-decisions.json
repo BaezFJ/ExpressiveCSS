@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedBy": "mcp/expressivecss/scripts/sync-guides.mjs",
-  "frameworkVersion": "0.9.0",
+  "frameworkVersion": "0.9.1",
   "authority": "This catalogue owns component-selection metadata. Component guides own syntax and semantics.json owns authored semantics.",
   "components": [
     {
@@ -57,7 +57,7 @@
       },
       "selectionExample": "A Home/Search/Profile row belongs in navigation, even if placed at the top. Keep the app bar for the title and screen actions.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -71,7 +71,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -128,7 +128,7 @@
         "reason": "Legacy Material component; Google deprecates it for M3 Expressive in favor of docked toolbars."
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -138,7 +138,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -208,7 +208,7 @@
       },
       "selectionExample": "Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -218,7 +218,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -294,7 +294,7 @@
         "specHref": "https://m3.material.io/components/navigation-rail/specs"
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -314,7 +314,7 @@
             "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -384,7 +384,7 @@
         }
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -398,7 +398,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -461,7 +461,7 @@
       },
       "selectionExample": "A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -477,7 +477,7 @@
             "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -529,7 +529,7 @@
       },
       "selectionExample": "Home/Search/Profile should not require scrolling to a footer. Use a navigation bar or rail for those destinations.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -539,7 +539,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -594,7 +594,7 @@
       },
       "selectionExample": "Home/Search/Profile are app destinations, so use a navigation bar or rail. Overview/Activity panels within one account page can use tabs; Day/Week/Month as a view setting can use segmented inputs.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -608,7 +608,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -663,7 +663,7 @@
       },
       "selectionExample": "Overview/Activity/Billing are peers, not ancestors. Use tabs for their same-page panels, not a breadcrumb trail.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -673,7 +673,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -727,7 +727,7 @@
       },
       "selectionExample": "A long article with Introduction/Methods/Results needs section links, optionally with scrollspy, not numbered result pages.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -737,7 +737,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -821,7 +821,7 @@
             "scope": "Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -876,7 +876,7 @@
       },
       "selectionExample": "A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -894,7 +894,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -997,7 +997,7 @@
             "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1082,7 +1082,7 @@
             "scope": "Icon children inside button group only."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1138,7 +1138,7 @@
       },
       "selectionExample": "Cut/Copy/Paste are commands, not stored choices. Use a standard button group. A shipping-speed value submitted with a form fits single-select segmented inputs with one shared radio name.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1148,7 +1148,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1202,7 +1202,7 @@
       },
       "selectionExample": "Economy/Express delivery submitted on Save needs radios or segmented inputs. Standard groups fit Cut/Copy/Paste; connected groups fit toggle states, not one-shot commands. A pressed button does not submit a radio value.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1242,7 +1242,7 @@
             "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1311,7 +1311,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1377,7 +1377,7 @@
         ]
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1395,7 +1395,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1495,7 +1495,7 @@
             "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1550,7 +1550,7 @@
       },
       "selectionExample": "A product with a large image, description, price, and several actions may need a card. A simple product-name index remains a list.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1566,7 +1566,7 @@
             "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1625,7 +1625,7 @@
       },
       "selectionExample": "Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and a banner for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1639,7 +1639,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1703,7 +1703,7 @@
         }
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1725,7 +1725,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1795,7 +1795,7 @@
         }
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1817,7 +1817,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1874,7 +1874,7 @@
       },
       "selectionExample": "A required delete confirmation needs a dialog. Floating geometry alone does not make a secondary sheet the right decision prompt.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1888,7 +1888,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -1945,7 +1945,7 @@
         "reason": "Related guidance is not a dedicated component specification."
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1955,7 +1955,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2010,7 +2010,7 @@
       },
       "selectionExample": "An unread count belongs on the inbox icon as a badge. A selectable Unread filter needs a chip or selection control with its own name and state.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2020,7 +2020,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2109,7 +2109,7 @@
             "scope": "Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2165,7 +2165,7 @@
       },
       "selectionExample": "A successful save can use a snackbar. Offline status that still allows editing needs a persistent banner; a required irreversible-delete confirmation needs a dialog before the action.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2179,7 +2179,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2234,7 +2234,7 @@
       },
       "selectionExample": "A Saved message should not leave a permanent banner. Use a snackbar. A sync outage that permits local edits fits a banner; an unavoidable decision fits a dialog. This banner is a framework feedback pattern, not a verified current M3 component.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2244,7 +2244,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2299,7 +2299,7 @@
       },
       "selectionExample": "A two-second refresh with no measured fraction fits a loading indicator. An upload with bytes transferred needs determinate progress, even if short; a long job with no fraction can use indeterminate progress. Never invent a percentage. Indeterminate linear bars remain supported; the short-wait replacement specifically targets indeterminate circular spinners.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2309,7 +2309,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2362,7 +2362,7 @@
       },
       "selectionExample": "A file upload reporting 42% needs determinate progress, not the morphing loading shape. A longer unmeasured job needs indeterminate progress. Do not flash an indicator for an effectively instant response or announce a fabricated value.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2372,7 +2372,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2427,7 +2427,7 @@
       },
       "selectionExample": "A transaction history must support scanning rows and values. Use a list instead of hiding records across carousel slides.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2441,7 +2441,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2498,7 +2498,7 @@
       },
       "selectionExample": "A payment confirmation needs a dialog, even if its design contains an image. Lightbox is for inspecting enlarged media.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2512,7 +2512,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2567,7 +2567,7 @@
       },
       "selectionExample": "Home/Search/Profile belong in navigation. A toolbar near a document can hold edit, share, and formatting actions.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2577,7 +2577,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2630,7 +2630,7 @@
         }
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2640,7 +2640,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2694,7 +2694,7 @@
       },
       "selectionExample": "A promotional feature block needs a section or card. Use a fieldset when a shared legend explains related inputs, such as delivery preferences.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2710,7 +2710,7 @@
             "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2769,7 +2769,7 @@
         "specHref": "https://m3.material.io/components/text-fields/specs"
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2797,7 +2797,7 @@
             "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2892,7 +2892,7 @@
             "scope": "Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -2948,7 +2948,7 @@
         "specHref": "https://m3.material.io/components/checkbox/specs"
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -2964,7 +2964,7 @@
             "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3019,7 +3019,7 @@
         "specHref": "https://m3.material.io/components/radio-button/specs"
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -3029,7 +3029,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3083,7 +3083,7 @@
         "specHref": "https://m3.material.io/components/switch/specs"
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -3093,7 +3093,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3148,7 +3148,7 @@
       },
       "selectionExample": "An invoice amount needs a labeled number field with appropriate precision. A slider fits approximate volume or brightness adjustment.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -3162,7 +3162,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3217,7 +3217,7 @@
       },
       "selectionExample": "A passive unread count is a badge. Turning it into a filter chip falsely suggests a selectable state unless filtering is implemented.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -3231,7 +3231,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3310,7 +3310,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3402,7 +3402,7 @@
           }
         ],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     },
     {
@@ -3490,7 +3490,7 @@
           }
         ],
         "browserChecks": [],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       }
     }
   ],
@@ -3516,7 +3516,7 @@
         }
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "partial",
         "sources": [
           {
@@ -3536,7 +3536,7 @@
             "sha256": "0b768be36675e97378e1ba9567896ee6bb87437352e3e6a059c56a9dde11a628"
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf",
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296",
         "gaps": [
           {
             "kind": "feature",
@@ -3595,7 +3595,7 @@
             "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf",
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296",
         "gaps": [
           {
             "kind": "feature",
@@ -3662,7 +3662,7 @@
             "sha256": "fe0c65c4a4de2af661aa39eae2629e5e76f73e681ef5b686694bbbee62eaff77"
           }
         ],
-        "inventorySha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf",
+        "inventorySha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296",
         "gaps": [
           {
             "kind": "feature",
@@ -4155,7 +4155,7 @@
       },
       {
         "path": "src/ts/index.ts",
-        "sha256": "a6d0651a778a07a1ef98e128e0e27384dc36b50a7cc96f4cd62ea85aeb1fccfd"
+        "sha256": "1991f5ff89149b706f0db90413661493cb286741e764c66273804568f9c08e53"
       },
       {
         "path": "src/ts/plugins/dockedDisplayPlugin.ts",
@@ -4639,35 +4639,35 @@
       },
       {
         "path": "dist/js/expressive.cjs",
-        "sha256": "6953b9c478bc47188c274d19b70dc01c776c8a192b7d96508f3b45b4411b1744"
+        "sha256": "851f25f7226300c64aa999d5f423d562d94d13b9d1454ec785623c3236882a3b"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "b48a6444941cbb7eb06391b6b6700aab46bcd54a15dac7cd5807ac14ce0f9129"
+        "sha256": "6459b641aa282609a849f55882943497344f95776c0889f84f8e0ba4d9e64236"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "376caeecc8896500422929ec97242a56f265c56be94be43f69d9716871e766f8"
+        "sha256": "22d5c640eb9e9ecf6901d266e0f2e3bc2a78d85d4b49b2a9dc2e9aa1504bb3dd"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "848fde9335bc9e718efece650af2f7ca498c3318e9903099bff48f5b86541f73"
+        "sha256": "9392583f711220ff3207c5e0e3d7c51201663dea80c382891c3f28d3be6cbb9c"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "60d1612548e22d455ce7463575e817de20365de98a91d7975b2d9166bd2b19c8"
+        "sha256": "b85b3157dca94a6f6ef60f5231d55e2fd79018dd6f60c165d4abd8dc71534e99"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "e28baee57d95b65dd65cab157328f4c3c2c4562037cb88bf6e226acc1a7ca9d8"
+        "sha256": "83e647980401125ede5fe4a0191358b639bd3d7c8aa004b66848e33be93d7270"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "9880951904df24cf1a0089dd7870e31fa2f89f647b6aeca117847f1c692b3d0f"
+        "sha256": "85309b7adb2f46e6eb38dabbdb99495a1a1ced772f5d18954a0485a40d6ac6f2"
       },
       {
         "path": "dist/js/expressive.mjs.map",
-        "sha256": "29d363f4c0f8b546b1333a36e94c96813a1e590f53fc624c595d47cfc2e37f99"
+        "sha256": "3009145bcdf90c85039804ce21f1201d82caf69ec7eae7b3bad7949d052f6555"
       },
       {
         "path": "dist/types/behaviors/bottomSheets.d.ts",
@@ -4791,7 +4791,7 @@
       },
       {
         "path": "dist/types/index.d.ts",
-        "sha256": "f7123660b6781f5a55d1ccade562ad3c58ad09379589291411612b3691d8cb3f"
+        "sha256": "e581851b049282e5e67882c1a4b83a45b4f7e3be3ab5cb8704ed5e4c8927b88b"
       },
       {
         "path": "dist/types/plugins/dockedDisplayPlugin.d.ts",
@@ -4931,11 +4931,11 @@
       },
       {
         "path": "package.json",
-        "sha256": "317ceb0af3f968ee38d1f8795cadc42159bca021a30d7c51697498b1895eb9e4"
+        "sha256": "e3f37442826dc1c210c6c0e0f2928051e01a3f34247965c3e4597ba47db6c800"
       },
       {
         "path": "package-lock.json",
-        "sha256": "3976e0c95ecb8e67425cb2616bcafe5bc098496400260ff4ec64f2ea7007eac9"
+        "sha256": "53220ba266d758cf56ad63afaf9f067b2005294a82fadde3d68862e34cf57690"
       },
       {
         "path": "semantics.json",
@@ -4947,205 +4947,205 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 160.477565
+        "durationMs": 159.802532
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 119.235652
+        "durationMs": 122.80609
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 661.928934
+        "durationMs": 665.358828
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1184.753798
+        "durationMs": 1185.586716
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 751.902966
+        "durationMs": 760.652074
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 164.446556
+        "durationMs": 152.920338
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 127.623031
+        "durationMs": 125.214995
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1821.286835
+        "durationMs": 1826.447348
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 221.093368
+        "durationMs": 232.744438
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (firefox)",
         "status": "passed",
-        "durationMs": 2688.434292
+        "durationMs": 2704.785718
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (firefox)",
         "status": "passed",
-        "durationMs": 1110.282825
+        "durationMs": 1104.88757
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (webkit)",
         "status": "passed",
-        "durationMs": 3257.827072
+        "durationMs": 3248.716086
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (webkit)",
         "status": "passed",
-        "durationMs": 306.479563
+        "durationMs": 308.183479
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10249.627403
+        "durationMs": 10300.632205
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10497.846598
+        "durationMs": 10527.588793
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10455.73804
+        "durationMs": 10474.605969
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 832.217077
+        "durationMs": 817.263372
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 173.099773
+        "durationMs": 172.758104
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 160.573753
+        "durationMs": 158.667168
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 147.803886
+        "durationMs": 145.11021
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 21.655064
+        "durationMs": 20.234623
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 6.9823
+        "durationMs": 6.952933
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22741.890702
+        "durationMs": 22862.059146
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 542.464364
+        "durationMs": 565.246564
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 124.752201
+        "durationMs": 126.920873
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 205.684179
+        "durationMs": 212.464475
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 174.835221
+        "durationMs": 175.469526
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (firefox)",
         "status": "passed",
-        "durationMs": 866.098543
+        "durationMs": 862.899744
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (firefox)",
         "status": "passed",
-        "durationMs": 1097.478647
+        "durationMs": 1111.523475
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (firefox)",
         "status": "passed",
-        "durationMs": 924.354754
+        "durationMs": 934.52005
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (webkit)",
         "status": "passed",
-        "durationMs": 269.767528
+        "durationMs": 274.593057
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (webkit)",
         "status": "passed",
-        "durationMs": 667.768372
+        "durationMs": 670.020666
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (webkit)",
         "status": "passed",
-        "durationMs": 293.625406
+        "durationMs": 301.980531
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "47f1a727f54472f4ebccf169bd5d2f2fa6ad9410a25bb3ed8be1c1a0134904bf"
+        "sha256": "ae36ca884b0437ea2dc679c0ad822c8f731ec8a840be28d26b47eff80384b296"
       },
       {
         "path": "tests",
@@ -5153,7 +5153,7 @@
       },
       {
         "path": "dist",
-        "sha256": "3ef37952d6298f878861636278dc5dde6266fe340b01a4b13b610bf591314a99"
+        "sha256": "2bd2eceb5136e4dcb268e339813fcfcfe4c7d675ca7ffafb3fd1e93402c0c76a"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -5165,6 +5165,6 @@
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "34fb4a331106f7fece05291033f94366ee70a48752a91420e836d30aca32be1e"
+    "reportSha256": "6e5b79d974875d99aa004a77cd4136a53bdc21d33bef4111ba3dcc1a0927a83c"
   }
 }
