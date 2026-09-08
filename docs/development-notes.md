@@ -8,7 +8,7 @@ ExpressiveCSS is a front-end framework based on vendored MaterializeCSS v2.2.2 s
 
 For agents, `llm.md` covers markup and JavaScript APIs; `m3-guidelines.md` covers Material 3 usage, anatomy, placement, adaptive design, and component behavior.
 
-Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/index.ts` exports `version = '0.8.0'` to match `package.json`. The renamed classes and APIs are:
+Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/index.ts` exports `version = '0.9.0'` to match `package.json`. The renamed classes and APIs are:
 
 | Upstream | Expressive |
 | --- | --- |

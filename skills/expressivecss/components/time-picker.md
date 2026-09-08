@@ -5,13 +5,13 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Component ID: `time-picker`
 
-[Component documentation](https://www.expressivecss.com/timepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/timepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+[Component documentation](https://www.expressivecss.com/timepicker.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/timepicker.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.0)
 
-Contract: ExpressiveCSS 0.8.0
+Contract: ExpressiveCSS 0.9.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+Contract SHA-256: `61b3f4ee227d6fa3b35f950da7067eee5b933069c5f75df5e1cad1667d874c64`
 
 #### Selection and adaptation
 

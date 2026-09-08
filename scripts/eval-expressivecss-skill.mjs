@@ -11,6 +11,7 @@ import { performance } from 'node:perf_hooks';
 const THIS_FILE = fileURLToPath(import.meta.url);
 const DEFAULT_ROOT = path.resolve(path.dirname(THIS_FILE), '..');
 const ROOT_SKILL_PATH = 'skills/expressivecss/SKILL.md';
+const FRAMEWORK_VERSION = JSON.parse(readFileSync(path.join(DEFAULT_ROOT, 'package.json'), 'utf8')).version;
 const BUNDLED_SKILL_VERSION = JSON.parse(readFileSync(
   path.join(DEFAULT_ROOT, 'skills/expressivecss/references/contract.json'),
   'utf8',
@@ -27,8 +28,8 @@ const BASE_PROJECT_FIXTURES = Object.freeze({
   }),
   'consumer-current': Object.freeze({
     ...CONSUMER_FILES,
-    'package.json': '{"name":"eval-consumer-current","private":true,"scripts":{"start":"node server.mjs"},"dependencies":{"@expressivecss/expressive":"0.8.0"}}\n',
-    'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0","main":"dist/js/expressive.cjs","module":"dist/js/expressive.mjs","exports":{".":{"import":"./dist/js/expressive.mjs","require":"./dist/js/expressive.cjs"},"./css":"./dist/css/expressive.css"}}\n',
+    'package.json': `{"name":"eval-consumer-current","private":true,"scripts":{"start":"node server.mjs"},"dependencies":{"@expressivecss/expressive":"${FRAMEWORK_VERSION}"}}\n`,
+    'node_modules/@expressivecss/expressive/package.json': `{"name":"@expressivecss/expressive","version":"${FRAMEWORK_VERSION}","main":"dist/js/expressive.cjs","module":"dist/js/expressive.mjs","exports":{".":{"import":"./dist/js/expressive.mjs","require":"./dist/js/expressive.cjs"},"./css":"./dist/css/expressive.css"}}\n`,
     'fixture.json': JSON.stringify({ routes: ['/dashboard', '/home', '/search', '/profile'], dataFixtureId: 'account-a', states: ['default', 'loading', 'empty', 'error', 'offline', 'long-content'], unavailableStates: ['permission'], widths: [599, 600, 839, 840], locales: ['en-US', 'ar'], directions: ['ltr', 'rtl'], themes: ['light', 'dark'], input: ['keyboard'], identity: 'Northstar accounts' }),
   }),
   'consumer-older-version': Object.freeze({

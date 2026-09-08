@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "frameworkVersion": "0.8.0",
+  "frameworkVersion": "0.9.0",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-09-08",
@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "a521002f001ab1ab0a978f8cbed34c5c7ca021d5d61e1d1d5931ae88d7efd011",
+    "reportSha256": "d05129f6dbbae366bc6be4da0b62e9291329f4fff98a05ad32e8848af12faa52",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
