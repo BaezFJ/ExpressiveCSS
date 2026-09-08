@@ -49,6 +49,16 @@ function configuredCommandRoots(value) {
   return trimmed.split(path.delimiter).map((entry) => entry.trim()).filter(Boolean);
 }
 
+const QUALITY_SCRIPTS = ['typecheck', 'test', 'verify:expressivecss'];
+// Trusted server configuration can only narrow the built-in list. Invalid input denies all.
+function configuredScripts(value) {
+  if (value === undefined) return QUALITY_SCRIPTS;
+  try {
+    const names = JSON.parse(value);
+    return Array.isArray(names) && names.every(name => QUALITY_SCRIPTS.includes(name)) ? [...new Set(names)] : [];
+  } catch { return []; }
+}
+
 const SETTINGS = {
   maxComponentResponseChars: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS || DEFAULT_MAX_COMPONENT_RESPONSE_CHARS),
   maxComponentSkips: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS || 7),
@@ -56,6 +66,7 @@ const SETTINGS = {
   qaMaxMb: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_MB || DEFAULT_QA_MAX_MB),
   qaMaxTotalMb: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB || DEFAULT_QA_MAX_TOTAL_MB),
   commandTimeoutMs: Number(process.env.EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS || DEFAULT_COMMAND_TIMEOUT_MS),
+  allowedScripts: configuredScripts(process.env.EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS),
   allowedCommandRoots: configuredCommandRoots(process.env.EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS),
 };
 
@@ -159,7 +170,7 @@ const TOOL_DESCRIPTIONS = {
   },
   quality_inspector: {
     stage: 'Quality Inspector',
-    description: 'Run checks and report a quality verdict for changed files and target project scope.',
+    description: 'Inspect selected files and optionally execute configured project scripts. Scripts may write files or access services; results are scoped evidence, not design approval.',
   },
 };
 
@@ -202,11 +213,34 @@ const syntaxSchema = {
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
+const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
+const inspectionEvidenceSchema = z.object({
+  algorithm: z.literal('sha256'),
+  files: z.array(z.object({ file: z.string(), sha256: digestSchema, bytes: z.number().int().nonnegative() })),
+  expectedMatched: z.boolean().nullable(),
+  inputsUnchanged: z.boolean(),
+  commandManifestSha256: digestSchema.nullable(),
+  scope: z.string(),
+});
+// Preserve tool-specific fields while validating the shared evidence envelope.
+const stageOutputSchema = z.looseObject({
+  workflowId: z.string(), stage: z.string(),
+  checksPerformed: z.array(z.string()), evidenceSources: z.array(z.string()),
+  uncheckedAreas: z.array(z.string()), blockedChecks: z.array(z.string()),
+  contractCompatibility: z.string(), contractProvenance: z.string(), coverageStatus: z.string(),
+});
+const qualityOutputSchema = stageOutputSchema.extend({
+  status: z.enum(['pass', 'warn', 'blocked', 'needs_fix']),
+  inspectionEvidence: inspectionEvidenceSchema.optional(), // Disabled tools return the shared blocked envelope.
+});
+const readAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
+
 const inspectSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   files: z.array(z.string().max(MAX_FILE_PATH_CHARS)).max(DEFAULT_QA_MAX_FILES).default([]),
   runType: z.enum(['quick', 'standard', 'full', 'consumer']).default('quick'),
   runCommands: z.boolean().default(false),
+  expectedSourceHashes: z.record(z.string().min(1).max(MAX_FILE_PATH_CHARS), digestSchema).refine(value => Object.keys(value).length <= DEFAULT_QA_MAX_FILES, 'Too many source pins').optional(),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
@@ -1427,7 +1461,7 @@ async function readInspectionFile(filePath, projectRoot, byteLimit) {
       || after.dev !== pathAfter.dev || after.ino !== pathAfter.ino) {
       throw new Error('file changed while reading');
     }
-    return { text: bytes.subarray(0, total).toString('utf8'), bytes: total };
+    return { text: bytes.subarray(0, total).toString('utf8'), bytes: total, sha256: createHash('sha256').update(bytes.subarray(0, total)).digest('hex') };
   } finally {
     await handle.close();
   }
@@ -1435,6 +1469,7 @@ async function readInspectionFile(filePath, projectRoot, byteLimit) {
 
 async function findFileViolations(fileInfoList, projectRoot) {
   const findings = [];
+  const sourcePins = [];
   const inspected = [];
   const uninspected = [];
   const perFileMb = Number.isFinite(SETTINGS.qaMaxMb) && SETTINGS.qaMaxMb > 0
@@ -1464,6 +1499,7 @@ async function findFileViolations(fileInfoList, projectRoot) {
       const remainingBytes = Math.floor(Math.min(maxBytes, maxTotalBytes - totalBytes));
       const read = await readInspectionFile(file.absolute, projectRoot, remainingBytes);
       totalBytes += read.bytes;
+      sourcePins.push({ file: file.requested, sha256: read.sha256, bytes: read.bytes });
       const issues = inspectAuthoringRules(
         read.text,
         Math.min(MAX_STATIC_ISSUES, MAX_STATIC_ISSUES_PER_REQUEST - totalIssues),
@@ -1499,7 +1535,7 @@ async function findFileViolations(fileInfoList, projectRoot) {
     }
   }
 
-  return { findings, inspected, uninspected };
+  return { findings, inspected, uninspected, sourcePins };
 }
 
 async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS) {
@@ -1591,6 +1627,7 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
     });
 
     proc.on('close', (code) => {
+      stopProcessTree(proc, 'SIGKILL'); // Stop descendants before checking the resulting source state.
       const output = redactSensitiveText(`${stdout}\n${stderr}`);
       finish({
         manager,
@@ -1619,24 +1656,33 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
   });
 }
 
-async function runQualityCommands(projectRoot, runType, packageManager) {
-  const commands = [];
-  if (runType === 'standard' || runType === 'full') {
-    commands.push(['typecheck', 180_000]);
-  }
-  if (runType === 'full') {
-    commands.push(['test', 360_000]);
-  }
+function qualityCommands(runType) {
+  return runType === 'full' ? ['typecheck', 'test'] : runType === 'standard' ? ['typecheck'] : runType === 'consumer' ? ['verify:expressivecss'] : [];
+}
 
-  if (runType === 'consumer') commands.push(['verify:expressivecss', 360_000]);
+// Endpoint comparisons detect stale evidence; they do not lock the checkout or sandbox scripts.
+async function pinsUnchanged(projectRoot, pins) {
+  for (const pin of pins) {
+    try {
+      const current = await readInspectionFile(path.resolve(projectRoot, pin.file), projectRoot, pin.bytes);
+      if (current.sha256 !== pin.sha256) return false;
+    } catch { return false; }
+  }
+  return true;
+}
 
+async function runQualityCommands(projectRoot, commands, packageManager, pins) {
   const results = [];
-  for (const [script, timeout] of commands) {
-    const result = await runCommandInProject(projectRoot, packageManager, script, timeout);
+  let unchanged = true;
+  for (const script of commands) {
+    unchanged = await pinsUnchanged(projectRoot, pins);
+    if (!unchanged) break;
+    const result = await runCommandInProject(projectRoot, packageManager, script, script === 'typecheck' ? 180_000 : 360_000);
     results.push(result);
+    unchanged = await pinsUnchanged(projectRoot, pins);
+    if (!unchanged || !result.completed || result.exitStatus !== 0) break;
   }
-
-  return results;
+  return { results, unchanged };
 }
 
 let bundledGuideCache;
@@ -2125,9 +2171,28 @@ async function qualityInspectorHandler(args) {
   const executionPolicy = commandExecutionPolicy(projectRoot);
   const commandRootBlocked = commandsRequested && !executionPolicy.allowed;
   const packageManagerBlocked = commandsRequested && !['npm', 'pnpm', 'yarn'].includes(version.packageManager);
-  if (commandsRequested && !commandRootBlocked && !packageManagerBlocked) {
-    commandChecks.push(...await runQualityCommands(executionPolicy.projectRoot, parsed.runType, version.packageManager));
+  const commands = commandsRequested ? qualityCommands(parsed.runType) : [];
+  const commandScopeBlocked = commands.some(script => !SETTINGS.allowedScripts.includes(script));
+  const pins = [...fileInspection.sourcePins];
+  const expectedMatched = parsed.expectedSourceHashes === undefined ? null : Object.entries(parsed.expectedSourceHashes)
+    .every(([file, sha256]) => pins.some(pin => pin.file === file && pin.sha256 === sha256));
+  let commandManifestSha256 = null;
+  let manifestBlocked = false;
+  if (commandsRequested && !commandRootBlocked && !commandScopeBlocked && !packageManagerBlocked && expectedMatched !== false) {
+    try {
+      const manifest = await readInspectionFile(path.join(projectRoot, 'package.json'), projectRoot, 1024 * 1024);
+      commandManifestSha256 = manifest.sha256;
+      pins.push({ file: 'package.json', sha256: manifest.sha256, bytes: manifest.bytes });
+    } catch { manifestBlocked = true; }
   }
+  let inputsUnchanged = await pinsUnchanged(projectRoot, pins);
+  if (commandsRequested && !commandRootBlocked && !commandScopeBlocked && !packageManagerBlocked && !manifestBlocked && expectedMatched !== false && inputsUnchanged) {
+    const run = await runQualityCommands(executionPolicy.projectRoot, commands, version.packageManager, pins);
+    commandChecks.push(...run.results);
+    inputsUnchanged = run.unchanged;
+  }
+  inputsUnchanged = inputsUnchanged && await pinsUnchanged(projectRoot, pins);
+  const commandsNotRun = commands.slice(commandChecks.length);
 
   const commandBlocked = commandChecks.filter((run) => !run.completed);
   const commandFailed = commandChecks.some((run) => run.completed && run.exitStatus !== 0);
@@ -2149,6 +2214,11 @@ async function qualityInspectorHandler(args) {
     || provenanceBlock
     || filesUninspected.length > 0
     || commandRootBlocked
+    || commandScopeBlocked
+    || expectedMatched === false
+    || !inputsUnchanged
+    || manifestBlocked
+    || commandsNotRun.length > 0
     || packageManagerBlocked
     || commandBlocked.length > 0
     || !inspectionPerformed;
@@ -2175,10 +2245,17 @@ async function qualityInspectorHandler(args) {
       },
       filesSkipped: filesUninspected,
       staticFindings,
+      inspectionEvidence: {
+        algorithm: 'sha256', files: fileInspection.sourcePins, expectedMatched, inputsUnchanged, commandManifestSha256,
+        scope: 'Exact inspected bytes and command package.json at observed endpoints only; no lock, whole-revision proof, script sandbox, or automatic rollback.',
+      },
       commandChecks: commandChecks.length ? commandChecks : [],
       commandExecutionPolicy: {
         requested: commandsRequested,
         ...executionPolicy,
+        allowedScripts: SETTINGS.allowedScripts,
+        commandsNotRun,
+        stopOnFailure: true,
       },
       status,
       staticStatus,
@@ -2210,13 +2287,18 @@ async function qualityInspectorHandler(args) {
         ...(!inspectionPerformed ? ['static inspection'] : []),
         ...(filesUninspected.length ? ['some requested files were not inspected'] : []),
         ...(commandRootBlocked ? ['command execution root is not allowlisted'] : []),
+        ...(commandScopeBlocked ? ['requested scripts exceed server command scope'] : []),
+        ...(expectedMatched === false ? ['expected source hashes do not match inspected files'] : []),
+        ...(!inputsUnchanged ? ['inspected inputs changed during verification'] : []),
+        ...(manifestBlocked ? ['command manifest could not be pinned'] : []),
+        ...commandsNotRun.map(script => `${script} command not run`),
         ...(packageManagerBlocked ? ['package manager could not be detected'] : []),
         ...commandBlocked.map((run) => `${run.command.split(' ').at(-1)} command ${run.timedOut ? 'timed out' : 'could not be launched'}`),
       ],
       recommendations: [
         ...(parsed.runType === 'consumer' ? ['Consumer commands are project-authored. Inspect operator-collected report.json and captures; exit status or printed claims alone do not establish browser conformance.'] : []),
         'If status is warn, resolve medium/high-severity issues before shipping.',
-        'If runCommands is disabled, pair this call with `runCommands: true` for command verification.',
+        'Run only authorized checks. On failure, retain evidence and repair within scope; do not widen permissions or reset unrelated work.',
       ],
       limits: {
         maxFiles: SETTINGS.qaMaxFiles,
@@ -2247,36 +2329,50 @@ async function startServer() {
   server.registerTool('setup_expert', {
     description: TOOL_DESCRIPTIONS.setup_expert.description,
     inputSchema: setupSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, setupExpertHandler);
 
   server.registerTool('rules_enforcer', {
     description: TOOL_DESCRIPTIONS.rules_enforcer.description,
     inputSchema: rulesSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, rulesEnforcerHandler);
 
   server.registerTool('creative_director', {
     description: TOOL_DESCRIPTIONS.creative_director.description,
     inputSchema: creativeSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, creativeDirectorHandler);
 
   server.registerTool('page_architect', {
     description: TOOL_DESCRIPTIONS.page_architect.description,
     inputSchema: pageArchitectSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, (args) => pageArchitectHandler(args, 'page_architect'));
 
   server.registerTool('page_arcjitect', {
     description: TOOL_DESCRIPTIONS.page_arcjitect.description,
     inputSchema: pageArchitectSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, (args) => pageArchitectHandler(args, 'page_arcjitect'));
 
   server.registerTool('component_syntax_expert', {
     description: TOOL_DESCRIPTIONS.component_syntax_expert.description,
     inputSchema: syntaxSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, componentSyntaxExpertHandler);
 
   server.registerTool('quality_inspector', {
     description: TOOL_DESCRIPTIONS.quality_inspector.description,
     inputSchema: inspectSchema,
+    outputSchema: qualityOutputSchema,
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
   }, qualityInspectorHandler);
 
   const transport = new StdioServerTransport();

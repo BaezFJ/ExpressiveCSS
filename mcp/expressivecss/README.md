@@ -148,3 +148,49 @@ Hermes uses the top-level `mcp_servers` setting shown in `sample-hermes-config.y
 - Repository maintainers can verify generated sources with `node ../../scripts/gen-expressivecss-skill.mjs --check` and `node scripts/sync-guides.mjs --check`, then run `npm test`. To refresh them, run those two generator commands without `--check` before packing.
 - `setup_expert` resolves framework source, an installed package, or supported lockfiles in that order. A manifest range alone is reported as unresolved rather than treated as the installed version. An installed version outside the direct manifest range also blocks contract-dependent guidance.
 - Pass `projectRoot` in tool calls when the target project differs from the MCP process working directory.
+
+
+### Task scope and recovery
+
+All seven tools publish an output schema for their shared evidence fields. The
+six lookup/review tools declare local read-only behavior. `quality_inspector`
+declares possible destructive, non-idempotent, open-world behavior because
+project-authored scripts can write files and contact services. These
+[MCP annotations](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)
+describe behavior; they do not grant permissions or sandbox a command.
+
+The server operator can narrow the existing script list at launch:
+
+```sh
+EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS='["typecheck","verify:expressivecss"]'
+```
+
+Omitting this setting preserves the built-in `typecheck`, `test`, and
+`verify:expressivecss` list. An empty array, malformed JSON, or an unknown entry
+denies all scripts. Call arguments cannot widen it. The project root must still
+be allowlisted and the call must request `runCommands: true`. A request needing
+a disallowed script runs none of its commands. A sequence stops after the first
+failure, timeout, unavailable command, or changed inspected input, and lists
+remaining scripts in `commandExecutionPolicy.commandsNotRun`. There are no
+implicit retries. Existing process-group cleanup also applies on normal exit.
+
+`quality_inspector.inspectionEvidence` records SHA-256 hashes and byte counts
+from the exact files read. `inputsUnchanged` compares these inputs after
+verification; command runs also pin `package.json`. A changed or unreadable
+input prevents a pass and stops subsequent commands. For a later check of the
+same candidate, optionally supply `expectedSourceHashes`, mapping the exact
+requested file names to hashes from an operator-owned previous result. Missing
+or mismatched pins block command execution. Only requested files are read for
+this comparison; the map grants no extra filesystem access.
+
+Hashes describe observed endpoints, not an atomic snapshot of the application.
+Undeclared files, script dependencies and transient changes are not covered.
+The root allowlist controls the command's working directory; scripts and npm
+hooks still execute project code. Use host filesystem/network isolation and
+inspect scripts before authorizing them. For browser requests use the consumer
+runner's explicit loopback origin and mutation policy.
+
+Keep failed evidence and the candidate diff before cleanup. Repair in a disposable
+checkout when practical. Never reset a shared tree to clear a failed check. The
+MCP does not restore files or discard user edits; recovery belongs to the task's
+owner and must preserve concurrent work.

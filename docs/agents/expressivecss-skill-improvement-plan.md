@@ -885,3 +885,19 @@ hashes and scoped file checks prevent silent resets, and failed stages block
 their successors while retaining evidence. The
 [maintenance report](expressivecss-maintenance.md) records outcomes and limits.
 No new skill instructions are added without evidence that maintenance needs them.
+
+## Autonomous scope and recovery follow-up
+
+Roadmap item 7 extends the existing skill, MCP, and evaluator. The optional
+[workflow reference](../../skills/expressivecss/references/autonomy.md) defines
+allowed work and safe recovery without a mandatory project configuration or
+extra approval step for already authorized changes. MCP permissions now support
+a narrower server-controlled script list and fail-fast command sequences.
+Output schemas and conservative annotations describe the tools; byte-level
+inspection evidence and optional expected hashes detect stale candidates.
+
+Two focused benchmark tasks cover a permitted repair preserving user edits and a
+failed-check investigation whose required repair is outside scope. The
+[autonomy report](./expressivecss-autonomy.md) records results and limits.
+The implementation adds no package dependencies, public framework API, or
+automatic rollback of shared files.

@@ -200,6 +200,8 @@ test('fixture browser connection preserves the sandbox and operator evidence own
     assert.ok(!result.candidateResponse.args.some((arg) => /approval_policy|danger-full-access|bypass/.test(arg)));
     assert.match(result.candidateResponse.prompt, /Start with inspect/);
     assert.deepEqual(result.executionEvidence.browser.records, browserSession.records);
+    assert.match(result.candidateResponse.prompt, /observed.*browser tool succeeds.*UI is broken/);
+    assert.match(result.candidateResponse.prompt, /failed.*only when the tool operation itself returns an error/);
     browserSession.records[0].status = 'error';
     assert.equal(result.executionEvidence.browser.records[0].status, 'success');
     const blocked = await run(program, { browserSession: { url: null, capability: { status: 'unavailable', error: 'launch returned ECONNREFUSED' }, records: [] } });
@@ -217,6 +219,9 @@ test('verification claims cannot turn missing operations or guessed error codes 
   ] }, commandErrors: [{ command: 'node --check broken.js', exitCode: 1, output: 'SyntaxError: Unexpected token' }], connectorErrors: [{server:'expressivecss_eval_browser',tool:'browser',output:'MCP tool call requires approval, but approval policy is never'}] };
   const valid = { verificationChecks: [{ evidenceId: 'browser-2', status: 'observed' }, { evidenceId: 'browser-3', status: 'failed' }], verificationErrors: [{ source: 'browser', evidenceId: 'browser-3', excerpt: 'Timeout waiting for selector' }, { source: 'command', excerpt: 'SyntaxError: Unexpected token' }] };
   assert.deepEqual(validateVerificationClaims(valid, evidence), []);
+  const brokenUi = { browser: { records: [{ id: 'broken-ui', status: 'success', action: 'evaluate', result: { value: false } }] } };
+  assert.deepEqual(validateVerificationClaims({ verificationChecks: [{ evidenceId: 'broken-ui', status: 'observed' }], verificationErrors: [] }, brokenUi), []);
+  assert.ok(validateVerificationClaims({ verificationChecks: [{ evidenceId: 'broken-ui', status: 'failed' }], verificationErrors: [] }, brokenUi).length);
   assert.deepEqual(validateVerificationClaims({ ...valid, verificationErrors: [{ source: 'browser', evidenceId: 'browser-2', excerpt: 'Refused to load an image due to Content Security Policy' }] }, evidence), []);
   assert.deepEqual(validateVerificationClaims({ ...valid, verificationErrors: [{ source: 'connector', server: 'expressivecss_eval_browser', tool: 'browser', excerpt: 'MCP tool call requires approval' }] }, evidence), []);
   for (const response of [

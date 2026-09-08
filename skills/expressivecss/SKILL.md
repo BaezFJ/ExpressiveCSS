@@ -84,7 +84,7 @@ For repeatable local browser checks, reuse project tests or the optional
 
 ## Optional MCP acceleration
 
-MCP is optional; the Markdown workflow stands alone.
+MCP is optional; the Markdown workflow stands alone. For autonomous work, read [scope and recovery](./references/autonomy.md).
 
 | Tool | Use |
 | --- | --- |

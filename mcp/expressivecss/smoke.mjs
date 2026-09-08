@@ -258,6 +258,11 @@ try {
   assert.deepEqual(listed.tools.map((tool) => tool.name).sort(), expectedTools.sort());
   for (const tool of listed.tools) {
     assert.equal(tool.inputSchema.required?.includes('projectRoot') ?? false, false);
+    assert.equal(tool.outputSchema.type, 'object');
+    assert.ok(tool.outputSchema.required.includes('blockedChecks'));
+    assert.deepEqual(tool.annotations, tool.name === 'quality_inspector'
+      ? { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true }
+      : { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
   }
 
   const oversizedRulesInput = await client.callTool({
@@ -978,6 +983,89 @@ try {
   }
   const missingConsumer = await client.callTool({ name: 'quality_inspector', arguments: { projectRoot: matchingDir, runType: 'consumer', runCommands: true } });
   assert.notEqual(missingConsumer.structuredContent.status, 'pass');
+
+  // Recoverable verification: exact input evidence, no automatic restoration, and no later scripts after failure.
+  const originalManifest = await readFile(path.join(matchingDir, 'package.json'));
+  const originalMarkup = await readFile(path.join(matchingDir, 'clean.html'));
+  const digest = bytes => createHash('sha256').update(bytes).digest('hex');
+  const qualityArgs = { projectRoot: matchingDir, files: ['clean.html'], runType: 'full', runCommands: true };
+  const setScripts = async typecheck => writeFile(path.join(matchingDir, 'package.json'), JSON.stringify({
+    ...JSON.parse(originalManifest), scripts: { typecheck, test: `node -e "require('fs').writeFileSync('later-script.txt','ran')"` },
+  }));
+  await writeFile(path.join(matchingDir, 'package-lock.json'), '{}');
+  await writeFile(path.join(matchingDir, 'unrelated-dirty.txt'), 'Uncommitted user work.');
+  try {
+    const pinned = (await client.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, runCommands: false } })).structuredContent;
+    assert.deepEqual(pinned.inspectionEvidence.files, [{ file: 'clean.html', sha256: digest(originalMarkup), bytes: originalMarkup.length }]);
+    assert.equal(pinned.inspectionEvidence.inputsUnchanged, true);
+    assert.equal(pinned.inspectionEvidence.expectedMatched, null);
+    await setScripts('node -e "process.exit(1)"');
+    const failure = (await client.callTool({ name: 'quality_inspector', arguments: qualityArgs })).structuredContent;
+    assert.equal(failure.commandChecks.length, 1);
+    assert.equal(failure.commandChecks[0].exitStatus, 1);
+    assert.deepEqual(failure.commandExecutionPolicy.commandsNotRun, ['test']);
+    assert.equal(failure.inspectionEvidence.inputsUnchanged, true);
+    assert.equal(failure.inspectionEvidence.commandManifestSha256, digest(await readFile(path.join(matchingDir, 'package.json'))));
+    await assert.rejects(access(path.join(matchingDir, 'later-script.txt')));
+
+    await setScripts(`node -e "require('fs').writeFileSync('clean.html','<main>Changed during verification</main>')"`);
+    const drift = (await client.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, expectedSourceHashes: { 'clean.html': digest(originalMarkup) } } })).structuredContent;
+    assert.equal(drift.commandChecks.length, 1);
+    assert.equal(drift.status, 'blocked');
+    assert.equal(drift.inspectionEvidence.inputsUnchanged, false);
+    assert.equal(drift.inspectionEvidence.expectedMatched, true);
+    assert.equal(drift.inspectionEvidence.files[0].sha256, digest(originalMarkup));
+    assert.match(await readFile(path.join(matchingDir, 'clean.html'), 'utf8'), /Changed during verification/);
+    for (const expectedSourceHashes of [{ 'clean.html': digest(originalMarkup) }, { '../outside.txt': digest(originalMarkup) }]) {
+      const stale = (await client.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, expectedSourceHashes } })).structuredContent;
+      assert.equal(stale.inspectionEvidence.expectedMatched, false);
+      assert.equal(stale.status, 'blocked');
+      assert.deepEqual(stale.commandChecks, []);
+    }
+    await setScripts(`node -e "require('fs').writeFileSync('package.json','{}')"`);
+    const manifestDrift = (await client.callTool({ name: 'quality_inspector', arguments: qualityArgs })).structuredContent;
+    assert.equal(manifestDrift.inspectionEvidence.inputsUnchanged, false);
+    assert.equal(manifestDrift.commandChecks.length, 1);
+    assert.deepEqual(manifestDrift.commandExecutionPolicy.commandsNotRun, ['test']);
+    await setScripts('node -e "process.exit(0)"');
+    await assert.rejects(access(path.join(matchingDir, 'later-script.txt')));
+    assert.equal(await readFile(path.join(matchingDir, 'unrelated-dirty.txt'), 'utf8'), 'Uncommitted user work.');
+    await writeFile(path.join(matchingDir, 'clean.html'), originalMarkup);
+    const restored = (await client.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, runCommands: false, expectedSourceHashes: { 'clean.html': digest(originalMarkup) } } })).structuredContent;
+    assert.equal(restored.inspectionEvidence.expectedMatched, true);
+    assert.equal(restored.inspectionEvidence.inputsUnchanged, true);
+    await writeFile(path.join(matchingDir, 'orphan.mjs'), `import { spawn } from 'node:child_process';
+spawn(process.execPath, ['-e', "setTimeout(() => require('node:fs').writeFileSync('orphan-survived.txt', 'yes'), 1500)"], { stdio: 'ignore' }).unref();
+`);
+    await setScripts('node orphan.mjs');
+    const exited = (await client.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, runType: 'standard' } })).structuredContent;
+    assert.equal(exited.commandChecks[0].exitStatus, 0);
+    await new Promise(resolve => setTimeout(resolve, 1800));
+    await assert.rejects(access(path.join(matchingDir, 'orphan-survived.txt')));
+    await setScripts('node -e "process.exit(0)"');
+    for (const scope of ['["typecheck"]', '[]', 'invalid', '["test", "deploy"]']) {
+      const scopedClient = new Client({ name: 'scoped-command-smoke', version: '0.1.0' });
+      try {
+        await scopedClient.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(packageDir, 'server.js')], stderr: 'pipe', env: {
+          ...process.env, EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS: matchingDir, EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS: scope,
+        } }));
+        const denied = (await scopedClient.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, allowedScripts: ['typecheck', 'test'] } })).structuredContent;
+        assert.equal(denied.status, 'blocked');
+        assert.deepEqual(denied.commandChecks, []);
+        assert.ok(denied.blockedChecks.includes('requested scripts exceed server command scope'));
+        assert.deepEqual(denied.commandExecutionPolicy.allowedScripts, scope === '["typecheck"]' ? ['typecheck'] : []);
+        if (scope === '["typecheck"]') {
+          const permitted = (await scopedClient.callTool({ name: 'quality_inspector', arguments: { ...qualityArgs, runType: 'standard' } })).structuredContent;
+          assert.equal(permitted.commandChecks.length, 1);
+          assert.equal(permitted.commandChecks[0].exitStatus, 0);
+          assert.equal(permitted.inspectionEvidence.inputsUnchanged, true);
+        }
+      } finally { await scopedClient.close(); }
+    }
+  } finally {
+    await writeFile(path.join(matchingDir, 'package.json'), originalManifest);
+    await writeFile(path.join(matchingDir, 'clean.html'), originalMarkup);
+  }
 
   const skippedTransport = new StdioClientTransport({
     command: process.execPath,

@@ -190,9 +190,9 @@ test('benchmark statistics cover paired medians, population variability, and rea
 
 test('benchmark definitions retain distinct scoped and whole-interface tasks with balanced discovery coverage', async () => {
   const definitions = JSON.parse(await readFile(new URL('./fixtures/expressivecss-skill-evals/benchmark.json', import.meta.url), 'utf8'));
-  assert.equal(definitions.cases.length, 11);
-  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 11);
-  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 11);
+  assert.equal(definitions.cases.length, 13);
+  assert.equal(new Set(definitions.cases.map(({ name }) => name)).size, 13);
+  assert.equal(new Set(definitions.cases.map(({ id }) => id)).size, 13);
   assert.ok(definitions.cases.find(({ name }) => name === 'no-edit-audit')?.readOnly);
   assert.ok(definitions.cases.find(({ name }) => name === 'interface-review')?.readOnly);
   assert.ok(definitions.cases.find(({ name }) => name === 'interface-refine').request.includes('primary user task'));
@@ -483,4 +483,40 @@ test('maintenance retains an interrupted stage and blocks its successors', { tim
     const benchmark = JSON.parse(await readFile(path.join(output, 'benchmark.json'), 'utf8'));
     assert.deepEqual(benchmark.chains, [{ sequence: 'settings-maintenance', complete: false, time_seconds: null, tokens: null }]);
   } finally { await rm(output, { recursive: true, force: true }); }
+});
+
+
+test('autonomy cases preserve user edits and distinguish a blocked repair from completion', async () => {
+  const { prepareCase, grade } = await import('../scripts/benchmark-expressivecss-skill.mjs');
+  const { readCompletionFiles } = await import('../scripts/eval-expressivecss-skill.mjs');
+  const { snapshotProject } = await import('../scripts/expressivecss-codex-adapter.mjs');
+  for (const name of ['autonomy-scoped-repair', 'autonomy-blocked-recovery']) {
+    const testCase = { name, fixture: 'consumer-current' };
+    const root = await prepareCase(testCase);
+    try {
+      const before = await readCompletionFiles(root), initial = await snapshotProject(root);
+      const html = path.join(root, 'src/index.html');
+      if (name === 'autonomy-scoped-repair') await writeFile(html, before['src/index.html'].replace('<button type="submit">Preview preferences', '<button type="button">Preview preferences'));
+      else {
+        const failed = spawnSync(process.execPath, ['check-save.mjs'], { cwd: root, encoding: 'utf8' });
+        assert.equal(failed.status, 1);
+        assert.match(failed.stderr, /Save handler does not produce the required confirmation/);
+      }
+      const after = await snapshotProject(root);
+      const filesystem = { source: 'adapter', independentlyComputed: true, algorithm: 'sha256', before: initial.hash, beforeManifest: initial.manifest, after: after.hash, afterManifest: after.manifest };
+      const envelope = { executionEvidence: { filesystem, commandErrors: [{ output: 'Save handler does not produce the required confirmation' }] }, runMetadata: {} };
+      // Synthetic operator observations exercise grading; live browser runs are separate.
+      const browser = { errors: [], formBehavior: { previewDoesNotSubmit: true, saved: true, resultText: 'Save confirmation unavailable.' } };
+      assert.ok((await grade(testCase, root, before, envelope, browser)).every(row => row.passed));
+      if (name === 'autonomy-scoped-repair') {
+        await writeFile(html, (await readFile(html, 'utf8')).replace('User draft:', 'Overwritten draft:'));
+        assert.ok((await grade(testCase, root, before, envelope, browser)).some(row => !row.passed));
+      } else {
+        envelope.executionEvidence.commandErrors = [];
+        assert.ok((await grade(testCase, root, before, envelope, browser)).some(row => !row.passed));
+      }
+      filesystem.afterManifest['user-notes.txt'] = { type: 'file', sha256: 'changed' };
+      assert.equal(gradeProjectChanges(name, filesystem)[0].passed, false);
+    } finally { await rm(root, { recursive: true, force: true }); }
+  }
 });
