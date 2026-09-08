@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `8cc60868bea80eeaf73f208a98276c1d9a55bfc4f4ad8821c1b71f17e9ea08b9`
+Contract SHA-256: `4ca7284f45fc684ea970360e8832660cc9b24c2370e364270b08732a50d052fd`
 
 #### Selection and adaptation
 
@@ -37,9 +37,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Choose one option, or several, from a styled menu.
 
-Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
+Filled enhanced selects reserve a label row that grows with wrapping and enlarged text. Leading icons retain their label spacing; supporting text stays outside the filled surface. Native and outlined variants retain their existing layouts.
 
-Add `multiple` to select several options. Chosen values appear as a comma-separated list.
+Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 
 #### Syntax
 

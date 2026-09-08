@@ -70,27 +70,44 @@ Playwright version. The local run used `mcr.microsoft.com/playwright:v1.62.1-nob
 with a read-only checkout, network disabled, and a writable artifact directory.
 Firefox also ran directly on Fedora; WebKit required the container's libraries.
 
-## Observed framework follow-ups
+## Framework follow-ups repaired, September 8, 2026
 
-An initial Chromium keyboard run reopened Menu immediately after Escape, before
-its close callback completed. The menu remained marked expanded but disappeared.
-The retained failed trace is in
-`.cache/cross-browser/container/chromium-keyboard-G1sczF/trace.zip`.
-Source review identifies an uncancelled `_animateOut()` timeout in
-`src/ts/components/menu.ts` which resets menu styles after a subsequent `open()`.
+The original rapid Menu reversal failure came from an uncancelled close timeout
+that reset styles after reopening. Menu now cancels superseded animation and
+deferred event work on open, close and destroy. Synchronous focus handlers can
+also close, reopen or destroy a component; completion callbacks and ARIA updates
+respect the resulting lifecycle state. Menu consumers share this repair.
 
-The critical-flow checks wait for the menu to finish closing before
-reopening. They establish completed transitions, not rapid reversal safety.
-A focused framework follow-up should cancel or invalidate superseded callbacks,
-then test close/reopen and destruction during transitions. No framework repair
-is included in this coverage change.
+The filled enhanced select's absolutely positioned label overlapped its value
+when enlarged or wrapped. Its label now occupies a content-sized row above the
+value, preserving leading-icon space and leaving supporting text outside the
+filled surface. The fix covers the filled enhanced variant; native and outlined
+selects retain their existing layouts. It does not establish native-zoom or
+complete language coverage.
 
-Visual inspection of the accepted WebKit compact RTL screenshot found the
-remounted select's label overlapping its value at a 32px root font. Page-level
-horizontal overflow remains absent, so that automatic check does not detect this
-internal collision. Investigate field label/value sizing and multiline labels
-with native zoom and translated text before claiming enlarged-text accessibility.
-The captured Arabic glyphs rendered, but this does not establish full font coverage.
+`tests/menu-field-browser.test.js` adds six named tests across Chromium, Firefox
+and WebKit. Before the repairs, all six reproduced their respective failures.
+The critical-flow suite retains its completed-transition checks; the new tests
+explicitly exercise reversal, teardown, reentrant focus handlers, and multiline
+LTR/RTL labels at 16px and 32px root text sizes. Label geometry checks supplement
+page-overflow checks, which could not detect the original internal collision.
+
+The operator capability collection passed 29 tests with unchanged inputs in
+`.cache/material-capabilities/run-h2CtTx/report.json`. The catalogue maps the
+new Chromium cases; the same test file executes equivalent Firefox and WebKit
+cases. Source delta review covers only `menu.ts` and `_select.scss`; unchanged
+source pins and upstream review dates are carried forward, not renewed as a full
+Material audit. Independent review's prefix-spacing and reentrant-focus findings
+were repaired and the six focused tests passed again.
+
+The documentation visual comparison against the pre-fix `HEAD` captured Menu,
+Select and Autocomplete at four viewport/theme combinations each. All twelve
+baseline/head captures completed; eight Menu/Select snapshots changed (including
+updated documentation) and four Autocomplete views were unchanged. Expected
+snapshot differences are advisory, not a screenshot-equality pass. The report
+is retained in `visual/report/`; native zoom and manual release checks remain
+unperformed. An initial anchored page-name filter matched no tests and was
+corrected before the accepted capture run.
 
 ## Manual release review
 
@@ -104,7 +121,7 @@ same task sequence above in an actual consumer or serve the fixture locally.
 | Native browser zoom | Use the browser UI at 200% and 400%. Complete the form, open/close overlays, and follow focus. Inspect clipping and reflow; do not substitute CSS zoom, device scale or root font changes. | Not performed |
 | Physical touch devices | Complete the flows on representative iOS Safari and Android Chrome devices, including orientation changes and the onscreen keyboard. | Not performed |
 | Screen readers | Check names, roles, selected values, modal reading scope, updates and focus recovery with NVDA/Firefox or Chrome and VoiceOver/Safari. | Not performed |
-| Visual and language review | Review translated wrapping, text clipping and actual glyph/font coverage at required product widths and text settings. | Sampled desktop/RTL screenshots reviewed; enlarged select-label overlap found. Full language review pending |
+| Visual and language review | Review translated wrapping, text clipping and actual glyph/font coverage at required product widths and text settings. | Sampled desktop/RTL screenshots reviewed; filled enhanced select overlap repaired with dedicated geometry checks. Full language review pending |
 
 These checks complement automation; they are not a comprehensive accessibility
 assessment. [W3C evaluation guidance](https://www.w3.org/WAI/test-evaluate/easy-checks/)

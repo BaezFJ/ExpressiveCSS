@@ -843,3 +843,18 @@ Use the canonical triage roles documented in the existing label reference. See `
 ### Domain docs
 
 Single-context: `CONTEXT.md` at the repo root, ADRs in `adr/` — **not** `docs/adr/`, because `docs/` is the Astro site. See `docs/agents/domain.md`.
+
+## Menu reversal and filled select labels
+
+Menu owns delayed transition completion, entry styling and deferred document
+handlers. Opening, closing and destroying cancel superseded work together.
+Focus can synchronously invoke application handlers that replace that lifecycle,
+so check generation again after initial-item focus and set closed ARIA before
+returning focus to a trigger that could reopen it. FormSelect and Autocomplete
+share this Menu implementation; keep their callback semantics intact.
+
+Filled enhanced selects always float their associated label. A real label row
+lets translations wrap and text grow without colliding with the value. Keep
+leading-icon padding on that row and paint only the label/control, not supporting
+text. Native and outlined selects are outside this layout change. Browser tests
+check label/value geometry, not just page overflow.

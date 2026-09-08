@@ -132,6 +132,44 @@ select.browser-default {
   }
 }
 
+// Filled selects always have a floated label. Put that label in a real row
+// so translated wrapping and enlarged text reserve space above the value.
+.field:has(> .hide-select):has(> label):not(.outlined) {
+  display: grid;
+
+  > label {
+    grid-row: 1;
+    background-color: var(--md-comp-filled-text-field-container-color);
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+    position: static;
+    transform: none;
+    margin: 0;
+    padding: 8px 16px 0;
+    padding-inline-end: 52px;
+    overflow-wrap: anywhere;
+    pointer-events: auto;
+    @include typescale("body-small");
+  }
+
+  &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) > label {
+    padding-left: 52px;
+  }
+
+  &.disabled > label {
+    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
+  }
+
+  > input.menu-trigger {
+    grid-row: 2;
+    height: auto;
+    min-height: calc(var(--md-sys-typescale-body-large-line-height) + 8px);
+    padding-block: 0 7px;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+}
+
 .field:has(> .hide-select).disabled {
   .caret {
     background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);

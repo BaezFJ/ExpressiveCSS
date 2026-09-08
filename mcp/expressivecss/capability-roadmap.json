@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b",
+    "reportSha256": "e13167f708052d5f24e3c3124654767e4a61d7e1cff277f76b901dbb8e775687",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -363,7 +363,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Vertical menus, nested flyouts, grouping, and standard/vibrant styles.",
       "adaptation": "Native menu/li structure; Menu owns opening and keyboard behavior.",
       "upstream": {
@@ -379,7 +379,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
         }
       ],
       "gaps": [],
@@ -394,6 +394,12 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "Menu cancels superseded callbacks and teardown work (chromium)",
+          "scope": "Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.",
           "state": "recorded-passed"
         }
       ],
@@ -664,7 +670,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Leading action and trailing menu trigger with matching styles.",
       "adaptation": "Reuses Menu; no separate split-button runtime.",
       "upstream": {
@@ -680,7 +686,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
         }
       ],
       "gaps": [],
@@ -1465,7 +1471,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
@@ -1478,7 +1484,7 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_select.scss",
-          "sha256": "e91abfb218a90a92f2b87922154836ba0eb6ceb5ccbbe2ed18a7f44f65065a31"
+          "sha256": "645b592dfe1ff3f729a46fa4370cfc533e7a18de2506204f7d5e7455daea4f44"
         },
         {
           "path": "src/sass/components/_menu.scss",
@@ -1490,7 +1496,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
         }
       ],
       "gaps": [],
@@ -1505,6 +1511,12 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/menu-field-browser.test.js",
+          "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
+          "scope": "Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.",
           "state": "recorded-passed"
         }
       ],
@@ -1692,7 +1704,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Single and multi-select suggestions.",
       "adaptation": "Runtime combobox behavior attached to a text field; no standalone upstream component claim.",
       "upstream": {
@@ -1717,7 +1729,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
         }
       ],
       "gaps": [],

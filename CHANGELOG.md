@@ -19,6 +19,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Menu cancels superseded transition and deferred event callbacks on reversal and destruction, preserving visibility, focus and end-callback ownership.
+- Filled enhanced selects reserve label space so enlarged and multiline RTL/LTR labels do not overlap the selected value.
+
 - Scale transitions now honor reduced-motion preferences, including changes during motion.
 - Expanding-card close cleanup follows the CSS container transition instead of a fixed timer. Reopening, cancellation, native close, and teardown cannot leave stale cleanup closing a new dialog or moving focus.
 

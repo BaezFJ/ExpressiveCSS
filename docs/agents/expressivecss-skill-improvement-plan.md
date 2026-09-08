@@ -1,5 +1,48 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Current status, September 8, 2026
+
+The core skill implementation and original six-case, 36-run comparison are
+complete. Historical sections below retain the results and limitations of their
+own snapshots; they are not a list of unfinished implementation tasks.
+
+| Workstream | Status | Evidence or next action |
+| --- | --- | --- |
+| Routing, direct-loading boundaries and component decisions | Implemented | Generated guides, mode/feature routes and component catalogue; skill regression suite. |
+| Version and documentation assurance | Implemented | Shared resolver, portable copies, provenance and matching-bundle checks. |
+| Review matrix, component contracts and evidence coverage | Implemented | Atomic criteria, scoped status, state/boundary ledger and matched capture rules. |
+| Optional MCP assistance and autonomous recovery | Implemented | Scoped tool evidence, command permissions and recovery evaluations in [autonomy](expressivecss-autonomy.md). |
+| Real-task evaluations and reproducibility | Implemented | Runnable fixtures, independent grading, frozen provenance, held-out discovery, maintenance sequences and retained failures. |
+| Original reliability/performance comparison | Complete within recorded scope | 36/36 runs passed named checks; required button reading reduced by at least 25%. See [comparison](expressivecss-skill-comparison.md). No general speed claim. |
+| Historical full-page A/B and Material editor A/B appearance | Accepted visually | BaezFJ's “accept visuals” is bound to four retained outputs in the [acceptance record](evidence/design-acceptance-2026-09-08.json). |
+| Historical full-page delivery completion | Incomplete | Both refinement attempts timed out before final reports. Visual acceptance does not turn them into completed evaluations; retain the failures. |
+| Assistance cost of accepted results | Visuals accepted; task acceptance pending | All 18 outputs passed named automated checks and received [visual acceptance](evidence/assistance-visual-acceptance-2026-09-08.json). Full task acceptance, correction effort and measured review time remain unavailable in [assistance cost](expressivecss-assistance-cost.md). |
+| Manual release checks | Not performed | Native zoom, physical devices, screen readers and complete language review remain separate in [browser coverage](expressivecss-browser-coverage.md). |
+| Known Menu reversal and filled-select label defects | Repaired | Shared Menu cancellation and content-sized select labels; six browser regressions cover Chromium, Firefox and WebKit. See [repair evidence](expressivecss-browser-coverage.md#framework-follow-ups-repaired-september-8-2026). |
+| Additional Material framework capabilities | Deferred feature work | Standalone button morphing, modal pickers, emphasized typography/font coverage and shared shape/motion roles remain in the [roadmap](../../skills/expressivecss/references/capability-roadmap.md). |
+| Publishing and installation | Outside this plan | Requires a separate release/install request. |
+
+The new prompt-6 dashboard comparison was also received positively. It is a
+separate local design exercise, not one of the historical benchmark outputs or
+proof of skill-only improvement. Neither visual review certifies accessibility.
+
+
+Closeout validation passed: `npm run verify` ran 1,019 tests with no failures
+or skips, typechecking, generated-file checks and the 66-page documentation
+build. The dedicated skill suite passed 240 tests and 22 replay cases; the
+explicit browser gate passed 41 tests across its required engines. MCP smoke
+passed all seven tools, and both isolated package checks passed. Generation and
+diff checks remained clean after packaging. Independent review found no remaining
+actionable issues in this closeout and repair scope.
+
+One initial skill run rejected changed evaluation provenance while another
+verification step rebuilt package artifacts. The complete skill suite passed
+when rerun after builds finished; no assertions or provenance guards were
+weakened. Visual comparison completed twelve baseline/head captures, with eight
+expected Menu/Select differences and four unchanged Autocomplete captures; see
+[browser evidence](expressivecss-browser-coverage.md#framework-follow-ups-repaired-september-8-2026).
+
+
 ## Framework gap follow-up: motion integration
 
 The first framework repair closes the two motion integration gaps from the

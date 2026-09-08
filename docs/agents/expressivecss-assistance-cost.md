@@ -1,5 +1,15 @@
 # Cost of an accepted result
 
+## Visual acceptance, September 8, 2026
+
+BaezFJ accepted the visuals of all eighteen outputs displayed in the combined
+review viewer. The [visual acceptance record](evidence/assistance-visual-acceptance-2026-09-08.json)
+binds that decision to each attempt hash and the verified viewer. This completes
+visual review for this set. Full task acceptance, correction effort and measured
+review time remain unavailable; the historical benchmark and its `reviews.json`
+are unchanged. Visual approval alone does not establish cost per accepted task.
+
+
 Compare the same consumer tasks with the ExpressiveCSS skill, the MCP server,
 and both together. Automated completion, human acceptance, requested corrections,
 and execution cost are separate results. Passing checks never fills in a human

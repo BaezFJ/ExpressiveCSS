@@ -8,7 +8,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `e13167f708052d5f24e3c3124654767e4a61d7e1cff277f76b901dbb8e775687`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -228,7 +228,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Vertical menus, nested flyouts, grouping, and standard/vibrant styles.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -238,6 +238,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- recorded-passed: [tests/menu-field-browser.test.js](../../../tests/menu-field-browser.test.js): `Menu cancels superseded callbacks and teardown work (chromium)`. Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="scrollspy"></a>
 
@@ -332,7 +333,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Leading action and trailing menu trigger with matching styles.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_split-button.scss](../../../src/sass/components/_split-button.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_split-button.scss](../../../src/sass/components/_split-button.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -673,7 +674,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Single/multiple selection, optgroups, and browser-default fallback.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_select.scss](../../../src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_select.scss](../../../src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
 
@@ -683,6 +684,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- recorded-passed: [tests/menu-field-browser.test.js](../../../tests/menu-field-browser.test.js): `enhanced select keeps enlarged multiline labels clear of values (chromium)`. Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="checkboxes"></a>
 
@@ -770,7 +772,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Single and multi-select suggestions.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/autocomplete.ts](../../../src/ts/components/autocomplete.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/autocomplete.ts](../../../src/ts/components/autocomplete.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
 

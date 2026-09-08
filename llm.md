@@ -3898,9 +3898,9 @@ Expressive.AutoInit(document.body, {
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `250` | Exit transition duration, in milliseconds. |
 | `onOpenStart` | Function | `null` | Called when the menu starts opening. |
-| `onOpenEnd` | Function | `null` | Called when the menu finishes opening. |
+| `onOpenEnd` | Function | `null` | Called when opening completes; superseded transitions and destruction cancel it. |
 | `onCloseStart` | Function | `null` | Called when the menu starts closing. |
-| `onCloseEnd` | Function | `null` | Called when the menu finishes closing. |
+| `onCloseEnd` | Function | `null` | Called when closing completes; reopening and destruction cancel it. |
 | `onItemClick` | Function | `null` | Called when an item is clicked. Receives the `li`. |
 
 #### Examples
@@ -5830,6 +5830,8 @@ The on/off captions are decoration. Left as bare text they are folded into the l
 ## Select
 
 Choose one option, or several, from a styled menu.
+
+Filled enhanced selects reserve a label row that grows with wrapping and enlarged text. Leading icons retain their label spacing; supporting text stays outside the filled surface. Native and outlined variants retain their existing layouts.
 
 Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 

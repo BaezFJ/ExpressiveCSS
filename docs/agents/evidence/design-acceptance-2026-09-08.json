@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-08T05:00:53.343567+00:00",
+  "reviewer": "BaezFJ",
+  "userFeedback": "accept visuals",
+  "scope": "Four historical captures: full-page A/B and Material editor A/B. Visual design only.",
+  "reviews": [
+    {
+      "runId": "eval-interface-refine-old_skill-run-1",
+      "decision": "accept-visual-design",
+      "sourceReportSha256": "0a9aed789885529bd3e1dfc7545200e7a9e7c31885b87bfd9ae55bcd0f170e4e",
+      "captures": [
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/before-default-1280.png",
+          "sha256": "5151e9c2d8bac220879d2ad978ff49f914f79211117c332e93b7ea68f0748584"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/after-default-1280.png",
+          "sha256": "ac232bb654ad1c25e1ad2ddd3687b31ae19281312207d318932467e975a60a4e"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/before-default-320.png",
+          "sha256": "3de1d1f72a0aa79282b8ef55e1fcb7597c5a0420020289a45e86dc928a42f9bd"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/after-default-320.png",
+          "sha256": "d85d089083ce79fdefd665e3017b92b0d7a058613d7653f272b255d395aa62a5"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/after-dark-375.png",
+          "sha256": "d93d38da8f279a0683791609a53103b622b5427101c2bc44d217f9b7cc1b153d"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/after-error-375.png",
+          "sha256": "bd7c5eba36bd4c91b531300724c819aa6466a5e3c0f2624b32dad6779e3a78dd"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/old_skill/run-1/outputs/after-text200-375.png",
+          "sha256": "7f63fd41ae088454525c3c582dd8da4f29e442b090d3b33dfb938f32a2d1b066"
+        }
+      ]
+    },
+    {
+      "runId": "eval-interface-refine-with_skill-run-1",
+      "decision": "accept-visual-design",
+      "sourceReportSha256": "8b3469fc052408f356118aadd62f2897e9730833a7936b0bc411fbb2733ddf8c",
+      "captures": [
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/before-default-1280.png",
+          "sha256": "5151e9c2d8bac220879d2ad978ff49f914f79211117c332e93b7ea68f0748584"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/after-default-1280.png",
+          "sha256": "19b1151e81833fb99d4dabf92dd47d77b78c81aec283b04c0c2a0b11e376a665"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/before-default-320.png",
+          "sha256": "3de1d1f72a0aa79282b8ef55e1fcb7597c5a0420020289a45e86dc928a42f9bd"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/after-default-320.png",
+          "sha256": "8191d9d4b6888c6cdd3f30c39e49c759ec4c88589254f584e36b1d1c34ca5d81"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/after-dark-375.png",
+          "sha256": "b0d8cd96a7db90693c65c189ffdadfe5aa0fb1b0122c63c307f8d6301e4d83e7"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/after-error-375.png",
+          "sha256": "df4d8789fd75a9ff938dbbf97cd3c989583c0a3588204217f1857d58e477ac8a"
+        },
+        {
+          "path": ".cache/expressivecss-interface-workspace/iteration-2/eval-interface-refine/with_skill/run-1/outputs/after-text200-375.png",
+          "sha256": "1dbba872da74c7cf88bdac272fda5bb895520bd1460a10ca4b47b50daebe29d7"
+        }
+      ]
+    },
+    {
+      "runId": "eval-material-expression-repair-old_skill-run-1",
+      "decision": "accept-visual-design",
+      "sourceReportSha256": "5fbac9184baec4fbfd06901de19a2b08e1a0718c351092b5a97b1ce799bca4b9",
+      "captures": [
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/before-expressive-1280-no-preference-initial.png",
+          "sha256": "cc6be02711e57aa36b16a18c598ba86f43d7c6595b98efe2311b163a911a09dc"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/after-expressive-1280-no-preference-initial.png",
+          "sha256": "c0f9bcc6912df434793633bb30efa0cf842847f257babe6fd9f9399fde321b2c"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/before-expressive-375-no-preference-initial.png",
+          "sha256": "51369bf1bd4499f3723d60773b7be23dec2770c2c8bd217cfd4d5042e773bf06"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/after-expressive-375-no-preference-initial.png",
+          "sha256": "6ba877f5af391d0d6a75ad52d3a3dd8e9a74ce025c79582b862e1d8a5f60498d"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/after-restrained-375-no-preference-initial.png",
+          "sha256": "ebe80a4b9e7ee90c7a0843f9454754e294e846399f889ca5cd52e97051e8e184"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/after-expressive-375-no-preference-preview.png",
+          "sha256": "b00a250bf74ba8ab50fccfa1ba62b91a2e866e09f27c1e4391a010a70162de2f"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/old_skill/run-1/outputs/after-expressive-375-no-preference-saved.png",
+          "sha256": "5b5c3087533059c49f831ffa6076d5dd56e76791688d9aec90e0bc52df9815dc"
+        }
+      ]
+    },
+    {
+      "runId": "eval-material-expression-repair-with_skill-run-1",
+      "decision": "accept-visual-design",
+      "sourceReportSha256": "e33d092e802bd06a09fd54ef2533a9fa60e86dc5ced778e4b6c1c1bb464e2335",
+      "captures": [
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/before-expressive-1280-no-preference-initial.png",
+          "sha256": "cc6be02711e57aa36b16a18c598ba86f43d7c6595b98efe2311b163a911a09dc"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/after-expressive-1280-no-preference-initial.png",
+          "sha256": "c0f9bcc6912df434793633bb30efa0cf842847f257babe6fd9f9399fde321b2c"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/before-expressive-375-no-preference-initial.png",
+          "sha256": "51369bf1bd4499f3723d60773b7be23dec2770c2c8bd217cfd4d5042e773bf06"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/after-expressive-375-no-preference-initial.png",
+          "sha256": "6ba877f5af391d0d6a75ad52d3a3dd8e9a74ce025c79582b862e1d8a5f60498d"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/after-restrained-375-no-preference-initial.png",
+          "sha256": "ebe80a4b9e7ee90c7a0843f9454754e294e846399f889ca5cd52e97051e8e184"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/after-expressive-375-no-preference-preview.png",
+          "sha256": "b00a250bf74ba8ab50fccfa1ba62b91a2e866e09f27c1e4391a010a70162de2f"
+        },
+        {
+          "path": ".cache/expressivecss-material-decisions/comparison/eval-material-expression-repair/with_skill/run-1/outputs/after-expressive-375-no-preference-saved.png",
+          "sha256": "5b5c3087533059c49f831ffa6076d5dd56e76791688d9aec90e0bc52df9815dc"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Full-page A/B deliveries timed out before their final reports; visual acceptance does not complete them.",
+    "No interaction, motion, accessibility or performance certification is inferred.",
+    "The eighteen assistance-cost outputs were not included in this review."
+  ]
+}

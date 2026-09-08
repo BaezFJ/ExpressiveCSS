@@ -1,5 +1,14 @@
 # ExpressiveCSS skill reliability and performance comparison
 
+## Human visual review, September 8, 2026
+
+BaezFJ accepted the four retained historical designs: full-page A/B and Material
+editor expression-repair A/B. The [acceptance record](evidence/design-acceptance-2026-09-08.json)
+binds the decision to their report and capture hashes. This supersedes the
+pending visual status below for those four outputs only. Both full-page runs
+still timed out before final reports. Other task outputs, assistance-cost
+acceptance, accessibility and interaction certification are not covered.
+
 The original 36-run study below describes the first reliability revision. The
 [browser and grading follow-up](#browser-and-grading-follow-up) records subsequent
 changes and six focused executions separately.

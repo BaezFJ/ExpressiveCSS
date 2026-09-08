@@ -70,7 +70,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -137,7 +137,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -217,7 +217,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -313,7 +313,7 @@
             "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -397,7 +397,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -476,7 +476,7 @@
             "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -538,7 +538,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -607,7 +607,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -672,7 +672,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -736,7 +736,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -790,7 +790,7 @@
         }
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -799,7 +799,7 @@
           },
           {
             "path": "src/ts/components/menu.ts",
-            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+            "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
           }
         ],
         "gaps": [],
@@ -813,9 +813,14 @@
             "file": "tests/expressivecss-lifecycle-browser.test.js",
             "name": "resource observations detect omitted teardown after a partial replacement",
             "scope": "Negative control proves resources remain without destroy; no visual parity assertion."
+          },
+          {
+            "file": "tests/menu-field-browser.test.js",
+            "name": "Menu cancels superseded callbacks and teardown work (chromium)",
+            "scope": "Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -888,7 +893,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -991,7 +996,7 @@
             "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1076,7 +1081,7 @@
             "scope": "Icon children inside button group only."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1142,7 +1147,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1236,7 +1241,7 @@
             "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1291,7 +1296,7 @@
       },
       "selectionExample": "PDF/CSV format selection for a later Export action belongs in a select or segmented inputs. A split button fits Export now plus alternate export commands.",
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -1300,12 +1305,12 @@
           },
           {
             "path": "src/ts/components/menu.ts",
-            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+            "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
           }
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1389,7 +1394,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1489,7 +1494,7 @@
             "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1560,7 +1565,7 @@
             "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1633,7 +1638,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1719,7 +1724,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1811,7 +1816,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1882,7 +1887,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -1949,7 +1954,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2014,7 +2019,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2098,7 +2103,7 @@
             "scope": "Runtime timer cancellation for enter, exit and animation scheduling."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2168,7 +2173,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2233,7 +2238,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2298,7 +2303,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2361,7 +2366,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2430,7 +2435,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2501,7 +2506,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2566,7 +2571,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2629,7 +2634,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2699,7 +2704,7 @@
             "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2786,7 +2791,7 @@
             "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2843,12 +2848,12 @@
         "reason": "Related guidance is not a dedicated component specification."
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
             "path": "src/sass/components/forms/_select.scss",
-            "sha256": "e91abfb218a90a92f2b87922154836ba0eb6ceb5ccbbe2ed18a7f44f65065a31"
+            "sha256": "645b592dfe1ff3f729a46fa4370cfc533e7a18de2506204f7d5e7455daea4f44"
           },
           {
             "path": "src/sass/components/_menu.scss",
@@ -2860,7 +2865,7 @@
           },
           {
             "path": "src/ts/components/menu.ts",
-            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+            "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
           }
         ],
         "gaps": [],
@@ -2874,9 +2879,14 @@
             "file": "tests/expressivecss-lifecycle-browser.test.js",
             "name": "resource observations detect omitted teardown after a partial replacement",
             "scope": "Negative control proves resources remain without destroy; no visual parity assertion."
+          },
+          {
+            "file": "tests/menu-field-browser.test.js",
+            "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
+            "scope": "Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -2948,7 +2958,7 @@
             "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity."
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3013,7 +3023,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3077,7 +3087,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3146,7 +3156,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3215,7 +3225,7 @@
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3272,7 +3282,7 @@
         "reason": "Related guidance is not a dedicated component specification."
       },
       "capabilityReview": {
-        "reviewedOn": "2026-09-07",
+        "reviewedOn": "2026-09-08",
         "support": "implemented",
         "sources": [
           {
@@ -3289,12 +3299,12 @@
           },
           {
             "path": "src/ts/components/menu.ts",
-            "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+            "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
           }
         ],
         "gaps": [],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3386,7 +3396,7 @@
           }
         ],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     },
     {
@@ -3474,7 +3484,7 @@
           }
         ],
         "browserChecks": [],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       }
     }
   ],
@@ -3520,7 +3530,7 @@
             "sha256": "0b768be36675e97378e1ba9567896ee6bb87437352e3e6a059c56a9dde11a628"
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728",
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028",
         "gaps": [
           {
             "kind": "feature",
@@ -3579,7 +3589,7 @@
             "sha256": "43a5b36f05b1596edb4d3f3a7686eb14f96819e6b67b5ac50dc76b4c179b6d38"
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728",
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028",
         "gaps": [
           {
             "kind": "feature",
@@ -3646,7 +3656,7 @@
             "sha256": "fe0c65c4a4de2af661aa39eae2629e5e76f73e681ef5b686694bbbee62eaff77"
           }
         ],
-        "inventorySha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728",
+        "inventorySha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028",
         "gaps": [
           {
             "kind": "feature",
@@ -3697,7 +3707,8 @@
       "tests/expanding-card-browser.test.js",
       "tests/expressivecss-examples-browser.test.js",
       "tests/expressivecss-lifecycle-browser.test.js",
-      "tests/expressivecss-material-quality.test.js"
+      "tests/expressivecss-material-quality.test.js",
+      "tests/menu-field-browser.test.js"
     ],
     "inputs": [
       {
@@ -3950,7 +3961,7 @@
       },
       {
         "path": "src/sass/components/forms/_select.scss",
-        "sha256": "e91abfb218a90a92f2b87922154836ba0eb6ceb5ccbbe2ed18a7f44f65065a31"
+        "sha256": "645b592dfe1ff3f729a46fa4370cfc533e7a18de2506204f7d5e7455daea4f44"
       },
       {
         "path": "src/sass/components/forms/_slider.scss",
@@ -4086,7 +4097,7 @@
       },
       {
         "path": "src/ts/components/menu.ts",
-        "sha256": "8dd8fe9d7e0d8c20096702d32f78d74fd4821bc9a2b4ba018151e56c6d19481f"
+        "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
       },
       {
         "path": "src/ts/components/navigationDrawer.ts",
@@ -4469,6 +4480,10 @@
         "sha256": "50396d2ca7962f8311b742da750c56a9d8bbf107c59a54e4f979d848eba9cfc1"
       },
       {
+        "path": "tests/menu-field-browser.test.js",
+        "sha256": "8f7941137fd0e45bb1e19929baa302964523ecc1f3b6c480a021d609a62b056c"
+      },
+      {
         "path": "tests/menu.test.js",
         "sha256": "f87a316452ca2b6127ed31c2671ab9e6b86f287dd304069b8102dae047766bb8"
       },
@@ -4562,19 +4577,19 @@
       },
       {
         "path": "dist/css/expressive.css",
-        "sha256": "09ac5ed19816b6561889b4d28a7ebd786097012a0ebc82e3c54751521efcc065"
+        "sha256": "71537e31c4dcb294a11cdc833a37a1cc99b9812696359dc0c46a3d666a2e9c4b"
       },
       {
         "path": "dist/css/expressive.css.map",
-        "sha256": "2ab1b26b85e3d282ec5d4783f1d3e0933da87606c1021fb6b1a9b1365c24abb7"
+        "sha256": "64374d76830235527b85c896dffd800470e008e4e6a9d5d33a03a08224723196"
       },
       {
         "path": "dist/css/expressive.min.css",
-        "sha256": "7e8abcfaeb4ca79226ba0a24766e6c918343a2405ac09db51b4ba80fa6ef8ce6"
+        "sha256": "73aa08392e99faad79bb80bbfffabbba1ced953e67c90e8034b38f40b76e171c"
       },
       {
         "path": "dist/css/expressive.min.css.map",
-        "sha256": "b5a144c6869095134790527965a183d6d41f93ce994ab093acf46ee0241666c2"
+        "sha256": "e4887fcffeb12a315d6a26ac9eaa23f5ba11b521da3ecf65024480ed16e08cbf"
       },
       {
         "path": "dist/fonts/LICENSE-material-symbols",
@@ -4618,35 +4633,35 @@
       },
       {
         "path": "dist/js/expressive.cjs",
-        "sha256": "f82da1e708ab9470d44a87082fac68eb4a26f43b763042b6c258ead10cae4d24"
+        "sha256": "d9ab0a7aecd283b85621e4795b6ae8c4cdf25225212c3b7dda2f3e37f03c7692"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "245fc3002f8c17e48777457662f9fbd988e4f70efaacdff8b2fc0e8622ee00da"
+        "sha256": "01da13b97322f6f17b65d38281f61f251f61961b03bdb0495562ca8cf0eb1816"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "37c3dab2766a9a31626d2a76330725b84e830a72bef0d44f0a04677e1ec625ac"
+        "sha256": "574e8e29b8ee6c47977554f6dc90bf9ae47c6aa57d9983629e2d352615d42182"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "dcf96c04a0abf4bc25fde4dbfe9afab8aa3e37951740074ccc73b53e0f5cdcee"
+        "sha256": "30f1b420b46441cabd8f6bf48fbe5c8e4bdec5ae831fdc32ea1db8957202f9eb"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "3e2e3483e75e934f9fac116266d171b5d7f01c90f16e67696f1ba8021300565b"
+        "sha256": "f1857215778dab26ae05bec75ada40cad09cf4ba72fde36563caf369b27ea7a5"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "d1ac8a4ef1ae94a859868c18b48f3896b2c7038777dfc9835442f220abfd7953"
+        "sha256": "e6617a3394ef94faf588304041bce53b1cfe2516847b2245d3be68881557da6d"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "f684350d24b7f2aac6c3c4b6d192f53a250f8102089bebeecb11c5586efc47bc"
+        "sha256": "83cf9e7a5e999976600d5f615cbaf6e0f1195d5cd1684895ea6b10ac38c006fb"
       },
       {
         "path": "dist/js/expressive.mjs.map",
-        "sha256": "dc9b3592d740d2f9156d89c437f9b3f33eebbc979efb75b10973dd65d7119c17"
+        "sha256": "b5cfc18628291f77b450aa4c166f96d935f327327685781583f3ffbfb5c0d938"
       },
       {
         "path": "dist/types/behaviors/bottomSheets.d.ts",
@@ -4718,7 +4733,7 @@
       },
       {
         "path": "dist/types/components/menu.d.ts",
-        "sha256": "a36e205c2a23f0a92e4c776c84f0211c368432d85eb447861f01a8286a0c7412"
+        "sha256": "b88d460c09461db971378338528d3588c596f204481c3cc5626448a15a22524e"
       },
       {
         "path": "dist/types/components/navigationDrawer.d.ts",
@@ -4926,153 +4941,189 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 161.684558
+        "durationMs": 158.693717
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 124.716248
+        "durationMs": 122.460543
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 665.072893
+        "durationMs": 659.851556
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1185.640785
+        "durationMs": 1178.554872
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 746.85309
+        "durationMs": 752.883622
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 159.84408
+        "durationMs": 165.079956
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 123.458597
+        "durationMs": 134.449035
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1817.428565
+        "durationMs": 1825.494603
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 204.658719
+        "durationMs": 218.314329
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (firefox)",
         "status": "passed",
-        "durationMs": 2770.579783
+        "durationMs": 2728.11977
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (firefox)",
         "status": "passed",
-        "durationMs": 964.644774
+        "durationMs": 1112.235213
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (webkit)",
         "status": "passed",
-        "durationMs": 3265.494653
+        "durationMs": 3256.152424
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (webkit)",
         "status": "passed",
-        "durationMs": 291.260705
+        "durationMs": 292.613256
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10275.580772
+        "durationMs": 10303.819519
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10510.842401
+        "durationMs": 10545.434546
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10472.188123
+        "durationMs": 10390.454926
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 831.324161
+        "durationMs": 831.932957
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 164.694319
+        "durationMs": 175.062861
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 142.664881
+        "durationMs": 144.870318
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 21.661939
+        "durationMs": 24.6864
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 6.982394
+        "durationMs": 6.943605
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22960.855485
+        "durationMs": 22962.972931
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 562.478591
+        "durationMs": 547.08299
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Menu cancels superseded callbacks and teardown work (chromium)",
+        "status": "passed",
+        "durationMs": 213.263942
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
+        "status": "passed",
+        "durationMs": 170.56027
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Menu cancels superseded callbacks and teardown work (firefox)",
+        "status": "passed",
+        "durationMs": 1120.762137
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "enhanced select keeps enlarged multiline labels clear of values (firefox)",
+        "status": "passed",
+        "durationMs": 919.197829
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "Menu cancels superseded callbacks and teardown work (webkit)",
+        "status": "passed",
+        "durationMs": 670.837945
+      },
+      {
+        "file": "tests/menu-field-browser.test.js",
+        "name": "enhanced select keeps enlarged multiline labels clear of values (webkit)",
+        "status": "passed",
+        "durationMs": 277.856192
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "ef58306f361c44863303d01c2055fa639e910c010ca9fdbc5bb58c1b119b9728"
+        "sha256": "8c6e9e080ddc976b2d9fd192da40cd746331df8dcdf5d47e13a4ef752aa6c028"
       },
       {
         "path": "tests",
-        "sha256": "0892c7eb9a3426bf5524b2fe1281825ee15c06f05c5dc066b005a20992d61ac3"
+        "sha256": "0766244a6cb46647dc94536d4fc25f371dc23cf653421a4c1f24a03af48cea1d"
       },
       {
         "path": "dist",
-        "sha256": "a77956dd0a904859c427b21a8bebbc89f4d028a61213ed5ee40814ceaa74930d"
+        "sha256": "ac3e50e5f3600787ee82115f0102c6b607b4f6ec3419587b34b10c6ec18b9f34"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -5084,6 +5135,6 @@
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b"
+    "reportSha256": "e13167f708052d5f24e3c3124654767e4a61d7e1cff277f76b901dbb8e775687"
   }
 }
