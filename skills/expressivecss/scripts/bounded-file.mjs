@@ -12,11 +12,12 @@ export async function readBoundedRegularFile(filePath, byteLimit, label, expecte
   const target = path.resolve(filePath);
   let resolvedRoot = null;
   if (expectedRoot) {
-    resolvedRoot = await realpath(expectedRoot);
-    const relative = path.relative(path.resolve(expectedRoot), target);
-    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    const rootPrefix = path.join(path.resolve(expectedRoot), path.sep);
+    if (!target.startsWith(rootPrefix)) {
       throw new Error(`${label} file is outside the repository`);
     }
+    resolvedRoot = await realpath(expectedRoot);
+    const relative = path.relative(rootPrefix, target);
     let current = resolvedRoot;
     for (const segment of relative.split(path.sep)) {
       current = path.join(current, segment);

@@ -10,6 +10,7 @@ import {
   PROJECT_FIXTURES,
   materializeProjectFixture,
   readCompletionFiles,
+  readBoundedRegularFile,
   checkProjectCompletion,
   assembleSkillBundle,
   DEFAULT_ADAPTER_TIMEOUT_MS,
@@ -58,6 +59,29 @@ function expectMutationFailure(id, mutate, evidence) {
 }
 
 describe('ExpressiveCSS behavioral evaluation runner', () => {
+  test('bounded reads enforce directory boundaries and reject linked assets', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-read-boundary-'));
+    const root = path.join(directory, 'project');
+    try {
+      await mkdir(path.join(root, 'assets'), { recursive: true });
+      await mkdir(`${root}-sibling`);
+      await writeFile(path.join(root, 'assets/plain.txt'), 'public');
+      await writeFile(path.join(`${root}-sibling`, 'private.txt'), 'private');
+      await symlink(`${root}-sibling`, path.join(root, 'linked-directory'), 'dir');
+      await symlink(path.join(`${root}-sibling`, 'private.txt'), path.join(root, 'linked-file'));
+      const read = (file, limit = 6) => readBoundedRegularFile(file, limit, 'test asset', root);
+      assert.equal(await read(path.join(root, 'assets/plain.txt')), 'public');
+      assert.equal(await read(path.join(root, 'assets/../assets/plain.txt')), 'public');
+      for (const file of [root, `${root}-sibling/private.txt`, path.join(root, '../project-sibling/private.txt')]) {
+        await assert.rejects(read(file), /outside the repository/);
+      }
+      for (const file of ['linked-directory/private.txt', 'linked-file']) {
+        await assert.rejects(read(path.join(root, file)), /symbolic link/);
+      }
+      await assert.rejects(read(path.join(root, 'assets/plain.txt'), 5), /exceeds 5 bytes/);
+    } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+
   test('rejects a FIFO without blocking while opening an untrusted file', { skip: process.platform === 'win32' }, async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-fifo-'));
     try {

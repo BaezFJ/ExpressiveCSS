@@ -4331,11 +4331,11 @@
       },
       {
         "path": "tests/expressivecss-skill-benchmark.test.js",
-        "sha256": "2a5e3b2df7c0db59ef1908f9ecc9b36b1a2eec233ae70fdbc94167863e8f6401"
+        "sha256": "072d03501d404904f5b87a77979986218a987c86ad4d28fabec77aeb959d77eb"
       },
       {
         "path": "tests/expressivecss-skill-evals.test.js",
-        "sha256": "e5d8f1ce38201bb38040fe8a554c1b75e17f2e35281dd262d89b9405778aa0a5"
+        "sha256": "a1c4425088164c1c87b031dbab7a9a771a675fac4b785a1bb2aa69a44197aea0"
       },
       {
         "path": "tests/expressivecss-skill.test.js",
@@ -4879,7 +4879,7 @@
       },
       {
         "path": "scripts/lib/bounded-file.mjs",
-        "sha256": "2601f8349583b4bef3f579813a5d76418cef742a785fb36de4f70e489c476534"
+        "sha256": "497171fb99f58c5802fa4e7e6942fc24e91e96e3632e0bc2dc44160c9830c89b"
       },
       {
         "path": "scripts/lib/consumer-browser.mjs",
@@ -4947,181 +4947,181 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 158.756397
+        "durationMs": 159.035251
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 120.475763
+        "durationMs": 118.753702
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 665.517474
+        "durationMs": 669.416981
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1184.181234
+        "durationMs": 1186.840003
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 756.526706
+        "durationMs": 762.236644
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 157.527996
+        "durationMs": 154.685871
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 133.467747
+        "durationMs": 139.343599
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1812.587595
+        "durationMs": 1808.207589
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 222.010144
+        "durationMs": 236.615199
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (firefox)",
         "status": "passed",
-        "durationMs": 2763.987686
+        "durationMs": 2725.043605
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (firefox)",
         "status": "passed",
-        "durationMs": 1109.94914
+        "durationMs": 976.157081
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (webkit)",
         "status": "passed",
-        "durationMs": 3263.628412
+        "durationMs": 3251.157406
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (webkit)",
         "status": "passed",
-        "durationMs": 293.633454
+        "durationMs": 290.067677
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10298.379659
+        "durationMs": 10301.741215
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10509.342237
+        "durationMs": 10547.101649
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10406.751646
+        "durationMs": 10421.153947
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 831.028716
+        "durationMs": 832.726542
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 169.006758
+        "durationMs": 175.07198
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 166.766383
+        "durationMs": 154.191985
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 141.824021
+        "durationMs": 147.434192
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 21.884343
+        "durationMs": 22.394943
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 7.084023
+        "durationMs": 7.018711
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 23054.217318
+        "durationMs": 22883.892926
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 562.784793
+        "durationMs": 544.785521
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 228.203232
+        "durationMs": 210.884779
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 185.001261
+        "durationMs": 173.328882
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (firefox)",
         "status": "passed",
-        "durationMs": 1166.921238
+        "durationMs": 1109.017436
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (firefox)",
         "status": "passed",
-        "durationMs": 950.705515
+        "durationMs": 919.775265
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (webkit)",
         "status": "passed",
-        "durationMs": 676.782729
+        "durationMs": 664.167868
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (webkit)",
         "status": "passed",
-        "durationMs": 281.284277
+        "durationMs": 280.672423
       }
     ],
     "directories": [
@@ -5131,7 +5131,7 @@
       },
       {
         "path": "tests",
-        "sha256": "b6ef84f664d50f69d657f7cc7acbf2320f325f6d499f687b72931c7a5838c214"
+        "sha256": "25da958c494c2f43edafa2c540697b387516fd38ce7656bd16b3771ce1229d8e"
       },
       {
         "path": "dist",
@@ -5143,10 +5143,10 @@
       },
       {
         "path": "scripts",
-        "sha256": "9f77e57c0bd3c401bed8ab4efd0e6f299667000e4ef07c80892a4453684a01ca"
+        "sha256": "f1b3830d50d74755ba83c72dbd35f209402b2d95dce64cd8d81ea70ba6b918cc"
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "c3ae88d5d7853c9e426fb0b78dadccb36d4f53f0edc8a6af1594bf4c5f0b4cb9"
+    "reportSha256": "6288da7aa297284a99b029dbad0bb2b33c8eb9176e540c0d2cb3824ae32ab679"
   }
 }

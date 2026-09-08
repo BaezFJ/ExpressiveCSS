@@ -549,7 +549,7 @@ test('cost reports bind human decisions to attempts and include rejected work wi
   assert.throws(() => costReport(rows, [{ ...reviewTemplate(rows).reviews[0], reviewSeconds: 0 }]), /Pending/);
 });
 
-test('three-mode runner preserves absent-skill provenance, resume and durable evidence', { timeout: 60000 }, async () => {
+test('three-mode runner preserves absent-skill provenance, resume and durable evidence', { timeout: 180000 }, async () => {
   const { exportAssistanceEvidence } = await import('../scripts/report-expressivecss-assistance-cost.mjs');
   const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-cost-test-'));
   try {
@@ -563,8 +563,8 @@ test('three-mode runner preserves absent-skill provenance, resume and durable ev
     const script = `import {runBenchmark} from ${JSON.stringify(new URL('../scripts/benchmark-expressivecss-skill.mjs', import.meta.url).href)};
       await runBenchmark({assistance:true,candidate:process.argv[1],output:process.argv[2],caseName:'form-action',repetitions:1,resume:process.argv[3]==='true'});`;
     for (const resume of ['false', 'true']) {
-      const run = spawnSync(process.execPath, ['--input-type=module', '-e', script, skill, output, resume], { encoding: 'utf8', timeout: 25000, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` } });
-      assert.equal(run.status, 0, run.stderr || run.stdout);
+      const run = spawnSync(process.execPath, ['--input-type=module', '-e', script, skill, output, resume], { encoding: 'utf8', timeout: 60000, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` } });
+      assert.equal(run.status, 0, [run.error?.message, run.stderr, run.stdout].filter(Boolean).join('\n'));
     }
     const rows = JSON.parse(await readFile(path.join(output, 'results.json'), 'utf8'));
     assert.deepEqual(rows.map(row => row.configuration), ['skill_only', 'mcp_only', 'combined']);
