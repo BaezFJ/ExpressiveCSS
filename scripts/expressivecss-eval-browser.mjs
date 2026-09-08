@@ -28,12 +28,15 @@ function fixturePath(raw) {
 
 /** Only public fixture assets are served; project metadata and arbitrary paths are never exposed. */
 export async function startFixtureServer(projectRoot) {
+  const root = path.resolve(projectRoot);
   let requests = 0;
   const server = createServer(async (request, response) => {
     try {
       if (++requests > LIMITS.requests || !trustedRequest(request, originOf(server)) || !['GET', 'HEAD'].includes(request.method)) { response.writeHead(403).end('Forbidden'); return; }
       const relative = fixturePath(request.url);
-      const data = await readBoundedRegularFile(path.join(projectRoot, relative), 16 * 1024 * 1024, 'fixture browser asset', projectRoot, null);
+      const assetPath = path.resolve(root, relative);
+      if (!assetPath.startsWith(path.join(root, path.sep))) throw new Error('Asset is outside the fixture directory');
+      const data = await readBoundedRegularFile(assetPath, 16 * 1024 * 1024, 'fixture browser asset', root, null);
       response.writeHead(200, { 'Content-Type': MIME[path.extname(relative)], 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
         'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'none'; worker-src 'none'; frame-src 'none'; object-src 'none'; form-action 'self'; base-uri 'none'" });
       response.end(request.method === 'HEAD' ? undefined : data);

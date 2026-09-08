@@ -113,14 +113,18 @@ for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit }
           <dialog class="expanding-card-dialog" aria-label="Detail"><button class="expanding-card-close">Back</button></dialog>
         </article>`);
       await page.addScriptTag({ content: js });
-      await page.evaluate(() => {
+      const started = await page.evaluate(() => {
         window.instance = Expressive.ExpandingCard.getInstance(document.querySelector('article'));
         document.querySelector('#toggle').focus();
         const el = document.querySelector('#scaled');
         void el.offsetWidth;
         el.classList.add('scale-in');
+        const animations = el.getAnimations();
+        // Keep the transition active until the next protocol call changes the preference.
+        animations.forEach(animation => animation.pause());
+        return animations.length > 0;
       });
-      assert.equal(await page.locator('#scaled').evaluate(el => el.getAnimations().length > 0), true);
+      assert.equal(started, true);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       assert.deepEqual(await page.locator('#scaled').evaluate(el => [getComputedStyle(el).transitionProperty, getComputedStyle(el).transform, el.getAnimations().length, document.activeElement.id]), ['none', 'matrix(1, 0, 0, 1, 0, 0)', 0, 'toggle']);
       await page.locator('#scaled').evaluate(el => el.classList.remove('scale-in'));
