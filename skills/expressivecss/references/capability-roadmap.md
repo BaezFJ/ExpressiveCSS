@@ -8,7 +8,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `e13167f708052d5f24e3c3124654767e4a61d7e1cff277f76b901dbb8e775687`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `d831c714bdec315d6ed68067da0b6560d5931ee14e3726f05b0180a37bf08d78`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -496,7 +496,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Plain and rich tooltips; CSS child and runtime-generated forms.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_tooltip.scss](../../../src/sass/components/_tooltip.scss), [src/ts/components/tooltip.ts](../../../src/ts/components/tooltip.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_tooltip.scss](../../../src/sass/components/_tooltip.scss), [src/ts/components/tooltip.ts](../../../src/ts/components/tooltip.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -507,6 +507,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
 - recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
+- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
 
 <a id="snackbar"></a>
 
@@ -804,7 +805,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Inline clock and digital input; 12-hour and 24-hour formats.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_timepicker.scss](../../../src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](../../../src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_timepicker.scss](../../../src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](../../../src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: links-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/time-pickers/overview).
 

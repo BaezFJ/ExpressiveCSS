@@ -289,13 +289,6 @@ export class Timepicker extends Component<TimepickerOptions> {
     }
   };
 
-  _handleTimeInputEnterKey = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER) {
-      e.preventDefault();
-      this._inputFromTextField();
-    }
-  };
-
   _handleClockClickStart = (e: PointerEvent) => {
     if (!e.isPrimary) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;

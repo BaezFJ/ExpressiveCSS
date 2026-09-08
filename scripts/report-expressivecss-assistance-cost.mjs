@@ -16,7 +16,7 @@ const sha256 = value => createHash('sha256').update(value).digest('hex');
 const save = (filename, value) => writeFile(filename, JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
 const readJson = async filename => JSON.parse(await readBoundedRegularFile(filename, 16 * 1024 * 1024, 'operator cost evidence'));
 const runId = row => `eval-${row.eval_name}-${row.configuration}-run-${row.run_number}`;
-export const attemptHash = row => sha256(JSON.stringify(row));
+const attemptHash = row => sha256(JSON.stringify(row));
 const number = value => Number.isFinite(value) && value >= 0;
 const sum = values => values.length && values.every(number) ? values.reduce((a, b) => a + b, 0) : null;
 const eligible = row => row.result?.failed === 0 && row.result?.total > 0 && row.expectations?.length === row.result.total

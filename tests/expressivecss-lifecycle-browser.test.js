@@ -116,6 +116,40 @@ browserTest('resource observations detect omitted teardown after a partial repla
   });
 });
 
+browserTest('Tooltip positioning preserves margins and viewport edges after scrolling', async () => {
+  await withConsumer(async page => {
+    await page.setViewportSize({ width: 640, height: 480 });
+    await page.addStyleTag({ content: 'html, body { margin: 0; overflow: visible; } body { width: 2000px; height: 2000px; }' });
+    const observed = await page.evaluate(() => {
+      const outcomes = [];
+      for (const [scrollX, scrollY] of [[0, 0], [130, 240]]) {
+        window.scrollTo(scrollX, scrollY);
+        for (const [margin, movement] of [[7, 3], [12, 8]]) {
+          const instance = Expressive.Tooltip.init(document.querySelector('.tooltipped'), { margin, transitionMovement: movement });
+          try {
+            const offset = margin + movement;
+            for (const [x, y, expectedX, expectedY] of [
+              [-30, 100, offset, 100], [innerWidth + 10, 100, innerWidth - 80, 100],
+              [100, -30, 100, offset], [100, innerHeight + 10, 100, innerHeight - 40],
+              [100, 100, 100, 100],
+            ]) {
+              outcomes.push({
+                actual: instance._repositionWithinScreen(x + window.scrollX, y + window.scrollY, 80, 40),
+                expected: { x: expectedX + window.scrollX, y: expectedY + window.scrollY },
+                scroll: [window.scrollX, window.scrollY],
+              });
+            }
+          } finally { instance.destroy(); }
+        }
+      }
+      return outcomes;
+    });
+    assert.equal(observed.length, 20);
+    assert.deepEqual(observed.at(-1).scroll, [130, 240], 'the scrolled scenario must actually scroll');
+    for (const row of observed) assert.deepEqual(row.actual, row.expected);
+  });
+});
+
 browserTest('Tooltip destroy cancels pending delay and animation callbacks', async () => {
   await withConsumer(async page => {
     for (const phase of ['enter', 'exit', 'animation-in', 'animation-out']) {

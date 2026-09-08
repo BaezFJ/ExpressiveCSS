@@ -739,6 +739,162 @@ function definitionInvariants(testCase) {
   return output;
 }
 
+function forbiddenContentInvariant(testCase, response) {
+  const markupStrings = collectStrings(response);
+  const normalizedMarkup = markupStrings.map((entry) => entry.value.toLowerCase()).join('\n');
+  const forbiddenMarkup = (testCase.forbiddenMarkup ?? []).filter((token) => normalizedMarkup.includes(token.toLowerCase()));
+  const authoredClasses = new Set();
+  for (const entry of markupStrings) {
+    for (const attribute of entry.value.matchAll(/\b(?:class|className)\s*=\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`|([^\s"'`=<>]+))/giu)) {
+      const value = attribute[1] ?? attribute[2] ?? attribute[3] ?? attribute[4] ?? '';
+      for (const className of value.split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
+    }
+    for (const attribute of entry.value.matchAll(/\bclassName\s*=\s*\{\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`)\s*\}/giu)) {
+      const value = attribute[1] ?? attribute[2] ?? attribute[3] ?? '';
+      for (const className of value.split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
+    }
+  }
+  const forbiddenClasses = (testCase.forbiddenClasses ?? []).filter((className) => authoredClasses.has(className));
+  const authoredRuntimeAria = (testCase.forbiddenAuthoredRuntimeAria ?? []).filter((attribute) => {
+    const lowered = attribute.toLowerCase();
+    return markupStrings.some((entry) => [...entry.value.matchAll(/\b(aria-[a-z-]+)\s*=/giu)]
+      .some((match) => match[1].toLowerCase() === lowered));
+  });
+  const unsupportedClaims = (testCase.forbiddenUnsupportedClaims ?? [])
+    .filter((claim) => normalizedMarkup.includes(claim.toLowerCase()));
+  const forbiddenContent = { forbiddenMarkup, forbiddenClasses, authoredRuntimeAria, unsupportedClaims };
+  const hasForbiddenContent = Object.values(forbiddenContent).some((items) => items.length > 0);
+  return result('contract/forbidden-content', hasForbiddenContent ? 'fail' : 'pass',
+    'candidate output must not contain declared forbidden markup, classes, authored runtime ARIA, or unsupported claims', {
+      expected: 'none',
+      actual: forbiddenContent,
+    });
+}
+
+function reviewEvidenceInvariants(testCase, response, evidence, artifacts) {
+  const invariants = [];
+  const reviewRows = Array.isArray(response?.reviewRows) ? response.reviewRows : [];
+  if (reviewRows.length > 0) {
+    const statusesValid = reviewRows.every((row) => REVIEW_STATUSES.has(row?.status));
+    invariants.push(result('review/statuses', statusesValid ? 'pass' : 'fail',
+      'review status must be Pass, Intentional adaptation, Fail, Not applicable, or Blocked', {
+        actual: reviewRows.map((row) => row?.status),
+      }));
+    const statusContractsValid = reviewRows.every((row) => reviewStatusContractIsValid(row, artifacts));
+    invariants.push(result('review/status-contracts', statusContractsValid ? 'pass' : 'fail',
+      'every review row must satisfy its status-specific evidence, rationale, blocker, applicability, deviation, and correction contract', {
+        actual: reviewRows,
+      }));
+    const passEvidenceMatches = reviewRows.filter((row) => row.status === 'Pass').every((row) => {
+      if (!row.criterionId || !row.componentId || !Array.isArray(row.evidenceIds)
+        || row.evidenceIds.length === 0 || new Set(row.evidenceIds).size !== row.evidenceIds.length) return false;
+      return row.evidenceIds.every((id) => {
+        const artifact = artifacts.get(id);
+        return artifactIsRecord(artifact)
+          && artifact.criterionId === row.criterionId
+          && artifact.componentId === row.componentId;
+      });
+    });
+    invariants.push(result('review/pass-evidence-links', passEvidenceMatches ? 'pass' : 'fail',
+      'Pass evidence IDs must resolve to artifacts for the same criterion and component', { actual: reviewRows }));
+    const criterionKindsMatch = reviewRows.filter((row) => row.status === 'Pass').every((row) => {
+      const referenced = (row.evidenceIds ?? []).map((id) => artifacts.get(id)).filter(Boolean);
+      return (testCase.requiredEvidenceByCriterion?.[row.criterionId] ?? [])
+        .every((kind) => referenced.some((artifact) => artifact.category === kind
+          && artifact.criterionId === row.criterionId && artifact.componentId === row.componentId));
+    });
+    invariants.push(result('review/criterion-evidence-kinds', criterionKindsMatch ? 'pass' : 'fail',
+      'Pass rows must contain every criterion-owned required evidence kind; unrelated artifacts do not count', {
+        expected: testCase.requiredEvidenceByCriterion,
+        actual: reviewRows,
+      }));
+  }
+
+  const requiredByCriterion = testCase.requiredEvidenceByCriterion ?? {};
+  const evidenceValid = Object.entries(requiredByCriterion).every(([criterionId, categories]) => categories.every((category) => evidence.some((artifact) => artifactIsRecord(artifact)
+    && artifact.criterionId === criterionId && artifact.category === category)));
+  invariants.push(result('evidence/required-categories', evidenceValid ? 'pass' : 'fail',
+    'criterion-owned required evidence artifacts must exist with an operator observation, sequence, and timestamp', {
+      expected: requiredByCriterion,
+      actual: evidence.map((item) => ({ category: item.category, criterionId: item.criterionId })),
+    }));
+
+  return invariants;
+}
+
+function coverageInvariants(testCase, response, artifacts) {
+  const invariants = [];
+  if (testCase.coverageInventory) {
+    const records = response?.coverageRecords ?? [];
+    const inventoryIds = testCase.coverageInventory.map((item) => item.id);
+    const recordIds = records.map((item) => item.inventoryId);
+    const exact = sameMembers(recordIds, inventoryIds);
+    const recordContractsValid = exact && testCase.coverageInventory.every((item) => {
+      const record = records.find((candidate) => candidate.inventoryId === item.id);
+      if (!record || !record.criterionId || !record.componentId || !record.expectedObservation
+        || !Number.isInteger(record.sequence) || !validTimestamp(record.timestamp)) return false;
+      if (String(item.requiredValue) !== record.expectedObservation) return false;
+      if (!item.evidenceAvailable) return record.result === 'Blocked' && record.evidenceIds?.length === 0 && Boolean(record.blockerReason?.trim());
+      return ['Pass', 'Fail'].includes(record.result) && record.evidenceIds?.length > 0;
+    });
+    invariants.push(result('coverage/fixture-inventory', recordContractsValid ? 'pass' : 'fail', exact
+      ? 'missing evidence must be Blocked with a blocker reason, never Not applicable'
+      : 'fixture-owned coverage must contain every required inventory key exactly once', {
+      expected: inventoryIds,
+      actual: recordIds,
+    }));
+    const coveredEvidenceIds = records.filter((record) => ['Pass', 'Fail'].includes(record.result))
+      .flatMap((record) => Array.isArray(record.evidenceIds) ? record.evidenceIds : []);
+    const coverageEvidenceValid = new Set(coveredEvidenceIds).size === coveredEvidenceIds.length
+      && records.filter((record) => ['Pass', 'Fail'].includes(record.result)).every((record) => Array.isArray(record.evidenceIds)
+        && record.evidenceIds.length > 0
+        && record.evidenceIds.every((id) => {
+          const artifact = artifacts.get(id);
+          const expectedValue = testCase.coverageInventory.find((item) => item.id === record.inventoryId)?.requiredValue;
+          return artifactIsRecord(artifact)
+            && artifact.criterionId === record.criterionId
+            && artifact.componentId === record.componentId
+            && artifact.inventoryId === record.inventoryId
+            && (Object.hasOwn(artifact, 'observedValue')
+              ? Object.is(artifact.observedValue, expectedValue)
+              : artifact.observation.includes(String(expectedValue))); // Compatibility for reviewed schemaVersion 3 replays.
+        }));
+    invariants.push(result('coverage/evidence-links', coverageEvidenceValid ? 'pass' : 'fail',
+      'coverage evidence IDs must resolve one-to-one to fixture-owned inventory observations for the record criterion and component', { actual: records }));
+    const blockedCoverageValid = records.filter((record) => record.result === 'Blocked')
+      .every((record) => Array.isArray(record.evidenceIds) && record.evidenceIds.length === 0 && Boolean(record.blockerReason?.trim()));
+    invariants.push(result('coverage/blocked-contract', blockedCoverageValid ? 'pass' : 'fail',
+      'Blocked coverage requires no evidence IDs and a blocker reason', { actual: records }));
+  }
+
+  return invariants;
+}
+
+function captureInvariants(testCase, response, artifacts, executionEvidence) {
+  const invariants = [];
+  if (testCase.captureDimensions) {
+    const pairs = response?.capturePairs ?? [];
+    const dimensionsExact = sameMembers(testCase.captureDimensions, CAPTURE_DIMENSIONS)
+      && pairs.length > 0 && pairs.every((pair) => pairDimensionsAreValid(pair, testCase.captureDimensions));
+    invariants.push(result('capture/exact-pair', dimensionsExact ? 'pass' : 'fail',
+      'exact capture dimensions and a pre-edit baseline are required', {
+        expected: testCase.captureDimensions,
+        actual: pairs,
+      }));
+    const pairArtifactsValid = pairs.length > 0
+      && pairs.every((pair) => pairArtifactsAreValid(pair, artifacts, executionEvidence));
+    invariants.push(result('capture/rendered-artifacts', pairArtifactsValid ? 'pass' : 'fail',
+      'matched capture IDs must resolve to rendered before and after artifacts, with roles and capture chronology bound to the trusted first edit', {
+        actual: pairs,
+      }));
+    const differencesValid = pairs.length > 0 && pairs.every(pairDifferencesAreValid);
+    invariants.push(result('capture/visible-differences', differencesValid ? 'pass' : 'fail',
+      'matched captures require an explicit visible-difference classification', { actual: pairs }));
+  }
+
+  return invariants;
+}
+
 function evaluateCaseInternal(testCase, response, executionEvidence = null) {
   const limitErrors = collectionLimitErrors(response, executionEvidence);
   const limitInvariant = result('limits/structure', limitErrors.length === 0 ? 'pass' : 'fail',
@@ -786,37 +942,7 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
       actual: forbiddenWrites,
     }));
 
-  const candidateStrings = collectStrings(response);
-  const markupStrings = candidateStrings;
-  const normalizedMarkup = markupStrings.map((entry) => entry.value.toLowerCase()).join('\n');
-  const allText = normalizedMarkup;
-  const forbiddenMarkup = (testCase.forbiddenMarkup ?? []).filter((token) => normalizedMarkup.includes(token.toLowerCase()));
-  const authoredClasses = new Set();
-  for (const entry of markupStrings) {
-    for (const attribute of entry.value.matchAll(/\b(?:class|className)\s*=\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`|([^\s"'`=<>]+))/giu)) {
-      const value = attribute[1] ?? attribute[2] ?? attribute[3] ?? attribute[4] ?? '';
-      for (const className of value.split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
-    }
-    for (const attribute of entry.value.matchAll(/\bclassName\s*=\s*\{\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`)\s*\}/giu)) {
-      const value = attribute[1] ?? attribute[2] ?? attribute[3] ?? '';
-      for (const className of value.split(/\s+/u).filter(Boolean)) authoredClasses.add(className);
-    }
-  }
-  const forbiddenClasses = (testCase.forbiddenClasses ?? []).filter((className) => authoredClasses.has(className));
-  const authoredRuntimeAria = (testCase.forbiddenAuthoredRuntimeAria ?? []).filter((attribute) => {
-    const lowered = attribute.toLowerCase();
-    return markupStrings.some((entry) => [...entry.value.matchAll(/\b(aria-[a-z-]+)\s*=/giu)]
-      .some((match) => match[1].toLowerCase() === lowered));
-  });
-  const unsupportedClaims = (testCase.forbiddenUnsupportedClaims ?? [])
-    .filter((claim) => allText.includes(claim.toLowerCase()));
-  const forbiddenContent = { forbiddenMarkup, forbiddenClasses, authoredRuntimeAria, unsupportedClaims };
-  const hasForbiddenContent = Object.values(forbiddenContent).some((items) => items.length > 0);
-  invariants.push(result('contract/forbidden-content', hasForbiddenContent ? 'fail' : 'pass',
-    'candidate output must not contain declared forbidden markup, classes, authored runtime ARIA, or unsupported claims', {
-      expected: 'none',
-      actual: forbiddenContent,
-    }));
+  invariants.push(forbiddenContentInvariant(testCase, response));
 
   const modeStatus = hasPath(response, 'mode')
     ? (response.mode === testCase.expectedOperatingMode ? 'pass' : 'fail')
@@ -841,114 +967,11 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
   const evidence = Array.isArray(executionEvidence?.artifacts) ? executionEvidence.artifacts : [];
   const scoredResponse = { ...(response ?? {}), evidenceArtifacts: evidence };
   const artifacts = artifactsById(scoredResponse);
-  const reviewRows = Array.isArray(response?.reviewRows) ? response.reviewRows : [];
-  if (reviewRows.length > 0) {
-    const statusesValid = reviewRows.every((row) => REVIEW_STATUSES.has(row?.status));
-    invariants.push(result('review/statuses', statusesValid ? 'pass' : 'fail',
-      'review status must be Pass, Intentional adaptation, Fail, Not applicable, or Blocked', {
-        actual: reviewRows.map((row) => row?.status),
-      }));
-    const statusContractsValid = reviewRows.every((row) => reviewStatusContractIsValid(row, artifacts));
-    invariants.push(result('review/status-contracts', statusContractsValid ? 'pass' : 'fail',
-      'every review row must satisfy its status-specific evidence, rationale, blocker, applicability, deviation, and correction contract', {
-        actual: reviewRows,
-      }));
-    const passEvidenceMatches = reviewRows.filter((row) => row.status === 'Pass').every((row) => {
-      if (!row.criterionId || !row.componentId || !Array.isArray(row.evidenceIds)
-        || row.evidenceIds.length === 0 || new Set(row.evidenceIds).size !== row.evidenceIds.length) return false;
-      return row.evidenceIds.every((id) => {
-        const artifact = artifacts.get(id);
-        return artifactIsRecord(artifact)
-          && artifact.criterionId === row.criterionId
-          && artifact.componentId === row.componentId;
-      });
-    });
-    invariants.push(result('review/pass-evidence-links', passEvidenceMatches ? 'pass' : 'fail',
-      'Pass evidence IDs must resolve to artifacts for the same criterion and component', { actual: reviewRows }));
-    const criterionKindsMatch = reviewRows.filter((row) => row.status === 'Pass').every((row) => {
-      const referenced = (row.evidenceIds ?? []).map((id) => artifacts.get(id)).filter(Boolean);
-      return (testCase.requiredEvidenceByCriterion?.[row.criterionId] ?? [])
-        .every((kind) => referenced.some((artifact) => artifact.category === kind
-          && artifact.criterionId === row.criterionId && artifact.componentId === row.componentId));
-    });
-    invariants.push(result('review/criterion-evidence-kinds', criterionKindsMatch ? 'pass' : 'fail',
-      'Pass rows must contain every criterion-owned required evidence kind; unrelated artifacts do not count', {
-        expected: testCase.requiredEvidenceByCriterion,
-        actual: reviewRows,
-      }));
-  }
+  invariants.push(...reviewEvidenceInvariants(testCase, response, evidence, artifacts));
 
-  const requiredByCriterion = testCase.requiredEvidenceByCriterion ?? {};
-  const evidenceValid = Object.entries(requiredByCriterion).every(([criterionId, categories]) => categories.every((category) => evidence.some((artifact) => artifactIsRecord(artifact)
-    && artifact.criterionId === criterionId && artifact.category === category)));
-  invariants.push(result('evidence/required-categories', evidenceValid ? 'pass' : 'fail',
-    'criterion-owned required evidence artifacts must exist with an operator observation, sequence, and timestamp', {
-      expected: requiredByCriterion,
-      actual: evidence.map((item) => ({ category: item.category, criterionId: item.criterionId })),
-    }));
+  invariants.push(...coverageInvariants(testCase, response, artifacts));
 
-  if (testCase.coverageInventory) {
-    const records = response?.coverageRecords ?? [];
-    const inventoryIds = testCase.coverageInventory.map((item) => item.id);
-    const recordIds = records.map((item) => item.inventoryId);
-    const exact = sameMembers(recordIds, inventoryIds);
-    const recordContractsValid = exact && testCase.coverageInventory.every((item) => {
-      const record = records.find((candidate) => candidate.inventoryId === item.id);
-      if (!record || !record.criterionId || !record.componentId || !record.expectedObservation
-        || !Number.isInteger(record.sequence) || !validTimestamp(record.timestamp)) return false;
-      if (String(item.requiredValue) !== record.expectedObservation) return false;
-      if (!item.evidenceAvailable) return record.result === 'Blocked' && record.evidenceIds?.length === 0 && Boolean(record.blockerReason?.trim());
-      return ['Pass', 'Fail'].includes(record.result) && record.evidenceIds?.length > 0;
-    });
-    invariants.push(result('coverage/fixture-inventory', recordContractsValid ? 'pass' : 'fail', exact
-      ? 'missing evidence must be Blocked with a blocker reason, never Not applicable'
-      : 'fixture-owned coverage must contain every required inventory key exactly once', {
-      expected: inventoryIds,
-      actual: recordIds,
-    }));
-    const coveredEvidenceIds = records.filter((record) => ['Pass', 'Fail'].includes(record.result))
-      .flatMap((record) => Array.isArray(record.evidenceIds) ? record.evidenceIds : []);
-    const coverageEvidenceValid = new Set(coveredEvidenceIds).size === coveredEvidenceIds.length
-      && records.filter((record) => ['Pass', 'Fail'].includes(record.result)).every((record) => Array.isArray(record.evidenceIds)
-        && record.evidenceIds.length > 0
-        && record.evidenceIds.every((id) => {
-          const artifact = artifacts.get(id);
-          const expectedValue = testCase.coverageInventory.find((item) => item.id === record.inventoryId)?.requiredValue;
-          return artifactIsRecord(artifact)
-            && artifact.criterionId === record.criterionId
-            && artifact.componentId === record.componentId
-            && artifact.inventoryId === record.inventoryId
-            && (Object.hasOwn(artifact, 'observedValue')
-              ? Object.is(artifact.observedValue, expectedValue)
-              : artifact.observation.includes(String(expectedValue))); // Compatibility for reviewed schemaVersion 3 replays.
-        }));
-    invariants.push(result('coverage/evidence-links', coverageEvidenceValid ? 'pass' : 'fail',
-      'coverage evidence IDs must resolve one-to-one to fixture-owned inventory observations for the record criterion and component', { actual: records }));
-    const blockedCoverageValid = records.filter((record) => record.result === 'Blocked')
-      .every((record) => Array.isArray(record.evidenceIds) && record.evidenceIds.length === 0 && Boolean(record.blockerReason?.trim()));
-    invariants.push(result('coverage/blocked-contract', blockedCoverageValid ? 'pass' : 'fail',
-      'Blocked coverage requires no evidence IDs and a blocker reason', { actual: records }));
-  }
-
-  if (testCase.captureDimensions) {
-    const pairs = response?.capturePairs ?? [];
-    const dimensionsExact = sameMembers(testCase.captureDimensions, CAPTURE_DIMENSIONS)
-      && pairs.length > 0 && pairs.every((pair) => pairDimensionsAreValid(pair, testCase.captureDimensions));
-    invariants.push(result('capture/exact-pair', dimensionsExact ? 'pass' : 'fail',
-      'exact capture dimensions and a pre-edit baseline are required', {
-        expected: testCase.captureDimensions,
-        actual: pairs,
-      }));
-    const pairArtifactsValid = pairs.length > 0
-      && pairs.every((pair) => pairArtifactsAreValid(pair, artifacts, executionEvidence));
-    invariants.push(result('capture/rendered-artifacts', pairArtifactsValid ? 'pass' : 'fail',
-      'matched capture IDs must resolve to rendered before and after artifacts, with roles and capture chronology bound to the trusted first edit', {
-        actual: pairs,
-      }));
-    const differencesValid = pairs.length > 0 && pairs.every(pairDifferencesAreValid);
-    invariants.push(result('capture/visible-differences', differencesValid ? 'pass' : 'fail',
-      'matched captures require an explicit visible-difference classification', { actual: pairs }));
-  }
+  invariants.push(...captureInvariants(testCase, response, artifacts, executionEvidence));
 
   if (testCase.id === 'combined-review-order') {
     const critique = evidence.filter((artifact) => artifact.mode === 'Critique');

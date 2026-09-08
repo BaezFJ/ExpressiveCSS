@@ -334,6 +334,28 @@ describe('Timepicker dial construction', () => {
     }
   });
 
+  test('Enter opens the dial and digital keyboard edits update the time', () => {
+    document.body.innerHTML = '<input type="text" class="timepicker" value="03:45 PM">';
+    const input = document.querySelector('.timepicker');
+    const instance = Expressive.Timepicker.init(input, { displayPlugin: 'docked' });
+    try {
+      const enter = new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+      input.dispatchEvent(enter);
+      assert.equal(enter.defaultPrevented, true);
+      assert.equal(document.activeElement, instance.inputHours);
+      assert.equal(dialSize(instance).svg, true);
+      instance.inputHours.value = '05';
+      instance.inputHours.dispatchEvent(new window.KeyboardEvent('keyup', { key: '5', bubbles: true }));
+      instance.inputMinutes.focus();
+      instance.inputMinutes.value = '20';
+      instance.inputMinutes.dispatchEvent(new window.KeyboardEvent('keyup', { key: 'Enter', bubbles: true }));
+      instance.confirm();
+      assert.equal(input.value, '05:20 PM');
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('without a display plugin the dial is built at init', () => {
     document.body.innerHTML = `<input type="text" class="timepicker" value="03:45 PM">`;
     const instance = Expressive.Timepicker.init(document.querySelector('.timepicker'));

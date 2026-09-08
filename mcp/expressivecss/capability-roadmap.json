@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "e13167f708052d5f24e3c3124654767e4a61d7e1cff277f76b901dbb8e775687",
+    "reportSha256": "d831c714bdec315d6ed68067da0b6560d5931ee14e3726f05b0180a37bf08d78",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1069,7 +1069,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Plain and rich tooltips; CSS child and runtime-generated forms.",
       "adaptation": "The selected form determines ownership; CSS-only hover/focus is not runtime initialization.",
       "upstream": {
@@ -1085,7 +1085,7 @@
         },
         {
           "path": "src/ts/components/tooltip.ts",
-          "sha256": "0c3b24fc13c7fd5d8958652f22e71bb0105dcdc766c830c54f5d5867e58ea938"
+          "sha256": "2f9fced2c2d0887cfe3db4bc131507ee3cb871a1198a02b7e2f3fa7fdcaab4d3"
         }
       ],
       "gaps": [],
@@ -1106,6 +1106,12 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "Tooltip destroy cancels pending delay and animation callbacks",
           "scope": "Runtime timer cancellation for enter, exit and animation scheduling.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-lifecycle-browser.test.js",
+          "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
+          "scope": "Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.",
           "state": "recorded-passed"
         }
       ],
@@ -1802,7 +1808,7 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Inline clock and digital input; 12-hour and 24-hour formats.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
       "upstream": {
@@ -1823,7 +1829,7 @@
         },
         {
           "path": "src/ts/components/timepicker.ts",
-          "sha256": "09351a82823567f4c6254d734e88e1b3ff5e2a80a721feb4884389b5fdc7460e"
+          "sha256": "18dab00c2eee80f24412878729e16847a0d2242c0917f3fd79e1516ee03cc01a"
         },
         {
           "path": "src/ts/plugins/dockedDisplayPlugin.ts",

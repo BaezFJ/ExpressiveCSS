@@ -193,7 +193,7 @@ export const ASSISTANCE_CONFIG = [
 ];
 const MCP_TOOLS = ['setup_expert', 'rules_enforcer', 'creative_director', 'page_architect', 'component_syntax_expert', 'quality_inspector'];
 
-export function assistanceArguments(mode, serverPath) {
+function assistanceArguments(mode, serverPath) {
   if (!ASSISTANCE_MODES.includes(mode)) throw new Error('Invalid assistance mode');
   const args = ['--ignore-user-config', ...ASSISTANCE_CONFIG.flatMap(value => ['-c', value])];
   if (mode !== 'skill_only') {

@@ -604,7 +604,7 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
   return benchmark;
 }
 
-export async function runTriggerEvaluations({ baseline, candidate = path.join(ROOT, 'skills/expressivecss'), output }) {
+async function runTriggerEvaluations({ baseline, candidate = path.join(ROOT, 'skills/expressivecss'), output }) {
   if (!baseline || !output) throw new Error('--baseline and --output are required');
   const versions = { with_skill: path.resolve(candidate), old_skill: path.resolve(baseline) };
   const results = [];

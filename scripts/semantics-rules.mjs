@@ -63,7 +63,7 @@ function authoredName(el, document) {
  * <label>, no alt on a descendant image, because a control relying on those is
  * not what this is looking for.
  */
-export function accessibleName(el, document) {
+function accessibleName(el, document) {
   const authored = authoredName(el, document);
   if (authored) return authored;
   const clone = el.cloneNode(true);

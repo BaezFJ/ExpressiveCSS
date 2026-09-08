@@ -281,34 +281,9 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   _repositionWithinScreen(x: number, y: number, width: number, height: number) {
-    const scrollLeft = Utils.getDocumentScrollLeft();
-    const scrollTop = Utils.getDocumentScrollTop();
-    let newX = x - scrollLeft;
-    let newY = y - scrollTop;
-
-    const bounding = {
-      left: newX,
-      top: newY,
-      width: width,
-      height: height
-    };
-    const offset = this.options.margin + this.options.transitionMovement;
-    const edges = Utils.checkWithinContainer(document.body, bounding, offset);
-
-    if (edges.left) {
-      newX = offset;
-    } else if (edges.right) {
-      newX -= newX + width - window.innerWidth;
-    }
-    if (edges.top) {
-      newY = offset;
-    } else if (edges.bottom) {
-      newY -= newY + height - window.innerHeight;
-    }
-    return {
-      x: newX + scrollLeft,
-      y: newY + scrollTop
-    };
+    return Utils._repositionWithinScreen(
+      x, y, width, height, this.options.margin, this.options.transitionMovement, 'center'
+    );
   }
 
   _animateIn() {

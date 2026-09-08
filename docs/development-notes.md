@@ -43,6 +43,22 @@ npm run clean          # remove dist/
 
 Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Sidenav.getInstance(el)`).
 
+### Fallow analysis
+
+Run `npx --no-install fallow` with the installed version. `.fallowrc.json`
+declares standalone preview, browser-test, and fixture assets as entry points.
+Sass layer indexes are explicit because `meta.load-css()` is not followed by
+the analyzer. Fontsource dependencies are copied by `scripts/copy-fonts.mjs`.
+The fixture URL exceptions resolve after materialization into a consumer project.
+Generated skill/MCP scripts are excluded; their owners in `scripts/lib/` remain
+analyzed. The exported auto-init registry is retained for compatibility.
+
+The optional `.design-sync` preview project is outside this audit. Fallow may
+warn about missing root `.astro` types even when `docs/.astro/types.d.ts` exists;
+the docs use `--root docs`. Check that location before running Astro sync.
+Complexity and duplicate counts guide review, not automatic deletion. Fallow's
+estimated coverage is not a test-coverage measurement.
+
 The documentation site is Astro, and the whole of it is Node -- one command
 from a clean checkout to a live server, no Python anywhere (ADR 0003):
 

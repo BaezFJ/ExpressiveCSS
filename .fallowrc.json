@@ -1,10 +1,24 @@
 {
   "entry": [
     "docs/src/pages/**/*.astro",
-    "docs/src/pages/**/*.ts"
+    "docs/src/pages/**/*.ts",
+    "docs/static/docs.js",
+    "scripts/preview-expressivecss-examples.mjs",
+    "skills/expressivecss/assets/examples/app.{css,js}",
+    "src/sass/base/_fonts.scss",
+    "src/sass/{base,components,tokens,utilities}/_index.scss",
+    "tests/fixtures/expressivecss-skill-evals/consumer/{app.css,server.mjs}",
+    "tests/fixtures/expressivecss-skill-evals/material/{expression,motion}.css",
+    "tests/fixtures/expressivecss-skill-evals/web-accessibility/app.css",
+    "tests/visual-run.test.mjs",
+    "visual/serve.mjs"
   ],
   "ignoreUnresolvedImports": [
-    "./js/expressive.min.js"
+    "./js/expressive.min.js",
+    "/node_modules/@expressivecss/expressive/dist/css/expressive.css",
+    "/node_modules/@expressivecss/expressive/dist/js/expressive.js",
+    "/src/app.css",
+    "/src/app.js"
   ],
   "usedClassMembers": [
     "getInstance",
@@ -19,6 +33,26 @@
         "index",
         "updateTabIndicator",
         "select"
+      ]
+    }
+  ],
+  "ignorePatterns": [
+    ".design-sync/**",
+    "skills/expressivecss/scripts/{resolve-version,verify-consumer,consumer-browser,bounded-file}.mjs",
+    "mcp/expressivecss/scripts/resolve-version.mjs"
+  ],
+  "ignoreDependencies": [
+    "@fontsource-variable/material-symbols-outlined",
+    "@fontsource-variable/material-symbols-rounded",
+    "@fontsource-variable/material-symbols-sharp",
+    "@fontsource/noto-sans",
+    "@fontsource/roboto"
+  ],
+  "ignoreExports": [
+    {
+      "file": "src/ts/components/registry.ts",
+      "exports": [
+        "AUTO_INIT_COMPONENTS"
       ]
     }
   ]
