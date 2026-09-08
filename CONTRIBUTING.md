@@ -57,14 +57,16 @@ such as `fix/menu-focus` or `docs/theme-example`. Keep each PR focused.
 
 ```sh
 npm run verify
-npx playwright install chromium
+npx playwright install --with-deps chromium firefox webkit
 npm run test:browser
 ```
 
 `verify` builds the framework, typechecks, runs Node tests, checks generated data,
-and builds and verifies the docs. Browser behavior tests require Chromium; the
-explicit browser command and CI fail if it is absent. Node-only local tests can
-skip browser tests when Chromium is not installed.
+and builds and verifies the docs. The critical-flow suite requires Chromium,
+Firefox and WebKit. The explicit browser command and CI fail if any is absent.
+Node-only local tests can skip uninstalled browser engines. See the
+[coverage and manual review procedure](docs/agents/expressivecss-browser-coverage.md);
+emulation does not verify real devices or native browser zoom.
 
 For repeatable checks of a running consumer application, use
 `npm run verify:consumer -- --project-root <app> --scenario <checks.json> --origin http://127.0.0.1:<port>`.

@@ -87,6 +87,7 @@
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",
     "test:browser": "run-s build:js build:css test:browser:run",
+    "test:browser:critical": "node scripts/check-browser.mjs && node --test tests/expressivecss-cross-browser.test.js",
     "test:browser:run": "node scripts/check-browser.mjs && node --test tests/*-browser.test.js",
     "test:watch": "node --test --watch",
     "test:visual": "node visual/run.mjs",

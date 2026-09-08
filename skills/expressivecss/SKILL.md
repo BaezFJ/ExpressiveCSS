@@ -77,7 +77,7 @@ Public-site and master-branch links are discovery pointers, not proof of the tar
 
 Before browser-dependent claims, probe one available route by loading the target. Prefer supplied project/browser tooling; a listed connector is not proof it works. Reuse a working route. After a permission, connection, or launch failure, stop retrying it until capability changes; continue independent source work. A bad selector can be corrected without changing routes.
 
-Separate source findings, browser observations, and unavailable checks. Reference actual tool output or captures. Quote observed errors without guessing codes or causes. A compound command's status does not prove each subcommand passed. Keep verification proportional to the task; source checks do not establish browser conformance.
+Name tested engines; separate source, browser, and unavailable evidence. Reference actual tool output or captures. Quote observed errors without guessing codes or causes. A compound command's status does not prove each subcommand passed. Keep verification proportional to the task; source checks do not establish browser conformance.
 
 For repeatable local browser checks, reuse project tests or the optional
 [consumer runner](./references/consumer-verification.md).

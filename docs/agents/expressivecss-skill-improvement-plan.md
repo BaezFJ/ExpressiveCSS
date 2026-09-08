@@ -1,5 +1,22 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Cross-browser critical flows, September 7, 2026
+
+The [browser coverage report](./expressivecss-browser-coverage.md) adds the same
+critical-flow cases across Chromium, Firefox and WebKit, with keyboard and
+compact Arabic RTL/touch/text-reflow profiles. CI requires all engines and retains
+case results and failure traces. Native zoom, physical devices, screen readers
+and full visual/language review remain explicit manual release checks.
+The skill now asks agents to name tested engines when reporting browser evidence.
+All six critical-flow cases passed. Contributor verification passed 998 tests,
+the explicit browser suite passed 29, and skill/MCP/package/generated checks
+passed. The report preserves two framework follow-ups: rapid Menu reversal and
+enlarged RTL select-label overlap. Those findings are not repaired by this change.
+
+No framework behavior or public API changes are included. The existing fixture
+server, Playwright dependency and Node runner provide the implementation.
+
+
 ## Capability roadmap follow-up, September 7, 2026
 
 The [generated roadmap](../../skills/expressivecss/references/capability-roadmap.md)

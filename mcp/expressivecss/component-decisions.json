@@ -4272,6 +4272,10 @@
         "sha256": "a5830fd9484df11bbae8be65f569fa7d3fc4a0d4909d52413ca5cb82b741738e"
       },
       {
+        "path": "tests/expressivecss-cross-browser.test.js",
+        "sha256": "c817489e37bda64b8e273fd60dfa885230edbf319c606efbcb690d91b7cab80d"
+      },
+      {
         "path": "tests/expressivecss-eval-browser.test.js",
         "sha256": "374c12306200908b76d8163fa15ad983fc373dbd350368e6cc76e2162e390b58"
       },
@@ -4785,7 +4789,7 @@
       },
       {
         "path": "scripts/check-browser.mjs",
-        "sha256": "2c493c1c9b025fb5245499787e168999c836efcc9643397ddb2952172381de76"
+        "sha256": "e4ca6c82a11c0139c57d833194d16fe431dfe09d6874b33e3b655e1bf3eee70d"
       },
       {
         "path": "scripts/copy-fonts.mjs",
@@ -4881,7 +4885,7 @@
       },
       {
         "path": "package.json",
-        "sha256": "aaf565cfa2d9f5e06e1180dab4712320fb39efe7dc5a458785e05a8ae3605cef"
+        "sha256": "24d5c14f23853bbd5e2a3dd4ba0f8d943aacb1d90ba7834883e33595af1d0308"
       },
       {
         "path": "package-lock.json",
@@ -4897,103 +4901,103 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 177.997244
+        "durationMs": 185.058066
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 143.942507
+        "durationMs": 135.487664
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 688.304961
+        "durationMs": 682.334972
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1215.80192
+        "durationMs": 1204.838135
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 755.921149
+        "durationMs": 766.767075
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 174.23921
+        "durationMs": 183.756636
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 152.25603
+        "durationMs": 144.438674
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10263.28454
+        "durationMs": 10259.185338
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10491.361662
+        "durationMs": 10495.456285
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10409.917489
+        "durationMs": 10405.320079
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 823.13469
+        "durationMs": 825.241396
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 169.542632
+        "durationMs": 164.723285
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 147.524592
+        "durationMs": 130.235571
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 24.240514
+        "durationMs": 22.556396
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 7.171631
+        "durationMs": 7.074601
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22559.660468
+        "durationMs": 22750.149618
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 534.972488
+        "durationMs": 513.396895
       }
     ],
     "directories": [
@@ -5003,7 +5007,7 @@
       },
       {
         "path": "tests",
-        "sha256": "7777ab6c7611dbea156985d59f1d28a701173e220a9d5e157b1a07c248cb91bb"
+        "sha256": "1b4b63da189c7da7a6980f506723ad26a126de9a7a8491b6429c298bef7ca55e"
       },
       {
         "path": "dist",
@@ -5015,10 +5019,10 @@
       },
       {
         "path": "scripts",
-        "sha256": "32e11d6975785960a524c9b193e394809cdf25aa341350240cfa88b5cc582abc"
+        "sha256": "7a3b320e7e661c0c88decb0bc56adaa0fc4b10f059caff70fbdd03ccb3499099"
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "519796bd2f6583a831928a3bafd0e05adbe012d56f8fdef69fb1cf7036df990c"
+    "reportSha256": "22bcd13678ce298c133ebb2eef794eca22cb622cc6dd9e8b70221c33c57a10c0"
   }
 }
