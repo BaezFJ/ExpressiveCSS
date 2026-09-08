@@ -3,10 +3,12 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 import { resetBody, window } from './setup.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+const actionRulePattern = /dialog:not\((?:[^()]|\([^()]*\))*\)\s*>\s*:is\(form,\s*nav\):last-child/;
 
 describe('Floating sheet CSS', () => {
   test('takes the sheet container tokens, not the basic dialog ones', () => {
@@ -52,11 +54,17 @@ describe('Floating sheet CSS', () => {
   test('action-row buttons stay sheet buttons, not dialog text buttons', () => {
     // The rule the dialog uses to make action buttons text buttons excludes
     // every sheet; the floating sheet has to be on that list too.
-    const sheetsExcluded = css.match(
-      /dialog:not\(([^)]|\([^)]*\))*\)\s*>\s*:is\(form,\s*nav\):last-child/
-    );
+    const sheetsExcluded = css.match(actionRulePattern);
     assert.ok(sheetsExcluded, 'the dialog flat-action rule should still exist');
     assert.match(sheetsExcluded[0], /\.floating-sheet/);
+  });
+
+  test('malformed nested selectors cannot stall the action-row check', () => {
+    const result = spawnSync(process.execPath, ['-e',
+      'const pattern = new RegExp(process.argv[1]); process.exit(pattern.test("dialog:not(" + "(()".repeat(30) + "x") ? 1 : 0);',
+      actionRulePattern.source
+    ], { encoding: 'utf8', timeout: 3000 });
+    assert.equal(result.status, 0, result.error?.message ?? result.stderr);
   });
 });
 

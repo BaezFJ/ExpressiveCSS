@@ -16,10 +16,14 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = join(root, 'semantics.json');
 const OUT = join(root, 'SEMANTICS.md');
 
-const esc = (s) => String(s).replace(/\|/g, '\\|');
-// Table cells too: a selector containing `|` (an attribute namespace, say)
-// would otherwise split the row.
-const code = (s) => '`' + esc(String(s).replace(/`/g, '\\`')) + '`';
+const esc = (s) => String(s).replace(/[\\|]/g, '\\$&');
+// GFM code spans do not support backslash escapes. Use inline HTML for values
+// that conflict with their delimiters or table syntax: https://github.github.com/gfm/#code-spans
+const code = (s) => {
+  const text = String(s);
+  if (!/[\\`|]/.test(text)) return '`' + text + '`';
+  return '<code>' + text.replace(/[&<>\\`|]/g, (c) => `&#${c.charCodeAt(0)};`) + '</code>';
+};
 
 export function render(data) {
   const names = Object.keys(data.rows).sort();

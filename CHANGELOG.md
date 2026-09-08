@@ -5,6 +5,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Validate enhanced-select icon URLs and encode calendar identifiers and day values.
+- Restrict Datepicker's low-level row renderers to calendar rows, cells, and day buttons. Custom renderers must use supported attributes and `type="button"`; unsupported HTML now throws `TypeError`.
+- Preserve special characters in generated semantics tables and correct the documentation-script and floating-sheet test patterns.
+
 ## [0.9.0] - 2026-09-08
 
 ### Migration from 0.8.0

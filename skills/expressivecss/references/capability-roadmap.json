@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "62dc84d562b5dcbca43f4dadc1a7a423dce806091bf6b00bcaa19092c29b71b6",
+    "reportSha256": "34fb4a331106f7fece05291033f94366ee70a48752a91420e836d30aca32be1e",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1498,7 +1498,7 @@
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+          "sha256": "33d9285e89d231522070ada3a4cc8e917a620cee245d86c09a2f3e4161fec49e"
         },
         {
           "path": "src/ts/components/menu.ts",
@@ -1754,7 +1754,7 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Inline single-date, range, and multiple-date calendar.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
       "upstream": {
@@ -1775,11 +1775,11 @@
         },
         {
           "path": "src/ts/components/datepicker.ts",
-          "sha256": "595a41a522aee4057c635085819476461cc2c0ff7a4100db55e463562503b800"
+          "sha256": "f45b22b2bfff14e704c10b9f7bc90867ae8f4b076be19ec0a5d53a49166d893e"
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "d71949f9e9ede88a78bbf0b5f8ad8feb4fe0dadc920bcef26470af490a814a99"
+          "sha256": "33d9285e89d231522070ada3a4cc8e917a620cee245d86c09a2f3e4161fec49e"
         },
         {
           "path": "src/ts/plugins/dockedDisplayPlugin.ts",
