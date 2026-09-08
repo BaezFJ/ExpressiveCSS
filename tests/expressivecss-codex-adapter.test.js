@@ -305,3 +305,31 @@ test('quoted diagnostics survive successful compound commands without inventing 
   const retained = retainedAdapterEnvelope({ executionEvidence: { commandDiagnostics: [{ eventId: 'sensitive', exitCode: 0, excerpt: 'API_KEY=fixture-secret' }] } });
   assert.match(retained.executionEvidence.commandDiagnostics[0].excerpt, /REDACTED/);
 });
+
+test('assistance modes isolate configuration, omit absent skills and record real MCP failures', async () => {
+  await fixture(async ({ run }) => {
+    const program = `let prompt='';for await(const chunk of process.stdin)prompt+=chunk;
+      emit({type:'item.completed',item:{type:'mcp_tool_call',server:'expressivecss',tool:'quality_inspector',status:'completed',result:{isError:true}}});
+      emit({type:'item.completed',item:{type:'command_execution',exit_code:1}});
+      emit({type:'item.completed',item:{type:'agent_message',text:JSON.stringify({prompt,args:process.argv.slice(2)})}});
+      emit({type:'turn.completed',usage:{input_tokens:20,cached_input_tokens:10,output_tokens:3}});`;
+    for (const assistanceMode of ['skill_only', 'mcp_only', 'combined']) {
+      const result = await run(program, { assistanceMode, mcpServerPath: '/operator/server.js' }, assistanceMode === 'mcp_only' ? { skillRoot: null, rootSkill: null } : {});
+      const args = result.candidateResponse.args;
+      assert.ok(args.includes('--ignore-user-config'));
+      assert.ok(args.includes('features.skip_host_skill_discovery=true'));
+      assert.ok(args.includes('features.plugins=false'));
+      assert.equal(args.some(arg => arg.startsWith('mcp_servers.expressivecss.command=')), assistanceMode !== 'skill_only');
+      if (assistanceMode !== 'skill_only') assert.ok(args.includes('mcp_servers.expressivecss.env.EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS="[]"'));
+      if (assistanceMode === 'mcp_only') {
+        assert.equal(result.runMetadata.skillHash, null);
+        assert.ok(!result.candidateResponse.prompt.includes('skill directory is'));
+        assert.ok(!result.candidateResponse.prompt.includes('# Root guide'));
+      }
+      assert.equal(result.runMetadata.toolFailures, 2);
+      assert.deepEqual(result.runMetadata.mcpCalls, [{ server: 'expressivecss', tool: 'quality_inspector', failed: true }]);
+    }
+    await assert.rejects(run(program, { assistanceMode: 'pretend' }), /Invalid assistance mode/);
+    await assert.rejects(run(program, { assistanceMode: 'mcp_only', mcpServerPath: '../server.js' }), /absolute server path/);
+  });
+});

@@ -1,0 +1,4340 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-08T03:40:35.980Z",
+  "status": "pending-human-review",
+  "observedCliVersion": "codex-cli 0.153.2",
+  "provenance": {
+    "schemaVersion": 1,
+    "protocol": "assistance-cost-v1",
+    "fixtureHash": "sha256:bebb09fdad911483bd45d51487c35a5dec1c66405d2749bcd93f6252b2c4b694",
+    "graderHash": "sha256:532256513f0629f8b3a691f650d0db16e7cf1e58957c1cc6b72d5447a86a7bce",
+    "fixtureInputs": {
+      "sourceTree": "sha256:1ce302f00110e4b3375a0b4e5566ea69d754d90d54b46cfce213efc2281de097",
+      "examples": "sha256:0d23b6d700ca37738733482a7b69db78a4271f56b4423c0e300e1fc2cbdf4f57",
+      "builtDistribution": "sha256:4b22015002501fe6b3e31a0c75b35edc84634dbb484568f463603d7eb96a28fe",
+      "package": "sha256:c0f8b15d460b86450ef96587ec6d33c48e6d10597c7d2e6050f4d0aa2fefcba4"
+    },
+    "graderInputs": {
+      "mcp/expressivecss/capability-roadmap.json": "sha256:d7c07328c903bb4b6f18187dc122b574b0771e95ca6e8b17e7fee2e5799ff8ff",
+      "mcp/expressivecss/component-decisions.json": "sha256:5867488b6346a44a82c57f312b5e8a7f0a25a2763860af5211ee935ba284d2ef",
+      "mcp/expressivecss/component-guides.json": "sha256:fc4fe518e9aec11eb11ed06f050a41883e0d4a42e1adcb2322cbe8ec70cef944",
+      "mcp/expressivecss/contract.json": "sha256:50e4aece90765e64d4eb3e423138ef565512863cf2a1c2c703b47e8fa7f79277",
+      "mcp/expressivecss/package-lock.json": "sha256:ed2912d988a4396b9a2940b2918a212a4e53b8b0c8655e2788332562cdcbed90",
+      "mcp/expressivecss/package.json": "sha256:0dd375b1d1d30615929ec6d4eca19c937223abde97a0b521528f49248ddc2511",
+      "mcp/expressivecss/scripts/resolve-version.mjs": "sha256:b58fdb89945762db783c207e75d07b403c9c1bc1430503e5a071e58f4ec5f7a5",
+      "mcp/expressivecss/semantics-data.json": "sha256:e4ae518b4b89e34ec139968c45ff2625bf6c9b85b779e414ad077e5e842f7cae",
+      "mcp/expressivecss/server.js": "sha256:62c889c730466345abb4502989f4bfbff2b61d9e7325b887a47ed9ec822fcb10",
+      "package-lock.json": "sha256:f1bf73ebae8fbf2821bedf9337cc8bf4a1e87fc8d6a5552c6753653c72022c5b",
+      "package.json": "sha256:c0f8b15d460b86450ef96587ec6d33c48e6d10597c7d2e6050f4d0aa2fefcba4",
+      "scripts/benchmark-expressivecss-skill.mjs": "sha256:f5c5d32687fd017bcf8645304f4f7b91bdb8ed4c04cd6e1ba2ab15e7a499e5f5",
+      "scripts/eval-expressivecss-skill.mjs": "sha256:b23e5769164146fe9b3572b8c91ca902923bfddc9ebea40ab47cf0b483cca2a5",
+      "scripts/expressivecss-codex-adapter.mjs": "sha256:949d88c18b6786dd3b672833a5e690a0cd900f9504e79f82c2c3fbfae7c18ef9",
+      "scripts/expressivecss-eval-browser.mjs": "sha256:4bdcaa55d4da7dc91b52e6c78287147f8dc87e1cc85d7ab37f53477461934578",
+      "scripts/expressivecss-eval-provenance.mjs": "sha256:e4e15b416eef3f8e9d39c2d534e0ea4bc15f63d5a9968de60af9022671c58914",
+      "scripts/expressivecss-interface-quality.mjs": "sha256:79f3953b3d50e6651f816dc102103e28320aac9dd5b1799669365fef389584a1",
+      "scripts/expressivecss-material-quality.mjs": "sha256:1ebf38ffdeead2c8b33624a75edadff988930a0affccbbb65913f9f9a9b51c38",
+      "scripts/lib/bounded-file.mjs": "sha256:2601f8349583b4bef3f579813a5d76418cef742a785fb36de4f70e489c476534",
+      "scripts/lib/consumer-browser.mjs": "sha256:571e207dff1144fe577fa914fe2b855d87b54283e14d9526dfe729dea6ac7789",
+      "scripts/report-expressivecss-assistance-cost.mjs": "sha256:f9a41dfb69dd67e54600cc596c0bb06099d7b56bc0ee509ac0e9c1f67ea58b97",
+      "skills/expressivecss/references/contract.json": "sha256:50e4aece90765e64d4eb3e423138ef565512863cf2a1c2c703b47e8fa7f79277",
+      "node_modules/@playwright/test/package.json": "sha256:be51f784a5742a1aa075e0173f5f04f189a791cc30c40e3bb18be584f696764e",
+      "node_modules/playwright-core/package.json": "sha256:07c47543631fef9508760365dee9fbe958c562093ec8d122543949ed231f233f",
+      "node_modules/playwright-core/browsers.json": "sha256:f306eed529599b1eaf2f8a85db9de2b23e1a3fe36c2b66434b7c9434fb627a99",
+      "node_modules/jsdom/package.json": "sha256:e87940b12f720a5b735a5df82108b634a238b8c6ebced71050a346a1675575b9",
+      "node_modules/smol-toml/package.json": "sha256:fa2995d429c856669968d6281c14e6be93a40cd404dad43aa2e4599608f20bdc",
+      "mcp/expressivecss/node_modules/@modelcontextprotocol/sdk/package.json": "sha256:0690cbe02511a95d1ff199acf20b5a12ac4dfde1bbe30c82a0de73afa92dffc9"
+    },
+    "runtime": {
+      "node": "v24.20.0",
+      "platform": "linux",
+      "architecture": "x64",
+      "modelSettings": {
+        "model": "gpt-6-astra",
+        "model_reasoning_effort": "low",
+        "model_provider": null
+      }
+    },
+    "plan": {
+      "cases": [
+        {
+          "id": "css-only-markup-routing",
+          "name": "form-action",
+          "fixture": "consumer-current",
+          "request": "Add a CSS-only common button named Preview preferences inside form#preferences. It must not submit the form. Preserve the existing save behavior and accessible markup. Do not add JavaScript for this action."
+        },
+        {
+          "id": "refine-preserves-product",
+          "name": "navigation-media",
+          "fixture": "consumer-current",
+          "request": "Refine this account dashboard's responsive navigation and hero image loading. The bar and rail currently overlap at wide widths, and the prominent hero has no dimensions and is lazy-loaded. Show exactly one peer navigation at Compact and Expanded widths, preserve all three destinations and existing identity/content/actions, reserve the hero's intrinsic 1200 by 600 ratio and avoid delaying its loading. Capture before/after evidence and check 839px and 840px. Keep changes limited to these defects."
+        }
+      ],
+      "repetitions": 3,
+      "skillHashes": {
+        "skill_only": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+        "mcp_only": null,
+        "combined": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf"
+      },
+      "timeoutMs": 600000,
+      "modes": [
+        "skill_only",
+        "mcp_only",
+        "combined"
+      ],
+      "overrides": [
+        "features.plugins=false",
+        "features.apps=false",
+        "features.remote_plugin=false",
+        "features.skip_host_skill_discovery=true",
+        "skills.include_instructions=false",
+        "skills.bundled.enabled=false",
+        "features.skill_search=false",
+        "features.multi_agent=false",
+        "features.multi_agent_v2=false",
+        "web_search=\"disabled\"",
+        "project_doc_max_bytes=0",
+        "features.memory_tool=false"
+      ],
+      "execution": "sequential rotating order",
+      "mcpCommands": "disabled"
+    },
+    "limits": "Installed package manifests and expected browser revision are hashed; external service state and the actual Codex/browser binaries are not fingerprinted.",
+    "hash": "sha256:c23424fc4fe2b23bf0ce984174c061703344c526ed1f07deb3fb70f572377b68"
+  },
+  "archive": {
+    "directory": "/home/javier/.local/share/expressivecss/evaluations/2026-09-07-assistance-cost",
+    "path": "evidence.tar.gz",
+    "sha256": "db5ed5849f346bc3c5f2ceb5d50f086b878063f8f487666775a1059e4dc5b17a",
+    "bytes": 23008381,
+    "manifestSha256": "826a294ccbff42754041f0826a1d6e7d1593a29747fab984bcc52831a83dc6e4",
+    "sourceHash": "sha256:c7092323dc8e7fc85c0815d37dc9c08e7c4fbc4d12b4ec31193e967a6a3ddd66"
+  },
+  "preliminary": {
+    "directory": "/home/javier/.local/share/expressivecss/evaluations/2026-09-07-assistance-cost-preliminary",
+    "status": "preliminary-instrumentation-error",
+    "reason": "Native Codex inventory helpers misclassified by the original grader; stopped at a provenance boundary. Original grades retained, excluded from the fresh comparison.",
+    "retainedAttempts": 6,
+    "provenanceHash": "sha256:39bb6df64bfe4e8913838ea4816279c45eab779c84336544b4df8a7ce08147d2",
+    "sourceHash": "sha256:615c5d0c58261b1d6da006bb369ec3fa0e4d100fea369cb28ffc55ef062231b5",
+    "archive": {
+      "path": "evidence.tar.gz",
+      "sha256": "f74e0b8e144a045560641f0a9bbb720760b28b5e47f3e5f7114734217dc41feb"
+    },
+    "agentSeconds": 431.96809966499995,
+    "usage": {
+      "input_tokens": 868945,
+      "cached_input_tokens": 628480,
+      "output_tokens": 8591
+    }
+  },
+  "notes": [
+    "Automated completion is limited to named checks; it does not establish human acceptance.",
+    "Input includes cached input; do not add cached tokens again. No currency cost is inferred.",
+    "Cost per accepted output includes all measured attempts in that case/mode and stays unavailable until all are reviewed.",
+    "Correction requests count operator-requested changes, not completed repair work. Repaired outputs need separately measured attempts.",
+    "Operator elapsed includes fixture preparation, independent browser checks and cleanup; agent seconds cover the CLI adapter only. Review time is separate."
+  ],
+  "groups": {
+    "form-action/skill_only": {
+      "attempts": 3,
+      "automated_complete": 3,
+      "accepted": 0,
+      "pending": 3,
+      "correction_requests": null,
+      "review_seconds": null,
+      "metrics": {
+        "agent_seconds": {
+          "mean": 60.99209997400006,
+          "median": 59.871563140999996,
+          "stddev": 4.676529808106026,
+          "min": 55.907619107000066,
+          "max": 67.1971176740001,
+          "available": 3
+        },
+        "operator_elapsed_seconds": {
+          "mean": 62.023935272333375,
+          "median": 60.952452878,
+          "stddev": 4.664108713871148,
+          "min": 56.92320512200007,
+          "max": 68.19614781700005,
+          "available": 3
+        },
+        "input_tokens": {
+          "mean": 115619.66666666667,
+          "median": 104349,
+          "stddev": 16923.596354071895,
+          "min": 102970,
+          "max": 139540,
+          "available": 3
+        },
+        "cached_input_tokens": {
+          "mean": 85717.33333333333,
+          "median": 75520,
+          "stddev": 14967.549372633526,
+          "min": 74752,
+          "max": 106880,
+          "available": 3
+        },
+        "output_tokens": {
+          "mean": 1094,
+          "median": 1147,
+          "stddev": 80.67630796377996,
+          "min": 980,
+          "max": 1155,
+          "available": 3
+        },
+        "tool_calls": {
+          "mean": 11.666666666666666,
+          "median": 12,
+          "stddev": 1.247219128924647,
+          "min": 10,
+          "max": 13,
+          "available": 3
+        },
+        "tool_failures": {
+          "mean": 1,
+          "median": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1,
+          "available": 3
+        }
+      },
+      "cost_per_accepted_output": {
+        "agent_seconds": null,
+        "operator_elapsed_seconds": null,
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "tool_calls": null,
+        "tool_failures": null,
+        "review_seconds": null
+      }
+    },
+    "form-action/mcp_only": {
+      "attempts": 3,
+      "automated_complete": 3,
+      "accepted": 0,
+      "pending": 3,
+      "correction_requests": null,
+      "review_seconds": null,
+      "metrics": {
+        "agent_seconds": {
+          "mean": 52.5538210733333,
+          "median": 54.86041898399987,
+          "stddev": 3.2636037836104372,
+          "min": 47.93838852100004,
+          "max": 54.862655715,
+          "available": 3
+        },
+        "operator_elapsed_seconds": {
+          "mean": 53.570582033666625,
+          "median": 55.87080175299989,
+          "stddev": 3.257213281694138,
+          "min": 48.96418811799999,
+          "max": 55.87675623,
+          "available": 3
+        },
+        "input_tokens": {
+          "mean": 109953.66666666667,
+          "median": 109847,
+          "stddev": 1828.875307091462,
+          "min": 107769,
+          "max": 112245,
+          "available": 3
+        },
+        "cached_input_tokens": {
+          "mean": 85120,
+          "median": 84480,
+          "stddev": 3737.6584470315993,
+          "min": 80896,
+          "max": 89984,
+          "available": 3
+        },
+        "output_tokens": {
+          "mean": 747.3333333333334,
+          "median": 721,
+          "stddev": 71.46249987852993,
+          "min": 676,
+          "max": 845,
+          "available": 3
+        },
+        "tool_calls": {
+          "mean": 7.333333333333333,
+          "median": 7,
+          "stddev": 0.4714045207910317,
+          "min": 7,
+          "max": 8,
+          "available": 3
+        },
+        "tool_failures": {
+          "mean": 0,
+          "median": 0,
+          "stddev": 0,
+          "min": 0,
+          "max": 0,
+          "available": 3
+        }
+      },
+      "cost_per_accepted_output": {
+        "agent_seconds": null,
+        "operator_elapsed_seconds": null,
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "tool_calls": null,
+        "tool_failures": null,
+        "review_seconds": null
+      }
+    },
+    "form-action/combined": {
+      "attempts": 3,
+      "automated_complete": 3,
+      "accepted": 0,
+      "pending": 3,
+      "correction_requests": null,
+      "review_seconds": null,
+      "metrics": {
+        "agent_seconds": {
+          "mean": 65.56740887233335,
+          "median": 63.28994318599999,
+          "stddev": 9.359295741398105,
+          "min": 55.414353208,
+          "max": 77.99793022300005,
+          "available": 3
+        },
+        "operator_elapsed_seconds": {
+          "mean": 66.58211871600002,
+          "median": 64.29669604800002,
+          "stddev": 9.355775367723012,
+          "min": 56.43862468600001,
+          "max": 79.01103541400005,
+          "available": 3
+        },
+        "input_tokens": {
+          "mean": 132755,
+          "median": 129954,
+          "stddev": 25377.777457190114,
+          "min": 103169,
+          "max": 165142,
+          "available": 3
+        },
+        "cached_input_tokens": {
+          "mean": 108800,
+          "median": 110464,
+          "stddev": 25684.553698023774,
+          "min": 76544,
+          "max": 139392,
+          "available": 3
+        },
+        "output_tokens": {
+          "mean": 1167.3333333333333,
+          "median": 1171,
+          "stddev": 218.42822365456553,
+          "min": 898,
+          "max": 1433,
+          "available": 3
+        },
+        "tool_calls": {
+          "mean": 11,
+          "median": 13,
+          "stddev": 2.8284271247461903,
+          "min": 7,
+          "max": 13,
+          "available": 3
+        },
+        "tool_failures": {
+          "mean": 1,
+          "median": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1,
+          "available": 3
+        }
+      },
+      "cost_per_accepted_output": {
+        "agent_seconds": null,
+        "operator_elapsed_seconds": null,
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "tool_calls": null,
+        "tool_failures": null,
+        "review_seconds": null
+      }
+    },
+    "navigation-media/mcp_only": {
+      "attempts": 3,
+      "automated_complete": 3,
+      "accepted": 0,
+      "pending": 3,
+      "correction_requests": null,
+      "review_seconds": null,
+      "metrics": {
+        "agent_seconds": {
+          "mean": 84.68935335933328,
+          "median": 85.93147682000001,
+          "stddev": 11.479218136580377,
+          "min": 70.05039162500005,
+          "max": 98.0861916329998,
+          "available": 3
+        },
+        "operator_elapsed_seconds": {
+          "mean": 90.00823714866668,
+          "median": 91.26851892900001,
+          "stddev": 11.506779284469768,
+          "min": 75.32755457399995,
+          "max": 103.42863794300007,
+          "available": 3
+        },
+        "input_tokens": {
+          "mean": 153092,
+          "median": 153897,
+          "stddev": 12726.812405311866,
+          "min": 137118,
+          "max": 168261,
+          "available": 3
+        },
+        "cached_input_tokens": {
+          "mean": 112938.66666666667,
+          "median": 120192,
+          "stddev": 21522.36253037498,
+          "min": 83712,
+          "max": 134912,
+          "available": 3
+        },
+        "output_tokens": {
+          "mean": 1451.3333333333333,
+          "median": 1432,
+          "stddev": 114.3134093427169,
+          "min": 1322,
+          "max": 1600,
+          "available": 3
+        },
+        "tool_calls": {
+          "mean": 16,
+          "median": 17,
+          "stddev": 1.4142135623730951,
+          "min": 14,
+          "max": 17,
+          "available": 3
+        },
+        "tool_failures": {
+          "mean": 0.3333333333333333,
+          "median": 0,
+          "stddev": 0.4714045207910317,
+          "min": 0,
+          "max": 1,
+          "available": 3
+        }
+      },
+      "cost_per_accepted_output": {
+        "agent_seconds": null,
+        "operator_elapsed_seconds": null,
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "tool_calls": null,
+        "tool_failures": null,
+        "review_seconds": null
+      }
+    },
+    "navigation-media/combined": {
+      "attempts": 3,
+      "automated_complete": 3,
+      "accepted": 0,
+      "pending": 3,
+      "correction_requests": null,
+      "review_seconds": null,
+      "metrics": {
+        "agent_seconds": {
+          "mean": 88.90605109233339,
+          "median": 90.85525244900002,
+          "stddev": 9.00071751653334,
+          "min": 77.03788193200016,
+          "max": 98.82501889599999,
+          "available": 3
+        },
+        "operator_elapsed_seconds": {
+          "mean": 94.22970649666662,
+          "median": 96.190759258,
+          "stddev": 9.017676095875986,
+          "min": 82.33618660799996,
+          "max": 104.16217362399993,
+          "available": 3
+        },
+        "input_tokens": {
+          "mean": 174764.33333333334,
+          "median": 182554,
+          "stddev": 22225.5887411085,
+          "min": 144498,
+          "max": 197241,
+          "available": 3
+        },
+        "cached_input_tokens": {
+          "mean": 134656,
+          "median": 140160,
+          "stddev": 18545.723244636934,
+          "min": 109696,
+          "max": 154112,
+          "available": 3
+        },
+        "output_tokens": {
+          "mean": 2106.6666666666665,
+          "median": 2086,
+          "stddev": 167.20513017116295,
+          "min": 1913,
+          "max": 2321,
+          "available": 3
+        },
+        "tool_calls": {
+          "mean": 20,
+          "median": 19,
+          "stddev": 1.4142135623730951,
+          "min": 19,
+          "max": 22,
+          "available": 3
+        },
+        "tool_failures": {
+          "mean": 1,
+          "median": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1,
+          "available": 3
+        }
+      },
+      "cost_per_accepted_output": {
+        "agent_seconds": null,
+        "operator_elapsed_seconds": null,
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "tool_calls": null,
+        "tool_failures": null,
+        "review_seconds": null
+      }
+    },
+    "navigation-media/skill_only": {
+      "attempts": 3,
+      "automated_complete": 3,
+      "accepted": 0,
+      "pending": 3,
+      "correction_requests": null,
+      "review_seconds": null,
+      "metrics": {
+        "agent_seconds": {
+          "mean": 97.35539489766661,
+          "median": 89.18694405999995,
+          "stddev": 14.484010951816055,
+          "min": 85.17194783199997,
+          "max": 117.70729280099995,
+          "available": 3
+        },
+        "operator_elapsed_seconds": {
+          "mean": 102.64310107033339,
+          "median": 94.48796910600004,
+          "stddev": 14.489624761889054,
+          "min": 90.44048874900001,
+          "max": 123.00084535600013,
+          "available": 3
+        },
+        "input_tokens": {
+          "mean": 150762.33333333334,
+          "median": 139192,
+          "stddev": 17375.246038226018,
+          "min": 137774,
+          "max": 175321,
+          "available": 3
+        },
+        "cached_input_tokens": {
+          "mean": 114133.33333333333,
+          "median": 99456,
+          "stddev": 21393.578932837663,
+          "min": 98560,
+          "max": 144384,
+          "available": 3
+        },
+        "output_tokens": {
+          "mean": 1819,
+          "median": 1906,
+          "stddev": 168.02579167100112,
+          "min": 1584,
+          "max": 1967,
+          "available": 3
+        },
+        "tool_calls": {
+          "mean": 18.333333333333332,
+          "median": 18,
+          "stddev": 1.247219128924647,
+          "min": 17,
+          "max": 20,
+          "available": 3
+        },
+        "tool_failures": {
+          "mean": 1,
+          "median": 1,
+          "stddev": 0,
+          "min": 1,
+          "max": 1,
+          "available": 3
+        }
+      },
+      "cost_per_accepted_output": {
+        "agent_seconds": null,
+        "operator_elapsed_seconds": null,
+        "input_tokens": null,
+        "cached_input_tokens": null,
+        "output_tokens": null,
+        "tool_calls": null,
+        "tool_failures": null,
+        "review_seconds": null
+      }
+    }
+  },
+  "runs": [
+    {
+      "id": "eval-form-action-skill_only-run-1",
+      "attemptHash": "77923f8f782f16f1e999b8ceef5b393de5a905f84d44f683b2dbc79230f27696",
+      "case": "form-action",
+      "mode": "skill_only",
+      "repetition": 1,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-skill_only-run-1",
+        "attemptHash": "77923f8f782f16f1e999b8ceef5b393de5a905f84d44f683b2dbc79230f27696",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 59.871563140999996,
+        "operator_elapsed_seconds": 60.952452878,
+        "input_tokens": 104349,
+        "cached_input_tokens": 75520,
+        "output_tokens": 980,
+        "tool_calls": 10,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "skill_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/buttons.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:5ca1e56668893b19e5cddd7be8266e89c4c0324fc9582e59b1bdef795c9036b9",
+      "projectAfter": "sha256:d79467d24b800b3198edf8cd4a34b70a5c81f5ee3e70d809fee28a5f3f2c26f9",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/transcript.json",
+          "sha256": "09b61518f78ab08dae37c167c68232aa13513cb64a9a2b56e4b5c063fdf301de"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/response.json",
+          "sha256": "e52058fb281c95d669a1e7df260668e35195b58302d73a3eb7c7c9c39b404282"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/browser.json",
+          "sha256": "6a5c4a4d90ba09efe2de0d65b8d71b3c1a4d238da036065ee4b87a23adc0d3ac"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/cli-diagnostics.txt",
+          "sha256": "9d53b68cad7f7b2afeff9c3be758d151110a6ec21ad1ac88512a9c1f7fb463ca"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/src/index.html",
+          "sha256": "fa451957611b2b265a88c44a8db29b7937ded52be3243fcb79ccaac1ec6c38ae"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-1/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-mcp_only-run-1",
+      "attemptHash": "f531d18ca4d77971b0af28b74b6f38c404752c76440fddbcd0c6bbd3bec5b384",
+      "case": "form-action",
+      "mode": "mcp_only",
+      "repetition": 1,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-mcp_only-run-1",
+        "attemptHash": "f531d18ca4d77971b0af28b74b6f38c404752c76440fddbcd0c6bbd3bec5b384",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 54.862655715,
+        "operator_elapsed_seconds": 55.87675623,
+        "input_tokens": 107769,
+        "cached_input_tokens": 89984,
+        "output_tokens": 676,
+        "tool_calls": 7,
+        "tool_failures": 0
+      },
+      "skillHash": null,
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "mcp_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:0ad1ae75b4fa4ce5e36f6ff2704f1535c923a75e4f1946b34a74ddf1f7055868",
+      "projectAfter": "sha256:655c2d4425ddfde3d54f81cdd10053f111adccf3ce006732df1685fa7784c10f",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/transcript.json",
+          "sha256": "22a3d2848f6714fcc18afcc44d3360ec1190e63b899dc04fdc547937e7ae4a33"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/response.json",
+          "sha256": "8ed1fc3a2c750fbe650c3c2be5ada5cf310c557fff4f3b94710e628f2faf33ed"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/browser.json",
+          "sha256": "bf33ed29167ba467c76691514a57124ac82f8c1af7ecf21576efeb3161865a07"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/cli-diagnostics.txt",
+          "sha256": "70cde44a5c16c0c3b65fa521e6d50efb1b441b986dff51b97ecb184987d7064a"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/src/index.html",
+          "sha256": "8f7dee6c5ae6c94e5463391ca69f109a548db6d4f1bcca7b29d2cc672c50cd33"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-1/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-combined-run-1",
+      "attemptHash": "07ad39e845fd02c1fa32b4b885eb62d25a067db114a897814a525f86f42f515b",
+      "case": "form-action",
+      "mode": "combined",
+      "repetition": 1,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-combined-run-1",
+        "attemptHash": "07ad39e845fd02c1fa32b4b885eb62d25a067db114a897814a525f86f42f515b",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 55.414353208,
+        "operator_elapsed_seconds": 56.43862468600001,
+        "input_tokens": 103169,
+        "cached_input_tokens": 76544,
+        "output_tokens": 898,
+        "tool_calls": 7,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "combined",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/buttons.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:5ca1e56668893b19e5cddd7be8266e89c4c0324fc9582e59b1bdef795c9036b9",
+      "projectAfter": "sha256:d79467d24b800b3198edf8cd4a34b70a5c81f5ee3e70d809fee28a5f3f2c26f9",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/combined/run-1/outputs/transcript.json",
+          "sha256": "c0d2e5a17a6227c3522060de47bd6cc1b97481188d39e3b3e9ed1ae10a40ebab"
+        },
+        {
+          "member": "eval-form-action/combined/run-1/outputs/response.json",
+          "sha256": "4c236936e692acd0040c4c2c7282b45b19a56e5c0b2c1639d5e5a08b9b3519ec"
+        },
+        {
+          "member": "eval-form-action/combined/run-1/outputs/browser.json",
+          "sha256": "4bf87cbc2202ff620c0cb16eeb071206c7eb685b14306d9578374a9741413191"
+        },
+        {
+          "member": "eval-form-action/combined/run-1/outputs/cli-diagnostics.txt",
+          "sha256": "5bc832f6fbc04e68a8189205ba6a8d947bea478bff8d671e8e1202bf4e2db2ab"
+        },
+        {
+          "member": "eval-form-action/combined/run-1/outputs/src/index.html",
+          "sha256": "fa451957611b2b265a88c44a8db29b7937ded52be3243fcb79ccaac1ec6c38ae"
+        },
+        {
+          "member": "eval-form-action/combined/run-1/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/combined/run-1/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-mcp_only-run-1",
+      "attemptHash": "68613dea707b491b7fea8beb5f0602010ea1fffdf7ef1dc29c7f663f2f430f2f",
+      "case": "navigation-media",
+      "mode": "mcp_only",
+      "repetition": 1,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-mcp_only-run-1",
+        "attemptHash": "68613dea707b491b7fea8beb5f0602010ea1fffdf7ef1dc29c7f663f2f430f2f",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 85.93147682000001,
+        "operator_elapsed_seconds": 91.26851892900001,
+        "input_tokens": 168261,
+        "cached_input_tokens": 134912,
+        "output_tokens": 1600,
+        "tool_calls": 17,
+        "tool_failures": 1
+      },
+      "skillHash": null,
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "mcp_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "list_mcp_resources",
+          "failed": true
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "quality_inspector",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:e7d12dd3726a3b46c3a6ec609274ea9c3af93756ffc0a8a372e2442c64650051",
+      "projectAfter": "sha256:5e5da59c3ae2ddee2a43c89e64b8f81756d64d19d8447d05ecf1f44bc7821bda",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/transcript.json",
+          "sha256": "fd8dd4853c6a6f55e73df2106a570b71fe8b22de9308849d1e11916d9c9f2ed4"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/response.json",
+          "sha256": "e76d83c660069710589bd0c3c3f60ca0a16bfb9b2ab30a8b40e383b8ec0b7e7e"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/browser.json",
+          "sha256": "faaf3b26c5d774d308eacd8d009a6b8965c8a0addaabd508015b3dac72751b5f"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/cli-diagnostics.txt",
+          "sha256": "10861d75665ec4fb5b953a6a1ec208bbca67cf77b355c1b8a3cfcc46598a80e3"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-1/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-combined-run-1",
+      "attemptHash": "cb86322c002ec13e7ba7f725f05f9b77491bfff1602066f907a2cc4d8c89c1ce",
+      "case": "navigation-media",
+      "mode": "combined",
+      "repetition": 1,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-combined-run-1",
+        "attemptHash": "cb86322c002ec13e7ba7f725f05f9b77491bfff1602066f907a2cc4d8c89c1ce",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 90.85525244900002,
+        "operator_elapsed_seconds": 96.190759258,
+        "input_tokens": 182554,
+        "cached_input_tokens": 140160,
+        "output_tokens": 2086,
+        "tool_calls": 22,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "combined",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-design/SKILL.md",
+        "skills/expressivecss/expressivecss-theming/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/navigation-bar.md",
+        "skills/expressivecss/components/navigation-rail.md",
+        "skills/expressivecss/expressivecss-runtime/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/references/media.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:19bfa69ae3fb05b930b3ec29f386b258bef636aec28531c85d86a0e88f57f366",
+      "projectAfter": "sha256:09624aaa63c589437bc6bc3656fccb94545f1cc8caec69d8b527b2f71e04b971",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/transcript.json",
+          "sha256": "03cfdfdefad453590f8e4a6b767e6ebd07ea9e7658c9dc13903b846e2c8a351c"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/response.json",
+          "sha256": "965e7841d2688a8780e75c4c6a63ec3786f4aa82d4d334a0662969c13ba15d5e"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/browser.json",
+          "sha256": "2879af6388a7b15831485ce89555e0595c52bdca8f5081726171869c7e8e33ab"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/cli-diagnostics.txt",
+          "sha256": "1ff7f124838cb4e16fefd96b96989b8816df7a1d1b044bb70f2d733cf5302dfa"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-1/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-skill_only-run-1",
+      "attemptHash": "083dbd9b6a85bfe842edc29744ca881ff394685e35a890564e2f83752daa7f13",
+      "case": "navigation-media",
+      "mode": "skill_only",
+      "repetition": 1,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-skill_only-run-1",
+        "attemptHash": "083dbd9b6a85bfe842edc29744ca881ff394685e35a890564e2f83752daa7f13",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 89.18694405999995,
+        "operator_elapsed_seconds": 94.48796910600004,
+        "input_tokens": 139192,
+        "cached_input_tokens": 99456,
+        "output_tokens": 1584,
+        "tool_calls": 20,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "skill_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-design/SKILL.md",
+        "skills/expressivecss/expressivecss-theming/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/navigation-bar.md",
+        "skills/expressivecss/components/navigation-rail.md",
+        "skills/expressivecss/expressivecss-runtime/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/references/media.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:19bfa69ae3fb05b930b3ec29f386b258bef636aec28531c85d86a0e88f57f366",
+      "projectAfter": "sha256:09624aaa63c589437bc6bc3656fccb94545f1cc8caec69d8b527b2f71e04b971",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/transcript.json",
+          "sha256": "917ceb08f6ca62acc04e6330dd90d5b9d5d62d2045efaad08a406f73e31a1552"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/response.json",
+          "sha256": "361d2d27249b22db4a3e8be7dd6248eaf18e15e87c336a76d5b67dba993abcac"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/browser.json",
+          "sha256": "1a559d4e5f01ae89878b1241b8b9995000594de95377f2ac1ee772a6563fa546"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/cli-diagnostics.txt",
+          "sha256": "8e9639ec00b9c9dbec9622f7f14eefc937d15e5c9de7e669358567567b9c207e"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-1/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-mcp_only-run-2",
+      "attemptHash": "62699a78e3d391a48302ed87a7cea7d3c757e375a02517a71217593b085f6059",
+      "case": "form-action",
+      "mode": "mcp_only",
+      "repetition": 2,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-mcp_only-run-2",
+        "attemptHash": "62699a78e3d391a48302ed87a7cea7d3c757e375a02517a71217593b085f6059",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 47.93838852100004,
+        "operator_elapsed_seconds": 48.96418811799999,
+        "input_tokens": 109847,
+        "cached_input_tokens": 80896,
+        "output_tokens": 721,
+        "tool_calls": 8,
+        "tool_failures": 0
+      },
+      "skillHash": null,
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "mcp_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "quality_inspector",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:0ad1ae75b4fa4ce5e36f6ff2704f1535c923a75e4f1946b34a74ddf1f7055868",
+      "projectAfter": "sha256:655c2d4425ddfde3d54f81cdd10053f111adccf3ce006732df1685fa7784c10f",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/transcript.json",
+          "sha256": "d303a1435aad320b1ee57a358d8148722aaa1ac10c657727db9bfce310d68ac7"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/response.json",
+          "sha256": "6a0ea5abbc9db6f15cb3e8bebf4c6e9f742a4f1777b788928b4f440167ba80cb"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/browser.json",
+          "sha256": "44b647cfddc19997803b8e89872b2d7e024908ec3f16670660e3cdcff8d021dd"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/cli-diagnostics.txt",
+          "sha256": "d8ddabe4315e38ffd240a71a1507d16cd1579413c2ed22206ebcc6e0e7776c23"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/src/index.html",
+          "sha256": "8f7dee6c5ae6c94e5463391ca69f109a548db6d4f1bcca7b29d2cc672c50cd33"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-2/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-combined-run-2",
+      "attemptHash": "40810a0d1f553a26de29ae3c5a242419d971e9da621f1a5d9a91ed45bab77747",
+      "case": "form-action",
+      "mode": "combined",
+      "repetition": 2,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-combined-run-2",
+        "attemptHash": "40810a0d1f553a26de29ae3c5a242419d971e9da621f1a5d9a91ed45bab77747",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 77.99793022300005,
+        "operator_elapsed_seconds": 79.01103541400005,
+        "input_tokens": 165142,
+        "cached_input_tokens": 139392,
+        "output_tokens": 1433,
+        "tool_calls": 13,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "combined",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/buttons.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:5ca1e56668893b19e5cddd7be8266e89c4c0324fc9582e59b1bdef795c9036b9",
+      "projectAfter": "sha256:d79467d24b800b3198edf8cd4a34b70a5c81f5ee3e70d809fee28a5f3f2c26f9",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/combined/run-2/outputs/transcript.json",
+          "sha256": "f66e576c26ebfc20aa607bcbc3b1ad62e229e52dd53b1091f1216ceb13ef0a24"
+        },
+        {
+          "member": "eval-form-action/combined/run-2/outputs/response.json",
+          "sha256": "3c0e2bf498b03fc4a4d0dd6f7d2515e030a597ed4b8c4ab1b385df25a042f508"
+        },
+        {
+          "member": "eval-form-action/combined/run-2/outputs/browser.json",
+          "sha256": "b79db97c036be2653f3940783564fa10826b2d70f49b3479c6f03a27f1831985"
+        },
+        {
+          "member": "eval-form-action/combined/run-2/outputs/cli-diagnostics.txt",
+          "sha256": "e89c564a670db0cf7c68a9d88c3d4f252ff5e06a78fa65bb1f721f0b8b1293b5"
+        },
+        {
+          "member": "eval-form-action/combined/run-2/outputs/src/index.html",
+          "sha256": "fa451957611b2b265a88c44a8db29b7937ded52be3243fcb79ccaac1ec6c38ae"
+        },
+        {
+          "member": "eval-form-action/combined/run-2/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/combined/run-2/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-skill_only-run-2",
+      "attemptHash": "43e27040c08efd857a87371927caa3435067fa14b8d99a651057a923dbe20f39",
+      "case": "form-action",
+      "mode": "skill_only",
+      "repetition": 2,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-skill_only-run-2",
+        "attemptHash": "43e27040c08efd857a87371927caa3435067fa14b8d99a651057a923dbe20f39",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 67.1971176740001,
+        "operator_elapsed_seconds": 68.19614781700005,
+        "input_tokens": 139540,
+        "cached_input_tokens": 106880,
+        "output_tokens": 1155,
+        "tool_calls": 13,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "skill_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/buttons.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:5ca1e56668893b19e5cddd7be8266e89c4c0324fc9582e59b1bdef795c9036b9",
+      "projectAfter": "sha256:4bb7aa419f3272d2625d0170e05e936a7dedec6edfa32f6d5d165433001444e1",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/transcript.json",
+          "sha256": "6bddbf9f97d748053329e08623d27cdfeba0a921f86c7956ec2e01f6a36a4cda"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/response.json",
+          "sha256": "27fa157e2440a8099f48304925e053d59557153ff61df5e817a20d3b690e806c"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/browser.json",
+          "sha256": "2cffeefa66b1468c03813fe691b98e47f798e96cbc8841f165b05e9b9fe3e0af"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/cli-diagnostics.txt",
+          "sha256": "d7ace290e23e0fbb1f7efd462da611de6a09bba356837ad1f8913823a555f6b6"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/src/index.html",
+          "sha256": "e8d13afeee862a73bb8dd64138d59519d9b8e2ae230ec1abe22c423571ad1bad"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-2/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-combined-run-2",
+      "attemptHash": "9252934069dc013568d782f179d71c8f846b3e8bfefba7a4f4f30339e3f3f5f1",
+      "case": "navigation-media",
+      "mode": "combined",
+      "repetition": 2,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-combined-run-2",
+        "attemptHash": "9252934069dc013568d782f179d71c8f846b3e8bfefba7a4f4f30339e3f3f5f1",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 98.82501889599999,
+        "operator_elapsed_seconds": 104.16217362399993,
+        "input_tokens": 197241,
+        "cached_input_tokens": 154112,
+        "output_tokens": 2321,
+        "tool_calls": 19,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "combined",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-design/SKILL.md",
+        "skills/expressivecss/expressivecss-theming/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/navigation-bar.md",
+        "skills/expressivecss/components/navigation-rail.md",
+        "skills/expressivecss/expressivecss-runtime/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/references/media.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "rules_enforcer",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:19bfa69ae3fb05b930b3ec29f386b258bef636aec28531c85d86a0e88f57f366",
+      "projectAfter": "sha256:09624aaa63c589437bc6bc3656fccb94545f1cc8caec69d8b527b2f71e04b971",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/transcript.json",
+          "sha256": "e4605891bce482da34cf06c5974aedcf5f60d322948ae5e3d08c2b573537c592"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/response.json",
+          "sha256": "f36d858f3b06da9b625ca720fef7fda9232ccb19c3c9f1d3cdc2fc0596d9474e"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/browser.json",
+          "sha256": "b74fa8c8d0a7e1faa8ccaf259d66c70f2ce4927b888a3844a1e3f2b26591af53"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/cli-diagnostics.txt",
+          "sha256": "026e29f81ff6a15a86c372d81d67fbd0b5e327773519c968929dc118a9a332b2"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-2/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-skill_only-run-2",
+      "attemptHash": "a0388e726594f6f83cd455fd0ce9ab6ae47f6cafd1f9210412a6198d9634e382",
+      "case": "navigation-media",
+      "mode": "skill_only",
+      "repetition": 2,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-skill_only-run-2",
+        "attemptHash": "a0388e726594f6f83cd455fd0ce9ab6ae47f6cafd1f9210412a6198d9634e382",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 85.17194783199997,
+        "operator_elapsed_seconds": 90.44048874900001,
+        "input_tokens": 137774,
+        "cached_input_tokens": 98560,
+        "output_tokens": 1967,
+        "tool_calls": 18,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "skill_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-design/SKILL.md",
+        "skills/expressivecss/expressivecss-theming/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/navigation-bar.md",
+        "skills/expressivecss/components/navigation-rail.md",
+        "skills/expressivecss/expressivecss-runtime/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/references/media.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:19bfa69ae3fb05b930b3ec29f386b258bef636aec28531c85d86a0e88f57f366",
+      "projectAfter": "sha256:09624aaa63c589437bc6bc3656fccb94545f1cc8caec69d8b527b2f71e04b971",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/transcript.json",
+          "sha256": "99ff950d9f8512914c4e4615a2b35b092747af429219c6e0707359a04daeb78a"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/response.json",
+          "sha256": "3cf8734430e4070408cc79a5b5f26436f8ab553cf30cc1bf8fc48307343abe38"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/browser.json",
+          "sha256": "d0e4fdafcf0c4067010b2969b9d9af08d66b416d1a20c035d9e1f03433d8cd08"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/cli-diagnostics.txt",
+          "sha256": "5a53c965cba4dec25da30ce46bd8c69472be60aa8ebcecd5b449dab592f9f466"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-2/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-mcp_only-run-2",
+      "attemptHash": "aa8616abca3d598c857adf6a67fda0a1b9444e066874df167492546acfb40408",
+      "case": "navigation-media",
+      "mode": "mcp_only",
+      "repetition": 2,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-mcp_only-run-2",
+        "attemptHash": "aa8616abca3d598c857adf6a67fda0a1b9444e066874df167492546acfb40408",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 70.05039162500005,
+        "operator_elapsed_seconds": 75.32755457399995,
+        "input_tokens": 137118,
+        "cached_input_tokens": 83712,
+        "output_tokens": 1322,
+        "tool_calls": 14,
+        "tool_failures": 0
+      },
+      "skillHash": null,
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "mcp_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "quality_inspector",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:e7d12dd3726a3b46c3a6ec609274ea9c3af93756ffc0a8a372e2442c64650051",
+      "projectAfter": "sha256:5e5da59c3ae2ddee2a43c89e64b8f81756d64d19d8447d05ecf1f44bc7821bda",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/transcript.json",
+          "sha256": "06a7fd03903b90ea49d5c2f52afe5b8bafe9918eae86934da0af75224fce0ddc"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/response.json",
+          "sha256": "06cc9f621067a6723a3a92025645e3af8e3b42b1fedd9928d8ff2b2ef54a666d"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/browser.json",
+          "sha256": "088313e304340139a3508778485e7b261c59f18f0565303ec32871edbde9d22e"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/cli-diagnostics.txt",
+          "sha256": "5b4ce707d1b078a42fdabd9553fd48b36edb5927ba41914680f8f4411f65049c"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-2/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-combined-run-3",
+      "attemptHash": "64329321c34e0c4fc817c63144bb226392ebd7d3091639894a94776fbcd0fd31",
+      "case": "form-action",
+      "mode": "combined",
+      "repetition": 3,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-combined-run-3",
+        "attemptHash": "64329321c34e0c4fc817c63144bb226392ebd7d3091639894a94776fbcd0fd31",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 63.28994318599999,
+        "operator_elapsed_seconds": 64.29669604800002,
+        "input_tokens": 129954,
+        "cached_input_tokens": 110464,
+        "output_tokens": 1171,
+        "tool_calls": 13,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "combined",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/buttons.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:5ca1e56668893b19e5cddd7be8266e89c4c0324fc9582e59b1bdef795c9036b9",
+      "projectAfter": "sha256:d79467d24b800b3198edf8cd4a34b70a5c81f5ee3e70d809fee28a5f3f2c26f9",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/combined/run-3/outputs/transcript.json",
+          "sha256": "157636667925c750929811e890991a09dbdc1684d5998502a720ab03a4fdddee"
+        },
+        {
+          "member": "eval-form-action/combined/run-3/outputs/response.json",
+          "sha256": "906ad6cbe70bfcf941d4b1d01a0566afd14eb790ed3c2c5e56e9fd40c2472d40"
+        },
+        {
+          "member": "eval-form-action/combined/run-3/outputs/browser.json",
+          "sha256": "b84cc8511e1e5a98f22cda7d1437eec4940dca0fe82821fd0c5b563908884675"
+        },
+        {
+          "member": "eval-form-action/combined/run-3/outputs/cli-diagnostics.txt",
+          "sha256": "3d4f91945d57661c774268324485d3e7a2eb3da5d5c1577c860cc8ba9a4aa41b"
+        },
+        {
+          "member": "eval-form-action/combined/run-3/outputs/src/index.html",
+          "sha256": "fa451957611b2b265a88c44a8db29b7937ded52be3243fcb79ccaac1ec6c38ae"
+        },
+        {
+          "member": "eval-form-action/combined/run-3/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/combined/run-3/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-skill_only-run-3",
+      "attemptHash": "850c73454cf25055ae2051dd7b972c4e76d3b3ef62b15fb244771bbb405b8d91",
+      "case": "form-action",
+      "mode": "skill_only",
+      "repetition": 3,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-skill_only-run-3",
+        "attemptHash": "850c73454cf25055ae2051dd7b972c4e76d3b3ef62b15fb244771bbb405b8d91",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 55.907619107000066,
+        "operator_elapsed_seconds": 56.92320512200007,
+        "input_tokens": 102970,
+        "cached_input_tokens": 74752,
+        "output_tokens": 1147,
+        "tool_calls": 12,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "skill_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/buttons.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:5ca1e56668893b19e5cddd7be8266e89c4c0324fc9582e59b1bdef795c9036b9",
+      "projectAfter": "sha256:d79467d24b800b3198edf8cd4a34b70a5c81f5ee3e70d809fee28a5f3f2c26f9",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/transcript.json",
+          "sha256": "c6e914e527ecbcd231e6d4f254917e9b0a5a96a58b523d0299c1d807eab7e168"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/response.json",
+          "sha256": "0a23ace450216e57844ec562f346d661d78bd97b601b4537c840280c32fa859a"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/browser.json",
+          "sha256": "53c90494f0de07db0827142df986c2e9e8df82a5e011104591757479104ebe5d"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/cli-diagnostics.txt",
+          "sha256": "73619bbf330290a15d8bc2de6b2dc3a608ded9e45bf6993e6166c1b655916203"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/src/index.html",
+          "sha256": "fa451957611b2b265a88c44a8db29b7937ded52be3243fcb79ccaac1ec6c38ae"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/skill_only/run-3/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-form-action-mcp_only-run-3",
+      "attemptHash": "52a0ad05b599a7682744834daa80ab0f27458797ec466f46be630047c06e0208",
+      "case": "form-action",
+      "mode": "mcp_only",
+      "repetition": 3,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-form-action-mcp_only-run-3",
+        "attemptHash": "52a0ad05b599a7682744834daa80ab0f27458797ec466f46be630047c06e0208",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 54.86041898399987,
+        "operator_elapsed_seconds": 55.87080175299989,
+        "input_tokens": 112245,
+        "cached_input_tokens": 84480,
+        "output_tokens": 845,
+        "tool_calls": 7,
+        "tool_failures": 0
+      },
+      "skillHash": null,
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "mcp_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "quality_inspector",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:0ad1ae75b4fa4ce5e36f6ff2704f1535c923a75e4f1946b34a74ddf1f7055868",
+      "projectAfter": "sha256:655c2d4425ddfde3d54f81cdd10053f111adccf3ce006732df1685fa7784c10f",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "Preview is an enabled non-submitting button inside the form",
+          "passed": true
+        },
+        {
+          "name": "Existing save behavior is preserved without new JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Preview does not submit and Save still works in the browser",
+          "passed": true
+        },
+        {
+          "name": "Preview has no inline event handler",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/transcript.json",
+          "sha256": "bcd4bee5e664158dc8ba398f634d67f50b93bd314f6a8b1881805f864f3916a2"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/response.json",
+          "sha256": "0f28788db25a1b177aa1a1ffc5544206df4bb282ec5ae6f92a4d4b024079e57a"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/browser.json",
+          "sha256": "7f52d451340ffd49bafa838d8b43310e6a4954b38cc547ed8ee0106f34db7053"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/cli-diagnostics.txt",
+          "sha256": "d65b24144f410b924dbb7c21eb3234f3c7186fec9786a9e9f09bcbfa0b58ada0"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/src/index.html",
+          "sha256": "8f7dee6c5ae6c94e5463391ca69f109a548db6d4f1bcca7b29d2cc672c50cd33"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/src/app.css",
+          "sha256": "8b23d8fd58ed25ab6e3af653ec98803f25ed3a6fde681a6ba365a506df24a6f0"
+        },
+        {
+          "member": "eval-form-action/mcp_only/run-3/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-skill_only-run-3",
+      "attemptHash": "da1842022bef88664ce8b3b3351ef51b395a727cdf7414fb33b31881c754616b",
+      "case": "navigation-media",
+      "mode": "skill_only",
+      "repetition": 3,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-skill_only-run-3",
+        "attemptHash": "da1842022bef88664ce8b3b3351ef51b395a727cdf7414fb33b31881c754616b",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 117.70729280099995,
+        "operator_elapsed_seconds": 123.00084535600013,
+        "input_tokens": 175321,
+        "cached_input_tokens": 144384,
+        "output_tokens": 1906,
+        "tool_calls": 17,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "skill_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-design/SKILL.md",
+        "skills/expressivecss/expressivecss-theming/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/navigation-bar.md",
+        "skills/expressivecss/components/navigation-rail.md",
+        "skills/expressivecss/expressivecss-runtime/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/references/media.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:19bfa69ae3fb05b930b3ec29f386b258bef636aec28531c85d86a0e88f57f366",
+      "projectAfter": "sha256:09624aaa63c589437bc6bc3656fccb94545f1cc8caec69d8b527b2f71e04b971",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/transcript.json",
+          "sha256": "43e9ac0ffafd914038fbad5e864bbfb96daa2d1ef1e9e1288d3719473e455227"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/response.json",
+          "sha256": "1315f278a7630a65da0011fd1540a16c5268479b38611acfb459b0ddeead09e9"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/browser.json",
+          "sha256": "5e901d98d65d97f27124bde0e23e22f87b3af5ae0af897cb96e621dac65fba46"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/cli-diagnostics.txt",
+          "sha256": "bd32866092fe4faf475dcc166b5f0b47aeb1ac43ad24a54771e7ef25a8b23e5c"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/skill_only/run-3/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-mcp_only-run-3",
+      "attemptHash": "15be58a1051e97f5a6a8ab0d96fd7ec217af2c08a91babf6258aa9e5332f38ff",
+      "case": "navigation-media",
+      "mode": "mcp_only",
+      "repetition": 3,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-mcp_only-run-3",
+        "attemptHash": "15be58a1051e97f5a6a8ab0d96fd7ec217af2c08a91babf6258aa9e5332f38ff",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 98.0861916329998,
+        "operator_elapsed_seconds": 103.42863794300007,
+        "input_tokens": 153897,
+        "cached_input_tokens": 120192,
+        "output_tokens": 1432,
+        "tool_calls": 17,
+        "tool_failures": 0
+      },
+      "skillHash": null,
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "mcp_only",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "quality_inspector",
+          "failed": false
+        },
+        {
+          "server": "expressivecss",
+          "tool": "component_syntax_expert",
+          "failed": false
+        },
+        {
+          "server": "codex",
+          "tool": "list_mcp_resources",
+          "failed": false
+        },
+        {
+          "server": "codex",
+          "tool": "list_mcp_resource_templates",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:e7d12dd3726a3b46c3a6ec609274ea9c3af93756ffc0a8a372e2442c64650051",
+      "projectAfter": "sha256:5e5da59c3ae2ddee2a43c89e64b8f81756d64d19d8447d05ecf1f44bc7821bda",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/transcript.json",
+          "sha256": "5a285ca4d0670ac8ce21b0b61f89fc1204c1b759b6035550a5579bcf594d84b4"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/response.json",
+          "sha256": "a494a958a81c1a64da039df4cb29818e5da71fdf6826e297f1ac13c6d41ef7cc"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/browser.json",
+          "sha256": "299161e99c7bb4d88c9e82fbcb80b6c25fcbc7d4a22c865992711ba03cbb04bd"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/cli-diagnostics.txt",
+          "sha256": "a630f6942725b95d383a9e3e089d903c91f1a4fb89799e7c341d2b436655b314"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/mcp_only/run-3/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    },
+    {
+      "id": "eval-navigation-media-combined-run-3",
+      "attemptHash": "1c3ca06c91bde42ace30da6c5b100b634c853d7ed182814ae4bc71635fe15bb3",
+      "case": "navigation-media",
+      "mode": "combined",
+      "repetition": 3,
+      "automaticCompletion": true,
+      "humanReview": {
+        "run_id": "eval-navigation-media-combined-run-3",
+        "attemptHash": "1c3ca06c91bde42ace30da6c5b100b634c853d7ed182814ae4bc71635fe15bb3",
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "correctionRequests": null,
+        "reviewSeconds": null,
+        "notes": ""
+      },
+      "metrics": {
+        "agent_seconds": 77.03788193200016,
+        "operator_elapsed_seconds": 82.33618660799996,
+        "input_tokens": 144498,
+        "cached_input_tokens": 109696,
+        "output_tokens": 1913,
+        "tool_calls": 19,
+        "tool_failures": 1
+      },
+      "skillHash": "sha256:ca61095a2572d07de26ea74e2d8a8d97640c65e3e18db6704da7046e15bbb9cf",
+      "settings": {
+        "sandbox": "workspace-write",
+        "ephemeral": true,
+        "reasoningEffort": "low",
+        "provider": null,
+        "assistanceMode": "combined",
+        "userConfig": "ignored except pinned model defaults",
+        "overrides": [
+          "features.plugins=false",
+          "features.apps=false",
+          "features.remote_plugin=false",
+          "features.skip_host_skill_discovery=true",
+          "skills.include_instructions=false",
+          "skills.bundled.enabled=false",
+          "features.skill_search=false",
+          "features.multi_agent=false",
+          "features.multi_agent_v2=false",
+          "web_search=\"disabled\"",
+          "project_doc_max_bytes=0",
+          "features.memory_tool=false"
+        ],
+        "mcpServers": [
+          "expressivecss_eval_browser",
+          "expressivecss"
+        ],
+        "mcpCommands": "disabled"
+      },
+      "observedGuideReads": [
+        "skills/expressivecss/expressivecss-accessibility/SKILL.md",
+        "skills/expressivecss/expressivecss-design/SKILL.md",
+        "skills/expressivecss/expressivecss-theming/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/SKILL.md",
+        "skills/expressivecss/references/component-decisions.md",
+        "skills/expressivecss/components/navigation-bar.md",
+        "skills/expressivecss/components/navigation-rail.md",
+        "skills/expressivecss/expressivecss-runtime/SKILL.md",
+        "skills/expressivecss/expressivecss-usage/references/media.md"
+      ],
+      "mcpCalls": [
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        },
+        {
+          "server": "expressivecss_eval_browser",
+          "tool": "browser",
+          "failed": false
+        }
+      ],
+      "projectBefore": "sha256:19bfa69ae3fb05b930b3ec29f386b258bef636aec28531c85d86a0e88f57f366",
+      "projectAfter": "sha256:09624aaa63c589437bc6bc3656fccb94545f1cc8caec69d8b527b2f71e04b971",
+      "checks": [
+        {
+          "name": "Changes stay within the requested files, preserving dependencies and assets",
+          "passed": true
+        },
+        {
+          "name": "Scoped tasks introduce no invented declarative asset references",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 375px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 839px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 840px",
+          "passed": true
+        },
+        {
+          "name": "One appropriate navigation and no overflow at 1024px",
+          "passed": true
+        },
+        {
+          "name": "Responsive browser evidence collected at four widths",
+          "passed": true
+        },
+        {
+          "name": "Hero reserves its ratio and is not lazy-loaded",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves h1",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-title",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #account-summary",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves #preferences",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves profile destination and save behavior",
+          "passed": true
+        },
+        {
+          "name": "Refine preserves the brand seed",
+          "passed": true
+        },
+        {
+          "name": "No page JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "Codex execution completed",
+          "passed": true
+        },
+        {
+          "name": "Reported browser operations and tool errors match operator evidence",
+          "passed": true
+        },
+        {
+          "name": "Candidate uses the working fixture browser",
+          "passed": true
+        },
+        {
+          "name": "Observed MCP calls stay within the configured assistance mode",
+          "passed": true
+        }
+      ],
+      "artifacts": [
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/transcript.json",
+          "sha256": "18e9b938ddc3556973bd85b36d5c7eced9ae8bcb8ac09ecc4c225ce5b8ad4be4"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/response.json",
+          "sha256": "70a60d9dda3506f991fee697adefdfce9b29b9020e93e149025137ad44f30ad3"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/browser.json",
+          "sha256": "5c1e6e27b35a986eb1703c3a53646619ae33cf25cf4fe3b4f0b97a9c37df6373"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/cli-diagnostics.txt",
+          "sha256": "fcbc07acdeb60f6907ffe89c4210e9ce7f6813ff85a8a435e18d494e580aaa6d"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/src/index.html",
+          "sha256": "8c1397b53e38b496b4dea23891853644eeb7aa672b2b4410d3db8c756ef5a386"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/src/app.css",
+          "sha256": "a00182415bf38fe36ffdb061a828a01df1e884993d33c85790d40e5701530dbe"
+        },
+        {
+          "member": "eval-navigation-media/combined/run-3/outputs/src/app.js",
+          "sha256": "cc0ca51811005c1376c010708a03ea19973794b6f4c03c08c7a887b0266aff74"
+        }
+      ]
+    }
+  ],
+  "reviewers": [
+    {
+      "path": "review-mcp.html",
+      "sha256": "0803c9cd4b374eaba299e8eb4805dd755c25d3bc22fb86f7b981f278a45d2fcd",
+      "runs": 18,
+      "status": "browser-checked",
+      "dataEscaping": "HTML-safe JSON; decoded payload verified unchanged"
+    },
+    {
+      "path": "review-combined.html",
+      "sha256": "03457d68b3b373c71e70c41dad1ae59338e8d90df92a190ea35e3a840cfd860a",
+      "runs": 18,
+      "status": "browser-checked",
+      "dataEscaping": "HTML-safe JSON; decoded payload verified unchanged"
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm run verify (existing Playwright container)",
+      "summary": "1007 tests passed, zero skips; typecheck, generated files and 66-page docs build passed; Chromium, Firefox and WebKit critical flows passed",
+      "exitCode": 0,
+      "artifact": "verification/verify.log",
+      "sha256": "cd53869387ec2ccd0a9de4cab316e951ff93f0ee7a5d6772c0dcb08a5840c1bc"
+    },
+    {
+      "command": "npm run test:skill",
+      "summary": "240 tests and 22 replay evaluations passed",
+      "exitCode": 0,
+      "artifact": "verification/skill.log",
+      "sha256": "4a52765945ea308c13ff3b2161d5305d1678d9f9313f564b69436467f67f988a"
+    },
+    {
+      "command": "npm test --prefix mcp/expressivecss",
+      "summary": "7-tool smoke checks passed",
+      "exitCode": 0,
+      "artifact": "verification/mcp.log",
+      "sha256": "9cc3db07c35d8aa1b2b1826c37e0f553985484ecd21511b90b2cb6b6c320f75e"
+    },
+    {
+      "command": "npm run verify:packages",
+      "summary": "Isolated framework 0.8.0 and MCP server 0.1.0 passed",
+      "exitCode": 0,
+      "artifact": "verification/packages.log",
+      "sha256": "d5994fed4d1ea9d7b542498e31e313cfc99553bb57d0163139d28be7a38941a2"
+    },
+    {
+      "command": "npm run record:capabilities",
+      "summary": "17 mapped browser checks passed with unchanged inputs",
+      "exitCode": 0,
+      "artifact": "verification/capabilities.json",
+      "sha256": "bca3dce7f5a70ebfde06618929e12d31a6bd25d95e739fcd5b91d36c6142ef49"
+    },
+    {
+      "command": "Exact archive restore and tree hash comparison",
+      "summary": "838 entries restored with matching SHA-256 tree",
+      "status": "passed"
+    },
+    {
+      "command": "Chromium review viewer checks",
+      "summary": "Both pages show all 18 outputs, mode labels and paired summaries without page errors",
+      "status": "passed"
+    },
+    {
+      "command": "Final provenance and generated-file checks",
+      "summary": "Archived fixture, grader, MCP, model settings and skill still match current workspace; all generated files current",
+      "status": "passed"
+    }
+  ]
+}

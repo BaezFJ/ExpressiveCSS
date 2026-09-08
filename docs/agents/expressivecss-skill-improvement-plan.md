@@ -901,3 +901,15 @@ failed-check investigation whose required repair is outside scope. The
 [autonomy report](./expressivecss-autonomy.md) records results and limits.
 The implementation adds no package dependencies, public framework API, or
 automatic rollback of shared files.
+
+## Follow-up 8: cost of accepted results
+
+Extend the existing implementation benchmark with skill-only, ExpressiveCSS
+MCP-only and combined assistance, initially on form-action and navigation/media.
+Three sequential attempts per mode rotate order. Preserve separate input/cached/
+output tokens, agent and operator elapsed time, observed tool failures and actual
+MCP/guide use. Keep first-pass acceptance and human correction requests separate
+from automated checks, bound to the exact retained attempt. Export bounded
+transcripts, source and captures outside the checkout with hashes; commit only a
+compact evidence record. Use Skill Creator's existing review viewer. See the
+[comparison protocol and results](expressivecss-assistance-cost.md).

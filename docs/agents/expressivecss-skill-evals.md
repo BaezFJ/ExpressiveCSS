@@ -538,3 +538,13 @@ inspection/evaluation succeeds, including when it observes failing UI or returns
 false. Reserve `failed` for a failed tool operation. Application defects belong
 in findings. The shared adapter states this distinction and the validator rejects
 contradictory status claims.
+
+## Assistance cost and acceptance
+
+The implementation benchmark also supports `--assistance=true` for the existing
+form-action and navigation/media tasks. It compares skill-only, ExpressiveCSS
+MCP-only and combined assistance with identical browser access and sequential,
+rotating mode order. It preserves separate token counters, observed tool failures,
+guide reads and MCP calls. Human acceptance and correction effort remain pending
+until an operator records a review bound to the retained attempt. See the
+[protocol, durable export and reporting rules](expressivecss-assistance-cost.md).

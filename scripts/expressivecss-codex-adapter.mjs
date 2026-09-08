@@ -110,6 +110,10 @@ export function summarizeEvents(events) {
     usage,
     completedTurns: turns.length,
     toolCalls: completed.filter((item) => ['command_execution', 'mcp_tool_call', 'web_search', 'file_change'].includes(item?.type)).length,
+    toolFailures: completed.filter((item) => item?.status === 'failed' || item?.error || item?.result?.isError
+      || (item?.type === 'command_execution' && Number.isInteger(item.exit_code) && item.exit_code !== 0)).length,
+    mcpCalls: completed.filter((item) => item?.type === 'mcp_tool_call').map((item) => ({ server: item.server, tool: item.tool,
+      failed: Boolean(item.status === 'failed' || item.error || item.result?.isError) })),
     finalMessage: completed.filter((item) => item?.type === 'agent_message').at(-1)?.text ?? '',
     errors: events.filter((event) => event.type === 'error' || event.type === 'turn.failed'),
   };
@@ -179,7 +183,33 @@ export function validateVerificationClaims(response, evidence) {
   return failures;
 }
 
-export async function runCodex(input, { executable = 'codex', timeoutMs = 600_000, configPath = path.join(process.env.CODEX_HOME || path.join(homedir(), '.codex'), 'config.toml'), browserSession = null } = {}) {
+export const ASSISTANCE_MODES = ['skill_only', 'mcp_only', 'combined'];
+export const ASSISTANCE_CONFIG = [
+  'features.plugins=false', 'features.apps=false', 'features.remote_plugin=false',
+  'features.skip_host_skill_discovery=true', 'skills.include_instructions=false',
+  'skills.bundled.enabled=false', 'features.skill_search=false', 'features.multi_agent=false',
+  'features.multi_agent_v2=false', 'web_search="disabled"',
+  'project_doc_max_bytes=0', 'features.memory_tool=false',
+];
+const MCP_TOOLS = ['setup_expert', 'rules_enforcer', 'creative_director', 'page_architect', 'component_syntax_expert', 'quality_inspector'];
+
+export function assistanceArguments(mode, serverPath) {
+  if (!ASSISTANCE_MODES.includes(mode)) throw new Error('Invalid assistance mode');
+  const args = ['--ignore-user-config', ...ASSISTANCE_CONFIG.flatMap(value => ['-c', value])];
+  if (mode !== 'skill_only') {
+    if (!path.isAbsolute(serverPath ?? '')) throw new Error('Assistance MCP requires an absolute server path');
+    const settings = {
+      command: JSON.stringify(process.execPath), args: JSON.stringify([serverPath]),
+      enabled_tools: JSON.stringify(MCP_TOOLS), default_tools_approval_mode: '"approve"',
+      startup_timeout_sec: '20', tool_timeout_sec: '30',
+      'env.EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS': '"[]"', 'env.EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS': '"[]"',
+    };
+    for (const [key, value] of Object.entries(settings)) args.push('-c', `mcp_servers.expressivecss.${key}=${value}`);
+  }
+  return args;
+}
+
+export async function runCodex(input, { executable = 'codex', timeoutMs = 600_000, configPath = path.join(process.env.CODEX_HOME || path.join(homedir(), '.codex'), 'config.toml'), browserSession = null, assistanceMode = null, mcpServerPath = null } = {}) {
   if (!input?.projectRoot || !input?.task?.request) throw new Error('projectRoot and task.request are required');
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1) throw new Error('timeoutMs must be a positive integer');
   const started = performance.now();
@@ -205,15 +235,17 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
   if (rootText && !input.discovery) record('read', 'skills/expressivecss/SKILL.md'); // Actually supplied by the operator.
   const prompt = input.discovery ? input.task.request : [
     input.task.request,
-    `Work in ${input.projectRoot}. The ExpressiveCSS skill directory is ${input.skillRoot}.`,
+    `Work in ${input.projectRoot}.${input.skillRoot ? ` The ExpressiveCSS skill directory is ${input.skillRoot}.` : ''}`,
     rootText ? `The root skill has been read and is supplied below:\n${rootText}` : '',
     'Use the project files as task facts. Do not access evaluation cases, passing responses, grading scripts, or other runs.',
     'Do the requested work and verification. Report blockers honestly. Do not install or upgrade dependencies unless the task requests it.',
+    assistanceMode ? `Assistance mode: ${assistanceMode}. ${assistanceMode === 'skill_only' ? 'Use the supplied skill and installed project sources.' : 'ExpressiveCSS MCP tools are available for local guidance and static inspection; command execution through MCP is disabled. Use relevant tools when useful.'} ${assistanceMode === 'mcp_only' ? 'No ExpressiveCSS skill is supplied. Do not read skill directories elsewhere.' : ''} Use only this fixture, supplied guidance and enabled tools; do not inspect host configuration, other skills, the MCP implementation, or this benchmark. Do not delegate.` : '',
     input.responseInstructions ?? '',
     browserSession ? browserInstructions(browserSession.capability) : '',
     `Return a JSON object with caseId, mode, summary, findings, and any task-specific decision/evidence fields. caseId is ${input.task.id}. Do not manufacture tool traces, filesystem hashes, or verification artifacts.`,
   ].join('\n\n');
   const args = ['exec', '--ephemeral', '--skip-git-repo-check', '--json', '-s', input.readOnly ? 'read-only' : 'workspace-write', '-C', input.projectRoot, '-'];
+  if (assistanceMode) args.splice(-1, 0, ...assistanceArguments(assistanceMode, mcpServerPath));
   if (browserSession?.capability.status === 'available') {
     const endpoint = new URL(browserSession.url);
     if (endpoint.protocol !== 'http:' || endpoint.hostname !== '127.0.0.1' || !endpoint.port || endpoint.username || endpoint.password) throw new Error('Evaluation browser must use an operator-owned loopback URL');
@@ -257,7 +289,8 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
     guides = await guideFiles(input.skillRoot);
     skillHash = input.skillRoot ? await hashProject(input.skillRoot) : null;
     await new Promise((resolve, reject) => {
-      const child = spawn(executable, args, { shell: false, detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'] });
+      const child = spawn(executable, args, { shell: false, detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe'],
+        ...(assistanceMode ? { env: Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('EXPRESSIVECSS_MCP_') && !key.startsWith('SKIP_'))) } : {}) });
       let settled = false;
       const kill = () => { try { process.kill(process.platform === 'win32' ? child.pid : -child.pid, 'SIGKILL'); } catch {} };
       let pendingError = null;
@@ -310,11 +343,14 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
       commandDiagnostics: recordedCommandDiagnostics(events, candidateResponse),
       connectorErrors: events.filter((event) => event.type === 'item.completed' && event.item?.type === 'mcp_tool_call' && (event.item.status === 'failed' || event.item.error || event.item.result?.isError))
         .map(({ item }) => ({ server: item.server, tool: item.tool, output: item.error?.message ?? item.result?.content?.filter((block) => block.type === 'text').map((block) => block.text).join('\n') ?? '' })) },
-    runMetadata: { wallTimeMs: performance.now() - started, ...telemetry, observedGuideReads: [...guideReads], guideReadCoverage: 'complete-file tool output only; partial reads and unobservable tools are unavailable; shell edits are covered by filesystem hashes, not the edit trace', infrastructureError: failure, model: defaults.model, modelSource: defaults.model ? 'user-config default pinned in CLI' : 'unavailable', settings: { sandbox: input.readOnly ? 'read-only' : 'workspace-write', ephemeral: true, reasoningEffort: defaults.model_reasoning_effort, provider: defaults.model_provider }, skillHash },
+    runMetadata: { wallTimeMs: performance.now() - started, ...telemetry, observedGuideReads: [...guideReads], guideReadCoverage: 'complete-file tool output only; partial reads and unobservable tools are unavailable; shell edits are covered by filesystem hashes, not the edit trace', infrastructureError: failure, model: defaults.model, modelSource: defaults.model ? 'user-config default pinned in CLI' : 'unavailable', settings: { sandbox: input.readOnly ? 'read-only' : 'workspace-write', ephemeral: true, reasoningEffort: defaults.model_reasoning_effort, provider: defaults.model_provider,
+      ...(assistanceMode ? { assistanceMode, userConfig: 'ignored except pinned model defaults', overrides: ASSISTANCE_CONFIG,
+        mcpServers: ['expressivecss_eval_browser', ...(assistanceMode === 'skill_only' ? [] : ['expressivecss'])], mcpCommands: 'disabled' } : {}) }, skillHash },
   };
   if (input.artifactDirectory) {
     await mkdir(input.artifactDirectory, { recursive: true });
     await writeFile(path.join(input.artifactDirectory, 'transcript.json'), JSON.stringify(events.map((event) => redactValue(event)), null, 2));
+    if (assistanceMode) await writeFile(path.join(input.artifactDirectory, 'cli-diagnostics.txt'), redactValue(stderr));
     await writeFile(path.join(input.artifactDirectory, 'response.json'), JSON.stringify(retainedAdapterEnvelope(envelope), null, 2));
   }
   return envelope;

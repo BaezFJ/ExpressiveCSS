@@ -52,6 +52,10 @@ such as `fix/menu-focus` or `docs/theme-example`. Keep each PR focused.
   `_site/`, screenshots, reports, and caches stay untracked.
 - Optional design previews live in `.design-sync`; see its [README](.design-sync/README.md).
   They are not framework source or a prerequisite for ordinary contributions.
+- Compact evaluation records in `docs/agents/evidence/` are an exception to the
+  report rule: retain settings, hashes, named checks and artifact references there.
+  Keep raw transcripts and captures in an exported archive outside the checkout.
+  See [assistance cost comparisons](docs/agents/expressivecss-assistance-cost.md).
 
 ## Verify
 

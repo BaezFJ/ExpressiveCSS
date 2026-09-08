@@ -520,3 +520,85 @@ test('autonomy cases preserve user edits and distinguish a blocked repair from c
     } finally { await rm(root, { recursive: true, force: true }); }
   }
 });
+
+test('cost reports bind human decisions to attempts and include rejected work without inventing telemetry', async () => {
+  const { costReport, reviewTemplate } = await import('../scripts/report-expressivecss-assistance-cost.mjs');
+  const row = { eval_name: 'form-action', configuration: 'skill_only', run_number: 1,
+    result: { time_seconds: 10, failed: 0, total: 1 }, expectations: [{ passed: true }],
+    runMetadata: { usage: { input_tokens: 100, cached_input_tokens: 60, output_tokens: 10 }, toolCalls: 2, toolFailures: 0 } };
+  const rows = [row, { ...row, run_number: 2 }];
+  const pending = costReport(rows);
+  assert.equal(pending.groups['form-action/skill_only'].pending, 2);
+  assert.equal(pending.groups['form-action/skill_only'].correction_requests, null);
+  assert.equal(pending.groups['form-action/skill_only'].cost_per_accepted_output.input_tokens, null);
+  const reviews = reviewTemplate(rows).reviews.map((review, index) => ({ ...review, decision: index ? 'needs-correction' : 'accepted', reviewer: 'human-test', reviewedAt: '2026-09-07T12:00:00Z', correctionRequests: index, reviewSeconds: 5 }));
+  const group = costReport(rows, reviews).groups['form-action/skill_only'];
+  assert.equal(group.accepted, 1);
+  assert.equal(group.correction_requests, 1);
+  assert.equal(group.cost_per_accepted_output.input_tokens, 200);
+  assert.equal(group.cost_per_accepted_output.cached_input_tokens, 120);
+  assert.equal(group.cost_per_accepted_output.agent_seconds, 20);
+  assert.equal(group.cost_per_accepted_output.review_seconds, 10);
+  assert.equal(group.cost_per_accepted_output.operator_elapsed_seconds, null);
+  assert.throws(() => costReport(rows, [reviews[0], reviews[0]]), /duplicate/);
+  assert.throws(() => costReport(rows, [{ ...reviews[0], attemptHash: 'forged' }]), /stale/);
+  assert.throws(() => costReport(rows, [{ ...reviews[0], correctionRequests: 1 }]), /Acceptance/);
+  const failed = [{ ...row, result: { ...row.result, failed: 1 } }];
+  const forged = { ...reviews[0], attemptHash: reviewTemplate(failed).reviews[0].attemptHash };
+  assert.throws(() => costReport(failed, [forged]), /Acceptance/);
+  assert.throws(() => costReport(rows, [{ ...reviewTemplate(rows).reviews[0], reviewSeconds: 0 }]), /Pending/);
+});
+
+test('three-mode runner preserves absent-skill provenance, resume and durable evidence', { timeout: 60000 }, async () => {
+  const { exportAssistanceEvidence } = await import('../scripts/report-expressivecss-assistance-cost.mjs');
+  const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-cost-test-'));
+  try {
+    const bin = path.join(directory, 'bin'), skill = path.join(directory, 'skill'), output = path.join(directory, 'runs');
+    await mkdir(bin); await mkdir(skill);
+    await writeFile(path.join(skill, 'SKILL.md'), '# Test skill');
+    await writeFile(path.join(bin, 'codex'), `#!${process.execPath}\nprocess.stdin.resume();process.stdin.on('end',()=>{
+      console.log(JSON.stringify({type:'item.completed',item:{type:'agent_message',text:'{"summary":"Transport stub, no implementation","verificationChecks":[],"verificationErrors":[]}'}}));
+      console.log(JSON.stringify({type:'turn.completed',usage:{input_tokens:1,cached_input_tokens:0,output_tokens:1}}));
+    });`, { mode: 0o700 });
+    const script = `import {runBenchmark} from ${JSON.stringify(new URL('../scripts/benchmark-expressivecss-skill.mjs', import.meta.url).href)};
+      await runBenchmark({assistance:true,candidate:process.argv[1],output:process.argv[2],caseName:'form-action',repetitions:1,resume:process.argv[3]==='true'});`;
+    for (const resume of ['false', 'true']) {
+      const run = spawnSync(process.execPath, ['--input-type=module', '-e', script, skill, output, resume], { encoding: 'utf8', timeout: 25000, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` } });
+      assert.equal(run.status, 0, run.stderr || run.stdout);
+    }
+    const rows = JSON.parse(await readFile(path.join(output, 'results.json'), 'utf8'));
+    assert.deepEqual(rows.map(row => row.configuration), ['skill_only', 'mcp_only', 'combined']);
+    assert.equal(rows[1].skillHash, null);
+    assert.ok(rows.every(row => row.result.failed > 0 && row.operator_elapsed_seconds > 0));
+    const archive = path.join(directory, 'durable');
+    await mkdir(path.join(output, 'empty-evidence-directory'));
+    const report = await exportAssistanceEvidence({ source: output, output: archive });
+    assert.equal(report.status, 'pending-human-review');
+    const manifest = JSON.parse(await readFile(path.join(archive, 'manifest.json'), 'utf8'));
+    assert.match(manifest.archive.sha256, /^[a-f0-9]{64}$/);
+    assert.ok(manifest.files['eval-form-action/mcp_only/run-1/outputs/src/index.html']);
+    const extracted = path.join(directory, 'extracted'); await mkdir(extracted);
+    const untar = spawnSync('tar', ['-xzf', path.join(archive, 'evidence.tar.gz'), '-C', extracted]);
+    assert.equal(untar.status, 0);
+    const { snapshotProject } = await import('../scripts/expressivecss-codex-adapter.mjs');
+    assert.equal((await snapshotProject(extracted)).hash, manifest.sourceHash);
+    assert.equal(await readFile(path.join(extracted, 'results.json'), 'utf8'), await readFile(path.join(output, 'results.json'), 'utf8'));
+    await assert.rejects(exportAssistanceEvidence({ source: output, output: archive }), /EEXIST/);
+    const { symlink } = await import('node:fs/promises');
+    await symlink('/etc/hosts', path.join(output, 'outside'));
+    await assert.rejects(exportAssistanceEvidence({ source: output, output: path.join(directory, 'unsafe') }), /symbolic link/);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test('assistance tool checks distinguish native MCP inventory from extra servers', async () => {
+  const { gradeAssistanceToolAccess: grade } = await import('../scripts/benchmark-expressivecss-skill.mjs');
+  const inventory = ['list_mcp_resources', 'list_mcp_resource_templates'].map(tool => ({ server: 'codex', tool }));
+  for (const mode of ['skill_only', 'mcp_only', 'combined']) {
+    assert.equal(grade(mode, inventory).passed, true);
+    assert.equal(grade(mode, [{ server: 'external', tool: 'browser' }]).passed, false);
+    assert.equal(grade(mode, [{ server: 'codex', tool: 'arbitrary_tool' }]).passed, false);
+  }
+  assert.equal(grade('skill_only', [{ server: 'expressivecss', tool: 'quality_inspector' }]).passed, false);
+  assert.equal(grade('combined', [{ server: 'expressivecss', tool: 'quality_inspector' }]).passed, true);
+  assert.equal(grade('unknown', []).passed, false);
+});

@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
 import { JSDOM } from 'jsdom';
 import { EVALUATOR_LIMITS, materializeProjectFixture, readCompletionFiles, readBoundedRegularFile, redactValue } from './eval-expressivecss-skill.mjs';
-import { configuredDefaults, hashProject, retainedBrowserEvidence, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
+import { ASSISTANCE_MODES, ASSISTANCE_CONFIG, configuredDefaults, hashProject, retainedBrowserEvidence, runCodex, validateVerificationClaims } from './expressivecss-codex-adapter.mjs';
 import { assertSameProvenance, collectEvaluationProvenance, validateRetainedResults } from './expressivecss-eval-provenance.mjs';
 import { startEvaluationBrowser, startFixtureServer, createRestrictedFixturePage } from './expressivecss-eval-browser.mjs';
 import { captureInterfaceQuality, gradeInterfaceQuality, INTERFACE_SCENARIOS, retainedInterfaceEvidence } from './expressivecss-interface-quality.mjs';
@@ -18,6 +18,14 @@ const save = async (filename, value) => { await mkdir(path.dirname(filename), { 
 const check = (text, passed, evidence) => ({ text, passed: Boolean(passed), evidence: redactValue(String(evidence)) });
 const isInterfaceCase = (name) => ['interface-refine', 'interface-review'].includes(name);
 export const INTERFACE_REVIEW_CRITERIA = ['C-TASK-PRIMARY', 'C-EMPHASIS-ONE', 'C-CONTAINER-PURPOSE', 'C-TYPE-ROLE', 'C-IDENTITY-CHANNELS', 'C-ADAPTIVE-COMPOSITION', 'C-THEME-HIERARCHY', 'C-LONG-CONTENT-FIT', 'C-STATE-NONCOLOR', 'A-FOCUS-VISIBLE'];
+
+export function gradeAssistanceToolAccess(configuration, calls) {
+  return check('Observed MCP calls stay within the configured assistance mode', ASSISTANCE_MODES.includes(configuration)
+    && Array.isArray(calls) && calls.every(call => call.server === 'expressivecss_eval_browser'
+      || (configuration !== 'skill_only' && call.server === 'expressivecss')
+      // Codex emits its native inventory helpers as MCP events; this is not another server.
+      || (call.server === 'codex' && ['list_mcp_resources', 'list_mcp_resource_templates'].includes(call.tool))), JSON.stringify(calls));
+}
 
 // Report completeness and provenance only. Independent review judges interpretations.
 export function gradeInterfaceReviewReferences(response, records) {
@@ -250,17 +258,18 @@ export function statistics(values) {
 }
 
 // Skill Creator's viewer reads metadata and files immediately inside each run.
-export async function prepareReviewOutputs(output) {
+export async function prepareReviewOutputs(output, configurations = ['with_skill', 'old_skill']) {
   for (const directory of await readdir(output, { withFileTypes: true })) {
     if (!directory.isDirectory() || !directory.name.startsWith('eval-')) continue;
     const evalDirectory = path.join(output, directory.name);
     const metadata = JSON.parse(await readFile(path.join(evalDirectory, 'eval_metadata.json'), 'utf8'));
-    for (const configuration of ['with_skill', 'old_skill']) {
+    for (const configuration of configurations) {
       const configDirectory = path.join(evalDirectory, configuration);
       for (const run of await readdir(configDirectory, { withFileTypes: true })) {
         if (!run.isDirectory()) continue;
         const runDirectory = path.join(configDirectory, run.name);
-        await save(path.join(runDirectory, 'eval_metadata.json'), metadata);
+        await save(path.join(runDirectory, 'eval_metadata.json'), ASSISTANCE_MODES.includes(configuration)
+          ? { ...metadata, prompt: `Reviewing ${configuration}, ${run.name}.\n\n${metadata.prompt}` } : metadata);
         const outputs = path.join(runDirectory, 'outputs');
         for (const phase of ['before', 'after', 'candidate-browser']) {
           const phaseDirectory = path.join(outputs, phase);
@@ -438,16 +447,19 @@ export async function grade(testCase, root, before, envelope, browser, baselineC
   } finally { dom.window.close(); }
 }
 
-export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skills/expressivecss'), output, repetitions = 3, caseName = null, resume = false }) {
-  if (!baseline || !output) throw new Error('--baseline and --output are required');
+export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skills/expressivecss'), output, repetitions = 3, caseName = null, resume = false, assistance = false }) {
+  if ((!baseline && !assistance) || !output) throw new Error('--baseline (unless --assistance=true) and --output are required');
   if (!Number.isSafeInteger(repetitions) || repetitions < 1 || repetitions > 3) throw new Error('repetitions must be 1–3');
-  const versions = { with_skill: path.resolve(candidate), old_skill: path.resolve(baseline) };
-  const hashes = Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, await hashProject(directory)])));
-  const selectedNames = caseName ? caseName.split(',') : null;
+  const versions = assistance ? { skill_only: path.resolve(candidate), mcp_only: null, combined: path.resolve(candidate) }
+    : { with_skill: path.resolve(candidate), old_skill: path.resolve(baseline) };
+  const modeNames = Object.keys(versions);
+  const hashes = Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, directory ? await hashProject(directory) : null])));
+  const selectedNames = caseName ? caseName.split(',') : assistance ? ['form-action', 'navigation-media'] : null;
   if (selectedNames && (new Set(selectedNames).size !== selectedNames.length || selectedNames.some((name) => !DEFINITIONS.cases.some((item) => item.name === name)))) throw new Error('Unknown case or duplicate selection');
   const definitions = selectedNames ? DEFINITIONS.cases.filter((item) => selectedNames.includes(item.name)) : DEFINITIONS.cases;
-  const collect = async () => collectEvaluationProvenance({ protocol: 'implementation-benchmark-v1',
-    plan: { cases: definitions, repetitions, skillHashes: Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, await hashProject(directory)]))), timeoutMs: 600000 },
+  if (assistance && definitions.some(item => !['form-action', 'navigation-media'].includes(item.name))) throw new Error('Assistance comparison currently supports form-action and navigation-media');
+  const collect = async () => collectEvaluationProvenance({ protocol: assistance ? 'assistance-cost-v1' : 'implementation-benchmark-v1',
+    plan: { cases: definitions, repetitions, skillHashes: Object.fromEntries(await Promise.all(Object.entries(versions).map(async ([name, directory]) => [name, directory ? await hashProject(directory) : null]))), timeoutMs: 600000, ...(assistance ? { modes: ASSISTANCE_MODES, overrides: ASSISTANCE_CONFIG, execution: 'sequential rotating order', mcpCommands: 'disabled' } : {}) },
     modelSettings: await configuredDefaults() });
   const provenance = await collect();
   if (Object.entries(hashes).some(([name, hash]) => provenance.plan.skillHashes[name] !== hash)) throw new Error('Skill inputs changed while preparing the benchmark');
@@ -469,9 +481,11 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
   for (let repetition = 1; repetition <= repetitions; repetition++) {
     for (const testCase of definitions) {
       const caseIndex = DEFINITIONS.cases.indexOf(testCase);
-      const configurations = (repetition + caseIndex) % 2 ? ['with_skill', 'old_skill'] : ['old_skill', 'with_skill'];
+      const offset = (repetition - 1 + caseIndex) % modeNames.length;
+      const configurations = assistance ? [...modeNames.slice(offset), ...modeNames.slice(0, offset)]
+        : (repetition + caseIndex) % 2 ? ['with_skill', 'old_skill'] : ['old_skill', 'with_skill'];
       assertSameProvenance(provenance, await collect());
-      const pair = await Promise.all(configurations.map(async (configuration) => {
+      const attempts = configurations.map(configuration => async () => {
         const runDirectory = path.join(output, `eval-${testCase.name}`, configuration, `run-${repetition}`);
         const outputDirectory = path.join(runDirectory, 'outputs');
         const retained = previous.find((row) => row.eval_name === testCase.name && row.configuration === configuration && row.run_number === repetition);
@@ -480,22 +494,23 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
           return retained;
         }
         await mkdir(outputDirectory, { recursive: true });
+        const attemptStarted = performance.now();
         let root;
         let record;
         let browserSession;
         let initialCapability;
         try {
           root = await prepareCase(testCase);
-          const skillRoot = path.join(root, '.agents/skills/expressivecss');
-          await cp(versions[configuration], skillRoot, { recursive: true });
+          const skillRoot = versions[configuration] ? path.join(root, '.agents/skills/expressivecss') : null;
+          if (skillRoot) await cp(versions[configuration], skillRoot, { recursive: true });
           const before = await readCompletionFiles(root);
           browserSession = testCase.name === 'version-mismatch'
             ? { capability: { status: 'unavailable', reason: 'Only older package metadata is available; no target-version browser contract can be verified.' }, records: [], close: async () => {} }
             : await startEvaluationBrowser({ projectRoot: root, artifactDirectory: path.join(outputDirectory, 'candidate-browser') });
           initialCapability = structuredClone(browserSession.capability);
           const baselineCapture = testCase.name === 'navigation-media' || isInterfaceCase(testCase.name) || isMaterialCase(testCase.name) ? await browserEvidence(root, path.join(outputDirectory, 'before'), testCase.name) : null;
-          const envelope = await runCodex({ task: testCase, projectRoot: root, skillRoot, rootSkill: await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'), artifactDirectory: outputDirectory, readOnly: testCase.readOnly,
-            responseInstructions: benchmarkResponseInstructions(testCase.name) }, { browserSession });
+          const envelope = await runCodex({ task: testCase, projectRoot: root, skillRoot, rootSkill: skillRoot ? await readFile(path.join(skillRoot, 'SKILL.md'), 'utf8') : null, artifactDirectory: outputDirectory, readOnly: testCase.readOnly,
+            responseInstructions: benchmarkResponseInstructions(testCase.name) }, { browserSession, ...(assistance ? { assistanceMode: configuration, mcpServerPath: path.join(ROOT, 'mcp/expressivecss/server.js') } : {}) });
           let browser = null;
           let browserError = null;
           if (testCase.name !== 'version-mismatch') try { browser = await browserEvidence(root, path.join(outputDirectory, 'after'), testCase.name); } catch (error) { browserError = error.message; }
@@ -515,10 +530,14 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
             initialCapability.status === 'available' && browserSession.records.some((row) => row.action !== 'preflight' && row.status === 'success'), JSON.stringify(initialCapability)));
           if (browserError) expectations.push(check('Browser verification available', false, browserError));
           await save(path.join(outputDirectory, 'browser.json'), { before: isMaterialCase(testCase.name) ? retainedMaterialEvidence(baselineCapture) : isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(baselineCapture) : baselineCapture, after: isMaterialCase(testCase.name) ? retainedMaterialEvidence(browser) : isInterfaceCase(testCase.name) ? retainedInterfaceEvidence(browser) : browser, error: redactValue(browserError) });
+          if (assistance) {
+            const calls = envelope.runMetadata.mcpCalls ?? [];
+            expectations.push(gradeAssistanceToolAccess(configuration, calls));
+          }
           const passed = expectations.filter((item) => item.passed).length;
           const usage = envelope.runMetadata.usage;
           const result = { pass_rate: passed / expectations.length, passed, failed: expectations.length - passed, total: expectations.length,
-            time_seconds: envelope.runMetadata.wallTimeMs / 1000, tokens: Number.isFinite(usage?.input_tokens) && Number.isFinite(usage?.output_tokens) ? usage.input_tokens + usage.output_tokens : null, tool_calls: envelope.runMetadata.toolCalls, errors: envelope.runMetadata.infrastructureError ? 1 : 0 };
+            time_seconds: envelope.runMetadata.wallTimeMs / 1000, tokens: Number.isFinite(usage?.input_tokens) && Number.isFinite(usage?.output_tokens) ? usage.input_tokens + usage.output_tokens : null, tool_calls: envelope.runMetadata.toolCalls, tool_failures: envelope.runMetadata.toolFailures, input_tokens: usage?.input_tokens ?? null, cached_input_tokens: usage?.cached_input_tokens ?? null, output_tokens: usage?.output_tokens ?? null, errors: envelope.runMetadata.infrastructureError ? 1 : 0 };
           await save(path.join(runDirectory, 'grading.json'), { expectations, summary: result, provenance });
           await save(path.join(runDirectory, 'timing.json'), { total_tokens: result.tokens, duration_ms: envelope.runMetadata.wallTimeMs, total_duration_seconds: result.time_seconds });
           record = { eval_id: caseIndex + 1, eval_name: testCase.name, configuration, run_number: repetition, skillHash: hashes[configuration], provenance, result, expectations, runMetadata: redactValue(envelope.runMetadata) };
@@ -549,21 +568,39 @@ export async function runBenchmark({ baseline, candidate = path.join(ROOT, 'skil
               }
             } finally { await rm(root, { recursive: true, force: true }); }
           }
+          if (record) record.operator_elapsed_seconds = (performance.now() - attemptStarted) / 1000;
         }
-      }));
+      });
+      const pair = [];
+      if (assistance) {
+        for (const attempt of attempts) {
+          assertSameProvenance(provenance, await collect());
+          const row = await attempt(); pair.push(row);
+          if (!previous.includes(row)) { results.push(row); await save(path.join(output, 'results.json'), results); }
+          assertSameProvenance(provenance, await collect());
+        }
+      } else pair.push(...await Promise.all(attempts.map(attempt => attempt())));
       assertSameProvenance(provenance, await collect());
-      results.push(...pair.filter((row) => !previous.includes(row)));
+      if (!assistance) results.push(...pair.filter((row) => !previous.includes(row)));
       await save(path.join(output, 'results.json'), results);
     }
   }
+  const metrics = assistance ? ['pass_rate', 'time_seconds', 'tokens', 'input_tokens', 'cached_input_tokens', 'output_tokens', 'tool_calls', 'tool_failures'] : ['pass_rate', 'time_seconds', 'tokens'];
   const run_summary = {};
-  for (const configuration of ['with_skill', 'old_skill']) run_summary[configuration] = Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, statistics(results.filter((row) => row.configuration === configuration).map((row) => row.result[metric]))]));
-  run_summary.delta = Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, Number.isFinite(run_summary.with_skill[metric].mean) && Number.isFinite(run_summary.old_skill[metric].mean) ? run_summary.with_skill[metric].mean - run_summary.old_skill[metric].mean : null]));
-  const benchmark = { metadata: { skill_name: 'expressivecss', timestamp: new Date().toISOString(), executor_model: 'configured Codex default', runs_per_configuration: repetitions, evals_run: definitions.map((item) => item.name), baselineHash: hashes.old_skill, candidateHash: hashes.with_skill, provenance }, runs: results.sort((a, b) => a.configuration === b.configuration ? 0 : a.configuration === 'with_skill' ? -1 : 1), run_summary,
-    per_case: Object.fromEntries(definitions.map((item) => [item.name, Object.fromEntries(['with_skill', 'old_skill'].map((config) => [config, Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, statistics(results.filter((row) => row.eval_name === item.name && row.configuration === config).map((row) => row.result[metric]))]))]))])),
+  for (const configuration of modeNames) run_summary[configuration] = Object.fromEntries(metrics.map((metric) => [metric, statistics(results.filter((row) => row.configuration === configuration).map((row) => row.result[metric]))]));
+  if (!assistance) run_summary.delta = Object.fromEntries(['pass_rate', 'time_seconds', 'tokens'].map((metric) => [metric, Number.isFinite(run_summary.with_skill[metric].mean) && Number.isFinite(run_summary.old_skill[metric].mean) ? run_summary.with_skill[metric].mean - run_summary.old_skill[metric].mean : null]));
+  const benchmark = { metadata: { skill_name: 'expressivecss', timestamp: new Date().toISOString(), executor_model: 'configured Codex default', runs_per_configuration: repetitions, evals_run: definitions.map((item) => item.name), skillHashes: hashes, baselineHash: hashes.old_skill, candidateHash: hashes.with_skill, provenance }, runs: [...results].sort((a, b) => modeNames.indexOf(a.configuration) - modeNames.indexOf(b.configuration)), run_summary,
+    per_case: Object.fromEntries(definitions.map((item) => [item.name, Object.fromEntries(modeNames.map((config) => [config, Object.fromEntries(metrics.map((metric) => [metric, statistics(results.filter((row) => row.eval_name === item.name && row.configuration === config).map((row) => row.result[metric]))]))]))])),
     notes: ['Local browser measurements are laboratory evidence, not field Core Web Vitals.', 'Human visual review remains required.', 'Guide read telemetry counts complete guide contents observed in successful tool output; partial reads are unavailable.'] };
   await save(path.join(output, 'benchmark.json'), benchmark);
-  await prepareReviewOutputs(output);
+  // Skill Creator's summary table displays two configurations; retain both comparisons.
+  if (assistance) for (const mode of ['mcp_only', 'combined']) await save(path.join(output, `benchmark-skill-vs-${mode}.json`), {
+    ...benchmark, runs: benchmark.runs.filter(row => ['skill_only', mode].includes(row.configuration)),
+    run_summary: Object.fromEntries(['skill_only', mode].map(name => [name,
+      Object.fromEntries(Object.entries(run_summary[name]).filter(([, stat]) => Number.isFinite(stat.mean)))])),
+    notes: [...benchmark.notes, `Summary compares skill_only and ${mode}. The output viewer retains all eighteen planned attempts when using three repetitions.`],
+  });
+  await prepareReviewOutputs(output, modeNames);
   return benchmark;
 }
 
@@ -598,5 +635,5 @@ export async function runTriggerEvaluations({ baseline, candidate = path.join(RO
 if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
   const args = Object.fromEntries(process.argv.slice(2).map((arg) => { const index = arg.indexOf('='); if (index < 0) throw new Error('Use --option=value'); return [arg.slice(2, index), arg.slice(index + 1)]; }));
   if (args.triggers === 'true') await runTriggerEvaluations({ baseline: args.baseline, candidate: args.candidate, output: args.output });
-  else await runBenchmark({ baseline: args.baseline, candidate: args.candidate, output: args.output, repetitions: args.repetitions ? Number(args.repetitions) : 3, caseName: args.case, resume: args.resume === 'true' });
+  else await runBenchmark({ baseline: args.baseline, candidate: args.candidate, output: args.output, repetitions: args.repetitions ? Number(args.repetitions) : 3, caseName: args.case, resume: args.resume === 'true', assistance: args.assistance === 'true' });
 }

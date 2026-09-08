@@ -13,8 +13,12 @@ export const EVALUATION_SOURCE_FILES = Object.freeze([
   'scripts/expressivecss-material-quality.mjs',
   'scripts/lib/bounded-file.mjs', 'scripts/lib/consumer-browser.mjs',
   'scripts/expressivecss-interface-quality.mjs', 'scripts/expressivecss-eval-provenance.mjs',
+  'scripts/report-expressivecss-assistance-cost.mjs',
   'skills/expressivecss/references/contract.json', 'package.json', 'package-lock.json',
   'mcp/expressivecss/package.json', 'mcp/expressivecss/package-lock.json',
+  'mcp/expressivecss/server.js', 'mcp/expressivecss/scripts/resolve-version.mjs',
+  'mcp/expressivecss/component-guides.json', 'mcp/expressivecss/component-decisions.json',
+  'mcp/expressivecss/capability-roadmap.json', 'mcp/expressivecss/contract.json', 'mcp/expressivecss/semantics-data.json',
 ]);
 const INSTALLED_FILES = [
   'node_modules/@playwright/test/package.json', 'node_modules/playwright-core/package.json',
@@ -65,7 +69,7 @@ export async function validateRetainedResults({ output, provenance, expectedRows
   if (!Array.isArray(expectedRows) || !expectedRows.length || expectedRows.length > 2000) throw new Error('Invalid expected evaluation rows');
   const expected = new Map();
   for (const row of expectedRows) {
-    if (!safeName(row.eval_name) || !safeName(row.configuration) || !Number.isSafeInteger(row.run_number) || row.run_number < 1 || !validHash(row.skillHash) || typeof row.prompt !== 'string' || expected.has(rowKey(row))) throw new Error('Invalid or duplicate expected evaluation row');
+    if (!safeName(row.eval_name) || !safeName(row.configuration) || !Number.isSafeInteger(row.run_number) || row.run_number < 1 || !(validHash(row.skillHash) || (row.configuration === 'mcp_only' && row.skillHash === null)) || typeof row.prompt !== 'string' || expected.has(rowKey(row))) throw new Error('Invalid or duplicate expected evaluation row');
     expected.set(rowKey(row), row);
   }
   assertSameProvenance(provenance, await readJson(output, 'provenance.json', 1024 * 1024));
