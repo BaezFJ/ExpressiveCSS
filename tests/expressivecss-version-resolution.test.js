@@ -10,6 +10,7 @@ import { resolveExpressiveVersion } from '../scripts/lib/resolve-expressivecss-v
 
 const fixturePath = new URL('./fixtures/expressivecss-version-resolution/cases.json', import.meta.url);
 const fixtures = JSON.parse(await readFile(fixturePath, 'utf8')).cases;
+const frameworkVersion = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
 const roots = [];
 
 afterEach(async () => {
@@ -524,7 +525,7 @@ describe('ExpressiveCSS version resolution', () => {
     const contracts = await Promise.all(contractUrls.map((url) => readFile(url, 'utf8').then(JSON.parse)));
     assert.deepEqual(contracts[0], contracts[1]);
     assert.equal(contracts[0].generatedBy, 'scripts/gen-expressivecss-skill.mjs');
-    assert.equal(contracts[0].frameworkVersion, '0.8.0');
+    assert.equal(contracts[0].frameworkVersion, frameworkVersion);
     assert.match(contracts[0].sourceHash, /^[a-f0-9]{64}$/);
     assert.deepEqual(contracts[0].sources, [
       'llm.md',
@@ -541,11 +542,11 @@ describe('ExpressiveCSS version resolution', () => {
     const independentHash = createHash('sha256');
     for (const [source, content] of sourceContents) independentHash.update(`${source}\0${content}\0`);
     assert.equal(contracts[0].sourceHash, independentHash.digest('hex'));
-    assert.ok(contracts[0].releaseTags.includes('v0.8.0'));
+    assert.ok(contracts[0].releaseTags.includes(`v${frameworkVersion}`));
 
     const projectRoot = await materialize({
-      'package.json': '{"dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
-      'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0"}',
+      'package.json': JSON.stringify({ dependencies: { '@expressivecss/expressive': `^${frameworkVersion}` } }),
+      'node_modules/@expressivecss/expressive/package.json': JSON.stringify({ name: '@expressivecss/expressive', version: frameworkVersion }),
     });
     const result = spawnSync(process.execPath, [
       fileURLToPath(new URL('../skills/expressivecss/scripts/resolve-version.mjs', import.meta.url)),
@@ -553,7 +554,7 @@ describe('ExpressiveCSS version resolution', () => {
     ], { encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
     const output = JSON.parse(result.stdout);
-    assert.equal(output.skillContractVersion, '0.8.0');
+    assert.equal(output.skillContractVersion, frameworkVersion);
     assert.equal(output.contractSourceHash, contracts[0].sourceHash);
     assert.equal(output.contractStatus, 'match');
     assert.equal(output.documentationMode, 'bundled');
@@ -573,12 +574,12 @@ describe('ExpressiveCSS version resolution', () => {
     const hashes = new Set();
     for (const name of names) {
       const guide = await readFile(new URL(name, directory), 'utf8');
-      assert.match(guide, /Contract: ExpressiveCSS 0\.8\.0/);
+      assert.ok(guide.includes(`Contract: ExpressiveCSS ${frameworkVersion}\n`));
       assert.match(guide, /Sources: `llm\.md`, `semantics\.json`, `docs\/src\/data\/nav\.ts`, `docs\/src\/data\/component-decisions\.json`, `package\.json`, `CHANGELOG\.md`/);
       const hash = guide.match(/Contract SHA-256: `([a-f0-9]{64})`/)?.[1];
       assert.ok(hash, `${name} has no contract hash`);
       hashes.add(hash);
-      assert.match(guide, /\/tree\/v0\.8\.0/);
+      assert.ok(guide.includes(`/tree/v${frameworkVersion})`));
     }
     assert.equal(hashes.size, 1, 'generated guides disagree on contract provenance');
   });

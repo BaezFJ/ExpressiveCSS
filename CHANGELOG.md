@@ -5,6 +5,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-09-08
+
+### Migration from 0.8.0
+
+- Replace card-reveal `.activator` headings and separate close controls with a
+  native `<button type="button" class="card-reveal-trigger" aria-controls="details">`.
+  Its closest card must contain exactly one direct reveal panel with the matching
+  `id="details"`. Use unique IDs for each card and give every trigger an accessible
+  name. The runtime owns `aria-expanded`; legacy triggers no longer toggle panels.
+- Use `<div class="actions">` for card command groups instead of `<nav>`.
+- Review layouts that depend on medium or large app-bar heights and typography;
+  their flexible-bar sizes now follow the mappings listed below.
+- Include `dist/fonts/` beside `dist/css/` when copying the compiled distribution.
+  Sass consumers that load their own fonts can set `$expressive-include-fonts: false`.
+
 ### Added
 
 - Community contribution and security policies, required CI, independently versioned MCP releases, and stable-release documentation deployment. Tracks [#134](https://github.com/BaezFJ/ExpressiveCSS/issues/134).
@@ -1478,7 +1493,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0
 [0.7.0-rc.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.6.0...v0.7.0-rc.0

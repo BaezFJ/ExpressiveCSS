@@ -31,7 +31,7 @@ const bySlug = new Map(data.components.map((item) => [item.slug, item]));
 describe('ExpressiveCSS component decisions', () => {
   test('cover every generated guide exactly once with usable fields', async () => {
     assert.equal(data.schemaVersion, 1);
-    assert.equal(data.frameworkVersion, '0.8.0');
+    assert.equal(data.frameworkVersion, JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version);
     assert.doesNotMatch(generator, /const COMPONENTS\s*=/, 'generator contains a second component catalogue');
     assert.deepEqual(data.components.map((item) => item.slug).sort(), guideNames);
     assert.deepEqual(data.components.map((item) => item.guideSource.pageId), cataloguePageIds);

@@ -50,7 +50,7 @@ jobs:
         run: node scripts/release.mjs
       - run: npm ci
       - run: npm ci --prefix mcp/expressivecss
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run verify
       - run: npm test --prefix mcp/expressivecss
       - run: npm run verify:packages

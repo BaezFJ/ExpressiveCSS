@@ -5,13 +5,13 @@ Important prompts in a user flow. Dedicated to a single task.
 
 Component ID: `dialogs`
 
-[Component documentation](https://www.expressivecss.com/dialogs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/dialogs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.8.0)
+[Component documentation](https://www.expressivecss.com/dialogs.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/dialogs.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.9.0)
 
-Contract: ExpressiveCSS 0.8.0
+Contract: ExpressiveCSS 0.9.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+Contract SHA-256: `ced880bd0ba99a8522712940eb7f77de9d26cadee729bd8d8f61fea5f82d903c`
 
 #### Selection and adaptation
 

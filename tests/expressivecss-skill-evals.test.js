@@ -888,7 +888,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       }
       const result = await resolveExpressiveVersion({
         projectRoot: root,
-        contractVersion: '0.8.0',
+        contractVersion: generatedContract.frameworkVersion,
         contractManifestPath: path.join(process.cwd(), 'skills/expressivecss/references/contract.json'),
       });
       assert.equal(result.resolvedVersion, '0.7.0');
@@ -905,6 +905,9 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     const empty = await materializeProjectFixture('consumer-empty');
     try {
       const before = await readCompletionFiles(current);
+      const version = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
+      assert.equal(JSON.parse(before['package.json']).dependencies['@expressivecss/expressive'], version);
+      assert.equal(JSON.parse(await readFile(path.join(current, 'node_modules/@expressivecss/expressive/package.json'), 'utf8')).version, version);
       for (const id of ['css-only-markup-routing', 'token-only-theming-routing']) {
         assert.equal((await checkProjectCompletion(id, current, before))[0].passed, false);
         const trusted = clone(executionEvidence[id]);
