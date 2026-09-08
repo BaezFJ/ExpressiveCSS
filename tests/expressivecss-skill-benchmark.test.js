@@ -401,3 +401,86 @@ test('Material coverage accepts equivalent skill matrix IDs without accepting in
   motion.materialReview[0].criterionId = 'C-TYPE-ROLE';
   assert.equal(gradeMaterialReviewReferences('material-motion-repair', motion, records).passed, false);
 });
+
+// Maintenance uses the same consumer/adapter boundary, but stages inherit prior files.
+test('maintenance rejects lost parent state, no-op work and edits outside scope', async () => {
+  const { gradeMaintenanceTransition, runMaintenance } = await import('../scripts/eval-expressivecss-maintenance.mjs');
+  const before = { hash: 'parent', manifest: { 'src/app.js': { sha256: 'a' }, 'package.json': { sha256: 'p' } } };
+  const after = { hash: 'child', manifest: { ...before.manifest, 'src/app.js': { sha256: 'b' } } };
+  assert.ok(gradeMaintenanceTransition(before, after, 'parent').every(row => row.passed));
+  assert.equal(gradeMaintenanceTransition(before, after, 'different-parent')[0].passed, false);
+  assert.equal(gradeMaintenanceTransition(before, before, 'parent')[1].passed, false);
+  assert.equal(gradeMaintenanceTransition(before, { ...after, manifest: { ...after.manifest, 'package.json': { sha256: 'changed' } } }, 'parent')[1].passed, false);
+  const archive = await mkdtemp(path.join(tmpdir(), 'maintenance-archive-'));
+  try {
+    await writeFile(path.join(archive, 'results.json'), 'retained');
+    await assert.rejects(runMaintenance({ output: archive }), /empty output directory/);
+    assert.equal(await readFile(path.join(archive, 'results.json'), 'utf8'), 'retained');
+  } finally { await rm(archive, { recursive: true, force: true }); }
+});
+
+test('maintenance browser checks reject lost earlier behavior and superseded scope', { timeout: 120000 }, async t => {
+  try { await access(chromium.executablePath()); } catch { t.skip('Chromium is unavailable'); return; }
+  const { captureMaintenance } = await import('../scripts/eval-expressivecss-maintenance.mjs');
+  const { materializeProjectFixture } = await import('../scripts/eval-expressivecss-skill.mjs');
+  const output = await mkdtemp(path.join(tmpdir(), 'maintenance-checks-'));
+  try {
+    for (const name of ['settings', 'editor']) {
+      const root = await materializeProjectFixture(`example-${name}`);
+      try {
+        const htmlPath = path.join(root, 'src/index.html'), jsPath = path.join(root, 'src/app.js');
+        const originalHtml = await readFile(htmlPath, 'utf8'), originalJs = await readFile(jsPath, 'utf8');
+        for (const stage of [1, 2, 3]) {
+          let html = originalHtml, js = originalJs;
+          if (name === 'settings') {
+            html = html.replace('</fieldset>', '<label class="choice-row"><input type="checkbox" name="updates" value="cancellations" aria-describedby="email-help"><span>Event cancellations</span></label></fieldset>');
+            if (stage >= 2) {
+              html = html.replace('<p id="status"', `<button type="button" class="outlined" id="restore-settings">${stage === 2 ? 'Reset preferences' : 'Reset email updates'}</button><p id="status"`);
+              js = js.replace("if (document.body.dataset.example === 'settings') {", `if (document.body.dataset.example === 'settings') {
+                listen(document.querySelector('#restore-settings'), 'click', () => {
+                  ${stage === 2 ? "document.querySelector('#settings-form').reset();" : "document.querySelectorAll('[name=updates]').forEach(node => node.checked = node.defaultChecked);"}
+                  status.textContent = '${stage === 2 ? 'Defaults restored.' : 'Email defaults restored.'} Save preferences to apply them.';
+                });`);
+            }
+          } else {
+            html = html.replace('aria-describedby="message-help"', 'aria-describedby="message-help message-count"').replace('</textarea>', '</textarea><small id="message-count"></small>');
+            js = js.replace("const group = document.querySelector('#formatting');", `const counter = document.querySelector('#message-count');
+              const count = () => counter.textContent = message.value.length + ' characters'; count(); listen(message, 'input', count);
+              const group = document.querySelector('#formatting');`);
+            if (stage >= 2) js = js.replace('for this page session. Nothing was sent.', 'for this page session${' + (stage === 2 ? 'true' : "treatment.value === 'expressive'") + " ? ': ' + message.value.length + ' characters' : ''}. Nothing was sent.");
+          }
+          await writeFile(htmlPath, html); await writeFile(jsPath, js);
+          const rows = await captureMaintenance(root, `${name}-maintenance`, stage, path.join(output, name, String(stage)));
+          assert.deepEqual(rows.filter(row => !row.passed), [], `${name} stage ${stage}`);
+          if (stage === 3) {
+            // A plausible final edit can pass its new task while deleting an older feature.
+            const broken = name === 'settings' ? js.replace("document.querySelectorAll('[name=updates]').forEach(node => node.checked = node.defaultChecked);", "document.querySelector('#settings-form').reset();") : js.replace("listen(message, 'input', count);", '');
+            await writeFile(jsPath, broken);
+            const failed = await captureMaintenance(root, `${name}-maintenance`, stage, path.join(output, name, 'regression'));
+            assert.ok(failed.some(row => !row.passed && row.text.includes(name === 'settings' ? 'reset obeys' : 'live count')), `missed ${name} regression`);
+          }
+        }
+      } finally { await rm(root, { recursive: true, force: true }); }
+    }
+  } finally { await rm(output, { recursive: true, force: true }); }
+});
+
+test('maintenance retains an interrupted stage and blocks its successors', { timeout: 30000 }, async t => {
+  try { await access(chromium.executablePath()); } catch { t.skip('Chromium is unavailable'); return; }
+  const { runMaintenance } = await import('../scripts/eval-expressivecss-maintenance.mjs');
+  const output = await mkdtemp(path.join(tmpdir(), 'maintenance-interrupted-'));
+  let calls = 0;
+  try {
+    const rows = await runMaintenance({ output, caseName: 'settings-maintenance', execute: async () => { calls++; throw new Error('synthetic adapter interruption'); } });
+    assert.equal(calls, 1);
+    assert.deepEqual(rows.map(row => row.status), ['failed', 'blocked', 'blocked']);
+    assert.ok(rows.slice(1).every(row => row.blockedBy === 'cancellations'));
+    const stage = path.join(output, 'eval-settings-maintenance-1/with_skill/run-1');
+    await access(path.join(stage, 'outputs/before/src/index.html'));
+    await access(path.join(stage, 'outputs/src/index.html'));
+    const grading = JSON.parse(await readFile(path.join(stage, 'grading.json'), 'utf8'));
+    assert.ok(grading.expectations.some(row => !row.passed && row.evidence.includes('synthetic adapter interruption')));
+    const benchmark = JSON.parse(await readFile(path.join(output, 'benchmark.json'), 'utf8'));
+    assert.deepEqual(benchmark.chains, [{ sequence: 'settings-maintenance', complete: false, time_seconds: null, tokens: null }]);
+  } finally { await rm(output, { recursive: true, force: true }); }
+});

@@ -226,7 +226,7 @@ export function onlyViewportRepair(before, after) {
   } finally { old.window.close(); next.window.close(); }
 }
 
-async function retainSourceArtifacts(root, outputDirectory) {
+export async function retainSourceArtifacts(root, outputDirectory) {
   const errors = [];
   for (const source of ['index.html', 'app.css', 'app.js']) {
     try {

@@ -276,3 +276,27 @@ test('large retained runs preserve every bounded record and section without shar
     assert.doesNotMatch(JSON.stringify([savedEvents,savedResponse]), /fixture-secret/);
   });
 });
+
+test('quoted diagnostics survive successful compound commands without inventing exit failures', async () => {
+  const { recordedCommandDiagnostics } = await import('../scripts/expressivecss-codex-adapter.mjs');
+  const excerpt = 'fatal: not a git repository';
+  const response = { verificationChecks: [], verificationErrors: [{ source: 'command', excerpt }] };
+  const event = { type: 'item.completed', item: { id: 'compound', type: 'command_execution', exit_code: 0, aggregated_output: `${excerpt}\nfollow-up succeeded` } };
+  const commandDiagnostics = recordedCommandDiagnostics([event], response);
+  assert.deepEqual(commandDiagnostics, [{ eventId: 'compound', exitCode: 0, excerpt }]);
+  assert.deepEqual(validateVerificationClaims(response, { commandErrors: [], commandDiagnostics }), []);
+  assert.deepEqual(recordedCommandDiagnostics([{ ...event, type: 'item.started' }], response), []);
+  assert.deepEqual(recordedCommandDiagnostics([{ ...event, item: { ...event.item, aggregated_output: 'follow-up succeeded' } }], response), []);
+  assert.deepEqual(recordedCommandDiagnostics([event], { verificationErrors: Array(101).fill(response.verificationErrors[0]) }), []);
+  assert.ok(validateVerificationClaims({ ...response, verificationErrors: [{ source: 'command', excerpt: 'invented error message' }] }, { commandDiagnostics }).length);
+  await fixture(async ({ run }) => {
+    const result = await run(`emit(${JSON.stringify(event)});
+      emit({type:'item.completed',item:{type:'agent_message',text:${JSON.stringify(JSON.stringify(response))}}});
+      emit({type:'turn.completed',usage:{input_tokens:12,cached_input_tokens:3,output_tokens:4}});`);
+    assert.deepEqual(result.executionEvidence.commandErrors, []);
+    assert.deepEqual(result.executionEvidence.commandDiagnostics, commandDiagnostics);
+    assert.deepEqual(validateVerificationClaims(result.candidateResponse, result.executionEvidence), []);
+  });
+  const retained = retainedAdapterEnvelope({ executionEvidence: { commandDiagnostics: [{ eventId: 'sensitive', exitCode: 0, excerpt: 'API_KEY=fixture-secret' }] } });
+  assert.match(retained.executionEvidence.commandDiagnostics[0].excerpt, /REDACTED/);
+});

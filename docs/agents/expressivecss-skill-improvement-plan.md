@@ -875,3 +875,13 @@ a new-page plan and an authorized update to existing design notes, including
 stale implementation notes and unapproved navigation ideas. See the
 [comparison and limits](expressivecss-product-context.md). No mandatory
 configuration format, new dependency, or product-context service was added.
+
+## Maintenance across requests
+
+The evaluator now carries the settings and editor examples through three
+requests each, with a fresh agent per stage. Cumulative browser checks preserve
+earlier behavior while accepting an explicit replacement requirement. Parent
+hashes and scoped file checks prevent silent resets, and failed stages block
+their successors while retaining evidence. The
+[maintenance report](expressivecss-maintenance.md) records outcomes and limits.
+No new skill instructions are added without evidence that maintenance needs them.

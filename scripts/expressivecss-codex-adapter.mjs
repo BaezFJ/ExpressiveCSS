@@ -139,6 +139,20 @@ function browserInstructions(capability) {
   ].join('\n');
 }
 
+// Preserve only requested diagnostic excerpts, not another copy of large guide reads.
+// A successful compound command can contain diagnostics from an earlier subcommand.
+// This proves the text occurred, not any subcommand's exit status.
+export function recordedCommandDiagnostics(events, response) {
+  const claims = response?.verificationErrors;
+  if (!Array.isArray(claims) || claims.length > 100) return [];
+  return claims.filter(claim => claim?.source === 'command' && typeof claim.excerpt === 'string'
+    && claim.excerpt.trim().length >= 8 && claim.excerpt.length <= 1000).flatMap(claim => {
+    const event = events.find(event => event.type === 'item.completed' && event.item?.type === 'command_execution'
+      && event.item.exit_code === 0 && typeof event.item.aggregated_output === 'string' && event.item.aggregated_output.includes(claim.excerpt));
+    return event ? [{ eventId: event.item.id, exitCode: 0, excerpt: claim.excerpt }] : [];
+  });
+}
+
 // Validates references to observed operations, never the truth of free-form prose.
 export function validateVerificationClaims(response, evidence) {
   const failures = [];
@@ -157,9 +171,10 @@ export function validateVerificationClaims(response, evidence) {
     let outputs = [];
     if (error?.source === 'browser') outputs = records.filter((row) => row.id === error.evidenceId)
       .flatMap((row) => row.status === 'error' ? [row.error] : row.result?.consoleErrors ?? []);
-    if (error?.source === 'command') outputs = (evidence?.commandErrors ?? []).map((row) => row.output);
+    if (error?.source === 'command') outputs = [...(evidence?.commandErrors ?? []).map(row => row.output),
+      ...(evidence?.commandDiagnostics ?? []).map(row => row.excerpt)];
     if (error?.source === 'connector') outputs = (evidence?.connectorErrors ?? []).filter((row) => row.server === error.server && row.tool === error.tool).map((row) => row.output);
-    if (typeof excerpt !== 'string' || excerpt.trim().length < 8 || excerpt.length > 1000 || !outputs.some((output) => typeof output === 'string' && output.includes(excerpt))) failures.push('Claimed tool error has no matching recorded failure output');
+    if (typeof excerpt !== 'string' || excerpt.trim().length < 8 || excerpt.length > 1000 || !outputs.some((output) => typeof output === 'string' && output.includes(excerpt))) failures.push('Claimed tool error has no matching recorded diagnostic output');
   }
   return failures;
 }
@@ -292,6 +307,7 @@ export async function runCodex(input, { executable = 'codex', timeoutMs = 600_00
       browser: browserSession ? { capability: browserSession.capability, records: structuredClone(browserSession.records) } : null,
       commandErrors: events.filter((event) => event.type === 'item.completed' && event.item?.type === 'command_execution' && Number.isInteger(event.item.exit_code) && event.item.exit_code !== 0)
         .map(({ item }) => ({ command: item.command, exitCode: item.exit_code, output: item.aggregated_output ?? '' })),
+      commandDiagnostics: recordedCommandDiagnostics(events, candidateResponse),
       connectorErrors: events.filter((event) => event.type === 'item.completed' && event.item?.type === 'mcp_tool_call' && (event.item.status === 'failed' || event.item.error || event.item.result?.isError))
         .map(({ item }) => ({ server: item.server, tool: item.tool, output: item.error?.message ?? item.result?.content?.filter((block) => block.type === 'text').map((block) => block.text).join('\n') ?? '' })) },
     runMetadata: { wallTimeMs: performance.now() - started, ...telemetry, observedGuideReads: [...guideReads], guideReadCoverage: 'complete-file tool output only; partial reads and unobservable tools are unavailable; shell edits are covered by filesystem hashes, not the edit trace', infrastructureError: failure, model: defaults.model, modelSource: defaults.model ? 'user-config default pinned in CLI' : 'unavailable', settings: { sandbox: input.readOnly ? 'read-only' : 'workspace-write', ephemeral: true, reasoningEffort: defaults.model_reasoning_effort, provider: defaults.model_provider }, skillHash },

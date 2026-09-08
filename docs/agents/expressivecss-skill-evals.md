@@ -27,6 +27,65 @@ The three basic implementation cases additionally require operator-owned `comple
 
 ## Project fixtures
 
+### Maintenance across requests
+
+Run the two three-stage sequences with:
+
+```sh
+node scripts/eval-expressivecss-maintenance.mjs --output .cache/maintenance/run-1
+```
+
+Build first. The runner uses the installed Chromium and existing Codex CLI
+adapter. `--case settings-maintenance` or `--case editor-maintenance` selects one
+sequence; `--skill /absolute/path/to/skill` selects a frozen skill. The default
+is the repository skill. Use a fresh output directory: resuming a chain without
+restoring and validating every prior project state is deliberately unsupported.
+
+Requests live in `tests/fixtures/expressivecss-skill-evals/maintenance.json`.
+Each sequence materializes an existing runnable example once. Every stage starts
+a fresh ephemeral Codex process with the prior requests and resulting files.
+Future requests and grader expectations are private. The newest request can
+explicitly replace an older requirement; all other earlier contracts still apply.
+This tests filesystem handoff with explicit request history, not conversational
+memory or natural discovery.
+
+Operator snapshots link each stage to its parent and detect unauthorized edits
+or no-op implementations. Independent browser checks run before and after each
+stage. Settings covers native checkbox submission, reset scope, unsaved feedback
+and focus. Editor covers accessible live counts, empty/Unicode input, draft
+feedback, treatment changes, safe preview, formatting and repeated lifecycle
+cleanup. Both preserve the shared CSS, theme controls and primary action, with
+320px/light and 840px/dark scenes and reduced motion. These are selected
+laboratory checks, not full accessibility or browser conformance.
+
+A failed stage blocks the rest of that sequence; another sequence can still run.
+Completed results, source, screenshots, redacted transcripts, scope checks,
+model settings, duration, input/cached/output tokens and observed guide reads
+are retained before temporary consumers are removed. Fixture, grader and skill
+hashes pin each archive. `benchmark.json` includes cumulative chain cost only
+when all stage telemetry is available. It never treats missing values as zero.
+Passing checks authorize the next evaluation stage, not human design acceptance.
+
+The shared adapter distinguishes failed command records from bounded diagnostic
+quotes in completed commands that exited zero. A diagnostic quote proves that
+the text occurred in operator-observed output; it does not infer any individual
+subcommand's exit status. This avoids rejecting truthful errors from compound
+commands while continuing to reject unsupported excerpts.
+
+Open the retained outputs with Skill Creator's existing viewer:
+
+```sh
+python /path/to/skill-creator/eval-viewer/generate_review.py \
+  .cache/maintenance/run-1 --skill-name expressivecss \
+  --benchmark .cache/maintenance/run-1/benchmark.json \
+  --static .cache/maintenance/review.html
+```
+
+The benchmark tests include deliberate regressions that reset Quiet hours
+outside the revised scope and remove the earlier live-count update. Checks
+must fail even if the newest feature appears to work or the candidate claims
+it verified everything. Human review of hierarchy and appearance remains separate.
+
 The product-context comparison in
 `tests/fixtures/expressivecss-skill-evals/product-context.json` reuses
 `consumer-current`. Materialize that consumer, then write the definition's

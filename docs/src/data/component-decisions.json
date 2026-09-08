@@ -4256,7 +4256,7 @@
       },
       {
         "path": "tests/expressivecss-codex-adapter.test.js",
-        "sha256": "3092a3e3dc7c9a1758d590e8a287dab275ecb118d6e4096a3996eec5f0e4d330"
+        "sha256": "ab51d6461037c3a753463b8e262b35aad87ec3c87af92b6b6b1a6bbe0296d03e"
       },
       {
         "path": "tests/expressivecss-component-decisions.test.js",
@@ -4304,7 +4304,7 @@
       },
       {
         "path": "tests/expressivecss-skill-benchmark.test.js",
-        "sha256": "59c0c5f02e46f2fd154bb7bba192d399b2f70864835e9dfeaa9e7a01d0c4d2f4"
+        "sha256": "dcb71cf9076c919ec7b0f6924adbe6c0d6ca006faf271db96c5984b0a582bc9c"
       },
       {
         "path": "tests/expressivecss-skill-evals.test.js",
@@ -4349,6 +4349,10 @@
       {
         "path": "tests/fixtures/expressivecss-skill-evals/expression-examples.json",
         "sha256": "4d6992e0b08b7c93550e9da2d73809192f59957e78c25e25d75b9a664f5bad42"
+      },
+      {
+        "path": "tests/fixtures/expressivecss-skill-evals/maintenance.json",
+        "sha256": "58148072f0e7dfef04c1009523582b9d101d2b651e53ac85c3c5b79902a61b57"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/material/expression.css",
@@ -4788,7 +4792,7 @@
       },
       {
         "path": "scripts/benchmark-expressivecss-skill.mjs",
-        "sha256": "83d3be3ed8a079c3f2df0f50b389bae399e7f9104aa7dc155c3fe16dfa82dd32"
+        "sha256": "fadd6b569120dfb9af81832f46cad13fa90bb4c4111cd545c4bec56fe2992dd3"
       },
       {
         "path": "scripts/check-browser.mjs",
@@ -4797,6 +4801,10 @@
       {
         "path": "scripts/copy-fonts.mjs",
         "sha256": "31542c3514e3fcb5eda028a7b2962a9e400f5d04faf60d81366b70b40f3fd1a9"
+      },
+      {
+        "path": "scripts/eval-expressivecss-maintenance.mjs",
+        "sha256": "9fcc300a2f8c979be24cc2a3543e57da0ad79c966cfc165ae1911286d8cb1f31"
       },
       {
         "path": "scripts/eval-expressivecss-natural-discovery.mjs",
@@ -4808,7 +4816,7 @@
       },
       {
         "path": "scripts/expressivecss-codex-adapter.mjs",
-        "sha256": "2b6de0ab5bbe7ee3a4175930e47f41e13c5613b9658963e73fdcd13b7da31a29"
+        "sha256": "4441694544b34a6218c7c18bc0ad8ddd25ac744a3c25c3a9c7b47d131cd4ec01"
       },
       {
         "path": "scripts/expressivecss-eval-browser.mjs",
@@ -4904,103 +4912,103 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 182.809672
+        "durationMs": 168.121364
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 134.012965
+        "durationMs": 143.401851
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 672.642478
+        "durationMs": 684.651237
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1204.412867
+        "durationMs": 1200.720133
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 769.419116
+        "durationMs": 784.233505
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 186.11228
+        "durationMs": 175.118028
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 137.75557
+        "durationMs": 142.813636
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10194.676714
+        "durationMs": 10174.961948
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10462.411175
+        "durationMs": 10410.630065
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10392.575837
+        "durationMs": 10346.193459
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 821.070395
+        "durationMs": 837.166017
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 170.236588
+        "durationMs": 172.874072
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 148.097689
+        "durationMs": 144.362725
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 23.278731
+        "durationMs": 22.303919
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 7.32932
+        "durationMs": 6.995483
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22546.217563
+        "durationMs": 22459.477237
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 517.255119
+        "durationMs": 527.960225
       }
     ],
     "directories": [
@@ -5010,7 +5018,7 @@
       },
       {
         "path": "tests",
-        "sha256": "6055554ee487aa022f440b3bb095e6143547e5358482c61d2f9e72a6bed5380d"
+        "sha256": "51dd3d225f24206c281d9ab93d9fb2528fe49a6e604bcfafdffd33e6f19898bc"
       },
       {
         "path": "dist",
@@ -5022,10 +5030,10 @@
       },
       {
         "path": "scripts",
-        "sha256": "7a3b320e7e661c0c88decb0bc56adaa0fc4b10f059caff70fbdd03ccb3499099"
+        "sha256": "3150cfde55f80c9bc11682dc389a6fe1fca7a702e4642c86eeda6596921e7b47"
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "956007e5ab205634abcd4b997a12d0abef20141dd98f8e3e0cb5c4cdedaa3998"
+    "reportSha256": "ba6589cf0d4b71bb5d1d521d382caa95c3dc8e222c70c72cf1a605b766f2f6a5"
   }
 }

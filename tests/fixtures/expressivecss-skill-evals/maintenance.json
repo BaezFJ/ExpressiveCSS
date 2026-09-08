@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "sequences": [
+    {
+      "id": "settings-maintenance",
+      "fixture": "example-settings",
+      "stages": [
+        {
+          "id": "cancellations",
+          "request": "Preserve existing product identity, content, treatments, theme controls, keyboard behavior, and session-only behavior. Do not add dependencies, assets, persistence, or framework initialization. Only src/index.html and src/app.js may change. Verify the requested behavior in both treatments. Add an unchecked Event cancellations checkbox to Email updates, named updates with value cancellations. It must participate in the existing Save preferences flow alongside all existing options."
+        },
+        {
+          "id": "reset-defaults",
+          "request": "Preserve existing product identity, content, treatments, theme controls, keyboard behavior, and session-only behavior. Do not add dependencies, assets, persistence, or framework initialization. Only src/index.html and src/app.js may change. Verify the requested behavior in both treatments. Keep Event cancellations and add a secondary Reset preferences button inside the form. Restore the authored defaults for Email updates and Quiet hours without submitting or saving. Announce: Defaults restored. Save preferences to apply them. Keep focus on the reset action."
+        },
+        {
+          "id": "reset-email-only",
+          "request": "Preserve existing product identity, content, treatments, theme controls, keyboard behavior, and session-only behavior. Do not add dependencies, assets, persistence, or framework initialization. Only src/index.html and src/app.js may change. Verify the requested behavior in both treatments. Revise the reset action: rename it Reset email updates and reset only the Email updates checkboxes to their authored defaults. Preserve the current Quiet hours choice. This replaces the previous whole-form reset requirement. Announce: Email defaults restored. Save preferences to apply them. Keep focus on this action and preserve Event cancellations and Save preferences."
+        }
+      ]
+    },
+    {
+      "id": "editor-maintenance",
+      "fixture": "example-editor",
+      "stages": [
+        {
+          "id": "message-count",
+          "request": "Preserve existing product identity, content, treatments, theme controls, keyboard behavior, and session-only behavior. Do not add dependencies, assets, persistence, or framework initialization. Only src/index.html and src/app.js may change. Verify the requested behavior in both treatments. Add a visible live character count with id message-count next to the Message field. Display N characters using message.value.length, including zero when empty. Include it in the textarea accessible description while preserving message-help. Keep the count current on input and across the existing pagehide/pageshow lifecycle. Preserve formatting, Save draft, Preview newsletter and return-to-edit behavior."
+        },
+        {
+          "id": "save-count",
+          "request": "Preserve existing product identity, content, treatments, theme controls, keyboard behavior, and session-only behavior. Do not add dependencies, assets, persistence, or framework initialization. Only src/index.html and src/app.js may change. Verify the requested behavior in both treatments. Keep the live Message count and include the current count in Save draft feedback in both treatments: Saved \u201cSUBJECT\u201d for this page session: N characters. Nothing was sent. Substitute the current subject and message.value.length. Preserve draft values and formatting."
+        },
+        {
+          "id": "expressive-feedback-only",
+          "request": "Preserve existing product identity, content, treatments, theme controls, keyboard behavior, and session-only behavior. Do not add dependencies, assets, persistence, or framework initialization. Only src/index.html and src/app.js may change. Verify the requested behavior in both treatments. Keep the live character count visible in both treatments, but include the count in Save draft feedback only in the expressive treatment. In restrained, restore the original feedback: Saved \u201cSUBJECT\u201d for this page session. Nothing was sent. This replaces the previous both-treatment feedback requirement. Respect treatment changes without reloading and preserve preview, editing, formatting, draft values and lifecycle cleanup."
+        }
+      ]
+    }
+  ]
+}
