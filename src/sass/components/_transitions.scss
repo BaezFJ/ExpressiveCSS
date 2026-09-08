@@ -12,3 +12,10 @@
     transform: scale(1);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .scale-transition,
+  .scale-transition.scale-out {
+    transition: none !important;
+  }
+}

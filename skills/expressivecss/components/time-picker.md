@@ -11,7 +11,35 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/time-pickers/overview)
+
+Example: An appointment time can use a labeled native time input when platform entry is enough. Do not choose this picker expecting a popup: its clock stays inline.
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: links-reviewed (2026-09-07); [evidence](https://m3.material.io/components/time-pickers/overview).
+
+destination and selected Guidelines tab verified; full guideline not reviewed; link-observed; full specifications not reviewed
+
+[Specification link](https://m3.material.io/components/time-pickers/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/time-pickers/guidelines).
+
+Support (2026-09-07, `llm.md#time-picker`): Inline clock and digital input; 12-hour and 24-hour formats.
+
+Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
+
+Known boundary: Modal picker parity is not provided by the documented inline API.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
 
 #### Contract
 
@@ -19,7 +47,7 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Add `timepicker` to a text input. `AutoInit()` starts every `.timepicker` except those marked `no-autoinit`.
 
-The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are deprecated no-ops.
+The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
 
 #### Syntax
 

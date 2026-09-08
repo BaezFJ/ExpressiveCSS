@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reading list · ExpressiveCSS example</title>
+  <link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css">
+  <link rel="stylesheet" href="/src/app.css">
+  <script defer src="/src/app.js"></script>
+</head>
+<body data-example="list-detail" data-treatment="restrained">
+  <a class="skip-link" href="#app">Skip to reading list</a>
+  <div class="example-controls" role="region" aria-label="Example controls">
+    <label for="treatment">Treatment</label><select id="treatment"><option value="restrained">Restrained</option><option value="expressive">Expressive</option></select>
+    <label for="theme">Theme</label><select id="theme"><option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+  </div>
+  <main id="app" class="workspace reading-workspace" tabindex="-1">
+    <p class="product-name">Common Ground / Reading room</p>
+    <h1 id="page-title" class="headline-medium">Good things take root</h1>
+    <p>Short reads for a shared garden. Choose a story to read it here.</p>
+    <!-- Panes own responsive layout; application code owns active pane and focus. -->
+    <div id="reading-panes" class="panes list-detail">
+      <section id="reading-list" class="list-pane active" aria-labelledby="list-title">
+        <header><h2 id="list-title">Your reading list</h2></header>
+        <ul class="list">
+          <li class="selected"><button class="story-link text" data-story="seeds" aria-current="true" aria-controls="reading-detail">Saving seeds for spring<span class="read-state">Unread</span></button></li>
+          <li><button class="story-link text" data-story="water" aria-controls="reading-detail">Make every drop count<span class="read-state">Unread</span></button></li>
+          <li><button class="story-link text" data-story="welcome" aria-controls="reading-detail">A place for new neighbors<span class="read-state">Unread</span></button></li>
+        </ul>
+      </section>
+      <section id="reading-detail" class="detail-pane" aria-labelledby="detail-title">
+        <div class="pane-content">
+          <button id="back-button" class="text medium" type="button"><span class="material-symbols" aria-hidden="true">arrow_back</span><span>Back to list</span></button>
+          <div class="focal">
+            <p id="story-meta">Seed library / 2 minute read</p>
+            <h2 id="detail-title" class="headline-medium" tabindex="-1">Saving seeds for spring</h2>
+            <button id="read-button" class="primary-action medium" type="button">Mark as read</button>
+          </div>
+          <div data-story-content="seeds">
+            <p>Leave a few of your healthiest bean pods on the plant until they turn brown and dry. Open them over a tray and spread the seeds in one layer.</p>
+            <p>After a week in a dry, airy spot, put them in a paper envelope. Write the variety, the harvest date and the plot number on the front. Next spring, another grower can pick up where you left off.</p>
+          </div>
+          <div data-story-content="water" hidden>
+            <p>Push a finger into the soil before reaching for the hose. If it feels cool and damp below the surface, the bed can wait.</p>
+            <p>Water near the roots early in the morning. A layer of leaf mulch helps the soil hold moisture, giving the next volunteer less to carry on a hot afternoon.</p>
+          </div>
+          <div data-story-content="welcome" hidden>
+            <p>A first visit is easier when someone knows your name. Meet new volunteers at the gate and show them where the tools and drinking water are.</p>
+            <p>Offer a choice of jobs, including one that can be done sitting down. Ask what they would enjoy learning, then work alongside them for the first few minutes.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+    <p id="status" role="status">Sample only. Reading status lasts until this page reloads.</p>
+  </main>
+  <details class="annotations">
+    <summary>Why these treatments?</summary>
+    <p>Restrained suits scanning a reference collection. Expressive suits a short community reading session where one selected story deserves attention. Item order, content and read state remain identical.</p>
+    <ul>
+      <li>Action size: medium Mark as read becomes large. List rows and Back remain at least 48px high without competing with that action.</li>
+      <li>Containment: canonical list-detail panes show one pane below 840px. Expressive contains only the selected story's introduction; body copy stays in an open reading column.</li>
+      <li>Typography: the selected story headline becomes headline-large at weight 500. List labels and body copy keep their scale and useful line lengths.</li>
+      <li>Color: primary-container/on-primary-container distinguishes the expressive story introduction. Selected-row color is accompanied by aria-current; read state is explicit text.</li>
+      <li>Shape: the story introduction changes from 16px to 32px corners. Its action receives the scoped 16px corner choice. Reading-list rows keep a consistent shape.</li>
+    </ul>
+    <p>No framework JavaScript is needed for panes or lists. The application moves the active pane and keyboard focus, retains selection across resizing, and keeps reading status in memory.</p>
+  </details>
+</body>
+</html>

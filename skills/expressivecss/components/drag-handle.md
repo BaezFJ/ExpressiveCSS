@@ -11,7 +11,29 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Related Google guidance](https://m3.material.io/components/bottom-sheets/overview)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: related. Related guidance is not a dedicated component specification.
+
+Upstream: document-reviewed (2026-09-07); [evidence](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md).
+
+Optional drag handle is bottom sheet anatomy. Android handle supports accessible expand/collapse. This does not verify the generic vertical handle or ExpressiveCSS dismiss-on-tap behavior as an identical spec.
+
+Support (2026-09-07, `llm.md#drag-handle`): Decorative grip and actionable button grip.
+
+Web adaptation: The host element determines semantics; no general dragging engine.
+
+Known boundary: A grip outside supported sheets implements neither dragging nor keyboard or non-drag pointer alternatives.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#drag-handle).
 
 #### Contract
 
@@ -19,7 +41,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Dragging is a pointer gesture, so an outcome reachable only by dragging is unreachable without a pointer: reordering built on a handle needs a keyboard path of its own — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position directly. The handle makes the gesture discoverable; it does not make the outcome reachable.
+**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 #### Syntax
 

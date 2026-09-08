@@ -250,7 +250,7 @@ Expressive.AutoInit(document.body, {
               <td><code>onOpenEnd</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the menu finishes opening.</td>
+              <td>Called when the menu finishes opening. A superseded transition or destruction cancels this callback.</td>
             </tr>
             <tr>
               <td><code>onCloseStart</code></td>
@@ -262,7 +262,7 @@ Expressive.AutoInit(document.body, {
               <td><code>onCloseEnd</code></td>
               <td>Function</td>
               <td><code>null</code></td>
-              <td>Called when the menu finishes closing.</td>
+              <td>Called when the menu finishes closing. Reopening or destruction cancels this callback.</td>
             </tr>
             <tr>
               <td><code>onItemClick</code></td>

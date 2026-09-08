@@ -449,6 +449,13 @@ const S = defineSections([
           <code>AutoInit()</code> wire up the modal, measured clip origin,
           back action, focus return, Escape, and reduced motion.
         </p>
+        <p>
+          Override <code>--md-comp-expanding-card-motion-duration</code> to change
+          container timing. Closing waits for the actual clip transition, including
+          cancellation; zero duration and reduced motion close immediately.
+          Reopening or destroying the instance invalidates pending close cleanup.
+          The <code>onClose</code> callback runs when closing starts.
+        </p>
         <div class="row" data-markdown-ignore>
           <div class="s12 m10 l10">
             <article class="outlined expanding-card">

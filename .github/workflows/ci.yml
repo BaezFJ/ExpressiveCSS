@@ -134,6 +134,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: npm run build
       - run: npm run check:generated
 
   browser:
@@ -147,8 +148,16 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run test:browser
+      - name: Retain critical-flow results and failure traces
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: browser-critical-flows
+          path: .cache/cross-browser/
+          retention-days: 7
+          if-no-files-found: warn
 
   dependency-review:
     runs-on: ubuntu-latest

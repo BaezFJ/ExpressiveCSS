@@ -1,6 +1,6 @@
 ---
 name: expressivecss-design
-description: Design and review Material 3 Expressive web interfaces.
+description: Design, refine, redesign, critique, and audit ExpressiveCSS interfaces and responsive flows. Use for product hierarchy, adaptive composition, state coverage, and rendered performance review; exclude setup-only, token-only, or narrow lifecycle repairs.
 ---
 
 # ExpressiveCSS design and review
@@ -18,6 +18,8 @@ Do not load this guide for setup-only, token-only, or narrow lifecycle work unle
 ## 1. Establish the brief
 
 Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document.
+
+For work that spans pages or continues an established product, use the [product context reference](./references/product-context.md) to find and reuse its existing decisions. Load only context relevant to this task; distinguish accepted decisions from observations and proposals.
 
 Classify the task before acting. Choose one operating mode, or run Critique followed by Audit for a combined review:
 
@@ -46,9 +48,11 @@ Do not ask the user to choose raw CSS values. Translate product and brand answer
 
 Material 3 Expressive governs design intent, component choice, adaptive behavior, and interaction. The ExpressiveCSS semantics contract governs authored semantics, while the accessibility guide supplies the WCAG checks. The consuming app's brand enters through semantic color roles, type tokens, icon style and axes, content voice, imagery, and assets. Do not replace familiar Material behavior merely to make the app look more branded.
 
+For a decision involving expressive foundations, read only the relevant Theming reference: [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md). Each separates Google's design intent from implemented web contracts and framework gaps. Do not claim an Android capability exists in ExpressiveCSS without matching implementation evidence.
+
 ## Routing dependency
 
-Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Read Material 3 guidance for design intent and the target-version component documentation for the shipped contract.
+Follow the root staged routing truth table. Do not recreate it here. This guide starts after the root has classified the mode, shortlisted candidates, inspected candidate runtime ownership in the decision index, and recorded this guide's actual read. Use selected component guides for the matching bundled contract and adaptive decisions. Consult Material 3 guidance or target-version documentation for missing details or conflicts.
 
 Write a short working brief before code:
 
@@ -59,9 +63,11 @@ Write a short working brief before code:
 - **Brand expression:** `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
 - **State plan:** loading, empty, error, success, disabled, selected, permission, offline, and destructive-action behavior that the feature can reach.
 
-The brief is a decision aid, not a new public artifact. Save it only when the project already records design decisions or the user asks for one.
+Keep the brief in the task unless an existing project record needs an in-scope update or the user asks to save it. Reuse that record; the product context reference explains how to preserve decision status and scope. Planning, Critique, and Audit alone do not authorize documentation edits.
 
 ## 3. Compose with Material hierarchy
+
+For a complete settings, editor, or list-detail flow, consult the matching [runnable example](../assets/examples/README.md) after selecting components. Compare its restrained and expressive treatments, including the product context in its annotations. Borrow the relationships between action size, containment, type, color, and shape; preserve the consuming product's identity and use its matching component contracts. These examples are optional references, not required reading for isolated component work.
 
 Build the task path before adding decoration.
 
@@ -98,6 +104,10 @@ Keep default, hover, focus-visible, pressed, selected, and disabled states coher
 
 ## 5. Review with evidence
 
+For a complete interface, first review the primary task in the whole-page composition. A valid component can still sit below an oversized navigation region, compete with secondary actions, or lose its feedback among unrelated content. Name the primary task and preservation requirements, inspect the initial viewport and the full page, then follow the action through its reachable states. Keep measured behavior separate from judgments about hierarchy, typography, containment, and recovery clarity. Attach matched captures and concrete observations to those judgments; a collection of passing DOM checks is not an overall design verdict.
+
+Budget verification by scene rather than by criterion. Collect related DOM observations together and reuse each capture for the criteria it actually demonstrates. Prefer a full-page capture over repeated scrolling screenshots when the tool supports it. Reserve capacity for the confirmation pass, and stop when a tool reports its resource limit. Check that you can open a capture before relying on visual judgments; a screenshot path or DOM summary alone does not establish that you saw the interface.
+
 Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Use the [review matrix](./references/review-matrix.md) for Critique, Audit, and combined finish reviews. Use the [evidence ledger](./references/evidence-ledger.md) to trace every reachable state and reached responsive boundary to evidence or `Blocked`. Record one evidence-backed status for every applicable matrix row. After component selection, add one review group per selected component. A family group is allowed only when every member shares the exact contract fact being reviewed; otherwise split the family. Record each component's target-version contract and each applicable generated-guide rule. A generic component summary does not replace these checks.
 
 When optional MCP tools contribute evidence, copy `checksPerformed`, `evidenceSources`, `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into the ledger. Mark an applicable unperformed check `Blocked`. MCP evidence does not replace browser interaction, rendered responsive, visual, or accessibility review.
@@ -124,6 +134,12 @@ Use severity sparingly:
 - **P3:** finish that does not block use.
 
 In Implement, Refine, Redesign, or a review where the user separately requested fixes, fix the first evidence batch in one grouped edit, then run one confirmation batch. In Critique or Audit alone, stop after reporting evidence and findings. Two inspection rounds are the normal ceiling for self-directed polish, not permission to ship known P0 or P1 defects. Ask the user before widening scope or continuing subjective polish after the confirmation pass.
+
+## Performance requests
+
+Measure the requested slow path before editing and repeat the same route, data, viewport, cache state, network/CPU settings, and interaction after the change. Inspect resource loading and duplicate assets, layout shifts, interaction traces and long tasks, and resources retained after remount and teardown. Record browser/tool versions, settings, raw observations, and repeated-run variability. Use the Installation, Runtime, or Media reference for the cause found.
+
+Run this performance pass when performance is requested or a measured regression needs investigation; ordinary markup work does not require a full audit. Laboratory results describe those runs, not field Core Web Vitals or real-user percentiles. Report unavailable measurements and avoid speed claims based only on fewer bytes or shorter code.
 
 ## Pitfalls
 

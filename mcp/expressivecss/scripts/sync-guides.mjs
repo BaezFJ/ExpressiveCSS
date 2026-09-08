@@ -12,6 +12,8 @@ const decisionsSource = path.join(repoRoot, 'docs', 'src', 'data', 'component-de
 const decisionsDestination = path.join(packageDir, 'component-decisions.json');
 const contractSource = path.join(repoRoot, 'skills', 'expressivecss', 'references', 'contract.json');
 const contractDestination = path.join(packageDir, 'contract.json');
+const roadmapDestination = path.join(packageDir, 'capability-roadmap.json');
+const generatedRoadmap = await readFile(path.join(repoRoot, 'skills/expressivecss/references/capability-roadmap.json'), 'utf8');
 const generatedBy = 'mcp/expressivecss/scripts/sync-guides.mjs';
 
 const files = (await readdir(sourceDir))
@@ -49,6 +51,7 @@ const generatedDecisions = `${JSON.stringify({
   ...decisionContents,
 }, null, 2)}\n`;
 if (process.argv.includes('--check')) {
+  if (await readFile(roadmapDestination, 'utf8').catch(() => '') !== generatedRoadmap) throw new Error('Bundled capability roadmap is stale; run npm run build:skill');
   const current = await readFile(destination, 'utf8').catch(() => '');
   const currentSemantics = await readFile(semanticsDestination, 'utf8').catch(() => '');
   const currentDecisions = await readFile(decisionsDestination, 'utf8').catch(() => '');
@@ -59,6 +62,7 @@ if (process.argv.includes('--check')) {
   }
   console.log(`Verified ${guides.length} bundled guides and normative semantics.`);
 } else {
+  await writeFile(roadmapDestination, generatedRoadmap);
   await writeFile(destination, generated);
   await writeFile(semanticsDestination, generatedSemantics);
   await writeFile(decisionsDestination, generatedDecisions);

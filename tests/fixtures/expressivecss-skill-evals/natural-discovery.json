@@ -1,0 +1,111 @@
+{
+  "development": [
+    {
+      "id": "dev-form-action",
+      "split": "development",
+      "fixture": "consumer-current",
+      "should_trigger": true,
+      "readOnly": false,
+      "request": "Add a Preview preferences button inside form#preferences using the project's existing component styles. Preview must not submit the form. Keep Save working and leave JavaScript unchanged."
+    },
+    {
+      "id": "dev-brand-seed",
+      "split": "development",
+      "fixture": "consumer-current",
+      "should_trigger": true,
+      "readOnly": false,
+      "request": "Set the account dashboard's ExpressiveCSS brand seed to #6750a4. Preserve the current HTML, layout and JavaScript."
+    },
+    {
+      "id": "dev-setup-review",
+      "split": "development",
+      "fixture": "consumer-current",
+      "should_trigger": true,
+      "readOnly": true,
+      "request": "Check whether this project's ExpressiveCSS stylesheet and runtime imports agree with its installed package. Read the local files and report any setup issues with file locations. Do not edit files or install anything."
+    },
+    {
+      "id": "dev-release-copy",
+      "split": "development",
+      "fixture": "consumer-current",
+      "should_trigger": false,
+      "readOnly": false,
+      "files": {
+        "release-email.txt": "Our ExpressiveCSS account dashboard now lets customers save notification preferences. The rollout begins Friday. Thank you for trying it.\n"
+      },
+      "request": "Shorten release-email.txt to two friendly sentences. Keep the product name, Friday rollout date and technical facts unchanged. This is a copy edit; leave application code alone."
+    },
+    {
+      "id": "dev-native-form",
+      "split": "development",
+      "fixture": "consumer-empty",
+      "should_trigger": false,
+      "readOnly": false,
+      "request": "Add a labelled email input and a native submit button to src/index.html. This is a plain HTML prototype; keep it dependency-free and do not add a component library."
+    },
+    {
+      "id": "dev-js-format",
+      "split": "development",
+      "fixture": "consumer-empty",
+      "should_trigger": false,
+      "readOnly": false,
+      "files": {
+        "src/format.js": "export function formatTotal(amount) { return '$' + amount; }\n"
+      },
+      "request": "Fix formatTotal in src/format.js to format a numeric amount as US dollars with exactly two decimal places using Intl.NumberFormat. Leave markup and styles alone."
+    }
+  ],
+  "heldout": [
+    {
+      "id": "heldout-help-remount",
+      "split": "heldout",
+      "fixture": "consumer-current",
+      "request": "The Privacy help button on our account dashboard never shows its hint. Fix that using the component runtime already installed here, and make sure it still works after I press Remount help several times. Keep the other dashboard behavior intact.",
+      "should_trigger": true,
+      "readOnly": false
+    },
+    {
+      "id": "heldout-wide-navigation",
+      "split": "heldout",
+      "fixture": "consumer-current",
+      "request": "On a wide screen, the navigation rail leaves a huge blank area above the account details. Arrange the existing rail beside the dashboard content at 840px and wider while keeping the bottom navigation layout below that width. Preserve our account copy, destinations, forms, and brand; only change the page markup and styles.",
+      "should_trigger": true,
+      "readOnly": false
+    },
+    {
+      "id": "heldout-theme-advice",
+      "split": "heldout",
+      "fixture": "consumer-current",
+      "request": "Before we add a theme switch, inspect this dashboard and explain how its installed design system handles automatic, light, and dark themes. Give the exact root attribute values and identify where our brand token is declared. Don't edit any files or add the switch yet.",
+      "should_trigger": true,
+      "readOnly": true
+    },
+    {
+      "id": "heldout-offline-copy",
+      "split": "heldout",
+      "fixture": "consumer-current",
+      "request": "Please change the offline activity message in src/app.js to: You're offline. You can still view previously saved account details. This is only a copy edit; keep all state keys, event handlers, markup, and styles as they are.",
+      "should_trigger": false,
+      "readOnly": false
+    },
+    {
+      "id": "heldout-save-message",
+      "split": "heldout",
+      "fixture": "consumer-current",
+      "request": "In the existing form submit handler in src/app.js, make the confirmation text say Email alerts enabled. when the alerts checkbox is checked, and Email alerts disabled. when it is unchecked. Keep this a plain JavaScript message change and leave the markup, styles, imports, and component initialization alone.",
+      "should_trigger": false,
+      "readOnly": false
+    },
+    {
+      "id": "heldout-native-reading-page",
+      "split": "heldout",
+      "fixture": "consumer-empty",
+      "request": "Make a small framework-free reading page from the supplied article copy. Put a heading and two paragraphs in main#app, link src/app.css, and use native CSS for a centered readable column with comfortable line spacing and padding on narrow screens. Keep the package dependency-free and add no JavaScript.",
+      "should_trigger": false,
+      "readOnly": false,
+      "files": {
+        "article.txt": "A quiet morning\n\nThe library opens before the market gets busy. Its tall windows catch the first sunlight, and the reading room fills slowly.\n\nI choose a book, settle into a chair, and leave my phone in my bag. For the next hour, there is nowhere else I need to be.\n"
+      }
+    }
+  ]
+}

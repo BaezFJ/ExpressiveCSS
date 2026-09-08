@@ -11,11 +11,31 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `shared-runtime`. [Related Google guidance](https://m3.material.io/components/dialogs/overview)
+
+Example: A required delete confirmation needs a dialog. Floating geometry alone does not make a secondary sheet the right decision prompt.
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: related. Related guidance is not a dedicated component specification.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#floating-sheet`): Inset floating dialog surface.
+
+Web adaptation: Shares Dialogs initialization; no edge attachment or drag handle.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#floating-sheet).
 
 #### Contract
 
-A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - the third member of M3's sheet family. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
+A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - an ExpressiveCSS dialog extension, not a verified standalone M3 component. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
 
 There are no edge modifiers: `.bottom` selects a bottom sheet and `.left` / `.right` a side sheet. Anchor it with `inset` / `margin`, or move it with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`.
 

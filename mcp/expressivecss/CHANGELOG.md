@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add opt-in consumer scenario command execution through the existing quality inspector and operator allowlist. Browser reports remain separately inspected evidence.
+
 - Breaking: update jsdom to 30.0.1 and require Node `^22.22.2 || ^24.15.0 || >=26.0.0`.
   Upgrade the Node executable used by your MCP client before reinstalling the
   server. Node 20 is no longer supported. Ship this change in the next MCP minor

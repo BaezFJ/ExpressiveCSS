@@ -11,11 +11,29 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/bottom-sheets/overview)
+
+- expanded window: replace-with [side-sheet](./side-sheet.md). Persistent secondary content fits beside the main task.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
+
+Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
 
 #### Contract
 
-A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss; a handle written as a `<button>` also dismisses when activated, so the keyboard reaches it too, and <kbd>Esc</kbd> closes the sheet natively.
+A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 #### Syntax
 

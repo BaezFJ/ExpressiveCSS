@@ -11,7 +11,29 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/foundations/layout/canonical-examples/overview)
+
+Example: A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region.
+
+- medium container: variant. Stack or collapse panes when their container cannot preserve useful pane widths.
+
+#### Material mapping
+
+Relationship: pattern. Canonical layout pattern, not a standalone component.
+
+Upstream: component-guidance-reviewed (2026-09-07); [evidence](https://m3.material.io/foundations/layout/canonical-examples/overview).
+
+Rendered canonical examples overview reviewed: feed, list-detail, supporting pane; equal and three-pane framework variants are not verified upstream specifications.
+
+Support (2026-09-07, `llm.md#panes`): List-detail, supporting pane, and equal panes.
+
+Web adaptation: CSS viewport and container queries; the application chooses the active compact pane.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#panes).
 
 #### Contract
 

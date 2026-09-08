@@ -17,7 +17,7 @@ function fileFor(site, path) {
 }
 
 /** Every canonical and legacy HTML route, mapped to its canonical Markdown counterpart. */
-export function markdownLinkMap() {
+function markdownLinkMap() {
   const links = new Map(PAGES.map((page) => [route(page.id), markdownRoute(page.id)]));
   for (const alias of aliases()) links.set(alias.from, links.get(alias.to));
   return links;

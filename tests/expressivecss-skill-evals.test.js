@@ -1,10 +1,17 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { spawn, spawnSync } from 'node:child_process';
+import { once } from 'node:events';
 import {
   PROJECT_FIXTURES,
+  materializeProjectFixture,
+  readCompletionFiles,
+  readBoundedRegularFile,
+  checkProjectCompletion,
   assembleSkillBundle,
   DEFAULT_ADAPTER_TIMEOUT_MS,
   EVALUATOR_LIMITS,
@@ -52,6 +59,45 @@ function expectMutationFailure(id, mutate, evidence) {
 }
 
 describe('ExpressiveCSS behavioral evaluation runner', () => {
+  test('bounded reads enforce directory boundaries and reject linked assets', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-read-boundary-'));
+    const root = path.join(directory, 'project');
+    try {
+      await mkdir(path.join(root, 'assets'), { recursive: true });
+      await mkdir(`${root}-sibling`);
+      await writeFile(path.join(root, 'assets/plain.txt'), 'public');
+      await writeFile(path.join(`${root}-sibling`, 'private.txt'), 'private');
+      await symlink(`${root}-sibling`, path.join(root, 'linked-directory'), 'dir');
+      await symlink(path.join(`${root}-sibling`, 'private.txt'), path.join(root, 'linked-file'));
+      const read = (file, limit = 6) => readBoundedRegularFile(file, limit, 'test asset', root);
+      assert.equal(await read(path.join(root, 'assets/plain.txt')), 'public');
+      assert.equal(await read(path.join(root, 'assets/../assets/plain.txt')), 'public');
+      for (const file of [root, `${root}-sibling/private.txt`, path.join(root, '../project-sibling/private.txt')]) {
+        await assert.rejects(read(file), /outside the repository/);
+      }
+      for (const file of ['linked-directory/private.txt', 'linked-file']) {
+        await assert.rejects(read(path.join(root, file)), /symbolic link/);
+      }
+      await assert.rejects(read(path.join(root, 'assets/plain.txt'), 5), /exceeds 5 bytes/);
+    } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+
+  test('rejects a FIFO without blocking while opening an untrusted file', { skip: process.platform === 'win32' }, async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-fifo-'));
+    try {
+      const fifo = path.join(directory, 'source');
+      const created = spawnSync('mkfifo', [fifo], { encoding: 'utf8', timeout: 1000 });
+      assert.equal(created.status, 0, created.stderr);
+      const checked = spawnSync(process.execPath, ['--input-type=module', '-e', `
+        import { readBoundedRegularFile } from './scripts/eval-expressivecss-skill.mjs';
+        try { await readBoundedRegularFile(process.argv[1], 1024, 'source', process.argv[2]); process.exitCode = 2; }
+        catch (error) { if (!/not a regular file/.test(error.message)) throw error; console.log('rejected'); }
+      `, fifo, directory], { encoding: 'utf8', timeout: 2000 });
+      assert.equal(checked.status, 0, checked.error?.message ?? checked.stderr);
+      assert.equal(checked.stdout.trim(), 'rejected');
+    } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+
   test('uses the generated skill version for the older-version contract case', () => {
     const item = caseById('older-version-contract');
     const response = clone(responses[item.id]);
@@ -631,14 +677,23 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }, 'required evidence');
   });
 
-  test('uses fixture-owned expected observations instead of trusted-producer expectations', () => {
+  test('accepts independent operator observations and artifact IDs while preserving structured evidence contracts', () => {
     const producerClaim = clone(executionEvidence['interactive-audit']);
     producerClaim.artifacts[0].expectedObservation = 'Contradictory observation';
+    producerClaim.artifacts[0].observation = 'Inspected the named drawer host in the rendered DOM.';
+    const candidate = clone(responses['interactive-audit']);
+    const oldId = producerClaim.artifacts[0].id;
+    producerClaim.artifacts[0].id = 'capture-collected-by-operator';
+    for (const row of candidate.reviewRows) row.evidenceIds = row.evidenceIds.map((id) => id === oldId ? producerClaim.artifacts[0].id : id);
+    producerClaim.artifacts.push({ id: 'additional-observation', category: 'source', criterionId: 'A-EXTRA', componentId: 'surface', observation: 'Additional checked source.', sequence: 100, timestamp: '2026-09-03T00:02:00.000Z' });
+    assert.equal(evaluateCase(caseById('interactive-audit'), candidate, producerClaim).status, 'pass');
+    producerClaim.artifacts[0].id = oldId;
+    producerClaim.artifacts.pop();
     assert.equal(evaluateCase(caseById('interactive-audit'), responses['interactive-audit'], producerClaim).status, 'pass');
     expectMutationFailure('interactive-audit', (_response, trusted) => {
-      trusted.artifacts[0].expectedObservation = 'Fabricated replacement observation';
-      trusted.artifacts[0].observation = 'Fabricated replacement observation';
+      trusted.artifacts[0].componentId = 'different-component';
     }, 'fixture-owned artifact expectations');
+    expectMutationFailure('interactive-audit', (_response, trusted) => { trusted.artifacts[0].observation = ''; }, 'trusted artifact');
   });
 
   test('rejects unknown review statuses', () => {
@@ -757,6 +812,13 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }, 'Blocked coverage');
   });
 
+  test('checks measured coverage values independently of observation prose', () => {
+    const trusted = clone(executionEvidence['reachable-state-ledger']);
+    trusted.artifacts[0].observation = 'The activity region shows its progress message.';
+    assert.equal(evaluateCase(caseById('reachable-state-ledger'), responses['reachable-state-ledger'], trusted).status, 'pass');
+    expectMutationFailure('reachable-state-ledger', (_response, evidence) => { evidence.artifacts[0].observedValue = 'other-state'; }, 'coverage evidence');
+  });
+
   test('rejects one altered matched-capture dimension', () => {
     expectMutationFailure('matched-before-after', (response) => {
       response.capturePairs[0].after.viewportWidth = 1025;
@@ -838,13 +900,83 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }
   });
 
+  test('checks basic task completion from actual source files and rejects empty implementation claims', async () => {
+    const current = await materializeProjectFixture('consumer-current');
+    const empty = await materializeProjectFixture('consumer-empty');
+    try {
+      const before = await readCompletionFiles(current);
+      for (const id of ['css-only-markup-routing', 'token-only-theming-routing']) {
+        assert.equal((await checkProjectCompletion(id, current, before))[0].passed, false);
+        const trusted = clone(executionEvidence[id]);
+        delete trusted.completionChecks;
+        assert.equal(evaluateCase(caseById(id), { caseId: id, mode: 'Implement' }, trusted).status, 'fail');
+      }
+      await writeFile(path.join(current, 'src/index.html'), before['src/index.html'].replace('</main>', '<button type="button">Download statement</button></main>'));
+      assert.equal((await checkProjectCompletion('css-only-markup-routing', current, before))[0].passed, true);
+      await writeFile(path.join(current, 'src/app.css'), before['src/app.css'].replace('#006a79', '#6750a4'));
+      assert.equal((await checkProjectCompletion('token-only-theming-routing', current, before))[0].passed, false, 'a theme-only task must not also change HTML');
+      await writeFile(path.join(current, 'src/index.html'), before['src/index.html']);
+      assert.equal((await checkProjectCompletion('token-only-theming-routing', current, before))[0].passed, true);
+      const emptyBefore = await readCompletionFiles(empty);
+      assert.equal((await checkProjectCompletion('setup-only-routing', empty, emptyBefore))[0].passed, false);
+      await writeFile(path.join(empty, 'package.json'), before['package.json']);
+      await writeFile(path.join(empty, 'src/app.css'), '@import "@expressivecss/expressive/css";');
+      assert.equal((await checkProjectCompletion('setup-only-routing', empty, emptyBefore))[0].passed, false, 'a declaration without installed files is insufficient');
+      await cp(path.join(current, 'node_modules'), path.join(empty, 'node_modules'), { recursive: true });
+      assert.equal((await checkProjectCompletion('setup-only-routing', empty, emptyBefore))[0].passed, true);
+    } finally {
+      await Promise.all([rm(current, { recursive: true, force: true }), rm(empty, { recursive: true, force: true })]);
+    }
+  });
+
+  test('serves the reusable consumer with working state, form, drawer, and adaptive navigation controls', async (context) => {
+    const { chromium } = await import('playwright');
+    const executablePath = existsSync(chromium.executablePath()) ? chromium.executablePath() : '/usr/bin/google-chrome';
+    if (!existsSync(executablePath)) { context.skip('Chromium is unavailable; fixture browser behavior was not checked.'); return; }
+    const root = await materializeProjectFixture('consumer-current');
+    const server = spawn(process.execPath, ['server.mjs'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+    let browser;
+    const controller = new AbortController();
+    const deadline = setTimeout(() => controller.abort(), 5000);
+    try {
+      const [data] = await once(server.stdout, 'data', { signal: controller.signal });
+      clearTimeout(deadline);
+      browser = await chromium.launch({ headless: true, executablePath });
+      const page = await browser.newPage({ viewport: { width: 599, height: 800 } });
+      page.setDefaultTimeout(5000);
+      const errors = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.goto(`${String(data).trim()}/dashboard`);
+      await page.selectOption('#preview-state', 'error');
+      assert.match(await page.locator('#activity').textContent(), /could not be loaded/u);
+      await page.getByRole('button', { name: 'Save preferences' }).click();
+      assert.equal(await page.locator('#save-result').textContent(), 'Preferences saved.');
+      await page.getByRole('button', { name: 'Open account navigation' }).click();
+      assert.equal(await page.locator('#account-drawer').evaluate((element) => element.open), true);
+      await page.getByRole('button', { name: 'Close navigation', exact: true }).click();
+      assert.equal(await page.locator('#account-drawer').evaluate((element) => element.open), false);
+      assert.equal(await page.locator('.navigation-bar').isVisible(), true);
+      assert.equal(await page.locator('.navigation-rail').isVisible(), false);
+      await page.setViewportSize({ width: 840, height: 800 });
+      assert.equal(await page.locator('.navigation-bar').isVisible(), false);
+      assert.equal(await page.locator('.navigation-rail').isVisible(), true);
+      assert.deepEqual(errors, []);
+    } finally {
+      clearTimeout(deadline);
+      controller.abort();
+      await browser?.close();
+      if (server.exitCode === null) { const closed = once(server, 'close'); server.kill('SIGTERM'); await closed; }
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
   test('requires fixture-owned requirement and accessibility evidence for Redesign', () => {
     expectMutationFailure('redesign-preserves-requirements', (response) => {
       response.requirements[0].evidenceIds = [];
     }, 'critical invariant');
     expectMutationFailure('redesign-preserves-requirements', (response, trusted) => {
-      trusted.artifacts.find((artifact) => artifact.id === 'redesign-requirement-account').observation = 'Different result';
-    }, 'fixture-owned artifact expectations');
+      trusted.artifacts.find((artifact) => artifact.id === 'redesign-requirement-account').inventoryId = 'different-requirement';
+    }, 'critical invariant');
     expectMutationFailure('redesign-preserves-requirements', (response) => {
       response.accessibilityAssertions[0].id = 'candidate-invented';
     }, 'critical invariant');
@@ -971,13 +1103,16 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     assert.ok(redactValue(tooManyStrings).length <= TEST_LIMITS.stringCount + 1);
   });
 
-  test('keeps the scoring oracle private and gives a live adapter a materialized sandbox', async () => {
+  test('keeps the scoring oracle private and checks a controlled adapter source edit independently', async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-adapter-'));
     try {
       const adapterPath = path.join(directory, 'adapter.mjs');
       const responsePath = new URL('./fixtures/expressivecss-skill-evals/passing-responses.json', import.meta.url).pathname;
+      const skillRoot = path.join(directory, 'snapshot');
+      await mkdir(skillRoot);
+      await writeFile(path.join(skillRoot, 'SKILL.md'), '# ExpressiveCSS\nSelected snapshot marker.\n');
       await writeFile(adapterPath, `
-        import { readFileSync } from 'node:fs';
+        import { readFileSync, writeFileSync } from 'node:fs';
         let input = '';
         process.stdin.setEncoding('utf8');
         for await (const chunk of process.stdin) input += chunk;
@@ -986,42 +1121,83 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
         if (Object.hasOwn(payload, 'skillBundle')) process.exit(22);
         if (process.argv[2] !== 'argument with spaces;$HOME') process.exit(23);
         if (Object.hasOwn(payload, 'testCase') || Object.hasOwn(payload.task, 'expectedOperatingMode') || Object.hasOwn(payload.task, 'criticalInvariants')) process.exit(24);
-        if (payload.task.id !== 'setup-only-routing' || typeof payload.task.request !== 'string') process.exit(25);
+        if (payload.task.id !== 'css-only-markup-routing' || typeof payload.task.request !== 'string') process.exit(25);
         if (payload.task.projectFixture !== 'consumer-current') process.exit(26);
         if (!readFileSync(new URL('package.json', 'file://' + payload.projectRoot + '/'), 'utf8').includes('@expressivecss/expressive')) process.exit(27);
+        if (!readFileSync(payload.skillRoot + '/SKILL.md', 'utf8').includes('# ExpressiveCSS')) process.exit(28);
+        if (!payload.rootSkill.includes('Selected snapshot marker')) process.exit(29);
+        const htmlPath = payload.projectRoot + '/src/index.html';
+        writeFileSync(htmlPath, readFileSync(htmlPath, 'utf8').replace('</main>', '<button type="button">Download statement</button></main>'));
         const responses = JSON.parse(readFileSync(process.argv[3], 'utf8')).responses;
+        // Transport fixture, not a live model: the runner must replace this false completion claim.
+        responses[payload.task.id].executionEvidence.completionChecks[0].passed = false;
         process.stdout.write(JSON.stringify(responses[payload.task.id]));
       `);
       const report = await runEvaluations({
         casesPath: new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url).pathname,
         adapter: process.execPath,
         adapterArgs: [adapterPath, 'argument with spaces;$HOME', responsePath],
-        caseId: 'setup-only-routing',
+        caseId: 'css-only-markup-routing',
         repositoryRoot: new URL('..', import.meta.url),
+        skillRoot,
+        outputDirectory: path.join(directory, 'artifacts'),
       });
       assert.equal(report.status, 'pass', JSON.stringify(report, null, 2));
       assert.equal(report.runType, 'live-adapter');
+      assert.equal(report.results[0].executionEvidence.completionChecks[0].passed, true);
+      assert.ok(report.results[0].runMetadata.wallTimeMs > 0);
+      const snapshot = JSON.parse(await readFile(path.join(directory, 'artifacts', report.results[0].artifactsPath, 'source-files.json'), 'utf8'));
+      assert.match(snapshot['src/index.html'], /Download statement/u);
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
   });
 
-  test('redacts a failing live adapter stderr before throwing', async () => {
+  test('retains completed cases and cleans every project after a later adapter failure', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-partial-'));
+    try {
+      const adapterPath = path.join(directory, 'adapter.mjs');
+      const rootsPath = path.join(directory, 'roots.jsonl');
+      const responsePath = new URL('./fixtures/expressivecss-skill-evals/passing-responses.json', import.meta.url).pathname;
+      await writeFile(adapterPath, `
+        import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+        let input = ''; for await (const chunk of process.stdin) input += chunk;
+        const payload = JSON.parse(input);
+        appendFileSync(process.argv[3], JSON.stringify(payload.projectRoot) + '\\n');
+        if (payload.task.id === 'token-only-theming-routing') { process.stdout.write('invalid json'); process.exit(0); }
+        if (payload.task.id === 'css-only-markup-routing') {
+          const file = payload.projectRoot + '/src/index.html';
+          writeFileSync(file, readFileSync(file, 'utf8').replace('</main>', '<button type="button">Download statement</button></main>'));
+        }
+        const replay = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+        process.stdout.write(JSON.stringify(replay.responses[payload.task.id]));
+      `);
+      const report = await runEvaluations({ casesPath: new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url).pathname, adapter: process.execPath, adapterArgs: [adapterPath, responsePath, rootsPath] });
+      assert.equal(report.results.length, cases.length);
+      assert.equal(report.results.find((item) => item.caseId === 'css-only-markup-routing').status, 'pass');
+      assert.equal(report.results.find((item) => item.caseId === 'token-only-theming-routing').failureKind, 'infrastructure');
+      assert.equal(report.results.at(-1).caseId, cases.at(-1).id);
+      for (const line of (await readFile(rootsPath, 'utf8')).trim().split('\n')) await assert.rejects(readFile(path.join(JSON.parse(line), 'package.json')), { code: 'ENOENT' });
+    } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+
+  test('records a redacted live adapter failure in the report', async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-adapter-error-'));
     try {
       const adapterPath = path.join(directory, 'adapter.mjs');
       const secret = `ghp_${'q'.repeat(30)}`;
       await writeFile(adapterPath, `process.stderr.write('Authorization: Bearer ${secret}'); process.exit(1);`);
-      await assert.rejects(
-        runEvaluations({
+      const report = await runEvaluations({
           casesPath: new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url).pathname,
           adapter: process.execPath,
           adapterArgs: [adapterPath],
           caseId: 'setup-only-routing',
           repositoryRoot: new URL('..', import.meta.url),
-        }),
-        (error) => !error.message.includes(secret) && error.message.includes('[REDACTED]'),
-      );
+        });
+      assert.equal(report.status, 'fail');
+      assert.equal(report.results[0].failureKind, 'infrastructure');
+      assert.ok(!report.results[0].error.message.includes(secret));
+      assert.match(report.results[0].error.message, /\[REDACTED\]/u);
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
@@ -1037,17 +1213,15 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
         setInterval(() => {}, 1000);
       `);
       const started = Date.now();
-      await assert.rejects(
-        runEvaluations({
+      const report = await runEvaluations({
           casesPath: new URL('./fixtures/expressivecss-skill-evals/cases.json', import.meta.url).pathname,
           adapter: process.execPath,
           adapterArgs: [adapterPath],
           adapterTimeoutMs: 25,
           caseId: 'setup-only-routing',
           repositoryRoot: new URL('..', import.meta.url),
-        }),
-        (error) => error?.code === 'ETIMEDOUT',
-      );
+        });
+      assert.equal(report.results[0].error.code, 'ETIMEDOUT');
       assert.ok(Date.now() - started < 200, 'timeout waited for a signal-trapping adapter');
     } finally {
       await rm(directory, { recursive: true, force: true });

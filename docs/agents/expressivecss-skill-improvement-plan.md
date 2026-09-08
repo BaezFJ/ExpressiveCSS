@@ -1,5 +1,364 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Current status, September 8, 2026
+
+The core skill implementation and original six-case, 36-run comparison are
+complete. Historical sections below retain the results and limitations of their
+own snapshots; they are not a list of unfinished implementation tasks.
+
+| Workstream | Status | Evidence or next action |
+| --- | --- | --- |
+| Routing, direct-loading boundaries and component decisions | Implemented | Generated guides, mode/feature routes and component catalogue; skill regression suite. |
+| Version and documentation assurance | Implemented | Shared resolver, portable copies, provenance and matching-bundle checks. |
+| Review matrix, component contracts and evidence coverage | Implemented | Atomic criteria, scoped status, state/boundary ledger and matched capture rules. |
+| Optional MCP assistance and autonomous recovery | Implemented | Scoped tool evidence, command permissions and recovery evaluations in [autonomy](expressivecss-autonomy.md). |
+| Real-task evaluations and reproducibility | Implemented | Runnable fixtures, independent grading, frozen provenance, held-out discovery, maintenance sequences and retained failures. |
+| Original reliability/performance comparison | Complete within recorded scope | 36/36 runs passed named checks; required button reading reduced by at least 25%. See [comparison](expressivecss-skill-comparison.md). No general speed claim. |
+| Historical full-page A/B and Material editor A/B appearance | Accepted visually | BaezFJ's “accept visuals” is bound to four retained outputs in the [acceptance record](evidence/design-acceptance-2026-09-08.json). |
+| Historical full-page delivery completion | Incomplete | Both refinement attempts timed out before final reports. Visual acceptance does not turn them into completed evaluations; retain the failures. |
+| Assistance cost of accepted results | Visuals accepted; task acceptance pending | All 18 outputs passed named automated checks and received [visual acceptance](evidence/assistance-visual-acceptance-2026-09-08.json). Full task acceptance, correction effort and measured review time remain unavailable in [assistance cost](expressivecss-assistance-cost.md). |
+| Manual release checks | Not performed | Native zoom, physical devices, screen readers and complete language review remain separate in [browser coverage](expressivecss-browser-coverage.md). |
+| Known Menu reversal and filled-select label defects | Repaired | Shared Menu cancellation and content-sized select labels; six browser regressions cover Chromium, Firefox and WebKit. See [repair evidence](expressivecss-browser-coverage.md#framework-follow-ups-repaired-september-8-2026). |
+| Additional Material framework capabilities | Deferred feature work | Standalone button morphing, modal pickers, emphasized typography/font coverage and shared shape/motion roles remain in the [roadmap](../../skills/expressivecss/references/capability-roadmap.md). |
+| Publishing and installation | Outside this plan | Requires a separate release/install request. |
+
+The new prompt-6 dashboard comparison was also received positively. It is a
+separate local design exercise, not one of the historical benchmark outputs or
+proof of skill-only improvement. Neither visual review certifies accessibility.
+
+
+Closeout validation passed: `npm run verify` ran 1,019 tests with no failures
+or skips, typechecking, generated-file checks and the 66-page documentation
+build. The dedicated skill suite passed 240 tests and 22 replay cases; the
+explicit browser gate passed 41 tests across its required engines. MCP smoke
+passed all seven tools, and both isolated package checks passed. Generation and
+diff checks remained clean after packaging. Independent review found no remaining
+actionable issues in this closeout and repair scope.
+
+One initial skill run rejected changed evaluation provenance while another
+verification step rebuilt package artifacts. The complete skill suite passed
+when rerun after builds finished; no assertions or provenance guards were
+weakened. Visual comparison completed twelve baseline/head captures, with eight
+expected Menu/Select differences and four unchanged Autocomplete captures; see
+[browser evidence](expressivecss-browser-coverage.md#framework-follow-ups-repaired-september-8-2026).
+
+
+## Framework gap follow-up: motion integration
+
+The first framework repair closes the two motion integration gaps from the
+capability roadmap. The scale utility now suppresses and cancels transitions
+under reduced motion without changing its final transform or disclosure
+ownership. Expanding-card cleanup waits for its actual CSS clip transition,
+including cancellation, instead of a separate 500ms timer. Zero-duration and
+reduced-motion paths close immediately; reopening and destruction invalidate
+old completion, and removed cards do not take focus. `onClose` remains a
+start-of-close callback. Public names and default animation values are unchanged.
+
+The browser regressions cover these paths in Chromium, Firefox and WebKit.
+They test timing and behavior, not Material spring fidelity or human design
+acceptance. The capability collector maps the Chromium assertions; the same
+file also records explicitly named Firefox and WebKit cases. Its engine-version
+field identifies the collector's Chromium preflight only.
+
+Validation passed: `npm run verify` ran 1,013 tests with no failures or skips,
+including six new motion browser tests across the three engines; typechecking,
+generation checks and the 66-page docs build passed. `npm run test:skill` passed
+240 tests and 22 replay cases. All seven MCP smoke checks and isolated framework
+and MCP package verification passed. The capability collector recorded 23
+passing tests in `.cache/material-capabilities/run-7qdm7T/report.json`, with
+SHA-256 `2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b`.
+No live agent benchmark, full-page screenshot comparison, or human visual
+acceptance is claimed for these behavior fixes.
+
+Source review compared the full source inventory with the preceding commit:
+only the scale partial and expanding-card runtime changed. The reviewed delta
+updates their source pins and the inventory guard; other source pins and prior
+upstream-review dates carry forward unchanged. Browser evidence is collected
+again against the changed build. This is not a renewed full Material audit.
+
+Remaining feature work still needs contracts for standalone button shape
+morphing, modal pickers, emphasized typography/font coverage, shared shape
+roles and shared motion roles. The older follow-up sections below describe
+their historical snapshots; the generated roadmap records current gaps.
+
+## Cross-browser critical flows, September 7, 2026
+
+The [browser coverage report](./expressivecss-browser-coverage.md) adds the same
+critical-flow cases across Chromium, Firefox and WebKit, with keyboard and
+compact Arabic RTL/touch/text-reflow profiles. CI requires all engines and retains
+case results and failure traces. Native zoom, physical devices, screen readers
+and full visual/language review remain explicit manual release checks.
+The skill now asks agents to name tested engines when reporting browser evidence.
+All six critical-flow cases passed. Contributor verification passed 998 tests,
+the explicit browser suite passed 29, and skill/MCP/package/generated checks
+passed. The report preserves two framework follow-ups: rapid Menu reversal and
+enlarged RTL select-label overlap. Those findings are not repaired by this change.
+
+No framework behavior or public API changes are included. The existing fixture
+server, Playwright dependency and Node runner provide the implementation.
+
+
+## Capability roadmap follow-up, September 7, 2026
+
+The [generated roadmap](../../skills/expressivecss/references/capability-roadmap.md)
+uses the existing component catalogue for all 46 components and separate
+typography, shape and motion records. Each entry states its documented scope,
+reviewed source hashes, upstream review limits, intentional web adaptations,
+feature/integration gaps, available browser checks and recorded results.
+`implemented` applies only to the named scope. It never means full Material parity.
+
+Source changes require a new review; changed browser inputs require a new run.
+The source inventory guard is conservative: any `src/` change invalidates all
+reviews, including changes to shared tokens or runtime helpers. Review owners
+listed per entry before renewing pins; matching hashes are never a new audit.
+Missing evidence remains unavailable. The operator collector executes native
+Node tests, records Chromium and Node versions, hashes inputs and retains a raw
+report. It cannot ingest candidate-authored verification prose. Skill and MCP
+receive generated snapshots; MCP blocks dependent results on version/provenance
+failure. The roadmap is optional reading, outside the ordinary component path.
+
+Concrete feature gaps include standalone common-button shape morphing, modal
+date/time pickers, an emphasized type scale with font coverage, shared shape
+roles, and shared motion roles. Separate integration findings concern the scale
+utility's reduced-motion behavior and expanding-card CSS/runtime timing. These
+remain roadmap items; this change adds no framework APIs or style behavior.
+Retained navigation components and intentionally excluded variants are usage
+constraints, not automatically missing capabilities. Stale picker prose now
+states that `open()`/`close()` methods are absent.
+
+Foundation design evidence comes from inspectable Google Android documentation.
+The JavaScript-only Material pages were not fully reviewed, so full web
+specification coverage stays unassessed. Existing expanding-card tests call
+`cubic-bezier(0.2, 0, 0, 1)` emphasized; Google's inspected motion guidance calls
+it standard. This naming mismatch is recorded without changing the curve.
+
+Validation passed: `npm run verify` completed 992 tests with no skips,
+typecheck, generated-file checks, and the documentation build/site checks.
+`npm run test:skill` passed 231 tests and 22 replay cases; the explicit browser
+suite passed 23 tests. MCP smoke checks passed for seven tools, and isolated
+framework/MCP package verification passed. Generated files were checked again
+after packaging. The basic-button reading path is 30,407 bytes, 25.23% below the
+original 40,670-byte baseline.
+
+The accepted operator collection records 17 passing tests on Chromium
+151.0.7922.34 and Node v24.20.0, dated September 8 UTC. Inputs stayed unchanged.
+Its raw report SHA-256 is
+`519796bd2f6583a831928a3bafd0e05adbe012d56f8fdef69fb1cf7036df990c`.
+Thirteen components and all three foundations have scoped mapped assertions;
+33 components have no directly mapped browser checks. An earlier run passed
+its tests but was discarded because collector inputs changed during collection.
+Independent review confirmed the source guards, MCP foundation blocking,
+complete script/semantics fingerprints and matching generated snapshots.
+
+No live agent benchmark, new human visual assessment, published-package parity
+claim, installation or publication is part of this follow-up.
+
+
+## Material decision evaluation follow-up, September 7, 2026
+
+The existing benchmark now tests component fit, expressive hierarchy, installed
+typography/shape contracts, and motion preferences in three runnable editor tasks.
+Intentional Material weaknesses remain semantically valid so markup conformance
+cannot substitute for design judgment. Read-only review and CSS-only repair
+scopes are independently enforced. Matched operator captures and behavior checks
+remain separate from pending human judgments about the design.
+
+No skill instructions, framework APIs, stylesheets, or dependencies change in
+this iteration. The existing Skill Creator viewer shows source, captures and
+results. See the [evaluation protocol](./expressivecss-skill-evals.md#material-decision-cases)
+for reproducible commands and review boundaries. The [comparison report](./expressivecss-skill-comparison.md#material-decision-evaluation-follow-up) records six completed tasks, the transparent report-label correction, and pending human design review.
+
+
+## Web accessibility follow-up, September 7, 2026
+
+Accessibility guidance now separates Material target recommendations, WCAG 2.2
+criteria, and measured browser behavior. A focused reference covers target-size
+exceptions, independent pointer alternatives to dragging, forced colors, and
+contrast after theme overrides. Root routing includes explicit contrast and
+forced-colors investigations while ordinary token work uses focused Theming
+checks. The required basic-button reading path remains below the 25% reduction
+budget at 30,253 bytes.
+
+The source drag-handle documentation and generated guides now require a non-drag
+pointer alternative as well as keyboard access. Audit rows distinguish those
+checks and treat Material's 48dp recommendation separately from WCAG failures.
+The existing evaluator gains forced-colors emulation and a deliberately flawed
+fixture for a no-edit review and scoped repair. No framework behavior, public
+API, or dependency changed. See the [comparison report](./expressivecss-skill-comparison.md#web-accessibility-follow-up)
+for results, evidence limits, and review artifacts.
+
+
+## Complete examples follow-up, September 7, 2026
+
+Three runnable Common Ground examples now teach composition through workspace
+settings, a newsletter editor, and a reading-list/detail flow. Each switches
+between restrained and expressive treatments without resetting content or state.
+Inline disclosures explain how action size, containment, typography, semantic
+color, and shape serve different product contexts. Sample state is explicitly
+session-only; no account settings, messages, or reading history reach a backend.
+
+The Design guide links to these optional assets after component selection.
+The examples remain outside the basic-button reading path. Their source lives
+inside the portable skill and is reused directly by the existing evaluator.
+A small contributor preview command uses the existing restricted fixture server
+and removes its temporary consumer on shutdown. No server framework, frontend
+dependency, public framework API, or component stylesheet was added.
+
+Browser review corrected textarea typography/theme styling, unintended article
+card styling, mobile action placement, and doubled-text editor overflow. The
+regression checks cover responsive boundaries, both treatments and themes,
+native keyboard behavior, feedback, safe text preview, and teardown/remount.
+See the [comparison report](./expressivecss-skill-comparison.md#complete-examples-follow-up)
+for matched captures, focused adaptation runs, and remaining review limits.
+
+## Component selection follow-up, September 7, 2026
+
+All 21 generic avoidance warnings now name the competing job or component.
+Thirty selected guides include a concrete scenario showing why a plausible
+choice is wrong. The existing catalogue owns the examples; the generator and
+optional MCP bundle carry them without another catalogue or runtime dependency.
+
+The main distinctions cover app destinations versus local panels, native form
+values versus command/toggle buttons, transient versus persistent versus blocking
+feedback, and measured versus unmeasured waits. Button-group toggle support,
+indeterminate linear progress, snackbar Undo, native input alternatives, and
+inline picker limits remain explicit. These are selection examples grounded in
+the existing package contracts, not new claims of Google specification parity.
+
+The complete basic-button reading path is 30,159 bytes, 25.84% below the original
+40,670-byte baseline and 285 bytes below the preceding revision. Examples live in
+the selected guides rather than the mandatory index. Regression checks protect
+example coverage, generation, existing MCP selection outcomes, and the reading
+budget. See the [focused comparison](./expressivecss-skill-comparison.md#component-selection-follow-up)
+for the two approved tasks, observed outputs, and validation limits.
+
+## Material mapping and expressive foundations, September 7, 2026
+
+The existing component catalogue now owns dated upstream evidence, documented
+support, web adaptations, and known boundaries. Its 46 entries distinguish 34
+Material components, including the explicitly marked legacy bottom app bar, one
+layout pattern, six related patterns, and five web extensions. The selected
+generated guide and optional MCP decision response carry the same mapping.
+Upstream inventory review confirms an observed Google entry; it does not certify
+every specification or the framework's visual parity. Source-reviewed support
+does not constitute a browser pass. Specification links remain pointers unless
+the evidence scope says the specification itself was reviewed.
+
+Shape and motion have focused Theming references; typography now explains
+emphasized treatments through existing scoped weight tokens and actual font
+coverage. These references identify framework gaps rather than inventing APIs:
+no reusable emphasized type scale, global shape scale, or global motion theme is
+shipped. Component-specific shape/motion remains available. The common-button
+square/toggle morph boundary, inline picker behavior, and independent expanding
+card CSS/cleanup timing are documented limits, not implementation changes.
+
+Shared floating-sheet and banner documentation was corrected where it implied
+unverified upstream authority. Search mapping preserves application ownership of
+view opening. Current Google guidance about expanded rails and docked toolbars is
+recorded without removing the existing drawer or bottom-app-bar contracts.
+
+The complete basic-button path is 30,444 bytes, a 25.14% reduction from the original
+40,670-byte baseline. Repeated selection text was shortened to keep the new
+evidence within the existing reading budget. No dependency, stylesheet behavior,
+runtime API, export, or installation changed. See the
+[comparison report](./expressivecss-skill-comparison.md#material-mapping-and-foundations)
+for the focused old/new task review and validation evidence.
+
+## Reliability and performance follow-up, September 2026
+
+The phases below record the original implementation plan. The follow-up keeps
+the six support guides and existing evaluator, with these changes:
+
+- One root routing policy, useful discovery descriptions, and a shorter generated
+  decision index. Adaptive details live with their selected component guide.
+- Resolve once per task and prefer matching bundled guidance. A bundled version
+  match does not verify the current public website.
+- Focused asset-loading, lifecycle, media, and browser-measurement guidance.
+- Runnable consumer fixtures, source-based completion checks, structured evidence
+  matching, retained infrastructure failures, and an operator-owned Codex adapter.
+
+The complete basic-button read path is now 30,501 bytes, compared with 40,670 bytes
+before the change: 25.0% less. This counts entire files, including the whole index;
+it is a deterministic context-size comparison, not a token or latency benchmark.
+
+The completed measurements and evidence limits are recorded in the
+[comparison report](./expressivecss-skill-comparison.md).
+
+The next reliability increment adds browser access during candidate execution,
+recorded capability failures, proof-backed error reporting, structured audit and
+version assertions, and full-project edit boundaries. Six focused live executions
+exercise lifecycle repair, no-edit audit, and unavailable version documentation.
+Their results and a correction to the console-error validator are recorded in the
+comparison report; they are separate from the original 36-run performance study.
+
+The live catalogue now contains eight cases and twenty discovery probes in
+`tests/fixtures/expressivecss-skill-evals/benchmark.json`. Keep an immutable copy of
+the original skill before editing. Run old and revised versions on independent
+copies of the same fixtures with the same Codex configuration:
+
+```sh
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --output=/tmp/expressivecss-comparison
+node scripts/benchmark-expressivecss-skill.mjs --baseline=/absolute/path/to/original-skill --output=/tmp/expressivecss-discovery --triggers=true
+```
+
+The unfiltered comparison runs each case three times per version, for 48
+runs. Each old/new pair runs concurrently; the dispatch order alternates. The
+report includes per-case medians, variability, observed usage, correctness checks,
+screenshots, and source outputs. Missing telemetry stays unavailable. Discovery
+uses constrained selection probes and is reported separately from task completion;
+it does not estimate natural-task invocation rates.
+
+The two complete-interface cases add full-page refinement and no-edit review,
+using matched browser scenes and task interactions. Measured assertions remain
+separate from the existing Design matrix's qualitative verdicts. See the
+[evaluation protocol](./expressivecss-skill-evals.md#complete-interface-evaluations)
+for scene coverage and review limits. The earlier six-case, 36-run study retains
+its original scope and results.
+
+For an interrupted comparison, `--resume=true` retains completed results only
+when skill, fixture, grader, plan and recorded runtime/settings provenance match.
+Legacy archives without provenance and orphan attempt directories require a new
+output directory; validation happens before any resume writes. Select only
+operator-reviewed local results. Interrupted attempts are not successful runs.
+Natural discovery now has an independently authored held-out split and a frozen
+protocol; see its [separate workflow](./expressivecss-skill-evals.md#natural-discovery-and-frozen-comparisons).
+The responsive case removes
+the fixture's unrelated header overflow before introducing navigation and hero
+defects; it does not grade that inherited defect as a candidate regression.
+
+Review the outputs with Skill Creator's existing viewer, not a new dashboard:
+
+```sh
+python /absolute/path/to/skill-creator/eval-viewer/generate_review.py /tmp/expressivecss-comparison --skill-name expressivecss --benchmark /tmp/expressivecss-comparison/benchmark.json --static /tmp/expressivecss-comparison/review.html
+```
+
+The installed viewer generator embeds raw JSON in a script block. Until it
+escapes HTML delimiters upstream, source snippets containing `</script>` break
+the export. Its statistics formatter also throws on unavailable token means.
+Apply these two export fixes; preserve missing telemetry as unavailable:
+
+```sh
+python3 - /tmp/expressivecss-comparison/review.html <<'PY'
+import json, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+html = p.read_text()
+prefix = '    const EMBEDDED_DATA = '
+line = next(line for line in html.splitlines() if line.startswith(prefix))
+data = json.loads(line[len(prefix):].removesuffix(';'))
+safe = json.dumps(data, ensure_ascii=True).replace('<', '\\u003c')
+html = html.replace(line, prefix + safe + ';', 1)
+html = html.replace('if (!stat) return "—";',
+                    'if (!stat || stat.mean == null || stat.stddev == null) return "Unavailable";', 1)
+p.write_text(html)
+PY
+```
+
+Human review remains necessary for visual quality and the accuracy of audit
+findings. Browser measurements describe these local fixtures, not field Core Web
+Vitals. A failed critical check or infrastructure failure cannot support a release
+claim. Publishing and installing the revised skill are separate work.
+
 ## Goal
 
 Make the ExpressiveCSS skill more deterministic, easier to load correctly, and harder to declare complete without evidence. Preserve the current focused design-and-review structure. Do not add a broad command suite or replace Material 3 Expressive rules with generic aesthetic guidance.
@@ -582,3 +941,56 @@ All recommendations are complete only when:
 - Generic aesthetic bans unrelated to Material 3 Expressive.
 - Automatically changing product copy, information architecture, or brand decisions during Refine.
 - Treating regex or static analysis as proof of visual, interaction, or accessibility conformance.
+
+## Durable product context
+
+Design now routes work across pages to an optional product-context reference.
+Theming can consult it directly for shared brand decisions without loading the
+full Design workflow. The reference reuses existing project records, separates
+acceptance from observed implementation and proposals, and scopes exceptions
+to their recorded purpose. It gives a fallback when documentation is absent
+and preserves planning and review as no-edit work.
+
+The focused comparison uses the existing consumer and Codex adapter. It checks
+a new-page plan and an authorized update to existing design notes, including
+stale implementation notes and unapproved navigation ideas. See the
+[comparison and limits](expressivecss-product-context.md). No mandatory
+configuration format, new dependency, or product-context service was added.
+
+## Maintenance across requests
+
+The evaluator now carries the settings and editor examples through three
+requests each, with a fresh agent per stage. Cumulative browser checks preserve
+earlier behavior while accepting an explicit replacement requirement. Parent
+hashes and scoped file checks prevent silent resets, and failed stages block
+their successors while retaining evidence. The
+[maintenance report](expressivecss-maintenance.md) records outcomes and limits.
+No new skill instructions are added without evidence that maintenance needs them.
+
+## Autonomous scope and recovery follow-up
+
+Roadmap item 7 extends the existing skill, MCP, and evaluator. The optional
+[workflow reference](../../skills/expressivecss/references/autonomy.md) defines
+allowed work and safe recovery without a mandatory project configuration or
+extra approval step for already authorized changes. MCP permissions now support
+a narrower server-controlled script list and fail-fast command sequences.
+Output schemas and conservative annotations describe the tools; byte-level
+inspection evidence and optional expected hashes detect stale candidates.
+
+Two focused benchmark tasks cover a permitted repair preserving user edits and a
+failed-check investigation whose required repair is outside scope. The
+[autonomy report](./expressivecss-autonomy.md) records results and limits.
+The implementation adds no package dependencies, public framework API, or
+automatic rollback of shared files.
+
+## Follow-up 8: cost of accepted results
+
+Extend the existing implementation benchmark with skill-only, ExpressiveCSS
+MCP-only and combined assistance, initially on form-action and navigation/media.
+Three sequential attempts per mode rotate order. Preserve separate input/cached/
+output tokens, agent and operator elapsed time, observed tool failures and actual
+MCP/guide use. Keep first-pass acceptance and human correction requests separate
+from automated checks, bound to the exact retained attempt. Export bounded
+transcripts, source and captures outside the checkout with hashes; commit only a
+compact evidence record. Use Skill Creator's existing review viewer. See the
+[comparison protocol and results](expressivecss-assistance-cost.md).

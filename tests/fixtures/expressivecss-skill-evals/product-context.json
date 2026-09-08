@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "fixture": "consumer-current",
+  "files": {
+    "README.md": "# Northstar\nExpressiveCSS member workspace. Product decisions live in docs/design.md; the older exploration in docs/archive.md is not the current policy. Shared brand tokens live in app.css. The existing dashboard shell is in index.html.\n",
+    "docs/design.md": "# Product decisions\n\n## Accepted direction\nApproved by the product owner in the project brief: help returning members find events and manage attendance quickly. Keep sentence-case, calm factual copy, the existing Dashboard, Home, Search, and Profile destinations and URLs, rounded Material Symbols, and the current type families. Use the shared app.css seed. Prefer compact recurring-task lists and one primary action per region. Provide useful empty and offline states without claiming a backend action succeeded.\n\n## Accepted exception\nThe event booking form uses roomier spacing for first-time members. This exception applies only to booking; recurring-task lists remain compact.\n\n## Theme maintenance note\nThe agreed seed is #006a79. An old implementation note below still names #6750a4 and needs correction if the theme is touched.\n\n## Old implementation note\nThe brand seed is #6750a4 in app.css.\n\n## Pending proposals\nRename Search to Discover. Explore brighter promotional surfaces. Neither proposal has been approved.\n\n## Unrelated operational note\nEvent hosts must supply their own cancellation contact details.\n",
+    "docs/archive.md": "# Early exploration \u2014 superseded\nUse purple #6750a4, roomy cards for every screen, and rename Search to Discover. These exploration ideas predate the accepted product brief.\n"
+  },
+  "cases": [
+    {
+      "id": "product-context-plan",
+      "request": "Plan an Events page for this existing ExpressiveCSS member workspace. Members should find upcoming events, filter by date, and open the existing booking flow; show an empty result and an offline state. Keep the current product identity and navigation. Give a concise working brief and component direction grounded in the project files, identify conflicting notes, and separate approved choices from assumptions or proposals. This is planning only: do not edit files or claim rendered verification.",
+      "readOnly": true,
+      "expected_output": "A source-grounded plan that preserves destinations and identity, scopes booking density to booking, flags the obsolete seed note, and leaves navigation proposals pending. No file changes."
+    },
+    {
+      "id": "product-context-record",
+      "request": "Update our existing design notes after this product decision: I approve roomier spacing for the Events filter form only, while event result lists and other recurring-task lists stay compact. Keep the booking exception, current navigation, brand, and pending proposals. Record this approval with its scope and reason (occasional visitors need easier date selection), and correct the obsolete seed implementation note from the current token file. This is a documentation-only task: do not change application code or archived notes, invent a review date, or create another design record. Summarize what the next page should inherit.",
+      "readOnly": false,
+      "expected_output": "Only docs/design.md changes. It records the approved local form exception and rationale, corrects the obsolete seed note, and preserves existing accepted and pending decisions and unrelated notes."
+    }
+  ]
+}

@@ -1385,6 +1385,8 @@ We've made some custom animation classes that will transition your content with 
 
 Use this to scale in and out elements. Make sure to add the base transition class `scale-transition`. Then add the class `scale-out` to scale the element down until it is hidden. To start something as hidden, add the class `scale-out` first, and then add the class `scale-in` to scale the element up until it is shown.
 
+With reduced motion requested, scale state changes happen immediately. Scaling out is visual only; applications still own disclosure semantics and focus.
+
 ```html
 <!-- Scaled in -->
 <a id="scale-demo" href="#!" class="button circle extra scale-transition" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
@@ -1671,7 +1673,7 @@ A banner is **not** `role="banner"`. That role is the page header landmark: a pa
 </div>
 ```
 
-Two colour variants and one shape modifier. Standard is the default — `surface-container` with `on-surface` text. `vibrant` is `primary-container` with `on-primary-container`, for the most important message on the screen. `square` flattens the 28dp corners for a banner running flush under an app bar — basic banners only, since Material gives the rich layout one shape and no square counterpart.
+Two colour variants and one shape modifier. Standard is the default — `surface-container` with `on-surface` text. `vibrant` is `primary-container` with `on-primary-container`, for the most important message on the screen. `square` flattens the 28dp corners for a banner running flush under an app bar — basic banners only, since ExpressiveCSS gives the rich layout one shape and no square counterpart.
 
 ```html
 <div class="banner vibrant square">
@@ -1696,7 +1698,7 @@ Two colour variants and one shape modifier. Standard is the default — `surface
 </div>
 ```
 
-Tokens follow M3 Expressive `md.comp.banners.*`. The basic row is 56dp tall with 4dp insets, a 48dp icon container around a 24dp icon, `body-medium` text with 14dp above and below, and actions 8dp apart. Below 600dp the actions take their own line and the row grows to 112dp. The rich layout has 12dp insets, a title at `body-medium` weight 500, and its actions 12dp under the message. Set `--md-comp-banners-color`, `--md-comp-banners-body-text-color`, `--md-comp-banners-title-text-color`, `--md-comp-banners-icon-color` and `--md-comp-banners-close-button-color` for colour; the geometry tokens are `--md-comp-banners-basic-*` and `--md-comp-banners-rich-*`.
+ExpressiveCSS uses `md.comp.banners.*`-style tokens; a dedicated current M3 specification for these variants has not been verified. The basic row is 56dp tall with 4dp insets, a 48dp icon container around a 24dp icon, `body-medium` text with 14dp above and below, and actions 8dp apart. Below 600dp the actions take their own line and the row grows to 112dp. The rich layout has 12dp insets, a title at `body-medium` weight 500, and its actions 12dp under the message. Set `--md-comp-banners-color`, `--md-comp-banners-body-text-color`, `--md-comp-banners-title-text-color`, `--md-comp-banners-icon-color` and `--md-comp-banners-close-button-color` for colour; the geometry tokens are `--md-comp-banners-basic-*` and `--md-comp-banners-rich-*`.
 
 ---
 
@@ -2328,6 +2330,8 @@ An `<aside>` expands in normal flow below the persistent media, headline, and su
 
 An expanding card performs a shared-container transition from a compact feed item into a full-screen modal detail surface. Use an `<article class="expanding-card">` with a direct `<dialog class="expanding-card-dialog">`. Keep the same hero image in both states so the media appears to grow with the container. `ExpandingCard.Init()` and `AutoInit()` wire up the modal, measured clip origin, back action, focus return, Escape, and reduced motion.
 
+`--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
+
 ```html
 <article class="outlined expanding-card">
   <figure>
@@ -2515,7 +2519,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Dragging is a pointer gesture, so an outcome reachable only by dragging is unreachable without a pointer: reordering built on a handle needs a keyboard path of its own — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position directly. The handle makes the gesture discoverable; it does not make the outcome reachable.
+**Nothing here drags.** No script belongs to this component and ExpressiveCSS ships no reordering behaviour. The one thing a handle is wired to is the bottom sheet's, below. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
 
@@ -2527,11 +2531,11 @@ The two-column layout is the page's own — a flex or grid row, or a pane layout
 
 Material tokenised the *vertical* handle — a 4×48dp bar in a 24dp hit target, `outline`, swelling to 12×52dp on a 12dp corner in `on-surface` while held. That is what `.drag-handle` draws. The container is sized to the pressed bar, so holding it moves nothing beside it. `cursor: grab` is the default; a splitter that resizes reads better as `cursor: col-resize`, which is one declaration of your own.
 
-On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. Decoration is the default and is enough: dragging the sheet down dismisses it and <kbd>Esc</kbd> already does the same from the keyboard, so the bar sits on top of a path that exists without it. Write a `<button>` there instead when you want a visible dismiss control — activating it closes the sheet, by pointer or by <kbd>Enter</kbd>, and a drag that snaps back does not also dismiss because the click ending a drag is told apart from a tap. This is the only place a drag handle is wired to anything. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
+On a bottom sheet the same class takes the sheet's grabber instead — a horizontal 32×4dp bar at 40% `on-surface-variant`, which is Material's own separate size and colour for that slot. A decorative handle needs a separate non-drag dismiss path. A named `<button>` handle closes the sheet by click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>; a `form method="dialog"` close button is another option. Native Escape behavior depends on the opening mode, browser, and `closedby` policy, and is not a pointer alternative. Scrim dismissal also depends on the installed shared runtime and `closedby` policy; test it before relying on it. A drag that snaps back does not also activate the button because the runtime distinguishes the ending click from a tap. This is the only place a drag handle is wired to anything. `.handle` is the pre-1.0 spelling and still works, decorative or wired.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">
-  <span class="drag-handle" aria-hidden="true"></span>
+  <button type="button" class="drag-handle" aria-label="Dismiss"></button>
   <h2 id="sheet-title">Share</h2>
 </dialog>
 ```
@@ -3894,9 +3898,9 @@ Expressive.AutoInit(document.body, {
 | `inDuration` | Number | `150` | Enter transition duration, in milliseconds. |
 | `outDuration` | Number | `250` | Exit transition duration, in milliseconds. |
 | `onOpenStart` | Function | `null` | Called when the menu starts opening. |
-| `onOpenEnd` | Function | `null` | Called when the menu finishes opening. |
+| `onOpenEnd` | Function | `null` | Called when opening completes; superseded transitions and destruction cancel it. |
 | `onCloseStart` | Function | `null` | Called when the menu starts closing. |
-| `onCloseEnd` | Function | `null` | Called when the menu finishes closing. |
+| `onCloseEnd` | Function | `null` | Called when closing completes; reopening and destruction cancel it. |
 | `onItemClick` | Function | `null` | Called when an item is clicked. Receives the `li`. |
 
 #### Examples
@@ -4153,7 +4157,7 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
-A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss; a handle written as a `<button>` also dismisses when activated, so the keyboard reaches it too, and <kbd>Esc</kbd> closes the sheet natively.
+A `dialog.bottom-sheet` (or `.bottom`) is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 ```html
 <dialog class="bottom-sheet" aria-labelledby="open-file-title">
@@ -4195,7 +4199,7 @@ document.getElementById('sheet').showModal(); // modal
 
 ### Floating sheet
 
-A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - the third member of M3's sheet family. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
+A `dialog.floating-sheet` is secondary content on a surface detached from every window edge - an ExpressiveCSS dialog extension, not a verified standalone M3 component. `show()` is standard (no scrim, the page stays interactive); `showModal()` is modal (scrim). The container is `surface-container-low`, 28dp corners all round, elevation 1, 24dp in from every edge, 400dp max width. It is a `<dialog>`, so the ordinary dialog slots apply and there is no floating-sheet module - light dismiss on the scrim is `Dialogs.Init()`, the same as any dialog. It does not drag, so it takes no handle.
 
 There are no edge modifiers: `.bottom` selects a bottom sheet and `.left` / `.right` a side sheet. Anchor it with `inset` / `margin`, or move it with `--md-comp-floating-sheet-inset` and `--md-comp-floating-sheet-container-max-width`.
 
@@ -5194,7 +5198,7 @@ Select a date, a range, or several dates from a calendar.
 
 Add `datepicker` to a text input. `AutoInit()` starts every `.datepicker` except those marked `no-autoinit`.
 
-The calendar is inline, not a modal. `open()` and `close()` are deprecated no-ops. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
+The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
 
 ```html
 <div class="field">
@@ -5398,7 +5402,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-Deprecated. Both log a warning and do nothing. The calendar is not a modal; show it with `openByDefault` or the docked display plugin.
+These methods are not provided. The calendar defaults to inline presentation; `displayPlugin: 'docked'` enables docking. Both require `openByDefault: true` to show the calendar. No modal implementation is available.
 
 ### Properties
 
@@ -5418,7 +5422,7 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Add `timepicker` to a text input. `AutoInit()` starts every `.timepicker` except those marked `no-autoinit`.
 
-The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are deprecated no-ops.
+The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
 
 ```html
 <div class="field">
@@ -5557,7 +5561,7 @@ instance.destroy();
 
 #### .open(); / .close();
 
-Deprecated. Both log a warning and do nothing. The clock is not a modal.
+These methods are not provided. The clock defaults to visible inline presentation; `displayPlugin: 'docked'` enables docking. No modal implementation is available.
 
 ### Properties
 
@@ -5826,6 +5830,8 @@ The on/off captions are decoration. Left as bare text they are folded into the l
 ## Select
 
 Choose one option, or several, from a styled menu.
+
+Filled enhanced selects reserve a label row that grows with wrapping and enlarged text. Leading icons retain their label spacing; supporting text stays outside the filled surface. Native and outlined variants retain their existing layouts.
 
 Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 

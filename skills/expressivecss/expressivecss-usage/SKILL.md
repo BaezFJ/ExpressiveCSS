@@ -1,6 +1,6 @@
 ---
 name: expressivecss-usage
-description: Use ExpressiveCSS markup, layout, and utilities.
+description: Write and repair ExpressiveCSS HTML, JSX, templates, layouts, utilities, and component choices. Use for interface implementation and review; exclude setup-only, token-only, and narrow lifecycle tasks.
 ---
 
 ## ExpressiveCSS usage rules
@@ -13,8 +13,8 @@ Use this guide for classes, markup, layout, utilities, or component selection an
 
 Do not load this guide when the task concerns only setup, visual tokens, or lifecycle code. Use the installation, theming, or runtime guide that owns that work. This guide does not replace a selected component's target-version contract.
 
-1. Identify the installed ExpressiveCSS version before writing classes or JavaScript.
-2. Read the applicable component guide in `../components/`, then the linked target-version documentation.
+1. Reuse the root version resolution. Resolve only when loaded directly or dependency evidence changed.
+2. Read the selected `../components/` guide. Fetch full matching documentation only for gaps, conflicts, or version uncertainty.
 3. Start with the documented native element and exact child structure. Required classes, IDs, `for`, `data-target`, and ARIA relationships are API.
 4. Choose the component from the user's job and behavior, not only from a requested visual resemblance.
 5. Use one component per job, one persistent peer-navigation pattern at each width, one feedback surface per event, and at most one high-emphasis action per region.
@@ -26,15 +26,13 @@ Do not load this guide when the task concerns only setup, visual tokens, or life
 
 ## Layout, utility, and foundation references
 
-For grid work, read the [grid reference](./references/grid.md) before writing layout classes. It gives agents the container variants, 12-column class grammar, M3 window-prefix cascade, offsets, gap scale, copyable responsive patterns, and boundary checklist.
+Load only the reference for the feature being changed:
 
-For spacing, visibility, alignment, formatting, responsive media, or native form opt-outs, read the [helper-class reference](./references/helpers.md). It distinguishes class syntax from compatibility aliases and records the `!important`, `display: block`, RTL, padding-auto, and accessibility constraints that are easy to miss when combining utilities.
-
-Load the focused foundation reference for the feature being used:
-
-- For responsive images, native video, embedded media, aspect ratios, and media alternatives, read the [media reference](./references/media.md).
-- For native table semantics, style classes, narrow-screen transformation, and data interaction, read the [table reference](./references/table.md).
-- For CSS-only scale motion, visual hiding, event timing, and reduced motion, read the [transitions reference](./references/transitions.md).
+- [Grid reference](./references/grid.md): containers, 12-column classes, offsets, gaps, and responsive boundaries.
+- [Helper-class reference](./references/helpers.md): spacing, visibility, alignment, formatting, and native form opt-outs.
+- [Media reference](./references/media.md): responsive images, video, embeds, aspect ratios, alternatives, and loading performance.
+- [Table reference](./references/table.md): native semantics, styles, narrow-screen layout, and data interaction.
+- [Transitions reference](./references/transitions.md): CSS scale motion, hiding, timing, and reduced motion.
 
 ## Responsive model
 
@@ -50,10 +48,8 @@ Reason in window widths, not device labels. Define the next narrower layout befo
 
 ## Component selection rules
 
-- Use a navigation bar on Compact, a rail or bar on Medium, and a rail or drawer on Expanded and wider when those patterns fit. Never display peer navigation patterns together.
-- Use a dialog for a blocking decision, a snackbar for ignorable status, inline text for form validation, a bottom sheet for Compact transient actions, and a menu or side sheet when the wider layout calls for one.
-- Use a switch for an immediately applied setting. Use a checkbox when a later Save action commits the choice.
-- Keep list-detail layouts to one active pane on Compact.
+Use the component index and selected guide for adaptive choices. Keep inline validation near its control and one active pane on Compact list-detail layouts.
+
 - Use `.loading-indicator` for a short indeterminate wait; use `.progress` for determinate or longer-running progress.
 - Use `.icon-button` for the Material 3 icon-button component. `.button.circle` is the older round common-button form and follows the common-button size ladder.
 

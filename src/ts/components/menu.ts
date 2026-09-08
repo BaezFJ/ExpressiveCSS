@@ -118,6 +118,8 @@ export class Menu extends Component<MenuOptions> implements Openable {
   focusedIndex: number;
   filterQuery: string[];
   filterTimeout: ReturnType<typeof setTimeout>;
+  private _pendingTimers = new Set<ReturnType<typeof setTimeout>>();
+  private _transition = 0;
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, options, Menu);
@@ -183,6 +185,9 @@ export class Menu extends Component<MenuOptions> implements Openable {
   }
 
   destroy() {
+    this._clearPendingTimers();
+    this.isOpen = false;
+    this.el.ariaExpanded = 'false';
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
     this._removeEventHandlers();
@@ -292,7 +297,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     } else if (!this.menuEl?.contains(target)) {
       // Do this one frame later so that if the element clicked also triggers _handleClick
       // For example, if a label for a select was clicked, that we don't close/open the menu
-      setTimeout(() => {
+      this._schedule(() => {
         if (this.isOpen) {
           this.close();
         }
@@ -737,19 +742,35 @@ export class Menu extends Component<MenuOptions> implements Openable {
     };
   }
 
+  private _schedule(callback: () => void, delay: number) {
+    const timer = setTimeout(() => {
+      this._pendingTimers.delete(timer);
+      callback();
+    }, delay);
+    this._pendingTimers.add(timer);
+  }
+
+  private _clearPendingTimers() {
+    for (const timer of this._pendingTimers) clearTimeout(timer);
+    this._pendingTimers.clear();
+    return ++this._transition;
+  }
+
   _animateIn() {
+    const transition = this._transition;
     const duration = this.options.inDuration;
     this.menuEl.style.transition = 'none';
     // from
     this.menuEl.style.opacity = '0';
     this.menuEl.style.transform = 'scale(0.85)';
-    setTimeout(() => {
+    this._schedule(() => {
       this.menuEl.style.transition = `opacity ${duration}ms ease, transform ${duration}ms ease`;
       this.menuEl.style.opacity = '1';
       this.menuEl.style.transform = 'scale(1)';
     }, 1);
-    setTimeout(() => {
+    this._schedule(() => {
       this._focusInitialItem();
+      if (transition !== this._transition) return;
       if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
     }, duration);
   }
@@ -761,7 +782,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
     // to
     this.menuEl.style.opacity = '0';
     this.menuEl.style.transform = 'scale(0.85)';
-    setTimeout(() => {
+    this._schedule(() => {
       this._resetMenuStyles();
       if (typeof this.options.onCloseEnd === 'function')
         this.options.onCloseEnd.call(this, this.el);
@@ -836,20 +857,23 @@ export class Menu extends Component<MenuOptions> implements Openable {
    * Open menu.
    */
   open = () => {
-    if (this.isOpen) return;
+    if (this.isOpen || this.el['Expressive_Menu'] !== this) return;
+    const transition = this._clearPendingTimers();
     this.isOpen = true;
     // onOpenStart callback
     if (typeof this.options.onOpenStart === 'function') {
       this.options.onOpenStart.call(this, this.el);
     }
+    if (transition !== this._transition) return;
     // Reset styles
     this._resetMenuStyles();
     this.menuEl.style.display = 'block';
     this._placeMenu();
-    this._animateIn();
     // Do this one frame later so that we don't bind an event handler that's immediately
     // called when the event bubbles up to the document and closes the menu
-    setTimeout(() => this._setupTemporaryEventHandlers(), 0);
+    this._schedule(() => this._setupTemporaryEventHandlers(), 0);
+    // Queue handlers before initial focus, including zero-duration entry.
+    this._animateIn();
     this.el.ariaExpanded = 'true';
   };
 
@@ -858,6 +882,7 @@ export class Menu extends Component<MenuOptions> implements Openable {
    */
   close = () => {
     if (!this.isOpen) return;
+    const transition = this._clearPendingTimers();
     this.isOpen = false;
     this.focusedIndex = -1;
     this._closeSubmenus();
@@ -865,12 +890,13 @@ export class Menu extends Component<MenuOptions> implements Openable {
     if (typeof this.options.onCloseStart === 'function') {
       this.options.onCloseStart.call(this, this.el);
     }
+    if (transition !== this._transition) return;
     this._animateOut();
     this._removeTemporaryEventHandlers();
+    this.el.ariaExpanded = 'false';
     if (this.options.autoFocus) {
       this.el.focus();
     }
-    this.el.ariaExpanded = 'false';
   };
 
   /**

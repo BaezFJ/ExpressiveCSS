@@ -11,7 +11,35 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/date-pickers/overview)
+
+Example: A single date with no calendar-specific requirements can use a labeled native date input. Do not choose this picker expecting a popup: its calendar is inline and requires the documented visibility option.
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: links-reviewed (2026-09-07); [evidence](https://m3.material.io/components/date-pickers/overview).
+
+destination and main heading verified; full guideline not reviewed; link-observed; full specifications not reviewed
+
+[Specification link](https://m3.material.io/components/date-pickers/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/date-pickers/guidelines).
+
+Support (2026-09-07, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar.
+
+Web adaptation: Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.
+
+Known boundary: Modal picker parity is not provided by the documented inline API.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#date-picker).
 
 #### Contract
 
@@ -19,7 +47,7 @@ Select a date, a range, or several dates from a calendar.
 
 Add `datepicker` to a text input. `AutoInit()` starts every `.datepicker` except those marked `no-autoinit`.
 
-The calendar is inline, not a modal. `open()` and `close()` are deprecated no-ops. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
+The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
 
 #### Syntax
 

@@ -636,6 +636,7 @@ export async function resolveExpressiveVersion({
   }
 
   const contract = await bundledContract(contractManifestPath);
+  const bundledVersion = cleanVersion(contract?.frameworkVersion ?? '');
   const normalizedContract = cleanVersion(contractVersion ?? contract?.frameworkVersion ?? '');
   const normalizedSkillVersion = cleanVersion(skillVersion ?? contract?.skillVersion ?? '');
   const hasBlockingDiagnostic = diagnostics.some((diagnostic) => diagnostic.severity === 'blocked');
@@ -648,16 +649,24 @@ export async function resolveExpressiveVersion({
     && contract.releaseTags.includes(`v${resolvedVersion}`)
     ? `v${resolvedVersion}`
     : null;
-  const documentationMode = status === 'match'
-    ? 'current'
+  const bundledContractSafe = status === 'match'
+    && versionsHaveEqualPrecedence(normalizedContract, bundledVersion);
+  const documentationMode = bundledContractSafe
+    ? 'bundled'
     : matchingTag
       ? 'matching-tag'
       : resolutionSource === 'installed-package'
         ? 'installed-package'
         : 'unavailable';
   const documentationSources = {
+    bundled: {
+      available: bundledContractSafe,
+      frameworkVersion: bundledVersion,
+      sourceHash: contract?.sourceHash ?? null,
+    },
     current: {
-      available: status === 'match',
+      // Local version agreement does not verify what the public site currently serves.
+      available: false,
       url: 'https://www.expressivecss.com',
     },
     matchingTag: {
@@ -692,7 +701,8 @@ export async function resolveExpressiveVersion({
     contractStatus: status,
     documentationMode,
     documentationSources,
-    currentDocsSafe: status === 'match',
+    bundledContractSafe,
+    currentDocsSafe: false,
     warnings,
     diagnostics,
     candidates,

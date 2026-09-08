@@ -1,19 +1,21 @@
 ---
 name: expressivecss-theming
-description: Theme ExpressiveCSS with Material 3 color roles.
+description: Theme ExpressiveCSS color roles, brand seeds, typography, shape, motion, icons, elevation, state layers, and light/dark schemes. Use for visual tokens and brand changes; exclude unrelated markup and runtime lifecycle repairs.
 ---
 
 ## ExpressiveCSS themes and colors
 
 ## When to use
 
-Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens such as elevation and shadows.
+Use this guide for color, typography, icon styling, themes, schemes, vibrant regions, state layers, or other visual tokens such as shape, motion, elevation, and shadows.
 
 ## Do not use when
 
 Do not load this guide for unrelated markup repair, setup, or JavaScript lifecycle work. It does not replace the selected component contract or Material 3 component behavior.
 
-Read the target version's Foundation documentation before changing tokens: [Color](https://www.expressivecss.com/color.html.md), [Themes](https://www.expressivecss.com/themes.html.md), [Shadow](https://www.expressivecss.com/shadow.html.md), [Icons](https://www.expressivecss.com/icons.html.md), [Typography](https://www.expressivecss.com/typography.html.md), and [State layers](https://www.expressivecss.com/state-layers.html.md).
+Reuse the root version resolution and load only the relevant focused reference below. Consult its linked target-version documentation for missing details, conflicts, or version uncertainty.
+
+Before changing a brand choice, check the application's existing theme notes and token owner. For conflicting decisions or a change shared across pages, consult the [product context reference](../expressivecss-design/references/product-context.md) directly; a token-only task does not require the full Design workflow.
 
 ## Focused references
 
@@ -23,7 +25,9 @@ Load only the references needed for the task:
 - For light/dark/auto selection, seed overrides, nested schemes, Shadow DOM, and vibrant regions, read the [themes reference](./references/themes.md).
 - For `z-depth-*`, Sass elevation mixins, and shadow-state rules, read the [elevation reference](./references/elevation.md).
 - For Material Symbols families, axes, sizing, font delivery, and icon accessibility, read the [icons reference](./references/icons.md).
-- For the 15 M3 type roles, typeface tokens, text helpers, and semantic hierarchy, read the [typography reference](./references/typography.md).
+- For the 15 baseline type roles, expressive emphasis, font support, and semantic hierarchy, read the [typography reference](./references/typography.md).
+- For component corners, state shape changes, and shape support gaps, read the [shape reference](./references/shape.md).
+- For spatial versus effects motion, component timing ownership, and reduced motion, read the [motion reference](./references/motion.md).
 - For hover, focus, pressed, and dragged opacity tokens, overlay and ring forms, and per-component overrides, read the [state-layers reference](./references/state-layers.md).
 
 ### Select a scheme
@@ -80,4 +84,4 @@ The error ramp deliberately does not follow the seed. Override documented `-ligh
 
 ## Verification
 
-Check light, dark, auto/OS-following, nested scheme overrides, and any vibrant region. Verify text and non-text contrast, native-control color scheme, and the absence of a wrong-theme flash when the application persists a choice.
+Check light, dark, auto/OS-following, nested scheme overrides, and any vibrant region. Use the [focused web checks](../expressivecss-accessibility/references/web-checks.md#contrast-after-theme-overrides) for affected contrast and forced colors. Verify native-control color scheme, and the absence of a wrong-theme flash when the application persists a choice.

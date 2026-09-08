@@ -11,7 +11,28 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/navigation-drawer/overview)
+
+- compact window: variant. Use a modal drawer when destinations overflow compact navigation.
+- expanded window: variant. Use a fixed drawer when nested destinations need persistence.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#navigation-drawer`): Sliding and fixed drawers with nested sections.
+
+Web adaptation: Native details/summary supports nesting.
+
+Known boundary: Retained baseline navigation component; current Expressive guidance points to expanded navigation rail as its replacement.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#navigation-drawer).
 
 #### Contract
 

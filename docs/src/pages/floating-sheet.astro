@@ -16,8 +16,8 @@ const S = defineSections([
 <PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
-          A <code>dialog.floating-sheet</code> is the third member of the
-          sheet family. Where a
+          A <code>dialog.floating-sheet</code> is ExpressiveCSS's inset
+          dialog extension. Where a
           <a href={route('bottom_sheet')}>bottom sheet</a> docks to
           the bottom and a
           <a href={route('side_sheet')}>side sheet</a> to one side,
@@ -25,7 +25,7 @@ const S = defineSections([
           content.
         </p>
         <p>
-          Tokens follow <code>md.comp.sheet.floating</code>: the container
+          ExpressiveCSS uses <code>md.comp.sheet.floating</code>-style token names; these do not establish a dedicated upstream component specification. The container
           is <code>surface-container-low</code> with 28dp corners on all
           four sides and elevation&nbsp;1. It is a <code>&lt;dialog&gt;</code>,
           so the ordinary dialog slots apply — a heading, body copy or a

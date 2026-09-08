@@ -9,7 +9,7 @@ const css = readFileSync(
 );
 
 describe("Expanding card CSS", () => {
-  test("publishes the 500ms emphasized shared-container motion", () => {
+  test("publishes the default 500ms container timing", () => {
     assert.match(css, /--md-comp-expanding-card-motion-duration:\s*500ms/);
     assert.match(
       css,

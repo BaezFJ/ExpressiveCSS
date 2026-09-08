@@ -11,7 +11,27 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Related Google guidance](https://m3.material.io/components/snackbar/overview)
+
+Example: A Saved message should not leave a permanent banner. Use a snackbar. A sync outage that permits local edits fits a banner; an unavoidable decision fits a dialog. This banner is a framework feedback pattern, not a verified current M3 component.
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: related. Retained framework pattern absent from the reviewed current M3 component inventory; related current guidance does not certify this implementation.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#banners`): Basic/rich and standard/vibrant; square basic banners.
+
+Web adaptation: Persistent in-flow feedback; application owns dismissal.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#banners).
 
 #### Contract
 

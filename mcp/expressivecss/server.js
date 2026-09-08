@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { accessSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
-import { access, lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
+import { existsSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
+import { lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
@@ -13,6 +13,8 @@ import { resolveExpressiveVersion } from './scripts/resolve-version.mjs';
 
 const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
 const COMPONENT_DECISIONS = JSON.parse(readFileSync(path.join(SERVER_DIR, 'component-decisions.json'), 'utf8'));
+const CAPABILITY_ROADMAP = JSON.parse(readFileSync(path.join(SERVER_DIR, 'capability-roadmap.json'), 'utf8'));
+const CAPABILITIES_BY_SLUG = new Map(CAPABILITY_ROADMAP.entries.map((entry) => [entry.slug, entry]));
 const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((entry) => [entry.slug, entry]));
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
 const DEFAULT_QA_MAX_FILES = 300;
@@ -47,6 +49,16 @@ function configuredCommandRoots(value) {
   return trimmed.split(path.delimiter).map((entry) => entry.trim()).filter(Boolean);
 }
 
+const QUALITY_SCRIPTS = ['typecheck', 'test', 'verify:expressivecss'];
+// Trusted server configuration can only narrow the built-in list. Invalid input denies all.
+function configuredScripts(value) {
+  if (value === undefined) return QUALITY_SCRIPTS;
+  try {
+    const names = JSON.parse(value);
+    return Array.isArray(names) && names.every(name => QUALITY_SCRIPTS.includes(name)) ? [...new Set(names)] : [];
+  } catch { return []; }
+}
+
 const SETTINGS = {
   maxComponentResponseChars: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS || DEFAULT_MAX_COMPONENT_RESPONSE_CHARS),
   maxComponentSkips: Number(process.env.EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS || 7),
@@ -54,6 +66,7 @@ const SETTINGS = {
   qaMaxMb: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_MB || DEFAULT_QA_MAX_MB),
   qaMaxTotalMb: Number(process.env.EXPRESSIVECSS_MCP_QA_MAX_TOTAL_MB || DEFAULT_QA_MAX_TOTAL_MB),
   commandTimeoutMs: Number(process.env.EXPRESSIVECSS_MCP_COMMAND_TIMEOUT_MS || DEFAULT_COMMAND_TIMEOUT_MS),
+  allowedScripts: configuredScripts(process.env.EXPRESSIVECSS_MCP_ALLOWED_SCRIPTS),
   allowedCommandRoots: configuredCommandRoots(process.env.EXPRESSIVECSS_MCP_ALLOWED_COMMAND_ROOTS),
 };
 
@@ -153,11 +166,11 @@ const TOOL_DESCRIPTIONS = {
   },
   component_syntax_expert: {
     stage: 'Component Syntax Expert',
-    description: 'Return authoritative syntax, contract, and usage constraints for selected components.',
+    description: 'Return component syntax and constraints, plus scoped Material capability evidence. Request typography, shape, or motion through foundations.',
   },
   quality_inspector: {
     stage: 'Quality Inspector',
-    description: 'Run checks and report a quality verdict for changed files and target project scope.',
+    description: 'Inspect selected files and optionally execute configured project scripts. Scripts may write files or access services; results are scoped evidence, not design approval.',
   },
 };
 
@@ -195,29 +208,41 @@ const pageArchitectSchema = {
 
 const syntaxSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
-  components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).min(1).max(12),
+  components: z.array(z.string().max(MAX_COMPONENT_NAME_CHARS)).max(12).default([]),
+  foundations: z.array(z.enum(['typography', 'shape', 'motion'])).max(3).default([]),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
+
+const digestSchema = z.string().regex(/^[a-f0-9]{64}$/u);
+const inspectionEvidenceSchema = z.object({
+  algorithm: z.literal('sha256'),
+  files: z.array(z.object({ file: z.string(), sha256: digestSchema, bytes: z.number().int().nonnegative() })),
+  expectedMatched: z.boolean().nullable(),
+  inputsUnchanged: z.boolean(),
+  commandManifestSha256: digestSchema.nullable(),
+  scope: z.string(),
+});
+// Preserve tool-specific fields while validating the shared evidence envelope.
+const stageOutputSchema = z.looseObject({
+  workflowId: z.string(), stage: z.string(),
+  checksPerformed: z.array(z.string()), evidenceSources: z.array(z.string()),
+  uncheckedAreas: z.array(z.string()), blockedChecks: z.array(z.string()),
+  contractCompatibility: z.string(), contractProvenance: z.string(), coverageStatus: z.string(),
+});
+const qualityOutputSchema = stageOutputSchema.extend({
+  status: z.enum(['pass', 'warn', 'blocked', 'needs_fix']),
+  inspectionEvidence: inspectionEvidenceSchema.optional(), // Disabled tools return the shared blocked envelope.
+});
+const readAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 
 const inspectSchema = {
   projectRoot: z.string().max(MAX_PROJECT_ROOT_CHARS).optional(),
   files: z.array(z.string().max(MAX_FILE_PATH_CHARS)).max(DEFAULT_QA_MAX_FILES).default([]),
-  runType: z.enum(['quick', 'standard', 'full']).default('quick'),
+  runType: z.enum(['quick', 'standard', 'full', 'consumer']).default('quick'),
   runCommands: z.boolean().default(false),
+  expectedSourceHashes: z.record(z.string().min(1).max(MAX_FILE_PATH_CHARS), digestSchema).refine(value => Object.keys(value).length <= DEFAULT_QA_MAX_FILES, 'Too many source pins').optional(),
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
-
-/**
- * Resolve the root of the current checkout and its ExpressiveCSS guides.
- */
-async function fileExists(filePath) {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 function parseCliProjectRoot() {
   const args = process.argv.slice(2);
@@ -239,7 +264,7 @@ function resolveRepoRoot(startDir) {
     const skillPath = path.join(current, 'skills', 'expressivecss', 'components');
     const navPath = path.join(current, 'docs', 'src', 'data', 'nav.ts');
 
-    if (accessSyncBoolean(pkgPath) && accessSyncBoolean(skillPath) && accessSyncBoolean(navPath)) {
+    if (existsSync(pkgPath) && existsSync(skillPath) && existsSync(navPath)) {
       return current;
     }
 
@@ -251,15 +276,6 @@ function resolveRepoRoot(startDir) {
   }
 
   return path.resolve(startDir);
-}
-
-function accessSyncBoolean(filePath) {
-  try {
-    accessSync(filePath);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 function normalizeForMatch(value) {
@@ -374,7 +390,7 @@ async function resolveGuideDirectory(projectRoot) {
     return null;
   }
   const candidate = path.join(projectRoot, 'skills', 'expressivecss', 'components');
-  return accessSyncBoolean(candidate) ? candidate : null;
+  return existsSync(candidate) ? candidate : null;
 }
 
 function parseGuide(file, content) {
@@ -718,16 +734,16 @@ async function projectSummary(projectRoot) {
     installGuide: null,
     foundDocs: false,
     foundSkills: false,
-    bundledGuides: accessSyncBoolean(path.join(SERVER_DIR, 'component-guides.json')),
+    bundledGuides: existsSync(path.join(SERVER_DIR, 'component-guides.json')),
   };
 
   const packagePath = path.join(projectRoot, 'package.json');
   const lockFiles = ['package-lock.json', 'pnpm-lock.yaml', 'yarn.lock'].map((f) => path.join(projectRoot, f));
 
-  if (lockFiles.some((p) => accessSyncBoolean(p))) {
-    summary.packageManager = lockFiles.find((p) => accessSyncBoolean(p)).endsWith('package-lock.json')
+  if (lockFiles.some((p) => existsSync(p))) {
+    summary.packageManager = lockFiles.find((p) => existsSync(p)).endsWith('package-lock.json')
       ? 'npm'
-      : lockFiles.find((p) => accessSyncBoolean(p)).endsWith('yarn.lock')
+      : lockFiles.find((p) => existsSync(p)).endsWith('yarn.lock')
         ? 'yarn'
         : 'pnpm';
   }
@@ -759,8 +775,8 @@ async function projectSummary(projectRoot) {
     }
   }
 
-  summary.foundDocs = accessSyncBoolean(path.join(projectRoot, 'docs', 'src', 'data', 'nav.ts'));
-  summary.foundSkills = accessSyncBoolean(path.join(projectRoot, 'skills', 'expressivecss', 'SKILL.md'));
+  summary.foundDocs = existsSync(path.join(projectRoot, 'docs', 'src', 'data', 'nav.ts'));
+  summary.foundSkills = existsSync(path.join(projectRoot, 'skills', 'expressivecss', 'SKILL.md'));
 
   summary.installGuide = summary.isExpressiveProject
     ? 'ExpressiveCSS is already in package.json.'
@@ -777,7 +793,12 @@ async function resolveAgainstContract(projectRoot, contractVersion) {
     status: 'unresolved',
     contractStatus: 'unresolved',
     documentationMode: 'unavailable',
+    bundledContractSafe: false,
     currentDocsSafe: false,
+    documentationSources: {
+      ...version.documentationSources,
+      bundled: { ...version.documentationSources.bundled, available: false },
+    },
   };
 }
 
@@ -1256,7 +1277,7 @@ function summarizeProjectFiles(files, projectRoot) {
     const requestedPath = path.isAbsolute(filePath)
       ? path.resolve(filePath)
       : path.resolve(resolvedRoot, filePath);
-    const exists = accessSyncBoolean(requestedPath);
+    const exists = existsSync(requestedPath);
     const absolute = exists ? realpathSync(requestedPath) : requestedPath;
     return {
       requested: filePath,
@@ -1419,7 +1440,7 @@ async function readInspectionFile(filePath, projectRoot, byteLimit) {
       || after.dev !== pathAfter.dev || after.ino !== pathAfter.ino) {
       throw new Error('file changed while reading');
     }
-    return { text: bytes.subarray(0, total).toString('utf8'), bytes: total };
+    return { text: bytes.subarray(0, total).toString('utf8'), bytes: total, sha256: createHash('sha256').update(bytes.subarray(0, total)).digest('hex') };
   } finally {
     await handle.close();
   }
@@ -1427,6 +1448,7 @@ async function readInspectionFile(filePath, projectRoot, byteLimit) {
 
 async function findFileViolations(fileInfoList, projectRoot) {
   const findings = [];
+  const sourcePins = [];
   const inspected = [];
   const uninspected = [];
   const perFileMb = Number.isFinite(SETTINGS.qaMaxMb) && SETTINGS.qaMaxMb > 0
@@ -1456,6 +1478,7 @@ async function findFileViolations(fileInfoList, projectRoot) {
       const remainingBytes = Math.floor(Math.min(maxBytes, maxTotalBytes - totalBytes));
       const read = await readInspectionFile(file.absolute, projectRoot, remainingBytes);
       totalBytes += read.bytes;
+      sourcePins.push({ file: file.requested, sha256: read.sha256, bytes: read.bytes });
       const issues = inspectAuthoringRules(
         read.text,
         Math.min(MAX_STATIC_ISSUES, MAX_STATIC_ISSUES_PER_REQUEST - totalIssues),
@@ -1491,7 +1514,7 @@ async function findFileViolations(fileInfoList, projectRoot) {
     }
   }
 
-  return { findings, inspected, uninspected };
+  return { findings, inspected, uninspected, sourcePins };
 }
 
 async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS) {
@@ -1583,6 +1606,7 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
     });
 
     proc.on('close', (code) => {
+      stopProcessTree(proc, 'SIGKILL'); // Stop descendants before checking the resulting source state.
       const output = redactSensitiveText(`${stdout}\n${stderr}`);
       finish({
         manager,
@@ -1611,22 +1635,33 @@ async function runCommandInProject(projectRoot, manager, script, timeoutMs = DEF
   });
 }
 
-async function runQualityCommands(projectRoot, runType, packageManager) {
-  const commands = [];
-  if (runType === 'standard' || runType === 'full') {
-    commands.push(['typecheck', 180_000]);
-  }
-  if (runType === 'full') {
-    commands.push(['test', 360_000]);
-  }
+function qualityCommands(runType) {
+  return runType === 'full' ? ['typecheck', 'test'] : runType === 'standard' ? ['typecheck'] : runType === 'consumer' ? ['verify:expressivecss'] : [];
+}
 
+// Endpoint comparisons detect stale evidence; they do not lock the checkout or sandbox scripts.
+async function pinsUnchanged(projectRoot, pins) {
+  for (const pin of pins) {
+    try {
+      const current = await readInspectionFile(path.resolve(projectRoot, pin.file), projectRoot, pin.bytes);
+      if (current.sha256 !== pin.sha256) return false;
+    } catch { return false; }
+  }
+  return true;
+}
+
+async function runQualityCommands(projectRoot, commands, packageManager, pins) {
   const results = [];
-  for (const [script, timeout] of commands) {
-    const result = await runCommandInProject(projectRoot, packageManager, script, timeout);
+  let unchanged = true;
+  for (const script of commands) {
+    unchanged = await pinsUnchanged(projectRoot, pins);
+    if (!unchanged) break;
+    const result = await runCommandInProject(projectRoot, packageManager, script, script === 'typecheck' ? 180_000 : 360_000);
     results.push(result);
+    unchanged = await pinsUnchanged(projectRoot, pins);
+    if (!unchanged || !result.completed || result.exitStatus !== 0) break;
   }
-
-  return results;
+  return { results, unchanged };
 }
 
 let bundledGuideCache;
@@ -1636,7 +1671,7 @@ const setupExpertSchema = z.object(setupSchema);
 const rulesSchemaParsed = z.object(rulesSchema);
 const creativeSchemaParsed = z.object(creativeSchema);
 const architectSchemaParsed = z.object(pageArchitectSchema);
-const syntaxSchemaParsed = z.object(syntaxSchema);
+const syntaxSchemaParsed = z.object(syntaxSchema).refine((value) => value.components.length + value.foundations.length > 0, 'Request at least one component or foundation');
 const qualitySchemaParsed = z.object(inspectSchema);
 
 async function setupExpertHandler(args) {
@@ -1726,6 +1761,9 @@ async function setupExpertHandler(args) {
         },
         matchingTag: version.matchingTag,
         documentationMode: version.documentationMode,
+        documentationSources: version.documentationSources,
+        bundledContractSafe: version.bundledContractSafe,
+        currentDocsSafe: version.currentDocsSafe,
         warnings: version.warnings,
         diagnostics: version.diagnostics,
       },
@@ -1833,6 +1871,9 @@ async function rulesEnforcerHandler(args) {
         guideSource: catalog.guideSource,
         contractCompatibility: version.status,
         documentationMode: version.documentationMode,
+        documentationSources: version.documentationSources,
+        bundledContractSafe: version.bundledContractSafe,
+        currentDocsSafe: version.currentDocsSafe,
       },
       issueCount: issues.length,
       blockingIssueCount: blocking.length,
@@ -2023,6 +2064,7 @@ async function componentSyntaxExpertHandler(args) {
   const version = await resolveAgainstContract(projectRoot, catalog.frameworkVersion);
   const provenanceBlock = provenanceBlockReason(catalog.provenance.status);
 
+  const capabilitySafe = version.status === 'match' && !provenanceBlock && CAPABILITY_ROADMAP.frameworkVersion === catalog.frameworkVersion;
   const requested = parsed.components;
   const found = [];
   const missing = [];
@@ -2036,7 +2078,7 @@ async function componentSyntaxExpertHandler(args) {
         nearest: nearestMatches(catalog, component, skipLimit).map((row) => row.slug),
       });
     } else {
-      found.push(summarizeGuide(guide));
+      found.push({ ...summarizeGuide(guide), capability: capabilitySafe ? CAPABILITIES_BY_SLUG.get(guide.slug) ?? null : null });
     }
   }
 
@@ -2044,13 +2086,15 @@ async function componentSyntaxExpertHandler(args) {
     'component_syntax_expert',
     {
       foundCount: found.length,
+      foundations: capabilitySafe ? parsed.foundations.map((slug) => CAPABILITIES_BY_SLUG.get(slug)) : [],
+      capabilityEvidence: { status: capabilitySafe ? 'bundled-review-snapshot' : 'blocked', basis: CAPABILITY_ROADMAP.basis, browserRun: capabilitySafe ? CAPABILITY_ROADMAP.browserRun : null },
       contractVersion: catalog.frameworkVersion,
       guideSource: catalog.guideSource,
       found,
       missing,
-      status: version.status === 'match' && !provenanceBlock && missing.length === 0 ? 'available' : 'blocked',
-      checksPerformed: ['named component contract lookup'],
-      evidenceSources: found.map((component) => `${catalog.guideSource}:${component.file}`),
+      status: version.status === 'match' && !provenanceBlock && missing.length === 0 && (!parsed.foundations.length || capabilitySafe) ? 'available' : 'blocked',
+      checksPerformed: [...(requested.length ? ['named component contract lookup'] : []), ...(capabilitySafe ? ['bundled capability snapshot lookup'] : [])],
+      evidenceSources: [...found.map((component) => `${catalog.guideSource}:${component.file}`), ...(capabilitySafe ? ['bundled:capability-roadmap.json'] : [])],
       uncheckedAreas: [
         'rendered component behavior',
         'visual hierarchy',
@@ -2060,11 +2104,12 @@ async function componentSyntaxExpertHandler(args) {
       contractCompatibility: version.status,
       contractProvenance: catalog.provenance.status,
       contractProvenanceDetails: catalog.provenance,
-      coverageStatus: missing.length ? 'partial-named-component-contracts' : 'named-component-contracts',
+      coverageStatus: !requested.length ? 'named-foundation-review-snapshot' : missing.length ? 'partial-named-component-contracts' : 'named-component-contracts',
       blockedChecks: [
         ...(version.status === 'match' ? [] : ['target-version contract checks']),
         ...(provenanceBlock ? [provenanceBlock] : []),
         ...(missing.length ? ['missing requested component contracts'] : []),
+        ...(!capabilitySafe && parsed.foundations.length ? ['requested foundation capability evidence'] : []),
       ],
       maxCharactersPerComponent: SETTINGS.maxComponentResponseChars,
       notes: [
@@ -2101,13 +2146,32 @@ async function qualityInspectorHandler(args) {
   const highCount = staticFindings.reduce((count, entry) => count + entry.issues.filter((issue) => issue.severity === 'high').length, 0);
 
   const commandChecks = [];
-  const commandsRequested = parsed.runCommands && (parsed.runType === 'standard' || parsed.runType === 'full');
+  const commandsRequested = parsed.runCommands && (['standard', 'full', 'consumer'].includes(parsed.runType));
   const executionPolicy = commandExecutionPolicy(projectRoot);
   const commandRootBlocked = commandsRequested && !executionPolicy.allowed;
   const packageManagerBlocked = commandsRequested && !['npm', 'pnpm', 'yarn'].includes(version.packageManager);
-  if (commandsRequested && !commandRootBlocked && !packageManagerBlocked) {
-    commandChecks.push(...await runQualityCommands(executionPolicy.projectRoot, parsed.runType, version.packageManager));
+  const commands = commandsRequested ? qualityCommands(parsed.runType) : [];
+  const commandScopeBlocked = commands.some(script => !SETTINGS.allowedScripts.includes(script));
+  const pins = [...fileInspection.sourcePins];
+  const expectedMatched = parsed.expectedSourceHashes === undefined ? null : Object.entries(parsed.expectedSourceHashes)
+    .every(([file, sha256]) => pins.some(pin => pin.file === file && pin.sha256 === sha256));
+  let commandManifestSha256 = null;
+  let manifestBlocked = false;
+  if (commandsRequested && !commandRootBlocked && !commandScopeBlocked && !packageManagerBlocked && expectedMatched !== false) {
+    try {
+      const manifest = await readInspectionFile(path.join(projectRoot, 'package.json'), projectRoot, 1024 * 1024);
+      commandManifestSha256 = manifest.sha256;
+      pins.push({ file: 'package.json', sha256: manifest.sha256, bytes: manifest.bytes });
+    } catch { manifestBlocked = true; }
   }
+  let inputsUnchanged = await pinsUnchanged(projectRoot, pins);
+  if (commandsRequested && !commandRootBlocked && !commandScopeBlocked && !packageManagerBlocked && !manifestBlocked && expectedMatched !== false && inputsUnchanged) {
+    const run = await runQualityCommands(executionPolicy.projectRoot, commands, version.packageManager, pins);
+    commandChecks.push(...run.results);
+    inputsUnchanged = run.unchanged;
+  }
+  inputsUnchanged = inputsUnchanged && await pinsUnchanged(projectRoot, pins);
+  const commandsNotRun = commands.slice(commandChecks.length);
 
   const commandBlocked = commandChecks.filter((run) => !run.completed);
   const commandFailed = commandChecks.some((run) => run.completed && run.exitStatus !== 0);
@@ -2129,6 +2193,11 @@ async function qualityInspectorHandler(args) {
     || provenanceBlock
     || filesUninspected.length > 0
     || commandRootBlocked
+    || commandScopeBlocked
+    || expectedMatched === false
+    || !inputsUnchanged
+    || manifestBlocked
+    || commandsNotRun.length > 0
     || packageManagerBlocked
     || commandBlocked.length > 0
     || !inspectionPerformed;
@@ -2155,10 +2224,17 @@ async function qualityInspectorHandler(args) {
       },
       filesSkipped: filesUninspected,
       staticFindings,
+      inspectionEvidence: {
+        algorithm: 'sha256', files: fileInspection.sourcePins, expectedMatched, inputsUnchanged, commandManifestSha256,
+        scope: 'Exact inspected bytes and command package.json at observed endpoints only; no lock, whole-revision proof, script sandbox, or automatic rollback.',
+      },
       commandChecks: commandChecks.length ? commandChecks : [],
       commandExecutionPolicy: {
         requested: commandsRequested,
         ...executionPolicy,
+        allowedScripts: SETTINGS.allowedScripts,
+        commandsNotRun,
+        stopOnFailure: true,
       },
       status,
       staticStatus,
@@ -2190,12 +2266,18 @@ async function qualityInspectorHandler(args) {
         ...(!inspectionPerformed ? ['static inspection'] : []),
         ...(filesUninspected.length ? ['some requested files were not inspected'] : []),
         ...(commandRootBlocked ? ['command execution root is not allowlisted'] : []),
+        ...(commandScopeBlocked ? ['requested scripts exceed server command scope'] : []),
+        ...(expectedMatched === false ? ['expected source hashes do not match inspected files'] : []),
+        ...(!inputsUnchanged ? ['inspected inputs changed during verification'] : []),
+        ...(manifestBlocked ? ['command manifest could not be pinned'] : []),
+        ...commandsNotRun.map(script => `${script} command not run`),
         ...(packageManagerBlocked ? ['package manager could not be detected'] : []),
         ...commandBlocked.map((run) => `${run.command.split(' ').at(-1)} command ${run.timedOut ? 'timed out' : 'could not be launched'}`),
       ],
       recommendations: [
+        ...(parsed.runType === 'consumer' ? ['Consumer commands are project-authored. Inspect operator-collected report.json and captures; exit status or printed claims alone do not establish browser conformance.'] : []),
         'If status is warn, resolve medium/high-severity issues before shipping.',
-        'If runCommands is disabled, pair this call with `runCommands: true` for command verification.',
+        'Run only authorized checks. On failure, retain evidence and repair within scope; do not widen permissions or reset unrelated work.',
       ],
       limits: {
         maxFiles: SETTINGS.qaMaxFiles,
@@ -2226,36 +2308,50 @@ async function startServer() {
   server.registerTool('setup_expert', {
     description: TOOL_DESCRIPTIONS.setup_expert.description,
     inputSchema: setupSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, setupExpertHandler);
 
   server.registerTool('rules_enforcer', {
     description: TOOL_DESCRIPTIONS.rules_enforcer.description,
     inputSchema: rulesSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, rulesEnforcerHandler);
 
   server.registerTool('creative_director', {
     description: TOOL_DESCRIPTIONS.creative_director.description,
     inputSchema: creativeSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, creativeDirectorHandler);
 
   server.registerTool('page_architect', {
     description: TOOL_DESCRIPTIONS.page_architect.description,
     inputSchema: pageArchitectSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, (args) => pageArchitectHandler(args, 'page_architect'));
 
   server.registerTool('page_arcjitect', {
     description: TOOL_DESCRIPTIONS.page_arcjitect.description,
     inputSchema: pageArchitectSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, (args) => pageArchitectHandler(args, 'page_arcjitect'));
 
   server.registerTool('component_syntax_expert', {
     description: TOOL_DESCRIPTIONS.component_syntax_expert.description,
     inputSchema: syntaxSchema,
+    outputSchema: stageOutputSchema,
+    annotations: readAnnotations,
   }, componentSyntaxExpertHandler);
 
   server.registerTool('quality_inspector', {
     description: TOOL_DESCRIPTIONS.quality_inspector.description,
     inputSchema: inspectSchema,
+    outputSchema: qualityOutputSchema,
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
   }, qualityInspectorHandler);
 
   const transport = new StdioServerTransport();

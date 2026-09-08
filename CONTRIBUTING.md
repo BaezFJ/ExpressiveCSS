@@ -52,19 +52,38 @@ such as `fix/menu-focus` or `docs/theme-example`. Keep each PR focused.
   `_site/`, screenshots, reports, and caches stay untracked.
 - Optional design previews live in `.design-sync`; see its [README](.design-sync/README.md).
   They are not framework source or a prerequisite for ordinary contributions.
+- Compact evaluation records in `docs/agents/evidence/` are an exception to the
+  report rule: retain settings, hashes, named checks and artifact references there.
+  Keep raw transcripts and captures in an exported archive outside the checkout.
+  See [assistance cost comparisons](docs/agents/expressivecss-assistance-cost.md).
 
 ## Verify
 
 ```sh
 npm run verify
-npx playwright install chromium
+npx playwright install --with-deps chromium firefox webkit
 npm run test:browser
 ```
 
 `verify` builds the framework, typechecks, runs Node tests, checks generated data,
-and builds and verifies the docs. Browser behavior tests require Chromium; the
-explicit browser command and CI fail if it is absent. Node-only local tests can
-skip browser tests when Chromium is not installed.
+and builds and verifies the docs. The critical-flow suite requires Chromium,
+Firefox and WebKit. The explicit browser command and CI fail if any is absent.
+Node-only local tests can skip uninstalled browser engines. See the
+[coverage and manual review procedure](docs/agents/expressivecss-browser-coverage.md);
+emulation does not verify real devices or native browser zoom.
+
+For repeatable checks of a running consumer application, use
+`npm run verify:consumer -- --project-root <app> --scenario <checks.json> --origin http://127.0.0.1:<port>`.
+See the [scenario format and evidence limits](skills/expressivecss/references/consumer-verification.md).
+The command reuses the consumer's installed Playwright; it does not start its server.
+
+For the Material capability roadmap, review source changes in
+`docs/src/data/component-decisions.json` before updating its source pins. Build
+the framework, then run `npm run record:capabilities` to execute mapped browser
+checks and record their input hashes. The collector preserves its raw report
+under `.cache/material-capabilities/`; regenerate with `npm run build:skill`.
+Generation never renews source reviews or runs tests. See the
+[roadmap](skills/expressivecss/references/capability-roadmap.md) for coverage limits.
 
 For MCP changes, also run:
 

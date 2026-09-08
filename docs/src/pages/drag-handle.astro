@@ -53,13 +53,13 @@ const S = defineSections([
           else the bar is inert, and that is worth being blunt about.
         </p>
         <p>
-          Dragging is a pointer gesture. An outcome you can only reach by
-          dragging is an outcome nobody using a keyboard, a switch or a screen
-          reader can reach at all — so a handle is never the whole feature. If
-          you build reordering on top of one, the reordering needs a keyboard
-          path of its own: arrow keys on the focused row, a "Move up" / "Move
-          down" pair in a <a href={route('menu')}>menu</a>, or fields
-          that take a position directly.
+          Provide keyboard operation and a single-pointer alternative without
+          dragging. Clickable "Move up" / "Move down" controls in a
+          <a href={route('menu')}>menu</a>, or a position input, can serve
+          both paths. Arrow keys alone cover only keyboard operation.
+          <a href="https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html">WCAG 2.2 SC 2.5.7</a>
+          requires the pointer alternative unless dragging is essential or the
+          unmodified user agent owns the functionality. Test each path.
         </p>
         <p>
           ExpressiveCSS ships no reordering behaviour, so there is nothing here
@@ -130,20 +130,22 @@ const S = defineSections([
   <span class="drag-handle" aria-hidden="true"></span>
   <h2 id="sheet-title">Share</h2>
   …
+  <form method="dialog"><button type="submit">Close</button></form>
 </dialog>
 `} />
         <p>
-          Decoration is the default, and it is enough: dragging the sheet down
-          dismisses it, and <kbd>Esc</kbd> already does the same from the
-          keyboard, so the bar sits on top of a path that exists without it.
+          A decorative handle needs a separate non-drag dismiss path, such as
+          the close button above. Native Escape behavior depends on the opening
+          mode, browser, and <code>closedby</code> policy; Escape is not a pointer
+          alternative. Scrim dismissal also depends on the installed shared
+          runtime and <code>closedby</code> policy. Test it before relying on it.
         </p>
         <p>
           Write a <code>&lt;button&gt;</code> there instead when you want a
           visible dismiss control. It is the one place a drag handle is wired to
-          anything: the sheet closes when the button is activated, by pointer or
-          by <kbd>Enter</kbd>, so the name on it is a promise the code keeps. A
-          drag that snaps back does not also dismiss — the click ending it is
-          told apart from a tap.
+          anything: the sheet closes on click, tap, <kbd>Enter</kbd>, or
+          <kbd>Space</kbd>. A drag that snaps back does not also dismiss because
+          the runtime distinguishes the ending click from a tap.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="share-title">

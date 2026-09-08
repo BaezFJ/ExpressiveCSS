@@ -1,6 +1,6 @@
 # Table foundation
 
-Read this after the Usage guide when presenting relational data in a native table. Resolve the installed ExpressiveCSS version first. The [target-version Table documentation](https://www.expressivecss.com/table.html.md), [global Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/base/_global.scss), and target-version compiled CSS override this summary if they differ.
+Read this after the Usage guide when presenting relational data in a native table. Reuse the root guide's installed-version resolution. The [target-version Table documentation](https://www.expressivecss.com/table.html.md), [global Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/base/_global.scss), and target-version compiled CSS override this summary if they differ.
 
 ## Start with table semantics
 

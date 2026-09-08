@@ -28,7 +28,7 @@
     {
       "id": "setup-only-routing",
       "request": "Install ExpressiveCSS in this empty project.",
-      "projectFixture": "consumer-current",
+      "projectFixture": "consumer-empty",
       "versionState": "match: installed and bundled contract 0.8.0",
       "expectedOperatingMode": "Implement",
       "mustLoad": [
@@ -522,7 +522,8 @@
           "colorScheme": "light",
           "motionPreference": "no-preference",
           "locale": "en-US",
-          "direction": "ltr"
+          "direction": "ltr",
+          "captureRole": "before"
         },
         {
           "id": "refine-preserves-product-pair-1-after",
@@ -540,7 +541,8 @@
           "colorScheme": "light",
           "motionPreference": "no-preference",
           "locale": "en-US",
-          "direction": "ltr"
+          "direction": "ltr",
+          "captureRole": "after"
         }
       ]
     },
@@ -637,7 +639,8 @@
           "colorScheme": "light",
           "motionPreference": "no-preference",
           "locale": "en-US",
-          "direction": "ltr"
+          "direction": "ltr",
+          "captureRole": "before"
         },
         {
           "id": "redesign-requirement-account",
@@ -669,7 +672,8 @@
           "colorScheme": "light",
           "motionPreference": "no-preference",
           "locale": "en-US",
-          "direction": "ltr"
+          "direction": "ltr",
+          "captureRole": "after"
         }
       ]
     },
@@ -1606,7 +1610,8 @@
           "colorScheme": "light",
           "motionPreference": "no-preference",
           "locale": "en-US",
-          "direction": "ltr"
+          "direction": "ltr",
+          "captureRole": "before"
         },
         {
           "id": "matched-before-after-pair-1-after",
@@ -1624,7 +1629,8 @@
           "colorScheme": "light",
           "motionPreference": "no-preference",
           "locale": "en-US",
-          "direction": "ltr"
+          "direction": "ltr",
+          "captureRole": "after"
         }
       ]
     },

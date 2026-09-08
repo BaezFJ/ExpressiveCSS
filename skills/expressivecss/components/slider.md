@@ -11,7 +11,29 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/sliders/overview)
+
+Example: An invoice amount needs a labeled number field with appropriate precision. A slider fits approximate volume or brightness adjustment.
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+[Specification link](https://m3.material.io/components/sliders/specs); full specs unreviewed.
+
+Support (2026-09-07, `llm.md#sliders`): Standard, centered, range, horizontal/vertical, and five sizes.
+
+Web adaptation: Native range inputs with runtime value-label and range coordination.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#slider).
 
 #### Contract
 

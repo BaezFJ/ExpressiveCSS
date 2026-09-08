@@ -4,11 +4,11 @@ Engineering reference for contributors and agents. Paths in code spans are relat
 
 ## What this project is
 
-ExpressiveCSS is a new front-end framework being grown out of a vendored copy of MaterializeCSS v2.2.2 source (`src/ts` + `src/sass`), with an Astro documentation/showcase site in `docs/`.
+ExpressiveCSS is a front-end framework based on vendored MaterializeCSS v2.2.2 source (`src/ts` and `src/sass`), with Astro documentation and examples in `docs/`.
 
-LLM-oriented docs: `llm.md` is markup and JavaScript APIs; `m3-guidelines.md` is Material 3 usage, anatomy, placement, adaptive design, and behaviors for those components.
+For agents, `llm.md` covers markup and JavaScript APIs; `m3-guidelines.md` covers Material 3 usage, anatomy, placement, adaptive design, and component behavior.
 
-The public surface is rebranded. Instances are stashed on elements as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, `src/ts/index.ts` exports `version = '0.8.0'` (tracking package.json), and the Materialize-branded markup classes are gone:
+Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/index.ts` exports `version = '0.8.0'` to match `package.json`. The renamed classes and APIs are:
 
 | Upstream | Expressive |
 | --- | --- |
@@ -16,7 +16,11 @@ The public surface is rebranded. Instances are stashed on elements as `el['Expre
 | `.materialize-textarea` | `.expressive-textarea` |
 | `el['M_<Component>']`, global `M` | `el['Expressive_<Component>']`, global `Expressive` |
 
-Icons are Material Symbols, outlined by default (`--md-icon-font`). Style (outlined / rounded / sharp) is the font family — switch it with the `icon-style` attribute or `--md-icon-font`. Fill, weight, grade, and optical size are variation axes (`--md-icon-fill`, `--md-icon-weight`, `--md-icon-grade`, `--md-icon-optical-size`). The compiled CSS ships unlayered `@font-face` rules and `dist/fonts/` holds the woff2 files: outlined, rounded, and sharp variable Symbols (opsz / wght / FILL / GRAD), Latin Roboto 400/500, and Latin Noto Sans 400/500. `build:css` copies them from Fontsource packages via `scripts/copy-fonts.mjs`. Browsers fetch a family only after markup uses it. Keep `dist/fonts/` next to `dist/css/` so `url(../fonts/...)` resolves. Sass consumers can set `$expressive-font-path` or `$expressive-include-fonts: false`. `.material-icons` is a compat alias that uses Symbols; do not ship the older Material Icons font. The `--md-sys-*` / `--md-ref-*` tokens stay Material Design 3 spec names.
+Icons use Material Symbols, outlined by default (`--md-icon-font`). Select the outlined, rounded, or sharp font family with the `icon-style` attribute or `--md-icon-font`. Fill, weight, grade, and optical size are variation axes (`--md-icon-fill`, `--md-icon-weight`, `--md-icon-grade`, `--md-icon-optical-size`).
+
+The compiled CSS includes unlayered `@font-face` rules. `dist/fonts/` holds the woff2 files: outlined, rounded, and sharp variable Symbols (opsz / wght / FILL / GRAD), Latin Roboto 400/500, and Latin Noto Sans 400/500. `build:css` copies them from Fontsource packages via `scripts/copy-fonts.mjs`. Browsers fetch a family only after markup uses it. Keep `dist/fonts/` next to `dist/css/` so `url(../fonts/...)` resolves. Sass consumers can set `$expressive-font-path` or `$expressive-include-fonts: false`.
+
+`.material-icons` is a compatibility alias that uses Symbols; do not ship the older Material Icons font. The `--md-sys-*` and `--md-ref-*` tokens retain their Material Design 3 spec names.
 
 Links to `github.com/materializecss/materialize` issues in code comments are real upstream references and should stay.
 
@@ -43,8 +47,24 @@ npm run clean          # remove dist/
 
 Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Sidenav.getInstance(el)`).
 
-The documentation site is Astro, and the whole of it is Node -- one command
-from a clean checkout to a live server, no Python anywhere (ADR 0003):
+### Fallow analysis
+
+Run `npx --no-install fallow` with the installed version. `.fallowrc.json`
+declares standalone preview, browser-test, and fixture assets as entry points.
+Sass layer indexes are explicit because Fallow does not follow `meta.load-css()`.
+`scripts/copy-fonts.mjs` copies the Fontsource dependencies. Fixture URLs listed
+as exceptions resolve after the fixtures are written into a consumer project.
+Fallow excludes generated skill/MCP scripts and analyzes their sources in
+`scripts/lib/`. The exported auto-init registry remains for compatibility.
+
+The optional `.design-sync` preview project is outside this audit. Fallow may
+warn about missing root `.astro` types even when `docs/.astro/types.d.ts` exists;
+the docs use `--root docs`. Check that location before running Astro sync.
+Complexity and duplicate counts guide review, not automatic deletion. Fallow's
+estimated coverage is not a test-coverage measurement.
+
+The Astro documentation site runs on Node (ADR 0003). After installing
+dependencies, `docs:dev` builds the framework and starts the server:
 
 ```bash
 npm run docs:dev       # build the framework, then its watchers beside astro dev
@@ -54,11 +74,9 @@ npm run docs:verify    # re-check the built _site/ on its own
 ```
 
 
-`.claude/launch.json` is gitignored, so a fresh clone has none and the
-editor's preview pane has no server to start. Recreate it with the same
-command — the `port` field must match the port astro binds, which is 4321
-unless `docs/astro.config.mjs` says otherwise, or the pane opens on one nothing
-is listening to:
+`.claude/launch.json` is gitignored. To use the editor's preview pane in a fresh
+clone, create it with the configuration below. Match `port` to Astro's port:
+4321 unless `docs/astro.config.mjs` overrides it.
 
 ```json
 {
@@ -77,7 +95,7 @@ is listening to:
 Notes:
 
 - Tests are `node:test` + jsdom in `tests/`, run against the **built** bundles — so a stale bundle tests stale code; `npm test` rebuilds first. Two artifacts are needed, not one: `tests/setup.js` imports `dist/js/expressive.mjs`, and `bundle.test.js` reads the IIFE `dist/js/expressive.js`. That is why `test` runs `build:js` (all four formats) rather than `build:js:esm` — building only the ESM bundle passes locally off a warm `dist/` and fails on a clean checkout. `test` also runs `build:css`, because `regressions.test.js` asserts against the compiled `dist/css/expressive.css`; the same warm-`dist/` trap sank the v0.4.0 publish, which CI missed because `ci.yml` runs a full `npm run build` before `test:run` while `release.yml` runs `npm test`. `tests/setup.js` owns the jsdom environment and its shims (`innerText`, `matchMedia`, element constructors); `tests/fixtures.js` is a hand-written table of markup per auto-init component, deliberately independent of `components/registry.ts` so a wrong selector fails the suite. Beyond the per-component tests: `teardown.test.js` (does `destroy()` hand back every window/document/body listener), `hot-paths.test.js` (work per event — rect reads per scroll tick, draws per click), `injection.test.js` (author-controlled values must not become markup or selector syntax), `regressions.test.js` (one test per fixed bug).
-- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and any pending timer keeps it alive, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. No component calls `setInterval` any more — the one that did, `slideshow.ts`, is gone — but `carousel.ts` re-arms a `setTimeout` after every auto-advance, which holds the loop open in precisely the same way: a repeating timer is the hazard, not the function that made it. The hazard is wider than that one, because eight more schedule one-shot `setTimeout`s — `menu`, `timepicker`, `carousel`, `tooltip`, `autocomplete`, `lightbox`, `snackbar`, `expandingCard`. Tear down in a `finally`.
+- **A test that leaves a live timer wedges the whole run.** `node --test` waits for the event loop to drain and any pending timer keeps it alive, so a failed assertion that skipped teardown hangs the file with *no output at all* rather than failing. No component calls `setInterval` any more — the one that did, `slideshow.ts`, is gone — but `carousel.ts` re-arms a `setTimeout` after every auto-advance, which holds the loop open in precisely the same way: a repeating timer is the hazard, not the function that made it. The hazard is wider than that one, because seven schedule one-shot `setTimeout`s — `menu`, `timepicker`, `carousel`, `tooltip`, `autocomplete`, `lightbox`, `snackbar`. Tear down in a `finally`.
 - jsdom does no layout — `getBoundingClientRect()` and every `offset*`/`client*` read returns 0. Geometry-dependent tests stub the rect on the element (`regressions.test.js`), and counting stubbed rect calls is how the scroll-path tests assert layout work. jsdom also lazily attaches its own `handleFocusEvent`/`handleKeyboardEvent`/`handleMouseEvent` to `window` once a form control is involved; listener-leak tests filter those by name.
 - To confirm a new test actually catches the bug it names: `git stash push -- src/ts`, `npm run build:js`, run the one file, `git stash pop` — **as separate Bash calls**, so a hung run can't strand the stash.
 - There is no linter. Several files carry `@typescript-eslint` disable comments inherited from upstream with no ESLint config behind them.
@@ -212,6 +230,14 @@ job is `visual.yml`, pull requests only.
   four. Probing this needs a `background-color`, not an `outline` - an outline
   draws outside the element box, escapes the mask, and fails 175 shots that are
   perfectly fine.
+
+- Expanding-card close cleanup observes only the dialog's actual `clip-path`
+  transition through [`getAnimations()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getAnimations)
+  and settled `finished` promises. Do not
+  restore a duplicate duration timer or wait for arbitrary consumer animations.
+  Reopening, native close and destruction invalidate pending completion; removed
+  cards must not move focus. The scale utility uses `transition: none !important`
+  under reduced motion to cancel active motion as well as suppress new motion.
 
 - **`transition-duration: 0s` does not stop a transition that is already
   running.** Per spec a running transition keeps the timing it started with, so
@@ -391,8 +417,8 @@ out of `scripts/semantics-rules.mjs`. Notes that matter when working on it:
   `require-attr` are selector-level. `require-accessible-name` is not, because
   whether a control ends up named depends on text *nodes* and CSS cannot see
   them. `:has(> .icon:only-child)` counts elements, so it flags
-  `<a><span icon/>Five</a>`. Reach for it only when that is genuinely the
-  problem.
+  `<a><span icon/>Five</a>` even though it has text. Use this selector only
+  when the rule should ignore text nodes.
 
   `forbid-composite-roles` **is** selector-level — it is a macro. The rule
   states the component's own selector and the checker expands it over
@@ -490,16 +516,13 @@ the only reason it is not a `.slider`-style content test is that a size has no
 content to tell it apart by.
 
 **`.button.circle` follows the *button* ladder, not the icon-button one** (#72).
-It is a common button wearing a round shape — `.icon-button` is the real M3
-icon button, with its own token families, its own ladder and its own colours —
-so its glyph is `--md-comp-filled-button-icon-size` like every other button's.
-The two ladders genuinely disagree at 40dp, which is the size almost every
-`.circle` on a page is: M3 gives a 40dp *icon button* a 24dp glyph and a 40dp
-*common button* a 20dp one, and `.circle` used to pin the former at every rung
-— so it took the size class's box and left the glyph behind, a 24px glyph
-adrift in a 136dp `xlarge` disc. Anyone who wanted the icon-button number wants
-`.icon-button`. `.circle.extra` / `.circle.large` are the FAB and read
-`--md-comp-fab-icon-size`, which is a third ladder and stays one.
+It is a round common button, so its glyph uses
+`--md-comp-filled-button-icon-size`. `.icon-button` has separate M3 tokens,
+sizes, and colors. At 40dp, M3 specifies a 24dp glyph for an icon button and a
+20dp glyph for a common button. `.circle` used to keep a 24px glyph at every
+size, including the 136dp `xlarge` button. Use `.icon-button` for icon-button
+sizing. `.circle.extra` / `.circle.large` use the separate FAB size scale and
+`--md-comp-fab-icon-size`.
 
 ## Sass architecture
 
@@ -835,3 +858,18 @@ Use the canonical triage roles documented in the existing label reference. See `
 ### Domain docs
 
 Single-context: `CONTEXT.md` at the repo root, ADRs in `adr/` — **not** `docs/adr/`, because `docs/` is the Astro site. See `docs/agents/domain.md`.
+
+## Menu reversal and filled select labels
+
+Menu owns delayed transition completion, entry styling and deferred document
+handlers. Opening, closing and destroying cancel superseded work together.
+Focus can synchronously invoke application handlers that replace that lifecycle,
+so check generation again after initial-item focus and set closed ARIA before
+returning focus to a trigger that could reopen it. FormSelect and Autocomplete
+share this Menu implementation; keep their callback semantics intact.
+
+Filled enhanced selects always float their associated label. A real label row
+lets translations wrap and text grow without colliding with the value. Keep
+leading-icon padding on that row and paint only the label/control, not supporting
+text. Native and outlined selects are outside this layout change. Browser tests
+check label/value geometry, not just page overflow.

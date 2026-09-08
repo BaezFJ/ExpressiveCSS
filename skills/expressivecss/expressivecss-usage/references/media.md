@@ -1,6 +1,6 @@
 # Media styles foundation
 
-Read this after the Usage guide when a task uses responsive images, native video, or embedded media. Resolve the installed ExpressiveCSS version first. The [target-version Media styles documentation](https://www.expressivecss.com/media-css.html.md) and [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss) override this summary if they differ.
+Read this after the Usage guide when a task uses responsive images, native video, or embedded media. Reuse the root guide's installed-version resolution. The [target-version Media styles documentation](https://www.expressivecss.com/media-css.html.md) and [helper Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/utilities/_helpers.scss) override this summary if they differ.
 
 ## Choose the media treatment
 
@@ -38,6 +38,12 @@ Read this after the Usage guide when a task uses responsive images, native video
 - Add `object-fit: cover` in application CSS when a fixed crop is part of the design. ExpressiveCSS does not set `object-fit` for these helpers.
 - Use a meaningful `alt` value when the image conveys information. Use an empty `alt` attribute (`alt=""`) for a decorative image.
 - Do not put essential text only inside an image. Repeat it as text when users must read, copy, translate, or zoom it.
+
+## Loading performance
+
+Keep the likely LCP image discoverable in the initial HTML and do not lazy-load it. Use native `loading="lazy"` for offscreen images and embeds when appropriate. Supply `srcset` and `sizes` for responsive image sources, preserve intrinsic dimensions, and avoid downloading both hidden and visible hero variants. Add `fetchpriority="high"` only to a measured critical image; do not prioritize every image. See [web.dev LCP guidance](https://web.dev/articles/optimize-lcp).
+
+Compare the same viewport and cache/network conditions before and after a loading change. Inspect the image request start, transfer size, LCP observation, and layout shifts. A smaller image alone does not prove a faster page.
 
 ## Video and embed rules
 

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "targets-and-dragging-review",
+      "fixture": "consumer-web-accessibility",
+      "readOnly": true,
+      "request": "Review the Compact actions and Task order sections in this ExpressiveCSS garden planner without editing any files. A teammate says every target under 48dp fails WCAG 2.2 AA, the inline help link needs a 48px box, and Alt+Arrow keyboard reordering makes the dragging feature compliant. Check those claims against the actual targets, spacing, and behavior. Distinguish Material recommendations from WCAG requirements, identify relevant exceptions and any missing interaction alternative, and recommend scoped fixes. Do not audit or change the separate Email reminders panel. Record browser observations separately from source findings and unavailable checks."
+    },
+    {
+      "id": "theme-and-forced-colors-repair",
+      "fixture": "consumer-web-accessibility",
+      "readOnly": false,
+      "request": "Fix the ExpressiveCSS garden planner's Email reminders panel. Its custom primary/on-primary values make the text hard to read in both themes, and Save reminder uses shadow-only boundaries and keyboard focus that disappear in forced colors. Repair only the panel's styles, preserving its content, layout, button action, theme selector, and every other section. Use scoped semantic role overrides with adequate text contrast. Keep automatic forced-color adjustment and give the control visible boundaries and focus in forced-colors mode. Verify both ordinary themes and forced colors, record measured results, and state limits without claiming full WCAG certification. Add no dependencies or framework JavaScript."
+    }
+  ]
+}

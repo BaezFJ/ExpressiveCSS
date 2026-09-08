@@ -279,7 +279,9 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _buildInput() {
     this.input = document.createElement('input');
     this.input.id = 'select-input-' + Utils.guid();
-    this.input.classList.add('menu-trigger');
+    // FormSelect owns this Menu. A later AutoInit must not replace it before
+    // FormSelect can destroy its own instance during reinitialization.
+    this.input.classList.add('menu-trigger', 'no-autoinit');
     this.input.type = 'text';
     this.input.readOnly = true;
     this.input.setAttribute('data-target', this.menuEl.id);

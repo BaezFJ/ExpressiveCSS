@@ -178,7 +178,7 @@ Available npm commands include:
 | `npm run watch` | Watch Sass and TypeScript sources |
 | `npm run verify` | Build, typecheck, test, check generated data, and verify docs |
 | `npm run typecheck` | Check the TypeScript source without emitting files |
-| `npm test` | Build the ESM bundle and run the test suite |
+| `npm test` | Build all JavaScript bundles and CSS, then run the test suite |
 | `npm run clean` | Remove generated build output |
 | `npm run docs:dev` | Build the framework, then watch it beside the docs server |
 | `npm run docs:build` | Build the documentation site into `_site/` and verify it |
@@ -190,9 +190,9 @@ Run the documentation and smoke-test site:
 npm run docs:dev
 ```
 
-One command from a clean checkout: it builds the framework first, then runs the
-Sass and esbuild watchers alongside the documentation server, so a change to
-either source appears after a browser refresh. Astro prints the URL it binds.
+This builds the framework, then starts the Sass and esbuild watchers alongside
+the documentation server. Refresh the browser to see source changes. Astro
+prints the server URL.
 
 It is the same site published at
 [www.expressivecss.com](https://www.expressivecss.com), authored in

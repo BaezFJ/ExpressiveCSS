@@ -1,6 +1,6 @@
 # ExpressiveCSS grid reference
 
-Read this after the Usage guide when a task uses containers, rows, columns, offsets, or responsive layout. Resolve the installed ExpressiveCSS version first. The [target-version Grid documentation](https://www.expressivecss.com/grid.html.md) and [grid Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/base/_grid.scss) override this summary if they differ.
+Read this after the Usage guide when a task uses containers, rows, columns, offsets, or responsive layout. Reuse the root guide's installed-version resolution. The [target-version Grid documentation](https://www.expressivecss.com/grid.html.md) and [grid Sass](https://github.com/BaezFJ/ExpressiveCSS/blob/master/src/sass/base/_grid.scss) override this summary if they differ.
 
 ## Agent procedure
 

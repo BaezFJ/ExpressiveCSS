@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { transform } from 'esbuild';
+import { buildCapabilityRoadmap, renderCapabilityRoadmap } from './lib/material-capabilities.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = resolve(ROOT, 'skills/expressivecss/components');
@@ -49,20 +50,33 @@ async function contractProvenance() {
   return { version, hash: hash.digest('hex'), releaseTags };
 }
 
-async function syncResolver(checkOnly) {
-  const expected = `${RESOLVER_MARKER}${await readFile(RESOLVER_SOURCE, 'utf8')}`;
+async function syncGeneratedFiles(destinations, expected, checkOnly) {
   const stale = [];
-  for (const destination of RESOLVER_DESTINATIONS) {
+  for (const destination of destinations) {
     if (checkOnly) {
-      const current = await readFile(destination, 'utf8').catch(() => '');
-      if (current !== expected) stale.push(destination);
+      if (await readFile(destination, 'utf8').catch(() => '') !== expected) stale.push(destination);
     } else {
       await mkdir(dirname(destination), { recursive: true });
       await writeFile(destination, expected);
     }
   }
+  return stale;
+}
+
+async function syncResolver(checkOnly) {
+  const expected = `${RESOLVER_MARKER}${await readFile(RESOLVER_SOURCE, 'utf8')}`;
+  const stale = await syncGeneratedFiles(RESOLVER_DESTINATIONS, expected, checkOnly);
   if (stale.length) {
     throw new Error(`Generated version resolver is stale: ${stale.join(', ')}`);
+  }
+}
+
+async function syncConsumerTools(checkOnly) {
+  for (const name of ['verify-consumer.mjs', 'consumer-browser.mjs', 'bounded-file.mjs']) {
+    const source = `scripts/lib/${name}`;
+    const destination = resolve(ROOT, 'skills/expressivecss/scripts', name);
+    const expected = `// Generated from ${source}. Do not edit.\n${await readFile(resolve(ROOT, source), 'utf8')}`;
+    if ((await syncGeneratedFiles([destination], expected, checkOnly)).length) throw new Error(`Generated consumer tool is stale: ${name}`);
   }
 }
 
@@ -70,31 +84,16 @@ function renderDecisionIndex(data) {
   const cell = (value) => String(value).replaceAll('|', '\\|').replaceAll('\n', ' ');
   const rows = data.components.map((component) => {
     const alternatives = component.alternatives.length
-      ? component.alternatives.map((slug) => `[${slug}](../components/${slug}.md)`).join(', ')
+      ? component.alternatives.map((slug) => `\`${slug}\``).join(', ')
       : 'Compare plausible candidates';
-    const adaptive = component.adaptive
-      .map((item) => {
-        const target = item.component ? ` ${item.component}` : '';
-        return `${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
-      })
-      .join('; ') || 'Read full guidance';
-    const materialGuidance = component.materialGuidance.status === 'material'
-      ? `[Material guidance](${component.materialGuidance.href})`
-      : 'Framework extra';
-    return `| [${cell(component.title)}](${component.guide}) | ${cell(component.useWhen.join('; '))} | ${cell(component.avoidWhen.join('; '))} | ${cell(alternatives)} | ${cell(adaptive)} | ${cell(component.runtime)} | ${materialGuidance} |`;
+    return `| [${cell(component.title)}](${component.guide}) | ${cell(component.useWhen.join('; '))} | ${cell(component.avoidWhen.join('; '))} | ${cell(alternatives)} | ${cell(component.runtime)} |`;
   });
-  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nUse this index to narrow candidates by user job, interaction model, and window class. Then read every plausible candidate guide. This index does not replace component syntax, semantics, or target-version documentation.\n\n| Component | Use when | Avoid when | Alternatives | Adaptive | Runtime | Material guidance |\n| --- | --- | --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nFind the entry matching the requested job. Read its selected guide; compare alternatives only when the behavior is ambiguous. Adaptive decisions, Material links, syntax, and semantics live in the guides.\n\n| Component | Use when | Avoid when | Alternatives | Runtime |\n| --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
 }
 
 async function syncDecisionIndex(checkOnly) {
   const expected = renderDecisionIndex(decisionData);
-  if (checkOnly) {
-    const current = await readFile(DECISIONS_DESTINATION, 'utf8').catch(() => '');
-    if (current !== expected) throw new Error('Generated component decision index is stale.');
-  } else {
-    await mkdir(dirname(DECISIONS_DESTINATION), { recursive: true });
-    await writeFile(DECISIONS_DESTINATION, expected);
-  }
+  if ((await syncGeneratedFiles([DECISIONS_DESTINATION], expected, checkOnly)).length) throw new Error('Generated component decision index is stale.');
 }
 
 async function contractManifest() {
@@ -121,16 +120,7 @@ async function contractManifest() {
 
 async function syncContractManifest(checkOnly) {
   const expected = `${JSON.stringify(await contractManifest(), null, 2)}\n`;
-  const stale = [];
-  for (const destination of CONTRACT_DESTINATIONS) {
-    if (checkOnly) {
-      const current = await readFile(destination, 'utf8').catch(() => '');
-      if (current !== expected) stale.push(destination);
-    } else {
-      await mkdir(dirname(destination), { recursive: true });
-      await writeFile(destination, expected);
-    }
-  }
+  const stale = await syncGeneratedFiles(CONTRACT_DESTINATIONS, expected, checkOnly);
   if (stale.length) throw new Error(`Generated contract manifest is stale: ${stale.join(', ')}`);
 }
 
@@ -164,6 +154,10 @@ const components = cataloguePages.map((pageId) => decisionComponentsByPage.get(p
   semantics: component.guideSource.semantics,
   excludeRules: component.guideSource.excludeRules ?? [],
   syntaxLanguage: component.guideSource.syntaxLanguage,
+  adaptive: component.adaptive,
+  selectionExample: component.selectionExample,
+  runtime: component.runtime,
+  materialGuidance: component.materialGuidance,
 }));
 
 async function validateComponentInventory() {
@@ -259,8 +253,33 @@ function renderGuide(component, page, section, rules, provenance) {
     links.push(`[Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/${provenance.matchingTag})`);
   }
   const renderedSources = CONTRACT_SOURCES.map((source) => `\`${source}\``).join(', ');
+  const adaptive = component.adaptive.map((item) => {
+    const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
+    return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
+  }).join('\n') || 'Use the documented component at each reachable width; no catalogue substitution is prescribed.';
+  const mapping = component.materialGuidance;
+  const material = mapping.href
+    ? `[${mapping.relationship === 'related' ? 'Related Google guidance' : 'Google guidance'}](${mapping.href})`
+    : 'No dedicated entry in the reviewed Google component inventory.';
+  const implementation = mapping.implementation;
+  const upstream = mapping.upstreamReview;
+  const mappingLines = [
+    `Relationship: ${mapping.relationship}. ${mapping.reason ?? ''}`.trim(),
+    `Upstream: ${upstream.scope}${upstream.reviewedOn ? ` (${upstream.reviewedOn})` : ''}; [evidence](${upstream.source}).`,
+    ...(upstream.note ? [upstream.note] : []),
+    ...(mapping.specHref ? [`[Specification link](${mapping.specHref}); full specs unreviewed.`] : []),
+    ...(mapping.guidelinesHref ? [`[Google guidelines](${mapping.guidelinesHref}).`] : []),
+    ...(mapping.relatedHrefs ?? []).map((href) => `[Related Google component](${href}).`),
+    `Support (${implementation.reviewedOn}, \`${implementation.source}\`): ${implementation.documentedSupport}`,
+    `Web adaptation: ${implementation.webAdaptation}`,
+    ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
+    `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
+  ].join('\n\n');
+  const selectionExample = component.selectionExample
+    ? `Example: ${component.selectionExample}\n\n`
+    : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
 }
 
 async function generatedGuides() {
@@ -328,7 +347,13 @@ await validateComponentInventory();
 const guides = await generatedGuides();
 const checkOnly = process.argv.includes('--check');
 await syncResolver(checkOnly);
+await syncConsumerTools(checkOnly);
 await syncDecisionIndex(checkOnly);
 await syncContractManifest(checkOnly);
+const roadmap = await buildCapabilityRoadmap(decisionData, ROOT);
+for (const [name, expected] of [['capability-roadmap.json', JSON.stringify(roadmap, null, 2) + '\n'], ['capability-roadmap.md', renderCapabilityRoadmap(roadmap)]]) {
+  const destination = resolve(ROOT, 'skills/expressivecss/references', name);
+  if ((await syncGeneratedFiles([destination], expected, checkOnly)).length) throw new Error(`Generated capability roadmap is stale: ${name}`);
+}
 if (checkOnly) await check(guides);
 else await write(guides);

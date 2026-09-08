@@ -74,7 +74,7 @@
     "build:skill": "node scripts/gen-expressivecss-skill.mjs && node mcp/expressivecss/scripts/sync-guides.mjs",
     "build:semantics": "node scripts/gen-semantics.mjs",
     "resolve:expressivecss": "node skills/expressivecss/scripts/resolve-version.mjs",
-    "test:skill": "node --test tests/expressivecss-skill.test.js tests/expressivecss-version-resolution.test.js tests/expressivecss-component-decisions.test.js tests/expressivecss-skill-evals.test.js && npm run test:skill-evals",
+    "test:skill": "node --test tests/expressivecss-skill.test.js tests/expressivecss-version-resolution.test.js tests/expressivecss-component-decisions.test.js tests/expressivecss-skill-evals.test.js tests/expressivecss-codex-adapter.test.js tests/expressivecss-skill-benchmark.test.js tests/expressivecss-eval-browser.test.js tests/expressivecss-interface-quality.test.js tests/expressivecss-material-quality.test.js tests/expressivecss-eval-provenance.test.js tests/expressivecss-natural-discovery.test.js && npm run test:skill-evals",
     "test:skill-evals": "node scripts/eval-expressivecss-skill.mjs --responses=tests/fixtures/expressivecss-skill-evals/passing-responses.json",
     "docs:dev": "run-s build docs:watch",
     "docs:watch": "run-p watch:css watch:js docs:server",
@@ -87,6 +87,7 @@
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",
     "test:browser": "run-s build:js build:css test:browser:run",
+    "test:browser:critical": "node scripts/check-browser.mjs && node --test tests/expressivecss-cross-browser.test.js",
     "test:browser:run": "node scripts/check-browser.mjs && node --test tests/*-browser.test.js",
     "test:watch": "node --test --watch",
     "test:visual": "node visual/run.mjs",
@@ -97,7 +98,9 @@
     "check:generated": "node scripts/gen-semantics.mjs --check && node scripts/gen-expressivecss-skill.mjs --check && node mcp/expressivecss/scripts/sync-guides.mjs --check",
     "verify": "run-s build typecheck test:run check:generated docs:build:astro docs:verify",
     "verify:packages": "node scripts/verify-packages.mjs",
-    "test:node": "node scripts/run-node-tests.mjs"
+    "test:node": "node scripts/run-node-tests.mjs",
+    "record:capabilities": "node scripts/record-capability-evidence.mjs --record",
+    "verify:consumer": "node scripts/lib/verify-consumer.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -117,9 +120,11 @@
     "@playwright/test": "^1.56.0",
     "astro": "^7.2.8",
     "esbuild": "^0.28.2",
+    "fallow": "^3.23.0",
     "jsdom": "^30.0.1",
     "npm-run-all2": "^9.0.3",
     "sass": "^1.102.0",
+    "smol-toml": "^1.8.0",
     "turndown": "^7.2.4",
     "turndown-plugin-gfm": "^1.0.2",
     "typescript": "^7.0.2"

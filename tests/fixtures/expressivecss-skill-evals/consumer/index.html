@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northstar accounts</title>
+  <link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css">
+  <link rel="stylesheet" href="/src/app.css">
+</head>
+<body>
+  <header><h1>Northstar accounts</h1><button type="button" class="navigation-drawer-trigger" data-target="account-drawer">Open account navigation</button></header>
+  <dialog id="account-drawer" class="navigation-drawer" aria-label="Account navigation"><nav><ul><li><a href="/profile">Account profile</a></li><li><a href="/dashboard">Dashboard</a></li></ul></nav><button class="navigation-drawer-close" type="button">Close navigation</button></dialog>
+  <nav class="navigation-bar" aria-label="Primary"><a href="/home" aria-current="page">Home</a><a href="/search">Search</a><a href="/profile">Profile</a></nav>
+  <nav class="navigation-rail" aria-label="Primary"><a href="/home" aria-current="page">Home</a><a href="/search">Search</a><a href="/profile">Profile</a></nav>
+  <main id="app">
+    <section aria-labelledby="account-title"><h2 id="account-title">Account overview</h2><p id="account-summary">Keep your account details and notification preferences up to date.</p><a class="button" href="/profile">Manage account</a></section>
+    <section aria-labelledby="preferences-title"><h2 id="preferences-title">Notification preferences</h2>
+      <form id="preferences"><label><input type="checkbox" name="alerts"><span>Email alerts</span></label><button type="submit">Save preferences</button></form>
+      <p id="save-result" role="status"></p>
+    </section>
+    <section aria-labelledby="state-title"><h2 id="state-title">Account activity</h2><p id="activity" role="status">Your account is up to date.</p></section>
+    <section aria-label="Account help"><span id="tooltip-slot"><button id="account-help" class="tooltipped no-autoinit" data-tooltip="Your preferences stay private." type="button">Privacy help</button></span><button id="remount-help" type="button">Remount help</button></section>
+    <details open><summary>Preview data</summary><label for="preview-state">Activity state</label><select id="preview-state" class="browser-default"><option value="default">Loaded</option><option value="loading">Loading</option><option value="empty">Empty</option><option value="error">Error</option><option value="offline">Offline</option><option value="long-content">Long content</option></select></details>
+  </main>
+  <script src="/node_modules/@expressivecss/expressive/dist/js/expressive.js"></script>
+  <script src="/src/app.js"></script>
+</body>
+</html>

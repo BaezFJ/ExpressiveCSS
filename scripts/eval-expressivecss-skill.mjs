@@ -1,9 +1,12 @@
-import { constants as fsConstants, readFileSync } from 'node:fs';
-import { lstat, mkdir, mkdtemp, open, realpath, rm, writeFile } from 'node:fs/promises';
+import { readBoundedRegularFile } from './lib/bounded-file.mjs';
+export { readBoundedRegularFile } from './lib/bounded-file.mjs';
+import { readFileSync } from 'node:fs';
+import { cp, mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { performance } from 'node:perf_hooks';
 
 const THIS_FILE = fileURLToPath(import.meta.url);
 const DEFAULT_ROOT = path.resolve(path.dirname(THIS_FILE), '..');
@@ -12,11 +15,21 @@ const BUNDLED_SKILL_VERSION = JSON.parse(readFileSync(
   path.join(DEFAULT_ROOT, 'skills/expressivecss/references/contract.json'),
   'utf8',
 )).skillVersion;
-export const PROJECT_FIXTURES = Object.freeze({
+const CONSUMER_FILES = Object.fromEntries(['index.html', 'app.css', 'app.js', 'server.mjs'].map((name) => [
+  name === 'server.mjs' ? name : `src/${name}`,
+  readFileSync(path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/consumer', name), 'utf8'),
+]));
+const BASE_PROJECT_FIXTURES = Object.freeze({
+  'consumer-empty': Object.freeze({
+    'package.json': '{"name":"eval-consumer-empty","private":true}\n',
+    'src/index.html': '<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><main id="app"></main></body></html>\n',
+    'src/app.css': '',
+  }),
   'consumer-current': Object.freeze({
-    'package.json': '{"name":"eval-consumer-current","private":true,"dependencies":{"@expressivecss/expressive":"0.8.0"}}\n',
-    'src/index.html': '<!doctype html><html lang="en"><body><main id="app"></main></body></html>\n',
-    'src/app.css': '@import "@expressivecss/expressive";\n',
+    ...CONSUMER_FILES,
+    'package.json': '{"name":"eval-consumer-current","private":true,"scripts":{"start":"node server.mjs"},"dependencies":{"@expressivecss/expressive":"0.8.0"}}\n',
+    'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0","main":"dist/js/expressive.cjs","module":"dist/js/expressive.mjs","exports":{".":{"import":"./dist/js/expressive.mjs","require":"./dist/js/expressive.cjs"},"./css":"./dist/css/expressive.css"}}\n',
+    'fixture.json': JSON.stringify({ routes: ['/dashboard', '/home', '/search', '/profile'], dataFixtureId: 'account-a', states: ['default', 'loading', 'empty', 'error', 'offline', 'long-content'], unavailableStates: ['permission'], widths: [599, 600, 839, 840], locales: ['en-US', 'ar'], directions: ['ltr', 'rtl'], themes: ['light', 'dark'], input: ['keyboard'], identity: 'Northstar accounts' }),
   }),
   'consumer-older-version': Object.freeze({
     'package.json': '{"name":"eval-consumer-older","private":true,"dependencies":{"@expressivecss/expressive":"0.7.0"}}\n',
@@ -25,6 +38,38 @@ export const PROJECT_FIXTURES = Object.freeze({
     'src/index.html': '<!doctype html><html lang="en"><body><main id="app"></main></body></html>\n',
     'src/app.css': '@import "@expressivecss/expressive";\n',
   }),
+});
+export const EXAMPLE_NAMES = Object.freeze(['settings', 'editor', 'list-detail']);
+const exampleRoot = path.join(DEFAULT_ROOT, 'skills/expressivecss/assets/examples');
+const STANDARD_PROJECT_FIXTURES = Object.freeze({
+  ...BASE_PROJECT_FIXTURES,
+  'consumer-web-accessibility': Object.freeze({
+    ...BASE_PROJECT_FIXTURES['consumer-current'],
+    ...Object.fromEntries(['index.html', 'app.css', 'app.js'].map(name => [`src/${name}`, readFileSync(path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/web-accessibility', name), 'utf8')])),
+    'fixture.json': JSON.stringify({ intentionallyFlawed: true, themes: ['light', 'dark'], forcedColors: ['active', 'none'], targets: ['spaced', 'packed', '32px', 'inline'], reorder: ['drag', 'Alt+ArrowUp', 'Alt+ArrowDown'], persistence: 'session only' }),
+  }),
+  ...Object.fromEntries(EXAMPLE_NAMES.map((name) => [`example-${name}`, Object.freeze({
+    ...BASE_PROJECT_FIXTURES['consumer-current'],
+    'src/index.html': readFileSync(path.join(exampleRoot, `${name}.html`), 'utf8'),
+    'src/app.css': readFileSync(path.join(exampleRoot, 'app.css'), 'utf8'),
+    'src/app.js': readFileSync(path.join(exampleRoot, 'app.js'), 'utf8'),
+    'fixture.json': JSON.stringify({ example: name, treatments: ['restrained', 'expressive'], themes: ['light', 'dark'], persistence: 'session only', source: 'skills/expressivecss/assets/examples' }),
+  })])),
+});
+const materialFile = name => readFileSync(path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/material', name), 'utf8');
+export const PROJECT_FIXTURES = Object.freeze({
+  ...STANDARD_PROJECT_FIXTURES,
+  ...Object.fromEntries(['component-review', 'expression-repair', 'motion-repair'].map(name => {
+    const base = STANDARD_PROJECT_FIXTURES['example-editor'];
+    const review = name === 'component-review';
+    return [`material-${name}`, Object.freeze({
+      ...base,
+      'src/index.html': review ? base['src/index.html'].replace('<form id="editor-form" class="editor-fields">', `<form id="editor-form" class="editor-fields">${materialFile('review.html')}`) : base['src/index.html'],
+      'src/app.css': `${base['src/app.css']}\n${materialFile(name === 'motion-repair' ? 'motion.css' : 'expression.css')}`,
+      'src/app.js': review ? `${base['src/app.js']}\n${materialFile('review.js')}` : base['src/app.js'],
+      'fixture.json': JSON.stringify({ example: 'editor', task: name, intentionallyPoorMaterialChoices: true, treatments: ['restrained', 'expressive'], motion: ['no-preference', 'reduce'], persistence: 'page session only', primaryTask: 'Write, preview, and save a local newsletter draft', unavailableChecks: ['publishing', 'screen-reader speech', 'native device testing'] }),
+    })];
+  })),
 });
 const SUPPORT_GUIDES = new Map([
   ['skills/expressivecss/expressivecss-design/SKILL.md', 'expressivecss-design'],
@@ -95,74 +140,14 @@ function rootPath(value) {
   return path.resolve(value ?? DEFAULT_ROOT);
 }
 
-function isPathInside(root, candidate) {
-  const relative = path.relative(root, candidate);
-  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
-}
-
-async function readBoundedRegularFile(filePath, byteLimit, label, expectedRoot = null) {
-  const target = path.resolve(filePath);
-  let resolvedRoot = null;
-  if (expectedRoot) {
-    resolvedRoot = await realpath(expectedRoot);
-    const relative = path.relative(path.resolve(expectedRoot), target);
-    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
-      throw new Error(`${label} file is outside the repository`);
-    }
-    let current = resolvedRoot;
-    for (const segment of relative.split(path.sep)) {
-      current = path.join(current, segment);
-      const entry = await lstat(current, { bigint: true });
-      if (entry.isSymbolicLink()) throw new Error(`${label} file path contains a symbolic link`);
-    }
-  }
-
-  const noFollow = Number.isInteger(fsConstants.O_NOFOLLOW) ? fsConstants.O_NOFOLLOW : 0;
-  const handle = await open(target, fsConstants.O_RDONLY | noFollow);
-  try {
-    const before = await handle.stat({ bigint: true });
-    const pathBefore = await lstat(target, { bigint: true });
-    if (pathBefore.isSymbolicLink()) throw new Error(`${label} file is a symbolic link`);
-    if (!before.isFile() || !pathBefore.isFile()) throw new Error(`${label} file is not a regular file`);
-    if (before.dev !== pathBefore.dev || before.ino !== pathBefore.ino) {
-      throw new Error(`${label} file identity changed before reading`);
-    }
-    if (resolvedRoot) {
-      const openedPath = await realpath(`/proc/self/fd/${handle.fd}`).catch(() => realpath(target));
-      if (!isPathInside(resolvedRoot, openedPath)) throw new Error(`${label} file is outside the repository`);
-    }
-    if (before.size > BigInt(byteLimit)) throw new Error(`${label} file exceeds ${byteLimit} bytes`);
-
-    const bytes = Buffer.allocUnsafe(byteLimit + 1);
-    let total = 0;
-    while (total <= byteLimit) {
-      const chunk = await handle.read(bytes, total, byteLimit + 1 - total, total);
-      if (chunk.bytesRead === 0) break;
-      total += chunk.bytesRead;
-    }
-    if (total > byteLimit) throw new Error(`${label} file exceeds ${byteLimit} bytes`);
-
-    const after = await handle.stat({ bigint: true });
-    const pathAfter = await lstat(target, { bigint: true });
-    const handleChanged = before.dev !== after.dev || before.ino !== after.ino
-      || before.size !== after.size || before.mtimeNs !== after.mtimeNs || before.ctimeNs !== after.ctimeNs;
-    const pathChanged = pathAfter.isSymbolicLink() || !pathAfter.isFile()
-      || after.dev !== pathAfter.dev || after.ino !== pathAfter.ino;
-    if (handleChanged || pathChanged) throw new Error(`${label} file changed while reading`);
-    return bytes.subarray(0, total).toString('utf8');
-  } finally {
-    await handle.close();
-  }
-}
-
 async function readBoundedJson(filePath, byteLimit, label) {
   return JSON.parse(await readBoundedRegularFile(filePath, byteLimit, label));
 }
 
-export async function assembleSkillBundle(_testCase, repositoryRoot = DEFAULT_ROOT) {
-  const root = rootPath(repositoryRoot);
+export async function assembleSkillBundle(_testCase, repositoryRoot = DEFAULT_ROOT, skillRoot = null) {
+  const root = skillRoot ? rootPath(skillRoot) : rootPath(repositoryRoot);
   const skill = await readBoundedRegularFile(
-    path.join(root, ROOT_SKILL_PATH),
+    path.join(root, skillRoot ? 'SKILL.md' : ROOT_SKILL_PATH),
     EVALUATOR_LIMITS.rootSkillBytes,
     'root skill',
     root,
@@ -373,30 +358,25 @@ function artifactsById(response) {
 }
 
 function artifactIsRecord(artifact) {
-  return Boolean(artifact?.id && artifact.category && artifact.observation
+  return Boolean(artifact?.id && artifact.category && typeof artifact.observation === 'string' && artifact.observation.trim()
     && artifact.criterionId && artifact.componentId
     && Number.isInteger(artifact.sequence) && validTimestamp(artifact.timestamp));
-}
-
-function artifactMatchesExpectedObservation(artifact, expectedObservation) {
-  return artifactIsRecord(artifact)
-    && typeof expectedObservation === 'string'
-    && expectedObservation.trim().length > 0
-    && artifact.observation.includes(expectedObservation);
 }
 
 function artifactExpectationsMatch(testCase, executionEvidence) {
   const expected = testCase.artifactExpectations ?? [];
   const artifacts = executionEvidence?.artifacts ?? [];
   if (!Array.isArray(expected) || !Array.isArray(artifacts)
-    || artifacts.length !== expected.length
     || new Set(artifacts.map((artifact) => artifact.id)).size !== artifacts.length) return false;
-  const byId = new Map(artifacts.map((artifact) => [artifact.id, artifact]));
+  const unmatched = [...artifacts];
   return expected.every((contract) => {
-    const artifact = byId.get(contract.id);
-    const { expectedObservation, ...ownedFields } = contract;
-    return artifactMatchesExpectedObservation(artifact, expectedObservation)
-      && Object.entries(ownedFields).every(([key, value]) => Object.is(artifact[key], value));
+    // IDs name collected artifacts, and prose describes an observation; neither is an answer key.
+    const { id, expectedObservation, ...ownedFields } = contract;
+    const index = unmatched.findIndex((artifact) => artifactIsRecord(artifact)
+      && Object.entries(ownedFields).every(([key, value]) => Object.is(artifact[key], value)));
+    if (index < 0) return false;
+    unmatched.splice(index, 1);
+    return true;
   });
 }
 
@@ -530,7 +510,7 @@ function fixtureInventoryPass(rows, inventory, artifacts) {
         && artifact.criterionId === item.criterionId
         && artifact.componentId === item.componentId
         && artifact.category === item.category
-        && artifact.expectedObservation === item.expectedObservation;
+        && artifact.inventoryId === item.id;
     });
   });
 }
@@ -542,7 +522,8 @@ function caseContract(testCase, response, executionEvidence) {
     case 'setup-only-routing':
     case 'css-only-markup-routing':
     case 'token-only-theming-routing':
-      passed = response.mode === 'Implement';
+      passed = response.mode === 'Implement'
+        && executionEvidence?.completionChecks?.some((check) => check.id === `${testCase.id}/output` && check.passed === true);
       break;
     case 'critique-no-edit': {
       const artifacts = artifactsById(response);
@@ -752,57 +733,9 @@ function definitionInvariants(testCase) {
   return output;
 }
 
-function evaluateCaseInternal(testCase, response, executionEvidence = null) {
-  const limitErrors = collectionLimitErrors(response, executionEvidence);
-  const limitInvariant = result('limits/structure', limitErrors.length === 0 ? 'pass' : 'fail',
-    'trace, artifact, row, string, depth, and nested traversal values must remain within evaluator limits', {
-      expected: EVALUATOR_LIMITS,
-      actual: limitErrors,
-    });
-  if (limitErrors.length > 0) {
-    return { caseId: testCase?.id, status: 'fail', actualGuideReads: [], invariants: [limitInvariant] };
-  }
-  const invariants = [limitInvariant, ...definitionInvariants(testCase)];
-  const trustedExecution = trustedExecutionIsValid(executionEvidence)
-    && !['toolTrace', 'preRunFilesystemHash', 'postRunFilesystemHash', 'executionEvidence', 'evidenceArtifacts']
-      .some((key) => Object.hasOwn(response ?? {}, key));
-  invariants.push(result('execution/trusted-evidence', trustedExecution ? 'pass' : 'fail',
-    'guide reads, writes, filesystem hashes, and trusted artifacts require separate valid adapter evidence'));
-  invariants.push(result('execution/artifact-expectations', artifactExpectationsMatch(testCase, executionEvidence) ? 'pass' : 'fail',
-    'trusted artifacts must match fixture-owned artifact expectations exactly'));
-  invariants.push(result('response/case-id', response?.caseId === testCase.id ? 'pass' : 'fail',
-    'candidate caseId must exactly equal the selected fixture ID', {
-      expected: testCase.id,
-      actual: response?.caseId,
-    }));
-  const candidateStructurePass = candidateStructureIsValid(response);
-  invariants.push(result('response/schema', candidateStructurePass ? 'pass' : 'fail',
-    'candidate response collections and review-row identifiers must have the declared structure'));
-  const requiredFields = [...new Set([
-    ...(testCase.requiredDecisionFields ?? []),
-    ...(testCase.requiredReportFields ?? []),
-  ])];
-  const missingFields = requiredFields.filter((field) => !hasPath(response, field));
-  invariants.push(result('contract/required-fields', missingFields.length === 0 ? 'pass' : 'fail',
-    'every declared decision and report field must be present', {
-      expected: requiredFields,
-      actual: missingFields,
-    }));
-
-  const editRules = testCase.forbiddenEdits ?? [];
-  const forbiddenWrites = (executionEvidence?.toolTrace ?? []).filter((event) =>
-    ['write', 'patch', 'create', 'delete'].includes(event.operation)
-      && (editRules.includes('*') || editRules.includes(event.path)));
-  invariants.push(result('contract/forbidden-edits', forbiddenWrites.length === 0 ? 'pass' : 'fail',
-    'trusted execution must not contain a declared forbidden edit', {
-      expected: editRules,
-      actual: forbiddenWrites,
-    }));
-
-  const candidateStrings = collectStrings(response);
-  const markupStrings = candidateStrings;
+function forbiddenContentInvariant(testCase, response) {
+  const markupStrings = collectStrings(response);
   const normalizedMarkup = markupStrings.map((entry) => entry.value.toLowerCase()).join('\n');
-  const allText = normalizedMarkup;
   const forbiddenMarkup = (testCase.forbiddenMarkup ?? []).filter((token) => normalizedMarkup.includes(token.toLowerCase()));
   const authoredClasses = new Set();
   for (const entry of markupStrings) {
@@ -822,38 +755,18 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
       .some((match) => match[1].toLowerCase() === lowered));
   });
   const unsupportedClaims = (testCase.forbiddenUnsupportedClaims ?? [])
-    .filter((claim) => allText.includes(claim.toLowerCase()));
+    .filter((claim) => normalizedMarkup.includes(claim.toLowerCase()));
   const forbiddenContent = { forbiddenMarkup, forbiddenClasses, authoredRuntimeAria, unsupportedClaims };
   const hasForbiddenContent = Object.values(forbiddenContent).some((items) => items.length > 0);
-  invariants.push(result('contract/forbidden-content', hasForbiddenContent ? 'fail' : 'pass',
+  return result('contract/forbidden-content', hasForbiddenContent ? 'fail' : 'pass',
     'candidate output must not contain declared forbidden markup, classes, authored runtime ARIA, or unsupported claims', {
       expected: 'none',
       actual: forbiddenContent,
-    }));
+    });
+}
 
-  const modeStatus = hasPath(response, 'mode')
-    ? (response.mode === testCase.expectedOperatingMode ? 'pass' : 'fail')
-    : 'unevaluated';
-  invariants.push(result('mode/exact', modeStatus, 'exact operating mode', {
-    expected: testCase.expectedOperatingMode,
-    actual: response?.mode,
-  }));
-
-  const reads = actualGuideReads(executionEvidence);
-  invariants.push(result('routing/actual-guide-reads', trustedExecution && sameMembers(reads, testCase.mustLoad ?? []) ? 'pass' : 'fail',
-    'actual guide read trace must equal the fixture route', { expected: testCase.mustLoad, actual: reads }));
-
-  if (testCase.noEdits) {
-    const writes = (executionEvidence?.toolTrace ?? []).filter((event) => ['write', 'patch', 'create', 'delete'].includes(event.operation));
-    const hashesMatch = trustedExecution
-      && executionEvidence.filesystem.before === executionEvidence.filesystem.after;
-    invariants.push(result('mode/no-write', writes.length === 0 && hashesMatch ? 'pass' : 'fail',
-      'write trace and filesystem hash must remain unchanged', { expected: [], actual: writes }));
-  }
-
-  const evidence = Array.isArray(executionEvidence?.artifacts) ? executionEvidence.artifacts : [];
-  const scoredResponse = { ...(response ?? {}), evidenceArtifacts: evidence };
-  const artifacts = artifactsById(scoredResponse);
+function reviewEvidenceInvariants(testCase, response, evidence, artifacts) {
+  const invariants = [];
   const reviewRows = Array.isArray(response?.reviewRows) ? response.reviewRows : [];
   if (reviewRows.length > 0) {
     const statusesValid = reviewRows.every((row) => REVIEW_STATUSES.has(row?.status));
@@ -895,11 +808,16 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
   const evidenceValid = Object.entries(requiredByCriterion).every(([criterionId, categories]) => categories.every((category) => evidence.some((artifact) => artifactIsRecord(artifact)
     && artifact.criterionId === criterionId && artifact.category === category)));
   invariants.push(result('evidence/required-categories', evidenceValid ? 'pass' : 'fail',
-    'criterion-owned required evidence artifacts must exist with a matching expected observation, sequence, and timestamp', {
+    'criterion-owned required evidence artifacts must exist with an operator observation, sequence, and timestamp', {
       expected: requiredByCriterion,
       actual: evidence.map((item) => ({ category: item.category, criterionId: item.criterionId })),
     }));
 
+  return invariants;
+}
+
+function coverageInvariants(testCase, response, artifacts) {
+  const invariants = [];
   if (testCase.coverageInventory) {
     const records = response?.coverageRecords ?? [];
     const inventoryIds = testCase.coverageInventory.map((item) => item.id);
@@ -926,11 +844,14 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
         && record.evidenceIds.length > 0
         && record.evidenceIds.every((id) => {
           const artifact = artifacts.get(id);
+          const expectedValue = testCase.coverageInventory.find((item) => item.id === record.inventoryId)?.requiredValue;
           return artifactIsRecord(artifact)
             && artifact.criterionId === record.criterionId
             && artifact.componentId === record.componentId
             && artifact.inventoryId === record.inventoryId
-            && artifact.observation.includes(record.expectedObservation);
+            && (Object.hasOwn(artifact, 'observedValue')
+              ? Object.is(artifact.observedValue, expectedValue)
+              : artifact.observation.includes(String(expectedValue))); // Compatibility for reviewed schemaVersion 3 replays.
         }));
     invariants.push(result('coverage/evidence-links', coverageEvidenceValid ? 'pass' : 'fail',
       'coverage evidence IDs must resolve one-to-one to fixture-owned inventory observations for the record criterion and component', { actual: records }));
@@ -940,6 +861,11 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
       'Blocked coverage requires no evidence IDs and a blocker reason', { actual: records }));
   }
 
+  return invariants;
+}
+
+function captureInvariants(testCase, response, artifacts, executionEvidence) {
+  const invariants = [];
   if (testCase.captureDimensions) {
     const pairs = response?.capturePairs ?? [];
     const dimensionsExact = sameMembers(testCase.captureDimensions, CAPTURE_DIMENSIONS)
@@ -959,6 +885,87 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
     invariants.push(result('capture/visible-differences', differencesValid ? 'pass' : 'fail',
       'matched captures require an explicit visible-difference classification', { actual: pairs }));
   }
+
+  return invariants;
+}
+
+function evaluateCaseInternal(testCase, response, executionEvidence = null) {
+  const limitErrors = collectionLimitErrors(response, executionEvidence);
+  const limitInvariant = result('limits/structure', limitErrors.length === 0 ? 'pass' : 'fail',
+    'trace, artifact, row, string, depth, and nested traversal values must remain within evaluator limits', {
+      expected: EVALUATOR_LIMITS,
+      actual: limitErrors,
+    });
+  if (limitErrors.length > 0) {
+    return { caseId: testCase?.id, status: 'fail', actualGuideReads: [], invariants: [limitInvariant] };
+  }
+  const invariants = [limitInvariant, ...definitionInvariants(testCase)];
+  const trustedExecution = trustedExecutionIsValid(executionEvidence)
+    && !['toolTrace', 'preRunFilesystemHash', 'postRunFilesystemHash', 'executionEvidence', 'evidenceArtifacts', 'completionChecks']
+      .some((key) => Object.hasOwn(response ?? {}, key));
+  invariants.push(result('execution/trusted-evidence', trustedExecution ? 'pass' : 'fail',
+    'guide reads, writes, filesystem hashes, and trusted artifacts require separate valid adapter evidence'));
+  invariants.push(result('execution/artifact-expectations', artifactExpectationsMatch(testCase, executionEvidence) ? 'pass' : 'fail',
+    'trusted artifacts must satisfy fixture-owned artifact expectations through criterion, component, and measured dimensions'));
+  invariants.push(result('response/case-id', response?.caseId === testCase.id ? 'pass' : 'fail',
+    'candidate caseId must exactly equal the selected fixture ID', {
+      expected: testCase.id,
+      actual: response?.caseId,
+    }));
+  const candidateStructurePass = candidateStructureIsValid(response);
+  invariants.push(result('response/schema', candidateStructurePass ? 'pass' : 'fail',
+    'candidate response collections and review-row identifiers must have the declared structure'));
+  const requiredFields = [...new Set([
+    ...(testCase.requiredDecisionFields ?? []),
+    ...(testCase.requiredReportFields ?? []),
+  ])];
+  const missingFields = requiredFields.filter((field) => !hasPath(response, field));
+  invariants.push(result('contract/required-fields', missingFields.length === 0 ? 'pass' : 'fail',
+    'every declared decision and report field must be present', {
+      expected: requiredFields,
+      actual: missingFields,
+    }));
+
+  const editRules = testCase.forbiddenEdits ?? [];
+  const forbiddenWrites = (executionEvidence?.toolTrace ?? []).filter((event) =>
+    ['write', 'patch', 'create', 'delete'].includes(event.operation)
+      && (editRules.includes('*') || editRules.includes(event.path)));
+  invariants.push(result('contract/forbidden-edits', forbiddenWrites.length === 0 ? 'pass' : 'fail',
+    'trusted execution must not contain a declared forbidden edit', {
+      expected: editRules,
+      actual: forbiddenWrites,
+    }));
+
+  invariants.push(forbiddenContentInvariant(testCase, response));
+
+  const modeStatus = hasPath(response, 'mode')
+    ? (response.mode === testCase.expectedOperatingMode ? 'pass' : 'fail')
+    : 'unevaluated';
+  invariants.push(result('mode/exact', modeStatus, 'exact operating mode', {
+    expected: testCase.expectedOperatingMode,
+    actual: response?.mode,
+  }));
+
+  const reads = actualGuideReads(executionEvidence);
+  invariants.push(result('routing/actual-guide-reads', trustedExecution && sameMembers(reads, testCase.mustLoad ?? []) ? 'pass' : 'fail',
+    'actual guide read trace must equal the fixture route', { expected: testCase.mustLoad, actual: reads }));
+
+  if (testCase.noEdits) {
+    const writes = (executionEvidence?.toolTrace ?? []).filter((event) => ['write', 'patch', 'create', 'delete'].includes(event.operation));
+    const hashesMatch = trustedExecution
+      && executionEvidence.filesystem.before === executionEvidence.filesystem.after;
+    invariants.push(result('mode/no-write', writes.length === 0 && hashesMatch ? 'pass' : 'fail',
+      'write trace and filesystem hash must remain unchanged', { expected: [], actual: writes }));
+  }
+
+  const evidence = Array.isArray(executionEvidence?.artifacts) ? executionEvidence.artifacts : [];
+  const scoredResponse = { ...(response ?? {}), evidenceArtifacts: evidence };
+  const artifacts = artifactsById(scoredResponse);
+  invariants.push(...reviewEvidenceInvariants(testCase, response, evidence, artifacts));
+
+  invariants.push(...coverageInvariants(testCase, response, artifacts));
+
+  invariants.push(...captureInvariants(testCase, response, artifacts, executionEvidence));
 
   if (testCase.id === 'combined-review-order') {
     const critique = evidence.filter((artifact) => artifact.mode === 'Critique');
@@ -1119,16 +1126,84 @@ function parseArguments(argv) {
   return parsed;
 }
 
-async function materializeProjectFixture(fixtureId) {
+export async function materializeProjectFixture(fixtureId, repositoryRoot = DEFAULT_ROOT) {
   const fixture = PROJECT_FIXTURES[fixtureId];
   if (!fixture) throw new Error(`Unknown project fixture ${fixtureId}`);
   const sandbox = await mkdtemp(path.join(tmpdir(), 'expressivecss-eval-project-'));
-  for (const [relativePath, content] of Object.entries(fixture)) {
-    const target = path.join(sandbox, relativePath);
-    await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, content, { flag: 'wx' });
+  try {
+    for (const [relativePath, content] of Object.entries(fixture)) {
+      const target = path.join(sandbox, relativePath);
+      await mkdir(path.dirname(target), { recursive: true });
+      await writeFile(target, content, { flag: 'wx' });
+    }
+    if (['consumer-current', 'consumer-web-accessibility', 'material-component-review', 'material-expression-repair', 'material-motion-repair'].includes(fixtureId) || EXAMPLE_NAMES.some((name) => fixtureId === `example-${name}`)) {
+      // Use the already-built package. The older-version fixture never receives today's runtime.
+      await cp(path.join(rootPath(repositoryRoot), 'dist'), path.join(sandbox, 'node_modules/@expressivecss/expressive/dist'), { recursive: true, errorOnExist: true, force: false });
+    }
+    return sandbox;
+  } catch (error) {
+    await rm(sandbox, { recursive: true, force: true });
+    throw error;
   }
-  return sandbox;
+}
+
+const COMPLETION_FILES = ['package.json', 'node_modules/@expressivecss/expressive/package.json', 'src/index.html', 'src/app.css', 'src/app.js'];
+
+export async function readCompletionFiles(projectRoot) {
+  const entries = await Promise.all(COMPLETION_FILES.map(async (relative) => {
+    try {
+      return [relative, await readBoundedRegularFile(path.join(projectRoot, relative), EVALUATOR_LIMITS.stringBytes, 'completion source', projectRoot)];
+    } catch (error) {
+      if (error.code === 'ENOENT') return [relative, null];
+      throw error;
+    }
+  }));
+  return Object.fromEntries(entries);
+}
+
+export async function checkProjectCompletion(caseId, projectRoot, beforeFiles) {
+  if (!['setup-only-routing', 'css-only-markup-routing', 'token-only-theming-routing'].includes(caseId)) return [];
+  const files = await readCompletionFiles(projectRoot);
+  const { JSDOM } = await import('jsdom');
+  const dom = new JSDOM(files['src/index.html'] ?? ''); // Static parsing only: no scripts or component initialization.
+  const beforeDom = new JSDOM(beforeFiles?.['src/index.html'] ?? '');
+  try {
+    let passed = false;
+    let evidence;
+    if (caseId === 'setup-only-routing') {
+      let manifest = {}; let installed = {};
+      try { manifest = JSON.parse(files['package.json'] ?? '{}'); } catch {}
+      try { installed = JSON.parse(files['node_modules/@expressivecss/expressive/package.json'] ?? '{}'); } catch {}
+      const declared = manifest.dependencies?.['@expressivecss/expressive'] ?? manifest.devDependencies?.['@expressivecss/expressive'];
+      const imported = /(?:@import\s+|import\s*)["']@expressivecss\/expressive\/css["']/u.test(`${files['src/app.css'] ?? ''}\n${files['src/app.js'] ?? ''}`);
+      const linked = [...dom.window.document.querySelectorAll('link[rel="stylesheet"]')].some((link) => /(?:@expressivecss\/expressive|expressivecss).*\/expressive(?:\.min)?\.css/u.test(link.getAttribute('href') ?? ''));
+      let stylesheet = '';
+      try { stylesheet = await readBoundedRegularFile(path.join(projectRoot, 'node_modules/@expressivecss/expressive/dist/css/expressive.css'), EVALUATOR_LIMITS.rootSkillBytes, 'installed stylesheet', projectRoot); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+      passed = Boolean(declared && installed.name === '@expressivecss/expressive' && installed.version && stylesheet.trim() && (imported || linked));
+      evidence = 'Installed package metadata, direct dependency, and an ExpressiveCSS stylesheet import or link are present.';
+    } else if (caseId === 'css-only-markup-routing') {
+      const buttons = (document) => [...document.querySelectorAll('button')].filter((button) => !button.disabled && !button.closest('[hidden], [inert]') && (button.textContent.trim() || button.getAttribute('aria-label')?.trim()));
+      const previous = buttons(beforeDom.window.document).map((button) => button.outerHTML);
+      const current = buttons(dom.window.document);
+      passed = current.length > previous.length && current.some((button) => !previous.includes(button.outerHTML));
+      evidence = 'A new enabled native button with an accessible label exists in src/index.html.';
+    } else {
+      const seed = (css) => [...(css ?? '').matchAll(/--md-source\s*:\s*([^;}]+)/gu)].map((match) => match[1].trim());
+      const before = seed(beforeFiles?.['src/app.css']);
+      const after = seed(files['src/app.css']);
+      const withoutSeed = (css) => (css ?? '').replace(/--md-source\s*:\s*[^;}]+/gu, '--md-source:SEED').replace(/\s+/gu, '');
+      const probe = dom.window.document.createElement('span');
+      probe.style.color = after[0] ?? '';
+      passed = before.length === 1 && after.length === 1 && before[0] !== after[0] && Boolean(probe.style.color)
+        && withoutSeed(beforeFiles?.['src/app.css']) === withoutSeed(files['src/app.css'])
+        && COMPLETION_FILES.filter((file) => file !== 'src/app.css').every((file) => beforeFiles?.[file] === files[file]);
+      evidence = 'Only the existing --md-source seed changes, to a valid CSS color.';
+    }
+    return [{ id: `${caseId}/output`, passed, evidence }];
+  } finally {
+    beforeDom.window.close();
+    dom.window.close();
+  }
 }
 
 function terminateProcessTree(child, signal) {
@@ -1148,8 +1223,8 @@ function terminateProcessTree(child, signal) {
   }
 }
 
-async function responseFromAdapter(adapter, adapterArgs, task, projectRoot, rootSkill, timeout) {
-  const input = JSON.stringify({ task, projectRoot, rootSkill });
+async function responseFromAdapter(adapter, adapterArgs, payload, timeout) {
+  const input = JSON.stringify(payload);
   return new Promise((resolve, reject) => {
     const child = spawn(adapter, adapterArgs, {
       detached: process.platform !== 'win32',
@@ -1234,6 +1309,8 @@ export async function runEvaluations({
   adapterTimeoutMs = DEFAULT_ADAPTER_TIMEOUT_MS,
   caseId = null,
   repositoryRoot = DEFAULT_ROOT,
+  skillRoot = null,
+  outputDirectory = null,
 } = {}) {
   if (!casesPath) throw new Error('casesPath is required');
   if (!responsesPath && !adapter) throw new Error('Provide responsesPath for replay or adapter for a live run');
@@ -1257,36 +1334,73 @@ export async function runEvaluations({
   const selected = caseId ? casesData.cases.filter((item) => item.id === caseId) : casesData.cases;
   if (caseId && selected.length !== 1) throw new Error(`Unknown case ${caseId}`);
   const results = [];
+  const rootSkill = await assembleSkillBundle(null, repositoryRoot, skillRoot);
+  const selectedSkillRoot = skillRoot ? rootPath(skillRoot) : path.join(rootPath(repositoryRoot), 'skills/expressivecss');
+  if (outputDirectory) await mkdir(outputDirectory, { recursive: true });
   for (const testCase of selected) {
-    const rootSkill = await assembleSkillBundle(testCase, repositoryRoot);
+    const started = performance.now();
     const task = {
       id: testCase.id,
       request: testCase.request,
       projectFixture: testCase.projectFixture,
     };
     if (!PROJECT_FIXTURES[task.projectFixture]) throw new Error(`Unknown project fixture ${task.projectFixture}`);
-    let envelope;
-    if (replay) {
-      envelope = replay[testCase.id];
-    } else {
-      const sandbox = await materializeProjectFixture(task.projectFixture);
-      try {
-        envelope = await responseFromAdapter(adapter, adapterArgs, task, sandbox, rootSkill, adapterTimeoutMs);
-      } finally {
-        await rm(sandbox, { recursive: true, force: true });
+    let sandbox;
+    let evaluated;
+    let artifactDirectory;
+    try {
+      let envelope;
+      if (replay) {
+        envelope = replay[testCase.id];
+      } else {
+        sandbox = await materializeProjectFixture(task.projectFixture, repositoryRoot);
+        const beforeFiles = await readCompletionFiles(sandbox);
+        artifactDirectory = outputDirectory ? path.resolve(outputDirectory, `${results.length + 1}-${testCase.id.replace(/[^a-z0-9-]/giu, '_')}`) : null;
+        if (artifactDirectory) await mkdir(artifactDirectory, { recursive: true });
+        envelope = await responseFromAdapter(adapter, adapterArgs, {
+          task, projectRoot: sandbox, rootSkill, skillRoot: selectedSkillRoot, artifactDirectory,
+        }, adapterTimeoutMs);
+        if (plainRecord(envelope?.executionEvidence)) {
+          envelope.executionEvidence.completionChecks = await checkProjectCompletion(testCase.id, sandbox, beforeFiles);
+        }
+      }
+      if (!envelope) throw new Error(`No response for ${testCase.id}`);
+      const metadataErrors = nestedLimitErrors(envelope.runMetadata);
+      if (metadataErrors.length) throw new Error(`Adapter metadata exceeds limits: ${metadataErrors.join(', ')}`);
+      const response = envelope.candidateResponse;
+      const executionEvidence = envelope.executionEvidence;
+      evaluated = {
+        ...evaluateCase(testCase, response, executionEvidence),
+        response, executionEvidence,
+        runMetadata: { telemetry: null, ...(plainRecord(envelope.runMetadata) ? envelope.runMetadata : {}), wallTimeMs: performance.now() - started },
+      };
+    } catch (error) {
+      evaluated = {
+        caseId: testCase.id, status: 'fail', failureKind: 'infrastructure', actualGuideReads: [],
+        error: { code: error.code ?? null, message: redactValue(error.message) },
+        invariants: [result('execution/infrastructure', 'fail', redactValue(error.message))],
+        runMetadata: { wallTimeMs: performance.now() - started, telemetry: null },
+      };
+    } finally {
+      if (sandbox) {
+        try {
+          if (artifactDirectory) {
+            const files = await readCompletionFiles(sandbox);
+            await writeFile(path.join(artifactDirectory, 'source-files.json'), `${JSON.stringify(redactValue(files), null, 2)}\n`);
+          }
+        } catch (error) {
+          evaluated.artifactError = redactValue(error.message);
+        } finally {
+          await rm(sandbox, { recursive: true, force: true });
+        }
       }
     }
-    if (!envelope) throw new Error(`No response for ${testCase.id}`);
-    const response = envelope.candidateResponse;
-    const executionEvidence = envelope.executionEvidence;
-    const evaluated = evaluateCase(testCase, response, executionEvidence);
     results.push({
       ...evaluated,
       prompt: testCase.request,
       rootContext: ROOT_SKILL_PATH,
       selectedGuides: evaluated.actualGuideReads,
-      response,
-      executionEvidence,
+      artifactsPath: artifactDirectory ? path.relative(path.resolve(outputDirectory), artifactDirectory) : null,
     });
   }
   return redactValue({
@@ -1310,6 +1424,8 @@ async function main() {
       : DEFAULT_ADAPTER_TIMEOUT_MS,
     caseId: typeof args.case === 'string' ? args.case : null,
     repositoryRoot: DEFAULT_ROOT,
+    skillRoot: typeof args['skill-root'] === 'string' ? path.resolve(args['skill-root']) : null,
+    outputDirectory: typeof args['output-directory'] === 'string' ? path.resolve(args['output-directory']) : null,
   });
   const output = `${JSON.stringify(report, null, 2)}\n`;
   if (typeof args.output === 'string') await writeFile(path.resolve(args.output), output);

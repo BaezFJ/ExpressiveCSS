@@ -24,7 +24,7 @@ These are the mistakes generated Material UIs make most often. Treat them as inv
 
 - **One high-emphasis action per region.** A screen may have many buttons. Only one should be filled, a FAB, or an extended FAB.
 - **Sentence case** on buttons, chips, tabs, and snackbar actions. Capitalize the first word and proper nouns only. Never `SAVE`, `Save Changes`, or `OK`.
-- **48×48 dp minimum hit target** on every interactive control, even when the visible glyph is 18–24 dp.
+- **Material target recommendation:** aim for a 48×48 dp interaction area even when the glyph is smaller. Measure the web hit area in CSS pixels and check the selected component contract. This design recommendation is distinct from [WCAG 2.2 AA SC 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), which requires 24×24 CSS pixels or a documented spacing, equivalent-control, inline, user-agent-control, or essential exception. CSS pixels are independent of device pixel ratio.
 - **Color roles, never hex.** Use `primary`, `on-surface`, `error`, and the other `--md-sys-color-*` roles. Do not hard-code `#6750A4`.
 - **Native HTML first.** `<button>`, `<a class="button">`, `<dialog>`, `<input>`, `<select>`, `<progress>`, `<label>`.
 - **A visual icon is not an accessible name.** Icon-only controls need `aria-label` (and a tooltip if the control has no visible text).
@@ -809,7 +809,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 **Use when** something is draggable and nothing else says so: a bottom sheet's grabber, the gutter between two panes, the grip on a reorderable row.
 
-**Don't use** it as the only route to an outcome. Dragging is a pointer gesture, so a reorder reachable only by dragging is unreachable without a pointer. Pair it with a keyboard path — arrow keys on the focused row, a "Move up" / "Move down" pair in a menu, or a field taking the position. ExpressiveCSS ships no reordering behaviour, so that path is the page's to build.
+**Don't use** it as the only route to an outcome. Provide keyboard operation and a single-pointer alternative without dragging. Clickable "Move up" / "Move down" controls or a position input can serve both; arrow keys alone cannot. [WCAG 2.2 AA SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) excepts essential dragging and unmodified user-agent functionality. ExpressiveCSS ships no reordering behaviour, so the application must implement and test each path.
 
 **Anatomy.** A bar and nothing else. `<span aria-hidden="true">` when decorative, which is the usual case; `<button>` with an `aria-label` when activating it does something. Never both — `aria-hidden` on a button leaves it in the tab order while hiding it from assistive technology. Inside a bottom sheet the button spelling is wired: it dismisses the sheet. Nowhere else is.
 
@@ -864,7 +864,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 ## 7.2 Bottom sheets
 
-**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet` (alias `.bottom`). `BottomSheets.Init()` drag-dismisses from the top 48 dp handle, and dismisses on activation when that handle is a `<button>` — so the keyboard reaches it. `Esc` closes the sheet natively either way.
+**M3:** Bottom sheets (standard / modal). **ExpressiveCSS:** `dialog.bottom-sheet` (alias `.bottom`). `BottomSheets.Init()` drag-dismisses from the top 48 dp handle. A named `<button>` handle also dismisses on click, tap, Enter, or Space. Verify native Escape against the opening mode, browser, and `closedby` policy.
 
 **Use when** compact/medium windows need **secondary content** anchored to the bottom: extra actions, a short list, a player, filters.
 
@@ -883,7 +883,7 @@ Use to separate **groups**, not every row. Prefer `outline-variant`. In menus, a
 
 **Adaptive.** Compact: full width, the default extra-content surface. ≥ 640 dp: capped width, 56 dp side and top margins. Medium+: consider a menu instead of a modal sheet of actions. Expanded+: prefer a side sheet for persistent extras.
 
-**Behavior.** Drag the handle down to dismiss. Modal: scrim tap or `form method="dialog"` also dismisses. Standard coexists with a scrolling/panning main view (maps, music).
+**Behavior.** Drag the handle down to dismiss. Provide a named button handle or a `form method="dialog"` close button as a non-drag pointer and keyboard path. Scrim dismissal depends on shared-runtime support and `closedby`; native Escape behavior also depends on the opening mode and browser. Verify the installed behavior. Standard coexists with a scrolling/panning main view (maps, music).
 
 ---
 
@@ -919,7 +919,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ## 7.4 Floating sheets
 
-**M3:** Floating sheets. **ExpressiveCSS:** `dialog.floating-sheet`. No plugin — light dismiss is `Dialogs.Init()`, the same as any `<dialog>`.
+**Mapping:** ExpressiveCSS inset-dialog extension; related dialog guidance does not establish a standalone M3 floating-sheet specification. **ExpressiveCSS:** `dialog.floating-sheet`. No plugin — light dismiss is `Dialogs.Init()`, the same as any `<dialog>`.
 
 **Use when** secondary content should float **above** the page rather than dock to an edge: a mini player, a filter panel, a detail card over a map or canvas.
 
@@ -962,7 +962,7 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ## 7.6 Banners
 
-**M3:** Banners (basic / rich). **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
+**Mapping:** Persistent feedback pattern; the reviewed current M3 component inventory has no dedicated banner entry. Basic/rich support is an ExpressiveCSS contract, not verified upstream parity. **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
 
 **Use when** a condition **persists** and the user can keep working around it: offline, a failed sync, an expiring trial, a cookie or privacy choice. The message stays until the user acts on it.
 

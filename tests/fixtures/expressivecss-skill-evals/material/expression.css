@@ -1,0 +1,5 @@
+/* Deliberately poor expression choices; markup and application behavior remain valid. */
+[data-treatment="expressive"] #page-title { font-size: 24px; line-height: 32px; font-weight: 400; }
+[data-treatment="expressive"] #preview-button { --md-comp-filled-button-container-height: 40px; --md-comp-filled-button-container-shape: 0px; }
+[data-treatment="expressive"] #editor-form > button[type="submit"] { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+[data-treatment="expressive"] .editor-fields .field { padding: 16px; background: var(--md-sys-color-surface-container-high); border-radius: 28px; }

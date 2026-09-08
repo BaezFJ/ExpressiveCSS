@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-08T05:18:19.705801+00:00",
+  "reviewer": "BaezFJ",
+  "userFeedback": "accept visuals",
+  "scope": "Visual appearance of all eighteen assistance-cost outputs in review-combined.html.",
+  "evidenceRecord": "assistance-cost-2026-09-07.json",
+  "evidenceRecordSha256": "ca3e90fc481d6b190b0c94e466591d9ca4f25ffa12d54f8cce02c372c8ffdd46",
+  "archiveSha256": "db5ed5849f346bc3c5f2ceb5d50f086b878063f8f487666775a1059e4dc5b17a",
+  "viewer": {
+    "path": "review-combined.html",
+    "sha256": "03457d68b3b373c71e70c41dad1ae59338e8d90df92a190ea35e3a840cfd860a"
+  },
+  "reviews": [
+    {
+      "runId": "eval-form-action-skill_only-run-1",
+      "attemptHash": "77923f8f782f16f1e999b8ceef5b393de5a905f84d44f683b2dbc79230f27696",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-mcp_only-run-1",
+      "attemptHash": "f531d18ca4d77971b0af28b74b6f38c404752c76440fddbcd0c6bbd3bec5b384",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-combined-run-1",
+      "attemptHash": "07ad39e845fd02c1fa32b4b885eb62d25a067db114a897814a525f86f42f515b",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-mcp_only-run-1",
+      "attemptHash": "68613dea707b491b7fea8beb5f0602010ea1fffdf7ef1dc29c7f663f2f430f2f",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-combined-run-1",
+      "attemptHash": "cb86322c002ec13e7ba7f725f05f9b77491bfff1602066f907a2cc4d8c89c1ce",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-skill_only-run-1",
+      "attemptHash": "083dbd9b6a85bfe842edc29744ca881ff394685e35a890564e2f83752daa7f13",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-mcp_only-run-2",
+      "attemptHash": "62699a78e3d391a48302ed87a7cea7d3c757e375a02517a71217593b085f6059",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-combined-run-2",
+      "attemptHash": "40810a0d1f553a26de29ae3c5a242419d971e9da621f1a5d9a91ed45bab77747",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-skill_only-run-2",
+      "attemptHash": "43e27040c08efd857a87371927caa3435067fa14b8d99a651057a923dbe20f39",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-combined-run-2",
+      "attemptHash": "9252934069dc013568d782f179d71c8f846b3e8bfefba7a4f4f30339e3f3f5f1",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-skill_only-run-2",
+      "attemptHash": "a0388e726594f6f83cd455fd0ce9ab6ae47f6cafd1f9210412a6198d9634e382",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-mcp_only-run-2",
+      "attemptHash": "aa8616abca3d598c857adf6a67fda0a1b9444e066874df167492546acfb40408",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-combined-run-3",
+      "attemptHash": "64329321c34e0c4fc817c63144bb226392ebd7d3091639894a94776fbcd0fd31",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-skill_only-run-3",
+      "attemptHash": "850c73454cf25055ae2051dd7b972c4e76d3b3ef62b15fb244771bbb405b8d91",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-form-action-mcp_only-run-3",
+      "attemptHash": "52a0ad05b599a7682744834daa80ab0f27458797ec466f46be630047c06e0208",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-skill_only-run-3",
+      "attemptHash": "da1842022bef88664ce8b3b3351ef51b395a727cdf7414fb33b31881c754616b",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-mcp_only-run-3",
+      "attemptHash": "15be58a1051e97f5a6a8ab0d96fd7ec217af2c08a91babf6258aa9e5332f38ff",
+      "decision": "accept-visual-design"
+    },
+    {
+      "runId": "eval-navigation-media-combined-run-3",
+      "attemptHash": "1c3ca06c91bde42ace30da6c5b100b634c853d7ed182814ae4bc71635fe15bb3",
+      "decision": "accept-visual-design"
+    }
+  ],
+  "reviewSeconds": null,
+  "limits": [
+    "Visual acceptance only; full task acceptance and correction effort are not inferred.",
+    "Existing benchmark grades, metrics, archives and reviews.json remain unchanged.",
+    "No accessibility, interaction, motion or performance certification is inferred."
+  ]
+}

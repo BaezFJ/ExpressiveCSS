@@ -11,7 +11,27 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/badges/overview)
+
+Example: An unread count belongs on the inbox icon as a badge. A selectable Unread filter needs a chip or selection control with its own name and state.
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: component.
+
+Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+
+Support (2026-09-07, `llm.md#badges`): Small dot and large count badges.
+
+Web adaptation: Expose counts through the enclosing control name when its icon is hidden.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#badges).
 
 #### Contract
 

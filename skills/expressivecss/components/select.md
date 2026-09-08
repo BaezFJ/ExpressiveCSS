@@ -11,15 +11,35 @@ Contract: ExpressiveCSS 0.8.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d6670dee63d8e9132b0b56a464a67a75c57586685154d3e4ae62170337c2cf3f`
+Contract SHA-256: `de04e37cc16d4748ff0a11dfd92c6a937c12a9d7e06021cdb14660673bfa8c25`
+
+#### Selection and adaptation
+
+Runtime ownership: `auto-init`. [Related Google guidance](https://m3.material.io/components/menus/overview)
+
+Use the documented component at each reachable width; no catalogue substitution is prescribed.
+
+#### Material mapping
+
+Relationship: related. Related guidance is not a dedicated component specification.
+
+Upstream: document-reviewed (2026-09-07); [evidence](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
+
+Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations.
+
+Support (2026-09-07, `llm.md#select`): Single/multiple selection, optgroups, and browser-default fallback.
+
+Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
+
+Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#select).
 
 #### Contract
 
 Choose one option, or several, from a styled menu.
 
-Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
+Filled enhanced selects reserve a label row that grows with wrapping and enlarged text. Leading icons retain their label spacing; supporting text stays outside the filled surface. Native and outlined variants retain their existing layouts.
 
-Add `multiple` to select several options. Chosen values appear as a comma-separated list.
+Select turns a native `<select>` into a menu. Wrap it in a `.field` and give the label a matching `for`. `AutoInit()` starts every `select` except those marked `no-autoinit`. Add `browser-default` to keep the native control.
 
 #### Syntax
 

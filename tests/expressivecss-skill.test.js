@@ -33,7 +33,7 @@ const helpersReferenceUrl = new URL('expressivecss-usage/references/helpers.md',
 const usageFoundationReferenceUrls = Object.fromEntries(['media', 'table', 'transitions']
   .map((name) => [name, new URL(`expressivecss-usage/references/${name}.md`, skillDirectory)]));
 const themingGuideUrl = new URL('expressivecss-theming/SKILL.md', skillDirectory);
-const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'state-layers']
+const foundationReferenceUrls = Object.fromEntries(['color', 'themes', 'elevation', 'icons', 'typography', 'shape', 'motion', 'state-layers']
   .map((name) => [name, new URL(`expressivecss-theming/references/${name}.md`, skillDirectory)]));
 const compiledCss = compile(fileURLToPath(new URL('../src/sass/expressive.scss', import.meta.url)), {
   loadPaths: [fileURLToPath(new URL('../src/sass/', import.meta.url))],
@@ -86,9 +86,12 @@ describe('the ExpressiveCSS agent skill', () => {
 
     const description = frontmatter.match(/^description: (.+)$/m)?.[1];
     assert.ok(description, 'description is missing');
-    assert.ok(description.length <= 60, `description is ${description.length} characters`);
+    assert.ok(description.length <= 400, `description is ${description.length} characters`);
     assert.ok(description.endsWith('.'), 'description is not a sentence');
-    assert.match(description, /^Use ExpressiveCSS for accessible Material 3 interfaces\.$/);
+    for (const scope of ['ExpressiveCSS', '@expressivecss/expressive', 'install', 'theme', 'runtime', 'accessibility', 'contributions']) {
+      assert.ok(description.includes(scope), `description omits ${scope}`);
+    }
+    assert.match(description, /exclude.*without ExpressiveCSS/i);
     assert.doesNotMatch(skill, /\/home\/|[A-Z]:\\Users\\/, 'skill contains a machine-local path');
     assert.doesNotMatch(skill, /\]\(\.\.\//, 'root skill links outside the portable skill directory');
   });
@@ -103,7 +106,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.match(guide, new RegExp(`^name: ${path.split('/')[0]}$`, 'm'));
       const description = guide.match(/^description: (.+)$/m)?.[1];
       assert.ok(description, `${path} has no description`);
-      assert.ok(description.length <= 60, `${path} description is too long`);
+      assert.ok(description.length <= 400, `${path} description is too long`);
       assert.ok(description.endsWith('.'), `${path} description is not a sentence`);
       assert.doesNotMatch(guide, /\/home\/|[A-Z]:\\Users\\/, `${path} contains a machine-local path`);
       assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//, `${path} links outside the portable skill directory`);
@@ -117,7 +120,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.equal(new Set(componentLinks).size, componentLinks.length, 'a component guide is listed more than once');
     assert.doesNotMatch(body, /\]\(\.\/components\/[a-z-]+\.md\)/, 'root skill duplicates the generated inventory');
     assert.match(body, /decision index[\s\S]*owns the complete component inventory/i);
-    assert.match(body, /Read every plausible candidate guide identified by the index before choosing/i);
+    assert.match(body, /uncertain.*read all plausible candidate guides before choosing/i);
 
     for (const name of componentFiles) {
       const guideUrl = new URL(name, componentsDirectory);
@@ -393,7 +396,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform \.2s !important/);
     assert.match(transitionsSass, /&\.scale-in[\s\S]*transform:\s*scale\(1\)/);
     assert.match(references.transitions, /`\.scale-out`[\s\S]*does not remove[\s\S]*layout[\s\S]*accessibility tree[\s\S]*tab order/i);
-    assert.match(references.transitions, /no built-in `prefers-reduced-motion` rule/i);
+    assert.match(references.transitions, /framework sets.*transition: none !important.*prefers-reduced-motion: reduce/i);
     assert.match(references.transitions, /transition: none !important/);
     assert.match(references.transitions, /wait at least one rendered frame/i);
   });
@@ -529,6 +532,43 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(stateLayers, /selected and disabled[\s\S]*do not have system state-layer opacity tokens/i);
     const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
     assert.doesNotMatch(matrix, /framework selected state-layer token|framework disabled state-layer token/i);
+  });
+
+  test('keeps expressive foundation examples within implemented contracts', () => {
+    const references = Object.fromEntries(['shape', 'motion', 'typography']
+      .map((name) => [name, readFileSync(foundationReferenceUrls[name], 'utf8')]));
+    for (const [name, reference] of Object.entries(references)) {
+      assert.ok(reference.includes(`docs/theming/${name[0].toUpperCase()}${name.slice(1)}.md`), `${name} lacks primary implementation provenance`);
+      assert.match(reference, /Reviewed \d{4}-\d{2}-\d{2}/);
+      for (const [, example] of reference.matchAll(/```css\n([\s\S]*?)\n```/g)) {
+        for (const [, token] of example.matchAll(/(--md-[\w-]+)\s*:/g)) {
+          assert.ok(compiledCss.includes(`${token}:`), `${name} example overrides undefined token ${token}`);
+          assert.ok(compiledCss.includes(`var(${token}`), `${name} example overrides unused token ${token}`);
+        }
+      }
+    }
+
+    // These gaps describe compiled capabilities, not speculative CSS APIs.
+    for (const prefix of ['--md-sys-shape-', '--md-sys-motion-', '--md-sys-typescale-emphasized-']) {
+      assert.ok(!compiledCss.includes(prefix), `${prefix} support changed; revise the documented gap`);
+      assert.ok(Object.values(references).some((reference) => reference.includes(`${prefix}*`)), `${prefix} gap is undocumented`);
+    }
+    assert.doesNotMatch(compiledCss, /\.(?:display|headline|title|body|label)-(?:large|medium|small)-emphasized\b/);
+    assert.match(compiledCss, /--md-comp-filled-button-container-shape:\s*9999px/);
+    assert.match(compiledCss, /--md-comp-button-group-motion:\s*linear\(/);
+    assert.match(compiledCss, /border-radius 200ms var\(--md-comp-button-group-motion\)/);
+    assert.match(references.typography, /Bundled fonts do not supply `700`/);
+    assert.match(references.typography, /\.bold` means `500`/);
+    const fontFaces = [...compiledCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
+      .map(([, declarations]) => declarations)
+      .filter((declarations) => /font-family:\s*["']?(?:Roboto|Noto Sans)["']?\s*;/.test(declarations));
+    assert.ok(fontFaces.length >= 4, 'could not inspect bundled text font faces');
+    assert.deepEqual([...new Set(fontFaces.map((face) => face.match(/font-weight:\s*([^;]+);/)?.[1]))].sort(), ['400', '500']);
+
+    const expandingCard = readFileSync(new URL('../src/ts/components/expandingCard.ts', import.meta.url), 'utf8');
+    assert.doesNotMatch(expandingCard, /setTimeout\(finish/);
+    assert.match(references.motion, /actual.*clip.*transition/);
+    assert.doesNotMatch(references.motion, /independently uses `500ms`|no built-in preference rule/);
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {
@@ -740,21 +780,23 @@ describe('the ExpressiveCSS agent skill', () => {
       ['Visual Critique', 'Design, Usage, Theming, Accessibility', 'Install, Runtime'],
       ['CSS-only Audit', 'Design, Usage, Accessibility, selected component guides', 'Install, Theming, Runtime'],
       ['JavaScript-backed Audit', 'Design, Usage, Runtime, Accessibility, selected component guides', 'Install, Theming'],
-      ['Manual initialization', 'Usage, Runtime, Accessibility, selected component guides', 'Install, Design, Theming'],
+      ['Manual initialization with markup changes', 'Usage, Runtime, Accessibility, selected component guides', 'Install, Design, Theming'],
+      ['Narrow runtime lifecycle repair', 'Runtime, selected component guides', 'Install, Design, Usage, Theming, Accessibility'],
+      ['New surface, Refine, or Redesign', 'Design, Usage, Theming, Accessibility, selected component guides', 'Install'],
     ];
 
-    assert.match(routing, /Start with this root guide only\./i);
-    assert.match(routing, /Classify.*Shortlist.*Inspect.*Read/is);
-    assert.match(routing, /A guide is loaded only after its `SKILL\.md` contents are actually read/i);
+    assert.match(routing, /Classify the task.*before reading support guides/i);
+    assert.match(routing, /Classify.*runtime ownership.*before reading/is);
+    assert.match(routing, /actual reads.*link does not count as loaded guidance/is);
     assert.match(routing, /\| Task classification \| Must read \| Must not read by default \|/);
     for (const [task, load, avoid] of expectedRows) {
       assert.ok(routing.includes(`| ${task} | ${load} | ${avoid} |`), `wrong route for ${task}`);
     }
-    assert.match(routing, /inspect candidate runtime ownership in.*decision index.*before deciding whether to read Runtime/is);
-    assert.match(routing, /Usage and Accessibility for every interface implementation or review/i);
-    assert.match(routing, /Theming for visual or token work/i);
-    assert.match(routing, /every plausible candidate guide.*every selected component guide/i);
-    assert.match(routing, /Runtime only.*JavaScript.*Auto Init.*shared-runtime.*manual/is);
+    assert.match(routing, /Inspect runtime ownership in the decision index/is);
+    assert.match(routing, /Interface implementation and review require Usage and Accessibility/i);
+    assert.match(routing, /Theming for visual\/token work/i);
+    assert.match(routing, /JavaScript.*Auto Init.*shared-runtime.*manual ownership require Runtime/is);
+    assert.match(routing, /CSS-only and native ownership do not/i);
     assert.match(routing, /Setup only.*Install/is);
     assert.doesNotMatch(design, /\| Guide \| Load condition \|/, 'design guide duplicates the routing truth table');
     assert.match(design, /follow the root staged routing truth table/i);
@@ -783,8 +825,8 @@ describe('the ExpressiveCSS agent skill', () => {
         avoid: /CSS-only Audit[\s\S]*static markup[\s\S]*visual-token/i,
       },
       'expressivecss-accessibility/SKILL.md': {
-        use: /interface implementation or Audit when semantics, keyboard, focus, announcements, contrast, zoom, reflow, touch, RTL, or motion is in scope/i,
-        avoid: /visual-only Critique[\s\S]*substitute for.*component contract/i,
+        use: /interface implementation, Critique, or Audit.*visual reviews/is,
+        avoid: /setup-only work[\s\S]*accessibility behavior unchanged[\s\S]*substitute for.*component contract/i,
       },
     };
 
@@ -800,19 +842,12 @@ describe('the ExpressiveCSS agent skill', () => {
   });
 
   test('keeps root discovery broad and separates skill from framework versions', () => {
-    const whenToUse = body.slice(body.indexOf('## When to use this skill'), body.indexOf('## Guide routing'));
-    for (const taskClass of [
-      /installing the package/i,
-      /HTML, JSX, templates, Sass, CSS, or JavaScript/i,
-      /configuring themes/i,
-      /initializing component behavior/i,
-      /semantics, accessibility/i,
-      /designing, refining, hardening, or reviewing/i,
-      /contributing components, documentation, tests, or styles/i,
-    ]) {
-      assert.match(whenToUse, taskClass);
+    const description = frontmatter.match(/^description: (.+)$/m)?.[1];
+    for (const taskClass of [/install/i, /markup/i, /theme/i, /runtime/i, /accessibility/i, /refine.*review/i, /contributions/i]) {
+      assert.match(description, taskClass);
     }
-    assert.match(body, /metadata `version` is the skill workflow version, not the ExpressiveCSS framework or generated contract version\./i);
+    assert.match(body, /metadata `version`.*workflow/i);
+    assert.match(body, /contract manifest.*framework/i);
   });
 
   test('routes narrow root tasks without implying every guide is mandatory', () => {
@@ -821,13 +856,13 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(routingStart >= 0, 'root staged guide routing is missing');
     const routing = body.slice(routingStart, routingEnd);
 
-    assert.match(routing, /Start with this root guide only\./i);
+    assert.match(routing, /Classify the task.*before reading support guides/i);
     assert.doesNotMatch(body, /## References that you must read/);
     assert.match(routing, /\| Setup only \| Install \|/);
     assert.match(routing, /\| CSS-only static markup \| Usage, Accessibility, selected component guides \|/);
     assert.match(routing, /\| Token-only theming \| Theming \|/);
     assert.match(routing, /\| Visual Critique \| Design, Usage, Theming, Accessibility \|/);
-    assert.match(routing, /Read only every guide in the applicable `Must read` cell/i);
+    assert.match(routing, /Combine overlapping routes/i);
   });
 
   test('uses the generated decision index before opening candidate component guides', () => {
@@ -835,20 +870,47 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(existsSync(decisionIndex), 'generated component decision index is missing');
     assert.ok(body.includes('[component decision index](./references/component-decisions.md)'));
     const protocol = body.slice(body.indexOf('## Component discovery protocol'), body.indexOf('## Authority by question'));
-    assert.match(protocol, /read the \[component decision index\]/i);
-    assert.match(protocol, /use when.*avoid when.*alternatives.*adaptive.*runtime/is);
-    assert.match(protocol, /uncertain.*read all candidate guides/i);
+    assert.match(protocol, /read the index entry/i);
+    assert.match(protocol, /use when.*avoid when.*alternatives.*runtime/is);
+    assert.match(protocol, /selected guide.*adaptive decisions/is);
+    assert.match(protocol, /uncertain.*read all plausible candidate guides/i);
+    assert.match(protocol, /unambiguous component.*only its selected guide/i);
   });
 
   test('resolves the exact installed framework version before using a contract', () => {
     assert.ok(body.includes('[version resolver](./scripts/resolve-version.mjs)'));
     const authority = body.slice(body.indexOf('## Authority by question'), body.indexOf('## Framework contribution path'));
-    assert.match(authority, /terminal\(command="node skills\/expressivecss\/scripts\/resolve-version\.mjs --project-root <project> --contract-version <contract-version>"/);
+    assert.match(authority, /node "<skill-directory>\/scripts\/resolve-version\.mjs" --project-root "<project>"/);
+    assert.match(authority, /once per task/i);
+    assert.match(authority, /Repeat only after dependency evidence changes/i);
+    assert.doesNotMatch(authority, /node skills\/expressivecss\//);
     assert.match(authority, /installed package.*lockfile.*manifest range/is);
-    assert.match(authority, /`match`.*current documentation/is);
+    assert.match(authority, /`match`.*bundled matching guidance/is);
+    assert.match(authority, /bundled match does not verify the public website/i);
     assert.match(authority, /`mismatch`.*matching tag or commit/is);
     assert.match(authority, /`unresolved`.*state that target-version guidance is unavailable/is);
-    assert.match(authority, /do not infer an exact installed version from a manifest range/i);
+    assert.match(authority, /range is not an installed version/i);
+  });
+
+  test('keeps the complete basic-button reading path below its baseline budget', () => {
+    const paths = ['SKILL.md', 'references/component-decisions.md', 'expressivecss-usage/SKILL.md', 'expressivecss-accessibility/SKILL.md', 'components/buttons.md'];
+    const bytes = paths.reduce((total, path) => total + readFileSync(new URL(path, skillDirectory)).length, 0);
+    assert.ok(bytes <= 40670 * 0.75, `basic-button reading uses ${bytes} bytes, above the 25% reduction budget`);
+    assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
+  });
+
+  test('teaches measured loading and lifecycle performance without imposing a full audit', () => {
+    const readGuide = (name) => readFileSync(new URL(`expressivecss-${name}/SKILL.md`, skillDirectory), 'utf8');
+    const media = readFileSync(usageFoundationReferenceUrls.media, 'utf8');
+    assert.match(readGuide('install'), /duplicate.*font stylesheets/is);
+    assert.match(readGuide('runtime'), /Scope initialization to the newly mounted container/i);
+    assert.match(readGuide('runtime'), /before and after.*retained.*after teardown/is);
+    assert.match(media, /LCP image.*do not lazy-load/i);
+    assert.match(media, /loading="lazy".*offscreen/i);
+    assert.match(readGuide('design'), /same route.*cache state.*network\/CPU/is);
+    assert.match(readGuide('design'), /ordinary markup work does not require a full audit/i);
+    assert.match(readGuide('design'), /not field Core Web Vitals/i);
+    assert.doesNotMatch(research, /fonts are external assets.*not shipped/i);
   });
 
   test('maps optional MCP tools to bounded workflow steps', () => {
@@ -857,11 +919,40 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const tool of ['setup_expert', 'rules_enforcer', 'component_syntax_expert', 'quality_inspector']) {
       assert.ok(section.includes(`\`${tool}\``), `${tool} is not routed`);
     }
-    assert.match(section, /Markdown workflow remains complete when the MCP server is unavailable/i);
-    assert.match(section, /pass applies only to `checksPerformed`/i);
-    assert.match(section, /does not replace.*visual.*responsive.*keyboard.*assistive/is);
-    assert.match(section, /contract.*mismatch.*Blocked/is);
+    assert.match(section, /MCP is optional.*Markdown workflow/is);
+    assert.match(section, /pass covers only `checksPerformed`/i);
+    assert.match(section, /does not establish browser, visual, or accessibility conformance/i);
+    assert.match(section, /contract.*mismatch.*blocks/is);
     assert.match(design, /MCP[\s\S]*`checksPerformed`[\s\S]*`uncheckedAreas`[\s\S]*`Blocked`/i);
     assert.match(design, /MCP[\s\S]*does not replace[\s\S]*browser[\s\S]*accessibility/i);
   });
+
+  test('requires a capability probe, bounded retries, and observed browser evidence', () => {
+    const protocol = body.slice(body.indexOf('## Browser evidence'), body.indexOf('## Optional MCP'));
+    assert.match(protocol, /probe.*route.*loading the target/i);
+    assert.match(protocol, /stop retrying.*until capability changes/i);
+    assert.match(protocol, /continue independent source work/i);
+    assert.match(protocol, /tool output or captures/i);
+    assert.match(protocol, /errors without guessing codes or causes/i);
+    assert.match(protocol, /compound command.*does not prove each subcommand passed/i);
+  });
+});
+
+
+test('distinguishes Material recommendations, web criteria, and observed behavior', () => {
+  const accessibility = readFileSync(new URL('expressivecss-accessibility/SKILL.md', skillDirectory), 'utf8');
+  const checks = readFileSync(new URL('expressivecss-accessibility/references/web-checks.md', skillDirectory), 'utf8');
+  for (const topic of ['target-size-minimum', 'dragging-movements', 'contrast-minimum', 'non-text-contrast', 'css-color-adjust']) assert.ok(checks.includes(topic), `missing primary source for ${topic}`);
+  for (const exception of ['Spacing', 'Equivalent', 'Inline', 'User agent', 'Essential']) assert.ok(checks.includes(`**${exception}:**`), `missing target exception ${exception}`);
+  assert.match(accessibility, /48 by 48 dp[\s\S]*not WCAG[\s\S]*24 by 24 CSS-pixel/);
+  assert.match(checks, /devicePixelRatio/);
+  assert.match(checks, /Keyboard access is a[\s\S]*separate requirement/);
+  assert.match(checks, /forced-color-adjust: none/);
+  assert.match(checks, /Semantic `on-\*` pairings[\s\S]*overrides can still break contrast/);
+  assert.match(checks, /4\.5:1[\s\S]*3:1[\s\S]*18pt[\s\S]*14pt/);
+  assert.match(body, /contrast or forced-colors investigations[\s\S]*add Accessibility/);
+  const theming = readFileSync(new URL('expressivecss-theming/SKILL.md', skillDirectory), 'utf8');
+  assert.ok(theming.includes('expressivecss-accessibility/references/web-checks.md'));
+  const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
+  for (const row of ['A-DRAG-POINTER', 'A-FORCED-COLORS']) assert.ok(matrix.includes(row));
 });

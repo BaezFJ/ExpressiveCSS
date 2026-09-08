@@ -112,6 +112,67 @@ describe('ExpressiveCSS component decisions', () => {
     assert.ok(bySlug.get('dialogs').aliases.includes('modal'));
   });
 
+  test('replaces generic warnings with concrete selection examples in the guides', async () => {
+    const exampleSlugs = [
+      'app-bar', 'panes', 'footer', 'breadcrumbs', 'pagination', 'scrollspy',
+      'buttons', 'icon-buttons', 'split-button', 'cards', 'lists', 'floating-sheet',
+      'badges', 'carousel', 'lightbox', 'toolbars', 'fieldsets', 'slider', 'chips',
+      'date-picker', 'time-picker', 'tabs', 'navigation-bar', 'segmented-buttons',
+      'button-groups', 'snackbar', 'banners', 'dialogs', 'progress', 'loading-indicator',
+    ];
+    for (const component of data.components) {
+      assert.doesNotMatch(component.avoidWhen.join(' '), /another component fits|fits the job better/i);
+    }
+    for (const slug of exampleSlugs) {
+      const component = bySlug.get(slug);
+      assert.equal(typeof component.selectionExample, 'string', `${slug} needs a wrong-choice example`);
+      assert.ok(component.selectionExample.length > 40, `${slug} needs a scenario and reason`);
+      const guide = await readFile(new URL(`../skills/expressivecss/components/${slug}.md`, import.meta.url), 'utf8');
+      assert.ok(guide.includes(component.selectionExample), `${slug} drops its selection example`);
+      assert.ok(!generated.includes(component.selectionExample), `${slug} bloats the decision index`);
+    }
+    // Protect the distinctions most likely to be lost in further shortening.
+    assert.match(bySlug.get('tabs').selectionExample, /navigation.*panels/is);
+    assert.match(bySlug.get('button-groups').selectionExample, /submit.*radio/is);
+    assert.match(bySlug.get('segmented-buttons').selectionExample, /commands.*radio/is);
+    assert.match(bySlug.get('snackbar').selectionExample, /save.*banner.*dialog/is);
+    assert.match(bySlug.get('loading-indicator').selectionExample, /determinate.*indeterminate/is);
+    assert.match(bySlug.get('progress').selectionExample, /indeterminate linear/i);
+  });
+
+  test('keeps upstream evidence distinct from documented support and web extensions', async () => {
+    const llm = await readFile(new URL('../llm.md', import.meta.url), 'utf8');
+    for (const component of data.components) {
+      const mapping = component.materialGuidance;
+      assert.ok(['component', 'pattern', 'related', 'none'].includes(mapping.relationship));
+      assert.equal(mapping.status, ['component', 'pattern'].includes(mapping.relationship) ? 'material' : 'framework-extra');
+      for (const href of [mapping.href, mapping.specHref, mapping.guidelinesHref, mapping.upstreamReview.source, ...(mapping.relatedHrefs ?? [])].filter(Boolean)) {
+        const url = new URL(href);
+        assert.equal(url.protocol, 'https:');
+        assert.ok(['m2.material.io', 'm3.material.io', 'github.com'].includes(url.hostname));
+        if (url.hostname === 'github.com') assert.ok(url.pathname.startsWith('/material-components/material-components-android/'));
+      }
+      assert.ok(mapping.upstreamReview.scope);
+      assert.match(mapping.upstreamReview.reviewedOn, /^\d{4}-\d{2}-\d{2}$/);
+      const implementation = mapping.implementation;
+      assert.match(implementation.reviewedOn, /^\d{4}-\d{2}-\d{2}$/);
+      assert.ok(implementation.documentedSupport && implementation.webAdaptation);
+      assert.ok(Array.isArray(implementation.limitations));
+      assert.ok(llm.includes(`${'#'.repeat(component.guideSource.headingLevel)} ${component.guideSource.heading}\n`));
+      assert.ok(implementation.source.startsWith('llm.md#'));
+      const guide = await readFile(new URL(`../skills/expressivecss/components/${component.slug}.md`, import.meta.url), 'utf8');
+      for (const evidence of [mapping.relationship, mapping.upstreamReview.scope, mapping.upstreamReview.source, implementation.documentedSupport, implementation.webAdaptation, ...implementation.limitations]) {
+        assert.ok(guide.includes(evidence), `${component.slug} dropped mapping evidence: ${evidence}`);
+      }
+    }
+    for (const slug of ['fieldsets', 'floating-sheet', 'select', 'autocomplete', 'drag-handle']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'related');
+    for (const slug of ['footer', 'breadcrumbs', 'pagination', 'scrollspy', 'lightbox']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'none');
+    assert.equal(bySlug.get('panes').materialGuidance.relationship, 'pattern');
+    assert.equal(new URL(bySlug.get('bottom-app-bar').materialGuidance.href).hostname, 'm2.material.io');
+    assert.ok(bySlug.get('date-picker').materialGuidance.implementation.limitations.length);
+    assert.ok(bySlug.get('buttons').materialGuidance.implementation.limitations.length);
+  });
+
   test('separates native host semantics from shared runtime ownership', () => {
     for (const slug of ['dialogs', 'bottom-sheet', 'side-sheet', 'floating-sheet']) {
       assert.equal(bySlug.get(slug).runtime, 'shared-runtime', `${slug} must route through shared dialog runtime guidance`);
@@ -120,7 +181,7 @@ describe('ExpressiveCSS component decisions', () => {
 
   test('keeps generated skill and MCP decision data synchronized', () => {
     assert.match(generated, /^<!-- Generated by scripts\/gen-expressivecss-skill\.mjs\. Do not edit\. -->/);
-    assert.match(generated, /\| Component \| Use when \| Avoid when \| Alternatives \| Adaptive \| Runtime \|/);
+    assert.match(generated, /\| Component \| Use when \| Avoid when \| Alternatives \| Runtime \|/);
     assert.doesNotMatch(generated, /```|## Contract|## Syntax|## Rules/);
     assert.ok(generated.split('\n').length < 100, 'decision index is not compact');
     for (const component of data.components) {
@@ -130,6 +191,20 @@ describe('ExpressiveCSS component decisions', () => {
     const { generatedBy, ...bundledCatalogue } = bundled;
     assert.ok(generatedBy);
     assert.deepEqual(bundledCatalogue, data);
+  });
+
+  test('moves complete adaptive guidance into the selected component guide', async () => {
+    assert.doesNotMatch(generated, /\| Adaptive \||\| Material guidance \|/);
+    for (const component of data.components) {
+      const guide = await readFile(new URL(`../skills/expressivecss/components/${component.slug}.md`, import.meta.url), 'utf8');
+      assert.ok(guide.includes(`Runtime ownership: \`${component.runtime}\``), `${component.slug} omits runtime ownership`);
+      for (const adaptation of component.adaptive) {
+        assert.ok(guide.includes(`${adaptation.window} ${adaptation.basis}: ${adaptation.kind}`));
+        assert.ok(guide.includes(adaptation.reason));
+        if (adaptation.component) assert.ok(guide.includes(`](./${adaptation.component}.md)`));
+      }
+      if (component.materialGuidance.status === 'material') assert.ok(guide.includes(component.materialGuidance.href));
+    }
   });
 
   test('keeps each Critique criterion to one falsifiable observation', () => {
@@ -234,5 +309,80 @@ describe('ExpressiveCSS component decisions', () => {
     const componentReview = reviewMatrix.slice(reviewMatrix.indexOf('## Component review groups'));
     assert.match(componentReview, /`buttons@icon-only-control-is-named`/);
     assert.match(componentReview, /\| `buttons` \| `icon-only-control-is-named` \|/);
+  });
+});
+
+// Capability evidence is an operator snapshot, never inferred from test registrations.
+describe('Material capability roadmap', () => {
+  test('covers the catalogue and foundations without turning constraints into feature gaps', async () => {
+    const { buildCapabilityRoadmap } = await import('../scripts/lib/material-capabilities.mjs');
+    const { fileURLToPath } = await import('node:url');
+    const roadmap = await buildCapabilityRoadmap(data, fileURLToPath(root));
+    assert.equal(roadmap.entries.length, data.components.length + 3);
+    assert.ok(roadmap.entries.every((entry) => entry.sourceReview === 'source-reviewed'));
+    assert.deepEqual(roadmap.entries.filter((entry) => entry.kind === 'component' && entry.support === 'partial').map((entry) => entry.slug).sort(), ['buttons', 'date-picker', 'time-picker']);
+    for (const slug of ['bottom-app-bar', 'navigation-drawer', 'icon-buttons', 'segmented-buttons', 'drag-handle']) {
+      assert.equal(roadmap.entries.find((entry) => entry.slug === slug).gaps.length, 0, slug);
+    }
+    for (const slug of ['typography', 'shape', 'motion']) assert.equal(roadmap.entries.find((entry) => entry.slug === slug).support, 'partial');
+    const generatedRoadmap = await readFile(new URL('../skills/expressivecss/references/capability-roadmap.json', import.meta.url), 'utf8');
+    assert.deepEqual(JSON.parse(generatedRoadmap), roadmap);
+    assert.equal(await readFile(new URL('../mcp/expressivecss/capability-roadmap.json', import.meta.url), 'utf8'), generatedRoadmap);
+  });
+
+  test('invalidates changed, missing and added inputs and distinguishes unavailable evidence', async () => {
+    const { mkdtemp, mkdir, writeFile, rm } = await import('node:fs/promises');
+    const { tmpdir } = await import('node:os');
+    const path = await import('node:path');
+    const { CAPABILITY_INPUT_DIRECTORIES, buildCapabilityRoadmap, pinDirectory, sha256 } = await import('../scripts/lib/material-capabilities.mjs');
+    const temporary = await mkdtemp(path.join(tmpdir(), 'material-capabilities-'));
+    try {
+      for (const directory of CAPABILITY_INPUT_DIRECTORIES) await mkdir(path.join(temporary, directory), { recursive: true });
+      await writeFile(path.join(temporary, 'src/component.ts'), 'original');
+      await writeFile(path.join(temporary, 'tests/check.test.js'), 'test');
+      const pins = await pinDirectory(temporary, 'src');
+      const review = { reviewedOn: '2026-09-07', support: 'partial', sources: pins, inventorySha256: sha256(JSON.stringify(pins)), gaps: [], browserChecks: [{ file: 'tests/check.test.js', name: 'scoped assertion', scope: 'One assertion only' }] };
+      const entry = (slug) => ({ slug, title: slug, capabilityReview: structuredClone(review), materialGuidance: { relationship: 'foundation', implementation: { documentedSupport: 'Named scope', webAdaptation: 'Web' }, upstreamReview: { source: 'https://example.com', reviewedOn: '2026-09-07', scope: 'unassessed' } } });
+      const fixture = { frameworkVersion: '0.8.0', components: [], foundations: ['typography', 'shape', 'motion'].map(entry) };
+      const first = async () => (await buildCapabilityRoadmap(fixture, temporary)).entries[0];
+      assert.equal((await first()).browserChecks[0].state, 'not-recorded');
+      const directories = [], inputs = [];
+      for (const directory of CAPABILITY_INPUT_DIRECTORIES) {
+        const directoryPins = await pinDirectory(temporary, directory);
+        inputs.push(...directoryPins); directories.push({ path: directory, sha256: sha256(JSON.stringify(directoryPins)) });
+      }
+      fixture.capabilityBrowserEvidence = { collector: 'scripts/record-capability-evidence.mjs', recordedOn: '2026-09-07', engine: 'chromium', status: 'passed', reportSha256: sha256('report'), directories, inputs, results: [{ file: 'tests/check.test.js', name: 'scoped assertion', status: 'passed' }] };
+      assert.equal((await first()).browserEvidence, 'recorded-scoped-pass');
+      fixture.capabilityBrowserEvidence.results[0].status = 'failed';
+      assert.equal((await first()).browserChecks[0].state, 'recorded-failed');
+      fixture.capabilityBrowserEvidence.results[0].status = 'skipped';
+      assert.equal((await first()).browserChecks[0].state, 'skipped');
+      fixture.capabilityBrowserEvidence.results[0].status = 'passed';
+      fixture.capabilityBrowserEvidence.status = 'blocked';
+      assert.equal((await first()).browserChecks[0].state, 'blocked');
+      fixture.capabilityBrowserEvidence.status = 'passed';
+      await writeFile(path.join(temporary, 'tests/new.test.js'), 'new');
+      assert.equal((await first()).browserEvidence, 'needs-rerun');
+      await rm(path.join(temporary, 'tests/new.test.js'));
+      await writeFile(path.join(temporary, 'src/new.ts'), 'new feature');
+      assert.equal((await first()).sourceReview, 'needs-review');
+      await rm(path.join(temporary, 'src/new.ts'));
+      await writeFile(path.join(temporary, 'src/component.ts'), 'changed');
+      assert.equal((await first()).support, 'unassessed');
+      await rm(path.join(temporary, 'src/component.ts'));
+      assert.equal((await first()).sourceReview, 'needs-review');
+      fixture.foundations[0].capabilityReview.sources[0].path = '../outside';
+      await assert.rejects(first, /Invalid reviewed source pin/);
+    } finally { await rm(temporary, { recursive: true, force: true }); }
+  });
+
+  test('collects native test events without accepting prose verification claims', async () => {
+    const { recordedTestEvent } = await import('../scripts/record-capability-evidence.mjs');
+    const event = { type: 'test:pass', data: { file: '/repo/tests/check.test.js', name: 'assertion', details: { duration_ms: 12 } } };
+    assert.deepEqual(recordedTestEvent(event, '/repo'), { file: 'tests/check.test.js', name: 'assertion', status: 'passed', durationMs: 12 });
+    assert.equal(recordedTestEvent({ type: 'test:stdout', data: { message: 'All tests passed' } }), null);
+    assert.equal(recordedTestEvent({ ...event, data: { ...event.data, details: { type: 'suite' } } }), null);
+    assert.equal(recordedTestEvent({ ...event, data: { ...event.data, skip: true } }, '/repo').status, 'skipped');
+    assert.equal(recordedTestEvent({ ...event, type: 'test:fail' }, '/repo').status, 'failed');
   });
 });

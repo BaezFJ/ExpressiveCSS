@@ -34,6 +34,7 @@ describe('ExpressiveCSS version resolution', () => {
       const result = await resolveExpressiveVersion({
         projectRoot,
         contractVersion: fixture.contractVersion,
+        contractManifestPath: path.join(projectRoot, 'contract.json'),
         skillVersion: '0.4.0',
       });
       for (const [key, expected] of Object.entries(fixture.expected)) {
@@ -48,6 +49,10 @@ describe('ExpressiveCSS version resolution', () => {
       assert.equal(result.declaredRange, result.declaredVersion);
       assert.equal(result.exactInstalledVersion, result.resolutionSource === 'installed-package' ? result.resolvedVersion : null);
       assert.equal(result.skillContractVersion, fixture.contractVersion);
+      assert.equal(result.currentDocsSafe, false);
+      assert.equal(result.documentationSources.current.available, false);
+      assert.equal(result.bundledContractSafe, fixture.expected.bundledContractSafe ?? false);
+      assert.equal(result.documentationSources.bundled.available, result.bundledContractSafe);
     });
   }
 
@@ -77,13 +82,45 @@ describe('ExpressiveCSS version resolution', () => {
     const projectRoot = await materialize({
       'package.json': '{"name":"consumer","dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
       'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0+local.1"}',
+      'contract.json': '{"frameworkVersion":"0.8.0"}',
     });
 
-    const result = await resolveExpressiveVersion({ projectRoot, contractVersion: '0.8.0' });
+    const result = await resolveExpressiveVersion({
+      projectRoot,
+      contractVersion: '0.8.0',
+      contractManifestPath: path.join(projectRoot, 'contract.json'),
+    });
     assert.equal(result.resolvedVersion, '0.8.0+local.1');
     assert.equal(result.status, 'match');
     assert.equal(result.contractStatus, 'match');
-    assert.equal(result.currentDocsSafe, true);
+    assert.equal(result.bundledContractSafe, true);
+    assert.equal(result.documentationMode, 'bundled');
+    assert.equal(result.currentDocsSafe, false);
+  });
+
+  test('comparison overrides cannot claim a different or missing bundled contract', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"dependencies":{"@expressivecss/expressive":"0.7.0"}}',
+      'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.7.0"}',
+      'contract.json': '{"frameworkVersion":"0.8.0","sourceHash":"bundle-0.8-source","releaseTags":["v0.7.0"]}',
+    });
+    for (const manifest of ['contract.json', 'missing.json']) {
+      const result = await resolveExpressiveVersion({
+        projectRoot,
+        contractVersion: '0.7.0',
+        contractManifestPath: path.join(projectRoot, manifest),
+      });
+      assert.equal(result.status, 'match');
+      assert.equal(result.contractVersion, '0.7.0');
+      assert.equal(result.bundledContractSafe, false);
+      assert.equal(result.currentDocsSafe, false);
+      assert.equal(result.documentationMode, manifest === 'contract.json' ? 'matching-tag' : 'installed-package');
+      assert.deepEqual(result.documentationSources.bundled, {
+        available: false,
+        frameworkVersion: manifest === 'contract.json' ? '0.8.0' : null,
+        sourceHash: manifest === 'contract.json' ? 'bundle-0.8-source' : null,
+      });
+    }
   });
 
   test('consumer resolution requires a direct manifest declaration', async () => {
@@ -437,6 +474,7 @@ describe('ExpressiveCSS version resolution', () => {
     assert.equal(result.matchingTag, null);
     assert.equal(result.documentationMode, 'installed-package');
     assert.deepEqual(result.documentationSources, {
+      bundled: { available: false, frameworkVersion: '0.8.0', sourceHash: null },
       current: { available: false, url: 'https://www.expressivecss.com' },
       matchingTag: { available: false, url: null },
       installedPackage: {
@@ -518,6 +556,14 @@ describe('ExpressiveCSS version resolution', () => {
     assert.equal(output.skillContractVersion, '0.8.0');
     assert.equal(output.contractSourceHash, contracts[0].sourceHash);
     assert.equal(output.contractStatus, 'match');
+    assert.equal(output.documentationMode, 'bundled');
+    assert.equal(output.bundledContractSafe, true);
+    assert.equal(output.currentDocsSafe, false);
+    assert.deepEqual(output.documentationSources.bundled, {
+      available: true,
+      frameworkVersion: contracts[0].frameworkVersion,
+      sourceHash: contracts[0].sourceHash,
+    });
   });
 
   test('generated component guides carry deterministic contract provenance', async () => {
@@ -544,6 +590,10 @@ describe('ExpressiveCSS version resolution', () => {
     const inputs = [
       'scripts/gen-expressivecss-skill.mjs',
       'scripts/lib/resolve-expressivecss-version.mjs',
+      'scripts/lib/material-capabilities.mjs',
+      'scripts/lib/verify-consumer.mjs',
+      'scripts/lib/consumer-browser.mjs',
+      'scripts/lib/bounded-file.mjs',
       'llm.md',
       'semantics.json',
       'docs/src/data/nav.ts',
@@ -552,7 +602,13 @@ describe('ExpressiveCSS version resolution', () => {
       'CHANGELOG.md',
       'skills/expressivecss/SKILL.md',
     ];
-    for (const input of inputs) {
+    const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
+    // Include reviewed inputs so the Git-free snapshot has the same evidence availability.
+    inputs.push(...(decisions.capabilityBrowserEvidence?.inputs ?? []).map((input) => input.path));
+    for (const directory of ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts']) {
+      await cp(path.join(sourceRoot, directory), path.join(projectRoot, directory), { recursive: true });
+    }
+    for (const input of new Set(inputs)) {
       const destination = path.join(projectRoot, input);
       await mkdir(path.dirname(destination), { recursive: true });
       await cp(path.join(sourceRoot, input), destination);
@@ -568,9 +624,14 @@ describe('ExpressiveCSS version resolution', () => {
     for (const output of [
       'skills/expressivecss/references/contract.json',
       'skills/expressivecss/references/component-decisions.md',
+      'skills/expressivecss/references/capability-roadmap.md',
+      'skills/expressivecss/references/capability-roadmap.json',
       'skills/expressivecss/components/app-bar.md',
       'skills/expressivecss/components/time-picker.md',
       'skills/expressivecss/scripts/resolve-version.mjs',
+      'skills/expressivecss/scripts/verify-consumer.mjs',
+      'skills/expressivecss/scripts/consumer-browser.mjs',
+      'skills/expressivecss/scripts/bounded-file.mjs',
       'mcp/expressivecss/contract.json',
       'mcp/expressivecss/scripts/resolve-version.mjs',
     ]) {
@@ -579,6 +640,28 @@ describe('ExpressiveCSS version resolution', () => {
         await readFile(path.join(sourceRoot, output), 'utf8'),
         `${output} depends on checkout metadata`,
       );
+    }
+
+    for (const [outputs, diagnostic] of [
+      [['skills/expressivecss/scripts/resolve-version.mjs', 'mcp/expressivecss/scripts/resolve-version.mjs'], 'Generated version resolver is stale:'],
+      [['skills/expressivecss/scripts/verify-consumer.mjs'], 'Generated consumer tool is stale: verify-consumer.mjs'],
+      [['skills/expressivecss/references/component-decisions.md'], 'Generated component decision index is stale.'],
+      [['skills/expressivecss/references/contract.json', 'mcp/expressivecss/contract.json'], 'Generated contract manifest is stale:'],
+      [['skills/expressivecss/references/capability-roadmap.json'], 'Generated capability roadmap is stale: capability-roadmap.json'],
+    ]) {
+      const originals = await Promise.all(outputs.map(output => readFile(path.join(projectRoot, output), 'utf8')));
+      try {
+        for (const output of outputs) await writeFile(path.join(projectRoot, output), 'stale');
+        const checked = spawnSync(process.execPath, ['scripts/gen-expressivecss-skill.mjs', '--check'], { cwd: projectRoot, encoding: 'utf8' });
+        assert.notEqual(checked.status, 0);
+        assert.ok(checked.stderr.includes(diagnostic), checked.stderr);
+        for (const output of outputs) {
+          assert.equal(await readFile(path.join(projectRoot, output), 'utf8'), 'stale', '--check must not repair files');
+          if (outputs.length > 1) assert.ok(checked.stderr.includes(path.join(projectRoot, output)), 'report every stale copy');
+        }
+      } finally {
+        for (const [index, output] of outputs.entries()) await writeFile(path.join(projectRoot, output), originals[index]);
+      }
     }
 
     await writeFile(path.join(projectRoot, 'CHANGELOG.md'), '# Changelog\n');
