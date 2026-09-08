@@ -19,6 +19,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Scale transitions now honor reduced-motion preferences, including changes during motion.
+- Expanding-card close cleanup follows the CSS container transition instead of a fixed timer. Reopening, cancellation, native close, and teardown cannot leave stale cleanup closing a new dialog or moving focus.
+
 - Tooltip teardown now cancels pending entry, exit, and animation callbacks.
 - FormSelect retains ownership of its generated Menu during repeated AutoInit, preventing a retained Menu registry entry.
 

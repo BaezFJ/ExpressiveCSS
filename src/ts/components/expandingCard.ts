@@ -17,8 +17,6 @@ const _defaults: ExpandingCardOptions = {
   onClose: null,
 };
 
-const MOTION_DURATION = 500;
-
 export const EXPANDING_CARD_SELECTOR =
   "article.expanding-card:has(> dialog.expanding-card-dialog)";
 
@@ -33,7 +31,7 @@ export class ExpandingCard
   private readonly trigger: HTMLElement | null;
   private readonly dialog: HTMLDialogElement | null;
   private readonly closeButton: HTMLElement | null;
-  private closeTimer: number | null = null;
+  private closeGeneration = 0;
 
   constructor(el: HTMLElement, options: Partial<ExpandingCardOptions>) {
     super(el, options, ExpandingCard);
@@ -91,7 +89,10 @@ export class ExpandingCard
 
   destroy() {
     this._removeEventHandlers();
-    if (this.closeTimer !== null) window.clearTimeout(this.closeTimer);
+    this.closeGeneration++;
+    this.isOpen = false;
+    if (this.trigger) this.trigger.ariaExpanded = "false";
+    if (this.dialog) this.dialog.ariaExpanded = "false";
     this.dialog?.classList.remove("expanded");
     if (this.dialog?.open) this.dialog.close();
     this.el["Expressive_ExpandingCard"] = undefined;
@@ -126,7 +127,9 @@ export class ExpandingCard
   };
 
   private _handleNativeClose = () => {
-    if (!this.isOpen) return;
+    // A queued close event can arrive after a caller has reopened the dialog.
+    if (this.dialog.open) return;
+    this.closeGeneration++;
     this.isOpen = false;
     this.trigger.ariaExpanded = "false";
     this.dialog.ariaExpanded = "false";
@@ -165,10 +168,7 @@ export class ExpandingCard
 
   open: () => void = () => {
     if (this.isOpen || !this.dialog || !this.trigger) return;
-    if (this.closeTimer !== null) {
-      window.clearTimeout(this.closeTimer);
-      this.closeTimer = null;
-    }
+    this.closeGeneration++;
 
     this._setTransitionOrigin();
     this.isOpen = true;
@@ -187,6 +187,7 @@ export class ExpandingCard
 
   close: () => void = () => {
     if (!this.isOpen || !this.dialog || !this.trigger) return;
+    const generation = ++this.closeGeneration;
     this._setTransitionOrigin();
     this.isOpen = false;
     this.trigger.ariaExpanded = "false";
@@ -198,15 +199,19 @@ export class ExpandingCard
     }
 
     const finish = () => {
-      this.closeTimer = null;
-      if (this.dialog.open) this.dialog.close();
-      this.trigger.focus();
+      if (generation !== this.closeGeneration || this.isOpen || !this.dialog.open) return;
+      this.dialog.close();
+      if (this.dialog.isConnected && this.trigger.isConnected) this.trigger.focus();
     };
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reducedMotion) finish();
-    else this.closeTimer = window.setTimeout(finish, MOTION_DURATION);
+    // Wait only for the container's actual clip transition, not arbitrary
+    // animations in consumer content. Cancellation also completes cleanup.
+    const transitions = reducedMotion ? [] : (this.dialog.getAnimations?.() ?? [])
+      .filter((animation) => (animation as CSSTransition).transitionProperty === "clip-path");
+    if (transitions.length === 0) finish();
+    else void Promise.allSettled(transitions.map((animation) => animation.finished)).then(finish);
   };
 
   static Init() {

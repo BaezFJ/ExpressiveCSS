@@ -12,18 +12,18 @@ Google's [motion guidance](https://m3.material.io/styles/motion/overview) and [A
 | --- | --- |
 | Component motion | Component CSS transitions/animations and, where required, component runtime. Keep that ownership. |
 | Sampled spatial spring | Button groups expose `--md-comp-button-group-motion`, a CSS `linear()` curve sampled from Google's fast spatial spring. Width and radius use it at `200ms`; this is not a general spring solver. |
-| Expanding-card timing | CSS exposes `--md-comp-expanding-card-motion-duration` and `--md-comp-expanding-card-motion-easing`; runtime close cleanup independently uses `500ms`. A CSS duration override does not synchronize that timer. |
+| Expanding-card timing | CSS exposes `--md-comp-expanding-card-motion-duration` and `--md-comp-expanding-card-motion-easing`; runtime close cleanup follows the actual CSS clip transition, including cancellation. Zero duration and reduced motion close immediately. |
 | Generic scale entrance/exit | `.scale-transition` and its state classes; these only change visual transforms and do not provide disclosure semantics. |
 | Global motion theme | No `--md-sys-motion-*` token family is emitted. There is no general public spring runtime or theme switch selecting Google's motion systems. |
 
-The inspected implementation is `src/sass/components/_button-groups.scss`, `_expanding-card.scss`, `_transitions.scss`, and `src/ts/components/buttonGroup.ts` and `expandingCard.ts`. Reduced-motion behavior is component-specific; the scale utility has no built-in preference rule. Do not infer complete motion coverage from one component's media query.
+The inspected implementation is `src/sass/components/_button-groups.scss`, `_expanding-card.scss`, `_transitions.scss`, and `src/ts/components/buttonGroup.ts` and `expandingCard.ts`. Reduced-motion behavior is component-specific; the scale utility suppresses transitions under reduced motion while retaining its final transform. Do not infer complete motion coverage from one component's media query.
 
 ## Apply motion safely
 
 - Choose the component before choosing an animation. Do not wrap its own opening or closing sequence in a second transition.
-- Keep CSS timings aligned with runtime cleanup and callbacks. A longer expanding-card CSS duration can be cut off by its fixed close timer; leave the duration unchanged unless a framework repair is in scope.
+- Keep CSS timings aligned with runtime cleanup and callbacks. Expanding-card duration overrides are supported; `onClose` still runs when closing starts, and reopening or teardown invalidates pending cleanup.
 - For application-owned transitions, preserve the final DOM state and focus when motion is disabled or interrupted. Do not rely exclusively on `transitionend`, which may never fire after cancellation or removal of the transition.
-- Honor `prefers-reduced-motion: reduce` for added motion. Reduce travel and repetition, retain useful feedback, and run completion/cleanup through the no-motion path too. Follow the scale reference's important override when using that utility.
+- Honor `prefers-reduced-motion: reduce` for added motion. Reduce travel and repetition, retain useful feedback, and run completion/cleanup through the no-motion path too. The scale utility already suppresses its transitions for that preference.
 - Avoid perpetual decorative motion and avoid JavaScript solely to reproduce an available CSS state change. Measure costly layout or paint only when the task calls for performance work.
 
 ## Verification

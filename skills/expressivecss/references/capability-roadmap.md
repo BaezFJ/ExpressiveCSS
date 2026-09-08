@@ -8,7 +8,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `bca3dce7f5a70ebfde06618929e12d31a6bd25d95e739fcd5b91d36c6142ef49`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -60,7 +60,7 @@ Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs mat
 | [Time picker](#time-picker) | partial | source-reviewed | no-mapped-checks | 1 |
 | [Typography](#typography) | partial | source-reviewed | recorded-scoped-pass | 2 |
 | [Shape](#shape) | partial | source-reviewed | recorded-scoped-pass | 1 |
-| [Motion](#motion) | partial | source-reviewed | recorded-scoped-pass | 3 |
+| [Motion](#motion) | partial | source-reviewed | recorded-scoped-pass | 1 |
 
 <a id="app-bar"></a>
 
@@ -375,6 +375,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 - recorded-passed: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `dragged and picked-up states override simultaneous pointer states`. Specific card state, disclosure fallback, or horizontal layout contract.
 - recorded-passed: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `invalid disclosures keep their panels visible and operable`. Specific card state, disclosure fallback, or horizontal layout contract.
 - recorded-passed: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint`. Specific card state, disclosure fallback, or horizontal layout contract.
+- recorded-passed: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
 
 <a id="lists"></a>
 
@@ -851,7 +852,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 ## Motion
 
-**partial within the stated scope.** Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups disable transitions under reduced motion; expanding cards disable CSS transitions and immediately complete close under that preference.
+**partial within the stated scope.** Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.
 
 Source review: source-reviewed, 2026-09-07. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts), [src/sass/components/_transitions.scss](../../../src/sass/components/_transitions.scss).
 
@@ -860,9 +861,9 @@ Google relationship: foundation. Upstream review: android-foundation-reviewed; f
 Web adaptation: Use supported web component and application overrides; Android attributes and APIs are design references only.
 
 - feature: No shared md-sys-motion token family, general spring solver, or unified motion-theme selector. Next: Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver.
-- integration: Scale utility has no built-in reduced-motion rule; component-specific rules do not prove universal preference support. Next: Audit application-visible motion owners for reduced-motion behavior, starting with the scale utility; preserve final state and focus when animation is suppressed.
-- integration: Expanding-card close completion uses a fixed 500ms timer independently of its public CSS duration property; overriding CSS duration can desynchronize visual transition and cleanup. Next: Prioritize synchronizing expanding-card completion with its supported CSS timing and test zero-duration, long-duration, reversal and removal paths.
 
 - recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.
 - recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Connected group's transition duration is zero under emulated reduced motion.
 - recorded-passed: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.
+- recorded-passed: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- recorded-passed: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `scale and expanding cards respect changing motion preferences (chromium)`. Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.

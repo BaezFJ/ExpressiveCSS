@@ -6,10 +6,10 @@
     "recordedOn": "2026-09-08",
     "engine": "chromium",
     "engineVersion": "151.0.7922.34",
-    "nodeVersion": "v24.20.0",
+    "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "bca3dce7f5a70ebfde06618929e12d31a6bd25d95e739fcd5b91d36c6142ef49",
+    "reportSha256": "2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -762,7 +762,7 @@
         },
         {
           "path": "src/ts/components/expandingCard.ts",
-          "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+          "sha256": "b776a51297bb066b41ce2c035370eac02c62fa7daa61bb1ce4cf57d2c74edff5"
         }
       ],
       "gaps": [],
@@ -783,6 +783,12 @@
           "file": "tests/cards-browser.test.js",
           "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expanding-card-browser.test.js",
+          "name": "expanding-card completion follows CSS and survives interruption (chromium)",
+          "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.",
           "state": "recorded-passed"
         }
       ],
@@ -1966,7 +1972,7 @@
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
       "reviewedOn": "2026-09-07",
-      "scope": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups disable transitions under reduced motion; expanding cards disable CSS transitions and immediately complete close under that preference.",
+      "scope": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
         "source": "https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md",
@@ -1989,11 +1995,11 @@
         },
         {
           "path": "src/ts/components/expandingCard.ts",
-          "sha256": "0633c2e1537c50083f749bca17eddf0451b9f9b37057a318f01c429c365c0681"
+          "sha256": "b776a51297bb066b41ce2c035370eac02c62fa7daa61bb1ce4cf57d2c74edff5"
         },
         {
           "path": "src/sass/components/_transitions.scss",
-          "sha256": "6421ac5f9288c802aebbfcc72c715521305c23321f25611cbbc62fc0c8484e7b"
+          "sha256": "fe0c65c4a4de2af661aa39eae2629e5e76f73e681ef5b686694bbbee62eaff77"
         }
       ],
       "gaps": [
@@ -2001,16 +2007,6 @@
           "kind": "feature",
           "description": "No shared md-sys-motion token family, general spring solver, or unified motion-theme selector.",
           "nextStep": "Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver."
-        },
-        {
-          "kind": "integration",
-          "description": "Scale utility has no built-in reduced-motion rule; component-specific rules do not prove universal preference support.",
-          "nextStep": "Audit application-visible motion owners for reduced-motion behavior, starting with the scale utility; preserve final state and focus when animation is suppressed."
-        },
-        {
-          "kind": "integration",
-          "description": "Expanding-card close completion uses a fixed 500ms timer independently of its public CSS duration property; overriding CSS duration can desynchronize visual transition and cleanup.",
-          "nextStep": "Prioritize synchronizing expanding-card completion with its supported CSS timing and test zero-duration, long-duration, reversal and removal paths."
         }
       ],
       "browserChecks": [
@@ -2030,6 +2026,18 @@
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expanding-card-browser.test.js",
+          "name": "expanding-card completion follows CSS and survives interruption (chromium)",
+          "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expanding-card-browser.test.js",
+          "name": "scale and expanding cards respect changing motion preferences (chromium)",
+          "scope": "Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.",
           "state": "recorded-passed"
         }
       ],

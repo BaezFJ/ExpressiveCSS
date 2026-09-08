@@ -36,7 +36,7 @@ requestAnimationFrame(() => {
 });
 ```
 
-Adding the start and end classes before the browser renders the start state may snap directly to the end. Use `transitionend` when later work depends on the animation finishing, and filter for `event.propertyName === 'transform'`.
+Adding the start and end classes before the browser renders the start state may snap directly to the end. When later work depends on completion, handle the no-transition and cancellation paths too. A `transitionend` listener alone cannot cover reduced motion or removal; the browser's `getAnimations()` and animation `finished` promises can observe actual transitions and their cancellation.
 
 ## Visibility and interaction
 
@@ -48,15 +48,7 @@ Do not use this utility to replace a component's own motion. Component classes a
 
 ## Reduced motion
 
-The transition foundation has no built-in `prefers-reduced-motion` rule. Add one in application CSS after ExpressiveCSS. Because the framework declaration is important, the override must also be important:
-
-```css
-@media (prefers-reduced-motion: reduce) {
-  .scale-transition {
-    transition: none !important;
-  }
-}
-```
+The framework sets `transition: none !important` on the scale utility under `prefers-reduced-motion: reduce`, including `.scale-out`. It also cancels an active transition when the preference changes. The selected transform state still applies immediately.
 
 Removing the transition must not change the final task outcome. State changes, focus movement, live-region announcements, and cleanup still need to run.
 

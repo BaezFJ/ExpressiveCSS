@@ -396,7 +396,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(transitionsSass, /&\.scale-out[\s\S]*transform:\s*scale\(0\)[\s\S]*transition:\s*transform \.2s !important/);
     assert.match(transitionsSass, /&\.scale-in[\s\S]*transform:\s*scale\(1\)/);
     assert.match(references.transitions, /`\.scale-out`[\s\S]*does not remove[\s\S]*layout[\s\S]*accessibility tree[\s\S]*tab order/i);
-    assert.match(references.transitions, /no built-in `prefers-reduced-motion` rule/i);
+    assert.match(references.transitions, /framework sets.*transition: none !important.*prefers-reduced-motion: reduce/i);
     assert.match(references.transitions, /transition: none !important/);
     assert.match(references.transitions, /wait at least one rendered frame/i);
   });
@@ -566,11 +566,9 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.deepEqual([...new Set(fontFaces.map((face) => face.match(/font-weight:\s*([^;]+);/)?.[1]))].sort(), ['400', '500']);
 
     const expandingCard = readFileSync(new URL('../src/ts/components/expandingCard.ts', import.meta.url), 'utf8');
-    const closeDuration = expandingCard.match(/const MOTION_DURATION = (\d+);/)?.[1];
-    assert.ok(closeDuration, 'could not inspect close cleanup timing');
-    assert.match(expandingCard, /setTimeout\(finish, MOTION_DURATION\)/);
-    assert.ok(references.motion.includes(`independently uses \`${closeDuration}ms\``));
-    assert.match(references.motion, /does not synchronize that timer/);
+    assert.doesNotMatch(expandingCard, /setTimeout\(finish/);
+    assert.match(references.motion, /actual.*clip.*transition/);
+    assert.doesNotMatch(references.motion, /independently uses `500ms`|no built-in preference rule/);
   });
 
   test('defines explicit design operating modes and edit boundaries', () => {

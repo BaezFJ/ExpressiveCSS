@@ -1385,6 +1385,8 @@ We've made some custom animation classes that will transition your content with 
 
 Use this to scale in and out elements. Make sure to add the base transition class `scale-transition`. Then add the class `scale-out` to scale the element down until it is hidden. To start something as hidden, add the class `scale-out` first, and then add the class `scale-in` to scale the element up until it is shown.
 
+With reduced motion requested, scale state changes happen immediately. Scaling out is visual only; applications still own disclosure semantics and focus.
+
 ```html
 <!-- Scaled in -->
 <a id="scale-demo" href="#!" class="button circle extra scale-transition" aria-label="Add"><span class="material-symbols" aria-hidden="true">add</span></a>
@@ -2327,6 +2329,8 @@ An `<aside>` expands in normal flow below the persistent media, headline, and su
 ### Expanding card
 
 An expanding card performs a shared-container transition from a compact feed item into a full-screen modal detail surface. Use an `<article class="expanding-card">` with a direct `<dialog class="expanding-card-dialog">`. Keep the same hero image in both states so the media appears to grow with the container. `ExpandingCard.Init()` and `AutoInit()` wire up the modal, measured clip origin, back action, focus return, Escape, and reduced motion.
+
+`--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
 
 ```html
 <article class="outlined expanding-card">

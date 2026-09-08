@@ -1,5 +1,43 @@
 # ExpressiveCSS skill improvement implementation plan
 
+## Framework gap follow-up: motion integration
+
+The first framework repair closes the two motion integration gaps from the
+capability roadmap. The scale utility now suppresses and cancels transitions
+under reduced motion without changing its final transform or disclosure
+ownership. Expanding-card cleanup waits for its actual CSS clip transition,
+including cancellation, instead of a separate 500ms timer. Zero-duration and
+reduced-motion paths close immediately; reopening and destruction invalidate
+old completion, and removed cards do not take focus. `onClose` remains a
+start-of-close callback. Public names and default animation values are unchanged.
+
+The browser regressions cover these paths in Chromium, Firefox and WebKit.
+They test timing and behavior, not Material spring fidelity or human design
+acceptance. The capability collector maps the Chromium assertions; the same
+file also records explicitly named Firefox and WebKit cases. Its engine-version
+field identifies the collector's Chromium preflight only.
+
+Validation passed: `npm run verify` ran 1,013 tests with no failures or skips,
+including six new motion browser tests across the three engines; typechecking,
+generation checks and the 66-page docs build passed. `npm run test:skill` passed
+240 tests and 22 replay cases. All seven MCP smoke checks and isolated framework
+and MCP package verification passed. The capability collector recorded 23
+passing tests in `.cache/material-capabilities/run-7qdm7T/report.json`, with
+SHA-256 `2fb82d844b2c0e7411aa9ed38e86501553087457fe3af84c9dc4ccdd98cc2a4b`.
+No live agent benchmark, full-page screenshot comparison, or human visual
+acceptance is claimed for these behavior fixes.
+
+Source review compared the full source inventory with the preceding commit:
+only the scale partial and expanding-card runtime changed. The reviewed delta
+updates their source pins and the inventory guard; other source pins and prior
+upstream-review dates carry forward unchanged. Browser evidence is collected
+again against the changed build. This is not a renewed full Material audit.
+
+Remaining feature work still needs contracts for standalone button shape
+morphing, modal pickers, emphasized typography/font coverage, shared shape
+roles and shared motion roles. The older follow-up sections below describe
+their historical snapshots; the generated roadmap records current gaps.
+
 ## Cross-browser critical flows, September 7, 2026
 
 The [browser coverage report](./expressivecss-browser-coverage.md) adds the same
