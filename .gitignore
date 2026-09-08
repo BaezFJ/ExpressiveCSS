@@ -106,3 +106,6 @@ ds-bundle/
 .claude/settings.local.json
 .claude/.headroom_wrap_marker.json
 .claude/launch.json
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
