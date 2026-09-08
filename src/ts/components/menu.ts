@@ -869,10 +869,11 @@ export class Menu extends Component<MenuOptions> implements Openable {
     this._resetMenuStyles();
     this.menuEl.style.display = 'block';
     this._placeMenu();
-    this._animateIn();
     // Do this one frame later so that we don't bind an event handler that's immediately
     // called when the event bubbles up to the document and closes the menu
     this._schedule(() => this._setupTemporaryEventHandlers(), 0);
+    // Queue handlers before initial focus, including zero-duration entry.
+    this._animateIn();
     this.el.ariaExpanded = 'true';
   };
 

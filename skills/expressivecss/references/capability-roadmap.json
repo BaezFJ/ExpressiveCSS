@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "02a4bbd034fa39c58118ad8f5c0214efa6abe5a3c1b215e352e524c8120fbfe7",
+    "reportSha256": "a521002f001ab1ab0a978f8cbed34c5c7ca021d5d61e1d1d5931ae88d7efd011",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -379,7 +379,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
+          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
       "gaps": [],
@@ -686,7 +686,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
+          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
       "gaps": [],
@@ -1502,7 +1502,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
+          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
       "gaps": [],
@@ -1735,7 +1735,7 @@
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "3be66e3def76dd00fa37093d57f52c41347100c238f8ed2a13c85541a4754c1e"
+          "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
       "gaps": [],

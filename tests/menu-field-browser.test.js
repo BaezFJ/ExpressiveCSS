@@ -62,6 +62,19 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await page.clock.runFor(100);
       await expect(page.locator('#trigger')).toHaveAttribute('aria-expanded', 'true');
       await expect(page.locator('#actions')).toBeVisible();
+      await page.evaluate(() => {
+        menu.destroy();
+        document.querySelector('#outside').focus();
+        window.menu = Expressive.Menu.init(document.querySelector('#trigger'), { inDuration: 0, outDuration: 0 });
+        document.querySelector('#actions > li').addEventListener('focus', event => {
+          event.target.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        }, { once: true });
+        menu.open();
+      });
+      await page.clock.runFor(10);
+      await expect(page.locator('#trigger')).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.locator('#trigger')).toBeFocused();
+      await expect(page.locator('#actions')).not.toBeVisible();
     } finally { try { await page?.evaluate(() => window.menu?.destroy()); } finally { await browser.close(); } }
   });
 

@@ -20,6 +20,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Menu cancels superseded transition and deferred event callbacks on reversal and destruction, preserving visibility, focus and end-callback ownership.
+- Menu installs keyboard handlers before moving initial focus, so Escape works immediately after a zero-duration opening.
 - Filled enhanced selects reserve label space so enlarged and multiline RTL/LTR labels do not overlap the selected value.
 
 - Scale transitions now honor reduced-motion preferences, including changes during motion.
