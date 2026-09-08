@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.0
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `61b3f4ee227d6fa3b35f950da7067eee5b933069c5f75df5e1cad1667d874c64`
+Contract SHA-256: `ced880bd0ba99a8522712940eb7f77de9d26cadee729bd8d8f61fea5f82d903c`
 
 #### Selection and adaptation
 
