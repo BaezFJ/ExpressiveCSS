@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { accessSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
-import { access, lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
+import { existsSync, closeSync, constants as fsConstants, fstatSync, lstatSync, openSync, readFileSync, realpathSync } from 'node:fs';
+import { lstat, open, readdir, readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
@@ -244,18 +244,6 @@ const inspectSchema = {
   workflowId: z.string().max(MAX_WORKFLOW_ID_CHARS).optional(),
 };
 
-/**
- * Resolve the root of the current checkout and its ExpressiveCSS guides.
- */
-async function fileExists(filePath) {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function parseCliProjectRoot() {
   const args = process.argv.slice(2);
   const explicit = args.find((arg) => arg.startsWith('--project-root='));
@@ -276,7 +264,7 @@ function resolveRepoRoot(startDir) {
     const skillPath = path.join(current, 'skills', 'expressivecss', 'components');
     const navPath = path.join(current, 'docs', 'src', 'data', 'nav.ts');
 
-    if (accessSyncBoolean(pkgPath) && accessSyncBoolean(skillPath) && accessSyncBoolean(navPath)) {
+    if (existsSync(pkgPath) && existsSync(skillPath) && existsSync(navPath)) {
       return current;
     }
 
@@ -288,15 +276,6 @@ function resolveRepoRoot(startDir) {
   }
 
   return path.resolve(startDir);
-}
-
-function accessSyncBoolean(filePath) {
-  try {
-    accessSync(filePath);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 function normalizeForMatch(value) {
@@ -411,7 +390,7 @@ async function resolveGuideDirectory(projectRoot) {
     return null;
   }
   const candidate = path.join(projectRoot, 'skills', 'expressivecss', 'components');
-  return accessSyncBoolean(candidate) ? candidate : null;
+  return existsSync(candidate) ? candidate : null;
 }
 
 function parseGuide(file, content) {
@@ -755,16 +734,16 @@ async function projectSummary(projectRoot) {
     installGuide: null,
     foundDocs: false,
     foundSkills: false,
-    bundledGuides: accessSyncBoolean(path.join(SERVER_DIR, 'component-guides.json')),
+    bundledGuides: existsSync(path.join(SERVER_DIR, 'component-guides.json')),
   };
 
   const packagePath = path.join(projectRoot, 'package.json');
   const lockFiles = ['package-lock.json', 'pnpm-lock.yaml', 'yarn.lock'].map((f) => path.join(projectRoot, f));
 
-  if (lockFiles.some((p) => accessSyncBoolean(p))) {
-    summary.packageManager = lockFiles.find((p) => accessSyncBoolean(p)).endsWith('package-lock.json')
+  if (lockFiles.some((p) => existsSync(p))) {
+    summary.packageManager = lockFiles.find((p) => existsSync(p)).endsWith('package-lock.json')
       ? 'npm'
-      : lockFiles.find((p) => accessSyncBoolean(p)).endsWith('yarn.lock')
+      : lockFiles.find((p) => existsSync(p)).endsWith('yarn.lock')
         ? 'yarn'
         : 'pnpm';
   }
@@ -796,8 +775,8 @@ async function projectSummary(projectRoot) {
     }
   }
 
-  summary.foundDocs = accessSyncBoolean(path.join(projectRoot, 'docs', 'src', 'data', 'nav.ts'));
-  summary.foundSkills = accessSyncBoolean(path.join(projectRoot, 'skills', 'expressivecss', 'SKILL.md'));
+  summary.foundDocs = existsSync(path.join(projectRoot, 'docs', 'src', 'data', 'nav.ts'));
+  summary.foundSkills = existsSync(path.join(projectRoot, 'skills', 'expressivecss', 'SKILL.md'));
 
   summary.installGuide = summary.isExpressiveProject
     ? 'ExpressiveCSS is already in package.json.'
@@ -1298,7 +1277,7 @@ function summarizeProjectFiles(files, projectRoot) {
     const requestedPath = path.isAbsolute(filePath)
       ? path.resolve(filePath)
       : path.resolve(resolvedRoot, filePath);
-    const exists = accessSyncBoolean(requestedPath);
+    const exists = existsSync(requestedPath);
     const absolute = exists ? realpathSync(requestedPath) : requestedPath;
     return {
       requested: filePath,

@@ -9,7 +9,7 @@
     "nodeVersion": "v24.18.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "d831c714bdec315d6ed68067da0b6560d5931ee14e3726f05b0180a37bf08d78",
+    "reportSha256": "c3ae88d5d7853c9e426fb0b78dadccb36d4f53f0edc8a6af1594bf4c5f0b4cb9",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -456,7 +456,7 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Filled, tonal, outlined, elevated, and text; xsmall through xlarge.",
       "adaptation": "Native buttons run commands; a.button links navigate.",
       "upstream": {
@@ -473,7 +473,7 @@
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+          "sha256": "734b13a6a1775f1f293e49c16f50697cb9f3e6b0fc20c23bd2f950a87f7dede7"
         },
         {
           "path": "src/sass/abstracts/_variables.scss",
@@ -521,7 +521,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.",
       "adaptation": "Accessible name belongs to the control; the glyph is decorative.",
       "upstream": {
@@ -537,7 +537,7 @@
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+          "sha256": "734b13a6a1775f1f293e49c16f50697cb9f3e6b0fc20c23bd2f950a87f7dede7"
         },
         {
           "path": "src/sass/abstracts/_variables.scss",
@@ -744,7 +744,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Elevated, filled, outlined, horizontal, and directly actionable cards.",
       "adaptation": "Native article anatomy; primary-action links preserve navigation semantics.",
       "upstream": {
@@ -756,11 +756,11 @@
       "sources": [
         {
           "path": "src/sass/components/_cards.scss",
-          "sha256": "59dec972c523603525d0db5401ff87c4dc8d55b958c06dfc454d65b7d48871dc"
+          "sha256": "506c13fe1a87f9397037ead0aaefdfb79f9e201523d9b39fd00b66cbd17a6bfb"
         },
         {
           "path": "src/sass/components/_expanding-card.scss",
-          "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+          "sha256": "199e0dfaddb39af5acb823e8dbc7933a459b765efad19cc28d0403ebe3942f5f"
         },
         {
           "path": "src/ts/components/cards.ts",
@@ -1925,7 +1925,7 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
@@ -1941,7 +1941,7 @@
         },
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "4c20cfa7061c03718f669bb840aa99a86979db87ec3d91eef812a5ccdc844bb5"
+          "sha256": "734b13a6a1775f1f293e49c16f50697cb9f3e6b0fc20c23bd2f950a87f7dede7"
         },
         {
           "path": "src/sass/components/_button-groups.scss",
@@ -1989,7 +1989,7 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-07",
+      "reviewedOn": "2026-09-08",
       "scope": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
       "upstream": {
@@ -2009,7 +2009,7 @@
         },
         {
           "path": "src/sass/components/_expanding-card.scss",
-          "sha256": "e86ad9d6e1f8c0c07e4aaded3d355093f572b992ac5728b128ab1f7c2d7242ea"
+          "sha256": "199e0dfaddb39af5acb823e8dbc7933a459b765efad19cc28d0403ebe3942f5f"
         },
         {
           "path": "src/ts/components/expandingCard.ts",

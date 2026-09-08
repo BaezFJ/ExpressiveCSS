@@ -50,18 +50,22 @@ async function contractProvenance() {
   return { version, hash: hash.digest('hex'), releaseTags };
 }
 
-async function syncResolver(checkOnly) {
-  const expected = `${RESOLVER_MARKER}${await readFile(RESOLVER_SOURCE, 'utf8')}`;
+async function syncGeneratedFiles(destinations, expected, checkOnly) {
   const stale = [];
-  for (const destination of RESOLVER_DESTINATIONS) {
+  for (const destination of destinations) {
     if (checkOnly) {
-      const current = await readFile(destination, 'utf8').catch(() => '');
-      if (current !== expected) stale.push(destination);
+      if (await readFile(destination, 'utf8').catch(() => '') !== expected) stale.push(destination);
     } else {
       await mkdir(dirname(destination), { recursive: true });
       await writeFile(destination, expected);
     }
   }
+  return stale;
+}
+
+async function syncResolver(checkOnly) {
+  const expected = `${RESOLVER_MARKER}${await readFile(RESOLVER_SOURCE, 'utf8')}`;
+  const stale = await syncGeneratedFiles(RESOLVER_DESTINATIONS, expected, checkOnly);
   if (stale.length) {
     throw new Error(`Generated version resolver is stale: ${stale.join(', ')}`);
   }
@@ -72,12 +76,7 @@ async function syncConsumerTools(checkOnly) {
     const source = `scripts/lib/${name}`;
     const destination = resolve(ROOT, 'skills/expressivecss/scripts', name);
     const expected = `// Generated from ${source}. Do not edit.\n${await readFile(resolve(ROOT, source), 'utf8')}`;
-    if (checkOnly) {
-      if (await readFile(destination, 'utf8').catch(() => '') !== expected) throw new Error(`Generated consumer tool is stale: ${name}`);
-    } else {
-      await mkdir(dirname(destination), { recursive: true });
-      await writeFile(destination, expected);
-    }
+    if ((await syncGeneratedFiles([destination], expected, checkOnly)).length) throw new Error(`Generated consumer tool is stale: ${name}`);
   }
 }
 
@@ -94,13 +93,7 @@ function renderDecisionIndex(data) {
 
 async function syncDecisionIndex(checkOnly) {
   const expected = renderDecisionIndex(decisionData);
-  if (checkOnly) {
-    const current = await readFile(DECISIONS_DESTINATION, 'utf8').catch(() => '');
-    if (current !== expected) throw new Error('Generated component decision index is stale.');
-  } else {
-    await mkdir(dirname(DECISIONS_DESTINATION), { recursive: true });
-    await writeFile(DECISIONS_DESTINATION, expected);
-  }
+  if ((await syncGeneratedFiles([DECISIONS_DESTINATION], expected, checkOnly)).length) throw new Error('Generated component decision index is stale.');
 }
 
 async function contractManifest() {
@@ -127,16 +120,7 @@ async function contractManifest() {
 
 async function syncContractManifest(checkOnly) {
   const expected = `${JSON.stringify(await contractManifest(), null, 2)}\n`;
-  const stale = [];
-  for (const destination of CONTRACT_DESTINATIONS) {
-    if (checkOnly) {
-      const current = await readFile(destination, 'utf8').catch(() => '');
-      if (current !== expected) stale.push(destination);
-    } else {
-      await mkdir(dirname(destination), { recursive: true });
-      await writeFile(destination, expected);
-    }
-  }
+  const stale = await syncGeneratedFiles(CONTRACT_DESTINATIONS, expected, checkOnly);
   if (stale.length) throw new Error(`Generated contract manifest is stale: ${stale.join(', ')}`);
 }
 
@@ -369,9 +353,7 @@ await syncContractManifest(checkOnly);
 const roadmap = await buildCapabilityRoadmap(decisionData, ROOT);
 for (const [name, expected] of [['capability-roadmap.json', JSON.stringify(roadmap, null, 2) + '\n'], ['capability-roadmap.md', renderCapabilityRoadmap(roadmap)]]) {
   const destination = resolve(ROOT, 'skills/expressivecss/references', name);
-  if (checkOnly) {
-    if (await readFile(destination, 'utf8').catch(() => '') !== expected) throw new Error(`Generated capability roadmap is stale: ${name}`);
-  } else await writeFile(destination, expected);
+  if ((await syncGeneratedFiles([destination], expected, checkOnly)).length) throw new Error(`Generated capability roadmap is stale: ${name}`);
 }
 if (checkOnly) await check(guides);
 else await write(guides);

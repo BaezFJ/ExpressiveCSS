@@ -8,7 +8,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `d831c714bdec315d6ed68067da0b6560d5931ee14e3726f05b0180a37bf08d78`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `c3ae88d5d7853c9e426fb0b78dadccb36d4f53f0edc8a6af1594bf4c5f0b4cb9`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -262,7 +262,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Filled, tonal, outlined, elevated, and text; xsmall through xlarge.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
 
 Google relationship: component. Upstream review: overview-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/buttons/overview).
 
@@ -280,7 +280,7 @@ Web adaptation: Native buttons run commands; a.button links navigate.
 
 **implemented within the stated scope.** Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_icon-buttons.scss](../../../src/sass/components/_icon-buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_icon-buttons.scss](../../../src/sass/components/_icon-buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -365,7 +365,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Elevated, filled, outlined, horizontal, and directly actionable cards.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_cards.scss](../../../src/sass/components/_cards.scss), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/cards.ts](../../../src/ts/components/cards.ts), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_cards.scss](../../../src/sass/components/_cards.scss), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/cards.ts](../../../src/ts/components/cards.ts), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -839,7 +839,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 **partial within the stated scope.** Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss).
 
 Google relationship: foundation. Upstream review: android-foundation-reviewed; full web specification unassessed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/theming/Shape.md).
 
@@ -857,7 +857,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 **partial within the stated scope.** Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts), [src/sass/components/_transitions.scss](../../../src/sass/components/_transitions.scss).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts), [src/sass/components/_transitions.scss](../../../src/sass/components/_transitions.scss).
 
 Google relationship: foundation. Upstream review: android-foundation-reviewed; full web specification unassessed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md).
 

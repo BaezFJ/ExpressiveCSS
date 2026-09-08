@@ -642,6 +642,28 @@ describe('ExpressiveCSS version resolution', () => {
       );
     }
 
+    for (const [outputs, diagnostic] of [
+      [['skills/expressivecss/scripts/resolve-version.mjs', 'mcp/expressivecss/scripts/resolve-version.mjs'], 'Generated version resolver is stale:'],
+      [['skills/expressivecss/scripts/verify-consumer.mjs'], 'Generated consumer tool is stale: verify-consumer.mjs'],
+      [['skills/expressivecss/references/component-decisions.md'], 'Generated component decision index is stale.'],
+      [['skills/expressivecss/references/contract.json', 'mcp/expressivecss/contract.json'], 'Generated contract manifest is stale:'],
+      [['skills/expressivecss/references/capability-roadmap.json'], 'Generated capability roadmap is stale: capability-roadmap.json'],
+    ]) {
+      const originals = await Promise.all(outputs.map(output => readFile(path.join(projectRoot, output), 'utf8')));
+      try {
+        for (const output of outputs) await writeFile(path.join(projectRoot, output), 'stale');
+        const checked = spawnSync(process.execPath, ['scripts/gen-expressivecss-skill.mjs', '--check'], { cwd: projectRoot, encoding: 'utf8' });
+        assert.notEqual(checked.status, 0);
+        assert.ok(checked.stderr.includes(diagnostic), checked.stderr);
+        for (const output of outputs) {
+          assert.equal(await readFile(path.join(projectRoot, output), 'utf8'), 'stale', '--check must not repair files');
+          if (outputs.length > 1) assert.ok(checked.stderr.includes(path.join(projectRoot, output)), 'report every stale copy');
+        }
+      } finally {
+        for (const [index, output] of outputs.entries()) await writeFile(path.join(projectRoot, output), originals[index]);
+      }
+    }
+
     await writeFile(path.join(projectRoot, 'CHANGELOG.md'), '# Changelog\n');
     const withoutReleaseMetadata = spawnSync(process.execPath, ['scripts/gen-expressivecss-skill.mjs'], {
       cwd: projectRoot,

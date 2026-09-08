@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { access, mkdtemp, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer, request } from 'node:http';
 import { createRequire } from 'node:module';
@@ -7,7 +8,31 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import test from 'node:test';
 import { chromium } from '@playwright/test';
-import { createRestrictedFixturePage, startEvaluationBrowser, startFixtureServer } from '../scripts/expressivecss-eval-browser.mjs';
+import { captureFixtureScreenshot, createRestrictedFixturePage, startEvaluationBrowser, startFixtureServer } from '../scripts/expressivecss-eval-browser.mjs';
+
+test('operator screenshots enforce limits, preserve bytes and refuse replacement', async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'expressivecss-capture-'));
+  let height = 100, bytes = Buffer.from('png'), captures = 0;
+  const limits = { height: 100, screenshot: 3 };
+  const page = {
+    evaluate: async () => height,
+    screenshot: async options => { assert.deepEqual(options, { fullPage: true, timeout: 3000 }); captures++; return bytes; },
+  };
+  try {
+    const saved = await captureFixtureScreenshot(page, directory, 'scene', limits);
+    assert.deepEqual(saved, { path: path.join(directory, 'scene.png'), sha256: createHash('sha256').update(bytes).digest('hex'), bytes: 3 });
+    assert.deepEqual(await readFile(saved.path), bytes);
+    await assert.rejects(captureFixtureScreenshot(page, directory, 'scene', limits), { code: 'EEXIST' });
+    assert.deepEqual(await readFile(saved.path), bytes);
+    height++;
+    await assert.rejects(captureFixtureScreenshot(page, directory, 'tall', limits), /height limit/);
+    assert.equal(captures, 2, 'oversized documents must be rejected before capture');
+    height--;
+    bytes = Buffer.from('large');
+    await assert.rejects(captureFixtureScreenshot(page, directory, 'large', limits), /byte limit/);
+    await assert.rejects(access(path.join(directory, 'large.png')), { code: 'ENOENT' });
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
 
 const require = createRequire(new URL('../mcp/expressivecss/package.json', import.meta.url));
 async function clientFor(url) {

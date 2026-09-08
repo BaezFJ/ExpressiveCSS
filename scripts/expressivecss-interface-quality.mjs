@@ -1,9 +1,8 @@
-import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
 import { redactValue } from './eval-expressivecss-skill.mjs';
-import { createRestrictedFixturePage, startFixtureServer } from './expressivecss-eval-browser.mjs';
+import { captureFixtureScreenshot, createRestrictedFixturePage, startFixtureServer } from './expressivecss-eval-browser.mjs';
 
 const LIMITS = Object.freeze({ timeout: 8000, nodes: 2000, text: 32000, height: 12000, screenshot: 4 * 1024 * 1024, tabs: 60 });
 const base = { route: '/dashboard', state: 'default', width: 375, height: 900, colorScheme: 'light', reducedMotion: 'reduce', deviceScaleFactor: 1, locale: 'en-US', textScale: 1 };
@@ -18,7 +17,6 @@ const PRIMARY = '#preferences button[type="submit"]';
 const AUXILIARY = ['account-help', 'remount-help', 'preview-state'];
 const CHECKBOX = '#preferences input[type="checkbox"][name="alerts"]';
 const errorText = (error) => String(error?.message ?? error).slice(0, 4096);
-const digest = (data) => createHash('sha256').update(data).digest('hex');
 
 function retainedRecord(record) {
   const retained = redactValue(record);
@@ -40,16 +38,6 @@ async function tabTo(page, selector, focus) {
     if (focused.target) return;
   }
   throw new Error(`Keyboard path did not reach ${selector} within ${LIMITS.tabs} Tab presses`);
-}
-
-async function screenshot(page, directory, id) {
-  const height = await page.evaluate(() => document.documentElement.scrollHeight);
-  if (height > LIMITS.height) throw new Error(`Capture exceeds ${LIMITS.height}px document height`);
-  const buffer = await page.screenshot({ fullPage: true, timeout: 3000 });
-  if (buffer.byteLength > LIMITS.screenshot) throw new Error('Capture exceeds screenshot byte limit');
-  const file = path.resolve(directory, `${id}.png`);
-  await writeFile(file, buffer, { flag: 'wx' });
-  return { path: file, sha256: digest(buffer), bytes: buffer.byteLength };
 }
 
 async function inspect(page) {
@@ -126,7 +114,7 @@ export async function captureInterfaceQuality(root, outputDirectory) {
             catch (error) { record.interactionError = errorText(error); record.trace = { failure: record.interactionError }; }
           }
           record.observation = await inspect(page);
-          record.screenshot = await screenshot(page, outputDirectory, settings.id);
+          record.screenshot = await captureFixtureScreenshot(page, outputDirectory, settings.id, LIMITS);
           const closedPreview = page.locator('details:not([open])').filter({ has: page.locator('#preview-state') });
           const openedPreview = await closedPreview.count() > 0;
           if (openedPreview) { try { await closedPreview.locator('summary').first().click(); } catch (error) { record.auxiliaryError = errorText(error); } }
@@ -150,7 +138,7 @@ export async function captureInterfaceQuality(root, outputDirectory) {
     for (const settings of INTERFACE_SCENARIOS) evidence.scenes.push(await collect(settings));
     for (const method of ['keyboard', 'pointer']) evidence.interactions.push(await collect({ ...base, id: `save-${method}` }, async (page) => {
       const trace = { method, focus: [], checkedBefore: await page.locator(CHECKBOX).isChecked() };
-      if (method === 'keyboard') { await tabTo(page, CHECKBOX, trace.focus); await page.keyboard.press('Space'); await tabTo(page, PRIMARY, trace.focus); trace.focusedScreenshot = await screenshot(page, outputDirectory, 'save-keyboard-focused'); await page.keyboard.press('Enter'); }
+      if (method === 'keyboard') { await tabTo(page, CHECKBOX, trace.focus); await page.keyboard.press('Space'); await tabTo(page, PRIMARY, trace.focus); trace.focusedScreenshot = await captureFixtureScreenshot(page, outputDirectory, 'save-keyboard-focused', LIMITS); await page.keyboard.press('Enter'); }
       else { await page.getByText('Email alerts', { exact: true }).click(); await page.locator(PRIMARY).click(); }
       trace.checkedAfter = await page.locator(CHECKBOX).isChecked();
       trace.message = await page.locator('#save-result').textContent();

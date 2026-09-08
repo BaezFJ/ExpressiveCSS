@@ -140,12 +140,6 @@ function rootPath(value) {
   return path.resolve(value ?? DEFAULT_ROOT);
 }
 
-function isPathInside(root, candidate) {
-  const relative = path.relative(root, candidate);
-  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
-}
-
-
 async function readBoundedJson(filePath, byteLimit, label) {
   return JSON.parse(await readBoundedRegularFile(filePath, byteLimit, label));
 }

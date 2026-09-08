@@ -1,9 +1,8 @@
-import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
 import { redactValue } from './eval-expressivecss-skill.mjs';
-import { createRestrictedFixturePage, startFixtureServer } from './expressivecss-eval-browser.mjs';
+import { captureFixtureScreenshot, createRestrictedFixturePage, startFixtureServer } from './expressivecss-eval-browser.mjs';
 
 const NAMES = ['material-component-review', 'material-expression-repair', 'material-motion-repair'];
 export const isMaterialCase = name => NAMES.includes(name);
@@ -49,15 +48,6 @@ async function inspect(page) {
   return data;
 }
 
-async function capture(page, directory, id) {
-  if (await page.evaluate(() => document.documentElement.scrollHeight) > LIMITS.height) throw new Error('Material capture exceeds document height limit');
-  const bytes = await page.screenshot({ fullPage: true, timeout: 3000 });
-  if (bytes.byteLength > LIMITS.screenshot) throw new Error('Material capture exceeds screenshot byte limit');
-  const file = path.resolve(directory, `${id}.png`);
-  await writeFile(file, bytes, { flag: 'wx' });
-  return { path: file, sha256: createHash('sha256').update(bytes).digest('hex'), bytes: bytes.byteLength };
-}
-
 /** Browser facts and retained captures; Material interpretation remains a human review. */
 export async function captureMaterialQuality(root, outputDirectory, name) {
   if (!isMaterialCase(name)) throw new Error('Unknown Material case');
@@ -83,7 +73,7 @@ export async function captureMaterialQuality(root, outputDirectory, name) {
           await page.evaluate(() => document.fonts.ready);
           await settle(page);
           record.initial = await inspect(page);
-          record.captures.initial = await capture(page, outputDirectory, `${settings.id}-initial`);
+          record.captures.initial = await captureFixtureScreenshot(page, outputDirectory, `${settings.id}-initial`, LIMITS);
           const subject = 'Garden meeting preview', message = 'Bring seeds and a story. <strong>Plain text remains text.</strong>';
           await page.locator('#subject').fill(subject);
           await page.locator('#message').fill(message);
@@ -109,7 +99,7 @@ export async function captureMaterialQuality(root, outputDirectory, name) {
           await settle(page);
           record.trace.previewVisible = await page.locator('#preview').evaluate(node => node.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }));
           record.preview = await inspect(page);
-          record.captures.preview = await capture(page, outputDirectory, `${settings.id}-preview`);
+          record.captures.preview = await captureFixtureScreenshot(page, outputDirectory, `${settings.id}-preview`, LIMITS);
           await page.locator('#edit-button').click();
           record.trace.focusReturned = await page.locator('#message').evaluate(node => node === document.activeElement);
           record.trace.previewClosed = await page.locator('#preview').isHidden();
@@ -117,7 +107,7 @@ export async function captureMaterialQuality(root, outputDirectory, name) {
           record.trace.savedMessage = await page.locator('#status').textContent();
           record.trace.completed = record.trace.subject === subject && record.trace.message === message && record.trace.markupChildren === 0 && record.trace.boldPressed === 'true' && record.trace.boldWeight === '700'
             && record.trace.focusEntered && record.trace.focusReturned && record.trace.previewClosed && record.trace.savedMessage.includes(subject) && record.trace.savedMessage.includes('Nothing was sent');
-          record.captures.saved = await capture(page, outputDirectory, `${settings.id}-saved`);
+          record.captures.saved = await captureFixtureScreenshot(page, outputDirectory, `${settings.id}-saved`, LIMITS);
           record.status = 'success';
         };
         await Promise.race([work(), new Promise((_, reject) => { timer = setTimeout(() => { void session.context.close().catch(() => {}); reject(new Error('Material scenario timed out')); }, LIMITS.timeout); })]);

@@ -66,6 +66,16 @@ export function createRestrictedFixturePage(browser, origin, options = {}) {
   return createBrowserSession(browser, origin, options, { checkPath: fixturePath });
 }
 
+/** Full-page operator capture, bounded before writing and linked to its bytes. */
+export async function captureFixtureScreenshot(page, directory, id, limits) {
+  if (await page.evaluate(() => document.documentElement.scrollHeight) > limits.height) throw new Error('Capture exceeds document height limit');
+  const bytes = await page.screenshot({ fullPage: true, timeout: 3000 });
+  if (bytes.byteLength > limits.screenshot) throw new Error('Capture exceeds screenshot byte limit');
+  const file = path.resolve(directory, `${id}.png`);
+  await writeFile(file, bytes, { flag: 'wx' });
+  return { path: file, sha256: createHash('sha256').update(bytes).digest('hex'), bytes: bytes.byteLength };
+}
+
 /** The evaluator owns the browser and records. Candidate responses are never verification evidence. */
 export async function startEvaluationBrowser({ projectRoot, artifactDirectory }) {
   const capability = { status: 'unavailable', error: null };
