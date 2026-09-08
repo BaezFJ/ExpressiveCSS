@@ -15,6 +15,26 @@ const PAYLOAD = '"><img src=x onerror=alert(1)>';
 describe('FormSelect renders author content as text', () => {
   beforeEach(resetBody);
 
+  test('option icons accept image URLs and reject executable or malformed URLs', () => {
+    for (const [value, allowed] of [
+      ['/icons/check.svg', true], ['https://example.com/icon.png', true],
+      ['//example.com/icon.png', true], ['blob:http://localhost/image', true],
+      ['data:image/png;base64,iVBORw0KGgo=', true],
+      ['javascript:alert(1)', false], [' \tJaVa\nScRiPt:alert(1)', false],
+      ['data:text/html,<script>alert(1)</script>', false], ['http://[', false]
+    ]) {
+      document.body.innerHTML = '<select><option value="1">One</option></select>';
+      document.querySelector('option').setAttribute('data-icon', value);
+      const instance = Expressive.FormSelect.init(document.querySelector('select'));
+      try {
+        const image = instance.menuEl.querySelector('img');
+        assert.equal(!!image, allowed, value);
+        if (allowed) assert.equal(image.src, new URL(value, document.baseURI).href);
+        assert.equal(instance.menuEl.querySelector('li span').textContent, 'One');
+      } finally { instance.destroy(); }
+    }
+  });
+
   test('an optgroup label cannot break out of its span', () => {
     document.body.innerHTML = `
       <select>
@@ -125,6 +145,51 @@ describe('ids are looked up, not interpolated into selectors', () => {
 
 describe('Datepicker escapes what it splices into markup', () => {
   beforeEach(resetBody);
+
+  test('calendar identifiers and day values cannot inject markup', () => {
+    document.body.innerHTML = '<input class="datepicker">';
+    const instance = Expressive.Datepicker.init(document.querySelector('input'));
+    try {
+      const host = document.createElement('div');
+      host.innerHTML = instance.renderTitle(instance, 0, 2026, 8, 2026, PAYLOAD);
+      assert.equal(host.querySelector('.datepicker-controls').id, PAYLOAD);
+      assert.equal(host.querySelector('img'), null);
+      host.innerHTML = instance.renderTable(instance.options, [], PAYLOAD);
+      assert.equal(host.querySelector('table').getAttribute('aria-labelledby'), PAYLOAD);
+      assert.equal(host.querySelector('img'), null);
+      host.innerHTML = '<table><tbody><tr>' + instance.renderDay({ day: PAYLOAD, month: PAYLOAD, year: PAYLOAD }) + '</tr></tbody></table>';
+      const button = host.querySelector('button');
+      assert.equal(button.textContent, PAYLOAD);
+      for (const name of ['day', 'month', 'year']) assert.equal(button.dataset[name], PAYLOAD);
+      assert.equal(host.querySelector('img'), null);
+    } finally { instance.destroy(); }
+  });
+
+  test('calendar row helpers reject unsupported HTML and preserve day semantics', () => {
+    document.body.innerHTML = '<input class="datepicker">';
+    const instance = Expressive.Datepicker.init(document.querySelector('input'));
+    try {
+      for (const cell of [
+        '<td><img src=x onerror=alert(1)></td>', '<td onclick="alert(1)">1</td>',
+        '<td><script>alert(1)</script></td>', '<td><svg onload="alert(1)"></svg></td>',
+        '<td><button type="submit">1</button></td>', '<td style="color:red">1</td>',
+        '<td><button type="button" formaction="javascript:alert(1)">1</button></td>'
+      ]) {
+        assert.throws(() => instance.renderRow([cell], false, false), TypeError);
+        assert.throws(() => instance.renderBody([`<tr>${cell}</tr>`]), TypeError);
+        assert.throws(() => instance.renderTable(instance.options, [`<tr>${cell}</tr>`], 'title'), TypeError);
+      }
+      const cell = instance.renderDay({ day: PAYLOAD, month: 8, year: 2026, isSelected: true });
+      const row = instance.renderRow([cell, '<td class="is-empty"></td>'], true, true);
+      const host = document.createElement('div');
+      host.innerHTML = instance.renderTable(instance.options, [row], 'title');
+      assert.equal(host.querySelector('tbody tr').className, 'datepicker-row is-selected');
+      assert.equal(host.querySelector('tbody td').className, 'is-empty');
+      assert.equal(host.querySelector('button').textContent, PAYLOAD);
+      assert.equal(host.querySelector('td[aria-selected]').getAttribute('aria-selected'), 'true');
+      assert.equal(host.querySelector('img'), null);
+    } finally { instance.destroy(); }
+  });
 
   test('translated month names cannot inject elements', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;

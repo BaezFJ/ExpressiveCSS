@@ -73,6 +73,9 @@ const S = defineSections([
           Put an image URL in <code>data-icon</code> on an option. Classes on that option
           are copied to the image; <code>left</code> floats it left. Images float right
           by default. There is no <code>icons</code> class on the <code>&lt;select&gt;</code>.
+          Relative, HTTP(S), blob, and image data URLs are supported (AVIF, BMP, GIF,
+          JPEG, PNG, SVG, WebP, or ICO). Invalid URLs and other schemes are ignored;
+          the option remains selectable.
         </p>
         <form class="row">
           <div class="s12 m6 field">

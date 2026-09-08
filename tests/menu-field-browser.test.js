@@ -7,6 +7,49 @@ const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url),
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+  browserTest(`select and calendar treat external values as data (${engine})`, async () => {
+    const browser = await type.launch();
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent('<select><option value="one">One</option></select><input class="datepicker"><div id="result"></div>');
+      await page.addScriptTag({ content: js });
+      const result = await page.evaluate(() => {
+        window.injected = false;
+        const payload = '\"><img src=x onerror="window.injected=true">';
+        document.querySelector('option').setAttribute('data-icon', 'java\nscript:window.injected=true');
+        let select, date;
+        try {
+          select = Expressive.FormSelect.init(document.querySelector('select'));
+          date = Expressive.Datepicker.init(document.querySelector('input.datepicker'));
+          const host = document.querySelector('#result');
+          host.innerHTML = date.renderTitle(date, 0, 2026, 8, 2026, payload) + date.renderTable(date.options, [], payload);
+          let rejected = 0;
+          for (const cell of ['<td onclick="window.injected=true">1</td>', '<td><img src=x onerror="window.injected=true"></td>']) {
+            try { date.renderTable(date.options, [`<tr>${cell}</tr>`], 'title'); }
+            catch (error) { if (error instanceof TypeError) rejected++; else throw error; }
+          }
+          return {
+            icon: !!select.menuEl.querySelector('img'),
+            value: select.input.value,
+            id: host.querySelector('.datepicker-controls').id,
+            labelledBy: host.querySelector('table').getAttribute('aria-labelledby'),
+            images: host.querySelectorAll('img').length,
+            rejected,
+            payload
+          };
+        } finally { date?.destroy(); select?.destroy(); }
+      });
+      assert.equal(result.icon, false);
+      assert.equal(result.value, 'One');
+      assert.equal(result.id, result.payload);
+      assert.equal(result.labelledBy, result.payload);
+      assert.equal(result.images, 0);
+      assert.equal(result.rejected, 2);
+      assert.equal(await page.evaluate(() => window.injected), false);
+    } finally { await browser.close(); }
+  });
+
   browserTest(`Menu cancels superseded callbacks and teardown work (${engine})`, async () => {
     const browser = await type.launch();
     let page;

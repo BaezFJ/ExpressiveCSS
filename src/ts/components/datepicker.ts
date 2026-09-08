@@ -951,27 +951,32 @@ export class Datepicker extends Component<DatepickerOptions> {
       }
     }
 
+    const day = Datepicker._escape(opts.day);
+    const month = Datepicker._escape(opts.month);
+    const year = Datepicker._escape(opts.year);
     return (
-      `<td data-day="${opts.day}" class="${arr.join(' ')}" aria-selected="${ariaSelected}">` +
-      `<button class="datepicker-day-button" type="button" data-year="${opts.year}" data-month="${opts.month}" data-day="${opts.day}">${opts.day}</button>` +
+      `<td data-day="${day}" class="${arr.join(' ')}" aria-selected="${ariaSelected}">` +
+      `<button class="datepicker-day-button" type="button" data-year="${year}" data-month="${month}" data-day="${day}">${day}</button>` +
       '</td>'
     );
   }
 
+  /** Assemble calendar cells; reject unsupported elements and attributes. */
   renderRow(days, isRTL, isRowSelected) {
     return (
       '<tr class="datepicker-row' +
       (isRowSelected ? ' is-selected' : '') +
       '">' +
-      (isRTL ? days.reverse() : days).join('') +
+      Datepicker._calendarMarkup((isRTL ? days.reverse() : days).join(''), 'tr') +
       '</tr>'
     );
   }
 
+  /** Assemble calendar rows; reject unsupported elements and attributes. */
   renderTable(opts, data, randId) {
     return (
       '<div class="datepicker-table-wrapper"><table cellpadding="0" cellspacing="0" class="datepicker-table" role="grid" aria-labelledby="' +
-      randId +
+      Datepicker._escape(randId) +
       '">' +
       this.renderHead(opts) +
       this.renderBody(data) +
@@ -990,8 +995,43 @@ export class Datepicker extends Component<DatepickerOptions> {
     return '<thead><tr>' + (opts.isRTL ? arr.reverse() : arr).join('') + '</tr></thead>';
   }
 
+  /** Wrap calendar rows after validating and encoding their contents. */
   renderBody(rows) {
-    return '<tbody>' + rows.join('') + '</tbody>';
+    return '<tbody>' + Datepicker._calendarMarkup(rows.join(''), 'tbody') + '</tbody>';
+  }
+
+  private static _calendarMarkup(html: string, parent: string): string {
+    const template = document.createElement('template');
+    // Template contents stay inert. Only rebuilt, encoded markup leaves here.
+    template.innerHTML = html;
+    const attributes = {
+      tr: ['class'],
+      td: ['class', 'data-day', 'aria-selected'],
+      button: ['class', 'type', 'data-year', 'data-month', 'data-day', 'aria-label', 'disabled', 'tabindex']
+    };
+    const render = (node: Node, container: string): string => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (container === 'tbody' || container === 'tr') {
+          if (node.textContent.trim()) throw new TypeError('Unsupported calendar row content');
+        }
+        return Datepicker._escape(node.textContent);
+      }
+      if (!(node instanceof HTMLElement)) throw new TypeError('Unsupported calendar row content');
+      const tag = node.localName === 'tr' ? 'tr' : node.localName === 'td' ? 'td' : node.localName === 'button' ? 'button' : null;
+      if (!tag || !((container === 'tbody' && tag === 'tr') || (container === 'tr' && tag === 'td') || (container === 'td' && tag === 'button'))) {
+        throw new TypeError('Unsupported calendar row element');
+      }
+      if ([...node.attributes].some(attr => !attributes[tag].includes(attr.name))) {
+        throw new TypeError('Unsupported calendar row attribute');
+      }
+      if (tag === 'button' && node.getAttribute('type') !== 'button') {
+        throw new TypeError('Calendar day buttons require type="button"');
+      }
+      const attrs = attributes[tag].filter(name => node.hasAttribute(name))
+        .map(name => ` ${name}="${Datepicker._escape(node.getAttribute(name))}"`).join('');
+      return `<${tag}${attrs}>${[...node.childNodes].map(child => render(child, tag)).join('')}</${tag}>`;
+    };
+    return [...template.content.childNodes].map(node => render(node, parent)).join('');
   }
 
   /**
@@ -1041,7 +1081,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       arr = [],
       html =
         '<div id="' +
-        randId +
+        Datepicker._escape(randId) +
         '" class="datepicker-controls" role="heading" aria-live="assertive">';
 
     // Decided up front. These used to be computed *below* the month-prev

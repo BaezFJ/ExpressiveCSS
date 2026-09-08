@@ -5363,6 +5363,8 @@ Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {
 const instance = Expressive.Datepicker.getInstance(elem);
 ```
 
+The low-level `renderRow`, `renderBody`, and `renderTable` helpers accept only calendar markup: rows containing cells and day buttons. Use `renderDay` to create cells. Unsupported elements or attributes, including event handlers and styles, throw `TypeError`; day buttons require `type="button"`. These helpers no longer accept arbitrary custom HTML.
+
 #### .toString();
 
 String form of the selected date, using `format`. You can pass another date and format.
@@ -5840,6 +5842,8 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 Native `<optgroup>` elements become group headings in the menu.
 
 Put an image URL in `data-icon` on an option. Classes on that option are copied to the image; `left` floats it left. Images float right by default. There is no `icons` class on the `<select>`.
+
+Icon URLs may be relative, HTTP(S), blob URLs, or image data URLs (AVIF, BMP, GIF, JPEG, PNG, SVG, WebP, or ICO). Invalid URLs and other schemes are ignored; the option remains selectable.
 
 Add `browser-default` to skip the menu and keep the native select.
 

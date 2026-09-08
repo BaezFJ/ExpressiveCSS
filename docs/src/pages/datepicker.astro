@@ -480,6 +480,11 @@ Expressive.Datepicker.init(document.getElementById('datepicker-multi'), {
 
   <Section {...S.methods}>
         <InstanceNote plugin="Datepicker" />
+        <p>The low-level <code>renderRow</code>, <code>renderBody</code>, and <code>renderTable</code>
+          helpers accept only calendar rows, cells, and day buttons. Use <code>renderDay</code>
+          to create cells. Unsupported elements or attributes, including event handlers and styles,
+          throw <code>TypeError</code>; day buttons require <code>type="button"</code>.
+          Arbitrary custom HTML is no longer accepted.</p>
 
         <h5 class="light">.toString();</h5>
         <p>String form of the selected date, using <code>format</code>. You can pass another date and format.</p>

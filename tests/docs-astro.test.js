@@ -50,6 +50,7 @@ const renderedSections = (src) =>
 
 /** The page with every `<Code code={`…`} />` sample cut out, so a sample's own markup is not read as the page's. */
 const withoutSamples = (src) => src.replace(/code=\{`[\s\S]*?`\}/g, '');
+const scriptTags = (src) => [...withoutSamples(src).matchAll(/<script(?=[\s/>])[^>]*>/gi)].map(([tag]) => tag);
 
 describe('the Astro documentation pages', () => {
   test('there are pages to check', () => {
@@ -86,10 +87,17 @@ describe('the Astro documentation pages', () => {
     // Nothing fails at build time; is:inline is the whole guard, and this is
     // the guard on the guard.
     for (const { file, src } of pages) {
-      for (const [tag] of withoutSamples(src).matchAll(/<script\b[^>]*>/g)) {
+      for (const tag of scriptTags(src)) {
         assert.match(tag, /\bis:inline\b/, `${file}: ${tag} would be hoisted out of <main>`);
       }
     }
+  });
+
+  test('script checks include mixed case and exclude lookalike tags and samples', () => {
+    assert.deepEqual(scriptTags('<SCRIPT src="a.js"></SCRIPT><ScRiPt>run()</ScRiPt><script-demo/>'),
+      ['<SCRIPT src="a.js">', '<ScRiPt>']);
+    assert.deepEqual(scriptTags('<Code code={`<SCRIPT>sample</SCRIPT>`} /><script is:inline/>'),
+      ['<script is:inline/>']);
   });
 
   test('Astro itself emits the Markdown counterparts before verification', () => {

@@ -8,7 +8,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `62dc84d562b5dcbca43f4dadc1a7a423dce806091bf6b00bcaa19092c29b71b6`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `34fb4a331106f7fece05291033f94366ee70a48752a91420e836d30aca32be1e`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -789,7 +789,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Inline single-date, range, and multiple-date calendar.
 
-Source review: source-reviewed, 2026-09-07. [src/sass/components/_datepicker.scss](../../../src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](../../../src/ts/components/datepicker.ts), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: source-reviewed, 2026-09-08. [src/sass/components/_datepicker.scss](../../../src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](../../../src/ts/components/datepicker.ts), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: links-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/date-pickers/overview).
 

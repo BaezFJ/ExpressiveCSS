@@ -533,6 +533,23 @@ describe('semantics.json', () => {
       'SEMANTICS.md is generated - run `npm run build:semantics`'
     );
   });
+
+  test('generated cells preserve backslashes, pipes and backticks as literal code', () => {
+    const sample = structuredClone(data);
+    const row = Object.values(sample.rows).find(row => row.status === 'enforced' && row.rules.length);
+    const selector = 'a\\|b`<img src=x onerror=alert(1)>`';
+    row.rules[0].selector = selector;
+    const line = render(sample).split('\n').find(line => line.includes('<code>a'));
+    assert.ok(line, 'special characters need a literal code representation');
+    assert.equal(line.split('|').length, 6, 'a selector must not add table cells');
+    const dom = new JSDOM(line);
+    try {
+      assert.equal(dom.window.document.querySelector('code').textContent, selector);
+      assert.equal(dom.window.document.querySelector('img'), null);
+    } finally { dom.window.close(); }
+    sample.notComponents = { example: 'a\\|b' };
+    assert.ok(render(sample).includes('a\\\\\\|b'), 'prose must escape backslashes before pipes');
+  });
 });
 
 describe('prose that names markup', () => {
