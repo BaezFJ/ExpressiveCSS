@@ -19,6 +19,8 @@ Do not load this guide for setup-only, token-only, or narrow lifecycle work unle
 
 Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document.
 
+For work that spans pages or continues an established product, use the [product context reference](./references/product-context.md) to find and reuse its existing decisions. Load only context relevant to this task; distinguish accepted decisions from observations and proposals.
+
 Classify the task before acting. Choose one operating mode, or run Critique followed by Audit for a combined review:
 
 - **Implement.** Build a new surface or extend an existing one inside the established product and theme. Change code, render the real interface, run the focused tests, and report the resulting evidence.
@@ -61,7 +63,7 @@ Write a short working brief before code:
 - **Brand expression:** `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
 - **State plan:** loading, empty, error, success, disabled, selected, permission, offline, and destructive-action behavior that the feature can reach.
 
-The brief is a decision aid, not a new public artifact. Save it only when the project already records design decisions or the user asks for one.
+Keep the brief in the task unless an existing project record needs an in-scope update or the user asks to save it. Reuse that record; the product context reference explains how to preserve decision status and scope. Planning, Critique, and Audit alone do not authorize documentation edits.
 
 ## 3. Compose with Material hierarchy
 

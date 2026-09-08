@@ -15,6 +15,8 @@ Do not load this guide for unrelated markup repair, setup, or JavaScript lifecyc
 
 Reuse the root version resolution and load only the relevant focused reference below. Consult its linked target-version documentation for missing details, conflicts, or version uncertainty.
 
+Before changing a brand choice, check the application's existing theme notes and token owner. For conflicting decisions or a change shared across pages, consult the [product context reference](../expressivecss-design/references/product-context.md) directly; a token-only task does not require the full Design workflow.
+
 ## Focused references
 
 Load only the references needed for the task:

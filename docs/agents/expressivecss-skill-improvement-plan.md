@@ -860,3 +860,18 @@ All recommendations are complete only when:
 - Generic aesthetic bans unrelated to Material 3 Expressive.
 - Automatically changing product copy, information architecture, or brand decisions during Refine.
 - Treating regex or static analysis as proof of visual, interaction, or accessibility conformance.
+
+## Durable product context
+
+Design now routes work across pages to an optional product-context reference.
+Theming can consult it directly for shared brand decisions without loading the
+full Design workflow. The reference reuses existing project records, separates
+acceptance from observed implementation and proposals, and scopes exceptions
+to their recorded purpose. It gives a fallback when documentation is absent
+and preserves planning and review as no-edit work.
+
+The focused comparison uses the existing consumer and Codex adapter. It checks
+a new-page plan and an authorized update to existing design notes, including
+stale implementation notes and unapproved navigation ideas. See the
+[comparison and limits](expressivecss-product-context.md). No mandatory
+configuration format, new dependency, or product-context service was added.

@@ -27,6 +27,24 @@ The three basic implementation cases additionally require operator-owned `comple
 
 ## Project fixtures
 
+The product-context comparison in
+`tests/fixtures/expressivecss-skill-evals/product-context.json` reuses
+`consumer-current`. Materialize that consumer, then write the definition's
+`files` into it before taking the initial snapshot. Give the candidate only
+the request, consumer, and chosen skill; keep expected outputs and other runs
+private. Use `runCodex` with the case's `readOnly` flag. Retain before/after
+files, adapter telemetry, and fixture, grader, and skill hashes before cleanup.
+Alternate old/new order across the two cases.
+
+The planning case must leave the consumer unchanged. The documentation case
+may change only `docs/design.md` and must actually update it. Review the
+resulting plan or file for scoped exceptions, current token evidence, preserved
+pending proposals, and honest acceptance provenance. Those content judgments
+remain separate from operator-computed file checks; a candidate's claim to
+have preserved context is not proof. These are source and documentation tasks,
+so neither is a rendered design or browser-conformance evaluation. Show the
+retained outputs with Skill Creator's existing review viewer.
+
 The shared materializer also exposes `example-settings`, `example-editor`, and
 `example-list-detail`. These use the exact portable sources from
 `skills/expressivecss/assets/examples`, plus the same built package and consumer
