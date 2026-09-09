@@ -20,6 +20,22 @@ Without nvm, install Node 24 using your preferred method. `.nvmrc` selects the
 contributor runtime; it does not change the framework's supported runtime range.
 No AI editor, account, plugin, or design-sync service is required.
 
+### Optional repo context graph
+
+Graft provides a local source index for agent-assisted navigation. To use it:
+
+```sh
+npm install -g @nanonets/graft
+graft build
+```
+
+Its native dependencies may require Python, Make, and a C++ compiler. The generated
+`graft/` directory is ignored by Git; each checkout builds its own index. To also
+configure an agent integration, run `graft init` and select your agent. This can
+update machine-wide agent settings. If installation or graph generation is
+unavailable, continue with `rg` and direct source inspection; Graft is not required
+to build, test, or contribute.
+
 ## Agree on the work
 
 Use [Discussions](https://github.com/BaezFJ/ExpressiveCSS/discussions) for questions
