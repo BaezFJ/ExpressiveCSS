@@ -134,10 +134,12 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 | Import | Purpose |
 | --- | --- |
 | `@expressivecss/expressive` | JavaScript module and TypeScript declarations |
+| `@expressivecss/expressive/modular` | ESM exports and types without import-time initialization |
 | `@expressivecss/expressive/css` | Expanded compiled stylesheet |
 | `@expressivecss/expressive/css/min` | Minified compiled stylesheet |
 | `@expressivecss/expressive/fonts/*` | Self-hosted woff2 files |
 | `@expressivecss/expressive/scss` | Sass entry point |
+| `@expressivecss/expressive/scss/custom` | Configurable component and utility selection |
 | `@expressivecss/expressive/scss/*` | Individual Sass source paths |
 
 ## Minimal browser setup
@@ -179,6 +181,27 @@ if (element) Tooltip.init(element, { position: 'top' });
 ```
 
 ## Sass setup
+
+For smaller consumer bundles, import selected components from
+`@expressivecss/expressive/modular` and call their `.init()` methods after markup
+exists. Call the required document behaviors explicitly, such as `Forms.Init()`
+for input enhancements and `Dialogs.Init()` for light dismissal. Do not repeat
+these calls alongside the root entry. `AutoInit` still includes the full registry.
+Both ESM entries share constructors; hosting them directly requires their chunks.
+
+Use `@use "pkg:@expressivecss/expressive/scss/custom" with ($components:
+("icons-material-design", "tabs", "carousel"), $utilities: ());` with Sass's
+Node package importer. Tokens and base remain included. Lists preserve the given
+order; `null` includes a whole group and `()` omits it. For FormSelect and
+Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicker")`.
+Add `"docked-display"` before `"forms"` for the optional docked picker.
+
+`$expressive-include-fonts: false` lets consumers supply subset font faces, but
+also removes the text font declarations. Restore Roboto and Noto Sans 400/500
+or explicitly choose alternative typefaces. Retain icon ligatures and variable
+axes, and include dynamic icons: Chips and dismissible Snackbar use `close`,
+and navigation drawer summaries use `expand_more`. The README includes font
+declarations and the full initialization table. Full fonts remain available.
 
 ```scss
 @use "@expressivecss/expressive/src/sass/expressive";

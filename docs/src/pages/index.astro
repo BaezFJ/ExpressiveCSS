@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "download", label: "Download" },
   { id: "setup", label: "Setup" },
   { id: "templates", label: "Templates" },
+  { id: "smaller-builds", label: "Smaller builds" },
   { id: "sass", label: "Sass", heading: "Sass Setup" },
 ]);
 ---
@@ -207,6 +208,34 @@ document.documentElement.setAttribute('theme', 'dark');
                     </div>
   </Section>
 
+  <Section {...S["smaller-builds"]}>
+    <p>Use the modular entry with a bundler to include selected JavaScript components.
+      Initialize after the markup exists, and destroy instances when removing the view.</p>
+    <Code code={`import { Tabs } from '@expressivecss/expressive/modular';
+const tabs = Tabs.init(document.querySelector('.tabs'));`} />
+    <p>This entry installs no document behaviors. Call the behaviors your page needs,
+      such as <code>Forms.Init()</code> or <code>Dialogs.Init()</code>, once explicitly.
+      The original root import keeps its existing initialization. <code>AutoInit</code>
+      remains available and includes the full component registry.</p>
+    <p>Select Sass partials with the custom entry. With Sass's Node package importer,
+      compile using <code>sass --pkg-importer=node app.scss app.css</code>.</p>
+    <Code code={`@use "pkg:@expressivecss/expressive/scss/custom" with (
+  $components: ("icons-material-design", "tabs", "carousel"),
+  $utilities: ()
+);`} />
+    <p>Tokens and base styles stay included. Lists load in the order written;
+      <code>null</code> includes the full group, and <code>()</code> omits it.
+      Include supporting partials for the features you use. The default configuration
+      produces the same CSS as the full entry.</p>
+    <p>For FormSelect and Datepicker, select <code>icons-material-design</code>,
+      <code>buttons</code>, <code>menu</code>, <code>forms</code>, and
+      <code>datepicker</code>, in that order. Initialize both components explicitly.</p>
+    <p>To supply smaller icon fonts, set <code>$expressive-include-fonts: false</code>
+      and provide your own font faces, including text fonts. Include icons from
+      dynamic content and generated controls. Keep full fonts for unrestricted icon names.</p>
+    <p>The <a href="https://github.com/BaezFJ/ExpressiveCSS#smaller-page-downloads">README</a>
+      contains the initialization table, complete Sass recipes, and font declarations.</p>
+  </Section>
   <Section {...S.sass}>
                     <p class="flow-text">This section is only relevant if you chose to use the Sass sources.</p>
                     <h5>Compiling Sass</h5>

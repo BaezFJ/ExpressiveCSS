@@ -1,0 +1,38 @@
+@charset "UTF-8";
+@use "sass:meta";
+@forward "abstracts";
+
+$components: null !default;
+$utilities: null !default;
+
+@include meta.load-css("base/fonts");
+
+@layer tokens, base, components, utilities;
+
+@layer tokens {
+  @include meta.load-css("tokens");
+}
+
+@layer base {
+  @include meta.load-css("base");
+}
+
+@layer components {
+  @if $components == null {
+    @include meta.load-css("components");
+  } @else {
+    @each $component in $components {
+      @include meta.load-css("components/#{$component}");
+    }
+  }
+}
+
+@layer utilities {
+  @if $utilities == null {
+    @include meta.load-css("utilities");
+  } @else {
+    @each $utility in $utilities {
+      @include meta.load-css("utilities/#{$utility}");
+    }
+  }
+}

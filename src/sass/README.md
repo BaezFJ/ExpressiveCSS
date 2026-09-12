@@ -2,12 +2,20 @@
 
 ```
 expressive.scss     entry point - decides cascade order, nothing else
+custom.scss         optional entry - selected partials in the same layers
 abstracts/          variables, functions, mixins        (emits no CSS)
 tokens/             M3 design tokens as :root custom properties
 base/               normalize, element defaults, typography, grid
 components/         one file per widget (+ components/forms/)
 utilities/          single-purpose helper classes
 ```
+
+`custom.scss` accepts `$components` and `$utilities` lists of partial names,
+in load order. `null` loads the complete group; `()` loads none. Tokens and base
+are always loaded, and the existing font configuration still applies. Its
+default output must equal `expressive.scss`. Use one entry per consumer sheet.
+Keep selections in the order of the existing indexes, with icons first, and
+include supporting partials. See the README's smaller-build recipes.
 
 ## Browser support
 

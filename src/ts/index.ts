@@ -17,15 +17,7 @@ import { BottomSheets } from "./behaviors/bottomSheets";
 import { SideSheets } from "./behaviors/sideSheets";
 import { Forms } from "./behaviors/forms";
 
-export * from "./components";
-export { Dialogs } from "./behaviors/dialogs";
-export { BottomSheets } from "./behaviors/bottomSheets";
-export { SideSheets } from "./behaviors/sideSheets";
-export { Forms } from "./behaviors/forms";
-export { AutoInit } from "./components/registry";
-export type { AutoInitOptions } from "./components/registry";
-
-export const version = "0.9.1";
+export * from './modular';
 
 // Side effects: importing the bundle wires up the document-level behaviors.
 // Order is preserved from the original bundle - do not reorder without checking

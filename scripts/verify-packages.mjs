@@ -1,13 +1,13 @@
 // Pack real artifacts and exercise them outside this checkout.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, readFileSync, rmSync, mkdirSync, existsSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync, rmSync, mkdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { JSDOM } from 'jsdom';
-import { compile } from 'sass';
+import { compile, compileString, NodePackageImporter } from 'sass';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const packages = { framework: '.', mcp: 'mcp/expressivecss' };
@@ -56,6 +56,15 @@ try {
       assert.match(license, /normalize.css/);
       assert.match(license, /Polymer/);
       assert.ok(compile(join(installed, 'src/sass/expressive.scss')).css.length);
+      const custom = compileString('@use "pkg:@expressivecss/expressive/scss/custom" with ($components: ("tabs", "carousel"), $utilities: ());', {
+        importers: [new NodePackageImporter(target)],
+      }).css;
+      assert.match(custom, /\.tabs/);
+      assert.doesNotMatch(custom, /\.datepicker/);
+      writeFileSync(join(target, 'consumer.mjs'), `import * as modular from '${manifest.name}/modular';\nimport * as legacy from '${manifest.name}';\nimport assert from 'node:assert/strict';\nassert.equal(modular.Tabs, legacy.Tabs);\nassert.equal(modular.version, '${manifest.version}');\n`);
+      run('node', ['consumer.mjs'], target);
+      writeFileSync(join(target, 'consumer.mts'), `import { Tabs, type TabsOptions, type DatepickerOptions } from '${manifest.name}/modular';\nconst options: Partial<TabsOptions> = { swipeable: true };\nTabs.init(document.createElement('nav'), options);\nconst dateOptions: Partial<DatepickerOptions> = {};\n`);
+      run(join(root, 'node_modules/.bin/tsc'), ['--noEmit', '--module', 'esnext', '--moduleResolution', 'bundler', '--target', 'es2020', 'consumer.mts'], target);
       const dom = new JSDOM('<!doctype html><html><body></body></html>', {
         url: 'http://localhost/', runScripts: 'outside-only', pretendToBeVisual: true,
       });

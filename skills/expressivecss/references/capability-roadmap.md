@@ -8,37 +8,37 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `6e5b79d974875d99aa004a77cd4136a53bdc21d33bef4111ba3dcc1a0927a83c`.
+Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs changed or unavailable. Raw report SHA-256: `6e5b79d974875d99aa004a77cd4136a53bdc21d33bef4111ba3dcc1a0927a83c`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
 | [App bar](#app-bar) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Bottom app bar](#bottom-app-bar) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Navigation bar](#navigation-bar) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Navigation rail](#navigation-rail) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Navigation rail](#navigation-rail) | implemented | source-reviewed | needs-rerun | 0 |
 | [Navigation drawer](#navigation-drawer) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Panes](#panes) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Panes](#panes) | implemented | source-reviewed | needs-rerun | 0 |
 | [Footer](#footer) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Tabs](#tabs) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Breadcrumbs](#breadcrumbs) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Pagination](#pagination) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Menu](#menu) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Menu](#menu) | implemented | source-reviewed | needs-rerun | 0 |
 | [Scrollspy](#scrollspy) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Buttons](#buttons) | partial | source-reviewed | recorded-scoped-pass | 1 |
-| [Icon buttons](#icon-buttons) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Buttons](#buttons) | partial | source-reviewed | needs-rerun | 1 |
+| [Icon buttons](#icon-buttons) | implemented | source-reviewed | needs-rerun | 0 |
 | [Segmented buttons](#segmented-buttons) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Button groups](#button-groups) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Button groups](#button-groups) | implemented | source-reviewed | needs-rerun | 0 |
 | [Split button](#split-button) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Floating action button](#fab) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Cards](#cards) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Lists](#lists) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Cards](#cards) | implemented | source-reviewed | needs-rerun | 0 |
+| [Lists](#lists) | implemented | source-reviewed | needs-rerun | 0 |
 | [Dialogs](#dialogs) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Side sheet](#side-sheet) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Floating sheet](#floating-sheet) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Drag handle](#drag-handle) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Badges](#badges) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Tooltips](#tooltips) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Tooltips](#tooltips) | implemented | source-reviewed | needs-rerun | 0 |
 | [Snackbar](#snackbar) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Banners](#banners) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Progress indicators](#progress) | implemented | source-reviewed | no-mapped-checks | 0 |
@@ -47,10 +47,10 @@ Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs mat
 | [Lightbox](#lightbox) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Toolbars](#toolbars) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Search](#search) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Fieldsets](#fieldsets) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Text fields](#text-fields) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Select](#select) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Checkboxes](#checkboxes) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Fieldsets](#fieldsets) | implemented | source-reviewed | needs-rerun | 0 |
+| [Text fields](#text-fields) | implemented | source-reviewed | needs-rerun | 0 |
+| [Select](#select) | implemented | source-reviewed | needs-rerun | 0 |
+| [Checkboxes](#checkboxes) | implemented | source-reviewed | needs-rerun | 0 |
 | [Radio buttons](#radio-buttons) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Switches](#switches) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Slider](#slider) | implemented | source-reviewed | no-mapped-checks | 0 |
@@ -58,9 +58,9 @@ Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs mat
 | [Autocomplete](#autocomplete) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Date picker](#date-picker) | partial | source-reviewed | no-mapped-checks | 1 |
 | [Time picker](#time-picker) | partial | source-reviewed | no-mapped-checks | 1 |
-| [Typography](#typography) | partial | source-reviewed | recorded-scoped-pass | 2 |
-| [Shape](#shape) | partial | source-reviewed | recorded-scoped-pass | 1 |
-| [Motion](#motion) | partial | source-reviewed | recorded-scoped-pass | 1 |
+| [Typography](#typography) | partial | source-reviewed | needs-rerun | 2 |
+| [Shape](#shape) | partial | source-reviewed | needs-rerun | 1 |
+| [Motion](#motion) | partial | source-reviewed | needs-rerun | 1 |
 
 <a id="app-bar"></a>
 
@@ -68,7 +68,7 @@ Last operator collection: 2026-09-08, Chromium 151.0.7922.34, passed; inputs mat
 
 **implemented within the stated scope.** Small, medium flexible, large flexible, and search app bars.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_navbar.scss](../../../src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](../../../src/ts/components/appBar.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_navbar.scss](../../../src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](../../../src/ts/components/appBar.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -84,7 +84,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Bottom command bar with optional FAB.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_bottom-app-bar.scss](../../../src/sass/components/_bottom-app-bar.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_bottom-app-bar.scss](../../../src/sass/components/_bottom-app-bar.scss).
 
 Google relationship: component. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md).
 
@@ -100,7 +100,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Stacked and horizontal destination layouts.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_navigation-bar.scss](../../../src/sass/components/_navigation-bar.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_navigation-bar.scss](../../../src/sass/components/_navigation-bar.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -116,7 +116,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Collapsed, expanded, and modal rails.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_navigation-rail.scss](../../../src/sass/components/_navigation-rail.scss), [src/ts/components/navigationRail.ts](../../../src/ts/components/navigationRail.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_navigation-rail.scss](../../../src/sass/components/_navigation-rail.scss), [src/ts/components/navigationRail.ts](../../../src/ts/components/navigationRail.ts).
 
 Google relationship: component. Upstream review: overview-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/navigation-rail/overview).
 
@@ -124,7 +124,7 @@ Web adaptation: The compact expanded rail uses a scrim and dismissal behavior.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
 
 <a id="navigation-drawer"></a>
 
@@ -132,7 +132,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Sliding and fixed drawers with nested sections.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_navigation-drawer.scss](../../../src/sass/components/_navigation-drawer.scss), [src/ts/components/navigationDrawer.ts](../../../src/ts/components/navigationDrawer.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_navigation-drawer.scss](../../../src/sass/components/_navigation-drawer.scss), [src/ts/components/navigationDrawer.ts](../../../src/ts/components/navigationDrawer.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -148,7 +148,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** List-detail, supporting pane, and equal panes.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_panes.scss](../../../src/sass/components/_panes.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_panes.scss](../../../src/sass/components/_panes.scss).
 
 Google relationship: pattern. Upstream review: component-guidance-reviewed (2026-09-07); [reviewed source](https://m3.material.io/foundations/layout/canonical-examples/overview).
 
@@ -156,7 +156,7 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 
 <a id="footer"></a>
 
@@ -164,7 +164,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Native footer with navigation columns and copyright content.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_page-footer.scss](../../../src/sass/components/_page-footer.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_page-footer.scss](../../../src/sass/components/_page-footer.scss).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -180,7 +180,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Primary and secondary tabs; stacked and horizontal icon layouts.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_tabs.scss](../../../src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](../../../src/ts/components/tabs.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_tabs.scss](../../../src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](../../../src/ts/components/tabs.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -196,7 +196,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Breadcrumb links and app-bar composition.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_breadcrumb.scss](../../../src/sass/components/_breadcrumb.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_breadcrumb.scss](../../../src/sass/components/_breadcrumb.scss).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -212,7 +212,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Page links, active page, and unavailable previous/next items.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_pagination.scss](../../../src/sass/components/_pagination.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_pagination.scss](../../../src/sass/components/_pagination.scss).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -228,7 +228,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Vertical menus, nested flyouts, grouping, and standard/vibrant styles.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -236,9 +236,9 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
-- recorded-passed: [tests/menu-field-browser.test.js](../../../tests/menu-field-browser.test.js): `Menu cancels superseded callbacks and teardown work (chromium)`. Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- stale: [tests/menu-field-browser.test.js](../../../tests/menu-field-browser.test.js): `Menu cancels superseded callbacks and teardown work (chromium)`. Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="scrollspy"></a>
 
@@ -246,7 +246,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Section tracking and table-of-contents links.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_scrollspy.scss](../../../src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](../../../src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](../../../src/ts/components/scrollspy.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_scrollspy.scss](../../../src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](../../../src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](../../../src/ts/components/scrollspy.ts).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -262,7 +262,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Filled, tonal, outlined, elevated, and text; xsmall through xlarge.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
 
 Google relationship: component. Upstream review: overview-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/buttons/overview).
 
@@ -270,9 +270,9 @@ Web adaptation: Native buttons run commands; a.button links navigate.
 
 - feature: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers. Next: Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 
 <a id="icon-buttons"></a>
 
@@ -280,7 +280,7 @@ Web adaptation: Native buttons run commands; a.button links navigate.
 
 **implemented within the stated scope.** Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_icon-buttons.scss](../../../src/sass/components/_icon-buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_icon-buttons.scss](../../../src/sass/components/_icon-buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](../../../src/sass/abstracts/_variables.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -288,8 +288,8 @@ Web adaptation: Accessible name belongs to the control; the glyph is decorative.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Filled icon button selected color and glyph fill inside a button group only.
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Icon children inside button group only.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Filled icon button selected color and glyph fill inside a button group only.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Icon children inside button group only.
 
 <a id="segmented-buttons"></a>
 
@@ -297,7 +297,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Single-select radio and multi-select checkbox groups.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_segmented-buttons.scss](../../../src/sass/components/_segmented-buttons.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_segmented-buttons.scss](../../../src/sass/components/_segmented-buttons.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -313,7 +313,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard and connected groups; commands and opt-in selection.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -321,11 +321,11 @@ Web adaptation: Runtime coordinates neighboring widths and selection; CSS handle
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
 
 <a id="split-button"></a>
 
@@ -333,7 +333,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Leading action and trailing menu trigger with matching styles.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_split-button.scss](../../../src/sass/components/_split-button.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_split-button.scss](../../../src/sass/components/_split-button.scss), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -349,7 +349,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** FAB sizes, extended FABs, and menus of related actions.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/components/_fab-menu.scss](../../../src/sass/components/_fab-menu.scss), [src/ts/components/buttons.ts](../../../src/ts/components/buttons.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/components/_fab-menu.scss](../../../src/sass/components/_fab-menu.scss), [src/ts/components/buttons.ts](../../../src/ts/components/buttons.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -365,7 +365,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Elevated, filled, outlined, horizontal, and directly actionable cards.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_cards.scss](../../../src/sass/components/_cards.scss), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/cards.ts](../../../src/ts/components/cards.ts), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_cards.scss](../../../src/sass/components/_cards.scss), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/cards.ts](../../../src/ts/components/cards.ts), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -373,10 +373,10 @@ Web adaptation: Native article anatomy; primary-action links preserve navigation
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `dragged and picked-up states override simultaneous pointer states`. Specific card state, disclosure fallback, or horizontal layout contract.
-- recorded-passed: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `invalid disclosures keep their panels visible and operable`. Specific card state, disclosure fallback, or horizontal layout contract.
-- recorded-passed: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint`. Specific card state, disclosure fallback, or horizontal layout contract.
-- recorded-passed: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- stale: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `dragged and picked-up states override simultaneous pointer states`. Specific card state, disclosure fallback, or horizontal layout contract.
+- stale: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `invalid disclosures keep their panels visible and operable`. Specific card state, disclosure fallback, or horizontal layout contract.
+- stale: [tests/cards-browser.test.js](../../../tests/cards-browser.test.js): `directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint`. Specific card state, disclosure fallback, or horizontal layout contract.
+- stale: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
 
 <a id="lists"></a>
 
@@ -384,7 +384,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Standard and segmented lists.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_list.scss](../../../src/sass/components/_list.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_list.scss](../../../src/sass/components/_list.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -392,7 +392,7 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 
 <a id="dialogs"></a>
 
@@ -400,7 +400,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Basic and full-screen dialogs.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_dialog.scss](../../../src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_dialog.scss](../../../src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -416,7 +416,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard and modal bottom sheets.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_bottom-sheet.scss](../../../src/sass/components/_bottom-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](../../../src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_bottom-sheet.scss](../../../src/sass/components/_bottom-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](../../../src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -432,7 +432,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard and modal side sheets.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_side-sheet.scss](../../../src/sass/components/_side-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](../../../src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_side-sheet.scss](../../../src/sass/components/_side-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](../../../src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](../../../src/ts/behaviors/sheetDrag.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -448,7 +448,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Inset floating dialog surface.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_floating-sheet.scss](../../../src/sass/components/_floating-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_floating-sheet.scss](../../../src/sass/components/_floating-sheet.scss), [src/ts/behaviors/dialogs.ts](../../../src/ts/behaviors/dialogs.ts).
 
 Google relationship: related. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -464,7 +464,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Decorative grip and actionable button grip.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_drag-handle.scss](../../../src/sass/components/_drag-handle.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_drag-handle.scss](../../../src/sass/components/_drag-handle.scss).
 
 Google relationship: related. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md).
 
@@ -480,7 +480,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Small dot and large count badges.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_badges.scss](../../../src/sass/components/_badges.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_badges.scss](../../../src/sass/components/_badges.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -496,7 +496,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Plain and rich tooltips; CSS child and runtime-generated forms.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_tooltip.scss](../../../src/sass/components/_tooltip.scss), [src/ts/components/tooltip.ts](../../../src/ts/components/tooltip.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_tooltip.scss](../../../src/sass/components/_tooltip.scss), [src/ts/components/tooltip.ts](../../../src/ts/components/tooltip.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -504,10 +504,10 @@ Web adaptation: The selected form determines ownership; CSS-only hover/focus is 
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
 
 <a id="snackbar"></a>
 
@@ -515,7 +515,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Transient message with optional action and close control.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_snackbar.scss](../../../src/sass/components/_snackbar.scss), [src/ts/components/snackbar.ts](../../../src/ts/components/snackbar.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_snackbar.scss](../../../src/sass/components/_snackbar.scss), [src/ts/components/snackbar.ts](../../../src/ts/components/snackbar.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -531,7 +531,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Basic/rich and standard/vibrant; square basic banners.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_banners.scss](../../../src/sass/components/_banners.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_banners.scss](../../../src/sass/components/_banners.scss).
 
 Google relationship: related. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -547,7 +547,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Linear and circular progress, determinate and indeterminate.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_progress.scss](../../../src/sass/components/_progress.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_progress.scss](../../../src/sass/components/_progress.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -563,7 +563,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Uncontained and contained morphing loading indicator.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_loading-indicator.scss](../../../src/sass/components/_loading-indicator.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_loading-indicator.scss](../../../src/sass/components/_loading-indicator.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -579,7 +579,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Adaptive visual collections with documented layout variants.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_carousel.scss](../../../src/sass/components/_carousel.scss), [src/ts/components/carousel.ts](../../../src/ts/components/carousel.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_carousel.scss](../../../src/sass/components/_carousel.scss), [src/ts/components/carousel.ts](../../../src/ts/components/carousel.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -595,7 +595,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Enlarge-on-activation image and dismissal.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_lightbox.scss](../../../src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](../../../src/ts/components/lightbox.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_lightbox.scss](../../../src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](../../../src/ts/components/lightbox.ts).
 
 Google relationship: none. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -611,7 +611,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Floating/docked, standard/vibrant, vertical floating, and companion FAB.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_toolbar.scss](../../../src/sass/components/_toolbar.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_toolbar.scss](../../../src/sass/components/_toolbar.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -627,7 +627,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Search bar and expanded search view.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_search.scss](../../../src/sass/components/_search.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_search.scss](../../../src/sass/components/_search.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -643,7 +643,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Outlined, filled, and rounded form groups.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_fieldset.scss](../../../src/sass/components/forms/_fieldset.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_fieldset.scss](../../../src/sass/components/forms/_fieldset.scss).
 
 Google relationship: related. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -651,7 +651,7 @@ Web adaptation: Native fieldset/legend; related text-field tokens do not make th
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
 
 <a id="text-fields"></a>
 
@@ -659,7 +659,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Filled and outlined fields, supporting text, and error states.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/forms/_file-input.scss](../../../src/sass/components/forms/_file-input.scss), [src/ts/behaviors/forms.ts](../../../src/ts/behaviors/forms.ts), [src/ts/components/characterCounter.ts](../../../src/ts/components/characterCounter.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/forms/_file-input.scss](../../../src/sass/components/forms/_file-input.scss), [src/ts/behaviors/forms.ts](../../../src/ts/behaviors/forms.ts), [src/ts/components/characterCounter.ts](../../../src/ts/components/characterCounter.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -667,7 +667,7 @@ Web adaptation: Native input/textarea with explicit label and description relati
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
 
 <a id="select"></a>
 
@@ -675,7 +675,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Single/multiple selection, optgroups, and browser-default fallback.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_select.scss](../../../src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_select.scss](../../../src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
 
@@ -683,9 +683,9 @@ Web adaptation: Native select enhanced by runtime; this is related to menu/text-
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
-- recorded-passed: [tests/menu-field-browser.test.js](../../../tests/menu-field-browser.test.js): `enhanced select keeps enlarged multiline labels clear of values (chromium)`. Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](../../../tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- stale: [tests/menu-field-browser.test.js](../../../tests/menu-field-browser.test.js): `enhanced select keeps enlarged multiline labels clear of values (chromium)`. Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="checkboxes"></a>
 
@@ -693,7 +693,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Unchecked, checked, indeterminate, and disabled.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_checkboxes.scss](../../../src/sass/components/forms/_checkboxes.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_checkboxes.scss](../../../src/sass/components/forms/_checkboxes.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -701,7 +701,7 @@ Web adaptation: Native checkbox; indeterminate is set through the DOM property.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
 
 <a id="radio-buttons"></a>
 
@@ -709,7 +709,7 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 **implemented within the stated scope.** Native radio groups and disabled controls.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_radio-buttons.scss](../../../src/sass/components/forms/_radio-buttons.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_radio-buttons.scss](../../../src/sass/components/forms/_radio-buttons.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -725,7 +725,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Native checkbox switches and disabled controls.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_switches.scss](../../../src/sass/components/forms/_switches.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_switches.scss](../../../src/sass/components/forms/_switches.scss).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -741,7 +741,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Standard, centered, range, horizontal/vertical, and five sizes.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_slider.scss](../../../src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](../../../src/ts/components/slider.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_slider.scss](../../../src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](../../../src/ts/components/slider.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -757,7 +757,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Assist, suggestion, filter, input, and display chips.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_chips.scss](../../../src/sass/components/_chips.scss), [src/ts/components/chips.ts](../../../src/ts/components/chips.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_chips.scss](../../../src/sass/components/_chips.scss), [src/ts/components/chips.ts](../../../src/ts/components/chips.ts).
 
 Google relationship: component. Upstream review: inventory-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components).
 
@@ -773,7 +773,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **implemented within the stated scope.** Single and multi-select suggestions.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/autocomplete.ts](../../../src/ts/components/autocomplete.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/forms/_input-fields.scss](../../../src/sass/components/forms/_input-fields.scss), [src/sass/components/_menu.scss](../../../src/sass/components/_menu.scss), [src/ts/components/autocomplete.ts](../../../src/ts/components/autocomplete.ts), [src/ts/components/menu.ts](../../../src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: document-reviewed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
 
@@ -789,7 +789,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Inline single-date, range, and multiple-date calendar.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_datepicker.scss](../../../src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](../../../src/ts/components/datepicker.ts), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_datepicker.scss](../../../src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](../../../src/ts/components/datepicker.ts), [src/ts/components/select.ts](../../../src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: links-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/date-pickers/overview).
 
@@ -805,7 +805,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Inline clock and digital input; 12-hour and 24-hour formats.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_timepicker.scss](../../../src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](../../../src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_timepicker.scss](../../../src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](../../../src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](../../../src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](../../../src/ts/plugins/dockedDisplayPlugin.ts).
 
 Google relationship: component. Upstream review: links-reviewed (2026-09-07); [reviewed source](https://m3.material.io/components/time-pickers/overview).
 
@@ -821,7 +821,7 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 **partial within the stated scope.** Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/tokens/_reference.scss](../../../src/sass/tokens/_reference.scss), [src/sass/utilities/_typescale.scss](../../../src/sass/utilities/_typescale.scss), [src/sass/base/_typography.scss](../../../src/sass/base/_typography.scss), [src/sass/base/_fonts.scss](../../../src/sass/base/_fonts.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/tokens/_reference.scss](../../../src/sass/tokens/_reference.scss), [src/sass/utilities/_typescale.scss](../../../src/sass/utilities/_typescale.scss), [src/sass/base/_typography.scss](../../../src/sass/base/_typography.scss), [src/sass/base/_fonts.scss](../../../src/sass/base/_fonts.scss).
 
 Google relationship: foundation. Upstream review: android-foundation-reviewed; full web specification unassessed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md).
 
@@ -830,8 +830,8 @@ Web adaptation: Use supported web component and application overrides; Android a
 - feature: No emphasized role utilities or emphasized token family; emphasized labels and smaller titles requiring 700 need an application-supplied real face. Next: Define an additive emphasized-scale contract and a font-loading policy before implementing public names.
 - feature: Bundled text fonts cover Latin and 400/500 only; a Noto Sans fallback declaration does not establish non-Latin coverage. Next: Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. 32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.
-- recorded-passed: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.
+- stale: [tests/expressivecss-examples-browser.test.js](../../../tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. 32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.
+- stale: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.
 
 <a id="shape"></a>
 
@@ -839,7 +839,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 **partial within the stated scope.** Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_buttons.scss](../../../src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](../../../src/sass/abstracts/_mixins.scss), [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss).
 
 Google relationship: foundation. Upstream review: android-foundation-reviewed; full web specification unassessed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/theming/Shape.md).
 
@@ -847,9 +847,9 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 - feature: No shared md-sys-shape token family or general rounded/cut-corner theming system. Next: Inventory existing component corner defaults against proposed shared roles before introducing an additive shape scale; preserve existing component overrides and state shapes.
 
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Standard and connected button-group pressed corner changes and release with keyboard activation.
-- recorded-passed: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped common-button 16px corner repair; does not establish shape-system parity.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Standard and connected button-group pressed corner changes and release with keyboard activation.
+- stale: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped common-button 16px corner repair; does not establish shape-system parity.
 
 <a id="motion"></a>
 
@@ -857,7 +857,7 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 **partial within the stated scope.** Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.
 
-Source review: source-reviewed, 2026-09-08. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts), [src/sass/components/_transitions.scss](../../../src/sass/components/_transitions.scss).
+Source review: source-reviewed, 2026-09-12. [src/sass/components/_button-groups.scss](../../../src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](../../../src/ts/components/buttonGroup.ts), [src/sass/components/_expanding-card.scss](../../../src/sass/components/_expanding-card.scss), [src/ts/components/expandingCard.ts](../../../src/ts/components/expandingCard.ts), [src/sass/components/_transitions.scss](../../../src/sass/components/_transitions.scss).
 
 Google relationship: foundation. Upstream review: android-foundation-reviewed; full web specification unassessed (2026-09-07); [reviewed source](https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md).
 
@@ -865,8 +865,8 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 - feature: No shared md-sys-motion token family, general spring solver, or unified motion-theme selector. Next: Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver.
 
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.
-- recorded-passed: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Connected group's transition duration is zero under emulated reduced motion.
-- recorded-passed: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.
-- recorded-passed: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
-- recorded-passed: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `scale and expanding cards respect changing motion preferences (chromium)`. Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.
+- stale: [tests/button-groups-browser.test.js](../../../tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Connected group's transition duration is zero under emulated reduced motion.
+- stale: [tests/expressivecss-material-quality.test.js](../../../tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.
+- stale: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- stale: [tests/expanding-card-browser.test.js](../../../tests/expanding-card-browser.test.js): `scale and expanding cards respect changing motion preferences (chromium)`. Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.
