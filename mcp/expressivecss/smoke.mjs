@@ -694,12 +694,14 @@ try {
   });
   assert.equal(matchingSyntax.structuredContent.contractCompatibility, 'match');
   assert.equal(matchingSyntax.structuredContent.status, 'available');
-  assert.equal(matchingSyntax.structuredContent.found[0].capability.support, 'partial');
+  const buttonCapability = matchingSyntax.structuredContent.found[0].capability;
+  assert.equal(buttonCapability.lastReviewedSupport, 'partial');
+  assert.equal(buttonCapability.support, buttonCapability.sourceReview === 'source-reviewed' ? 'partial' : 'unassessed');
   assert.match(matchingSyntax.structuredContent.capabilityEvidence.basis, /not proof of published package/);
   const foundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, foundations: ['typography', 'shape', 'motion'] } });
   assert.equal(foundations.structuredContent.foundCount, 0);
   assert.deepEqual(foundations.structuredContent.foundations.map((entry) => entry.slug), ['typography', 'shape', 'motion']);
-  assert.ok(foundations.structuredContent.foundations.every((entry) => entry.support === 'partial'));
+  assert.ok(foundations.structuredContent.foundations.every((entry) => entry.lastReviewedSupport === 'partial' && entry.support === (entry.sourceReview === 'source-reviewed' ? 'partial' : 'unassessed')));
   const blockedFoundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: versionedDir, foundations: ['shape'] } });
   assert.equal(blockedFoundations.structuredContent.capabilityEvidence.status, 'blocked');
   assert.deepEqual(blockedFoundations.structuredContent.foundations, []);

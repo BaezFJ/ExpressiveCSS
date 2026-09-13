@@ -66,6 +66,9 @@ export class Lightbox extends Component<LightboxOptions> {
   private attrHeight: string;
   private _overlay: HTMLElement;
   private _photoCaption: HTMLElement;
+  private _trigger: HTMLElement;
+  private _tabindex: string | null;
+  private _timers = new Set<ReturnType<typeof setTimeout>>();
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
     super(el, options, Lightbox);
@@ -84,7 +87,9 @@ export class Lightbox extends Component<LightboxOptions> {
     this.originalHeight = 0;
     this.originInlineStyles = this.el.getAttribute('style');
     this.caption = this.el.getAttribute('data-caption') || '';
-    this.el.tabIndex = 0;
+    this._tabindex = this.el.getAttribute('tabindex');
+    this._trigger = this.el.closest('button') ?? this.el;
+    this.el.tabIndex = this._trigger === this.el ? 0 : -1;
     // Wrap
     this.el.before(this.placeholder);
     this.placeholder.append(this.el);
@@ -125,21 +130,40 @@ export class Lightbox extends Component<LightboxOptions> {
 
   destroy() {
     this._removeEventHandlers();
+    for (const timer of this._timers) clearTimeout(timer);
+    this._timers.clear();
+    window.removeEventListener('scroll', this._handleWindowScroll);
+    window.removeEventListener('resize', this._handleWindowResize);
+    window.removeEventListener('keyup', this._handleWindowEscape);
+    this._overlay?.remove();
+    this._photoCaption?.remove();
+    this._changedAncestorList?.forEach(([ancestor, overflow]) => ancestor.style.overflow = overflow);
+    if (this.attrWidth) this.el.setAttribute('width', this.attrWidth);
+    if (this.attrHeight) this.el.setAttribute('height', this.attrHeight);
+    this.el.classList.remove('active');
+    this.placeholder.replaceWith(this.el);
+    if (this.originInlineStyles === null) this.el.removeAttribute('style');
+    else this.el.setAttribute('style', this.originInlineStyles);
+    if (this._tabindex === null) this.el.removeAttribute('tabindex');
+    else this.el.setAttribute('tabindex', this._tabindex);
+    this.overlayActive = false;
+    this.doneAnimating = true;
     this.el['Expressive_Lightbox'] = undefined;
-    // Unwrap image
-    //this.placeholder.after(this.el).remove();
-    this.placeholder.remove();
-    this.el.removeAttribute('style');
+  }
+
+  private _schedule(callback: () => void, delay: number) {
+    const timer = setTimeout(() => { this._timers.delete(timer); callback(); }, delay);
+    this._timers.add(timer);
   }
 
   private _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleLightboxClick);
-    this.el.addEventListener('keypress', this._handleLightboxKeypress);
+    this._trigger.addEventListener('click', this._handleLightboxClick);
+    this.el.addEventListener('keydown', this._handleLightboxKeypress);
   }
 
   private _removeEventHandlers() {
-    this.el.removeEventListener('click', this._handleLightboxClick);
-    this.el.removeEventListener('keypress', this._handleLightboxKeypress);
+    this._trigger.removeEventListener('click', this._handleLightboxClick);
+    this.el.removeEventListener('keydown', this._handleLightboxKeypress);
   }
 
   private _handleLightboxClick = () => {
@@ -147,7 +171,8 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _handleLightboxKeypress = (e: KeyboardEvent) => {
-    if (e.key === Utils.keys.ENTER) {
+    if (this._trigger === this.el && (e.key === Utils.keys.ENTER || e.key === ' ')) {
+      e.preventDefault();
       this._handleLightboxToggle();
     }
   };
@@ -209,7 +234,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.style.transition = 'none';
     this.el.style.height = this.originalHeight + 'px';
     this.el.style.width = this.originalWidth + 'px';
-    setTimeout(() => {
+    this._schedule(() => {
       // One offset for both axes, read before any of the writes below.
       const placeholderOffset = this._offset(this.placeholder);
       // easeOutQuad
@@ -236,7 +261,7 @@ export class Lightbox extends Component<LightboxOptions> {
         'px';
     }, 1);
 
-    setTimeout(() => {
+    this._schedule(() => {
       this.doneAnimating = true;
       if (typeof this.options.onOpenEnd === 'function') this.options.onOpenEnd.call(this, this.el);
     }, duration);
@@ -279,7 +304,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.style.width = this.originalWidth + 'px';
     this.el.style.left = '0';
     this.el.style.top = '0';
-    setTimeout(() => {
+    this._schedule(() => {
       this.placeholder.style.height = '';
       this.placeholder.style.width = '';
       this.placeholder.style.position = '';
@@ -312,7 +337,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._photoCaption.style.transition = 'none';
     this._photoCaption.style.opacity = '0';
     const duration = this.options.inDuration;
-    setTimeout(() => {
+    this._schedule(() => {
       this._photoCaption.style.transition = `opacity ${duration}ms ease`;
       this._photoCaption.style.opacity = '1';
     }, 1);
@@ -321,7 +346,7 @@ export class Lightbox extends Component<LightboxOptions> {
     const duration = this.options.outDuration;
     this._photoCaption.style.transition = `opacity ${duration}ms ease`;
     this._photoCaption.style.opacity = '0';
-    setTimeout(() => {
+    this._schedule(() => {
       this._photoCaption.remove();
     }, duration);
   }
@@ -352,7 +377,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._overlay.style.transition = 'none';
     this._overlay.style.opacity = '0';
     const duration = this.options.inDuration;
-    setTimeout(() => {
+    this._schedule(() => {
       this._overlay.style.transition = `opacity ${duration}ms ease`;
       this._overlay.style.opacity = '1';
     }, 1);
@@ -361,7 +386,7 @@ export class Lightbox extends Component<LightboxOptions> {
     const duration = this.options.outDuration;
     this._overlay.style.transition = `opacity ${duration}ms ease`;
     this._overlay.style.opacity = '0';
-    setTimeout(() => {
+    this._schedule(() => {
       this.overlayActive = false;
       this._overlay.remove();
     }, duration);

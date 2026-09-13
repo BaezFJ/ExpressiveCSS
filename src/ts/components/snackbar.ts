@@ -294,6 +294,10 @@ export class Snackbar {
     snackbar.setAttribute('role', 'status');
     snackbar.setAttribute('aria-live', 'polite');
     snackbar.setAttribute('aria-atomic', 'true');
+    snackbar.addEventListener('focusin', () => this._pauseTimer());
+    snackbar.addEventListener('focusout', () => setTimeout(() => this._resumeTimer(), 0));
+    snackbar.addEventListener('pointerenter', () => this._pauseTimer());
+    snackbar.addEventListener('pointerleave', () => this._resumeTimer());
     // Add custom classes onto snackbar
     if (this.options.classes.length > 0) {
       snackbar.classList.add(...this.options.classes.split(' ').filter(Boolean));
@@ -373,7 +377,7 @@ export class Snackbar {
 
   /** Restart a countdown stopped by {@link _pauseTimer}. */
   _resumeTimer() {
-    if (this.counterTimeout != null) return;
+    if (this._dismissed || this.panning || this.el.matches(':hover, :focus-within') || this.counterTimeout != null) return;
     this._setTimer();
   }
 

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -25,11 +25,19 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/chips/overview).
 
-Support (2026-09-07, `llm.md#chips`): Assist, suggestion, filter, input, and display chips.
+Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/chips/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/chips/guidelines).
+
+Support (2026-09-13, `llm.md#chips`): Assist, suggestion, filter, input, and display chips.
 
 Web adaptation: Element choice defines behavior; display chips are a framework extension.
+
+Known boundary: Filter selection is checked; input-chip deletion, dual targets and focus after removal remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#chips).
 

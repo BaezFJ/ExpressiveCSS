@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -23,15 +23,23 @@ Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/compone
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/floating-action-button/overview).
+
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/floating-action-button/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/floating-action-button/guidelines).
 
 [Related Google component](https://m3.material.io/components/extended-fab/overview).
 
 [Related Google component](https://m3.material.io/components/fab-menu/overview).
 
-Support (2026-09-07, `llm.md#floating-action-button`): FAB sizes, extended FABs, and menus of related actions.
+Support (2026-09-13, `llm.md#floating-action-button`): FAB sizes, extended FABs, and menus of related actions.
 
 Web adaptation: Floating action behavior uses the documented FAB runtime.
+
+Known boundary: Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#fab).
 

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -25,21 +25,29 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/progress-indicators/overview).
 
-Support (2026-09-07, `llm.md#progress-indicators`): Linear and circular progress, determinate and indeterminate.
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/progress-indicators/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/progress-indicators/guidelines).
+
+Support (2026-09-13, `llm.md#progress-indicators`): Linear and circular progress, determinate and indeterminate.
 
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
+
+Known boundary: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#progress).
 
 #### Contract
 
+Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering, forced colors and custom RTL fill require separate verification. Published 0.9.1 does not include these repairs.
+
 Activity and progress indicators for content that takes time to load.
 
 If content will take a while to load, give the user feedback. Expressive ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
-
-For an indeterminate wait under about five seconds, prefer the Loading indicator — it supersedes the indeterminate circular case below. Progress indicators keep both linear bars and everything determinate.
 
 #### Syntax
 

@@ -93,3 +93,33 @@ Record selector, theme, state, resolved colors, ratio, threshold, and outcome.
 Repair the scoped role pair or state styling, then repeat the same checks;
 do not disable forced colors or overwrite the user's scheme to force a pass.
 Report only the states measured, not blanket WCAG conformance.
+
+## Content on hover or focus
+
+For custom tooltips and other nonmodal content triggered by hover or focus, apply [SC 1.4.13, AA](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html):
+
+- Dismissible: dismiss without moving hover or keyboard focus, commonly with Escape. The condition has exceptions for input errors and content that does not obscure or replace other content. Record the applicable exception rather than assuming every bubble needs a close control.
+- Hoverable: move the pointer from the trigger onto the added content without it disappearing. Check the crossing gap and the content itself, including with a large pointer or magnification.
+- Persistent: content remains until hover/focus leaves the trigger and added content, the person dismisses it, or its information is no longer valid. Do not time out a tooltip while it is still being read.
+
+Unmodified user-agent presentation is excepted. Native browser tooltips and custom CSS bubbles are not interchangeable for that exception. Test hover and keyboard focus separately, including dismissal without losing focus. Naming or aria-describedby checks alone cannot satisfy these interaction requirements.
+
+Inspect the actual tooltip variant. Published 0.9.1 CSS-only plain tooltips have pointer-events disabled and no own Escape handler; those source facts warrant hoverability and dismissal checks, not a blanket claim of failure or success. Rich and runtime variants need their own evidence. If the chosen path cannot satisfy an applicable condition, record the framework limitation and use persistent supporting text or another verified presentation when appropriate. Do not invent a tooltip API.
+
+## Text-spacing overrides
+
+[SC 1.4.12, AA](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html) requires no loss of content or functionality when people override line height to at least 1.5 times font size, paragraph spacing to 2 times font size, letter spacing to .12 times font size, and word spacing to .16 times font size. These are test overrides, not required default typography. Apply only spacing properties used in the language or script.
+
+Apply all relevant overrides together to affected HTML content, then inspect labels, error/help text, buttons, fields, dialogs, and scrollable regions. Content may grow or reflow; required text and actions must remain readable and usable. Test wrapping and control height rather than assuming a Material single-line recommendation permits clipping at larger text settings.
+
+## Focus not obscured
+
+[SC 2.4.11, AA](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) requires that author-created content does not entirely hide a component when it receives keyboard focus. Traverse the affected flow while scrolling, with sticky bars, cookie banners, sheets, or other overlays present. Inspect the focused component, not only whether an outline exists.
+
+For interfaces where the user can reposition content, consider initial positions as described by the criterion. For content opened by the user, evaluate whether the focused item can be revealed without advancing keyboard focus. Record any applicable note and demonstrated recovery. Prefer keeping the whole target and focus indicator visible; partial coverage is not automatically an AA failure under this criterion. Do not confuse it with the stricter AAA requirement.
+
+## Accessible authentication
+
+Read this only for authentication steps, including sign-in and verification. [SC 3.3.8, AA](https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html) addresses cognitive-function tests such as remembering, manipulating, or transcribing information. Each such step needs a permitted alternative, assistance mechanism, object-recognition exception, or personal-content exception.
+
+Preserve native labels and useful autocomplete values. Allow password managers and paste into password and code fields; do not require manual transcription where those mechanisms can help. Verify the actual input path, including multi-field codes and error recovery, rather than treating an autocomplete attribute as proof that a manager works. Do not claim password-manager integration was tested without using it. The object-recognition and personal-content exceptions belong to this AA criterion; they are not a general endorsement of inaccessible challenges.

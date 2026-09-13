@@ -39,6 +39,8 @@ async function main() {
     engine: 'chromium', engineVersion: null, nodeVersion: process.version, status: 'blocked', files, inputs: await inputPins(), results: [] };
   report.directories = CAPABILITY_INPUT_DIRECTORIES.map((directory) => ({ path: directory, sha256: sha256(JSON.stringify(report.inputs.filter((pin) => pin.path.startsWith(`${directory}/`)))) }));
   let browser, timer;
+  const previousEngine = process.env.EXPRESSIVECSS_TEST_BROWSER;
+  process.env.EXPRESSIVECSS_TEST_BROWSER = 'chromium';
   try {
     browser = await chromium.launch({ headless: true, timeout: 8000 });
     report.engineVersion = browser.version();
@@ -55,7 +57,11 @@ async function main() {
     report.status = !complete || !unchanged || controller.signal.aborted || report.results.length === 0 ? 'blocked' : report.results.some((result) => result.status === 'failed') ? 'failed' : report.results.some((result) => result.status === 'skipped') ? 'blocked' : 'passed';
     report.inputsUnchanged = unchanged;
   } catch (error) { report.error = error.code ?? error.name; }
-  finally { clearTimeout(timer); await browser?.close(); }
+  finally {
+    clearTimeout(timer); await browser?.close();
+    if (previousEngine === undefined) delete process.env.EXPRESSIVECSS_TEST_BROWSER;
+    else process.env.EXPRESSIVECSS_TEST_BROWSER = previousEngine;
+  }
   const serialized = JSON.stringify(report, null, 2) + '\n';
   await writeFile(path.join(directory, 'report.json'), serialized, { flag: 'wx', mode: 0o600 });
   if (values.record) {

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -25,15 +25,21 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
 
-Support (2026-09-07, `llm.md#lightbox`): Enlarge-on-activation image and dismissal.
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+Support (2026-09-13, `llm.md#lightbox`): Enlarge-on-activation image and dismissal.
 
 Web adaptation: ExpressiveCSS media behavior, not an upstream component contract.
+
+Known boundary: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#lightbox).
 
 #### Contract
+
+Unreleased source supports Space and native button activation, cancels pending animation callbacks on destroy and retains the original image. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 

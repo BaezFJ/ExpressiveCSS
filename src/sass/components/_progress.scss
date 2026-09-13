@@ -184,11 +184,23 @@ progress.progress:indeterminate {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .progress > .indeterminate,
-  progress.progress:indeterminate,
-  .progress:not(:is(progress)):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"]),
+  .progress > .indeterminate::before,
+  .progress > .indeterminate::after,
+  .progress::after,
+  .progress.circular,
+  progress.progress:indeterminate::before,
+  progress.progress:indeterminate::after,
+  .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"])::after,
   .preloader {
     animation: none;
+  }
+
+  .progress > .indeterminate::before,
+  .progress > .indeterminate::after,
+  progress.progress:indeterminate::before,
+  progress.progress:indeterminate::after,
+  .progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > .indeterminate)):not([style*="--md-comp-progress-value"])::after {
+    width: 40%;
   }
 
   .preloader {

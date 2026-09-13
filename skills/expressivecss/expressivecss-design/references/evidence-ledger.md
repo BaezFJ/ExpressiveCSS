@@ -1,6 +1,6 @@
 # Evidence ledger
 
-Use this ledger with the review matrix. The fixture or working brief owns coverage. The reviewer may add reached items but may not remove a required item because it is difficult to exercise.
+Use this ledger for full reviews with the review matrix. Focused changes can use the compact record in [review scope](./review-scope.md). The fixture or working brief owns coverage. The reviewer may add reached items but may not remove a required item because it is difficult to exercise.
 
 ## Fixture-owned coverage inventory
 
@@ -13,6 +13,8 @@ Create this inventory before evidence collection. States and responsive boundari
 For every responsive boundary, declare two inventory entries with exact widths: one immediately below and one immediately above. Declare every required state, including blocked or hard-to-reach states. Before reporting completion, compare the completed ledger keys to this inventory. A missing key fails coverage. Do not infer completeness from the records the reviewer happened to collect, and do not require an undeclared full Cartesian product.
 
 ## Evidence records
+
+For A-ANNOUNCEMENT, an interaction trace must identify the browser, OS, assistive technology, triggering event, and observed announcement. Record programmatic exposure separately under A-STATUS-SEMANTICS. If an announcement check is in scope but assistive technology is unavailable, mark delivery Blocked; an accessibility-tree capture cannot substitute for spoken output.
 
 Use one row per criterion instance and scoped observation. `Component ID` may be `none` only for a surface-level claim.
 

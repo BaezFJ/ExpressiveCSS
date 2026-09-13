@@ -151,6 +151,164 @@ Use the framework's Sass entry point in another Sass project:
 When working directly in this repository, the entry point is
 `src/sass/expressive.scss`.
 
+### Smaller page downloads
+
+Use the optional ESM entry with a bundler to remove unused components:
+
+```ts
+import { Tabs } from '@expressivecss/expressive/modular';
+import type { TabsOptions } from '@expressivecss/expressive/modular';
+
+const tabs = Tabs.init(document.querySelector('.tabs'));
+```
+
+The type import is for TypeScript consumers. Initialize after the markup exists
+and call `tabs.destroy()` when removing it. The modular entry performs no
+initialization on import. `AutoInit` remains available, but importing and calling
+it includes the full registry. Importing the root entry retains the existing
+shared behaviors. Both ESM entries share constructors; copy the entire `dist/js`
+directory when hosting ESM files directly. Direct browser imports do not remove
+unused exports. The existing single-file IIFE and CommonJS builds remain available.
+
+| Feature | Explicit initialization with the modular entry |
+| --- | --- |
+| AppBar, Autocomplete, FloatingActionButton, ButtonGroup, Carousel, CharacterCounter, Datepicker, Menu, Lightbox, ScrollSpy, FormSelect, NavigationDrawer, NavigationRail, Tabs, Timepicker, Tooltip | Call the component's `.init(element, options)` |
+| Cards, ExpandingCard, Slider | Call `.init(element, options)` for owned elements, or `.Init()` once to discover matching document elements |
+| Chips | Call `.init()` for managed chips; use `Chips.Init()` once for removal of static chips |
+| Snackbar | Use the existing Snackbar constructor |
+| Input validation, textarea resize, file input paths | Call `Forms.Init()` once after choosing these enhancements |
+| Dialog light dismissal | Call `Dialogs.Init()` once |
+| Bottom-sheet drag dismissal | Call `BottomSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
+| Side-sheet drag dismissal | Call `SideSheets.Init()` once; add `Dialogs.Init()` for light dismissal |
+
+`Range` and `Sidenav` retain their Slider and NavigationDrawer aliases. Component
+initializers include their internal dependencies, such as Menu in FormSelect,
+FormSelect in Datepicker, and Carousel in swipeable Tabs. Do not initialize those
+internal instances separately. Document behaviors are page-level setup; avoid
+repeating their `.Init()` calls on route changes or alongside the root entry.
+
+Choose Sass partials with the custom entry. With Sass's Node package importer,
+compile using `sass --pkg-importer=node app.scss app.css`:
+
+```scss
+@use "pkg:@expressivecss/expressive/scss/custom" with (
+  $components: ("icons-material-design", "tabs", "carousel"),
+  $utilities: ()
+);
+```
+
+This Tabs recipe includes styling for the swipeable option. For FormSelect and
+Datepicker, use this complete recipe instead:
+
+```scss
+@use "pkg:@expressivecss/expressive/scss/custom" with (
+  $components: ("icons-material-design", "buttons", "menu", "forms", "datepicker"),
+  $utilities: ()
+);
+```
+
+```js
+import { Forms, FormSelect, Datepicker } from '@expressivecss/expressive/modular';
+
+Forms.Init();
+const select = FormSelect.init(document.querySelector('#choice'));
+const datepicker = Datepicker.init(document.querySelector('#date'), { openByDefault: true });
+```
+
+Destroy both component instances when removing that view. Add `"docked-display"`
+before `"forms"` if using the picker's optional docked display plugin.
+
+Tokens and base styles are always included. Lists load in the order written,
+inside the original cascade layers. Partial names are relative to `components/`
+or `utilities/`, without underscores or extensions. Keep icons first and preserve
+the order in the corresponding `_index.scss` when combining recipes. Add supporting
+partials for features used by your markup. For example, `$utilities: ("spacing",
+"visibility")` includes those helpers. A `null` list includes the complete group,
+which is the default; `()` omits it. An unknown partial fails compilation.
+
+Bundlers that resolve Sass package paths can use
+`@expressivecss/expressive/scss/custom`; plain Sass with a `node_modules` load path
+can use `@expressivecss/expressive/src/sass/custom`. Import one framework Sass
+entry per stylesheet. The original full entry and compiled CSS are unchanged.
+
+#### Smaller icon fonts
+
+Full fonts remain available. Browsers fetch only the families used on the page;
+choosing just outlined icons already avoids downloading rounded and sharp fonts.
+For a smaller outlined font, supply a subset from your own font tooling and turn
+off the bundled font declarations:
+
+```scss
+@use "pkg:@expressivecss/expressive/scss/custom" with (
+  $components: ("icons-material-design", "tabs", "carousel"),
+  $utilities: (),
+  $expressive-include-fonts: false
+);
+
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: block;
+  src: url("/assets/icons-outlined-subset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/roboto-latin-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/roboto-latin-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/noto-sans-latin-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/noto-sans-latin-500.woff2") format("woff2");
+}
+```
+
+Copy the four text fonts from `dist/fonts` into `/assets`, along with their license
+notices. Disabling bundled faces disables text fonts too; the declarations above
+restore their existing names and weights. Supply corresponding subset faces for
+rounded or sharp icons if the site uses them. Retain ligature shaping and the
+`opsz`, `wght`, `FILL`, and `GRAD` axes in each variable subset.
+
+Include icon names from templates, dynamic content, and framework-generated UI:
+
+| Source | Required icon name |
+| --- | --- |
+| Chips removal buttons | `close`, using the configurable `closeIconClass` family |
+| Snackbar dismissal button | `close` when the dismissal button is enabled |
+| Navigation drawer nested summaries | `expand_more`, generated by CSS |
+
+FormSelect uses CSS masks for its caret and selection marks. Datepicker uses text
+for its configurable previous/next labels. Neither requires an icon-font glyph
+by default. Custom markup and option values may add requirements. Subsets do not
+automatically cover new icons, so retain full fonts for unrestricted icon names.
+
+Run `node --test tests/selective-builds.test.js` after building to record raw,
+gzip, and Brotli sizes in `.cache/selective-builds/sizes.json`. The browser suite
+records font requests and full/selective screenshots separately in that directory.
+
 ### Themes
 
 ExpressiveCSS uses the `theme` attribute on the root element:

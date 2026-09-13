@@ -85,14 +85,15 @@ const _defaults: AutocompleteOptions = {
   isMultiSelect: false,
   onSearch: (text: string, autocomplete: Autocomplete) => {
     const normSearch = text.toLocaleLowerCase();
+    const data = autocomplete.options.data;
     autocomplete.setMenuItems(
-
-      autocomplete.options.data.filter((option) =>
+      data.filter((option) =>
         option.id.toString().toLocaleLowerCase().includes(normSearch)
           || option.text?.toLocaleLowerCase().includes(normSearch)
 
       )
     );
+    autocomplete.options.data = data;
   },
   maxMenuHeight: '300px',
   allowUnsafeHTML: false,
@@ -152,7 +153,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.count = 0;
     this.activeIndex = -1;
     this.oldVal = '';
-    this.selectedValues = this.selectedValues || this.options.selected.map((value) => <AutocompleteData>{ id: value }) || [];
+    this.selectedValues = this.options.selected.map((id) => this.options.data.find(entry => entry.id === id) ?? { id });
     this.menuItems = this.options.data || [];
     this.$active = null;
     this._pointerDown = false;
@@ -297,6 +298,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       if (typeof userOnItemClick === 'function') userOnItemClick.call(this.menu, li);
     };
     this.menu = Menu.init(this.el, menuOptions);
+    this.el.setAttribute('aria-haspopup', 'listbox');
 
     // ! Workaround for Label: move label up again
     // TODO: Just use PopperJS in future!
@@ -339,7 +341,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (
       e.key === Utils.keys.ENTER ||
       e.key === Utils.keys.ARROW_UP ||
-      e.key === Utils.keys.ARROW_DOWN
+      e.key === Utils.keys.ARROW_DOWN ||
+      e.key === Utils.keys.ESC ||
+      e.key === 'Tab'
     )
       return;
     // Check if the input isn't empty, and that focus arrived by keyboard -
@@ -358,6 +362,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   };
 
   _inputChangeDetection = (value: string) => {
+    if (!this.options.isMultiSelect && this.selectedValues.length && this.el.value !== (this.selectedValues[0].text || String(this.selectedValues[0].id))) {
+      this.selectedValues = [];
+    }
     // Value has changed!
     if (this.oldVal !== value) {
       this._setStatusLoading();
@@ -373,6 +380,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   _handleInputKeydown = (e: KeyboardEvent) => {
     Autocomplete._keydown = true;
+    if (e.key === Utils.keys.ESC || e.key === 'Tab') {
+      this.close();
+      this._resetCurrentElementPosition();
+      return;
+    }
     // Arrow keys and enter key usage
     const numItems = this.container.querySelectorAll('li').length;
     // select element on Enter
@@ -459,7 +471,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       'style',
       'display:grid; grid-auto-flow: column; user-select: none; align-items: center;'
     );
-    item.tabIndex = 0;
+    item.tabIndex = -1;
     // Checkbox
     if (this.options.isMultiSelect) {
       const selection = document.createElement('div');
@@ -467,6 +479,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       selection.style.textAlign = 'center';
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
+      checkbox.tabIndex = -1;
       checkbox.checked = isSelected;
       const spacer = document.createElement('span');
       spacer.style.paddingLeft = '21px';
@@ -597,6 +610,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * Hide autocomplete.
    */
   close = () => {
+    if (this._openTimer !== undefined) {
+      clearTimeout(this._openTimer);
+      this._openTimer = undefined;
+    }
+    this.isOpen = false;
     this.menu.close();
   };
 

@@ -199,7 +199,7 @@ export class NavigationDrawer extends Component<NavigationDrawerOptions> impleme
    * Closes the overlay drawer. No-op while the sidenav is docked.
    */
   close = () => {
-    if (this._isCurrentlyFixed() || !this.isOpen) return;
+    if (!this.isOpen) return;
     this._beginClose();
     if (this._dialog?.open) {
       this._closing = true;

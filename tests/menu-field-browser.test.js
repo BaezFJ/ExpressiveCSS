@@ -5,7 +5,9 @@ import { chromium, firefox, webkit, expect } from '@playwright/test';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
+assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(type.executablePath()) ? test : test.skip;
   browserTest(`select and calendar treat external values as data (${engine})`, async () => {
     const browser = await type.launch();

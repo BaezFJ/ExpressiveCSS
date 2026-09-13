@@ -29,10 +29,10 @@ const S = defineSections([
 `} />
         <p>
           The element is empty, so it reports nothing on its own.
-          <code>role="status"</code> announces the wait and
-          <code>aria-label</code> gives it something to announce — not
-          <code>role="progressbar"</code>, which promises an
-          <code>aria-valuenow</code> an indeterminate indicator does not have.
+          Supply a named waiting state and meaningful status text updates;
+          verify spoken delivery with assistive technology. An indeterminate
+          <code>progressbar</code> is also valid and omits <code>aria-valuenow</code>.
+          The current framework contract requires a named status. A name alone does not prove an announcement.
         </p>
   </Section>
   <Section {...S.contained}>
@@ -52,12 +52,10 @@ const S = defineSections([
   </Section>
   <Section {...S["vs-progress"]}>
         <p>
-          This <strong>supersedes the indeterminate circular
-          <a href={route('preloader')}>progress indicator</a></strong>.
-          Reach for the loading indicator whenever you would have written
-          <code>&lt;span class="progress circular"&gt;</code> with no value.
-          <code>.progress</code> keeps everything else — both linear bars, and
-          every case where you know the percentage.
+          Use it for short waits with unknown progress. It replaces most
+          indeterminate circular uses, but keep a progress indicator for a
+          process that will transition to a determinate value. Google's button
+          guidance also retains circular progress.
         </p>
         <table class="striped">
           <thead>

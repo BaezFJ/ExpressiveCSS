@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -25,13 +25,15 @@ Example: A contact directory with no detail view needs a list. Use list-detail p
 
 Relationship: pattern. Canonical layout pattern, not a standalone component.
 
-Upstream: component-guidance-reviewed (2026-09-07); [evidence](https://m3.material.io/foundations/layout/canonical-examples/overview).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/foundations/layout/canonical-examples/overview).
 
-Rendered canonical examples overview reviewed: feed, list-detail, supporting pane; equal and three-pane framework variants are not verified upstream specifications.
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Support (2026-09-07, `llm.md#panes`): List-detail, supporting pane, and equal panes.
+Support (2026-09-13, `llm.md#panes`): List-detail, supporting pane, and equal panes.
 
 Web adaptation: CSS viewport and container queries; the application chooses the active compact pane.
+
+Known boundary: Viewport rules at 840px override narrow-container collapse; compact supporting layouts hide rather than stack supporting content.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#panes).
 
@@ -39,7 +41,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Material 3 canonical layouts — list-detail, supporting pane, and equal panes.
 
-Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Compact windows (`< 600px`) use 16px inline margins. Every wider layout uses 24px inline margins and 24px spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container is also a `container-type: inline-size` query container, so a pane layout nested inside a narrow column collapses on its own width, not the viewport's.
+Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Compact windows (`< 600px`) use 16px inline margins. Every wider layout uses 24px inline margins and 24px spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container declares inline-size containment, but the viewport media rules still show all panes at 840px and above. Do not assume a narrow nested column collapses independently. Google recommends stacking supporting content below primary content on compact and medium layouts; the current one-active-pane behavior is a framework adaptation.
 
 Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane` counts as a pane child — the specific names are for readability.
 

@@ -18,7 +18,7 @@ ExpressiveCSS implements Material Design 3 Expressive with semantic HTML. Metada
 
 ## Staged guide routing
 
-Start here. Classify the task and runtime ownership before reading support guides. Record actual reads; a link does not count as loaded guidance.
+Classify the task and runtime ownership first. Record actual guide reads, not links.
 
 Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expressivecss-design/SKILL.md), [Usage](./expressivecss-usage/SKILL.md), [Theming](./expressivecss-theming/SKILL.md), [Runtime](./expressivecss-runtime/SKILL.md), [Accessibility](./expressivecss-accessibility/SKILL.md), and [component guides](./components/).
 
@@ -40,7 +40,7 @@ Combine overlapping routes. Interface implementation and review require Usage an
 
 The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, use/avoid boundaries, alternatives, runtime ownership, and guide links. Detailed adaptive decisions and Material links live in each component guide.
 
-For support gaps or parity questions, read the optional [capability roadmap](./references/capability-roadmap.md). Scoped source and browser evidence never imply full Material parity.
+For support gaps, read the [capability roadmap](./references/capability-roadmap.md). For Material conformance, use the [review reference](./expressivecss-design/references/material-conformance.md). Scoped evidence never proves full parity.
 
 ## Component discovery protocol
 
@@ -71,7 +71,7 @@ Use the source that owns the question, at the resolved version:
 - **Authored semantics:** [semantics.json](https://github.com/BaezFJ/ExpressiveCSS/blob/master/semantics.json); [SEMANTICS.md](https://www.expressivecss.com/SEMANTICS.md) is generated from it.
 - **Runtime truth:** Sass, TypeScript, registry, neighboring examples, and tests when contributing or resolving drift.
 
-Public-site and master-branch links are discovery pointers, not proof of the target version. For an older installed version use installed sources and a matching repository tag or commit. Report disagreements instead of combining incompatible contracts.
+Public-site and master links do not prove target-version support. For older versions, use installed sources or a matching tag or commit. Report incompatible contracts.
 
 ## Browser evidence
 

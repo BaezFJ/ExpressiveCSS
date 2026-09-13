@@ -505,15 +505,15 @@ Swept 0.8.0.
 
 ### loading-indicator
 
-The M3 Expressive indicator for short waits. One empty <span> that reports nothing on its own, so the role and the name are both the author's - it is a live region, not a progressbar: it has no value to report. It supersedes the indeterminate circular case of `progress`, which keeps every determinate case and both linear bars.
+Short waits with unknown duration. The current framework contract uses a named status. ARIA also permits an indeterminate progressbar without aria-valuenow; that is not the current loading-indicator contract.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 | `loading-indicator-reports-itself` | require-attr | `.loading-indicator` | must have `role` = `status` |
 | `loading-indicator-is-named` | require-accessible-name | `.loading-indicator` | must end up with an accessible name |
 
-- **loading-indicator-reports-itself** - An empty <span class="loading-indicator"> is a shape drawn with CSS and reports nothing. It needs role="status" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it.
-- **loading-indicator-is-named** - The indicator has no text of its own, so role="status" would announce an empty string. Name it - aria-label="Loading", or aria-labelledby pointing at the copy beside it.
+- **loading-indicator-reports-itself** - The current loading-indicator contract requires role="status". Provide meaningful waiting text updates and verify announcement delivery; a role alone does not prove spoken output.
+- **loading-indicator-is-named** - Name the waiting state with aria-label or aria-labelledby. Verify meaningful status updates separately from its accessible name.
 
 ### menu
 

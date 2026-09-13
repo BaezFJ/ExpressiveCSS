@@ -6,7 +6,9 @@ import { chromium, firefox, webkit } from 'playwright';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
+assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
 for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
+  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
   const browserTest = existsSync(browserType.executablePath()) ? test : test.skip;
   browserTest(`expanding-card completion follows CSS and survives interruption (${engine})`, async () => {
     const browser = await browserType.launch({ headless: true });

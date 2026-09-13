@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -25,11 +25,19 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/loading-indicator/overview).
 
-Support (2026-09-07, `llm.md#loading-indicator`): Uncontained and contained morphing loading indicator.
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/loading-indicator/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/loading-indicator/guidelines).
+
+Support (2026-09-13, `llm.md#loading-indicator`): Uncontained and contained morphing loading indicator.
 
 Web adaptation: CSS-only; the author supplies an accessible waiting message.
+
+Known boundary: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#loading-indicator).
 
@@ -37,9 +45,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 M3 Expressive's indicator for a short wait — a shape that morphs while it spins.
 
-Reach for it whenever the wait is under about five seconds and you cannot report a percentage. It **supersedes the indeterminate circular progress indicator**: anywhere you would have written `<span class="progress circular">` with no value, write this instead. `.progress` keeps both linear bars and every determinate case.
+Reach for it whenever the wait is under about five seconds and you cannot report a percentage. It replaces most short indeterminate circular uses. Keep a progress indicator for a process that will transition to a determinate value; Google's button guidance also retains circular progress. `.progress` supports both linear bars and determinate cases.
 
-One element, CSS-only, no JavaScript plugin. The element is empty, so it reports nothing on its own: `role="status"` announces the wait and `aria-label` gives it something to announce. Not `role="progressbar"` — that promises an `aria-valuenow` an indeterminate indicator does not have.
+One element, CSS-only, no JavaScript plugin. The element is empty, so it reports nothing on its own. Supply a named waiting state and meaningful status text updates; verify spoken delivery with assistive technology. An indeterminate `progressbar` is also valid and omits `aria-valuenow`. The current framework contract requires a named status. A name alone does not prove an announcement.
 
 #### Syntax
 
@@ -51,8 +59,8 @@ One element, CSS-only, no JavaScript plugin. The element is empty, so it reports
 
 The following are end-state semantic invariants. The rule IDs come directly from `semantics.json`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.
 
-- `loading-indicator-reports-itself`: An empty <span class="loading-indicator"> is a shape drawn with CSS and reports nothing. It needs role="status" so the wait is announced. Not progressbar - an indeterminate indicator has no aria-valuenow to give it.
-- `loading-indicator-is-named`: The indicator has no text of its own, so role="status" would announce an empty string. Name it - aria-label="Loading", or aria-labelledby pointing at the copy beside it.
+- `loading-indicator-reports-itself`: The current loading-indicator contract requires role="status". Provide meaningful waiting text updates and verify announcement delivery; a role alone does not prove spoken output.
+- `loading-indicator-is-named`: Name the waiting state with aria-label or aria-labelledby. Verify meaningful status updates separately from its accessible name.
 
 #### Guide checks
 

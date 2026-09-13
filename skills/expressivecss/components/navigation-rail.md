@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `d0634ec2be01884bbaacc4424422e5a046886942ec7b5974c4a6a5a725c8e991`
+Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
 
 #### Selection and adaptation
 
@@ -19,15 +19,15 @@ Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/compone
 
 - compact window: replace-with [navigation-bar](./navigation-bar.md). Compact peer destinations fit the bottom edge.
 - expanded window: variant. Use the expanded rail when labels should remain visible.
-- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Use a drawer when nested destinations need more space.
+- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Retain a drawer only for an existing interface or a verified nested-navigation capability missing from the target-version expanded rail.
 
 #### Material mapping
 
 Relationship: component.
 
-Upstream: overview-reviewed (2026-09-07); [evidence](https://m3.material.io/components/navigation-rail/overview).
+Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-rail/overview).
 
-tab observed; destination not followed; link-observed; full specifications not reviewed
+Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
 [Specification link](https://m3.material.io/components/navigation-rail/specs); full specs unreviewed.
 
