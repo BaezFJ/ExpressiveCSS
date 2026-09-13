@@ -11,20 +11,20 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7035a5c2f9f2371ad7e4a7fe0754b78f9d3f998734fb99fecfad14025a6560c0`
+Contract SHA-256: `f7d92f28aeefe6130e16668f77ef1cc4a7a67c6425432b5b5eee5e0b77ff3d3f`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/navigation-drawer/overview)
 
-Compatibility guide: No longer recommended by Google for new M3 Expressive designs; use a expanded navigation rail. Use this contract for maintenance, an explicit request, or a verified replacement gap. The syntax below is retained legacy markup.
+Compatibility guide: No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Use this contract for maintenance, an explicit request, or a verified replacement gap. The syntax below is retained legacy markup.
 
 - compact window: variant. For retained drawers, use the documented modal variant on compact windows.
 - expanded window: variant. For retained drawers, use the documented fixed variant on expanded windows.
 
 #### Material mapping
 
-Relationship: component. No longer recommended by Google for new M3 Expressive designs; use a expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance.
+Relationship: component. No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-drawer/overview).
 

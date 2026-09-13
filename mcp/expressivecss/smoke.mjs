@@ -574,6 +574,30 @@ try {
     });
     assert.equal(retained.structuredContent.found[0].file, `${legacy}.md`);
   }
+  for (const [goal, expected] of [
+    ['Use native radio buttons, not segmented buttons.', 'radio-buttons'],
+    ['Use native radio buttons instead of segmented buttons in a new design.', 'radio-buttons'],
+    ['Do not retain segmented buttons in a new design; use native radio buttons.', 'radio-buttons'],
+    ['Use navigation rail, not navigation drawer, in a new design.', 'navigation-rail'],
+    ['Retain the existing segmented buttons for form submission.', 'segmented-buttons'],
+    ['Maintain segmented buttons needing native submitted radio values.', 'segmented-buttons'],
+    ['Use a navigation drawer because nested navigation is unavailable in the target rail.', 'navigation-drawer'],
+    ['Keep the existing bottom app bar for compatibility.', 'bottom-app-bar'],
+    ['Replace the navigation drawer with current Expressive navigation.', 'navigation-rail'],
+  ]) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal, maxSuggestions: 1 },
+    });
+    assert.equal(decision.structuredContent?.suggestions[0]?.slug, expected, goal);
+  }
+  const constrainedLegacy = await client.callTool({
+    name: 'creative_director',
+    arguments: { projectRoot: matchingDir, goal: 'Use segmented buttons in a new design.',
+      constraints: 'Retain segmented buttons for compatibility with native form submission.', maxSuggestions: 1 },
+  });
+  assert.equal(constrainedLegacy.structuredContent?.suggestions[0]?.slug, 'segmented-buttons');
+
   for (const goal of [
     'Choose navigation and controls for settings.',
     'navigation-drawer-trigger segmented-control bottom-app-bar-icon-hidden',

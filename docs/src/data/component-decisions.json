@@ -369,7 +369,7 @@
         "sidebar"
       ],
       "selectable": false,
-      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use a expanded navigation rail.",
+      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail.",
       "guideSource": {
         "pageId": "sidenav",
         "heading": "Navigation drawer",
@@ -385,7 +385,7 @@
         "Compatibility, explicit requests, or verified replacement gaps."
       ],
       "avoidWhen": [
-        "New designs: use a expanded navigation rail."
+        "New designs: use an expanded navigation rail."
       ],
       "alternatives": [
         "navigation-rail",
@@ -442,7 +442,7 @@
         },
         "specHref": "https://m3.material.io/components/navigation-drawer/specs",
         "guidelinesHref": "https://m3.material.io/components/navigation-drawer/guidelines",
-        "reason": "No longer recommended by Google for new M3 Expressive designs; use a expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance."
+        "reason": "No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance."
       },
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
@@ -6748,5 +6748,5 @@
     "inputsUnchanged": true,
     "reportSha256": "bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab"
   },
-  "sourceRevision": "bef61ad4b7b62a2d346011716bade94a70a3daa8"
+  "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c"
 }

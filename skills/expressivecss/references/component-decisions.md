@@ -10,7 +10,7 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Bottom app bar](../components/bottom-app-bar.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use a docked toolbar. | `toolbars`, `navigation-bar` | css-only |
 | [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `toolbars` | css-only |
 | [Navigation rail](../components/navigation-rail.md) | Collapsed, expanded, or modal peer navigation; the Expressive drawer replacement. | Compact peers fit a navigation bar; verify nesting support. | `navigation-bar` | auto-init |
-| [Navigation drawer](../components/navigation-drawer.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use a expanded navigation rail. | `navigation-rail`, `side-sheet` | auto-init |
+| [Navigation drawer](../components/navigation-drawer.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use an expanded navigation rail. | `navigation-rail`, `side-sheet` | auto-init |
 | [Panes](../components/panes.md) | Responsive list-detail or supporting layouts. | A single collection needs a list, not multiple panes. | `lists` | css-only |
 | [Footer](../components/footer.md) | Site links and legal information at page end. | Primary app destinations need persistent navigation. | `navigation-bar` | css-only |
 | [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `button-groups` | auto-init |

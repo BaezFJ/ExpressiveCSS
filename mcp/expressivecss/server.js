@@ -1033,10 +1033,21 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
   const primary = [];
   const rejected = new Set();
   const replacements = new Map();
+  const retained = new Set();
+  const clauses = goal.toLowerCase().replace(/[-_]/gu, ' ').split(/[.;\n]/u);
   for (const decision of COMPONENT_DECISIONS_BY_SLUG.values()) {
     if (decision.selectable !== false) continue;
-    const names = [decision.slug, decision.title, ...(decision.aliases ?? [])].map(normalizeForMatch);
-    if (names.some((name) => normalizedGoal.includes(name) || hinted.has(name))) {
+    const names = [decision.slug, decision.title, ...(decision.aliases ?? [])]
+      .map((name) => normalizeForMatch(name).replaceAll('-', ' '));
+    const mentions = clauses.filter((clause) =>
+      names.some((name) => new RegExp(`\\b${name}\\b`, 'u').test(clause))
+      && !names.some((name) => new RegExp(`\\b(?:not|never|avoid|without|instead of|rather than) (?:using |the |existing )*${name}\\b`, 'u').test(clause)));
+    const preserve = /\b(?:retain|keep|maintain|maintenance|repair|fix|preserve|compatibility|unavailable|unsupported|missing|lacks?|cannot|needs? native|requires? native)\b/u;
+    const migrate = /\b(?:new (?:design|interface|ui|screen|layout)|migrat(?:e|ing|ion)|replac(?:e|ing)|moderniz(?:e|ing))\b/u;
+    if (mentions.some((clause) => preserve.test(clause)
+      && !/\b(?:not|never|avoid) (?:retain|keep|maintain|repair|fix|preserve)/u.test(clause))) {
+      retained.add(decision.slug);
+    } else if (mentions.some((clause) => migrate.test(clause) && !/\b(?:not|never|avoid|without)\b/u.test(clause))) {
       const replacement = decision.alternatives?.[0];
       if (replacement) replacements.set(replacement, decision.excludeReason);
     }
@@ -1053,7 +1064,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
 
   for (const guide of catalog.components.values()) {
     const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
-    if (!decision || decision.selectable === false) continue;
+    if (!decision || (decision.selectable === false && !retained.has(guide.slug))) continue;
 
     const aliases = Array.isArray(decision.aliases) ? decision.aliases : [];
     const adaptive = decision.adaptive ?? [];
@@ -1072,10 +1083,11 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
       || normalizedGoal.includes(normalizeForMatch(decision.title));
     const hintMatch = hinted.has(guide.slug) || aliases.some((alias) => hinted.has(normalizeForMatch(alias)));
     const replacementReason = replacements.get(guide.slug);
-    const score = (positiveMatches.length * 2) + (aliasMatch ? 30 : 0) + (nameMatch ? 12 : 0) + (hintMatch ? 12 : 0) + (replacementReason ? 60 : 0);
+    const retentionReason = retained.has(guide.slug) ? `Retained for explicit maintenance or compatibility intent. ${decision.excludeReason}` : null;
+    const score = (positiveMatches.length * 2) + (aliasMatch ? 30 : 0) + (nameMatch ? 12 + tokenize(decision.slug).length : 0) + (hintMatch ? 12 : 0) + (replacementReason || retentionReason ? 60 : 0);
     const avoidScore = avoidMatches.length * 8;
 
-    if (!replacementReason && (score <= avoidScore || score === 0)) {
+    if (score <= avoidScore || score === 0) {
       if (avoidMatches.length) rejected.add(guide.slug);
       continue;
     }
@@ -1083,8 +1095,8 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
     primary.push({
       slug: guide.slug,
       title: guide.title,
-      score: replacementReason ? score : score - avoidScore,
-      why: replacementReason || (positiveMatches.length
+      score: score - avoidScore,
+      why: retentionReason || replacementReason || (positiveMatches.length
         ? `Decision metadata matches: ${positiveMatches.slice(0, 4).join(', ')}`
         : 'Explicit component name or alias match'),
       docs: guide.sourceUrl,
