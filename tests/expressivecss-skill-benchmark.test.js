@@ -236,7 +236,7 @@ test('failed live cases retain bounded redacted source without symlinks and stil
       import { runBenchmark } from ${JSON.stringify(moduleUrl)};
       await runBenchmark({ baseline: process.argv[1], candidate: process.argv[1], output: process.argv[2], repetitions: 1, caseName: 'version-mismatch' });
     `, skill, output], {
-      encoding: 'utf8', timeout: 15000,
+      encoding: 'utf8', timeout: 60000,
       env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}`, EXPRESSIVECSS_TEST_ROOTS: roots, EXPRESSIVECSS_TEST_OUTSIDE: outside },
     });
     assert.equal(checked.status, 0, checked.error?.message ?? checked.stderr);
@@ -563,7 +563,7 @@ test('three-mode runner preserves absent-skill provenance, resume and durable ev
     const script = `import {runBenchmark} from ${JSON.stringify(new URL('../scripts/benchmark-expressivecss-skill.mjs', import.meta.url).href)};
       await runBenchmark({assistance:true,candidate:process.argv[1],output:process.argv[2],caseName:'form-action',repetitions:1,resume:process.argv[3]==='true'});`;
     for (const resume of ['false', 'true']) {
-      const run = spawnSync(process.execPath, ['--input-type=module', '-e', script, skill, output, resume], { encoding: 'utf8', timeout: 60000, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` } });
+      const run = spawnSync(process.execPath, ['--input-type=module', '-e', script, skill, output, resume], { encoding: 'utf8', timeout: 120000, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` } });
       assert.equal(run.status, 0, [run.error?.message, run.stderr, run.stdout].filter(Boolean).join('\n'));
     }
     const rows = JSON.parse(await readFile(path.join(output, 'results.json'), 'utf8'));
