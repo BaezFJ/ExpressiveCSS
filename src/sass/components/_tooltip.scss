@@ -37,8 +37,9 @@
   color: var(--md-comp-plain-tooltip-supporting-text-color);
   @include typescale("body-small");
   text-align: center;
-  white-space: nowrap;
-  pointer-events: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: auto;
   z-index: 2000;
 }
 
@@ -158,4 +159,21 @@ body > .tooltip {
     background: none;
     box-shadow: none;
   }
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--md-comp-tooltip-anchor-gap));
+  z-index: -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :not(body) > .tooltip {
+    transition: none;
+  }
+}
+
+.tooltip-content {
+  min-width: 0;
 }

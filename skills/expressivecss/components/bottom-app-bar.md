@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -23,15 +23,21 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component. Legacy Material component; Google deprecates it for M3 Expressive in favor of docked toolbars.
 
-Upstream: document-reviewed (2026-09-07); [evidence](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/toolbars/overview).
 
-Google MDC Android marks bottom app bar available but deprecated/not recommended in M3 Expressive; docked toolbar replaces it. Legacy M2 link observed: https://m2.material.io/components/app-bars-bottom .
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Support (2026-09-07, `llm.md#bottom-app-bar`): Bottom command bar with optional FAB.
+[Specification link](https://m3.material.io/components/toolbars/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/toolbars/guidelines).
+
+Support (2026-09-13, `llm.md#bottom-app-bar`): Bottom command bar with optional FAB.
 
 Web adaptation: Tab-reachable commands; no toolbar composite role.
 
 Known boundary: Retained API; use a docked toolbar for new M3 Expressive work when its behavior fits.
+
+Known boundary: Retained baseline bar has no directly mapped target, Tab-order or content-clearance check.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-app-bar).
 

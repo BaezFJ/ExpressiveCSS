@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -25,11 +25,15 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
 
-Support (2026-09-07, `llm.md#footer`): Native footer with navigation columns and copyright content.
+Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
+
+Support (2026-09-13, `llm.md#footer`): Native footer with navigation columns and copyright content.
 
 Web adaptation: Web page landmark styled with theme roles.
+
+Known boundary: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#footer).
 

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -20,13 +20,15 @@ Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/componen
 Example: Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths.
 
 - expanded window: replace-with [navigation-rail](./navigation-rail.md). Use persistent peer navigation at wider widths.
-- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Use a drawer when nested destinations need more space.
+- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Retain a drawer only for an existing interface or a verified capability missing from the target-version expanded rail.
 
 #### Material mapping
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-bar/overview).
+
+Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
 Support (2026-09-07, `llm.md#navigation-bar`): Stacked and horizontal destination layouts.
 
@@ -38,7 +40,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).
 
-This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows; a navigation rail covers mid-size screens and a navigation drawer the rest.
+This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows, a bar or rail in medium windows, and an expanded navigation rail in wider windows. Retained navigation drawers need a capability or compatibility reason.
 
 Default. Icon above the label. The selected destination puts a pill behind the icon and fills the glyph.
 

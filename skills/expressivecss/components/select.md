@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -23,13 +23,19 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: related. Related guidance is not a dedicated component specification.
 
-Upstream: document-reviewed (2026-09-07); [evidence](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/menus/overview).
 
-Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations.
+Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Support (2026-09-07, `llm.md#select`): Single/multiple selection, optgroups, and browser-default fallback.
+[Specification link](https://m3.material.io/components/menus/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/menus/guidelines).
+
+Support (2026-09-13, `llm.md#select`): Single/multiple selection, optgroups, and browser-default fallback.
 
 Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
+
+Known boundary: Current browser evidence covers lifecycle and enlarged labels, not every disabled, grouped, or multiple-selection path.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#select).
 

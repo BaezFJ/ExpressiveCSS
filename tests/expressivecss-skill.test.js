@@ -225,7 +225,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(body, /\*\*Shipped contract:\*\*.*elements.*classes.*options.*methods/);
     assert.match(body, /\*\*Authored semantics:\*\*.*semantics\.json/);
     assert.match(body, /\*\*Runtime truth:\*\*.*Sass.*TypeScript.*tests/);
-    assert.match(body, /older.*installed version.*matching repository tag/is);
+    assert.match(body, /older versions.*installed sources.*matching tag/is);
   });
 
   test('keeps the load-bearing design, usage, runtime, theme, and accessibility rules', () => {
@@ -673,7 +673,7 @@ describe('the ExpressiveCSS agent skill', () => {
     const matrix = readFileSync(new URL('expressivecss-design/references/review-matrix.md', skillDirectory), 'utf8');
     const componentGroup = matrix.slice(matrix.indexOf('## Component review groups'));
 
-    assert.match(design, /one review group per selected component/i);
+    assert.match(design, /one component group per distinct contract/i);
     assert.match(componentGroup, /one group per selected component/i);
     for (const criterionId of [
       'A-HOST-ELEMENT',
@@ -785,9 +785,9 @@ describe('the ExpressiveCSS agent skill', () => {
       ['New surface, Refine, or Redesign', 'Design, Usage, Theming, Accessibility, selected component guides', 'Install'],
     ];
 
-    assert.match(routing, /Classify the task.*before reading support guides/i);
-    assert.match(routing, /Classify.*runtime ownership.*before reading/is);
-    assert.match(routing, /actual reads.*link does not count as loaded guidance/is);
+    assert.match(routing, /Classify the task.*runtime ownership first/i);
+    assert.match(routing, /Classify.*runtime ownership first/is);
+    assert.match(routing, /Record actual guide reads, not links/is);
     assert.match(routing, /\| Task classification \| Must read \| Must not read by default \|/);
     for (const [task, load, avoid] of expectedRows) {
       assert.ok(routing.includes(`| ${task} | ${load} | ${avoid} |`), `wrong route for ${task}`);
@@ -826,7 +826,7 @@ describe('the ExpressiveCSS agent skill', () => {
       },
       'expressivecss-accessibility/SKILL.md': {
         use: /interface implementation, Critique, or Audit.*visual reviews/is,
-        avoid: /setup-only work[\s\S]*accessibility behavior unchanged[\s\S]*substitute for.*component contract/i,
+        avoid: /setup-only work[\s\S]*accessibility behavior unchanged[\s\S]*selected component and runtime contracts/i,
       },
     };
 
@@ -856,7 +856,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(routingStart >= 0, 'root staged guide routing is missing');
     const routing = body.slice(routingStart, routingEnd);
 
-    assert.match(routing, /Classify the task.*before reading support guides/i);
+    assert.match(routing, /Classify the task.*runtime ownership first/i);
     assert.doesNotMatch(body, /## References that you must read/);
     assert.match(routing, /\| Setup only \| Install \|/);
     assert.match(routing, /\| CSS-only static markup \| Usage, Accessibility, selected component guides \|/);

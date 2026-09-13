@@ -59,6 +59,7 @@ Write a short working brief before code:
 - **Task path:** what the user sees, decides, does, and receives as feedback.
 - **Hierarchy:** primary content, supporting content, and the one high-emphasis action per region.
 - **Adaptive plan:** Compact first, then Medium, Expanded, Large, and Extra-large where reachable. State what reflows, collapses, moves, or becomes a different documented component.
+- **Scaffold map:** bars, rails, content panes, and relevant safety regions; distinguish navigation from contextual actions. Name pane relationships, the narrower adaptation, and whether the document or individual panes own scrolling.
 - **Component map:** one documented component per job, including navigation, containment, input, feedback, and progress.
 - **Brand expression:** `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
 - **State plan:** loading, empty, error, success, disabled, selected, permission, offline, and destructive-action behavior that the feature can reach.
@@ -66,6 +67,8 @@ Write a short working brief before code:
 Keep the brief in the task unless an existing project record needs an in-scope update or the user asks to save it. Reuse that record; the product context reference explains how to preserve decision status and scope. Planning, Critique, and Audit alone do not authorize documentation edits.
 
 ## 3. Compose with Material hierarchy
+
+For a complete page, app shell, or adaptive pane layout, read the [Material 3 Expressive scaffold reference](./references/scaffold.md). Use it to assign bars, rails, panes, and safety regions, then map each region to the selected ExpressiveCSS components.
 
 For a complete settings, editor, or list-detail flow, consult the matching [runnable example](../assets/examples/README.md) after selecting components. Compare its restrained and expressive treatments, including the product context in its annotations. Borrow the relationships between action size, containment, type, color, and shape; preserve the consuming product's identity and use its matching component contracts. These examples are optional references, not required reading for isolated component work.
 
@@ -104,13 +107,17 @@ Keep default, hover, focus-visible, pressed, selected, and disabled states coher
 
 ## 5. Review with evidence
 
+When assessing Material conformance, read the [Material review reference](./references/material-conformance.md). Verify Google requirements separately from target-version framework contracts, using only the selected components and relevant specification sections.
+
 For a complete interface, first review the primary task in the whole-page composition. A valid component can still sit below an oversized navigation region, compete with secondary actions, or lose its feedback among unrelated content. Name the primary task and preservation requirements, inspect the initial viewport and the full page, then follow the action through its reachable states. Keep measured behavior separate from judgments about hierarchy, typography, containment, and recovery clarity. Attach matched captures and concrete observations to those judgments; a collection of passing DOM checks is not an overall design verdict.
 
 Budget verification by scene rather than by criterion. Collect related DOM observations together and reuse each capture for the criteria it actually demonstrates. Prefer a full-page capture over repeated scrolling screenshots when the tool supports it. Reserve capacity for the confirmation pass, and stop when a tool reports its resource limit. Check that you can open a capture before relying on visual judgments; a screenshot path or DOM summary alone does not establish that you saw the interface.
 
-Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Use the [review matrix](./references/review-matrix.md) for Critique, Audit, and combined finish reviews. Use the [evidence ledger](./references/evidence-ledger.md) to trace every reachable state and reached responsive boundary to evidence or `Blocked`. Record one evidence-backed status for every applicable matrix row. After component selection, add one review group per selected component. A family group is allowed only when every member shares the exact contract fact being reviewed; otherwise split the family. Record each component's target-version contract and each applicable generated-guide rule. A generic component summary does not replace these checks.
+Use the real interface. Source inspection alone cannot prove hierarchy, overflow, focus, motion, or responsive behavior. Choose review depth with the [review scope reference](./references/review-scope.md). Explicit Material conformance and comprehensive accessibility audits use the full [review matrix](./references/review-matrix.md) and [evidence ledger](./references/evidence-ledger.md) for their declared scope. Record one evidence-backed status for every applicable matrix row, with one component group per distinct contract. Focused changes use a compact record of affected criteria, observations, tests, and unavailable evidence. Neither path can waive a relevant failure or claim untested behavior passed.
 
-When optional MCP tools contribute evidence, copy `checksPerformed`, `evidenceSources`, `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into the ledger. Mark an applicable unperformed check `Blocked`. MCP evidence does not replace browser interaction, rendered responsive, visual, or accessibility review.
+When optional MCP tools contribute evidence, copy `checksPerformed`, `evidenceSources`, `uncheckedAreas`, `coverageStatus`, and `blockedChecks` into the selected compact record or full ledger. Mark a required unperformed check `Blocked`. MCP evidence does not replace browser interaction, rendered responsive, visual, or accessibility review.
+
+Apply the following checks to affected criteria and their dependencies in the selected scope. Unrelated states or components do not expand a focused review.
 
 1. Run the consuming project's build and focused tests.
 2. Exercise the primary task with keyboard and pointer input. Use touch input when the feature targets it.
@@ -118,7 +125,7 @@ When optional MCP tools contribute evidence, copy `checksPerformed`, `evidenceSo
 4. Include light and dark schemes, reduced motion, 200% text resizing, reflow at a 320 CSS px-equivalent viewport where WCAG reflow applies, long content, an error path, and right-to-left layout where relevant.
 5. Inspect the accessibility tree, accessible names, focus order, focus visibility, announcements, dialog behavior, and contrast under [`../expressivecss-accessibility/SKILL.md`](../expressivecss-accessibility/SKILL.md).
 
-When subagents are available, request one independent review after the implementation pass. Give the reviewer the original request, working brief, changed files, screenshots, and applicable ExpressiveCSS guides. The reviewer must not edit. It should return:
+For a comprehensive review or a change spanning interaction and accessibility, request one independent review after implementation when subagents are available. A small label or token edit does not require another agent. Give the reviewer the original request, working brief, changed files, screenshots, and applicable ExpressiveCSS guides. The reviewer must not edit. It should return:
 
 - what must be preserved;
 - findings ordered by user impact;

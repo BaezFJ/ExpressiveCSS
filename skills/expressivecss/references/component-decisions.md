@@ -7,10 +7,10 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | Component | Use when | Avoid when | Alternatives | Runtime |
 | --- | --- | --- | --- | --- |
 | [App bar](../components/app-bar.md) | Page title and screen-level actions. | Peer destinations need navigation; categories need tabs. | `navigation-bar`, `tabs`, `breadcrumbs` | auto-init |
-| [Bottom app bar](../components/bottom-app-bar.md) | This screen's commands at the bottom edge, with an optional FAB — not its destinations. | The items are destinations rather than commands, or a top toolbar fits the task. | `navigation-bar`, `toolbars` | css-only |
-| [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `navigation-drawer`, `bottom-app-bar` | css-only |
-| [Navigation rail](../components/navigation-rail.md) | Switch between UI views on mid-sized devices. | Destinations are nested or the surface is Compact. | `navigation-bar`, `navigation-drawer` | auto-init |
-| [Navigation drawer](../components/navigation-drawer.md) | A slide-out menu, or a fixed sidebar on Expanded and wider screens. | Flat peer destinations fit a bar or rail, or the content is details for the current item. | `navigation-rail`, `side-sheet` | auto-init |
+| [Bottom app bar](../components/bottom-app-bar.md) | Retain an existing bottom app bar or explicit compatibility need. | New Expressive bottom actions need docked toolbars; destinations need navigation. | `toolbars`, `navigation-bar` | css-only |
+| [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `navigation-drawer`, `toolbars` | css-only |
+| [Navigation rail](../components/navigation-rail.md) | Collapsed, expanded, or modal peer navigation; the Expressive drawer replacement. | Compact peers fit a navigation bar; verify nesting support. | `navigation-bar`, `navigation-drawer` | auto-init |
+| [Navigation drawer](../components/navigation-drawer.md) | Retain a drawer or a verified nesting capability missing from expanded rails. | New navigation fits expanded rails; item details need a side sheet. | `navigation-rail`, `side-sheet` | auto-init |
 | [Panes](../components/panes.md) | Responsive list-detail or supporting layouts. | A single collection needs a list, not multiple panes. | `lists` | css-only |
 | [Footer](../components/footer.md) | Site links and legal information at page end. | Primary app destinations need persistent navigation. | `navigation-bar` | css-only |
 | [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `segmented-buttons` | auto-init |
@@ -23,7 +23,7 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Segmented buttons](../components/segmented-buttons.md) | Choose 2–5 values using native radio/checkbox inputs. | Independent commands need a standard button group. | `button-groups`, `radio-buttons` | css-only |
 | [Button groups](../components/button-groups.md) | Cluster commands or aria-pressed toggle buttons. | Submitted values need segmented or other native inputs. | `segmented-buttons`, `split-button` | auto-init |
 | [Split button](../components/split-button.md) | Default action plus related menu actions. | Equal actions need a group; values need inputs. | `button-groups`, `menu` | auto-init |
-| [Floating action button](../components/fab.md) | A circular action that can open a menu of related shortcuts. | The action is not the single highest-priority screen action. | `buttons`, `bottom-app-bar` | auto-init |
+| [Floating action button](../components/fab.md) | A circular action that can open a menu of related shortcuts. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |
 | [Cards](../components/cards.md) | Distinct items with their own content or actions. | Dense comparable rows need a list. | `lists`, `carousel`, `badges` | auto-init |
 | [Lists](../components/lists.md) | Scan repeated rows of text and images. | Rich independent items need cards. | `cards`, `carousel`, `panes` | css-only |
 | [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or banner. | `snackbar`, `banners`, `bottom-sheet`, `side-sheet`, `floating-sheet` | shared-runtime |
@@ -39,7 +39,7 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Loading indicator](../components/loading-indicator.md) | Brief waits under about five seconds, no known fraction. | Measured or long-running work needs progress. | `progress` | css-only |
 | [Carousel](../components/carousel.md) | Browse a visual collection horizontally. | Dense comparisons need lists; enlargement needs lightbox. | `lists`, `cards`, `lightbox` | auto-init |
 | [Lightbox](../components/lightbox.md) | Enlarge an image on activation. | Tasks need dialogs; browsing collections needs carousel. | `carousel`, `dialogs`, `floating-sheet` | auto-init |
-| [Toolbars](../components/toolbars.md) | Group frequent actions near their content. | Destinations need navigation; page identity needs app bar. | `navigation-bar`, `app-bar` | css-only |
+| [Toolbars](../components/toolbars.md) | Contextual actions; docked toolbars replace bottom app bars in new Expressive layouts. | Destinations need navigation; page identity needs app bar. | `navigation-bar`, `app-bar` | css-only |
 | [Search](../components/search.md) | A search bar, and the view it expands into. | The field is ordinary data entry rather than finding content. | `text-fields`, `autocomplete` | css-only |
 | [Fieldsets](../components/fieldsets.md) | Name related form controls with a legend. | Visual content grouping needs cards or sections. | `cards` | css-only |
 | [Text fields](../components/text-fields.md) | Material Design 3 text fields, from the HTML. | The value comes from a constrained set better represented by selection controls. | `search`, `autocomplete`, `select` | css-only |

@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -25,23 +25,29 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/snackbar/overview).
+
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
 [Specification link](https://m3.material.io/components/snackbar/specs); full specs unreviewed.
 
-Support (2026-09-07, `llm.md#snackbar`): Transient message with optional action and close control.
+[Google guidelines](https://m3.material.io/components/snackbar/guidelines).
+
+Support (2026-09-13, `llm.md#snackbar`): Transient message with optional action and close control.
 
 Web adaptation: Use the documented announcement and timeout behavior.
+
+Known boundary: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#snackbar).
 
 #### Contract
 
+Unreleased source pauses finite timers while focus or the pointer is inside and resumes after departure. For persistent actionable feedback use the existing displayLength: Infinity and dismissible: true options; keyboard reach, Escape and focus recovery need application verification. Published 0.9.1 does not include these repairs.
+
 Material Design 3 snackbars, from the HTML.
 
 Snackbars show short updates about app processes at the bottom of the screen. They should not interrupt browsing. A `.snackbar` is the bar. A `<p>` is the supporting text. A trailing `<button>` is the optional action; a `.circle` button is the optional close.
-
-Tokens follow the [M3 snackbar spec](https://m3.material.io/components/snackbar/specs). The container is `inverse-surface`, 4dp corners, elevation 3, 48dp minimum. Supporting text is `body-medium` / `inverse-on-surface`, two lines max. The action is a `label-large` / `inverse-primary` text button. Close is a 24dp `inverse-on-surface` icon. On Compact viewports the bar is inset 8dp from the edges; from the Medium breakpoint up it hugs content (344–672dp) and sits centered 24dp from the bottom.
 
 #### Syntax
 

@@ -85,6 +85,12 @@ for (const name of EXAMPLE_NAMES) browserTest(`complete ${name} example preserve
         assert.equal(await page.locator('#preview-message').evaluate(el => getComputedStyle(el).fontWeight), '700');
         await page.locator('#edit-button').click();
         assert.equal(await page.locator('#message').evaluate(el => el === document.activeElement), true);
+        for (const width of [840, 839, 1280, 375]) {
+          await page.setViewportSize({ width, height: 900 });
+          assert.equal(await page.locator('#message').inputValue(), 'Bring seeds and a story.');
+          assert.equal(await page.locator('#subject').inputValue(), 'Neighbors <img src=x onerror=alert(1)>');
+          assert.equal(await page.locator('#message').evaluate(el => el === document.activeElement && el.getClientRects().length > 0), true);
+        }
         await page.locator('#editor-form button[type="submit"]').click();
         assert.match(await page.locator('#status').innerText(), /Nothing was sent/);
         // A bfcache-style dispose/remount must retain state and avoid duplicate listeners.

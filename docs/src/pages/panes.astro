@@ -34,9 +34,11 @@ const S = defineSections([
         <a href="https://m3.material.io/foundations/layout/canonical-layouts">M3 canonical layouts</a>.
         Coplanar is the default: full-bleed surfaces and a 1dp
         <code>outline-variant</code> divider. The split is 840px, from
-        either the viewport or the panes container itself
-        (<code>container-type: inline-size</code>). Below that, one pane
-        at a time. Compact windows add 16dp inline margins; every wider
+        viewport media rules. Inline-size containment does not make a narrow
+        nested layout collapse at wide viewport sizes. Below the split, one pane
+        shows at a time. Google recommends stacking supporting content below
+        primary content on compact and medium layouts; this component's
+        one-active-pane behavior is a framework adaptation. Compact windows add 16dp inline margins; every wider
         layout uses 24dp margins and 24dp spacers. Give the container a
         height — it is <code>height: 100%</code>.
       </p>

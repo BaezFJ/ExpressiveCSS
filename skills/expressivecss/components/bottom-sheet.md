@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -23,11 +23,19 @@ Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/co
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/bottom-sheets/overview).
 
-Support (2026-09-07, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/bottom-sheets/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/bottom-sheets/guidelines).
+
+Support (2026-09-13, `llm.md#bottom-sheet`): Standard and modal bottom sheets.
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
+
+Known boundary: The shared handle dismisses rather than cycling sheet heights; long-content and drag behavior are outside the new modal check.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
 

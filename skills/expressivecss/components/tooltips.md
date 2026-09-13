@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `33b826d7b11e9fa9c64fc6b7b1a579f24e6a76c79f68346bb6413d0a91784fe1`
+Contract SHA-256: `60d29ddfd03670a1dc7ab7e5e69914776f1a7d9d6d809f3c3c75ad40b0d0d6ac`
 
 #### Selection and adaptation
 
@@ -23,13 +23,17 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/tooltips/overview).
+
+Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
 [Specification link](https://m3.material.io/components/tooltips/specs); full specs unreviewed.
 
 Support (2026-09-07, `llm.md#tooltips`): Plain and rich tooltips; CSS child and runtime-generated forms.
 
 Web adaptation: The selected form determines ownership; CSS-only hover/focus is not runtime initialization.
+
+Known boundary: For hover/focus tooltips, verify dismissibility, hoverability, and persistence under WCAG SC 1.4.13, including its exceptions. Plain CSS bubbles disable pointer events and have no own Escape handler; aria-describedby alone does not verify these behaviors. Read the [focused web checks](../expressivecss-accessibility/references/web-checks.md#content-on-hover-or-focus).
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tooltips).
 

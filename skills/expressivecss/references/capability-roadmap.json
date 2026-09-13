@@ -1,15 +1,16 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.9.1",
+  "sourceRevision": "f5f2aac3f5c19fbc4e5c69a946f647a088f18f49",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
-    "recordedOn": "2026-09-08",
+    "recordedOn": "2026-09-13",
     "engine": "chromium",
     "engineVersion": "151.0.7922.34",
     "nodeVersion": "v24.18.1",
     "status": "passed",
-    "inputsCurrent": false,
-    "reportSha256": "6e5b79d974875d99aa004a77cd4136a53bdc21d33bef4111ba3dcc1a0927a83c",
+    "inputsCurrent": true,
+    "reportSha256": "bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -20,13 +21,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Small, medium flexible, large flexible, and search app bars.",
       "adaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/app-bars/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/app-bars/overview",
+          "https://m3.material.io/components/app-bars/specs",
+          "https://m3.material.io/components/app-bars/guidelines",
+          "https://m3.material.io/components/app-bars/accessibility"
+        ],
+        "requirements": "Choose small, flexible medium/large or search app bars for the title and screen actions. Preserve meaningful headings, named actions and reachable controls through scrolling and collapse."
       },
       "relationship": "component",
       "sources": [
@@ -39,7 +54,13 @@
           "sha256": "e9a494671ff1ad9675f378f47e1bd2b0e7026c9dc3fe6cff6d0cb552c8c45e00"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Real modal search close/focus ordering and collapsed-header focus clearance are not mapped.",
+          "nextStep": "Open and dismiss the actual search dialog; Tab through scroll collapse and enlarged headings."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -55,14 +76,24 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Bottom command bar with optional FAB.",
       "adaptation": "Tab-reachable commands; no toolbar composite role.",
       "upstream": {
-        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/BottomAppBar.md",
-        "reviewedOn": "2026-09-07",
-        "scope": "document-reviewed",
-        "note": "Google MDC Android marks bottom app bar available but deprecated/not recommended in M3 Expressive; docked toolbar replaces it. Legacy M2 link observed: https://m2.material.io/components/app-bars-bottom ."
+        "source": "https://m3.material.io/components/toolbars/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Toolbars/Overview and Specs: docked toolbar replaces the baseline bottom app bar"
+        ],
+        "sources": [
+          "https://m3.material.io/components/toolbars/overview",
+          "https://m3.material.io/components/toolbars/specs",
+          "https://m3.material.io/components/toolbars/guidelines",
+          "https://m3.material.io/components/toolbars/accessibility"
+        ],
+        "requirements": "The docked toolbar replaces the baseline bottom app bar in Expressive guidance. Retain the older bar only for compatibility or a specific capability need."
       },
       "relationship": "component",
       "sources": [
@@ -71,7 +102,13 @@
           "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Retained baseline bar has no directly mapped target, Tab-order or content-clearance check.",
+          "nextStep": "Verify fixed-bar clearance at enlarged text; prefer a docked toolbar for new Expressive designs."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -84,16 +121,17 @@
       "slug": "navigation-bar",
       "title": "Navigation bar",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Stacked and horizontal destination layouts.",
       "adaptation": "Links navigate; the application marks the current destination.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/navigation-bar/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -115,17 +153,17 @@
       "slug": "navigation-rail",
       "title": "Navigation rail",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Collapsed, expanded, and modal rails.",
       "adaptation": "The compact expanded rail uses a scrim and dismissal behavior.",
       "upstream": {
         "source": "https://m3.material.io/components/navigation-rail/overview",
-        "reviewedOn": "2026-09-07",
-        "scope": "overview-reviewed",
-        "note": "tab observed; destination not followed; link-observed; full specifications not reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -144,10 +182,10 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -161,13 +199,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Sliding and fixed drawers with nested sections.",
       "adaptation": "Native details/summary supports nesting.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/navigation-drawer/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/navigation-drawer/overview",
+          "https://m3.material.io/components/navigation-drawer/specs",
+          "https://m3.material.io/components/navigation-drawer/guidelines",
+          "https://m3.material.io/components/navigation-drawer/accessibility"
+        ],
+        "requirements": "Current Expressive guidance replaces the drawer with an expanded navigation rail. Retained drawers still need named destinations, independent scrolling and correct modal focus and dismissal."
       },
       "relationship": "component",
       "sources": [
@@ -177,12 +229,25 @@
         },
         {
           "path": "src/ts/components/navigationDrawer.ts",
-          "sha256": "d68973e7e9b0f73270449270021adf2587b95a9573678731af4b602b26da4823"
+          "sha256": "6199889b6d22bd065f85e66c5890de0f638de2c42b314b7e30f31d714fb0f56f"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks.",
+          "nextStep": "Test nested destinations, long scrolling and Escape with the actual trigger."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining fixed drawer releases modal state at the expanded boundary",
+          "scope": "Compact open to expanded fixed drawer releases native modality and can reopen after returning compact.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -196,14 +261,23 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "List-detail, supporting pane, and equal panes.",
       "adaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
       "upstream": {
         "source": "https://m3.material.io/foundations/layout/canonical-examples/overview",
-        "reviewedOn": "2026-09-07",
-        "scope": "component-guidance-reviewed",
-        "note": "Rendered canonical examples overview reviewed: feed, list-detail, supporting pane; equal and three-pane framework variants are not verified upstream specifications."
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Canonical examples/List-detail and Supporting pane/Across breakpoints"
+        ],
+        "sources": [
+          "https://m3.material.io/foundations/layout/canonical-examples/overview",
+          "https://m3.material.io/foundations/layout/canonical-examples/list-detail",
+          "https://m3.material.io/foundations/layout/canonical-examples/supporting-pane"
+        ],
+        "requirements": "List-detail uses one pane on compact windows, usually one on medium and two on expanded windows. Supporting content stacks below primary content on compact and medium windows, then sits alongside it on expanded windows. Preserve selection and scroll state."
       },
       "relationship": "pattern",
       "sources": [
@@ -212,16 +286,22 @@
           "sha256": "09f9d783b94ba5464410e8a005f8b4b3d25ed7f1afcf8533e023fcd5194915b8"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "Viewport rules at 840px override narrow-container collapse; compact supporting layouts hide rather than stack supporting content.",
+          "nextStep": "Use an explicit application layout when both panes must remain visible; test actual container width, reading order, selection and scrolling."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -235,13 +315,19 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Native footer with navigation columns and copyright content.",
       "adaptation": "Web page landmark styled with theme roles.",
       "upstream": {
         "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Use a document footer landmark where appropriate, name distinct navigation groups and preserve meaningful links, reading order and reflow."
       },
       "relationship": "none",
       "sources": [
@@ -250,9 +336,22 @@
           "sha256": "71f385db254eb07874be949d5bcb0cdd0ec8835342c1d5a89ba0def76d3668ab"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.",
+          "nextStep": "Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+          "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -266,13 +365,26 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Primary and secondary tabs; stacked and horizontal icon layouts.",
       "adaptation": "Links target panels; use the shipped runtime keyboard contract.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/tabs/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Specs/Primary tabs and Secondary tabs",
+          "Guidelines/Choosing the tab variant",
+          "Accessibility/Keyboard navigation"
+        ],
+        "sources": [
+          "https://m3.material.io/components/tabs/overview",
+          "https://m3.material.io/components/tabs/specs",
+          "https://m3.material.io/components/tabs/guidelines",
+          "https://m3.material.io/components/tabs/accessibility"
+        ],
+        "requirements": "Use primary or secondary tabs for related content, with consistent labels and icons, selected state and reachable overflow. Google describes arrow navigation; native anchor navigation is a distinct web adaptation."
       },
       "relationship": "component",
       "sources": [
@@ -285,9 +397,22 @@
           "sha256": "154b97877b4683a1277d9cbfb1cb320a2d25c8dcefe900d0be3e6835ecf5d178"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "Native links use Tab and aria-current; runtime does not implement composite tab arrow keys.",
+          "nextStep": "Retain native anchor semantics; test overflow and selected-panel focus before adding tab roles."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
+          "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -301,13 +426,19 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Breadcrumb links and app-bar composition.",
       "adaptation": "Labelled navigation with an ordered list and current-page link.",
       "upstream": {
         "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Use named hierarchy navigation with real ancestor links and a current-page state. It communicates location, not peer categories."
       },
       "relationship": "none",
       "sources": [
@@ -316,9 +447,22 @@
           "sha256": "9961900fec76177ae0078a8f68a74fc36155fe97f86d2351c1b527c808642c9e"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified.",
+          "nextStep": "Inspect assistive-technology output for separators and test translated paths without truncating essential context."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+          "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -332,13 +476,19 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Page links, active page, and unavailable previous/next items.",
       "adaptation": "CSS-only navigation; the application supplies destinations.",
       "upstream": {
         "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name result-page navigation and previous/next actions. Expose the current page and make unavailable actions genuinely unavailable to keyboard users."
       },
       "relationship": "none",
       "sources": [
@@ -347,9 +497,22 @@
           "sha256": "7637a970c2ae783f4f5803d82f4373409de9160d1f635327fd855574312704c3"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "aria-disabled and pointer-events alone cannot disable a link for keyboard users.",
+          "nextStep": "Use a non-link unavailable control, verify actual page destinations and preserve current-page state after updates."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+          "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -363,13 +526,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Vertical menus, nested flyouts, grouping, and standard/vibrant styles.",
       "adaptation": "Native menu/li structure; Menu owns opening and keyboard behavior.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/menus/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/menus/overview",
+          "https://m3.material.io/components/menus/specs",
+          "https://m3.material.io/components/menus/guidelines",
+          "https://m3.material.io/components/menus/accessibility"
+        ],
+        "requirements": "Choose the current standard, vibrant or grouped menu for a set of choices. Verify 48dp actionable targets, unclipped placement, first-item focus, arrows, typeahead, Escape and submenu navigation. A menu item should not contain multiple independent controls."
       },
       "relationship": "component",
       "sources": [
@@ -382,28 +559,34 @@
           "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Closing animation focus exclusion, submenu RTL, item targets and typeahead need a rendered check.",
+          "nextStep": "Exercise a normal-duration closing popup with immediate Tab and Shift+Tab; measure targets and test nested menus."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Menu cancels superseded callbacks and teardown work (chromium)",
           "scope": "Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -417,13 +600,19 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Section tracking and table-of-contents links.",
       "adaptation": "Web document navigation helper.",
       "upstream": {
         "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Use named in-page navigation, real fragment links, stable heading IDs and current-section state. Account for sticky offsets and reduced-motion preferences."
       },
       "relationship": "none",
       "sources": [
@@ -440,9 +629,22 @@
           "sha256": "d35d756f8cabcd9bf95aafe9646630309606977fc1bc0347f3e1ded5eba5a3a6"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified.",
+          "nextStep": "Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+          "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -453,17 +655,17 @@
       "slug": "buttons",
       "title": "Buttons",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Filled, tonal, outlined, elevated, and text; xsmall through xlarge.",
       "adaptation": "Native buttons run commands; a.button links navigate.",
       "upstream": {
         "source": "https://m3.material.io/components/buttons/overview",
-        "reviewedOn": "2026-09-07",
-        "scope": "overview-reviewed",
-        "note": "rendered main content reviewed in part; link-observed; full specifications not reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -492,22 +694,22 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -521,13 +723,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.",
       "adaptation": "Accessible name belongs to the control; the glyph is decorative.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/icon-buttons/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/icon-buttons/overview",
+          "https://m3.material.io/components/icon-buttons/specs",
+          "https://m3.material.io/components/icon-buttons/guidelines",
+          "https://m3.material.io/components/icon-buttons/accessibility"
+        ],
+        "requirements": "Distinguish default and toggle controls, sizes, shapes and widths. Name each action and expose toggle state. Verify 48dp effective targets even for visually smaller sizes, and sufficient icon contrast."
       },
       "relationship": "component",
       "sources": [
@@ -544,22 +760,28 @@
           "sha256": "e8a5dfd7355cefde5a87775455cb95ac41c735f0d407a7b23ef94b2ec1ed8fd8"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states.",
+          "nextStep": "Measure XS/S effective targets and test named default/toggle controls outside groups."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group toggle colors resolve in a browser",
           "scope": "Filled icon button selected color and glyph fill inside a button group only.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "keyboard press changes icon widths and rendered corners",
           "scope": "Icon children inside button group only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -573,13 +795,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Single-select radio and multi-select checkbox groups.",
       "adaptation": "Native fieldset/input/label owns selection and form values.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/segmented-buttons/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/segmented-buttons/overview",
+          "https://m3.material.io/components/segmented-buttons/specs",
+          "https://m3.material.io/components/segmented-buttons/guidelines",
+          "https://m3.material.io/components/segmented-buttons/accessibility"
+        ],
+        "requirements": "Use the retained component for two to five single- or multiple-select choices. Current Expressive guidance recommends connected button groups. Preserve form semantics and effective targets when choosing a replacement."
       },
       "relationship": "component",
       "sources": [
@@ -588,7 +824,13 @@
           "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Legacy native radio/checkbox contracts lack a directly mapped rendered group check.",
+          "nextStep": "Test single/multiple form values and native keys; preserve semantics when choosing connected button groups."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -604,13 +846,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Standard and connected groups; commands and opt-in selection.",
       "adaptation": "Runtime coordinates neighboring widths and selection; CSS handles connected shapes.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/button-groups/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/button-groups/overview",
+          "https://m3.material.io/components/button-groups/specs",
+          "https://m3.material.io/components/button-groups/guidelines",
+          "https://m3.material.io/components/button-groups/accessibility"
+        ],
+        "requirements": "Choose standard or connected groups and optional, required, single or multiple selection deliberately. Verify press growth, shapes, 48dp targets and reachable unwrapped content. Google describes Tab between buttons, with no focus on the group itself."
       },
       "relationship": "component",
       "sources": [
@@ -623,40 +879,46 @@
           "sha256": "e628a02ce4d2f6d1d9cbd61c61191f54e4b6de98bcf05b5a19ec7cd4b2da58b8"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Existing geometry and keyboard checks do not cover every required-selection and overflow configuration.",
+          "nextStep": "Exercise empty optional and required selection, disabled neighbors and constrained translated labels."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group toggle colors resolve in a browser",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group geometry resolves for overrides, targets, and RTL",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "standard press redistribution keeps its rendered width stable",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "keyboard press changes icon widths and rendered corners",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -670,13 +932,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Leading action and trailing menu trigger with matching styles.",
       "adaptation": "Reuses Menu; no separate split-button runtime.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/split-button/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/split-button/overview",
+          "https://m3.material.io/components/split-button/specs",
+          "https://m3.material.io/components/split-button/guidelines",
+          "https://m3.material.io/components/split-button/accessibility"
+        ],
+        "requirements": "Keep the leading default action distinct from the trailing additional-choices menu. Name both controls, expose the trailing expanded state, return focus after dismissal and verify separate 48dp effective targets."
       },
       "relationship": "component",
       "sources": [
@@ -689,7 +965,13 @@
           "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Full leading-action versus trailing-menu activation and Escape return are not directly mapped.",
+          "nextStep": "Activate both halves with keyboard and pointer; verify expanded state and separate effective targets."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -702,16 +984,38 @@
       "slug": "fab",
       "title": "Floating action button",
       "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "FAB sizes, extended FABs, and menus of related actions.",
       "adaptation": "Floating action behavior uses the documented FAB runtime.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/floating-action-button/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/floating-action-button/overview",
+          "https://m3.material.io/components/floating-action-button/specs",
+          "https://m3.material.io/components/floating-action-button/guidelines",
+          "https://m3.material.io/components/floating-action-button/accessibility",
+          "https://m3.material.io/components/extended-fab/overview",
+          "https://m3.material.io/components/extended-fab/specs",
+          "https://m3.material.io/components/extended-fab/guidelines",
+          "https://m3.material.io/components/extended-fab/accessibility",
+          "https://m3.material.io/components/fab-menu/overview",
+          "https://m3.material.io/components/fab-menu/specs",
+          "https://m3.material.io/components/fab-menu/guidelines",
+          "https://m3.material.io/components/fab-menu/accessibility"
+        ],
+        "requirements": "Use one primary, non-destructive action. Current guidance discourages the small FAB. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls."
       },
       "relationship": "component",
       "sources": [
@@ -728,7 +1032,13 @@
           "sha256": "8f693be33245b1984742a4f51272c4f39927f4a75c735583583f530ace701940"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child.",
+          "nextStep": "Reproduce hover and keyboard paths in a browser, unify expanded-state ownership and restore focus when hiding an active child."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -744,13 +1054,26 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Elevated, filled, outlined, horizontal, and directly actionable cards.",
       "adaptation": "Native article anatomy; primary-action links preserve navigation semantics.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/cards/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Guidelines/Usage, Behavior/Expanding, Gestures",
+          "Specs/Measurements",
+          "Accessibility/Interaction & style, Focus, Labeling elements"
+        ],
+        "sources": [
+          "https://m3.material.io/components/cards/overview",
+          "https://m3.material.io/components/cards/specs",
+          "https://m3.material.io/components/cards/guidelines",
+          "https://m3.material.io/components/cards/accessibility"
+        ],
+        "requirements": "Group one related subject in an elevated, filled or outlined card. A whole-card primary action must not contain other actions. Avoid unnecessary containment and internal scrolling; provide alternatives to drag and swipe gestures."
       },
       "relationship": "component",
       "sources": [
@@ -771,34 +1094,40 @@
           "sha256": "b776a51297bb066b41ce2c035370eac02c62fa7daa61bb1ce4cf57d2c74edff5"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Existing card lifecycle and geometry evidence does not cover every selected variant, contrast and reflow state.",
+          "nextStep": "Measure and keyboard-test the chosen variant with long content and nested controls."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/cards-browser.test.js",
           "name": "dragged and picked-up states override simultaneous pointer states",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/cards-browser.test.js",
           "name": "invalid disclosures keep their panels visible and operable",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/cards-browser.test.js",
           "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expanding-card-browser.test.js",
           "name": "expanding-card completion follows CSS and survives interruption (chromium)",
           "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -812,13 +1141,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Standard and segmented lists.",
       "adaptation": "Native list semantics; visual selection alone does not justify aria-selected.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/lists/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview/M3 Expressive update",
+          "Specs/Anatomy/Flexibility & slots, Measurements/Shape morphing",
+          "Guidelines/Behavior/List selection modes",
+          "Accessibility/Indicate selection with more than color, Focus, Platform-specific labels"
+        ],
+        "sources": [
+          "https://m3.material.io/components/lists/overview",
+          "https://m3.material.io/components/lists/specs",
+          "https://m3.material.io/components/lists/guidelines",
+          "https://m3.material.io/components/lists/accessibility"
+        ],
+        "requirements": "Choose ordinary content, actionable rows or selection explicitly. Use consistent slots and alignment, 48dp targets and a selection cue beyond color. Google describes composite arrow navigation for actionable lists and listbox/option semantics for web selection; these do not apply automatically to ordinary lists."
       },
       "relationship": "component",
       "sources": [
@@ -827,16 +1170,28 @@
           "sha256": "dec11dbc88d047cac5ba72da9ebcef10fef598767dfdb41418a9b84bb39c9b65"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "Ordinary native lists and child controls do not implement Google composite arrow navigation.",
+          "nextStep": "Retain native semantics unless a complete composite is supplied; test row control names and selection meaning."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+          "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -847,16 +1202,17 @@
       "slug": "dialogs",
       "title": "Dialogs",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Basic and full-screen dialogs.",
       "adaptation": "Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/dialogs/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -885,13 +1241,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Standard and modal bottom sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/bottom-sheets/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/bottom-sheets/overview",
+          "https://m3.material.io/components/bottom-sheets/specs",
+          "https://m3.material.io/components/bottom-sheets/guidelines",
+          "https://m3.material.io/components/bottom-sheets/accessibility"
+        ],
+        "requirements": "Distinguish standard and modal sheets. Keep overflowing content scrollable, close actions reachable and height changes available without dragging. Verify the selected width and margin configuration against Google measurements."
       },
       "relationship": "component",
       "sources": [
@@ -912,9 +1282,22 @@
           "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "The shared handle dismisses rather than cycling sheet heights; long-content and drag behavior are outside the new modal check.",
+          "nextStep": "Use explicit close controls; separately verify reachable scrolling and any application-owned height changes."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
+          "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -928,13 +1311,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Standard and modal side sheets.",
       "adaptation": "Native dialog and shared drag/dismiss behavior.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/side-sheets/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/side-sheets/overview",
+          "https://m3.material.io/components/side-sheets/specs",
+          "https://m3.material.io/components/side-sheets/guidelines",
+          "https://m3.material.io/components/side-sheets/accessibility"
+        ],
+        "requirements": "Use standard or modal sheets for optional supporting content. Mirror the trailing edge in RTL, avoid horizontal scrolling and provide an accessible close action separate from dragging."
       },
       "relationship": "component",
       "sources": [
@@ -955,9 +1352,22 @@
           "sha256": "52d955d70b2d3b3d577787aa94b0a95d45eb37b5570158a6558359daecad40ee"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Native modal/nonmodal focus is checked; start-docked RTL drag direction and long-content fit remain unverified.",
+          "nextStep": "Test the actual RTL edge, drag alternative, enlarged labels and reachable close action."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
+          "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -971,13 +1381,24 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Inset floating dialog surface.",
       "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/dialogs/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Related Dialogs/Usage and Accessibility/Keyboard; no standalone floating-sheet specification"
+        ],
+        "sources": [
+          "https://m3.material.io/components/dialogs/overview",
+          "https://m3.material.io/components/dialogs/specs",
+          "https://m3.material.io/components/dialogs/guidelines",
+          "https://m3.material.io/components/dialogs/accessibility"
+        ],
+        "requirements": "Apply the relevant dialog naming, keyboard, focus and dismissal guidance. Google has no standalone floating-sheet specification; its inset geometry is a framework choice."
       },
       "relationship": "related",
       "sources": [
@@ -990,9 +1411,22 @@
           "sha256": "5fc476d1f93312f8cbd88c1df7301aa8a49cc9a459c121e4d1fa5881a759a4f7"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified.",
+          "nextStep": "Verify content scrolling and action reachability in the chosen inset dialog."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
+          "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1006,14 +1440,24 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Decorative grip and actionable button grip.",
       "adaptation": "The host element determines semantics; no general dragging engine.",
       "upstream": {
-        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/BottomSheet.md",
-        "reviewedOn": "2026-09-07",
-        "scope": "document-reviewed",
-        "note": "Optional drag handle is bottom sheet anatomy. Android handle supports accessible expand/collapse. This does not verify the generic vertical handle or ExpressiveCSS dismiss-on-tap behavior as an identical spec."
+        "source": "https://m3.material.io/components/bottom-sheets/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Bottom sheets/Accessibility: dragging alternatives and handle behavior"
+        ],
+        "sources": [
+          "https://m3.material.io/components/bottom-sheets/overview",
+          "https://m3.material.io/components/bottom-sheets/specs",
+          "https://m3.material.io/components/bottom-sheets/guidelines",
+          "https://m3.material.io/components/bottom-sheets/accessibility"
+        ],
+        "requirements": "A decorative grip is not an operable control. Bottom-sheet guidance describes activation to cycle available heights; provide keyboard and non-drag pointer alternatives for any real drag operation."
       },
       "relationship": "related",
       "sources": [
@@ -1022,7 +1466,13 @@
           "sha256": "a1ba374ed080c749b0c8f4f5fe6f931bebfe5d12c8151ecfa72b484810e0e238"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "Standalone grip styling supplies no drag, resize or reorder operation.",
+          "nextStep": "Provide a named operable control plus keyboard and non-drag pointer alternatives for the real operation."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -1038,13 +1488,26 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Small dot and large count badges.",
       "adaptation": "Expose counts through the enclosing control name when its icon is hidden.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/badges/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Specs/Measurements",
+          "Guidelines/Container, Placement",
+          "Accessibility/Visual indicators, Labeling elements"
+        ],
+        "sources": [
+          "https://m3.material.io/components/badges/overview",
+          "https://m3.material.io/components/badges/specs",
+          "https://m3.material.io/components/badges/guidelines",
+          "https://m3.material.io/components/badges/accessibility"
+        ],
+        "requirements": "Use a 6dp small badge or a 16dp large badge, with short counts anchored at the trailing icon edge. Expose the badge meaning once alongside its destination. Google badge contrast guidance does not replace WCAG text-contrast requirements."
       },
       "relationship": "component",
       "sources": [
@@ -1053,9 +1516,22 @@
           "sha256": "1d9ade7617c30f8584cfee9b3f2fe5d3c5d39f5ed7fa2fd362a9f8205fa15693"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "A named count fixture is checked; changing counts, clipping and spoken updates remain unverified.",
+          "nextStep": "Expose count meaning once, test large/localized counts and verify announcements only when the task needs them."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+          "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1066,16 +1542,17 @@
       "slug": "tooltips",
       "title": "Tooltips",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Plain and rich tooltips; CSS child and runtime-generated forms.",
       "adaptation": "The selected form determines ownership; CSS-only hover/focus is not runtime initialization.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/tooltips/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -1094,28 +1571,28 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "Tooltip destroy cancels pending delay and animation callbacks",
           "scope": "Runtime timer cancellation for enter, exit and animation scheduling.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
           "scope": "Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1126,16 +1603,28 @@
       "slug": "snackbar",
       "title": "Snackbar",
       "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Transient message with optional action and close control.",
       "adaptation": "Use the documented announcement and timeout behavior.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/snackbar/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Guidelines/Accessibility requirements for web, Placement, Behavior",
+          "Accessibility/Interaction & style, Accessibility requirements on web, Focus, Keyboard navigation"
+        ],
+        "sources": [
+          "https://m3.material.io/components/snackbar/overview",
+          "https://m3.material.io/components/snackbar/specs",
+          "https://m3.material.io/components/snackbar/guidelines",
+          "https://m3.material.io/components/snackbar/accessibility"
+        ],
+        "requirements": "Show one snackbar at a time without autofocus or a focus trap. Actionable snackbars persist until acted on or dismissed. Timed web feedback needs an equivalent persistent inline message. Document a keyboard route to actions, support Escape when focused and restore logical focus."
       },
       "relationship": "component",
       "sources": [
@@ -1145,12 +1634,25 @@
         },
         {
           "path": "src/ts/components/snackbar.ts",
-          "sha256": "bb2f35946ede77074ea743fc573bcfbf1203a9abc8e72d811dfddbdb60b87f1a"
+          "sha256": "a041948479ad04cf3e32cfaafa9aebfaa0816f32bbb2f99b2e7c42bf8c23083c"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent.",
+          "nextStep": "Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining snackbar retains a focused action until focus leaves",
+          "scope": "Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1164,13 +1666,24 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Basic/rich and standard/vibrant; square basic banners.",
       "adaptation": "Persistent in-flow feedback; application owns dismissal.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/snackbar/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Related current snackbar/Overview, Guidelines/Usage",
+          "Legacy M2 banners/Usage, Anatomy/Buttons, Behavior/Dismissing banners"
+        ],
+        "sources": [
+          "https://m3.material.io/components/snackbar/overview",
+          "https://m3.material.io/components/snackbar/guidelines",
+          "https://m2.material.io/components/banners"
+        ],
+        "requirements": "Keep persistent nonblocking feedback and its actions in the application flow. Legacy M2 guidance places one banner below the app bar, with up to two text actions, until the user dismisses it. This is not a current M3 component specification."
       },
       "relationship": "related",
       "sources": [
@@ -1179,7 +1692,13 @@
           "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "Legacy/related banner styling supplies no announcements, dismissal or focus recovery.",
+          "nextStep": "Implement application-owned status updates and named actions; verify text enlargement and focus after removal."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -1192,27 +1711,59 @@
       "slug": "progress",
       "title": "Progress indicators",
       "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Linear and circular progress, determinate and indeterminate.",
       "adaptation": "Prefer native progress where applicable; supply accessible state for custom hosts.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/progress-indicators/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview/M3 Expressive update, Previous updates",
+          "Specs/Configurations",
+          "Guidelines/Usage, Progress indicators in buttons, Responsive layout",
+          "Accessibility/Interaction & style, Labeling elements"
+        ],
+        "sources": [
+          "https://m3.material.io/components/progress-indicators/overview",
+          "https://m3.material.io/components/progress-indicators/specs",
+          "https://m3.material.io/components/progress-indicators/guidelines",
+          "https://m3.material.io/components/progress-indicators/accessibility"
+        ],
+        "requirements": "Report accurate determinate values and omit values for unknown progress. Keep the same process recognizable when its state changes. Mirror linear progress in RTL and provide an end stop when track contrast needs it. Loading indicators cover many short waits; circular progress remains useful in buttons and processes that become determinate."
       },
       "relationship": "component",
       "sources": [
         {
           "path": "src/sass/components/_progress.scss",
-          "sha256": "3dbb0324f6203f154ddd0bda1c1c0e1cf318323523f0dbba23acc880b5d8591e"
+          "sha256": "3ef3fc4af36bed45813e0533b93ca1242b4169298c8d9e5eb899ffa6fb9e6266"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified.",
+          "nextStep": "Test native and custom determinate/indeterminate variants, visible static feedback and changing accessible values."
+        },
+        {
+          "kind": "feature",
+          "description": "Custom linear progress uses physical left fill in RTL; end-stop and wavy Expressive variants are not verified.",
+          "nextStep": "Test RTL native and custom bars; repair mirrored custom fill and assess an end stop for insufficient track contrast before claiming current variant parity."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining progress and loading variants stop spatial motion",
+          "scope": "Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1226,13 +1777,26 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Uncontained and contained morphing loading indicator.",
       "adaptation": "CSS-only; the author supplies an accessible waiting message.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/loading-indicator/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview/M3 Expressive update",
+          "Guidelines/Usage, Container (optional), Responsive layout, Behavior",
+          "Accessibility/Use cases, Interaction & style, Labeling elements"
+        ],
+        "sources": [
+          "https://m3.material.io/components/loading-indicator/overview",
+          "https://m3.material.io/components/loading-indicator/specs",
+          "https://m3.material.io/components/loading-indicator/guidelines",
+          "https://m3.material.io/components/loading-indicator/accessibility"
+        ],
+        "requirements": "Use for an actual short wait with unknown progress, usually 200ms to five seconds. Do not use for a process that will become determinate. Google specifies a descriptive progressbar role and sufficient shape contrast; a refresh gesture still needs an alternative."
       },
       "relationship": "component",
       "sources": [
@@ -1241,9 +1805,22 @@
           "sha256": "1121e043f42b471963aa823d9c5d651306ab7aeed135bee7a1427c5afe7e5228"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow.",
+          "nextStep": "Record this current contract difference; test meaningful waiting text and spoken delivery. Choose a progress indicator initially when a transition to determinate progress is expected."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining progress and loading variants stop spatial motion",
+          "scope": "Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1257,13 +1834,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Adaptive visual collections with documented layout variants.",
       "adaptation": "Runtime owns sizing and navigation; reduced motion removes parallax and morphing.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/carousel/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview/Updates",
+          "Specs/layout Measurements",
+          "Guidelines/Usage, Full-screen, Item text",
+          "Accessibility/Requirements on scrolling pages, Keyboard navigation, Labeling elements, Reduced motion"
+        ],
+        "sources": [
+          "https://m3.material.io/components/carousel/overview",
+          "https://m3.material.io/components/carousel/specs",
+          "https://m3.material.io/components/carousel/guidelines",
+          "https://m3.material.io/components/carousel/accessibility"
+        ],
+        "requirements": "Choose a supported layout for the content. On scrolling pages provide a route to all items. Name the container and item positions, provide keyboard and non-drag navigation, keep controls clear of content and provide pause controls for autoplay. Reduced motion removes parallax and equalizes item widths."
       },
       "relationship": "component",
       "sources": [
@@ -1276,7 +1867,13 @@
           "sha256": "772609159091d79c516820e5a68042407d641cd67d78b1a7d09ed6346fe44ced"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Existing DOM/timer checks do not prove rendered scrolling, RTL focus or visible pause-control usability.",
+          "nextStep": "Run keyboard, non-drag previous/next, pause, hover/focus and reduced-motion checks on the selected carousel."
+        }
+      ],
       "browserChecks": [],
       "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
@@ -1292,13 +1889,19 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Enlarge-on-activation image and dismissal.",
       "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
       "upstream": {
         "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Provide a named keyboard-operable enlargement trigger, Escape and an accessible close route, logical focus and reduced motion. Image enlargement is not automatically a modal gallery."
       },
       "relationship": "none",
       "sources": [
@@ -1308,12 +1911,31 @@
         },
         {
           "path": "src/ts/components/lightbox.ts",
-          "sha256": "22e0686f6f7dc9cfd6be5d7d259b197818eb6046818c3a67d2597fca8c0c573f"
+          "sha256": "6513452ede942293fd996d647d8b574f30726975829ec93f40ab3eefb721af34"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.",
+          "nextStep": "Treat this as image enlargement, not a verified modal gallery; test closing interruption and actual focus ownership."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
+          "scope": "Space opens image enlargement; Escape closes; destroy preserves original image/style.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
+          "scope": "Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1324,16 +1946,17 @@
       "slug": "toolbars",
       "title": "Toolbars",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Floating/docked, standard/vibrant, vertical floating, and companion FAB.",
       "adaptation": "CSS-only commands; no automatic composite toolbar keyboard model.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/toolbars/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -1358,13 +1981,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Search bar and expanded search view.",
       "adaptation": "Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/search/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/search/overview",
+          "https://m3.material.io/components/search/specs",
+          "https://m3.material.io/components/search/guidelines",
+          "https://m3.material.io/components/search/accessibility"
+        ],
+        "requirements": "Prefer the contained Expressive style. Adapt compact full-screen and wider docked search to available space, preserve the submitted query and make suggestions reachable and announced."
       },
       "relationship": "component",
       "sources": [
@@ -1373,9 +2010,22 @@
           "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "CSS does not supply search results announcements or modal focus ownership.",
+          "nextStep": "Verify submitted-query retention, full-screen return focus and spoken results in the application."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
+          "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1389,13 +2039,24 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Outlined, filled, and rounded form groups.",
       "adaptation": "Native fieldset/legend; related text-field tokens do not make this an M3 component.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/text-fields/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Related Text fields/Labels and Accessibility/Labeling elements; native grouping is a web adaptation"
+        ],
+        "sources": [
+          "https://m3.material.io/components/text-fields/overview",
+          "https://m3.material.io/components/text-fields/specs",
+          "https://m3.material.io/components/text-fields/guidelines",
+          "https://m3.material.io/components/text-fields/accessibility"
+        ],
+        "requirements": "Use native fieldset and legend to name related form controls. Text-field labels and errors remain relevant, but Google has no dedicated fieldset specification."
       },
       "relationship": "related",
       "sources": [
@@ -1404,16 +2065,28 @@
           "sha256": "0de91ee778fb360cd8a5451c920df81dd2b1cd5fb9d26993729afe1f745d7e65"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Named native groups and disabled descendants are checked; long legends and nested groups remain unverified.",
+          "nextStep": "Enlarge translated legends and verify readable group names without clipping."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
-          "state": "stale"
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining native controls preserve names, keyboard state and form values",
+          "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1424,16 +2097,17 @@
       "slug": "text-fields",
       "title": "Text fields",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Filled and outlined fields, supporting text, and error states.",
       "adaptation": "Native input/textarea with explicit label and description relationships.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/text-fields/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
       "sources": [
@@ -1460,10 +2134,10 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1477,20 +2151,35 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
-        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md",
-        "reviewedOn": "2026-09-07",
-        "scope": "document-reviewed",
-        "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
+        "source": "https://m3.material.io/components/menus/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/menus/overview",
+          "https://m3.material.io/components/menus/specs",
+          "https://m3.material.io/components/menus/guidelines",
+          "https://m3.material.io/components/menus/accessibility",
+          "https://m3.material.io/components/text-fields/guidelines",
+          "https://m3.material.io/components/text-fields/accessibility"
+        ],
+        "requirements": "Google menu guidance includes select and text-field dropdown menus. Single selection replaces the previous value; multiple selection remains open. Preserve field labels and associated errors."
       },
       "relationship": "related",
       "sources": [
         {
           "path": "src/sass/components/forms/_select.scss",
-          "sha256": "645b592dfe1ff3f729a46fa4370cfc533e7a18de2506204f7d5e7455daea4f44"
+          "sha256": "2e651be3951b59c99f827b190df52d302ffe5f548300767e653b9d09e7b18609"
         },
         {
           "path": "src/sass/components/_menu.scss",
@@ -1505,28 +2194,34 @@
           "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Current browser evidence covers lifecycle and enlarged labels, not every disabled, grouped, or multiple-selection path.",
+          "nextStep": "Exercise native form submission, optgroups, disabled options and multiple selection in each target browser."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
           "scope": "Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1540,13 +2235,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Unchecked, checked, indeterminate, and disabled.",
       "adaptation": "Native checkbox; indeterminate is set through the DOM property.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/checkbox/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/checkbox/overview",
+          "https://m3.material.io/components/checkbox/specs",
+          "https://m3.material.io/components/checkbox/guidelines",
+          "https://m3.material.io/components/checkbox/accessibility"
+        ],
+        "requirements": "Use labelled independent multi-select options with a 48dp effective target. An indeterminate parent reflects partial child selection. The Google accessibility table contains chip-specific shortcuts; native checkbox behavior uses Space."
       },
       "relationship": "component",
       "sources": [
@@ -1555,16 +2264,28 @@
           "sha256": "3fd662bcbca486e3b05413ce9b1ff9a10a8002e3e3ea6e853bd179e8fcfe2f09"
         }
       ],
-      "gaps": [],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Native state coverage does not verify parent aggregation or every target and forced-colors state.",
+          "nextStep": "Test partial child selection, label activation, effective targets and forced-colors rendering."
+        }
+      ],
       "browserChecks": [
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
-          "state": "stale"
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining native controls preserve names, keyboard state and form values",
+          "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1578,13 +2299,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Native radio groups and disabled controls.",
       "adaptation": "Shared name provides exclusivity; fieldset/legend names the group.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/radio-button/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/radio-button/overview",
+          "https://m3.material.io/components/radio-button/specs",
+          "https://m3.material.io/components/radio-button/guidelines",
+          "https://m3.material.io/components/radio-button/accessibility"
+        ],
+        "requirements": "Use a named group of exclusive options with 48dp targets and native arrow navigation. Guidelines favor a default; the accessibility page also discusses an initially empty group. Choose the initial state for the task."
       },
       "relationship": "component",
       "sources": [
@@ -1593,9 +2328,22 @@
           "sha256": "a8054892643f184463052ad5e566ee0d8c96d2f125f9dea433915eba5f3b7cf1"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Native group selection is checked; initially-empty and disabled-option paths remain unmeasured.",
+          "nextStep": "Check both Tab directions and arrow wrapping with the actual default and disabled choices."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining native controls preserve names, keyboard state and form values",
+          "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1609,13 +2357,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Native checkbox switches and disabled controls.",
       "adaptation": "Input state owns selection and form value.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/switch/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/switch/overview",
+          "https://m3.material.io/components/switch/specs",
+          "https://m3.material.io/components/switch/guidelines",
+          "https://m3.material.io/components/switch/accessibility"
+        ],
+        "requirements": "Use a switch for an immediate binary setting with a stable label and a 48dp effective target. Preserve native checkbox keyboard behavior and verify that the setting actually changes."
       },
       "relationship": "component",
       "sources": [
@@ -1624,9 +2386,22 @@
           "sha256": "3700fa309d0524fce4eff27c1f337d1ab03f592c567423a275cc9332144b2e8a"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "integration",
+          "description": "The styled native checkbox does not perform or announce a persisted setting change.",
+          "nextStep": "Verify immediate application outcome and failure recovery with a stable label."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining native controls preserve names, keyboard state and form values",
+          "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1640,13 +2415,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Standard, centered, range, horizontal/vertical, and five sizes.",
       "adaptation": "Native range inputs with runtime value-label and range coordination.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/sliders/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/sliders/overview",
+          "https://m3.material.io/components/sliders/specs",
+          "https://m3.material.io/components/sliders/guidelines",
+          "https://m3.material.io/components/sliders/accessibility"
+        ],
+        "requirements": "Choose standard, centered or range selection and an appropriate track size. Verify immediate values, arrows, Home/End, stops and orientation. Provide synchronized numeric entry when precise values matter."
       },
       "relationship": "component",
       "sources": [
@@ -1656,12 +2445,31 @@
         },
         {
           "path": "src/ts/components/slider.ts",
-          "sha256": "bb22f1baaa0814b6d9389ec115cd6b705c73fbac8ddda1b35f32124ff6766128"
+          "sha256": "255ae77971082316716f8d483d292a5e3184cd3f96ae7fc08f5c626d5d8ed2b1"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Zero maximum and resized RTL value-label placement are checked; vertical, dual-range and forced-colors geometry remain unverified.",
+          "nextStep": "Measure noncentral vertical and paired handles; test a synchronized numeric input and non-drag pointer changes."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining native controls preserve names, keyboard state and form values",
+          "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
+          "scope": "Correct zero maximum fraction/stop count, resized value label, noncentral RTL geometry and native End key.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1675,13 +2483,27 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Assist, suggestion, filter, input, and display chips.",
       "adaptation": "Element choice defines behavior; display chips are a framework extension.",
       "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-09-07",
-        "scope": "inventory-reviewed"
+        "source": "https://m3.material.io/components/chips/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/chips/overview",
+          "https://m3.material.io/components/chips/specs",
+          "https://m3.material.io/components/chips/guidelines",
+          "https://m3.material.io/components/chips/accessibility"
+        ],
+        "requirements": "Distinguish assist, filter, input and suggestion chips. Verify a 48dp effective target around the 32dp visual chip, separate named removal controls, overflow and focus after deletion."
       },
       "relationship": "component",
       "sources": [
@@ -1694,9 +2516,22 @@
           "sha256": "6cb6af3f1b41f5634de1e1bf3a821ad080b006a922d7238466915c87f775f47d"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Filter selection is checked; input-chip deletion, dual targets and focus after removal remain unverified.",
+          "nextStep": "Test keyboard and pointer removal, next-focus recovery, wrapping and nonoverlapping targets."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining native controls preserve names, keyboard state and form values",
+          "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1707,17 +2542,33 @@
       "slug": "autocomplete",
       "title": "Autocomplete",
       "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
+      "support": "partial",
+      "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Single and multi-select suggestions.",
       "adaptation": "Runtime combobox behavior attached to a text field; no standalone upstream component claim.",
       "upstream": {
-        "source": "https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md",
-        "reviewedOn": "2026-09-07",
-        "scope": "document-reviewed",
-        "note": "Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations."
+        "source": "https://m3.material.io/components/menus/overview",
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/menus/overview",
+          "https://m3.material.io/components/menus/specs",
+          "https://m3.material.io/components/menus/guidelines",
+          "https://m3.material.io/components/menus/accessibility",
+          "https://m3.material.io/components/text-fields/guidelines",
+          "https://m3.material.io/components/text-fields/accessibility",
+          "https://m3.material.io/components/search/accessibility"
+        ],
+        "requirements": "Provide a labelled text field, reachable suggestions and clear selection state. Announce new results when suggestions update; filtering and selection must preserve the intended value."
       },
       "relationship": "related",
       "sources": [
@@ -1731,16 +2582,35 @@
         },
         {
           "path": "src/ts/components/autocomplete.ts",
-          "sha256": "5cf06711627918a0a5b2605c72f025494bbe9cd0aaebcc47b8e4b6f08d8c7b45"
+          "sha256": "355c7c33a06c563dfb48d3278b3cb21029652f59428e3894bc09a78b8455a813"
         },
         {
           "path": "src/ts/components/menu.ts",
           "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
         }
       ],
-      "gaps": [],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "gaps": [
+        {
+          "kind": "feature",
+          "description": "Generated status-info does not announce new suggestion counts or asynchronous results.",
+          "nextStep": "Implement and verify an appropriate result-status update; test spoken delivery and multi-select keyboard behavior."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
+          "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
+          "state": "recorded-passed"
+        },
+        {
+          "file": "tests/expressivecss-web-accessibility-browser.test.js",
+          "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
+          "scope": "Initial selected record retains its display label and selection through first focus and Tab exit.",
+          "state": "recorded-passed"
+        }
+      ],
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1754,14 +2624,24 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Inline single-date, range, and multiple-date calendar.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
       "upstream": {
         "source": "https://m3.material.io/components/date-pickers/overview",
-        "reviewedOn": "2026-09-07",
-        "scope": "links-reviewed",
-        "note": "destination and main heading verified; full guideline not reviewed; link-observed; full specifications not reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Accessibility/Date entry methods, Accessible date input, Affordance for keyboard shortcuts, Color contrast between dates, Keyboard navigation"
+        ],
+        "sources": [
+          "https://m3.material.io/components/date-pickers/overview",
+          "https://m3.material.io/components/date-pickers/specs",
+          "https://m3.material.io/components/date-pickers/guidelines",
+          "https://m3.material.io/components/date-pickers/accessibility"
+        ],
+        "requirements": "Distinguish docked, modal, input and range variants. Provide manual entry and a date-format description. Calendar navigation includes arrows, Home/End, Page Up/Down and modified month/year movement."
       },
       "relationship": "component",
       "sources": [
@@ -1791,6 +2671,11 @@
           "kind": "feature",
           "description": "Modal picker parity is not provided by the documented inline API.",
           "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
+        },
+        {
+          "kind": "feature",
+          "description": "Calendar markup claims a grid but lacks calendar arrow, Home/End and month-navigation key handling; modal/range coverage remains incomplete.",
+          "nextStep": "Implement and test the calendar keyboard contract or choose native date input; verify locale and constrained-date behavior."
         }
       ],
       "browserChecks": [],
@@ -1808,14 +2693,27 @@
       "support": "partial",
       "lastReviewedSupport": "partial",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-12",
+      "reviewedOn": "2026-09-13",
       "scope": "Inline clock and digital input; 12-hour and 24-hour formats.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
       "upstream": {
         "source": "https://m3.material.io/components/time-pickers/overview",
-        "reviewedOn": "2026-09-07",
-        "scope": "links-reviewed",
-        "note": "destination and selected Guidelines tab verified; full guideline not reviewed; link-observed; full specifications not reviewed"
+        "reviewedOn": "2026-09-13",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Overview",
+          "Specs",
+          "Guidelines",
+          "Accessibility"
+        ],
+        "sources": [
+          "https://m3.material.io/components/time-pickers/overview",
+          "https://m3.material.io/components/time-pickers/specs",
+          "https://m3.material.io/components/time-pickers/guidelines",
+          "https://m3.material.io/components/time-pickers/accessibility"
+        ],
+        "requirements": "Provide named hour and minute inputs, manual entry, 12/24-hour handling and named AM/PM selection state. Keep an input alternative when the dial is unsuitable for available space."
       },
       "relationship": "component",
       "sources": [
@@ -1841,6 +2739,11 @@
           "kind": "feature",
           "description": "Modal picker parity is not provided by the documented inline API.",
           "nextStep": "Decide the modal picker contract, focus behavior and dismissal before adding it; preserve inline and docked APIs."
+        },
+        {
+          "kind": "feature",
+          "description": "Hour/minute inputs are unnamed and AM/PM controls have no role or selected state; modal and complete keyboard behavior remain incomplete.",
+          "nextStep": "Design localized input names and period controls, then test keyboard entry, 12/24-hour modes and dialog focus."
         }
       ],
       "browserChecks": [],
@@ -1855,9 +2758,9 @@
       "slug": "typography",
       "title": "Typography",
       "kind": "foundation",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Fifteen baseline type-role utilities and rem-based tokens; semantic element defaults; separate brand/plain/fallback font tokens; bundled Latin Roboto and Noto Sans 400/500. Existing role-weight tokens permit scoped application emphasis.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
@@ -1902,16 +2805,16 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1922,9 +2825,9 @@
       "slug": "shape",
       "title": "Shape",
       "kind": "foundation",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Per-component shape properties and variants; common button scoped radius; separate FAB geometry; icon-button and button-group pressed/selected corner changes; logical connected-group edges.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
@@ -1960,22 +2863,22 @@
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group geometry resolves for overrides, targets, and RTL",
           "scope": "Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "keyboard press changes icon widths and rendered corners",
           "scope": "Standard and connected button-group pressed corner changes and release with keyboard activation.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-scoped common-button 16px corner repair; does not establish shape-system parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1986,9 +2889,9 @@
       "slug": "motion",
       "title": "Motion",
       "kind": "foundation",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-12",
       "scope": "Component-owned CSS/runtime motion, sampled fast-spatial linear easing for button-group width/radius, expanding-card container transition, and scale utility. Button groups, expanding cards and the scale utility suppress transitions under reduced motion. Expanding-card close cleanup follows the actual container transition, including CSS timing overrides and cancellation.",
       "adaptation": "Use supported web component and application overrides; Android attributes and APIs are design references only.",
@@ -2032,34 +2935,34 @@
           "file": "tests/button-groups-browser.test.js",
           "name": "standard press redistribution keeps its rendered width stable",
           "scope": "Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group geometry resolves for overrides, targets, and RTL",
           "scope": "Connected group's transition duration is zero under emulated reduced motion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expanding-card-browser.test.js",
           "name": "expanding-card completion follows CSS and survives interruption (chromium)",
           "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expanding-card-browser.test.js",
           "name": "scale and expanding cards respect changing motion preferences (chromium)",
           "scope": "Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

@@ -7,19 +7,19 @@ description: Implement and review ExpressiveCSS semantics, keyboard, focus, name
 
 ## When to use
 
-Use this guide for every interface implementation, Critique, or Audit, including visual reviews. Also use for contrast or forced-colors investigations, including token-only changes.
+Use for interface implementation, Critique, or Audit, including visual reviews and contrast or forced-colors work.
 
 ## Do not use when
 
-Skip setup-only work and token or lifecycle changes that leave accessibility behavior unchanged. It does not substitute for the selected component contract or runtime guidance.
+Skip setup-only work and token or lifecycle changes that leave accessibility behavior unchanged. Use the selected component and runtime contracts.
 
-Reuse the root version resolution and selected component semantic rules. `semantics.json` owns package markup rules; it does not establish WCAG conformance. Consult matching contracts for gaps or conflicts.
+Reuse root version resolution and selected component rules. `semantics.json` owns package markup rules; it does not establish WCAG conformance. Consult matching contracts for gaps or conflicts.
 
 1. Prefer documented native elements: buttons for commands, links with real `href` values for navigation, and native dialogs, inputs, labels, and groups.
 2. Authors own elements, landmarks, labels, decorative hiding, and initial state the contract explicitly requires at author time. Components own changing ARIA values and generated IDs when their contract says so.
 3. Label every navigation landmark. Do not use `<nav>` for card actions, toolbars, app-bar commands, or other button rows.
 4. Use `<span class="material-symbols" aria-hidden="true">` for decorative icons. Otherwise the ligature can be announced.
-5. Name icon-only controls, normally with `aria-label`; tooltips supplement that name.
+5. Name icon-only controls, with `aria-label` when needed; tooltips supplement names.
 6. Do not add composite roles such as `menu`, `tablist`, or `toolbar` unless the component documentation declares the role and the promised keyboard model is implemented.
 7. Keep hidden subtrees out of the focus order. `aria-hidden="true"` does not remove descendants from Tab navigation.
 8. Connect every form label, supporting text, error, group legend, and description to its control with native relationships.
@@ -30,7 +30,7 @@ Reuse the root version resolution and selected component semantic rules. `semant
 
 Separate Material recommendations, WCAG success criteria, and observed browser behavior. Material's 48 by 48 dp touch-target recommendation is not WCAG 2.2 AA's 24 by 24 CSS-pixel minimum with exceptions. Measure the clickable region, not the icon or hardware pixels; preserve the component's larger target contract.
 
-For target-size judgments, dragging, contrast changes, or forced colors, read [focused web checks](./references/web-checks.md). Do not accept keyboard-only dragging alternatives or matching color-role names as proof of accessibility.
+For targets, dragging, hover/focus content, spacing, obscured focus, authentication, contrast, or forced colors, read [focused web checks](./references/web-checks.md). Do not accept keyboard-only dragging alternatives or matching color-role names as proof of accessibility.
 
 Check the affected flow's keyboard operation, visible focus/order, dialog focus/containment/Escape/return, names/values/descriptions, feedback, contrast, target size, reduced motion, zoom, reflow, and content extremes. Use APG to verify behavior a role promises, not to add a role the package withholds.
 

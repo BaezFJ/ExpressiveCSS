@@ -150,6 +150,7 @@ select.browser-default {
     overflow-wrap: anywhere;
     pointer-events: auto;
     @include typescale("body-small");
+    line-height: normal;
   }
 
   &:has(> i:first-of-type:not(.suffix):not(:last-child), > i.prefix, > .prefix) > label {

@@ -9,6 +9,7 @@ const _defaults: SliderOptions = {};
 export class Slider extends Component<SliderOptions> {
   declare el: HTMLInputElement;
   private _pointerDown: boolean;
+  private _resizeObserver: ResizeObserver | null = null;
   value: HTMLElement;
   thumb: HTMLElement;
 
@@ -25,6 +26,10 @@ export class Slider extends Component<SliderOptions> {
     this._setupThumb();
     this._sync();
     this._setupEventHandlers();
+    if (typeof ResizeObserver !== 'undefined') {
+      this._resizeObserver = new ResizeObserver(() => this._sync());
+      this._resizeObserver.observe(this.el);
+    }
   }
 
   static get defaults(): SliderOptions {
@@ -63,6 +68,7 @@ export class Slider extends Component<SliderOptions> {
   }
 
   destroy() {
+    this._resizeObserver?.disconnect();
     this._removeEventHandlers();
     this._removeThumb();
     this.el['Expressive_Slider'] = undefined;
@@ -172,7 +178,8 @@ export class Slider extends Component<SliderOptions> {
   }
 
   _fraction(el: HTMLInputElement): number {
-    const max = parseFloat(el.max) || 100;
+    const parsedMax = parseFloat(el.max);
+    const max = Number.isNaN(parsedMax) ? 100 : parsedMax;
     const min = parseFloat(el.min) || 0;
     const val = parseFloat(el.value) || 0;
     return max === min ? 0 : (val - min) / (max - min);
@@ -189,6 +196,7 @@ export class Slider extends Component<SliderOptions> {
     const top = this.el.offsetTop;
     const width = this.el.offsetWidth;
     const height = this.el.offsetHeight;
+    const rtl = getComputedStyle(this.el).direction === 'rtl';
 
     this.el.style.setProperty('--md-comp-slider-active-fraction', fraction);
 
@@ -200,7 +208,8 @@ export class Slider extends Component<SliderOptions> {
       host.style.setProperty('--md-comp-slider-end-fraction', `${Math.max(...nums) * 100}%`);
     }
     if (host?.classList.contains('stops')) {
-      const max = parseFloat(this.el.max) || 100;
+      const parsedMax = parseFloat(this.el.max);
+      const max = Number.isNaN(parsedMax) ? 100 : parsedMax;
       const min = parseFloat(this.el.min) || 0;
       const step = parseFloat(this.el.step);
       if (step > 0 && Number.isFinite(step)) {
@@ -214,7 +223,7 @@ export class Slider extends Component<SliderOptions> {
       this.thumb.style.left = `${left + width / 2}px`;
       this.thumb.style.top = `${top + (1 - percent) * height}px`;
     } else {
-      this.thumb.style.left = `${left + percent * width}px`;
+      this.thumb.style.left = `${left + (rtl ? 1 - percent : percent) * width}px`;
       this.thumb.style.top = `${top}px`;
     }
   }
