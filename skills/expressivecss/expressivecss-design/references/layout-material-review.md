@@ -68,7 +68,7 @@ Relationship: component. Sources: [overview](https://m3.material.io/components/s
 
 Reviewed sections: Overview; Specs; Guidelines; Accessibility.
 
-Requirements: Use the retained component for two to five single- or multiple-select choices. Current Expressive guidance recommends connected button groups. Preserve form semantics and effective targets when choosing a replacement.
+Requirements: Use connected button groups for new toggle choices; retain segmented inputs only for maintenance, explicit requests or a verified native form-value gap. Preserve form semantics and effective targets when choosing a replacement.
 
 Framework comparison: The existing contract uses native radio and checkbox groups. Preserve form values and native keys when migrating to connected button groups.
 
@@ -110,7 +110,7 @@ Relationship: component. Sources: [overview](https://m3.material.io/components/f
 
 Reviewed sections: Overview; Specs; Guidelines; Accessibility.
 
-Requirements: Use one primary, non-destructive action. Current guidance discourages the small FAB. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls.
+Requirements: Use one primary, non-destructive action. Current guidance replaces the small FAB, baseline extended FAB, surface-colored FABs and speed dials. The linked FAB guide maps each replacement to retained and current framework variants. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls.
 
 Framework comparison: The source includes sizes, extended FABs, .fab-menu and a legacy speed dial. Hover can reveal actions while runtime expanded state remains false. Keyboard closing does not restore focus from a hidden action.
 

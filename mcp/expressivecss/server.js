@@ -1032,6 +1032,15 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
   const hinted = new Set(componentsHint.map(normalizeForMatch));
   const primary = [];
   const rejected = new Set();
+  const replacements = new Map();
+  for (const decision of COMPONENT_DECISIONS_BY_SLUG.values()) {
+    if (decision.selectable !== false) continue;
+    const names = [decision.slug, decision.title, ...(decision.aliases ?? [])].map(normalizeForMatch);
+    if (names.some((name) => normalizedGoal.includes(name) || hinted.has(name))) {
+      const replacement = decision.alternatives?.[0];
+      if (replacement) replacements.set(replacement, decision.excludeReason);
+    }
+  }
 
   const searchableText = (values) => values
     .flatMap((value) => {
@@ -1062,10 +1071,11 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
     const nameMatch = normalizedGoal.includes(normalizeForMatch(decision.slug))
       || normalizedGoal.includes(normalizeForMatch(decision.title));
     const hintMatch = hinted.has(guide.slug) || aliases.some((alias) => hinted.has(normalizeForMatch(alias)));
-    const score = (positiveMatches.length * 2) + (aliasMatch ? 30 : 0) + (nameMatch ? 12 : 0) + (hintMatch ? 12 : 0);
+    const replacementReason = replacements.get(guide.slug);
+    const score = (positiveMatches.length * 2) + (aliasMatch ? 30 : 0) + (nameMatch ? 12 : 0) + (hintMatch ? 12 : 0) + (replacementReason ? 60 : 0);
     const avoidScore = avoidMatches.length * 8;
 
-    if (score <= avoidScore || score === 0) {
+    if (!replacementReason && (score <= avoidScore || score === 0)) {
       if (avoidMatches.length) rejected.add(guide.slug);
       continue;
     }
@@ -1073,10 +1083,10 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
     primary.push({
       slug: guide.slug,
       title: guide.title,
-      score: score - avoidScore,
-      why: positiveMatches.length
+      score: replacementReason ? score : score - avoidScore,
+      why: replacementReason || (positiveMatches.length
         ? `Decision metadata matches: ${positiveMatches.slice(0, 4).join(', ')}`
-        : 'Explicit component name or alias match',
+        : 'Explicit component name or alias match'),
       docs: guide.sourceUrl,
       selectionSource: 'decision-catalog',
       confidence: 'primary',
@@ -1095,10 +1105,11 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
   const selectedSlugs = new Set(primary.map((item) => item.slug));
   const fallback = [];
   for (const guide of catalog.components.values()) {
+    const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
+    if (decision?.selectable === false) continue;
     if (selectedSlugs.has(guide.slug) || rejected.has(guide.slug)) continue;
     const matches = [...tokens].filter((token) => guide.text.includes(token));
     if (!matches.length) continue;
-    const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
     fallback.push({
       slug: guide.slug,
       title: guide.title,

@@ -11,17 +11,19 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
+Contract SHA-256: `7035a5c2f9f2371ad7e4a7fe0754b78f9d3f998734fb99fecfad14025a6560c0`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/floating-action-button/overview)
 
+Example: The syntax below is a retained speed-dial example, not the default for new designs. Use the documented fab-menu variant for labelled actions and verify focus when it closes.
+
 - expanded window: variant. Use the extended FAB when the action benefits from a visible label.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. These are design replacements, not removed APIs.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/floating-action-button/overview).
 

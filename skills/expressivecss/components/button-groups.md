@@ -11,19 +11,19 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
+Contract SHA-256: `7035a5c2f9f2371ad7e4a7fe0754b78f9d3f998734fb99fecfad14025a6560c0`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/button-groups/overview)
 
-Example: Economy/Express delivery submitted on Save needs radios or segmented inputs. Standard groups fit Cut/Copy/Paste; connected groups fit toggle states, not one-shot commands. A pressed button does not submit a radio value.
+Example: Standard groups fit Cut/Copy/Paste commands; connected groups fit toggle choices. A pressed button does not submit a radio value: use native inputs for form values, or explicitly integrate persistence.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google recommends the connected button group instead of segmented buttons. Match toggle state, required selection and persistence explicitly; native form submission is not supplied by aria-pressed.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/button-groups/overview).
 

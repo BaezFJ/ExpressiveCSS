@@ -11,19 +11,19 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
+Contract SHA-256: `7035a5c2f9f2371ad7e4a7fe0754b78f9d3f998734fb99fecfad14025a6560c0`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/progress-indicators/overview)
 
-Example: A two-second refresh with no measured fraction fits a loading indicator. An upload with bytes transferred needs determinate progress, even if short; a long job with no fraction can use indeterminate progress. Never invent a percentage. Indeterminate linear bars remain supported; the short-wait replacement specifically targets indeterminate circular spinners.
+Example: A brief unknown refresh fits a loading indicator. An upload needs accurate determinate progress, even if short. Keep circular progress when an unknown process becomes determinate or runs inside a button; indeterminate linear bars remain supported. Never invent a percentage.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google replaces most short indeterminate circular waits with a loading indicator. Keep circular progress in buttons and for processes that become determinate; keep determinate and indeterminate linear progress. Deprecated baseline token sets do not deprecate these families.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/progress-indicators/overview).
 

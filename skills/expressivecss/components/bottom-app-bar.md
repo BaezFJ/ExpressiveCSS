@@ -11,17 +11,19 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
+Contract SHA-256: `7035a5c2f9f2371ad7e4a7fe0754b78f9d3f998734fb99fecfad14025a6560c0`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m2.material.io/components/app-bars-bottom)
 
+Compatibility guide: No longer recommended by Google for new M3 Expressive designs; use a docked toolbar. Use this contract for maintenance, an explicit request, or a verified replacement gap. The syntax below is retained legacy markup.
+
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component. Legacy Material component; Google deprecates it for M3 Expressive in favor of docked toolbars.
+Relationship: component. No longer recommended by Google for new M3 Expressive designs; use a docked toolbar. Retained APIs and accessible existing interfaces remain valid for maintenance.
 
 Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/toolbars/overview).
 

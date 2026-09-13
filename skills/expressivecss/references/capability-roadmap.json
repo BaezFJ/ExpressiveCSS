@@ -33,7 +33,8 @@
           "Overview",
           "Specs",
           "Guidelines",
-          "Accessibility"
+          "Accessibility",
+          "Overview/M3 Expressive update: replacement guidance"
         ],
         "sources": [
           "https://m3.material.io/components/app-bars/overview",
@@ -131,7 +132,13 @@
         "source": "https://m3.material.io/components/navigation-bar/overview",
         "reviewedOn": "2026-09-13",
         "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
-        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.",
+        "sections": [
+          "Overview/M3 Expressive update: replacement guidance"
+        ],
+        "sources": [
+          "https://m3.material.io/components/navigation-bar/overview"
+        ]
       },
       "relationship": "component",
       "sources": [
@@ -163,7 +170,13 @@
         "source": "https://m3.material.io/components/navigation-rail/overview",
         "reviewedOn": "2026-09-13",
         "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
-        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.",
+        "sections": [
+          "Overview/M3 Expressive update: replacement guidance"
+        ],
+        "sources": [
+          "https://m3.material.io/components/navigation-rail/overview"
+        ]
       },
       "relationship": "component",
       "sources": [
@@ -665,7 +678,13 @@
         "source": "https://m3.material.io/components/buttons/overview",
         "reviewedOn": "2026-09-13",
         "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
-        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
+        "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.",
+        "sections": [
+          "Overview/M3 Expressive update: replacement guidance"
+        ],
+        "sources": [
+          "https://m3.material.io/components/buttons/overview"
+        ]
       },
       "relationship": "component",
       "sources": [
@@ -735,7 +754,8 @@
           "Overview",
           "Specs",
           "Guidelines",
-          "Accessibility"
+          "Accessibility",
+          "Overview/M3 Expressive update: replacement guidance; Specs/Baseline tokens"
         ],
         "sources": [
           "https://m3.material.io/components/icon-buttons/overview",
@@ -815,7 +835,7 @@
           "https://m3.material.io/components/segmented-buttons/guidelines",
           "https://m3.material.io/components/segmented-buttons/accessibility"
         ],
-        "requirements": "Use the retained component for two to five single- or multiple-select choices. Current Expressive guidance recommends connected button groups. Preserve form semantics and effective targets when choosing a replacement."
+        "requirements": "Segmented buttons are no longer recommended for new Expressive designs; use connected button groups. Retained native radio/checkbox groups remain available for maintenance, explicit requests or a documented form-value gap. Preserve selection, form semantics and effective targets."
       },
       "relationship": "component",
       "sources": [
@@ -858,7 +878,8 @@
           "Overview",
           "Specs",
           "Guidelines",
-          "Accessibility"
+          "Accessibility",
+          "Overview/M3 Expressive update: replacement guidance"
         ],
         "sources": [
           "https://m3.material.io/components/button-groups/overview",
@@ -999,7 +1020,8 @@
           "Overview",
           "Specs",
           "Guidelines",
-          "Accessibility"
+          "Accessibility",
+          "Overview/M3 Expressive update: replacement guidance"
         ],
         "sources": [
           "https://m3.material.io/components/floating-action-button/overview",
@@ -1726,7 +1748,8 @@
           "Overview/M3 Expressive update, Previous updates",
           "Specs/Configurations",
           "Guidelines/Usage, Progress indicators in buttons, Responsive layout",
-          "Accessibility/Interaction & style, Labeling elements"
+          "Accessibility/Interaction & style, Labeling elements",
+          "Overview/M3 Expressive update: replacement guidance; Specs/Baseline tokens"
         ],
         "sources": [
           "https://m3.material.io/components/progress-indicators/overview",
@@ -1788,7 +1811,8 @@
         "sections": [
           "Overview/M3 Expressive update",
           "Guidelines/Usage, Container (optional), Responsive layout, Behavior",
-          "Accessibility/Use cases, Interaction & style, Labeling elements"
+          "Accessibility/Use cases, Interaction & style, Labeling elements",
+          "Overview/M3 Expressive update: replacement guidance"
         ],
         "sources": [
           "https://m3.material.io/components/loading-indicator/overview",

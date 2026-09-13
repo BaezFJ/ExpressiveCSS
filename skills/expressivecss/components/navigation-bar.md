@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
+Contract SHA-256: `7035a5c2f9f2371ad7e4a7fe0754b78f9d3f998734fb99fecfad14025a6560c0`
 
 #### Selection and adaptation
 
@@ -20,11 +20,10 @@ Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/componen
 Example: Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths.
 
 - expanded window: replace-with [navigation-rail](./navigation-rail.md). Use persistent peer navigation at wider widths.
-- expanded window: replace-with [navigation-drawer](./navigation-drawer.md). Retain a drawer only for an existing interface or a verified capability missing from the target-version expanded rail.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google replaces the baseline bar with the flexible bar. The documented stacked/horizontal navigation-bar layouts remain current; do not exclude the family by its name.
 
 Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-bar/overview).
 
