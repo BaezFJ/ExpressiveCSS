@@ -7,28 +7,28 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | Component | Use when | Avoid when | Alternatives | Runtime |
 | --- | --- | --- | --- | --- |
 | [App bar](../components/app-bar.md) | Page title and screen-level actions. | Peer destinations need navigation; categories need tabs. | `navigation-bar`, `tabs`, `breadcrumbs` | auto-init |
-| [Bottom app bar](../components/bottom-app-bar.md) | Retain an existing bottom app bar or explicit compatibility need. | New Expressive bottom actions need docked toolbars; destinations need navigation. | `toolbars`, `navigation-bar` | css-only |
-| [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `navigation-drawer`, `toolbars` | css-only |
-| [Navigation rail](../components/navigation-rail.md) | Collapsed, expanded, or modal peer navigation; the Expressive drawer replacement. | Compact peers fit a navigation bar; verify nesting support. | `navigation-bar`, `navigation-drawer` | auto-init |
-| [Navigation drawer](../components/navigation-drawer.md) | Retain a drawer or a verified nesting capability missing from expanded rails. | New navigation fits expanded rails; item details need a side sheet. | `navigation-rail`, `side-sheet` | auto-init |
+| [Bottom app bar](../components/bottom-app-bar.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use a docked toolbar. | `toolbars`, `navigation-bar` | css-only |
+| [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `toolbars` | css-only |
+| [Navigation rail](../components/navigation-rail.md) | Collapsed, expanded, or modal peer navigation; the Expressive drawer replacement. | Compact peers fit a navigation bar; verify nesting support. | `navigation-bar` | auto-init |
+| [Navigation drawer](../components/navigation-drawer.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use an expanded navigation rail. | `navigation-rail`, `side-sheet` | auto-init |
 | [Panes](../components/panes.md) | Responsive list-detail or supporting layouts. | A single collection needs a list, not multiple panes. | `lists` | css-only |
 | [Footer](../components/footer.md) | Site links and legal information at page end. | Primary app destinations need persistent navigation. | `navigation-bar` | css-only |
-| [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `segmented-buttons` | auto-init |
+| [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `button-groups` | auto-init |
 | [Breadcrumbs](../components/breadcrumbs.md) | Ancestor path to the current page. | Peer views need tabs; numbered results need pagination. | `tabs`, `pagination` | css-only |
 | [Pagination](../components/pagination.md) | Move through pages of one result set. | In-page sections need anchors or scrollspy. | `scrollspy` | css-only |
-| [Menu](../components/menu.md) | Material Design 3 menus, from the HTML. | The choices need persistent layout space, blocking interaction, or peer navigation. | `bottom-sheet`, `side-sheet`, `navigation-drawer` | auto-init |
+| [Menu](../components/menu.md) | Material Design 3 menus, from the HTML. | The choices need persistent layout space, blocking interaction, or peer navigation. | `bottom-sheet`, `side-sheet`, `navigation-rail` | auto-init |
 | [Scrollspy](../components/scrollspy.md) | Track visible sections in a table of contents. | Separate views need navigation or tabs. | `tabs`, `navigation-bar` | auto-init |
-| [Buttons](../components/buttons.md) | Run an action with a visible label. | Stored choices need inputs; destinations need links. | `segmented-buttons`, `icon-buttons` | css-only |
+| [Buttons](../components/buttons.md) | Run an action with a visible label. | Stored choices need inputs; destinations need links. | `button-groups`, `icon-buttons` | css-only |
 | [Icon buttons](../components/icon-buttons.md) | Compact actions with recognizable icons. | An unfamiliar action needs a visible button label. | `buttons`, `tooltips` | css-only |
-| [Segmented buttons](../components/segmented-buttons.md) | Choose 2–5 values using native radio/checkbox inputs. | Independent commands need a standard button group. | `button-groups`, `radio-buttons` | css-only |
-| [Button groups](../components/button-groups.md) | Cluster commands or aria-pressed toggle buttons. | Submitted values need segmented or other native inputs. | `segmented-buttons`, `split-button` | auto-init |
+| [Segmented buttons](../components/segmented-buttons.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use a connected button group. | `button-groups`, `radio-buttons` | css-only |
+| [Button groups](../components/button-groups.md) | Cluster commands or aria-pressed toggle buttons. | Submitted values need segmented or other native inputs. | `split-button`, `radio-buttons` | auto-init |
 | [Split button](../components/split-button.md) | Default action plus related menu actions. | Equal actions need a group; values need inputs. | `button-groups`, `menu` | auto-init |
 | [Floating action button](../components/fab.md) | A circular action that can open a menu of related shortcuts. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |
 | [Cards](../components/cards.md) | Distinct items with their own content or actions. | Dense comparable rows need a list. | `lists`, `carousel`, `badges` | auto-init |
 | [Lists](../components/lists.md) | Scan repeated rows of text and images. | Rich independent items need cards. | `cards`, `carousel`, `panes` | css-only |
 | [Dialogs](../components/dialogs.md) | Focused prompts or decisions that interrupt the flow. | Ignorable feedback needs snackbar or banner. | `snackbar`, `banners`, `bottom-sheet`, `side-sheet`, `floating-sheet` | shared-runtime |
 | [Bottom sheet](../components/bottom-sheet.md) | Secondary content anchored to the bottom of the screen. | Persistent wider-window secondary content or a small anchored choice fits another component. | `side-sheet`, `menu`, `dialogs` | shared-runtime |
-| [Side sheet](../components/side-sheet.md) | Optional content and actions, without interrupting the main view. | The content is peer navigation or requires a blocking modal decision. | `navigation-drawer`, `bottom-sheet`, `dialogs` | shared-runtime |
+| [Side sheet](../components/side-sheet.md) | Optional content and actions, without interrupting the main view. | The content is peer navigation or requires a blocking modal decision. | `navigation-rail`, `bottom-sheet`, `dialogs` | shared-runtime |
 | [Floating sheet](../components/floating-sheet.md) | Detached secondary content or tools. | Urgent decisions need dialogs; edge content needs sheets. | `dialogs`, `bottom-sheet`, `side-sheet` | shared-runtime |
 | [Drag handle](../components/drag-handle.md) | The bar that says a thing can be dragged — and nothing that does the dragging. | The containing component lacks drag behavior, keyboard operation, or an equivalent single-pointer path without dragging. | `bottom-sheet`, `side-sheet` | css-only |
 | [Badges](../components/badges.md) | Attach counts or status to another item. | Interactive filters need chips; messages need feedback. | `chips`, `cards` | css-only |
@@ -44,8 +44,8 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Fieldsets](../components/fieldsets.md) | Name related form controls with a legend. | Visual content grouping needs cards or sections. | `cards` | css-only |
 | [Text fields](../components/text-fields.md) | Material Design 3 text fields, from the HTML. | The value comes from a constrained set better represented by selection controls. | `search`, `autocomplete`, `select` | css-only |
 | [Select](../components/select.md) | Choose one option, or several, from a styled menu. | A short option set should remain visible or free-form entry is required. | `radio-buttons`, `autocomplete` | auto-init |
-| [Checkboxes](../components/checkboxes.md) | Material Design 3 checkboxes, from the HTML. | The setting applies immediately or exactly one option must be chosen. | `switches`, `radio-buttons`, `segmented-buttons`, `chips` | css-only |
-| [Radio buttons](../components/radio-buttons.md) | Material Design 3 radios, from the HTML. | Several choices may be selected or compact direct manipulation is better. | `segmented-buttons`, `checkboxes` | css-only |
+| [Checkboxes](../components/checkboxes.md) | Material Design 3 checkboxes, from the HTML. | The setting applies immediately or exactly one option must be chosen. | `switches`, `radio-buttons`, `button-groups`, `chips` | css-only |
+| [Radio buttons](../components/radio-buttons.md) | Material Design 3 radios, from the HTML. | Several choices may be selected or compact direct manipulation is better. | `button-groups`, `checkboxes` | css-only |
 | [Switches](../components/switches.md) | Material Design 3 switches, from the HTML. | A later Save action commits the choice. | `checkboxes` | css-only |
 | [Slider](../components/slider.md) | Adjust a bounded numeric range. | Exact typed values need a numeric field. | `text-fields` | shared-runtime |
 | [Chips](../components/chips.md) | Compact filters, tags, or contextual actions. | Passive counts need badges; primary actions need buttons. | `checkboxes`, `badges` | auto-init |

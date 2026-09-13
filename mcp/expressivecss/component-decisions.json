@@ -60,7 +60,8 @@
             "Overview",
             "Specs",
             "Guidelines",
-            "Accessibility"
+            "Accessibility",
+            "Overview/M3 Expressive update: replacement guidance"
           ],
           "sources": [
             "https://m3.material.io/components/app-bars/overview",
@@ -71,7 +72,8 @@
           "requirements": "Choose small, flexible medium/large or search app bars for the title and screen actions. Preserve meaningful headings, named actions and reachable controls through scrolling and collapse."
         },
         "specHref": "https://m3.material.io/components/app-bars/specs",
-        "guidelinesHref": "https://m3.material.io/components/app-bars/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/app-bars/guidelines",
+        "reason": "Google replaces baseline medium/large bars with flexible variants. ExpressiveCSS medium and large already mean medium-flexible and large-flexible; keep those classes."
       },
       "selectionExample": "A Home/Search/Profile row belongs in navigation, even if placed at the top. Keep the app bar for the title and screen actions.",
       "capabilityReview": {
@@ -104,8 +106,8 @@
       "aliases": [
         "bottom command bar"
       ],
-      "selectable": true,
-      "excludeReason": null,
+      "selectable": false,
+      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use a docked toolbar.",
       "guideSource": {
         "pageId": "bottom_app_bar",
         "heading": "Bottom app bar",
@@ -118,10 +120,10 @@
         "This screen's commands at the bottom edge, with an optional FAB — not its destinations."
       ],
       "useWhen": [
-        "Retain an existing bottom app bar or explicit compatibility need."
+        "Compatibility, explicit requests, or verified replacement gaps."
       ],
       "avoidWhen": [
-        "New Expressive bottom actions need docked toolbars; destinations need navigation."
+        "New designs: use a docked toolbar."
       ],
       "alternatives": [
         "toolbars",
@@ -160,7 +162,7 @@
           ],
           "requirements": "The docked toolbar replaces the baseline bottom app bar in Expressive guidance. Retain the older bar only for compatibility or a specific capability need."
         },
-        "reason": "Legacy Material component; Google deprecates it for M3 Expressive in favor of docked toolbars.",
+        "reason": "No longer recommended by Google for new M3 Expressive designs; use a docked toolbar. Retained APIs and accessible existing interfaces remain valid for maintenance.",
         "specHref": "https://m3.material.io/components/toolbars/specs",
         "guidelinesHref": "https://m3.material.io/components/toolbars/guidelines"
       },
@@ -211,7 +213,6 @@
       ],
       "alternatives": [
         "navigation-rail",
-        "navigation-drawer",
         "toolbars"
       ],
       "adaptive": [
@@ -221,13 +222,6 @@
           "kind": "replace-with",
           "component": "navigation-rail",
           "reason": "Use persistent peer navigation at wider widths."
-        },
-        {
-          "window": "expanded",
-          "basis": "window",
-          "kind": "replace-with",
-          "component": "navigation-drawer",
-          "reason": "Retain a drawer only for an existing interface or a verified capability missing from the target-version expanded rail."
         }
       ],
       "runtime": "css-only",
@@ -247,8 +241,15 @@
           "source": "https://m3.material.io/components/navigation-bar/overview",
           "reviewedOn": "2026-09-13",
           "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
-          "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
-        }
+          "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.",
+          "sections": [
+            "Overview/M3 Expressive update: replacement guidance"
+          ],
+          "sources": [
+            "https://m3.material.io/components/navigation-bar/overview"
+          ]
+        },
+        "reason": "Google replaces the baseline bar with the flexible bar. The documented stacked/horizontal navigation-bar layouts remain current; do not exclude the family by its name."
       },
       "selectionExample": "Overview/Activity within an account page should not displace Home/Search/Profile in app navigation. Use tabs for those local panels and preserve the app destinations across widths.",
       "capabilityReview": {
@@ -291,8 +292,7 @@
         "Compact peers fit a navigation bar; verify nesting support."
       ],
       "alternatives": [
-        "navigation-bar",
-        "navigation-drawer"
+        "navigation-bar"
       ],
       "adaptive": [
         {
@@ -307,13 +307,6 @@
           "basis": "window",
           "kind": "variant",
           "reason": "Use the expanded rail when labels should remain visible."
-        },
-        {
-          "window": "expanded",
-          "basis": "window",
-          "kind": "replace-with",
-          "component": "navigation-drawer",
-          "reason": "Retain a drawer only for an existing interface or a verified nested-navigation capability missing from the target-version expanded rail."
         }
       ],
       "runtime": "auto-init",
@@ -333,9 +326,16 @@
           "source": "https://m3.material.io/components/navigation-rail/overview",
           "reviewedOn": "2026-09-13",
           "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
-          "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
+          "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.",
+          "sections": [
+            "Overview/M3 Expressive update: replacement guidance"
+          ],
+          "sources": [
+            "https://m3.material.io/components/navigation-rail/overview"
+          ]
         },
-        "specHref": "https://m3.material.io/components/navigation-rail/specs"
+        "specHref": "https://m3.material.io/components/navigation-rail/specs",
+        "reason": "Google replaces the baseline rail with the collapsed rail and the drawer with the expanded rail. The documented collapsed, expanded and modal variants remain current. Retain a drawer only for compatibility, an explicit request or a verified target-version nesting gap."
       },
       "capabilityReview": {
         "reviewedOn": "2026-09-12",
@@ -369,8 +369,8 @@
         "drawer",
         "sidebar"
       ],
-      "selectable": true,
-      "excludeReason": null,
+      "selectable": false,
+      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail.",
       "guideSource": {
         "pageId": "sidenav",
         "heading": "Navigation drawer",
@@ -383,10 +383,10 @@
         "A slide-out menu, or a fixed sidebar on Expanded and wider screens."
       ],
       "useWhen": [
-        "Retain a drawer or a verified nesting capability missing from expanded rails."
+        "Compatibility, explicit requests, or verified replacement gaps."
       ],
       "avoidWhen": [
-        "New navigation fits expanded rails; item details need a side sheet."
+        "New designs: use an expanded navigation rail."
       ],
       "alternatives": [
         "navigation-rail",
@@ -442,7 +442,8 @@
           "requirements": "Current Expressive guidance replaces the drawer with an expanded navigation rail. Retained drawers still need named destinations, independent scrolling and correct modal focus and dismissal."
         },
         "specHref": "https://m3.material.io/components/navigation-drawer/specs",
-        "guidelinesHref": "https://m3.material.io/components/navigation-drawer/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/navigation-drawer/guidelines",
+        "reason": "No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance."
       },
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
@@ -679,7 +680,7 @@
       ],
       "alternatives": [
         "navigation-bar",
-        "segmented-buttons"
+        "button-groups"
       ],
       "adaptive": [],
       "runtime": "auto-init",
@@ -946,7 +947,7 @@
       "alternatives": [
         "bottom-sheet",
         "side-sheet",
-        "navigation-drawer"
+        "navigation-rail"
       ],
       "adaptive": [],
       "runtime": "auto-init",
@@ -1149,7 +1150,7 @@
         "Stored choices need inputs; destinations need links."
       ],
       "alternatives": [
-        "segmented-buttons",
+        "button-groups",
         "icon-buttons"
       ],
       "adaptive": [],
@@ -1172,12 +1173,19 @@
           "source": "https://m3.material.io/components/buttons/overview",
           "reviewedOn": "2026-09-13",
           "scope": "overview-specs-guidelines-accessibility-prose-reviewed",
-          "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
+          "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.",
+          "sections": [
+            "Overview/M3 Expressive update: replacement guidance"
+          ],
+          "sources": [
+            "https://m3.material.io/components/buttons/overview"
+          ]
         },
         "specHref": "https://m3.material.io/components/buttons/specs",
-        "guidelinesHref": "https://m3.material.io/components/buttons/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/buttons/guidelines",
+        "reason": "Google no longer recommends 24dp padding for small buttons; use the current 16dp inset. This is spacing guidance, not removal of a button style."
       },
-      "selectionExample": "A saved delivery-speed choice needs radios or segmented inputs, not three action buttons.",
+      "selectionExample": "Use radios for saved form values; buttons run commands.",
       "capabilityReview": {
         "reviewedOn": "2026-09-12",
         "support": "partial",
@@ -1277,7 +1285,8 @@
             "Overview",
             "Specs",
             "Guidelines",
-            "Accessibility"
+            "Accessibility",
+            "Overview/M3 Expressive update: replacement guidance; Specs/Baseline tokens"
           ],
           "sources": [
             "https://m3.material.io/components/icon-buttons/overview",
@@ -1288,7 +1297,8 @@
           "requirements": "Distinguish default and toggle controls, sizes, shapes and widths. Name each action and expose toggle state. Verify 48dp effective targets even for visually smaller sizes, and sufficient icon contrast."
         },
         "specHref": "https://m3.material.io/components/icon-buttons/specs",
-        "guidelinesHref": "https://m3.material.io/components/icon-buttons/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/icon-buttons/guidelines",
+        "reason": "Google deprecates baseline filled, tonal and outlined token sets in favor of updated tokens, not those current icon-button variants. Do not rename framework tokens from Android examples."
       },
       "selectionExample": "A novel approval workflow should use a labeled button. A tooltip on an ambiguous icon cannot replace a clear label or the control's accessible name.",
       "capabilityReview": {
@@ -1336,8 +1346,8 @@
       "aliases": [
         "segmented control"
       ],
-      "selectable": true,
-      "excludeReason": null,
+      "selectable": false,
+      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use a connected button group.",
       "guideSource": {
         "pageId": "segmented_buttons",
         "heading": "Segmented buttons",
@@ -1350,10 +1360,10 @@
         "Two to five connected options, one choice or several, with no script behind them."
       ],
       "useWhen": [
-        "Choose 2–5 values using native radio/checkbox inputs."
+        "Compatibility, explicit requests, or verified replacement gaps."
       ],
       "avoidWhen": [
-        "Independent commands need a standard button group."
+        "New designs: use a connected button group."
       ],
       "alternatives": [
         "button-groups",
@@ -1393,12 +1403,13 @@
             "https://m3.material.io/components/segmented-buttons/guidelines",
             "https://m3.material.io/components/segmented-buttons/accessibility"
           ],
-          "requirements": "Use the retained component for two to five single- or multiple-select choices. Current Expressive guidance recommends connected button groups. Preserve form semantics and effective targets when choosing a replacement."
+          "requirements": "Segmented buttons are no longer recommended for new Expressive designs; use connected button groups. Retained native radio/checkbox groups remain available for maintenance, explicit requests or a documented form-value gap. Preserve selection, form semantics and effective targets."
         },
         "specHref": "https://m3.material.io/components/segmented-buttons/specs",
-        "guidelinesHref": "https://m3.material.io/components/segmented-buttons/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/segmented-buttons/guidelines",
+        "reason": "No longer recommended by Google for new M3 Expressive designs; use a connected button group. Retained APIs and accessible existing interfaces remain valid for maintenance."
       },
-      "selectionExample": "Cut/Copy/Paste are commands, not stored choices. Use a standard button group. A shipping-speed value submitted with a form fits single-select segmented inputs with one shared radio name.",
+      "selectionExample": "For new toggle choices use connected button groups; commands use standard groups. This retained radio/checkbox example supports existing forms or a verified native form-value requirement.",
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
         "support": "implemented",
@@ -1445,8 +1456,8 @@
         "Submitted values need segmented or other native inputs."
       ],
       "alternatives": [
-        "segmented-buttons",
-        "split-button"
+        "split-button",
+        "radio-buttons"
       ],
       "adaptive": [],
       "runtime": "auto-init",
@@ -1473,7 +1484,8 @@
             "Overview",
             "Specs",
             "Guidelines",
-            "Accessibility"
+            "Accessibility",
+            "Overview/M3 Expressive update: replacement guidance"
           ],
           "sources": [
             "https://m3.material.io/components/button-groups/overview",
@@ -1484,9 +1496,10 @@
           "requirements": "Choose standard or connected groups and optional, required, single or multiple selection deliberately. Verify press growth, shapes, 48dp targets and reachable unwrapped content. Google describes Tab between buttons, with no focus on the group itself."
         },
         "specHref": "https://m3.material.io/components/button-groups/specs",
-        "guidelinesHref": "https://m3.material.io/components/button-groups/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/button-groups/guidelines",
+        "reason": "Google recommends the connected button group instead of segmented buttons. Match toggle state, required selection and persistence explicitly; native form submission is not supplied by aria-pressed."
       },
-      "selectionExample": "Economy/Express delivery submitted on Save needs radios or segmented inputs. Standard groups fit Cut/Copy/Paste; connected groups fit toggle states, not one-shot commands. A pressed button does not submit a radio value.",
+      "selectionExample": "Standard groups fit Cut/Copy/Paste commands; connected groups fit toggle choices. A pressed button does not submit a radio value: use native inputs for form values, or explicitly integrate persistence.",
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
         "support": "implemented",
@@ -1693,7 +1706,8 @@
             "Overview",
             "Specs",
             "Guidelines",
-            "Accessibility"
+            "Accessibility",
+            "Overview/M3 Expressive update: replacement guidance"
           ],
           "sources": [
             "https://m3.material.io/components/floating-action-button/overview",
@@ -1716,7 +1730,8 @@
           "https://m3.material.io/components/fab-menu/overview"
         ],
         "specHref": "https://m3.material.io/components/floating-action-button/specs",
-        "guidelinesHref": "https://m3.material.io/components/floating-action-button/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/floating-action-button/guidelines",
+        "reason": "Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. These are design replacements, not removed APIs."
       },
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
@@ -1744,7 +1759,8 @@
         ],
         "browserChecks": [],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
+      },
+      "selectionExample": "The syntax below is a retained speed-dial example, not the default for new designs. Use the documented fab-menu variant for labelled actions and verify focus when it closes."
     },
     {
       "slug": "cards",
@@ -2185,7 +2201,7 @@
         "The content is peer navigation or requires a blocking modal decision."
       ],
       "alternatives": [
-        "navigation-drawer",
+        "navigation-rail",
         "bottom-sheet",
         "dialogs"
       ],
@@ -2887,7 +2903,8 @@
             "Overview/M3 Expressive update, Previous updates",
             "Specs/Configurations",
             "Guidelines/Usage, Progress indicators in buttons, Responsive layout",
-            "Accessibility/Interaction & style, Labeling elements"
+            "Accessibility/Interaction & style, Labeling elements",
+            "Overview/M3 Expressive update: replacement guidance; Specs/Baseline tokens"
           ],
           "sources": [
             "https://m3.material.io/components/progress-indicators/overview",
@@ -2898,9 +2915,10 @@
           "requirements": "Report accurate determinate values and omit values for unknown progress. Keep the same process recognizable when its state changes. Mirror linear progress in RTL and provide an end stop when track contrast needs it. Loading indicators cover many short waits; circular progress remains useful in buttons and processes that become determinate."
         },
         "specHref": "https://m3.material.io/components/progress-indicators/specs",
-        "guidelinesHref": "https://m3.material.io/components/progress-indicators/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/progress-indicators/guidelines",
+        "reason": "Google replaces most short indeterminate circular waits with a loading indicator. Keep circular progress in buttons and for processes that become determinate; keep determinate and indeterminate linear progress. Deprecated baseline token sets do not deprecate these families."
       },
-      "selectionExample": "A two-second refresh with no measured fraction fits a loading indicator. An upload with bytes transferred needs determinate progress, even if short; a long job with no fraction can use indeterminate progress. Never invent a percentage. Indeterminate linear bars remain supported; the short-wait replacement specifically targets indeterminate circular spinners.",
+      "selectionExample": "A brief unknown refresh fits a loading indicator. An upload needs accurate determinate progress, even if short. Keep circular progress when an unknown process becomes determinate or runs inside a button; indeterminate linear bars remain supported. Never invent a percentage.",
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
         "support": "partial",
@@ -2984,7 +3002,8 @@
           "sections": [
             "Overview/M3 Expressive update",
             "Guidelines/Usage, Container (optional), Responsive layout, Behavior",
-            "Accessibility/Use cases, Interaction & style, Labeling elements"
+            "Accessibility/Use cases, Interaction & style, Labeling elements",
+            "Overview/M3 Expressive update: replacement guidance"
           ],
           "sources": [
             "https://m3.material.io/components/loading-indicator/overview",
@@ -2995,7 +3014,8 @@
           "requirements": "Use for an actual short wait with unknown progress, usually 200ms to five seconds. Do not use for a process that will become determinate. Google specifies a descriptive progressbar role and sufficient shape contrast; a refresh gesture still needs an alternative."
         },
         "specHref": "https://m3.material.io/components/loading-indicator/specs",
-        "guidelinesHref": "https://m3.material.io/components/loading-indicator/guidelines"
+        "guidelinesHref": "https://m3.material.io/components/loading-indicator/guidelines",
+        "reason": "Use for brief unknown waits, typically under five seconds. Do not replace progress that transitions from unknown to determinate, or circular progress within buttons."
       },
       "selectionExample": "A file upload reporting 42% needs determinate progress, not the morphing loading shape. A longer unmeasured job needs indeterminate progress. Do not flash an indicator for an effectively instant response or announce a fabricated value.",
       "capabilityReview": {
@@ -3704,7 +3724,7 @@
       "alternatives": [
         "switches",
         "radio-buttons",
-        "segmented-buttons",
+        "button-groups",
         "chips"
       ],
       "adaptive": [],
@@ -3803,7 +3823,7 @@
         "Several choices may be selected or compact direct manipulation is better."
       ],
       "alternatives": [
-        "segmented-buttons",
+        "button-groups",
         "checkboxes"
       ],
       "adaptive": [],
@@ -6729,5 +6749,5 @@
     "inputsUnchanged": true,
     "reportSha256": "bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab"
   },
-  "sourceRevision": "bef61ad4b7b62a2d346011716bade94a70a3daa8"
+  "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c"
 }

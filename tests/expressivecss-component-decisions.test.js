@@ -39,8 +39,9 @@ describe('ExpressiveCSS component decisions', () => {
     for (const component of data.components) {
       assert.ok(component.title);
       assert.ok(Array.isArray(component.aliases), `${component.slug} has no aliases`);
-      assert.equal(component.selectable, true, `${component.slug} must be selectable or explicitly excluded`);
-      assert.equal(component.excludeReason, null);
+      assert.equal(typeof component.selectable, 'boolean');
+      if (component.selectable) assert.equal(component.excludeReason, null);
+      else assert.ok(component.excludeReason && component.alternatives.length, `${component.slug} needs a reason and replacement`);
       assert.ok(component.guideSource.pageId);
       assert.ok(component.guideSource.heading);
       assert.ok([2, 3].includes(component.guideSource.headingLevel));
@@ -68,12 +69,12 @@ describe('ExpressiveCSS component decisions', () => {
       ['navigation-bar', 'navigation-rail'],
       ['navigation-drawer', 'side-sheet'],
       ['bottom-app-bar', 'navigation-bar'],
-      ['button-groups', 'segmented-buttons'],
+      ['button-groups', 'radio-buttons'],
       ['progress', 'loading-indicator'],
       ['app-bar', 'tabs'],
       ['app-bar', 'breadcrumbs'],
       ['button-groups', 'split-button'],
-      ['checkboxes', 'segmented-buttons'],
+      ['checkboxes', 'button-groups'],
       ['checkboxes', 'chips'],
       ['dialogs', 'floating-sheet'],
       ['lists', 'cards'],
@@ -413,8 +414,13 @@ describe('Expressive selection and portable capability evidence', () => {
     for (const slug of ['navigation-bar', 'fab']) {
       assert.ok(!entries.get(slug).alternatives.includes('bottom-app-bar'));
     }
-    assert.equal(entries.get('bottom-app-bar').selectable, true);
-    assert.equal(entries.get('navigation-drawer').selectable, true);
+    assert.equal(entries.get('segmented-buttons').alternatives[0], 'button-groups');
+    assert.deepEqual(data.components.filter((entry) => !entry.selectable).map((entry) => entry.slug).sort(),
+      ['bottom-app-bar', 'navigation-drawer', 'segmented-buttons']);
+    for (const entry of data.components.filter((item) => item.selectable)) {
+      assert.ok(entry.alternatives.every((slug) => entries.get(slug).selectable));
+      assert.ok(entry.adaptive.every((item) => !item.component || entries.get(item.component).selectable));
+    }
   });
 
   test('roadmap source links survive packaging and reject invalid revisions and paths', async () => {

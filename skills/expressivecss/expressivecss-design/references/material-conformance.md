@@ -22,7 +22,9 @@ Do not turn these classifications into an aggregate parity score. Map observatio
 
 An intentional web adaptation needs a concrete platform or task reason and evidence that usability and accessibility remain intact. It cannot waive a WCAG failure or change a hard Audit result to Pass. Report an unavailable interaction or assistive-technology check as unverified, even if source inspection passes.
 
-Prefer current Expressive components for new designs. Retained baseline components remain available for compatibility or an explicit capability need; state the reason and the unsupported replacement capability instead of silently treating the legacy choice as the Expressive default.
+Prefer current Expressive components for new designs. The decision index marks compatibility-only components and links their replacements. Retain legacy components or variants for maintenance, an explicit request, or a verified target-version capability gap; state the reason. Do not migrate an existing interface automatically. Google's "no longer recommended" is design guidance, not an API removal or an accessibility failure.
+
+Check variant meaning in the resolved framework contract before replacing it. A current family can contain a legacy variant, and existing class names can already implement the Expressive replacement. Preserve navigation versus actions, form values, required selection, keyboard behavior, focus return, reading order and scroll ownership. If the replacement cannot preserve a required behavior, record the gap and use a supported alternative or retain the legacy component explicitly. Component guides contain the dated Google links and replacement conditions; token-set deprecation does not remove current component styles.
 
 ## Report and maintain only reviewed scope
 

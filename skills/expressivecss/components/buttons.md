@@ -11,19 +11,19 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `7324e2d02a9b43796aea2c3e5326d0dc36c2595965b9ce313b25de9b25169fc1`
+Contract SHA-256: `f7d92f28aeefe6130e16668f77ef1cc4a7a67c6425432b5b5eee5e0b77ff3d3f`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
 
-Example: A saved delivery-speed choice needs radios or segmented inputs, not three action buttons.
+Example: Use radios for saved form values; buttons run commands.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google no longer recommends 24dp padding for small buttons; use the current 16dp inset. This is spacing guidance, not removal of a button style.
 
 Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/buttons/overview).
 
