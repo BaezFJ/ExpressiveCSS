@@ -10,59 +10,59 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-13, Chromium 151.0.7922.34, passed; inputs match. Raw report SHA-256: `bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab`.
+Last operator collection: 2026-09-13, Chromium 151.0.7922.34, passed; inputs changed or unavailable. Raw report SHA-256: `bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
 | [App bar](#app-bar) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Bottom app bar](#bottom-app-bar) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Navigation bar](#navigation-bar) | unassessed | needs-review | no-mapped-checks | 0 |
-| [Navigation rail](#navigation-rail) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Navigation drawer](#navigation-drawer) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Panes](#panes) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Footer](#footer) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Tabs](#tabs) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Breadcrumbs](#breadcrumbs) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Pagination](#pagination) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Menu](#menu) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Scrollspy](#scrollspy) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Buttons](#buttons) | unassessed | needs-review | recorded-scoped-pass | 1 |
-| [Icon buttons](#icon-buttons) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Navigation rail](#navigation-rail) | unassessed | needs-review | needs-rerun | 0 |
+| [Navigation drawer](#navigation-drawer) | implemented | source-reviewed | needs-rerun | 0 |
+| [Panes](#panes) | implemented | source-reviewed | needs-rerun | 1 |
+| [Footer](#footer) | implemented | source-reviewed | needs-rerun | 0 |
+| [Tabs](#tabs) | implemented | source-reviewed | needs-rerun | 1 |
+| [Breadcrumbs](#breadcrumbs) | implemented | source-reviewed | needs-rerun | 0 |
+| [Pagination](#pagination) | implemented | source-reviewed | needs-rerun | 1 |
+| [Menu](#menu) | implemented | source-reviewed | needs-rerun | 0 |
+| [Scrollspy](#scrollspy) | implemented | source-reviewed | needs-rerun | 0 |
+| [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 1 |
+| [Icon buttons](#icon-buttons) | implemented | source-reviewed | needs-rerun | 0 |
 | [Segmented buttons](#segmented-buttons) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Button groups](#button-groups) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Button groups](#button-groups) | implemented | source-reviewed | needs-rerun | 0 |
 | [Split button](#split-button) | implemented | source-reviewed | no-mapped-checks | 0 |
 | [Floating action button](#fab) | partial | source-reviewed | no-mapped-checks | 1 |
-| [Cards](#cards) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Lists](#lists) | implemented | source-reviewed | recorded-scoped-pass | 1 |
+| [Cards](#cards) | implemented | source-reviewed | needs-rerun | 0 |
+| [Lists](#lists) | implemented | source-reviewed | needs-rerun | 1 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
-| [Bottom sheet](#bottom-sheet) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Side sheet](#side-sheet) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Floating sheet](#floating-sheet) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Bottom sheet](#bottom-sheet) | implemented | source-reviewed | needs-rerun | 1 |
+| [Side sheet](#side-sheet) | implemented | source-reviewed | needs-rerun | 0 |
+| [Floating sheet](#floating-sheet) | implemented | source-reviewed | needs-rerun | 0 |
 | [Drag handle](#drag-handle) | implemented | source-reviewed | no-mapped-checks | 1 |
-| [Badges](#badges) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Tooltips](#tooltips) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Snackbar](#snackbar) | partial | source-reviewed | recorded-scoped-pass | 1 |
+| [Badges](#badges) | implemented | source-reviewed | needs-rerun | 0 |
+| [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
+| [Snackbar](#snackbar) | partial | source-reviewed | needs-rerun | 1 |
 | [Banners](#banners) | implemented | source-reviewed | no-mapped-checks | 1 |
-| [Progress indicators](#progress) | partial | source-reviewed | recorded-scoped-pass | 1 |
-| [Loading indicator](#loading-indicator) | implemented | source-reviewed | recorded-scoped-pass | 1 |
+| [Progress indicators](#progress) | partial | source-reviewed | needs-rerun | 1 |
+| [Loading indicator](#loading-indicator) | implemented | source-reviewed | needs-rerun | 1 |
 | [Carousel](#carousel) | implemented | source-reviewed | no-mapped-checks | 0 |
-| [Lightbox](#lightbox) | implemented | source-reviewed | recorded-scoped-pass | 0 |
+| [Lightbox](#lightbox) | implemented | source-reviewed | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
-| [Search](#search) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Fieldsets](#fieldsets) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Text fields](#text-fields) | unassessed | needs-review | recorded-scoped-pass | 0 |
-| [Select](#select) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Checkboxes](#checkboxes) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Radio buttons](#radio-buttons) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Switches](#switches) | implemented | source-reviewed | recorded-scoped-pass | 1 |
-| [Slider](#slider) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Chips](#chips) | implemented | source-reviewed | recorded-scoped-pass | 0 |
-| [Autocomplete](#autocomplete) | partial | source-reviewed | recorded-scoped-pass | 1 |
+| [Search](#search) | implemented | source-reviewed | needs-rerun | 1 |
+| [Fieldsets](#fieldsets) | implemented | source-reviewed | needs-rerun | 0 |
+| [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
+| [Select](#select) | implemented | source-reviewed | needs-rerun | 0 |
+| [Checkboxes](#checkboxes) | implemented | source-reviewed | needs-rerun | 0 |
+| [Radio buttons](#radio-buttons) | implemented | source-reviewed | needs-rerun | 0 |
+| [Switches](#switches) | implemented | source-reviewed | needs-rerun | 1 |
+| [Slider](#slider) | implemented | source-reviewed | needs-rerun | 0 |
+| [Chips](#chips) | implemented | source-reviewed | needs-rerun | 0 |
+| [Autocomplete](#autocomplete) | partial | source-reviewed | needs-rerun | 1 |
 | [Date picker](#date-picker) | partial | source-reviewed | no-mapped-checks | 2 |
 | [Time picker](#time-picker) | partial | source-reviewed | no-mapped-checks | 2 |
-| [Typography](#typography) | unassessed | needs-review | recorded-scoped-pass | 2 |
-| [Shape](#shape) | unassessed | needs-review | recorded-scoped-pass | 1 |
-| [Motion](#motion) | unassessed | needs-review | recorded-scoped-pass | 1 |
+| [Typography](#typography) | unassessed | needs-review | needs-rerun | 2 |
+| [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
+| [Motion](#motion) | unassessed | needs-review | needs-rerun | 1 |
 
 <a id="app-bar"></a>
 
@@ -126,7 +126,7 @@ Web adaptation: The compact expanded rail uses a scrim and dismissal behavior.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
 
 <a id="navigation-drawer"></a>
 
@@ -142,7 +142,7 @@ Web adaptation: Native details/summary supports nesting.
 
 - verification: Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks. Next: Test nested destinations, long scrolling and Escape with the actual trigger.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining fixed drawer releases modal state at the expanded boundary`. Compact open to expanded fixed drawer releases native modality and can reopen after returning compact.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining fixed drawer releases modal state at the expanded boundary`. Compact open to expanded fixed drawer releases native modality and can reopen after returning compact.
 
 <a id="panes"></a>
 
@@ -158,7 +158,7 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 - integration: Viewport rules at 840px override narrow-container collapse; compact supporting layouts hide rather than stack supporting content. Next: Use an explicit application layout when both panes must remain visible; test actual container width, reading order, selection and scrolling.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 
 <a id="footer"></a>
 
@@ -174,7 +174,7 @@ Web adaptation: Web page landmark styled with theme roles.
 
 - verification: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified. Next: Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
 <a id="tabs"></a>
 
@@ -190,7 +190,7 @@ Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 
 - integration: Native links use Tab and aria-current; runtime does not implement composite tab arrow keys. Next: Retain native anchor semantics; test overflow and selected-panel focus before adding tab roles.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
 
 <a id="breadcrumbs"></a>
 
@@ -206,7 +206,7 @@ Web adaptation: Labelled navigation with an ordered list and current-page link.
 
 - verification: Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified. Next: Inspect assistive-technology output for separators and test translated paths without truncating essential context.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
 <a id="pagination"></a>
 
@@ -222,7 +222,7 @@ Web adaptation: CSS-only navigation; the application supplies destinations.
 
 - integration: aria-disabled and pointer-events alone cannot disable a link for keyboard users. Next: Use a non-link unavailable control, verify actual page destinations and preserve current-page state after updates.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
 <a id="menu"></a>
 
@@ -238,9 +238,9 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 
 - verification: Closing animation focus exclusion, submenu RTL, item targets and typeahead need a rendered check. Next: Exercise a normal-duration closing popup with immediate Tab and Shift+Tab; measure targets and test nested menus.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/menu-field-browser.test.js): `Menu cancels superseded callbacks and teardown work (chromium)`. Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/menu-field-browser.test.js): `Menu cancels superseded callbacks and teardown work (chromium)`. Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="scrollspy"></a>
 
@@ -256,7 +256,7 @@ Web adaptation: Web document navigation helper.
 
 - verification: A scoped TOC current link is checked; shared observer behavior with different offsets and multiple independent TOCs remains unverified. Next: Use getActiveElement to select the correct TOC; test independent offsets and teardown before claiming multi-TOC support.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
 <a id="buttons"></a>
 
@@ -272,9 +272,9 @@ Web adaptation: Native buttons run commands; a.button links navigate.
 
 - feature: Standalone common buttons do not document a square/toggle shape-morph contract; do not borrow icon-button or connected-group modifiers. Next: Define and test a standalone shape-morph contract without borrowing connected-group or icon-button modifiers.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 
 <a id="icon-buttons"></a>
 
@@ -290,8 +290,8 @@ Web adaptation: Accessible name belongs to the control; the glyph is decorative.
 
 - verification: Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states. Next: Measure XS/S effective targets and test named default/toggle controls outside groups.
 
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Filled icon button selected color and glyph fill inside a button group only.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Icon children inside button group only.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Filled icon button selected color and glyph fill inside a button group only.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Icon children inside button group only.
 
 <a id="segmented-buttons"></a>
 
@@ -323,11 +323,11 @@ Web adaptation: Runtime coordinates neighboring widths and selection; CSS handle
 
 - verification: Existing geometry and keyboard checks do not cover every required-selection and overflow configuration. Next: Exercise empty optional and required selection, disabled neighbors and constrained translated labels.
 
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Rendered group behavior; does not establish standalone common/icon-button parity.
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group toggle colors resolve in a browser`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Rendered group behavior; does not establish standalone common/icon-button parity.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
 
 <a id="split-button"></a>
 
@@ -375,10 +375,10 @@ Web adaptation: Native article anatomy; primary-action links preserve navigation
 
 - verification: Existing card lifecycle and geometry evidence does not cover every selected variant, contrast and reflow state. Next: Measure and keyboard-test the chosen variant with long content and nested controls.
 
-- recorded-passed: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/cards-browser.test.js): `dragged and picked-up states override simultaneous pointer states`. Specific card state, disclosure fallback, or horizontal layout contract.
-- recorded-passed: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/cards-browser.test.js): `invalid disclosures keep their panels visible and operable`. Specific card state, disclosure fallback, or horizontal layout contract.
-- recorded-passed: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/cards-browser.test.js): `directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint`. Specific card state, disclosure fallback, or horizontal layout contract.
-- recorded-passed: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- stale: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/cards-browser.test.js): `dragged and picked-up states override simultaneous pointer states`. Specific card state, disclosure fallback, or horizontal layout contract.
+- stale: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/cards-browser.test.js): `invalid disclosures keep their panels visible and operable`. Specific card state, disclosure fallback, or horizontal layout contract.
+- stale: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/cards-browser.test.js): `directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint`. Specific card state, disclosure fallback, or horizontal layout contract.
+- stale: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
 
 <a id="lists"></a>
 
@@ -394,8 +394,8 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 
 - integration: Ordinary native lists and child controls do not implement Google composite arrow navigation. Next: Retain native semantics unless a complete composite is supplied; test row control names and selection meaning.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
 <a id="dialogs"></a>
 
@@ -427,7 +427,7 @@ Web adaptation: Native dialog.show()/showModal(); shared runtime handles draggin
 
 - integration: The shared handle dismisses rather than cycling sheet heights; long-content and drag behavior are outside the new modal check. Next: Use explicit close controls; separately verify reachable scrolling and any application-owned height changes.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 
 <a id="side-sheet"></a>
 
@@ -443,7 +443,7 @@ Web adaptation: Native dialog and shared drag/dismiss behavior.
 
 - verification: Native modal/nonmodal focus is checked; start-docked RTL drag direction and long-content fit remain unverified. Next: Test the actual RTL edge, drag alternative, enlarged labels and reachable close action.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 
 <a id="floating-sheet"></a>
 
@@ -459,7 +459,7 @@ Web adaptation: Shares Dialogs initialization; no edge attachment or drag handle
 
 - verification: Native dialog focus and close are checked; long-content zoom and inset geometry remain unverified. Next: Verify content scrolling and action reachability in the chosen inset dialog.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining sheet variants retain native modal focus and explicit close actions`. Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.
 
 <a id="drag-handle"></a>
 
@@ -491,7 +491,7 @@ Web adaptation: Expose counts through the enclosing control name when its icon i
 
 - verification: A named count fixture is checked; changing counts, clipping and spoken updates remain unverified. Next: Expose count meaning once, test large/localized counts and verify announcements only when the task needs them.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
 <a id="tooltips"></a>
 
@@ -507,10 +507,10 @@ Web adaptation: The selected form determines ownership; CSS-only hover/focus is 
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
 
 <a id="snackbar"></a>
 
@@ -526,7 +526,7 @@ Web adaptation: Use the documented announcement and timeout behavior.
 
 - feature: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent. Next: Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining snackbar retains a focused action until focus leaves`. Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining snackbar retains a focused action until focus leaves`. Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
 
 <a id="banners"></a>
 
@@ -559,7 +559,7 @@ Web adaptation: Prefer native progress where applicable; supply accessible state
 - verification: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified. Next: Test native and custom determinate/indeterminate variants, visible static feedback and changing accessible values.
 - feature: Custom linear progress uses physical left fill in RTL; end-stop and wavy Expressive variants are not verified. Next: Test RTL native and custom bars; repair mirrored custom fill and assess an end stop for insufficient track contrast before claiming current variant parity.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 
 <a id="loading-indicator"></a>
 
@@ -575,7 +575,7 @@ Web adaptation: CSS-only; the author supplies an accessible waiting message.
 
 - integration: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow. Next: Record this current contract difference; test meaningful waiting text and spoken delivery. Choose a progress indicator initially when a transition to determinate progress is expected.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 
 <a id="carousel"></a>
 
@@ -607,8 +607,8 @@ Web adaptation: ExpressiveCSS media behavior, not an upstream component contract
 
 - verification: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified. Next: Treat this as image enlargement, not a verified modal gallery; test closing interruption and actual focus ownership.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox supports Space and preserves its image on teardown`. Space opens image enlargement; Escape closes; destroy preserves original image/style.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox teardown cancels pending work and preserves native button focus`. Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox supports Space and preserves its image on teardown`. Space opens image enlargement; Escape closes; destroy preserves original image/style.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox teardown cancels pending work and preserves native button focus`. Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.
 
 <a id="toolbars"></a>
 
@@ -640,7 +640,7 @@ Web adaptation: Application toggles hidden for docked views or opens a native di
 
 - integration: CSS does not supply search results announcements or modal focus ownership. Next: Verify submitted-query retention, full-screen return focus and spoken results in the application.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
 
 <a id="fieldsets"></a>
 
@@ -656,8 +656,8 @@ Web adaptation: Native fieldset/legend; related text-field tokens do not make th
 
 - verification: Named native groups and disabled descendants are checked; long legends and nested groups remain unverified. Next: Enlarge translated legends and verify readable group names without clipping.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
 <a id="text-fields"></a>
 
@@ -673,7 +673,7 @@ Web adaptation: Native input/textarea with explicit label and description relati
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
 
 <a id="select"></a>
 
@@ -689,9 +689,9 @@ Web adaptation: Native select enhanced by runtime; this is related to menu/text-
 
 - verification: Current browser evidence covers lifecycle and enlarged labels, not every disabled, grouped, or multiple-selection path. Next: Exercise native form submission, optgroups, disabled options and multiple selection in each target browser.
 
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
-- recorded-passed: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
-- recorded-passed: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/menu-field-browser.test.js): `enhanced select keeps enlarged multiline labels clear of values (chromium)`. Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `partial replacement and client navigation preserve shell ownership across repeated mounts`. Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.
+- stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
+- stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/menu-field-browser.test.js): `enhanced select keeps enlarged multiline labels clear of values (chromium)`. Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.
 
 <a id="checkboxes"></a>
 
@@ -707,8 +707,8 @@ Web adaptation: Native checkbox; indeterminate is set through the DOM property.
 
 - verification: Native state coverage does not verify parent aggregation or every target and forced-colors state. Next: Test partial child selection, label activation, effective targets and forced-colors rendering.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
 <a id="radio-buttons"></a>
 
@@ -724,7 +724,7 @@ Web adaptation: Shared name provides exclusivity; fieldset/legend names the grou
 
 - verification: Native group selection is checked; initially-empty and disabled-option paths remain unmeasured. Next: Check both Tab directions and arrow wrapping with the actual default and disabled choices.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
 <a id="switches"></a>
 
@@ -740,7 +740,7 @@ Web adaptation: Input state owns selection and form value.
 
 - integration: The styled native checkbox does not perform or announce a persisted setting change. Next: Verify immediate application outcome and failure recovery with a stable label.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
 <a id="slider"></a>
 
@@ -756,8 +756,8 @@ Web adaptation: Native range inputs with runtime value-label and range coordinat
 
 - verification: Zero maximum and resized RTL value-label placement are checked; vertical, dual-range and forced-colors geometry remain unverified. Next: Measure noncentral vertical and paired handles; test a synchronized numeric input and non-drag pointer changes.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize`. Correct zero maximum fraction/stop count, resized value label, noncentral RTL geometry and native End key.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize`. Correct zero maximum fraction/stop count, resized value label, noncentral RTL geometry and native End key.
 
 <a id="chips"></a>
 
@@ -773,7 +773,7 @@ Web adaptation: Element choice defines behavior; display chips are a framework e
 
 - verification: Filter selection is checked; input-chip deletion, dual targets and focus after removal remain unverified. Next: Test keyboard and pointer removal, next-focus recovery, wrapping and nonoverlapping targets.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
 <a id="autocomplete"></a>
 
@@ -789,8 +789,8 @@ Web adaptation: Runtime combobox behavior attached to a text field; no standalon
 
 - feature: Generated status-info does not announce new suggestion counts or asynchronous results. Next: Implement and verify an appropriate result-status update; test spoken delivery and multi-select keyboard behavior.
 
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
-- recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining autocomplete preserves a preselected display label on focus`. Initial selected record retains its display label and selection through first focus and Tab exit.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining autocomplete preserves a preselected display label on focus`. Initial selected record retains its display label and selection through first focus and Tab exit.
 
 <a id="date-picker"></a>
 
@@ -841,8 +841,8 @@ Web adaptation: Use supported web component and application overrides; Android a
 - feature: No emphasized role utilities or emphasized token family; emphasized labels and smaller titles requiring 700 need an application-supplied real face. Next: Define an additive emphasized-scale contract and a font-loading policy before implementing public names.
 - feature: Bundled text fonts cover Latin and 400/500 only; a Noto Sans fallback declaration does not establish non-Latin coverage. Next: Add browser checks for actual rendered font faces/weights, representative scripts, and all type-role metrics; retain native zoom/assistive review separately.
 
-- recorded-passed: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. 32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.
-- recorded-passed: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.
+- stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. 32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.
+- stale: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.
 
 <a id="shape"></a>
 
@@ -858,9 +858,9 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 - feature: No shared md-sys-shape token family or general rounded/cut-corner theming system. Next: Inventory existing component corner defaults against proposed shared roles before introducing an additive shape scale; preserve existing component overrides and state shapes.
 
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Standard and connected button-group pressed corner changes and release with keyboard activation.
-- recorded-passed: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped common-button 16px corner repair; does not establish shape-system parity.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `keyboard press changes icon widths and rendered corners`. Standard and connected button-group pressed corner changes and release with keyboard activation.
+- stale: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-scoped common-button 16px corner repair; does not establish shape-system parity.
 
 <a id="motion"></a>
 
@@ -876,8 +876,8 @@ Web adaptation: Use supported web component and application overrides; Android a
 
 - feature: No shared md-sys-motion token family, general spring solver, or unified motion-theme selector. Next: Define shared semantic timing/spring roles only after mapping existing component needs; distinguish spatial and effects motion without presenting sampled CSS easing as a general solver.
 
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.
-- recorded-passed: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Connected group's transition duration is zero under emulated reduced motion.
-- recorded-passed: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.
-- recorded-passed: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
-- recorded-passed: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expanding-card-browser.test.js): `scale and expanding cards respect changing motion preferences (chromium)`. Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `standard press redistribution keeps its rendered width stable`. Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.
+- stale: [tests/button-groups-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/button-groups-browser.test.js): `button-group geometry resolves for overrides, targets, and RTL`. Connected group's transition duration is zero under emulated reduced motion.
+- stale: [tests/expressivecss-material-quality.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expressivecss-material-quality.test.js): `Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending`. Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.
+- stale: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
+- stale: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/f5f2aac3f5c19fbc4e5c69a946f647a088f18f49/tests/expanding-card-browser.test.js): `scale and expanding cards respect changing motion preferences (chromium)`. Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.
