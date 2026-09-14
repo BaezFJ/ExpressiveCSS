@@ -1,0 +1,158 @@
+name: Container validation
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      benchmark:
+        description: Measure three cold and three cached image builds
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: container-validation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+      - name: Assert cold checkout
+        run: |
+          test ! -e node_modules
+          test ! -e mcp/expressivecss/node_modules
+          if docker image inspect expressivecss-playwright >/dev/null 2>&1; then exit 1; fi
+          version=$(node -p 'require("./package-lock.json").packages["node_modules/playwright"].version')
+          if docker image inspect "mcr.microsoft.com/playwright:v$version-noble" >/dev/null 2>&1; then exit 1; fi
+          docker version
+          docker compose version
+      - run: npm run test:docker
+      - run: node scripts/check-container-reports.mjs
+      - run: npm run test:docker -- npm run verify
+      - run: npm run test:packages:docker
+      - run: npm run test:visual:docker -- --grep buttons --workers 2
+      - run: node scripts/check-container-docs.mjs
+      - name: Verify failed command exports and cleanup
+        run: |
+          set +e
+          npm run test:docker -- node -e 'require("node:fs").writeFileSync(".cache/cross-browser/failure-probe.json", JSON.stringify({status:"failed",container:require("node:os").hostname()})); process.exit(7)'
+          status=$?
+          set -e
+          test "$status" -eq 7
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdirSync,readFileSync} from 'node:fs';
+          import {spawnSync} from 'node:child_process';
+          const root='.cache/container-tests';
+          const files=readdirSync(root,{recursive:true}).filter(f=>f.endsWith('/failure-probe.json'));
+          assert.equal(files.length,1);
+          const report=JSON.parse(readFileSync(`${root}/${files[0]}`));
+          assert.equal(report.status,'failed');
+          const result=spawnSync('docker',['container','inspect',report.container]);
+          if(result.error) throw result.error;
+          assert.notEqual(result.status,0,'Failed container was not removed');
+          JS
+      - name: Cleanup and verify host remains unchanged
+        if: always()
+        run: |
+          docker compose down
+          test ! -e docs/src/pages/container-hmr-probe.astro
+          test ! -e docs/static/container-hmr-probe.css
+          test ! -e docs/static/container-hmr-probe.js
+          test ! -e node_modules
+          test ! -e mcp/expressivecss/node_modules
+          git diff --exit-code
+          git diff --cached --exit-code
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: container-validation
+          path: .cache/container-tests/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  cache-seed:
+    if: github.event_name == 'workflow_dispatch' && inputs.benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+      - run: |
+          docker buildx create --use
+          version=$(node -p 'require("./package-lock.json").packages["node_modules/playwright"].version')
+          docker buildx build -f Dockerfile.playwright --target dependencies --build-arg "PLAYWRIGHT_VERSION=$version" --cache-to type=local,dest=/tmp/container-build-cache,mode=max .
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: container-build-cache
+          path: /tmp/container-build-cache/
+          retention-days: 1
+          if-no-files-found: error
+          compression-level: 0
+
+  benchmark:
+    needs: cache-seed
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [cold, cached]
+        sample: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+      - run: docker buildx create --use
+      - run: node -e 'require("node:fs").writeFileSync("/tmp/build-start", String(Date.now()))'
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        if: matrix.mode == 'cached'
+        with:
+          name: container-build-cache
+          path: /tmp/container-build-cache
+      - run: node scripts/measure-container-build.mjs
+        env:
+          BUILD_MODE: ${{ matrix.mode }}
+          BUILD_SAMPLE: ${{ matrix.sample }}
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: build-timing-${{ matrix.mode }}-${{ matrix.sample }}
+          path: /tmp/build-timing.json
+          retention-days: 7
+          if-no-files-found: error
+
+  benchmark-summary:
+    needs: benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: build-timing-*
+          path: /tmp/build-timings
+      - run: node scripts/measure-container-build.mjs --summary

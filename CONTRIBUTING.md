@@ -75,6 +75,117 @@ such as `fix/menu-focus` or `docs/theme-example`. Keep each PR focused.
 
 ## Verify
 
+### Container tests
+
+With Git, Node.js and Docker installed, run all browser tests without installing
+browsers, npm dependencies, or browser system libraries on the host:
+
+```sh
+npm run test:docker
+```
+
+The runner builds from the [official Playwright image](https://playwright.dev/docs/docker),
+matching the version in `package-lock.json`, and installs dependencies with `npm ci`.
+Test commands receive an isolated Git bundle for source-provenance checks. Use a
+full checkout so the referenced source revisions are available in the bundle.
+It copies the current checkout, including uncommitted source changes. Dependencies
+and build output stay inside the container. Docker caches the dependency layer.
+After each run, browser traces and visual reports are copied to a unique directory
+under `.cache/container-tests/`, even when tests fail. The runner prints the path
+and removes the container. Each invocation builds and runs its own unique image
+tag, including the docs service, then removes that tag during cleanup. The shared
+`expressivecss-playwright` alias remains available for manual commands.
+Ctrl+C and termination signals stop the active command,
+export available reports, and remove its container. CI uses the same command and
+uploads this directory.
+
+To run contributor verification in the same image, or use Podman on Fedora:
+
+```sh
+npm run test:docker -- npm run verify
+npm run test:packages:docker
+CONTAINER_RUNTIME=podman npm run test:docker
+```
+
+Package checks install MCP dependencies, run its smoke tests, and validate both
+package tarballs in clean consumers. Nothing is published.
+
+### Maintaining container checks
+
+The `Container validation` Actions workflow runs Mondays at 07:00 UTC and can be
+started manually. It begins on a fresh Ubuntu runner with Git, Node from `.nvmrc`,
+Docker and Compose, without host npm dependencies or restored caches. It checks
+browser reports, contributor verification, packages, a focused visual comparison,
+docs live reload, and report export after an intentional failure. Its cleanup
+checks that tracked files and host dependency directories remain untouched.
+
+The PR browser job requires passing reports for both profiles in Chromium,
+Firefox and WebKit. Both workflows retain exported reports for seven days,
+including when tests fail. Build and command durations appear separately in the
+run summary. Inspect a run and download its reports with:
+
+```sh
+gh run list --workflow container-validation.yml
+gh run view <run-id> --log-failed
+gh run download <run-id> --name container-validation --dir .cache/downloaded-container-reports
+```
+
+For a PR run, download the `browser-critical-flows` artifact instead. Check the
+browser `result.json` files and failure traces; the weekly artifact also includes
+visual HTML reports. A local Podman pass does not establish a Docker Actions pass.
+
+Select the manual workflow's `benchmark` input to compare three cold and three
+cached builds on separate fresh runners at the same revision. The experiment
+transfers a dependency-stage BuildKit cache through a temporary Actions artifact;
+cached timings include that download. It does not enable caching for normal CI.
+The six timing artifacts last seven days; the temporary cache lasts one day.
+
+Enable production caching only if median cold `npm ci` time exceeds 60 seconds
+and median total build savings reach 30 seconds. If measured, implement Buildx
+GHA caching with `mode=max` and local image loading, and confirm its transfer costs
+meet the same threshold. Keep the weekly cold check uncached and permit cache
+misses. Until those measurements exist, leave caching disabled.
+
+Dependabot groups Playwright minor and patch updates separately from other build
+tooling. Major updates remain individual reviews. The image follows the lockfile;
+there is no separate version to update. Regenerate committed skill/MCP metadata
+when package or fingerprinted source changes make it stale. Generation does not
+renew browser evidence.
+
+### Container documentation preview
+
+```sh
+npm run docs:docker
+```
+
+Requires Docker Compose, or `podman-compose` with `CONTAINER_RUNTIME=podman`.
+Open http://localhost:4321. Changes under `src/`, `docs/src/`, `docs/public/`, and `docs/static/`
+are mounted read-only and watched for rebuilding or live reload. Dependencies
+and generated files stay inside the container. Restart the command after changing
+dependencies or configuration. Ctrl+C stops and removes the service. After the
+image has been built, `docker compose up docs` also works; use `docker compose down`
+to remove a service started directly through Compose.
+
+### Container visual regression
+
+```sh
+npm run test:visual:docker
+npm run test:visual:docker -- --grep buttons --workers 2
+```
+
+The runner copies Git history through a temporary bundle and compares the current
+source with its merge base against `origin/master` or `master`. `VISUAL_BASE=<ref>`
+selects another base. Fetch the needed history first in shallow checkouts. The
+container uses its own Git metadata and never creates worktrees in the host repo.
+The printed artifact directory contains `report/index.html` and `results/`.
+To view the report with the container's Playwright installation:
+
+```sh
+docker run --rm --init -p 127.0.0.1:9323:9323 -v "$PWD/.cache/container-tests/<run>/report:/report:ro,z" expressivecss-playwright npx playwright show-report /report --host 0.0.0.0
+```
+
+### Host tests
+
 ```sh
 npm run verify
 npx playwright install --with-deps chromium firefox webkit

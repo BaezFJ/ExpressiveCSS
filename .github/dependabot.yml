@@ -19,10 +19,14 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     groups:
+      playwright:
+        patterns: ['@playwright/*', 'playwright', 'playwright-core']
+        update-types: [minor, patch]
       # esbuild, sass, typescript and jsdom all move often. A major is worth
       # reading on its own; minors and patches are not worth five PRs.
       build-tooling:
         patterns: ['*']
+        exclude-patterns: ['@playwright/*', 'playwright', 'playwright-core']
         update-types: [minor, patch]
 
   - package-ecosystem: npm

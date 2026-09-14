@@ -1,0 +1,12 @@
+ARG PLAYWRIGHT_VERSION
+FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble AS dependencies
+
+WORKDIR /app
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+COPY package.json package-lock.json ./
+RUN dependency_start=$(date +%s) && npm ci && echo $(($(date +%s) - dependency_start)) > /tmp/dependency-seconds
+RUN node -e 'const v=require("playwright/package.json").version; for(const p of ["@playwright/test", "playwright-core"]) if(require(p+"/package.json").version!==v) throw Error("Playwright version mismatch: "+p)'
+FROM dependencies AS tests
+COPY . .
+RUN mkdir -p .cache/cross-browser visual/report visual/results
+CMD ["npm", "run", "test:browser"]
