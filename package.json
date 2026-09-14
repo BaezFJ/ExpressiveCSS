@@ -32,7 +32,10 @@
   "unpkg": "./dist/js/expressive.min.js",
   "jsdelivr": "./dist/js/expressive.min.js",
   "sideEffects": [
-    "./dist/js/*",
+    "./dist/js/expressive.mjs",
+    "./dist/js/expressive.cjs",
+    "./dist/js/expressive.js",
+    "./dist/js/expressive.min.js",
     "*.css",
     "*.scss"
   ],
@@ -47,7 +50,12 @@
     "./css/min": "./dist/css/expressive.min.css",
     "./fonts/*": "./dist/fonts/*",
     "./scss": "./src/sass/expressive.scss",
-    "./scss/*": "./src/sass/*"
+    "./scss/*": "./src/sass/*",
+    "./modular": {
+      "types": "./dist/types/modular.d.ts",
+      "import": "./dist/js/modular.mjs"
+    },
+    "./scss/custom": "./src/sass/custom.scss"
   },
   "files": [
     "dist",
@@ -66,7 +74,7 @@
     "build:css:expanded": "sass src/sass/expressive.scss dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
     "build:css:min": "sass src/sass/expressive.scss dist/css/expressive.min.css --style=compressed --source-map --load-path=src/sass",
     "build:js": "run-s build:js:esm build:js:cjs build:js:iife build:js:iife-min",
-    "build:js:esm": "esbuild src/ts/index.ts --bundle --format=esm --target=es2020 --outfile=dist/js/expressive.mjs --sourcemap",
+    "build:js:esm": "node scripts/build-esm.mjs",
     "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/expressive.cjs --sourcemap",
     "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
     "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",

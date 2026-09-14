@@ -39,8 +39,9 @@ describe('ExpressiveCSS component decisions', () => {
     for (const component of data.components) {
       assert.ok(component.title);
       assert.ok(Array.isArray(component.aliases), `${component.slug} has no aliases`);
-      assert.equal(component.selectable, true, `${component.slug} must be selectable or explicitly excluded`);
-      assert.equal(component.excludeReason, null);
+      assert.equal(typeof component.selectable, 'boolean');
+      if (component.selectable) assert.equal(component.excludeReason, null);
+      else assert.ok(component.excludeReason && component.alternatives.length, `${component.slug} needs a reason and replacement`);
       assert.ok(component.guideSource.pageId);
       assert.ok(component.guideSource.heading);
       assert.ok([2, 3].includes(component.guideSource.headingLevel));
@@ -68,12 +69,12 @@ describe('ExpressiveCSS component decisions', () => {
       ['navigation-bar', 'navigation-rail'],
       ['navigation-drawer', 'side-sheet'],
       ['bottom-app-bar', 'navigation-bar'],
-      ['button-groups', 'segmented-buttons'],
+      ['button-groups', 'radio-buttons'],
       ['progress', 'loading-indicator'],
       ['app-bar', 'tabs'],
       ['app-bar', 'breadcrumbs'],
       ['button-groups', 'split-button'],
-      ['checkboxes', 'segmented-buttons'],
+      ['checkboxes', 'button-groups'],
       ['checkboxes', 'chips'],
       ['dialogs', 'floating-sheet'],
       ['lists', 'cards'],
@@ -176,6 +177,22 @@ describe('ExpressiveCSS component decisions', () => {
   test('separates native host semantics from shared runtime ownership', () => {
     for (const slug of ['dialogs', 'bottom-sheet', 'side-sheet', 'floating-sheet']) {
       assert.equal(bySlug.get(slug).runtime, 'shared-runtime', `${slug} must route through shared dialog runtime guidance`);
+    }
+  });
+
+  test('accounts for the remaining Material and web component reviews without claiming full parity', async () => {
+    const prior = new Set(['buttons','navigation-bar','navigation-rail','toolbars','text-fields','dialogs','tooltips']);
+    const remaining = data.components.filter(entry => !prior.has(entry.slug));
+    assert.equal(remaining.length, 39);
+    const names = ['inputs-material-review','layout-material-review','feedback-material-review','web-extensions-review'];
+    const references = (await Promise.all(names.map(name => readFile(new URL(`../skills/expressivecss/expressivecss-design/references/${name}.md`, import.meta.url), 'utf8')))).join('\n');
+    for (const entry of remaining) {
+      const review = entry.materialGuidance.upstreamReview;
+      assert.ok(review.requirements && review.sections.length);
+      assert.ok(entry.capabilityReview.gaps.length || entry.capabilityReview.browserChecks.length, entry.slug);
+      assert.equal(references.split(`](../../components/${entry.slug}.md)`).length - 1, 1, entry.slug);
+      for (const source of review.sources) assert.ok(references.includes(source), source);
+      if (entry.materialGuidance.relationship === 'none') assert.equal(review.sources.length, 0);
     }
   });
 
@@ -319,12 +336,14 @@ describe('Material capability roadmap', () => {
     const { fileURLToPath } = await import('node:url');
     const roadmap = await buildCapabilityRoadmap(data, fileURLToPath(root));
     assert.equal(roadmap.entries.length, data.components.length + 3);
-    assert.ok(roadmap.entries.every((entry) => entry.sourceReview === 'source-reviewed'));
-    assert.deepEqual(roadmap.entries.filter((entry) => entry.kind === 'component' && entry.support === 'partial').map((entry) => entry.slug).sort(), ['buttons', 'date-picker', 'time-picker']);
-    for (const slug of ['bottom-app-bar', 'navigation-drawer', 'icon-buttons', 'segmented-buttons', 'drag-handle']) {
-      assert.equal(roadmap.entries.find((entry) => entry.slug === slug).gaps.length, 0, slug);
+    for (const entry of roadmap.entries) {
+      assert.equal(entry.support, entry.sourceReview === 'source-reviewed' ? entry.lastReviewedSupport : 'unassessed');
     }
-    for (const slug of ['typography', 'shape', 'motion']) assert.equal(roadmap.entries.find((entry) => entry.slug === slug).support, 'partial');
+    assert.deepEqual(roadmap.entries.filter((entry) => entry.kind === 'component' && entry.lastReviewedSupport === 'partial').map((entry) => entry.slug).sort(), data.components.filter(entry => entry.capabilityReview.support === 'partial').map(entry => entry.slug).sort());
+    for (const slug of ['bottom-app-bar', 'navigation-drawer', 'icon-buttons', 'segmented-buttons', 'drag-handle']) {
+      assert.equal(roadmap.entries.find((entry) => entry.slug === slug).gaps.filter(gap => gap.kind === 'feature').length, 0, slug);
+    }
+    for (const slug of ['typography', 'shape', 'motion']) assert.equal(roadmap.entries.find((entry) => entry.slug === slug).lastReviewedSupport, 'partial');
     const generatedRoadmap = await readFile(new URL('../skills/expressivecss/references/capability-roadmap.json', import.meta.url), 'utf8');
     assert.deepEqual(JSON.parse(generatedRoadmap), roadmap);
     assert.equal(await readFile(new URL('../mcp/expressivecss/capability-roadmap.json', import.meta.url), 'utf8'), generatedRoadmap);
@@ -384,5 +403,63 @@ describe('Material capability roadmap', () => {
     assert.equal(recordedTestEvent({ ...event, data: { ...event.data, details: { type: 'suite' } } }), null);
     assert.equal(recordedTestEvent({ ...event, data: { ...event.data, skip: true } }, '/repo').status, 'skipped');
     assert.equal(recordedTestEvent({ ...event, type: 'test:fail' }, '/repo').status, 'failed');
+  });
+});
+
+describe('Expressive selection and portable capability evidence', () => {
+  test('keeps current Expressive replacements first in the selection catalogue', () => {
+    const entries = new Map(data.components.map((entry) => [entry.slug, entry]));
+    assert.equal(entries.get('bottom-app-bar').alternatives[0], 'toolbars');
+    assert.equal(entries.get('navigation-drawer').alternatives[0], 'navigation-rail');
+    for (const slug of ['navigation-bar', 'fab']) {
+      assert.ok(!entries.get(slug).alternatives.includes('bottom-app-bar'));
+    }
+    assert.equal(entries.get('segmented-buttons').alternatives[0], 'button-groups');
+    assert.deepEqual(data.components.filter((entry) => !entry.selectable).map((entry) => entry.slug).sort(),
+      ['bottom-app-bar', 'navigation-drawer', 'segmented-buttons']);
+    for (const entry of data.components.filter((item) => item.selectable)) {
+      assert.ok(entry.alternatives.every((slug) => entries.get(slug).selectable));
+      assert.ok(entry.adaptive.every((item) => !item.component || entries.get(item.component).selectable));
+    }
+  });
+
+  test('roadmap source links survive packaging and reject invalid revisions and paths', async () => {
+    const { buildCapabilityRoadmap, renderCapabilityRoadmap } = await import('../scripts/lib/material-capabilities.mjs');
+    const { fileURLToPath } = await import('node:url');
+    const { mkdtemp, writeFile, rm } = await import('node:fs/promises');
+    const { tmpdir } = await import('node:os');
+    const path = await import('node:path');
+    const { execFileSync } = await import('node:child_process');
+    function validateCapabilityLinks(roadmap, root) {
+      assert.match(roadmap.sourceRevision, /^[a-f0-9]{40}$/u, 'Capability links require an immutable source revision');
+      const tracked = new Set(execFileSync('git', ['ls-tree', '-r', '--name-only', roadmap.sourceRevision], { cwd: root, encoding: 'utf8' }).trim().split('\n'));
+      for (const entry of roadmap.entries) {
+        for (const name of [...entry.sources.map((source) => source.path), ...entry.browserChecks.map((check) => check.file)]) {
+          assert.ok(!name.split('/').includes('..') && tracked.has(name), `Capability link is absent at the recorded revision: ${name}`);
+        }
+      }
+    }
+
+    const roadmap = await buildCapabilityRoadmap(data, fileURLToPath(root));
+    validateCapabilityLinks(roadmap, fileURLToPath(root));
+    const directory = await mkdtemp(path.join(tmpdir(), 'expressivecss-portable-roadmap-'));
+    try {
+      const file = path.join(directory, 'capability-roadmap.md');
+      await writeFile(file, renderCapabilityRoadmap(roadmap));
+      const markdown = await readFile(file, 'utf8');
+      const links = [...markdown.matchAll(/\]\(([^)]+)\)/gu)].map((match) => match[1]);
+      assert.ok(links.every((link) => link.startsWith('#') || /^https:\/\//u.test(link)));
+      const pinned = links.filter((link) => link.startsWith('https://github.com/BaezFJ/ExpressiveCSS/blob/'));
+      assert.equal(pinned.length, roadmap.entries.reduce((count, entry) => count + entry.sources.length + entry.browserChecks.length, 0));
+      assert.ok(pinned.every((link) => link.includes(`/blob/${data.sourceRevision}/`)));
+      assert.throws(() => renderCapabilityRoadmap({ ...roadmap, sourceRevision: 'master' }), /immutable source revision/u);
+      const missing = structuredClone(roadmap);
+      missing.entries[0].sources[0].path = 'src/missing-capability-file.ts';
+      assert.throws(() => validateCapabilityLinks(missing, fileURLToPath(root)), /absent at the recorded revision/u);
+      missing.entries[0].sources[0].path = 'src/../../outside';
+      assert.throws(() => renderCapabilityRoadmap(missing), /Invalid capability link path/u);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
   });
 });

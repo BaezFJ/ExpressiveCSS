@@ -2,6 +2,7 @@
 
 ```
 index.ts        public entry: re-exports, version, import-time side effects
+modular.ts      optional public entry: exports only, explicit initialization
 core/           Component base class, Utils, Bounding/Edges types
 components/     per-element widgets, + index.ts (barrel) and registry.ts
 behaviors/      document-level enhancers (Forms, Dialogs) - no per-element instances
@@ -59,13 +60,19 @@ read-it-off-the-element access that key provides.
 
 ## Gotchas
 
-- **Importing the bundle has side effects.** `index.ts` attaches document-level
-  key/focus listeners and calls `Forms.Init()`, `Chips.Init()`,
+- **Importing the root bundle has side effects.** `index.ts` calls `Forms.Init()`, `Chips.Init()`,
   `Slider.Init()`, `Cards.Init()`, `ExpandingCard.Init()`, `Dialogs.Init()`,
   `BottomSheets.Init()`, `SideSheets.Init()`. Order matters; the delegated
   listeners those install are what several components rely on. `Dialogs.Init()`
   light-dismisses an open `<dialog>` only when both ends of a pointer gesture
   land outside its box — a drag that starts on the dialog cannot close it.
+- **The modular entry is inert.** Consumers initialize selected components and
+  behaviors explicitly. `scripts/build-esm.mjs` builds both ESM entries and
+  internal modules together so constructors are shared across entries and unused
+  modules can be removed by consumer bundlers. Keep internal chunks free of
+  document setup; package side-effect declarations deliberately exclude them.
+  Do not flatten the ESM graph: ES2020 static-field assignments prevent unused
+  classes in the same file from being removed. IIFE and CommonJS remain bundled.
 - **`AutoInit()` is not automatic.** Callers invoke it themselves (the docs site
   does it on `DOMContentLoaded`). Elements opt out with `.no-autoinit`.
 - **Dialogs are native `<dialog>`.** Open with `showModal()`, close with

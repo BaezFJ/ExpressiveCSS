@@ -11,36 +11,46 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/navigation-drawer/overview)
 
-- compact window: variant. Use a modal drawer when destinations overflow compact navigation.
-- expanded window: variant. Use a fixed drawer when nested destinations need persistence.
+Compatibility guide: No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Use this contract for maintenance, an explicit request, or a verified replacement gap. The syntax below is retained legacy markup.
+
+- compact window: variant. For retained drawers, use the documented modal variant on compact windows.
+- expanded window: variant. For retained drawers, use the documented fixed variant on expanded windows.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-drawer/overview).
 
-Support (2026-09-07, `llm.md#navigation-drawer`): Sliding and fixed drawers with nested sections.
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/navigation-drawer/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/navigation-drawer/guidelines).
+
+Support (2026-09-13, `llm.md#navigation-drawer`): Sliding and fixed drawers with nested sections.
 
 Web adaptation: Native details/summary supports nesting.
 
 Known boundary: Retained baseline navigation component; current Expressive guidance points to expanded navigation rail as its replacement.
 
+Known boundary: Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks.
+
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#navigation-drawer).
 
 #### Contract
 
+Unreleased source releases native modal state when an open fixed drawer crosses into the expanded layout. Published 0.9.1 does not include these repairs.
+
 A slide-out menu, or a fixed sidebar on Expanded and wider windows.
 
 This is a slide-out menu. Nest `<details>` / `<summary>` for nested sections — the documentation sidebar uses that. On Compact and Medium windows this same drawer slides over the page.
-
-The drawer HTML must **not** sit inside the app bar’s `<nav>`. Put a `navigation-drawer-trigger` anywhere and set `data-target` to the navigation drawer’s `id`. `AutoInit()` starts every `.navigation-drawer` except those marked `no-autoinit`.
 
 #### Syntax
 

@@ -11,35 +11,43 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/progress-indicators/overview)
 
-Example: A two-second refresh with no measured fraction fits a loading indicator. An upload with bytes transferred needs determinate progress, even if short; a long job with no fraction can use indeterminate progress. Never invent a percentage. Indeterminate linear bars remain supported; the short-wait replacement specifically targets indeterminate circular spinners.
+Example: A brief unknown refresh fits a loading indicator. An upload needs accurate determinate progress, even if short. Keep circular progress when an unknown process becomes determinate or runs inside a button; indeterminate linear bars remain supported. Never invent a percentage.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google replaces most short indeterminate circular waits with a loading indicator. Keep circular progress in buttons and for processes that become determinate; keep determinate and indeterminate linear progress. Deprecated baseline token sets do not deprecate these families.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/progress-indicators/overview).
 
-Support (2026-09-07, `llm.md#progress-indicators`): Linear and circular progress, determinate and indeterminate.
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/progress-indicators/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/progress-indicators/guidelines).
+
+Support (2026-09-13, `llm.md#progress-indicators`): Linear and circular progress, determinate and indeterminate.
 
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
+
+Known boundary: Reduced-motion static custom fill is checked; forced colors and native indicator rendering remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#progress).
 
 #### Contract
 
+Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering, forced colors and custom RTL fill require separate verification. Published 0.9.1 does not include these repairs.
+
 Activity and progress indicators for content that takes time to load.
 
 If content will take a while to load, give the user feedback. Expressive ships linear progress bars and circular spinners. Both are CSS-only — there is no JavaScript plugin.
-
-For an indeterminate wait under about five seconds, prefer the Loading indicator — it supersedes the indeterminate circular case below. Progress indicators keep both linear bars and everything determinate.
 
 #### Syntax
 

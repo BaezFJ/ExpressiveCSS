@@ -134,10 +134,12 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 | Import | Purpose |
 | --- | --- |
 | `@expressivecss/expressive` | JavaScript module and TypeScript declarations |
+| `@expressivecss/expressive/modular` | ESM exports and types without import-time initialization |
 | `@expressivecss/expressive/css` | Expanded compiled stylesheet |
 | `@expressivecss/expressive/css/min` | Minified compiled stylesheet |
 | `@expressivecss/expressive/fonts/*` | Self-hosted woff2 files |
 | `@expressivecss/expressive/scss` | Sass entry point |
+| `@expressivecss/expressive/scss/custom` | Configurable component and utility selection |
 | `@expressivecss/expressive/scss/*` | Individual Sass source paths |
 
 ## Minimal browser setup
@@ -179,6 +181,27 @@ if (element) Tooltip.init(element, { position: 'top' });
 ```
 
 ## Sass setup
+
+For smaller consumer bundles, import selected components from
+`@expressivecss/expressive/modular` and call their `.init()` methods after markup
+exists. Call the required document behaviors explicitly, such as `Forms.Init()`
+for input enhancements and `Dialogs.Init()` for light dismissal. Do not repeat
+these calls alongside the root entry. `AutoInit` still includes the full registry.
+Both ESM entries share constructors; hosting them directly requires their chunks.
+
+Use `@use "pkg:@expressivecss/expressive/scss/custom" with ($components:
+("icons-material-design", "tabs", "carousel"), $utilities: ());` with Sass's
+Node package importer. Tokens and base remain included. Lists preserve the given
+order; `null` includes a whole group and `()` omits it. For FormSelect and
+Datepicker use `("icons-material-design", "buttons", "menu", "forms", "datepicker")`.
+Add `"docked-display"` before `"forms"` for the optional docked picker.
+
+`$expressive-include-fonts: false` lets consumers supply subset font faces, but
+also removes the text font declarations. Restore Roboto and Noto Sans 400/500
+or explicitly choose alternative typefaces. Retain icon ligatures and variable
+axes, and include dynamic icons: Chips and dismissible Snackbar use `close`,
+and navigation drawer summaries use `expand_more`. The README includes font
+declarations and the full initialization table. Full fonts remain available.
 
 ```scss
 @use "@expressivecss/expressive/src/sass/expressive";
@@ -3234,7 +3257,7 @@ M3 Expressive's docked toolbar (`div.toolbar.docked`) is the shorter 64dp answer
 
 Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).
 
-This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows; a navigation rail covers mid-size screens and a navigation drawer the rest.
+This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows, a bar or rail in medium windows, and an expanded navigation rail in wider windows. Retained navigation drawers need a capability or compatibility reason.
 
 ### Stacked
 
@@ -3391,7 +3414,7 @@ Add `nowrap` to keep a long run on one row and scroll it sideways instead of wra
 
 Material 3 canonical layouts — list-detail, supporting pane, and equal panes.
 
-Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Compact windows (`< 600px`) use 16px inline margins. Every wider layout uses 24px inline margins and 24px spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container is also a `container-type: inline-size` query container, so a pane layout nested inside a narrow column collapses on its own width, not the viewport's.
+Panes are CSS-only. A container (`panes`, or one of the named aliases `list-detail`, `supporting-pane-layout`, `pane-layout`) holds two or three `pane` children. Compact windows (`< 600px`) use 16px inline margins. Every wider layout uses 24px inline margins and 24px spacers. Below 840px only one pane shows at a time; at 840px and up the panes sit side by side. The container declares inline-size containment, but the viewport media rules still show all panes at 840px and above. Do not assume a narrow nested column collapses independently. Google recommends stacking supporting content below primary content on compact and medium layouts; the current one-active-pane behavior is a framework adaptation.
 
 Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane` counts as a pane child — the specific names are for readability.
 
@@ -3516,6 +3539,8 @@ Set these on the container to resize a layout.
 ---
 
 ## Progress indicators
+
+Unreleased source stops spatial animation under reduced motion and retains a visible static fill for custom indeterminate bars. Native rendering, forced colors and custom RTL fill require separate verification. Published 0.9.1 does not include these repairs.
 
 Activity and progress indicators for content that takes time to load.
 
@@ -3694,15 +3719,15 @@ That is the whole relationship between the two, and it is deliberate. A `.search
 M3 Expressive's indicator for a short wait — a shape that morphs while it spins.
 
 Reach for it whenever the wait is under about five seconds and you cannot report
-a percentage. It **supersedes the indeterminate circular progress indicator**:
-anywhere you would have written `<span class="progress circular">` with no
-value, write this instead. `.progress` keeps both linear bars and every
-determinate case.
+a percentage. It replaces most short indeterminate circular uses. Keep a progress
+indicator for a process that will transition to a determinate value; Google's
+button guidance also retains circular progress. `.progress` supports both linear
+bars and determinate cases.
 
 One element, CSS-only, no JavaScript plugin. The element is empty, so it reports
-nothing on its own: `role="status"` announces the wait and `aria-label` gives it
-something to announce. Not `role="progressbar"` — that promises an
-`aria-valuenow` an indeterminate indicator does not have.
+nothing on its own. Supply a named waiting state and meaningful status text updates;
+verify spoken delivery with assistive technology. An indeterminate `progressbar`
+is also valid and omits `aria-valuenow`. The current framework contract requires a named status. A name alone does not prove an announcement.
 
 ```html
 <span class="loading-indicator" role="status" aria-label="Loading"></span>
@@ -3990,6 +4015,8 @@ Lightbox for enlarge-on-click images.
 Media components handle large objects such as images. For responsive images and videos without JavaScript, see Media Styles.
 
 ### Lightbox
+
+Unreleased source supports Space and native button activation, cancels pending animation callbacks on destroy and retains the original image. This does not supply a modal-gallery focus contract. Published 0.9.1 does not include these repairs.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 
@@ -4344,6 +4371,8 @@ instance.destroy();
 ---
 
 ## Navigation drawer
+
+Unreleased source releases native modal state when an open fixed drawer crosses into the expanded layout. Published 0.9.1 does not include these repairs.
 
 A slide-out menu, or a fixed sidebar on Expanded and wider windows.
 
@@ -4711,6 +4740,8 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` (or `tabs-h
 ---
 
 ## Snackbar
+
+Unreleased source pauses finite timers while focus or the pointer is inside and resumes after departure. For persistent actionable feedback use the existing displayLength: Infinity and dismissible: true options; keyboard reach, Escape and focus recovery need application verification. Published 0.9.1 does not include these repairs.
 
 Material Design 3 snackbars, from the HTML.
 
@@ -5993,6 +6024,8 @@ Browser Disabled Choose your option Option 1 Option 2 Option 3
 
 ## Sliders
 
+Unreleased source handles a maximum of zero and updates value-label placement when the input resizes, including horizontal RTL placement. Published 0.9.1 does not include these repairs.
+
 Material Design 3 sliders, from the HTML.
 
 An `<input type="range">` is the control. A wrapping `.slider` (or a `<label>`) is the host for the value label; `.range` and `.range-field` are the older names and still work.
@@ -6461,6 +6494,8 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 ---
 
 ## Autocomplete
+
+Unreleased source preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order. Published 0.9.1 does not include these repairs.
 
 Suggest values under a text field as the user types.
 

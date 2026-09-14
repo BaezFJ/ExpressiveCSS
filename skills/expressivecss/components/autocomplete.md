@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
@@ -23,23 +23,29 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: related. Related guidance is not a dedicated component specification.
 
-Upstream: document-reviewed (2026-09-07); [evidence](https://github.com/material-components/material-components-android/blob/master/docs/components/Menu.md).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/menus/overview).
 
-Exposed dropdown is an official menu variant; editable variants accept typed input. Native select enhancement and multi-select are ExpressiveCSS adaptations.
+Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Support (2026-09-07, `llm.md#autocomplete`): Single and multi-select suggestions.
+[Specification link](https://m3.material.io/components/menus/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/menus/guidelines).
+
+Support (2026-09-13, `llm.md#autocomplete`): Single and multi-select suggestions.
 
 Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim.
+
+Known boundary: Generated status-info does not announce new suggestion counts or asynchronous results.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#autocomplete).
 
 #### Contract
 
+Unreleased source preserves the original suggestion dataset and selected display label while editing. Escape and Tab close from the input, cancel pending opening, and keep listbox options outside sequential Tab order. Published 0.9.1 does not include these repairs.
+
 Suggest values under a text field as the user types.
 
 Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every `.autocomplete` except `no-autoinit`, but the default `data` list is empty — pass options (or call `init`) to give it something to suggest.
-
-Set `isMultiSelect: true` to pick several values. A count appears on the field.
 
 #### Syntax
 

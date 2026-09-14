@@ -11,27 +11,37 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/segmented-buttons/overview)
 
-Example: Cut/Copy/Paste are commands, not stored choices. Use a standard button group. A shipping-speed value submitted with a form fits single-select segmented inputs with one shared radio name.
+Compatibility guide: No longer recommended by Google for new M3 Expressive designs; use a connected button group. Use this contract for maintenance, an explicit request, or a verified replacement gap. The syntax below is retained legacy markup.
+
+Example: For new toggle choices use connected button groups; commands use standard groups. This retained radio/checkbox example supports existing forms or a verified native form-value requirement.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. No longer recommended by Google for new M3 Expressive designs; use a connected button group. Retained APIs and accessible existing interfaces remain valid for maintenance.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/segmented-buttons/overview).
 
-Support (2026-09-07, `llm.md#segmented-buttons`): Single-select radio and multi-select checkbox groups.
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/segmented-buttons/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/segmented-buttons/guidelines).
+
+Support (2026-09-13, `llm.md#segmented-buttons`): Single-select radio and multi-select checkbox groups.
 
 Web adaptation: Native fieldset/input/label owns selection and form values.
 
 Known boundary: The selected check icon is authored; the framework does not insert it.
+
+Known boundary: Legacy native radio/checkbox contracts lack a directly mapped rendered group check.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#segmented-buttons).
 

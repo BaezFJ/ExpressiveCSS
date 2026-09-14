@@ -77,7 +77,7 @@ such as `fix/menu-focus` or `docs/theme-example`. Keep each PR focused.
 
 ### Container tests
 
-With Node.js and Docker installed, run all browser tests without installing
+With Git, Node.js and Docker installed, run all browser tests without installing
 browsers, npm dependencies, or browser system libraries on the host:
 
 ```sh
@@ -86,11 +86,15 @@ npm run test:docker
 
 The runner builds from the [official Playwright image](https://playwright.dev/docs/docker),
 matching the version in `package-lock.json`, and installs dependencies with `npm ci`.
+Test commands receive an isolated Git bundle for source-provenance checks. Use a
+full checkout so the referenced source revisions are available in the bundle.
 It copies the current checkout, including uncommitted source changes. Dependencies
 and build output stay inside the container. Docker caches the dependency layer.
 After each run, browser traces and visual reports are copied to a unique directory
 under `.cache/container-tests/`, even when tests fail. The runner prints the path
-and removes the container. CI uses the same command and uploads this directory.
+and removes the container. Ctrl+C and termination signals stop the active command,
+export available reports, and remove its container. CI uses the same command and
+uploads this directory.
 
 To run contributor verification in the same image, or use Podman on Fedora:
 
@@ -155,8 +159,9 @@ Requires Docker Compose, or `podman-compose` with `CONTAINER_RUNTIME=podman`.
 Open http://localhost:4321. Changes under `src/`, `docs/src/`, and `docs/public/`
 are mounted read-only and watched for rebuilding or live reload. Dependencies
 and generated files stay inside the container. Restart the command after changing
-dependencies or configuration. Stop with Ctrl+C; `docker compose down` removes the
-stopped service. After the image has been built, `docker compose up docs` also works.
+dependencies or configuration. Ctrl+C stops and removes the service. After the
+image has been built, `docker compose up docs` also works; use `docker compose down`
+to remove a service started directly through Compose.
 
 ### Container visual regression
 

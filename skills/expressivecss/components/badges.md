@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
@@ -25,11 +25,19 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: component.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/badges/overview).
 
-Support (2026-09-07, `llm.md#badges`): Small dot and large count badges.
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/badges/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/badges/guidelines).
+
+Support (2026-09-13, `llm.md#badges`): Small dot and large count badges.
 
 Web adaptation: Expose counts through the enclosing control name when its icon is hidden.
+
+Known boundary: A named count fixture is checked; changing counts, clipping and spoken updates remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#badges).
 

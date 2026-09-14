@@ -11,27 +11,37 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/floating-action-button/overview)
 
+Example: The syntax below is a retained speed-dial example, not the default for new designs. Use the documented fab-menu variant for labelled actions and verify focus when it closes.
+
 - expanded window: variant. Use the extended FAB when the action benefits from a visible label.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. Use a current FAB size, extend small for the current small extended FAB, and supported primary/secondary/tertiary container roles. circle extra small is the retained 40dp FAB; sizeless extend is baseline. The small extended FAB remains recommended. Use fab-menu instead of fab speed dials or stacked small FABs. These are design replacements, not removed APIs.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/floating-action-button/overview).
+
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/floating-action-button/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/floating-action-button/guidelines).
 
 [Related Google component](https://m3.material.io/components/extended-fab/overview).
 
 [Related Google component](https://m3.material.io/components/fab-menu/overview).
 
-Support (2026-09-07, `llm.md#floating-action-button`): FAB sizes, extended FABs, and menus of related actions.
+Support (2026-09-13, `llm.md#floating-action-button`): FAB sizes, extended FABs, and menus of related actions.
 
 Web adaptation: Floating action behavior uses the documented FAB runtime.
+
+Known boundary: Hover can reveal actions without runtime expanded state; Escape closing can leave focus on a hidden child.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#fab).
 

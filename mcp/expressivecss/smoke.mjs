@@ -556,6 +556,67 @@ try {
     assert.notEqual(selected.confidence, 'fallback');
   }
 
+  const legacyReplacements = [
+    ['bottom-app-bar', 'toolbars'],
+    ['navigation-drawer', 'navigation-rail'],
+    ['segmented-buttons', 'button-groups'],
+  ];
+  for (const [legacy, replacement] of legacyReplacements) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal: `Use ${legacy} in a new design.`, maxSuggestions: 1 },
+    });
+    assert.equal(decision.structuredContent.suggestions[0].slug, replacement);
+    assert.ok(decision.structuredContent.suggestions[0].why.includes('No longer recommended'));
+    const retained = await client.callTool({
+      name: 'component_syntax_expert',
+      arguments: { projectRoot: matchingDir, components: [legacy] },
+    });
+    assert.equal(retained.structuredContent.found[0].file, `${legacy}.md`);
+  }
+  for (const [goal, expected] of [
+    ['Use native radio buttons, not segmented buttons.', 'radio-buttons'],
+    ['Use native radio buttons instead of segmented buttons in a new design.', 'radio-buttons'],
+    ['Do not retain segmented buttons in a new design; use native radio buttons.', 'radio-buttons'],
+    ['Use navigation rail, not navigation drawer, in a new design.', 'navigation-rail'],
+    ['Retain the existing segmented buttons for form submission.', 'segmented-buttons'],
+    ['Maintain segmented buttons needing native submitted radio values.', 'segmented-buttons'],
+    ['Use a navigation drawer because nested navigation is unavailable in the target rail.', 'navigation-drawer'],
+    ['Keep the existing bottom app bar for compatibility.', 'bottom-app-bar'],
+    ['Replace the navigation drawer with current Expressive navigation.', 'navigation-rail'],
+  ]) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal, maxSuggestions: 1 },
+    });
+    assert.equal(decision.structuredContent?.suggestions[0]?.slug, expected, goal);
+  }
+  const constrainedLegacy = await client.callTool({
+    name: 'creative_director',
+    arguments: { projectRoot: matchingDir, goal: 'Use segmented buttons in a new design.',
+      constraints: 'Retain segmented buttons for compatibility with native form submission.', maxSuggestions: 1 },
+  });
+  assert.equal(constrainedLegacy.structuredContent?.suggestions[0]?.slug, 'segmented-buttons');
+
+  for (const goal of [
+    'Choose navigation and controls for settings.',
+    'navigation-drawer-trigger segmented-control bottom-app-bar-icon-hidden',
+    'circle extra small',
+  ]) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal, maxSuggestions: 12 },
+    });
+    assert.ok(decision.structuredContent.suggestions.every((item) => !legacyReplacements.some(([legacy]) => item.slug === legacy)));
+  }
+  for (const component of ['app-bar', 'navigation-bar', 'navigation-rail', 'fab', 'buttons', 'icon-buttons', 'progress']) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal: `Choose ${component} for this interface.`, maxSuggestions: 12 },
+    });
+    assert.ok(decision.structuredContent.suggestions.some((item) => item.slug === component), `${component} must remain selectable`);
+  }
+
   const navigationDecision = await client.callTool({
     name: 'creative_director',
     arguments: {
@@ -567,7 +628,7 @@ try {
   assert.equal(navigationDecision.structuredContent.suggestions.length, 1);
   assert.equal(navigationDecision.structuredContent.suggestions[0].slug, 'navigation-bar');
   assert.ok(Array.isArray(navigationDecision.structuredContent.suggestions[0].adaptive));
-  assert.equal(navigationDecision.structuredContent.suggestions[0].adaptive.length, 2);
+  assert.equal(navigationDecision.structuredContent.suggestions[0].adaptive.length, 1);
   assert.equal(navigationDecision.structuredContent.truncated, true);
   assert.ok(navigationDecision.structuredContent.omittedCount > 0);
 
@@ -694,12 +755,14 @@ try {
   });
   assert.equal(matchingSyntax.structuredContent.contractCompatibility, 'match');
   assert.equal(matchingSyntax.structuredContent.status, 'available');
-  assert.equal(matchingSyntax.structuredContent.found[0].capability.support, 'partial');
+  const buttonCapability = matchingSyntax.structuredContent.found[0].capability;
+  assert.equal(buttonCapability.lastReviewedSupport, 'partial');
+  assert.equal(buttonCapability.support, buttonCapability.sourceReview === 'source-reviewed' ? 'partial' : 'unassessed');
   assert.match(matchingSyntax.structuredContent.capabilityEvidence.basis, /not proof of published package/);
   const foundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: matchingDir, foundations: ['typography', 'shape', 'motion'] } });
   assert.equal(foundations.structuredContent.foundCount, 0);
   assert.deepEqual(foundations.structuredContent.foundations.map((entry) => entry.slug), ['typography', 'shape', 'motion']);
-  assert.ok(foundations.structuredContent.foundations.every((entry) => entry.support === 'partial'));
+  assert.ok(foundations.structuredContent.foundations.every((entry) => entry.lastReviewedSupport === 'partial' && entry.support === (entry.sourceReview === 'source-reviewed' ? 'partial' : 'unassessed')));
   const blockedFoundations = await client.callTool({ name: 'component_syntax_expert', arguments: { projectRoot: versionedDir, foundations: ['shape'] } });
   assert.equal(blockedFoundations.structuredContent.capabilityEvidence.status, 'blocked');
   assert.deepEqual(blockedFoundations.structuredContent.foundations, []);

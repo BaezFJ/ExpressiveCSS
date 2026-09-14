@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
@@ -23,15 +23,23 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google deprecates baseline filled, tonal and outlined token sets in favor of updated tokens, not those current icon-button variants. Do not rename framework tokens from Android examples.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/icon-buttons/overview).
 
-Support (2026-09-07, `llm.md#icon-buttons`): Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
+
+[Specification link](https://m3.material.io/components/icon-buttons/specs); full specs unreviewed.
+
+[Google guidelines](https://m3.material.io/components/icon-buttons/guidelines).
+
+Support (2026-09-13, `llm.md#icon-buttons`): Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.
 
 Web adaptation: Accessible name belongs to the control; the glyph is decorative.
 
 Known boundary: Elevated and text are not icon-button variants.
+
+Known boundary: Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#icon-buttons).
 

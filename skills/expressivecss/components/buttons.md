@@ -11,23 +11,23 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
 
-Example: A saved delivery-speed choice needs radios or segmented inputs, not three action buttons.
+Example: Use radios for saved form values; buttons run commands.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 
 #### Material mapping
 
-Relationship: component.
+Relationship: component. Google no longer recommends 24dp padding for small buttons; use the current 16dp inset. This is spacing guidance, not removal of a button style.
 
-Upstream: overview-reviewed (2026-09-07); [evidence](https://m3.material.io/components/buttons/overview).
+Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/buttons/overview).
 
-rendered main content reviewed in part; link-observed; full specifications not reviewed
+Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
 [Specification link](https://m3.material.io/components/buttons/specs); full specs unreviewed.
 

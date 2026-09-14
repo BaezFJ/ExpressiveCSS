@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
@@ -25,11 +25,17 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: related. Retained framework pattern absent from the reviewed current M3 component inventory; related current guidance does not certify this implementation.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/snackbar/overview).
 
-Support (2026-09-07, `llm.md#banners`): Basic/rich and standard/vibrant; square basic banners.
+Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+[Google guidelines](https://m3.material.io/components/snackbar/guidelines).
+
+Support (2026-09-13, `llm.md#banners`): Basic/rich and standard/vibrant; square basic banners.
 
 Web adaptation: Persistent in-flow feedback; application owns dismissal.
+
+Known boundary: Legacy/related banner styling supplies no announcements, dismissal or focus recovery.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#banners).
 

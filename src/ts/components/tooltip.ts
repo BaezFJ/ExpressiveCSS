@@ -183,17 +183,23 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('mouseenter', this._handleMouseEnter);
-    this.el.addEventListener('mouseleave', this._handleMouseLeave);
-    this.el.addEventListener('focus', this._handleFocus, true);
-    this.el.addEventListener('blur', this._handleBlur, true);
+    for (const el of [this.el, this.tooltipEl]) {
+      el.addEventListener('mouseenter', this._handleMouseEnter);
+      el.addEventListener('mouseleave', this._handleMouseLeave);
+      el.addEventListener('focus', this._handleFocus, true);
+      el.addEventListener('blur', this._handleBlur, true);
+    }
+    this.el.ownerDocument.addEventListener('keydown', this._handleKeydown, true);
   }
 
   _removeEventHandlers() {
-    this.el.removeEventListener('mouseenter', this._handleMouseEnter);
-    this.el.removeEventListener('mouseleave', this._handleMouseLeave);
-    this.el.removeEventListener('focus', this._handleFocus, true);
-    this.el.removeEventListener('blur', this._handleBlur, true);
+    for (const el of [this.el, this.tooltipEl]) {
+      el.removeEventListener('mouseenter', this._handleMouseEnter);
+      el.removeEventListener('mouseleave', this._handleMouseLeave);
+      el.removeEventListener('focus', this._handleFocus, true);
+      el.removeEventListener('blur', this._handleBlur, true);
+    }
+    this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
   }
 
   /**
@@ -202,6 +208,8 @@ export class Tooltip extends Component<TooltipOptions> {
   open = (isManual: boolean) => {
     if (this.isOpen) return;
     isManual = isManual === undefined ? true : undefined; // Default value true
+    clearTimeout(this._exitDelayTimeout);
+    clearTimeout(this._animationTimeout);
     this.isOpen = true;
     // Update tooltip content with HTML attribute options
     this.options = { ...this.options, ...this._getAttributeOptions() };
@@ -217,6 +225,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.isHovered = false;
     this.isFocused = false;
     this.isOpen = false;
+    clearTimeout(this._enterDelayTimeout);
     this._setExitDelayTimeout();
   };
 
@@ -276,6 +285,7 @@ export class Tooltip extends Component<TooltipOptions> {
       tooltipHeight
     );
 
+    tooltip.style.setProperty('--md-comp-tooltip-anchor-gap', `${Math.max(0, margin) + Math.abs(this.options.transitionMovement)}px`);
     tooltip.style.top = newCoordinates.y + 'px';
     tooltip.style.left = newCoordinates.x + 'px';
   }
@@ -286,69 +296,66 @@ export class Tooltip extends Component<TooltipOptions> {
     );
   }
 
-  _animateIn() {
-    this._positionTooltip();
-    this.tooltipEl.style.visibility = 'visible';
-    const duration = this.options.inDuration;
-    // easeOutCubic
-    this.tooltipEl.style.transition = `
-      transform ${duration}ms ease-out,
-      opacity ${duration}ms ease-out`;
-    clearTimeout(this._animationTimeout);
-    this._animationTimeout = setTimeout(() => {
-      this.tooltipEl.style.transform = `translateX(${this.xMovement}px) translateY(${this.yMovement}px)`;
-      this.tooltipEl.style.opacity = (this.options.opacity || 1).toString();
-    }, 1);
-  }
+  _animateIn() { this._animate(true); }
 
-  _animateOut() {
-    const duration = this.options.outDuration;
-    // easeOutCubic
-    this.tooltipEl.style.transition = `
-      transform ${duration}ms ease-out,
-      opacity ${duration}ms ease-out`;
+  _animateOut() { this._animate(false); }
+
+  _animate(show: boolean) {
+    const style = this.tooltipEl.style;
+    const reduce = this.el.ownerDocument.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const duration = reduce ? 0 : show ? this.options.inDuration : this.options.outDuration;
+    if (show) {
+      this._positionTooltip();
+      style.visibility = 'visible';
+      style.overflow = 'visible';
+    }
+    style.transition = `transform ${duration}ms ease-out, opacity ${duration}ms ease-out`;
     clearTimeout(this._animationTimeout);
     this._animationTimeout = setTimeout(() => {
-      this.tooltipEl.style.transform = `translateX(0px) translateY(0px)`;
-      this.tooltipEl.style.opacity = '0';
+      style.transform = show && !reduce ? `translateX(${this.xMovement}px) translateY(${this.yMovement}px)` : 'none';
+      style.opacity = show ? (this.options.opacity || 1).toString() : '0';
+      if (!show) this._animationTimeout = setTimeout(() => {
+        style.visibility = 'hidden';
+        style.overflow = '';
+      }, duration);
     }, 1);
-    /*
-    anim.remove(this.tooltipEl);
-    anim({
-      targets: this.tooltipEl,
-      opacity: 0,
-      translateX: 0,
-      translateY: 0,
-      duration: this.options.outDuration,
-      easing: 'easeOutCubic'
-    });
-    */
   }
 
   _handleMouseEnter = () => {
     this.isHovered = true;
-    this.isFocused = false; // Allows close of tooltip when opened by focus.
     this.open(false);
   };
 
-  _handleMouseLeave = () => {
+  _handleMouseLeave = (event: MouseEvent) => {
+    const next = event.relatedTarget as Node | null;
+    if (next && (this.el.contains(next) || this.tooltipEl.contains(next))) return;
     this.isHovered = false;
-    this.isFocused = false; // Allows close of tooltip when opened by focus.
+    if (!this.isFocused) this.close();
+  };
+
+  _handleKeydown = (event: KeyboardEvent) => {
+    if (event.key !== 'Escape' || !this.isOpen) return;
+    event.preventDefault();
+    event.stopPropagation();
     this.close();
+    clearTimeout(this._exitDelayTimeout);
+    this._animateOut();
   };
 
   // Focus opens the tooltip only when it arrived by keyboard: a pointer press
   // on the trigger also focuses it, and _handleMouseEnter already covers that.
-  _handleFocus = () => {
-    if (this.el.matches(':focus-visible')) {
+  _handleFocus = (event: FocusEvent) => {
+    if ((event.target as HTMLElement).matches(':focus-visible')) {
       this.isFocused = true;
       this.open(false);
     }
   };
 
-  _handleBlur = () => {
+  _handleBlur = (event: FocusEvent) => {
+    const next = event.relatedTarget as Node | null;
+    if (next && (this.el.contains(next) || this.tooltipEl.contains(next))) return;
     this.isFocused = false;
-    this.close();
+    if (!this.isHovered) this.close();
   };
 
   _getAttributeOptions(): Partial<TooltipOptions> {

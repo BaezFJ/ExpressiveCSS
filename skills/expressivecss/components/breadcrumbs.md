@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `f3cb8961dd1cae3cb819f5101f7ebe108784ca3704f03ca7be47e70e6462f2cb`
+Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
 
 #### Selection and adaptation
 
@@ -25,11 +25,15 @@ Use the documented component at each reachable width; no catalogue substitution 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: inventory-reviewed (2026-09-07); [evidence](https://m3.material.io/components).
+Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
 
-Support (2026-09-07, `llm.md#breadcrumbs`): Breadcrumb links and app-bar composition.
+Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
+
+Support (2026-09-13, `llm.md#breadcrumbs`): Breadcrumb links and app-bar composition.
 
 Web adaptation: Labelled navigation with an ordered list and current-page link.
+
+Known boundary: Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#breadcrumbs).
 
