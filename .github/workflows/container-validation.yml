@@ -69,6 +69,8 @@ jobs:
         run: |
           docker compose down
           test ! -e docs/src/pages/container-hmr-probe.astro
+          test ! -e docs/static/container-hmr-probe.css
+          test ! -e docs/static/container-hmr-probe.js
           test ! -e node_modules
           test ! -e mcp/expressivecss/node_modules
           git diff --exit-code

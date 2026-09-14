@@ -92,7 +92,10 @@ It copies the current checkout, including uncommitted source changes. Dependenci
 and build output stay inside the container. Docker caches the dependency layer.
 After each run, browser traces and visual reports are copied to a unique directory
 under `.cache/container-tests/`, even when tests fail. The runner prints the path
-and removes the container. Ctrl+C and termination signals stop the active command,
+and removes the container. Each invocation builds and runs its own unique image
+tag, including the docs service, then removes that tag during cleanup. The shared
+`expressivecss-playwright` alias remains available for manual commands.
+Ctrl+C and termination signals stop the active command,
 export available reports, and remove its container. CI uses the same command and
 uploads this directory.
 
@@ -156,7 +159,7 @@ npm run docs:docker
 ```
 
 Requires Docker Compose, or `podman-compose` with `CONTAINER_RUNTIME=podman`.
-Open http://localhost:4321. Changes under `src/`, `docs/src/`, and `docs/public/`
+Open http://localhost:4321. Changes under `src/`, `docs/src/`, `docs/public/`, and `docs/static/`
 are mounted read-only and watched for rebuilding or live reload. Dependencies
 and generated files stay inside the container. Restart the command after changing
 dependencies or configuration. Ctrl+C stops and removes the service. After the

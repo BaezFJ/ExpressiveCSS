@@ -1,6 +1,6 @@
 services:
   docs:
-    image: expressivecss-playwright
+    image: ${EXPRESSIVECSS_IMAGE:-expressivecss-playwright}
     init: true
     ports:
       - "127.0.0.1:4321:4321"
@@ -8,4 +8,5 @@ services:
       - ./src:/app/src:ro,z
       - ./docs/src:/app/docs/src:ro,z
       - ./docs/public:/app/docs/public:ro,z
+      - ./docs/static:/app/docs/static:ro,z
     command: ["sh", "-c", "npm run build && npm exec run-p -- watch:css watch:js 'docs:server -- --host 0.0.0.0'"]

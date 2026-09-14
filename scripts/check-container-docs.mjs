@@ -5,7 +5,8 @@ import { setTimeout } from 'node:timers/promises';
 
 const runtime = process.env.CONTAINER_RUNTIME || 'docker';
 const probe = 'docs/src/pages/container-hmr-probe.astro';
-let created = false;
+const assets = ['docs/static/container-hmr-probe.css', 'docs/static/container-hmr-probe.js'];
+const created = [];
 try {
   const start = spawnSync(runtime, ['compose', 'up', '-d', 'docs'], { stdio: 'inherit' });
   if (start.error) throw start.error;
@@ -18,16 +19,23 @@ try {
     await setTimeout(500);
   }
   assert.ok(ready, 'Docs did not become ready within 120 seconds');
+  for (const asset of assets) {
+    writeFileSync(asset, '/* container-before */', { flag: 'wx' });
+    created.push(asset);
+  }
   writeFileSync(probe, '<html><body>container-before</body></html>', { flag: 'wx' });
-  created = true;
+  created.push(probe);
   const code = `import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
 const browser = await chromium.launch();
 try {
-  const page = await browser.newPage();
+  const page = await browser.newPage({ baseURL: 'http://127.0.0.1:4321' });
   await page.goto('http://127.0.0.1:4321/container-hmr-probe');
   await page.getByText('container-before').waitFor();
+  for (const extension of ['css', 'js']) assert.match(await (await page.request.get('/static/container-hmr-probe.' + extension)).text(), /container-before/);
   console.log('READY');
   await page.getByText('container-after').waitFor({timeout:20000});
+  for (const extension of ['css', 'js']) assert.match(await (await page.request.get('/static/container-hmr-probe.' + extension)).text(), /container-after/);
 } finally { await browser.close(); }`;
   const child = spawn(runtime, ['compose', 'exec', '-T', 'docs', 'node', '--input-type=module', '-e', code], { stdio: ['ignore', 'pipe', 'inherit'] });
   let output = '', changed = false;
@@ -35,6 +43,7 @@ try {
     output += bytes;
     if (!changed && output.includes('READY')) {
       changed = true;
+      for (const asset of assets) writeFileSync(asset, '/* container-after */');
       writeFileSync(probe, '<html><body>container-after</body></html>');
     }
   });
@@ -43,7 +52,7 @@ try {
   assert.ok(changed, 'Browser did not observe the initial page');
   console.log('Docs HTTP readiness and live reload passed.');
 } finally {
-  if (created) unlinkSync(probe);
+  for (const file of created) unlinkSync(file);
   const stop = spawnSync(runtime, ['compose', 'down'], { stdio: 'inherit' });
   if (stop.error) throw stop.error;
   assert.equal(stop.status, 0, 'Docs cleanup failed');

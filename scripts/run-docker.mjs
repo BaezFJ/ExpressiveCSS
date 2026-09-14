@@ -9,8 +9,8 @@ const cwd = fileURLToPath(new URL('../', import.meta.url));
 const lock = JSON.parse(readFileSync(new URL('../package-lock.json', import.meta.url), 'utf8'));
 const version = lock.packages['node_modules/playwright'].version;
 const runtime = process.env.CONTAINER_RUNTIME || 'docker';
-const image = 'expressivecss-playwright';
 const buildId = randomUUID();
+const image = `expressivecss-playwright:${buildId}`;
 const command = process.argv.slice(2);
 const mode = ['--docs', '--visual'].includes(command[0]) ? command.shift() : null;
 
@@ -35,7 +35,7 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 async function run(executable, args, options = {}) {
   if (interrupted && !cleaningUp) throw Object.assign(new Error('Container command interrupted'), { status: interrupted });
   return new Promise((resolve, reject) => {
-    const child = spawn(executable, args, { cwd, stdio: 'inherit', detached: process.platform !== 'win32', ...options });
+    const child = spawn(executable, args, { cwd, stdio: 'inherit', detached: process.platform !== 'win32', env: { ...process.env, EXPRESSIVECSS_IMAGE: image }, ...options });
     active = child;
     let output = '';
     child.stdout?.on('data', bytes => { output += bytes; });
@@ -60,7 +60,7 @@ async function timed(label, action) {
 
 let container, temporary, artifacts, created = false, docs = false, built = false;
 try {
-  await timed('Container image build', () => run(runtime, ['build', '--force-rm', '--label', `io.expressivecss.build=${buildId}`, '-f', 'Dockerfile.playwright', '--build-arg', `PLAYWRIGHT_VERSION=${version}`, '-t', image, '.']));
+  await timed('Container image build', () => run(runtime, ['build', '--force-rm', '--label', `io.expressivecss.build=${buildId}`, '-f', 'Dockerfile.playwright', '--build-arg', `PLAYWRIGHT_VERSION=${version}`, '-t', image, '-t', 'expressivecss-playwright', '.']));
   built = true;
   if (mode === '--docs') {
     docs = true;
@@ -118,4 +118,8 @@ try {
     catch (error) { console.error(error.message); process.exitCode ||= error.status ?? 1; }
   }
   if (temporary) rmSync(temporary, { recursive: true, force: true });
+  if (built) {
+    try { await run(runtime, ['image', 'rm', image]); }
+    catch (error) { console.error(error.message); process.exitCode ||= error.status ?? 1; }
+  }
 }
