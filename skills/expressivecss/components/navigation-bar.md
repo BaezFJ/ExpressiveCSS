@@ -11,7 +11,7 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
+Contract SHA-256: `c8643d292a73b5111f20cfecf8032a47869d9a6e30af3db24aaf33d5ed994a72`
 
 #### Selection and adaptation
 
@@ -39,7 +39,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).
 
-This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows, a bar or rail in medium windows, and an expanded navigation rail in wider windows. Retained navigation drawers need a capability or compatibility reason.
+This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows, a bar or rail in medium windows, and an expanded navigation rail in wider windows.
 
 Default. Icon above the label. The selected destination puts a pill behind the icon and fills the glyph.
 

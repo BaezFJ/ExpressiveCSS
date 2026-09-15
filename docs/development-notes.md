@@ -43,9 +43,9 @@ npm run test:visual    # screenshot the merge base, then this tree, and diff
 npm run clean          # remove dist/
 ```
 
-`npm test` runs a single test file with `node --test path/to/file.test.js`, or filter by name with `node --test --test-name-pattern "Sidenav"`.
+`npm test` runs a single test file with `node --test path/to/file.test.js`, or filter by name with `node --test --test-name-pattern "NavigationRail"`.
 
-Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.Sidenav.getInstance(el)`).
+Entry points are `src/sass/expressive.scss` and `src/ts/index.ts`. The IIFE bundle exposes the global `Expressive` for `<script>` usage (`Expressive.AutoInit()`, `Expressive.NavigationRail.getInstance(el)`).
 
 ### Fallow analysis
 
@@ -399,7 +399,7 @@ out of `scripts/semantics-rules.mjs`. Notes that matter when working on it:
   then forms, then navigation, then the rest (`input-fields`,
   `fieldset`, `checkboxes`, `radio-buttons`, `switches`, `select`,
   `file-input`, `range`, `autocomplete`, `character-counter`; then `landmarks`,
-  `navbar`, `navigation-bar`, `navigation-rail`, `sidenav`, `breadcrumb`,
+  `navbar`, `navigation-bar`, `navigation-rail`, `breadcrumb`,
   `pagination`, `tabs`, `menu`, `scrollspy`, `page-footer`; then icons,
   badges, buttons, cards, toolbar, list, tooltip, preloader, dialog, panes,
   carousel, lightbox, icon-buttons, and nine rows that state no markup of their
@@ -484,14 +484,13 @@ deliberate:
 | M3 | ExpressiveCSS | Note |
 | --- | --- | --- |
 | Slider | `.slider` / `Slider` | Held the image slideshow before 0.8.0; now the range control |
-| Navigation drawer | `.navigation-drawer` / `NavigationDrawer` | `.sidenav` / `Sidenav` alias |
 | FAB | `.fab` | `.fixed-action-btn` alias |
 | Progress indicators | `.progress`, `.progress.circular` | `.preloader` alias |
 | Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated forms alias |
 | Drag handle | `.drag-handle` | `.handle` alias, the bottom sheet's pre-1.0 slot class |
 | Text fields | `.field` | **Deliberately not `.text-field`** — the same container wraps `<select>`, autocomplete and file inputs, so the M3 name would be wrong for most of its uses |
 
-Every rename is **additive**: the old class stays in the selector list, the old
+Every remaining rename is **additive**: the old class stays in the selector list, the old
 export stays as an alias, and `tests/m3-naming.test.js` asserts both — it walks
 every rule mentioning an old class and fails if the new one is not on it, which
 is how it caught `$_toolbar` excluding `.fixed-action-btn` but not `.fab`.
@@ -568,7 +567,7 @@ Other things worth knowing:
 
 **Read `src/ts/README.md` before adding code** — layout, the add-a-component steps, and the Component contract. Layers: `core/` (base class, `Utils`, types) ← `components/` (per-element widgets) and `behaviors/` (document-level enhancers: `Forms`, `Dialogs`); `plugins/` holds non-`Component` helpers; `index.ts` is the public entry.
 
-`src/ts/core/component.ts` defines the `Component<O extends BaseOptions>` base class. Every component follows the same shape (see `components/carousel.ts`, `components/sidenav.ts` for full examples):
+`src/ts/core/component.ts` defines the `Component<O extends BaseOptions>` base class. Every component follows the same shape (see `components/carousel.ts` and `components/navigationRail.ts` for full examples):
 
 ```ts
 export interface XOptions extends BaseOptions { /* … */ }

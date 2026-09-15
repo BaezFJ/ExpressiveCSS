@@ -11,8 +11,6 @@
         "navbar",
         "top app bar"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "navbar",
         "heading": "Navbar",
@@ -101,99 +99,11 @@
       }
     },
     {
-      "slug": "bottom-app-bar",
-      "title": "Bottom app bar",
-      "aliases": [
-        "bottom command bar"
-      ],
-      "selectable": false,
-      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use a docked toolbar.",
-      "guideSource": {
-        "pageId": "bottom_app_bar",
-        "heading": "Bottom app bar",
-        "headingLevel": 2,
-        "semantics": [
-          "bottom-app-bar"
-        ]
-      },
-      "jobs": [
-        "This screen's commands at the bottom edge, with an optional FAB — not its destinations."
-      ],
-      "useWhen": [
-        "Compatibility, explicit requests, or verified replacement gaps."
-      ],
-      "avoidWhen": [
-        "New designs: use a docked toolbar."
-      ],
-      "alternatives": [
-        "toolbars",
-        "navigation-bar"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/bottom-app-bar.md",
-      "materialGuidance": {
-        "status": "material",
-        "href": "https://m2.material.io/components/app-bars-bottom",
-        "implementation": {
-          "source": "llm.md#bottom-app-bar",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Bottom command bar with optional FAB.",
-          "webAdaptation": "Tab-reachable commands; no toolbar composite role.",
-          "limitations": [
-            "Retained API; use a docked toolbar for new M3 Expressive work when its behavior fits.",
-            "Retained baseline bar has no directly mapped target, Tab-order or content-clearance check."
-          ]
-        },
-        "relationship": "component",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components/toolbars/overview",
-          "reviewedOn": "2026-09-13",
-          "scope": "requirements-prose-reviewed",
-          "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "Toolbars/Overview and Specs: docked toolbar replaces the baseline bottom app bar"
-          ],
-          "sources": [
-            "https://m3.material.io/components/toolbars/overview",
-            "https://m3.material.io/components/toolbars/specs",
-            "https://m3.material.io/components/toolbars/guidelines",
-            "https://m3.material.io/components/toolbars/accessibility"
-          ],
-          "requirements": "The docked toolbar replaces the baseline bottom app bar in Expressive guidance. Retain the older bar only for compatibility or a specific capability need."
-        },
-        "reason": "No longer recommended by Google for new M3 Expressive designs; use a docked toolbar. Retained APIs and accessible existing interfaces remain valid for maintenance.",
-        "specHref": "https://m3.material.io/components/toolbars/specs",
-        "guidelinesHref": "https://m3.material.io/components/toolbars/guidelines"
-      },
-      "capabilityReview": {
-        "reviewedOn": "2026-09-13",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_bottom-app-bar.scss",
-            "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Retained baseline bar has no directly mapped target, Tab-order or content-clearance check.",
-            "nextStep": "Verify fixed-bar clearance at enlarged text; prefer a docked toolbar for new Expressive designs."
-          }
-        ],
-        "browserChecks": [],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
       "slug": "navigation-bar",
       "title": "Navigation bar",
       "aliases": [
         "bottom navigation"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "navigation_bar",
         "heading": "Navigation bar",
@@ -272,8 +182,6 @@
       "aliases": [
         "side navigation rail"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "navigation_rail",
         "heading": "Navigation rail",
@@ -362,128 +270,12 @@
       }
     },
     {
-      "slug": "navigation-drawer",
-      "title": "Navigation drawer",
-      "aliases": [
-        "sidenav",
-        "drawer",
-        "sidebar"
-      ],
-      "selectable": false,
-      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail.",
-      "guideSource": {
-        "pageId": "sidenav",
-        "heading": "Navigation drawer",
-        "headingLevel": 2,
-        "semantics": [
-          "navigation-drawer"
-        ]
-      },
-      "jobs": [
-        "A slide-out menu, or a fixed sidebar on Expanded and wider screens."
-      ],
-      "useWhen": [
-        "Compatibility, explicit requests, or verified replacement gaps."
-      ],
-      "avoidWhen": [
-        "New designs: use an expanded navigation rail."
-      ],
-      "alternatives": [
-        "navigation-rail",
-        "side-sheet"
-      ],
-      "adaptive": [
-        {
-          "window": "compact",
-          "basis": "window",
-          "kind": "variant",
-          "reason": "For retained drawers, use the documented modal variant on compact windows."
-        },
-        {
-          "window": "expanded",
-          "basis": "window",
-          "kind": "variant",
-          "reason": "For retained drawers, use the documented fixed variant on expanded windows."
-        }
-      ],
-      "runtime": "auto-init",
-      "guide": "../components/navigation-drawer.md",
-      "materialGuidance": {
-        "status": "material",
-        "href": "https://m3.material.io/components/navigation-drawer/overview",
-        "implementation": {
-          "source": "llm.md#navigation-drawer",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Sliding and fixed drawers with nested sections.",
-          "webAdaptation": "Native details/summary supports nesting.",
-          "limitations": [
-            "Retained baseline navigation component; current Expressive guidance points to expanded navigation rail as its replacement.",
-            "Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks."
-          ]
-        },
-        "relationship": "component",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components/navigation-drawer/overview",
-          "reviewedOn": "2026-09-13",
-          "scope": "requirements-prose-reviewed",
-          "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "Overview",
-            "Specs",
-            "Guidelines",
-            "Accessibility"
-          ],
-          "sources": [
-            "https://m3.material.io/components/navigation-drawer/overview",
-            "https://m3.material.io/components/navigation-drawer/specs",
-            "https://m3.material.io/components/navigation-drawer/guidelines",
-            "https://m3.material.io/components/navigation-drawer/accessibility"
-          ],
-          "requirements": "Current Expressive guidance replaces the drawer with an expanded navigation rail. Retained drawers still need named destinations, independent scrolling and correct modal focus and dismissal."
-        },
-        "specHref": "https://m3.material.io/components/navigation-drawer/specs",
-        "guidelinesHref": "https://m3.material.io/components/navigation-drawer/guidelines",
-        "reason": "No longer recommended by Google for new M3 Expressive designs; use an expanded navigation rail. Retained APIs and accessible existing interfaces remain valid for maintenance."
-      },
-      "capabilityReview": {
-        "reviewedOn": "2026-09-13",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_navigation-drawer.scss",
-            "sha256": "6f1a81c328dcdfe1d0127764b33b9f88529ea4a059b0ccb9f30436801a85da89"
-          },
-          {
-            "path": "src/ts/components/navigationDrawer.ts",
-            "sha256": "6199889b6d22bd065f85e66c5890de0f638de2c42b314b7e30f31d714fb0f56f"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks.",
-            "nextStep": "Test nested destinations, long scrolling and Escape with the actual trigger."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: remaining fixed drawer releases modal state at the expanded boundary",
-            "scope": "Compact open to expanded fixed drawer releases native modality and can reopen after returning compact."
-          }
-        ],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
       "slug": "panes",
       "title": "Panes",
       "aliases": [
         "split view",
         "two pane"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "panes",
         "heading": "Panes",
@@ -575,8 +367,6 @@
       "slug": "footer",
       "title": "Footer",
       "aliases": [],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "footer",
         "heading": "Footer",
@@ -659,8 +449,6 @@
       "aliases": [
         "tab navigation"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "tabs",
         "heading": "Tabs",
@@ -719,7 +507,7 @@
         "specHref": "https://m3.material.io/components/tabs/specs",
         "guidelinesHref": "https://m3.material.io/components/tabs/guidelines"
       },
-      "selectionExample": "Home/Search/Profile are app destinations, so use a navigation bar or rail. Overview/Activity panels within one account page can use tabs; Day/Week/Month as a view setting can use segmented inputs.",
+      "selectionExample": "Home/Search/Profile are app destinations, so use a navigation bar or rail. Overview/Activity panels within one account page can use tabs; Day/Week/Month as a form value can use native radio inputs.",
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
         "support": "implemented",
@@ -756,8 +544,6 @@
       "aliases": [
         "breadcrumb trail"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "breadcrumbs",
         "heading": "Breadcrumbs",
@@ -841,8 +627,6 @@
       "aliases": [
         "pager"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "pagination",
         "heading": "Pagination",
@@ -925,8 +709,6 @@
       "aliases": [
         "dropdown menu"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "menu",
         "heading": "Menu",
@@ -1033,8 +815,6 @@
       "aliases": [
         "active table of contents"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "scrollspy",
         "heading": "Scrollspy",
@@ -1126,8 +906,6 @@
       "aliases": [
         "button"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "buttons",
         "heading": "Buttons",
@@ -1236,8 +1014,6 @@
       "aliases": [
         "icon button"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "icon_buttons",
         "heading": "Icon buttons",
@@ -1341,103 +1117,11 @@
       }
     },
     {
-      "slug": "segmented-buttons",
-      "title": "Segmented buttons",
-      "aliases": [
-        "segmented control"
-      ],
-      "selectable": false,
-      "excludeReason": "No longer recommended by Google for new M3 Expressive designs; use a connected button group.",
-      "guideSource": {
-        "pageId": "segmented_buttons",
-        "heading": "Segmented buttons",
-        "headingLevel": 2,
-        "semantics": [
-          "segmented-buttons"
-        ]
-      },
-      "jobs": [
-        "Two to five connected options, one choice or several, with no script behind them."
-      ],
-      "useWhen": [
-        "Compatibility, explicit requests, or verified replacement gaps."
-      ],
-      "avoidWhen": [
-        "New designs: use a connected button group."
-      ],
-      "alternatives": [
-        "button-groups",
-        "radio-buttons"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/segmented-buttons.md",
-      "materialGuidance": {
-        "status": "material",
-        "href": "https://m3.material.io/components/segmented-buttons/overview",
-        "implementation": {
-          "source": "llm.md#segmented-buttons",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Single-select radio and multi-select checkbox groups.",
-          "webAdaptation": "Native fieldset/input/label owns selection and form values.",
-          "limitations": [
-            "The selected check icon is authored; the framework does not insert it.",
-            "Legacy native radio/checkbox contracts lack a directly mapped rendered group check."
-          ]
-        },
-        "relationship": "component",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components/segmented-buttons/overview",
-          "reviewedOn": "2026-09-13",
-          "scope": "requirements-prose-reviewed",
-          "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "Overview",
-            "Specs",
-            "Guidelines",
-            "Accessibility"
-          ],
-          "sources": [
-            "https://m3.material.io/components/segmented-buttons/overview",
-            "https://m3.material.io/components/segmented-buttons/specs",
-            "https://m3.material.io/components/segmented-buttons/guidelines",
-            "https://m3.material.io/components/segmented-buttons/accessibility"
-          ],
-          "requirements": "Segmented buttons are no longer recommended for new Expressive designs; use connected button groups. Retained native radio/checkbox groups remain available for maintenance, explicit requests or a documented form-value gap. Preserve selection, form semantics and effective targets."
-        },
-        "specHref": "https://m3.material.io/components/segmented-buttons/specs",
-        "guidelinesHref": "https://m3.material.io/components/segmented-buttons/guidelines",
-        "reason": "No longer recommended by Google for new M3 Expressive designs; use a connected button group. Retained APIs and accessible existing interfaces remain valid for maintenance."
-      },
-      "selectionExample": "For new toggle choices use connected button groups; commands use standard groups. This retained radio/checkbox example supports existing forms or a verified native form-value requirement.",
-      "capabilityReview": {
-        "reviewedOn": "2026-09-13",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_segmented-buttons.scss",
-            "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Legacy native radio/checkbox contracts lack a directly mapped rendered group check.",
-            "nextStep": "Test single/multiple form values and native keys; preserve semantics when choosing connected button groups."
-          }
-        ],
-        "browserChecks": [],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
       "slug": "button-groups",
       "title": "Button groups",
       "aliases": [
         "button group"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "button_groups",
         "heading": "Button groups",
@@ -1556,8 +1240,6 @@
       "aliases": [
         "split action"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "split_button",
         "heading": "Split button",
@@ -1618,7 +1300,7 @@
         "specHref": "https://m3.material.io/components/split-button/specs",
         "guidelinesHref": "https://m3.material.io/components/split-button/guidelines"
       },
-      "selectionExample": "PDF/CSV format selection for a later Export action belongs in a select or segmented inputs. A split button fits Export now plus alternate export commands.",
+      "selectionExample": "PDF/CSV format selection for a later Export action belongs in a select or native inputs. A split button fits Export now plus alternate export commands.",
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
         "support": "implemented",
@@ -1650,8 +1332,6 @@
         "fab",
         "speed dial"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "floating_action_button",
         "heading": "Floating Action Button",
@@ -1768,8 +1448,6 @@
       "aliases": [
         "card"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "cards",
         "heading": "Cards",
@@ -1890,8 +1568,6 @@
       "aliases": [
         "list"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "lists",
         "heading": "Lists",
@@ -1991,8 +1667,6 @@
         "dialog",
         "modal"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "dialogs",
         "heading": "Dialogs",
@@ -2064,8 +1738,6 @@
       "aliases": [
         "action sheet"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "bottom_sheet",
         "heading": "Bottom sheet",
@@ -2180,8 +1852,6 @@
       "aliases": [
         "side panel"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "side_sheet",
         "heading": "Side sheet",
@@ -2302,8 +1972,6 @@
       "aliases": [
         "floating panel"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "floating_sheet",
         "heading": "Floating sheet",
@@ -2400,8 +2068,6 @@
       "aliases": [
         "grab handle"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "drag_handle",
         "heading": "Drag handle",
@@ -2487,8 +2153,6 @@
         "badge",
         "count badge"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "badges",
         "heading": "Badges",
@@ -2581,8 +2245,6 @@
         "tooltip",
         "hover hint"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "tooltips",
         "heading": "Tooltips",
@@ -2672,8 +2334,6 @@
       "aliases": [
         "toast"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "snackbar",
         "heading": "Snackbar",
@@ -2769,8 +2429,6 @@
       "aliases": [
         "banner"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "banners",
         "heading": "Banners",
@@ -2856,8 +2514,6 @@
         "preloader",
         "progress indicator"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "preloader",
         "heading": "Progress indicators",
@@ -2956,8 +2612,6 @@
       "aliases": [
         "spinner"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "loading_indicator",
         "heading": "Loading indicator",
@@ -3050,8 +2704,6 @@
       "aliases": [
         "gallery"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "carousel",
         "heading": "Carousel",
@@ -3144,8 +2796,6 @@
         "media",
         "image viewer"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "media",
         "heading": "Lightbox",
@@ -3239,8 +2889,6 @@
       "aliases": [
         "toolbar"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "toolbars",
         "heading": "Toolbars",
@@ -3305,8 +2953,6 @@
       "aliases": [
         "search box"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "search",
         "heading": "Search",
@@ -3398,8 +3044,6 @@
       "aliases": [
         "fieldset"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "fieldsets",
         "heading": "Fieldsets",
@@ -3496,8 +3140,6 @@
         "text input",
         "input field"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "text_inputs",
         "heading": "Text Inputs",
@@ -3583,8 +3225,6 @@
         "dropdown",
         "select input"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "select",
         "heading": "Select",
@@ -3702,8 +3342,6 @@
       "aliases": [
         "checkbox"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "checkboxes",
         "heading": "Checkboxes",
@@ -3802,8 +3440,6 @@
       "aliases": [
         "radio"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "radio_buttons",
         "heading": "Radio Buttons",
@@ -3897,8 +3533,6 @@
         "switch",
         "toggle"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "switches",
         "heading": "Switches",
@@ -3990,8 +3624,6 @@
         "sliders",
         "range input"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "sliders",
         "heading": "Sliders",
@@ -4093,8 +3725,6 @@
         "chip",
         "filter chip"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "chips",
         "heading": "Chips",
@@ -4192,8 +3822,6 @@
         "typeahead",
         "combobox"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "autocomplete",
         "heading": "Autocomplete",
@@ -4308,8 +3936,6 @@
         "datepicker",
         "calendar picker"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "datepicker",
         "heading": "Date Picker",
@@ -4416,8 +4042,6 @@
         "timepicker",
         "clock picker"
       ],
-      "selectable": true,
-      "excludeReason": null,
       "guideSource": {
         "pageId": "timepicker",
         "heading": "Time Picker",
@@ -4725,10 +4349,10 @@
   ],
   "capabilityBrowserEvidence": {
     "collector": "scripts/record-capability-evidence.mjs",
-    "recordedOn": "2026-09-13",
+    "recordedOn": "2026-09-15",
     "engine": "chromium",
-    "engineVersion": "151.0.7922.34",
-    "nodeVersion": "v24.18.1",
+    "engineVersion": "153.0.8010.12",
+    "nodeVersion": "v22.23.1",
     "status": "passed",
     "files": [
       "tests/button-groups-browser.test.js",
@@ -4787,15 +4411,11 @@
       },
       {
         "path": "src/sass/components/_badges.scss",
-        "sha256": "1d9ade7617c30f8584cfee9b3f2fe5d3c5d39f5ed7fa2fd362a9f8205fa15693"
+        "sha256": "f249dc305b207a60c642863fb652282310e956049ec3e7eff51782c962b4bd26"
       },
       {
         "path": "src/sass/components/_banners.scss",
         "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
-      },
-      {
-        "path": "src/sass/components/_bottom-app-bar.scss",
-        "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
       },
       {
         "path": "src/sass/components/_bottom-sheet.scss",
@@ -4831,7 +4451,7 @@
       },
       {
         "path": "src/sass/components/_dialog.scss",
-        "sha256": "05a7ec3c2578a3e850548b8d6207043e1ff66fdb2fd44d1e3328b73dce95b3f6"
+        "sha256": "a4f945cfab09bbdc267dae727edc1e0d40f14e9ce51c648f45c4c969f4e31df1"
       },
       {
         "path": "src/sass/components/_docked-display.scss",
@@ -4855,7 +4475,7 @@
       },
       {
         "path": "src/sass/components/_icon-buttons.scss",
-        "sha256": "c77a969e392a03be07f10aa6021758d5fa7ddccd999440755c93942a9dbb38e8"
+        "sha256": "6dbdd8e36e4dfbe3b406595b4536adb810753fb5136edb951f1f087af4d00ef9"
       },
       {
         "path": "src/sass/components/_icons-material-design.scss",
@@ -4863,7 +4483,7 @@
       },
       {
         "path": "src/sass/components/_index.scss",
-        "sha256": "6bbf549be011ec143a520f5c92c3c2b48b956b5bfdf1afc6fc2317f2e278b51b"
+        "sha256": "365d213d1dbb17a3a01756f4f38fdf5c04b3eccd6d511b27b0f4823c9007bcad"
       },
       {
         "path": "src/sass/components/_lightbox.scss",
@@ -4890,12 +4510,8 @@
         "sha256": "e42c5c395c9f2cdc1dc9c8c4cfdff1a06cb12183cae1d17bcea915536f0aa9c2"
       },
       {
-        "path": "src/sass/components/_navigation-drawer.scss",
-        "sha256": "6f1a81c328dcdfe1d0127764b33b9f88529ea4a059b0ccb9f30436801a85da89"
-      },
-      {
         "path": "src/sass/components/_navigation-rail.scss",
-        "sha256": "7dcc854d90a48a541ae9ed2380d28063e8217e567f697e27a21fe1ab84e055bb"
+        "sha256": "a2d96e8eada8504003fa910d15565cbaeb6fdcec12b67ef166ba0cdaa86a1873"
       },
       {
         "path": "src/sass/components/_page-footer.scss",
@@ -4915,7 +4531,7 @@
       },
       {
         "path": "src/sass/components/_scrim.scss",
-        "sha256": "604e66fcd4d0259c70f6af50933ea1cce3a5d620b8f787885ab1aadab1288f01"
+        "sha256": "e086b0082e890ee01e157052df1b48fecceee84fef94b62694133f1092bfd118"
       },
       {
         "path": "src/sass/components/_scrollspy.scss",
@@ -4924,10 +4540,6 @@
       {
         "path": "src/sass/components/_search.scss",
         "sha256": "827fd893f6c3ac380a95ed3f5febd3a4fff4fee29cac5b1fb230df5e6f051c76"
-      },
-      {
-        "path": "src/sass/components/_segmented-buttons.scss",
-        "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
       },
       {
         "path": "src/sass/components/_side-sheet.scss",
@@ -5123,7 +4735,7 @@
       },
       {
         "path": "src/ts/components/index.ts",
-        "sha256": "03262ca857f8f6cb09be3077534f378d4b1c4ca835a01c749f7469cc54eddc7c"
+        "sha256": "15e124d9d7386e4d5d23bf045bf4d716ac2624bb09617c02bdf4994d07e5640c"
       },
       {
         "path": "src/ts/components/lightbox.ts",
@@ -5134,16 +4746,12 @@
         "sha256": "dffb2df2cbd79a4b1fdfb354c62509952070059eb35418aec9cb296680f6a241"
       },
       {
-        "path": "src/ts/components/navigationDrawer.ts",
-        "sha256": "6199889b6d22bd065f85e66c5890de0f638de2c42b314b7e30f31d714fb0f56f"
-      },
-      {
         "path": "src/ts/components/navigationRail.ts",
         "sha256": "f7b4e682a87ea664dc8b8927ea86a784fd61ab1d538a9996f97d5c2e95db4406"
       },
       {
         "path": "src/ts/components/registry.ts",
-        "sha256": "4fee437817251d2ce971e939c64ea150fe36e22a96ddb08cb2bfbfdaab5e0f99"
+        "sha256": "6afe610acbab9447cf6b135e50de7d8278fbe51781baaa4df0ca20f2ff564794"
       },
       {
         "path": "src/ts/components/scrollspy.ts",
@@ -5187,7 +4795,7 @@
       },
       {
         "path": "src/ts/modular.ts",
-        "sha256": "c18836da305f490e4e03f59f37cdbe0217647e29b72e589c00e6349adf6db75e"
+        "sha256": "3c2de45113f2e4d383fc0833f0cdc6639662ed33f70845b421f564e72bd3d395"
       },
       {
         "path": "src/ts/plugins/dockedDisplayPlugin.ts",
@@ -5195,7 +4803,7 @@
       },
       {
         "path": "src/ts/README.md",
-        "sha256": "88f2a852103c7b7e6451d150b5a01ab760e0aa8d7d1f214ec222168f16349d62"
+        "sha256": "5ec08252ee6611d1ae8b68707ce9b446c74f3d72c8381a54d866af3a73b8ebc2"
       },
       {
         "path": "tests/app-bar-js.test.js",
@@ -5207,7 +4815,7 @@
       },
       {
         "path": "tests/autoinit.test.js",
-        "sha256": "64eac4a2a9ee95290df9fc074b8ab01c77017123a30a6db6604f259694c0139f"
+        "sha256": "c12496ba880304582d7da20fab7fab7e0aa400b705e53a43be67f6b12ccd1e18"
       },
       {
         "path": "tests/badges.test.js",
@@ -5218,16 +4826,12 @@
         "sha256": "ed3db04f652220f0c8e28fd0a9e401b7e5d822f8e212e4c895db59a334a779a2"
       },
       {
-        "path": "tests/bottom-app-bar.test.js",
-        "sha256": "5b85f1dbeca04c1148656f1daf1ef9d90095d420586b167906d11eab80e85380"
-      },
-      {
         "path": "tests/bottom-sheet.test.js",
         "sha256": "01c325223ec7de035f65c5dd2118e2e272cc643839803b6ba6db33cf1a3c1565"
       },
       {
         "path": "tests/bundle.test.js",
-        "sha256": "89e8e722ca7e59919b16dd433b416eb333baa77e5a60bdda0be5a94ade4aeff6"
+        "sha256": "0e7d9d19be01a6ff337339972f25e85c4a03f8b8cd5d0ff8d01fedafe11d49d5"
       },
       {
         "path": "tests/button-group-js.test.js",
@@ -5275,7 +4879,11 @@
       },
       {
         "path": "tests/components.test.js",
-        "sha256": "dd91b492bb3018530a9b8013d92097b4eee2da53b02fecf43dad1d1dc1e9a883"
+        "sha256": "ba72a0751ce68f7ad7f87e5e8145db5ca1fd2a479784123b81e1a1db21323b1a"
+      },
+      {
+        "path": "tests/container-validation.test.js",
+        "sha256": "a80836f09944ecc99eca11b480943b4f14483edab2f13a9897d3bda890f72cea"
       },
       {
         "path": "tests/css.js",
@@ -5286,12 +4894,16 @@
         "sha256": "a1d1bf7b9d8d84e0dc3f90039de44dda28d36dfa3561f469aa59dfb20b8c8e9f"
       },
       {
+        "path": "tests/docker-runner.test.js",
+        "sha256": "0032c94329db564933372cc308279a31ce3e088dbe65d6db755c3cefcb1489bc"
+      },
+      {
         "path": "tests/docs-api.test.js",
-        "sha256": "663afbcf9e4a53e7c045fad24b24f41d538665c064c464c6f79fbda1deac787e"
+        "sha256": "01e52230fdf9bc02e85e9b15c9b274ded86cda51bda59f274e07d9b3fa9e671b"
       },
       {
         "path": "tests/docs-astro.test.js",
-        "sha256": "1730f01ce95788193677cae413ef04acf9880640721cf2518f8e65ba176248ab"
+        "sha256": "7ac041d7635a04ffd8f7a95174681728628307cd76faf3726fe079519b115161"
       },
       {
         "path": "tests/docs-code-blocks.test.js",
@@ -5319,7 +4931,7 @@
       },
       {
         "path": "tests/expressivecss-component-decisions.test.js",
-        "sha256": "33b94c6aa42f4d867511c32a5c3ee60c7e19d865e1af1c1a7e364a079ee2c862"
+        "sha256": "693ce56a8552bde9292e8a3c8b8b1d38f2668ac536ece9133d0108f67dff86f2"
       },
       {
         "path": "tests/expressivecss-consumer-browser.test.js",
@@ -5331,7 +4943,7 @@
       },
       {
         "path": "tests/expressivecss-cross-browser.test.js",
-        "sha256": "c817489e37bda64b8e273fd60dfa885230edbf319c606efbcb690d91b7cab80d"
+        "sha256": "bc22880b53a8b8b40d1738a0b1bf9a3ba97c214eec47c23f95f7a1bb0ec9b09f"
       },
       {
         "path": "tests/expressivecss-eval-browser.test.js",
@@ -5363,23 +4975,23 @@
       },
       {
         "path": "tests/expressivecss-skill-benchmark.test.js",
-        "sha256": "072d03501d404904f5b87a77979986218a987c86ad4d28fabec77aeb959d77eb"
+        "sha256": "dabee27a485c63266d75e70c1fafc4047ab33b5292908f5f7a9d44d17c763293"
       },
       {
         "path": "tests/expressivecss-skill-evals.test.js",
-        "sha256": "898be204dd4adbbd47912837819725ad14db2cfa1afad99f260fc49fb819662b"
+        "sha256": "f27a76b546b68678612522ac81866cc7fc21fb84e5eb412975b186be213f8eae"
       },
       {
         "path": "tests/expressivecss-skill.test.js",
-        "sha256": "c790412d6ff4e53c79a430eea9bb2c5d013b398f453a65750f1989e1eb6818ed"
+        "sha256": "c83c229519b3cde07ed3866ca20f1a61111a03c800a7db81b8d08e691077f13a"
       },
       {
         "path": "tests/expressivecss-version-resolution.test.js",
-        "sha256": "b2f1e6bb71c98e6918e45fdd59de9db2bf9034f400b6d2f93bcbd82e08e54dda"
+        "sha256": "66c89b93905985c555b32a992744add1184bdd1eeacc3488f382155327b9b3d4"
       },
       {
         "path": "tests/expressivecss-web-accessibility-browser.test.js",
-        "sha256": "a9e0313f4f0e2f5581c473d9e949e5d33b2a3de847c2dc455d04d34d9439c831"
+        "sha256": "a4de2b641d41b8b1090ee30fdaabef412ba87e58532d71a6f3143ba92d2dc310"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/benchmark.json",
@@ -5387,7 +4999,7 @@
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/cases.json",
-        "sha256": "60ef88d1724065dddff50997b3bfc416b9aa1c135ab18a4437f89777db8a2b48"
+        "sha256": "668c323b0e4c7136f0c37cd9c314afdc3fafa7aaee250f123265aee0e5596cae"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/consumer/app.css",
@@ -5395,11 +5007,11 @@
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/consumer/app.js",
-        "sha256": "c942c2ed45abd7b2d4be9876a7847d84bad32a28132a431197cbe93f5a870aac"
+        "sha256": "c14ff4176e7b29c8c509a4b851b5152d442afca6a71c1badad7389117ecae8c0"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/consumer/index.html",
-        "sha256": "3627270e226ce477605dd420633741f90b37eab9883d9d770f21278053ecbdcc"
+        "sha256": "e88c8f5e11cc7c36226defb16f10b33a35a55b5d8b7d5d19ec785704ef9a1950"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/consumer/server.mjs",
@@ -5435,7 +5047,7 @@
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/passing-responses.json",
-        "sha256": "3f02157ef4792db966ae916b3ae81845a767de2f66c0c4971f855ee3edd208c8"
+        "sha256": "6d77c17759bb7e8227d3416f5bad3cf197149970551d69329589c155e08d0de0"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/product-context.json",
@@ -5467,7 +5079,7 @@
       },
       {
         "path": "tests/fixtures.js",
-        "sha256": "bdbe3903aba7418e27c73af28678497dbc3305c6b372c2ea152aab94ec3c7261"
+        "sha256": "2ff9d1433a479a769b222eef17d43508498d61bb75e7662127d8ed5a2dafd5bf"
       },
       {
         "path": "tests/floating-sheet.test.js",
@@ -5483,7 +5095,7 @@
       },
       {
         "path": "tests/generated-a11y.test.js",
-        "sha256": "a52296ad28aee7fc41538f35b423557be5f4aab7467835266c4a4770f28d25e9"
+        "sha256": "82c98dc02f5e58c47209033f67befa66c551dfafd8ec0e23381e841917bbfbd2"
       },
       {
         "path": "tests/grid.test.js",
@@ -5491,7 +5103,7 @@
       },
       {
         "path": "tests/hot-paths.test.js",
-        "sha256": "9f3021b5fd440ad02dd35ca163c1ce9a120fe3e0600c601fd0cebdc62e73aa4a"
+        "sha256": "275ec83eacf07cfc00120d2e254b14d2e4478fa82cc2a8de96cdb948129a9b5e"
       },
       {
         "path": "tests/icon-buttons.test.js",
@@ -5499,7 +5111,7 @@
       },
       {
         "path": "tests/injection.test.js",
-        "sha256": "344ca12ba955c0d6e2739032d8b32e0442e56f471e498b62274aef1c46d8929f"
+        "sha256": "9c843b7c0340d82f8d473bc9d550d54e14413a8d0a8e2c37fb680f7deda89163"
       },
       {
         "path": "tests/lists.test.js",
@@ -5511,7 +5123,7 @@
       },
       {
         "path": "tests/m3-naming.test.js",
-        "sha256": "b5562bc5f5bda288d40f377a5d242588314a0b6909c64e2246d735a9d8c302d8"
+        "sha256": "7928a6811497961ced14b74538c7c82f739ef2a5f3b9f5a3d17a2c017f3018f4"
       },
       {
         "path": "tests/m3-reference-ramps.js",
@@ -5531,7 +5143,7 @@
       },
       {
         "path": "tests/navigation-bar.test.js",
-        "sha256": "207c98c439f4b1210a30132f9037dd56dca9b2120792f2c2e9a1c11ea5ca3990"
+        "sha256": "be5dc107d8b6a4c28546e545478fe93f3dfb3a2f9ad4ac8b7806f1e3db81f92a"
       },
       {
         "path": "tests/navigation-rail.test.js",
@@ -5543,7 +5155,7 @@
       },
       {
         "path": "tests/portals.test.js",
-        "sha256": "c84516406ff189f0a6cab4f0e9ab9648c16377470b8ca5bfa3b5e08fdf22257d"
+        "sha256": "a810f27ce492d4df73e35cb01cb7c3d2c14fc2311f8b8de2e36b444f33733e78"
       },
       {
         "path": "tests/range.test.js",
@@ -5551,7 +5163,7 @@
       },
       {
         "path": "tests/regressions.test.js",
-        "sha256": "b964fc33accc404c4ad0fcda8f8fa53e7dc4d2d2a3e5bcd785b93132e4cc0de8"
+        "sha256": "e0169abe5005fc8cc8a82cd10afdbc7104b64b317d2251bf24807b4e068a2019"
       },
       {
         "path": "tests/release.test.js",
@@ -5559,11 +5171,7 @@
       },
       {
         "path": "tests/scrim.test.js",
-        "sha256": "d0d4ba5a62da2be575fca12b0241bc207a5addd63ea663c623ce98488f906375"
-      },
-      {
-        "path": "tests/segmented-buttons.test.js",
-        "sha256": "558246482945f4e2ad168cabd28413b3a69028c6381d48a1d59edd1313f4f636"
+        "sha256": "b79f3fca0a28c441f632626899ac4ae823f985114bb7baabe6e330ca13f9e483"
       },
       {
         "path": "tests/selective-builds-browser.test.js",
@@ -5590,10 +5198,6 @@
         "sha256": "268077ea034a3a4b4c3d826ae40534301ab46ca2dab92c8e375083ef30df8aec"
       },
       {
-        "path": "tests/sidenav.test.js",
-        "sha256": "a81f8ceed999c8eaa5644b78442a0a5ded02b9d32a3c5da6c521e5f42d3cd334"
-      },
-      {
         "path": "tests/snackbar.test.js",
         "sha256": "eedc1da86fce3c76cfe8b7040e935df79b09ce6d3db2c8eaefd9c628cfb9a416"
       },
@@ -5607,7 +5211,7 @@
       },
       {
         "path": "tests/teardown.test.js",
-        "sha256": "cafb16469345cecab529ad66cb903291586a9ae90a2240c2b8e840b9fb01219f"
+        "sha256": "f1730c87c1861e149f88f89b9973a8a2351f09d39dc6d7e40fa54e24eb185259"
       },
       {
         "path": "tests/tokens.test.js",
@@ -5627,19 +5231,19 @@
       },
       {
         "path": "dist/css/expressive.css",
-        "sha256": "92b62330bf6f83c6150c149fa1d5809ddcdfc2281842af983db0913c22f4ced4"
+        "sha256": "fe16907e3fc60a5e9f954b1f05463696de6418d5726de608036bf9083ff27b28"
       },
       {
         "path": "dist/css/expressive.css.map",
-        "sha256": "3600ccc7591f0874482af5fd1a8195aefcc5bcca8ab8299914ea7176ab8962a7"
+        "sha256": "c0de4eaf0dc642882db2cd4c12adedb1e84e859ea7414ded22e140fd7691ccd4"
       },
       {
         "path": "dist/css/expressive.min.css",
-        "sha256": "01915abb2d8f96e3a451ca636cc4dab29d123ebdca157bc8709bfda9ac67d30f"
+        "sha256": "ae40d9f65243936e7c838f1b461088b587c9a40b13c4cda474b846223bd833c9"
       },
       {
         "path": "dist/css/expressive.min.css.map",
-        "sha256": "685cae98ad246b713892ec7e17deee90b7ee70e5c1f752cb5bd765967b78aedb"
+        "sha256": "c4947467c30de2509c61438b0b9a95e10602ba13929532987a3c5bda5c8661c6"
       },
       {
         "path": "dist/fonts/LICENSE-material-symbols",
@@ -5655,15 +5259,15 @@
       },
       {
         "path": "dist/fonts/material-symbols-outlined.woff2",
-        "sha256": "329f6eb34ac05b0c0b1bb172e36d004bbc57cb5112abeeccc70755afdc4f2d8d"
+        "sha256": "78775b8fa82e0be6950f040a718982e1589c1bbefbd60ee9d393f85c766b0a5d"
       },
       {
         "path": "dist/fonts/material-symbols-rounded.woff2",
-        "sha256": "fb133d3ec8288e46a570bd987a2e6c1e90caa1eb174660ac8f0c9c04ddb83f16"
+        "sha256": "fdaef5bb6deb90b91fe777ac5b9608a4c1741a770337bfa1c91547e3d4bcbddf"
       },
       {
         "path": "dist/fonts/material-symbols-sharp.woff2",
-        "sha256": "f0adc706b2f7a1e8e340fc0143162a9e7384d6e5d117e5955343c58cc5f82b65"
+        "sha256": "c85f893aa6fd73e86177f0ed424212ca5d73413128464b72aecd87a48528ae3e"
       },
       {
         "path": "dist/fonts/noto-sans-latin-400.woff2",
@@ -5688,6 +5292,14 @@
       {
         "path": "dist/js/chunks/chunk-4DLCIEF7.mjs.map",
         "sha256": "4f0e93799fb5360a4408112d0480d1c760de8a769a8313db49a6249643732e5a"
+      },
+      {
+        "path": "dist/js/chunks/chunk-4LHO4FIV.mjs",
+        "sha256": "3750e2e1403a5a68bef40fe913edd6989678cafbaa15e48dca56bc1873336f7a"
+      },
+      {
+        "path": "dist/js/chunks/chunk-4LHO4FIV.mjs.map",
+        "sha256": "bf4825432e2dcc8cea2b05a7acb0f5f58dc0fdb2efd49c8aae476599eb706a98"
       },
       {
         "path": "dist/js/chunks/chunk-5MP7TWN6.mjs",
@@ -5738,12 +5350,12 @@
         "sha256": "a89a0ffa78d0f9e7d6dfe5df714ff0c4c2be7cd49ed2ca98e957a1323ed0b74f"
       },
       {
-        "path": "dist/js/chunks/chunk-BQQJPPXT.mjs",
-        "sha256": "f812edf86e0294376cb05ede0b8de89c9667c63179c0895b1976d6a6a52598ea"
+        "path": "dist/js/chunks/chunk-BPP4CIBA.mjs",
+        "sha256": "cfd27194961deb7305e0b67a250a86808c4e211834779637f40804fa2ba1f897"
       },
       {
-        "path": "dist/js/chunks/chunk-BQQJPPXT.mjs.map",
-        "sha256": "064c1f9fbc32808bea4fc0836435c0b9b91a1ef42cf95b85cd793c064cdef342"
+        "path": "dist/js/chunks/chunk-BPP4CIBA.mjs.map",
+        "sha256": "2b92b5312b2a12468da48b9e36a759b1ec5748a410ba05bb71d904334d1994bc"
       },
       {
         "path": "dist/js/chunks/chunk-BVLMO5FI.mjs",
@@ -5842,6 +5454,14 @@
         "sha256": "23fd296f688f4f372eed392584d088d1c205c9a3f14b191b6ca0d85acfb021f4"
       },
       {
+        "path": "dist/js/chunks/chunk-TGU6MUZR.mjs",
+        "sha256": "45496ffeda0476173de1acbdcefd927f141806d80314cadf5592364db387a3f7"
+      },
+      {
+        "path": "dist/js/chunks/chunk-TGU6MUZR.mjs.map",
+        "sha256": "bf8f56f1327be6bfc2099f68a895be05d38adb849a09d323c7a67758a027e52d"
+      },
+      {
         "path": "dist/js/chunks/chunk-TUIB2QN6.mjs",
         "sha256": "0bbddb54749e48e0e0867af1dc8802bbbc6cc3432f5b41ad08216ca4153cf137"
       },
@@ -5874,14 +5494,6 @@
         "sha256": "6f399f514b75367b732f4701dd631ff2159c97e9d86dfa0d5bd044de4a6c177a"
       },
       {
-        "path": "dist/js/chunks/chunk-UTJ2UVYM.mjs",
-        "sha256": "633a2e372ec749b1ccec58ccb883d45bad08efdb367e2e974c4cdb6a575ba2a2"
-      },
-      {
-        "path": "dist/js/chunks/chunk-UTJ2UVYM.mjs.map",
-        "sha256": "52b04b9ab64e89cf36227b03bdf951e1bf0765a28402ac797503f8a9ba3861fc"
-      },
-      {
         "path": "dist/js/chunks/chunk-VJASNTTR.mjs",
         "sha256": "6350574311608baf871cc1e511581004a13a5792ad0aee01a43d33840edae476"
       },
@@ -5890,19 +5502,11 @@
         "sha256": "604bb0b2865fc6370ea29d645d680aae0ac783a6e27d3787e5e3c371b0bed991"
       },
       {
-        "path": "dist/js/chunks/chunk-VXKLR2YM.mjs",
-        "sha256": "a1c2854e858b976f829a64b0c5cde74a4eeea1905fc56711cef76f98b2f90e0f"
+        "path": "dist/js/chunks/chunk-WWPAPHMA.mjs",
+        "sha256": "1f6e8dba26f9dda9a34aaed46ab866154066a5cde161e80927ee1991e43a789e"
       },
       {
-        "path": "dist/js/chunks/chunk-VXKLR2YM.mjs.map",
-        "sha256": "bf4825432e2dcc8cea2b05a7acb0f5f58dc0fdb2efd49c8aae476599eb706a98"
-      },
-      {
-        "path": "dist/js/chunks/chunk-W2ZW7M47.mjs",
-        "sha256": "26f383b0687822899fa10d0d342de6cb64ca922295f7f4504761c9898d596d0a"
-      },
-      {
-        "path": "dist/js/chunks/chunk-W2ZW7M47.mjs.map",
+        "path": "dist/js/chunks/chunk-WWPAPHMA.mjs.map",
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
@@ -5930,44 +5534,36 @@
         "sha256": "214511538963d140758e41207e5aba1b87007f6dc6e62b69184cbf3fa5745484"
       },
       {
-        "path": "dist/js/chunks/chunk-YIJRMPN3.mjs",
-        "sha256": "b3a29ed67b34ac11c905ceaabaf5b72c34ee8c0c56632ba475e2884a1b382cf9"
-      },
-      {
-        "path": "dist/js/chunks/chunk-YIJRMPN3.mjs.map",
-        "sha256": "2e446875af895dc6469f321662ee0e2d56e3af723ee178633e08d51ab78f42d6"
-      },
-      {
         "path": "dist/js/expressive.cjs",
-        "sha256": "43da906a496b97db90b41100a6e5ec071802965bd24053b2f2b40c54d54a8522"
+        "sha256": "0ec3ce8721180a6bec4fe01873bc1c8236624d40475045bb91e92762bae45231"
       },
       {
         "path": "dist/js/expressive.cjs.map",
-        "sha256": "ac96d969ae76a4637bbc8f17ad2fb188d11e5529dfa481044423917a9ebe9206"
+        "sha256": "d633beb053e4daf1add71edc0f6098b8adbe950b861ade7933098620133f6728"
       },
       {
         "path": "dist/js/expressive.js",
-        "sha256": "5dcf4634fcce3ec030b88829c2a92589a13cdec09bdd50394c241ab3574bb88c"
+        "sha256": "d59143a7e955302239d46a243a6e39fbc7011f671df94b7432f1a89b4d030490"
       },
       {
         "path": "dist/js/expressive.js.map",
-        "sha256": "e064a4018c7afe3a5e2d579929f33534a97f0385f9194656404666fe02a568a7"
+        "sha256": "ef97d6d93baeb6ae0414c774dbe63f7457015bf07b8558ae63e69615ec6fb1a1"
       },
       {
         "path": "dist/js/expressive.min.js",
-        "sha256": "f2898bc21253055adad0e5b96cdf4d50f3bb39269bc66ae327ed8bc6a0c5fb4e"
+        "sha256": "f680e8ef4451eafdb69bba1196c009524cec683a0d99e9e4ca3614d88c02563f"
       },
       {
         "path": "dist/js/expressive.min.js.map",
-        "sha256": "2239cd917492e3c67465207d557491c086d8b6ae799d39798643c13fa7e761d2"
+        "sha256": "f0fe4f3f5f54ba45dc528a33d21ef448ab02536c42bdde608c6bcdc51d6646b9"
       },
       {
         "path": "dist/js/expressive.mjs",
-        "sha256": "4315811ec108df93cfb492a631f1d950bf2baba90412e15043e37940cf2c03ac"
+        "sha256": "41845775c366491bf9e89992ec7ba0f22d483d251db6d513450e8270f49f0b82"
       },
       {
         "path": "dist/js/expressive.mjs.map",
-        "sha256": "cb189e3834aa2d0c7d7661b87334606b39ed08bcacca090b5be1025cd1c88428"
+        "sha256": "0c8da0737961cb470478eb7458e0b1f1bf3a360d2a368abef3d2afad9a78cc5c"
       },
       {
         "path": "dist/js/internal/behaviors/bottomSheets.mjs",
@@ -6075,7 +5671,7 @@
       },
       {
         "path": "dist/js/internal/components/datepicker.mjs",
-        "sha256": "a76fd93bc2611c2fbea0f0a79a1b9a570f938125c4e0114f05515a77f1c7f235"
+        "sha256": "a56291fd376c078c26dbbd219ea6c0ce5726a073448678b1c2f00b3d69f93dd7"
       },
       {
         "path": "dist/js/internal/components/datepicker.mjs.map",
@@ -6091,7 +5687,7 @@
       },
       {
         "path": "dist/js/internal/components/index.mjs",
-        "sha256": "3a9a8d486e8f57a149eb8a6ae493868ab000a0dd44872517940771f50fb19e56"
+        "sha256": "3e1ada3b6add63537021ff086c81efef8fa0d58be9f545ebc8164fc0b501bc9f"
       },
       {
         "path": "dist/js/internal/components/index.mjs.map",
@@ -6114,14 +5710,6 @@
         "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
       },
       {
-        "path": "dist/js/internal/components/navigationDrawer.mjs",
-        "sha256": "b16c4df7c2c5b566e67e2f11b1dc84afcb16e96afdf8d290be10e5f9bf6775b0"
-      },
-      {
-        "path": "dist/js/internal/components/navigationDrawer.mjs.map",
-        "sha256": "ed562b0bba7ee7214e56ac7f728054b3496bec4597c94a4eb7b4179e6f5cb1c9"
-      },
-      {
         "path": "dist/js/internal/components/navigationRail.mjs",
         "sha256": "db9f32f2e16cbbd94c019bd418e79841a68e74dd71126c0a90447cd5d0b3e3a1"
       },
@@ -6131,7 +5719,7 @@
       },
       {
         "path": "dist/js/internal/components/registry.mjs",
-        "sha256": "ba0a8c2d67da6e530750cdd780048277c2de6e2a8ee6f2887cb3e27e198c7860"
+        "sha256": "d425fec68b6768bb88f62181b6aefa0f2c7870095a0cf5fb04fb80be9ab3d7e0"
       },
       {
         "path": "dist/js/internal/components/registry.mjs.map",
@@ -6219,7 +5807,7 @@
       },
       {
         "path": "dist/js/modular.mjs",
-        "sha256": "cbb0771eae3609ac27df4a392394e1e5315ebe31ee5fe289efa5f6c3952138c4"
+        "sha256": "9e31ac0280d3ba672e9b76451f46cb40df0fb7816ecc4a756fb4b9d4e088d0c9"
       },
       {
         "path": "dist/js/modular.mjs.map",
@@ -6287,7 +5875,7 @@
       },
       {
         "path": "dist/types/components/index.d.ts",
-        "sha256": "71c72070da4d7a22cd613399bcfa6f5ac3e020c90531372564601aadb168913c"
+        "sha256": "72db932de6ad19f9957db85a253ca61fd380a00b9c1770334619763555a0752b"
       },
       {
         "path": "dist/types/components/lightbox.d.ts",
@@ -6298,16 +5886,12 @@
         "sha256": "b88d460c09461db971378338528d3588c596f204481c3cc5626448a15a22524e"
       },
       {
-        "path": "dist/types/components/navigationDrawer.d.ts",
-        "sha256": "ac16a7bcca7a6a3a3276f087b320ac92c6e937051f499ea752c7f537e7b65c59"
-      },
-      {
         "path": "dist/types/components/navigationRail.d.ts",
         "sha256": "689442ca84871733884a8951e98856e91088e986ffdfc1502f3866372e80df72"
       },
       {
         "path": "dist/types/components/registry.d.ts",
-        "sha256": "f7c78afc27b448827c32e6a977be971a13423b9fea54817b18169bf10013d149"
+        "sha256": "6b47062885aa10daf1407df8dacbfe1e5bc979d36752e22188b12ce5bc1faf2a"
       },
       {
         "path": "dist/types/components/scrollspy.d.ts",
@@ -6351,7 +5935,7 @@
       },
       {
         "path": "dist/types/modular.d.ts",
-        "sha256": "7fa65940fc36e8f4a8ae5f7bce263e4203b0e8e9237bac5f32234e20f85718fb"
+        "sha256": "a3d6819f7c5347e9007ec4a22066f3caa0f2df82939ed03b49361976cc9e92dd"
       },
       {
         "path": "dist/types/plugins/dockedDisplayPlugin.d.ts",
@@ -6394,6 +5978,14 @@
         "sha256": "e4ca6c82a11c0139c57d833194d16fe431dfe09d6874b33e3b655e1bf3eee70d"
       },
       {
+        "path": "scripts/check-container-docs.mjs",
+        "sha256": "209005b35f9b58e0da99fe477586c6bf6185de9af214b3386c6d68ac7535e344"
+      },
+      {
+        "path": "scripts/check-container-reports.mjs",
+        "sha256": "0c4097ed273923f28c0fd9670a29623effc955455a6bd162ce495fe87f59ba7a"
+      },
+      {
         "path": "scripts/copy-fonts.mjs",
         "sha256": "31542c3514e3fcb5eda028a7b2962a9e400f5d04faf60d81366b70b40f3fd1a9"
       },
@@ -6407,7 +5999,7 @@
       },
       {
         "path": "scripts/eval-expressivecss-skill.mjs",
-        "sha256": "1b6cb3c6cdacfeec9e2efe33f5cd463e5052e7cbab575fc5f250455a44be6c8d"
+        "sha256": "90e6ee9e56f1d5ecff88b3038590f20096d051264e0fa50f63374928066781d3"
       },
       {
         "path": "scripts/expressivecss-codex-adapter.mjs",
@@ -6423,7 +6015,7 @@
       },
       {
         "path": "scripts/expressivecss-interface-quality.mjs",
-        "sha256": "3bd1466c463b6d868fdd817c263df50b398f0c51f3d4369fe00f5534f2450c46"
+        "sha256": "2b9864abe88cbe4dcab792ea36e714d5f3f03ca140d30495720912051946f18f"
       },
       {
         "path": "scripts/expressivecss-material-quality.mjs",
@@ -6462,6 +6054,10 @@
         "sha256": "1357e571f5a0eac2836326f5821a33a6ca71ed78c72064c79cf03c57a678058c"
       },
       {
+        "path": "scripts/measure-container-build.mjs",
+        "sha256": "5de51a6629ca85aac031f689e67e9adbd0ca5855374acf72893b1ded65be105a"
+      },
+      {
         "path": "scripts/preview-expressivecss-examples.mjs",
         "sha256": "22c16795a27b31584ae09328d7c4a69a15571dae618a9d8d17710536c5a60cf3"
       },
@@ -6476,6 +6072,10 @@
       {
         "path": "scripts/report-expressivecss-assistance-cost.mjs",
         "sha256": "7e338cd87eda397deb6844654046bd486f6903fa17c9f1ea838ff0635f6674c5"
+      },
+      {
+        "path": "scripts/run-docker.mjs",
+        "sha256": "905a7df0afbdc3d7d4fc1acca450b0ee5a090552f7d4247eb82ba4ee752a29ee"
       },
       {
         "path": "scripts/run-node-tests.mjs",
@@ -6495,15 +6095,15 @@
       },
       {
         "path": "package.json",
-        "sha256": "107d90377d0fda7c421e967876527f55096ca1a108d2d8ffac2ec77738a9ad1e"
+        "sha256": "88b2034817b16ad7998374df75254290754b56c96f71ebb5b90cc9c6c26e8722"
       },
       {
         "path": "package-lock.json",
-        "sha256": "53220ba266d758cf56ad63afaf9f067b2005294a82fadde3d68862e34cf57690"
+        "sha256": "ef3f74d252f2d92ad1a07ce5ba5d646b5d28620e829a5891601a0d0b36931ace"
       },
       {
         "path": "semantics.json",
-        "sha256": "c64892bb863b643b07cbfc1ddad32e01f49746fad286f7c8e35aeac33ffda192"
+        "sha256": "a4e13dc353cadcd9266af55324d8b50619fdde7654a944837ebcd2eee115ca8c"
       }
     ],
     "results": [
@@ -6511,231 +6111,225 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 162.693179
+        "durationMs": 169.832901
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 116.392361
+        "durationMs": 125.18446
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 665.263843
+        "durationMs": 669.02348
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1177.809837
+        "durationMs": 1187.968414
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 743.129031
+        "durationMs": 752.723714
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 156.976738
+        "durationMs": 173.778142
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 128.694685
+        "durationMs": 135.655483
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1812.361013
+        "durationMs": 1822.515807
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 217.779395
+        "durationMs": 231.139381
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10276.526812
+        "durationMs": 10365.019818
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10577.955787
+        "durationMs": 10607.676272
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10420.567663
+        "durationMs": 10511.730626
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 854.571026
+        "durationMs": 841.235723
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 181.457578
+        "durationMs": 174.717895
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 169.6288
+        "durationMs": 172.407962
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 147.577673
+        "durationMs": 154.280306
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 31.031754
+        "durationMs": 77.985887
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 7.21271
+        "durationMs": 13.795419
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22695.760786
+        "durationMs": 22717.345236
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 589.599869
+        "durationMs": 595.52218
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "web accessibility fixture exposes target geometry, keyboard reorder, and forced-color defects",
         "status": "passed",
-        "durationMs": 218.987417
+        "durationMs": 254.22683
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: tooltip hover, dismissal, reduced motion and native form behavior",
         "status": "passed",
-        "durationMs": 4987.655071
+        "durationMs": 5016.511718
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining native controls preserve names, keyboard state and form values",
         "status": "passed",
-        "durationMs": 305.008359
+        "durationMs": 334.249632
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
         "status": "passed",
-        "durationMs": 210.329807
-      },
-      {
-        "file": "tests/expressivecss-web-accessibility-browser.test.js",
-        "name": "chromium: remaining fixed drawer releases modal state at the expanded boundary",
-        "status": "passed",
-        "durationMs": 296.904184
+        "durationMs": 216.970885
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining progress and loading variants stop spatial motion",
         "status": "passed",
-        "durationMs": 174.313588
+        "durationMs": 194.252442
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining snackbar retains a focused action until focus leaves",
         "status": "passed",
-        "durationMs": 1254.852353
+        "durationMs": 1251.571006
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
         "status": "passed",
-        "durationMs": 288.88764
+        "durationMs": 290.063457
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
         "status": "passed",
-        "durationMs": 381.794324
+        "durationMs": 395.562951
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
         "status": "passed",
-        "durationMs": 242.387614
+        "durationMs": 243.554719
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
         "status": "passed",
-        "durationMs": 367.138787
+        "durationMs": 375.709137
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
         "status": "passed",
-        "durationMs": 274.445742
+        "durationMs": 280.751815
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
         "status": "passed",
-        "durationMs": 172.41232
+        "durationMs": 174.740645
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 127.443894
+        "durationMs": 140.543226
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 199.668371
+        "durationMs": 212.589197
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 169.58676
+        "durationMs": 177.100888
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+        "sha256": "a0dc15bfff425bf9b6ef9a58b29b63eafab518e8bbcc7e35bb0c7e9bd8138e4c"
       },
       {
         "path": "tests",
-        "sha256": "53d4b5fa750ef54502650f15e27b23d52e79b6a3183b13595eaa2d295e5449b0"
+        "sha256": "f2625e92f95f3095eb5071652881aebaf6bd815b17d9e013358f52caf6430ec3"
       },
       {
         "path": "dist",
-        "sha256": "4fab3a342fb49536b7de22d1f4abed97aae5114ae9dcde259a8d6cc037ee3eef"
+        "sha256": "c5515ea9c6bfa6ca42bb9230f506072d2d5be0d4befcb347953e48da321c5646"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -6743,11 +6337,11 @@
       },
       {
         "path": "scripts",
-        "sha256": "b5f9e0ac6bef81e839cce15140a4f702f4c602f8d871889878816c13235b1af6"
+        "sha256": "2c659359b197bf580c6a035e8589beb0af9a4821868404b05fa6862edf85c562"
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab"
+    "reportSha256": "4b8b67500c635f4b85b5a1e370b2dbd6f21a08f77c0a3c92c596ebdd415bdc0b"
   },
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c"
 }

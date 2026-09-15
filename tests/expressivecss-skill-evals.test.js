@@ -134,7 +134,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       'token-only-theming-routing': ['expressivecss-theming'],
       'critique-no-edit': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-theming', 'expressivecss-accessibility'],
       'css-only-audit': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-accessibility', 'component:checkboxes'],
-      'interactive-audit': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-runtime', 'expressivecss-accessibility', 'component:navigation-drawer'],
+      'interactive-audit': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-runtime', 'expressivecss-accessibility', 'component:navigation-rail'],
       'feedback-component-choice': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-runtime', 'expressivecss-accessibility', 'component:snackbar', 'component:banners', 'component:dialogs'],
       'feedback-banner-choice': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-accessibility', 'component:snackbar', 'component:banners', 'component:dialogs'],
       'feedback-dialog-choice': ['expressivecss-design', 'expressivecss-usage', 'expressivecss-accessibility', 'component:snackbar', 'component:banners', 'component:dialogs'],
@@ -932,7 +932,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }
   });
 
-  test('serves the reusable consumer with working state, form, drawer, and adaptive navigation controls', async (context) => {
+  test('serves the reusable consumer with working state, form, and adaptive navigation controls', async (context) => {
     const { chromium } = await import('playwright');
     const executablePath = existsSync(chromium.executablePath()) ? chromium.executablePath() : '/usr/bin/google-chrome';
     if (!existsSync(executablePath)) { context.skip('Chromium is unavailable; fixture browser behavior was not checked.'); return; }
@@ -954,15 +954,15 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
       assert.match(await page.locator('#activity').textContent(), /could not be loaded/u);
       await page.getByRole('button', { name: 'Save preferences' }).click();
       assert.equal(await page.locator('#save-result').textContent(), 'Preferences saved.');
-      await page.getByRole('button', { name: 'Open account navigation' }).click();
-      assert.equal(await page.locator('#account-drawer').evaluate((element) => element.open), true);
-      await page.getByRole('button', { name: 'Close navigation', exact: true }).click();
-      assert.equal(await page.locator('#account-drawer').evaluate((element) => element.open), false);
       assert.equal(await page.locator('.navigation-bar').isVisible(), true);
       assert.equal(await page.locator('.navigation-rail').isVisible(), false);
       await page.setViewportSize({ width: 840, height: 800 });
       assert.equal(await page.locator('.navigation-bar').isVisible(), false);
       assert.equal(await page.locator('.navigation-rail').isVisible(), true);
+      await page.getByRole('button', { name: 'Toggle navigation' }).click();
+      assert.equal(await page.locator('.navigation-rail').getAttribute('aria-expanded'), 'true');
+      await page.getByRole('button', { name: 'Toggle navigation' }).click();
+      assert.equal(await page.locator('.navigation-rail').getAttribute('aria-expanded'), 'false');
       assert.deepEqual(errors, []);
     } finally {
       clearTimeout(deadline);

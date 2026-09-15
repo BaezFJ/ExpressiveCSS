@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**54 of 54 rows enforced; 0 remaining.**
+**51 of 51 rows enforced; 0 remaining.**
 
-50 of those rows are components - a part of the framework an author writes markup for.
+47 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**5 of 50 components declare conformance debt.**
+**4 of 47 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -88,24 +88,6 @@ A persistent in-flow message with actions, added with the banner component (#33)
 - **banner-actions-are-not-nav** - A banner's actions are commands - retry, update, dismiss - not destinations, so the row is .actions and not a <nav> landmark (rule 4).
 - **banner-icon-hidden** - The ligature is real text and is read out verbatim. A banner's leading icon restates the message beside it and the close button carries its own name, so both icons are decoration.
 - **banner-image-has-alt** - A rich banner's leading image needs an alt attribute - descriptive when it says something the title and message do not, and empty when it is decoration. Stated as a forbid rather than require-attr because alt="" is the correct answer for a decorative image, and an empty value does not satisfy require-attr.
-
-### bottom-app-bar
-
-A row of commands at the bottom edge, with an optional FAB, added in 1.x (#35). It is the counterpart of the top app bar, not of the navigation bar: a navigation bar holds 3-5 destinations that do not change per screen, and this holds the actions of the screen the reader is already on. So it is not a <nav> and takes no landmark (rule 4), and no composite role either - `toolbar` would promise arrow-key navigation nothing here implements (rule 2), the same account the toolbar row gives. The element rule names every landmark element, not just <nav>, and that is not pedantry: the retired version of this component was keyed on `footer:has(> nav:only-child)`, which claimed the landmark from the markup alone and left the two bars one slip apart. Nothing is scripted and nothing is generated, so every rule below is about the markup an author writes.
-
-**Conformance debt:** `toolbar` is withheld pending keyboard model, and `bottom-app-bar-not-a-composite-widget` enforces that, keeping every composite role out.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `bottom-app-bar-is-not-a-landmark` | forbid | `:is(nav, header, footer, main, aside).bottom-app-bar` | must not match |
-| `bottom-app-bar-not-a-composite-widget` | forbid-composite-roles | `.bottom-app-bar` | must not match with any composite role |
-| `bottom-app-bar-action-is-named` | require-accessible-name | `.bottom-app-bar > :is(a, button)` | must end up with an accessible name |
-| `bottom-app-bar-icon-hidden` | require-attr | `.bottom-app-bar :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
-
-- **bottom-app-bar-is-not-a-landmark** - A bottom app bar holds this screen's commands - share, edit, delete - not destinations, so it is not a <nav> landmark (rule 4), and it is not any other landmark either: <footer> is contentinfo, <header> is banner, and a row of buttons is neither. The retired version of this component was keyed on `footer:has(> nav:only-child)`, which is why both of those spellings are named here rather than just the <nav> one. Write it on a <div>. Destinations at the bottom of the screen are nav.navigation-bar, a different component.
-- **bottom-app-bar-not-a-composite-widget** - A bottom app bar takes no composite role; its actions are reached with Tab, not arrow keys.
-- **bottom-app-bar-action-is-named** - Every action in the bar is icon-only, and the icon is aria-hidden, so the control needs an aria-label. Without one it arrives as an unnamed button.
-- **bottom-app-bar-icon-hidden** - The ligature is real text and is read out verbatim. Every icon here sits inside a control that carries its own name, so all of them are decoration.
 
 ### bottom-sheet
 
@@ -543,26 +525,6 @@ Swept 0.8.0.
 
 - **navigation-bar-marks-current** - The active destination needs aria-current="page".
 
-### navigation-drawer
-
-Swept 0.8.0. Renamed from sidenav to the name M3 uses; `.sidenav` stays as an alias.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `sidenav-in-nav` | forbid | `:is(.navigation-drawer, .sidenav):not(nav):not(nav *)` | must not match |
-| `drawer-trigger-is-button` | forbid | `:is(.navigation-drawer-trigger, .sidenav-trigger):not(button)` | must not match |
-| `drawer-close-is-button` | forbid | `:is(.navigation-drawer-close, .sidenav-close):not(button)` | must not match |
-| `drawer-subheader-not-a-link` | forbid | `:is(.navigation-drawer, .sidenav) a.subheader` | must not match |
-| `drawer-marks-current` | forbid | `:is(.navigation-drawer, .sidenav) :is(li.active > a, a.active):not([aria-current])` | must not match |
-| `drawer-avatar-link-is-named` | require-accessible-name | `:is(.navigation-drawer, .sidenav) .user-view > a:has(> img)` | must end up with an accessible name |
-
-- **sidenav-in-nav** - A drawer of destinations is navigation. Wrap the list in a labelled <nav>.
-- **drawer-trigger-is-button** - The trigger opens a modal <dialog>; it is a command, not a destination. Use <button type="button"> with data-target - an <a href="#!"> announces as a link and adds a history entry for a drawer that never navigates.
-- **drawer-close-is-button** - The close row dismisses the drawer, so it is a command: use <button type="button" class="navigation-drawer-close">. Same call as expanding-card-close-is-button.
-- **drawer-subheader-not-a-link** - A subheader labels the rows under it and goes nowhere. Write it as <span class="subheader">; the <a> carried no href, and the sheet had to neutralise it with pointer-events: none.
-- **drawer-marks-current** - The current destination needs aria-current="page". .active is a paint: it colours the row and says nothing to a screen reader. Same call as navigation-rail-marks-current.
-- **drawer-avatar-link-is-named** - A link wrapping only a decorative <img alt=""> has no name left - it arrives in the links list as the bare URL. Give the link an aria-label.
-
 ### navigation-rail
 
 Swept 0.8.0.
@@ -623,7 +585,7 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 **Kind:** foundation.
 
-The wash a modal surface paints behind itself, added in 1.x (#37). A foundation, not a component: nothing is marked up to get one, so there is no element for a rule to name. `--md-comp-scrim-color` is the whole of it; the dialogs, sheets, navigation-drawer and navigation-rail rows own the markup that ends up wearing it.
+The wash a modal surface paints behind itself, added in 1.x (#37). A foundation, not a component: nothing is marked up to get one, so there is no element for a rule to name. `--md-comp-scrim-color` is the whole of it; dialogs, sheets, and the navigation rail own the markup that wears it.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
@@ -652,32 +614,6 @@ The bar is a `<search>` landmark holding an `<input type="search">`; the view is
 
 - **search-view-not-a-composite-widget** - The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
 - **search-bar-holds-a-search-input** - The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it. The selector names `.search-bar` and deliberately not the `.searchbar` alias: pre-1.0 markup of that shape predates the requirement, and holding old markup to a rule it could not have known is how a promise of an additive rename gets broken.
-
-### segmented-buttons
-
-A single- or multi-select group of connected buttons. The root is a <fieldset>, and each segment is an <input> plus the <label class="segment"> beside it, tied by id: radios for single-select, checkboxes for multi-select. The control is the label's sibling rather than its child, the way a filter chip is written - a <label> wrapping one of those inputs is a radio or a checkbox to the rest of the sheet, and gets painted as one. The role is rejected rather than withheld, which is Carousel's case and not Tabs': rule 2 asks for an implemented keyboard contract before a component claims a composite role, and a native radio group has one the platform implements - so `radiogroup` is declined because the element already carries it, not deferred until some later commit. The rules are what keeps that true. Swap the <fieldset> for a <div>, the <input> for a <button>, or drop the shared `name`, and the arrow keys, the group name and the checked state leave with it - which is why `name` is required here even though the sheet never reads it.
-
-**Rejected role:** `radiogroup` is not withheld but declined - a <fieldset> of radios already is one, with the arrow-key model implemented by the browser - an authored role would restate natively-supplied semantics and replace the group role the fieldset provides. `segmented-button-is-not-an-authored-composite-widget` enforces that, keeping every composite role out.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `segmented-button-is-a-fieldset` | forbid | `.segmented-button:not(fieldset)` | must not match |
-| `segmented-button-is-not-an-authored-composite-widget` | forbid-composite-roles | `.segmented-button` | must not match with any composite role |
-| `segment-is-a-label` | forbid | `.segmented-button .segment:not(label)` | must not match |
-| `segment-names-its-input` | require-attr | `.segmented-button label.segment` | must have `for` |
-| `segment-radios-share-a-name` | require-attr | `.segmented-button input[type="radio"]` | must have `name` |
-| `segment-does-not-wrap-its-input` | forbid | `.segmented-button .segment :is([type="radio"], [type="checkbox"])` | must not match |
-| `segment-selection-is-not-authored` | forbid | `.segmented-button :is([aria-checked], [aria-selected], [aria-pressed])` | must not match |
-| `segment-icon-hidden` | require-attr | `.segmented-button .segment :is(.material-symbols,.material-symbols-outlined,.material-symbols-rounded,.material-symbols-sharp,.material-icons)` | must have `aria-hidden` = `true` |
-
-- **segmented-button-is-a-fieldset** - A segmented button is a group of controls answering one question, which is what a <fieldset> is. On a <div> the group has no name and, for radios, no native arrow-key model.
-- **segmented-button-is-not-an-authored-composite-widget** - The group takes no authored composite role. `radiogroup` is what the fieldset and its radios already are, and every other composite role is a promise this component does not make.
-- **segment-is-a-label** - A segment is the <label> of its own control. A <button> or <div> segment carries no checked state and no form value.
-- **segment-names-its-input** - The control is the label's sibling, not its child, so only `for` ties the two together: <input id="x"> then <label class="segment" for="x">.
-- **segment-radios-share-a-name** - Radios are a group only because they share a `name`, and that group is where the arrow keys come from. Without it each segment is its own one-option group and the keyboard contract this component leans on does not exist.
-- **segment-does-not-wrap-its-input** - A <label> wrapping a radio or a checkbox is one, to forms/_radio-buttons and forms/_checkboxes: they would paint a 20dp ring on the control and a 48dp row around it. Put the input before the label and point the label at it.
-- **segment-selection-is-not-authored** - Selected is dynamic state and the input already holds it: `checked` states the initial value and the browser moves it from there. An ARIA copy is a second answer that nothing updates.
-- **segment-icon-hidden** - A ligature icon is read aloud verbatim. The segment's own text is its name, so the icon beside it is decoration.
 
 ### side-sheet
 

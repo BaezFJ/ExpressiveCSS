@@ -47,10 +47,6 @@ export const AUTO_INIT_COMPONENTS = {
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   FormSelect: { component: Components.FormSelect, selector: "select" },
-  NavigationDrawer: {
-    component: Components.NavigationDrawer,
-    selector: ".sidenav, .navigation-drawer",
-  },
   NavigationRail: {
     component: Components.NavigationRail,
     selector: ".navigation-rail",

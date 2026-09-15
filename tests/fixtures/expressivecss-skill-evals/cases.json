@@ -279,7 +279,7 @@
     },
     {
       "id": "interactive-audit",
-      "request": "Audit a JavaScript-backed navigation drawer. Do not edit.",
+      "request": "Audit a JavaScript-backed navigation rail. Do not edit.",
       "projectFixture": "consumer-current",
       "versionState": "match: installed and bundled contract 0.8.0",
       "expectedOperatingMode": "Audit",
@@ -288,7 +288,7 @@
         "expressivecss-usage",
         "expressivecss-runtime",
         "expressivecss-accessibility",
-        "component:navigation-drawer"
+        "component:navigation-rail"
       ],
       "mustNotLoad": [],
       "noEdits": true,
@@ -345,28 +345,28 @@
           "id": "artifact-source",
           "category": "source",
           "criterionId": "A-HOST-ELEMENT",
-          "componentId": "navigation-drawer",
+          "componentId": "navigation-rail",
           "expectedObservation": "Observed source contract"
         },
         {
           "id": "artifact-runtime-inspection",
           "category": "runtime-inspection",
           "criterionId": "A-RUNTIME-ARIA-UPDATE",
-          "componentId": "navigation-drawer",
+          "componentId": "navigation-rail",
           "expectedObservation": "Observed runtime-inspection contract"
         },
         {
           "id": "artifact-accessibility-tree",
           "category": "accessibility-tree",
           "criterionId": "A-LABEL",
-          "componentId": "navigation-drawer",
+          "componentId": "navigation-rail",
           "expectedObservation": "Observed accessibility-tree contract"
         },
         {
           "id": "artifact-test-output",
           "category": "interaction-trace",
           "criterionId": "A-KEYBOARD-ACTION",
-          "componentId": "navigation-drawer",
+          "componentId": "navigation-rail",
           "expectedObservation": "Observed test-output contract"
         }
       ]
@@ -1074,7 +1074,7 @@
         "expressivecss-usage",
         "expressivecss-runtime",
         "expressivecss-accessibility",
-        "component:navigation-drawer"
+        "component:navigation-rail"
       ],
       "mustNotLoad": [],
       "noEdits": false,
@@ -1100,8 +1100,7 @@
         }
       ],
       "runtimeOwnedFields": [
-        "aria-expanded",
-        "aria-controls"
+        "aria-expanded"
       ],
       "staticRequiredFields": [
         "aria-label"
@@ -1135,14 +1134,14 @@
           "id": "artifact-source",
           "category": "source",
           "criterionId": "A-HOST-ELEMENT",
-          "componentId": "navigation-drawer",
+          "componentId": "navigation-rail",
           "expectedObservation": "Observed source contract"
         },
         {
           "id": "artifact-runtime-inspection",
           "category": "runtime-inspection",
           "criterionId": "A-RUNTIME-ARIA-UPDATE",
-          "componentId": "navigation-drawer",
+          "componentId": "navigation-rail",
           "expectedObservation": "Observed runtime-inspection contract"
         }
       ]

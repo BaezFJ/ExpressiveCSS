@@ -1,0 +1,74 @@
+---
+import { NAV } from "../data/nav";
+import { route } from "../lib/catalogue";
+
+interface Props {
+  current: string;
+}
+
+const { current } = Astro.props;
+const currentGroup = NAV.find((group) => group.pages.some((page) => page.id === current)) ?? NAV[0];
+---
+<div class="docs-navigation-wide">
+  <nav class="navigation-rail no-autoinit docs-category-rail" aria-label="Documentation categories, wide layout">
+    {NAV.map((group) => (
+      <a
+        href={route(group.pages[0].id)}
+        class={group === currentGroup ? "active" : undefined}
+        aria-current={group === currentGroup ? "true" : undefined}
+      >
+        <span class="material-symbols" aria-hidden="true">{group.icon}</span>
+        {group.label}
+      </a>
+    ))}
+  </nav>
+  <nav class="docs-page-navigation" aria-label={`${currentGroup.label} pages`}>
+    <h2>{currentGroup.label}</h2>
+    <ul class="list">
+      {currentGroup.pages.map((page) => (
+        <li>
+          <a href={route(page.id)} aria-current={current === page.id ? "page" : undefined}>
+            {page.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<dialog id="docs-navigation-dialog" class="max docs-navigation-dialog" aria-labelledby="docs-navigation-title">
+  <header>
+    <h2 id="docs-navigation-title">Browse documentation</h2>
+    <form method="dialog">
+      <button type="submit" aria-label="Close navigation">
+        <span class="material-symbols" aria-hidden="true">close</span>
+      </button>
+    </form>
+  </header>
+  <nav class="tabs" aria-label="Documentation categories, compact layout">
+    {NAV.map((group) => (
+      <a
+        class={group === currentGroup ? "active" : undefined}
+        href={`#docs-${group.label.toLowerCase()}`}
+        aria-current={group === currentGroup ? "page" : undefined}
+      >
+        <span class="material-symbols" aria-hidden="true">{group.icon}</span>
+        <span>{group.label}</span>
+      </a>
+    ))}
+  </nav>
+  {NAV.map((group) => (
+    <section id={`docs-${group.label.toLowerCase()}`}>
+      <h3>{group.label}</h3>
+      <ul class="list">
+        {group.pages.map((page) => (
+          <li>
+            <a href={route(page.id)} aria-current={current === page.id ? "page" : undefined}>
+              {page.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</dialog>

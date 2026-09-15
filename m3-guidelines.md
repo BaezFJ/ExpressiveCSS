@@ -28,8 +28,8 @@ These are the mistakes generated Material UIs make most often. Treat them as inv
 - **Color roles, never hex.** Use `primary`, `on-surface`, `error`, and the other `--md-sys-color-*` roles. Do not hard-code `#6750A4`.
 - **Native HTML first.** `<button>`, `<a class="button">`, `<dialog>`, `<input>`, `<select>`, `<progress>`, `<label>`.
 - **A visual icon is not an accessible name.** Icon-only controls need `aria-label` (and a tooltip if the control has no visible text).
-- **Do not mix peer navigation components.** Never show a navigation bar and a navigation rail at the same time. Never pin a navigation drawer and a rail as two persistent side columns.
-- **Do not put the navigation drawer markup inside the app bar’s `<nav>`.** The trigger may live in the bar; the drawer must not.
+- **Do not mix peer navigation components.** Never show a navigation bar and a navigation rail at the same time. Never pin two rails as persistent side columns.
+- **Keep compact overflow navigation outside the app bar’s `<nav>`.** The trigger may live in the bar; its full-screen dialog must not.
 - **Do not nest tabs in the app bar.** Tabs are their own bar under the app bar, or inside a pane.
 - **Dialogs are high priority. Snackbars are low priority.** Do not use a dialog to say “Saved.” Do not use a snackbar to confirm a destructive action.
 - **Switches take effect immediately.** If the user still has to press Save, use checkboxes.
@@ -97,15 +97,14 @@ Top-level destinations (Home, Library, Settings) are **peer destinations**. They
 | --- | --- | --- | --- |
 | 2–5 peers | Navigation bar (stacked) | Navigation bar (horizontal) **or** collapsed rail | Collapsed or expanded rail |
 | 6–7 peers | Modal expanded rail (opened from the app-bar menu button) | Collapsed rail, expand for labels | Expanded rail |
-| Nested / many | Modal navigation drawer | Modal drawer or expanded rail | Expanded rail or `navigation-drawer-fixed` for a documentation-style tree |
+| Nested / many | Split into peer categories and page lists | Collapsed rail plus page list | Expanded rail plus page list |
 
 M3 Expressive (May 2025) **prefers an expanded navigation rail over a navigation drawer** for the same job. In ExpressiveCSS:
 
 - Use `.navigation-rail` / `.navigation-rail.expanded` for 3–7 peer destinations.
-- Use `.navigation-drawer` when destinations nest (`<details>` / `<summary>`), when you need a user header, or when a compact screen needs a modal overflow menu that is not a rail.
-- `.navigation-drawer.navigation-drawer-fixed` is a persistent sidebar from the `expanded` breakpoint up. Do not combine it with a rail.
+- Split larger hierarchies into 3–7 peer categories and a separate page-level list.
 
-The **app bar** is not navigation between app views. It names the current page and holds 1–2 actions. Pair it with a bar, a rail, or a navigation drawer — it does not replace them.
+The **app bar** is not navigation between app views. It names the current page and holds 1–2 actions. Pair it with a bar or rail. It does not replace them.
 
 ---
 
@@ -209,7 +208,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | --- | --- |
 | 3–5 peers, compact / medium window | **Navigation bar** |
 | 3–7 peers, medium+ window | **Navigation rail** (collapsed; expand for labels) |
-| Nested sections, user header, overflow menu | **NavigationDrawer** (modal on compact, `navigation-drawer-fixed` on large) |
+| Nested sections or more than 7 destinations | Split them into peer categories and page-level lists |
 | Related content *inside* a page | **Tabs** (not app navigation) |
 | Path from home to this page | **Breadcrumbs** |
 | Pages of a large collection | **Pagination** or infinite list, not tabs |
@@ -225,7 +224,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | Minor action, no room for a label | **Icon button** (`.icon-button`) + tooltip |
 | One usual action plus a few related ones | **Split button** (`.split-button`), not a button beside a separate icon button |
 | Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
-| Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked), or a **bottom app bar** on compact |
+| Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked) |
 | Smart / automated action, or a filter / input token | **Chip** (see chip types) |
 | Confirm or cancel in a blocking prompt | Dialog **text buttons**, not a FAB |
 
@@ -245,7 +244,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 
 | Situation | Use |
 | --- | --- |
-| One of a short exclusive set | **Radio**, or a **segmented button** when the options are 2-5 and switch a view |
+| One of a short exclusive set | **Radio**, or a connected **button group** when the options are 2-5 and switch a view |
 | Many of a short set, saved later | **Checkbox** |
 | Immediate on/off setting | **Switch** |
 | One of a long set | **Select** (or autocomplete) |
@@ -299,52 +298,21 @@ The original medium (headline-small) and large (152 dp / headline-medium) bars a
 
 DOM order is layout: the headline grows; everything after it sits on the end.
 
-**Placement.** Top of the window or the pane. Stays put while body content scrolls. On compact, the leading icon opens the navigation drawer or the modal expanded rail.
+**Placement.** Top of the window or the pane. Stays put while body content scrolls. On compact, the leading icon opens a full-screen navigation dialog or the modal expanded rail.
 
 **Adaptive.** Compact: leading menu + title + 1–2 icons. Medium+: text destinations may appear in a `<menu>` after the title; still pair with a rail, not with a second nav bar. Large/XL: a medium or large title is acceptable.
 
-**Behavior.** Layout is CSS. `AppBar` collapses `header.medium` / `header.large` on scroll (`.collapsed` is the small 64 dp row) and opens the related search view when the search field is selected. Menus and NavigationDrawer are separate components. A `navigation-drawer-trigger` in the bar is the NavigationDrawer contract, not bar chrome.
+**Behavior.** Layout is CSS. `AppBar` collapses `header.medium` / `header.large` on scroll (`.collapsed` is the small 64 dp row) and opens the related search view when the search field is selected. Menus and navigation rails remain separate components.
 
 **Don't**
 
 - Don't put multiple filled or tonal buttons in the bar. One emphasized trailing action is enough.
 - Don't nest `.tabs` in the header.
-- Don't put the navigation drawer `<ul>` inside the header `<nav>`.
+- Don't put a navigation rail inside the header `<nav>`.
 - Don't use the app bar as a tab bar of top-level views.
 
 ---
 
-## 4.2 Bottom app bar
-
-**M3:** Bottom app bar. **ExpressiveCSS:** `div.bottom-app-bar`. CSS-only, and not a `<nav>` — it holds commands, not destinations.
-
-**Use when** a compact window needs 3–4 frequent actions **for the screen the user is on**, and the screen's FAB should sit with them.
-
-**Don't use when** the items are destinations (that is a navigation bar), when the window is expanded or wider (move the actions into the top app bar or a rail), or when a docked toolbar already carries them. Never show a bottom app bar and a navigation bar at once.
-
-**Anatomy**
-
-0. Container (`div.bottom-app-bar`) — 80 dp, full width, required
-1. Actions — 3–4 icon-only `<button>`/`<a>` children, each with `aria-label`
-2. FAB — optional, `button.button.extra.circle` as the last child; it goes to the end on its own
-3. `.fixed` — optional, pins the bar to the bottom edge inside the safe area
-
-The bar is one height with or without a FAB. M3's 72 dp `with-fab` height is deprecated.
-
-**Placement.** Bottom of the window, in place of a navigation bar, never beside one. A fixed bar covers the last 80 dp of the page — pad the content behind it.
-
-**Adaptive.** Compact only. Medium+: fold the actions into the top app bar, a rail, or a docked toolbar.
-
-**Behavior.** CSS-only. Nothing here is selectable: an action fires and is done, so there is no `aria-current` and no `.active`. The in-bar FAB is flat and `secondary-container` — the bar already carries the elevation.
-
-**Don't**
-
-- Don't write it as a `<nav>` or a `<footer>` — it is not a landmark of any kind — and don't give it `role="toolbar"` — the actions are reached with Tab, not arrow keys.
-- Don't put destinations in it.
-- Don't ship an icon-only action without `aria-label`.
-- Don't show it with a navigation bar or a docked toolbar.
-
----
 
 ## 4.3 Navigation bar
 
@@ -369,7 +337,7 @@ The bar is one height with or without a FAB. M3's 72 dp `with-fab` height is dep
 3. Active indicator — required, driven by `aria-current="page"`
 4. Badge (small or large) — optional, nested in the icon
 
-**Placement.** Bottom of the window, above nothing except a snackbar (snackbars sit in front and may shift up). A FAB sits **above** the bar, trailing, and must not cover it. Do not combine with a docked toolbar or a bottom app bar — that bar is this bar's alternative, holding commands where this one holds destinations.
+**Placement.** Bottom of the window, above nothing except a snackbar (snackbars sit in front and may shift up). A FAB sits **above** the bar, trailing, and must not cover it. Do not combine it with a docked toolbar, which holds commands where this bar holds destinations.
 
 **Adaptive.** Compact: stacked. Medium: horizontal. Expanded+: **replace** the bar with a rail; do not show both.
 
@@ -419,47 +387,11 @@ The bar is one height with or without a FAB. M3's 72 dp `with-fab` height is dep
 
 - Don't show a rail and a navigation bar together.
 - Don't hide the collapsed rail.
-- Don't put more than seven destinations; use a navigation drawer tree or an expanded modal rail.
+- Don't put more than seven destinations; split the hierarchy into peer categories and page lists, using a full-screen dialog or expanded modal rail on compact layouts.
 - Don't build a horizontal “rail”.
 
 ---
 
-## 4.5 Navigation drawer
-
-**M3:** Navigation drawer. M3 Expressive prefers an **expanded rail** for peer destinations. **ExpressiveCSS:** `ul.navigation-drawer` (`.sidenav` is the old name and still works). `AutoInit()`.
-
-**Use when** destinations nest, when you need a user header, or when compact screens need a modal menu that is not a 3–7 rail.
-
-**Don't use when** 3–7 flat peers would fit a bar or rail. Don't use a drawer as a side sheet (filters, details of the current item).
-
-**Variants**
-
-| Variant | When | ExpressiveCSS |
-| --- | --- | --- |
-| Modal | Compact, or overflow on any size | Default overlay; framework wraps it in a `<dialog>` |
-| Standard / fixed | Large+ persistent sidebar | `.navigation-drawer-fixed` — CSS, no overlay, no resize listener |
-
-**Anatomy**
-
-0. Container (`ul.navigation-drawer`) — required, with an `id`
-1. Optional user header (`.user-view`)
-2. Destination rows (`li > a` with optional leading icon)
-3. Dividers, subheaders, nested `<details>` / `<summary>` (same `name` = accordion)
-4. Trigger (`button.navigation-drawer-trigger` with `data-target`) — it opens a dialog, so it is a button, not a link
-
-**Placement.** Trigger in the app bar. Drawer itself is a sibling of the page, **not** inside `<header> nav`. Modal slides over the content. Fixed occupies the leading column from `large` up.
-
-**Adaptive.** Compact: modal. Large+: `navigation-drawer-fixed` *or* a rail, not both.
-
-**Behavior.** Escape and backdrop tap close the modal. `button.navigation-drawer-close` is an explicit close row. Nested sections are HTML `<details>`, not a Collapsible plugin.
-
-**Don't**
-
-- Don't put the `<nav aria-label="Main"><ul class="navigation-drawer">` inside the app bar.
-- Don't use a drawer for item-level details (that is a side sheet or the detail pane).
-- Don't combine `navigation-drawer-fixed` with `.navigation-rail`.
-
----
 
 ## 4.6 Tabs
 
@@ -638,7 +570,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
-**Don't use** for destructive actions (Delete), for alerts, for volume/font controls, inside dialogs, or attached to a navigation drawer.
+**Don't use** for destructive actions (Delete), for alerts, for volume/font controls, inside dialogs, or attached to overflow navigation.
 
 **Variants**
 
@@ -673,7 +605,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 5.4 Toolbars
 
-**M3:** Toolbars (docked / floating), M3 Expressive replacement for the bottom app bar (which also ships, as `div.bottom-app-bar`). **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fab.toolbar` either (that is the FAB-to-toolbar transition).
+**M3:** Toolbars (docked / floating), M3 Expressive replacement for the retired bottom app bar. **ExpressiveCSS:** `div.toolbar`. CSS-only, and not a `<nav>` — a toolbar holds commands, not destinations. Not `div.fab.toolbar` either (that is the FAB-to-toolbar transition).
 
 **Use when** the page has a **cluster of frequent actions** that apply to the current content (formatting, selection actions, playback).
 
@@ -1185,32 +1117,6 @@ Three **selection controls**. They are not interchangeable.
 
 ---
 
-## 8.11 Segmented buttons
-
-**M3:** Outlined segmented button (single-select, multi-select). **ExpressiveCSS:** `fieldset.segmented-button` + `label.segment` (CSS only).
-
-**Use when** 2–5 related options sit side by side and the choice reshapes what is already on screen — a view switcher (Day / Week / Month), a date range, a filter over a chart.
-
-| Variant | Markup | Job |
-| --- | --- | --- |
-| Single select | `<input type="radio" id="x" name="g">` + `<label class="segment" for="x">` | Exactly one option; the arrow keys move between them |
-| Multi select | `<input type="checkbox" id="x">` + `<label class="segment" for="x">` | Any number on at once, each its own Tab stop |
-
-**Don't**
-
-- Don't go past 5 segments, and don't use one for a set of 1 — that is a button or a toggle.
-- Don't use it for navigation between top-level views (that is tabs or a navigation bar), and don't use it as a screen's primary action.
-- Don't put a `<button>` or a `<div>` in a segment, or wrap the group in a `<div>`: the native fieldset and inputs are what carry the group name, the keyboard model and the checked state.
-- Don't wrap the input in its label. A `<label>` around a radio or a checkbox is one, and gets painted as one — a 20 dp ring on the control and a 48 dp row around it. Input first, then `<label for>`, as with a filter chip.
-- Don't write `aria-checked`, `aria-selected`, `aria-pressed` or a `selected` class on a segment. `checked` on the input is the initial value and the browser owns it from there.
-
-**Anatomy.** One outlined container, 40 dp tall on a full corner, filling the width it is given as equal columns, with 1 dp dividers between segments. Each segment: an `<input>` and its `<label class="segment">` — label text (`label-large`) + optional 18 dp leading icon, 12 dp insets. Selected is `secondary-container` / `on-secondary-container`. The `<legend>` names the group and is not shown.
-
-**Placement.** Above the content it changes, aligned with it. One group per decision.
-
-**Behavior.** No script. The composite role is rejected, not withheld — a fieldset of radios already is one, keyboard model included, so authoring `radiogroup` restates the element. Radios must share a `name`: that group is where the arrow keys come from.
-
----
 
 ## 8.12 Button groups
 
@@ -1227,7 +1133,7 @@ Three **selection controls**. They are not interchangeable.
 
 **Don't**
 
-- Don't use a selection group as a form field. When two to five options should submit a radio or checkbox value, use a segmented button. Use Button Group selection for toggle-button commands whose state is exposed through `aria-pressed`.
+- Don't use a selection group as a form field. When two to five options should submit a value, use native radio or checkbox inputs. Use Button Group selection for toggle-button commands whose state is exposed through `aria-pressed`.
 - Don't use the connected treatment for one-shot actions. Current M3 guidance reserves connected groups for single- or multiple-selection toggle buttons.
 - Don't put a composite role on the group. Its buttons are independent commands reached with Tab, so `toolbar` and its siblings are rejected. `role="group"` with an `aria-label` is the role that fits when the group needs a name.
 - Don't wrap the items in anything. The gap and the connected corners are written against direct children, so a nested `<div>` loses both.
@@ -1319,7 +1225,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 - `<main>` one pane of content (list **or** cards, not both for the same data).
 - Optional FAB, trailing, above the bar.
 - `<footer><nav class="navigation-bar">` with 3–5 peers, `aria-current="page"` on the current one.
-- Overflow destinations: modal navigation drawer or modal expanded rail, triggered from the app bar, markup **outside** the header `nav`.
+- Overflow destinations: full-screen navigation dialog or modal expanded rail, triggered from the app bar, markup **outside** the header `nav`.
 
 ## 12.2 List-detail (tablet / desktop)
 
@@ -1346,7 +1252,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 
 ## 12.5 Marketing / docs page
 
-- App bar with title + text destinations in a `<menu>` from `large` up; navigation-drawer trigger below that.
+- App bar with title + text destinations in a `<menu>` from `large` up; compact navigation bar or modal expanded rail below that.
 - `main.container` + 12-column grid.
 - Cards for features, lists for indexes, breadcrumbs on nested docs.
 - Site `<footer>` (not a navigation bar) for legal and site maps.
@@ -1362,7 +1268,6 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | App bar | `header > nav` | Headline | — |
 | Navigation bar | `nav.navigation-bar` | 3–5 links, each icon + label | `aria-current="page"` |
 | Navigation rail | `nav.navigation-rail` | Menu button, 3–7 links | `aria-current="page"`; `.expanded` |
-| NavigationDrawer | `ul.navigation-drawer#id` | `li` rows; separate trigger `[data-target]` | `.active` on `li` |
 | Tabs | `nav.tabs` | `a[href="#panel"]` | `.active` |
 | Breadcrumbs | `nav > ol` | Links; last current | `aria-current="page"` |
 | Pagination | `nav.pagination > ol` | Page links | `aria-current="page"` |
@@ -1374,7 +1279,6 @@ Required vs optional, for generation. “Host” is the element you put on the p
 | FAB speed-dial | `.fab` | Primary FAB + `ul` of FABs | — |
 | Split button | `div.split-button` | Leading button + `.menu-trigger[data-target]` + `menu#id` | `aria-expanded` (framework) |
 | Toolbar | `div.toolbar` | Action buttons | `.active` |
-| Bottom app bar | `div.bottom-app-bar` | 3–4 icon buttons + `aria-label`; optional trailing FAB | — |
 | Card | `article` | Anything; heading + body typical; optional direct `.primary-action` link | `.dragged`; `aria-disabled` on primary action |
 | List | `ul.list` | `li` rows | `aria-selected` / `.active` |
 | Dialog | `dialog` | Headline, body, `form method="dialog"` | `showModal()` |
@@ -1408,7 +1312,7 @@ If training data or the user says the left column, emit the right.
 | `M`, `M.AutoInit`, `el.M_*` | `Expressive`, `Expressive.AutoInit`, `el.Expressive_*` |
 | `.navbar`, `.nav-wrapper`, `.brand-logo` | `header > nav` |
 | “bottom navigation” as `.tabs` | `nav.navigation-bar` |
-| “navigation drawer” as the default large-screen nav | `.navigation-rail.expanded` (or `.navigation-drawer-fixed` for trees) |
+| “navigation drawer” | `.navigation-rail.expanded`; split trees into peer categories and page lists |
 | `.btn`, `.btn-large`, `.btn-flat` | `<button>`, `large` / `extra`, `text` |
 | `.btn-floating` | `circle extra` / `.fab` |
 | `.card`, `.card-content`, `.card-title`, `.card-action` | `<article>`, heading, `<p>`, `.actions` |
@@ -1418,9 +1322,9 @@ If training data or the user says the left column, emit the right.
 | `.materialboxed` | `.lightboxed` |
 | `.materialize-textarea` | `.expressive-textarea` |
 | `.lever`, `.filled-in`, `.with-gap` | (omit) |
-| `Collapsible` | `<details>` / `<summary>` in the navigation drawer or page |
+| `Collapsible` | `<details>` / `<summary>` on the page |
 | `.slider` on a range | `.range` + `input[type=range]` |
-| Bottom app bar | `div.bottom-app-bar`, or `div.toolbar` (docked) |
+| Bottom app bar | `div.toolbar.docked` |
 
 ---
 
@@ -1429,7 +1333,7 @@ If training data or the user says the left column, emit the right.
 Before finishing generated UI:
 
 1. Which window size class is this layout for, and what happens at the next class down?
-2. Is there exactly one persistent navigation pattern (bar **or** rail **or** fixed navigation drawer)?
+2. Is there exactly one persistent navigation pattern, either a bar or rail?
 3. Is there at most one FAB / filled primary action per region?
 4. Are dialogs reserved for blocking work and snackbars for ignorable status?
 5. Do icon-only controls have `aria-label` (and a tooltip if appropriate)?

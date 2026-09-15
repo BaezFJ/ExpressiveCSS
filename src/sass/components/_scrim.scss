@@ -3,17 +3,17 @@
 // Scrim (M3 Expressive). A foundation, not a component: there is no markup an
 // author writes to get one. It is the wash a modal surface puts behind itself
 // to dim what it covers, and this is the one place its value is decided -
-// dialogs, both sheets, the navigation drawer and the modal navigation rail
+// dialogs, both sheets, and the modal navigation rail
 // all consume the same custom property - the sheets through the
 // `dialog::backdrop` rule they already share, so they declare nothing.
 //
 // https://m3.material.io/styles/color/roles - the `scrim` role, at 32%.
 //
 // Blur is deliberately not part of it. Only the basic dialog frosts what is
-// behind it (`--md-comp-basic-dialog-scrim-blur`); the drawer and the rail
-// slide over the page and would smear it.
+// behind it (`--md-comp-basic-dialog-scrim-blur`); the rail slides over the
+// page and would smear it.
 //
-// Declared on :root rather than per surface because four of the five consumers
+// Declared on :root rather than per surface because the modal consumers
 // paint into `::backdrop`, which has no box of its own to hang a token on -
 // only the rail uses a `::before`. `::backdrop` inherits from the element it
 // belongs to, so setting this on one `<dialog>` still dims only that one.

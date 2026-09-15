@@ -120,27 +120,6 @@ describe('ids are looked up, not interpolated into selectors', () => {
     instance.destroy();
   });
 
-  test('Sidenav resolves a data-target containing a quote', () => {
-    document.body.innerHTML = `
-      <ul id='slide"out' class="sidenav"><li><a href="#!">First</a></li></ul>
-      <a href="#" data-target='slide"out' class="sidenav-trigger">menu</a>`;
-    const el = document.querySelector('.sidenav');
-    const instance = Expressive.Sidenav.init(el);
-    fire(document.querySelector('.sidenav-trigger'), 'click');
-    assert.equal(instance.isOpen, true);
-    instance.destroy();
-  });
-
-  test('Sidenav survives a trigger whose target is missing', () => {
-    document.body.innerHTML = `
-      <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
-      <a href="#" data-target="missing" class="sidenav-trigger">menu</a>`;
-    const instance = Expressive.Sidenav.init(document.querySelector('.sidenav'));
-    fire(document.querySelector('.sidenav-trigger'), 'click');
-    assert.equal(instance.isOpen, false);
-    instance.destroy();
-  });
-
 });
 
 describe('Datepicker escapes what it splices into markup', () => {

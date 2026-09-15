@@ -3,9 +3,9 @@
 ## What this repo is, for sync purposes
 
 ExpressiveCSS is a **class-based CSS framework**, not a React component library.
-There is no React anywhere in `src/ts` or `dist/types`. The 26 PascalCase exports
-are DOM-attaching classes (`Sidenav extends Component`, constructed with
-`(el, options)`), so the value this design system carries is the **stylesheet,
+There is no React anywhere in `src/ts` or `dist/types`. PascalCase exports such
+as `NavigationRail` and `Carousel` are DOM-attaching classes, constructed with
+`(el, options)`, so the value this design system carries is the **stylesheet,
 the M3 token layer, and the guidelines** — not importable components.
 
 - Previews are authored as **plain JSX with framework classes**
@@ -43,9 +43,9 @@ the M3 token layer, and the guidelines** — not importable components.
   anything depending on runtime-set custom properties is never initialized. That
   is why the slider `stops` cell was dropped: its ticks are drawn from
   `--md-comp-slider-active-fraction`, which the plugin sets.
-- **Off-canvas components** (`.sidenav` without `sidenav-fixed`, snackbars,
-  tooltips, open menus) need `open()` and cannot render statically. Prefer the
-  docked/static form where one exists.
+- **Initially hidden components** such as snackbars, tooltips, and menus need
+  an open state and cannot render statically. Render that state in the preview
+  when it is useful; otherwise omit the preview.
 
 ## Known render warns
 
@@ -61,22 +61,16 @@ the M3 token layer, and the guidelines** — not importable components.
 
 ## 2026-08-28 re-sync
 
-- The framework gained `ExpandingCard` and `NavigationDrawer` as bundle exports
-  and dropped `Parallax` and `Waves`; the diff removed 12 remote paths for the
-  latter two. Both new components were authored rather than left on the floor
-  card — `NavigationDrawer` because it is the canonical M3 name whose *alias*
-  (`Sidenav`) already had a rich card, which reads backwards in the picker.
-- **`navigation-drawer-fixed` is the docked form**, the same trick
-  `Sidenav.tsx` uses: `position: static; transform: none` on the `<ul>` so it
-  renders in place instead of waiting on `open()`.
+- The framework gained `ExpandingCard` and dropped `Parallax` and `Waves`; the
+  diff removed 12 remote paths for the latter two.
 - **ExpandingCard's resting state is the compact article.** Its
   `<dialog class="expanding-card-dialog">` renders nothing while closed, so the
   full contract can stay in the preview and the card still shows the feed item.
 - The class audit (compare every `class="..."` token in `conventions.md`
   against `ds-bundle/_ds_bundle.css`) ran clean: 27/27 resolve. Only
   `aria-selected` and the spacing infixes `t`/`b`/`l`/`r`/`x`/`y` fail the
-  naive backtick sweep, and neither is a class. Watch `.expanding-card*` and
-  `.navigation-drawer*` on the next run — they are new vocabulary.
+  naive backtick sweep, and neither is a class. Watch `.expanding-card*` on the
+  next run because it is new vocabulary.
 
 ## 2026-08-28, later: the floor cards came off
 

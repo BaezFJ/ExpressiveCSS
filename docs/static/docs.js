@@ -3,6 +3,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   Expressive.AutoInit();
 
+  const navigationDialog = document.getElementById("docs-navigation-dialog");
+  const navigationTrigger = document.getElementById("docs-navigation-trigger");
+  navigationTrigger?.addEventListener("click", () => navigationDialog?.showModal());
+  navigationDialog?.addEventListener("close", () => navigationTrigger?.focus());
+
   const THEME_ICONS = {
     light: "light_mode",
     dark: "dark_mode",
@@ -263,16 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("carousel-intro"),
     )?.next();
   });
-
-  const slideOut = document.getElementById("slide-out");
-  if (slideOut) {
-    Expressive.Sidenav.init(slideOut);
-  }
-
-  const slideOutRight = document.getElementById("slide-out-right");
-  if (slideOutRight) {
-    Expressive.Sidenav.init(slideOutRight, { edge: "right" });
-  }
 
   const swipeTabs = document.getElementById("tabs-swipe");
   if (swipeTabs) {

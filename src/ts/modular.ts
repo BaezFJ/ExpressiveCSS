@@ -23,7 +23,6 @@ export type * from './components/lightbox';
 export type * from './components/slider';
 export type * from './components/scrollspy';
 export type * from './components/select';
-export type * from './components/navigationDrawer';
 export type * from './components/navigationRail';
 export type * from './components/tabs';
 export type * from './components/timepicker';

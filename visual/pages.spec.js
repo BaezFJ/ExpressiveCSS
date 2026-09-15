@@ -247,11 +247,6 @@ for (const entry of PAGES) {
         }`,
       });
 
-      // The docs chrome is not the framework, and it moves for reasons this
-      // suite cannot sanction: the drawer *and* the footer are both
-      // rendered from the catalogue, so documenting one component relinks
-      // every page.
-      //
       // Hiding the footer, not masking it, is the whole fix. A mask paints over
       // pixels and leaves the image the same size; the failure was a *dimension*
       // mismatch - 388x7118 against 388x7166, one footer link row taller.
@@ -259,19 +254,6 @@ for (const entry of PAGES) {
       // Hidden in both passes, page height stops depending on how many pages
       // are documented.
       //
-      // The sidenav is masked instead. Its box is viewport-height either way so
-      // it costs no height, and `display: none` on a fixed drawer risks
-      // reflowing the content beside it.
-      //
-      // Both selectors must match the *base* revision, which is why neither is
-      // a hook added only to this tree. This spec is the head's, so a new id
-      // would exist on one side only and the footer would be hidden in one pass
-      // but not the other. `body > footer` is the chrome's own shape: a sibling
-      // of <main>, while the four demo footers on the Footer page sit inside
-      // it. #nav-mobile is NavigationDrawer.astro's stable drawer id.
-      // Component coverage is untouched: the
-      // Sidenav page demos ~30 drawers in its body and none of them is
-      // #nav-mobile.
       await page.addStyleTag({ content: 'body > footer { display: none !important; }' });
 
       // A page this branch adds has no baseline, and photographing it against

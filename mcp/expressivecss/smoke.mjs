@@ -112,7 +112,7 @@ await writeFile(invalidMarkupFile, '<nav class="navigation-bar"><a class="active
 await writeFile(mechanicalFile, 'Expressive.AutoInit();\nconst instance = Expressive.Tooltip.init(button);\nother.destroy();\nconst color = "#6750a4";\n');
 await writeFile(
   manualInitFile,
-  'Expressive.AutoInit();\nconst first = Expressive.Tooltip.init(one);\nfirst.destroy();\nconst $owned = Expressive.Menu.init(two);\n$owned.destroy();\nconst $later = Expressive.Sidenav.init(three);\n',
+  'Expressive.AutoInit();\nconst first = Expressive.Tooltip.init(one);\nfirst.destroy();\nconst $owned = Expressive.Menu.init(two);\n$owned.destroy();\nconst $later = Expressive.NavigationRail.init(three);\n',
 );
 await writeFile(rawColorFile, '.account-panel { color: #6750a4; background-color: #ffffff; }\n');
 await writeFile(retiredMarkupFile, '<div class="input-field"><textarea class="materialize-textarea"></textarea></div>\n');
@@ -562,41 +562,18 @@ try {
     ['segmented-buttons', 'button-groups'],
   ];
   for (const [legacy, replacement] of legacyReplacements) {
-    const decision = await client.callTool({
-      name: 'creative_director',
-      arguments: { projectRoot: matchingDir, goal: `Use ${legacy} in a new design.`, maxSuggestions: 1 },
-    });
-    assert.equal(decision.structuredContent.suggestions[0].slug, replacement);
-    assert.ok(decision.structuredContent.suggestions[0].why.includes('No longer recommended'));
-    const retained = await client.callTool({
+    const removed = await client.callTool({
       name: 'component_syntax_expert',
       arguments: { projectRoot: matchingDir, components: [legacy] },
     });
-    assert.equal(retained.structuredContent.found[0].file, `${legacy}.md`);
-  }
-  for (const [goal, expected] of [
-    ['Use native radio buttons, not segmented buttons.', 'radio-buttons'],
-    ['Use native radio buttons instead of segmented buttons in a new design.', 'radio-buttons'],
-    ['Do not retain segmented buttons in a new design; use native radio buttons.', 'radio-buttons'],
-    ['Use navigation rail, not navigation drawer, in a new design.', 'navigation-rail'],
-    ['Retain the existing segmented buttons for form submission.', 'segmented-buttons'],
-    ['Maintain segmented buttons needing native submitted radio values.', 'segmented-buttons'],
-    ['Use a navigation drawer because nested navigation is unavailable in the target rail.', 'navigation-drawer'],
-    ['Keep the existing bottom app bar for compatibility.', 'bottom-app-bar'],
-    ['Replace the navigation drawer with current Expressive navigation.', 'navigation-rail'],
-  ]) {
+    assert.equal(removed.structuredContent.found.length, 0);
+    assert.ok(removed.structuredContent.missing.some((item) => item.requested === legacy));
     const decision = await client.callTool({
       name: 'creative_director',
-      arguments: { projectRoot: matchingDir, goal, maxSuggestions: 1 },
+      arguments: { projectRoot: matchingDir, goal: `Choose ${replacement} for this interface.`, maxSuggestions: 12 },
     });
-    assert.equal(decision.structuredContent?.suggestions[0]?.slug, expected, goal);
+    assert.ok(decision.structuredContent.suggestions.some((item) => item.slug === replacement));
   }
-  const constrainedLegacy = await client.callTool({
-    name: 'creative_director',
-    arguments: { projectRoot: matchingDir, goal: 'Use segmented buttons in a new design.',
-      constraints: 'Retain segmented buttons for compatibility with native form submission.', maxSuggestions: 1 },
-  });
-  assert.equal(constrainedLegacy.structuredContent?.suggestions[0]?.slug, 'segmented-buttons');
 
   for (const goal of [
     'Choose navigation and controls for settings.',

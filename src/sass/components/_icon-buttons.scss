@@ -21,11 +21,6 @@
 // goes inside the existing `:not()` argument list, never chained after it, so
 // the host rule stays exactly as specific as it was.
 //
-// The navigation drawer is the deliberate exception. Its `$_row` geometry has
-// no opt-out for `.button` either: every row in a drawer is one shape, and
-// carving an icon button out of that is the drawer's decision to make, not
-// this component's.
-//
 // Anatomy is the HTML — one control, one icon, and the name on the control.
 // The icon is decoration (`aria-hidden`), so `aria-label` is the only name the
 // control has; `semantics.json` enforces both halves of that.

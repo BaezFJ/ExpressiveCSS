@@ -5,6 +5,29 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Migration
+
+- Replace `.bottom-app-bar` with `.toolbar.docked` or `.toolbar.fixed`. Place an
+  adjacent FAB in `.toolbar-group` when the layout needs one.
+- Replace `.navigation-drawer`, `.sidenav`, `NavigationDrawer`, and `Sidenav`
+  with `NavigationRail`. Use a navigation bar on compact layouts when the same
+  hierarchy fits; use a native full-screen dialog for a larger compact menu.
+- Replace `.segmented-button` with `.button-group.connected`. Keep native radio
+  or checkbox inputs when form submission is required, and synchronize button
+  state with those inputs in application code.
+
+### Changed
+
+- The documentation shell now uses a five-category rail with a page list on
+  wide layouts and a native full-screen navigation dialog on compact layouts.
+  Removed component URLs redirect to their replacement documentation.
+
+### Removed
+
+- Bottom app bar Sass, navigation drawer Sass and runtime APIs, segmented
+  button Sass, their documentation pages, semantics, generated guides, and
+  component-specific tests.
+
 ## [0.9.1] - 2026-09-08
 
 Includes the fixes from [#140](https://github.com/BaezFJ/ExpressiveCSS/pull/140).

@@ -47,7 +47,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
     const project = await materializeProjectFixture('consumer-current');
     let browser, server, page;
     try {
-      await writeFile(path.join(project, 'src/index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Accessible controls</title><link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css"><style>main{padding:8rem 2rem;max-width:45rem;margin:auto}.tooltip-hosts{display:flex;gap:5rem;margin:3rem}header{position:sticky;top:0;background:var(--md-sys-color-surface)}input{max-width:100%}</style></head><body><header><h1>Preferences</h1></header><main><p id="instructions">Choose when to receive workspace updates. Save your delivery preference below.</p><form id="preferences"><button id="before" type="button">Before group</button><fieldset class="segmented-button"><legend>Delivery</legend><input id="daily" type="radio" name="delivery" value="daily" checked><label class="segment" for="daily">Daily</label><input id="weekly" type="radio" name="delivery" value="weekly"><label class="segment" for="weekly">Weekly</label></fieldset><button id="save">Save</button><output id="status" role="status" aria-live="polite" aria-atomic="true"></output></form><div class="tooltip-hosts"><button id="runtime" class="tooltipped" data-tooltip="Changes stay in this workspace" type="button">Runtime</button><button id="child" aria-describedby="child-tip" type="button">CSS child<span id="child-tip" class="tooltip bottom">Persistent help</span></button></div></main><script src="/node_modules/@expressivecss/expressive/dist/js/expressive.js"></script><script>window.tip=Expressive.Tooltip.init(document.querySelector('#runtime'),{enterDelay:0,exitDelay:0,inDuration:160,outDuration:80,position:'bottom'});let count=0;document.querySelector('form').onsubmit=e=>{e.preventDefault();document.querySelector('#status').textContent=new FormData(e.target).get('delivery')+' saved '+ ++count;};</script></body></html>`);
+      await writeFile(path.join(project, 'src/index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Accessible controls</title><link rel="stylesheet" href="/node_modules/@expressivecss/expressive/dist/css/expressive.css"><style>main{padding:8rem 2rem;max-width:45rem;margin:auto}.tooltip-hosts{display:flex;gap:5rem;margin:3rem}header{position:sticky;top:0;background:var(--md-sys-color-surface)}input{max-width:100%}</style></head><body><header><h1>Preferences</h1></header><main><p id="instructions">Choose when to receive workspace updates. Save your delivery preference below.</p><form id="preferences"><button id="before" type="button">Before group</button><fieldset><legend>Delivery</legend><label><input id="daily" type="radio" name="delivery" value="daily" checked>Daily</label><label><input id="weekly" type="radio" name="delivery" value="weekly">Weekly</label></fieldset><button id="save">Save</button><output id="status" role="status" aria-live="polite" aria-atomic="true"></output></form><div class="tooltip-hosts"><button id="runtime" class="tooltipped" data-tooltip="Changes stay in this workspace" type="button">Runtime</button><button id="child" aria-describedby="child-tip" type="button">CSS child<span id="child-tip" class="tooltip bottom">Persistent help</span></button></div></main><script src="/node_modules/@expressivecss/expressive/dist/js/expressive.js"></script><script>window.tip=Expressive.Tooltip.init(document.querySelector('#runtime'),{enterDelay:0,exitDelay:0,inDuration:160,outDuration:80,position:'bottom'});let count=0;document.querySelector('form').onsubmit=e=>{e.preventDefault();document.querySelector('#status').textContent=new FormData(e.target).get('delivery')+' saved '+ ++count;};</script></body></html>`);
       server = await startFixtureServer(project);
       browser = await engine.launch({ headless: true });
       ({ page } = await createRestrictedFixturePage(browser, server.origin, { reducedMotion: 'no-preference', viewport: { width: 1000, height: 900 } }));
@@ -104,7 +104,7 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
       await expect(runtime).toBeHidden();
       await page.addStyleTag({ content: 'main,main *{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}main p{margin-block-end:2em!important}' });
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-      for (const selector of ['#instructions', 'label[for=daily]', 'label[for=weekly]', '#save']) {
+      for (const selector of ['#instructions', 'label:has(#daily)', 'label:has(#weekly)', '#save']) {
         assert.equal(await page.locator(selector).evaluate(el => {
           const style = getComputedStyle(el), rect = el.getBoundingClientRect();
           if (Math.abs(parseFloat(style.lineHeight) - parseFloat(style.fontSize) * 1.5) > 1) return false;
@@ -236,23 +236,6 @@ scenario('remaining suggestions and section links preserve selection and dismiss
   await page.evaluate(() => window.instances.pop().destroy());
 });
 
-scenario('remaining fixed drawer releases modal state at the expanded boundary', `
-<button id="drawer-trigger" class="navigation-drawer-trigger" data-target="drawer" type="button">Navigation</button>
-<ul id="drawer" class="navigation-drawer navigation-drawer-fixed" aria-label="Main"><li><a href="#content">Home</a></li><li><button class="navigation-drawer-close" type="button">Close navigation</button></li></ul>
-<button id="content" type="button">Page action</button>`, async page => {
-  await page.setViewportSize({width:375,height:900});
-  await page.evaluate(() => window.instances=[Expressive.NavigationDrawer.init(document.querySelector('#drawer'))]);
-  await page.locator('#drawer-trigger').click();
-  await expect(page.locator('#drawer-trigger')).toHaveAttribute('aria-expanded','true');
-  assert.equal(await page.locator('#drawer').evaluate(el=>el.closest('dialog').matches(':modal')),true);
-  await page.setViewportSize({width:1000,height:900});
-  await expect(page.locator('#drawer-trigger')).toHaveAttribute('aria-expanded','false');
-  await expect.poll(()=>page.locator('#drawer').evaluate(el=>el.closest('dialog').matches(':modal'))).toBe(false);
-  await page.locator('#content').focus();await expect(page.locator('#content')).toBeFocused();
-  await page.setViewportSize({width:375,height:900});await page.locator('#drawer-trigger').click();
-  await page.getByRole('button',{name:'Close navigation'}).click();
-  await expect(page.locator('#drawer-trigger')).toHaveAttribute('aria-expanded','false');
-});
 
 scenario('remaining progress and loading variants stop spatial motion', `
 <label for="upload">Upload</label><progress id="upload" class="progress" value="40" max="100"></progress>

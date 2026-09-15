@@ -71,11 +71,6 @@ export const AUTO_INIT_FIXTURES = [
     html: `<nav class="navigation-rail" aria-label="Main"><button type="button" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button><a href="#!" aria-current="page"><span class="material-symbols" aria-hidden="true">star</span>Label</a></nav>`,
   },
   {
-    name: "Sidenav",
-    selector: ".navigation-drawer",
-    html: `<nav aria-label="Main"><ul id="slide-out" class="navigation-drawer"><li><a href="#!">First</a></li></ul></nav><button type="button" data-target="slide-out" class="navigation-drawer-trigger">menu</button>`,
-  },
-  {
     name: "Tabs",
     selector: ".tabs",
     html: `<nav class="tabs" aria-label="Demo"><li class="tab"><a class="active" aria-current="page" href="#tab1">Tab 1</a></li><li class="tab"><a href="#tab2">Tab 2</a></li></nav><div id="tab1">one</div><div id="tab2">two</div>`,

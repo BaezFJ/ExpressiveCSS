@@ -29,4 +29,4 @@ for (const link of document.querySelectorAll('nav.navigation-bar a, nav.navigati
   else link.removeAttribute('aria-current');
 }
 Expressive.AutoInit();
-addEventListener('pagehide', () => Expressive.NavigationDrawer.getInstance(document.querySelector('#account-drawer'))?.destroy(), { once: true });
+addEventListener('pagehide', () => Expressive.NavigationRail.getInstance(document.querySelector('.navigation-rail'))?.destroy(), { once: true });
