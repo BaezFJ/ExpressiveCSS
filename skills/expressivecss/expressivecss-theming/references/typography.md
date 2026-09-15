@@ -54,7 +54,7 @@ Google's [typography guidance](https://m3.material.io/styles/typography/overview
 | Display, headline, title-large, body | Medium, conventionally `500` | Scope the existing role's `-font-weight` token to the intended element. Bundled fonts supply `500`. |
 | Title-medium, title-small, label | Bold, conventionally `700` | Supply a real `700` face or a variable font covering it, then scope the existing role token. Bundled fonts do not supply `700`. |
 
-ExpressiveCSS emits only the 15 baseline roles above. It has no emphasized type-role utility or `--md-sys-typescale-emphasized-*` token family. The rich banner title already applies body-medium at `500` locally; that component treatment does not expose a reusable emphasized scale. See `src/sass/components/_banners.scss`.
+ExpressiveCSS emits only the 15 baseline roles above. It has no emphasized type-role utility or `--md-sys-typescale-emphasized-*` token family.
 
 For a selected headline treatment, this is an application-owned override of an existing token:
 

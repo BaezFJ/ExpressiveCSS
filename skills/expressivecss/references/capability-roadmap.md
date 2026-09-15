@@ -10,7 +10,7 @@ Source pins preserve review provenance. A changed or unavailable source makes it
 
 Re-review changed sources; rerun changed checks or inputs. Review upstream guidance when Google changes it and before new release-parity claims. Inventory/Android reviews do not establish full web specification coverage.
 
-Last operator collection: 2026-09-15, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `4b8b67500c635f4b85b5a1e370b2dbd6f21a08f77c0a3c92c596ebdd415bdc0b`.
+Last operator collection: 2026-09-15, Chromium 153.0.8010.12, passed; inputs match. Raw report SHA-256: `e508a21bbeb8f8c699e04f8431f846f28b98ff44b93656098986ee4984acd6ff`.
 
 | Capability | Scoped support | Source evidence | Browser evidence | Feature/integration gaps |
 | --- | --- | --- | --- | ---: |
@@ -39,7 +39,6 @@ Last operator collection: 2026-09-15, Chromium 153.0.8010.12, passed; inputs mat
 | [Badges](#badges) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | recorded-scoped-pass | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | recorded-scoped-pass | 1 |
-| [Banners](#banners) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Progress indicators](#progress) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | recorded-scoped-pass | 1 |
 | [Carousel](#carousel) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -476,22 +475,6 @@ Web adaptation: Use the documented announcement and timeout behavior.
 - feature: Focus/hover pause does not satisfy persistent actionable snackbar guidance; default action timeout is finite and Escape handling is absent. Next: Use existing displayLength: Infinity and dismissible: true for persistent actions; provide a documented reach shortcut and test Escape and spoken delivery.
 
 - recorded-passed: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining snackbar retains a focused action until focus leaves`. Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
-
-<a id="banners"></a>
-
-## Banners
-
-**unassessed within the stated scope.** Basic/rich and standard/vibrant; square basic banners.
-
-Source review: needs-review, 2026-09-13. [src/sass/components/_banners.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/b3821bb0390b985c31a858ab7f4e3dbf0de2d71c/src/sass/components/_banners.scss).
-
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/snackbar/overview).
-
-Web adaptation: Persistent in-flow feedback; application owns dismissal.
-
-- integration: Legacy/related banner styling supplies no announcements, dismissal or focus recovery. Next: Implement application-owned status updates and named actions; verify text enlargement and focus after removal.
-
-No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
 
 <a id="progress"></a>
 

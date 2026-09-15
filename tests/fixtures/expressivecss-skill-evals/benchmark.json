@@ -23,7 +23,7 @@
     {"query": "Refine our ExpressiveCSS mobile navigation so it adapts to a wide window without two sets of destinations.", "should_trigger": true},
     {"query": "Help contribute a component to the ExpressiveCSS framework while keeping semantics and generated guides synchronized.", "should_trigger": true},
     {"query": "The ExpressiveCSS hero image shifts everything during loading. Measure the problem and fix the markup.", "should_trigger": true},
-    {"query": "Should this ExpressiveCSS save confirmation use a dialog, banner, or snackbar? Users must continue working.", "should_trigger": true},
+    {"query": "Should this ExpressiveCSS save confirmation use a dialog, inline message, or snackbar? Users must continue working.", "should_trigger": true},
     {"query": "Review our @expressivecss/expressive Sass imports, icon fonts and CSS bundle setup for duplicate loading.", "should_trigger": true},
     {"query": "Build a Material 3 screen in Jetpack Compose. This is a native Android app with no web framework.", "should_trigger": false},
     {"query": "Theme our existing MUI React dashboard purple. Keep using @mui/material and its ThemeProvider.", "should_trigger": false},

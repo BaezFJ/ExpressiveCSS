@@ -109,7 +109,7 @@ const KNOWN_CRITICAL_INVARIANT_IDS = new Set([
   'refine-preserves-product/contract',
   'redesign-preserves-requirements/contract',
   'feedback-component-choice/contract',
-  'feedback-banner-choice/contract',
+  'feedback-inline-choice/contract',
   'feedback-dialog-choice/contract',
   'switch-versus-checkbox/contract',
   'deferred-checkbox/contract',
@@ -565,7 +565,7 @@ function caseContract(testCase, response, executionEvidence) {
       break;
     }
     case 'feedback-component-choice':
-    case 'feedback-banner-choice':
+    case 'feedback-inline-choice':
     case 'feedback-dialog-choice':
       passed = feedbackContract(testCase, response);
       break;

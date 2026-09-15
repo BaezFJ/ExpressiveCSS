@@ -556,6 +556,48 @@ try {
     assert.notEqual(selected.confidence, 'fallback');
   }
 
+  for (const goal of [
+    'Keep a nonblocking action visible until the user handles it.',
+    'Show persistent non-blocking feedback while editing continues.',
+    'Use an inline message for offline status.',
+  ]) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal, maxSuggestions: 1 },
+    });
+    assert.equal(decision.structuredContent.count, 1);
+    const [selected] = decision.structuredContent.suggestions;
+    assert.equal(selected.slug, 'inline');
+    assert.equal(selected.selectionSource, 'native-pattern');
+    assert.equal(selected.runtime, 'native');
+    assert.match(selected.guidance.join(' '), /status node.*buttons outside/);
+    assert.ok(decision.structuredContent.evidenceSources.includes('server:native-inline-feedback'));
+  }
+  for (const goal of [
+    'Show a temporary nonblocking confirmation after saving.',
+    'Require a blocking decision before deleting the account.',
+    'Design navigation and forms for settings.',
+  ]) {
+    const decision = await client.callTool({
+      name: 'creative_director',
+      arguments: { projectRoot: matchingDir, goal },
+    });
+    assert.ok(decision.structuredContent.suggestions.every(({ slug }) => slug !== 'inline'));
+  }
+  const blockedInline = await client.callTool({
+    name: 'creative_director',
+    arguments: { projectRoot: versionedDir, goal: 'Keep a nonblocking action visible until the user handles it.' },
+  });
+  assert.equal(blockedInline.structuredContent.status, 'blocked');
+  assert.deepEqual(blockedInline.structuredContent.suggestions, []);
+
+  const removedBanner = await client.callTool({
+    name: 'component_syntax_expert',
+    arguments: { projectRoot: matchingDir, components: ['banners'] },
+  });
+  assert.equal(removedBanner.structuredContent.found.length, 0);
+  assert.ok(removedBanner.structuredContent.missing.some((item) => item.requested === 'banners'));
+
   const legacyReplacements = [
     ['bottom-app-bar', 'toolbars'],
     ['navigation-drawer', 'navigation-rail'],

@@ -1682,11 +1682,10 @@
         "Focused prompts or decisions that interrupt the flow."
       ],
       "avoidWhen": [
-        "Ignorable feedback needs snackbar or banner."
+        "Ignorable feedback needs snackbar or inline feedback."
       ],
       "alternatives": [
         "snackbar",
-        "banners",
         "bottom-sheet",
         "side-sheet",
         "floating-sheet"
@@ -1713,7 +1712,7 @@
         },
         "specHref": "https://m3.material.io/components/dialogs/specs"
       },
-      "selectionExample": "Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and a banner for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.",
+      "selectionExample": "Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and inline feedback for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.",
       "capabilityReview": {
         "reviewedOn": "2026-09-12",
         "support": "implemented",
@@ -2350,10 +2349,9 @@
         "Brief, nonblocking feedback after an action."
       ],
       "avoidWhen": [
-        "Persistent issues need banners; decisions need dialogs."
+        "Persistent issues need inline messages; decisions need dialogs."
       ],
       "alternatives": [
-        "banners",
         "dialogs"
       ],
       "adaptive": [],
@@ -2392,7 +2390,7 @@
         "specHref": "https://m3.material.io/components/snackbar/specs",
         "guidelinesHref": "https://m3.material.io/components/snackbar/guidelines"
       },
-      "selectionExample": "A successful save can use a snackbar. Offline status that still allows editing needs a persistent banner; a required irreversible-delete confirmation needs a dialog before the action.",
+      "selectionExample": "A successful save can use a snackbar. Offline status that still allows editing needs a persistent inline message; a required irreversible-delete confirmation needs a dialog before the action.",
       "capabilityReview": {
         "reviewedOn": "2026-09-13",
         "support": "partial",
@@ -2420,89 +2418,6 @@
             "scope": "Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar."
           }
         ],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
-      "slug": "banners",
-      "title": "Banners",
-      "aliases": [
-        "banner"
-      ],
-      "guideSource": {
-        "pageId": "banners",
-        "heading": "Banners",
-        "headingLevel": 2,
-        "semantics": [
-          "banners"
-        ]
-      },
-      "jobs": [
-        "A prominent message that stays put until the user deals with it."
-      ],
-      "useWhen": [
-        "Persistent feedback while work can continue."
-      ],
-      "avoidWhen": [
-        "Transient confirmation needs snackbar; blocking choices need dialog."
-      ],
-      "alternatives": [
-        "snackbar",
-        "dialogs"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/banners.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": "https://m3.material.io/components/snackbar/overview",
-        "implementation": {
-          "source": "llm.md#banners",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Basic/rich and standard/vibrant; square basic banners.",
-          "webAdaptation": "Persistent in-flow feedback; application owns dismissal.",
-          "limitations": [
-            "Legacy/related banner styling supplies no announcements, dismissal or focus recovery."
-          ]
-        },
-        "relationship": "related",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components/snackbar/overview",
-          "reviewedOn": "2026-09-13",
-          "scope": "requirements-prose-reviewed",
-          "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "Related current snackbar/Overview, Guidelines/Usage",
-            "Legacy M2 banners/Usage, Anatomy/Buttons, Behavior/Dismissing banners"
-          ],
-          "sources": [
-            "https://m3.material.io/components/snackbar/overview",
-            "https://m3.material.io/components/snackbar/guidelines",
-            "https://m2.material.io/components/banners"
-          ],
-          "requirements": "Keep persistent nonblocking feedback and its actions in the application flow. Legacy M2 guidance places one banner below the app bar, with up to two text actions, until the user dismisses it. This is not a current M3 component specification."
-        },
-        "reason": "Retained framework pattern absent from the reviewed current M3 component inventory; related current guidance does not certify this implementation.",
-        "guidelinesHref": "https://m3.material.io/components/snackbar/guidelines"
-      },
-      "selectionExample": "A Saved message should not leave a permanent banner. Use a snackbar. A sync outage that permits local edits fits a banner; an unavoidable decision fits a dialog. This banner is a framework feedback pattern, not a verified current M3 component.",
-      "capabilityReview": {
-        "reviewedOn": "2026-09-13",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_banners.scss",
-            "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "integration",
-            "description": "Legacy/related banner styling supplies no announcements, dismissal or focus recovery.",
-            "nextStep": "Implement application-owned status updates and named actions; verify text enlargement and focus after removal."
-          }
-        ],
-        "browserChecks": [],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
       }
     },
@@ -4414,10 +4329,6 @@
         "sha256": "f249dc305b207a60c642863fb652282310e956049ec3e7eff51782c962b4bd26"
       },
       {
-        "path": "src/sass/components/_banners.scss",
-        "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
-      },
-      {
         "path": "src/sass/components/_bottom-sheet.scss",
         "sha256": "0f6edc494bfafba25fd34dbddee8d405f8d9b5e4567be6ca99bd0b19cb41f54c"
       },
@@ -4483,7 +4394,7 @@
       },
       {
         "path": "src/sass/components/_index.scss",
-        "sha256": "365d213d1dbb17a3a01756f4f38fdf5c04b3eccd6d511b27b0f4823c9007bcad"
+        "sha256": "4679253ac639a60305327280c1f9fe1b1b0bb3b570dd5d305b9dd458898e8861"
       },
       {
         "path": "src/sass/components/_lightbox.scss",
@@ -4822,8 +4733,8 @@
         "sha256": "8c1df289ff6b66a4f7dee0b1700af4ef1def6160943871422dec35cdd4406fb9"
       },
       {
-        "path": "tests/banners.test.js",
-        "sha256": "ed3db04f652220f0c8e28fd0a9e401b7e5d822f8e212e4c895db59a334a779a2"
+        "path": "tests/banner-removal.test.js",
+        "sha256": "1b019df10bebd488612d45065fb1a35198a52998ff2ae87668e191c3d44f5156"
       },
       {
         "path": "tests/bottom-sheet.test.js",
@@ -4931,7 +4842,7 @@
       },
       {
         "path": "tests/expressivecss-component-decisions.test.js",
-        "sha256": "693ce56a8552bde9292e8a3c8b8b1d38f2668ac536ece9133d0108f67dff86f2"
+        "sha256": "de881d353ea946be10a382ca73e740f874452f137427173b25a0eb30b215a7a3"
       },
       {
         "path": "tests/expressivecss-consumer-browser.test.js",
@@ -4979,15 +4890,15 @@
       },
       {
         "path": "tests/expressivecss-skill-evals.test.js",
-        "sha256": "f27a76b546b68678612522ac81866cc7fc21fb84e5eb412975b186be213f8eae"
+        "sha256": "8d6caa3b05a4b4c721cecde61f9604d0307646d4c574c14669ced064dcfcdb7f"
       },
       {
         "path": "tests/expressivecss-skill.test.js",
-        "sha256": "c83c229519b3cde07ed3866ca20f1a61111a03c800a7db81b8d08e691077f13a"
+        "sha256": "1205793fcdef181bcbca0f2daa2437f88f12a709af9cc7299fa2bb13e542c8fd"
       },
       {
         "path": "tests/expressivecss-version-resolution.test.js",
-        "sha256": "66c89b93905985c555b32a992744add1184bdd1eeacc3488f382155327b9b3d4"
+        "sha256": "7068dd41aa9c817c089af61584573f428b65df193f273cb9b6aa87507ab7a11e"
       },
       {
         "path": "tests/expressivecss-web-accessibility-browser.test.js",
@@ -4995,11 +4906,11 @@
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/benchmark.json",
-        "sha256": "9fc29ac90cdeb74604d380262489e22adf6b16361410b2fe64183bc608df8ad9"
+        "sha256": "ca53174ed6d641684027ba6eba6dfd5df44fee2f50f561fe335634a47ce22202"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/cases.json",
-        "sha256": "668c323b0e4c7136f0c37cd9c314afdc3fafa7aaee250f123265aee0e5596cae"
+        "sha256": "92dc2ccce5a6a5c338b45e754b6a7876ff7b1b195b46d312e79bd5b33ac8cb30"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/consumer/app.css",
@@ -5047,7 +4958,7 @@
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/passing-responses.json",
-        "sha256": "6d77c17759bb7e8227d3416f5bad3cf197149970551d69329589c155e08d0de0"
+        "sha256": "276fc2b58c515af264420e853cf20a7d5fbab8831d3e63124415c2cca7a886a8"
       },
       {
         "path": "tests/fixtures/expressivecss-skill-evals/product-context.json",
@@ -5231,19 +5142,19 @@
       },
       {
         "path": "dist/css/expressive.css",
-        "sha256": "fe16907e3fc60a5e9f954b1f05463696de6418d5726de608036bf9083ff27b28"
+        "sha256": "b2862973ffa8ca94082274daa67d4bd05acb3fdb1fb4ce845fd9bdde54c1529d"
       },
       {
         "path": "dist/css/expressive.css.map",
-        "sha256": "c0de4eaf0dc642882db2cd4c12adedb1e84e859ea7414ded22e140fd7691ccd4"
+        "sha256": "7a56ba600af830279fbf2d04167f6d15893b7304419c07ffaa3a63736e432878"
       },
       {
         "path": "dist/css/expressive.min.css",
-        "sha256": "ae40d9f65243936e7c838f1b461088b587c9a40b13c4cda474b846223bd833c9"
+        "sha256": "4a031579192707ebc3e08ac6dff12fcef91bd536eb00b2a402340b7e5a461bbc"
       },
       {
         "path": "dist/css/expressive.min.css.map",
-        "sha256": "c4947467c30de2509c61438b0b9a95e10602ba13929532987a3c5bda5c8661c6"
+        "sha256": "c333de519b16192ab24bef09290e9610abe70a348fdc19e2a3e7951bfecaf265"
       },
       {
         "path": "dist/fonts/LICENSE-material-symbols",
@@ -5999,7 +5910,7 @@
       },
       {
         "path": "scripts/eval-expressivecss-skill.mjs",
-        "sha256": "90e6ee9e56f1d5ecff88b3038590f20096d051264e0fa50f63374928066781d3"
+        "sha256": "c50500d393cfbc0936168500d28ec531d05f3ca333dfda38cc6f8de6ed2c4a5e"
       },
       {
         "path": "scripts/expressivecss-codex-adapter.mjs",
@@ -6103,7 +6014,7 @@
       },
       {
         "path": "semantics.json",
-        "sha256": "a4e13dc353cadcd9266af55324d8b50619fdde7654a944837ebcd2eee115ca8c"
+        "sha256": "fede0ccc7ed1c4b1bd711807e70e5de7a59ad44c214ef7d5ba75b9861cf6dafc"
       }
     ],
     "results": [
@@ -6111,225 +6022,225 @@
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group toggle colors resolve in a browser",
         "status": "passed",
-        "durationMs": 169.832901
+        "durationMs": 175.631291
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "button-group geometry resolves for overrides, targets, and RTL",
         "status": "passed",
-        "durationMs": 125.18446
+        "durationMs": 131.09291
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "standard press redistribution keeps its rendered width stable",
         "status": "passed",
-        "durationMs": 669.02348
+        "durationMs": 670.067827
       },
       {
         "file": "tests/button-groups-browser.test.js",
         "name": "keyboard press changes icon widths and rendered corners",
         "status": "passed",
-        "durationMs": 1187.968414
+        "durationMs": 1189.901227
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "dragged and picked-up states override simultaneous pointer states",
         "status": "passed",
-        "durationMs": 752.723714
+        "durationMs": 752.327695
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "invalid disclosures keep their panels visible and operable",
         "status": "passed",
-        "durationMs": 173.778142
+        "durationMs": 165.528301
       },
       {
         "file": "tests/cards-browser.test.js",
         "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
         "status": "passed",
-        "durationMs": 135.655483
+        "durationMs": 126.948679
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "expanding-card completion follows CSS and survives interruption (chromium)",
         "status": "passed",
-        "durationMs": 1822.515807
+        "durationMs": 1829.332388
       },
       {
         "file": "tests/expanding-card-browser.test.js",
         "name": "scale and expanding cards respect changing motion preferences (chromium)",
         "status": "passed",
-        "durationMs": 231.139381
+        "durationMs": 230.997566
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete settings example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10365.019818
+        "durationMs": 10208.606532
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete editor example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10607.676272
+        "durationMs": 10473.368613
       },
       {
         "file": "tests/expressivecss-examples-browser.test.js",
         "name": "complete list-detail example preserves both treatments and its task path",
         "status": "passed",
-        "durationMs": 10511.730626
+        "durationMs": 10479.972857
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
         "status": "passed",
-        "durationMs": 841.235723
+        "durationMs": 849.596021
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "resource observations detect omitted teardown after a partial replacement",
         "status": "passed",
-        "durationMs": 174.717895
+        "durationMs": 174.902065
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
         "status": "passed",
-        "durationMs": 172.407962
+        "durationMs": 173.876263
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Tooltip destroy cancels pending delay and animation callbacks",
         "status": "passed",
-        "durationMs": 154.280306
+        "durationMs": 156.469884
       },
       {
         "file": "tests/expressivecss-lifecycle-browser.test.js",
         "name": "Node can import the ESM bundle but runtime initialization requires a document",
         "status": "passed",
-        "durationMs": 77.985887
+        "durationMs": 75.052859
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material grading rejects candidate evidence and missing or malformed operator observations",
         "status": "passed",
-        "durationMs": 13.795419
+        "durationMs": 14.520449
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
         "status": "passed",
-        "durationMs": 22717.345236
+        "durationMs": 22724.390038
       },
       {
         "file": "tests/expressivecss-material-quality.test.js",
         "name": "Material review fixture is semantically valid despite intrusive feedback and mismatched selection intent",
         "status": "passed",
-        "durationMs": 595.52218
+        "durationMs": 577.708208
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "web accessibility fixture exposes target geometry, keyboard reorder, and forced-color defects",
         "status": "passed",
-        "durationMs": 254.22683
+        "durationMs": 242.998283
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: tooltip hover, dismissal, reduced motion and native form behavior",
         "status": "passed",
-        "durationMs": 5016.511718
+        "durationMs": 5003.327156
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining native controls preserve names, keyboard state and form values",
         "status": "passed",
-        "durationMs": 334.249632
+        "durationMs": 333.601074
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
         "status": "passed",
-        "durationMs": 216.970885
+        "durationMs": 217.37179
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining progress and loading variants stop spatial motion",
         "status": "passed",
-        "durationMs": 194.252442
+        "durationMs": 194.098032
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining snackbar retains a focused action until focus leaves",
         "status": "passed",
-        "durationMs": 1251.571006
+        "durationMs": 1260.382198
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
         "status": "passed",
-        "durationMs": 290.063457
+        "durationMs": 290.029447
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
         "status": "passed",
-        "durationMs": 395.562951
+        "durationMs": 419.836925
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
         "status": "passed",
-        "durationMs": 243.554719
+        "durationMs": 243.832907
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
         "status": "passed",
-        "durationMs": 375.709137
+        "durationMs": 378.084545
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
         "status": "passed",
-        "durationMs": 280.751815
+        "durationMs": 284.900151
       },
       {
         "file": "tests/expressivecss-web-accessibility-browser.test.js",
         "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
         "status": "passed",
-        "durationMs": 174.740645
+        "durationMs": 177.374709
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "select and calendar treat external values as data (chromium)",
         "status": "passed",
-        "durationMs": 140.543226
+        "durationMs": 134.425896
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "Menu cancels superseded callbacks and teardown work (chromium)",
         "status": "passed",
-        "durationMs": 212.589197
+        "durationMs": 214.940678
       },
       {
         "file": "tests/menu-field-browser.test.js",
         "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
         "status": "passed",
-        "durationMs": 177.100888
+        "durationMs": 179.008777
       }
     ],
     "directories": [
       {
         "path": "src",
-        "sha256": "a0dc15bfff425bf9b6ef9a58b29b63eafab518e8bbcc7e35bb0c7e9bd8138e4c"
+        "sha256": "146ce7a9aed461402c2a635d2b6040980efb02d1184e87eebab2c1c9392ab9fa"
       },
       {
         "path": "tests",
-        "sha256": "f2625e92f95f3095eb5071652881aebaf6bd815b17d9e013358f52caf6430ec3"
+        "sha256": "5db83576393c736bbf73a25ff5bb1b136017f41536fc1ddede77becbb64376c6"
       },
       {
         "path": "dist",
-        "sha256": "c5515ea9c6bfa6ca42bb9230f506072d2d5be0d4befcb347953e48da321c5646"
+        "sha256": "437738cd7d1ce686f147ede8f66e6aefe12e9106c8779750c4201d29242c6ce3"
       },
       {
         "path": "skills/expressivecss/assets/examples",
@@ -6337,11 +6248,11 @@
       },
       {
         "path": "scripts",
-        "sha256": "2c659359b197bf580c6a035e8589beb0af9a4821868404b05fa6862edf85c562"
+        "sha256": "2c7232e0da86839689c31fa63def8bc4721b1505395ec547664d087941c6e5be"
       }
     ],
     "inputsUnchanged": true,
-    "reportSha256": "4b8b67500c635f4b85b5a1e370b2dbd6f21a08f77c0a3c92c596ebdd415bdc0b"
+    "reportSha256": "e508a21bbeb8f8c699e04f8431f846f28b98ff44b93656098986ee4984acd6ff"
   },
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c"
 }

@@ -233,7 +233,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | Priority | User must act? | Use |
 | --- | --- | --- |
 | Low | No | **Snackbar** (optional action, auto-dismiss) |
-| Low, but persists | No, not immediately | **Banner** (in flow, stays until dismissed) |
+| Low, but persists | No, not immediately | **Inline message** (in flow, stays until resolved) |
 | Medium | Optional extra content | **Standard bottom sheet** (compact) or **standard side sheet** (expanded+) |
 | High | Yes | **Basic dialog** |
 | High + lots of content on compact | Yes | **Full-screen dialog** (`.max`) |
@@ -892,23 +892,11 @@ Header is 64 dp: optional back, `title-large` headline, close. Last-child `<form
 
 ---
 
-## 7.6 Banners
+## 7.6 Persistent inline feedback
 
-**Mapping:** Persistent feedback pattern; the reviewed current M3 component inventory has no dedicated banner entry. Basic/rich support is an ExpressiveCSS contract, not verified upstream parity. **ExpressiveCSS:** `.banner`, `.banner.rich`. CSS only — nothing to initialize.
+Use native text and controls near the affected content when an issue persists but work can continue. The banner component has been removed; the reviewed current M3 inventory has no dedicated banner entry. This does not establish an explicit Google deprecation.
 
-**Use when** a condition **persists** and the user can keep working around it: offline, a failed sync, an expiring trial, a cookie or privacy choice. The message stays until the user acts on it.
-
-**Don't use** to confirm something that already happened — that is a snackbar, and a banner nobody needs to dismiss is a banner that never earned its place. Don't use it for a decision the user cannot postpone: that is a dialog. Don't stack two banners; the second one loses.
-
-**Snackbar, banner, dialog.** Transient and floating, persistent and in flow, or blocking. Reach for the least of the three that does the job: if missing the message is harmless it is a snackbar, and if the user can usefully carry on with it on screen it is not a dialog.
-
-**Anatomy.** Container (required), message `<p>` (required), optional leading icon, optional `.actions` row of text buttons, optional trailing close icon button. Rich adds a heading (`h1`–`h6`) and takes an 80 dp `<img>` in place of the icon.
-
-**Placement.** In the flow, at the top of the content it is about, pushing content down rather than covering it. `square` for a banner flush under an app bar.
-
-**Adaptive.** Basic: 56 dp tall. Below 600 dp the actions take their own line and the row grows to 112 dp.
-
-**Behavior.** Nothing is scripted — closing a banner is removing it. A banner is **not** `role="banner"` (the page header landmark); one inserted while the user is on the page takes `role="status"`.
+Use snackbar for temporary confirmations and dialog only for blocking decisions. Keep controls outside dynamic status text, and let the application manage dismissal and focus.
 
 ---
 

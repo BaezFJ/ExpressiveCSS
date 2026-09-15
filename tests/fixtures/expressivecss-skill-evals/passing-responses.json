@@ -864,7 +864,7 @@
         "mode": "Implement",
         "selectedComponent": "snackbar",
         "rejectionReasons": {
-          "banners": "The action does not need persistent placement.",
+          "inline": "The action does not need persistent placement.",
           "dialogs": "Progress must not be blocked."
         }
       },
@@ -907,13 +907,6 @@
             "status": "success"
           },
           {
-            "sequence": 6,
-            "timestamp": "2026-09-03T00:00:06.000Z",
-            "operation": "read",
-            "path": "skills/expressivecss/components/banners.md",
-            "status": "success"
-          },
-          {
             "sequence": 7,
             "timestamp": "2026-09-03T00:00:07.000Z",
             "operation": "read",
@@ -938,11 +931,11 @@
         "artifacts": []
       }
     },
-    "feedback-banner-choice": {
+    "feedback-inline-choice": {
       "candidateResponse": {
-        "caseId": "feedback-banner-choice",
+        "caseId": "feedback-inline-choice",
         "mode": "Implement",
-        "selectedComponent": "banners",
+        "selectedComponent": "inline",
         "rejectionReasons": {
           "snackbar": "The action must remain available after a transient message would disappear.",
           "dialogs": "The user can continue without deciding now."
@@ -980,13 +973,6 @@
             "status": "success"
           },
           {
-            "sequence": 5,
-            "timestamp": "2026-09-03T00:00:05.000Z",
-            "operation": "read",
-            "path": "skills/expressivecss/components/banners.md",
-            "status": "success"
-          },
-          {
             "sequence": 6,
             "timestamp": "2026-09-03T00:00:06.000Z",
             "operation": "read",
@@ -1018,7 +1004,7 @@
         "selectedComponent": "dialogs",
         "rejectionReasons": {
           "snackbar": "The decision cannot be safely ignored.",
-          "banners": "Progress must remain blocked until the choice is made."
+          "inline": "Progress must remain blocked until the choice is made."
         }
       },
       "executionEvidence": {
@@ -1050,13 +1036,6 @@
             "timestamp": "2026-09-03T00:00:04.000Z",
             "operation": "read",
             "path": "skills/expressivecss/components/snackbar.md",
-            "status": "success"
-          },
-          {
-            "sequence": 5,
-            "timestamp": "2026-09-03T00:00:05.000Z",
-            "operation": "read",
-            "path": "skills/expressivecss/components/banners.md",
             "status": "success"
           },
           {

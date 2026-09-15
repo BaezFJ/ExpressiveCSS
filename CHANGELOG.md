@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Migration
 
+- Replace banners with native inline messages for persistent nonblocking issues,
+  snackbars for temporary feedback, or dialogs for blocking decisions.
+  Remove banner classes, tokens and custom Sass imports. The existing
+  `/banners.html` route now explains the migration.
+
 - Replace `.bottom-app-bar` with `.toolbar.docked` or `.toolbar.fixed`. Place an
   adjacent FAB in `.toolbar-group` when the layout needs one.
 - Replace `.navigation-drawer`, `.sidenav`, `NavigationDrawer`, and `Sidenav`
@@ -23,6 +28,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Removed component URLs redirect to their replacement documentation.
 
 ### Removed
+
+- Banner Sass, component semantics, generated component guides and variant tests.
 
 - Bottom app bar Sass, navigation drawer Sass and runtime APIs, segmented
   button Sass, their documentation pages, semantics, generated guides, and
