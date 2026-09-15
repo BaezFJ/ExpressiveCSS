@@ -41,7 +41,6 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 
 - Badges
 - Banners
-- Bottom app bar
 - Breadcrumbs
 - Buttons
 - Cards
@@ -60,7 +59,6 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Preloader
 - Loading indicator
 - Search
-- Segmented buttons
 - Button groups
 - Split button
 
@@ -75,7 +73,6 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Side sheet
 - Floating sheet
 - Scrollspy
-- NavigationDrawer
 - Tabs
 - Snackbar
 - Tooltips
@@ -275,7 +272,6 @@ Opt an element out when it needs manual options:
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
-| `NavigationDrawer` | `.navigation-drawer` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
@@ -305,7 +301,7 @@ The main bundle exports:
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
 - `Slider` and `ScrollSpy`
-- `FormSelect`, `NavigationDrawer`, `NavigationRail`, and `Tabs`
+- `FormSelect`, `NavigationRail`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
 ---
@@ -1990,79 +1986,6 @@ Every value is a `--md-comp-icon-button-*` custom property — `container-height
 
 ---
 
-## Segmented buttons
-
-Two to five connected options in one outlined pill — a view switcher, a date range, a filter over a chart. Beyond five use a select or chips.
-
-The root is a `<fieldset class="segmented-button">` with a `<legend>`. Each segment is an `<input>` and the `<label class="segment">` beside it, tied by `id` and `for`. Radios make the group single-select, checkboxes make it multi-select; the input type is the entire difference. There is no plugin, nothing to initialize, and no selected class to keep in sync — the input holds the state and the form value, `checked` states the initial one, and the browser moves it from there. Never write `aria-checked`, `aria-selected` or `aria-pressed` on a segment: that is a second answer nothing updates.
-
-The control is the label's sibling rather than its child, the same way a filter chip is written. A `<label>` wrapping a radio or a checkbox *is* one to the rest of the framework, and gets painted as one — a 20dp ring on the control and a 48dp row around it.
-
-The legend is the group's accessible name and is not shown; Material 3's anatomy has no visible group label. There is no modifier that shows it — the root is both the fieldset and the grid of segments, so a legend back in flow becomes another column beside them. When the group needs a visible label, write one before the fieldset and leave the legend saying the same thing.
-
-```html
-<fieldset class="segmented-button">
-  <legend>View</legend>
-  <input type="radio" id="view-day" name="view" value="day" checked>
-  <label class="segment" for="view-day">Day</label>
-  <input type="radio" id="view-week" name="view" value="week">
-  <label class="segment" for="view-week">Week</label>
-  <input type="radio" id="view-month" name="view" value="month">
-  <label class="segment" for="view-month">Month</label>
-</fieldset>
-```
-
-Multi-select is the same markup with checkboxes. Any number of segments can be on at once, and each is its own Tab stop.
-
-```html
-<fieldset class="segmented-button">
-  <legend>Filter transport</legend>
-  <input type="checkbox" id="transport-walk" name="transport" value="walk" checked>
-  <label class="segment" for="transport-walk">Walk</label>
-  <input type="checkbox" id="transport-bike" name="transport" value="bike">
-  <label class="segment" for="transport-bike">Bike</label>
-</fieldset>
-```
-
-An optional 18dp icon goes in the label, before or after the text. The segment's text is its name, so the icon is `aria-hidden`. M3 shows a check on the chosen segment — write that icon yourself if you want it; nothing swaps it in.
-
-```html
-<fieldset class="segmented-button">
-  <legend>Map layer</legend>
-  <input type="radio" id="layer-map" name="layer" value="map" checked>
-  <label class="segment" for="layer-map">
-    <span class="material-symbols" aria-hidden="true">map</span>
-    Map
-  </label>
-  <input type="radio" id="layer-satellite" name="layer" value="satellite">
-  <label class="segment" for="layer-satellite">
-    <span class="material-symbols" aria-hidden="true">satellite_alt</span>
-    Satellite
-  </label>
-</fieldset>
-```
-
-`disabled` on one input greys that segment; on the `<fieldset>` it greys the group, outline included.
-
-The role is *rejected*, not withheld. A composite role such as `radiogroup` promises arrow-key navigation, and a fieldset of radios already is one — the browser implements the keyboard model — so writing the role by hand restates the element and costs you the fieldset's group role. No composite role is accepted on the group. That is why the markup has to stay native, and why `SEMANTICS.md` enforces the fieldset, the label, the input, and the shared `name` the arrow keys come from.
-
-The group is a grid of equal columns filling the width it is given, as Material specifies. Constrain it with a width or a wrapper when it should be narrower than its container.
-
-| Token | Default |
-| --- | --- |
-| `--md-comp-outlined-segmented-button-container-height` | 40px |
-| `--md-comp-outlined-segmented-button-container-shape` | 9999px |
-| `--md-comp-outlined-segmented-button-outline-width` | 1px |
-| `--md-comp-outlined-segmented-button-outline-color` | `--md-sys-color-outline` |
-| `--md-comp-outlined-segmented-button-leading-space` | 12px |
-| `--md-comp-outlined-segmented-button-trailing-space` | 12px |
-| `--md-comp-outlined-segmented-button-icon-size` | 18px |
-| `--md-comp-outlined-segmented-button-icon-label-space` | 8px |
-| `--md-comp-outlined-segmented-button-label-text-color` | `--md-sys-color-on-surface` |
-| `--md-comp-outlined-segmented-button-selected-container-color` | `--md-sys-color-secondary-container` |
-| `--md-comp-outlined-segmented-button-selected-label-text-color` | `--md-sys-color-on-secondary-container` |
-
----
 
 ## Button groups
 
@@ -2964,7 +2887,7 @@ The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. T
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
 
-Menus and the navigation drawer are separate components. A `navigation-drawer-trigger` inside the bar is still required — that class is the NavigationDrawer contract, not bar chrome. Tabs live in their own bar — do not nest `.tabs` in the header.
+Navigation rails and tabs are separate components. Do not nest either one in the header.
 
 ### Small
 
@@ -3169,95 +3092,18 @@ A `<form>` in the nav still fills the space between the leading action and anyth
 </header>
 ```
 
-### Mobile collapse
+### Responsive navigation
 
-Hide the destination menu below the Expanded breakpoint and put a `navigation-drawer-trigger` in the leading slot. The trigger stays visible at every size — it is the page-navigation control, not collapse chrome. Pair it with a `navigation-drawer` whose id matches `data-target`. The drawer element itself must not be a child of the `<nav>`.
-
-```html
-<header>
-  <nav aria-label="Main">
-    <button type="button" data-target="mobile-demo" class="navigation-drawer-trigger" aria-label="Open menu">
-      <span class="material-symbols" aria-hidden="true">menu</span>
-    </button>
-    <h2>Title</h2>
-    <menu class="hide-on-med-and-down">
-      <li><a href="#!">Sass</a></li>
-      <li><a href="#!">Components</a></li>
-    </menu>
-  </nav>
-</header>
-
-<nav aria-label="Main">
-  <ul class="navigation-drawer" id="mobile-demo">
-    <li><a href="#!">Sass</a></li>
-  </ul>
-</nav>
-```
-
-After you add the trigger and the navigation drawer, initialize NavigationDrawer (or let `AutoInit()` do it).
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  Expressive.NavigationDrawer.init(document.querySelectorAll('.navigation-drawer'));
-});
-```
+Hide wide text destinations below the Expanded breakpoint. Use a separate navigation bar for 3–5 compact destinations or a modal expanded navigation rail for up to 7. Split larger hierarchies into peer categories and a separate page-level list.
 
 ---
 
-## Bottom app bar
-
-This screen's commands at the bottom edge, with an optional FAB. A `div.bottom-app-bar` holds 3–4 icon-only actions that belong to the screen the reader is on. CSS only.
-
-This is not the navigation bar. A navigation bar holds destinations that stay the same from screen to screen and is a `<nav>` landmark; a bottom app bar holds commands, so it is not a `<nav>` — nor a `<footer>`, nor any other landmark element — and takes no `role="toolbar"` either — that role promises arrow-key navigation, and the actions here are reached with Tab. Material says never show both bars at once.
-
-Every action is icon-only, so every action carries an `aria-label`; the icon inside it is `aria-hidden="true"`.
-
-```html
-<div class="bottom-app-bar">
-  <button type="button" aria-label="Check">
-    <span class="material-symbols" aria-hidden="true">check_box</span>
-  </button>
-  <button type="button" aria-label="Edit">
-    <span class="material-symbols" aria-hidden="true">edit</span>
-  </button>
-  <button type="button" aria-label="More options">
-    <span class="material-symbols" aria-hidden="true">more_vert</span>
-  </button>
-</div>
-```
-
-### With a FAB
-
-Add the screen's FAB as the last child; it is pushed to the end of the bar, so there is no spacer to write. Inside the bar it is flat and `secondary-container` rather than lifted and `primary-container`. The bar is 80dp either way — Material's 72dp with-FAB height is deprecated.
-
-```html
-<div class="bottom-app-bar">
-  <button type="button" aria-label="Check">
-    <span class="material-symbols" aria-hidden="true">check_box</span>
-  </button>
-  <button type="button" class="button extra circle" aria-label="New message">
-    <span class="material-symbols" aria-hidden="true">add</span>
-  </button>
-</div>
-```
-
-### Fixed
-
-Add `fixed` to pin the bar to the bottom of the viewport, inside `safe-area-inset-bottom`. It covers the last 80dp of the page, so pad the content behind it.
-
-```html
-<div class="bottom-app-bar fixed">…</div>
-```
-
-M3 Expressive's docked toolbar (`div.toolbar.docked`) is the shorter 64dp answer to the same problem. Both ship.
-
----
 
 ## Navigation bar
 
 Switch between UI views on compact and medium screens. A `nav.navigation-bar` holds 3–5 destinations of equal importance. Destinations do not change from screen to screen. There is no JavaScript — mark the current view with `aria-current="page"` (or `active`).
 
-This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows, a bar or rail in medium windows, and an expanded navigation rail in wider windows. Retained navigation drawers need a capability or compatibility reason.
+This is not the app bar. The app bar names the current page and holds 1–2 actions. Use a navigation bar in compact windows, a bar or rail in medium windows, and an expanded navigation rail in wider windows.
 
 ### Stacked
 
@@ -3834,7 +3680,6 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
 | `FormSelect` | `select` |
-| `NavigationDrawer` | `.navigation-drawer` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.timepicker` |
 | `Tooltip` | `.tooltipped` |
@@ -4370,193 +4215,6 @@ instance.destroy();
 
 ---
 
-## Navigation drawer
-
-Unreleased source releases native modal state when an open fixed drawer crosses into the expanded layout. Published 0.9.1 does not include these repairs.
-
-A slide-out menu, or a fixed sidebar on Expanded and wider windows.
-
-This is a slide-out menu. Nest `<details>` / `<summary>` for nested sections — the documentation sidebar uses that. On Compact and Medium windows this same drawer slides over the page.
-
-The drawer HTML must **not** sit inside the app bar’s `<nav>`. Put a `navigation-drawer-trigger` anywhere and set `data-target` to the navigation drawer’s `id`. `AutoInit()` starts every `.navigation-drawer` except those marked `no-autoinit`.
-
-Toggle NavigationDrawer
-
-```html
-<nav aria-label="Main">
-  <ul id="slide-out" class="navigation-drawer">
-    <li>
-      <div class="user-view">
-        <div class="background">
-          <img src="images/office.jpg" alt="">
-        </div>
-        <a href="#user" aria-label="Profile"><img class="circle" src="images/portrait.jpg" alt=""></a>
-        <a href="#name"><span class="name">John Doe</span></a>
-        <a href="#email"><span class="email">jdoe@example.com</span></a>
-      </div>
-    </li>
-    <li><a href="#!"><span class="material-symbols" aria-hidden="true">cloud</span>First Link With Icon</a></li>
-    <li><a href="#!">Second Link</a></li>
-    <li><div class="divider"></div></li>
-    <li><span class="subheader">Subheader</span></li>
-    <li><a href="#!">Third Link</a></li>
-  </ul>
-</nav>
-<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
-```
-
-### Initialization
-
-The IIFE bundle exposes `Expressive.NavigationDrawer`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.navigation-drawer`.
-
-```js
-document.addEventListener('DOMContentLoaded', function() {
-  const elems = document.querySelectorAll('.navigation-drawer');
-  const instances = Expressive.NavigationDrawer.init(elems, {
-    // specify options here
-  });
-});
-```
-
-Nested sections are HTML. A `<details>` / `<summary>` inside a `.navigation-drawer` is a nested section; the same `name` on several details is an accordion. There is no Collapsible plugin.
-
-### Options
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `edge` | String | `'left'` | Side of the screen. `'left'` or `'right'`. The constructor adds `right-aligned` when the edge is right. |
-| `draggable` | Boolean | `true` | Allow swipe gestures to open and close. Drag is disabled while the navigation drawer is fixed on Expanded and wider windows. |
-| `dragTargetWidth` | String | `'10px'` | Width of the screen-edge strip where a drag can start. |
-| `inDuration` | Number | `250` | Open transition duration, in milliseconds. |
-| `outDuration` | Number | `200` | Close transition duration, in milliseconds. |
-| `preventScrolling` | Boolean | `true` | Prevent the page from scrolling while an overlay drawer is open. |
-| `onOpenStart` | Function | `null` | Called when the navigation drawer starts opening. |
-| `onOpenEnd` | Function | `null` | Called when the navigation drawer finishes opening. |
-| `onCloseStart` | Function | `null` | Called when the navigation drawer starts closing. |
-| `onCloseEnd` | Function | `null` | Called when the navigation drawer finishes closing. |
-
-### Methods
-
-> All methods are called on the plugin instance. You can get the instance like this:
-
-```js
-const instance = Expressive.NavigationDrawer.getInstance(elem);
-```
-
-#### .open();
-
-Opens the navigation drawer.
-
-```text
-instance.open();
-```
-
-#### .close();
-
-Closes the navigation drawer.
-
-```text
-instance.close();
-```
-
-#### .destroy();
-
-Destroy the plugin instance and tear down its overlay, drag target, and event handlers.
-
-```text
-instance.destroy();
-```
-
-### Properties
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `el` | Element | The DOM element the plugin was initialized with. |
-| `options` | Object | The options the instance was initialized with. |
-| `isOpen` | Boolean | Whether the navigation drawer is open. |
-| `isFixed` | Boolean | Whether the element has `navigation-drawer-fixed`. |
-| `isDragged` | Boolean | Whether the navigation drawer is being dragged. |
-
-### Close Trigger
-
-Add `navigation-drawer-close` to an element inside the drawer. A click on that element closes an overlay drawer. That is useful in a single-page app where the page does not reload. It does nothing while the navigation drawer is fixed on Expanded and wider windows.
-
-```html
-<nav aria-label="Main">
-  <ul id="slide-out" class="navigation-drawer">
-    <li><button type="button" class="navigation-drawer-close">Clicking this will close NavigationDrawer</button></li>
-  </ul>
-</nav>
-<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
-```
-
-### Variations
-
-#### Right edge
-
-Pass `edge: 'right'`. Mark the element `no-autoinit` if you initialize it yourself, otherwise AutoInit would start it on the left.
-
-Toggle Right NavigationDrawer
-
-```js
-Expressive.NavigationDrawer.init(document.querySelector('#slide-out-right'), {
-  edge: 'right'
-});
-```
-
-#### Menu HTML Structure
-
-Nest `<details>` for a section that opens in place. Same `name` on several details is an accordion. The documentation sidebar uses this for Foundations, Structure, Components, and Forms.
-
-```html
-<nav aria-label="Main">
-  <ul id="slide-out" class="navigation-drawer">
-    <li><a href="#!">First Sidebar Link</a></li>
-    <li>
-      <details name="docs-nav">
-        <summary>
-          <span class="material-symbols" aria-hidden="true">palette</span>
-          Foundations
-        </summary>
-        <ul>
-          <li><a href="#!">Color</a></li>
-          <li><a href="#!">Typography</a></li>
-        </ul>
-      </details>
-    </li>
-  </ul>
-</nav>
-```
-
-#### Fixed HTML Structure
-
-Add `navigation-drawer-fixed` so the drawer stays open on Expanded and wider windows (`>= 840px`) and slides away below that boundary. The documentation sidebar on the left is this pattern.
-
-```html
-<nav aria-label="Main">
-  <ul id="slide-out" class="navigation-drawer navigation-drawer-fixed">
-    <li><a href="#!">First Sidebar Link</a></li>
-    <li><a href="#!">Second Sidebar Link</a></li>
-  </ul>
-</nav>
-<button type="button" data-target="slide-out" class="button text circle navigation-drawer-trigger" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button>
-```
-
-Offset the rest of the page by the navigation drawer width. The width token is `--md-comp-nav-drawer-width` (300px). Put the padding on `header`, `main`, and `footer`.
-
-```css
-header, main, footer {
-  padding-left: 300px;
-}
-
-@media only screen and (max-width: 992px) {
-  header, main, footer {
-    padding-left: 0;
-  }
-}
-```
-
----
 
 ## Tabs
 

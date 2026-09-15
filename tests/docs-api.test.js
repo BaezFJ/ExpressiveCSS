@@ -1,10 +1,7 @@
 // Script in the documentation, checked against the bundle and the sheet.
 //
 // Renames keep breaking here rather than in markup: the class attributes get
-// swept mechanically and the JavaScript beside them does not. A single pass
-// left `Expressive.Slider.init` initialising slideshows after Slider became the
-// range control, and three pages querying `.sidenav` after the drawer markup
-// had moved to `.navigation-drawer` - each of them silently doing nothing.
+// swept mechanically and the JavaScript beside them does not.
 //
 // Two questions, both cheap: does every `Expressive.X` name something the
 // bundle exports, and does every selector string in a documented snippet match
@@ -24,10 +21,9 @@ const css = read('dist/css/expressive.css');
 const HOOKS = new Set([
   'tooltipped', 'no-autoinit', 'validate', 'activator', 'autocomplete',
   'date-picker', 'time-picker', 'datepicker', 'timepicker',
-  'navigation-drawer-trigger', 'navigation-drawer-close', 'sidenav-trigger', 'sidenav-close',
   'menu-trigger', 'lightboxed', 'scrollspy', 'carousel-item',
   'chips-initial', 'chips-placeholder', 'chips-autocomplete', 'custom-class',
-  'navigation-drawer', 'fab'
+  'fab'
 ]);
 
 function docSources() {

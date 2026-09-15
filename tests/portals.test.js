@@ -46,18 +46,6 @@ describe('Portals in the light DOM still go to document.body', () => {
     }
   });
 
-  test('drawer drag target', () => {
-    const el = document.createElement('nav');
-    el.className = 'sidenav';
-    document.body.appendChild(el);
-    const instance = Expressive.NavigationDrawer.init(el, { draggable: true });
-    try {
-      assert.equal(instance.dragTarget.parentNode, document.body);
-    } finally {
-      instance.destroy();
-    }
-  });
-
   test('snackbar container', () => {
     const instance = new Expressive.Snackbar({ text: 'Saved' });
     try {
@@ -90,17 +78,6 @@ describe('Portals inside a shadow root stay in that root', () => {
       instance.open();
       assert.equal(root.querySelector('.lightbox-caption').getRootNode(), root);
       assert.equal(document.querySelector('.lightbox-caption'), null);
-    } finally {
-      instance.destroy();
-    }
-  });
-
-  test('drawer drag target', () => {
-    const { root, el } = shadowHost('<nav class="sidenav"></nav>');
-    const instance = Expressive.NavigationDrawer.init(el, { draggable: true });
-    try {
-      assert.equal(instance.dragTarget.getRootNode(), root);
-      assert.equal(document.querySelector('.drag-target'), null);
     } finally {
       instance.destroy();
     }

@@ -144,17 +144,14 @@ export async function captureInterfaceQuality(root, outputDirectory) {
       trace.message = await page.locator('#save-result').textContent();
       return trace;
     }));
-    evidence.interactions.push(await collect({ ...base, id: 'drawer-keyboard' }, async (page) => {
-      const trigger = page.locator('.navigation-drawer-trigger');
+    evidence.interactions.push(await collect({ ...base, id: 'rail-keyboard', width: 840 }, async (page) => {
+      const trigger = page.locator('.navigation-rail > button');
       const focus = [];
-      await tabTo(page, '.navigation-drawer-trigger', focus);
+      await tabTo(page, '.navigation-rail > button', focus);
       await page.keyboard.press('Enter');
-      await page.waitForFunction(() => document.querySelector('#account-drawer').contains(document.activeElement));
-      const focusEntered = await page.locator('#account-drawer').evaluate((node) => node.contains(document.activeElement));
-      const open = await page.locator('#account-drawer').evaluate((node) => node.open);
-      await page.keyboard.press('Escape');
-      await page.waitForFunction(() => !document.querySelector('#account-drawer').open);
-      return { open, focus, focusEntered, closed: await page.locator('#account-drawer').evaluate((node) => !node.open), focusReturned: await trigger.evaluate((node) => node === document.activeElement) };
+      const expanded = await page.locator('.navigation-rail').getAttribute('aria-expanded');
+      await page.keyboard.press('Enter');
+      return { expanded, focus, collapsed: await page.locator('.navigation-rail').getAttribute('aria-expanded'), focusRetained: await trigger.evaluate((node) => node === document.activeElement) };
     }));
   } catch (error) { evidence.infrastructureError = errorText(error); }
   finally {
@@ -214,12 +211,12 @@ export function gradeInterfaceQuality(evidence, { reviewOnly = false } = {}) {
     results.push(check(`Whole-interface browser errors absent: ${settings.id}`, available && record.consoleErrors.length === 0 && record.blockedRequests.length === 0, { errors: record?.consoleErrors, blocked: record?.blockedRequests }));
   }
   const interactions = Array.isArray(evidence?.interactions) ? evidence.interactions : [];
-  results.push(check('Whole-interface interaction inventory is exact', interactions.length === 3 && new Set(interactions.map((record) => record.id)).size === 3 && ['save-keyboard', 'save-pointer', 'drawer-keyboard'].every((id) => interactions.some((record) => record.id === id)), interactions.map((record) => record.id)));
-  for (const id of ['save-keyboard', 'save-pointer', 'drawer-keyboard']) {
+  results.push(check('Whole-interface interaction inventory is exact', interactions.length === 3 && new Set(interactions.map((record) => record.id)).size === 3 && ['save-keyboard', 'save-pointer', 'rail-keyboard'].every((id) => interactions.some((record) => record.id === id)), interactions.map((record) => record.id)));
+  for (const id of ['save-keyboard', 'save-pointer', 'rail-keyboard']) {
     const record = interactions.find((entry) => entry.id === id), trace = record?.trace;
     results.push(check(`Whole-interface interaction evidence: ${id}`, recordValid(record) && trace && typeof trace === 'object', record?.error ?? trace));
     if (reviewOnly) continue;
-    const completed = id === 'drawer-keyboard' ? trace?.open === true && trace.focusEntered === true && trace.closed === true && trace.focusReturned === true
+    const completed = id === 'rail-keyboard' ? trace?.expanded === 'true' && trace.collapsed === 'false' && trace.focusRetained === true
       : trace?.checkedBefore === false && trace.checkedAfter === true && trace.message === 'Preferences saved.' && trace.method === id.slice(5) && (id !== 'save-keyboard' || Array.isArray(trace.focus) && trace.focus.some((entry) => entry.target === true && entry.tag === 'input') && trace.focus.some((entry) => entry.target === true && entry.tag === 'button') && /^[a-f0-9]{64}$/.test(trace.focusedScreenshot?.sha256 ?? ''));
     results.push(check(`Whole-interface task outcome: ${id}`, recordValid(record) && !record.interactionError && completed && record.consoleErrors.length === 0 && record.blockedRequests.length === 0, trace));
   }

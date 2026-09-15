@@ -79,9 +79,8 @@
   }
 }
 
-// Trailing count in a list or drawer row stays in flow.
+// Trailing count in a list or menu row stays in flow.
 .list .badge,
-:is(.sidenav, .navigation-drawer) .badge,
 menu .badge {
   position: static;
   transform: none;
@@ -89,8 +88,4 @@ menu .badge {
 
 .list .badge {
   margin-inline-start: auto;
-}
-
-:is(.sidenav, .navigation-drawer) summary .badge {
-  margin-inline-start: 14px;
 }

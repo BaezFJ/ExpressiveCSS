@@ -31,13 +31,6 @@ describe('Scrim', () => {
     assert.match(css, /dialog::backdrop \{\s*background-color: var\(--md-comp-scrim-color\);/);
   });
 
-  test('the navigation drawer consumes it', () => {
-    assert.match(
-      css,
-      /dialog:is\(\.sidenav, \.navigation-drawer\)::backdrop \{\s*background-color: var\(--md-comp-scrim-color\);/
-    );
-  });
-
   test('the modal navigation rail consumes it, at both breakpoints', () => {
     const rail = css.match(
       /\.navigation-rail\.expanded(?:\.modal|:not\(\.modal\))::before \{[^}]*background-color: var\(--md-comp-scrim-color\);/g

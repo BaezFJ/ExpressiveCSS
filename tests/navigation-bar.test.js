@@ -31,13 +31,4 @@ describe('Navigation bar', () => {
     assert.doesNotMatch(css, /^\.bar\s*[,{]/m);
   });
 
-  // The bottom app bar came back in 1.x as `.bottom-app-bar` (#35). What was
-  // retired is the *element-driven* host: keying it on `footer:has(> nav)`
-  // made a row of commands a navigation landmark and left it one markup slip
-  // from this component. `tests/bottom-app-bar.test.js` owns the rest.
-  test('the bottom app bar is a class, and never this one', () => {
-    assert.doesNotMatch(css, /footer:has\(>\s*nav:only-child/);
-    assert.match(css, /\.bottom-app-bar\s*\{/);
-    assert.doesNotMatch(css, /\.bottom-app-bar[^{,]*\.navigation-bar/);
-  });
 });

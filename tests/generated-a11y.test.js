@@ -76,22 +76,3 @@ describe('Carousel slides', () => {
     }
   });
 });
-
-describe('Sidenav overlay dialog', () => {
-  beforeEach(resetBody);
-
-  test('the generated dialog carries the drawer name', () => {
-    // A <dialog> takes no name from its contents, and once it opens modally
-    // the wrapping <nav> that holds the label is outside it.
-    document.body.innerHTML =
-      `<nav aria-label="Main"><ul id="drawer" class="sidenav"><li><a href="#!">One</a></li></ul></nav>`;
-    const instance = Expressive.Sidenav.init(document.getElementById('drawer'));
-    try {
-      const dialog = document.querySelector('dialog.sidenav-overlay');
-      assert.ok(dialog, 'expected the component to build a dialog');
-      assert.equal(dialog.getAttribute('aria-label'), 'Main');
-    } finally {
-      instance.destroy();
-    }
-  });
-});

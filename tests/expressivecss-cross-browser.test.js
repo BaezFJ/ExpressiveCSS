@@ -30,7 +30,7 @@ const fixture = `<!doctype html><html lang="en"><head><meta charset="utf-8"><met
 <button id="menu-trigger" class="menu-trigger" type="button" data-target="actions">Actions</button>
 <menu id="actions"><li><button type="button" id="menu-command">Copy preferences</button></li><li><button type="button">Reset view</button></li></menu>
 </div><div id="help-popover" popover><p>Changes affect this workspace only.</p><button type="button" popovertarget="help-popover" popovertargetaction="hide">Close help</button></div>
-<form id="preferences"><fieldset class="segmented-button"><legend id="cadence-label">Delivery</legend><input id="daily" type="radio" name="cadence" value="daily" checked><label class="segment" for="daily">Daily</label><input id="weekly" type="radio" name="cadence" value="weekly"><label class="segment" for="weekly">Weekly</label></fieldset>
+<form id="preferences"><fieldset><legend id="cadence-label">Delivery</legend><label><input id="daily" type="radio" name="cadence" value="daily" checked>Daily</label><label><input id="weekly" type="radio" name="cadence" value="weekly">Weekly</label></fieldset>
 <div id="mounted"><div class="field"><select id="frequency" name="frequency"><option value="daily">Daily</option><option value="weekly">Weekly</option></select><label id="frequency-label" for="frequency">Summary frequency</label></div><button type="button" class="tooltipped" data-tooltip="Session-only preferences">Details</button></div>
 <button type="submit" id="save">Save preferences</button><output id="result" aria-live="polite"></output></form></section>
 <section id="history"><h2>History</h2><p>No changes saved today.</p></section>
@@ -138,7 +138,7 @@ for (const [engineName, engine] of Object.entries(engines).filter(([name]) => !r
         await expect(page.locator('#general')).toBeVisible();
         report.checks.push('tab navigation preserves reachable panels');
 
-        if(profile.touch) await page.locator('label[for="weekly"]').tap(); else { await page.locator('#daily').focus(); await page.keyboard.press('ArrowRight'); }
+        if(profile.touch) await page.locator('label:has(#weekly)').tap(); else { await page.locator('#daily').focus(); await page.keyboard.press('ArrowRight'); }
         await expect(page.locator('#weekly')).toBeChecked();
         await activate(page.locator('#mounted [role="combobox"]'));
         if(profile.touch) await page.getByRole('listbox').getByRole('option',{name:'Weekly',exact:true}).tap(); else { await expect(page.getByRole('listbox').getByRole('option').first()).toBeFocused(); await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter'); }
@@ -146,7 +146,7 @@ for (const [engineName, engine] of Object.entries(engines).filter(([name]) => !r
         await expect(page.locator('#mounted [role="listbox"]')).not.toBeVisible();
         await activate(page.locator('#save'));
         await expect(page.locator('#result')).toHaveText('weekly:weekly');
-        report.checks.push('native segmented inputs and enhanced select submit their form values');
+        report.checks.push('native radio inputs and enhanced select submit their form values');
 
         for(let cycle=0;cycle<3;cycle++) {
           const cleanup=await page.evaluate(()=>{window.disposeRoute();return {menus:Expressive.Menu._menus.length-window.baselineMenus,generated:document.querySelectorAll('#mounted [role="combobox"], #mounted [role="listbox"], [role="tooltip"]').length,native:document.querySelector('#frequency').tabIndex};});

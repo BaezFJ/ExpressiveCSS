@@ -631,18 +631,6 @@ describe('Select caret position', () => {
   });
 });
 
-describe('App bar sidenav trigger', () => {
-  test('a sidenav-trigger inside a top app bar is not hidden on wider screens', () => {
-    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-    // Materialize hid header > nav > .sidenav-trigger at the large
-    // breakpoint. An M3 app bar keeps the leading page-navigation
-    // control visible at every size.
-    assert.doesNotMatch(
-      css,
-      /header:has\(>\s*nav\)\s*>\s*nav:not\(\.tabs\)\s*>\s*\.sidenav-trigger\s*\{[^}]*display:\s*none/
-    );
-  });
-});
 
 describe('App bar scroll fill', () => {
   test('a fixed bar fills with surface-container on scroll, not a shadow', () => {
@@ -1370,7 +1358,6 @@ describe('Surfaces that lost the ripple keep a pressed state layer', () => {
     ['card reveal trigger', /\.card-reveal-trigger:active\s*\{[^}]*state-layer-opacity/],
     ['expanding card trigger', /\.expanding-card-trigger:active\s*\{[^}]*state-layer-opacity/],
     ['FAB toolbar action', /\.toolbar\b[^{]*:is\(a, button\):active\s*\{[^}]*state-layer-opacity/],
-    ['navigation drawer row', /\.navigation-drawer\)[^{]*:active\s*\{[^}]*state-layer-opacity/],
     ['pagination item', /\.pagination :is\(a, button\):active\s*\{[^}]*state-layer-opacity/]
   ];
 
@@ -1381,22 +1368,9 @@ describe('Surfaces that lost the ripple keep a pressed state layer', () => {
   }
 });
 
-// Two ordering/specificity traps in the state layers that replaced Waves.
+// An ordering trap in the state layers that replaced Waves.
 describe('State layers that replaced the ripple', () => {
   const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-
-  test('the selected drawer row keeps its pill while hovered and pressed', () => {
-    // The row's own layer mixes into `transparent`; letting it reach a
-    // selected row erases the secondary-container fill instead of tinting it.
-    for (const state of ['hover', 'active']) {
-      const rule = css.match(
-        new RegExp(`li\\.active > :is\\(a, button\\)[^{]*:${state}\\s*\\{[^}]*\\}`, 's')
-      );
-      assert.ok(rule, `no selected-drawer-row rule for :${state}`);
-      assert.match(rule[0], /var\(--md-sys-color-secondary-container\)\s*\)/);
-      assert.doesNotMatch(rule[0], /,\s*transparent\s*\)/);
-    }
-  });
 
   test('a pressed media trigger outranks its own focus layer', () => {
     // Keyboard activation is :focus-visible *and* :active at equal

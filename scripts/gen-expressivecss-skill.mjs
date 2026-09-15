@@ -156,8 +156,6 @@ const components = cataloguePages.map((pageId) => decisionComponentsByPage.get(p
   syntaxLanguage: component.guideSource.syntaxLanguage,
   adaptive: component.adaptive,
   selectionExample: component.selectionExample,
-  selectable: component.selectable,
-  excludeReason: component.excludeReason,
   runtime: component.runtime,
   materialGuidance: component.materialGuidance,
 }));
@@ -277,14 +275,11 @@ function renderGuide(component, page, section, rules, provenance) {
     ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
     `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
   ].join('\n\n');
-  const selectionPolicy = component.selectable === false
-    ? `Compatibility guide: ${component.excludeReason} Use this contract for maintenance, an explicit request, or a verified replacement gap. The syntax below is retained legacy markup.\n\n`
-    : '';
   const selectionExample = component.selectionExample
     ? `Example: ${component.selectionExample}\n\n`
     : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionPolicy}${selectionExample}${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nSources: ${renderedSources}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive}\n\n#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n#### Rules\n\nThe following are end-state semantic invariants. The rule IDs come directly from \`semantics.json\`; keep them when creating component review criterion instances. Author static requirements; verify component-generated state instead of pre-authoring values the runtime owns.\n\n${ruleLines}\n\n#### Guide checks\n\n${guideCheckLines.join('\n')}\n`;
 }
 
 async function generatedGuides() {

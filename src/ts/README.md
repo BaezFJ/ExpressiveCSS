@@ -96,9 +96,6 @@ read-it-off-the-element access that key provides.
   `.flat` / `fullWidth` remains the full-width compatibility track used by
   swipeable tabs.
   `destroy()` removes generated labels, size roles, indicators, and wrappers.
-- **Sidenav nested sections are HTML.** `<details>` / `<summary>` inside
-  a `.sidenav`; same `name` is an accordion. There is no Collapsible
-  plugin — the drawer styles the summary as a destination row.
 - **Menu nested menus are markup.** A `<menu>` inside an `<li>`
   is a flyout. Hover / `:focus-within` on `(hover: hover) and
   (pointer: fine)`; `.open` is the tap/keyboard switch. Flyouts
@@ -120,14 +117,6 @@ read-it-off-the-element access that key provides.
   no click hijack. Offset is `scroll-margin-block-start` /
   `--md-comp-scrollspy-offset`. Default link lookup compares `href`
   attributes — do not interpolate the section id into a selector.
-- **Sidenav overlay is a modal `<dialog>`.** JS wraps a `ul.sidenav` in
-  `dialog.sidenav-overlay` (or the element is already a dialog).
-  `showModal()` / `::backdrop` / Escape replace the overlay div, body
-  overflow lock, and tabindex carpet bomb. Drag writes
-  `--md-comp-nav-drawer-shift`; do not write `transform` or `opacity`.
-  `.sidenav-fixed` is `matchMedia('(width >= 840px)')`, not a resize
-  `open()`. `inDuration` / `outDuration` / `preventScrolling` are
-  accepted and ignored.
 - **Card reveal is CSS.** `aside` / `.card-reveal` rests at
   `translateY(100%)` (clipped). `aria-expanded="true"` slides it to
   cover the card. Do not write `transform` / `display` / `overflow`.

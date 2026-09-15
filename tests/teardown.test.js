@@ -174,21 +174,6 @@ describe('destroy() releases shared listeners', () => {
     assert.deepEqual(watch.live(), [], 'NavigationRail left its keydown listener attached');
   });
 
-  test('Sidenav detaches the shared trigger click and does not attach resize', () => {
-    document.body.innerHTML = `
-      <ul id="slide-out" class="sidenav"><li><a href="#!">First</a></li></ul>
-      <a href="#" data-target="slide-out" class="sidenav-trigger">menu</a>`;
-    const instance = Expressive.Sidenav.init(document.querySelector('.sidenav'));
-
-    assert.ok(watch.live().includes('click'), 'Sidenav did not attach a body click handler');
-    assert.ok(!watch.live().includes('resize'), 'Sidenav attached a window resize handler');
-
-    instance.open();
-    instance.destroy();
-
-    assert.deepEqual(watch.live(), [], 'Sidenav left its trigger listener attached');
-  });
-
   test('the docked display plugin detaches its document click handler', () => {
     document.body.innerHTML = `<input type="text" class="datepicker">`;
     const instance = Expressive.Datepicker.init(document.querySelector('.datepicker'), {

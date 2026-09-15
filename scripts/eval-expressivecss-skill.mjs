@@ -605,7 +605,6 @@ function caseContract(testCase, response, executionEvidence) {
     case 'runtime-owned-aria':
       passed = !/aria-(?:expanded|selected|controls)=/u.test(response.sourceMarkup ?? '')
         && response.initializedDom?.['aria-expanded'] === 'false'
-        && response.initializedDom?.['aria-controls']
         && response.interactionUpdates?.some((item) => item.field === 'aria-expanded' && item.before !== item.after)
         && response.teardown?.staleAria === false && response.teardown?.generatedIds === 0;
       break;

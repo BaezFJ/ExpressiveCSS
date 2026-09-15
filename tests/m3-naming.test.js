@@ -23,9 +23,6 @@ describe('M3 names reach the same rules as the old ones', () => {
   // Each pair is [old class, new class] and must appear together wherever the
   // component is styled - the point of :is(.old, .new) in the Sass.
   const PAIRS = [
-    ['sidenav', 'navigation-drawer'],
-    ['sidenav-overlay', 'navigation-drawer-overlay'],
-    ['sidenav-fixed', 'navigation-drawer-fixed'],
     ['fixed-action-btn', 'fab'],
     ['datepicker', 'date-picker'],
     ['timepicker', 'time-picker'],
@@ -65,18 +62,10 @@ describe('Slider is the range control, and nothing else', () => {
   });
 });
 
-describe('exports keep their old names', () => {
-  test('Sidenav is NavigationDrawer', () => {
-    assert.equal(typeof Expressive.NavigationDrawer, 'function');
-    assert.equal(Expressive.Sidenav, Expressive.NavigationDrawer);
-  });
-});
-
 describe('AutoInit accepts both spellings', () => {
   beforeEach(resetBody);
 
   const CASES = [
-    ['navigation-drawer', 'sidenav', 'NavigationDrawer', (c) => `<ul class="${c}" id="d"><li><a href="#!">One</a></li></ul>`],
     ['fab', 'fixed-action-btn', 'FloatingActionButton', (c) => `<div class="${c}"><a class="button extra circle" aria-label="Add">+</a><ul><li><a class="button extra circle small" aria-label="Edit">e</a></li></ul></div>`],
     ['date-picker', 'datepicker', 'Datepicker', (c) => `<input type="text" class="${c}">`],
     ['time-picker', 'timepicker', 'Timepicker', (c) => `<input type="text" class="${c}">`]
@@ -101,21 +90,6 @@ describe('AutoInit accepts both spellings', () => {
 
 describe('the renames reach behaviour, not just styling', () => {
   beforeEach(resetBody);
-
-  test('a canonically-named fixed drawer is treated as fixed', () => {
-    // The Sass alias made `.navigation-drawer-fixed` *look* docked while the
-    // component still read only `sidenav-fixed`, so at the Expanded breakpoint it
-    // kept the drag target live and open() could showModal() a docked drawer.
-    for (const cls of ['navigation-drawer-fixed', 'sidenav-fixed']) {
-      document.body.innerHTML = `<ul class="navigation-drawer ${cls}" id="d"><li><a href="#!">One</a></li></ul>`;
-      const instance = Expressive.NavigationDrawer.init(document.getElementById('d'));
-      try {
-        assert.equal(instance.isFixed, true, `${cls} was not treated as fixed`);
-      } finally {
-        instance.destroy();
-      }
-    }
-  });
 
   test('a dual-handle slider finds a .slider host and clamps against it', () => {
     // _host() knew only the legacy classes, so the canonical host returned

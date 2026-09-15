@@ -4,13 +4,13 @@
   "sourceRevision": "b3821bb0390b985c31a858ab7f4e3dbf0de2d71c",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
-    "recordedOn": "2026-09-13",
+    "recordedOn": "2026-09-15",
     "engine": "chromium",
     "engineVersion": "151.0.7922.34",
-    "nodeVersion": "v24.18.1",
+    "nodeVersion": "v22.23.1",
     "status": "passed",
-    "inputsCurrent": false,
-    "reportSha256": "bf17b490ad5c06e73a26acc5ab7e79e8d884db0af8b17ba696ba2038db4a3aab",
+    "inputsCurrent": true,
+    "reportSha256": "1e3dec260d185d0bd1ec21106f21c223055c57682315064f260a9320640a8ec1",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -18,9 +18,9 @@
       "slug": "app-bar",
       "title": "App bar",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Small, medium flexible, large flexible, and search app bars.",
       "adaptation": "Native header/nav composition; AppBar owns scroll collapse and search expansion.",
@@ -60,54 +60,6 @@
           "kind": "verification",
           "description": "Real modal search close/focus ordering and collapsed-header focus clearance are not mapped.",
           "nextStep": "Open and dismiss the actual search dialog; Tab through scroll collapse and enlarged headings."
-        }
-      ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "bottom-app-bar",
-      "title": "Bottom app bar",
-      "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-13",
-      "scope": "Bottom command bar with optional FAB.",
-      "adaptation": "Tab-reachable commands; no toolbar composite role.",
-      "upstream": {
-        "source": "https://m3.material.io/components/toolbars/overview",
-        "reviewedOn": "2026-09-13",
-        "scope": "requirements-prose-reviewed",
-        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "Toolbars/Overview and Specs: docked toolbar replaces the baseline bottom app bar"
-        ],
-        "sources": [
-          "https://m3.material.io/components/toolbars/overview",
-          "https://m3.material.io/components/toolbars/specs",
-          "https://m3.material.io/components/toolbars/guidelines",
-          "https://m3.material.io/components/toolbars/accessibility"
-        ],
-        "requirements": "The docked toolbar replaces the baseline bottom app bar in Expressive guidance. Retain the older bar only for compatibility or a specific capability need."
-      },
-      "relationship": "component",
-      "sources": [
-        {
-          "path": "src/sass/components/_bottom-app-bar.scss",
-          "sha256": "7c6073e4279007eb089de9a839e1940f732a26067479b8fc745e1d7d366c70f9"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Retained baseline bar has no directly mapped target, Tab-order or content-clearance check.",
-          "nextStep": "Verify fixed-bar clearance at enlarged text; prefer a docked toolbar for new Expressive designs."
         }
       ],
       "browserChecks": [],
@@ -195,72 +147,10 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "navigation-drawer",
-      "title": "Navigation drawer",
-      "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-13",
-      "scope": "Sliding and fixed drawers with nested sections.",
-      "adaptation": "Native details/summary supports nesting.",
-      "upstream": {
-        "source": "https://m3.material.io/components/navigation-drawer/overview",
-        "reviewedOn": "2026-09-13",
-        "scope": "requirements-prose-reviewed",
-        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "Overview",
-          "Specs",
-          "Guidelines",
-          "Accessibility"
-        ],
-        "sources": [
-          "https://m3.material.io/components/navigation-drawer/overview",
-          "https://m3.material.io/components/navigation-drawer/specs",
-          "https://m3.material.io/components/navigation-drawer/guidelines",
-          "https://m3.material.io/components/navigation-drawer/accessibility"
-        ],
-        "requirements": "Current Expressive guidance replaces the drawer with an expanded navigation rail. Retained drawers still need named destinations, independent scrolling and correct modal focus and dismissal."
-      },
-      "relationship": "component",
-      "sources": [
-        {
-          "path": "src/sass/components/_navigation-drawer.scss",
-          "sha256": "6f1a81c328dcdfe1d0127764b33b9f88529ea4a059b0ccb9f30436801a85da89"
-        },
-        {
-          "path": "src/ts/components/navigationDrawer.ts",
-          "sha256": "6199889b6d22bd065f85e66c5890de0f638de2c42b314b7e30f31d714fb0f56f"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks.",
-          "nextStep": "Test nested destinations, long scrolling and Escape with the actual trigger."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/expressivecss-web-accessibility-browser.test.js",
-          "name": "chromium: remaining fixed drawer releases modal state at the expanded boundary",
-          "scope": "Compact open to expanded fixed drawer releases native modality and can reopen after returning compact.",
-          "state": "stale"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -271,9 +161,9 @@
       "slug": "panes",
       "title": "Panes",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "List-detail, supporting pane, and equal panes.",
       "adaptation": "CSS viewport and container queries; the application chooses the active compact pane.",
@@ -311,10 +201,10 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -325,9 +215,9 @@
       "slug": "footer",
       "title": "Footer",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Native footer with navigation columns and copyright content.",
       "adaptation": "Web page landmark styled with theme roles.",
@@ -361,10 +251,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -375,9 +265,9 @@
       "slug": "tabs",
       "title": "Tabs",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Primary and secondary tabs; stacked and horizontal icon layouts.",
       "adaptation": "Links target panels; use the shipped runtime keyboard contract.",
@@ -422,10 +312,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
           "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -436,9 +326,9 @@
       "slug": "breadcrumbs",
       "title": "Breadcrumbs",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Breadcrumb links and app-bar composition.",
       "adaptation": "Labelled navigation with an ordered list and current-page link.",
@@ -472,10 +362,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -486,9 +376,9 @@
       "slug": "pagination",
       "title": "Pagination",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Page links, active page, and unavailable previous/next items.",
       "adaptation": "CSS-only navigation; the application supplies destinations.",
@@ -522,10 +412,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -536,9 +426,9 @@
       "slug": "menu",
       "title": "Menu",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Vertical menus, nested flyouts, grouping, and standard/vibrant styles.",
       "adaptation": "Native menu/li structure; Menu owns opening and keyboard behavior.",
@@ -584,22 +474,22 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "Menu cancels superseded callbacks and teardown work (chromium)",
           "scope": "Open/close reversal and destruction during opening/closing preserve visibility, focus and completion callback ownership. Equivalent Firefox and WebKit cases run in the same file.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -610,9 +500,9 @@
       "slug": "scrollspy",
       "title": "Scrollspy",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Section tracking and table-of-contents links.",
       "adaptation": "Web document navigation helper.",
@@ -654,10 +544,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -713,22 +603,22 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -739,9 +629,9 @@
       "slug": "icon-buttons",
       "title": "Icon buttons",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Standard, filled, tonal, outlined; five sizes; narrow, wide, and square.",
       "adaptation": "Accessible name belongs to the control; the glyph is decorative.",
@@ -792,67 +682,16 @@
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group toggle colors resolve in a browser",
           "scope": "Filled icon button selected color and glyph fill inside a button group only.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "keyboard press changes icon widths and rendered corners",
           "scope": "Icon children inside button group only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "segmented-buttons",
-      "title": "Segmented buttons",
-      "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-09-13",
-      "scope": "Single-select radio and multi-select checkbox groups.",
-      "adaptation": "Native fieldset/input/label owns selection and form values.",
-      "upstream": {
-        "source": "https://m3.material.io/components/segmented-buttons/overview",
-        "reviewedOn": "2026-09-13",
-        "scope": "requirements-prose-reviewed",
-        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "Overview",
-          "Specs",
-          "Guidelines",
-          "Accessibility"
-        ],
-        "sources": [
-          "https://m3.material.io/components/segmented-buttons/overview",
-          "https://m3.material.io/components/segmented-buttons/specs",
-          "https://m3.material.io/components/segmented-buttons/guidelines",
-          "https://m3.material.io/components/segmented-buttons/accessibility"
-        ],
-        "requirements": "Segmented buttons are no longer recommended for new Expressive designs; use connected button groups. Retained native radio/checkbox groups remain available for maintenance, explicit requests or a documented form-value gap. Preserve selection, form semantics and effective targets."
-      },
-      "relationship": "component",
-      "sources": [
-        {
-          "path": "src/sass/components/_segmented-buttons.scss",
-          "sha256": "e9ccd5d1fce16d58d67ba03fb4302ef7342ccdab528237b199b63bbd46022f47"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Legacy native radio/checkbox contracts lack a directly mapped rendered group check.",
-          "nextStep": "Test single/multiple form values and native keys; preserve semantics when choosing connected button groups."
-        }
-      ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -863,9 +702,9 @@
       "slug": "button-groups",
       "title": "Button groups",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Standard and connected groups; commands and opt-in selection.",
       "adaptation": "Runtime coordinates neighboring widths and selection; CSS handles connected shapes.",
@@ -912,34 +751,34 @@
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group toggle colors resolve in a browser",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group geometry resolves for overrides, targets, and RTL",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "standard press redistribution keeps its rendered width stable",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "keyboard press changes icon widths and rendered corners",
           "scope": "Rendered group behavior; does not establish standalone common/icon-button parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -950,9 +789,9 @@
       "slug": "split-button",
       "title": "Split button",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Leading action and trailing menu trigger with matching styles.",
       "adaptation": "Reuses Menu; no separate split-button runtime.",
@@ -1005,9 +844,9 @@
       "slug": "fab",
       "title": "Floating action button",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "FAB sizes, extended FABs, and menus of related actions.",
       "adaptation": "Floating action behavior uses the documented FAB runtime.",
@@ -1073,9 +912,9 @@
       "slug": "cards",
       "title": "Cards",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Elevated, filled, outlined, horizontal, and directly actionable cards.",
       "adaptation": "Native article anatomy; primary-action links preserve navigation semantics.",
@@ -1128,28 +967,28 @@
           "file": "tests/cards-browser.test.js",
           "name": "dragged and picked-up states override simultaneous pointer states",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/cards-browser.test.js",
           "name": "invalid disclosures keep their panels visible and operable",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/cards-browser.test.js",
           "name": "directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint",
           "scope": "Specific card state, disclosure fallback, or horizontal layout contract.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expanding-card-browser.test.js",
           "name": "expanding-card completion follows CSS and survives interruption (chromium)",
           "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1160,9 +999,9 @@
       "slug": "lists",
       "title": "Lists",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Standard and segmented lists.",
       "adaptation": "Native list semantics; visual selection alone does not justify aria-selected.",
@@ -1204,16 +1043,16 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete list-detail example preserves both treatments and its task path",
           "scope": "Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1260,9 +1099,9 @@
       "slug": "bottom-sheet",
       "title": "Bottom sheet",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Standard and modal bottom sheets.",
       "adaptation": "Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.",
@@ -1316,10 +1155,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
           "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1330,9 +1169,9 @@
       "slug": "side-sheet",
       "title": "Side sheet",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Standard and modal side sheets.",
       "adaptation": "Native dialog and shared drag/dismiss behavior.",
@@ -1386,10 +1225,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
           "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1400,9 +1239,9 @@
       "slug": "floating-sheet",
       "title": "Floating sheet",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Inset floating dialog surface.",
       "adaptation": "Shares Dialogs initialization; no edge attachment or drag handle.",
@@ -1445,10 +1284,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining sheet variants retain native modal focus and explicit close actions",
           "scope": "Each native dialog variant: modal containment, Escape, explicit close/return focus and nonmodal outside focus. No drag or long-content assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1459,9 +1298,9 @@
       "slug": "drag-handle",
       "title": "Drag handle",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Decorative grip and actionable button grip.",
       "adaptation": "The host element determines semantics; no general dragging engine.",
@@ -1507,9 +1346,9 @@
       "slug": "badges",
       "title": "Badges",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Small dot and large count badges.",
       "adaptation": "Expose counts through the enclosing control name when its icon is hidden.",
@@ -1550,10 +1389,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
           "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1593,28 +1432,28 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "Tooltip destroy cancels pending delay and animation callbacks",
           "scope": "Runtime timer cancellation for enter, exit and animation scheduling.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "Tooltip positioning preserves margins and viewport edges after scrolling",
           "scope": "Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1625,9 +1464,9 @@
       "slug": "snackbar",
       "title": "Snackbar",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Transient message with optional action and close control.",
       "adaptation": "Use the documented announcement and timeout behavior.",
@@ -1671,10 +1510,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining snackbar retains a focused action until focus leaves",
           "scope": "Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1685,9 +1524,9 @@
       "slug": "banners",
       "title": "Banners",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Basic/rich and standard/vibrant; square basic banners.",
       "adaptation": "Persistent in-flow feedback; application owns dismissal.",
@@ -1733,9 +1572,9 @@
       "slug": "progress",
       "title": "Progress indicators",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Linear and circular progress, determinate and indeterminate.",
       "adaptation": "Prefer native progress where applicable; supply accessible state for custom hosts.",
@@ -1783,10 +1622,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining progress and loading variants stop spatial motion",
           "scope": "Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1797,9 +1636,9 @@
       "slug": "loading-indicator",
       "title": "Loading indicator",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Uncontained and contained morphing loading indicator.",
       "adaptation": "CSS-only; the author supplies an accessible waiting message.",
@@ -1841,10 +1680,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining progress and loading variants stop spatial motion",
           "scope": "Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -1855,9 +1694,9 @@
       "slug": "carousel",
       "title": "Carousel",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Adaptive visual collections with documented layout variants.",
       "adaptation": "Runtime owns sizing and navigation; reduced motion removes parallax and morphing.",
@@ -1910,9 +1749,9 @@
       "slug": "lightbox",
       "title": "Lightbox",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Enlarge-on-activation image and dismissal.",
       "adaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
@@ -1950,16 +1789,16 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
           "scope": "Space opens image enlargement; Escape closes; destroy preserves original image/style.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
           "scope": "Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2002,9 +1841,9 @@
       "slug": "search",
       "title": "Search",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Search bar and expanded search view.",
       "adaptation": "Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.",
@@ -2046,10 +1885,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
           "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2060,9 +1899,9 @@
       "slug": "fieldsets",
       "title": "Fieldsets",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Outlined, filled, and rounded form groups.",
       "adaptation": "Native fieldset/legend; related text-field tokens do not make this an M3 component.",
@@ -2101,16 +1940,16 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining native controls preserve names, keyboard state and form values",
           "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2158,10 +1997,10 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete editor example preserves both treatments and its task path",
           "scope": "Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2172,9 +2011,9 @@
       "slug": "select",
       "title": "Select",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
@@ -2230,22 +2069,22 @@
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "partial replacement and client navigation preserve shell ownership across repeated mounts",
           "scope": "Rail shell ownership; enhanced select interaction; generated Menu registry/resource cleanup; tooltip ownership across route replacement.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-lifecycle-browser.test.js",
           "name": "resource observations detect omitted teardown after a partial replacement",
           "scope": "Negative control proves resources remain without destroy; no visual parity assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/menu-field-browser.test.js",
           "name": "enhanced select keeps enlarged multiline labels clear of values (chromium)",
           "scope": "Filled enhanced select label/value separation with multiline LTR/RTL labels at 16px and 32px root text size. Native zoom, native and outlined selects are not covered. Equivalent Firefox and WebKit cases run in the same file.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2256,9 +2095,9 @@
       "slug": "checkboxes",
       "title": "Checkboxes",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Unchecked, checked, indeterminate, and disabled.",
       "adaptation": "Native checkbox; indeterminate is set through the DOM property.",
@@ -2300,16 +2139,16 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining native controls preserve names, keyboard state and form values",
           "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2320,9 +2159,9 @@
       "slug": "radio-buttons",
       "title": "Radio buttons",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Native radio groups and disabled controls.",
       "adaptation": "Shared name provides exclusivity; fieldset/legend names the group.",
@@ -2364,10 +2203,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining native controls preserve names, keyboard state and form values",
           "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2378,9 +2217,9 @@
       "slug": "switches",
       "title": "Switches",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Native checkbox switches and disabled controls.",
       "adaptation": "Input state owns selection and form value.",
@@ -2422,10 +2261,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining native controls preserve names, keyboard state and form values",
           "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2436,9 +2275,9 @@
       "slug": "slider",
       "title": "Slider",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Standard, centered, range, horizontal/vertical, and five sizes.",
       "adaptation": "Native range inputs with runtime value-label and range coordination.",
@@ -2484,16 +2323,16 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining native controls preserve names, keyboard state and form values",
           "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining slider accepts zero maximum and keeps value labels aligned after resize",
           "scope": "Correct zero maximum fraction/stop count, resized value label, noncentral RTL geometry and native End key.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2504,9 +2343,9 @@
       "slug": "chips",
       "title": "Chips",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Assist, suggestion, filter, input, and display chips.",
       "adaptation": "Element choice defines behavior; display chips are a framework extension.",
@@ -2552,10 +2391,10 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining native controls preserve names, keyboard state and form values",
           "scope": "Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2566,9 +2405,9 @@
       "slug": "autocomplete",
       "title": "Autocomplete",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Single and multi-select suggestions.",
       "adaptation": "Runtime combobox behavior attached to a text field; no standalone upstream component claim.",
@@ -2625,16 +2464,16 @@
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining suggestions and section links preserve selection and dismissal",
           "scope": "Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-web-accessibility-browser.test.js",
           "name": "chromium: remaining autocomplete preserves a preselected display label on focus",
           "scope": "Initial selected record retains its display label and selection through first focus and Tab exit.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2645,9 +2484,9 @@
       "slug": "date-picker",
       "title": "Date picker",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Inline single-date, range, and multiple-date calendar.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
@@ -2714,9 +2553,9 @@
       "slug": "time-picker",
       "title": "Time picker",
       "kind": "component",
-      "support": "partial",
+      "support": "unassessed",
       "lastReviewedSupport": "partial",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-09-13",
       "scope": "Inline clock and digital input; 12-hour and 24-hour formats.",
       "adaptation": "Default inline presentation with optional docked display plugin; no open()/close() methods or modal implementation.",
@@ -2829,16 +2668,16 @@
           "file": "tests/expressivecss-examples-browser.test.js",
           "name": "complete settings example preserves both treatments and its task path",
           "scope": "32px/28px example headline sizes, responsive overflow and doubled root text size; does not prove font identity or full scale parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-scoped headline size, line-height and 500 weight repair is accepted while qualitative judgment stays pending; no synthesized-font detection.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2887,22 +2726,22 @@
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group geometry resolves for overrides, targets, and RTL",
           "scope": "Selected small/xlarge corners, connected XS RTL outer/inner corners, target geometry; reduced-motion transition duration is zero.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "keyboard press changes icon widths and rendered corners",
           "scope": "Standard and connected button-group pressed corner changes and release with keyboard activation.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-scoped common-button 16px corner repair; does not establish shape-system parity.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -2959,34 +2798,34 @@
           "file": "tests/button-groups-browser.test.js",
           "name": "standard press redistribution keeps its rendered width stable",
           "scope": "Post-transition standard-group growth/release preserves total rendered width; not spring-curve fidelity.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/button-groups-browser.test.js",
           "name": "button-group geometry resolves for overrides, targets, and RTL",
           "scope": "Connected group's transition duration is zero under emulated reduced motion.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expressivecss-material-quality.test.js",
           "name": "Material browser exposes wrong hierarchy contracts and motion while keeping design judgments pending",
           "scope": "Application-owned editor animation is removed only for reduced-motion scenes while visible completion remains; not framework-wide reduced-motion coverage.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expanding-card-browser.test.js",
           "name": "expanding-card completion follows CSS and survives interruption (chromium)",
           "scope": "Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.",
-          "state": "stale"
+          "state": "recorded-passed"
         },
         {
           "file": "tests/expanding-card-browser.test.js",
           "name": "scale and expanding cards respect changing motion preferences (chromium)",
           "scope": "Chromium: reduced-motion final transforms, active transition cancellation, focus preservation and card close cleanup. Equivalent Firefox and WebKit cases run separately in the browser suite.",
-          "state": "stale"
+          "state": "recorded-passed"
         }
       ],
-      "browserEvidence": "needs-rerun",
+      "browserEvidence": "recorded-scoped-pass",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

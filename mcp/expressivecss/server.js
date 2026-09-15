@@ -1032,27 +1032,6 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
   const hinted = new Set(componentsHint.map(normalizeForMatch));
   const primary = [];
   const rejected = new Set();
-  const replacements = new Map();
-  const retained = new Set();
-  const clauses = goal.toLowerCase().replace(/[-_]/gu, ' ').split(/[.;\n]/u);
-  for (const decision of COMPONENT_DECISIONS_BY_SLUG.values()) {
-    if (decision.selectable !== false) continue;
-    const names = [decision.slug, decision.title, ...(decision.aliases ?? [])]
-      .map((name) => normalizeForMatch(name).replaceAll('-', ' '));
-    const mentions = clauses.filter((clause) =>
-      names.some((name) => new RegExp(`\\b${name}\\b`, 'u').test(clause))
-      && !names.some((name) => new RegExp(`\\b(?:not|never|avoid|without|instead of|rather than) (?:using |the |existing )*${name}\\b`, 'u').test(clause)));
-    const preserve = /\b(?:retain|keep|maintain|maintenance|repair|fix|preserve|compatibility|unavailable|unsupported|missing|lacks?|cannot|needs? native|requires? native)\b/u;
-    const migrate = /\b(?:new (?:design|interface|ui|screen|layout)|migrat(?:e|ing|ion)|replac(?:e|ing)|moderniz(?:e|ing))\b/u;
-    if (mentions.some((clause) => preserve.test(clause)
-      && !/\b(?:not|never|avoid) (?:retain|keep|maintain|repair|fix|preserve)/u.test(clause))) {
-      retained.add(decision.slug);
-    } else if (mentions.some((clause) => migrate.test(clause) && !/\b(?:not|never|avoid|without)\b/u.test(clause))) {
-      const replacement = decision.alternatives?.[0];
-      if (replacement) replacements.set(replacement, decision.excludeReason);
-    }
-  }
-
   const searchableText = (values) => values
     .flatMap((value) => {
       if (typeof value === 'string') return [value];
@@ -1064,7 +1043,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
 
   for (const guide of catalog.components.values()) {
     const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
-    if (!decision || (decision.selectable === false && !retained.has(guide.slug))) continue;
+    if (!decision) continue;
 
     const aliases = Array.isArray(decision.aliases) ? decision.aliases : [];
     const adaptive = decision.adaptive ?? [];
@@ -1082,9 +1061,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
     const nameMatch = normalizedGoal.includes(normalizeForMatch(decision.slug))
       || normalizedGoal.includes(normalizeForMatch(decision.title));
     const hintMatch = hinted.has(guide.slug) || aliases.some((alias) => hinted.has(normalizeForMatch(alias)));
-    const replacementReason = replacements.get(guide.slug);
-    const retentionReason = retained.has(guide.slug) ? `Retained for explicit maintenance or compatibility intent. ${decision.excludeReason}` : null;
-    const score = (positiveMatches.length * 2) + (aliasMatch ? 30 : 0) + (nameMatch ? 12 + tokenize(decision.slug).length : 0) + (hintMatch ? 12 : 0) + (replacementReason || retentionReason ? 60 : 0);
+    const score = (positiveMatches.length * 2) + (aliasMatch ? 30 : 0) + (nameMatch ? 12 + tokenize(decision.slug).length : 0) + (hintMatch ? 12 : 0);
     const avoidScore = avoidMatches.length * 8;
 
     if (score <= avoidScore || score === 0) {
@@ -1096,9 +1073,9 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
       slug: guide.slug,
       title: guide.title,
       score: score - avoidScore,
-      why: retentionReason || replacementReason || (positiveMatches.length
+      why: positiveMatches.length
         ? `Decision metadata matches: ${positiveMatches.slice(0, 4).join(', ')}`
-        : 'Explicit component name or alias match'),
+        : 'Explicit component name or alias match',
       docs: guide.sourceUrl,
       selectionSource: 'decision-catalog',
       confidence: 'primary',
@@ -1118,7 +1095,6 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
   const fallback = [];
   for (const guide of catalog.components.values()) {
     const decision = COMPONENT_DECISIONS_BY_SLUG.get(guide.slug);
-    if (decision?.selectable === false) continue;
     if (selectedSlugs.has(guide.slug) || rejected.has(guide.slug)) continue;
     const matches = [...tokens].filter((token) => guide.text.includes(token));
     if (!matches.length) continue;
@@ -1169,7 +1145,7 @@ function buildPageArchitecture(catalog, pageGoal, components = [], viewportTarge
 
   const uniqueSelected = Array.from(new Set(selected));
   const hasAppBar = uniqueSelected.includes('app-bar');
-  const primaryNavigation = uniqueSelected.find((slug) => ['navigation-bar', 'navigation-rail', 'navigation-drawer', 'sidenav'].includes(slug));
+  const primaryNavigation = uniqueSelected.find((slug) => ['navigation-bar', 'navigation-rail'].includes(slug));
   const hasTabs = uniqueSelected.includes('tabs');
   const hasBreadcrumbs = uniqueSelected.includes('breadcrumbs');
   const hasFooter = uniqueSelected.includes('footer');
@@ -1178,8 +1154,6 @@ function buildPageArchitecture(catalog, pageGoal, components = [], viewportTarge
     'app-bar',
     'navigation-bar',
     'navigation-rail',
-    'navigation-drawer',
-    'sidenav',
     'tabs',
     'breadcrumbs',
     'footer',
@@ -1230,12 +1204,6 @@ function buildPageArchitecture(catalog, pageGoal, components = [], viewportTarge
     skeleton.push('  <nav class="navigation-bar" aria-label="Primary"><!-- 3–5 destinations; mark one aria-current="page" --></nav>');
   } else if (primaryNavigation === 'navigation-rail') {
     skeleton.push('  <nav class="navigation-rail" aria-label="Primary"><!-- destinations; mark one aria-current="page" --></nav>');
-  } else if (primaryNavigation === 'navigation-drawer' || primaryNavigation === 'sidenav') {
-    skeleton.push(
-      '  <nav aria-label="Primary">',
-      '    <ul class="navigation-drawer"><!-- destinations --></ul>',
-      '  </nav>',
-    );
   }
   skeleton.push('  <main>');
   if (hasBreadcrumbs) {

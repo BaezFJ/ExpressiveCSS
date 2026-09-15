@@ -31,7 +31,7 @@ export interface DocsPage {
 /** One drawer/footer group. A group with no `icon` renders flat. */
 export interface DocsGroup {
   label: string;
-  icon: string | null;
+  icon: string;
   blurb?: string;
   pages: DocsPage[];
 }
@@ -39,7 +39,7 @@ export interface DocsGroup {
 export const NAV: DocsGroup[] = [
   {
     label: "Start",
-    icon: null,
+    icon: "home",
     blurb:
       "If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.",
     pages: [
@@ -160,13 +160,6 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 top app bars, from the HTML.",
       },
       {
-        id: "bottom_app_bar",
-        label: "Bottom app bar",
-        route: "/bottom-app-bar.html",
-        description:
-          "This screen's commands at the bottom edge, with an optional FAB — not its destinations.",
-      },
-      {
         id: "navigation_bar",
         label: "Navigation bar",
         route: "/navigation-bar.html",
@@ -179,15 +172,7 @@ export const NAV: DocsGroup[] = [
         route: "/navigation-rail.html",
         description:
           "Switch between UI views on mid-sized devices.",
-      },
-      {
-        id: "sidenav",
-        label: "Sidenav",
-        title: "NavigationDrawer",
-        route: "/sidenav.html",
-        description:
-          "A slide-out menu, or a fixed sidebar on Expanded and wider screens.",
-        aliases: ["/collapsible.html"],
+        aliases: ["/sidenav.html", "/collapsible.html"],
       },
       {
         id: "panes",
@@ -260,18 +245,12 @@ export const NAV: DocsGroup[] = [
           "A single icon as the whole control, in four styles and five sizes.",
       },
       {
-        id: "segmented_buttons",
-        label: "Segmented buttons",
-        route: "/segmented-buttons.html",
-        description:
-          "Two to five connected options, one choice or several, with no script behind them.",
-      },
-      {
         id: "button_groups",
         label: "Button groups",
         route: "/button-groups.html",
         description:
           "Related buttons that bump and reshape against each other, in two variants and five sizes.",
+        aliases: ["/segmented-buttons.html"],
       },
       {
         id: "split_button",
@@ -403,6 +382,7 @@ export const NAV: DocsGroup[] = [
         route: "/toolbars.html",
         description:
           "Frequently used actions for the current page.",
+        aliases: ["/bottom-app-bar.html"],
       },
       {
         id: "search",

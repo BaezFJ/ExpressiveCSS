@@ -11,7 +11,6 @@ const S = defineSections([
   { id: "large", label: "Large" },
   { id: "navigation", label: "On navigation" },
   { id: "lists", label: "In a list" },
-  { id: "sidenav", label: "In a navigation drawer" },
   { id: "color", label: "Color" },
 ]);
 ---
@@ -117,7 +116,7 @@ const S = defineSections([
   </Section>
   <Section {...S.lists}>
         <p>
-          A trailing <code>.badge</code> in a list or drawer row stays
+          A trailing <code>.badge</code> in a list row stays
           in flow on the end, as a count, not overlapped on the leading
           icon.
         </p>
@@ -140,37 +139,6 @@ const S = defineSections([
     <span class="badge">3</span>
   </li>
 </ul>
-`} />
-  </Section>
-  <Section {...S.sidenav}>
-        <p>
-          Put a badge on a <code>summary</code> or a destination. Nested
-          sections are native <code>&lt;details&gt;</code>.
-        </p>
-        <nav aria-label="Main — In a navigation drawer">
-          <ul class="sidenav navigation-drawer-demo">
-            <li>
-              <details open>
-                <summary>
-                  <span class="material-symbols" aria-hidden="true">inbox</span>
-                  Inbox
-                  <span class="badge">4</span>
-                </summary>
-                <ul>
-                  <li><a href="#!">Primary<span class="badge">1</span></a></li>
-                  <li><a href="#!">Social</a></li>
-                </ul>
-              </details>
-            </li>
-            <li><a href="#!">Sent</a></li>
-          </ul>
-        </nav>
-<Code code={`
-<summary>
-  <span class="material-symbols" aria-hidden="true">inbox</span>
-  Inbox
-  <span class="badge">4</span>
-</summary>
 `} />
   </Section>
   <Section {...S.color}>

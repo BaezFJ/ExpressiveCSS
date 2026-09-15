@@ -11,13 +11,13 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `12cc0bf4dc5e147205987335e80e626052ffd334a779700bcec115316ba4f221`
+Contract SHA-256: `80d3e55442bd9f54c70d720c024ab67d83d6935e255b7f20500a7911917b3d1f`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/split-button)
 
-Example: PDF/CSV format selection for a later Export action belongs in a select or segmented inputs. A split button fits Export now plus alternate export commands.
+Example: PDF/CSV format selection for a later Export action belongs in a select or native inputs. A split button fits Export now plus alternate export commands.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 

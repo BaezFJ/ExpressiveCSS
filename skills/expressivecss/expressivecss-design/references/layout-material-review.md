@@ -18,36 +18,6 @@ Verification gap: Real modal search close/focus ordering and collapsed-header fo
 
 No browser check is directly mapped. Source and unit tests do not substitute for the concrete rendered check above.
 
-## [Bottom app bar](../../components/bottom-app-bar.md)
-
-Relationship: component. Sources: [overview](https://m3.material.io/components/toolbars/overview), [specs](https://m3.material.io/components/toolbars/specs), [guidelines](https://m3.material.io/components/toolbars/guidelines), [accessibility](https://m3.material.io/components/toolbars/accessibility).
-
-Reviewed sections: Toolbars/Overview and Specs: docked toolbar replaces the baseline bottom app bar.
-
-Requirements: The docked toolbar replaces the baseline bottom app bar in Expressive guidance. Retain the older bar only for compatibility or a specific capability need.
-
-Framework comparison: The retained bar uses CSS styling and the native Tab sequence. It is not the recommended starting point for new Expressive designs.
-
-Verification gap: Retained baseline bar has no directly mapped target, Tab-order or content-clearance check. Next check: Verify fixed-bar clearance at enlarged text; prefer a docked toolbar for new Expressive designs.
-
-No browser check is directly mapped. Source and unit tests do not substitute for the concrete rendered check above.
-
-## [Navigation drawer](../../components/navigation-drawer.md)
-
-Relationship: component. Sources: [overview](https://m3.material.io/components/navigation-drawer/overview), [specs](https://m3.material.io/components/navigation-drawer/specs), [guidelines](https://m3.material.io/components/navigation-drawer/guidelines), [accessibility](https://m3.material.io/components/navigation-drawer/accessibility).
-
-Reviewed sections: Overview; Specs; Guidelines; Accessibility.
-
-Requirements: Current Expressive guidance replaces the drawer with an expanded navigation rail. Retained drawers still need named destinations, independent scrolling and correct modal focus and dismissal.
-
-Framework comparison: The runtime retains nested details and a native modal wrapper. Older advice to replace a rail with a drawer is historical, not the current default.
-
-Unreleased source repair releases modal state when an open fixed drawer crosses the expanded breakpoint.
-
-Verification gap: Breakpoint modal release is checked; nested details and Escape return focus remain distinct checks. Next check: Test nested destinations, long scrolling and Escape with the actual trigger.
-
-Mapped browser scope: Compact open to expanded fixed drawer releases native modality and can reopen after returning compact.
-
 ## [Icon buttons](../../components/icon-buttons.md)
 
 Relationship: component. Sources: [overview](https://m3.material.io/components/icon-buttons/overview), [specs](https://m3.material.io/components/icon-buttons/specs), [guidelines](https://m3.material.io/components/icon-buttons/guidelines), [accessibility](https://m3.material.io/components/icon-buttons/accessibility).
@@ -61,20 +31,6 @@ Framework comparison: Sizes, shapes and toggle mappings exist. Measure effective
 Verification gap: Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states. Next check: Measure XS/S effective targets and test named default/toggle controls outside groups.
 
 Mapped browser scope: Filled icon button selected color and glyph fill inside a button group only. Icon children inside button group only.
-
-## [Segmented buttons](../../components/segmented-buttons.md)
-
-Relationship: component. Sources: [overview](https://m3.material.io/components/segmented-buttons/overview), [specs](https://m3.material.io/components/segmented-buttons/specs), [guidelines](https://m3.material.io/components/segmented-buttons/guidelines), [accessibility](https://m3.material.io/components/segmented-buttons/accessibility).
-
-Reviewed sections: Overview; Specs; Guidelines; Accessibility.
-
-Requirements: Use connected button groups for new toggle choices; retain segmented inputs only for maintenance, explicit requests or a verified native form-value gap. Preserve form semantics and effective targets when choosing a replacement.
-
-Framework comparison: The existing contract uses native radio and checkbox groups. Preserve form values and native keys when migrating to connected button groups.
-
-Verification gap: Legacy native radio/checkbox contracts lack a directly mapped rendered group check. Next check: Test single/multiple form values and native keys; preserve semantics when choosing connected button groups.
-
-No browser check is directly mapped. Source and unit tests do not substitute for the concrete rendered check above.
 
 ## [Button groups](../../components/button-groups.md)
 

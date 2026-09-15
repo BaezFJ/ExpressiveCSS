@@ -157,22 +157,20 @@ describe('the Astro chrome', () => {
     assert.match(base, /\/static\/docs\.css\?v=\$\{version\}/);
   });
 
-  test('the drawer and the footer keep the hooks and names they are found by', () => {
-    // Both render from the catalogue, and the things most able to break here
-    // are the least likely to look wrong while doing it: a dropped
-    // `aria-current` or a renamed `#nav-mobile` changes nothing a reader sees.
-    // The tokens below are the drawer's own identity, the app bar trigger's
-    // target, the exclusive-group name, the current-page state, and the
-    // footer's labelling and version line.
+  test('the documentation navigation and footer keep their shared hooks', () => {
     const shared = {
-      'docs/src/components/NavigationDrawer.astro': [
-        'aria-label="Main"',
-        'navigation-drawer navigation-drawer-fixed',
-        'id="nav-mobile"',
-        'name="docs-nav"',
+      'docs/src/components/DocsNavigation.astro': [
+        'navigation-rail no-autoinit docs-category-rail',
+        'docs-page-navigation',
+        'id="docs-navigation-dialog"',
+        'class="tabs"',
         'material-symbols',
         'aria-current',
         'active',
+      ],
+      'docs/src/layouts/DocsLayout.astro': [
+        'id="docs-navigation-trigger"',
+        'aria-controls="docs-navigation-dialog"',
       ],
       'docs/src/components/Footer.astro': [
         'footer-',
@@ -186,6 +184,12 @@ describe('the Astro chrome', () => {
         assert.ok(astro.includes(token), `${file} no longer states ${token}`);
       }
     }
+  });
+
+  test('compact navigation uses the native dialog lifecycle', () => {
+    const script = read('docs/static/docs.js');
+    assert.match(script, /navigationDialog\?\.showModal\(\)/);
+    assert.match(script, /navigationDialog\?\.addEventListener\("close", \(\) => navigationTrigger\?\.focus\(\)\)/);
   });
 });
 
@@ -223,7 +227,7 @@ describe('the compatibility routes Astro publishes', () => {
   test('every legacy route the catalogue records keeps redirecting', () => {
     // `aliases()` diverges from `ALIASES` for exactly one page -- the landing
     // page's two compatibility paths swap roles -- and every other alias has
-    // to survive that transformation untouched. The six named here are URLs in
+    // to survive that transformation untouched. These named routes are URLs in
     // search results.
     const published = new Map(aliases().map((a) => [a.from, a.to]));
     for (const { from, to } of ALIASES) {
@@ -232,14 +236,15 @@ describe('the compatibility routes Astro publishes', () => {
     }
     assert.deepEqual(
       ALIASES.map((a) => a.from).filter((from) => from !== '/index.html').sort(),
-      ['/collapsible.html', '/collections.html', '/dropdown.html',
-       '/modals.html', '/range.html', '/toasts.html'],
+      ['/bottom-app-bar.html', '/collapsible.html', '/collections.html',
+       '/dropdown.html', '/modals.html', '/range.html',
+       '/segmented-buttons.html', '/sidenav.html', '/toasts.html'],
       'the set of legacy routes changed',
     );
   });
 
   test('an alias is generated, not maintained', () => {
-    // One layout and one dynamic route. Six hand-written redirect pages would
+    // One layout and one dynamic route. Hand-written redirect pages would
     // be six places for a canonical target to go stale.
     assert.match(alias, /getStaticPaths/);
     assert.match(alias, /aliases\(\)/);

@@ -15,6 +15,7 @@ const iife = readFileSync(
   new URL("../dist/js/expressive.js", import.meta.url),
   "utf8",
 );
+const css = readFileSync(new URL("../dist/css/expressive.css", import.meta.url), "utf8");
 
 // index.ts hand-maintains its `version` export to track package.json. Asserting
 // against the manifest rather than a literal catches the two drifting apart,
@@ -43,7 +44,6 @@ describe("IIFE bundle", () => {
   test("the global carries AutoInit and the components", () => {
     assert.equal(typeof dom.window.Expressive.AutoInit, "function");
     for (const name of [
-      "Sidenav",
       "Tabs",
       "Snackbar",
       "Menu",
@@ -82,9 +82,15 @@ describe("IIFE bundle", () => {
       undefined,
       "retired TapTarget is still on the global",
     );
+    assert.equal(dom.window.Expressive.NavigationDrawer, undefined);
+    assert.equal(dom.window.Expressive.Sidenav, undefined);
   });
 
   test("reports ExpressiveCSS own version, matching package.json", () => {
     assert.equal(dom.window.Expressive.version, pkgVersion);
+  });
+
+  test("omits removed component selectors", () => {
+    assert.doesNotMatch(css, /\.bottom-app-bar|\.navigation-drawer|\.sidenav|\.segmented-button/);
   });
 });

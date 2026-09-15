@@ -1,13 +1,13 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import Banner from "../components/Banner.astro";
-import NavigationDrawer from "../components/NavigationDrawer.astro";
+import DocsNavigation from "../components/DocsNavigation.astro";
 import { markdownRoute, page } from "../lib/catalogue";
 
 /**
  * Every documentation page. The title and the banner come from the shared
  * catalogue rather than being restated per page, so a page cannot call itself
- * one thing in the drawer and another in its own heading.
+ * one thing in navigation and another in its own heading.
  */
 interface Props {
   /** The catalogue id of the page being rendered. */
@@ -25,7 +25,7 @@ const pageName = entry.title ?? entry.label;
 
     <header class="fixed">
         <div class="bar">
-            <button type="button" class="navigation-drawer-trigger hide-on-expanded-and-up" data-target="nav-mobile" aria-label="Open navigation">
+            <button type="button" id="docs-navigation-trigger" class="hide-on-expanded-and-up" aria-label="Browse documentation" aria-haspopup="dialog" aria-controls="docs-navigation-dialog">
                 <span class="material-symbols" aria-hidden="true">menu</span>
             </button>
             <h2>{pageName}</h2>
@@ -38,11 +38,7 @@ const pageName = entry.title ?? entry.label;
         </div>
     </header>
 
-{/* The drawer is a sibling of the bar, not a child of it. m3-guidelines.md:32:
-   "The trigger may live in the bar; the drawer must not." Inside <header> the
-   wrapper was also a direct child of an app bar host, so the navbar rules
-   styled it as a second 64dp bar. */}
-<NavigationDrawer current={id} />
+<DocsNavigation current={id} />
 
     <main>
         <Banner title={pageName} description={entry.description} />

@@ -7,10 +7,8 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | Component | Use when | Avoid when | Alternatives | Runtime |
 | --- | --- | --- | --- | --- |
 | [App bar](../components/app-bar.md) | Page title and screen-level actions. | Peer destinations need navigation; categories need tabs. | `navigation-bar`, `tabs`, `breadcrumbs` | auto-init |
-| [Bottom app bar](../components/bottom-app-bar.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use a docked toolbar. | `toolbars`, `navigation-bar` | css-only |
 | [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `toolbars` | css-only |
 | [Navigation rail](../components/navigation-rail.md) | Collapsed, expanded, or modal peer navigation; the Expressive drawer replacement. | Compact peers fit a navigation bar; verify nesting support. | `navigation-bar` | auto-init |
-| [Navigation drawer](../components/navigation-drawer.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use an expanded navigation rail. | `navigation-rail`, `side-sheet` | auto-init |
 | [Panes](../components/panes.md) | Responsive list-detail or supporting layouts. | A single collection needs a list, not multiple panes. | `lists` | css-only |
 | [Footer](../components/footer.md) | Site links and legal information at page end. | Primary app destinations need persistent navigation. | `navigation-bar` | css-only |
 | [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `button-groups` | auto-init |
@@ -20,7 +18,6 @@ Find the entry matching the requested job. Read its selected guide; compare alte
 | [Scrollspy](../components/scrollspy.md) | Track visible sections in a table of contents. | Separate views need navigation or tabs. | `tabs`, `navigation-bar` | auto-init |
 | [Buttons](../components/buttons.md) | Run an action with a visible label. | Stored choices need inputs; destinations need links. | `button-groups`, `icon-buttons` | css-only |
 | [Icon buttons](../components/icon-buttons.md) | Compact actions with recognizable icons. | An unfamiliar action needs a visible button label. | `buttons`, `tooltips` | css-only |
-| [Segmented buttons](../components/segmented-buttons.md) | Compatibility, explicit requests, or verified replacement gaps. | New designs: use a connected button group. | `button-groups`, `radio-buttons` | css-only |
 | [Button groups](../components/button-groups.md) | Cluster commands or aria-pressed toggle buttons. | Submitted values need segmented or other native inputs. | `split-button`, `radio-buttons` | auto-init |
 | [Split button](../components/split-button.md) | Default action plus related menu actions. | Equal actions need a group; values need inputs. | `button-groups`, `menu` | auto-init |
 | [Floating action button](../components/fab.md) | A circular action that can open a menu of related shortcuts. | The action is not the single highest-priority screen action. | `buttons`, `toolbars` | auto-init |

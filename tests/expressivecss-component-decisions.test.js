@@ -39,9 +39,8 @@ describe('ExpressiveCSS component decisions', () => {
     for (const component of data.components) {
       assert.ok(component.title);
       assert.ok(Array.isArray(component.aliases), `${component.slug} has no aliases`);
-      assert.equal(typeof component.selectable, 'boolean');
-      if (component.selectable) assert.equal(component.excludeReason, null);
-      else assert.ok(component.excludeReason && component.alternatives.length, `${component.slug} needs a reason and replacement`);
+      assert.equal('selectable' in component, false);
+      assert.equal('excludeReason' in component, false);
       assert.ok(component.guideSource.pageId);
       assert.ok(component.guideSource.heading);
       assert.ok([2, 3].includes(component.guideSource.headingLevel));
@@ -67,8 +66,6 @@ describe('ExpressiveCSS component decisions', () => {
       ['dialogs', 'banners'],
       ['switches', 'checkboxes'],
       ['navigation-bar', 'navigation-rail'],
-      ['navigation-drawer', 'side-sheet'],
-      ['bottom-app-bar', 'navigation-bar'],
       ['button-groups', 'radio-buttons'],
       ['progress', 'loading-indicator'],
       ['app-bar', 'tabs'],
@@ -118,7 +115,7 @@ describe('ExpressiveCSS component decisions', () => {
       'app-bar', 'panes', 'footer', 'breadcrumbs', 'pagination', 'scrollspy',
       'buttons', 'icon-buttons', 'split-button', 'cards', 'lists', 'floating-sheet',
       'badges', 'carousel', 'lightbox', 'toolbars', 'fieldsets', 'slider', 'chips',
-      'date-picker', 'time-picker', 'tabs', 'navigation-bar', 'segmented-buttons',
+      'date-picker', 'time-picker', 'tabs', 'navigation-bar',
       'button-groups', 'snackbar', 'banners', 'dialogs', 'progress', 'loading-indicator',
     ];
     for (const component of data.components) {
@@ -135,7 +132,6 @@ describe('ExpressiveCSS component decisions', () => {
     // Protect the distinctions most likely to be lost in further shortening.
     assert.match(bySlug.get('tabs').selectionExample, /navigation.*panels/is);
     assert.match(bySlug.get('button-groups').selectionExample, /submit.*radio/is);
-    assert.match(bySlug.get('segmented-buttons').selectionExample, /commands.*radio/is);
     assert.match(bySlug.get('snackbar').selectionExample, /save.*banner.*dialog/is);
     assert.match(bySlug.get('loading-indicator').selectionExample, /determinate.*indeterminate/is);
     assert.match(bySlug.get('progress').selectionExample, /indeterminate linear/i);
@@ -169,7 +165,6 @@ describe('ExpressiveCSS component decisions', () => {
     for (const slug of ['fieldsets', 'floating-sheet', 'select', 'autocomplete', 'drag-handle']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'related');
     for (const slug of ['footer', 'breadcrumbs', 'pagination', 'scrollspy', 'lightbox']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'none');
     assert.equal(bySlug.get('panes').materialGuidance.relationship, 'pattern');
-    assert.equal(new URL(bySlug.get('bottom-app-bar').materialGuidance.href).hostname, 'm2.material.io');
     assert.ok(bySlug.get('date-picker').materialGuidance.implementation.limitations.length);
     assert.ok(bySlug.get('buttons').materialGuidance.implementation.limitations.length);
   });
@@ -183,7 +178,7 @@ describe('ExpressiveCSS component decisions', () => {
   test('accounts for the remaining Material and web component reviews without claiming full parity', async () => {
     const prior = new Set(['buttons','navigation-bar','navigation-rail','toolbars','text-fields','dialogs','tooltips']);
     const remaining = data.components.filter(entry => !prior.has(entry.slug));
-    assert.equal(remaining.length, 39);
+    assert.equal(remaining.length, 36);
     const names = ['inputs-material-review','layout-material-review','feedback-material-review','web-extensions-review'];
     const references = (await Promise.all(names.map(name => readFile(new URL(`../skills/expressivecss/expressivecss-design/references/${name}.md`, import.meta.url), 'utf8')))).join('\n');
     for (const entry of remaining) {
@@ -340,7 +335,7 @@ describe('Material capability roadmap', () => {
       assert.equal(entry.support, entry.sourceReview === 'source-reviewed' ? entry.lastReviewedSupport : 'unassessed');
     }
     assert.deepEqual(roadmap.entries.filter((entry) => entry.kind === 'component' && entry.lastReviewedSupport === 'partial').map((entry) => entry.slug).sort(), data.components.filter(entry => entry.capabilityReview.support === 'partial').map(entry => entry.slug).sort());
-    for (const slug of ['bottom-app-bar', 'navigation-drawer', 'icon-buttons', 'segmented-buttons', 'drag-handle']) {
+    for (const slug of ['icon-buttons', 'drag-handle']) {
       assert.equal(roadmap.entries.find((entry) => entry.slug === slug).gaps.filter(gap => gap.kind === 'feature').length, 0, slug);
     }
     for (const slug of ['typography', 'shape', 'motion']) assert.equal(roadmap.entries.find((entry) => entry.slug === slug).lastReviewedSupport, 'partial');
@@ -409,17 +404,12 @@ describe('Material capability roadmap', () => {
 describe('Expressive selection and portable capability evidence', () => {
   test('keeps current Expressive replacements first in the selection catalogue', () => {
     const entries = new Map(data.components.map((entry) => [entry.slug, entry]));
-    assert.equal(entries.get('bottom-app-bar').alternatives[0], 'toolbars');
-    assert.equal(entries.get('navigation-drawer').alternatives[0], 'navigation-rail');
     for (const slug of ['navigation-bar', 'fab']) {
       assert.ok(!entries.get(slug).alternatives.includes('bottom-app-bar'));
     }
-    assert.equal(entries.get('segmented-buttons').alternatives[0], 'button-groups');
-    assert.deepEqual(data.components.filter((entry) => !entry.selectable).map((entry) => entry.slug).sort(),
-      ['bottom-app-bar', 'navigation-drawer', 'segmented-buttons']);
-    for (const entry of data.components.filter((item) => item.selectable)) {
-      assert.ok(entry.alternatives.every((slug) => entries.get(slug).selectable));
-      assert.ok(entry.adaptive.every((item) => !item.component || entries.get(item.component).selectable));
+    for (const entry of data.components) {
+      assert.ok(entry.alternatives.every((slug) => entries.has(slug)));
+      assert.ok(entry.adaptive.every((item) => !item.component || entries.has(item.component)));
     }
   });
 

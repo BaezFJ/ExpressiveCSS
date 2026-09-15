@@ -35,22 +35,45 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
   height: 100%;
 }
 
-/* In-flow sidenav so examples can sit in a docs section. */
-:is(.sidenav, .navigation-drawer).navigation-drawer-demo {
-  position: static;
-  transform: none;
-  height: auto;
-  max-width: 20rem;
-  z-index: auto;
-  margin: 0 0 1rem;
+.docs-navigation-wide {
+  display: none;
 }
 
-/* Offset documentation pages so they sit beside the fixed sidenav. */
+.docs-navigation-dialog > section {
+  padding: 1rem;
+}
+
 @media (width >= 840px) {
+  .docs-navigation-wide {
+    display: block;
+  }
+
+  .docs-category-rail {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 999;
+  }
+
+  .docs-page-navigation {
+    position: fixed;
+    inset: 0 auto 0 var(--md-comp-nav-rail-collapsed-width);
+    z-index: 998;
+    box-sizing: border-box;
+    width: 280px;
+    height: 100dvh;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: var(--md-sys-color-surface-container-low);
+  }
+
+  .docs-page-navigation > h2 {
+    margin: 0 1rem 0.5rem;
+  }
+
   body.docs > header,
   body.docs > main,
   body.docs > footer {
-    padding-left: var(--md-comp-nav-drawer-width, 300px);
+    padding-left: calc(var(--md-comp-nav-rail-collapsed-width) + 280px);
   }
 }
 

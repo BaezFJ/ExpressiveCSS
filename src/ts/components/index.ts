@@ -19,7 +19,6 @@ export { Lightbox } from "./lightbox";
 export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";
 export { FormSelect } from "./select";
-export { NavigationDrawer } from "./navigationDrawer";
 export { NavigationRail } from "./navigationRail";
 export { Tabs } from "./tabs";
 export { Timepicker } from "./timepicker";
@@ -34,4 +33,3 @@ export { Tooltip } from "./tooltip";
 // was called out in the changelog rather than aliased. The slideshow is gone in
 // 0.8.0; Carousel covers the case.
 export { Slider as Range } from "./slider";
-export { NavigationDrawer as Sidenav } from "./navigationDrawer";

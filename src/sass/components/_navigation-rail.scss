@@ -1,7 +1,7 @@
 @use "../abstracts" as *;
 
 // Navigation rail. Destinations on mid-size screens, not the bottom
-// navigation bar and not the sidenav drawer.
+// navigation bar.
 //
 // Anatomy is the HTML: a nav.navigation-rail. The first
 // button:not(.button) is the menu toggle. A .button child is the
