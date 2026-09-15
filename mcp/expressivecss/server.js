@@ -1118,7 +1118,27 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
   }
   fallback.sort((a, b) => b.score - a.score || a.slug.localeCompare(b.slug));
 
-  const allCandidates = [...primary, ...fallback];
+  const nativePatterns = [];
+  if (/\binline (?:feedback|messages?)\b/i.test(goal)
+    || (/\bnon[- ]?blocking\b/i.test(goal) && /\b(?:persistent|offline|until|remain|stays?)\b/i.test(goal))) {
+    nativePatterns.push({
+      slug: 'inline',
+      title: 'Native inline feedback',
+      why: 'Keep persistent nonblocking feedback and its actions in the document flow.',
+      selectionSource: 'native-pattern',
+      confidence: 'primary',
+      runtime: 'native',
+      useWhen: ['An issue persists while the user can continue working.'],
+      avoidWhen: ['Temporary confirmations need snackbar; blocking decisions need dialog.'],
+      alternatives: ['snackbar', 'dialogs'],
+      guidance: [
+        'Use native text and named buttons near the affected content. No banner classes or framework initialization are needed.',
+        'Static messages need no live region. For dynamic announcements, update an existing status node and keep action buttons outside it.',
+        'The application owns actions, dismissal and logical focus recovery. Allow text and controls to wrap.',
+      ],
+    });
+  }
+  const allCandidates = [...nativePatterns, ...primary, ...fallback];
   const suggestions = allCandidates.slice(0, maxSuggestions);
   return {
     suggestions,
@@ -1939,10 +1959,10 @@ async function creativeDirectorHandler(args) {
       truncated,
       omittedCount,
       checksPerformed: contractSafe
-        ? ['target contract resolution', 'contract provenance validation', 'component decision catalogue ranking']
+        ? ['target contract resolution', 'contract provenance validation', 'component decision catalogue ranking', 'native inline-feedback selection']
         : ['target contract resolution', 'contract provenance validation'],
       evidenceSources: contractSafe
-        ? [version.resolutionSource, 'bundled:component-decisions.json', `${catalog.guideSource}:component-guides`]
+        ? [version.resolutionSource, 'bundled:component-decisions.json', `${catalog.guideSource}:component-guides`, 'server:native-inline-feedback']
         : [version.resolutionSource],
       uncheckedAreas: [
         'target-version compatibility',
