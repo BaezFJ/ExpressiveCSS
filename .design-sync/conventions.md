@@ -2,7 +2,7 @@
 
 **There are no components to import.** ExpressiveCSS is a class-based CSS
 framework: you write ordinary HTML and apply framework classes. The JavaScript
-exports on `window.Expressive` (`Sidenav`, `Carousel`, `Menu`, …) are DOM-attaching
+exports on `window.Expressive` (`NavigationRail`, `Carousel`, `Menu`, …) are DOM-attaching
 plugins that enhance existing markup — they are not React components and must
 never be rendered as JSX. Build a design out of plain elements and the class
 vocabulary below.

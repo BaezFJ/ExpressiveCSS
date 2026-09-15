@@ -197,7 +197,7 @@ Add `"docked-display"` before `"forms"` for the optional docked picker.
 also removes the text font declarations. Restore Roboto and Noto Sans 400/500
 or explicitly choose alternative typefaces. Retain icon ligatures and variable
 axes, and include dynamic icons: Chips and dismissible Snackbar use `close`,
-and navigation drawer summaries use `expand_more`. The README includes font
+and expandable navigation rail summaries use `expand_more`. The README includes font
 declarations and the full initialization table. Full fonts remain available.
 
 ```scss
@@ -411,7 +411,7 @@ Next you just have to make sure you link the files properly in your webpage. Gen
 
 #### Initialize JavaScript
 
-The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, chips, cards, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation drawers, tooltips, and tabs start themselves.
+The browser bundle exposes the framework as the global `Expressive` object. Importing the JavaScript installs shared document behaviors (forms, chips, cards, and a few others), but it does not call `AutoInit()` automatically. Call it after the page has loaded so components such as navigation rails, tooltips, and tabs start themselves.
 
 `AutoInit()` scans `document.body` by default. Pass a container to limit the scan, or add the `no-autoinit` class to an element that should be initialized manually.
 
@@ -699,7 +699,7 @@ Every role name is a background class. The same name plus `-text` is the foregro
 
 Standard pairs: `primary` / `on-primary`, `primary-container` / `on-primary-container`, and the same for secondary, tertiary, and error. Surface: `surface`, `surface-dim`, `surface-bright`, `surface-container-lowest` … `surface-container-highest`, `on-surface`, `on-surface-variant`. Outline: `outline`, `outline-variant`. Inverse: `inverse-surface` / `inverse-on-surface`, `inverse-primary`. Overlay: `scrim`, `shadow`. Optional fixed accents (`primary-fixed`, `primary-fixed-dim`, `on-primary-fixed`, `on-primary-fixed-variant`, and the secondary/tertiary copies) stay the same in light and dark. `background`, `on-background`, `surface-variant`, and `surface-tint` remain as aliases.
 
-`scrim` is the opaque neutral the wash behind a modal surface is mixed from, not the wash itself. That is `--md-comp-scrim-color` — the role at 32%, defined once on `:root, :host` (so a sheet adopted into a shadow root gets one too) and consumed by dialogs, both sheets, the navigation drawer and the modal navigation rail. Override it at the root to retheme all of them, or set it on one element to dim just that surface (`::backdrop` inherits from the element it belongs to). The mix resolves at the root, so overriding `--md-sys-color-scrim` on a subtree does not reach a scrim below it — override `--md-comp-scrim-color` there instead.
+`scrim` is the opaque neutral the wash behind a modal surface is mixed from, not the wash itself. That is `--md-comp-scrim-color` — the role at 32%, defined once on `:root, :host` (so a sheet adopted into a shadow root gets one too) and consumed by dialogs, both sheets, and the modal navigation rail. Override it at the root to retheme all of them, or set it on one element to dim just that surface (`::backdrop` inherits from the element it belongs to). The mix resolves at the root, so overriding `--md-sys-color-scrim` on a subtree does not reach a scrim below it — override `--md-comp-scrim-color` there instead.
 
 In Sass, consume the token directly. Do not write `rgba(var(--md-sys-color-primary), 0.06)` — the tokens hold hex colors, so that form is invalid. Mix with transparency instead:
 
@@ -1644,9 +1644,9 @@ Nest the badge in the destination icon, or leave it as a sibling — the bar and
 </a>
 ```
 
-### In a list or navigation drawer
+### In a list
 
-A trailing `.badge` in a list or drawer row stays in flow on the end.
+A trailing `.badge` in a list row stays in flow on the end.
 
 ```html
 <ul class="list">
@@ -2908,7 +2908,7 @@ Default. Leading icon, headline, trailing actions. DOM order is the layout — t
 
 ### Destinations
 
-Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the Expanded breakpoint and pair it with a navigation drawer trigger when the bar has to collapse.
+Text links go in a `<menu>`. Put the menu after the heading to align it on the end; put it first to align it on the start. Hide it below the Expanded breakpoint and use a full-screen navigation dialog or modal expanded rail when the bar has to collapse.
 
 ```html
 <header>

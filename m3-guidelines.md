@@ -28,8 +28,8 @@ These are the mistakes generated Material UIs make most often. Treat them as inv
 - **Color roles, never hex.** Use `primary`, `on-surface`, `error`, and the other `--md-sys-color-*` roles. Do not hard-code `#6750A4`.
 - **Native HTML first.** `<button>`, `<a class="button">`, `<dialog>`, `<input>`, `<select>`, `<progress>`, `<label>`.
 - **A visual icon is not an accessible name.** Icon-only controls need `aria-label` (and a tooltip if the control has no visible text).
-- **Do not mix peer navigation components.** Never show a navigation bar and a navigation rail at the same time. Never pin a navigation drawer and a rail as two persistent side columns.
-- **Do not put the navigation drawer markup inside the app bar’s `<nav>`.** The trigger may live in the bar; the drawer must not.
+- **Do not mix peer navigation components.** Never show a navigation bar and a navigation rail at the same time. Never pin two rails as persistent side columns.
+- **Keep compact overflow navigation outside the app bar’s `<nav>`.** The trigger may live in the bar; its full-screen dialog must not.
 - **Do not nest tabs in the app bar.** Tabs are their own bar under the app bar, or inside a pane.
 - **Dialogs are high priority. Snackbars are low priority.** Do not use a dialog to say “Saved.” Do not use a snackbar to confirm a destructive action.
 - **Switches take effect immediately.** If the user still has to press Save, use checkboxes.
@@ -224,7 +224,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | Minor action, no room for a label | **Icon button** (`.icon-button`) + tooltip |
 | One usual action plus a few related ones | **Split button** (`.split-button`), not a button beside a separate icon button |
 | Several related shortcuts from a FAB | **FAB speed-dial** (`.fab`), not a second FAB |
-| Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked), or a **bottom app bar** on compact |
+| Frequent actions for *this* page, not destinations | **Toolbar** (floating or docked) |
 | Smart / automated action, or a filter / input token | **Chip** (see chip types) |
 | Confirm or cancel in a blocking prompt | Dialog **text buttons**, not a FAB |
 
@@ -244,7 +244,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 
 | Situation | Use |
 | --- | --- |
-| One of a short exclusive set | **Radio**, or a **segmented button** when the options are 2-5 and switch a view |
+| One of a short exclusive set | **Radio**, or a connected **button group** when the options are 2-5 and switch a view |
 | Many of a short set, saved later | **Checkbox** |
 | Immediate on/off setting | **Switch** |
 | One of a long set | **Select** (or autocomplete) |
@@ -298,7 +298,7 @@ The original medium (headline-small) and large (152 dp / headline-medium) bars a
 
 DOM order is layout: the headline grows; everything after it sits on the end.
 
-**Placement.** Top of the window or the pane. Stays put while body content scrolls. On compact, the leading icon opens the navigation drawer or the modal expanded rail.
+**Placement.** Top of the window or the pane. Stays put while body content scrolls. On compact, the leading icon opens a full-screen navigation dialog or the modal expanded rail.
 
 **Adaptive.** Compact: leading menu + title + 1–2 icons. Medium+: text destinations may appear in a `<menu>` after the title; still pair with a rail, not with a second nav bar. Large/XL: a medium or large title is acceptable.
 
@@ -337,7 +337,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 3. Active indicator — required, driven by `aria-current="page"`
 4. Badge (small or large) — optional, nested in the icon
 
-**Placement.** Bottom of the window, above nothing except a snackbar (snackbars sit in front and may shift up). A FAB sits **above** the bar, trailing, and must not cover it. Do not combine with a docked toolbar or a bottom app bar — that bar is this bar's alternative, holding commands where this one holds destinations.
+**Placement.** Bottom of the window, above nothing except a snackbar (snackbars sit in front and may shift up). A FAB sits **above** the bar, trailing, and must not cover it. Do not combine it with a docked toolbar, which holds commands where this bar holds destinations.
 
 **Adaptive.** Compact: stacked. Medium: horizontal. Expanded+: **replace** the bar with a rail; do not show both.
 
@@ -387,7 +387,7 @@ DOM order is layout: the headline grows; everything after it sits on the end.
 
 - Don't show a rail and a navigation bar together.
 - Don't hide the collapsed rail.
-- Don't put more than seven destinations; use a navigation drawer tree or an expanded modal rail.
+- Don't put more than seven destinations; split the hierarchy into peer categories and page lists, using a full-screen dialog or expanded modal rail on compact layouts.
 - Don't build a horizontal “rail”.
 
 ---
@@ -570,7 +570,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 **Use when** there is **one** positive, primary action for the screen: Create, Compose, Add. Not every screen needs a FAB.
 
-**Don't use** for destructive actions (Delete), for alerts, for volume/font controls, inside dialogs, or attached to a navigation drawer.
+**Don't use** for destructive actions (Delete), for alerts, for volume/font controls, inside dialogs, or attached to overflow navigation.
 
 **Variants**
 
@@ -1133,7 +1133,7 @@ Three **selection controls**. They are not interchangeable.
 
 **Don't**
 
-- Don't use a selection group as a form field. When two to five options should submit a radio or checkbox value, use a segmented button. Use Button Group selection for toggle-button commands whose state is exposed through `aria-pressed`.
+- Don't use a selection group as a form field. When two to five options should submit a value, use native radio or checkbox inputs. Use Button Group selection for toggle-button commands whose state is exposed through `aria-pressed`.
 - Don't use the connected treatment for one-shot actions. Current M3 guidance reserves connected groups for single- or multiple-selection toggle buttons.
 - Don't put a composite role on the group. Its buttons are independent commands reached with Tab, so `toolbar` and its siblings are rejected. `role="group"` with an `aria-label` is the role that fits when the group needs a name.
 - Don't wrap the items in anything. The gap and the connected corners are written against direct children, so a nested `<div>` loses both.
@@ -1225,7 +1225,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 - `<main>` one pane of content (list **or** cards, not both for the same data).
 - Optional FAB, trailing, above the bar.
 - `<footer><nav class="navigation-bar">` with 3–5 peers, `aria-current="page"` on the current one.
-- Overflow destinations: modal navigation drawer or modal expanded rail, triggered from the app bar, markup **outside** the header `nav`.
+- Overflow destinations: full-screen navigation dialog or modal expanded rail, triggered from the app bar, markup **outside** the header `nav`.
 
 ## 12.2 List-detail (tablet / desktop)
 

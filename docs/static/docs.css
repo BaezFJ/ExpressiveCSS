@@ -40,7 +40,11 @@ section :is(button, a.button):not(nav :is(button, a.button)) {
 }
 
 .docs-navigation-dialog > section {
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 @media (width >= 840px) {
