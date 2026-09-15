@@ -6,11 +6,11 @@
   "browserRun": {
     "recordedOn": "2026-09-15",
     "engine": "chromium",
-    "engineVersion": "151.0.7922.34",
+    "engineVersion": "153.0.8010.12",
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "816f9d7bcdcb853e3da0068177c81370353b4a9d307b777b31343c54c4f83ce9",
+    "reportSha256": "4b8b67500c635f4b85b5a1e370b2dbd6f21a08f77c0a3c92c596ebdd415bdc0b",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
