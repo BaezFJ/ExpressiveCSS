@@ -10,7 +10,7 @@
     "nodeVersion": "v22.23.1",
     "status": "passed",
     "inputsCurrent": true,
-    "reportSha256": "4b8b67500c635f4b85b5a1e370b2dbd6f21a08f77c0a3c92c596ebdd415bdc0b",
+    "reportSha256": "e508a21bbeb8f8c699e04f8431f846f28b98ff44b93656098986ee4984acd6ff",
     "collector": "scripts/record-capability-evidence.mjs"
   },
   "entries": [
@@ -1514,54 +1514,6 @@
         }
       ],
       "browserEvidence": "recorded-scoped-pass",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "banners",
-      "title": "Banners",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-13",
-      "scope": "Basic/rich and standard/vibrant; square basic banners.",
-      "adaptation": "Persistent in-flow feedback; application owns dismissal.",
-      "upstream": {
-        "source": "https://m3.material.io/components/snackbar/overview",
-        "reviewedOn": "2026-09-13",
-        "scope": "requirements-prose-reviewed",
-        "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "Related current snackbar/Overview, Guidelines/Usage",
-          "Legacy M2 banners/Usage, Anatomy/Buttons, Behavior/Dismissing banners"
-        ],
-        "sources": [
-          "https://m3.material.io/components/snackbar/overview",
-          "https://m3.material.io/components/snackbar/guidelines",
-          "https://m2.material.io/components/banners"
-        ],
-        "requirements": "Keep persistent nonblocking feedback and its actions in the application flow. Legacy M2 guidance places one banner below the app bar, with up to two text actions, until the user dismisses it. This is not a current M3 component specification."
-      },
-      "relationship": "related",
-      "sources": [
-        {
-          "path": "src/sass/components/_banners.scss",
-          "sha256": "a47f742756ddd0405ac6f2609478ee910913290a323c6a9d95444a1164859432"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "integration",
-          "description": "Legacy/related banner styling supplies no announcements, dismissal or focus recovery.",
-          "nextStep": "Implement application-owned status updates and named actions; verify text enlargement and focus after removal."
-        }
-      ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

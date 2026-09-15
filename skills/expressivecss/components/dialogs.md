@@ -11,13 +11,13 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `c8643d292a73b5111f20cfecf8032a47869d9a6e30af3db24aaf33d5ed994a72`
+Contract SHA-256: `36962b517cdc84cd0db5a787546ecdd2b8bb78885998be6bfe928a30d9001a9d`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/dialogs/overview)
 
-Example: Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and a banner for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.
+Example: Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and inline feedback for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 

@@ -1149,7 +1149,7 @@ function buildPageArchitecture(catalog, pageGoal, components = [], viewportTarge
   const hasTabs = uniqueSelected.includes('tabs');
   const hasBreadcrumbs = uniqueSelected.includes('breadcrumbs');
   const hasFooter = uniqueSelected.includes('footer');
-  const hasFeedback = selected.some((slug) => ['snackbar', 'banners', 'tooltips'].includes(slug));
+  const hasFeedback = selected.some((slug) => ['snackbar', 'tooltips'].includes(slug));
   const structuralComponents = new Set([
     'app-bar',
     'navigation-bar',

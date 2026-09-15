@@ -11,7 +11,7 @@
     "refine-preserves-product/contract",
     "redesign-preserves-requirements/contract",
     "feedback-component-choice/contract",
-    "feedback-banner-choice/contract",
+    "feedback-inline-choice/contract",
     "feedback-dialog-choice/contract",
     "switch-versus-checkbox/contract",
     "deferred-checkbox/contract",
@@ -689,7 +689,6 @@
         "expressivecss-runtime",
         "expressivecss-accessibility",
         "component:snackbar",
-        "component:banners",
         "component:dialogs"
       ],
       "mustNotLoad": [],
@@ -706,7 +705,7 @@
       ],
       "expectedComponent": "snackbar",
       "rejectedComponents": [
-        "banners",
+        "inline",
         "dialogs"
       ],
       "requiredDecisionFields": [
@@ -730,7 +729,7 @@
       "artifactExpectations": []
     },
     {
-      "id": "feedback-banner-choice",
+      "id": "feedback-inline-choice",
       "request": "Keep a nonblocking action visible until the user handles it.",
       "projectFixture": "consumer-current",
       "versionState": "match: installed and bundled contract 0.8.0",
@@ -740,22 +739,21 @@
         "expressivecss-usage",
         "expressivecss-accessibility",
         "component:snackbar",
-        "component:banners",
         "component:dialogs"
       ],
       "mustNotLoad": [],
       "noEdits": false,
       "requiredEvidenceCategories": [],
       "expectedCriticalInvariantIds": [
-        "feedback-banner-choice/contract"
+        "feedback-inline-choice/contract"
       ],
       "criticalInvariants": [
         {
-          "id": "feedback-banner-choice/contract",
+          "id": "feedback-inline-choice/contract",
           "operator": "caseContract"
         }
       ],
-      "expectedComponent": "banners",
+      "expectedComponent": "inline",
       "rejectedComponents": [
         "snackbar",
         "dialogs"
@@ -791,7 +789,6 @@
         "expressivecss-usage",
         "expressivecss-accessibility",
         "component:snackbar",
-        "component:banners",
         "component:dialogs"
       ],
       "mustNotLoad": [],
@@ -809,7 +806,7 @@
       "expectedComponent": "dialogs",
       "rejectedComponents": [
         "snackbar",
-        "banners"
+        "inline"
       ],
       "requiredDecisionFields": [
         "selectedComponent",

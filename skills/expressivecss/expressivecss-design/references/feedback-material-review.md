@@ -60,19 +60,11 @@ Feature gap: Focus/hover pause does not satisfy persistent actionable snackbar g
 
 Mapped browser scope: Focused action survives its timeout and activates once; timer resumes after focus leaves a second snackbar.
 
-## [Banners](../../components/banners.md)
+## Persistent inline feedback
 
-Relationship: related. Sources: [overview](https://m3.material.io/components/snackbar/overview), [guidelines](https://m3.material.io/components/snackbar/guidelines), [banners](https://m2.material.io/components/banners).
+The banner component has been removed. Use native text and controls for persistent nonblocking messages. Update an existing status node when announcements are needed; keep controls outside it. The application owns dismissal and focus recovery. Static text needs no live region.
 
-Reviewed sections: Related current snackbar/Overview, Guidelines/Usage; Legacy M2 banners/Usage, Anatomy/Buttons, Behavior/Dismissing banners.
-
-Requirements: Keep persistent nonblocking feedback and its actions in the application flow. Legacy M2 guidance places one banner below the app bar, with up to two text actions, until the user dismisses it. This is not a current M3 component specification.
-
-Framework comparison: This retained extension relates to persistent feedback. Its close-icon form differs from the legacy M2 text-action recommendation.
-
-Integration gap: Legacy/related banner styling supplies no announcements, dismissal or focus recovery. Next check: Implement application-owned status updates and named actions; verify text enlargement and focus after removal.
-
-No browser check is directly mapped. Source and unit tests do not substitute for the concrete rendered check above.
+The reviewed current M3 inventory has no dedicated banner entry. [Legacy M2 guidance](https://m2.material.io/components/banners) is historical context, not a current framework contract or proof of explicit Google deprecation.
 
 ## [Progress indicators](../../components/progress.md)
 

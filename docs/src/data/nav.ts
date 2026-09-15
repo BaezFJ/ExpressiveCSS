@@ -44,6 +44,13 @@ export const NAV: DocsGroup[] = [
       "If ExpressiveCSS has helped you ship a project, open issues and send pull requests to keep the framework moving.",
     pages: [
       {
+        id: "banners",
+        label: "Banner migration",
+        route: "/banners.html",
+        description:
+          "Replace removed banners with inline messages, snackbars or dialogs.",
+      },
+      {
         id: "index",
         label: "Getting started",
         icon: "home",
@@ -339,13 +346,6 @@ export const NAV: DocsGroup[] = [
         description:
           "Material Design 3 snackbars, from the HTML.",
         aliases: ["/toasts.html"],
-      },
-      {
-        id: "banners",
-        label: "Banners",
-        route: "/banners.html",
-        description:
-          "A prominent message that stays put until the user deals with it.",
       },
       {
         id: "preloader",

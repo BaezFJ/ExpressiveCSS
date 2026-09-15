@@ -556,6 +556,13 @@ try {
     assert.notEqual(selected.confidence, 'fallback');
   }
 
+  const removedBanner = await client.callTool({
+    name: 'component_syntax_expert',
+    arguments: { projectRoot: matchingDir, components: ['banners'] },
+  });
+  assert.equal(removedBanner.structuredContent.found.length, 0);
+  assert.ok(removedBanner.structuredContent.missing.some((item) => item.requested === 'banners'));
+
   const legacyReplacements = [
     ['bottom-app-bar', 'toolbars'],
     ['navigation-drawer', 'navigation-rail'],

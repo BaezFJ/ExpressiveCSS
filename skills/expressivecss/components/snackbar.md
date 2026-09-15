@@ -11,13 +11,13 @@ Contract: ExpressiveCSS 0.9.1
 
 Sources: `llm.md`, `semantics.json`, `docs/src/data/nav.ts`, `docs/src/data/component-decisions.json`, `package.json`, `CHANGELOG.md`
 
-Contract SHA-256: `c8643d292a73b5111f20cfecf8032a47869d9a6e30af3db24aaf33d5ed994a72`
+Contract SHA-256: `36962b517cdc84cd0db5a787546ecdd2b8bb78885998be6bfe928a30d9001a9d`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/snackbar/overview)
 
-Example: A successful save can use a snackbar. Offline status that still allows editing needs a persistent banner; a required irreversible-delete confirmation needs a dialog before the action.
+Example: A successful save can use a snackbar. Offline status that still allows editing needs a persistent inline message; a required irreversible-delete confirmation needs a dialog before the action.
 
 Use the documented component at each reachable width; no catalogue substitution is prescribed.
 

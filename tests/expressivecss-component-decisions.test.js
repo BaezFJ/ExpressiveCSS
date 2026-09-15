@@ -63,7 +63,6 @@ describe('ExpressiveCSS component decisions', () => {
 
     for (const [left, right] of [
       ['dialogs', 'snackbar'],
-      ['dialogs', 'banners'],
       ['switches', 'checkboxes'],
       ['navigation-bar', 'navigation-rail'],
       ['button-groups', 'radio-buttons'],
@@ -116,7 +115,7 @@ describe('ExpressiveCSS component decisions', () => {
       'buttons', 'icon-buttons', 'split-button', 'cards', 'lists', 'floating-sheet',
       'badges', 'carousel', 'lightbox', 'toolbars', 'fieldsets', 'slider', 'chips',
       'date-picker', 'time-picker', 'tabs', 'navigation-bar',
-      'button-groups', 'snackbar', 'banners', 'dialogs', 'progress', 'loading-indicator',
+      'button-groups', 'snackbar', 'dialogs', 'progress', 'loading-indicator',
     ];
     for (const component of data.components) {
       assert.doesNotMatch(component.avoidWhen.join(' '), /another component fits|fits the job better/i);
@@ -132,7 +131,7 @@ describe('ExpressiveCSS component decisions', () => {
     // Protect the distinctions most likely to be lost in further shortening.
     assert.match(bySlug.get('tabs').selectionExample, /navigation.*panels/is);
     assert.match(bySlug.get('button-groups').selectionExample, /submit.*radio/is);
-    assert.match(bySlug.get('snackbar').selectionExample, /save.*banner.*dialog/is);
+    assert.match(bySlug.get('snackbar').selectionExample, /save.*inline.*dialog/is);
     assert.match(bySlug.get('loading-indicator').selectionExample, /determinate.*indeterminate/is);
     assert.match(bySlug.get('progress').selectionExample, /indeterminate linear/i);
   });
@@ -178,7 +177,7 @@ describe('ExpressiveCSS component decisions', () => {
   test('accounts for the remaining Material and web component reviews without claiming full parity', async () => {
     const prior = new Set(['buttons','navigation-bar','navigation-rail','toolbars','text-fields','dialogs','tooltips']);
     const remaining = data.components.filter(entry => !prior.has(entry.slug));
-    assert.equal(remaining.length, 36);
+    assert.equal(remaining.length, 35);
     const names = ['inputs-material-review','layout-material-review','feedback-material-review','web-extensions-review'];
     const references = (await Promise.all(names.map(name => readFile(new URL(`../skills/expressivecss/expressivecss-design/references/${name}.md`, import.meta.url), 'utf8')))).join('\n');
     for (const entry of remaining) {
